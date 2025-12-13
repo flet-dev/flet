@@ -18,21 +18,24 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     To cause a child control to expand and fill the available horizontal space, set
     its [`expand`][(c).] property.
 
+    Example:
     ```python
-    ft.Row(
-        controls=[
-            ft.Card(
-                shape=ft.ContinuousRectangleBorder(radius=10),
-                content=ft.Container(
-                    padding=5,
-                    border_radius=ft.BorderRadius.all(5),
-                    bgcolor=ft.Colors.AMBER_100,
-                    content=ft.Text(f"Control {i}"),
-                ),
-            )
-            for i in range(1, 6)
-        ],
-    ),
+    (
+        ft.Row(
+            controls=[
+                ft.Card(
+                    shape=ft.ContinuousRectangleBorder(radius=10),
+                    content=ft.Container(
+                        padding=5,
+                        border_radius=ft.BorderRadius.all(5),
+                        bgcolor=ft.Colors.AMBER_100,
+                        content=ft.Text(f"Control {i}"),
+                    ),
+                )
+                for i in range(1, 6)
+            ],
+        ),
+    )
     ```
 
     """
@@ -50,6 +53,12 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
     Defines how the child [`controls`][(c).] should be placed vertically.
+
+    Note:
+        When [`wrap`][(c).] is `True`, this property doesn't support
+        [`CrossAxisAlignment.STRETCH`][flet.] or
+        [`CrossAxisAlignment.BASELINE`][flet.]. If either is used,
+        [`CrossAxisAlignment.CENTER`][flet.] will be applied instead.
     """
 
     spacing: Number = 10
@@ -64,30 +73,33 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     tight: bool = False
     """
-    Specifies how much space should be occupied horizontally.
+    Whether this row should occupy all available horizontal space (`True`),
+    or only as much as needed by its children [`controls`][(c).] (`False`).
 
-    Defaults to `False`, meaning all space is allocated to children.
+    Note:
+        Has effect only when [`wrap`][(c).] is `False`.
     """
 
     wrap: bool = False
     """
-    When set to `True` the Row will put child controls into additional rows (runs) if
-    they don't fit a single row.
+    Whether this row should put child [`controls`][(c).] into additional rows (runs) if
+    they don't fit in a single row.
     """
 
     run_spacing: Number = 10
     """
-    Spacing between runs when `wrap=True`.
+    The spacing between runs when [`wrap`][(c).] is `True`.
     """
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when `wrap=True`.
+    How the runs should be placed in the cross-axis when [`wrap`][(c).] is `True`.
     """
 
     intrinsic_height: bool = False
     """
-    If `True`, the Row will be as tall as the tallest child control.
+    Whether this row should be as tall as the tallest child control in
+    [`controls`][(c).].
     """
 
     def init(self):

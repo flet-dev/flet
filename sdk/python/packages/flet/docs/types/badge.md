@@ -16,7 +16,7 @@ example_images: ../test-images/examples/material/golden/macos/badge
 --8<-- "{{ examples }}/basic.py"
 ```
 
+{{ image(example_images + "/basic.png", width="80%") }}
 
-{{ image(example_images + "/badge-navigation-bar.png", alt="badge-navigation-bar", width="80%") }}
 
 {{ class_members(class_name) }}

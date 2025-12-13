@@ -4,8 +4,8 @@ import os
 import subprocess as sp
 from pathlib import Path
 
-import flet
-from flet.utils import is_mobile, is_windows, which
+from flet.utils.files import which
+from flet.utils.platform_utils import is_mobile, is_windows
 
 DEFAULT_VERSION = "0.1.0"
 
@@ -17,7 +17,7 @@ def from_git():
     """Try to get the version from Git tags."""
     working = Path().absolute()
     try:
-        version_file_path = Path(flet.__file__).absolute().parent / "version.py"
+        version_file_path = Path(__file__).resolve()
         repo_root = find_repo_root(version_file_path.parent)
 
         if repo_root:

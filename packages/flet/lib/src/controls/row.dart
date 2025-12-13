@@ -18,12 +18,7 @@ class RowControl extends StatelessWidget {
     debugPrint("Row build: ${control.id}");
 
     var spacing = control.getDouble("spacing", 10)!;
-    var mainAlignment = parseMainAxisAlignment(
-        control.getString("alignment"), MainAxisAlignment.start)!;
-    var tight = control.getBool("tight", false)!;
     var wrap = control.getBool("wrap", false)!;
-    var intrinsicHeight = control.getBool("intrinsic_height", false)!;
-    var verticalAlignment = control.getString("vertical_alignment");
     var controls = control.buildWidgets("controls");
 
     Widget child = wrap
@@ -35,20 +30,23 @@ class RowControl extends StatelessWidget {
                 control.getString("alignment"), WrapAlignment.start)!,
             runAlignment: parseWrapAlignment(
                 control.getString("run_alignment"), WrapAlignment.start)!,
-            crossAxisAlignment: parseWrapCrossAlignment(
-                verticalAlignment, WrapCrossAlignment.center)!,
+            crossAxisAlignment: control.getWrapCrossAlignment(
+                "vertical_alignment", WrapCrossAlignment.center)!,
             children: controls,
           )
         : Row(
             spacing: spacing,
-            mainAxisAlignment: mainAlignment,
-            mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
-            crossAxisAlignment: parseCrossAxisAlignment(
-                verticalAlignment, CrossAxisAlignment.center)!,
+            mainAxisSize: control.getBool("tight", false)!
+                ? MainAxisSize.min
+                : MainAxisSize.max,
+            mainAxisAlignment: control.getMainAxisAlignment(
+                "alignment", MainAxisAlignment.start)!,
+            crossAxisAlignment: control.getCrossAxisAlignment(
+                "vertical_alignment", CrossAxisAlignment.center)!,
             children: controls,
           );
 
-    if (intrinsicHeight) {
+    if (control.getBool("intrinsic_height", false)!) {
       child = IntrinsicHeight(child: child);
     }
 

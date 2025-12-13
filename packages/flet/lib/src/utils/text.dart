@@ -140,20 +140,19 @@ TextAffinity? parseTextAffinity(String? value, [TextAffinity? defaultValue]) {
       defaultValue;
 }
 
-TextStyle? parseTextStyle(dynamic value, ThemeData theme,
-    [TextStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  var fontWeight = value["weight"];
-
-  List<FontVariation>? variations;
-  if (fontWeight != null && fontWeight.startsWith("w")) {
-    variations = [
-      FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)
-    ];
+List<FontVariation>? parseFontVariations(dynamic fontWeight,
+    [List<FontVariation>? defaultValue]) {
+  if (fontWeight != null &&
+      fontWeight is String &&
+      fontWeight.startsWith("w")) {
+    return [FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)];
   }
+  return defaultValue;
+}
 
+List<TextDecoration> parseTextDecorations(dynamic decorationValue) {
   List<TextDecoration> decorations = [];
-  var decor = parseInt(value["decoration"], 0)!;
+  var decor = parseInt(decorationValue, 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }
@@ -163,6 +162,16 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
   if (decor & 0x4 > 0) {
     decorations.add(TextDecoration.lineThrough);
   }
+  return decorations;
+}
+
+TextStyle? parseTextStyle(dynamic value, ThemeData theme,
+    [TextStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  var fontWeight = value["weight"];
+  List<FontVariation>? variations = parseFontVariations(fontWeight);
+  List<TextDecoration> decorations = parseTextDecorations(value["decoration"]);
 
   return TextStyle(
     fontSize: parseDouble(value["size"]),
