@@ -576,6 +576,7 @@ from flet.controls.types import (
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
+from flet.version import version as __version__
 
 __all__ = [
     "Accelerometer",
@@ -1047,6 +1048,7 @@ __all__ = [
     "WindowEventType",
     "WindowResizeEdge",
     "WindowsDeviceInfo",
+    "__version__",
     "alignment",
     "app",
     "app_async",
