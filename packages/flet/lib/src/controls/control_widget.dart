@@ -32,7 +32,7 @@ class ControlWidget extends StatelessWidget {
       key = ValueKey(controlKey.value);
     }
 
-    return wrapWithControlInheritedNotifierAndTheme(control, (context) {
+    return control.buildInControlContext((context) {
       for (var extension in FletBackend.of(context).extensions) {
         final widget = extension.createWidget(key, control);
         if (widget != null) return widget;

@@ -35,7 +35,7 @@ class ControlInheritedNotifier extends InheritedNotifier<Control> {
 ///
 /// If `"skip_inherited_notifier"` internal is `true`, this returns
 /// [builder] unwrapped to preserve historical semantics.
-Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
+Widget withControlNotifier(Control control, WidgetBuilder builder) {
   if (control.internals?["skip_inherited_notifier"] == true) {
     return Builder(builder: builder);
   }
@@ -50,15 +50,15 @@ Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
 }
 
 /// Convenience wrapper that applies both:
-/// - [withControlInheritedNotifier]
-/// - [wrapWithControlTheme]
-Widget wrapWithControlInheritedNotifierAndTheme(
+/// - [withControlNotifier]
+/// - [withControlTheme]
+Widget withControlContext(
   Control control,
   WidgetBuilder builder,
 ) {
   return Builder(builder: (context) {
-    final child = withControlInheritedNotifier(control, builder);
-    return wrapWithControlTheme(control, context, child);
+    final child = withControlNotifier(control, builder);
+    return withControlTheme(control, context, child);
   });
 }
 
@@ -73,8 +73,7 @@ Widget wrapWithControlInheritedNotifierAndTheme(
 /// - `control`: the control whose per-control theme (if any) will be applied.
 /// - `context`: used to access `FletBackend` and the ambient `Theme`.
 /// - `child`: the widget subtree to wrap with the per-control `Theme`.
-Widget wrapWithControlTheme(
-    Control control, BuildContext context, Widget child) {
+Widget withControlTheme(Control control, BuildContext context, Widget child) {
   if (control == FletBackend.of(context).page) return child;
 
   if (control.internals?["skip_inherited_notifier"] == true) return child;
@@ -113,4 +112,12 @@ Widget wrapWithControlTheme(
   }
 
   return buildTheme(themeModeToBrightness(themeMode));
+}
+
+extension ControlContextBuilder on Control {
+  /// Builds a widget under this control's standard "control context":
+  /// [ControlInheritedNotifier] + per-control theme wrapping.
+  Widget buildInControlContext(WidgetBuilder builder) {
+    return withControlContext(this, builder);
+  }
 }
