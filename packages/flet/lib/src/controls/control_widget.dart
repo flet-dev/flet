@@ -24,25 +24,12 @@ class ControlWidget extends StatelessWidget {
       key = ValueKey(controlKey.value);
     }
 
-    Widget? widget;
-    if (control.internals?["skip_inherited_notifier"] == true) {
+    return wrapWithControlInheritedNotifierAndTheme(control, context, (context) {
       for (var extension in FletBackend.of(context).extensions) {
-        widget = extension.createWidget(key, control);
+        final widget = extension.createWidget(key, control);
         if (widget != null) return widget;
       }
-      widget = ErrorControl("Unknown control: ${control.type}");
-    } else {
-      widget = withControlInheritedNotifier(control, (context) {
-        Widget? cw;
-        for (var extension in FletBackend.of(context).extensions) {
-          cw = extension.createWidget(key, control);
-          if (cw != null) return cw;
-        }
-
-        return ErrorControl("Unknown control: ${control.type}");
-      });
-    }
-
-    return wrapWithControlTheme(control, context, widget);
+      return ErrorControl("Unknown control: ${control.type}");
+    });
   }
 }

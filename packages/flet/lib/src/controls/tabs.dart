@@ -245,7 +245,7 @@ class TabControl extends Tab {
   Widget build(BuildContext context) {
     debugPrint("TabControl build: ${control.id}");
 
-    final tabWidget = withControlInheritedNotifier(control, (context) {
+    return wrapWithControlInheritedNotifierAndTheme(control, context, (context) {
       return BaseControl(
         control: control,
         child: Tab(
@@ -257,8 +257,6 @@ class TabControl extends Tab {
         ),
       );
     });
-
-    return wrapWithControlTheme(control, context, tabWidget);
   }
 }
 
