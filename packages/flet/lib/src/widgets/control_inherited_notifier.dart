@@ -35,7 +35,7 @@ class ControlInheritedNotifier extends InheritedNotifier<Control> {
 ///
 /// If `"skip_inherited_notifier"` internal is `true`, this returns
 /// [builder] unwrapped to preserve historical semantics.
-Widget withControlNotifier(Control control, WidgetBuilder builder) {
+Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
   if (control.internals?["skip_inherited_notifier"] == true) {
     return Builder(builder: builder);
   }
@@ -50,14 +50,14 @@ Widget withControlNotifier(Control control, WidgetBuilder builder) {
 }
 
 /// Convenience wrapper that applies both:
-/// - [withControlNotifier]
+/// - [withControlInheritedNotifier]
 /// - [withControlTheme]
 Widget withControlContext(
   Control control,
   WidgetBuilder builder,
 ) {
   return Builder(builder: (context) {
-    final child = withControlNotifier(control, builder);
+    final child = withControlInheritedNotifier(control, builder);
     return withControlTheme(control, context, child);
   });
 }
