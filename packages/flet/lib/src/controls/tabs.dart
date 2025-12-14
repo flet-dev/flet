@@ -218,17 +218,9 @@ class TabControl extends Tab {
           // but providing `text`/`icon` here lets TabBar pick the correct
           // default height (text vs text+icon) and ensures consistent hover/
           // splash overlay sizing (see issue #5599).
-          text: _tabTextHint(control),
-          icon: _tabIconHint(control),
+          text: control.buildTextOrWidget("label") != null ? "" : null,
+          icon: control.buildIconOrWidget("icon"),
         );
-
-  static String? _tabTextHint(Control control) {
-    return control.get("label") != null ? "" : null;
-  }
-
-  static Widget? _tabIconHint(Control control) {
-    return control.get("icon") != null ? const SizedBox.shrink() : null;
-  }
 
   static Key? _keyFromControl(Control control) {
     final controlKey = control.getKey("key");
