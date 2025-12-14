@@ -43,8 +43,6 @@ class ControlWidget extends StatelessWidget {
       });
     }
 
-    final isRootControl = control == FletBackend.of(context).page;
-    return wrapWithControlTheme(control, context, widget,
-        isRootControl: isRootControl);
+    return wrapWithControlTheme(control, context, widget);
   }
 }

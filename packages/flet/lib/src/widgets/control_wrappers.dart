@@ -25,10 +25,11 @@ Widget wrapWithControlTheme(
   Control control,
   BuildContext context,
   Widget child, {
-  bool isRootControl = false,
   bool respectSkipInheritedNotifier = true,
 }) {
-  if (isRootControl) return child;
+  // skip root/page control
+  if (control == FletBackend.of(context).page) return child;
+
   if (respectSkipInheritedNotifier &&
       control.internals?["skip_inherited_notifier"] == true) {
     return child;
@@ -43,22 +44,32 @@ Widget wrapWithControlTheme(
 
   final ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
 
+  /// Converts ThemeMode to Brightness
+  Brightness? themeModeToBrightness(ThemeMode? mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return Brightness.light;
+      case ThemeMode.dark:
+        return Brightness.dark;
+      case ThemeMode.system:
+        return context.select<FletBackend, Brightness>(
+          (backend) => backend.platformBrightness,
+        );
+      case null:
+        return parentTheme?.brightness;
+    }
+  }
+
   Widget buildTheme(Brightness? brightness) {
-    final themeProp = brightness == Brightness.dark ? "dark_theme" : "theme";
-    final themeData = parseTheme(control.get(themeProp), context, brightness,
-        parentTheme: parentTheme);
+    final themeData = control.getTheme(
+      brightness == Brightness.dark ? "dark_theme" : "theme",
+      context,
+      brightness,
+      parentTheme: parentTheme,
+    );
     return Theme(data: themeData, child: child);
   }
 
-  if (themeMode == ThemeMode.system) {
-    final brightness = context.select<FletBackend, Brightness>(
-        (backend) => backend.platformBrightness);
-    return buildTheme(brightness);
-  } else if (themeMode == ThemeMode.light) {
-    return buildTheme(Brightness.light);
-  } else if (themeMode == ThemeMode.dark) {
-    return buildTheme(Brightness.dark);
-  } else {
-    return buildTheme(parentTheme?.brightness);
-  }
+  final brightness = themeModeToBrightness(themeMode);
+  return buildTheme(brightness);
 }
