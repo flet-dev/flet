@@ -22,16 +22,13 @@ Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
 }
 
 Widget wrapWithControlTheme(
-  Control control,
-  BuildContext context,
-  Widget child, {
-  bool respectSkipInheritedNotifier = true,
-}) {
+    Control control, BuildContext context, Widget child) {
   // skip root/page control
   if (control == FletBackend.of(context).page) return child;
 
-  if (respectSkipInheritedNotifier &&
-      control.internals?["skip_inherited_notifier"] == true) {
+  // Preserve ControlWidget semantics: if a control opts out of
+  // ControlInheritedNotifier, it also skips per-control theme wrapping.
+  if (control.internals?["skip_inherited_notifier"] == true) {
     return child;
   }
 
