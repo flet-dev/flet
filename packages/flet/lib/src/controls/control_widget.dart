@@ -4,7 +4,7 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/keys.dart';
-import '../widgets/control_wrappers.dart';
+import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 
 class ControlWidget extends StatelessWidget {

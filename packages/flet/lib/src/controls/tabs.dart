@@ -15,7 +15,7 @@ import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
 import '../utils/time.dart';
-import '../widgets/control_wrappers.dart';
+import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
