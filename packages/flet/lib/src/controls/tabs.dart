@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
 import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import '../utils/time.dart';
+import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 
 /// Default duration for tab animation if none is provided.
 const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 100);
@@ -202,23 +208,95 @@ class TabBarViewControl extends StatelessWidget {
   }
 }
 
-class TabControl extends StatelessWidget {
+class TabControl extends Tab {
   final Control control;
 
-  const TabControl({super.key, required this.control});
+  TabControl({super.key, required this.control})
+      : super(
+          // These are primarily used by Flutter's TabBar heuristics (e.g. to
+          // decide text-vs-text+icon height) because TabBar checks `tab is Tab`.
+          // The actual tab UI is built from `control` in `build()`.
+          text: _tabTextHint(control),
+          icon: _tabIconHint(control),
+        );
+
+  static bool _hasLabel(Control control) => control.get("label") != null;
+
+  static bool _hasIcon(Control control) => control.get("icon") != null;
+
+  static String? _tabTextHint(Control control) {
+    if (!_hasLabel(control)) return null;
+    final label = control.get("label");
+    return label is String ? label : "";
+  }
+
+  static Widget? _tabIconHint(Control control) {
+    if (!_hasIcon(control)) return null;
+    // Non-null placeholder so TabBar can detect icon presence.
+    return const SizedBox.shrink();
+  }
+
+  static Key? _keyFromControl(Control control) {
+    final controlKey = control.getKey("key");
+    if (controlKey is ControlValueKey) {
+      return ValueKey(controlKey.value);
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TabControl build: ${control.id}");
 
-    return BaseControl(
-        control: control,
-        child: Tab(
-          icon: control.buildIconOrWidget("icon"),
-          height: control.getDouble("height"),
-          iconMargin: control.getMargin("icon_margin"),
-          child: control.buildTextOrWidget("label"),
-        ));
+    Widget tab = ControlInheritedNotifier(
+      notifier: control,
+      child: Builder(builder: (context) {
+        ControlInheritedNotifier.of(context);
+
+        return BaseControl(
+          control: control,
+          child: Tab(
+            key: _keyFromControl(control),
+            icon: control.buildIconOrWidget("icon"),
+            height: control.getDouble("height"),
+            iconMargin: control.getMargin("icon_margin"),
+            child: control.buildTextOrWidget("label"),
+          ),
+        );
+      }),
+    );
+
+    final hasNoThemes =
+        control.get("theme") == null && control.get("dark_theme") == null;
+    final themeMode = control.getThemeMode("theme_mode");
+    if (hasNoThemes && themeMode == null) {
+      return tab;
+    }
+
+    final ThemeData? parentTheme =
+        (themeMode == null) ? Theme.of(context) : null;
+
+    Widget buildTheme(Brightness? brightness) {
+      final themeData = control.getTheme(
+          brightness == Brightness.dark ? "dark_theme" : "theme",
+          context,
+          brightness,
+          parentTheme: parentTheme);
+      return Theme(data: themeData, child: tab);
+    }
+
+    if (themeMode == ThemeMode.system) {
+      final brightness = context.select<FletBackend, Brightness>(
+        (backend) => backend.platformBrightness,
+      );
+      return buildTheme(brightness);
+    } else if (themeMode == ThemeMode.light) {
+      return buildTheme(Brightness.light);
+    } else if (themeMode == ThemeMode.dark) {
+      return buildTheme(Brightness.dark);
+    } else {
+      return buildTheme(parentTheme?.brightness);
+    }
   }
 }
 
@@ -268,7 +346,19 @@ class _TabBarControlState extends State<TabBarControl> {
           .getTextStyle("unselected_label_text_style", Theme.of(context));
       var splashBorderRadius =
           widget.control.getBorderRadius("splash_border_radius");
-      var tabs = widget.control.buildWidgets("tabs");
+      final tabs = widget.control.children("tabs").map((tab) {
+        // Ensure parent gets rebuilt when a tab becomes visible/invisible.
+        tab.notifyParent = true;
+
+        if (tab.type == "Tab") {
+          return TabControl(control: tab);
+        }
+
+        // TabBar applies consistent sizing/ink behavior only when `tab is Tab`.
+        // Wrapping arbitrary controls into a `Tab` keeps hover/splash sizes aligned
+        // with the tab bar.
+        return Tab(child: ControlWidget(control: tab));
+      }).toList();
 
       void onTap(int index) {
         widget.control.triggerEvent("click", index);

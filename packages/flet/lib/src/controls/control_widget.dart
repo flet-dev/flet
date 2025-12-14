@@ -77,9 +77,7 @@ class ControlWidget extends StatelessWidget {
         (backend) => backend.platformBrightness,
       );
       return buildTheme(brightness);
-    }
-
-    if (themeMode == ThemeMode.light) {
+    } else if (themeMode == ThemeMode.light) {
       return buildTheme(Brightness.light);
     } else if (themeMode == ThemeMode.dark) {
       return buildTheme(Brightness.dark);
