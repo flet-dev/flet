@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -16,9 +14,8 @@ import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
-import '../utils/theme.dart';
 import '../utils/time.dart';
-import '../widgets/control_inherited_notifier.dart';
+import '../widgets/control_wrappers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -248,55 +245,20 @@ class TabControl extends Tab {
   Widget build(BuildContext context) {
     debugPrint("TabControl build: ${control.id}");
 
-    Widget tab = ControlInheritedNotifier(
-      notifier: control,
-      child: Builder(builder: (context) {
-        ControlInheritedNotifier.of(context);
-
-        return BaseControl(
-          control: control,
-          child: Tab(
-            key: _keyFromControl(control),
-            icon: control.buildIconOrWidget("icon"),
-            height: control.getDouble("height"),
-            iconMargin: control.getMargin("icon_margin"),
-            child: control.buildTextOrWidget("label"),
-          ),
-        );
-      }),
-    );
-
-    final hasNoThemes =
-        control.get("theme") == null && control.get("dark_theme") == null;
-    final themeMode = control.getThemeMode("theme_mode");
-    if (hasNoThemes && themeMode == null) {
-      return tab;
-    }
-
-    final ThemeData? parentTheme =
-        (themeMode == null) ? Theme.of(context) : null;
-
-    Widget buildTheme(Brightness? brightness) {
-      final themeData = control.getTheme(
-          brightness == Brightness.dark ? "dark_theme" : "theme",
-          context,
-          brightness,
-          parentTheme: parentTheme);
-      return Theme(data: themeData, child: tab);
-    }
-
-    if (themeMode == ThemeMode.system) {
-      final brightness = context.select<FletBackend, Brightness>(
-        (backend) => backend.platformBrightness,
+    final tabWidget = withControlInheritedNotifier(control, (context) {
+      return BaseControl(
+        control: control,
+        child: Tab(
+          key: _keyFromControl(control),
+          icon: control.buildIconOrWidget("icon"),
+          height: control.getDouble("height"),
+          iconMargin: control.getMargin("icon_margin"),
+          child: control.buildTextOrWidget("label"),
+        ),
       );
-      return buildTheme(brightness);
-    } else if (themeMode == ThemeMode.light) {
-      return buildTheme(Brightness.light);
-    } else if (themeMode == ThemeMode.dark) {
-      return buildTheme(Brightness.dark);
-    } else {
-      return buildTheme(parentTheme?.brightness);
-    }
+    });
+
+    return wrapWithControlTheme(control, context, tabWidget);
   }
 }
 
