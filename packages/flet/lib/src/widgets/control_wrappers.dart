@@ -7,13 +7,9 @@ import '../models/control.dart';
 import '../utils/theme.dart';
 import 'control_inherited_notifier.dart';
 
-Widget withControlInheritedNotifier(
-  Control control,
-  BuildContext context,
-  WidgetBuilder builder,
-) {
+Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
   if (control.internals?["skip_inherited_notifier"] == true) {
-    return builder(context);
+    return Builder(builder: builder);
   }
 
   return ControlInheritedNotifier(
@@ -26,12 +22,10 @@ Widget withControlInheritedNotifier(
 }
 
 Widget wrapWithControlInheritedNotifierAndTheme(
-  Control control,
-  BuildContext context,
-  WidgetBuilder builder,
-) {
-  final child = withControlInheritedNotifier(control, context, builder);
-  return wrapWithControlTheme(control, context, child);
+    Control control, WidgetBuilder builder) {
+  return Builder(
+      builder: (context) => wrapWithControlTheme(
+          control, context, withControlInheritedNotifier(control, builder)));
 }
 
 Widget wrapWithControlTheme(

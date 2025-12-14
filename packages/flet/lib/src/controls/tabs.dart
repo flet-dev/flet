@@ -245,7 +245,7 @@ class TabControl extends Tab {
   Widget build(BuildContext context) {
     debugPrint("TabControl build: ${control.id}");
 
-    return wrapWithControlInheritedNotifierAndTheme(control, context, (context) {
+    return wrapWithControlInheritedNotifierAndTheme(control, (context) {
       return BaseControl(
         control: control,
         child: Tab(
