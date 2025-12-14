@@ -6,7 +6,10 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/theme.dart';
 
-/// InheritedNotifier for Control.
+/// InheritedNotifier for a [Control].
+///
+/// Used to rebuild a control subtree when the
+/// corresponding [Control] (a [ChangeNotifier]) changes.
 class ControlInheritedNotifier extends InheritedNotifier<Control> {
   const ControlInheritedNotifier({
     super.key,
@@ -14,6 +17,8 @@ class ControlInheritedNotifier extends InheritedNotifier<Control> {
     required super.child,
   }) : super();
 
+  /// Establishes a dependency on the nearest [ControlInheritedNotifier] and
+  /// returns its [Control].
   static Control? of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<ControlInheritedNotifier>()
@@ -26,6 +31,10 @@ class ControlInheritedNotifier extends InheritedNotifier<Control> {
   }
 }
 
+/// Wraps [builder] with [ControlInheritedNotifier], unless the control opts out.
+///
+/// If `"skip_inherited_notifier"` internal is `true`, this returns
+/// [builder] unwrapped to preserve historical semantics.
 Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
   if (control.internals?["skip_inherited_notifier"] == true) {
     return Builder(builder: builder);
@@ -40,6 +49,9 @@ Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
   );
 }
 
+/// Convenience wrapper that applies both:
+/// - [withControlInheritedNotifier]
+/// - [wrapWithControlTheme]
 Widget wrapWithControlInheritedNotifierAndTheme(
   Control control,
   WidgetBuilder builder,
@@ -50,13 +62,21 @@ Widget wrapWithControlInheritedNotifierAndTheme(
   });
 }
 
+/// Applies per-control theming (`theme`, `dark_theme`, `theme_mode`) to `child`.
+///
+/// Returns `child` unchanged when:
+/// - `control` is the page/root control
+/// - `"skip_inherited_notifier"` internal is `true`
+/// - no `theme`/`dark_theme` is set and `theme_mode` is `null`
+///
+/// Parameters:
+/// - `control`: the control whose per-control theme (if any) will be applied.
+/// - `context`: used to access `FletBackend` and the ambient `Theme`.
+/// - `child`: the widget subtree to wrap with the per-control `Theme`.
 Widget wrapWithControlTheme(
     Control control, BuildContext context, Widget child) {
-  // skip root/page control
   if (control == FletBackend.of(context).page) return child;
 
-  // if a control opts out of ControlInheritedNotifier,
-  // it also skips per-control theme wrapping.
   if (control.internals?["skip_inherited_notifier"] == true) return child;
 
   final hasNoThemes =
@@ -66,7 +86,7 @@ Widget wrapWithControlTheme(
 
   final ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
 
-  /// Converts ThemeMode to Brightness
+  /// Converts [ThemeMode] to [Brightness] used by [Control.getTheme].
   Brightness? themeModeToBrightness(ThemeMode? mode) {
     switch (mode) {
       case ThemeMode.light:
