@@ -117,6 +117,10 @@ Widget withControlTheme(Control control, BuildContext context, Widget child) {
 extension ControlContextBuilder on Control {
   /// Builds a widget under this control's standard "control context":
   /// [ControlInheritedNotifier] + per-control theme wrapping.
+  ///
+  /// This is primarily used by [ControlWidget] and any "special" controls that
+  /// must subclass a Flutter widget (e.g. a control that must be a `Tab`) but
+  /// still need the same wrapper behavior as a normal `ControlWidget`.
   Widget buildInControlContext(WidgetBuilder builder) {
     return withControlContext(this, builder);
   }

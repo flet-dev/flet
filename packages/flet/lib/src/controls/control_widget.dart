@@ -12,7 +12,7 @@ import '../widgets/error.dart';
 /// - Resolves a stable Flutter [Key] from the control's `key` property (including
 ///   registering a scroll [GlobalKey] with the backend).
 /// - Delegates widget creation to registered extensions.
-/// - Wraps the result in:
+/// - Builds the result in this control's standard "control context":
 ///   [ControlInheritedNotifier] (reactivity) and per-control theme overrides.
 class ControlWidget extends StatelessWidget {
   final Control control;

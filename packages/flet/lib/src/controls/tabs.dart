@@ -210,27 +210,24 @@ class TabControl extends Tab {
 
   TabControl({super.key, required this.control})
       : super(
-          // These are primarily used by Flutter's TabBar heuristics (e.g. to
-          // decide text-vs-text+icon height) because TabBar checks `tab is Tab`.
-          // The actual tab UI is built from `control` in `build()`.
+          // These values are *hints* for Flutter's TabBar heuristics.
+          //
+          // TabBar applies different sizing/ink behavior when items in `tabs:`
+          // are actual `Tab` instances (it literally checks `tab is Tab`).
+          // In Flet, the real content is built from `control` in `build()`,
+          // but providing `text`/`icon` here lets TabBar pick the correct
+          // default height (text vs text+icon) and ensures consistent hover/
+          // splash overlay sizing (see issue #5599).
           text: _tabTextHint(control),
           icon: _tabIconHint(control),
         );
 
-  static bool _hasLabel(Control control) => control.get("label") != null;
-
-  static bool _hasIcon(Control control) => control.get("icon") != null;
-
   static String? _tabTextHint(Control control) {
-    if (!_hasLabel(control)) return null;
-    final label = control.get("label");
-    return label is String ? label : "";
+    return control.get("label") != null ? "" : null;
   }
 
   static Widget? _tabIconHint(Control control) {
-    if (!_hasIcon(control)) return null;
-    // Non-null placeholder so TabBar can detect icon presence.
-    return const SizedBox.shrink();
+    return control.get("icon") != null ? const SizedBox.shrink() : null;
   }
 
   static Key? _keyFromControl(Control control) {
