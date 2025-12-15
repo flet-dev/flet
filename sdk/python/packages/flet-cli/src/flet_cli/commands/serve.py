@@ -65,7 +65,8 @@ class Command(BaseCommand):
         try:
             with socketserver.TCPServer(("", options.port), handler) as httpd:
                 console.print(
-                    f"Serving [green]{directory}[/green] at [cyan]http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
+                    f"Serving [green]{directory}[/green] at [cyan]"
+                    f"http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
                 )
                 httpd.serve_forever()
         except KeyboardInterrupt:

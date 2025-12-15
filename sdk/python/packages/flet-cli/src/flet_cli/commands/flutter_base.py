@@ -21,8 +21,13 @@ from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 
-FLUTTER_VERSION = version.Version(flet_version.FLUTTER_VERSION)
-print(f"Flutter version: {FLUTTER_VERSION}")
+
+def get_flutter_version() -> Optional[version.Version]:
+    flutter_version_str = flet_version.get_flutter_version()
+    if not flutter_version_str:
+        return None
+    return version.Version(flutter_version_str)
+
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -50,6 +55,7 @@ class BaseFlutterCommand(BaseCommand):
         self.emojis = {}
         self.dart_exe = None
         self.flutter_exe = None
+        self.required_flutter_version: Optional[version.Version] = None
         self.verbose = False
         self.require_android_sdk = False
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
@@ -98,6 +104,14 @@ class BaseFlutterCommand(BaseCommand):
 
     def initialize_command(self):
         assert self.options
+        self.required_flutter_version = get_flutter_version()
+        if not self.required_flutter_version:
+            self.cleanup(
+                1,
+                "Cannot determine required Flutter SDK version. "
+                "In a development checkout ensure `.fvmrc` exists.",
+            )
+
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
@@ -125,7 +139,7 @@ class BaseFlutterCommand(BaseCommand):
                 )
                 prompt = (
                     "Flutter SDK "
-                    f"{FLUTTER_VERSION} is required. It will be installed now. "
+                    f"{self.required_flutter_version} is required. It will be installed now. "
                     "Proceed? [y/n] "
                 )
 
@@ -154,6 +168,7 @@ class BaseFlutterCommand(BaseCommand):
             self.install_android_sdk()
 
     def flutter_version_valid(self):
+        assert self.required_flutter_version
         version_results = self.run(
             [
                 self.flutter_exe,
@@ -171,18 +186,21 @@ class BaseFlutterCommand(BaseCommand):
 
                 # validate installed Flutter version
                 return (
-                    flutter_version.major == FLUTTER_VERSION.major
-                    and flutter_version.minor == FLUTTER_VERSION.minor
+                    flutter_version.major == self.required_flutter_version.major
+                    and flutter_version.minor == self.required_flutter_version.minor
                 )
         else:
             console.log(1, "Failed to validate Flutter version.")
         return False
 
     def install_flutter(self):
-        self.update_status(f"[bold blue]Installing Flutter {FLUTTER_VERSION}...")
+        assert self.required_flutter_version
+        self.update_status(
+            f"[bold blue]Installing Flutter {self.required_flutter_version}..."
+        )
 
         flutter_dir = install_flutter(
-            str(FLUTTER_VERSION), self.log_stdout, progress=self.progress
+            str(self.required_flutter_version), self.log_stdout, progress=self.progress
         )
         ext = ".bat" if platform.system() == "Windows" else ""
         self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
@@ -222,7 +240,7 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(
-                f"Flutter {FLUTTER_VERSION} installed {self.emojis['checkmark']}"
+                f"Flutter {self.required_flutter_version} installed {self.emojis['checkmark']}"
             )
 
     def install_jdk(self):
@@ -300,7 +318,8 @@ class BaseFlutterCommand(BaseCommand):
             self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
-        install_dir = get_flutter_dir(str(FLUTTER_VERSION))
+        assert self.required_flutter_version
+        install_dir = get_flutter_dir(str(self.required_flutter_version))
         ext = ".bat" if is_windows() else ""
         batch_path = os.path.join(install_dir, "bin", f"{exe_filename}{ext}")
         if os.path.exists(batch_path):

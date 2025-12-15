@@ -10,6 +10,13 @@ function patch_python_package_versions() {
       uv version --package "$pkg" "$PYPI_VER"
       echo "Patched version for $pkg to $PYPI_VER"
     done
+
+    # Get Flutter version from .fvmrc and set it in version.py
+    FLUTTER_VERSION="$(
+      uv run --no-default-groups "$SCRIPTS/read_fvmrc.py" "${ROOT}/.fvmrc" 2>/dev/null || true
+    )"
+    sed -i -e "s/FLUTTER_VERSION = \"\"/FLUTTER_VERSION = \"$FLUTTER_VERSION\"/g" packages/flet/src/flet/version.py
+    echo "Patched Flutter SDK version to $FLUTTER_VERSION"
 }
 
 

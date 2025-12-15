@@ -22,7 +22,7 @@ class Command(BaseBuildCommand):
         parser.add_argument(
             "--flutter-version",
             action="version",
-            version=flet.version.FLUTTER_VERSION,
+            version=flet.version.get_flutter_version() or "Unknown",
             help="Print the required Flutter SDK version and exit.",
         )
         parser.add_argument(

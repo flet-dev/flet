@@ -34,7 +34,7 @@ class Command(BaseFlutterCommand):
             type=int,
             default=10,
             dest="device_timeout",
-            help="Time (in seconds) to wait for devices to attach (default: 10).",
+            help="Time (in seconds) to wait for devices to attach (default: 10)",
         )
         parser.add_argument(
             "--device-connection",
@@ -43,7 +43,7 @@ class Command(BaseFlutterCommand):
             default="both",
             dest="device_connection",
             help="Filter devices by connection type: attached (USB) or wireless "
-            "(default: both).",
+            "(default: both)",
         )
         super().add_arguments(parser)
 
