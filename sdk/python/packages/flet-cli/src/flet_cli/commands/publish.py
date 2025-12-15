@@ -6,7 +6,7 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
@@ -305,7 +305,7 @@ class Command(BaseCommand):
                 or get_pyproject("tool.flet.web.renderer")
                 or "auto"
             ),
-            route_url_strategy=str(
+            route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
                 or "path"

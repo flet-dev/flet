@@ -14,16 +14,15 @@ from rich.prompt import Confirm
 from rich.style import Style
 from rich.theme import Theme
 
+import flet.version as flet_version
 import flet_cli.utils.processes as processes
 from flet.utils import cleanup_path, is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 
-PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
-DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
-
-FLUTTER_VERSION = version.Version("3.38.3")
+FLUTTER_VERSION = version.Version(flet_version.FLUTTER_VERSION)
+print(f"Flutter version: {FLUTTER_VERSION}")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 

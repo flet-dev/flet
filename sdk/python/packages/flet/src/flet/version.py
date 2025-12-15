@@ -7,10 +7,32 @@ from pathlib import Path
 import flet
 from flet.utils import is_mobile, is_windows, which
 
+__all__ = [
+    "DEFAULT_VERSION",
+    "FLUTTER_VERSION",
+    "PYODIDE_VERSION",
+    "find_repo_root",
+    "from_git",
+    "version",
+]
+
 DEFAULT_VERSION = "0.1.0"
 
 # will be replaced by CI
 version = ""
+
+
+FLUTTER_VERSION = "3.38.3"
+"""
+The Flutter SDK version used when building the flet client or packaging
+apps with [`flet build`](https://docs.flet.dev/cli/flet-build/).
+"""
+
+PYODIDE_VERSION = "0.27.7"
+"""
+The Pyodide version being used when packaging
+with [`flet build web`](https://docs.flet.dev/cli/flet-build/).
+"""
 
 
 def from_git():
