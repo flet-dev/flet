@@ -23,7 +23,7 @@ from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.38.3")
+FLUTTER_VERSION = version.Version("3.38.3")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -126,7 +126,7 @@ class BaseFlutterCommand(BaseCommand):
                 )
                 prompt = (
                     "Flutter SDK "
-                    f"{MINIMAL_FLUTTER_VERSION} is required. It will be installed now. "
+                    f"{FLUTTER_VERSION} is required. It will be installed now. "
                     "Proceed? [y/n] "
                 )
 
@@ -172,20 +172,18 @@ class BaseFlutterCommand(BaseCommand):
 
                 # validate installed Flutter version
                 return (
-                    flutter_version.major == MINIMAL_FLUTTER_VERSION.major
-                    and flutter_version.minor == MINIMAL_FLUTTER_VERSION.minor
+                    flutter_version.major == FLUTTER_VERSION.major
+                    and flutter_version.minor == FLUTTER_VERSION.minor
                 )
         else:
             console.log(1, "Failed to validate Flutter version.")
         return False
 
     def install_flutter(self):
-        self.update_status(
-            f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION}..."
-        )
+        self.update_status(f"[bold blue]Installing Flutter {FLUTTER_VERSION}...")
 
         flutter_dir = install_flutter(
-            str(MINIMAL_FLUTTER_VERSION), self.log_stdout, progress=self.progress
+            str(FLUTTER_VERSION), self.log_stdout, progress=self.progress
         )
         ext = ".bat" if platform.system() == "Windows" else ""
         self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
@@ -225,8 +223,7 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(
-                f"Flutter {MINIMAL_FLUTTER_VERSION} installed "
-                f"{self.emojis['checkmark']}"
+                f"Flutter {FLUTTER_VERSION} installed {self.emojis['checkmark']}"
             )
 
     def install_jdk(self):
@@ -304,7 +301,7 @@ class BaseFlutterCommand(BaseCommand):
             self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
-        install_dir = get_flutter_dir(str(MINIMAL_FLUTTER_VERSION))
+        install_dir = get_flutter_dir(str(FLUTTER_VERSION))
         ext = ".bat" if is_windows() else ""
         batch_path = os.path.join(install_dir, "bin", f"{exe_filename}{ext}")
         if os.path.exists(batch_path):
