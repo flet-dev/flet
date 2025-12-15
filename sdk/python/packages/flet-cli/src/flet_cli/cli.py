@@ -31,10 +31,7 @@ def set_default_subparser(
     """
 
     # exit if help or version flags are present
-    if any(
-        flag in sys.argv[1:]
-        for flag in {"-h", "--help", "-V", "--version", "--flutter-version"}
-    ):
+    if any(flag in sys.argv[1:] for flag in {"-h", "--help", "-V", "--version"}):
         return
 
     # all subparser actions
@@ -77,13 +74,6 @@ def get_parser() -> argparse.ArgumentParser:
         version=flet.version.version
         if flet.version.version
         else flet.version.from_git(),
-    )
-
-    parser.add_argument(
-        "--flutter-version",
-        action="version",
-        version=flet.version.FLUTTER_VERSION,
-        help="Print the required Flutter SDK version and exit",
     )
 
     sp = parser.add_subparsers(dest="command")
