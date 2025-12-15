@@ -14,20 +14,12 @@ from rich.prompt import Confirm
 from rich.style import Style
 from rich.theme import Theme
 
-import flet.version as flet_version
+import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import cleanup_path, is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
-
-
-def get_flutter_version() -> Optional[version.Version]:
-    flutter_version_str = flet_version.get_flutter_version()
-    if not flutter_version_str:
-        return None
-    return version.Version(flutter_version_str)
-
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -104,12 +96,12 @@ class BaseFlutterCommand(BaseCommand):
 
     def initialize_command(self):
         assert self.options
-        self.required_flutter_version = get_flutter_version()
-        if not self.required_flutter_version:
+        self.required_flutter_version = version.Version(flet.version.FLUTTER_VERSION)
+        if self.required_flutter_version == version.Version("0"):
             self.cleanup(
                 1,
-                "Cannot determine required Flutter SDK version. "
-                "In a development checkout ensure `.fvmrc` exists.",
+                "Unable to determine the required Flutter SDK version. "
+                "If in a source checkout, ensure a valid `.fvmrc` file exists.",
             )
 
         self.emojis = {
@@ -138,9 +130,8 @@ class BaseFlutterCommand(BaseCommand):
                     style=warning_style,
                 )
                 prompt = (
-                    "Flutter SDK "
-                    f"{self.required_flutter_version} is required. It will be installed now. "
-                    "Proceed? [y/n] "
+                    f"Flutter SDK {self.required_flutter_version} is required. "
+                    f"It will be installed now. Proceed? [y/n] "
                 )
 
                 if not self._prompt_input(prompt):
@@ -240,7 +231,8 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(
-                f"Flutter {self.required_flutter_version} installed {self.emojis['checkmark']}"
+                f"Flutter {self.required_flutter_version} "
+                f"installed {self.emojis['checkmark']}"
             )
 
     def install_jdk(self):

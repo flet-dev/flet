@@ -1,7 +1,6 @@
 """Provide the current Flet version."""
 
 import json
-import os
 import subprocess as sp
 from pathlib import Path
 from typing import Optional
@@ -13,12 +12,20 @@ __all__ = [
     "PYODIDE_VERSION",
     "find_repo_root",
     "from_git",
+    "get_flet_version",
     "get_flutter_version",
     "version",
 ]
 
 # set by CI
 version = ""
+"""
+The Flet version in use.
+
+This value is set explicitly in CI for released packages. When running from
+source and no version is provided, it is derived from the nearest Git tag
+when available.
+"""
 
 
 # set by CI
@@ -26,6 +33,10 @@ FLUTTER_VERSION = ""
 """
 The Flutter SDK version used when building the flet client or packaging
 apps with [`flet build`](https://docs.flet.dev/cli/flet-build/).
+
+This value is set explicitly in CI for released packages. When running from
+source and no version is provided, it is resolved from the repository's
+`.fvmrc` file when available.
 """
 
 PYODIDE_VERSION = "0.27.7"
@@ -35,90 +46,33 @@ with [`flet build web`](https://docs.flet.dev/cli/flet-build/).
 """
 
 
-def _find_upwards(start_dir: Path, file_name: str) -> Optional[Path]:
-    current_dir = start_dir.resolve()
-    while current_dir != current_dir.parent:
-        candidate = current_dir / file_name
-        if candidate.is_file():
-            return candidate
-        current_dir = current_dir.parent
-    return None
-
-
-def _flutter_version_from_fvmrc(fvmrc_path: Path) -> Optional[str]:
-    try:
-        raw = fvmrc_path.read_text(encoding="utf-8").strip()
-    except OSError:
-        return None
-    if not raw:
-        return None
-    try:
-        data = json.loads(raw)
-    except json.JSONDecodeError:
-        return raw.strip().strip('"')
-    if isinstance(data, dict):
-        value = data.get("flutter")
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    return None
-
-
-def get_flutter_version() -> str:
-    """
-    Return the required Flutter SDK version.
-
-    In CI/release builds the value is stamped into `FLUTTER_VERSION`.
-    In a local development checkout (where `FLUTTER_VERSION == ""`), it is
-    resolved from the repository's `.fvmrc`.
-    """
-
-    if FLUTTER_VERSION:
-        return FLUTTER_VERSION
-
-    start_dirs = [Path.cwd(), Path(__file__).resolve().parent]
-    for start_dir in start_dirs:
-        fvmrc_path = _find_upwards(start_dir, ".fvmrc")
-        if fvmrc_path:
-            v = _flutter_version_from_fvmrc(fvmrc_path)
-            if v:
-                return v
-    return ""
-
-
 def from_git() -> Optional[str]:
     """Try to get the version from Git tags."""
-    working = Path().absolute()
+    repo_root = find_repo_root(Path(__file__).resolve().parent)
+    if not repo_root:
+        return None
+
+    git_cmd = "git.exe" if is_windows() else "git"
+    if not which(git_cmd):
+        return None
+
     try:
-        repo_root = find_repo_root(Path(__file__).resolve().parent)
+        result = sp.run(
+            [git_cmd, "describe", "--abbrev=0"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        tag = result.stdout.strip()
+        return tag[1:] if tag.startswith("v") else tag
 
-        if repo_root:
-            os.chdir(repo_root)
-            in_repo = (
-                which("git.exe" if is_windows() else "git")
-                and sp.run(
-                    ["git", "status"],
-                    capture_output=True,
-                    text=True,
-                ).returncode
-                == 0
-            )
+    except sp.CalledProcessError as e:
+        # Git is present but no tags / not a valid repo state
+        print(f"Error getting Git version: {e}")
+    except OSError as e:
+        print(f"Error running Git: {e}")
 
-            if in_repo:
-                try:
-                    git_p = sp.run(
-                        ["git", "describe", "--abbrev=0"],
-                        capture_output=True,
-                        text=True,
-                        check=True,  # Raise an exception for non-zero exit codes
-                    )
-                    tag = git_p.stdout.strip()
-                    return tag[1:] if tag.startswith("v") else tag
-                except sp.CalledProcessError as e:
-                    print(f"Error getting Git version: {e}")
-                except FileNotFoundError:
-                    print("Git command not found.")
-    finally:
-        os.chdir(working)
     return None
 
 
@@ -132,16 +86,57 @@ def find_repo_root(start_path: Path) -> Optional[Path]:
     return None
 
 
-DEFAULT_FLET_VERSION = "0.1.0"
+def get_flet_version() -> str:
+    """Return the Flet version, falling back to Git or a default if needed."""
 
-if not version and not is_mobile():
-    # Only try to get the version from Git if the pre-set version is empty
-    # This is more likely to happen in a development/source environment
-    version = from_git() or DEFAULT_FLET_VERSION  # Fallback to default if Git fails
+    # If the version is already set (e.g., replaced by CI), use it
+    if version:
+        return version
 
-# If 'version' is still empty after the above (e.g., in a built package
-# where CI didn't replace it), it might be appropriate to have another
-# default or a way to set it during the build process. However, the
-# CI replacement is the standard way for packaged versions.
-if not version:
-    version = DEFAULT_FLET_VERSION  # Final fallback
+    # Only try to get the version from Git if the pre-set version is empty.
+    # This is more likely to happen in a development/source environment.
+    if not is_mobile():
+        git_version = from_git()
+        if git_version:
+            return git_version  # Use Git version if available
+
+    # If 'version' is still empty after the above (e.g., in a built package
+    # where CI didn't replace it), fall back to the default version.
+    # CI replacement is the standard way for packaged versions.
+    return "0.1.0"
+
+
+def get_flutter_version() -> str:
+    """
+    Return the Flutter SDK version.
+
+    Uses `FLUTTER_VERSION` when set (CI/release builds); otherwise resolves it
+    from `.fvmrc` in a local development checkout.
+    """
+
+    # If the version is already set (e.g., replaced by CI), use it
+    if FLUTTER_VERSION:
+        return FLUTTER_VERSION
+
+    if not is_mobile():
+        repo_root = find_repo_root(Path(__file__).resolve().parent)
+        if repo_root:
+            fvmrc_path = repo_root / ".fvmrc"
+            try:
+                v = json.loads(fvmrc_path.read_text(encoding="utf-8"))[
+                    "flutter"
+                ].strip()
+                if not v:
+                    raise ValueError("Empty or missing 'flutter' value")
+                return v
+            except Exception as e:
+                print(f"Error parsing {fvmrc_path!r}: {e}")
+
+    # If 'FLUTTER_VERSION' is still empty after the above (e.g., in a built package
+    # where CI didn't replace it), fall back to the below default.
+    # CI replacement is the standard way for packaged versions.
+    return "0"
+
+
+version = get_flet_version()
+FLUTTER_VERSION = get_flutter_version()

@@ -14,10 +14,10 @@ def main() -> None:
         with open(sys.argv[1], encoding="utf-8") as f:
             v = json.load(f)["flutter"].strip()
             if not v:
-                raise ValueError("Empty 'flutter' value in .fvmrc")
+                raise ValueError("Empty or missing 'flutter' value")
             print(v)
     except Exception as e:
-        print(f"Error parsing {sys.argv[1]}: {e}", file=sys.stderr)
+        print(f"Error parsing {sys.argv[1]!r}: {e}", file=sys.stderr)
         sys.exit(1)
 
 
