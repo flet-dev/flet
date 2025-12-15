@@ -4,6 +4,7 @@ import json
 import os
 import subprocess as sp
 from pathlib import Path
+from typing import Optional
 
 from flet.utils import is_mobile, is_windows, which
 
@@ -15,8 +16,6 @@ __all__ = [
     "get_flutter_version",
     "version",
 ]
-
-DEFAULT_FLET_VERSION = "0.1.0"
 
 # set by CI
 version = ""
@@ -36,7 +35,7 @@ with [`flet build web`](https://docs.flet.dev/cli/flet-build/).
 """
 
 
-def _find_upwards(start_dir: Path, file_name: str) -> Path | None:
+def _find_upwards(start_dir: Path, file_name: str) -> Optional[Path]:
     current_dir = start_dir.resolve()
     while current_dir != current_dir.parent:
         candidate = current_dir / file_name
@@ -46,7 +45,7 @@ def _find_upwards(start_dir: Path, file_name: str) -> Path | None:
     return None
 
 
-def _flutter_version_from_fvmrc(fvmrc_path: Path) -> str | None:
+def _flutter_version_from_fvmrc(fvmrc_path: Path) -> Optional[str]:
     try:
         raw = fvmrc_path.read_text(encoding="utf-8").strip()
     except OSError:
@@ -75,8 +74,6 @@ def get_flutter_version() -> str:
 
     if FLUTTER_VERSION:
         return FLUTTER_VERSION
-    if is_mobile():
-        return ""
 
     start_dirs = [Path.cwd(), Path(__file__).resolve().parent]
     for start_dir in start_dirs:
@@ -88,7 +85,7 @@ def get_flutter_version() -> str:
     return ""
 
 
-def from_git():
+def from_git() -> Optional[str]:
     """Try to get the version from Git tags."""
     working = Path().absolute()
     try:
@@ -125,7 +122,7 @@ def from_git():
     return None
 
 
-def find_repo_root(start_path: Path) -> Path | None:
+def find_repo_root(start_path: Path) -> Optional[Path]:
     """Find the root directory of the Git repository containing the start path."""
     current_path = start_path.resolve()
     while current_path != current_path.parent:
@@ -135,10 +132,12 @@ def find_repo_root(start_path: Path) -> Path | None:
     return None
 
 
+DEFAULT_FLET_VERSION = "0.1.0"
+
 if not version and not is_mobile():
     # Only try to get the version from Git if the pre-set version is empty
     # This is more likely to happen in a development/source environment
-    version = from_git() or DEFAULT_FLET_VERSION  # Fallback to a default if Git fails
+    version = from_git() or DEFAULT_FLET_VERSION  # Fallback to default if Git fails
 
 # If 'version' is still empty after the above (e.g., in a built package
 # where CI didn't replace it), it might be appropriate to have another
