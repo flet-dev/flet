@@ -496,6 +496,12 @@ jobs:
           path: '.fvmrc'
           cache: true
 
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "$SCRIPTS/common.sh"
+          patch_python_package_versions
+
       - name: Build Web client
         shell: bash
         working-directory: client
@@ -530,8 +536,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
           uv build --package flet-web --wheel
 
           rm -rf "packages/flet-web/src/flet_web/web"
