@@ -1015,11 +1015,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "tool.flet.template.ref"
         )
         if not template_ref:
-            template_ref = (
-                version.Version(flet.version.version).base_version
-                if flet.version.version
-                else flet.version.from_git()
-            )
+            template_ref = version.Version(flet.version.version).base_version
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1621,12 +1617,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     hash.update(reqs_txt_contents)
             package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
         else:
-            flet_version = (
-                flet.version.version
-                if flet.version.version
-                else flet.version.from_git()
-            )
-            package_args.extend(["-r", f"flet=={flet_version}"])
+            package_args.extend(["-r", f"flet=={flet.version.version}"])
 
         # site-packages variable
         if self.package_platform != "Pyodide":

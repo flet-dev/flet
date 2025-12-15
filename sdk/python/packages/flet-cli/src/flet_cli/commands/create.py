@@ -75,7 +75,7 @@ class Command(BaseCommand):
         }
 
         template_ref = options.template_ref
-        if not template_ref and flet.version.version:
+        if not template_ref:
             template_ref = version.Version(flet.version.version).base_version
 
         out_dir = Path(options.output_directory).resolve()

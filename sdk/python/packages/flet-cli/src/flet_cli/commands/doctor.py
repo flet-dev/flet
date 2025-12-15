@@ -33,8 +33,7 @@ class Command(BaseCommand):
     def check_flet_version(self) -> None:
         """Check and print Flet version."""
         with console.status("[bold white]Checking Flet version..."):
-            flet_version = flet.version.version or "Unknown"
-            console.print(f"[green]✔ Flet Version:[/green] {flet_version}")
+            console.print(f"[green]✔ Flet Version:[/green] {flet.version.version}")
 
     def check_python_version(self) -> None:
         """Check and print Python version."""
