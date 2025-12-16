@@ -161,12 +161,6 @@ class FletSocketServer(Connection):
 
         if session_to_close is not None:
             try:
-                await asyncio.wait_for(session_to_close.disconnect(0), timeout=0.1)
-            except asyncio.TimeoutError:
-                pass
-            except Exception:
-                logger.debug("Error disconnecting session.", exc_info=True)
-            try:
                 session_to_close.close()
             except Exception:
                 logger.debug("Error closing session.", exc_info=True)
