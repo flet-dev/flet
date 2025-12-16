@@ -497,20 +497,27 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      - name: Patch versions
+      - name: Patch Python and Flutter versions
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          uv pip list
+
+      - name: Get Pyodide version
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
+
+          echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
+          echo "Pyodide version: $PYODIDE_VERSION"
 
       - name: Build Web client
         shell: bash
         working-directory: client
         run: |
           # Compute Pyodide URLs
-          PYODIDE_VERSION="$( uv run --directory "$SDK_PYTHON" python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
