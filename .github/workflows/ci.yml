@@ -158,10 +158,11 @@ jobs:
 
       - name: Prepare env and patch versions
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          patch_toml_versions "${SDK_PYTHON}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
+          patch_toml_versions "packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
@@ -501,13 +502,15 @@ jobs:
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
+          uv pip list
 
       - name: Build Web client
         shell: bash
         working-directory: client
         run: |
           # Compute Pyodide URLs
-          PYODIDE_VERSION="$( uv run --no-default-groups python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
+          uv pip list
+          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
@@ -643,6 +646,7 @@ jobs:
 
       - name: Build Python packages
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
