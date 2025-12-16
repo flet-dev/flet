@@ -509,7 +509,6 @@ jobs:
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
-
           echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
           echo "Pyodide version: $PYODIDE_VERSION"
 

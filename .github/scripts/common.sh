@@ -5,8 +5,8 @@ function patch_python_package_versions() (
     # Install dependencies
     uv sync --no-default-groups || true
 
+    # Update package versions in version.py and pyproject.toml files
     for pkg in flet flet-cli flet-desktop flet-web; do
-      # Update package versions in version.py and pyproject.toml files
       sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" packages/$pkg/src/${pkg//-/_}/version.py
       uv version --package "$pkg" "$PYPI_VER"
       echo "Patched version for $pkg to $PYPI_VER"
