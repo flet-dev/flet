@@ -1,4 +1,4 @@
-function patch_python_package_versions() {
+function patch_python_package_versions() (
     set -euo pipefail
     cd "$SDK_PYTHON" || exit 1
 
@@ -16,7 +16,7 @@ function patch_python_package_versions() {
     FLUTTER_VERSION="$( uv run "$SCRIPTS/read_fvmrc.py" "${ROOT}/.fvmrc" )"
     sed -i -e "s/FLUTTER_VERSION = \"\"/FLUTTER_VERSION = \"$FLUTTER_VERSION\"/g" packages/flet/src/flet/version.py
     echo "Patched Flutter SDK version to $FLUTTER_VERSION"
-}
+)
 
 
 update_flet_wheel_deps() {
