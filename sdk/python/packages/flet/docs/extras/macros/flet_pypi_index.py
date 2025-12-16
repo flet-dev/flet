@@ -171,11 +171,14 @@ def _sorted_versions(versions: Iterable[str]) -> list[str]:
     return [v for _, v in valid] + invalid
 
 
-def _format_md(packages: dict[str, list[str]]) -> str:
+def _format_md(packages: dict[str, list[str]], resolved_base_url: str) -> str:
     lines = ["| Package | Versions |", "|---|---|"]
     for name, versions in packages.items():
+        project_url = urllib.parse.urljoin(
+            resolved_base_url, f"{urllib.parse.quote(name)}/"
+        )
         versions_cell = ", ".join(versions) if versions else ""
-        lines.append(f"| `{name}` | {versions_cell} |")
+        lines.append(f"| [`{name}`]({project_url}) | {versions_cell} |")
     return "\n".join(lines) + "\n"
 
 
@@ -186,7 +189,7 @@ def _fetch_packages_and_versions_cached(
     workers: int,
     limit_projects: int | None,
     user_agent: str,
-) -> tuple[dict[str, tuple[str, ...]], tuple[tuple[str, str], ...]]:
+) -> tuple[str, dict[str, tuple[str, ...]], tuple[tuple[str, str], ...]]:
     last_error: Exception | None = None
     resolved_base_url: str | None = None
     projects: list[str] = []
@@ -242,7 +245,7 @@ def _fetch_packages_and_versions_cached(
                 continue
             results[project] = versions
 
-    return dict(sorted(results.items())), tuple(errors)
+    return resolved_base_url, dict(sorted(results.items())), tuple(errors)
 
 
 def render_pypi_flet_dev_packages_versions(
@@ -270,7 +273,7 @@ def render_pypi_flet_dev_packages_versions(
             else render partial results + a warning block.
     """
     try:
-        packages_raw, errors = _fetch_packages_and_versions_cached(
+        resolved_base_url, packages_raw, errors = _fetch_packages_and_versions_cached(
             base_url=base_url,
             timeout_s=timeout_s,
             workers=workers,
@@ -335,9 +338,11 @@ def render_pypi_flet_dev_packages_versions(
                 rendered += f"... and {len(errors) - 10} more\n"
         return rendered
 
-    rendered = _format_md(packages)
+    rendered = _format_md(packages, resolved_base_url)
     if errors:
-        message = f"Failed to fetch {len(errors)} project page(s) from `{base_url}`"
+        message = (
+            f"Failed to fetch {len(errors)} project page(s) from `{resolved_base_url}`"
+        )
         if strict:
             raise RuntimeError(message)
         details = "\n".join(f"    - `{name}`: {err}" for name, err in errors[:10])
