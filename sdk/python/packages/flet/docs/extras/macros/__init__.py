@@ -1,8 +1,10 @@
 import os
+from typing import Optional
 from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_nav_overview, render_sub_nav_overview
+from .flet_pypi_index import render_pypi_flet_dev_packages_versions
 
 
 def define_env(env):
@@ -125,6 +127,27 @@ def define_env(env):
     def flet_cli_as_markdown(command: str = "", subcommands_only: bool = True):
         return render_flet_cli_as_markdown(
             command=command, subcommands_only=subcommands_only
+        )
+
+    @env.macro
+    def flet_pypi_index(
+        base_url: str = "https://pypi.flet.dev/",
+        *,
+        timeout_s: float = 20.0,
+        workers: int = 12,
+        limit_projects: Optional[int] = None,
+        max_versions: Optional[int] = None,
+        output_format: str = "md",
+        strict: bool = False,
+    ) -> str:
+        return render_pypi_flet_dev_packages_versions(
+            base_url=base_url,
+            timeout_s=timeout_s,
+            workers=workers,
+            limit_projects=limit_projects,
+            max_versions=max_versions,
+            output_format=output_format,
+            strict=strict,
         )
 
     @env.macro
