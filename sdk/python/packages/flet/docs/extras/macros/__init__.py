@@ -57,8 +57,11 @@ def define_env(env):
     def image(src, alt=None, width=None, caption=None, link=None):
         if alt is None:
             parsed_src = urlparse(src)
+            print(f"Parsed Source =====>>>>>> {parsed_src}")
             path = parsed_src.path or src
+            print(f"Path =====>>>>>> {path}")
             filename = os.path.basename(path.rstrip("/"))
+            print(f"filename =====>>>>>> {filename}")
             alt_text = filename or src
         else:
             alt_text = alt
