@@ -35,7 +35,7 @@ env:
   ROOT: "${{ github.workspace }}"
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
-  UV_PYTHON: "3.12"
+  UV_PYTHON: "3.12.7"
 
 jobs:
   # ============
@@ -499,6 +499,7 @@ jobs:
 
       - name: Patch versions
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
@@ -509,8 +510,7 @@ jobs:
         working-directory: client
         run: |
           # Compute Pyodide URLs
-          uv pip list
-          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
+          PYODIDE_VERSION="$( uv run --directory "$SDK_PYTHON" python -c 'import flet.version; print(flet.version.PYODIDE_VERSION)' )"
           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
