@@ -5,7 +5,7 @@ example_images: ../test-images-charts/examples/golden/macos/bar_chart
 diagram: assets/bar-chart-diagram.svg
 ---
 
-{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic bar chart", image_width="100%") }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic bar chart", image_width="80%") }}
 
 ## Examples
 

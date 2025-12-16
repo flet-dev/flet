@@ -12,7 +12,6 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         fch.BarChart(
-            # expand=True,
             border=ft.Border.all(1, ft.Colors.GREY_400),
             groups=[
                 fch.BarChartGroup(

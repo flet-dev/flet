@@ -1,10 +1,10 @@
 ---
 class_name: flet_charts.candlestick_chart.CandlestickChart
 examples: ../../examples/controls/charts/candlestick_chart
-example_images: ../examples/controls/charts/candlestick_chart/media
+example_images: ../test-images-charts/examples/golden/macos/candlestick_chart
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic candlestick chart", image_width="80%") }}
 
 ## Examples
 
