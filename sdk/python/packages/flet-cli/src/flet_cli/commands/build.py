@@ -23,7 +23,7 @@ class Command(BaseBuildCommand):
             "--flutter-version",
             action="version",
             version=flet.version.FLUTTER_VERSION,
-            help="Print the required Flutter SDK version and exit.",
+            help="Print the required Flutter SDK version and exit",
         )
         parser.add_argument(
             "target_platform",
