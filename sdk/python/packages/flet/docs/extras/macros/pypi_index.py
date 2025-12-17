@@ -141,7 +141,7 @@ def _fetch_text(url: str, *, timeout_s: float, user_agent: str) -> str:
 
     # Use urllib to avoid bringing in an HTTP client dependency for docs builds.
     request = urllib.request.Request(url, headers={"User-Agent": user_agent})
-    with urllib.request.urlopen(request, timeout=timeout_s) as response:  # noqa: S310
+    with urllib.request.urlopen(request, timeout=timeout_s) as response:
         charset = response.headers.get_content_charset() or "utf-8"
         return response.read().decode(charset, errors="replace")
 
@@ -508,13 +508,10 @@ def render_pypi_index(
 
 
 if __name__ == "__main__":
-    try:
-        print(
-            render_pypi_index(
-                DEFAULT_PYPI_FLET_DEV_BASE_URL,
-                limit_projects=25,
-                max_versions=5,
-            )
+    print(
+        render_pypi_index(
+            DEFAULT_PYPI_FLET_DEV_BASE_URL,
+            limit_projects=25,
+            max_versions=5,
         )
-    except (urllib.error.URLError, ValueError) as e:
-        raise SystemExit(f"ERROR: {e}") from e
+    )
