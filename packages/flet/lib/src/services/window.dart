@@ -16,6 +16,7 @@ import '../utils/window.dart';
 
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
+  Future<void> _pendingWindowUpdate = Future.value();
   Control? _titleSourceControl;
   String? _title;
   Color? _bgColor;
@@ -133,12 +134,13 @@ class WindowService extends FletService with WindowListener {
 
   void _scheduleWindowUpdate() {
     _ensureTitleSourceListenerAttached();
-    if (_initWindowStateCompleter.isCompleted) {
-      unawaited(_updateWindow(control.backend));
-    } else {
-      _initWindowStateCompleter.future
+    _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
+      if (_initWindowStateCompleter.isCompleted) {
+        return _updateWindow(control.backend);
+      }
+      return _initWindowStateCompleter.future
           .then((_) => _updateWindow(control.backend));
-    }
+    });
   }
 
   Future<void> _updateWindow(FletBackend backend) async {
@@ -383,6 +385,7 @@ class WindowService extends FletService with WindowListener {
         windowToFront();
         break;
       case "center":
+        await _pendingWindowUpdate;
         await centerWindow();
         break;
       case "close":
