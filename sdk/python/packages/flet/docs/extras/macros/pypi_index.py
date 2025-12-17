@@ -169,7 +169,8 @@ def _list_projects(simple_index_html: str) -> list[str]:
         candidate = (text or href).strip().strip("/").strip()
         if candidate:
             projects.add(candidate)
-    return sorted(projects)
+    # Sort case-insensitively
+    return sorted(projects, key=str.casefold)
 
 
 def _filename_from_href_or_text(text: str, href: str) -> str:
@@ -376,7 +377,9 @@ def _fetch_packages_and_versions_cached(
                 continue
             results[project] = (versions, project_platforms)
 
-    return resolved_base_url, dict(sorted(results.items())), tuple(errors)
+    # Sort case-insensitively
+    results_sorted = dict(sorted(results.items(), key=lambda item: item[0].casefold()))
+    return resolved_base_url, results_sorted, tuple(errors)
 
 
 def render_pypi_index(
@@ -509,7 +512,7 @@ if __name__ == "__main__":
         print(
             render_pypi_index(
                 DEFAULT_PYPI_FLET_DEV_BASE_URL,
-                limit_projects=10,
+                limit_projects=25,
                 max_versions=5,
             )
         )
