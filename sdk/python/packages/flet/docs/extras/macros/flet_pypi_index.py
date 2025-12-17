@@ -22,6 +22,10 @@ except Exception:  # pragma: no cover
 DEFAULT_PYPI_FLET_DEV_BASE_URL = "https://pypi.flet.dev/"
 DEFAULT_USER_AGENT = "flet-docs-pypi-index-macro/0.1 (+https://flet.dev)"
 
+ProjectIndexEntry = tuple[tuple[str, ...], tuple[str, ...]]  # (versions, platforms)
+ProjectIndex = dict[str, ProjectIndexEntry]
+IndexFetchResult = tuple[str, ProjectIndex, tuple[tuple[str, str], ...]]
+
 
 class _AnchorCollector(HTMLParser):
     def __init__(self) -> None:
@@ -150,6 +154,31 @@ def _version_from_filename(filename: str) -> str | None:
     return None
 
 
+def _platforms_from_wheel_tags(tags) -> set[str]:
+    platforms: set[str] = set()
+    for tag in tags:
+        platform_tag = getattr(tag, "platform", "")
+        if not platform_tag:
+            continue
+        if platform_tag == "any":
+            platforms.update({"android", "ios"})
+            continue
+        platform_lower = platform_tag.lower()
+        if "android" in platform_lower:
+            platforms.add("android")
+        if "ios" in platform_lower or "iphone" in platform_lower:
+            platforms.add("ios")
+    return platforms
+
+
+def _platform_suffix(project_platforms: set[str]) -> str:
+    if project_platforms == {"android"}:
+        return " (Android only)"
+    if project_platforms == {"ios"}:
+        return " (iOS only)"
+    return ""
+
+
 def _sorted_versions(versions: Iterable[str]) -> list[str]:
     versions_set = {v.strip() for v in versions if v.strip()}
     if not versions_set:
@@ -171,14 +200,21 @@ def _sorted_versions(versions: Iterable[str]) -> list[str]:
     return [v for _, v in valid] + invalid
 
 
-def _format_md(packages: dict[str, list[str]], resolved_base_url: str) -> str:
+def _format_md(
+    packages: dict[str, list[str]],
+    platforms: dict[str, set[str]],
+    resolved_base_url: str,
+) -> str:
     lines = ["| Package | Versions |", "|---|---|"]
     for name, versions in packages.items():
         project_url = urllib.parse.urljoin(
             resolved_base_url, f"{urllib.parse.quote(name)}/"
         )
+        project_platforms = platforms.get(name) or set()
+        platform_suffix = _platform_suffix(project_platforms)
         versions_cell = ", ".join(versions) if versions else ""
-        lines.append(f"| [`{name}`]({project_url}) | {versions_cell} |")
+        package_cell = f"[`{name}`]({project_url}){platform_suffix}"
+        lines.append(f"| {package_cell} | {versions_cell} |")
     return "\n".join(lines) + "\n"
 
 
@@ -189,7 +225,7 @@ def _fetch_packages_and_versions_cached(
     workers: int,
     limit_projects: int | None,
     user_agent: str,
-) -> tuple[str, dict[str, tuple[str, ...]], tuple[tuple[str, str], ...]]:
+) -> IndexFetchResult:
     last_error: Exception | None = None
     resolved_base_url: str | None = None
     projects: list[str] = []
@@ -220,30 +256,43 @@ def _fetch_packages_and_versions_cached(
     if limit_projects is not None:
         projects = projects[: max(0, limit_projects)]
 
-    results: dict[str, tuple[str, ...]] = {}
+    results: ProjectIndex = {}
     errors: list[tuple[str, str]] = []
 
-    def fetch_one(project: str) -> tuple[str, tuple[str, ...]]:
+    def fetch_one(project: str) -> tuple[str, tuple[str, ...], tuple[str, ...]]:
         project_url = urllib.parse.urljoin(resolved_base_url, f"{project}/")
         html = _fetch_text(project_url, timeout_s=timeout_s, user_agent=user_agent)
         versions: set[str] = set()
+        project_platforms: set[str] = set()
         for text, href in _parse_anchor_text_and_href(html):
             filename = _filename_from_href_or_text(text, href)
+            if filename.endswith(".whl") and parse_wheel_filename is not None:
+                try:
+                    _, version, _, tags = parse_wheel_filename(filename)
+                except Exception:
+                    continue
+                versions.add(str(version))
+                project_platforms.update(_platforms_from_wheel_tags(tags))
+                continue
             version = _version_from_filename(filename)
             if version is not None:
                 versions.add(version)
-        return project, tuple(_sorted_versions(versions))
+        return (
+            project,
+            tuple(_sorted_versions(versions)),
+            tuple(sorted(project_platforms)),
+        )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
         future_to_project = {executor.submit(fetch_one, p): p for p in projects}
         for future in concurrent.futures.as_completed(future_to_project):
             project = future_to_project[future]
             try:
-                project, versions = future.result()
+                project, versions, project_platforms = future.result()
             except Exception as e:
                 errors.append((project, f"{type(e).__name__}: {e}"))
                 continue
-            results[project] = versions
+            results[project] = (versions, project_platforms)
 
     return resolved_base_url, dict(sorted(results.items())), tuple(errors)
 
@@ -288,6 +337,7 @@ def render_pypi_flet_dev_packages_versions(
             rendered = json.dumps(
                 {
                     "packages": {},
+                    "platforms": {},
                     "errors": [{"project": "__index__", "error": message}],
                 },
                 indent=2,
@@ -305,9 +355,11 @@ def render_pypi_flet_dev_packages_versions(
             ]
         )
 
-    packages: dict[str, list[str]] = {
-        name: list(versions) for name, versions in packages_raw.items()
-    }
+    packages: dict[str, list[str]] = {}
+    platforms: dict[str, set[str]] = {}
+    for name, (versions, project_platforms) in packages_raw.items():
+        packages[name] = list(versions)
+        platforms[name] = set(project_platforms)
     if max_versions is not None:
         cap = max(0, max_versions)
         packages = {name: versions[:cap] for name, versions in packages.items()}
@@ -316,6 +368,7 @@ def render_pypi_flet_dev_packages_versions(
         rendered = json.dumps(
             {
                 "packages": packages,
+                "platforms": {name: sorted(vals) for name, vals in platforms.items()},
                 "errors": [{"project": name, "error": err} for name, err in errors],
             },
             indent=2,
@@ -325,7 +378,7 @@ def render_pypi_flet_dev_packages_versions(
 
     if output_format == "text":
         rendered = "\n".join(
-            f"{name}: {', '.join(versions) if versions else '(no versions)'}"
+            f"{name}{_platform_suffix(platforms.get(name) or set())}: {', '.join(versions) if versions else '(no versions)'}"
             for name, versions in packages.items()
         )
         rendered += "\n"
@@ -338,7 +391,7 @@ def render_pypi_flet_dev_packages_versions(
                 rendered += f"... and {len(errors) - 10} more\n"
         return rendered
 
-    rendered = _format_md(packages, resolved_base_url)
+    rendered = _format_md(packages, platforms, resolved_base_url)
     if errors:
         message = (
             f"Failed to fetch {len(errors)} project page(s) from `{resolved_base_url}`"

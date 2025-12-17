@@ -131,23 +131,16 @@ def define_env(env):
 
     @env.macro
     def flet_pypi_index(
-        base_url: str = "https://pypi.flet.dev/",
         *,
-        timeout_s: float = 20.0,
-        workers: int = 12,
-        limit_projects: Optional[int] = None,
         max_versions: Optional[int] = None,
-        output_format: str = "md",
-        strict: bool = False,
     ) -> str:
         return render_pypi_flet_dev_packages_versions(
-            base_url=base_url,
-            timeout_s=timeout_s,
-            workers=workers,
-            limit_projects=limit_projects,
+            base_url="https://pypi.flet.dev/",
+            timeout_s=20.0,
+            workers=12,
             max_versions=max_versions,
-            output_format=output_format,
-            strict=strict,
+            output_format="md",
+            strict=False,
         )
 
     @env.macro
