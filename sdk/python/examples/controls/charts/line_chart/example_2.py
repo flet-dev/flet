@@ -136,4 +136,5 @@ def main(page: ft.Page):
     page.add(ft.Button("avg", on_click=toggle_data), chart)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

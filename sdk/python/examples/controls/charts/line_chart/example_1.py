@@ -203,4 +203,5 @@ def main(page: ft.Page):
     page.add(ft.IconButton(ft.Icons.REFRESH, on_click=toggle_data), chart)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

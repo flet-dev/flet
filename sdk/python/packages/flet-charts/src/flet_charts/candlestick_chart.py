@@ -96,28 +96,38 @@ class CandlestickChartTooltip:
         """
         return CandlestickChartTooltip(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
-            border_radius=border_radius
-            if border_radius is not None
-            else self.border_radius,
+            border_radius=(
+                border_radius if border_radius is not None else self.border_radius
+            ),
             padding=padding if padding is not None else self.padding,
             max_width=max_width if max_width is not None else self.max_width,
             rotation=rotation if rotation is not None else self.rotation,
-            horizontal_offset=horizontal_offset
-            if horizontal_offset is not None
-            else self.horizontal_offset,
-            horizontal_alignment=horizontal_alignment
-            if horizontal_alignment is not None
-            else self.horizontal_alignment,
+            horizontal_offset=(
+                horizontal_offset
+                if horizontal_offset is not None
+                else self.horizontal_offset
+            ),
+            horizontal_alignment=(
+                horizontal_alignment
+                if horizontal_alignment is not None
+                else self.horizontal_alignment
+            ),
             border_side=border_side if border_side is not None else self.border_side,
-            fit_inside_horizontally=fit_inside_horizontally
-            if fit_inside_horizontally is not None
-            else self.fit_inside_horizontally,
-            fit_inside_vertically=fit_inside_vertically
-            if fit_inside_vertically is not None
-            else self.fit_inside_vertically,
-            show_on_top_of_chart_box_area=show_on_top_of_chart_box_area
-            if show_on_top_of_chart_box_area is not None
-            else self.show_on_top_of_chart_box_area,
+            fit_inside_horizontally=(
+                fit_inside_horizontally
+                if fit_inside_horizontally is not None
+                else self.fit_inside_horizontally
+            ),
+            fit_inside_vertically=(
+                fit_inside_vertically
+                if fit_inside_vertically is not None
+                else self.fit_inside_vertically
+            ),
+            show_on_top_of_chart_box_area=(
+                show_on_top_of_chart_box_area
+                if show_on_top_of_chart_box_area is not None
+                else self.show_on_top_of_chart_box_area
+            ),
         )
 
 
@@ -140,6 +150,27 @@ class CandlestickChartEvent(ft.Event["CandlestickChart"]):
 class CandlestickChart(ft.LayoutControl):
     """
     Draws a candlestick chart representing OHLC values.
+
+    ```python
+    fch.CandlestickChart(
+        min_x=-1,
+        max_x=2,
+        min_y=20,
+        max_y=30,
+        bgcolor=ft.Colors.AMBER_200,
+        spots=[
+            fch.CandlestickChartSpot(
+                x=0,
+                open=22.6,
+                high=28.3,
+                low=21.4,
+                close=24.1,
+            ),
+            ...
+        ],
+    )
+    ```
+
     """
 
     spots: list[CandlestickChartSpot] = field(default_factory=list)
