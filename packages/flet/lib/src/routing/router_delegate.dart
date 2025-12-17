@@ -7,6 +7,7 @@ class SimpleRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
   final RouteState routeState;
   final WidgetBuilder builder;
+  final Future<bool?> Function()? popRouteHandler;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
@@ -15,6 +16,7 @@ class SimpleRouterDelegate extends RouterDelegate<String>
     required this.routeState,
     required this.builder,
     required this.navigatorKey,
+    this.popRouteHandler,
   }) {
     routeState.addListener(notifyListeners);
   }
@@ -31,6 +33,19 @@ class SimpleRouterDelegate extends RouterDelegate<String>
   @override
   String get currentConfiguration {
     return routeState.route;
+  }
+
+  @override
+  Future<bool> popRoute() async {
+    debugPrint("SimpleRouterDelegate.popRoute()");
+    final handler = popRouteHandler;
+    if (handler != null) {
+      final result = await handler();
+      if (result != null) {
+        return result;
+      }
+    }
+    return super.popRoute();
   }
 
   @override
