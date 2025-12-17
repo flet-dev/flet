@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_nav_overview, render_sub_nav_overview
-from .flet_pypi_index import render_pypi_flet_dev_packages_versions
+from .pypi_index import render_pypi_index
 
 
 def define_env(env):
@@ -132,9 +132,9 @@ def define_env(env):
     @env.macro
     def flet_pypi_index(
         *,
-        max_versions: Optional[int] = None,
+        max_versions: Optional[int] = 5,
     ) -> str:
-        return render_pypi_flet_dev_packages_versions(
+        return render_pypi_index(
             base_url="https://pypi.flet.dev/",
             timeout_s=20.0,
             workers=12,
