@@ -71,8 +71,8 @@ def get_parser() -> argparse.ArgumentParser:
         "--version",
         "-V",
         action="version",
-        version=flet.version.version
-        if flet.version.version
+        version=flet.version.flet_version
+        if flet.version.flet_version
         else flet.version.from_git(),
     )
 

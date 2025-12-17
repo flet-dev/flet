@@ -3,7 +3,6 @@ import argparse
 from rich.console import Group
 from rich.live import Live
 
-import flet.version
 from flet_cli.commands.build_base import BaseBuildCommand, console
 
 
@@ -19,12 +18,6 @@ class Command(BaseBuildCommand):
         super().__init__(parser)
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument(
-            "--flutter-version",
-            action="version",
-            version=flet.version.FLUTTER_VERSION,
-            help="Print the required Flutter SDK version and exit",
-        )
         parser.add_argument(
             "target_platform",
             type=str.lower,

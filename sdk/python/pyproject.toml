@@ -110,6 +110,8 @@ pydocstyle = { convention = 'google' }
 isort = { known-first-party = [
     "flet",
     "flet_cli",
+    "flet_desktop",
+    "flet_web",
     "flet_ads",
     "flet_audio",
     "flet_audio_recorder",

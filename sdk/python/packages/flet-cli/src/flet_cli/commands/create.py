@@ -70,13 +70,13 @@ class Command(BaseCommand):
 
         template_data = {
             "template_name": options.template,
-            "flet_version": flet.version.version,
+            "flet_version": flet.version.flet_version,
             "sep": os.sep,
         }
 
         template_ref = options.template_ref
         if not template_ref:
-            template_ref = version.Version(flet.version.version).base_version
+            template_ref = version.Version(flet.version.flet_version).base_version
 
         out_dir = Path(options.output_directory).resolve()
         template_data["out_dir"] = out_dir.name

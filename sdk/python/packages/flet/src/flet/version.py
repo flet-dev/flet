@@ -8,17 +8,15 @@ from typing import Optional
 from flet.utils import is_mobile, is_windows, which
 
 __all__ = [
-    "FLUTTER_VERSION",
-    "PYODIDE_VERSION",
     "find_repo_root",
+    "flet_version",
+    "flutter_version",
     "from_git",
-    "get_flet_version",
-    "get_flutter_version",
-    "version",
+    "pyodide_version",
 ]
 
 # set by CI
-version = ""
+flet_version = ""
 """
 The Flet version in use.
 
@@ -27,9 +25,8 @@ source and no version is provided, it is derived from the nearest Git tag
 when available.
 """
 
-
 # set by CI
-FLUTTER_VERSION = ""
+flutter_version = ""
 """
 The Flutter SDK version used when building the flet client or packaging
 apps with [`flet build`](https://docs.flet.dev/cli/flet-build/).
@@ -90,8 +87,8 @@ def get_flet_version() -> str:
     """Return the Flet version, falling back to Git or a default if needed."""
 
     # If the version is already set (e.g., replaced by CI), use it
-    if version:
-        return version
+    if flet_version:
+        return flet_version
 
     # Only try to get the version from Git if the pre-set version is empty.
     # This is more likely to happen in a development/source environment.
@@ -100,7 +97,7 @@ def get_flet_version() -> str:
         if git_version:
             return git_version  # Use Git version if available
 
-    # If 'version' is still empty after the above (e.g., in a built package
+    # If 'flet_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the default version.
     # CI replacement is the standard way for packaged versions.
     return "0.1.0"
@@ -110,13 +107,13 @@ def get_flutter_version() -> str:
     """
     Return the Flutter SDK version.
 
-    Uses `FLUTTER_VERSION` when set (CI/release builds); otherwise resolves it
+    Uses `flutter_version` when set (CI/release builds); otherwise resolves it
     from `.fvmrc` in a local development checkout.
     """
 
     # If the version is already set (e.g., replaced by CI), use it
-    if FLUTTER_VERSION:
-        return FLUTTER_VERSION
+    if flutter_version:
+        return flutter_version
 
     if not is_mobile():
         repo_root = find_repo_root(Path(__file__).resolve().parent)
@@ -132,11 +129,13 @@ def get_flutter_version() -> str:
             except Exception as e:
                 print(f"Error parsing {fvmrc_path!r}: {e}")
 
-    # If 'FLUTTER_VERSION' is still empty after the above (e.g., in a built package
+    # If 'flutter_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the below default.
     # CI replacement is the standard way for packaged versions.
     return "0"
 
 
-version = get_flet_version()
-FLUTTER_VERSION = get_flutter_version()
+flutter_version = get_flutter_version()
+pyodide_version = PYODIDE_VERSION
+flet_version = get_flet_version()
+__version__ = flet_version
