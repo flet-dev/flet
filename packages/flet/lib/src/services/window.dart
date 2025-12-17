@@ -5,6 +5,7 @@ import 'package:window_manager/window_manager.dart';
 
 import '../flet_backend.dart';
 import '../flet_service.dart';
+import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
@@ -15,6 +16,7 @@ import '../utils/window.dart';
 
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
+  Control? _titleSourceControl;
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -53,6 +55,26 @@ class WindowService extends FletService with WindowListener {
 
   WindowService({required super.control});
 
+  void _ensureTitleSourceListenerAttached() {
+    final parent = control.parent;
+    if (identical(parent, _titleSourceControl)) {
+      return;
+    }
+    _titleSourceControl?.removeListener(_onTitleSourceChanged);
+    _titleSourceControl = parent;
+    _titleSourceControl?.addListener(_onTitleSourceChanged);
+  }
+
+  void _onTitleSourceChanged() {
+    if (!isDesktopPlatform()) {
+      return;
+    }
+    final title = _titleSourceControl?.getString("title");
+    if (title != null && title != _title) {
+      _scheduleWindowUpdate();
+    }
+  }
+
   @override
   void init() {
     super.init();
@@ -60,6 +82,7 @@ class WindowService extends FletService with WindowListener {
       return;
     }
     debugPrint("WindowService(${control.id}).init");
+    _ensureTitleSourceListenerAttached();
     _initWindowState();
   }
 
@@ -104,10 +127,12 @@ class WindowService extends FletService with WindowListener {
     if (!isDesktopPlatform()) {
       return;
     }
+    _ensureTitleSourceListenerAttached();
     _scheduleWindowUpdate();
   }
 
   void _scheduleWindowUpdate() {
+    _ensureTitleSourceListenerAttached();
     if (_initWindowStateCompleter.isCompleted) {
       unawaited(_updateWindow(control.backend));
     } else {
@@ -382,6 +407,8 @@ class WindowService extends FletService with WindowListener {
 
   @override
   void dispose() {
+    _titleSourceControl?.removeListener(_onTitleSourceChanged);
+    _titleSourceControl = null;
     if (_listenersAttached) {
       windowManager.removeListener(this);
       control.removeInvokeMethodListener(_invokeMethod);
