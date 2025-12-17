@@ -206,23 +206,25 @@ class Control extends ChangeNotifier {
 
   bool update(Map<dynamic, dynamic> props, {bool shouldNotify = false}) {
     final changes = <String>[];
-    _mergeMaps(this, properties, props, changes, '');
-    if (changes.isNotEmpty) {
-      if (shouldNotify) {
-        notify();
+    final changedControls = <Control>[];
+    _mergeMaps(this, properties, props, changes, changedControls, '');
+    if (shouldNotify) {
+      for (var c in changedControls) {
+        c.notify();
       }
-      if (changes.any((prop) => _notifyParentProperties.contains(prop))) {
-        _parent?.target?.notify();
-      }
+    }
+    if (changes.any((prop) => _notifyParentProperties.contains(prop))) {
+      _parent?.target?.notify();
     }
     return changes.isNotEmpty;
   }
 
   void _mergeMaps(
-    Control? parent,
+    Control parent,
     Map<dynamic, dynamic> dst,
     Map<dynamic, dynamic> src,
     List<String> changes,
+    List<Control> changedControls,
     String prefix,
   ) {
     for (var entry in src.entries) {
@@ -230,14 +232,19 @@ class Control extends ChangeNotifier {
       final fullKey = prefix.isEmpty ? key : '$prefix.$key';
 
       if (dst[key] is Map && entry.value is Map) {
-        _mergeMaps(parent, dst[key], entry.value, changes, fullKey);
+        _mergeMaps(
+            parent, dst[key], entry.value, changes, changedControls, fullKey);
       } else if (dst[key] is Control &&
           entry.value is Map &&
           (dst[key] as Control).id == entry.value["_i"]) {
-        _mergeMaps(parent, dst[key].properties, entry.value, changes, fullKey);
-      } else if (dst[key] != entry.value) {
+        _mergeMaps(dst[key], dst[key].properties, entry.value, changes,
+            changedControls, fullKey);
+      } else if (dst[key] != entry.value && !["_i", "_c"].contains(key)) {
         dst[key] = _transformIfControl(entry.value, parent, backend);
         changes.add(fullKey);
+        if (!changedControls.any((c) => c.id == parent.id)) {
+          changedControls.add(parent);
+        }
       }
     }
   }
