@@ -291,6 +291,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   Future<bool?> _handleSystemPopRoute() async {
+    debugPrint("Page._handleSystemPopRoute");
     final views = widget.control.children("views");
     if (views.length <= 1) {
       return null;

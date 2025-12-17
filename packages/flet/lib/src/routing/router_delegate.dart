@@ -37,7 +37,6 @@ class SimpleRouterDelegate extends RouterDelegate<String>
 
   @override
   Future<bool> popRoute() async {
-    debugPrint("SimpleRouterDelegate.popRoute()");
     final handler = popRouteHandler;
     if (handler != null) {
       final result = await handler();
