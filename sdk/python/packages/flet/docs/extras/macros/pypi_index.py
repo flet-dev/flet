@@ -30,6 +30,7 @@ With `strict=False` (default), network/parsing failures render warnings (or popu
 
 import concurrent.futures
 import json
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -50,6 +51,16 @@ except Exception:
 
 DEFAULT_PYPI_FLET_DEV_BASE_URL = "https://pypi.flet.dev/"
 DEFAULT_USER_AGENT = "flet-docs-pypi-index-macro/0.1 (+https://flet.dev)"
+
+# These projects tend to have lots of releases;
+# for docs we link out instead of listing every version.
+_ALL_VERSIONS_PROJECTS = {
+    "flet",
+    "flet-cli",
+    "flet-desktop",
+    "flet-desktop-light",
+    "flet-web",
+}
 
 ProjectIndexEntry = tuple[tuple[str, ...], tuple[str, ...]]  # (versions, platforms)
 ProjectIndex = dict[str, ProjectIndexEntry]
@@ -239,6 +250,12 @@ def _platform_suffix(project_platforms: set[str]) -> str:
     return ""
 
 
+def _normalize_project_name(name: str) -> str:
+    """Normalize project names similar to PEP 503 / wheel index generation."""
+
+    return re.sub(r"[-_.]+", "-", name).casefold()
+
+
 def _sorted_versions(versions: Iterable[str]) -> list[str]:
     """
     Return unique versions sorted newest-first using PEP 440 semantics when possible.
@@ -268,6 +285,8 @@ def _format_md(
     packages: dict[str, list[str]],
     platforms: dict[str, set[str]],
     resolved_base_url: str,
+    *,
+    all_versions_projects: set[str],
 ) -> str:
     """
     Render a Markdown table of packages and versions, with optional platform markers.
@@ -281,7 +300,10 @@ def _format_md(
         )
         project_platforms = platforms.get(name) or set()
         platform_suffix = _platform_suffix(project_platforms)
-        versions_cell = ", ".join(versions) if versions else ""
+        if _normalize_project_name(name) in all_versions_projects:
+            versions_cell = "All versions"
+        else:
+            versions_cell = ", ".join(versions) if versions else ""
         package_cell = f"[`{name}`]({project_url}){platform_suffix}"
         lines.append(f"| {package_cell} | {versions_cell} |")
     return "\n".join(lines) + "\n"
@@ -382,6 +404,52 @@ def _fetch_packages_and_versions_cached(
     return resolved_base_url, results_sorted, tuple(errors)
 
 
+def _merge_duplicate_projects(packages_raw: ProjectIndex) -> ProjectIndex:
+    """Collapse duplicates such as `Brotli` vs `brotli` by normalized project name.
+
+    The index can contain multiple entries for the same logical project due to casing or
+    `-`/`_`/`.` normalization differences. We merge those entries by:
+    - grouping by normalized name, and
+    - unioning versions and platforms.
+
+    The display name is chosen from the grouped variants (preferring "nicer" casing).
+    """
+
+    def uppercase_weight(s: str) -> int:
+        return sum(1 for ch in s if ch.isupper())
+
+    grouped: dict[str, list[tuple[str, tuple[str, ...], tuple[str, ...]]]] = {}
+    for name, (versions, plats) in packages_raw.items():
+        grouped.setdefault(_normalize_project_name(name), []).append(
+            (name, versions, plats)
+        )
+
+    merged: ProjectIndex = {}
+    for _, items in grouped.items():
+        if len(items) == 1:
+            name, versions, plats = items[0]
+            merged[name] = (versions, plats)
+            continue
+
+        # Prefer the variant with more uppercase letters (e.g. "PyYAML" over "pyyaml").
+        best_name = max(items, key=lambda t: (uppercase_weight(t[0]), t[0].casefold()))[
+            0
+        ]
+
+        versions_union: set[str] = set()
+        platforms_union: set[str] = set()
+        for _, versions, plats in items:
+            versions_union.update(versions)
+            platforms_union.update(plats)
+
+        merged[best_name] = (
+            tuple(_sorted_versions(versions_union)),
+            tuple(sorted(platforms_union)),
+        )
+
+    return dict(sorted(merged.items(), key=lambda item: item[0].casefold()))
+
+
 def render_pypi_index(
     base_url: str = DEFAULT_PYPI_FLET_DEV_BASE_URL,
     *,
@@ -445,15 +513,17 @@ def render_pypi_index(
             ]
         )
 
+    packages_raw = _merge_duplicate_projects(packages_raw)
+
+    all_versions_projects = {
+        _normalize_project_name(name) for name in _ALL_VERSIONS_PROJECTS
+    }
+
     packages: dict[str, list[str]] = {}
     platforms: dict[str, set[str]] = {}
     for name, (versions, project_platforms) in packages_raw.items():
         packages[name] = list(versions)
         platforms[name] = set(project_platforms)
-    if max_versions is not None:
-        # Keep the table compact (latest-first) when a limit is requested.
-        cap = max(0, max_versions)
-        packages = {name: versions[:cap] for name, versions in packages.items()}
 
     # Output is embedded directly into Markdown pages, so keep formats simple and stable
     if output_format == "json":
@@ -468,9 +538,20 @@ def render_pypi_index(
         )
         return rendered + "\n"
 
+    if max_versions is not None:
+        # Keep the table compact (latest-first) when a limit is requested.
+        cap = max(0, max_versions)
+        packages = {name: versions[:cap] for name, versions in packages.items()}
+
     if output_format == "text":
+
+        def _versions_text(name: str, versions: list[str]) -> str:
+            if _normalize_project_name(name) in all_versions_projects:
+                return "All versions"
+            return ", ".join(versions) if versions else "(no versions)"
+
         rendered = "\n".join(
-            f"{name}{_platform_suffix(platforms.get(name) or set())}: {', '.join(versions) if versions else '(no versions)'}"  # noqa: E501
+            f"{name}{_platform_suffix(platforms.get(name) or set())}: {_versions_text(name, versions)}"  # noqa: E501
             for name, versions in packages.items()
         )
         rendered += "\n"
@@ -483,7 +564,12 @@ def render_pypi_index(
                 rendered += f"... and {len(errors) - 10} more\n"
         return rendered
 
-    rendered = _format_md(packages, platforms, resolved_base_url)
+    rendered = _format_md(
+        packages,
+        platforms,
+        resolved_base_url,
+        all_versions_projects=all_versions_projects,
+    )
     if errors:
         message = (
             f"Failed to fetch {len(errors)} project page(s) from `{resolved_base_url}`"

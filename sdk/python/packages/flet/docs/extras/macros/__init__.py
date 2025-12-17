@@ -132,7 +132,7 @@ def define_env(env):
     @env.macro
     def flet_pypi_index(
         *,
-        max_versions: Optional[int] = 5,
+        max_versions: Optional[int] = None,
     ) -> str:
         return render_pypi_index(
             base_url="https://pypi.flet.dev/",
