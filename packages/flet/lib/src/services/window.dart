@@ -17,7 +17,7 @@ import '../utils/window.dart';
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
   Future<void> _pendingWindowUpdate = Future.value();
-  Control? _titleSourceControl;
+  Control? _page;
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -56,21 +56,21 @@ class WindowService extends FletService with WindowListener {
 
   WindowService({required super.control});
 
-  void _ensureTitleSourceListenerAttached() {
+  void _ensurePageListenerAttached() {
     final parent = control.parent;
-    if (identical(parent, _titleSourceControl)) {
+    if (identical(parent, _page)) {
       return;
     }
-    _titleSourceControl?.removeListener(_onTitleSourceChanged);
-    _titleSourceControl = parent;
-    _titleSourceControl?.addListener(_onTitleSourceChanged);
+    _page?.removeListener(_onPageChanged);
+    _page = parent;
+    _page?.addListener(_onPageChanged);
   }
 
-  void _onTitleSourceChanged() {
+  void _onPageChanged() {
     if (!isDesktopPlatform()) {
       return;
     }
-    final title = _titleSourceControl?.getString("title");
+    final title = _page?.getString("title");
     if (title != null && title != _title) {
       _scheduleWindowUpdate();
     }
@@ -83,7 +83,7 @@ class WindowService extends FletService with WindowListener {
       return;
     }
     debugPrint("WindowService(${control.id}).init");
-    _ensureTitleSourceListenerAttached();
+    _ensurePageListenerAttached();
     _initWindowState();
   }
 
@@ -128,12 +128,12 @@ class WindowService extends FletService with WindowListener {
     if (!isDesktopPlatform()) {
       return;
     }
-    _ensureTitleSourceListenerAttached();
+    _ensurePageListenerAttached();
     _scheduleWindowUpdate();
   }
 
   void _scheduleWindowUpdate() {
-    _ensureTitleSourceListenerAttached();
+    _ensurePageListenerAttached();
     _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
       if (_initWindowStateCompleter.isCompleted) {
         return _updateWindow(control.backend);
@@ -410,8 +410,8 @@ class WindowService extends FletService with WindowListener {
 
   @override
   void dispose() {
-    _titleSourceControl?.removeListener(_onTitleSourceChanged);
-    _titleSourceControl = null;
+    _page?.removeListener(_onPageChanged);
+    _page = null;
     if (_listenersAttached) {
       windowManager.removeListener(this);
       control.removeInvokeMethodListener(_invokeMethod);
