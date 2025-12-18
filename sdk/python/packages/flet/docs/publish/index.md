@@ -464,6 +464,41 @@ message = "Starting up the app…"
 ```
 ///
 
+## Launch an app with a hidden window
+
+A Flet desktop app on Windows, macOS, or Linux can start with its window hidden. This allows you to add initial content, resize the window, and position it on the screen before revealing it to the user.
+
+In the example below, the window is resized and centered before becoming visible:
+
+```py
+import flet as ft
+
+async def main(page: ft.Page):
+    page.add(ft.Text("Hello!"))
+    page.window.width = 300
+    page.window.height = 200
+    page.update()
+    await page.window.center()
+    await asyncio.sleep(3)
+    page.window.visible = True
+    page.update()
+
+ft.run(main)
+```
+
+To enable hidden window during development use `flet run` with `-n` option:
+
+```
+flet run -n your_app.py
+```
+
+To start an app with hidden window packaged with `flet build` add the following to your `pyproject.toml`:
+
+```toml
+[tool.flet.app]
+hide_window_on_start = true
+```
+
 ## Entry point
 
 The Flet application entry (or starting) point refers to the file that contains the call to `ft.run()`.
