@@ -290,6 +290,16 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
   }
 
+  void _markViewAsPopped(String routeStr) {
+    if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
+      setState(() {});
+    }
+    if (_sentViewPopEventsForRoutes.add(routeStr)) {
+      widget.control
+          .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
+    }
+  }
+
   Future<bool?> _handleSystemPopRoute() async {
     debugPrint("Page._handleSystemPopRoute");
     final views = widget.control.children("views");
@@ -306,14 +316,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     final routeStr = topView.getString("route", topView.id.toString()) ??
         topView.id.toString();
-    if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
-      setState(() {});
-    }
-
-    if (_sentViewPopEventsForRoutes.add(routeStr)) {
-      widget.control
-          .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
-    }
+    _markViewAsPopped(routeStr);
     return true;
   }
 
@@ -661,13 +664,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         }
 
         final routeStr = routeValue.toString();
-        if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
-          setState(() {});
-        }
-        if (_sentViewPopEventsForRoutes.add(routeStr)) {
-          widget.control
-              .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
-        }
+        _markViewAsPopped(routeStr);
       },
     );
   }
