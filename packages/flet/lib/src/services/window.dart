@@ -5,7 +5,6 @@ import 'package:window_manager/window_manager.dart';
 
 import '../flet_backend.dart';
 import '../flet_service.dart';
-import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
@@ -17,7 +16,6 @@ import '../utils/window.dart';
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
   Future<void> _pendingWindowUpdate = Future.value();
-  Control? _page;
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -56,26 +54,6 @@ class WindowService extends FletService with WindowListener {
 
   WindowService({required super.control});
 
-  void _ensurePageListenerAttached() {
-    final parent = control.parent;
-    if (identical(parent, _page)) {
-      return;
-    }
-    _page?.removeListener(_onPageChanged);
-    _page = parent;
-    _page?.addListener(_onPageChanged);
-  }
-
-  void _onPageChanged() {
-    if (!isDesktopPlatform()) {
-      return;
-    }
-    final title = _page?.getString("title");
-    if (title != null && title != _title) {
-      _scheduleWindowUpdate();
-    }
-  }
-
   @override
   void init() {
     super.init();
@@ -83,7 +61,6 @@ class WindowService extends FletService with WindowListener {
       return;
     }
     debugPrint("WindowService(${control.id}).init");
-    _ensurePageListenerAttached();
     _initWindowState();
   }
 
@@ -110,6 +87,7 @@ class WindowService extends FletService with WindowListener {
       if (!_listenersAttached) {
         windowManager.addListener(this);
         control.addInvokeMethodListener(_invokeMethod);
+        control.parent?.addListener(_onPageChanged);
         _listenersAttached = true;
       }
 
@@ -128,12 +106,20 @@ class WindowService extends FletService with WindowListener {
     if (!isDesktopPlatform()) {
       return;
     }
-    _ensurePageListenerAttached();
     _scheduleWindowUpdate();
   }
 
+  void _onPageChanged() {
+    if (!isDesktopPlatform()) {
+      return;
+    }
+    final title = control.parent?.getString("title");
+    if (title != null && title != _title) {
+      _scheduleWindowUpdate();
+    }
+  }
+
   void _scheduleWindowUpdate() {
-    _ensurePageListenerAttached();
     _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
       if (_initWindowStateCompleter.isCompleted) {
         return _updateWindow(control.backend);
@@ -410,11 +396,10 @@ class WindowService extends FletService with WindowListener {
 
   @override
   void dispose() {
-    _page?.removeListener(_onPageChanged);
-    _page = null;
     if (_listenersAttached) {
       windowManager.removeListener(this);
       control.removeInvokeMethodListener(_invokeMethod);
+      control.parent?.removeListener(_onPageChanged);
       _listenersAttached = false;
     }
     super.dispose();

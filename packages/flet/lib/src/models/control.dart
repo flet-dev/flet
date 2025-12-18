@@ -220,7 +220,7 @@ class Control extends ChangeNotifier {
   }
 
   void _mergeMaps(
-    Control parent,
+    Control? parent,
     Map<dynamic, dynamic> dst,
     Map<dynamic, dynamic> src,
     List<String> changes,
@@ -242,7 +242,7 @@ class Control extends ChangeNotifier {
       } else if (dst[key] != entry.value && !["_i", "_c"].contains(key)) {
         dst[key] = _transformIfControl(entry.value, parent, backend);
         changes.add(fullKey);
-        if (!changedControls.any((c) => c.id == parent.id)) {
+        if (parent != null && !changedControls.any((c) => c.id == parent.id)) {
           changedControls.add(parent);
         }
       }
