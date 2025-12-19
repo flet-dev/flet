@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -16,6 +18,9 @@ class VideoControl extends StatefulWidget {
 
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   final GlobalKey<VideoState> _videoKey = GlobalKey<VideoState>();
+  StreamSubscription<String?>? _errorSub;
+  StreamSubscription<bool>? _completedSub;
+  StreamSubscription<Playlist>? _playlistSub;
   late final playerConfig = PlayerConfiguration(
     title: widget.control.getString("title", "flet-video")!,
     muted: widget.control.getBool("muted", false)!,
@@ -54,6 +59,19 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   void initState() {
     super.initState();
     widget.control.addInvokeMethodListener(_invokeMethod);
+
+    _errorSub = player.stream.error.listen(_onError);
+    _completedSub = player.stream.completed.listen((event) {
+      if (widget.control.getBool("on_complete", false)!) {
+        widget.control.triggerEvent("complete", event);
+      }
+    });
+    _playlistSub = player.stream.playlist.listen((event) {
+      if (widget.control.getBool("on_track_change", false)!) {
+        widget.control.triggerEvent("track_change", event.index);
+      }
+    });
+
     player.open(Playlist(parseVideoMedias(widget.control.get("playlist"), [])!),
         play: widget.control.getBool("autoplay", false)!);
   }
@@ -61,6 +79,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   @override
   void dispose() {
     widget.control.removeInvokeMethodListener(_invokeMethod);
+    _errorSub?.cancel();
+    _completedSub?.cancel();
+    _playlistSub?.cancel();
     player.dispose();
     super.dispose();
   }
@@ -235,25 +256,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         });
       }
     }();
-
-    // listen to errors
-    player.stream.error.listen((event) {
-      _onError(event);
-    });
-
-    // listen to completion
-    player.stream.completed.listen((event) {
-      if (widget.control.getBool("on_complete", false)!) {
-        widget.control.triggerEvent("complete", event);
-      }
-    });
-
-    // listen to track changes
-    player.stream.playlist.listen((event) {
-      if (widget.control.getBool("on_track_change", false)!) {
-        widget.control.triggerEvent("track_change", event.index);
-      }
-    });
 
     return ConstrainedControl(control: widget.control, child: video);
   }
