@@ -17,25 +17,74 @@ class VideoControl extends StatefulWidget {
 }
 
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
-  final GlobalKey<VideoState> _videoKey = GlobalKey<VideoState>();
+  GlobalKey<VideoState> _videoKey = GlobalKey<VideoState>();
   StreamSubscription<String?>? _errorSub;
   StreamSubscription<bool>? _completedSub;
   StreamSubscription<Playlist>? _playlistSub;
-  late final playerConfig = PlayerConfiguration(
-    title: widget.control.getString("title", "flet-video")!,
-    muted: widget.control.getBool("muted", false)!,
-    pitch: widget.control.getDouble("pitch") != null ? true : false,
-    ready: widget.control.getBool("on_loaded", false)!
-        ? () => widget.control.triggerEvent("loaded")
-        : null,
-  );
+  late Player _player;
+  late VideoController _controller;
+  bool _initialized = false;
 
-  late final Player player = Player(configuration: playerConfig);
-  late final videoControllerConfiguration = parseControllerConfiguration(
-      widget.control.get("configuration"),
-      const VideoControllerConfiguration())!;
-  late final controller =
-      VideoController(player, configuration: videoControllerConfiguration);
+  void _setup(Control control) {
+    final playerConfig = PlayerConfiguration(
+      title: control.getString("title", "flet-video")!,
+      muted: control.getBool("muted", false)!,
+      pitch: control.getDouble("pitch") != null,
+      ready: control.getBool("on_loaded", false)!
+          ? () => control.triggerEvent("loaded")
+          : null,
+    );
+
+    _player = Player(configuration: playerConfig);
+
+    final videoControllerConfiguration = parseControllerConfiguration(
+        control.get("configuration"), const VideoControllerConfiguration())!;
+    _controller =
+        VideoController(_player, configuration: videoControllerConfiguration);
+
+    _initialized = true;
+
+    control.addInvokeMethodListener(_invokeMethod);
+
+    if (control.getBool("on_error", false)!) {
+      _errorSub = _player.stream.error.listen((message) {
+        control.triggerEvent("error", message);
+      });
+    }
+
+    if (control.getBool("on_complete", false)!) {
+      _completedSub = _player.stream.completed.listen((completed) {
+        control.triggerEvent("complete", completed);
+      });
+    }
+
+    if (control.getBool("on_track_change", false)!) {
+      _playlistSub = _player.stream.playlist.listen((playlist) {
+        control.triggerEvent("track_change", playlist.index);
+      });
+    }
+
+    _player.open(Playlist(parseVideoMedias(control.get("playlist"), [])!),
+        play: control.getBool("autoplay", false)!);
+  }
+
+  void _teardown(Control control) {
+    if (!_initialized) {
+      return;
+    }
+
+    control.removeInvokeMethodListener(_invokeMethod);
+
+    _errorSub?.cancel();
+    _errorSub = null;
+    _completedSub?.cancel();
+    _completedSub = null;
+    _playlistSub?.cancel();
+    _playlistSub = null;
+
+    _player.dispose();
+    _initialized = false;
+  }
 
   Future<void> _handleEnterFullscreen() async {
     widget.control.updateProperties({"_fullscreen": true}, python: false);
@@ -58,88 +107,74 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   @override
   void initState() {
     super.initState();
-    widget.control.addInvokeMethodListener(_invokeMethod);
+    _setup(widget.control);
+  }
 
-    _errorSub = player.stream.error.listen(_onError);
-    _completedSub = player.stream.completed.listen((event) {
-      if (widget.control.getBool("on_complete", false)!) {
-        widget.control.triggerEvent("complete", event);
-      }
-    });
-    _playlistSub = player.stream.playlist.listen((event) {
-      if (widget.control.getBool("on_track_change", false)!) {
-        widget.control.triggerEvent("track_change", event.index);
-      }
-    });
+  @override
+  void didUpdateWidget(covariant VideoControl oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    player.open(Playlist(parseVideoMedias(widget.control.get("playlist"), [])!),
-        play: widget.control.getBool("autoplay", false)!);
+    if (oldWidget.control != widget.control) {
+      _teardown(oldWidget.control);
+      _videoKey = GlobalKey<VideoState>();
+      _setup(widget.control);
+    }
   }
 
   @override
   void dispose() {
-    widget.control.removeInvokeMethodListener(_invokeMethod);
-    _errorSub?.cancel();
-    _completedSub?.cancel();
-    _playlistSub?.cancel();
-    player.dispose();
+    _teardown(widget.control);
     super.dispose();
-  }
-
-  void _onError(String? message) {
-    if (widget.control.getBool("on_error", false)!) {
-      widget.control.triggerEvent("error", message);
-    }
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Video.$name($args)");
     switch (name) {
       case "play":
-        await player.play();
+        await _player.play();
         break;
       case "pause":
-        await player.pause();
+        await _player.pause();
         break;
       case "play_or_pause":
-        await player.playOrPause();
+        await _player.playOrPause();
         break;
       case "stop":
-        await player.stop();
-        player.open(
+        await _player.stop();
+        _player.open(
             Playlist(parseVideoMedias(widget.control.get("playlist"), [])!),
             play: false);
         break;
       case "seek":
         var position = parseDuration(args["position"]);
-        if (position != null) await player.seek(position);
+        if (position != null) await _player.seek(position);
         break;
       case "next":
-        await player.next();
+        await _player.next();
         break;
       case "previous":
-        await player.previous();
+        await _player.previous();
         break;
       case "jump_to":
         final mediaIndex = parseInt(args["media_index"]);
-        if (mediaIndex != null) await player.jump(mediaIndex);
+        if (mediaIndex != null) await _player.jump(mediaIndex);
         break;
       case "playlist_add":
         var media = parseVideoMedia(args["media"]);
-        if (media != null) await player.add(media);
+        if (media != null) await _player.add(media);
         break;
       case "playlist_remove":
         final mediaIndex = parseInt(args["media_index"]);
-        if (mediaIndex != null) await player.remove(mediaIndex);
+        if (mediaIndex != null) await _player.remove(mediaIndex);
         break;
       case "is_playing":
-        return player.state.playing;
+        return _player.state.playing;
       case "is_completed":
-        return player.state.completed;
+        return _player.state.completed;
       case "get_duration":
-        return player.state.duration;
+        return _player.state.duration;
       case "get_current_position":
-        return player.state.position;
+        return _player.state.position;
       default:
         throw Exception("Unknown Video method: $name");
     }
@@ -177,7 +212,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
     Video video = Video(
       key: _videoKey,
-      controller: controller,
+      controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
       controls: showControls ? AdaptiveVideoControls : null,
       pauseUponEnteringBackgroundMode:
@@ -201,41 +236,41 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           volume >= 0 &&
           volume <= 100) {
         widget.control.updateProperties({"_volume": volume}, python: false);
-        await player.setVolume(volume);
+        await _player.setVolume(volume);
       }
 
       // pitch
       if (pitch != null && pitch != prevPitch) {
         widget.control.updateProperties({"_pitch": pitch}, python: false);
-        await player.setPitch(pitch);
+        await _player.setPitch(pitch);
       }
 
       // playbackRate
       if (playbackRate != null && playbackRate != prevPlaybackRate) {
         widget.control
             .updateProperties({"_playbackRate": playbackRate}, python: false);
-        await player.setRate(playbackRate);
+        await _player.setRate(playbackRate);
       }
 
       // shufflePlaylist
       if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
         widget.control.updateProperties({"_shufflePlaylist": shufflePlaylist},
             python: false);
-        await player.setShuffle(shufflePlaylist);
+        await _player.setShuffle(shufflePlaylist);
       }
 
       // playlistMode
       if (playlistMode != null && playlistMode != prevPlaylistMode) {
         widget.control
             .updateProperties({"_playlistMode": playlistMode}, python: false);
-        await player.setPlaylistMode(playlistMode);
+        await _player.setPlaylistMode(playlistMode);
       }
 
       // subtitleTrack
       if (subtitleTrack != null && subtitleTrack != prevSubtitleTrack) {
         widget.control
             .updateProperties({"_subtitleTrack": subtitleTrack}, python: false);
-        await player.setSubtitleTrack(subtitleTrack);
+        await _player.setSubtitleTrack(subtitleTrack);
       }
 
       // fullscreen
