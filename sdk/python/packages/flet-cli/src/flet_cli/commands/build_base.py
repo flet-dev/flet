@@ -31,7 +31,6 @@ from flet_cli.utils.project_dependencies import (
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
-PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 
@@ -544,7 +543,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
             default="upload",
-            help="Android signing key alias (default: upload)",
+            help="Android signing key alias",
         )
         parser.add_argument(
             "--build-number",
@@ -1016,11 +1015,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "tool.flet.template.ref"
         )
         if not template_ref:
-            template_ref = (
-                version.Version(flet.version.version).base_version
-                if flet.version.version
-                else flet.version.from_git()
-            )
+            template_ref = version.Version(flet.version.flet_version).base_version
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1622,12 +1617,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     hash.update(reqs_txt_contents)
             package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
         else:
-            flet_version = (
-                flet.version.version
-                if flet.version.version
-                else flet.version.from_git()
-            )
-            package_args.extend(["-r", f"flet=={flet_version}"])
+            package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
 
         # site-packages variable
         if self.package_platform != "Pyodide":
