@@ -50,8 +50,7 @@ class Command(BaseCommand):
             "--distpath",
             dest="distpath",
             default="dist",
-            help="Directory where the published web app "
-            "should be placed (default: ./dist)",
+            help="Directory where the published web app should be placed",
         )
         parser.add_argument(
             "--app-name",

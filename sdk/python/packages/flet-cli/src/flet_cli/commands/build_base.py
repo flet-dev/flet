@@ -543,7 +543,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
             default="upload",
-            help="Android signing key alias (default: upload)",
+            help="Android signing key alias",
         )
         parser.add_argument(
             "--build-number",
