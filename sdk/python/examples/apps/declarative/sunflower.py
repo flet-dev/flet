@@ -117,7 +117,8 @@ def Sunflower():
                             alignment=ft.MainAxisAlignment.CENTER,
                         ),
                     ],
-                )
+                ),
+                expand=True,
             )
         ],
     )
