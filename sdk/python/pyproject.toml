@@ -90,7 +90,8 @@ docs = [
     "pydocstyle >=6.3.0",
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
-    "mkdocs-macros-plugin>=1.5.0",
+    "mkdocs-macros-plugin >=1.5.0",
+    "packaging >=23.0",
     { include-group = 'docs-coverage' },
 ]
 all = [
@@ -110,6 +111,8 @@ pydocstyle = { convention = 'google' }
 isort = { known-first-party = [
     "flet",
     "flet_cli",
+    "flet_desktop",
+    "flet_web",
     "flet_ads",
     "flet_audio",
     "flet_audio_recorder",

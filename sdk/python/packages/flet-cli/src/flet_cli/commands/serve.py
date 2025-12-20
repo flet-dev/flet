@@ -34,7 +34,7 @@ class Command(BaseCommand):
             "web_root",
             type=str,
             nargs="?",
-            help="Directory to serve (default: ./build/web)",
+            help="Directory to serve",
             default="./build/web",
         )
         parser.add_argument(
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             type=int,
             default=8000,
             help="Port number to serve the files on. Use this to customize the port if "
-            "the default is already in use or needs to be changed (default: 8000)",
+            "the default is already in use or needs to be changed",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -65,7 +65,8 @@ class Command(BaseCommand):
         try:
             with socketserver.TCPServer(("", options.port), handler) as httpd:
                 console.print(
-                    f"Serving [green]{directory}[/green] at [cyan]http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
+                    f"Serving [green]{directory}[/green] at [cyan]"
+                    f"http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
                 )
                 httpd.serve_forever()
         except KeyboardInterrupt:
