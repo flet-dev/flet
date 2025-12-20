@@ -112,10 +112,10 @@ async def test_placeholder_1(flet_app: ftt.FletTestApp, request):
             height=100,
             fit=ft.BoxFit.CONTAIN,
             placeholder_src=base64_image,
-            fade_in_duration=1000,
-            fade_out_duration=250,
-            fade_in_curve=ft.AnimationCurve.EASE_IN_OUT,
-            fade_out_curve=ft.AnimationCurve.EASE_OUT,
+            fade_in_animation=ft.Animation(1000, ft.AnimationCurve.EASE_IN_OUT),
+            placeholder_fade_out_animation=ft.Animation(
+                250, ft.AnimationCurve.EASE_OUT
+            ),
         ),
         pump_times=1,
         pump_duration=50,
@@ -132,10 +132,10 @@ async def test_placeholder_2(flet_app: ftt.FletTestApp, request):
             height=100,
             fit=ft.BoxFit.CONTAIN,
             placeholder_src=base64_image,
-            fade_in_duration=1000,
-            fade_out_duration=250,
-            fade_in_curve=ft.AnimationCurve.EASE_IN_OUT,
-            fade_out_curve=ft.AnimationCurve.EASE_OUT,
+            fade_in_animation=ft.Animation(1000, ft.AnimationCurve.EASE_IN_OUT),
+            placeholder_fade_out_animation=ft.Animation(
+                250, ft.AnimationCurve.EASE_OUT
+            ),
         ),
         pump_times=3,
         pump_duration=1000,

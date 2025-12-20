@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/animations.dart';
 import 'package:flet/src/utils/strings.dart';
 import 'package:flet/src/utils/uri.dart';
 import 'package:flutter/material.dart';
@@ -296,34 +297,18 @@ Widget buildImage({
 class ImageFadeConfig {
   const ImageFadeConfig(
       {this.placeholder,
-      this.fadeInDuration,
-      this.fadeOutDuration,
-      this.fadeInCurve,
-      this.fadeOutCurve});
+      this.fadeInAnimation,
+      this.placeholderFadeOutAnimation});
 
   final Widget? placeholder;
-  final Duration? fadeInDuration;
-  final Duration? fadeOutDuration;
-  final Curve? fadeInCurve;
-  final Curve? fadeOutCurve;
+  final ImplicitAnimationDetails? fadeInAnimation;
+  final ImplicitAnimationDetails? placeholderFadeOutAnimation;
 
   /// Returns true if any fade-related option is set.
   bool get enabled =>
       placeholder != null ||
-      fadeInDuration != null ||
-      fadeOutDuration != null ||
-      fadeInCurve != null ||
-      fadeOutCurve != null;
-
-  Duration get resolvedFadeInDuration =>
-      fadeInDuration ?? const Duration(milliseconds: 250);
-
-  Duration get resolvedFadeOutDuration =>
-      fadeOutDuration ?? const Duration(milliseconds: 150);
-
-  Curve get resolvedFadeInCurve => fadeInCurve ?? Curves.easeInOut;
-
-  Curve get resolvedFadeOutCurve => fadeOutCurve ?? Curves.easeOut;
+      fadeInAnimation != null ||
+      placeholderFadeOutAnimation != null;
 
   /// Wraps an [Image] frame with a placeholder-to-image fade transition.
   ///
@@ -338,18 +323,25 @@ class ImageFadeConfig {
     }
 
     final isLoaded = frame != null || wasSyncLoaded;
+    final effectiveFadeInCurve = fadeInAnimation?.curve ?? Curves.easeInOut;
+    final effectiveFadeInDuration =
+        fadeInAnimation?.duration ?? const Duration(milliseconds: 250);
+    final effectiveFadeOutCurve =
+        placeholderFadeOutAnimation?.curve ?? Curves.easeOut;
+    final effectiveFadeOutDuration = placeholderFadeOutAnimation?.duration ??
+        const Duration(milliseconds: 150);
     final placeholderWidget = placeholder != null
         ? SizedBox(width: width, height: height, child: placeholder)
-        // Defaults to an invisible version to preserve layout.
+        // invisible version to preserve layout
         : SizedBox(
             width: width,
             height: height,
             child: Opacity(opacity: 0, child: image));
 
     return AnimatedSwitcher(
-        duration: isLoaded ? resolvedFadeInDuration : resolvedFadeOutDuration,
-        switchInCurve: resolvedFadeInCurve,
-        switchOutCurve: resolvedFadeOutCurve,
+        duration: isLoaded ? effectiveFadeInDuration : effectiveFadeOutDuration,
+        switchInCurve: effectiveFadeInCurve,
+        switchOutCurve: effectiveFadeOutCurve,
         layoutBuilder: (Widget? current, List<Widget> previousChildren) =>
             Stack(
               alignment: Alignment.center,

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/animations.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 import '../utils/numbers.dart';
-import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -70,10 +69,9 @@ class ImageControl extends StatelessWidget {
 
     final fadeConfig = ImageFadeConfig(
         placeholder: placeholder,
-        fadeInDuration: control.getDuration("fade_in_duration"),
-        fadeOutDuration: control.getDuration("fade_out_duration"),
-        fadeInCurve: control.getCurve("fade_in_curve"),
-        fadeOutCurve: control.getCurve("fade_out_curve"));
+        fadeInAnimation: control.getAnimation("fade_in_animation"),
+        placeholderFadeOutAnimation:
+            control.getAnimation("placeholder_fade_out_animation"));
 
     Widget? image = buildImage(
       context: context,
