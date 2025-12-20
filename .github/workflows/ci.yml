@@ -35,8 +35,7 @@ env:
   ROOT: "${{ github.workspace }}"
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
-  UV_PYTHON: "3.12"
-  PYODIDE_VERSION: "0.27.7"
+  UV_PYTHON: "3.12.7"
 
 jobs:
   # ============
@@ -159,10 +158,11 @@ jobs:
 
       - name: Prepare env and patch versions
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
-          patch_toml_versions "${SDK_PYTHON}/packages/flet-desktop/pyproject.toml" "$PYPI_VER"
+          patch_toml_versions "packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
       - name: Build Flutter Windows client
         env:
@@ -497,6 +497,21 @@ jobs:
           path: '.fvmrc'
           cache: true
 
+      - name: Patch Python and Flutter versions
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          source "$SCRIPTS/common.sh"
+          patch_python_package_versions
+
+      - name: Get Pyodide version
+        shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.pyodide_version)' )"
+          echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
+          echo "Pyodide version: $PYODIDE_VERSION"
+
       - name: Build Web client
         shell: bash
         working-directory: client
@@ -530,8 +545,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
           uv build --package flet-web --wheel
 
           rm -rf "packages/flet-web/src/flet_web/web"
@@ -639,6 +652,7 @@ jobs:
 
       - name: Build Python packages
         shell: bash
+        working-directory: ${{ env.SDK_PYTHON }}
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
