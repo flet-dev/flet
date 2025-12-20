@@ -64,16 +64,20 @@ def set_default_subparser(
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct and return the CLI argument parser."""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     # add version flag
     parser.add_argument(
         "--version",
         "-V",
         action="version",
-        version=flet.version.flet_version
-        if flet.version.flet_version
-        else flet.version.from_git(),
+        version=(
+            f"Flet: {flet.version.flet_version}\n"
+            f"Flutter: {flet.version.flutter_version}\n"
+            f"Pyodide: {flet.version.pyodide_version}"
+        ),
     )
 
     sp = parser.add_subparsers(dest="command")
