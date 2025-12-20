@@ -20,6 +20,7 @@ import '../models/page_design.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
+import '../services/service_binding.dart';
 import '../services/service_registry.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
@@ -55,15 +56,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
   late final AppLifecycleListener _appLifecycleListener;
-  ServiceRegistry? _pageServices;
-  ServiceRegistry? _userServices;
+  ServiceRegistry? _services;
+  String? _servicesUid;
+  ServiceBinding? _windowService;
+  Control? _windowControl;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
+  final Set<String> _pendingPoppedViewRoutes = <String>{};
+  final Set<String> _sentViewPopEventsForRoutes = <String>{};
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
-  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -82,6 +86,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       routeState: _routeState,
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
+      popRouteHandler: _handleSystemPopRoute,
     );
 
     _appLifecycleListener = AppLifecycleListener(
@@ -95,12 +100,15 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _attachKeyboardListenerIfNeeded();
     widget.control.addInvokeMethodListener(_invokeMethod);
+    widget.control.addListener(_onPageControlChanged);
+    _ensureServiceRegistries();
   }
 
   @override
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
+    _ensureServiceRegistries();
     _loadFontsIfNeeded(FletBackend.of(context));
   }
 
@@ -109,26 +117,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     debugPrint("Page.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
     _updateMultiViews();
-
-    // page services
-    _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: FletBackend.of(context));
-
-    // user services
-    var userServicesControl = widget.control.child("_user_services");
-    if (userServicesControl != null) {
-      if (_userServices == null ||
-          _userServices?.control.internals?["uid"] !=
-              userServicesControl.internals?["uid"]) {
-        _userServices = ServiceRegistry(
-            control: userServicesControl,
-            propertyName: "_services",
-            backend: FletBackend.of(context));
-      }
-    }
-
+    _ensureServiceRegistries();
     _attachKeyboardListenerIfNeeded();
     _loadFontsIfNeeded(FletBackend.of(context));
   }
@@ -148,7 +137,52 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       HardwareKeyboard.instance.removeHandler(_handleKeyDown);
     }
     widget.control.removeInvokeMethodListener(_invokeMethod);
+    widget.control.removeListener(_onPageControlChanged);
+    _services?.dispose();
+    _windowService?.dispose();
     super.dispose();
+  }
+
+  void _onPageControlChanged() {
+    _ensureServiceRegistries();
+  }
+
+  void _ensureServiceRegistries() {
+    if (!mounted) {
+      return;
+    }
+    var backend = FletBackend.of(context);
+
+    var servicesControl = widget.control.child("_services");
+    if (servicesControl != null) {
+      var uid = servicesControl.internals?["uid"];
+      if (_services == null || _servicesUid != uid) {
+        _services?.dispose();
+        _services = ServiceRegistry(
+            control: servicesControl,
+            propertyName: "_services",
+            backend: backend);
+        _servicesUid = uid;
+      }
+    } else if (_services != null) {
+      _services?.dispose();
+      _services = null;
+      _servicesUid = null;
+    }
+
+    var windowControl = widget.control.child("window", visibleOnly: false);
+    if (windowControl != null) {
+      if (!identical(windowControl, _windowControl)) {
+        _windowService?.dispose();
+        _windowService =
+            ServiceBinding(control: windowControl, backend: backend);
+        _windowControl = windowControl;
+      }
+    } else if (_windowService != null) {
+      _windowService?.dispose();
+      _windowService = null;
+      _windowControl = null;
+    }
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -256,6 +290,36 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
   }
 
+  void _markViewAsPopped(String routeStr) {
+    if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
+      setState(() {});
+    }
+    if (_sentViewPopEventsForRoutes.add(routeStr)) {
+      widget.control
+          .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
+    }
+  }
+
+  Future<bool?> _handleSystemPopRoute() async {
+    debugPrint("Page._handleSystemPopRoute");
+    final views = widget.control.children("views");
+    if (views.length <= 1) {
+      return null;
+    }
+
+    final topView = views.last;
+    final canPop = topView.getBool("can_pop", true) ?? true;
+    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    if (!canPop || requiresConfirm) {
+      return null;
+    }
+
+    final routeStr = topView.getString("route", topView.id.toString()) ??
+        topView.id.toString();
+    _markViewAsPopped(routeStr);
+    return true;
+  }
+
   void _handleAppLifecycleTransition(String state) {
     widget.control.triggerEventWithoutSubscribers(
         "app_lifecycle_state_change", {"state": state});
@@ -341,8 +405,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       var appStatus = context
           .select<FletBackend, ({bool isLoading, String error})>((backend) =>
               (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage =
-          backend.appStartupScreenMessage ?? "";
+      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
       var formattedErrorMessage =
           backend.formatAppErrorMessage(appStatus.error);
 
@@ -432,6 +495,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             ? control.getCupertinoTheme("dark_theme", context, Brightness.dark)
             : control.getCupertinoTheme("theme", context, Brightness.dark);
 
+    var materialTheme = themeMode == ThemeMode.dark ||
+            ((themeMode == null || themeMode == ThemeMode.system) &&
+                brightness == Brightness.dark)
+        ? darkTheme
+        : lightTheme;
+
+    Widget scaffoldMessengerBuilder(BuildContext context, Widget? child) {
+      return Theme(
+          data: materialTheme ?? lightTheme ?? ThemeData(),
+          child: ScaffoldMessenger(child: child ?? const SizedBox.shrink()));
+    }
+
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
@@ -442,6 +517,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -454,6 +530,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 routeInformationParser: _routeParser,
                 title: windowTitle,
                 theme: cupertinoTheme,
+                builder: scaffoldMessengerBuilder,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
@@ -503,18 +580,32 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     var backend = FletBackend.of(context);
     var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage =
-        backend.appStartupScreenMessage ?? "";
+    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage =
-        backend.formatAppErrorMessage(appStatus.error);
+    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
+    final viewRouteValues = views
+        .map((v) => v.getString("route", v.id.toString()))
+        .whereType<String>()
+        .toSet();
+    _pendingPoppedViewRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+    _sentViewPopEventsForRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+
+    final effectiveViews = _pendingPoppedViewRoutes.isEmpty
+        ? views
+        : views
+            .where((v) => !_pendingPoppedViewRoutes
+                .contains(v.getString("route", v.id.toString())))
+            .toList();
+
     List<Page<dynamic>> pages = [];
-    if (views.isEmpty) {
+    if (effectiveViews.isEmpty) {
       pages.add(AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
@@ -532,10 +623,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                   body: PageMedia(),
                 )));
     } else {
-      String viewRoutes =
-          views.map((v) => v.getString("route", v.id.toString())).join();
+      String viewRoutes = effectiveViews
+          .map((v) => v.getString("route", v.id.toString()))
+          .join();
 
-      pages = views.map((view) {
+      pages = effectiveViews.map((view) {
         var key = ValueKey(view.getString("route", view.id.toString()));
         var child = ControlWidget(control: view);
 
@@ -558,13 +650,22 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
 
     return Navigator(
-        key: navigatorKey,
-        pages: pages,
-        onDidRemovePage: (page) {
-          if (page.key != null) {
-            widget.control.triggerEventWithoutSubscribers(
-                "view_pop", {"route": (page.key as ValueKey).value});
-          }
-        });
+      key: navigatorKey,
+      pages: pages,
+      onDidRemovePage: (page) {
+        if (pages.length <= 1) {
+          return;
+        }
+
+        final pageKey = page.key;
+        final routeValue = pageKey is ValueKey ? pageKey.value : null;
+        if (routeValue == null) {
+          return;
+        }
+
+        final routeStr = routeValue.toString();
+        _markViewAsPopped(routeStr);
+      },
+    );
   }
 }

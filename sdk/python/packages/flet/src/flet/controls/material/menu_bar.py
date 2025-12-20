@@ -44,6 +44,22 @@ class MenuBar(Control):
     It could be placed anywhere but typically resides above the main body of the
     application and defines a menu system for invoking callbacks in response to user
     selection of a menu item.
+
+    ```python
+    ft.MenuBar(
+        controls=[
+            ft.SubmenuButton(
+                content=ft.Text("Submenu"),
+                controls=[
+                    ft.MenuItemButton(content=ft.Text("Item 1")),
+                    ft.MenuItemButton(content=ft.Text("Item 2")),
+                    ft.MenuItemButton(content=ft.Text("Item 3")),
+                ],
+            ),
+        ],
+    )
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)

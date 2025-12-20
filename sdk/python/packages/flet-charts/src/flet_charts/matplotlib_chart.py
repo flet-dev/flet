@@ -323,7 +323,7 @@ class MatplotlibChart(ft.GestureDetector):
 
                 self.canvas.shapes = [
                     fc.Image(
-                        src_bytes=content,
+                        src=content,
                         x=0,
                         y=0,
                         width=self.figure.bbox.size[0] / self.__dpr,

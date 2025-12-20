@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'borders.dart';

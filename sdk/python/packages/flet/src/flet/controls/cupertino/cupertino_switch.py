@@ -155,6 +155,6 @@ class CupertinoSwitch(LayoutControl):
 
     on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when [`active_thumb_image`][(c).] or
-    [`inactive_thumb_image`][(c).] fails to load.
+    Called when [`active_thumb_image_src`][(c).] or
+    [`inactive_thumb_image_src`][(c).] fails to load.
     """

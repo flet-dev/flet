@@ -21,8 +21,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  battery_plus: ^7.0.0
   collection: ^1.19.0
-  device_info_plus: ^12.1.0
+  connectivity_plus: ^7.0.0
+  device_info_plus: ^12.3.0
   equatable: ^2.0.3
   file_picker: ^10.3.3
   flutter_highlight: 0.7.0
@@ -36,23 +38,20 @@ dependencies:
   path_provider: ^2.1.5
   provider: ^6.1.2
   screenshot: ^3.0.0
-  sensors_plus: ^6.1.1
+  screen_brightness: ^2.1.7
+  sensors_plus: ^7.0.0
   shared_preferences: 2.5.3
+  share_plus: ^12.0.1
+  shimmer: ^3.0.0
   url_launcher: 6.3.2
   vector_math: ^2.2.0
   web: ^1.1.1
   web_socket_channel: ^3.0.2
   window_manager: ^0.5.1
   window_to_front: ^0.0.3
+  wakelock_plus: ^1.2.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-
-flutter:
-
-  # To add assets to your package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg

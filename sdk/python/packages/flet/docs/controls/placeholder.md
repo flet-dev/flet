@@ -1,10 +1,10 @@
 ---
 class_name: flet.Placeholder
 examples: ../../examples/controls/placeholder
-example_images: ../examples/controls/placeholder/media
+example_images: ../test-images/examples/core/golden/macos/placeholder
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Placeholder") }}
 
 ## Examples
 

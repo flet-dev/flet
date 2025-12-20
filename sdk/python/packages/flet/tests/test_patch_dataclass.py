@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import msgpack
 
-from flet.controls.base_control import BaseControl
+from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import PageMediaData
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
@@ -35,6 +35,21 @@ def test_simple_patch_dataclass():
     assert settings.debug
     assert isinstance(settings.config, Config)
     assert settings.config.timeout == 2.5
+
+
+def test_encode_emits_overridden_defaults():
+    @control("BaseTestControl")
+    class BaseTestControl(BaseControl):
+        foo: int = 0
+
+    @control("ChildTestControl")
+    class ChildTestControl(BaseTestControl):
+        foo: int = 5
+
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(ChildTestControl())
+
+    assert encoded["foo"] == 5
 
 
 def test_page_patch_dataclass():

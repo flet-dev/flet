@@ -1,12 +1,12 @@
 ---
 class_name: flet.NavigationDrawer
 examples: ../../examples/controls/navigation_drawer
-example_images: ../../examples/controls/navigation_drawer/media
+example_images: ../../test-images/examples/material/golden/macos/navigation_drawer
 ---
 
 # NavigationDrawer
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Navigation drawer extended") }}
 
 ## Examples
 

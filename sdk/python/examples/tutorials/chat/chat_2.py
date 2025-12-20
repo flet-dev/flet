@@ -20,9 +20,8 @@ def main(page: ft.Page):
     page.pubsub.subscribe(on_message)
 
     def send_click(e):
-        page.pubsub.send_all(Message(user=page.session_id, text=new_message.value))
+        page.pubsub.send_all(Message(user=page.session.id, text=new_message.value))
         new_message.value = ""
-        page.update()
 
     page.add(chat, ft.Row([new_message, ft.Button("Send", on_click=send_click)]))
 

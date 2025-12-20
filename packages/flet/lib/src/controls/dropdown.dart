@@ -1,8 +1,20 @@
 import 'package:collection/collection.dart';
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
+import '../utils/menu.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import '../utils/textfield.dart';
+import 'base_controls.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control control;
@@ -280,6 +292,7 @@ class _DropdownControlState extends State<DropdownControl> {
       helperText: widget.control.getString("helper_text"),
       menuStyle: menuStyle,
       inputDecorationTheme: inputDecorationTheme,
+      inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
       onSelected: widget.control.disabled
           ? null
           : (String? selection) {
@@ -291,7 +304,6 @@ class _DropdownControlState extends State<DropdownControl> {
     );
 
     var didAutoFocus = false;
-
     if (!didAutoFocus && autofocus) {
       didAutoFocus = true;
       SchedulerBinding.instance.addPostFrameCallback((_) {

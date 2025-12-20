@@ -78,42 +78,47 @@ def Sunflower():
     return ft.View(
         appbar=ft.AppBar(title=ft.Text("Sunflower")),
         controls=[
-            ft.Column(
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                expand=True,
-                controls=[
-                    ft.Container(
-                        content=ft.Stack(
-                            controls=[MemoSeedView(s, key=s.key) for s in app.seeds],
-                            aspect_ratio=1.0,
+            ft.SafeArea(
+                ft.Column(
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    expand=True,
+                    controls=[
+                        ft.Container(
+                            content=ft.Stack(
+                                controls=[
+                                    MemoSeedView(s, key=s.key) for s in app.seeds
+                                ],
+                                aspect_ratio=1.0,
+                            ),
+                            alignment=ft.Alignment.CENTER,
+                            expand=True,
                         ),
-                        alignment=ft.Alignment.CENTER,
-                        expand=True,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Text(
-                                f"Showing {round(app.seeds_count)} "
-                                f"seed{'s' if app.seeds_count != 1 else ''}"
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Slider(
-                                min=1,
-                                max=MAX_SEEDS,
-                                value=app.seeds_count,
-                                width=300,
-                                on_change=lambda e: app.update_seeds_count(
-                                    cast(float, e.control.value)
-                                ),
-                            )
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER,
-                    ),
-                ],
+                        ft.Row(
+                            [
+                                ft.Text(
+                                    f"Showing {round(app.seeds_count)} "
+                                    f"seed{'s' if app.seeds_count != 1 else ''}"
+                                )
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                        ),
+                        ft.Row(
+                            [
+                                ft.Slider(
+                                    min=1,
+                                    max=MAX_SEEDS,
+                                    value=app.seeds_count,
+                                    width=300,
+                                    on_change=lambda e: app.update_seeds_count(
+                                        cast(float, e.control.value)
+                                    ),
+                                )
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                        ),
+                    ],
+                ),
+                expand=True,
             )
         ],
     )

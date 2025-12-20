@@ -4,14 +4,14 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/animations.dart';
-import 'package:flet/src/utils/strings.dart';
-import 'package:flet/src/utils/uri.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/animations.dart';
+import '../utils/strings.dart';
+import '../utils/uri.dart';
 import '../widgets/error.dart';
 import 'collections.dart';
 import 'colors.dart';

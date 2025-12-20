@@ -130,6 +130,7 @@ from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.shader_mask import ShaderMask
+from flet.controls.core.shimmer import Shimmer, ShimmerDirection
 from flet.controls.core.stack import Stack, StackFit
 from flet.controls.core.text import (
     Text,
@@ -413,8 +414,23 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
+from flet.controls.services.accelerometer import (
+    Accelerometer,
+    AccelerometerReadingEvent,
+)
+from flet.controls.services.barometer import Barometer, BarometerReadingEvent
+from flet.controls.services.battery import (
+    Battery,
+    BatteryState,
+    BatteryStateChangeEvent,
+)
 from flet.controls.services.browser_context_menu import BrowserContextMenu
 from flet.controls.services.clipboard import Clipboard
+from flet.controls.services.connectivity import (
+    Connectivity,
+    ConnectivityChangeEvent,
+    ConnectivityType,
+)
 from flet.controls.services.file_picker import (
     FilePicker,
     FilePickerFile,
@@ -422,13 +438,37 @@ from flet.controls.services.file_picker import (
     FilePickerUploadEvent,
     FilePickerUploadFile,
 )
+from flet.controls.services.gyroscope import Gyroscope, GyroscopeReadingEvent
 from flet.controls.services.haptic_feedback import HapticFeedback
+from flet.controls.services.magnetometer import Magnetometer, MagnetometerReadingEvent
+from flet.controls.services.screen_brightness import (
+    ScreenBrightness,
+    ScreenBrightnessChangeEvent,
+)
 from flet.controls.services.semantics_service import Assertiveness, SemanticsService
+from flet.controls.services.sensor_error_event import SensorErrorEvent
 from flet.controls.services.service import Service
 from flet.controls.services.shake_detector import ShakeDetector
+from flet.controls.services.share import (
+    Share,
+    ShareCupertinoActivityType,
+    ShareFile,
+    ShareResult,
+    ShareResultStatus,
+)
 from flet.controls.services.shared_preferences import SharedPreferences
 from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.url_launcher import UrlLauncher
+from flet.controls.services.url_launcher import (
+    BrowserConfiguration,
+    LaunchMode,
+    UrlLauncher,
+    WebViewConfiguration,
+)
+from flet.controls.services.user_accelerometer import (
+    UserAccelerometer,
+    UserAccelerometerReadingEvent,
+)
+from flet.controls.services.wakelock import Wakelock
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
     StrutStyle,
@@ -538,6 +578,8 @@ from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 
 __all__ = [
+    "Accelerometer",
+    "AccelerometerReadingEvent",
     "AdaptiveControl",
     "AlertDialog",
     "Alignment",
@@ -568,8 +610,13 @@ __all__ = [
     "BadgeValue",
     "Banner",
     "BannerTheme",
+    "Barometer",
+    "BarometerReadingEvent",
     "BaseControl",
     "BasePage",
+    "Battery",
+    "BatteryState",
+    "BatteryStateChangeEvent",
     "BeveledRectangleBorder",
     "BlendMode",
     "Blur",
@@ -594,6 +641,7 @@ __all__ = [
     "BoxShadowValue",
     "BoxShape",
     "Brightness",
+    "BrowserConfiguration",
     "BrowserContextMenu",
     "Button",
     "ButtonStyle",
@@ -616,6 +664,9 @@ __all__ = [
     "Colors",
     "Column",
     "Component",
+    "Connectivity",
+    "ConnectivityChangeEvent",
+    "ConnectivityType",
     "ConstrainedControl",
     "Container",
     "Context",
@@ -733,6 +784,8 @@ __all__ = [
     "Gradient",
     "GradientTileMode",
     "GridView",
+    "Gyroscope",
+    "GyroscopeReadingEvent",
     "HapticFeedback",
     "HoverEvent",
     "Icon",
@@ -759,6 +812,7 @@ __all__ = [
     "KeyboardListener",
     "KeyboardType",
     "LabelPosition",
+    "LaunchMode",
     "LayoutControl",
     "LinearGradient",
     "LinuxDeviceInfo",
@@ -775,6 +829,8 @@ __all__ = [
     "LongPressMoveUpdateEvent",
     "LongPressStartEvent",
     "MacOsDeviceInfo",
+    "Magnetometer",
+    "MagnetometerReadingEvent",
     "MainAxisAlignment",
     "Margin",
     "MarginValue",
@@ -870,6 +926,8 @@ __all__ = [
     "ScaleStartEvent",
     "ScaleUpdateEvent",
     "ScaleValue",
+    "ScreenBrightness",
+    "ScreenBrightnessChangeEvent",
     "Screenshot",
     "ScrollDirection",
     "ScrollEvent",
@@ -887,11 +945,19 @@ __all__ = [
     "SelectionArea",
     "Semantics",
     "SemanticsService",
+    "SensorErrorEvent",
     "Service",
     "ShaderMask",
     "ShakeDetector",
     "ShapeBorder",
+    "Share",
+    "ShareCupertinoActivityType",
+    "ShareFile",
+    "ShareResult",
+    "ShareResultStatus",
     "SharedPreferences",
+    "Shimmer",
+    "ShimmerDirection",
     "Size",
     "Slider",
     "SliderInteraction",
@@ -962,15 +1028,19 @@ __all__ = [
     "Url",
     "UrlLauncher",
     "UrlTarget",
+    "UserAccelerometer",
+    "UserAccelerometerReadingEvent",
     "ValueKey",
     "VerticalAlignment",
     "VerticalDivider",
     "View",
     "ViewPopEvent",
     "VisualDensity",
+    "Wakelock",
     "WebBrowserName",
     "WebDeviceInfo",
     "WebRenderer",
+    "WebViewConfiguration",
     "Window",
     "WindowDragArea",
     "WindowEvent",
