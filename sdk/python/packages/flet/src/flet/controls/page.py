@@ -467,12 +467,11 @@ class Page(BasePage):
             self.query()
 
         elif isinstance(e, ViewPopEvent):
-            views = unwrap_component(self.views)
-            view_index = next(
-                (i for i, v in enumerate(views) if v.route == e.route), None
-            )
-            if view_index is not None:
-                e.view = views[view_index]
+            for v in unwrap_component(self.views):
+                v = unwrap_component(v)
+                if v.route == e.route:
+                    e.view = v
+                    break
 
         return super().before_event(e)
 
