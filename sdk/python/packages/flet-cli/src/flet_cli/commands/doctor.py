@@ -1,5 +1,4 @@
 import argparse
-import os
 import platform
 import sys
 
@@ -21,42 +20,20 @@ class Command(BaseCommand):
         """Handle the 'doctor' command."""
         verbose = options.verbose
 
-        # Step-by-step checks (No need to store results)
-        self.check_flet_version()
-        self.check_python_version()
-        self.check_os_info()
+        os_name = platform.system()
+        if os_name == "Darwin":
+            os_name = "macOS"
+            os_version = platform.mac_ver()[0]
+        else:
+            os_version = platform.release()
 
-        # Extra details in verbose mode
-        if verbose:
-            self.check_virtual_env()
+        arch = platform.machine()
+        console.print(
+            f"Flet {flet.version.flet_version} on {os_name} {os_version} ({arch})"
+            if arch
+            else f"Flet {flet.version.flet_version} on {os_name} {os_version}"
+        )
 
-    def check_flet_version(self) -> None:
-        """Check and print Flet version."""
-        with console.status("[bold white]Checking Flet version..."):
-            console.print(f"[green]✔ Flet Version:[/green] {flet.version.flet_version}")
+        console.print(f"Python {platform.python_version()} ({sys.executable})")
 
-    def check_python_version(self) -> None:
-        """Check and print Python version."""
-        with console.status("[bold white]Checking Python version..."):
-            console.print(f"[green]✔ Python Version:[/green] {sys.version}")
-
-    def check_os_info(self) -> None:
-        """Check and print OS information."""
-        with console.status("[bold white]Checking OS information..."):
-            os_info = f"{platform.system()} {platform.release()} ({platform.version()})"
-            console.print(f"[green]✔ Operating System:[/green] {os_info}")
-
-    def check_virtual_env(self) -> None:
-        """Check if a Python virtual environment is active."""
-        with console.status("[bold white]Checking Python virtual environment..."):
-            venv = os.getenv("VIRTUAL_ENV")
-            conda_env = os.getenv("CONDA_PREFIX")
-
-            if venv:
-                console.print(f"[green]✔ Virtual Environment active:[/green] {venv}")
-            elif conda_env:
-                console.print(f"[green]✔ Conda Environment active:[/green] {conda_env}")
-            else:
-                console.print(
-                    "[yellow]⚠ No virtual environment or Conda detected[/yellow]"
-                )
+        # TODO: output Flutter version, if installed
