@@ -6,7 +6,7 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
@@ -50,8 +50,7 @@ class Command(BaseCommand):
             "--distpath",
             dest="distpath",
             default="dist",
-            help="Directory where the published web app "
-            "should be placed (default: ./dist)",
+            help="Directory where the published web app should be placed",
         )
         parser.add_argument(
             "--app-name",
@@ -216,7 +215,7 @@ class Command(BaseCommand):
                 print(f"{reqs_filename} dependencies: {deps}")
 
         if len(deps) == 0:
-            deps = [f"flet=={flet.version.version}"]
+            deps = [f"flet=={flet.version.flet_version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w", encoding="utf-8") as f:
@@ -305,7 +304,7 @@ class Command(BaseCommand):
                 or get_pyproject("tool.flet.web.renderer")
                 or "auto"
             ),
-            route_url_strategy=str(
+            route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
                 or "path"

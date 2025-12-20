@@ -36,7 +36,7 @@ class Command(BaseCommand):
             type=str,
             nargs="?",
             default=".",
-            help="Path to the Python script that starts your Flet app (default: .)",
+            help="Path to the Python script that starts your Flet app",
         )
         parser.add_argument(
             "-p",
