@@ -7,6 +7,7 @@ import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/keys.dart';
 import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
@@ -14,8 +15,10 @@ import '../utils/numbers.dart';
 import '../utils/tabs.dart';
 import '../utils/text.dart';
 import '../utils/time.dart';
+import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 
 /// Default duration for tab animation if none is provided.
 const Duration kDefaultTabAnimationDuration = Duration(milliseconds: 100);
@@ -202,23 +205,47 @@ class TabBarViewControl extends StatelessWidget {
   }
 }
 
-class TabControl extends StatelessWidget {
+class TabControl extends Tab {
   final Control control;
 
-  const TabControl({super.key, required this.control});
+  TabControl({super.key, required this.control})
+      : super(
+          // These values are *hints* for Flutter's TabBar heuristics.
+          //
+          // TabBar applies different sizing/ink behavior when items in `tabs:`
+          // are actual `Tab` instances (it literally checks `tab is Tab`).
+          // In Flet, the real content is built from `control` in `build()`,
+          // but providing `text`/`icon` here lets TabBar pick the correct
+          // default height (text vs text+icon) and ensures consistent hover/
+          // splash overlay sizing (see issue #5599).
+          text: control.buildTextOrWidget("label") != null ? "" : null,
+          icon: control.buildIconOrWidget("icon"),
+        );
+
+  static Key? _keyFromControl(Control control) {
+    final controlKey = control.getKey("key");
+    if (controlKey is ControlValueKey) {
+      return ValueKey(controlKey.value);
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TabControl build: ${control.id}");
 
-    return BaseControl(
+    return control.buildInControlContext((context) {
+      return BaseControl(
         control: control,
         child: Tab(
+          key: _keyFromControl(control),
           icon: control.buildIconOrWidget("icon"),
           height: control.getDouble("height"),
           iconMargin: control.getMargin("icon_margin"),
           child: control.buildTextOrWidget("label"),
-        ));
+        ),
+      );
+    });
   }
 }
 
@@ -268,7 +295,19 @@ class _TabBarControlState extends State<TabBarControl> {
           .getTextStyle("unselected_label_text_style", Theme.of(context));
       var splashBorderRadius =
           widget.control.getBorderRadius("splash_border_radius");
-      var tabs = widget.control.buildWidgets("tabs");
+      final tabs = widget.control.children("tabs").map((tab) {
+        // Ensure parent gets rebuilt when a tab becomes visible/invisible.
+        tab.notifyParent = true;
+
+        if (tab.type == "Tab") {
+          return TabControl(control: tab);
+        }
+
+        // TabBar applies consistent sizing/ink behavior only when `tab is Tab`.
+        // Wrapping arbitrary controls into a `Tab` keeps hover/splash sizes aligned
+        // with the tab bar.
+        return Tab(child: ControlWidget(control: tab));
+      }).toList();
 
       void onTap(int index) {
         widget.control.triggerEvent("click", index);
