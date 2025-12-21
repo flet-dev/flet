@@ -96,7 +96,7 @@ class BaseFlutterCommand(BaseCommand):
 
     def initialize_command(self):
         assert self.options
-        self.required_flutter_version = version.Version(flet.version.FLUTTER_VERSION)
+        self.required_flutter_version = version.Version(flet.version.flutter_version)
         if self.required_flutter_version == version.Version("0"):
             self.cleanup(
                 1,
