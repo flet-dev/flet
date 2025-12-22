@@ -65,4 +65,5 @@ def main(page: ft.Page):
     page.add(chart)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

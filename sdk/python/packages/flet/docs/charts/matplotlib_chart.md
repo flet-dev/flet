@@ -1,7 +1,8 @@
 ---
 class_name: flet_charts.matplotlib_chart.MatplotlibChart
 examples: ../../examples/controls/charts/matplotlib_chart
-example_images: ../examples/controls/charts/matplotlib_chart/media
+example_images: ../test-images-charts/examples/golden/macos/matplotlib_chart
+example_media: ../examples/controls/charts/matplotlib_chart/media
 ---
 
 {{ class_summary(class_name, image_url=example_images + "/toolbar.png", image_width="80%") }}
@@ -31,10 +32,10 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 ### 3D chart
 
 ```python
---8<-- "{{ examples }}/3d.py"
+--8<-- "{{ examples }}/three_d.py"
 ```
 
-{{ image(example_images + "/3d.png", width="80%") }}
+{{ image(example_images + "/three_d.png", width="80%") }}
 
 ### Handle events
 
@@ -50,6 +51,6 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 --8<-- "{{ examples }}/animate.py"
 ```
 
-{{ image(example_images + "/animate.png", width="80%") }}
+{{ image(example_media + "/animate.png", width="80%") }}
 
 {{ class_members(class_name) }}

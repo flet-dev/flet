@@ -1,10 +1,10 @@
 ---
 class_name: flet_charts.radar_chart.RadarChart
 examples: ../../examples/controls/charts/radar_chart
-example_images: ../examples/controls/charts/radar_chart/media
+example_images: ../test-images-charts/examples/golden/macos/radar_chart
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic radar chart", image_width="100%") }}
 
 ## Examples
 

@@ -115,27 +115,35 @@ class BarChartTooltip:
         """
         return BarChartTooltip(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
-            border_radius=border_radius
-            if border_radius is not None
-            else self.border_radius,
+            border_radius=(
+                border_radius if border_radius is not None else self.border_radius
+            ),
             margin=margin if margin is not None else self.margin,
             padding=padding if padding is not None else self.padding,
             max_width=max_width if max_width is not None else self.max_width,
             rotation=rotation if rotation is not None else self.rotation,
-            horizontal_offset=horizontal_offset
-            if horizontal_offset is not None
-            else self.horizontal_offset,
+            horizontal_offset=(
+                horizontal_offset
+                if horizontal_offset is not None
+                else self.horizontal_offset
+            ),
             border_side=border_side if border_side is not None else self.border_side,
-            fit_inside_horizontally=fit_inside_horizontally
-            if fit_inside_horizontally is not None
-            else self.fit_inside_horizontally,
-            fit_inside_vertically=fit_inside_vertically
-            if fit_inside_vertically is not None
-            else self.fit_inside_vertically,
+            fit_inside_horizontally=(
+                fit_inside_horizontally
+                if fit_inside_horizontally is not None
+                else self.fit_inside_horizontally
+            ),
+            fit_inside_vertically=(
+                fit_inside_vertically
+                if fit_inside_vertically is not None
+                else self.fit_inside_vertically
+            ),
             direction=direction if direction is not None else self.direction,
-            horizontal_alignment=horizontal_alignment
-            if horizontal_alignment is not None
-            else self.horizontal_alignment,
+            horizontal_alignment=(
+                horizontal_alignment
+                if horizontal_alignment is not None
+                else self.horizontal_alignment
+            ),
         )
 
 
@@ -166,6 +174,26 @@ class BarChartEvent(ft.Event["BarChart"]):
 class BarChart(ft.LayoutControl):
     """
     Draws a bar chart.
+
+    ```python
+    fch.BarChart(
+        border=ft.Border.all(1, ft.Colors.GREY_400),
+        groups=[
+            fch.BarChartGroup(
+                x=0,
+                rods=[
+                    fch.BarChartRod(
+                        from_y=0,
+                        to_y=40,
+                        color=ft.Colors.BLUE_GREY_200,
+                    ),
+                ],
+            ),
+            ...
+        ],
+    )
+    ```
+
     """
 
     groups: list[BarChartGroup] = field(default_factory=list)
