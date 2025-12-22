@@ -31,7 +31,6 @@ def install_flet_package(name: str):
 
 def ensure_flet_desktop_package_installed():
     try:
-        import flet.version
         import flet_desktop.version
 
         if (
@@ -45,7 +44,6 @@ def ensure_flet_desktop_package_installed():
 
 def ensure_flet_web_package_installed():
     try:
-        import flet.version
         import flet_web.version
 
         if (
@@ -59,7 +57,6 @@ def ensure_flet_web_package_installed():
 
 def ensure_flet_cli_package_installed():
     try:
-        import flet.version
         import flet_cli.version
 
         if (
