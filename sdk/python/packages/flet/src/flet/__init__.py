@@ -576,7 +576,7 @@ from flet.controls.types import (
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
-from flet.version import version as __version__
+from flet.version import flet_version as __version__
 
 __all__ = [
     "Accelerometer",

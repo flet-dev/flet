@@ -63,6 +63,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
+  final Set<String> _pendingPoppedViewRoutes = <String>{};
+  final Set<String> _sentViewPopEventsForRoutes = <String>{};
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
@@ -84,6 +86,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       routeState: _routeState,
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
+      popRouteHandler: _handleSystemPopRoute,
     );
 
     _appLifecycleListener = AppLifecycleListener(
@@ -285,6 +288,36 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   void _routeChanged() {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
+  }
+
+  void _markViewAsPopped(String routeStr) {
+    if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
+      setState(() {});
+    }
+    if (_sentViewPopEventsForRoutes.add(routeStr)) {
+      widget.control
+          .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
+    }
+  }
+
+  Future<bool?> _handleSystemPopRoute() async {
+    debugPrint("Page._handleSystemPopRoute");
+    final views = widget.control.children("views");
+    if (views.length <= 1) {
+      return null;
+    }
+
+    final topView = views.last;
+    final canPop = topView.getBool("can_pop", true) ?? true;
+    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    if (!canPop || requiresConfirm) {
+      return null;
+    }
+
+    final routeStr = topView.getString("route", topView.id.toString()) ??
+        topView.id.toString();
+    _markViewAsPopped(routeStr);
+    return true;
   }
 
   void _handleAppLifecycleTransition(String state) {
@@ -555,8 +588,24 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
+    final viewRouteValues = views
+        .map((v) => v.getString("route", v.id.toString()))
+        .whereType<String>()
+        .toSet();
+    _pendingPoppedViewRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+    _sentViewPopEventsForRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+
+    final effectiveViews = _pendingPoppedViewRoutes.isEmpty
+        ? views
+        : views
+            .where((v) => !_pendingPoppedViewRoutes
+                .contains(v.getString("route", v.id.toString())))
+            .toList();
+
     List<Page<dynamic>> pages = [];
-    if (views.isEmpty) {
+    if (effectiveViews.isEmpty) {
       pages.add(AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
@@ -574,10 +623,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                   body: PageMedia(),
                 )));
     } else {
-      String viewRoutes =
-          views.map((v) => v.getString("route", v.id.toString())).join();
+      String viewRoutes = effectiveViews
+          .map((v) => v.getString("route", v.id.toString()))
+          .join();
 
-      pages = views.map((view) {
+      pages = effectiveViews.map((view) {
         var key = ValueKey(view.getString("route", view.id.toString()));
         var child = ControlWidget(control: view);
 
@@ -600,13 +650,22 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
 
     return Navigator(
-        key: navigatorKey,
-        pages: pages,
-        onDidRemovePage: (page) {
-          if (page.key != null) {
-            widget.control.triggerEventWithoutSubscribers(
-                "view_pop", {"route": (page.key as ValueKey).value});
-          }
-        });
+      key: navigatorKey,
+      pages: pages,
+      onDidRemovePage: (page) {
+        if (pages.length <= 1) {
+          return;
+        }
+
+        final pageKey = page.key;
+        final routeValue = pageKey is ValueKey ? pageKey.value : null;
+        if (routeValue == null) {
+          return;
+        }
+
+        final routeStr = routeValue.toString();
+        _markViewAsPopped(routeStr);
+      },
+    );
   }
 }

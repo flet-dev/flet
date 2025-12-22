@@ -86,6 +86,7 @@ docs = [
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
     "mkdocs-macros-plugin>=1.5.0",
+    "packaging >=23.0",
     "flet-cli",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },

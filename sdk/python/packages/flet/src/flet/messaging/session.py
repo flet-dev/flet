@@ -333,13 +333,17 @@ class Session:
             self.__updates_ready.clear()
 
             # Process pending updates
-            for control in self.__pending_updates:
-                control.update()
-
+            pending_updates = list(self.__pending_updates)
             self.__pending_updates.clear()
 
+            for control in pending_updates:
+                control.update()
+
             # Process pending effects
-            for effect in self.__pending_effects:
+            pending_effects = list(self.__pending_effects)
+            self.__pending_effects.clear()
+
+            for effect in pending_effects:
                 try:
                     hook = effect[0]()
                     is_cleanup = effect[1]
@@ -362,5 +366,3 @@ class Session:
                 except Exception as ex:
                     tb = traceback.format_exc()
                     self.error(f"Exception in effect: {ex}\n{tb}")
-
-            self.__pending_effects.clear()

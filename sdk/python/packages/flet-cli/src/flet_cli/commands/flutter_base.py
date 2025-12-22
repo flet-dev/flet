@@ -14,16 +14,12 @@ from rich.prompt import Confirm
 from rich.style import Style
 from rich.theme import Theme
 
+import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import cleanup_path, is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
-
-PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full"
-DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
-
-MINIMAL_FLUTTER_VERSION = version.Version("3.38.3")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -51,6 +47,7 @@ class BaseFlutterCommand(BaseCommand):
         self.emojis = {}
         self.dart_exe = None
         self.flutter_exe = None
+        self.required_flutter_version: Optional[version.Version] = None
         self.verbose = False
         self.require_android_sdk = False
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
@@ -99,6 +96,14 @@ class BaseFlutterCommand(BaseCommand):
 
     def initialize_command(self):
         assert self.options
+        self.required_flutter_version = version.Version(flet.version.flutter_version)
+        if self.required_flutter_version == version.Version("0"):
+            self.cleanup(
+                1,
+                "Unable to determine the required Flutter SDK version. "
+                "If in a source checkout, ensure a valid `.fvmrc` file exists.",
+            )
+
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
@@ -125,9 +130,8 @@ class BaseFlutterCommand(BaseCommand):
                     style=warning_style,
                 )
                 prompt = (
-                    "Flutter SDK "
-                    f"{MINIMAL_FLUTTER_VERSION} is required. It will be installed now. "
-                    "Proceed? [y/n] "
+                    f"Flutter SDK {self.required_flutter_version} is required. "
+                    f"It will be installed now. Proceed? [y/n] "
                 )
 
                 if not self._prompt_input(prompt):
@@ -155,6 +159,7 @@ class BaseFlutterCommand(BaseCommand):
             self.install_android_sdk()
 
     def flutter_version_valid(self):
+        assert self.required_flutter_version
         version_results = self.run(
             [
                 self.flutter_exe,
@@ -172,20 +177,21 @@ class BaseFlutterCommand(BaseCommand):
 
                 # validate installed Flutter version
                 return (
-                    flutter_version.major == MINIMAL_FLUTTER_VERSION.major
-                    and flutter_version.minor == MINIMAL_FLUTTER_VERSION.minor
+                    flutter_version.major == self.required_flutter_version.major
+                    and flutter_version.minor == self.required_flutter_version.minor
                 )
         else:
             console.log(1, "Failed to validate Flutter version.")
         return False
 
     def install_flutter(self):
+        assert self.required_flutter_version
         self.update_status(
-            f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION}..."
+            f"[bold blue]Installing Flutter {self.required_flutter_version}..."
         )
 
         flutter_dir = install_flutter(
-            str(MINIMAL_FLUTTER_VERSION), self.log_stdout, progress=self.progress
+            str(self.required_flutter_version), self.log_stdout, progress=self.progress
         )
         ext = ".bat" if platform.system() == "Windows" else ""
         self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
@@ -225,8 +231,8 @@ class BaseFlutterCommand(BaseCommand):
 
         if self.verbose > 0:
             console.log(
-                f"Flutter {MINIMAL_FLUTTER_VERSION} installed "
-                f"{self.emojis['checkmark']}"
+                f"Flutter {self.required_flutter_version} "
+                f"installed {self.emojis['checkmark']}"
             )
 
     def install_jdk(self):
@@ -304,7 +310,8 @@ class BaseFlutterCommand(BaseCommand):
             self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
-        install_dir = get_flutter_dir(str(MINIMAL_FLUTTER_VERSION))
+        assert self.required_flutter_version
+        install_dir = get_flutter_dir(str(self.required_flutter_version))
         ext = ".bat" if is_windows() else ""
         batch_path = os.path.join(install_dir, "bin", f"{exe_filename}{ext}")
         if os.path.exists(batch_path):

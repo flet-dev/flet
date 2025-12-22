@@ -11,7 +11,7 @@ from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
 from flet.auth.user import User
-from flet.version import version
+from flet.version import flet_version
 
 
 class AuthorizationService(Authorization):
@@ -157,5 +157,5 @@ class AuthorizationService(Authorization):
 
     def __get_default_headers(self):
         return {
-            "User-Agent": f"Flet/{version}",
+            "User-Agent": f"Flet/{flet_version}",
         }

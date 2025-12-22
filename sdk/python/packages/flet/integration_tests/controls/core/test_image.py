@@ -99,3 +99,44 @@ async def test_src_bytes(flet_app: ftt.FletTestApp, request):
         pump_times=1,
         pump_duration=1000,
     )
+
+
+@pytest.mark.skip(reason="The test is flaky on CI")
+@pytest.mark.asyncio(loop_scope="module")
+async def test_placeholder_1(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Image(
+            src="/minion.png",
+            width=100,
+            height=100,
+            fit=ft.BoxFit.CONTAIN,
+            placeholder_src=base64_image,
+            fade_in_animation=ft.Animation(1000, ft.AnimationCurve.EASE_IN_OUT),
+            placeholder_fade_out_animation=ft.Animation(
+                250, ft.AnimationCurve.EASE_OUT
+            ),
+        ),
+        pump_times=1,
+        pump_duration=50,
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_placeholder_2(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Image(
+            src="/minion.png",
+            width=100,
+            height=100,
+            fit=ft.BoxFit.CONTAIN,
+            placeholder_src=base64_image,
+            fade_in_animation=ft.Animation(1000, ft.AnimationCurve.EASE_IN_OUT),
+            placeholder_fade_out_animation=ft.Animation(
+                250, ft.AnimationCurve.EASE_OUT
+            ),
+        ),
+        pump_times=3,
+        pump_duration=1000,
+    )
