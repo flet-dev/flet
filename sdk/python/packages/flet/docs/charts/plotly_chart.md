@@ -1,10 +1,10 @@
 ---
 class_name: flet_charts.plotly_chart.PlotlyChart
 examples: ../../examples/controls/charts/plotly_chart
-example_images: ../examples/controls/charts/plotly_chart/media
+example_images: ../test-images-charts/examples/golden/macos/plotly_chart
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Bar chart based on official [Plotly example](https://plotly.com/python/bar-charts)", image_width="100%") }}
 
 ## Examples
 

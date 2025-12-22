@@ -1,4 +1,5 @@
 import pytest
+import plotly.express as px
 
 import flet as ft
 import flet_charts as fch
@@ -11,7 +12,18 @@ from examples.controls.charts.plotly_chart import (
 )
 
 
-@pytest.mark.skip(reason="poltly control temporarily out of service")
+@pytest.mark.asyncio(loop_scope="function")
+async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.padding = 20
+    flet_app_function.page.update()
+    data_canada = px.data.gapminder().query("country == 'Canada'")
+    fig = px.bar(data_canada, x="year", y="pop")
+    await flet_app_function.assert_control_screenshot(
+        request.node.name, fch.PlotlyChart(figure=fig, expand=True)
+    )
+
+
 @pytest.mark.parametrize(
     "flet_app_function",
     [{"flet_app_main": example_1.main}],
@@ -28,7 +40,6 @@ async def test_example_1(flet_app_function: ftt.FletTestApp):
     )
 
 
-@pytest.mark.skip(reason="poltly control temporarily out of service")
 @pytest.mark.parametrize(
     "flet_app_function",
     [{"flet_app_main": example_2.main}],
@@ -45,7 +56,6 @@ async def test_example_2(flet_app_function: ftt.FletTestApp):
     )
 
 
-@pytest.mark.skip(reason="poltly control temporarily out of service")
 @pytest.mark.parametrize(
     "flet_app_function",
     [{"flet_app_main": example_3.main}],
@@ -62,7 +72,6 @@ async def test_example_3(flet_app_function: ftt.FletTestApp):
     )
 
 
-@pytest.mark.skip(reason="poltly control temporarily out of service")
 @pytest.mark.parametrize(
     "flet_app_function",
     [{"flet_app_main": example_4.main}],

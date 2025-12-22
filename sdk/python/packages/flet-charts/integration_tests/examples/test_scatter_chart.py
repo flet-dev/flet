@@ -36,17 +36,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         fch.ScatterChart(
-            # expand=True,
             aspect_ratio=1.0,
-            # min_x=0.0,
-            # max_x=50.0,
-            # min_y=0.0,
-            # max_y=50.0,
-            # left_axis=fch.ChartAxis(show_labels=False),
-            # right_axis=fch.ChartAxis(show_labels=False),
-            # top_axis=fch.ChartAxis(show_labels=False),
-            # bottom_axis=fch.ChartAxis(show_labels=False),
-            # show_tooltips_for_selected_spots_only=False,
             spots=chart_spots,
         ),
     )
