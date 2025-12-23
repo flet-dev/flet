@@ -15,6 +15,7 @@ export 'src/flet_service.dart';
 export 'src/models/asset_source.dart';
 export 'src/models/control.dart';
 export 'src/models/page_size_view_model.dart';
+export 'src/routing/deep_linking_bootstrap.dart';
 export 'src/testing/test_finder.dart';
 export 'src/testing/tester.dart';
 export 'src/utils.dart';
