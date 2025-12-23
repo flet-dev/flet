@@ -12,8 +12,8 @@ class FletRouteInformationProvider extends PlatformRouteInformationProvider {
     return RouteInformation(
       uri: Uri(
         path: uri.path.isEmpty ? '/' : uri.path,
-        query: uri.query,
-        fragment: uri.fragment,
+        query: uri.hasQuery ? uri.query : null,
+        fragment: uri.hasFragment ? uri.fragment : null,
       ),
       state: routeInformation.state,
     );
