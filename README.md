@@ -7,21 +7,16 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/flet-dev/flet/blob/main/LICENSE" target="_blank">
-    <img src="https://img.shields.io/github/license/flet-dev/flet.svg" alt="License">
-</a>
-<a href="https://pypi.org/project/flet" target="_blank">
-    <img src="https://img.shields.io/pypi/v/flet?color=%2334D058&label=pypi" alt="Package version">
-</a>
-<a href="https://pepy.tech/project/flet" target="_blank">
-    <img src="https://static.pepy.tech/badge/flet/month" alt="Supported Python versions">
-</a>
-<a href="https://pypi.org/project/flet" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions">
-</a>
-<a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
-    <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status">
-</a>
+    <a href="https://github.com/flet-dev/flet/blob/main/LICENSE" target="_blank">
+        <img src="https://img.shields.io/github/license/flet-dev/flet.svg" alt="License" /></a>
+    <a href="https://pypi.org/project/flet" target="_blank">
+        <img src="https://img.shields.io/pypi/v/flet?color=%2334D058&label=pypi" alt="Package version" /></a>
+    <a href="https://pepy.tech/project/flet" target="_blank">
+        <img src="https://static.pepy.tech/badge/flet/month" alt="Supported Python versions" /></a>
+    <a href="https://pypi.org/project/flet" target="_blank">
+        <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions" /></a>
+    <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
+        <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
 </p>
 
 ---
