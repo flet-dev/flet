@@ -29,39 +29,39 @@
 Flet is a framework that allows building mobile, desktop and web applications
 in Python only without prior experience in frontend development.
 
-### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" style="vertical-align: middle;" /> Single code base for any device
+### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="28" style="vertical-align: bottom;" /> Single code base for any device
 
 Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
 
-### <img src="https://flet.dev/img/pages/home/python.svg" width="25" style="vertical-align: middle;" /> Build an entire app in Python
+### <img src="https://flet.dev/img/pages/home/python.svg" width="28" style="vertical-align: bottom;" /> Build an entire app in Python
 
 Build cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
 
-### 150+ built-in controls and services
+### <img src="https://flet.dev/img/pages/home/controls.svg" width="28" style="vertical-align: bottom;" /> 150+ built-in controls and services
 
 Beautiful UI widgets with Material and Cupertino design: layout, navigation, dialogs, charts - Flet uses Flutter to render UI.
 
-### 50+ Python packages for iOS and Android
+### <img src="https://flet.dev/img/pages/home/python-packages.svg" width="28" style="vertical-align: bottom;" /> 50+ Python packages for iOS and Android
 
 Numpy, pandas, pydantic, cryptography, opencv, pillow and other popular libraries.
 
-### Full web support
+### <img src="https://flet.dev/img/pages/home/web-support.svg" width="28" style="vertical-align: bottom;" /> Full web support
 
 Flet apps run natively in modern browsers using WebAssembly and Pyodide, with no server required. Prefer server-side? Deploy as a Python web app with real-time UI updates.
 
-### Built-in packaging
+### <img src="https://flet.dev/img/pages/home/packaging.svg" width="28" style="vertical-align: bottom;" /> Built-in packaging
 
 Build standalone executables or bundles for iOS, Android, Windows, Linux, macOS and web. Instantly deploy to App Store and Google Play.
 
-### Test on iOS and Android
+### <img src="https://flet.dev/img/pages/home/test-on-ios-android.svg" width="28" style="vertical-align: bottom;" /> Test on iOS and Android
 
 Test your project on your own mobile device with Flet App. See your app updates as you make changes.
 
-### Extensible
+### <img src="https://flet.dev/img/pages/home/extensible.svg" width="28" style="vertical-align: bottom;" /> Extensible
 
 Easily wrap any of thousands of Flutter packages to use with Flet or built new controls in pure Python using built-in UI primitives.
 
-### Accessible
+### <img src="https://flet.dev/img/pages/home/accessible.svg" width="28" style="vertical-align: bottom;" /> Accessible
 
 Flet is built with Flutter which has solid accessibility foundations on Android, iOS, web, and desktop.
 
