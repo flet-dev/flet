@@ -29,11 +29,11 @@
 Flet is a framework that allows building mobile, desktop and web applications
 in Python only without prior experience in frontend development.
 
-### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="middle" /> Single code base for any device
+### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="bottom" /> Single code base for any device
 
 Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
 
-### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="middle" /> Build an entire app in Python
+### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="bottom" /> Build an entire app in Python
 
 Build cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
 
