@@ -17,6 +17,8 @@ import '../models/control.dart';
 import '../models/keyboard_event.dart';
 import '../models/multi_view.dart';
 import '../models/page_design.dart';
+import '../routing/deep_linking_bootstrap.dart';
+import '../routing/route_information_provider.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -55,6 +57,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
+  late final RouteInformationProvider _routeInformationProvider;
   late final AppLifecycleListener _appLifecycleListener;
   ServiceRegistry? _services;
   String? _servicesUid;
@@ -78,6 +81,19 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     _routeParser = RouteParser();
+    final defaultRouteName =
+        WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+    final pendingInitial =
+        FletDeepLinkingBootstrap.takePendingInitialRouteInformation();
+    final initial = FletRouteInformationProvider.normalize(
+      pendingInitial ??
+          RouteInformation(
+            uri: Uri.tryParse(defaultRouteName) ?? Uri(path: '/'),
+          ),
+    );
+    _routeInformationProvider =
+        FletRouteInformationProvider(initialRouteInformation: initial);
+    FletDeepLinkingBootstrap.markRouterReady();
 
     _routeState = RouteState(_routeParser);
     _routeState.addListener(_routeChanged);
@@ -528,6 +544,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
+                routeInformationProvider: _routeInformationProvider,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -553,6 +570,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
+                routeInformationProvider: _routeInformationProvider,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,
