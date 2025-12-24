@@ -123,6 +123,7 @@ jobs:
         shell: bash
         working-directory: packages/flet
         run: |
+          source "$SCRIPTS/common.sh"
           mkdir -p "$HOME/.config/dart"
           printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
 
