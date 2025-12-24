@@ -30,7 +30,7 @@ Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
 
 ### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Build an entire app in Python
 
-Build cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
+Build a cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
 
 ### <img src="https://flet.dev/img/pages/home/controls.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;150+ built-in controls and services
 
