@@ -1,7 +1,13 @@
 Start building awesome mobile apps in Python using just your computer and mobile phone!
 
+/// admonition | Work in progress
+    type: warning
+The App Store and Google Play currently host a Flet app built for Flet 0.28.3.
+An updated app supporting Flet API 0.80.0 is under development and coming soon.
+///
+
 /// admonition | Important
-    type: danger
+    type: note
 - Make sure your computer fulfills [these requirements](installation.md#prerequisites).
 - Your device and computer must be connected to the same Wi-Fi or local network.
 - We recommend starting with the [creation of a new virtual environment](installation.md#creating-a-virtual-environment-venv).

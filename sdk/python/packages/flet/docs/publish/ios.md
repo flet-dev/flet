@@ -358,28 +358,28 @@ internal testing without publishing to the App Store.
 
 Follow the following steps:
 
-### Step 1: Install and Launch Apple Configurator
+#### Install and Launch Apple Configurator
 
 - Install [Apple Configurator](https://apps.apple.com/ca/app/apple-configurator/id1037126344?mt=12) from App Store;
 - Find and open it from your Applications folder.
 
-### Step 2: Connect Your iOS Device
+#### Connect Your iOS Device
 
 - Connect your device (iPhone or iPad) to your Mac via USB;
 - Unlock the connected device, and tap **Trust This Computer**, if prompted;
 - Wait for this device to appear in the Apple Configurator.
 
-### Step 3: Add the `.ipa` File
+#### Add the `.ipa` File
 
 - Either drag the `.ipa` file onto the connected device in Apple Configurator;
 - Or click **Add → Apps**, then browse and select the `.ipa` file from your Mac.
 
-### Step 4: Install the App
+#### Install the App
 
 - Click **Prepare** or **Install** to begin the deployment/installation;
 - Apple Configurator will install the app on the connected device.
 
-### Step 5: Trust the Developer (for Ad Hoc or Enterprise apps)
+#### Trust the Developer (for Ad Hoc or Enterprise apps)
 
 If your app is signed with an **Ad Hoc** or **Enterprise** [provisioning profile](),
 you'll need to manually trust the developer:
@@ -390,28 +390,28 @@ you'll need to manually trust the developer:
 
 ## Uploading app to App Store Connect for distribution
 
-### Step 1: Install and Sign in to Transporter
+#### Install and Sign in to Transporter
 
 - Install and open [**Transporter**](https://apps.apple.com/us/app/transporter/id1450874784) from the Mac App Store.
 - Sign in using your **Apple Developer Account** credentials (the same account used for App Store Connect).
 
-### Step 2: Prepare Your `.ipa` File
+#### Prepare Your `.ipa` File
 
 - Build your app and export an `.ipa` file using either the **app-store-connect** or **release-testing** export options.
 
-### Step 3: Upload the `.ipa` File in Transporter
+#### Upload the `.ipa` File in Transporter
 
 - Drag and drop the `.ipa` file directly into the Transporter window, or click "Add App" and select your `.ipa` file from your Mac.
 - Click the "..." button next to "Deliver", and select "Verify".
 - Wait for Transporter to complete the verification process.
 - After successful verification, click "Deliver" to upload your `.ipa` file to App Store Connect.
 
-### Step 4: Check Upload Status
+#### Check Upload Status
 
 - Transporter will display a success message upon completion.
 - If errors occur, carefully review the details provided, correct the issues, and repeat the upload process.
 
-### Step 5: Confirm Upload in App Store Connect
+#### Confirm Upload in App Store Connect
 
 - Go to [App Store Connect](https://appstoreconnect.apple.com/).
 - Navigate to **Apps → Your App → TestFlight or App Store Version**.
