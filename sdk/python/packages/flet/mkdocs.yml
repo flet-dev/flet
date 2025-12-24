@@ -177,6 +177,7 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: "#"
+      toc_depth: 3
 
   # Python Markdown Extensions
   - pymdownx.arithmatex:

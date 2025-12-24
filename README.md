@@ -1,62 +1,64 @@
 <p align="center">
-  <a href="https://flet.dev"><img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" alt="Flet logo"></a>
+  <a href="https://flet.dev"><img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" height="150" alt="Flet logo"></a>
 </p>
 
 <p align="center">
-    <em>Build multi-platform apps in Python powered by Flutter</em>
+    <em>Build multi-platform apps in Python. No frontend experience required.</em>
 </p>
 
 <p align="center">
-<a href="https://github.com/flet-dev/flet/blob/main/LICENSE" target="_blank">
-    <img src="https://img.shields.io/github/license/flet-dev/flet.svg" alt="License">
-</a>
-<a href="https://pypi.org/project/flet" target="_blank">
-    <img src="https://img.shields.io/pypi/v/flet?color=%2334D058&label=pypi" alt="Package version">
-</a>
-<a href="https://pepy.tech/project/flet" target="_blank">
-    <img src="https://static.pepy.tech/badge/flet/month" alt="Supported Python versions">
-</a>
-<a href="https://pypi.org/project/flet" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions">
-</a>
-<a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
-    <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status">
-</a>
+    <a href="https://github.com/flet-dev/flet/blob/main/LICENSE" target="_blank">
+        <img src="https://img.shields.io/github/license/flet-dev/flet.svg" alt="License" /></a>
+    <a href="https://pypi.org/project/flet" target="_blank">
+        <img src="https://img.shields.io/pypi/v/flet?color=%2334D058&label=pypi" alt="Package version" /></a>
+    <a href="https://pepy.tech/project/flet" target="_blank">
+        <img src="https://static.pepy.tech/badge/flet/month" alt="Supported Python versions" /></a>
+    <a href="https://pypi.org/project/flet" target="_blank">
+        <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions" /></a>
+    <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
+        <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
 </p>
 
 ---
 
-Flet is a framework that allows building web, desktop and mobile applications
-in Python without prior experience in frontend development.
+Flet is a framework that allows building mobile, desktop and web applications
+in Python only without prior experience in frontend development.
 
-### ⚡️ From idea to app in minutes
+### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
 
-An internal tool or a dashboard for your team, weekend project, data entry form, kiosk app,
-or high-fidelity prototype - Flet is an ideal framework to quickly hack great-looking
-interactive apps to serve a group of users.
+Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
 
-### 📐 Simple architecture
+### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Build an entire app in Python
 
-No more complex architecture with JavaScript frontend, REST API backend, database, cache, etc.
-With Flet you just write a monolith stateful app in Python only and get multi-user,
-real-time Single-Page Application (SPA).
+Build a cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
 
-### 🔋 Batteries included
+### <img src="https://flet.dev/img/pages/home/controls.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;150+ built-in controls and services
 
-To start developing with Flet, you just need your favorite IDE or text editor.
-No SDKs, no thousands of dependencies, no complex tooling - Flet has a built-in web server
-with assets hosting and desktop clients.
+Beautiful UI widgets with Material and Cupertino design: layout, navigation, dialogs, charts - Flet uses Flutter to render UI.
 
-### <img src="https://storage.googleapis.com/cms-storage-bucket/icon_flutter.4fd5520fe28ebf839174.svg" width="18" style="vertical-align: middle;" /> Powered by Flutter
+### <img src="https://flet.dev/img/pages/home/python-packages.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;50+ Python packages for iOS and Android
 
-Flet UI is built with [Flutter](https://flutter.dev/), so your app looks professional and could be delivered to any platform.
-Flet simplifies the Flutter model by combining smaller "widgets" to ready-to-use "controls"
-with an imperative programming model.
+Numpy, pandas, pydantic, cryptography, opencv, pillow and other popular libraries.
 
-### 📱 Deliver to any device or platform
+### <img src="https://flet.dev/img/pages/home/web-support.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Full web support
 
-Package your Flet app as a standalone desktop app (for Windows, macOS, and Linux), mobile
-app (for iOS and Android), dynamic/static Web app or as a Progressive Web App ([PWA](https://web.dev/what-are-pwas/)).
+Flet apps run natively in modern browsers using WebAssembly and Pyodide, with no server required. Prefer server-side? Deploy as a Python web app with real-time UI updates.
+
+### <img src="https://flet.dev/img/pages/home/packaging.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Built-in packaging
+
+Build standalone executables or bundles for iOS, Android, Windows, Linux, macOS and web. Instantly deploy to App Store and Google Play.
+
+### <img src="https://flet.dev/img/pages/home/test-on-ios-android.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Test on iOS and Android
+
+Test your project on your own mobile device with Flet App. See your app updates as you make changes.
+
+### <img src="https://flet.dev/img/pages/home/extensible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Extensible
+
+Easily wrap any of thousands of Flutter packages to use with Flet or build new controls in pure Python using built-in UI primitives.
+
+### <img src="https://flet.dev/img/pages/home/accessible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Accessible
+
+Flet is built with Flutter which has solid accessibility foundations on Android, iOS, web, and desktop.
 
 ## Flet app example
 
@@ -73,15 +75,13 @@ def main(page: ft.Page):
 
     def minus_click(e):
         input.value = str(int(input.value) - 1)
-        page.update()
 
     def plus_click(e):
         input.value = str(int(input.value) + 1)
-        page.update()
 
     page.add(
         ft.Row(
-            alignment=ft.alignment.center,
+            alignment=ft.MainAxisAlignment.CENTER,
             controls=[
                 ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
                 input,
@@ -111,13 +111,7 @@ This will open the app in a native OS window - what a nice alternative to Electr
     <img src="https://docs.flet-docs.pages.dev/assets/getting-started/counter-app/macos.png" width="45%" />
 </p>
 
-To run the same app as a web app, update the last line in your script to:
-
-```python
-ft.run(main, view=flet.AppView.WEB_BROWSER)
-```
-
-Alternatively, you can use the `--web` flag when running the `flet run` command:
+To run the same app as a web app use `--web` option with `flet run` command:
 
 ```bash
 flet run --web counter.py
