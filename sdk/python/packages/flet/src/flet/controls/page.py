@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import sys
 import threading
@@ -486,7 +487,7 @@ class Page(BasePage):
         current page.
         """
         _context_page.set(self)
-        if not asyncio.iscoroutinefunction(handler):
+        if not inspect.iscoroutinefunction(handler):
             raise TypeError("handler must be a coroutine function")
 
         future = asyncio.run_coroutine_threadsafe(
@@ -697,7 +698,7 @@ class Page(BasePage):
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
-                if asyncio.iscoroutinefunction(self.on_login):
+                if inspect.iscoroutinefunction(self.on_login):
                     asyncio.create_task(self.on_login(e))
                 elif callable(self.on_login):
                     self.on_login(e)
@@ -732,7 +733,7 @@ class Page(BasePage):
             except Exception as ex:
                 e.error = str(ex)
         if self.on_login:
-            if asyncio.iscoroutinefunction(self.on_login):
+            if inspect.iscoroutinefunction(self.on_login):
                 asyncio.create_task(self.on_login(e))
             elif callable(self.on_login):
                 self.on_login(e)
@@ -746,7 +747,7 @@ class Page(BasePage):
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
-            if asyncio.iscoroutinefunction(self.on_logout):
+            if inspect.iscoroutinefunction(self.on_logout):
                 asyncio.create_task(self.on_logout(e))
             elif callable(self.on_logout):
                 self.on_logout(e)

@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import os
 import platform
@@ -195,7 +196,7 @@ class FletTestApp:
             page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
-            if asyncio.iscoroutinefunction(self.__flet_app_main):
+            if inspect.iscoroutinefunction(self.__flet_app_main):
                 await self.__flet_app_main(page)
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)

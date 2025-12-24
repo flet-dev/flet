@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import traceback
 import weakref
@@ -351,7 +352,7 @@ class Session:
                     if hook and hook.setup and not is_cleanup:
                         hook.cancel()
                         res = None
-                        if asyncio.iscoroutinefunction(hook.setup):
+                        if inspect.iscoroutinefunction(hook.setup):
                             hook._setup_task = asyncio.create_task(hook.setup())
                         else:
                             res = hook.setup()
@@ -359,7 +360,7 @@ class Session:
                             hook.cleanup = res
                     elif hook and hook.cleanup and is_cleanup:
                         hook.cancel()
-                        if asyncio.iscoroutinefunction(hook.cleanup):
+                        if inspect.iscoroutinefunction(hook.cleanup):
                             hook._cleanup_task = asyncio.create_task(hook.cleanup())
                         else:
                             hook.cleanup()

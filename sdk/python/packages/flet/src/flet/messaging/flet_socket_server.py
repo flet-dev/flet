@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import inspect
 import logging
 import os
 import tempfile
@@ -250,7 +251,7 @@ class FletSocketServer(Connection):
 
             register_error = ""
             try:
-                if asyncio.iscoroutinefunction(self.__before_main):
+                if inspect.iscoroutinefunction(self.__before_main):
                     await self.__before_main(self.session.page)
                 elif callable(self.__before_main):
                     self.__before_main(self.session.page)
