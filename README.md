@@ -81,7 +81,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.Row(
-            alignment=ft.Alignment.CENTER,
+            alignment=ft.MainAxisAlignment.CENTER,
             controls=[
                 ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
                 input,
