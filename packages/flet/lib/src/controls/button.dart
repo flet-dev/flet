@@ -104,7 +104,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
           widget.control.getColor("color", context, theme.colorScheme.primary)!,
       defaultBackgroundColor: widget.control
           .getColor("bgcolor", context, theme.colorScheme.surface)!,
-      defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
+      defaultOverlayColor: theme.colorScheme.primary.withValues(alpha: 0.08),
       defaultShadowColor: theme.colorScheme.shadow,
       defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
       defaultElevation: widget.control.getDouble("elevation", 1)!,

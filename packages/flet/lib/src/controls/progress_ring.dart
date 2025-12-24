@@ -31,6 +31,7 @@ class ProgressRingControl extends StatelessWidget {
       trackGap: control.getDouble("track_gap"),
       constraints: control.getBoxConstraints("size_constraints"),
       padding: control.getPadding("padding"),
+      // ignore: deprecated_member_use
       year2023: control.getBool(
           "year2023"), // todo: deprecated and to be removed in future versions
     );

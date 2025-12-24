@@ -1,3 +1,7 @@
+# 0.80.0
+
+* **Flet 1.0 Beta Release** – [Read the announcement](https://flet.dev/blog/flet-1-0-beta)
+
 # 0.70.0
 
 * **Flet 1.0 Alpha Released** – [Read the announcement](https://flet.dev/blog/introducing-flet-1-0-alpha)
