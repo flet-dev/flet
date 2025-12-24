@@ -54,7 +54,7 @@ Test your project on your own mobile device with Flet App. See your app updates 
 
 ### <img src="https://flet.dev/img/pages/home/extensible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Extensible
 
-Easily wrap any of thousands of Flutter packages to use with Flet or built new controls in pure Python using built-in UI primitives.
+Easily wrap any of thousands of Flutter packages to use with Flet or build new controls in pure Python using built-in UI primitives.
 
 ### <img src="https://flet.dev/img/pages/home/accessible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Accessible
 
