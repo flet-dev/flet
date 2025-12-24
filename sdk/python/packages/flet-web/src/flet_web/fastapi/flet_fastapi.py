@@ -1,7 +1,7 @@
 import asyncio
+import inspect
 from collections.abc import Awaitable, Coroutine, Sequence
 from contextlib import asynccontextmanager, suppress
-import inspect
 from typing import (
     Any,
     Callable,
