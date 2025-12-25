@@ -24,13 +24,13 @@ class FletMockBackendChannel implements FletBackendChannel {
     await Future.delayed(
         const Duration(seconds: 1)); // Simulating async operation
     debugPrint("Connected to the Mock Flet backend channel");
-    //_scenario_line_chart_simple();
-    _scenario_register();
-    //_scenario_test_services();
-    //_scenario_call_window_methods();
+    // _scenarioLineChartSimple();
+    _scenarioRegister();
+    // _scenarioTestServices();
+    // scenarioCallWindowMethods();
   }
 
-  _scenario_register() async {
+  Future<void> _scenarioRegister() async {
     onMessage(Message(action: MessageAction.registerClient, payload: {
       "id": 1,
       "patch": {
@@ -81,7 +81,8 @@ class FletMockBackendChannel implements FletBackendChannel {
     }));
   }
 
-  _scenario_line_chart_simple() async {
+  // ignore: unused_element
+  Future<void> _scenarioLineChartSimple() async {
     onMessage(Message(action: MessageAction.registerClient, payload: {
       "id": 1,
       "patch": {
@@ -169,7 +170,8 @@ class FletMockBackendChannel implements FletBackendChannel {
     }));
   }
 
-  _scenario_test_services() async {
+  // ignore: unused_element
+  Future<void> _scenarioTestServices() async {
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 11,
       "patch": {
@@ -212,7 +214,7 @@ class FletMockBackendChannel implements FletBackendChannel {
     //     payload: {"id": 9, "name": "close", "args": {}}));
   }
 
-  scenario_call_window_methods() async {
+  Future<void> scenarioCallWindowMethods() async {
     onMessage(Message(
         action: MessageAction.invokeControlMethod,
         payload: {"id": 9, "name": "to_front", "args": {}}));

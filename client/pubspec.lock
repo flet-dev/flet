@@ -295,7 +295,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.70.0"
+    version: "0.80.0"
   flet_ads:
     dependency: "direct main"
     description:

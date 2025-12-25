@@ -37,7 +37,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     var style = widget.control.getButtonStyle("style", Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: theme.colorScheme.surface,
-        defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
+        defaultOverlayColor: theme.colorScheme.primary.withValues(alpha: 0.08),
         defaultShadowColor: theme.colorScheme.shadow,
         defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
         defaultElevation: 1,

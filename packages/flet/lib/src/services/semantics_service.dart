@@ -26,8 +26,12 @@ class SemanticsServiceControl extends FletService {
     switch (name) {
       case "announce_message":
         var message = args["message"].toString();
-        return SemanticsService.announce(
-            message, args["rtl"] ? TextDirection.rtl : TextDirection.ltr,
+        final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+        if (view == null) {
+          return;
+        }
+        return SemanticsService.sendAnnouncement(
+            view, message, args["rtl"] ? TextDirection.rtl : TextDirection.ltr,
             assertiveness: control.getAssertiveness(
                 args["assertiveness"], Assertiveness.polite)!);
       case "announce_tooltip":

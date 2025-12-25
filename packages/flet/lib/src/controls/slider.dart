@@ -75,6 +75,7 @@ class _SliderControlState extends State<SliderControl> {
         min: min,
         max: max,
         // todo: remove deprecated property year2023
+        // ignore: deprecated_member_use
         year2023: widget.control.getBool("year_2023"),
         divisions: widget.control.getInt("divisions"),
         label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),

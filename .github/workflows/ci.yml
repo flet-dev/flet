@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
     tags:
-      - '*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
     paths:
       - '.github/workflows/ci.yml'
       - '.github/scripts/**'
@@ -82,6 +82,9 @@ jobs:
   build_flet_package:
     name: Build Flet Flutter package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for authentication using OIDC (pub.dev trusted publisher)
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
@@ -111,25 +114,31 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Publish to pub.dev (Dry Run)
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub publish --dry-run || exit 0
-
-      - name: Publish to pub.dev (Release)
+      - name: Patch pubspec version for release
         if: ${{ github.ref_type == 'tag' }}
-        env:
-          PUB_DEV_TOKEN: ${{ secrets.PUB_DEV_TOKEN }}
         shell: bash
         working-directory: packages/flet
         run: |
           source "$SCRIPTS/common.sh"
-          mkdir -p "$HOME/.config/dart"
-          printf %s "$PUB_DEV_TOKEN" | base64 --decode > "$HOME/.config/dart/pub-credentials.json"
-
-          # patch pubspec for release
           patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
+      - name: Install dependencies
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub get
+
+      - name: Publish to pub.dev (Dry Run)
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub publish --dry-run
+
+      - name: Publish to pub.dev (Release)
+        if: ${{ github.ref_type == 'tag' }}
+        env:
+          PUB_ENVIRONMENT: github-actions
+        shell: bash
+        working-directory: packages/flet
+        run: |
           dart pub publish --force
 
   # =============================
