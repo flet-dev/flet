@@ -114,14 +114,6 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Patch pubspec version for release
-        if: ${{ github.ref_type == 'tag' }}
-        shell: bash
-        working-directory: packages/flet
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_pubspec_version ./pubspec.yaml "$PKG_VER"
-
       - name: Install dependencies
         shell: bash
         working-directory: packages/flet
@@ -131,6 +123,14 @@ jobs:
         shell: bash
         working-directory: packages/flet
         run: dart pub publish --dry-run
+
+      - name: Patch pubspec version for release
+        if: ${{ github.ref_type == 'tag' }}
+        shell: bash
+        working-directory: packages/flet
+        run: |
+          source "$SCRIPTS/common.sh"
+          patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
       - name: Publish to pub.dev (Release)
         if: ${{ github.ref_type == 'tag' }}
