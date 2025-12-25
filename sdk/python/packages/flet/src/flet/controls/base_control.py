@@ -311,7 +311,7 @@ class BaseControl:
 
             # Handle async and sync event handlers accordingly
             event_handler = getattr(self, field_name)
-            if asyncio.iscoroutinefunction(event_handler):
+            if inspect.iscoroutinefunction(event_handler):
                 if get_param_count(event_handler) == 0:
                     await event_handler()
                 else:

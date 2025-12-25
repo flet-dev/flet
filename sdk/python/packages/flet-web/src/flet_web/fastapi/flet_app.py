@@ -143,7 +143,7 @@ class FletApp(Connection):
             _context_page.set(self.__session.page)
             context.reset_auto_update()
 
-            if asyncio.iscoroutinefunction(self.__main):
+            if inspect.iscoroutinefunction(self.__main):
                 await self.__main(self.__session.page)
 
             elif inspect.isasyncgenfunction(self.__main):
@@ -260,7 +260,7 @@ class FletApp(Connection):
 
                 # run before_main
                 try:
-                    if asyncio.iscoroutinefunction(self.__before_main):
+                    if inspect.iscoroutinefunction(self.__before_main):
                         await self.__before_main(self.__session.page)
                     elif callable(self.__before_main):
                         self.__before_main(self.__session.page)

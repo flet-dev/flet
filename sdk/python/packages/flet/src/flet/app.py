@@ -256,7 +256,7 @@ def __get_on_session_created(main):
             assert main is not None
             _context_page.set(session.page)
             context.reset_auto_update()
-            if asyncio.iscoroutinefunction(main):
+            if inspect.iscoroutinefunction(main):
                 await main(session.page)
 
             elif inspect.isasyncgenfunction(main):
