@@ -82,9 +82,6 @@ jobs:
   build_flet_package:
     name: Build Flet Flutter package
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write # Required for authentication using OIDC (pub.dev trusted publisher)
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
@@ -132,14 +129,19 @@ jobs:
           source "$SCRIPTS/common.sh"
           patch_pubspec_version ./pubspec.yaml "$PKG_VER"
 
-      - name: Publish to pub.dev (Release)
-        if: ${{ github.ref_type == 'tag' }}
-        env:
-          PUB_ENVIRONMENT: github-actions
-        shell: bash
+  # =======================================
+  # Publish Flet Flutter package to pub.dev
+  # =======================================
+  publish_flet_package:
+    name: Publish Flet Flutter package to pub.dev
+    if: ${{ github.ref_type == 'tag' }}
+    needs:
+      - build_flet_package
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
         working-directory: packages/flet
-        run: |
-          dart pub publish --force
 
   # =============================
   # Build Flet Client for Windows
