@@ -18,3 +18,22 @@ dev = [
     "pandas",
     "plotly"
 ]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "apps",
+  "apps.*",
+  "controls",
+  "controls.*",
+  "cookbook",
+  "cookbook.*",
+  "services",
+  "services.*",
+  "tutorials",
+  "tutorials.*",
+]
