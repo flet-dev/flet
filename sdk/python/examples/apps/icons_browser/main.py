@@ -8,8 +8,9 @@ ft.context.disable_auto_update()
 
 
 class IconBrowser(ft.Container):
-    def __init__(self, expand=False, height=500):
+    def __init__(self, icon_set, expand=False, height=500):
         super().__init__()
+        self.icon_set = icon_set
         if expand:
             self.expand = expand
         else:
@@ -22,7 +23,13 @@ class IconBrowser(ft.Container):
                 yield batch
 
         # fetch all icon constants from icons.py module
-        icons_list = list(ft.Icons)
+        icons_list = list(self.icon_set)
+
+        search_icon = (
+            self.icon_set.SEARCH
+            if hasattr(self.icon_set, "SEARCH")
+            else ft.Icons.SEARCH
+        )
 
         async def search_click():
             await display_icons(search_txt.value)
@@ -36,7 +43,7 @@ class IconBrowser(ft.Container):
         )
 
         search_query = ft.Row(
-            [search_txt, ft.IconButton(icon=ft.Icons.SEARCH, on_click=search_click)]
+            [search_txt, ft.IconButton(icon=search_icon, on_click=search_click)]
         )
 
         search_results = ft.GridView(
@@ -89,7 +96,7 @@ class IconBrowser(ft.Container):
             for batch in batches(search_icons(search_term.upper()), 500):
                 for icon in batch:
                     icon_name = icon.name
-                    icon_key = f"ft.Icons.{icon_name}"
+                    icon_key = f"ft.{icon.__class__.__name__}.{icon_name}"
                     # print("Found icon:", icon_key)
                     search_results.controls.append(
                         ft.TextButton(
@@ -139,7 +146,31 @@ class IconBrowser(ft.Container):
 
 def main(page: ft.Page):
     page.title = "Flet icons browser"
-    page.add(IconBrowser(expand=True))
+    page.add(
+        ft.Tabs(
+            selected_index=0,
+            length=2,
+            expand=True,
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.TabBar(
+                        tabs=[
+                            ft.Tab(label="Material"),
+                            ft.Tab(label="Cupertino"),
+                        ]
+                    ),
+                    ft.TabBarView(
+                        expand=True,
+                        controls=[
+                            IconBrowser(ft.Icons, expand=True),
+                            IconBrowser(ft.CupertinoIcons, expand=True),
+                        ],
+                    ),
+                ],
+            ),
+        )
+    )
 
 
 ft.run(main)
