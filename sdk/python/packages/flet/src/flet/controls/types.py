@@ -1124,7 +1124,7 @@ Represents a color and can be:
 - a material color from the [`Colors`][flet.] enum,
 - or a Cupertino color from the [`CupertinoColors`][flet.] enum.
 
-More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookbook/colors).
+More information [here](https://docs.flet.dev/cookbook/cookbook/cookbook/colors).
 """
 
 # Icons
