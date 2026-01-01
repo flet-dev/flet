@@ -82,6 +82,8 @@ jobs:
   build_flet_package:
     name: Build Flet Flutter package
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for authentication using OIDC
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
@@ -100,6 +102,9 @@ jobs:
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
 
+      - name: Setup Dart (OIDC for pub.dev)
+        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
+
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -111,37 +116,16 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Install dependencies
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub get
-
       - name: Publish to pub.dev (Dry Run)
         shell: bash
         working-directory: packages/flet
         run: dart pub publish --dry-run
 
-      - name: Patch pubspec version for release
+      - name: Publish to pub.dev
         if: ${{ github.ref_type == 'tag' }}
         shell: bash
         working-directory: packages/flet
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_pubspec_version ./pubspec.yaml "$PKG_VER"
-
-  # =======================================
-  # Publish Flet Flutter package to pub.dev
-  # =======================================
-  publish_flet_package:
-    name: Publish Flet Flutter package to pub.dev
-    if: ${{ github.ref_type == 'tag' }}
-    needs:
-      - build_flet_package
-    permissions:
-      id-token: write # Required for authentication using OIDC
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    with:
-        working-directory: packages/flet
+        run: dart pub publish -f
 
   # =============================
   # Build Flet Client for Windows
