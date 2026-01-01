@@ -187,10 +187,9 @@ class Command(BaseCommand):
         # copy assets
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_path.joinpath(assets_dir).resolve())
+            assets_dir = str(script_dir / assets_dir)
         else:
             assets_dir = str(script_dir / assets_name)
-
         if os.path.exists(assets_dir):
             copy_tree(assets_dir, str(dist_dir))
 

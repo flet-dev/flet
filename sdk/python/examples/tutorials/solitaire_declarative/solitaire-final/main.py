@@ -244,7 +244,7 @@ class Game:
 
 # ---------- View (pure) ----------
 @ft.component
-def CardView(card: Card, on_card_click) -> ft.Control:
+def CardView(card: Card, on_card_click, key=None) -> ft.Control:
     return ft.Container(
         left=card.left,
         top=card.top,
@@ -260,7 +260,7 @@ def CardView(card: Card, on_card_click) -> ft.Control:
 
 
 @ft.component
-def SlotView(slot: Slot, on_slot_click) -> ft.Control:
+def SlotView(slot: Slot, on_slot_click, key=None) -> ft.Control:
     return ft.Container(
         margin=5,
         left=slot.left,
@@ -301,6 +301,7 @@ def App():
         for c in dragging:
             c.left = max(0, c.left + e.local_delta.x)
             c.top = max(0, c.top + e.local_delta.y)
+        game.notify()
 
     def on_pan_end(_: ft.DragEndEvent):
         if dragging is None or not dragging[0].face_up:
@@ -316,7 +317,22 @@ def App():
             for i, c in enumerate(dragging):
                 c.left, c.top = start_x, start_y + i * OFFSET_Y
 
+        game.notify()
         set_dragging(None)
+
+    def open_card_and_notify(card: Card):
+        game.open_card(card)
+        game.notify()
+
+    def reset_deck_and_notify(slot: Slot):
+        game.reset_deck(slot)
+        game.notify()
+
+    cb_reset_deck = ft.use_callback(reset_deck_and_notify, [game])
+    cb_open_card = ft.use_callback(open_card_and_notify, [game])
+
+    MemoSlotView = ft.memo(SlotView)
+    MemoCardView = ft.memo(CardView)
 
     board = ft.GestureDetector(
         on_pan_start=on_pan_start,
@@ -326,10 +342,10 @@ def App():
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
             controls=[
-                ft.Container(expand=True, bgcolor="#207F4C")
+                ft.Container(expand=True, bgcolor="#207F4C", key="bg")
             ]  # to capture full area
-            + [SlotView(s, game.reset_deck) for s in game.slots]
-            + [CardView(c, game.open_card) for c in game.cards],
+            + [MemoSlotView(s, cb_reset_deck, key=s.id) for s in game.slots]
+            + [MemoCardView(c, cb_open_card, key=c.id) for c in game.cards],
             width=1000,
             height=500,
         ),

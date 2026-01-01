@@ -6,18 +6,34 @@ license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10,<3.15"
 dependencies = [
-  "flet>=0.70.0.dev0",
-  "flet-desktop>=0.70.0.dev0",
-  "flet-web>=0.70.0.dev0",
-  "flet-cli>=0.70.0.dev0",
+  "flet",
   "flet-contrib",
 ]
 
 [dependency-groups]
 dev = [
-    "black>=23.3.0,<24.0.0",
+    "flet[all]",
     "matplotlib",
     "mplfinance",
     "pandas",
     "plotly"
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "apps",
+  "apps.*",
+  "controls",
+  "controls.*",
+  "cookbook",
+  "cookbook.*",
+  "services",
+  "services.*",
+  "tutorials",
+  "tutorials.*",
 ]

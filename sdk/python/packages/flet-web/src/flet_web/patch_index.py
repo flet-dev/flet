@@ -22,6 +22,16 @@ def patch_index_html(
     with open(index_path, encoding="utf-8") as f:
         index = f.read()
 
+    base_url = "/"
+    if base_href:
+        base_url = base_href.strip("/").strip()
+        base_url = "/" if base_url == "" else f"/{base_url}/"
+
+    index = index.replace(
+        '<base href="/">',
+        f'<base href="{base_url}">',
+    )
+
     app_config = []
 
     if pyodide and pyodide_script_path:
@@ -33,6 +43,8 @@ def patch_index_html(
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
     app_config.append(f'flet.routeUrlStrategy="{route_url_strategy.value}";')
+    app_config.append(f'flet.entrypointBaseUrl="{base_url}";')
+    app_config.append(f'flet.assetBase="{base_url}";')
 
     if websocket_endpoint_path:
         app_config.append(f'flet.webSocketEndpoint="{websocket_endpoint_path}";')
@@ -41,13 +53,6 @@ def patch_index_html(
         "<!-- fletAppConfig -->",
         "<script>\n{}\n</script>".format("\n".join(app_config)),
     )
-
-    if base_href:
-        base_url = base_href.strip("/").strip()
-        index = index.replace(
-            '<base href="/">',
-            '<base href="{}">'.format("/" if base_url == "" else f"/{base_url}/"),
-        )
 
     if app_name:
         index = re.sub(
