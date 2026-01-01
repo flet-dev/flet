@@ -1,3 +1,7 @@
+## 0.80.1
+
+* Fix `flet publish` to sub-directories, Icons Browser and other Gallery examples updated [#5964](https://github.com/flet-dev/flet/pull/5964).
+
 # 0.80.0
 
 * **Flet 1.0 Beta Release** – [Read the announcement](https://flet.dev/blog/flet-1-0-beta)

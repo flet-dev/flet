@@ -14,7 +14,7 @@ On the server side Flet provides an easy to learn programming model that enables
 
 ### Install `flet` Python module
 
-Flet requires Python 3.7 or above. To start with Flet, you need to install flet module first:
+Flet requires Python 3.10 or above. To start with Flet, you need to install flet module first:
 
 ```
 pip install flet
@@ -27,35 +27,32 @@ Create a new Python program using Flet which will be driving the content of `Fle
 Let's do a simple `counter.py` app similar to a Flutter new project template:
 
 ```python
-import flet
-from flet import IconButton, Page, Row, TextField, icons
+import flet as ft
 
-def main(page: Page):
+def main(page: ft.Page):
     page.title = "Flet counter example"
-    page.vertical_alignment = "center"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    txt_number = TextField(value="0", text_align="right", width=100)
+    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
 
     def minus_click(e):
-        txt_number.value = int(txt_number.value) - 1
-        page.update()
+        txt_number.value = str(int(txt_number.value) - 1)
 
     def plus_click(e):
-        txt_number.value = int(txt_number.value) + 1
-        page.update()
+        txt_number.value = str(int(txt_number.value) + 1)
 
     page.add(
-        Row(
+        ft.Row(
             [
-                IconButton(icons.REMOVE, on_click=minus_click),
+                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click, key="decrement"),
                 txt_number,
-                IconButton(icons.ADD, on_click=plus_click),
+                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
             ],
-            alignment="center",
+            alignment=ft.MainAxisAlignment.CENTER,
         )
     )
 
-flet.app(target=main, port=8550)
+ft.run(main)
 ```
 
 Run the app:
