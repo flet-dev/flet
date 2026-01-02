@@ -3,145 +3,125 @@
 
 <img src="https://raw.githubusercontent.com/flet-dev/flet/main/media/logo/flet-logo.svg" width="50%"/>
 
-Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter apps or building standalone web, mobile and desktop apps with Flutter UI.
+<p align="center">
+    <em>Build multi-platform apps in Python. No frontend experience required.</em>
+</p>
 
-Add an interactive `FletApp` widget to your Flutter app whose content is controlled by a remote Python script.
-It is an ideal solution for building non-core or frequently changing functionality such as product catalog, feedback form, in-app survey or support chat. Flet enables your team to ship new features faster by reducing the number of App Store validation cycles. Just re-deploy a web app hosting a Python script and your users will get an instant update!
+Flet is a framework that allows building mobile, desktop and web applications
+in Python only without prior experience in frontend development.
 
-On the server side Flet provides an easy to learn programming model that enables Python developers without prior Flutter (or even front-end) experience to participate in development of your larger Flutter app or build their own apps with Flutter UI from scratch.
+### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
 
-## Getting started with Flet
+Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
 
-### Install `flet` Python module
+### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Build an entire app in Python
 
-Flet requires Python 3.7 or above. To start with Flet, you need to install flet module first:
+Build a cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
 
-```
-pip install flet
-```
+### <img src="https://flet.dev/img/pages/home/controls.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;150+ built-in controls and services
 
-### Create Python program
+Beautiful UI widgets with Material and Cupertino design: layout, navigation, dialogs, charts - Flet uses Flutter to render UI.
 
-Create a new Python program using Flet which will be driving the content of `FletApp` widget.
+### <img src="https://flet.dev/img/pages/home/python-packages.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;50+ Python packages for iOS and Android
 
-Let's do a simple `counter.py` app similar to a Flutter new project template:
+Numpy, pandas, pydantic, cryptography, opencv, pillow and other popular libraries.
 
-```python
-import flet
-from flet import IconButton, Page, Row, TextField, icons
+### <img src="https://flet.dev/img/pages/home/web-support.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Full web support
 
-def main(page: Page):
+Flet apps run natively in modern browsers using WebAssembly and Pyodide, with no server required. Prefer server-side? Deploy as a Python web app with real-time UI updates.
+
+### <img src="https://flet.dev/img/pages/home/packaging.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Built-in packaging
+
+Build standalone executables or bundles for iOS, Android, Windows, Linux, macOS and web. Instantly deploy to App Store and Google Play.
+
+### <img src="https://flet.dev/img/pages/home/test-on-ios-android.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Test on iOS and Android
+
+Test your project on your own mobile device with Flet App. See your app updates as you make changes.
+
+### <img src="https://flet.dev/img/pages/home/extensible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Extensible
+
+Easily wrap any of thousands of Flutter packages to use with Flet or build new controls in pure Python using built-in UI primitives.
+
+### <img src="https://flet.dev/img/pages/home/accessible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Accessible
+
+Flet is built with Flutter which has solid accessibility foundations on Android, iOS, web, and desktop.
+
+## Flet app example
+
+Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
+
+```python title="counter.py"
+import flet as ft
+
+def main(page: ft.Page):
     page.title = "Flet counter example"
-    page.vertical_alignment = "center"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    txt_number = TextField(value="0", text_align="right", width=100)
+    input = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
 
     def minus_click(e):
-        txt_number.value = int(txt_number.value) - 1
-        page.update()
+        input.value = str(int(input.value) - 1)
 
     def plus_click(e):
-        txt_number.value = int(txt_number.value) + 1
-        page.update()
+        input.value = str(int(input.value) + 1)
 
     page.add(
-        Row(
-            [
-                IconButton(icons.REMOVE, on_click=minus_click),
-                txt_number,
-                IconButton(icons.ADD, on_click=plus_click),
+        ft.Row(
+            alignment=ft.MainAxisAlignment.CENTER,
+            controls=[
+                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
+                input,
+                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
             ],
-            alignment="center",
         )
     )
 
-flet.app(target=main, port=8550)
+ft.run(main)
 ```
 
-Run the app:
+To run the app, install `flet`:
 
-```
-python counter.py
-```
-
-You should see the app running in a native OS window.
-
-There is a web server (Fletd) running in the background on a fixed port `8550`. Fletd web server is a "bridge" between Python and Flutter.
-
-`FletApp` widget in your Flutter application will be communicating with Fletd web server via WebSockets to receive UI updates and send user-generated UI events.
-
-For production use Python app along with Fletd could be [deployed to a public web host](https://flet.dev/docs/guides/python/deploying-web-app) and be accessible via HTTPS with domain name.
-
-### Add Flet widget to a Flutter app
-
-Create a new or open existing Flutter project.
-
-Install Flutter `flet` package:
-
-```
-flutter pub add flet
+```bash
+pip install 'flet[all]'
 ```
 
-For a new project replace `main.dart` with the following:
+then launch the app:
 
-```dart
-import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
-
-void main() async {
-  await setupDesktop();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flet Flutter Demo',
-      home: FletApp(pageUrl: "http://localhost:8550"),
-    );
-  }
-}
+```bash
+flet run counter.py
 ```
 
-In the app above `FletApp` widget is hosted inside `MaterialApp` widget.
+This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
-If Flet app must be able to handle page route change events (web browser URL changes, mobile app deep linking) it must be the top most widget as it contains its own `MaterialApp` widget handling route changes:
+<p align="center">
+    <img src="https://docs.flet.dev/assets/getting-started/counter-app/macos.png" width="45%" />
+</p>
 
-```dart
-import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+To run the same app as a web app use `--web` option with `flet run` command:
 
-void main() async {
-  await setupDesktop();
-  runApp(const FletApp(pageUrl: "http://localhost:8550"));
-}
+```bash
+flet run --web counter.py
 ```
 
-Run the program and see Flet app running inside a Flutter app.
+<p align="center">
+    <img src="https://docs.flet.dev/assets/getting-started/counter-app/safari.png" width="60%" />
+</p>
 
-When adding `FletApp` widget to the existing desktop Flutter app make sure `setupDesktop()` is called before `runApp()` to initialize Flet's built-in window manager.
+## Learn more
 
-## Flet learning resources
+* [Website](https://flet.dev)
+* [Documentation](https://docs.flet.dev)
+* [Roadmap](https://flet.dev/roadmap)
+* [Apps Gallery](https://flet.dev/gallery)
 
-* [Getting started for Python](https://flet.dev/docs/guides/python/getting-started/)
-* [Controls reference](https://flet.dev/docs/controls)
-* [Tutorials](https://flet.dev/docs/tutorials)
-* [Examples](https://github.com/flet-dev/examples/tree/main/python)
-
-## Flet community
+## Community
 
 * [Discussions](https://github.com/flet-dev/flet/discussions)
 * [Discord](https://discord.gg/dzWXP8SHG8)
-* [Twitter](https://twitter.com/fletdev)
-* [Email](mailto:hello@flet.dev)
+* [X (Twitter)](https://twitter.com/fletdev)
+* [Bluesky](https://bsky.app/profile/fletdev.bsky.social)
+* [Email us](mailto:hello@flet.dev)
 
-## FAQ
+## Contributing
 
-Coming soon.
-
-## Adding custom Flutter widgets
-
-Coming soon.
+Want to help improve Flet? Check out the [contribution guide](https://docs.flet.dev/contributing).
