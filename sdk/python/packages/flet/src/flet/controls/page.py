@@ -566,13 +566,15 @@ class Page(BasePage):
             def main(page: ft.Page):
                 page.title = "Routes Example"
 
-                def route_change(e):
+                def route_change():
                     page.views.clear()
                     page.views.append(
                         ft.View(
                             route="/",
                             controls=[
-                                ft.AppBar(title=ft.Text("Flet app")),
+                                ft.AppBar(
+                                    title=ft.Text("Flet app"),
+                                ),
                                 ft.Button(
                                     "Visit Store",
                                     on_click=lambda: asyncio.create_task(
@@ -587,7 +589,9 @@ class Page(BasePage):
                             ft.View(
                                 route="/store",
                                 controls=[
-                                    ft.AppBar(title=ft.Text("Store")),
+                                    ft.AppBar(
+                                        title=ft.Text("Store"),
+                                    ),
                                     ft.Button(
                                         "Go Home",
                                         on_click=lambda: asyncio.create_task(
@@ -601,17 +605,19 @@ class Page(BasePage):
 
                 async def view_pop(e):
                     if e.view is not None:
+                        print("View pop:", e.view)
                         page.views.remove(e.view)
                         top_view = page.views[-1]
                         await page.push_route(top_view.route)
 
-                    page.on_route_change = route_change
-                    page.on_view_pop = view_pop
+                page.on_route_change = route_change
+                page.on_view_pop = view_pop
 
                 route_change()
 
 
-            ft.run(main)
+            if __name__ == "__main__":
+                ft.run(main)
             ```
 
         Args:
