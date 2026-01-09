@@ -20,7 +20,7 @@ def main(page: ft.Page):
         ft.SafeArea(
             ft.Container(
                 counter := ft.Text("0", size=50),
-                alignment=ft.alignment.center,
+                alignment=ft.Alignment.CENTER,
             ),
             expand=True,
         )
