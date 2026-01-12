@@ -153,3 +153,6 @@ docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["packages*"]
