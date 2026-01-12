@@ -31,11 +31,15 @@ def main(page: ft.Page):
     async def login_click(e):
         await page.login(provider)
 
-    def on_login(e):
+    async def on_login(e):
         if e.error:
-            raise Exception(e.error)
-        print("User ID:", page.auth.user.id)
-        print("Access token:", page.auth.token.access_token)
+            page.add(ft.Text(f"Login error: {e.error}"))
+        else:
+            access_token = (await page.auth.get_token()).access_token
+            page.add(
+                ft.Text(f"Access token: {access_token}"),
+                ft.Text(f"User ID: {page.auth.user.id}"),
+            )
 
     page.on_login = on_login
     page.add(ft.Button("Login with LinkedIn", on_click=login_click))

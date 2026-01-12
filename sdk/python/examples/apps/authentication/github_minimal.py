@@ -1,11 +1,11 @@
-import os
-
 #
 # Run this example with:
 #   export GITHUB_CLIENT_ID=<your_github_oauth_app_client_id>
 #   export GITHUB_CLIENT_SECRET=<your_github_oauth_app_client_secret>
 #   flet run --web --port 8550 github_minimal.py
 #
+import os
+
 import flet as ft
 from flet.auth.providers import GitHubOAuthProvider
 
@@ -27,11 +27,14 @@ def main(page: ft.Page):
         await page.login(provider)
 
     async def on_login(e):
-        page.add(
-            ft.Text(f"Login error: {e.error}"),
-            ft.Text(f"Access token: {(await page.auth.get_token()).access_token}"),
-            ft.Text(f"User ID: {page.auth.user.id}"),
-        )
+        if e.error:
+            page.add(ft.Text(f"Login error: {e.error}"))
+        else:
+            access_token = (await page.auth.get_token()).access_token
+            page.add(
+                ft.Text(f"Access token: {access_token}"),
+                ft.Text(f"User ID: {page.auth.user.id}"),
+            )
 
     page.on_login = on_login
     page.add(ft.Button("Login with GitHub", on_click=login_click))

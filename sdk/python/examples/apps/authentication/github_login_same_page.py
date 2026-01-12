@@ -33,10 +33,10 @@ def main(page: ft.Page):
         )
 
     async def on_login(e):
-        page.add(
-            ft.Text(f"Login error: {e.error}"),
-            ft.Text(f"User ID: {page.auth.user.id}"),
-        )
+        if e.error:
+            page.add(ft.Text(f"Login error: {e.error}"))
+        else:
+            page.add(ft.Text(f"User ID: {page.auth.user.id}"))
 
     page.on_login = on_login
     page.add(ft.Button("Login with GitHub", on_click=login_click))
