@@ -1,16 +1,29 @@
 import flet as ft
 
 
-def example(page):
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+@ft.component
+def App():
+    # keep the state as a string so it maps cleanly to TextField.value
+    count, set_count = ft.use_state("0")
+
+    txt_number = ft.TextField(value=count, text_align=ft.TextAlign.RIGHT, width=100)
+
+    def parse_int_or_fallback(value, fallback):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            try:
+                return int(fallback)
+            except (TypeError, ValueError):
+                return 0
 
     def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
-        e.control.page.update()
+        n = parse_int_or_fallback(txt_number.value, count)
+        set_count(str(n - 1))
 
     def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
-        e.control.page.update()
+        n = parse_int_or_fallback(txt_number.value, count)
+        set_count(str(n + 1))
 
     return ft.Column(
         expand=True,
@@ -28,12 +41,5 @@ def example(page):
     )
 
 
-def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.window_width = 390
-    page.window_height = 844
-    page.add(example(page))
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render(App))

@@ -4,7 +4,9 @@ from math import pi
 import flet as ft
 
 
-def example(page):
+@ft.component
+def App():
+    scattered, set_scattered = ft.use_state(True)
     size = 15
     gap = 3
     duration = 2000
@@ -73,7 +75,6 @@ def example(page):
     ]
 
     width = 16 * (size + gap)
-    # height = 5 * (size + gap)
     height = 15 * (size + gap)
 
     canvas = ft.Stack(
@@ -81,56 +82,39 @@ def example(page):
         height=height,
         animate_scale=duration,
         animate_opacity=duration,
+        scale=5 if scattered else 1,
+        opacity=0.3 if scattered else 1,
     )
 
     # spread parts randomly
-    for _ in range(len(parts)):
+    for i in range(len(parts)):
         canvas.controls.append(
             ft.Container(
                 animate=duration,
                 animate_position=duration,
                 animate_rotation=duration,
+                left=random.randrange(0, width)
+                if scattered
+                else parts[i][0] * (size + gap),
+                top=random.randrange(0, height)
+                if scattered
+                else parts[i][1] * (size + gap),
+                bgcolor=all_colors[random.randrange(0, len(all_colors))]
+                if scattered
+                else parts[i][2],
+                width=random.randrange(int(size / 2), int(size * 3))
+                if scattered
+                else size,
+                height=random.randrange(int(size / 2), int(size * 3))
+                if scattered
+                else size,
+                border_radius=random.randrange(0, int(size / 2)) if scattered else 5,
+                rotate=random.randrange(0, 90) * 2 * pi / 360 if scattered else 0,
             )
         )
 
-    def randomize(e):
-        random.seed()
-        for i in range(len(parts)):
-            c = canvas.controls[i]
-            part_size = random.randrange(int(size / 2), int(size * 3))
-            c.left = random.randrange(0, width)
-            c.top = random.randrange(0, height)
-            c.bgcolor = all_colors[random.randrange(0, len(all_colors))]
-            c.width = part_size
-            c.height = part_size
-            c.border_radius = random.randrange(0, int(size / 2))
-            c.rotate = random.randrange(0, 90) * 2 * pi / 360
-        canvas.scale = 5
-        canvas.opacity = 0.3
-        go_button.visible = True
-        again_button.visible = False
-        page.update()
-
-    def assemble(e):
-        for i, (left, top, bgcolor) in enumerate(parts):
-            c = canvas.controls[i]
-            c.left = left * (size + gap)
-            c.top = top * (size + gap)
-            c.bgcolor = bgcolor
-            c.width = size
-            c.height = size
-            c.border_radius = 5
-            c.rotate = 0
-        canvas.scale = 1
-        canvas.opacity = 1
-        go_button.visible = False
-        again_button.visible = True
-        page.update()
-
-    go_button = ft.Button("Go!", on_click=assemble, visible=True)
-    again_button = ft.Button("Again!", on_click=randomize, visible=False)
-
-    randomize(None)
+    go_button = ft.Button("Go!", on_click=lambda e: set_scattered(False))
+    again_button = ft.Button("Again!", on_click=lambda e: set_scattered(True))
 
     return ft.Container(
         expand=True,
@@ -141,22 +125,11 @@ def example(page):
             tight=True,
             controls=[
                 canvas,
-                go_button,
-                again_button,
+                go_button if scattered else again_button,
             ],
         ),
     )
 
 
-def main(page: ft.Page):
-    page.title = "Flet animation example"
-    # page.horizontal_alignment = "center"
-    # page.vertical_alignment = "center"
-    page.spacing = 30
-    page.window.width = 390
-    page.window.height = 844
-    page.add(example(page=page))
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render(App))
