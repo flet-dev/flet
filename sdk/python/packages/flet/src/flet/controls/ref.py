@@ -1,7 +1,7 @@
 import weakref
 from typing import Generic, Optional, TypeVar
 
-T = TypeVar("T")
+T = TypeVar("T", covariant=True)
 __all__ = ["Ref"]
 
 
