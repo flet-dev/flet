@@ -1,3 +1,10 @@
+#
+# Run this example with:
+#   export GITHUB_CLIENT_ID=<your_github_oauth_app_client_id>
+#   export GITHUB_CLIENT_SECRET=<your_github_oauth_app_client_secret>
+#   export MY_APP_SECRET_KEY=<your_app_secret_key_for_token_encryption>
+#   flet run --web --port 8550 github_repos_browser.py
+#
 import json
 import logging
 import os
@@ -10,45 +17,57 @@ from flet.security import decrypt, encrypt
 
 logging.basicConfig(level=logging.INFO)
 
-MY_APP_SECRET_KEY = os.getenv("MY_APP_SECRET_KEY")
-assert MY_APP_SECRET_KEY, "set MY_APP_SECRET_KEY environment variable"
-GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
-assert GITHUB_CLIENT_ID, "set GITHUB_CLIENT_ID environment variable"
-GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
-assert GITHUB_CLIENT_SECRET, "set GITHUB_CLIENT_SECRET environment variable"
+
+def get_env_variable(name: str) -> str:
+    value = os.getenv(name)
+    assert value, f"set {name} environment variable"
+    return value
 
 
 async def main(page: ft.Page):
     # encryption passphrase
-    secret_key = MY_APP_SECRET_KEY
+    secret_key = get_env_variable("MY_APP_SECRET_KEY")
 
     # configure provider
     provider = GitHubOAuthProvider(
-        client_id=GITHUB_CLIENT_ID,
-        client_secret=GITHUB_CLIENT_SECRET,
-        redirect_url="http://localhost:8550/oauth_callback",
+        client_id=get_env_variable("GITHUB_CLIENT_ID"),
+        client_secret=get_env_variable("GITHUB_CLIENT_SECRET"),
+        redirect_url="http://127.0.0.1:8550/oauth_callback",
     )
 
     # client storage keys
     AUTH_TOKEN_KEY = "myapp.auth_token"
 
     async def perform_login(e):
+        login_button.disabled = True
+        login_button.update()
+
         # perform login
         saved_token = None
-        ejt = await page.shared_preferences.get(AUTH_TOKEN_KEY)
+        ejt = await ft.SharedPreferences().get(AUTH_TOKEN_KEY)
         if ejt:
             saved_token = decrypt(ejt, secret_key)
         if e is not None or saved_token is not None:
-            page.login(provider, saved_token=saved_token, scope=["public_repo"])
+            await page.login(
+                provider,
+                redirect_to_page=True,
+                on_open_authorization_url=lambda url: ft.UrlLauncher().launch_url(
+                    ft.Url(url, target=ft.UrlTarget.SELF)
+                ),
+                saved_token=saved_token,
+                scope=["public_repo"],
+            )
 
     async def on_login(e: ft.LoginEvent):
         if e.error:
             raise Exception(e.error)
 
+        assert page.auth
+
         # save token in a client storage
-        jt = page.auth.token.to_json()
+        jt = (await page.auth.get_token()).to_json()
         ejt = encrypt(jt, secret_key)
-        await page.shared_preferences.set(AUTH_TOKEN_KEY, ejt)
+        await ft.SharedPreferences().set(AUTH_TOKEN_KEY, ejt)
 
         logged_user.value = f"Hello, {page.auth.user['name']}!"
         toggle_login_buttons()
@@ -60,7 +79,7 @@ async def main(page: ft.Page):
         if page.auth:
             headers = {
                 "User-Agent": "Flet",
-                "Authorization": f"Bearer {page.auth.token.access_token}",
+                "Authorization": f"Bearer {(await page.auth.get_token()).access_token}",
             }
             async with httpx.AsyncClient() as client:
                 repos_resp = await client.get(
@@ -77,16 +96,16 @@ async def main(page: ft.Page):
                     )
 
     async def logout_button_click(e):
-        await page.shared_preferences.remove(AUTH_TOKEN_KEY)
+        await ft.SharedPreferences().remove(AUTH_TOKEN_KEY)
         page.logout()
 
     async def on_logout(e):
         toggle_login_buttons()
         await list_github_repositories()
-        page.update()
 
     def toggle_login_buttons():
         login_button.visible = page.auth is None
+        login_button.disabled = False
         logged_user.visible = logout_button.visible = page.auth is not None
 
     logged_user = ft.Text()
@@ -96,8 +115,8 @@ async def main(page: ft.Page):
     page.on_login = on_login
     page.on_logout = on_logout
     toggle_login_buttons()
-    await perform_login(None)
     page.add(ft.Row([logged_user, login_button, logout_button]), repos_view)
+    await perform_login(None)
 
 
 ft.run(main)
