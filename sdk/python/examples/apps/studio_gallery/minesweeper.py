@@ -180,6 +180,10 @@ def App():
     new_game_tapped, set_new_game_tapped = ft.use_state(False)
 
     ticker_task, set_ticker_task = ft.use_state(None)
+    is_mobile = ft.context.page.platform in (
+        ft.PagePlatform.ANDROID,
+        ft.PagePlatform.IOS,
+    )
 
     def end_game():
         game.running = False
@@ -204,11 +208,16 @@ def App():
             t = ft.context.page.run_task(tick_loop)
             set_ticker_task(t)
 
+    last_tap_pos_ref = ft.use_ref(None)
+
     def on_tap_down(e: ft.TapEvent):
-        # e.local_position.x / e.local_position.y are relative to the GestureDetector
-        # content (the Stack)
+        last_tap_pos_ref.current = (e.local_position.x, e.local_position.y)
+
+    def on_tap(e: ft.TapEvent):
         if game.over:
             return
+
+        x, y = last_tap_pos_ref.current
 
         if not game.first_click_done:
             game.first_click_done = True
@@ -218,8 +227,8 @@ def App():
 
         for s in game.squares:
             if (
-                s.left <= e.local_position.x <= s.left + SQUARE_SIZE
-                and s.top <= e.local_position.y <= s.top + SQUARE_SIZE
+                s.left <= x <= s.left + SQUARE_SIZE
+                and s.top <= y <= s.top + SQUARE_SIZE
             ):
                 if s.flagged:
                     print("square is flagged, cannot reveal")
@@ -246,7 +255,9 @@ def App():
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         on_tap_down=on_tap_down,
-        on_right_pan_start=on_right_pan_start,
+        on_tap=on_tap,
+        on_right_pan_start=on_right_pan_start if not is_mobile else None,
+        on_long_press_start=on_right_pan_start if is_mobile else None,
         content=ft.Stack(
             controls=[SquareView(c) for c in game.squares],
         ),
