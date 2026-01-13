@@ -1,5 +1,15 @@
 # Flet changelog
 
+## 0.80.2
+
+* OAuth fixes and updated examples ([#5996](https://github.com/flet-dev/flet/issues/5996)).
+* Examples cleanup ([#5997](https://github.com/flet-dev/flet/issues/5997)).
+* Fix wrong `LinearGradient` alignment defaults + allow multiple use of `--exclude` option in `flet build` ([#5986](https://github.com/flet-dev/flet/issues/5986)).
+* Update TypeVar definition for covariant typing in Ref class ([#5994](https://github.com/flet-dev/flet/issues/5994)).
+* feat: add `on_long_press` and `on_hover` events to `IconButton` ([#5984](https://github.com/flet-dev/flet/issues/5984)).
+* replace all `asyncio.iscoroutinefunction` with `inspect.iscoroutinefunction` ([#5928](https://github.com/flet-dev/flet/issues/5928)).
+
+
 ## 0.80.1
 
 * Fix `flet publish` to sub-directories, Icons Browser and other Gallery examples updated [#5964](https://github.com/flet-dev/flet/pull/5964).
