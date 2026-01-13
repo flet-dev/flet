@@ -73,6 +73,9 @@ dependencies:
   flet_charts:
     path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
 
+  flet_secure_storage:
+    path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
+
   cupertino_icons: ^1.0.6
   wakelock_plus: ^1.4.0
   package_info_plus: ^9.0.0

@@ -18,6 +18,7 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import 'package:flet_secure_storage/flet_secure_storage.dart' as flet_secure_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -47,6 +48,7 @@ void main([List<String>? args]) async {
     flet_flashlight.Extension(),
     flet_datatable2.Extension(),
     flet_charts.Extension(),
+    flet_secure_storage.Extension(),
   ];
 
   // --FAT_CLIENT_START--
