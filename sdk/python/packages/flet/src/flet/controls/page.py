@@ -112,8 +112,11 @@ class ServiceRegistry(Service):
     def unregister_services(self):
         with self._lock:
             original_len = len(self._services)
+            min_refs = 3 if sys.version_info >= (3, 14) else 4
             self._services = [
-                service for service in self._services if sys.getrefcount(service) > 4
+                service
+                for service in self._services
+                if sys.getrefcount(service) > min_refs
             ]
             removed_count = original_len - len(self._services)
             if removed_count > 0:
