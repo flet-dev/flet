@@ -6,7 +6,7 @@ import httpx
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
-from flet.version import version
+from flet.version import flet_version
 
 
 class GitHubOAuthProvider(OAuthProvider):
@@ -72,5 +72,5 @@ class GitHubOAuthProvider(OAuthProvider):
     def __get_client_headers(self, access_token):
         return {
             "Authorization": f"Bearer {access_token}",
-            "User-Agent": f"Flet/{version}",
+            "User-Agent": f"Flet/{flet_version}",
         }

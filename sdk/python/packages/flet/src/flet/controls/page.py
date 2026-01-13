@@ -112,8 +112,11 @@ class ServiceRegistry(Service):
     def unregister_services(self):
         with self._lock:
             original_len = len(self._services)
+            min_refs = 3 if sys.version_info >= (3, 14) else 4
             self._services = [
-                service for service in self._services if sys.getrefcount(service) > 4
+                service
+                for service in self._services
+                if sys.getrefcount(service) > min_refs
             ]
             removed_count = original_len - len(self._services)
             if removed_count > 0:
@@ -704,10 +707,7 @@ class Page(BasePage):
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
-                if inspect.iscoroutinefunction(self.on_login):
-                    asyncio.create_task(self.on_login(e))
-                elif callable(self.on_login):
-                    self.on_login(e)
+                asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
         return self.__authorization
 
@@ -739,10 +739,7 @@ class Page(BasePage):
             except Exception as ex:
                 e.error = str(ex)
         if self.on_login:
-            if inspect.iscoroutinefunction(self.on_login):
-                asyncio.create_task(self.on_login(e))
-            elif callable(self.on_login):
-                self.on_login(e)
+            asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
     def logout(self) -> None:
         """
@@ -753,10 +750,7 @@ class Page(BasePage):
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
-            if inspect.iscoroutinefunction(self.on_logout):
-                asyncio.create_task(self.on_logout(e))
-            elif callable(self.on_logout):
-                self.on_logout(e)
+            asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))
 
     @deprecated(
         "Use UrlLauncher().launch_url() instead.",
