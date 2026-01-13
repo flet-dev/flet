@@ -1,309 +1,193 @@
 import flet as ft
-from flet import (
-    Button,
-    Colors,
-    Column,
-    Container,
-    Row,
-    Text,
-    border_radius,
-)
 
 
-class CalculatorApp(Container):
-    def build(self):
-        self.reset()
-        self.result = Text(value="0", color=Colors.WHITE, size=20)
+@ft.component
+def App():
+    display, set_display = ft.use_state("0")
+    operand1, set_operand1 = ft.use_state(0.0)
+    operator, set_operator = ft.use_state("+")
+    new_operand, set_new_operand = ft.use_state(True)
 
-        # application's root control (i.e. "view") containing all other controls
-        self.content = Container(
-            # width=300,
-            bgcolor=Colors.BLACK,
-            border_radius=border_radius.all(20),
-            padding=20,
-            content=Column(
-                controls=[
-                    Row(controls=[self.result], alignment=ft.MainAxisAlignment.END),
-                    Row(
-                        controls=[
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="AC",
-                                bgcolor=Colors.BLUE_GREY_100,
-                                color=Colors.BLACK,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="AC",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="+/-",
-                                bgcolor=Colors.BLUE_GREY_100,
-                                color=Colors.BLACK,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="+/-",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="%",
-                                bgcolor=Colors.BLUE_GREY_100,
-                                color=Colors.BLACK,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="%",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="/",
-                                bgcolor=Colors.ORANGE,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="/",
-                            ),
-                        ],
-                    ),
-                    Row(
-                        controls=[
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="7",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="7",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="8",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="8",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="9",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="9",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="*",
-                                bgcolor=Colors.ORANGE,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="*",
-                            ),
-                        ]
-                    ),
-                    Row(
-                        controls=[
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="4",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="4",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="5",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="5",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="6",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="6",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="-",
-                                bgcolor=Colors.ORANGE,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="-",
-                            ),
-                        ]
-                    ),
-                    Row(
-                        controls=[
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="1",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="1",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="2",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="2",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="3",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="3",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="+",
-                                bgcolor=Colors.ORANGE,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="+",
-                            ),
-                        ]
-                    ),
-                    Row(
-                        controls=[
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="0",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=2,
-                                on_click=self.button_clicked,
-                                data="0",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content=".",
-                                bgcolor=Colors.WHITE24,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data=".",
-                            ),
-                            Button(
-                                style=ft.ButtonStyle(padding=0),
-                                content="=",
-                                bgcolor=Colors.ORANGE,
-                                color=Colors.WHITE,
-                                expand=1,
-                                on_click=self.button_clicked,
-                                data="=",
-                            ),
-                        ]
-                    ),
-                ],
-            ),
-        )
-
-    def button_clicked(self, e):
-        data = e.control.data
-        if self.result.value == "Error" or data == "AC":
-            self.result.value = "0"
-            self.reset()
-
-        elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
-            if self.result.value == "0" or self.new_operand:
-                self.result.value = data
-                self.new_operand = False
-            else:
-                self.result.value = self.result.value + data
-
-        elif data in ("+", "-", "*", "/"):
-            self.result.value = self.calculate(
-                self.operand1, float(self.result.value), self.operator
-            )
-            self.operator = data
-            if self.result.value == "Error":
-                self.operand1 = "0"
-            else:
-                self.operand1 = float(self.result.value)
-            self.new_operand = True
-
-        elif data in ("="):
-            self.result.value = self.calculate(
-                self.operand1, float(self.result.value), self.operator
-            )
-            self.reset()
-
-        elif data in ("%"):
-            self.result.value = float(self.result.value) / 100
-            self.reset()
-
-        elif data in ("+/-"):
-            if float(self.result.value) > 0:
-                self.result.value = "-" + str(self.result.value)
-
-            elif float(self.result.value) < 0:
-                self.result.value = str(
-                    self.format_number(abs(float(self.result.value)))
-                )
-
-        self.update()
-
-    def format_number(self, num):
+    def format_number(num: float):
         if num % 1 == 0:
             return int(num)
-        else:
-            return num
+        return num
 
-    def calculate(self, operand1, operand2, operator):
-        if operator == "+":
-            return self.format_number(operand1 + operand2)
+    def calculate(op1: float, op2: float, op: str):
+        try:
+            if op == "+":
+                return format_number(op1 + op2)
+            if op == "-":
+                return format_number(op1 - op2)
+            if op == "*":
+                return format_number(op1 * op2)
+            if op == "/":
+                if op2 == 0:
+                    return "Error"
+                return format_number(op1 / op2)
+        except Exception:
+            return "Error"
 
-        elif operator == "-":
-            return self.format_number(operand1 - operand2)
+    def parse_float(v, fallback=0.0):
+        try:
+            return float(v)
+        except Exception:
+            try:
+                return float(fallback)
+            except Exception:
+                return 0.0
 
-        elif operator == "*":
-            return self.format_number(operand1 * operand2)
+    def on_button(data: str):
+        nonlocal display, operand1, operator, new_operand
+        # update via setters so UI re-renders
+        if display == "Error" or data == "AC":
+            set_display("0")
+            set_operand1(0.0)
+            set_operator("+")
+            set_new_operand(True)
+            return
 
-        elif operator == "/":
-            if operand2 == 0:
-                return "Error"
+        if data in ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."):
+            if display == "0" or new_operand:
+                set_display(data)
+                set_new_operand(False)
             else:
-                return self.format_number(operand1 / operand2)
+                set_display(str(display) + data)
+            return
 
-    def reset(self):
-        self.operator = "+"
-        self.operand1 = 0
-        self.new_operand = True
+        if data in ("+", "-", "*", "/"):
+            val = calculate(operand1, parse_float(display), operator)
+            # set result and operator
+            set_display(str(val))
+            set_operator(data)
+            if val == "Error":
+                set_operand1(0.0)
+            else:
+                set_operand1(parse_float(val))
+            set_new_operand(True)
+            return
 
+        if data == "=":
+            val = calculate(operand1, parse_float(display), operator)
+            set_display(str(val))
+            # reset for next input
+            set_operand1(0.0)
+            set_operator("+")
+            set_new_operand(True)
+            return
 
-def example(page):
-    calc = CalculatorApp()
+        if data == "%":
+            set_display(str(parse_float(display) / 100))
+            set_operand1(0.0)
+            set_operator("+")
+            set_new_operand(True)
+            return
 
-    return calc
+        if data == "+/-":
+            v = parse_float(display)
+            if v > 0:
+                set_display("-" + str(display))
+            elif v < 0:
+                set_display(str(format_number(abs(v))))
+            return
 
+    def make_btn(label: str, bgcolor=None, color=None, expand: int = 1):
+        return ft.Button(
+            label,
+            expand=expand,
+            bgcolor=bgcolor,
+            color=color,
+            on_click=lambda e, d=label: on_button(d),
+        )
 
-def main(page: ft.Page):
-    page.title = "Flet calculator example"
-    page.window_width = 390
-    page.window_height = 844
-    page.add(example(page))
+    # build rows like the original layout
+    return ft.Container(
+        width=350,
+        bgcolor=ft.Colors.BLACK,
+        border_radius=ft.BorderRadius.all(20),
+        padding=20,
+        content=ft.Column(
+            controls=[
+                ft.Row(
+                    [ft.Text(value=str(display), color=ft.Colors.WHITE, size=20)],
+                    alignment=ft.MainAxisAlignment.END,
+                ),
+                ft.Row(
+                    controls=[
+                        make_btn(
+                            "AC", bgcolor=ft.Colors.BLUE_GREY_100, color=ft.Colors.BLACK
+                        ),
+                        make_btn(
+                            "+/-",
+                            bgcolor=ft.Colors.BLUE_GREY_100,
+                            color=ft.Colors.BLACK,
+                        ),
+                        make_btn(
+                            "%", bgcolor=ft.Colors.BLUE_GREY_100, color=ft.Colors.BLACK
+                        ),
+                        make_btn("/", bgcolor=ft.Colors.ORANGE, color=ft.Colors.WHITE),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        make_btn(
+                            "7", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "8", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "9", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn("*", bgcolor=ft.Colors.ORANGE, color=ft.Colors.WHITE),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        make_btn(
+                            "4", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "5", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "6", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn("-", bgcolor=ft.Colors.ORANGE, color=ft.Colors.WHITE),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        make_btn(
+                            "1", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "2", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn(
+                            "3", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn("+", bgcolor=ft.Colors.ORANGE, color=ft.Colors.WHITE),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        make_btn(
+                            "0",
+                            bgcolor=ft.Colors.WHITE_24,
+                            color=ft.Colors.WHITE,
+                            expand=2,
+                        ),
+                        make_btn(
+                            ".", bgcolor=ft.Colors.WHITE_24, color=ft.Colors.WHITE
+                        ),
+                        make_btn("=", bgcolor=ft.Colors.ORANGE, color=ft.Colors.WHITE),
+                    ]
+                ),
+            ]
+        ),
+    )
 
 
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render(App))
