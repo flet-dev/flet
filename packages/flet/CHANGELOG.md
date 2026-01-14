@@ -6,6 +6,7 @@
 * Update TypeVar definition for covariant typing in Ref class ([#5994](https://github.com/flet-dev/flet/issues/5994)).
 * feat: add `on_long_press` and `on_hover` events to `IconButton` ([#5984](https://github.com/flet-dev/flet/issues/5984)).
 * replace all `asyncio.iscoroutinefunction` with `inspect.iscoroutinefunction` ([#5928](https://github.com/flet-dev/flet/issues/5928)).
+* Fix: Control with ID xxx is not registered for `flet_permission_handler` when using Python 3.14 ([#5896](https://github.com/flet-dev/flet/issues/5896)).
 
 # 0.80.1
 
