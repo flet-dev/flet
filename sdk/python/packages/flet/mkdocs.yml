@@ -477,6 +477,7 @@ nav:
           - SemanticsService: services/semanticsservice.md
           - ShakeDetector: services/shakedetector.md
           - Share: services/share.md
+          - SecureStorage: services/securestorage.md
           - SharedPreferences: services/sharedpreferences.md
           - StoragePaths: services/storagepaths.md
           - UrlLauncher: services/urllauncher.md
