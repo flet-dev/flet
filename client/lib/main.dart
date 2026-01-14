@@ -14,11 +14,12 @@ import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
+import 'package:flet_secure_storage/flet_secure_storage.dart'
+    as flet_secure_storage;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
-import 'package:flet_secure_storage/flet_secure_storage.dart' as flet_secure_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -89,10 +90,8 @@ void main([List<String>? args]) async {
         assetsDir = args[2];
         debugPrint("Args contain a path assets directory: $assetsDir}");
       }
-    } else if (!kDebugMode &&
-        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
-      throw Exception(
-          'In desktop mode Flet app URL must be provided as a first argument.');
+    } else if (!kDebugMode && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+      throw Exception('In desktop mode Flet app URL must be provided as a first argument.');
     }
   }
 

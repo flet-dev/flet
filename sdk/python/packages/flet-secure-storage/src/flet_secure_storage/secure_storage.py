@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Any
+from typing import Any, Optional
 
 import flet as ft
 from flet.controls.base_control import control
@@ -45,7 +45,7 @@ class SecureStorage(Service):
     Web-specific configuration for secure storage.
     """
 
-    on_change: ft.EventHandler["SecureStorageEvent"] | None = None
+    on_change: Optional[ft.EventHandler["SecureStorageEvent"]] = None
     """
     Fires when secure storage availability changes.
 
@@ -53,7 +53,7 @@ class SecureStorage(Service):
     The payload is a `SecureStorageEvent` object with the `available` field.
     """
 
-    async def get_availability(self) -> bool | None:
+    async def get_availability(self) -> Optional[bool]:
         """
         Gets the current availability status of secure storage.
 
@@ -70,11 +70,11 @@ class SecureStorage(Service):
         self,
         key: str,
         value: Any,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
     ) -> None:
         """
         Stores a value in secure storage under the given key.
@@ -109,12 +109,12 @@ class SecureStorage(Service):
     async def get(
         self,
         key: str,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
-    ) -> str | None:
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
+    ) -> Optional[str]:
         """
         Retrieves the value stored under the given key in secure storage.
 
@@ -143,11 +143,11 @@ class SecureStorage(Service):
 
     async def get_all(
         self,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
     ) -> dict[str, Any]:
         """
         Retrieves all key-value pairs from secure storage.
@@ -176,11 +176,11 @@ class SecureStorage(Service):
     async def contains_key(
         self,
         key: str,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
     ) -> bool:
         """
         Checks whether the given key exists in secure storage.
@@ -211,11 +211,11 @@ class SecureStorage(Service):
     async def remove(
         self,
         key: str,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
     ) -> None:
         """
         Removes the value stored under the given key in secure storage.
@@ -242,11 +242,11 @@ class SecureStorage(Service):
 
     async def clear(
         self,
-        web: WebOptions | None = None,
-        ios: IOSOptions | None = None,
-        macos: MacOsOptions | None = None,
-        android: AndroidOptions | None = None,
-        windows: WindowsOptions | None = None,
+        web: Optional[WebOptions] = None,
+        ios: Optional[IOSOptions] = None,
+        macos: Optional[MacOsOptions] = None,
+        android: Optional[AndroidOptions] = None,
+        windows: Optional[WindowsOptions] = None,
     ) -> None:
         """
         Clears all key-value pairs from secure storage.

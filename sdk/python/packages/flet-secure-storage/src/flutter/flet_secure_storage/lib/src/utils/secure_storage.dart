@@ -2,17 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-FlutterSecureStorage createSecureStorage(dynamic value) {
-  return FlutterSecureStorage(
-    aOptions: parseAndroidOptions(value["android"], AndroidOptions.defaultOptions)!,
-    iOptions: parseIosOptions(value["ios"], IOSOptions.defaultOptions)!,
-    lOptions: LinuxOptions.defaultOptions,
-    wOptions: parseWindowsOptions(value["windows"], WindowsOptions.defaultOptions)!,
-    webOptions: parseWebOptions(value["web"], WebOptions.defaultOptions)!,
-    mOptions: parseMacOptions(value["macos"], MacOsOptions.defaultOptions)!,
-  );
-}
-
 IOSOptions? parseIosOptions(dynamic value, [IOSOptions? defaultValue]) {
   if (value == null) return defaultValue;
   return IOSOptions(
@@ -25,8 +14,8 @@ IOSOptions? parseIosOptions(dynamic value, [IOSOptions? defaultValue]) {
     comment: value["comment"],
     isInvisible: parseBool(value["is_invisible"]),
     isNegative: parseBool(value["is_negative"]),
-    creationDate: parseDateTime(value["creation_date"]),
-    lastModifiedDate: parseDateTime(value["last_modified_date"]),
+    creationDate: value["creation_date"],
+    lastModifiedDate: value["last_modified_date"],
     resultLimit: parseInt(value["result_limit"]),
     shouldReturnPersistentReference: parseBool(value["is_persistent"], false)!,
     authenticationUIBehavior: value["auth_ui_behavior"],
@@ -35,7 +24,7 @@ IOSOptions? parseIosOptions(dynamic value, [IOSOptions? defaultValue]) {
 }
 
 MacOsOptions? parseMacOptions(dynamic value, [MacOsOptions? defaultValue]) {
-  if (value == null) return defaultValue; 
+  if (value == null) return defaultValue;
   return MacOsOptions(
     accountName: value["account_name"],
     groupId: value["group_id"],
@@ -46,8 +35,8 @@ MacOsOptions? parseMacOptions(dynamic value, [MacOsOptions? defaultValue]) {
     comment: value["comment"],
     isInvisible: parseBool(value["is_invisible"]),
     isNegative: parseBool(value["is_negative"]),
-    creationDate: parseDateTime(value["creation_date"]),
-    lastModifiedDate: parseDateTime(value["last_modified_date"]),
+    creationDate: value["creation_date"],
+    lastModifiedDate: value["last_modified_date"],
     resultLimit: parseInt(value["result_limit"]),
     shouldReturnPersistentReference: parseBool(value["is_persistent"]),
     authenticationUIBehavior: value["auth_ui_behavior"],
@@ -122,9 +111,4 @@ List<AccessControlFlag>? parseAccessControlFlags(List<dynamic>? value, [List<Acc
       .cast<String>()
       .map((e) => AccessControlFlag.values.byName(e))
       .toList();
-}
-
-DateTime? parseDateTime(dynamic value, [DateTime? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DateTime.parse(value);
 }

@@ -21,9 +21,9 @@ dependencies = [
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
+    "flet-secure-storage",
     "flet-video",
     "flet-webview",
-    "flet-secure-storage",
 ]
 
 [tool.uv.sources]
@@ -42,9 +42,9 @@ flet-lottie = { workspace = true }
 flet-map = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
+flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
-flet-secure-storage = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
 [tool.uv.workspace]
@@ -126,9 +126,9 @@ isort = { known-first-party = [
     "flet_map",
     "flet_permission_handler",
     "flet_rive",
+    "flet_secure_storage",
     "flet_video",
-    "flet_webview",
-    "flet_secure_storage"
+    "flet_webview"
 ] }
 preview = true
 select = [

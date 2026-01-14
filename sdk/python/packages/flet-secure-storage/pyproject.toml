@@ -2,7 +2,7 @@
 name = "flet-secure-storage"
 version = "0.1.0"
 description = "Secure Storage control for Flet"
-authors = [{ name = "Flet contributors", email = "you@example.com" }]
+authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

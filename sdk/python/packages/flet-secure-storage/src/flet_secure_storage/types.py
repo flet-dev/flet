@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 import flet as ft
 
@@ -138,4 +139,4 @@ class StorageCipherAlgorithm(Enum):
 
 @dataclass
 class SecureStorageEvent(ft.Event["SecureStorage"]):  # type: ignore
-    available: bool | None
+    available: Optional[bool]

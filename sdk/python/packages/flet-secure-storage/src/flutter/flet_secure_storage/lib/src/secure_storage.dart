@@ -8,9 +8,9 @@ import 'utils/secure_storage.dart';
 
 class SecureStorageService extends FletService {
   SecureStorageService({required super.control});
-  
-  FlutterSecureStorage? storage;
-  StreamSubscription? onSecureDataChanged;
+
+  FlutterSecureStorage? _storage;
+  StreamSubscription? _onSecureDataChanged;
   AndroidOptions androidOptions = AndroidOptions.defaultOptions;
   WindowsOptions windowsOptions = WindowsOptions.defaultOptions;
   LinuxOptions linuxOptions = LinuxOptions.defaultOptions;
@@ -18,11 +18,8 @@ class SecureStorageService extends FletService {
   IOSOptions iosOptions = IOSOptions.defaultOptions;
   WebOptions webOptions = WebOptions.defaultOptions;
 
-  @override
-  void init() {
-    super.init();
-    debugPrint("SecureStorageService(${control.id}).init: ${control.properties}");
-    storage = FlutterSecureStorage(
+  FlutterSecureStorage get storage {
+    return _storage ??= FlutterSecureStorage(
       lOptions: linuxOptions,
       aOptions: parseAndroidOptions(control.get<Map>("android_options"), androidOptions)!,
       wOptions: parseWindowsOptions(control.get<Map>("windows_options"), windowsOptions)!,
@@ -30,80 +27,107 @@ class SecureStorageService extends FletService {
       iOptions: parseIosOptions(control.get<Map>("ios_options"), iosOptions)!,
       webOptions: parseWebOptions(control.get<Map>("web_options"), webOptions)!,
     );
+  }
+
+  @override
+  void init() {
+    super.init();
+    debugPrint("SecureStorageService(${control.id}).init: ${control.properties}");
     control.addInvokeMethodListener(_invokeMethod);
-    onSecureDataChanged = storage!.onCupertinoProtectedDataAvailabilityChanged?.listen(
-      (isAvailable) => control.triggerEvent("change", {"is_available_storage": isAvailable})
-    );
+    _updateListeners();
   }
 
   @override
   void update() {
     debugPrint("SecureStorageService(${control.id}).update: ${control.properties}");
+    _updateListeners();
+  }
+
+  void _updateListeners() {
+    final listenChange = control.getBool("on_change") == true;
+    if (listenChange && _onSecureDataChanged == null) {
+      _onSecureDataChanged = storage.onCupertinoProtectedDataAvailabilityChanged?.listen(
+        (bool result) {
+          control.triggerEvent("change", {"is_available_storage": result});
+        }, onError: (error) {
+            debugPrint("SecureStorageService: error listening to connectivity: $error");
+        }
+      );
+    } else if (!listenChange && _onSecureDataChanged != null) {
+      _onSecureDataChanged?.cancel();
+      _onSecureDataChanged = null;
+    }
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    AndroidOptions aOptions = parseAndroidOptions(args?["android"], storage.aOptions)!;
+    IOSOptions iOptions = parseIosOptions(args?["ios"], storage.iOptions)!;
+    LinuxOptions lOptions = storage.lOptions;
+    WindowsOptions wOptions = parseWindowsOptions(args?["windows"], storage.wOptions)!;
+    WebOptions webOptions = parseWebOptions(args?["web"], storage.webOptions)!;
+    MacOsOptions mOptions = parseMacOptions(args?["macos"], storage.mOptions as MacOsOptions)!;
     switch (name) {
       case "set":
-        return await storage!.write(
+        return await storage.write(
           key: args["key"]!,
           value: args["value"]!,
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "get":
-        return await storage!.read(
+        return await storage.read(
           key: args["key"]!,
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "get_all":
-        return await storage!.readAll(
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+        return await storage.readAll(
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "contains_key":
-        return await storage!.containsKey(
+        return await storage.containsKey(
           key: args["key"]!,
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "remove":
-        return await storage!.delete(
+        return await storage.delete(
           key: args["key"]!,
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "clear":
-        return await storage!.deleteAll(
-          aOptions: parseAndroidOptions(args?["android"], storage!.aOptions)!,
-          iOptions: parseIosOptions(args?["ios"], storage!.iOptions)!,
-          lOptions: storage!.lOptions,
-          wOptions: parseWindowsOptions(args?["windows"], storage!.wOptions)!,
-          webOptions: parseWebOptions(args?["web"], storage!.webOptions)!,
-          mOptions: parseMacOptions(args?["macos"], storage!.mOptions as MacOsOptions)!,
+        return await storage.deleteAll(
+          aOptions: aOptions,
+          iOptions: iOptions,
+          lOptions: lOptions,
+          wOptions: wOptions,
+          webOptions: webOptions,
+          mOptions: mOptions,
         );
       case "get_availability":
-        return await storage!.isCupertinoProtectedDataAvailable();
+        return await storage.isCupertinoProtectedDataAvailable();
       default:
         throw Exception("Unknown SecureStorage method: $name");
     }
@@ -113,7 +137,7 @@ class SecureStorageService extends FletService {
   void dispose() {
     debugPrint("SecureStorageService(${control.id}).dispose()");
     control.removeInvokeMethodListener(_invokeMethod);
-    onSecureDataChanged?.cancel();
+    _onSecureDataChanged?.cancel();
     super.dispose();
   }
 }

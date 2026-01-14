@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Optional
 
 from flet_secure_storage.types import (
     AccessControlFlag,
@@ -66,7 +67,7 @@ class AndroidOptions:
     Legacy AES/CBC/PKCS7Padding is available for backwards compatibility.
     """
 
-    shared_preferences_name: str | None = None
+    shared_preferences_name: Optional[str] = None
     """
     The name of the shared preferences database to use.
 
@@ -74,7 +75,7 @@ class AndroidOptions:
     Warning: changing this will prevent access to already saved preferences.
     """
 
-    preferences_key_prefix: str | None = None
+    preferences_key_prefix: Optional[str] = None
     """
     Prefix for shared preference keys. Ensures keys are unique to your app.
 
@@ -101,14 +102,14 @@ class AppleOptions:
     This class allows configuring keychain access and storage behavior.
     """
 
-    account_name: str | None = "flutter_secure_storage_service"
+    account_name: Optional[str] = "flutter_secure_storage_service"
     """
     Represents the service or application name associated with the item.
 
     Typically used to group related keychain items.
     """
 
-    group_id: str | None = None
+    group_id: Optional[str] = None
     """
     Specifies the app group for shared access. Allows multiple apps in the
     same app group to access the item.
@@ -117,7 +118,7 @@ class AppleOptions:
     kSecAttrSynchronizable is set.
     """
 
-    accessibility: KeychainAccessibility | None = KeychainAccessibility.UNLOCKED
+    accessibility: Optional[KeychainAccessibility] = KeychainAccessibility.UNLOCKED
     """
     Defines the accessibility level of the keychain item.
 
@@ -130,61 +131,61 @@ class AppleOptions:
     Indicates whether the keychain item should be synchronized with iCloud.
     True enables synchronization, False disables it.
     """
-    label: str | None = None
+    label: Optional[str] = None
     """
     A user-visible label for the keychain item.
     Helps identify the item in keychain management tools.
     """
 
-    description: str | None = None
+    description: Optional[str] = None
     """
     A description of the keychain item.
     Can describe a category of items (shared) or a specific item (unique).
     """
 
-    comment: str | None = None
+    comment: Optional[str] = None
     """
     A comment associated with the keychain item.
     Often used for metadata or debugging information.
     """
 
-    is_invisible: bool | None = None
+    is_invisible: Optional[bool] = None
     """
     Indicates whether the keychain item is hidden from user-visible lists.
     Can apply to all items in a category (shared) or specific items (unique).
     """
 
-    is_negative: bool | None = None
+    is_negative: Optional[bool] = None
     """
     Indicates whether the item is a placeholder or a negative entry.
     Typically unique to individual keychain items.
     """
 
-    creation_date: datetime | None = None
+    creation_date: Optional[datetime] = None
     """
     The creation date of the keychain item.
     Automatically set by the system when an item is created.
     """
 
-    last_modified_date: datetime | None = None
+    last_modified_date: Optional[datetime] = None
     """
     The last modification date of the keychain item.
     Automatically updated when an item is modified.
     """
 
-    result_limit: int | None = None
+    result_limit: Optional[int] = None
     """
     Specifies the maximum number of results to return in a query.
     For example, 1 for a single result, or all for all matching results.
     """
 
-    is_persistent: bool | None = None
+    is_persistent: Optional[bool] = None
     """
     Indicates whether to return a persistent reference to the keychain item.
     Used for persistent access across app sessions.
     """
 
-    auth_ui_behavior: str | None = None
+    auth_ui_behavior: Optional[str] = None
     """
     Controls how authentication UI is presented during secure operations.
     Determines whether authentication prompts are displayed to the user.
@@ -288,9 +289,9 @@ class WindowsOptions:
 
     Notes:
       - May introduce performance overhead.
-      - May cause errors for keys containing `"`, `<`, `>`, `|`, `:`, `*`, `?`, `/`, `\`
+      - May cause errors for keys with `"`, `<`, `>`, `|`, `:`, `*`, `?`, `/`, `\\`.
       or any ASCII control characters.
-      - May cause errors for keys containing `/../`, `\..\`, or similar patterns.
+      - May cause errors for keys containing `/../`, `\\..\\`, or similar patterns.
       - May cause errors for very long keys (length depends on app's product name,
         company name, and executing account).
 
