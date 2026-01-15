@@ -1,7 +1,9 @@
 
 # Flet
 
-<img src="https://raw.githubusercontent.com/flet-dev/flet/main/media/logo/flet-logo.svg" width="50%"/>
+<p align="center">
+    <img src="https://raw.githubusercontent.com/flet-dev/flet/main/media/logo/flet-logo.svg" width="50%"/>
+</p>
 
 <p align="center">
     <em>Build multi-platform apps in Python. No frontend experience required.</em>
