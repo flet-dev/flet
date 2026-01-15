@@ -315,7 +315,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 ? () =>
                     widget.control.triggerEvent("tap", _tapDownDetails?.toMap())
                 : null,
-            onTapDown: onTapDown | onTap
+            onTapDown: onTapDown || onTap
                 ? (TapDownDetails details) {
                     _tapDownDetails = details;
                     if (onTapDown) {
