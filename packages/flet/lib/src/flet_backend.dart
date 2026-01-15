@@ -253,7 +253,7 @@ class FletBackend extends ChangeNotifier {
         await pageSizeUpdated.future;
         debugPrint("Registering web client with route: $newRoute");
         String platform = defaultTargetPlatform.name.toLowerCase();
-        if (platform == "android") {
+        if (platform == "android" && !kIsWeb) {
           try {
             DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
             AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
