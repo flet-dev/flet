@@ -39,6 +39,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   bool _rightPanActive = false;
   int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
   Offset _rightPanStart = Offset.zero;
+  TapDownDetails? _tapDownDetails;
 
   @override
   void initState() {
@@ -310,10 +311,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   .nonNulls
                   .toSet();
             }(),
-            onTap: onTap ? () => widget.control.triggerEvent("tap") : null,
-            onTapDown: onTapDown
+            onTap: onTap
+                ? () =>
+                    widget.control.triggerEvent("tap", _tapDownDetails?.toMap())
+                : null,
+            onTapDown: onTapDown | onTap
                 ? (TapDownDetails details) {
-                    widget.control.triggerEvent("tap_down", details.toMap());
+                    _tapDownDetails = details;
+                    if (onTapDown) {
+                      widget.control.triggerEvent("tap_down", details.toMap());
+                    }
                   }
                 : null,
             onTapUp: onTapUp
