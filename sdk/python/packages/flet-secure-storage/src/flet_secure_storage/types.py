@@ -105,17 +105,17 @@ class KeyCipherAlgorithm(Enum):
     Algorithm used to encrypt/wrap the secret key in Android KeyStore.
     """
 
-    RSA_ECB_PKCS1 = "RSA_ECB_PKCS1Padding"
+    RSA_ECB_PKCS1_PADDING = "RSA_ECB_PKCS1Padding"
     """
     Legacy RSA/ECB/PKCS1Padding for backwards compatibility.
     """
 
-    RSA_ECB_OAEP = "RSA_ECB_OAEPwithSHA_256andMGF1Padding"
+    RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING = "RSA_ECB_OAEPwithSHA_256andMGF1Padding"
     """
     RSA/ECB/OAEPWithSHA-256AndMGF1Padding (default, API 23+).
     """
 
-    AES_GCM = "AES_GCM_NoPadding"
+    AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
     """
     AES/GCM/NoPadding for KeyStore-based key wrapping (supports biometrics).
     """
@@ -126,12 +126,12 @@ class StorageCipherAlgorithm(Enum):
     Algorithm used to encrypt stored data.
     """
 
-    AES_CBC_PKCS7 = "AES_CBC_PKCS7Padding"
+    AES_CBC_PKCS7_PADDING = "AES_CBC_PKCS7Padding"
     """
     Legacy AES/CBC/PKCS7Padding for backwards compatibility.
     """
 
-    AES_GCM = "AES_GCM_NoPadding"
+    AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
     """
     AES/GCM/NoPadding (default, API 23+).
     """

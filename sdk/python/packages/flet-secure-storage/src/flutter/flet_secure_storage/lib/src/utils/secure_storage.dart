@@ -50,7 +50,7 @@ AndroidOptions? parseAndroidOptions(dynamic value, [AndroidOptions? defaultValue
   return AndroidOptions(
     resetOnError: parseBool(value['reset_on_error'], true)!,
     migrateOnAlgorithmChange: parseBool(value['migrate_on_algorithm_change'], true)!,
-    enforceBiometrics: parseBool(value['enforce_biometrics'], true)!,
+    enforceBiometrics: parseBool(value['enforce_biometrics'], false)!,
     keyCipherAlgorithm: parseKeyCipherAlgorithm(
       value['key_cipher_algorithm'],
       KeyCipherAlgorithm.RSA_ECB_OAEPwithSHA_256andMGF1Padding

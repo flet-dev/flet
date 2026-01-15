@@ -51,7 +51,9 @@ class AndroidOptions:
     Security note: set True for highly sensitive data.
     """
 
-    key_cipher_algorithm: KeyCipherAlgorithm = KeyCipherAlgorithm.RSA_ECB_OAEP
+    key_cipher_algorithm: KeyCipherAlgorithm = (
+        KeyCipherAlgorithm.RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING
+    )
     """
     Algorithm used to encrypt the secret key.
 
@@ -59,7 +61,9 @@ class AndroidOptions:
     Legacy RSA/ECB/PKCS1Padding is available for backwards compatibility.
     """
 
-    storage_cipher_algorithm: StorageCipherAlgorithm = StorageCipherAlgorithm.AES_GCM
+    storage_cipher_algorithm: StorageCipherAlgorithm = (
+        StorageCipherAlgorithm.AES_GCM_NO_PADDING
+    )
     """
     Algorithm used to encrypt stored data.
 
@@ -102,7 +106,7 @@ class AppleOptions:
     This class allows configuring keychain access and storage behavior.
     """
 
-    account_name: Optional[str] = "flutter_secure_storage_service"
+    account_name: Optional[str] = "flet_secure_storage_service"
     """
     Represents the service or application name associated with the item.
 

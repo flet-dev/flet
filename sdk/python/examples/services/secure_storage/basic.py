@@ -1,3 +1,6 @@
+import base64
+import os
+
 import flet as ft
 import flet_secure_storage as fss
 
@@ -5,7 +8,21 @@ import flet_secure_storage as fss
 def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    storage = fss.SecureStorage()
+    storage = fss.SecureStorage(
+        web_options=fss.WebOptions(
+            db_name="customstorage",
+            public_key="publickey",
+            wrap_key=base64.urlsafe_b64encode(os.urandom(32)).decode(),
+            wrap_key_iv=base64.urlsafe_b64encode(os.urandom(16)).decode(),
+        ),
+        android_options=fss.AndroidOptions(
+            reset_on_error=True,
+            migrate_on_algorithm_change=True,
+            enforce_biometrics=True,
+            key_cipher_algorithm=fss.KeyCipherAlgorithm.AES_GCM_NO_PADDING,
+            storage_cipher_algorithm=fss.StorageCipherAlgorithm.AES_GCM_NO_PADDING,
+        ),
+    )
 
     key = ft.TextField(label="Key", value="example_key")
     value = ft.TextField(label="Value", value="secret_value")
