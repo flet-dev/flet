@@ -39,8 +39,8 @@ class DatePickerControl extends StatelessWidget {
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? currentDate ?? DateTime.now(),
-        firstDate: control.getDateTime("first_date", DateTime(1900))!,
-        lastDate: control.getDateTime("last_date", DateTime(2050))!,
+        firstDate: control.getDateTime("first_date", DateTime(1900, 1, 1))!,
+        lastDate: control.getDateTime("last_date", DateTime(2050, 1, 1))!,
         currentDate: currentDate ?? DateTime.now(),
         helpText: control.getString("help_text"),
         cancelText: control.getString("cancel_text"),
