@@ -1,4 +1,6 @@
-# Flet changelog
+## 0.80.3
+
+* Add position details to `GestureDetector.on_tap` event ([#6016](https://github.com/flet-dev/flet/issues/6016)).
 
 ## 0.80.2
 

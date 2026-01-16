@@ -116,7 +116,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     TBD
     """
 
-    on_tap: Optional[ControlEventHandler["GestureDetector"]] = None
+    on_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
     """
     Called when a tap with a primary button has occurred.
     """
