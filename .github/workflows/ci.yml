@@ -241,6 +241,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
+          dart run rive_native:setup --verbose --clean --platform macos
           flutter build macos --build-name="$BUILD_VER"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
