@@ -82,16 +82,3 @@ class PieChartSection(ft.BaseControl):
     def init(self):
         super().init()
         self._internals["skip_properties"] = ["badge"]
-
-    def before_update(self):
-        super().before_update()
-        if self.title_position is not None and not (0.0 <= self.title_position <= 1.0):
-            raise ValueError(
-                "title_position must be between 0.0 and 1.0 inclusive, "
-                f"got {self.title_position}"
-            )
-        if self.badge_position is not None and not (0.0 <= self.badge_position <= 1.0):
-            raise ValueError(
-                "badge_position must be between 0.0 and 1.0 inclusive, "
-                f"got {self.badge_position}"
-            )
