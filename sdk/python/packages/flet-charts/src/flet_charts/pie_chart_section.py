@@ -45,15 +45,12 @@ class PieChartSection(ft.BaseControl):
 
     title_position: Optional[ft.Number] = None
     """
-    The position/offset of the title relative to the section's center.
+    The position/offset of the [`title`][(c).] relative to the section's center.
 
     - `0.0`: near the center
     - `1.0`: near the outside of the chart
 
-    By default the title is drawn in the middle of the section.
-
-    Raises:
-        ValueError: If it is not between `0.0` and `1.0` inclusive.
+    By default the [`title`][(c).] is drawn in the middle of the section.
     """
 
     badge: Optional[ft.Control] = None
@@ -63,15 +60,12 @@ class PieChartSection(ft.BaseControl):
 
     badge_position: Optional[ft.Number] = None
     """
-    The position/offset of the badge relative to the section's center.
+    The position/offset of the [`badge`][(c).] relative to the section's center.
 
     - `0.0`: near the center
     - `1.0`: near the outside of the chart
 
-    By default the badge is drawn in the middle of the section.
-
-    Raises:
-        ValueError: If it is not between `0.0` and `1.0` inclusive.
+    By default the [`badge`][(c).] is drawn in the middle of the section.
     """
 
     gradient: Optional[ft.Gradient] = None
