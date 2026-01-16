@@ -48,7 +48,7 @@ class SecureStorageService extends FletService {
     if (listenChange && _onSecureDataChanged == null) {
       _onSecureDataChanged = storage.onCupertinoProtectedDataAvailabilityChanged?.listen(
         (bool result) {
-          control.triggerEvent("change", {"is_available_storage": result});
+          control.triggerEvent("change", {"available": result});
         }, onError: (error) {
             debugPrint("SecureStorageService: error listening to connectivity: $error");
         }

@@ -4,14 +4,14 @@ from typing import Any, Optional
 import flet as ft
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
-from flet_secure_storage.options import (
+from flet_secure_storage.types import (
     AndroidOptions,
     IOSOptions,
     MacOsOptions,
+    SecureStorageEvent,
     WebOptions,
     WindowsOptions,
 )
-from flet_secure_storage.types import SecureStorageEvent
 
 
 @control("SecureStorage")

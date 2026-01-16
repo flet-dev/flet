@@ -44,9 +44,9 @@ extensions = [
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
+    "flet-secure-storage",
     "flet-video",
     "flet-webview",
-    "flet-secure-storage",
 ]
 test = [
     "pytest >=7.2.0",

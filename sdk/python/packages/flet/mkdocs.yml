@@ -477,7 +477,7 @@ nav:
           - SemanticsService: services/semanticsservice.md
           - ShakeDetector: services/shakedetector.md
           - Share: services/share.md
-          - SecureStorage: services/securestorage.md
+          - SecureStorage: secure_storage/index.md
           - SharedPreferences: services/sharedpreferences.md
           - StoragePaths: services/storagepaths.md
           - UrlLauncher: services/urllauncher.md
@@ -684,6 +684,13 @@ nav:
               - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
               - Rotate: types/rotate.md
               - Scale: types/scale.md
+              - SecureStorage:
+                  - WindowsOptions: secure_storage/types/windows_options.md
+                  - AndroidOptions: secure_storage/types/android_options.md
+                  - AppleOptions: secure_storage/types/apple_options.md
+                  - MacOsOptions: secure_storage/types/macos_options.md
+                  - IOSOptions: secure_storage/types/ios_options.md
+                  - WebOptions: secure_storage/types/web_options.md
               - ShapeBorder: types/shapeborder.md
               - Size: types/size.md
               - StrutStyle: types/strutstyle.md
@@ -852,6 +859,10 @@ nav:
               - WebRenderer: types/webrenderer.md
               - WindowEventType: types/windoweventtype.md
               - WindowResizeEdge: types/windowresizeedge.md
+              - AccessControlFlag: secure_storage/types/access_control_flag.md
+              - KeychainAccessibility: secure_storage/types/keychain_accessibility.md
+              - KeyCipherAlgorithm: secure_storage/types/key_cipher_algorithm.md
+              - StorageCipherAlgorithm: secure_storage/types/storage_cipher_algorithm.md
           - Events:
               - AccelerometerReadingEvent: types/accelerometerreadingevent.md
               - Ads:
@@ -908,6 +919,7 @@ nav:
               - ShareFile: types/sharefile.md
               - ShareCupertinoActivityType: types/sharecupertinoactivitytype.md
               - ScrollEvent: types/scrollevent.md
+              - SecureStorageEvent: secure_storage/types/secure_storage_event.md
               - TabBarHoverEvent: types/tabbarhoverevent.md
               - TapEvent: types/tapevent.md
               - TextSelectionChangeEvent: types/textselectionchangeevent.md
