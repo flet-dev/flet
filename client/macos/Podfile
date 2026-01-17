@@ -34,6 +34,7 @@ target 'Runner' do
 end
 
 post_install do |installer|
+  # Ensure rive_native's setup script runs from the project root so pubspec.yaml is found in CI.
   installer.pods_project.targets.each do |target|
     flutter_additional_macos_build_settings(target)
     next unless target.name == 'rive_native'
