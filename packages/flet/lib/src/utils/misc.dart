@@ -1,46 +1,31 @@
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
 import 'borders.dart';
+import 'enums.dart';
 import 'numbers.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Clip.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(Clip.values, value, defaultValue);
 }
 
 Orientation? parseOrientation(String? value, [Orientation? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Orientation.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(Orientation.values, value, defaultValue);
 }
 
 StrokeCap? parseStrokeCap(String? value, [StrokeCap? defaultValue]) {
-  if (value == null) return defaultValue;
-  return StrokeCap.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(StrokeCap.values, value, defaultValue);
 }
 
 StrokeJoin? parseStrokeJoin(String? value, [StrokeJoin? defaultValue]) {
-  if (value == null) return defaultValue;
-  return StrokeJoin.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(StrokeJoin.values, value, defaultValue);
 }
 
 BoxShape? parseBoxShape(String? value, [BoxShape? defaultValue]) {
-  if (value == null) return defaultValue;
-  return BoxShape.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(BoxShape.values, value, defaultValue);
 }
 
 NotchedShape? parseNotchedShape(dynamic value, ThemeData? theme,
@@ -63,141 +48,91 @@ NotchedShape? parseNotchedShape(dynamic value, ThemeData? theme,
 
 SliderInteraction? parseSliderInteraction(String? value,
     [SliderInteraction? defaultValue]) {
-  if (value == null) return defaultValue;
-  return SliderInteraction.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(SliderInteraction.values, value, defaultValue);
 }
 
 SnackBarBehavior? parseSnackBarBehavior(String? value,
     [SnackBarBehavior? defaultValue]) {
-  if (value == null) return defaultValue;
-  return SnackBarBehavior.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(SnackBarBehavior.values, value, defaultValue);
 }
 
 StackFit? parseStackFit(String? value, [StackFit? defaultValue]) {
-  if (value == null) return defaultValue;
-  return StackFit.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(StackFit.values, value, defaultValue);
 }
 
 enum CardVariant { elevated, filled, outlined }
 
 CardVariant? parseCardVariant(String? value, [CardVariant? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CardVariant.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CardVariant.values, value, defaultValue);
 }
 
 enum ScrollMode { none, auto, adaptive, always, hidden }
 
 ScrollMode? parseScrollMode(String? value,
     [ScrollMode? defaultValue = ScrollMode.none]) {
-  if (value == null) return defaultValue;
-  return ScrollMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ScrollMode.values, value, defaultValue);
 }
 
 enum LabelPosition { right, left }
 
 LabelPosition? parseLabelPosition(String? value,
     [LabelPosition? defaultValue]) {
-  if (value == null) return defaultValue;
-  return LabelPosition.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(LabelPosition.values, value, defaultValue);
 }
 
 ListTileControlAffinity? parseListTileControlAffinity(String? value,
     [ListTileControlAffinity? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ListTileControlAffinity.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ListTileControlAffinity.values, value, defaultValue);
 }
 
 ListTileStyle? parseListTileStyle(String? value,
     [ListTileStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ListTileStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ListTileStyle.values, value, defaultValue);
 }
 
 NavigationDestinationLabelBehavior? parseNavigationDestinationLabelBehavior(
     String? value,
     [NavigationDestinationLabelBehavior? defaultValue]) {
-  if (value == null) return defaultValue;
-  return NavigationDestinationLabelBehavior.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(
+      NavigationDestinationLabelBehavior.values, value, defaultValue);
 }
 
 PopupMenuPosition? parsePopupMenuPosition(String? value,
     [PopupMenuPosition? defaultValue]) {
-  if (value == null) return defaultValue;
-  return PopupMenuPosition.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(PopupMenuPosition.values, value, defaultValue);
 }
 
 Assertiveness? parseAssertiveness(String? value,
     [Assertiveness? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Assertiveness.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(Assertiveness.values, value, defaultValue);
 }
 
 ListTileTitleAlignment? parseListTileTitleAlignment(String? value,
     [ListTileTitleAlignment? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ListTileTitleAlignment.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ListTileTitleAlignment.values, value, defaultValue);
 }
 
 Axis? parseAxis(String? value, [Axis? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Axis.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(Axis.values, value, defaultValue);
 }
 
 PointerDeviceKind? parsePointerDeviceKind(String? value,
     [PointerDeviceKind? defaultValue]) {
-  if (value == null) return defaultValue;
-  return PointerDeviceKind.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(PointerDeviceKind.values, value, defaultValue);
 }
 
 NavigationRailLabelType? parseNavigationRailLabelType(String? value,
     [NavigationRailLabelType? defaultValue]) {
-  if (value == null) return defaultValue;
-  return NavigationRailLabelType.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(NavigationRailLabelType.values, value, defaultValue);
 }
 
 BlurStyle? parseBlurStyle(String? value, [BlurStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return BlurStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(BlurStyle.values, value, defaultValue);
 }
 
 FloatingLabelBehavior? parseFloatingLabelBehavior(String? value,
     [FloatingLabelBehavior? defaultValue]) {
-  if (value == null) return defaultValue;
-  return FloatingLabelBehavior.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(FloatingLabelBehavior.values, value, defaultValue);
 }
 
 extension MiscParsers on Control {

@@ -38,7 +38,7 @@ Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
   return Locale.fromSubtags(
       languageCode: (languageCode != null && languageCode.isNotEmpty)
           ? languageCode
-          : "und", // und = undefined language code
+          : "und", // undefined language code
       countryCode:
           (countryCode != null && countryCode.isNotEmpty) ? countryCode : null,
       scriptCode:
