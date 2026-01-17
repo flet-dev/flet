@@ -69,6 +69,7 @@ jobs:
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
+          dart run rive_native:setup --verbose --clean --platform macos
           uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
 
       - name: Prepare failure screenshots
