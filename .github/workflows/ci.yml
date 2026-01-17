@@ -241,7 +241,6 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          dart run rive_native:setup --verbose --clean --platform macos
           flutter build macos --build-name="$BUILD_VER"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
@@ -361,6 +360,13 @@ jobs:
               # Strip FAT_CLIENT blocks for the light flavor
               sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
               sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
+            fi
+
+            if [[ "$ARCH" == "arm64" ]]; then
+              # flet_rive is excluded for Linux ARM64 builds
+              sed -i '/--RIVE_CLIENT_START--/,/--RIVE_CLIENT_END--/d' pubspec.yaml
+              sed -i '/--RIVE_IMPORT_START--/,/--RIVE_IMPORT_END--/d' lib/main.dart
+              sed -i '/--RIVE_EXTENSION_START--/,/--RIVE_EXTENSION_END--/d' lib/main.dart
             fi
             echo "::endgroup::"
 
