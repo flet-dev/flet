@@ -6,8 +6,10 @@ from typing import Optional
 
 class KeychainAccessibility(Enum):
     """
-    KeyChain accessibility attributes as defined here:
-    https://developer.apple.com/documentation/security/ksecattraccessible?language=objc
+    KeyChain accessibility attributes for iOS/macOS platforms.
+
+    These attributes determine when the app can access secure values
+    stored in the Keychain.
     """
 
     PASSCODE = "passcode"
@@ -29,13 +31,16 @@ class KeychainAccessibility(Enum):
     The data in the keychain item can be accessed only while
     the device is unlocked by the user.
 
-    Items with this attribute do not migrate to a new device
+    Items with this attribute do not migrate to a new device.
     """
 
     FIRST_UNLOCK = "first_unlock"
     """
     The data in the keychain item cannot be accessed after a restart until
     the device has been unlocked once by the user.
+
+    Enables access to secure values after the device is unlocked for the first
+    time after a reboot.
     """
 
     FIRST_UNLOCK_THIS_DEVICE = "first_unlock_this_device"
@@ -44,13 +49,23 @@ class KeychainAccessibility(Enum):
     a restart until the device has been unlocked once by the user.
 
     Items with this attribute do not migrate to a new device.
+
+    Allows access to secure values only after the device is unlocked for the first time
+    since installation on this device.
     """
 
 
 class AccessControlFlag(Enum):
     """
     Keychain access control flags that define security conditions for accessing items.
-    These flags can be combined to create complex access control policies.
+
+    These flags can be combined to create complex access control policies using
+    the `access_control_flags` parameter in `IOSOptions` or `MacOsOptions`.
+
+    Rules for combining flags:
+        - Use `AccessControlFlag.OR` to allow access if any condition is met
+        - Use `AccessControlFlag.AND` to require that all specified conditions are met
+        - Only one logical operator (OR/AND) can be used per combination
     """
 
     DEVICE_PASSCODE = "devicePasscode"
@@ -102,6 +117,14 @@ class AccessControlFlag(Enum):
 class KeyCipherAlgorithm(Enum):
     """
     Algorithm used to encrypt/wrap the secret key in Android KeyStore.
+
+    Different algorithms provide different security guarantees and compatibility levels:
+
+    - RSA algorithms wrap the AES encryption key with RSA (no biometric support)
+    - AES algorithm stores the key directly in Android KeyStore
+    (supports biometric authentication)
+
+    See the [AndroidOptions] class for usage examples and combinations.
     """
 
     RSA_ECB_PKCS1_PADDING = "RSA_ECB_PKCS1Padding"
@@ -112,17 +135,26 @@ class KeyCipherAlgorithm(Enum):
     RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING = "RSA_ECB_OAEPwithSHA_256andMGF1Padding"
     """
     RSA/ECB/OAEPWithSHA-256AndMGF1Padding (API 23+).
+
+    This is the default and recommended algorithm for most use cases.
+    Provides strong authenticated encryption without biometrics.
     """
 
     AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
     """
     AES/GCM/NoPadding for KeyStore-based key wrapping (supports biometrics).
+
+    Use this algorithm when you need biometric authentication support.
+    Requires API 23+ for basic use, API 28+ for enforced biometric authentication.
     """
 
 
 class StorageCipherAlgorithm(Enum):
     """
-    Algorithm used to encrypt stored data.
+    Algorithm used to encrypt stored data on Android.
+
+    Modern applications should use `AES_GCM_NO_PADDING` for better security.
+    The legacy `AES_CBC_PKCS7_PADDING` is provided for backwards compatibility only.
     """
 
     AES_CBC_PKCS7_PADDING = "AES_CBC_PKCS7Padding"
@@ -133,6 +165,9 @@ class StorageCipherAlgorithm(Enum):
     AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
     """
     AES/GCM/NoPadding (API 23+).
+
+    This is the default and recommended storage cipher algorithm.
+    Provides authenticated encryption with associated data (AEAD).
     """
 
 
@@ -173,8 +208,6 @@ class AndroidOptions:
     When False:
       - The plugin gracefully degrades if biometrics are unavailable.
       - The key is generated without authentication required.
-
-    Security note: set `True` for highly sensitive data.
     """
 
     key_cipher_algorithm: KeyCipherAlgorithm = (
@@ -199,15 +232,16 @@ class AndroidOptions:
     """
     The name of the shared preferences database to use.
 
-    Warning: changing this will prevent access to already saved preferences.
+    Changing this will prevent access to already saved preferences.
     """
 
     preferences_key_prefix: Optional[str] = None
     """
     Prefix for shared preference keys. Ensures keys are unique to your app.
 
-    An underscore (_) is added automatically. Changing this prevents access
-    to existing preferences.
+    An underscore (_) is added automatically.
+
+    Changing this prevents access to existing preferences.
     """
 
     biometric_prompt_title: str = "Authenticate to access"
@@ -227,6 +261,14 @@ class AppleOptions:
     Specific options for Apple platforms (iOS/macOS) for secure storage.
 
     This class allows configuring keychain access and storage behavior.
+    Use `IOSOptions` for iOS-specific configuration
+    or `MacOsOptions` for macOS-specific configuration.
+
+    Note:
+        - Most options apply to both iOS and macOS
+        - Some options (like `group_id` on macOS) only apply when
+        certain keychain flags are set
+        - See individual option documentation for platform-specific behavior
     """
 
     account_name: Optional[str] = "flet_secure_storage_service"
@@ -240,9 +282,6 @@ class AppleOptions:
     """
     Specifies the app group for shared access. Allows multiple apps in the
     same app group to access the item.
-
-    Note for macOS: Applies only if kSecUseDataProtectionKeychain or
-    kSecAttrSynchronizable is set.
     """
 
     accessibility: Optional[KeychainAccessibility] = KeychainAccessibility.UNLOCKED
@@ -256,8 +295,11 @@ class AppleOptions:
     synchronizable: bool = False
     """
     Indicates whether the keychain item should be synchronized with iCloud.
-    True enables synchronization, False disables it.
+
+    - True: Enables synchronization across user's devices
+    - False: Item stays local to this device only
     """
+
     label: Optional[str] = None
     """
     A user-visible label for the keychain item.
@@ -303,7 +345,7 @@ class AppleOptions:
     result_limit: Optional[int] = None
     """
     Specifies the maximum number of results to return in a query.
-    For example, 1 for a single result, or all for all matching results.
+    For example, 1 for a single result, or `None` for all matching results.
     """
 
     is_persistent: Optional[bool] = None
@@ -321,30 +363,16 @@ class AppleOptions:
     access_control_flags: list[AccessControlFlag] = field(default_factory=list)
     """
     Keychain access control flags that define security conditions for accessing items.
-
-    Rules for combining flags:
-      - Use AccessControlFlag.OR to allow access if any condition is met.
-      - Use AccessControlFlag.AND to require that all specified conditions are met.
-      - Only one logical operator (or/and) can be used per combination.
-
-    Supported flags:
-      - USER_PRESENCE: Requires user authentication via biometrics or passcode.
-      - BIOMETRY_ANY: Allows access with any enrolled biometrics.
-      - BIOMETRY_CURRENT_SET: Requires currently enrolled biometrics.
-      - DEVICE_PASSCODE: Requires device passcode authentication.
-      - WATCH: Allows access with a paired Apple Watch.
-      - PRIVATE_KEY_USAGE: Enables use of a private key for signing operations.
-      - APPLICATION_PASSWORD: Uses an app-defined password for encryption.
     """
 
 
 @dataclass
 class IOSOptions(AppleOptions):
     """
-    Specific options for iOS platform.
+    iOS-specific configuration for secure storage.
 
-    Currently, there are no iOS-specific options available.
-    All configurable options are inherited from AppleOptions.
+    All configurable options are inherited from `AppleOptions`.
+    There are currently no iOS-only options.
     """
 
 
@@ -358,7 +386,6 @@ class MacOsOptions(AppleOptions):
     uses_data_protection_keychain: bool = True
     """
     Indicates whether the macOS data protection keychain is used.
-    Not applicable on iOS.
     """
 
 
@@ -403,6 +430,11 @@ class WindowsOptions:
 
     Allows configuring backward compatibility when reading/writing
     values from previous versions of storage.
+
+    Note:
+        You need the C++ ATL libraries installed along with Visual Studio Build Tools.
+        Download from: https://visualstudio.microsoft.com/downloads/?q=build+tools
+        Make sure the C++ ATL under optional components is installed as well.
     """
 
     use_backward_compatibility: bool = False
@@ -411,19 +443,11 @@ class WindowsOptions:
     When reading or writing old storage values, they will be automatically
     migrated to new storage.
 
-    Notes:
+    Note:
       - May introduce performance overhead.
       - May cause errors for keys with `"`, `<`, `>`, `|`, `:`, `*`, `?`, `/`, `\\`.
       or any ASCII control characters.
       - May cause errors for keys containing `/../`, `\\..\\`, or similar patterns.
       - May cause errors for very long keys (length depends on app's product name,
         company name, and executing account).
-
-    Example:
-        ```py
-        storage = SecureStorage()
-        await storage.get_all(
-            windows=WindowsOptions(use_backward_compatibility=True),
-        )
-        ```
     """
