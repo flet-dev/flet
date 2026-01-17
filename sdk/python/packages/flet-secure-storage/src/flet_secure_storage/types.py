@@ -3,8 +3,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-import flet as ft
-
 
 class KeychainAccessibility(Enum):
     """
@@ -55,22 +53,22 @@ class AccessControlFlag(Enum):
     These flags can be combined to create complex access control policies.
     """
 
-    DEVICE_PASSCODE = "device_passcode"
+    DEVICE_PASSCODE = "devicePasscode"
     """
     Constraint to access an item with a passcode.
     """
 
-    BIOMETRY_ANY = "biometry_any"
+    BIOMETRY_ANY = "biometryAny"
     """
     Constraint to access an item with biometrics (Touch ID/Face ID).
     """
 
-    BIOMETRY_CURRENT_SET = "biometry_current_set"
+    BIOMETRY_CURRENT_SET = "biometryCurrentSet"
     """
     Constraint to access an item with the currently enrolled biometrics.
     """
 
-    USER_PRESENCE = "user_presence"
+    USER_PRESENCE = "userPresence"
     """
     Constraint to access an item with either biometry or passcode.
     """
@@ -90,12 +88,12 @@ class AccessControlFlag(Enum):
     Combine multiple constraints with an AND operation.
     """
 
-    APPLICATION_PASSWORD = "application_password"
+    APPLICATION_PASSWORD = "applicationPassword"
     """
     Use an application-provided password for encryption.
     """
 
-    PRIVATE_KEY_USAGE = "private_key_usage"
+    PRIVATE_KEY_USAGE = "privateKeyUsage"
     """
     Enable private key usage for signing operations.
     """
@@ -113,7 +111,7 @@ class KeyCipherAlgorithm(Enum):
 
     RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING = "RSA_ECB_OAEPwithSHA_256andMGF1Padding"
     """
-    RSA/ECB/OAEPWithSHA-256AndMGF1Padding (default, API 23+).
+    RSA/ECB/OAEPWithSHA-256AndMGF1Padding (API 23+).
     """
 
     AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
@@ -134,20 +132,7 @@ class StorageCipherAlgorithm(Enum):
 
     AES_GCM_NO_PADDING = "AES_GCM_NoPadding"
     """
-    AES/GCM/NoPadding (default, API 23+).
-    """
-
-
-@dataclass
-class SecureStorageEvent(ft.Event["SecureStorage"]):  # type: ignore
-    """
-    The event fired by SecureStorage when availability changes.
-    """
-
-    available: Optional[bool]
-    """
-    The availability of secure storage. True if secure storage is available,
-    False if not, None if unknown.
+    AES/GCM/NoPadding (API 23+).
     """
 
 
@@ -160,20 +145,20 @@ class AndroidOptions:
     and shared preferences naming.
     """
 
-    reset_on_error: bool = False
+    reset_on_error: bool = True
     """
     When an error is detected, automatically reset all data to prevent fatal errors
     with unknown keys.
 
-    Defaults to True. Be aware that data is PERMANENTLY erased when this occurs.
+    Be aware that data is PERMANENTLY erased when this occurs.
     """
 
-    migrate_on_algorithm_change: bool = False
+    migrate_on_algorithm_change: bool = True
     """
     When the encryption algorithm changes, automatically migrate existing data
     to the new algorithm. Preserves data across algorithm upgrades.
 
-    Defaults to True. If False, data may be lost when algorithm changes unless
+    If False, data may be lost when algorithm changes unless
     reset_on_error is True.
     """
 
@@ -189,7 +174,7 @@ class AndroidOptions:
       - The plugin gracefully degrades if biometrics are unavailable.
       - The key is generated without authentication required.
 
-    Security note: set True for highly sensitive data.
+    Security note: set `True` for highly sensitive data.
     """
 
     key_cipher_algorithm: KeyCipherAlgorithm = (
@@ -198,7 +183,6 @@ class AndroidOptions:
     """
     Algorithm used to encrypt the secret key.
 
-    Default: RSA/ECB/OAEPWithSHA-256AndMGF1Padding (API 23+).
     Legacy RSA/ECB/PKCS1Padding is available for backwards compatibility.
     """
 
@@ -208,7 +192,6 @@ class AndroidOptions:
     """
     Algorithm used to encrypt stored data.
 
-    Default: AES/GCM/NoPadding (API 23+).
     Legacy AES/CBC/PKCS7Padding is available for backwards compatibility.
     """
 
@@ -216,7 +199,6 @@ class AndroidOptions:
     """
     The name of the shared preferences database to use.
 
-    Default name will be used if not provided.
     Warning: changing this will prevent access to already saved preferences.
     """
 
@@ -294,7 +276,7 @@ class AppleOptions:
     Often used for metadata or debugging information.
     """
 
-    is_invisible: Optional[bool] = None
+    invisible: Optional[bool] = None
     """
     Indicates whether the keychain item is hidden from user-visible lists.
     Can apply to all items in a category (shared) or specific items (unique).
@@ -391,13 +373,11 @@ class WebOptions:
     db_name: str = "FletEncryptedStorage"
     """
     The name of the database used for secure storage.
-    Defaults to 'FlutterEncryptedStorage'.
     """
 
     public_key: str = "FletSecureStorage"
     """
     The public key used for encryption.
-    Defaults to 'FlutterSecureStorage'.
     """
 
     wrap_key: str = ""
@@ -413,7 +393,6 @@ class WebOptions:
     use_session_storage: bool = False
     """
     Whether to use session storage instead of local storage.
-    Defaults to False.
     """
 
 
@@ -440,9 +419,11 @@ class WindowsOptions:
       - May cause errors for very long keys (length depends on app's product name,
         company name, and executing account).
 
-    Default: False.
-
     Example:
+        ```py
         storage = SecureStorage()
-        await storage.get_all(WindowsOptions(use_backward_compatibility=True))
+        await storage.get_all(
+            windows_options=WindowsOptions(use_backward_compatibility=True),
+        )
+        ```
     """

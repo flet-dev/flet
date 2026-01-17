@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Any, Optional
 
 import flet as ft
@@ -8,10 +8,22 @@ from flet_secure_storage.types import (
     AndroidOptions,
     IOSOptions,
     MacOsOptions,
-    SecureStorageEvent,
     WebOptions,
     WindowsOptions,
 )
+
+
+@dataclass
+class SecureStorageEvent(ft.Event["SecureStorage"]):
+    """
+    The event fired by SecureStorage when availability changes.
+    """
+
+    available: Optional[bool]
+    """
+    The availability of secure storage. True if secure storage is available,
+    False if not, None if unknown.
+    """
 
 
 @control("SecureStorage")
@@ -70,6 +82,7 @@ class SecureStorage(Service):
         self,
         key: str,
         value: Any,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,
@@ -109,6 +122,7 @@ class SecureStorage(Service):
     async def get(
         self,
         key: str,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,
@@ -143,12 +157,13 @@ class SecureStorage(Service):
 
     async def get_all(
         self,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,
         android: Optional[AndroidOptions] = None,
         windows: Optional[WindowsOptions] = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, str]:
         """
         Retrieves all key-value pairs from secure storage.
 
@@ -176,6 +191,7 @@ class SecureStorage(Service):
     async def contains_key(
         self,
         key: str,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,
@@ -211,6 +227,7 @@ class SecureStorage(Service):
     async def remove(
         self,
         key: str,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,
@@ -242,6 +259,7 @@ class SecureStorage(Service):
 
     async def clear(
         self,
+        *,
         web: Optional[WebOptions] = None,
         ios: Optional[IOSOptions] = None,
         macos: Optional[MacOsOptions] = None,

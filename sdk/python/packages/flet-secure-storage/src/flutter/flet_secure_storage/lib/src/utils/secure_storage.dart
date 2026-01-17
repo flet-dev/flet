@@ -105,10 +105,19 @@ StorageCipherAlgorithm? parseStorageCipherAlgorithm(String? value, [StorageCiphe
   ) ?? defaultValue;
 }
 
-List<AccessControlFlag>? parseAccessControlFlags(List<dynamic>? value, [List<AccessControlFlag>? defaultValue]) {
+AccessControlFlag? parseAccessControlFlag(String? value, [AccessControlFlag? defaultValue]) {
   if (value == null) return defaultValue;
+  return AccessControlFlag.values.firstWhereOrNull(
+    (e) => e.name.toLowerCase() == value.toLowerCase()
+  ) ?? defaultValue;
+}
+
+List<AccessControlFlag>? parseAccessControlFlags(List<dynamic>? value, [List<AccessControlFlag>? defaultValue,]) {
+  if (value == null) return defaultValue;
+
   return value
-      .cast<String>()
-      .map((e) => AccessControlFlag.values.byName(e))
+      .whereType<String>()
+      .map((e) => parseAccessControlFlag(e)).nonNulls
+      .whereType<AccessControlFlag>()
       .toList();
 }

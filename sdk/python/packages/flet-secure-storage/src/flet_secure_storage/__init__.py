@@ -1,4 +1,4 @@
-from flet_secure_storage.secure_storage import SecureStorage
+from flet_secure_storage.secure_storage import SecureStorage, SecureStorageEvent
 from flet_secure_storage.types import (
     AccessControlFlag,
     AndroidOptions,
@@ -7,7 +7,6 @@ from flet_secure_storage.types import (
     KeychainAccessibility,
     KeyCipherAlgorithm,
     MacOsOptions,
-    SecureStorageEvent,
     StorageCipherAlgorithm,
     WebOptions,
     WindowsOptions,
