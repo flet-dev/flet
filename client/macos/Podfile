@@ -36,5 +36,17 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_macos_build_settings(target)
+    next unless target.name == 'rive_native'
+
+    target.shell_script_build_phases.each do |phase|
+      script = phase.shell_script
+      next unless script&.include?('rive_native:setup')
+      next if script.include?('PROJECT_ROOT="${SRCROOT}/../.."')
+
+      phase.shell_script = script.sub(
+        "set -e\n",
+        "set -e\nPROJECT_ROOT=\"${SRCROOT}/../..\"\ncd \"$PROJECT_ROOT\"\n"
+      )
+    end
   end
 end
