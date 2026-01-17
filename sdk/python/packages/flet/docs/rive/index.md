@@ -11,7 +11,7 @@ Render [Rive](https://rive.app/) animations in your [Flet](https://flet.dev) app
 
 | Platform | Windows | macOS | Linux | iOS | Android | Web |
 |----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Supported|    ✅    |   ✅   |   ✅  (x64 only) |  ✅  |    ✅    |  ✅  |
 
 ## Usage
 
