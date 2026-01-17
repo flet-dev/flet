@@ -86,7 +86,7 @@ def configure_encode_object_for_msgpack(control_cls):
                             tz = datetime.datetime.now().astimezone().tzinfo
                         except Exception:
                             tz = datetime.timezone.utc
-                        obj = obj.replace(tzinfo=tz or datetime.timezone.utc)
+                        obj = obj.replace(tzinfo=tz)
                 # Normalize to UTC to ensure cross-platform consistency.
                 obj = obj.astimezone(datetime.timezone.utc)
             return msgpack.ExtType(1, obj.isoformat().encode("utf-8"))
