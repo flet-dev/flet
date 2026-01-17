@@ -423,7 +423,7 @@ class WindowsOptions:
         ```py
         storage = SecureStorage()
         await storage.get_all(
-            windows_options=WindowsOptions(use_backward_compatibility=True),
+            windows=WindowsOptions(use_backward_compatibility=True),
         )
         ```
     """
