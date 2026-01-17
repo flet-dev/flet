@@ -66,16 +66,16 @@ jobs:
         run: |
           uv --version && uv run python --version && pod --version && flutter --version
 
-      - name: Fix rive_native setup in CI
-        working-directory: client
-        run: |
-          flutter doctor
-          dart run rive_native:setup --verbose --clean --platform macos
+    #   - name: Fix rive_native setup in CI
+    #     working-directory: client
+    #     run: |
+    #       flutter doctor
+    #       dart run rive_native:setup --verbose --clean --platform macos
 
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/${{ matrix.suite }}
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
 
       - name: Prepare failure screenshots
         if: failure()
