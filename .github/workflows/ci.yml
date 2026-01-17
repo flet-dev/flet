@@ -407,26 +407,26 @@ jobs:
           dist="${SDK_PYTHON}/dist"
 
           FLET_DESKTOP="${SDK_PYTHON}/packages/flet-desktop"
+          FLET_DESKTOP_LIGHT="${SDK_PYTHON}/packages/flet-desktop-light"
           FLET_DESKTOP_APP="${FLET_DESKTOP}/src/flet_desktop/app"
 
           mkdir -p "$FLET_DESKTOP_APP"
 
           build_wheels() {
-            local PACKAGE_NAME="$1"
+            local PACKAGE_DIR="$1"
+            local PACKAGE_NAME="$2"
             local FLAVOR="full"
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
               FLAVOR="light"
             fi
 
             echo "::group::($PACKAGE_NAME) Build wheels"
-            pushd "$FLET_DESKTOP"
+            pushd "$PACKAGE_DIR"
 
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
             mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
-            # Patch the package name to match the current wheel's flavor and build
-            patch_toml_package_name pyproject.toml "$PACKAGE_NAME"
             uv build --wheel
 
             if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
@@ -463,8 +463,8 @@ jobs:
             echo "::endgroup::"
           }
 
-          build_wheels "flet-desktop"
-          build_wheels "flet-desktop-light"
+          build_wheels "$FLET_DESKTOP" "flet-desktop"
+          build_wheels "$FLET_DESKTOP_LIGHT" "flet-desktop-light"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -662,7 +662,6 @@ jobs:
           uv build --package flet-cli
           uv build --package flet
           uv build --package flet-desktop --sdist
-          update_flet_wheel_deps dist
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
