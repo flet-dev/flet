@@ -131,8 +131,9 @@ class DatePicker(DialogControl):
     It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
     but does not participate in page-level locale resolution.
 
-    If `None` (the default), the [`current_locale`][flet.LocaleConfiguration.] of the
-    [`Page.locale_configuration`][flet.] is used.
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
     """
 
     keyboard_type: KeyboardType = KeyboardType.DATETIME

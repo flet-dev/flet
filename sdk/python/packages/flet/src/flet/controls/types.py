@@ -1140,6 +1140,7 @@ class LocaleConfiguration:
     A list of locales that the application supports for localization.
 
     Note:
+        - Locales unsupported/invalid are ignored.
         - Order matters: Locale resolution is performed by progressively relaxing
             specificity until a match is found. Matching is attempted in the following
             priority order:
@@ -1186,9 +1187,8 @@ class LocaleConfiguration:
     The current locale.
 
     Note:
-        - If `None`, the system locale is used.
         - Must be an item of [`supported_locales`][(c).] to take effect.
-        - If not present in [`supported_locales`][(c).], the first supported locale in
+        - If `None` or invalid/unsupported, the first supported locale in
             [`supported_locales`][(c).] is used.
     """
 

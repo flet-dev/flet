@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../models/control.dart';
 
@@ -11,23 +12,29 @@ class LocaleConfiguration {
 }
 
 LocaleConfiguration parseLocaleConfiguration(dynamic value) {
-  List<Locale>? supportedLocales;
+  List<Locale> supportedLocales = [];
   Locale? locale;
 
   if (value != null) {
     var sl = value["supported_locales"];
     if (sl != null) {
-      supportedLocales =
-          sl.map((e) => parseLocale(e)).whereType<Locale>().toList();
+      supportedLocales = sl
+          .map((e) {
+            final l = parseLocale(e);
+            return l?.isSupportedByDelegates() == true ? l : null;
+          })
+          .whereType<Locale>()
+          .toList();
     }
     locale = parseLocale(value["current_locale"]);
   }
 
   return LocaleConfiguration(
-      supportedLocales: supportedLocales != null && supportedLocales.isNotEmpty
-          ? supportedLocales
-          : [const Locale("en", "US")],
-      locale: locale);
+    supportedLocales: supportedLocales.isNotEmpty
+        ? supportedLocales
+        : [const Locale("en", "US")],
+    locale: locale,
+  );
 }
 
 Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
@@ -53,5 +60,16 @@ extension LocaleParsers on Control {
 
   Locale? getLocale(String propertyName, [Locale? defaultValue]) {
     return parseLocale(get(propertyName), defaultValue);
+  }
+}
+
+extension LocaleExtention on Locale {
+  bool isSupportedByDelegates(
+      [List<LocalizationsDelegate<dynamic>> delegates = const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ]]) {
+    return delegates.every((d) => d.isSupported(this));
   }
 }

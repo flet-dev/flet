@@ -71,7 +71,7 @@ class DatePickerControl extends StatelessWidget {
             : null,
       );
 
-      return locale == null
+      return locale == null || !locale.isSupportedByDelegates()
           ? dialog
           : Localizations.override(
               context: context, locale: locale, child: dialog);
