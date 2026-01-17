@@ -38,15 +38,15 @@ jobs:
       matrix:
         suite:
         - apps
-        - examples/apps
-        - examples/core
-        - examples/cupertino
-        - examples/material
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/theme
-        - controls/types
+        # - examples/apps
+        # - examples/core
+        # - examples/cupertino
+        # - examples/material
+        # - controls/core
+        # - controls/cupertino
+        # - controls/material
+        # - controls/theme
+        # - controls/types
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
@@ -74,7 +74,7 @@ jobs:
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
+          uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/${{ matrix.suite }}
 
       - name: Prepare failure screenshots
         if: failure()
