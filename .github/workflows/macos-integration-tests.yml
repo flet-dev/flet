@@ -38,15 +38,15 @@ jobs:
       matrix:
         suite:
         - apps
-        # - examples/apps
-        # - examples/core
-        # - examples/cupertino
-        # - examples/material
-        # - controls/core
-        # - controls/cupertino
-        # - controls/material
-        # - controls/theme
-        # - controls/types
+        - examples/apps
+        - examples/core
+        - examples/cupertino
+        - examples/material
+        - controls/core
+        - controls/cupertino
+        - controls/material
+        - controls/theme
+        - controls/types
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
@@ -65,12 +65,6 @@ jobs:
       - name: Show tool versions
         run: |
           uv --version && uv run python --version && pod --version && flutter --version
-
-    #   - name: Fix rive_native setup in CI
-    #     working-directory: client
-    #     run: |
-    #       flutter doctor
-    #       dart run rive_native:setup --verbose --clean --platform macos
 
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python

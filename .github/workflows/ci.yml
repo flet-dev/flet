@@ -217,7 +217,7 @@ jobs:
   # ===========================
   build_macos:
     name: Build Flet Client for macOS
-    runs-on: macos-latest
+    runs-on: macos-15
     needs:
       - python_tests
       - build_flet_package
