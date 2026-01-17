@@ -69,6 +69,7 @@ jobs:
       - name: Fix rive_native setup in CI
         working-directory: client
         run: |
+          flutter doctor
           dart run rive_native:setup --verbose --clean --platform macos
 
       - name: Run integration tests (${{ matrix.suite }})
