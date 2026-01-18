@@ -13,6 +13,7 @@ from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     ColorValue,
     IconData,
+    Locale,
 )
 
 __all__ = [
@@ -64,19 +65,32 @@ class DateRangePicker(DialogControl):
         default_factory=lambda: datetime(year=1900, month=1, day=1)
     )
     """
-    The earliest allowable date on the date range. Defaults to `January 1, 1900`.
+    The earliest allowable date on the date range.
     """
 
     last_date: DateTimeValue = field(
         default_factory=lambda: datetime(year=2050, month=1, day=1)
     )
     """
-    The latest allowable date on the date range. Defaults to `January 1, 2050`.
+    The latest allowable date on the date range.
     """
 
     current_date: DateTimeValue = field(default_factory=lambda: datetime.now())
     """
     The date representing today. It will be highlighted in the day grid.
+    """
+
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker dialog. It is intended for (rare) cases where this
+    dialog should be localized differently from the rest of the page.
+
+    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    but does not participate in page-level locale resolution.
+
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
     """
 
     keyboard_type: KeyboardType = KeyboardType.DATETIME

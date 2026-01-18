@@ -239,7 +239,7 @@ class LayoutControl(Control):
 
 @deprecated_class(
     reason="Inherit from LayoutControl instead.",
-    version="0.70.0",
+    version="0.80.0",
     delete_version="1.0",
 )
 class ConstrainedControl(LayoutControl):

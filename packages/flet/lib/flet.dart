@@ -35,6 +35,7 @@ export 'src/utils/desktop.dart';
 export 'src/utils/dismissible.dart';
 export 'src/utils/drawing.dart';
 export 'src/utils/edge_insets.dart';
+export 'src/utils/enums.dart';
 export 'src/utils/events.dart';
 export 'src/utils/form_field.dart';
 export 'src/utils/geometry.dart';

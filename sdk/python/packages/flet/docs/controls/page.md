@@ -35,4 +35,10 @@ Shows how to lock your app to specific device orientations
 --8<-- "{{ examples }}/window_hidden_on_start.py"
 ```
 
+### Toggle semantics debugger
+
+```python
+--8<-- "{{ examples }}/semantics_debugger.py"
+```
+
 {{ class_members(class_name) }}

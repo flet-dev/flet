@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
@@ -23,6 +24,8 @@ class _CupertinoDatePickerControlState
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDatePicker build: ${widget.control.id}");
+
+    var locale = widget.control.getLocale("locale");
 
     Widget dialog;
     try {
@@ -49,6 +52,12 @@ class _CupertinoDatePickerControlState
       return ErrorControl("CupertinoDatePicker Error: ${e.toString()}");
     }
 
-    return LayoutControl(control: widget.control, child: dialog);
+    return LayoutControl(
+      control: widget.control,
+      child: locale == null || !locale.isSupportedByDelegates()
+          ? dialog
+          : Localizations.override(
+              context: context, locale: locale, child: dialog),
+    );
   }
 }

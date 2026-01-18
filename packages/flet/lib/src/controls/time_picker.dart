@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/locale.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
@@ -25,6 +26,7 @@ class TimePickerControl extends StatelessWidget {
         control.getIconData("switch_to_timer_icon");
     var switchToInputEntryModeIcon =
         control.getIconData("switch_to_input_icon");
+    var locale = control.getLocale("locale");
 
     void onClosed(TimeOfDay? timeValue) {
       control.updateProperties({"_open": false}, python: false);
@@ -63,7 +65,10 @@ class TimePickerControl extends StatelessWidget {
       return MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(alwaysUse24HourFormat: hourFormatMap[hourFormat]),
-        child: dialog,
+        child: locale == null || !locale.isSupportedByDelegates()
+            ? dialog
+            : Localizations.override(
+                context: context, locale: locale, child: dialog),
       );
     }
 

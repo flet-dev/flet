@@ -133,7 +133,7 @@ appearance of your app or its behavior, for example:
 * App loading animation.
 * `manifest.json` with PWA details.
 
-You can specify `assets_dir` in `flet.app()` call to set the location of assets that should be available to the application.
+You can specify `assets_dir` in `flet.run()` call to set the location of assets that should be available to the application.
 `assets_dir` should be a relative to your `main.py` directory or an absolute path.
 Default value for `assets_dir` argument is `assets`.
 

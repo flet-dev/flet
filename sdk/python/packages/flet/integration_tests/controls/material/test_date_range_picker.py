@@ -15,21 +15,23 @@ def flet_app(flet_app_function):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app: ftt.FletTestApp, request):
-    dp = ft.DateRangePicker(
-        start_value=datetime.datetime(year=2000, month=10, day=1),
-        end_value=datetime.datetime(year=2000, month=10, day=15),
-        first_date=datetime.datetime(year=2000, month=10, day=1),
-        last_date=datetime.datetime(year=2000, month=11, day=15),
-        current_date=datetime.datetime(year=2000, month=10, day=16),
-    )
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(400, 600)
-    flet_app.page.show_dialog(dp)
     flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
 
+    flet_app.page.show_dialog(
+        ft.DateRangePicker(
+            start_value=datetime.datetime(year=2000, month=10, day=1),
+            end_value=datetime.datetime(year=2000, month=10, day=15),
+            first_date=datetime.datetime(year=2000, month=10, day=1),
+            last_date=datetime.datetime(year=2000, month=11, day=15),
+            current_date=datetime.datetime(year=2000, month=10, day=16),
+        )
+    )
+
+    await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
-        "basic",
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
@@ -84,6 +86,32 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
     await flet_app.tester.pump_and_settle()
     flet_app.assert_screenshot(
         "properties_input",
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_locale(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(400, 600)
+    flet_app.page.update()
+
+    flet_app.page.show_dialog(
+        ft.DateRangePicker(
+            locale=ft.Locale("zh", "Hans"),
+            start_value=datetime.datetime(year=2000, month=10, day=1),
+            end_value=datetime.datetime(year=2000, month=10, day=15),
+            first_date=datetime.datetime(year=2000, month=10, day=1),
+            last_date=datetime.datetime(year=2000, month=11, day=15),
+            current_date=datetime.datetime(year=2000, month=10, day=16),
+        )
+    )
+
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        request.node.name,
         await flet_app.page.take_screenshot(
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),

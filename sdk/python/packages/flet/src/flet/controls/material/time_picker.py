@@ -13,6 +13,7 @@ from flet.controls.dialog_control import DialogControl
 from flet.controls.material.icons import IconData
 from flet.controls.types import (
     ColorValue,
+    Locale,
     Orientation,
 )
 
@@ -114,6 +115,19 @@ class TimePicker(DialogControl):
     The selected time that this picker should display.
 
     The default value is equal to the current time.
+    """
+
+    locale: Optional[Locale] = None
+    """
+    The locale for this time picker dialog. It is intended for (rare) cases where this
+    dialog should be localized differently from the rest of the page.
+
+    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    but does not participate in page-level locale resolution.
+
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
     """
 
     modal: bool = False

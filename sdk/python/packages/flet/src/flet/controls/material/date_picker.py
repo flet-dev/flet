@@ -16,6 +16,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconData,
+    Locale,
 )
 
 __all__ = [
@@ -122,6 +123,19 @@ class DatePicker(DialogControl):
     The date representing today. It will be highlighted in the day grid.
     """
 
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker dialog. It is intended for (rare) cases where this
+    dialog should be localized differently from the rest of the page.
+
+    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    but does not participate in page-level locale resolution.
+
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
+    """
+
     keyboard_type: KeyboardType = KeyboardType.DATETIME
     """
     The type of keyboard to use for editing the text.
@@ -129,7 +143,7 @@ class DatePicker(DialogControl):
 
     date_picker_mode: DatePickerMode = DatePickerMode.DAY
     """
-    Initial display of a calendar date picker.
+    Initial display mode of this picker.
     """
 
     entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
