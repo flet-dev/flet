@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from collections.abc import Awaitable, Coroutine, Sequence
 from contextlib import asynccontextmanager, suppress
 from typing import (
@@ -74,7 +75,7 @@ class FastAPI(fastapi.FastAPI):
             await flet_web.fastapi.app_manager.start()
             if on_startup:
                 for h in on_startup:
-                    if asyncio.iscoroutinefunction(h):
+                    if inspect.iscoroutinefunction(h):
                         await h()
                     else:
                         h()
@@ -83,7 +84,7 @@ class FastAPI(fastapi.FastAPI):
                 yield
             if on_shutdown:
                 for h in on_shutdown:
-                    if asyncio.iscoroutinefunction(h):
+                    if inspect.iscoroutinefunction(h):
                         await h()
                     else:
                         h()

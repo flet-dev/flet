@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -21,8 +21,9 @@ class CupertinoSwitch(LayoutControl):
 
     Used to toggle the on/off state of a single setting.
 
+    Example:
     ```python
-    ft.CupertinoSwitch(value=True)
+           ft.CupertinoSwitch(value=True)
     ```
     """
 
@@ -69,18 +70,24 @@ class CupertinoSwitch(LayoutControl):
     The color to use for the accessibility label when the switch is off.
     """
 
-    active_thumb_image: Optional[str] = None
+    active_thumb_image_src: Optional[Union[str, bytes]] = None
     """
     An image to use on the thumb of this switch when the switch is on.
 
-    Can be a local file path or URL.
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
     """
 
-    inactive_thumb_image: Optional[str] = None
+    inactive_thumb_image_src: Optional[Union[str, bytes]] = None
     """
     An image to use on the thumb of this switch when the switch is off.
 
-    Can be a local file path or URL.
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
     """
 
     active_track_color: Optional[ColorValue] = None
@@ -148,6 +155,6 @@ class CupertinoSwitch(LayoutControl):
 
     on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when [`active_thumb_image`][(c).] or
-    [`inactive_thumb_image`][(c).] fails to load.
+    Called when [`active_thumb_image_src`][(c).] or
+    [`inactive_thumb_image_src`][(c).] fails to load.
     """

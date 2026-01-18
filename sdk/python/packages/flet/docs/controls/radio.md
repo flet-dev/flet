@@ -1,10 +1,10 @@
 ---
 class_name: flet.Radio
 examples: ../../examples/controls/radio
-example_images: ../examples/controls/radio/media
+example_images: ../test-images/examples/material/golden/macos/radio
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Simple radio buttons") }}
 
 ## Examples
 
@@ -16,7 +16,7 @@ example_images: ../examples/controls/radio/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_images + "/basic.png", alt="basic", width="80%") }}
 
 
 
@@ -26,7 +26,7 @@ example_images: ../examples/controls/radio/media
 --8<-- "{{ examples }}/handling_selection_changes.py"
 ```
 
-{{ image(example_images + "/handling_selection_changes.gif", alt="handling-selection-changes", width="80%") }}
+{{ image(example_images + "/handling_selection_changes.png", alt="handling-selection-changes", width="80%") }}
 
 
 ### Styled radio buttons

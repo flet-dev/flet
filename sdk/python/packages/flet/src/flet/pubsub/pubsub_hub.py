@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import threading
 from collections.abc import Awaitable, Iterable
@@ -150,7 +151,7 @@ class PubSubHub:
         if not self.__loop:
             raise RuntimeError("PubSub event loop is not set")
 
-        if asyncio.iscoroutinefunction(handler):
+        if inspect.iscoroutinefunction(handler):
             asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
         else:
             if self.__executor:

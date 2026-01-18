@@ -228,6 +228,19 @@ class SnackBar(DialogControl):
         ValueError: If it is not between `0.0` and `1.0` inclusive.
     """
 
+    persist: Optional[bool] = None
+    """
+    Whether the snack bar will stay or auto-dismiss after timeout.
+
+    If `True`, the snack bar remains visible even after the timeout,
+    until the user taps the action button or the close icon.
+
+    If `False`, the snack bar will be dismissed after the timeout.
+
+    If not provided, but the snackbar [`action`][(c).] is not null,
+    the snackbar will persist as well.
+    """
+
     on_action: Optional[ControlEventHandler["SnackBar"]] = None
     """
     Called when action button is clicked.

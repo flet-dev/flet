@@ -195,6 +195,16 @@ class IconButton(LayoutControl, AdaptiveControl):
     Called when a user clicks this button.
     """
 
+    on_long_press: Optional[ControlEventHandler["IconButton"]] = None
+    """
+    Called when the button is long-pressed.
+    """
+
+    on_hover: Optional[ControlEventHandler["IconButton"]] = None
+    """
+    Called when the button is hovered.
+    """
+
     on_focus: Optional[ControlEventHandler["IconButton"]] = None
     """
     Called when this button has received focus.

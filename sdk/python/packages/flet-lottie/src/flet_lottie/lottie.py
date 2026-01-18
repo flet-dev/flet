@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import flet as ft
 
@@ -9,32 +9,21 @@ __all__ = ["Lottie"]
 class Lottie(ft.LayoutControl):
     """
     Displays lottie animations.
-    """
-
-    src: Optional[str] = None
-    """
-    The source of the Lottie file.
-
-    Can be a URL or a local [asset file](https://docs.flet.dev/cookbook/assets).
 
     Note:
-        If both `src` and [`src_base64`][(c).] are provided,
-        `src_base64` will be prioritized/used.
+        - Layer effects are currently not supported.
+            See [airbnb/lottie-android#1964](https://github.com/airbnb/lottie-android/issues/1964)
+            and [xvrh/lottie-flutter#189](https://github.com/xvrh/lottie-flutter/issues/189) for details.
+    """  # noqa: E501
 
-    Raises:
-        ValueError: If neither `src` nor [`src_base64`][(c).] is provided.
+    src: Union[str, bytes]
     """
+    The lottie animation source.
 
-    src_base64: Optional[str] = None
-    """
-    The base64 encoded string of the Lottie file.
-
-    Note:
-        If both `src_base64` and [`src`][(c).] are provided,
-        `src_base64` will be prioritized/used.
-
-    Raises:
-        ValueError: If neither `src_base64` nor [`src`][(c).] is provided.
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
     """
 
     repeat: bool = True
@@ -105,8 +94,3 @@ class Lottie(ft.LayoutControl):
     The [`data`][flet.Event.data] property of the event handler argument
     contains information on the error.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (self.src or self.src_base64):
-            raise ValueError("at least one of src and src_base64 must be provided")

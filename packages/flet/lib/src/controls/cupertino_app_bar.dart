@@ -91,6 +91,7 @@ class CupertinoAppBarControl extends StatelessWidget
     final Color backgroundColor = CupertinoDynamicColor.maybeResolve(
             control.getColor("bgcolor", context), context) ??
         CupertinoTheme.of(context).barBackgroundColor;
-    return backgroundColor.alpha == 0xFF;
+    final alpha8 = (backgroundColor.a * 255.0).round().clamp(0, 255);
+    return alpha8 == 0xFF;
   }
 }

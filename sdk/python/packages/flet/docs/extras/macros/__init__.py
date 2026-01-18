@@ -1,8 +1,10 @@
 import os
+from typing import Optional
 from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
-from .controls_overview import render_controls_overview
+from .controls_overview import render_nav_overview, render_sub_nav_overview
+from .pypi_index import render_pypi_index
 
 
 def define_env(env):
@@ -128,5 +130,31 @@ def define_env(env):
         )
 
     @env.macro
+    def flet_pypi_index(
+        *,
+        max_versions: Optional[int] = None,
+    ) -> str:
+        return render_pypi_index(
+            base_url="https://pypi.flet.dev/",
+            timeout_s=20.0,
+            workers=12,
+            max_versions=max_versions,
+            output_format="md",
+            strict=False,
+        )
+
+    @env.macro
     def controls_overview():
-        return render_controls_overview()
+        return render_sub_nav_overview("Controls")
+
+    @env.macro
+    def services_overview():
+        return render_sub_nav_overview("Services")
+
+    @env.macro
+    def cookbook_overview():
+        return render_nav_overview(
+            ["Cookbook"],
+            base_dir="cookbook",
+            skip_paths={"cookbook/index.md"},
+        )

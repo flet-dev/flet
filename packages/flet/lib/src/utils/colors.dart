@@ -200,7 +200,7 @@ extension HexColor on Color {
     }
 
     if (color != null && colorOpacity != null) {
-      color = color.withOpacity(parseDouble(colorOpacity, 1.0)!);
+      color = color.withValues(alpha: parseDouble(colorOpacity, 1.0)!);
     }
 
     return color ?? defaultColor;
@@ -262,11 +262,21 @@ extension HexColor on Color {
   }
 
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-      '${alpha.toRadixString(16).padLeft(2, '0')}'
-      '${red.toRadixString(16).padLeft(2, '0')}'
-      '${green.toRadixString(16).padLeft(2, '0')}'
-      '${blue.toRadixString(16).padLeft(2, '0')}';
+  String toHex({bool leadingHashSign = true}) {
+    int to8bit(double component) =>
+        (component * 255.0).round().clamp(0, 255);
+
+    final alpha8 = to8bit(a);
+    final red8 = to8bit(r);
+    final green8 = to8bit(g);
+    final blue8 = to8bit(b);
+
+    return '${leadingHashSign ? '#' : ''}'
+        '${alpha8.toRadixString(16).padLeft(2, '0')}'
+        '${red8.toRadixString(16).padLeft(2, '0')}'
+        '${green8.toRadixString(16).padLeft(2, '0')}'
+        '${blue8.toRadixString(16).padLeft(2, '0')}';
+  }
 }
 
 extension ColorExtension on Color {
@@ -274,11 +284,14 @@ extension ColorExtension on Color {
   Color darken([int percent = 40]) {
     assert(1 <= percent && percent <= 100);
     final value = 1 - percent / 100;
+    int to8bit(double component) =>
+        (component * 255.0).round().clamp(0, 255);
+
     return Color.fromARGB(
-      alpha,
-      (red * value).round(),
-      (green * value).round(),
-      (blue * value).round(),
+      to8bit(a),
+      (to8bit(r) * value).round().clamp(0, 255),
+      (to8bit(g) * value).round().clamp(0, 255),
+      (to8bit(b) * value).round().clamp(0, 255),
     );
   }
 }

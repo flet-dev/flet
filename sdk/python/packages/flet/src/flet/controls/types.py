@@ -197,15 +197,41 @@ class AutomaticNotchShape(NotchShape):
 
 class ResponsiveRowBreakpoint(Enum):
     """
-    Breakpoints for responsive design.
+    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive
+    properties such as [`Control.col`][flet.].
+
+    To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
     """
 
     XS = "xs"
+    """
+    Extra small screens. Default min width: `0` px.
+    """
+
     SM = "sm"
+    """
+    Small screens. Default min width: `576` px.
+    """
+
     MD = "md"
+    """
+    Medium screens. Default min width: `768` px.
+    """
+
     LG = "lg"
+    """
+    Large screens. Default min width: `992` px.
+    """
+
     XL = "xl"
+    """
+    Extra-large screens. Default min width: `1200` px.
+    """
+
     XXL = "xxl"
+    """
+    Double extra-large screens. Default min width: `1400` px.
+    """
 
 
 Number = Union[int, float]
@@ -1098,7 +1124,7 @@ Represents a color and can be:
 - a material color from the [`Colors`][flet.] enum,
 - or a Cupertino color from the [`CupertinoColors`][flet.] enum.
 
-More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookbook/colors).
+More information [here](https://docs.flet.dev/cookbook/cookbook/cookbook/colors).
 """
 
 # Icons

@@ -32,11 +32,22 @@ env:
 
 jobs:
   test-macos:
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
-        suite: [apps, examples, controls/core, controls/material, controls/cupertino, controls/theme, controls/types]
+        suite:
+        - apps
+        - examples/apps
+        - examples/core
+        - examples/cupertino
+        - examples/material
+        - controls/core
+        - controls/cupertino
+        - controls/material
+        - controls/theme
+        - controls/types
+
     name: ${{ matrix.suite }} Integration Tests
     steps:
       - name: Checkout repository
@@ -47,7 +58,6 @@ jobs:
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        id: fvm-config-action
         with:
           path: '.fvmrc'
           cache: true

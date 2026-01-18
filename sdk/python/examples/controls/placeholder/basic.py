@@ -5,9 +5,13 @@ def main(page: ft.Page):
     page.add(
         ft.Placeholder(
             expand=True,
-            color=ft.Colors.random(),
+            color=ft.Colors.GREEN_ACCENT,
+            fallback_height=200,
+            fallback_width=300,
+            stroke_width=20,
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

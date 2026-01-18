@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import traceback
 import weakref
@@ -258,7 +259,7 @@ class Session:
             await self.__auto_update(control)
 
         # unregister unreferenced services
-        self.page._user_services.unregister_services()
+        self.page._services.unregister_services()
 
     async def __auto_update(self, control: BaseControl | None):
         while control:
@@ -333,13 +334,17 @@ class Session:
             self.__updates_ready.clear()
 
             # Process pending updates
-            for control in self.__pending_updates:
-                control.update()
-
+            pending_updates = list(self.__pending_updates)
             self.__pending_updates.clear()
 
+            for control in pending_updates:
+                control.update()
+
             # Process pending effects
-            for effect in self.__pending_effects:
+            pending_effects = list(self.__pending_effects)
+            self.__pending_effects.clear()
+
+            for effect in pending_effects:
                 try:
                     hook = effect[0]()
                     is_cleanup = effect[1]
@@ -347,7 +352,7 @@ class Session:
                     if hook and hook.setup and not is_cleanup:
                         hook.cancel()
                         res = None
-                        if asyncio.iscoroutinefunction(hook.setup):
+                        if inspect.iscoroutinefunction(hook.setup):
                             hook._setup_task = asyncio.create_task(hook.setup())
                         else:
                             res = hook.setup()
@@ -355,12 +360,10 @@ class Session:
                             hook.cleanup = res
                     elif hook and hook.cleanup and is_cleanup:
                         hook.cancel()
-                        if asyncio.iscoroutinefunction(hook.cleanup):
+                        if inspect.iscoroutinefunction(hook.cleanup):
                             hook._cleanup_task = asyncio.create_task(hook.cleanup())
                         else:
                             hook.cleanup()
                 except Exception as ex:
                     tb = traceback.format_exc()
                     self.error(f"Exception in effect: {ex}\n{tb}")
-
-            self.__pending_effects.clear()

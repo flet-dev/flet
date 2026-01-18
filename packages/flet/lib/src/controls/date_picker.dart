@@ -1,5 +1,12 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
+
+import '../models/control.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
+import '../utils/icons.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
 
 class DatePickerControl extends StatelessWidget {
   final Control control;
@@ -32,8 +39,8 @@ class DatePickerControl extends StatelessWidget {
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? currentDate ?? DateTime.now(),
-        firstDate: control.getDateTime("first_date", DateTime(1900))!,
-        lastDate: control.getDateTime("last_date", DateTime(2050))!,
+        firstDate: control.getDateTime("first_date", DateTime(1900, 1, 1))!,
+        lastDate: control.getDateTime("last_date", DateTime(2050, 1, 1))!,
         currentDate: currentDate ?? DateTime.now(),
         helpText: control.getString("help_text"),
         cancelText: control.getString("cancel_text"),

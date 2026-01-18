@@ -116,6 +116,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     var label =
         widget.control.buildTextOrWidget("label", textStyle: labelStyle);
     if (label != null) {
+      var spacing = widget.control.getDouble("spacing", 10)!;
       label = widget.control.disabled
           ? label
           : MouseRegion(cursor: SystemMouseCursors.click, child: label);
@@ -125,8 +126,9 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
           child: GestureDetector(
               onTap: !widget.control.disabled ? _toggleValue : null,
               child: labelPosition == LabelPosition.right
-                  ? Row(children: [cupertinoCheckbox, label])
-                  : Row(children: [label, cupertinoCheckbox])));
+                  ? Row(spacing: spacing, children: [cupertinoCheckbox, label])
+                  : Row(
+                      spacing: spacing, children: [label, cupertinoCheckbox])));
     }
 
     // Apply width and height if provided

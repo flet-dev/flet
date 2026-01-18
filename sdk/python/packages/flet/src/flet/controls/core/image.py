@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Union
 
+from flet.controls.animation import Animation
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxFit, FilterQuality
@@ -17,16 +18,12 @@ __all__ = ["Image"]
 @control("Image")
 class Image(LayoutControl):
     """
-    Displays an image. The following popular formats are supported: JPEG, PNG, SVG,
+    Displays an image.
+
+    The following popular formats are supported: JPEG, PNG, SVG,
     GIF, Animated GIF, WebP, Animated WebP, BMP, and WBMP.
 
-    The source can be specified through one of the following
-    properties (in order of precedence):
-
-    - [`src_bytes`][(c).]
-    - [`src_base64`][(c).]
-    - [`src`][(c).]
-
+    Example:
     ```python
     ft.Image(
         src="https://flet.dev/img/logo.svg",
@@ -36,60 +33,35 @@ class Image(LayoutControl):
     ```
     """
 
-    src: Optional[str] = None
+    src: Union[str, bytes]
     """
     The image source.
 
-    This could be an external URL or a local
-    [asset file](https://flet.dev/docs/cookbook/assets).
-    """
-
-    src_base64: Optional[str] = None
-    """
-    A string representing an image encoded in Base64 format.
-
-    [Here](https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/image/image-base64.py)
-    is an example.
-
-    /// details | Tip
-        type: tip
-
-    - Use `base64` command (on Linux, macOS or WSL) to convert file to Base64 format:
-        ```bash
-        base64 -i <image.png> -o <image-base64.txt>
-        ```
-
-    - On Windows you can use PowerShell to encode string into Base64 format:
-        ```posh
-        [convert]::ToBase64String((Get-Content -path "your_file_path" -Encoding byte))
-        ```
-    ///
-    """
-
-    src_bytes: Optional[bytes] = None
-    """
-    A byte array representing an image.
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
     """
 
     error_content: Optional[Control] = None
     """
     Fallback control to display if the image cannot be loaded
-    from the provided sources (`src` or `src_base64`).
+    from the provided source.
     """
 
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
     """
-    How to paint any portions of the layout bounds not covered by the image.
+    How to paint any portions of the layout bounds not covered by this image.
     """
 
     fit: Optional[BoxFit] = None
     """
-    How to inscribe the image into the space allocated during layout.
+    Defines how to inscribe this image into the space allocated during layout.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
-    Clip image to have rounded corners.
+    Clips this image to have rounded corners.
     """
 
     color: Optional[ColorValue] = None
@@ -100,7 +72,7 @@ class Image(LayoutControl):
 
     color_blend_mode: Optional[BlendMode] = None
     """
-    Used to combine `color` with the image.
+    Used to combine [`color`][(c).] with the image.
 
     In terms of the blend mode, color is the source and this image is the destination.
     """
@@ -115,7 +87,7 @@ class Image(LayoutControl):
 
     semantics_label: Optional[str] = None
     """
-    A semantic description of the image.
+    A semantic description of this image.
 
     Used to provide a description of the image to TalkBack on Android, and VoiceOver
     on iOS.
@@ -131,9 +103,54 @@ class Image(LayoutControl):
     The rendering quality of the image.
     """
 
+    placeholder_src: Optional[Union[str, bytes]] = None
+    """
+    A placeholder displayed while the image is loading.
+
+    It can be one of the following:
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A base64 string;
+    - Raw bytes.
+
+    If `None`, no placeholder is shown while loading; the [`src`][(c).]
+    simply appears (or fades in if [`placeholder`][(c).] or
+    [`placeholder_fade_out_animation`][(c).] is not `None`).
+
+    Note:
+        SVG sources are currently not supported as placeholders. If provided,
+        this property will be ignored and the [`src`][(c).] will be
+        displayed directly instead.
+    """
+
+    placeholder_fit: Optional[BoxFit] = None
+    """
+    Defines how to inscribe the placeholder into its space.
+
+    If `None`, default to [`fit`][(c).].
+    """
+
+    fade_in_animation: Optional[Animation] = None
+    """
+    Fade-in animation of the [`src`][(c).] image as it appears after loading,
+    replacing the [`placeholder`][(c).].
+
+    If `None`, defaults to
+    `Animation(Duration(milliseconds=250), AnimationCurve.EASE_IN_OUT)`,
+    if [`placeholder`][(c).] or [`placeholder_fade_out_animation`][(c).] is not `None`.
+    """
+
+    placeholder_fade_out_animation: Optional[Animation] = None
+    """
+    Fade-out animation for the [`placeholder`][(c).], after the [`src`][(c).] loads.
+
+    If `None`, defaults to
+    `Animation(Duration(milliseconds=150), AnimationCurve.EASE_OUT)`,
+    if [`placeholder`][(c).] or [`fade_in_animation`][(c).] is not `None`.
+    """
+
     cache_width: Optional[int] = None
     """
-    The size at which the image should be decoded.
+    The size at which this image should be decoded.
 
     The image will, however, be rendered to the constraints of the layout regardless
     of this parameter.
@@ -141,7 +158,7 @@ class Image(LayoutControl):
 
     cache_height: Optional[int] = None
     """
-    The size at which the image should be decoded.
+    The size at which this image should be decoded.
 
     The image will, however, be rendered to the constraints of the layout regardless
     of this parameter.
@@ -151,7 +168,7 @@ class Image(LayoutControl):
     """
     Whether to paint the image with anti-aliasing.
 
-    Anti-aliasing alleviates the sawtooth artifact when the image is rotated.
+    Anti-aliasing alleviates the sawtooth artifact when this image is rotated.
     """
 
     def init(self):

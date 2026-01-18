@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import os
 import platform
@@ -7,6 +8,7 @@ from collections.abc import Iterable
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
+from enum import Enum
 
 import numpy as np
 from PIL import Image
@@ -19,6 +21,32 @@ from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
 __all__ = ["FletTestApp"]
+
+
+class DisposalMode(Enum):
+    """
+    Indicates the way in which a frame is treated after being displayed.
+    """
+
+    DEFAULT = 0
+    """
+    No disposal method specified
+    """
+
+    NONE = 1
+    """
+    Do not dispose
+    """
+
+    BACKGROUND = 2
+    """
+    Restore to background color.
+    """
+
+    PREVIOUS = 3
+    """
+    Restore to previous content.
+    """
 
 
 class FletTestApp:
@@ -80,6 +108,9 @@ class FletTestApp:
             If `True`, do not invoke `fvm` when running the Flutter test
             process. Env override: `FLET_TEST_DISABLE_FVM=1`.
 
+        skip_pump_and_settle:
+            If `True`, the initial `pump_and_settle` after app start is skipped.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -105,6 +136,7 @@ class FletTestApp:
         screenshots_similarity_threshold: float = 99.0,
         use_http: bool = False,
         disable_fvm: bool = False,
+        skip_pump_and_settle: bool = False,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -124,12 +156,13 @@ class FletTestApp:
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
+        self.__skip_pump_and_settle = skip_pump_and_settle
         self.__flutter_app_dir = flutter_app_dir
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
-        self.__tester = None
+        self.__tester: Tester | None = None
 
     @property
     def page(self) -> ft.Page:
@@ -163,11 +196,12 @@ class FletTestApp:
             page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
-            if asyncio.iscoroutinefunction(self.__flet_app_main):
+            if inspect.iscoroutinefunction(self.__flet_app_main):
                 await self.__flet_app_main(page)
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)
-            await self.__tester.pump_and_settle()
+            if not self.__skip_pump_and_settle:
+                await self.__tester.pump_and_settle()
             ready.set()
 
         if not self.__tcp_port:
@@ -419,6 +453,7 @@ class FletTestApp:
         *,
         duration: int = 1000,
         loop: int = 0,
+        disposal: DisposalMode = DisposalMode.DEFAULT,
     ) -> Path:
         """Create an animated GIF from a sequence of image files.
 
@@ -464,7 +499,16 @@ class FletTestApp:
                 path = golden_dir / f"{name}.png"
                 if not path.exists():
                     raise FileNotFoundError(path)
-                frames.append(Image.open(path))
+
+                frames.append(
+                    Image.open(path)
+                    .convert("RGB")
+                    .convert(
+                        "P",
+                        palette=Image.ADAPTIVE,
+                        colors=256,
+                    )
+                )
 
             first, *rest = frames
             first.save(
@@ -473,6 +517,8 @@ class FletTestApp:
                 append_images=rest,
                 duration=duration,
                 loop=loop,
+                optimize=True,
+                disposal=disposal.value,
             )
         finally:
             for frame in frames:

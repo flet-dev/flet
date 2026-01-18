@@ -24,7 +24,7 @@ async def test_properties1(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Column(
-            [
+            controls=[
                 ft.ListTile(
                     "List Tile with custom shape",
                     subtitle="Subtitle",
@@ -95,7 +95,7 @@ async def test_properties2(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Column(
-            [
+            controls=[
                 ft.ListTile(
                     title="List Tile with horizontal spacing",
                     subtitle="Subtitle",

@@ -1,12 +1,12 @@
 ---
 class_name: flet.NavigationRail
 examples: ../../examples/controls/navigation_rail
-example_images: ../../examples/controls/navigation_rail/media
+example_images: ../../test-images/examples/material/golden/macos/navigation_rail
 ---
 
 # NavigationRail
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Navigation rail extended") }}
 
 ## Examples
 

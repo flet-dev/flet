@@ -1,6 +1,6 @@
 ---
 class_name: flet_audio.Audio
-examples: ../../examples/controls/audio
+examples: ../../examples/services/audio
 ---
 
 # Audio

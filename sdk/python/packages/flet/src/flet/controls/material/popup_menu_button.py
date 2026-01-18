@@ -90,6 +90,18 @@ class PopupMenuItem(Control):
 class PopupMenuButton(LayoutControl):
     """
     An icon button which displays a menu when clicked.
+
+    ```python
+    ft.PopupMenuButton(
+        items=[
+            ft.PopupMenuItem(content="Sm"),
+            ft.PopupMenuItem(content="Med"),
+            ft.PopupMenuItem(content="Lg"),
+        ],
+        menu_position=ft.PopupMenuPosition.UNDER,
+    )
+    ```
+
     """
 
     content: Optional[StrOrControl] = None

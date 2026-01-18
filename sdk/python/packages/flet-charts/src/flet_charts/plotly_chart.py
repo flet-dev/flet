@@ -34,6 +34,15 @@ class PlotlyChart(ft.Container):
         packages to be installed.
 
         See this [installation guide](index.md#installation) for more information.
+
+    ```python
+    import plotly.express as px
+
+    data_canada = px.data.gapminder().query("country == 'Canada'")
+    fig = px.bar(data_canada, x="year", y="pop")
+    fch.PlotlyChart(figure=fig, expand=True)
+    ```
+
     """
 
     figure: Figure = field(metadata={"skip": True})
@@ -53,7 +62,7 @@ class PlotlyChart(ft.Container):
     def init(self):
         _require_plotly()
         self.alignment = ft.Alignment.CENTER
-        self.__img = ft.Image(fit=ft.BoxFit.FILL)
+        self.__img = ft.Image(src="", fit=ft.BoxFit.FILL)
         self.content = self.__img
 
     def before_update(self):

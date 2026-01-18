@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';

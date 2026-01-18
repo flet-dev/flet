@@ -14,6 +14,11 @@ class ProgressBar(LayoutControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
+
+    ```python
+    ft.ProgressBar(width=400, value=0.8),
+    ```
+
     """
 
     value: Optional[Number] = None

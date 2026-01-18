@@ -225,6 +225,7 @@ class Component(BaseControl):
             # all effects are running on unmount
             if isinstance(hook, EffectHook) and callable(hook.cleanup):
                 self._schedule_effect(hook, is_cleanup=True)
+        self._state.hooks.clear()
 
     def did_mount(self):
         super().did_mount()

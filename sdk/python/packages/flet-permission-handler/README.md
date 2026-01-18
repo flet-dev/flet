@@ -42,4 +42,4 @@ To install the `flet-permission-handler` package and add it to your project depe
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/permission_handler).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/services/permission_handler).

@@ -1,4 +1,25 @@
-# Flet changelog
+## 0.80.3
+
+* Add position details to `GestureDetector.on_tap` event ([#6016](https://github.com/flet-dev/flet/issues/6016)).
+
+## 0.80.2
+
+* OAuth fixes and updated examples ([#5996](https://github.com/flet-dev/flet/issues/5996)).
+* Examples cleanup ([#5997](https://github.com/flet-dev/flet/issues/5997)).
+* Fix wrong `LinearGradient` alignment defaults + allow multiple use of `--exclude` option in `flet build` ([#5986](https://github.com/flet-dev/flet/issues/5986)).
+* Update TypeVar definition for covariant typing in Ref class ([#5994](https://github.com/flet-dev/flet/issues/5994)).
+* feat: add `on_long_press` and `on_hover` events to `IconButton` ([#5984](https://github.com/flet-dev/flet/issues/5984)).
+* replace all `asyncio.iscoroutinefunction` with `inspect.iscoroutinefunction` ([#5928](https://github.com/flet-dev/flet/issues/5928)).
+* Fix: Control with ID xxx is not registered for `flet_permission_handler` when using Python 3.14 ([#5896](https://github.com/flet-dev/flet/issues/5896)).
+
+
+## 0.80.1
+
+* Fix `flet publish` to sub-directories, Icons Browser and other Gallery examples updated [#5964](https://github.com/flet-dev/flet/pull/5964).
+
+## 0.80.0
+
+* **Flet 1.0 Beta Release** – [Read the announcement](https://flet.dev/blog/flet-1-0-beta)
 
 ## 0.70.0
 
@@ -13,6 +34,7 @@
   * Controls in Python are now defined as plain dataclasses
   * Unified diffing algorithm supports both imperative and declarative styles
   * Refactored Flutter layer using inherited widgets and `Provider`
+* Added a Shimmer control for building skeleton loaders and animated placeholders.
 * Added `FletApp.appErrorMessage` template to customize loading screen errors.
 * See the list of [breaking changes](https://github.com/flet-dev/flet/issues/5238)
 

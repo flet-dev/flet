@@ -6,7 +6,7 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
@@ -50,8 +50,7 @@ class Command(BaseCommand):
             "--distpath",
             dest="distpath",
             default="dist",
-            help="Directory where the published web app "
-            "should be placed (default: ./dist)",
+            help="Directory where the published web app should be placed",
         )
         parser.add_argument(
             "--app-name",
@@ -88,6 +87,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
+            type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             default="auto",
             help="Flutter web renderer to use",
@@ -95,6 +95,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
+            type=str.lower,
             choices=["path", "hash"],
             default="path",
             help="Controls how routes are handled in the browser",
@@ -186,10 +187,9 @@ class Command(BaseCommand):
         # copy assets
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_path.joinpath(assets_dir).resolve())
+            assets_dir = str(script_dir / assets_dir)
         else:
             assets_dir = str(script_dir / assets_name)
-
         if os.path.exists(assets_dir):
             copy_tree(assets_dir, str(dist_dir))
 
@@ -214,7 +214,7 @@ class Command(BaseCommand):
                 print(f"{reqs_filename} dependencies: {deps}")
 
         if len(deps) == 0:
-            deps = [f"flet=={flet.version.version}"]
+            deps = [f"flet=={flet.version.flet_version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w", encoding="utf-8") as f:
@@ -303,7 +303,7 @@ class Command(BaseCommand):
                 or get_pyproject("tool.flet.web.renderer")
                 or "auto"
             ),
-            route_url_strategy=str(
+            route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
                 or "path"

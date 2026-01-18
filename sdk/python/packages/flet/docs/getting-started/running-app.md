@@ -15,11 +15,6 @@ uv run flet run
 flet run
 ```
 ///
-/// tab | poetry
-```bash
-poetry run flet run
-```
-///
 
 When you run the command without any arguments, `main.py` script in the current directory will be executed, by default.
 
@@ -33,11 +28,6 @@ uv run flet run [script]
 /// tab | pip
 ```bash
 flet run [script]
-```
-///
-/// tab | poetry
-```bash
-poetry run flet run [script]
 ```
 ///
 
@@ -76,13 +66,6 @@ flet run --web [script]  # (1)!
 
 1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
 ///
-/// tab | poetry
-```bash
-poetry run flet run --web [script]  # (1)!
-```
-
-1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
-///
 
 A new browser window/tab will be opened and the app will be using a random TCP port:
 
@@ -110,11 +93,6 @@ uv run flet run --recursive [script]
 /// tab | pip
 ```bash
 flet run --recursive [script]
-```
-///
-/// tab | poetry
-```bash
-poetry run flet run --recursive [script]
 ```
 ///
 

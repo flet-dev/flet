@@ -9,6 +9,7 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
+    "flet-desktop-light",
     "flet-web",
     "flet-ads",
     "flet-audio",
@@ -29,6 +30,7 @@ dependencies = [
 flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
+flet-desktop-light = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
@@ -90,7 +92,8 @@ docs = [
     "pydocstyle >=6.3.0",
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
-    "mkdocs-macros-plugin>=1.5.0",
+    "mkdocs-macros-plugin >=1.5.0",
+    "packaging >=23.0",
     { include-group = 'docs-coverage' },
 ]
 all = [
@@ -110,6 +113,8 @@ pydocstyle = { convention = 'google' }
 isort = { known-first-party = [
     "flet",
     "flet_cli",
+    "flet_desktop",
+    "flet_web",
     "flet_ads",
     "flet_audio",
     "flet_audio_recorder",
@@ -150,3 +155,6 @@ docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["packages*"]

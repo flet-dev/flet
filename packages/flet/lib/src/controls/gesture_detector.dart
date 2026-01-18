@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:flet/src/utils/events.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/events.dart';
 import '../utils/gesture_detector.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
@@ -39,6 +39,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   bool _rightPanActive = false;
   int _rightPanTimestamp = DateTime.now().millisecondsSinceEpoch;
   Offset _rightPanStart = Offset.zero;
+  TapDownDetails? _tapDownDetails;
 
   @override
   void initState() {
@@ -74,17 +75,14 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.control.getBool("on_secondary_tap_cancel", false)!;
     var onTertiaryTapDown =
         widget.control.getBool("on_tertiary_tap_down", false)!;
-    var onTertiaryTapUp =
-        widget.control.getBool("on_tertiary_tap_up", false)!;
+    var onTertiaryTapUp = widget.control.getBool("on_tertiary_tap_up", false)!;
     var onTertiaryTapCancel =
         widget.control.getBool("on_tertiary_tap_cancel", false)!;
     var onDoubleTap = widget.control.getBool("on_double_tap", false)!;
-    var onDoubleTapDown =
-        widget.control.getBool("on_double_tap_down", false)!;
+    var onDoubleTapDown = widget.control.getBool("on_double_tap_down", false)!;
     var onDoubleTapCancel =
         widget.control.getBool("on_double_tap_cancel", false)!;
-    var onLongPressDown =
-        widget.control.getBool("on_long_press_down", false)!;
+    var onLongPressDown = widget.control.getBool("on_long_press_down", false)!;
     var onLongPressCancel =
         widget.control.getBool("on_long_press_cancel", false)!;
     var onLongPress = widget.control.getBool("on_long_press", false)!;
@@ -92,8 +90,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.control.getBool("on_long_press_start", false)!;
     var onLongPressMoveUpdate =
         widget.control.getBool("on_long_press_move_update", false)!;
-    var onLongPressUp =
-        widget.control.getBool("on_long_press_up", false)!;
+    var onLongPressUp = widget.control.getBool("on_long_press_up", false)!;
     var onLongPressEnd = widget.control.getBool("on_long_press_end", false)!;
     var onSecondaryLongPressDown =
         widget.control.getBool("on_secondary_long_press_down", false)!;
@@ -104,8 +101,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onSecondaryLongPressStart =
         widget.control.getBool("on_secondary_long_press_start", false)!;
     var onSecondaryLongPressMoveUpdate =
-        widget.control
-            .getBool("on_secondary_long_press_move_update", false)!;
+        widget.control.getBool("on_secondary_long_press_move_update", false)!;
     var onSecondaryLongPressUp =
         widget.control.getBool("on_secondary_long_press_up", false)!;
     var onSecondaryLongPressEnd =
@@ -119,8 +115,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var onTertiaryLongPressStart =
         widget.control.getBool("on_tertiary_long_press_start", false)!;
     var onTertiaryLongPressMoveUpdate =
-        widget.control
-            .getBool("on_tertiary_long_press_move_update", false)!;
+        widget.control.getBool("on_tertiary_long_press_move_update", false)!;
     var onTertiaryLongPressUp =
         widget.control.getBool("on_tertiary_long_press_up", false)!;
     var onTertiaryLongPressEnd =
@@ -159,8 +154,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.control.getBool("on_force_press_peak", false)!;
     var onForcePressUpdate =
         widget.control.getBool("on_force_press_update", false)!;
-    var onForcePressEnd =
-        widget.control.getBool("on_force_press_end", false)!;
+    var onForcePressEnd = widget.control.getBool("on_force_press_end", false)!;
     var onMultiTap = widget.control.getBool("on_multi_tap", false)!;
     var onMultiLongPress =
         widget.control.getBool("on_multi_long_press", false)!;
@@ -317,10 +311,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   .nonNulls
                   .toSet();
             }(),
-            onTap: onTap ? () => widget.control.triggerEvent("tap") : null,
-            onTapDown: onTapDown
+            onTap: onTap
+                ? () =>
+                    widget.control.triggerEvent("tap", _tapDownDetails?.toMap())
+                : null,
+            onTapDown: onTapDown || onTap
                 ? (TapDownDetails details) {
-                    widget.control.triggerEvent("tap_down", details.toMap());
+                    _tapDownDetails = details;
+                    if (onTapDown) {
+                      widget.control.triggerEvent("tap_down", details.toMap());
+                    }
                   }
                 : null,
             onTapUp: onTapUp
@@ -508,8 +508,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 : null,
             onHorizontalDragDown: onHorizontalDragDown
                 ? (DragDownDetails details) {
-                    widget.control.triggerEvent(
-                        "horizontal_drag_down", details.toMap());
+                    widget.control
+                        .triggerEvent("horizontal_drag_down", details.toMap());
                   }
                 : null,
             onHorizontalDragStart:
@@ -534,8 +534,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 : null,
             onVerticalDragDown: onVerticalDragDown
                 ? (DragDownDetails details) {
-                    widget.control.triggerEvent(
-                        "vertical_drag_down", details.toMap());
+                    widget.control
+                        .triggerEvent("vertical_drag_down", details.toMap());
                   }
                 : null,
             onVerticalDragStart: (onVerticalDragStart || onVerticalDragUpdate)

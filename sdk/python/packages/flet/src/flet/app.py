@@ -177,14 +177,16 @@ async def run_async(
 
     terminate = asyncio.Event()
 
-    def exit_gracefully(signum, frame):
-        logger.debug("Gracefully terminating Flet app...")
-        loop.call_soon_threadsafe(terminate.set)
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+    if not is_embedded():
 
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
+        def exit_gracefully(signum, frame):
+            logger.debug("Gracefully terminating Flet app...")
+            loop.call_soon_threadsafe(terminate.set)
+            signal.signal(signal.SIGINT, signal.SIG_DFL)
+            signal.signal(signal.SIGTERM, signal.SIG_DFL)
+
+        signal.signal(signal.SIGINT, exit_gracefully)
+        signal.signal(signal.SIGTERM, exit_gracefully)
 
     conn = (
         await __run_socket_server(
@@ -254,7 +256,7 @@ def __get_on_session_created(main):
             assert main is not None
             _context_page.set(session.page)
             context.reset_auto_update()
-            if asyncio.iscoroutinefunction(main):
+            if inspect.iscoroutinefunction(main):
                 await main(session.page)
 
             elif inspect.isasyncgenfunction(main):
