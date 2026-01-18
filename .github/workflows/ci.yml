@@ -323,6 +323,10 @@ jobs:
         run: |
           sudo sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           sudo apt update --allow-releaseinfo-change
+          sudo apt install -y software-properties-common
+          sudo add-apt-repository -y universe
+          sudo apt update
+          sudo apt install -y libunwind-dev
           sudo apt install -y clang libgtk-3-dev libasound2-dev
           sudo apt install -y \
             libmpv-dev mpv \
