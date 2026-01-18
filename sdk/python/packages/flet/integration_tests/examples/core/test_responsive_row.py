@@ -99,7 +99,7 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     for _ in range(5):
         await flet_app_function.tester.pump(100)
     flet_app_function.assert_screenshot(
-        "responsive_custom_2",
+        "custom_breakpoint_2",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
