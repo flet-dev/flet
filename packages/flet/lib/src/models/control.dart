@@ -371,35 +371,39 @@ class Control extends ChangeNotifier {
         var node = getPatchTarget(op[1]);
         var index = op[2];
         var value = op[3];
-        if (node.obj is! List) {
-          throw Exception("Add operation can be applied to lists only: $op");
+        if (node.obj is Map) {
+          node.obj[index] = _transformIfControl(value, node.control, backend);
+        } else if (node.obj is List) {
+          node.obj.insert(index, _transformIfControl(value, node.control, backend));
+        } else {
+          throw Exception("Add operation can be applied to lists or maps: $op");
         }
-        node.obj
-            .insert(index, _transformIfControl(value, node.control, backend));
-        if (shouldNotify) {
-          node.control.notify();
-        }
+        if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.remove) {
         // REMOVE
         var node = getPatchTarget(op[1]);
         var index = op[2];
-        if (node.obj is! List) {
-          throw Exception("Remove operation can be applied to lists only: $op");
+        if (node.obj is List) {
+          node.obj.removeAt(index);
+        } else if (node.obj is Map) {
+          node.obj.remove(index);
+        } else {
+          throw Exception("Remove operation can be applied to lists or maps: $op");
         }
-        node.obj.removeAt(index);
-        if (shouldNotify) {
-          node.control.notify();
-        }
+        if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.move) {
         // MOVE
         var fromNode = getPatchTarget(op[1]);
         var fromIndex = op[2];
         var toNode = getPatchTarget(op[3]);
         var toIndex = op[4];
-        if (fromNode.obj is! List || toNode.obj is! List) {
-          throw Exception("Move operation can be applied to lists only: $op");
+        if (fromNode.obj is List && toNode.obj is List) {
+          toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
+        } else if (fromNode.obj is Map && toNode.obj is Map) {
+          toNode.obj[toIndex] = fromNode.obj.remove(fromIndex);
+        } else {
+            throw Exception("Move operation can only be applied to lists or maps: $op");
         }
-        toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
         if (shouldNotify) {
           if (fromNode.control.id != toNode.control.id) {
             fromNode.control.notify();

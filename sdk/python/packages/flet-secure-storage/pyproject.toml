@@ -1,0 +1,23 @@
+[project]
+name = "flet-secure-storage"
+version = "0.1.0"
+description = "Secure Storage control for Flet"
+authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://docs.flet.dev/secure-storage"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-secure-storage"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_secure_storage" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
