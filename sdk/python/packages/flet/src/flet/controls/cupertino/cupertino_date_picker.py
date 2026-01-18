@@ -7,7 +7,7 @@ from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
-from flet.controls.types import ColorValue, Number
+from flet.controls.types import ColorValue, Locale, Number
 
 __all__ = [
     "CupertinoDatePicker",
@@ -53,6 +53,18 @@ class CupertinoDatePicker(LayoutControl):
             greater than [`maximum_year`][(c).].
         ValueError: If [`value`][(c).] minute is not divisible by
             [`minute_interval`][(c).].
+    """
+
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker. It is intended for rare cases where this
+    control should be localized differently from the rest of the page.
+
+    Notes:
+        - The locale must be supported by Flutter's global localization delegates;
+          otherwise the override is ignored and the control uses the page or system
+          locale.
+        - If `None` (the default), the page or system locale is used.
     """
 
     first_date: Optional[DateTimeValue] = None

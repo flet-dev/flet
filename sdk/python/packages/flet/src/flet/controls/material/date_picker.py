@@ -125,7 +125,7 @@ class DatePicker(DialogControl):
 
     locale: Optional[Locale] = None
     """
-    The locale for this date picker dialog. It is intended for rare cases where this
+    The locale for this date picker dialog. It is intended for (rare) cases where this
     dialog should be localized differently from the rest of the page.
 
     It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
