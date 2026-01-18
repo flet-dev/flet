@@ -7,10 +7,16 @@ examples: ../../examples/controls/page_view
 
 ## Examples
 
-### Basic usage
+### Basic Example
 
 ```python
 --8<-- "{{ examples }}/basic.py"
+```
+
+### Programmatic Swipes
+
+```python
+--8<-- "{{ examples }}/programmatic_swipe.py"
 ```
 
 

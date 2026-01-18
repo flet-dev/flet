@@ -4,14 +4,13 @@ import flet as ft
 def main(page: ft.Page):
     page.padding = 0
 
-    def handle_change(e: ft.Event[ft.PageView]):
-        print(f"Currently viewing page {int(e.data) + 1}")
-
     page.add(
         ft.PageView(
             expand=True,
             viewport_fraction=0.9,
-            on_change=handle_change,
+            on_change=lambda e: print(f"Currently viewing page {int(e.data)}"),
+            selected_index=1,
+            horizontal=True,
             controls=[
                 ft.Container(
                     bgcolor=ft.Colors.INDIGO_400,

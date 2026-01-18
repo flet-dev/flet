@@ -5,11 +5,15 @@ from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
-from flet.controls.duration import DurationValue
+from flet.controls.duration import Duration, DurationValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ClipBehavior, Number
 
 __all__ = ["PageView"]
+
+
+DEFAULT_ANIMATION_DURATION = Duration(seconds=1)
+DEFAULT_ANIMATION_CURVE = AnimationCurve.LINEAR
 
 
 @control("PageView")
@@ -31,8 +35,7 @@ class PageView(LayoutControl):
     """
     The zero-based index of the currently visible page.
 
-    Setting this before the control is rendered selects the initial page.
-    Changing it later (followed by [`update()`][flet.Control.update])
+    Changing it later on (followed by [`update()`][flet.Control.update])
     jumps to the specified page without animation.
 
     Raises:
@@ -41,93 +44,116 @@ class PageView(LayoutControl):
 
     keep_page: bool = True
     """
-    Whether the `PageView` should restore the most recently viewed page when rebuilt.
+    Whether this page view should restore the most recently viewed page when rebuilt.
     """
 
     horizontal: bool = True
     """
-    When `True` (default), pages scroll horizontally. If `False`, pages scroll vertically.
+    Whether the pages should be arranged and scrolled horizontally.
+
+    `False` implies vertical arrangement and scrolling.
     """
 
     reverse: bool = False
     """
     Whether to reverse the order in which pages are read and swiped.
+
+    For example, if the reading direction is left-to-right and
+    [`horizontal`][(c).] is `True`, then this page view scrolls from
+    left to right when `reverse` is `False` and from right to left when
+    `reverse` is `True`.
+
+    Similarly, if [`horizontal`][(c).] is `False`, then this page view
+    scrolls from top to bottom when `reverse` is `False` and from bottom to top
+    when `reverse` is `True`.
     """
 
     viewport_fraction: Number = 1.0
     """
-    Fraction of the viewport that each page should occupy.
+    The fraction of the viewport that each page should occupy in the
+    scrolling direction (see [`horizontal`][(c).]).
 
-    For example, `1.0` (default) means every page is as wide/tall as the viewport.
+    For example, `1.0` (default), means each page fills the viewport.
 
     Raises:
-        ValueError: If it is not greater than `0`.
+        ValueError: If it is less than or equal to `0.0`.
     """
 
-    page_snapping: bool = True
+    snap: bool = True
     """
     Whether the view should snap to exact page boundaries after a drag.
+
+    If the [`pad_ends`][(c).] is `False` and [`viewport_fraction`][(c).] < `1.0`,
+    the page will snap to the beginning of the viewport; otherwise, the page
+    will snap to the center of the viewport.
     """
 
     implicit_scrolling: bool = False
     """
-    Whether to allow adjacent pages to render partially before the user scrolls to them.
+    Whether to allow adjacent pages to render partially before the user scrolls to them,
+    enabling smoother transitions and improved accessibility by allowing focus to move
+    seamlessly between pages during navigation.
+
+    With this flag set to `False`, when accessibility focus reaches the end of
+    the current page and the user attempts to move it to the next element, the
+    focus will traverse to the next widget outside of the page view.
+
+    With this flag set to `True`, when accessibility focus reaches the end of
+    the current page and user attempts to move it to the next element, focus
+    will traverse to the next page in the page view.
     """
 
     pad_ends: bool = True
     """
-    Adds padding before the first page and after the last page
-    so they snap to the center of the viewport.
+    Whether to add padding to both ends of the list.
+
+    If this is set to `True` and [`viewport_fraction`][(c).] < `1.0`,
+    padding will be added before the first page and after the last page so they snap
+    to the center of the viewport when scrolled all the way to the start or end.
+
+    Note:
+        If [`viewport_fraction`][(c).] >= 1.0, this property has no effect.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    How pages are clipped if they overflow their bounds.
-    """
-
-    animation_duration: Optional[DurationValue] = None
-    """
-    The default duration to use for animations.
-    """
-
-    animation_curve: Optional[AnimationCurve] = None
-    """
-    The default easing curve to use for animations.
+    Defines how pages are clipped if they overflow their bounds.
     """
 
     on_change: Optional[ControlEventHandler["PageView"]] = None
     """
     Fired when the visible page changes.
 
-    The [`data`][flet.Event.] attribute contains the new page index.
+    The [`data`][flet.Event.] property of the event argument contains
+    the index of the new page.
     """
 
     def before_update(self):
         super().before_update()
         if self.selected_index < 0:
             raise ValueError(
-                f"selected_index must be greater than or equal to 0, got {self.selected_index}"
+                f"selected_index must be greater than or equal to 0, "
+                f"got {self.selected_index}"
             )
         if self.viewport_fraction <= 0:
             raise ValueError(
-                f"viewport_fraction must be greater than 0, got {self.viewport_fraction}"
+                f"viewport_fraction must be greater than 0, "
+                f"got {self.viewport_fraction}"
             )
 
     async def go_to_page(
         self,
         index: int,
-        animation_duration: Optional[DurationValue] = None,
-        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
+        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
     ):
         """
         Animates to the page at `index`.
 
         Args:
-            index: The zero-based page to show.
+            index: The index of the page to show.
             animation_duration: Length of the animation.
-                If `None`, defaults to [`animation_duration`][(c).].
             animation_curve: The easing curve of the animation.
-                If `None`, defaults to [`animation_curve`][(c).].
 
         Raises:
             ValueError: If `index` is negative.
@@ -137,20 +163,17 @@ class PageView(LayoutControl):
 
         await self._invoke_method(
             "go_to_page",
-            {
-                "index": index,
-                "duration": animation_duration
-                if animation_duration is not None
-                else self.animation_duration,
-                "curve": animation_curve
-                if animation_curve is not None
-                else self.animation_curve,
-            },
+            {"index": index, "duration": animation_duration, "curve": animation_curve},
         )
 
     async def jump_to_page(self, index: int):
         """
-        Jumps immediately to the page at `index` without animation.
+        Jumps immediately to the page at `index` without animation, moving the page
+        position from its current value to the given value without animation nor
+        range checking.
+
+        Args:
+            index: The index of the page to show.
 
         Raises:
             ValueError: If `index` is negative.
@@ -162,18 +185,17 @@ class PageView(LayoutControl):
 
     async def jump_to(self, value: Number):
         """
-        Jumps the scroll position from its current value to the given value,
-        without animation, and without checking if the new value is in range.
+        Immediately sets the scroll position to the given value, without animation
+        and without validating whether the value is within bounds.
 
-        Any active animation is canceled. If the user is currently scrolling, that
-        action is canceled.
+        Any active scrolling or animation is canceled.
 
-        If this method changes the scroll position, a sequence of start/update/end
-        scroll notifications will be dispatched. No overscroll notifications can
-        be generated by this method.
+        If the scroll position changes, a start/update/end sequence of scroll
+        notifications is dispatched. This method does not generate overscroll
+        notifications.
 
-        Immediately after the jump, a ballistic activity is started, in case the
-        value was out of range.
+        After the jump, a ballistic activity is initiated if the value is outside
+        the valid scroll range.
 
         Args:
             value: The new scroll position.
@@ -182,52 +204,36 @@ class PageView(LayoutControl):
 
     async def next_page(
         self,
-        animation_duration: Optional[DurationValue] = None,
-        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
+        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
     ):
         """
-        Animates forward by one page.
+        Animates to the next page. Same as calling
+        [`go_to_page()`][flet.PageView.go_to_page] with `selected_index + 1`.
 
         Args:
             animation_duration: Length of the animation.
-                If `None`, defaults to [`animation_duration`][(c).].
             animation_curve: The easing curve of the animation.
-                If `None`, defaults to [`animation_curve`][(c).].
         """
         await self._invoke_method(
             "next_page",
-            {
-                "duration": animation_duration
-                if animation_duration is not None
-                else self.animation_duration,
-                "curve": animation_curve
-                if animation_curve is not None
-                else self.animation_curve,
-            },
+            {"duration": animation_duration, "curve": animation_curve},
         )
 
     async def previous_page(
         self,
-        animation_duration: Optional[DurationValue] = None,
-        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = DEFAULT_ANIMATION_DURATION,
+        animation_curve: AnimationCurve = DEFAULT_ANIMATION_CURVE,
     ):
         """
-        Animates backward by one page.
+        Animates to the previous page. Same as calling
+        [`go_to_page()`][flet.PageView.go_to_page] with `selected_index - 1`.
 
         Args:
             animation_duration: Length of the animation.
-                If `None`, defaults to [`animation_duration`][(c).].
             animation_curve: The easing curve of the animation.
-                If `None`, defaults to [`animation_curve`][(c).].
         """
         await self._invoke_method(
             "previous_page",
-            {
-                "duration": animation_duration
-                if animation_duration is not None
-                else self.animation_duration,
-                "curve": animation_curve
-                if animation_curve is not None
-                else self.animation_curve,
-            },
+            {"duration": animation_duration, "curve": animation_curve},
         )

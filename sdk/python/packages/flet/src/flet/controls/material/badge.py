@@ -49,7 +49,7 @@ class Badge(BaseControl):
 
     alignment: Optional[Alignment] = None
     """
-    Aligns the [`label][flet.Badge.label] relative to the content of the badge.
+    Aligns the [`label`][flet.Badge.label] relative to the content of the badge.
 
     The alignment positions the [`label`][(c).] in similar way
     [`Container.content`][flet.] is positioned using [`Container.alignment`][flet.],

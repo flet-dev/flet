@@ -75,56 +75,48 @@ class _PageViewControlState extends State<PageViewControl> {
     );
   }
 
-  void _handlePageChanged(int index) {
-    _selectedIndex = index;
-    widget.control.updateProperties({"selected_index": index});
-    widget.control.triggerEvent("change", index);
-  }
-
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    final defaultAnimationDuration =
-        widget.control.getDuration("animation_duration");
-    final defaultAnimationCurve = widget.control.getCurve("animation_curve");
+    final defaultAnimationDuration = widget.control
+        .getDuration("animation_duration", const Duration(seconds: 1))!;
+    final defaultAnimationCurve =
+        widget.control.getCurve("animation_curve", Curves.linear)!;
 
     switch (name) {
       case "go_to_page":
         final index = parseInt(args["index"]);
-        final duration =
-            parseDuration(args["duration"], defaultAnimationDuration);
-        final curve = parseCurve(args["curve"], defaultAnimationCurve);
-
-        if (index != null && duration != null && curve != null) {
-          return _pageController.animateToPage(index,
-              duration: duration, curve: curve);
+        if (index != null) {
+          await _pageController.animateToPage(
+            index,
+            duration:
+                parseDuration(args["duration"], defaultAnimationDuration)!,
+            curve: parseCurve(args["curve"], defaultAnimationCurve)!,
+          );
         }
+        break;
       case "jump_to_page":
         final index = parseInt(args["index"]);
-
         if (index != null) {
-          return _pageController.jumpToPage(index);
+          _pageController.jumpToPage(index);
         }
+        break;
       case "jump_to":
         final value = parseDouble(args["value"]);
-
         if (value != null) {
-          return _pageController.jumpTo(value);
+          _pageController.jumpTo(value);
         }
+        break;
       case "next_page":
-        final duration =
-            parseDuration(args["duration"], defaultAnimationDuration);
-        final curve = parseCurve(args["curve"], defaultAnimationCurve);
-
-        if (duration != null && curve != null) {
-          return _pageController.nextPage(duration: duration, curve: curve);
-        }
+        await _pageController.nextPage(
+          duration: parseDuration(args["duration"], defaultAnimationDuration)!,
+          curve: parseCurve(args["curve"], defaultAnimationCurve)!,
+        );
+        break;
       case "previous_page":
-        final duration =
-            parseDuration(args["duration"], defaultAnimationDuration);
-        final curve = parseCurve(args["curve"], defaultAnimationCurve);
-
-        if (duration != null && curve != null) {
-          return _pageController.previousPage(duration: duration, curve: curve);
-        }
+        await _pageController.previousPage(
+          duration: parseDuration(args["duration"], defaultAnimationDuration)!,
+          curve: parseCurve(args["curve"], defaultAnimationCurve)!,
+        );
+        break;
       default:
         throw Exception("Unknown PageView method: $name");
     }
@@ -151,17 +143,19 @@ class _PageViewControlState extends State<PageViewControl> {
       padEnds: widget.control.getBool("pad_ends", true)!,
       allowImplicitScrolling:
           widget.control.getBool("implicit_scrolling", false)!,
-      pageSnapping: widget.control.getBool("page_snapping", true)!,
-      onPageChanged: _handlePageChanged,
+      pageSnapping: widget.control.getBool("snap", true)!,
+      onPageChanged: (int index) {
+        _selectedIndex = index;
+        widget.control.updateProperties({"selected_index": index});
+        widget.control.triggerEvent("change", index);
+      },
       children: widget.control.buildWidgets("controls"),
     );
 
     Widget layoutChild =
         LayoutControl(control: widget.control, child: pageView);
 
-    if (widget.control.getExpand("expand", 0)! > 0) {
-      return layoutChild;
-    }
+    if (widget.control.getExpand("expand", 0)! > 0) return layoutChild;
 
     return LayoutBuilder(
       builder: (context, constraints) {
