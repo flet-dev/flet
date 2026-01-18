@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.responsive_row import basic, custom_breakpoint
 
 
@@ -40,6 +39,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive1",
         await flet_app_function.page.take_screenshot(
@@ -51,6 +51,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive2",
         await flet_app_function.page.take_screenshot(
@@ -62,6 +63,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive3",
         await flet_app_function.page.take_screenshot(
@@ -87,8 +89,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(1000, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive_custom_1",
         await flet_app_function.page.take_screenshot(
@@ -97,8 +100,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     )
     flet_app_function.resize_page(650, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive_custom_2",
         await flet_app_function.page.take_screenshot(
@@ -107,8 +111,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     )
     flet_app_function.resize_page(200, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "responsive_custom_3",
         await flet_app_function.page.take_screenshot(

@@ -1,4 +1,5 @@
 import dataclasses
+import inspect
 import sys
 from enum import Enum
 from typing import (
@@ -14,6 +15,14 @@ from typing import (
 
 T = TypeVar("T")
 
+_EVAL_TYPE_HAS_TYPE_PARAMS = "type_params" in inspect.signature(_eval_type).parameters
+
+
+def _eval_type_compat(annotation, globalns, localns):
+    if _EVAL_TYPE_HAS_TYPE_PARAMS:
+        return _eval_type(annotation, globalns, localns, None)
+    return _eval_type(annotation, globalns, localns)
+
 
 def from_dict(cls: type[T], data: Any) -> T:
     # Handle generic types and ForwardRefs
@@ -27,7 +36,7 @@ def from_dict(cls: type[T], data: Any) -> T:
     # If cls is a ForwardRef, resolve it
     if isinstance(cls, ForwardRef):
         globalns = sys.modules[cls.__module__].__dict__
-        cls = _eval_type(cls, globalns, None)
+        cls = _eval_type_compat(cls, globalns, None)
 
     if dataclasses.is_dataclass(cls):
         try:
