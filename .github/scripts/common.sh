@@ -7,7 +7,12 @@ function patch_python_package_versions() (
 
     # Update package versions in version.py and pyproject.toml files
     for pkg in flet flet-cli flet-desktop flet-desktop-light flet-web; do
-      sed -i -e "s/flet_version = \"\"/flet_version = \"$PYPI_VER\"/g" packages/$pkg/src/${pkg//-/_}/version.py
+      version_py="packages/$pkg/src/${pkg//-/_}/version.py"
+      if [[ -f "$version_py" ]]; then
+        sed -i -e "s/flet_version = \"\"/flet_version = \"$PYPI_VER\"/g" "$version_py"
+      else
+        echo "Skipping version patch: $version_py not found"
+      fi
       uv version --package "$pkg" "$PYPI_VER"
       echo "Patched version for $pkg to $PYPI_VER"
     done
