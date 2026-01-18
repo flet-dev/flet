@@ -39,6 +39,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic_1",
         await flet_app_function.page.take_screenshot(
@@ -50,6 +51,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic_2",
         await flet_app_function.page.take_screenshot(
@@ -61,6 +63,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     for _ in range(5):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic_3",
         await flet_app_function.page.take_screenshot(
@@ -86,8 +89,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(1000, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "custom_breakpoint_1",
         await flet_app_function.page.take_screenshot(
@@ -96,8 +100,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     )
     flet_app_function.resize_page(650, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "custom_breakpoint_2",
         await flet_app_function.page.take_screenshot(
@@ -106,8 +111,9 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     )
     flet_app_function.resize_page(200, 800)
     flet_app_function.page.update()
-    for _ in range(5):
+    for _ in range(10):
         await flet_app_function.tester.pump(100)
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "custom_breakpoint_3",
         await flet_app_function.page.take_screenshot(

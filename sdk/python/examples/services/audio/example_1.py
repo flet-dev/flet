@@ -39,6 +39,7 @@ def main(page: ft.Page):
         autoplay=False,
         volume=1,
         balance=0,
+        release_mode=fta.ReleaseMode.STOP,
         on_loaded=lambda _: print("Loaded"),
         on_duration_change=lambda e: print("Duration changed:", e.duration),
         on_position_change=lambda e: print("Position changed:", e.position),
