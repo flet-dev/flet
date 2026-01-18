@@ -55,7 +55,7 @@ def main() -> None:
 
     # patch dependencies
     deps: list[str] = t["project"]["dependencies"]
-    for name in ["flet-cli", "flet-desktop", "flet-web", "flet"]:
+    for name in ["flet-cli", "flet-desktop", "flet-desktop-light", "flet-web", "flet"]:
         patch_dependency(deps, name, version)
 
     # save

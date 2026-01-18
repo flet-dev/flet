@@ -5,6 +5,7 @@ import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 
 import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_decoder.dart';
 import 'flet_msgpack_encoder.dart';
 
 @JS()
@@ -39,7 +40,8 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   }
 
   void _onMessage(JSUint8Array data) {
-    onMessage(Message.fromList(msgpack.deserialize(data.toDart)));
+    onMessage(Message.fromList(
+        msgpack.deserialize(data.toDart, extDecoder: FletMsgpackDecoder())));
   }
 
   @override

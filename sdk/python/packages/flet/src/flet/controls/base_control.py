@@ -1,4 +1,3 @@
-import asyncio
 import inspect
 import logging
 import sys
@@ -272,7 +271,9 @@ class BaseControl:
             self._i, method_name, arguments, timeout
         )
 
-    async def _trigger_event(self, event_name: str, event_data: Any):
+    async def _trigger_event(
+        self, event_name: str, event_data: Any, e: Optional[ControlEvent] = None
+    ):
         field_name = f"on_{event_name}"
         if not hasattr(self, field_name):
             # field_name not defined
@@ -282,17 +283,18 @@ class BaseControl:
         if event_type is None:
             return
 
-        if event_type == ControlEvent or not isinstance(event_data, dict):
-            # simple ControlEvent
-            e = ControlEvent(control=self, name=event_name, data=event_data)
-        else:
-            # custom ControlEvent
-            args = {
-                "control": self,
-                "name": event_name,
-                **(event_data or {}),
-            }
-            e = from_dict(event_type, args)
+        if e is None:
+            if event_type == ControlEvent or not isinstance(event_data, dict):
+                # simple ControlEvent
+                e = ControlEvent(control=self, name=event_name, data=event_data)
+            else:
+                # custom ControlEvent
+                args = {
+                    "control": self,
+                    "name": event_name,
+                    **(event_data or {}),
+                }
+                e = from_dict(event_type, args)
 
         handle_event = self.before_event(e)
 

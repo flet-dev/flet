@@ -13,6 +13,7 @@ import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
+// --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_secure_storage/flet_secure_storage.dart'
     as flet_secure_storage;
@@ -44,7 +45,9 @@ void main([List<String>? args]) async {
     flet_lottie.Extension(),
     flet_map.Extension(),
     flet_ads.Extension(),
+    // --RIVE_EXTENSION_START--
     flet_rive.Extension(),
+    // --RIVE_EXTENSION_END--
     flet_webview.Extension(),
     flet_flashlight.Extension(),
     flet_datatable2.Extension(),

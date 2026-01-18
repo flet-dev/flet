@@ -2,6 +2,7 @@ import subprocess
 import sys
 
 import flet.version
+from flet.utils import is_linux
 
 
 def install_flet_package(name: str):
@@ -39,7 +40,8 @@ def ensure_flet_desktop_package_installed():
         ):
             raise RuntimeError("flet-desktop version mismatch")
     except Exception:
-        install_flet_package("flet-desktop")
+        package_name = "flet-desktop-light" if is_linux() else "flet-desktop"
+        install_flet_package(package_name)
 
 
 def ensure_flet_web_package_installed():

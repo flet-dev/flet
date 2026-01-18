@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.2.0] - Unreleased
+## 0.80.0
 
 Initial release.
 
@@ -70,6 +70,3 @@ All chart controls have been refactored to use `@ft.control` dataclass-style def
 - Renamed properties:
     - `animate` → `animation`
     - `on_chart_event` → `on_event`
-
-
-[0.2.0]: https://github.com/flet-dev/flet-charts/releases/tag/0.2.0

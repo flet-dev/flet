@@ -237,10 +237,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -253,10 +253,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -295,7 +295,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.80.1"
+    version: "0.80.2"
   flet_ads:
     dependency: "direct main"
     description:
@@ -517,10 +517,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_linux
-      sha256: c4e966f0a7a87e70049eac7a2617f9e16fd4c585a26e4330bdfc3a71e6a721f3
+      sha256: d64112a205931926f4363bb6bd48f14cb38e7326833041d170615586cd143797
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.4"
   geolocator_platform_interface:
     dependency: transitive
     description:
@@ -549,10 +549,10 @@ packages:
     dependency: transitive
     description:
       name: google_mobile_ads
-      sha256: a4f59019f2c32769fb6c60ed8aa321e9c21a36297e2c4f23452b3e779a3e7a26
+      sha256: f35e040875bb54e8a3455bcffed3b4ac9e9263fbf7751b9fd1ae7f30793faee8
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "7.0.0"
   graphs:
     dependency: transitive
     description:
@@ -1082,18 +1082,18 @@ packages:
     dependency: transitive
     description:
       name: rive
-      sha256: "2551a44fa766a7ed3f52aa2b94feda6d18d00edc25dee5f66e72e9b365bb6d6c"
+      sha256: d3901d82850e17395a149d05c8b446a16eca42b328bac6ca9bd9ed760016f20c
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.20"
-  rive_common:
+    version: "0.14.1"
+  rive_native:
     dependency: transitive
     description:
-      name: rive_common
-      sha256: "2ba42f80d37a4efd0696fb715787c4785f8a13361e8aea9227c50f1e78cf763a"
+      name: rive_native
+      sha256: "955e7820b7cd508f4885aa6f25d6240791c932756291c400326ab8b1f3c57c7d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.15"
+    version: "0.1.1"
   safe_local_storage:
     dependency: transitive
     description:
@@ -1583,10 +1583,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter
-      sha256: c3e4fe614b1c814950ad07186007eff2f2e5dd2935eba7b9a9a1af8e5885f1ba
+      sha256: a3da219916aba44947d3a5478b1927876a09781174b5a2b67fa5be0555154bf9
       url: "https://pub.dev"
     source: hosted
-    version: "4.13.0"
+    version: "4.13.1"
   webview_flutter_android:
     dependency: transitive
     description:
@@ -1685,4 +1685,4 @@ packages:
     version: "3.1.3"
 sdks:
   dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.35.0"
+  flutter: ">=3.35.1"
