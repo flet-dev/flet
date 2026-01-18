@@ -1,5 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rive/rive.dart';
 
 import 'rive.dart';
 
@@ -12,5 +13,10 @@ class Extension extends FletExtension {
       default:
         return null;
     }
+  }
+
+  @override
+  void ensureInitialized() {
+    RiveNative.init();
   }
 }

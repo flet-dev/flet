@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:msgpack_dart/msgpack_dart.dart';
 
+import '../utils/strings.dart';
 import 'js_interop.dart' show JSAny;
 
 class FletMsgpackEncoder extends ExtEncoder {
@@ -28,7 +29,10 @@ class FletMsgpackEncoder extends ExtEncoder {
   @override
   Uint8List encodeObject(dynamic object) {
     if (object is DateTime) {
-      return codec.encode(object.toIso8601String());
+      var iso = object.toUtc().toIso8601String();
+      // Z suffix is not supported by Python's `datetime.fromisoformat`
+      iso = iso.endsWith('Z') ? "${iso.trimEnd('Z')}+00:00" : iso;
+      return codec.encode(iso);
     } else if (object is TimeOfDay) {
       return codec.encode("${object.hour}:${object.minute}");
     } else if (object is Duration) {

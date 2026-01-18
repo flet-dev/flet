@@ -64,8 +64,10 @@ dependencies:
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
 
+  # --RIVE_CLIENT_START--
   flet_rive:
     path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
+  # --RIVE_CLIENT_END--
 
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview

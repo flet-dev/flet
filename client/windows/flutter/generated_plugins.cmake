@@ -11,7 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   media_kit_video
   permission_handler_windows
   record_windows
-  rive_common
+  rive_native
   screen_brightness_windows
   screen_retriever_windows
   share_plus

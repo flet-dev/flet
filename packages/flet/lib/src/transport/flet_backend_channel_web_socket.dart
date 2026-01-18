@@ -8,6 +8,7 @@ import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/uri.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_decoder.dart';
 import 'flet_msgpack_encoder.dart';
 
 class FletWebSocketBackendChannel implements FletBackendChannel {
@@ -56,7 +57,8 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
   }
 
   _onMessage(message) {
-    onMessage(Message.fromList(msgpack.deserialize(message)));
+    onMessage(Message.fromList(
+        msgpack.deserialize(message, extDecoder: FletMsgpackDecoder())));
   }
 
   @override

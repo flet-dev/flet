@@ -1,0 +1,29 @@
+[project]
+name = "flet-desktop-light"
+version = "0.1.0"
+description = "Flet Desktop client in Flutter (light)"
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet"
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Repository = "https://github.com/flet-dev/flet"
+Documentation = "https://flet.dev/docs"
+
+[tool.setuptools]
+package-dir = { "" = "../flet-desktop/src" }
+
+[tool.setuptools.packages.find]
+where = ["../flet-desktop/src"]
+
+[tool.setuptools.package-data]
+"flet_desktop.app" = ["**/*"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

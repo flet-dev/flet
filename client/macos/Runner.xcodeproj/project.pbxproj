@@ -11,6 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 33CC111B2044C6BA0003C045 /* Build configuration list for PBXAggregateTarget "Flutter Assemble" */;
 			buildPhases = (
+				B8C2A0D41E5F4A9CB1234E56 /* Rive Native Setup */,
 				33CC111E2044C6BF0003C045 /* ShellScript */,
 			);
 			dependencies = (
@@ -253,6 +254,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		B8C2A0D41E5F4A9CB1234E56 /* Rive Native Setup */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Rive Native Setup";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nPROJECT_ROOT=\"${PROJECT_DIR}/..\"\ncd \"$PROJECT_ROOT\"\nDART_BIN=\"${FLUTTER_ROOT}/bin/dart\"\nif [ ! -x \"$DART_BIN\" ]; then\n  DART_BIN=\"$(command -v dart || true)\"\nfi\nif [ -z \"$DART_BIN\" ]; then\n  echo \"error: dart not found; cannot run rive_native:setup\" >&2\n  exit 1\nfi\necho \"Running rive_native setup for macos...\"\n\"$DART_BIN\" run rive_native:setup --verbose --clean --platform macos\n";
+		};
 		15125595ECCDEE56B3D8B7C4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

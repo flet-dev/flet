@@ -24,6 +24,7 @@ def _get_root_dataclass_field(cls, field_name):
 
 def configure_encode_object_for_msgpack(control_cls):
     def encode_object_for_msgpack(obj):
+        """Encode object for MessagePack."""
         if is_dataclass(obj):
             r = {}
             prev_lists = {}
@@ -73,8 +74,21 @@ def configure_encode_object_for_msgpack(control_cls):
         elif isinstance(obj, Enum):
             return obj.value
         elif isinstance(obj, (datetime.datetime, datetime.date)):
-            if isinstance(obj, datetime.datetime) and obj.tzinfo is None:
-                obj = obj.astimezone()
+            if isinstance(obj, datetime.datetime):
+                if obj.tzinfo is None:  # naive
+                    try:
+                        # May fail on Windows for out-of-range values.
+                        # See: https://github.com/flet-dev/flet/issues/5895
+                        obj = obj.astimezone()
+                    except Exception:
+                        # Attach current local tzinfo or UTC if that fails.
+                        try:
+                            tz = datetime.datetime.now().astimezone().tzinfo
+                        except Exception:
+                            tz = datetime.timezone.utc
+                        obj = obj.replace(tzinfo=tz)
+                # Normalize to UTC to ensure cross-platform consistency.
+                obj = obj.astimezone(datetime.timezone.utc)
             return msgpack.ExtType(1, obj.isoformat().encode("utf-8"))
         elif isinstance(obj, datetime.time):
             return msgpack.ExtType(2, obj.strftime("%H:%M").encode("utf-8"))
@@ -88,6 +102,7 @@ def configure_encode_object_for_msgpack(control_cls):
 
 
 def decode_ext_from_msgpack(code, data):
+    """Decode MessagePack extension types used in Flet protocol."""
     if code == 1:
         return datetime.datetime.fromisoformat(data.decode("utf-8"))
     elif code == 2:
