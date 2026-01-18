@@ -283,12 +283,12 @@ jobs:
       matrix:
         include:
           - arch: arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-22.04-arm
             build_arch: arm64
             platform_arch: aarch64
             title: ARM64
           - arch: amd64
-            runner: ubuntu-24.04
+            runner: ubuntu-22.04
             build_arch: x64
             platform_arch: x86_64
             title: AMD64

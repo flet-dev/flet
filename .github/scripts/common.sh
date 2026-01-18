@@ -9,6 +9,7 @@ function patch_python_package_versions() (
     for pkg in flet flet-cli flet-desktop flet-desktop-light flet-web; do
       version_py="packages/$pkg/src/${pkg//-/_}/version.py"
       if [[ -f "$version_py" ]]; then
+        sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" "$version_py"
         sed -i -e "s/flet_version = \"\"/flet_version = \"$PYPI_VER\"/g" "$version_py"
       else
         echo "Skipping version patch: $version_py not found"
