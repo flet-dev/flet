@@ -19,20 +19,12 @@ function patch_python_package_versions() (
 )
 
 
-update_flet_wheel_deps() {
-  uv run "$SCRIPTS/update_flet_wheel_deps.py" "$@"
-}
-
 repackage_wheel_with_tag() {
   uv run "$SCRIPTS/repackage_wheel_with_tag.py" "$@"
 }
 
 patch_toml_versions() {
   uv run "$SCRIPTS/patch_toml_versions.py" "$@"
-}
-
-patch_toml_package_name() {
-  uv run "$SCRIPTS/patch_toml_package_name.py" "$@"
 }
 
 patch_pubspec_version() {
