@@ -309,7 +309,7 @@ jobs:
             runner: ubuntu-24.04
             build_arch: x64
             platform_arch: x86_64
-            rive_enabled: true
+            rive_enabled: false
             title: Debian 12 AMD64
           - distro_id: debian12
             container: debian:12
