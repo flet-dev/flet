@@ -305,7 +305,7 @@ jobs:
         shell: bash
         run: |
           apt-get update
-          apt-get install -y git curl unzip xz-utils zip ca-certificates
+          apt-get install -y git curl unzip xz-utils zip ca-certificates jq
 
       - name: Checkout repository
         uses: actions/checkout@v4
