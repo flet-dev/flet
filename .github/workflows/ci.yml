@@ -38,243 +38,237 @@ env:
   UV_PYTHON: "3.12.7"
 
 jobs:
-  # ============
-  # Python tests
-  # ============
-  python_tests:
-    name: Python ${{ matrix.python-version }} tests
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#   # ============
+#   # Python tests
+#   # ============
+#   python_tests:
+#     name: Python ${{ matrix.python-version }} tests
+#     runs-on: ubuntu-latest
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Allow git safe directories
-        shell: bash
-        run: |
-          git config --global --add safe.directory /__w/flet/flet
-          git config --global --add safe.directory /__t/flutter
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
+#         with:
+#           python-version: ${{ matrix.python-version }}
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: ${{ matrix.python-version }}
+#       - name: Run tests
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           uv run --no-dev --group test pytest packages/flet/tests
 
-      - name: Run tests
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          uv run --no-dev --group test pytest packages/flet/tests
+#       - name: Run docs-coverage
+#         if: matrix.python-version == '3.12'
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
 
-      - name: Run docs-coverage
-        if: matrix.python-version == '3.12'
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
+#       - name: Upload docs-coverage logs
+#         if: matrix.python-version == '3.12'
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: docs-coverage
+#           path: sdk/python/docstr_coverage.log
 
-      - name: Upload docs-coverage logs
-        if: matrix.python-version == '3.12'
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs-coverage
-          path: sdk/python/docstr_coverage.log
+#   # ===========================
+#   # Build Flet Flutter package
+#   # ===========================
+#   build_flet_package:
+#     name: Build Flet Flutter package
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write # Required for authentication using OIDC
+#     outputs:
+#       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
+#       BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
+#       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0   # fetch all history
+#           fetch-tags: true # ensure tags are available
 
-  # ===========================
-  # Build Flet Flutter package
-  # ===========================
-  build_flet_package:
-    name: Build Flet Flutter package
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # Required for authentication using OIDC
-    outputs:
-      PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
-      BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
-      PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # fetch all history
-          fetch-tags: true # ensure tags are available
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Compute versions
+#         id: versions
+#         run: source "${SCRIPTS}/update_build_version.sh"
 
-      - name: Compute versions
-        id: versions
-        run: source "${SCRIPTS}/update_build_version.sh"
+#       - name: Setup Dart (OIDC for pub.dev)
+#         uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
 
-      - name: Setup Dart (OIDC for pub.dev)
-        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
+#       - name: Setup Flutter
+#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+#         with:
+#           path: '.fvmrc'
+#           cache: true
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
+#       - name: Run tests
+#         shell: bash
+#         working-directory: packages/flet
+#         run: flutter test
 
-      - name: Run tests
-        shell: bash
-        working-directory: packages/flet
-        run: flutter test
+#       - name: Publish to pub.dev (Dry Run)
+#         shell: bash
+#         working-directory: packages/flet
+#         run: dart pub publish --dry-run
 
-      - name: Publish to pub.dev (Dry Run)
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub publish --dry-run
+#       - name: Publish to pub.dev
+#         if: ${{ github.ref_type == 'tag' }}
+#         shell: bash
+#         working-directory: packages/flet
+#         run: dart pub publish -f
 
-      - name: Publish to pub.dev
-        if: ${{ github.ref_type == 'tag' }}
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub publish -f
+#   # =============================
+#   # Build Flet Client for Windows
+#   # =============================
+#   build_windows:
+#     name: Build Flet Client for Windows
+#     runs-on: windows-latest
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#     env:
+#       BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+#       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-  # =============================
-  # Build Flet Client for Windows
-  # =============================
-  build_windows:
-    name: Build Flet Client for Windows
-    runs-on: windows-latest
-    needs:
-      - python_tests
-      - build_flet_package
-    env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
-      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Setup Flutter
+#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+#         with:
+#           path: '.fvmrc'
+#           cache: true
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
+#       - name: Prepare env and patch versions
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           source "$SCRIPTS/common.sh"
+#           patch_python_package_versions
+#           patch_toml_versions "packages/flet-desktop/pyproject.toml" "$PYPI_VER"
 
-      - name: Prepare env and patch versions
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
-          patch_toml_versions "packages/flet-desktop/pyproject.toml" "$PYPI_VER"
+#       - name: Build Flutter Windows client
+#         env:
+#           RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner
+#           RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner/Release
+#         shell: bash
+#         working-directory: client
+#         run: |
+#           flutter build windows --build-name="$BUILD_VER"
 
-      - name: Build Flutter Windows client
-        env:
-          RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner
-          RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner/Release
-        shell: bash
-        working-directory: client
-        run: |
-          flutter build windows --build-name="$BUILD_VER"
+#           # Copy needed runtime DLLs
+#           cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
+#           cp "${WINDIR}/system32/vcruntime140.dll" "$RELEASE_DIR"
+#           cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
 
-          # Copy needed runtime DLLs
-          cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
-          cp "${WINDIR}/system32/vcruntime140.dll" "$RELEASE_DIR"
-          cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
+#           # Rename Release folder to flet
+#           mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
 
-          # Rename Release folder to flet
-          mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
+#           # Zip up the runner
+#           cd "$RUNNER_DIR"
+#           7z a "${ROOT}/client/flet-windows.zip" "flet"
 
-          # Zip up the runner
-          cd "$RUNNER_DIR"
-          7z a "${ROOT}/client/flet-windows.zip" "flet"
+#           # Stage app into flet-desktop package
+#           FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+#           mkdir -p "$FLET_DESKTOP_APP"
+#           cp -r "flet" "${FLET_DESKTOP_APP}/flet"
 
-          # Stage app into flet-desktop package
-          FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-          mkdir -p "$FLET_DESKTOP_APP"
-          cp -r "flet" "${FLET_DESKTOP_APP}/flet"
+#       - name: Build flet-desktop Python package
+#         shell: bash
+#         run: |
+#           source "$SCRIPTS/common.sh"
 
-      - name: Build flet-desktop Python package
-        shell: bash
-        run: |
-          source "$SCRIPTS/common.sh"
+#           cd "$SDK_PYTHON"
+#           uv build --package flet-desktop --wheel
 
-          cd "$SDK_PYTHON"
-          uv build --package flet-desktop --wheel
+#           # Ensure glob expands
+#           shopt -s nullglob
 
-          # Ensure glob expands
-          shopt -s nullglob
+#           for wheel in dist/*-py3-none-any.whl; do
+#             repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
+#             repackage_wheel_with_tag "$wheel" "py3-none-win32"
+#             rm -f "$wheel"
+#           done
 
-          for wheel in dist/*-py3-none-any.whl; do
-            repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
-            repackage_wheel_with_tag "$wheel" "py3-none-win32"
-            rm -f "$wheel"
-          done
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: windows-artifacts
+#           if-no-files-found: error
+#           path: |
+#             client/flet-windows.zip
+#             sdk/python/dist/*.whl
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-artifacts
-          if-no-files-found: error
-          path: |
-            client/flet-windows.zip
-            sdk/python/dist/*.whl
+#   # ===========================
+#   # Build Flet Client for macOS
+#   # ===========================
+#   build_macos:
+#     name: Build Flet Client for macOS
+#     runs-on: macos-15
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#     env:
+#       BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+#       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-  # ===========================
-  # Build Flet Client for macOS
-  # ===========================
-  build_macos:
-    name: Build Flet Client for macOS
-    runs-on: macos-15
-    needs:
-      - python_tests
-      - build_flet_package
-    env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
-      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Setup Flutter
+#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+#         with:
+#           path: '.fvmrc'
+#           cache: true
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
+#       - name: Build Flutter macOS client
+#         shell: bash
+#         working-directory: client
+#         run: |
+#           flutter build macos --build-name="$BUILD_VER"
+#           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
+#           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+#           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
 
-      - name: Build Flutter macOS client
-        shell: bash
-        working-directory: client
-        run: |
-          flutter build macos --build-name="$BUILD_VER"
-          tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
-          mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
-          cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+#       - name: Build flet-desktop Python package
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           source "$SCRIPTS/common.sh"
 
-      - name: Build flet-desktop Python package
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          source "$SCRIPTS/common.sh"
+#           patch_python_package_versions
+#           uv build --package flet-desktop --wheel
 
-          patch_python_package_versions
-          uv build --package flet-desktop --wheel
+#           for file in dist/*-py3-none-any.whl; do
+#             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
+#             repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
+#             rm "$file"
+#           done
 
-          for file in dist/*-py3-none-any.whl; do
-            repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
-            repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
-            rm "$file"
-          done
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-artifacts
-          if-no-files-found: error
-          path: |
-            client/flet-macos.tar.gz
-            sdk/python/dist/*.whl
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: macos-artifacts
+#           if-no-files-found: error
+#           path: |
+#             client/flet-macos.tar.gz
+#             sdk/python/dist/*.whl
 
   # ===========================
   # Build Flet Client for Linux
@@ -284,9 +278,9 @@ jobs:
     runs-on: ${{ matrix.runner }}
     container:
       image: ubuntu:20.04
-    needs:
-      - python_tests
-      - build_flet_package
+    # needs:
+    #   - python_tests
+    #   - build_flet_package
     strategy:
       matrix:
         include:
@@ -333,6 +327,14 @@ jobs:
           flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
           channel: ${{ matrix.arch == 'arm64' && 'master' || 'stable' }}  # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
           cache: true
+
+      - name: Mark git safe directories
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [[ -n "${FLUTTER_ROOT:-}" ]]; then
+            git config --global --add safe.directory "$FLUTTER_ROOT"
+          fi
 
       - name: Install dependencies
         shell: bash
@@ -497,284 +499,284 @@ jobs:
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
 
-  # =========================
-  # Build Flet Client for Web
-  # =========================
-  build_web:
-    name: Build Flet Client for Web
-    runs-on: ubuntu-latest
-    needs:
-      - python_tests
-      - build_flet_package
-    env:
-      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#   # =========================
+#   # Build Flet Client for Web
+#   # =========================
+#   build_web:
+#     name: Build Flet Client for Web
+#     runs-on: ubuntu-latest
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#     env:
+#       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
+#       - name: Setup Flutter
+#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+#         with:
+#           path: '.fvmrc'
+#           cache: true
 
-      - name: Patch Python and Flutter versions
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
+#       - name: Patch Python and Flutter versions
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           source "$SCRIPTS/common.sh"
+#           patch_python_package_versions
 
-      - name: Get Pyodide version
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.pyodide_version)' )"
-          echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
-          echo "Pyodide version: $PYODIDE_VERSION"
+#       - name: Get Pyodide version
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.pyodide_version)' )"
+#           echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
+#           echo "Pyodide version: $PYODIDE_VERSION"
 
-      - name: Build Web client
-        shell: bash
-        working-directory: client
-        run: |
-          # Compute Pyodide URLs
-          PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
-          PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
+#       - name: Build Web client
+#         shell: bash
+#         working-directory: client
+#         run: |
+#           # Compute Pyodide URLs
+#           PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
+#           PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
 
-          FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
+#           FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
 
-          flutter build web --wasm
+#           flutter build web --wasm
 
-          cp -R "build/web" "${FLET_WEB}"
+#           cp -R "build/web" "${FLET_WEB}"
 
-          # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
-          FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
-          cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
+#           # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139
+#           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
+#           cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
 
-          # Download the Pyodide tarball and extract its contents into the web build folder
-          curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
+#           # Download the Pyodide tarball and extract its contents into the web build folder
+#           curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
 
-          # Download the prebuilt pyodide wheels
-          for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
-            curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
-          done
+#           # Download the prebuilt pyodide wheels
+#           for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
+#             curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
+#           done
 
-          # Archive the web client into a gzipped tarball
-          tar -czvf "flet-web.tar.gz" -C "build/web" .
+#           # Archive the web client into a gzipped tarball
+#           tar -czvf "flet-web.tar.gz" -C "build/web" .
 
-      - name: Build flet-web Python package
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          uv build --package flet-web --wheel
+#       - name: Build flet-web Python package
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           uv build --package flet-web --wheel
 
-          rm -rf "packages/flet-web/src/flet_web/web"
-          uv build --package flet-web --sdist
+#           rm -rf "packages/flet-web/src/flet_web/web"
+#           uv build --package flet-web --sdist
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-artifacts
-          if-no-files-found: error
-          path: |
-            client/flet-web.tar.gz
-            sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: web-artifacts
+#           if-no-files-found: error
+#           path: |
+#             client/flet-web.tar.gz
+#             sdk/python/dist/*.whl
+#             sdk/python/dist/*.tar.gz
 
-  # ============================================
-  # Build Flet extension Python packages
-  # ============================================
-  build_flet_extensions:
-    name: Build Flet extensions
-    runs-on: ubuntu-latest
-    needs:
-      - python_tests
-      - build_flet_package
-    env:
-      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#   # ============================================
+#   # Build Flet extension Python packages
+#   # ============================================
+#   build_flet_extensions:
+#     name: Build Flet extensions
+#     runs-on: ubuntu-latest
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#     env:
+#       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        with:
-          path: '.fvmrc'
-          cache: true
+#       - name: Setup Flutter
+#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+#         with:
+#           path: '.fvmrc'
+#           cache: true
 
-      - name: Analyze and Build Flutter & Python packages
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          set -euo pipefail
+#       - name: Analyze and Build Flutter & Python packages
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           set -euo pipefail
 
-          PACKAGES=(
-            flet-ads
-            flet-audio
-            flet-audio-recorder
-            flet-charts
-            flet-datatable2
-            flet-flashlight
-            flet-geolocator
-            flet-lottie
-            flet-map
-            flet-permission-handler
-            flet-rive
-            flet-video
-            flet-webview
-          )
+#           PACKAGES=(
+#             flet-ads
+#             flet-audio
+#             flet-audio-recorder
+#             flet-charts
+#             flet-datatable2
+#             flet-flashlight
+#             flet-geolocator
+#             flet-lottie
+#             flet-map
+#             flet-permission-handler
+#             flet-rive
+#             flet-video
+#             flet-webview
+#           )
 
-          source "$SCRIPTS/common.sh"
+#           source "$SCRIPTS/common.sh"
 
-          for PACKAGE in "${PACKAGES[@]}"; do
-            echo "::group::Processing ${PACKAGE}"
-            FLUTTER_PACKAGE="${PACKAGE//-/_}"
-            FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
+#           for PACKAGE in "${PACKAGES[@]}"; do
+#             echo "::group::Processing ${PACKAGE}"
+#             FLUTTER_PACKAGE="${PACKAGE//-/_}"
+#             FLUTTER_DIR="${SDK_PYTHON}/packages/${PACKAGE}/src/flutter/${FLUTTER_PACKAGE}"
 
-            pushd "$FLUTTER_DIR"
-            flutter pub get
-            dart analyze
-            popd
+#             pushd "$FLUTTER_DIR"
+#             flutter pub get
+#             dart analyze
+#             popd
 
-            patch_toml_versions "packages/${PACKAGE}/pyproject.toml" "$PYPI_VER"
-            uv build --package "$PACKAGE"
-            echo "::endgroup::"
-          done
+#             patch_toml_versions "packages/${PACKAGE}/pyproject.toml" "$PYPI_VER"
+#             uv build --package "$PACKAGE"
+#             echo "::endgroup::"
+#           done
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: flet-python-extensions
-          if-no-files-found: error
-          path: |
-            sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: flet-python-extensions
+#           if-no-files-found: error
+#           path: |
+#             sdk/python/dist/*.whl
+#             sdk/python/dist/*.tar.gz
 
-  # =====================================
-  # Build flet, flet-cli and flet-desktop
-  # =====================================
-  build_flet_cli_desktop:
-    name: Build flet, flet-cli and flet-desktop Python packages
-    runs-on: ubuntu-latest
-    env:
-      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
-    needs:
-      - python_tests
-      - build_flet_package
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#   # =====================================
+#   # Build flet, flet-cli and flet-desktop
+#   # =====================================
+#   build_flet_cli_desktop:
+#     name: Build flet, flet-cli and flet-desktop Python packages
+#     runs-on: ubuntu-latest
+#     env:
+#       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
 
-      - name: Build Python packages
-        shell: bash
-        working-directory: ${{ env.SDK_PYTHON }}
-        run: |
-          source "$SCRIPTS/common.sh"
-          patch_python_package_versions
-          uv build --package flet-cli
-          uv build --package flet
-          uv build --package flet-desktop --sdist
+#       - name: Build Python packages
+#         shell: bash
+#         working-directory: ${{ env.SDK_PYTHON }}
+#         run: |
+#           source "$SCRIPTS/common.sh"
+#           patch_python_package_versions
+#           uv build --package flet-cli
+#           uv build --package flet
+#           uv build --package flet-desktop --sdist
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: flet-cli-desktop-python-distribution
-          path: |
-            sdk/python/dist/*.whl
-            sdk/python/dist/*.tar.gz
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: flet-cli-desktop-python-distribution
+#           path: |
+#             sdk/python/dist/*.whl
+#             sdk/python/dist/*.tar.gz
 
-  # ===============================
-  # Publish Python packages to PyPI
-  # ===============================
-  py_publish:
-    name: Publish Python packages to PyPI
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
-    needs:
-      - python_tests
-      - build_flet_package
-      - build_flet_cli_desktop
-      - build_windows
-      - build_macos
-      - build_linux
-      - build_web
-      - build_flet_extensions
-    steps:
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          ignore-empty-workdir: true
-          cache-dependency-glob: ""
+#   # ===============================
+#   # Publish Python packages to PyPI
+#   # ===============================
+#   py_publish:
+#     name: Publish Python packages to PyPI
+#     runs-on: ubuntu-latest
+#     if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+#     needs:
+#       - python_tests
+#       - build_flet_package
+#       - build_flet_cli_desktop
+#       - build_windows
+#       - build_macos
+#       - build_linux
+#       - build_web
+#       - build_flet_extensions
+#     steps:
+#       - name: Setup uv
+#         uses: astral-sh/setup-uv@v6
+#         with:
+#           ignore-empty-workdir: true
+#           cache-dependency-glob: ""
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
+#       - name: Download artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           path: dist
+#           merge-multiple: true
 
-      - name: Publish packages to PyPI
-        run: |
-          # remove client to avoid glob conflicts with its contents
-          rm -rf dist/client
+#       - name: Publish packages to PyPI
+#         run: |
+#           # remove client to avoid glob conflicts with its contents
+#           rm -rf dist/client
 
-          for pkg in \
-            flet \
-            flet_cli \
-            flet_desktop \
-            flet_desktop_light \
-            flet_web \
-            flet_ads \
-            flet_audio \
-            flet_audio_recorder \
-            flet_charts \
-            flet_datatable2 \
-            flet_flashlight \
-            flet_geolocator \
-            flet_lottie \
-            flet_map \
-            flet_permission_handler \
-            flet_rive \
-            flet_video \
-            flet_webview; do
-            uv publish dist/**/${pkg}-*
-          done
+#           for pkg in \
+#             flet \
+#             flet_cli \
+#             flet_desktop \
+#             flet_desktop_light \
+#             flet_web \
+#             flet_ads \
+#             flet_audio \
+#             flet_audio_recorder \
+#             flet_charts \
+#             flet_datatable2 \
+#             flet_flashlight \
+#             flet_geolocator \
+#             flet_lottie \
+#             flet_map \
+#             flet_permission_handler \
+#             flet_rive \
+#             flet_video \
+#             flet_webview; do
+#             uv publish dist/**/${pkg}-*
+#           done
 
-  # ==============
-  # GitHub Release
-  # ==============
-  release:
-    name: Publish GitHub Release
-    runs-on: ubuntu-latest
-    needs: py_publish
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
+#   # ==============
+#   # GitHub Release
+#   # ==============
+#   release:
+#     name: Publish GitHub Release
+#     runs-on: ubuntu-latest
+#     needs: py_publish
+#     if: ${{ startsWith(github.ref, 'refs/tags/') }}
+#     steps:
+#       - name: Download artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           path: dist
+#           merge-multiple: true
 
-      - name: Create/Update GitHub Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          name: ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          generate_release_notes: true
-          preserve_order: true
-          overwrite_files: true
-          fail_on_unmatched_files: true
-          files: |
-            dist/**/*.whl
-            dist/**/*.tar.gz
-            dist/**/*.zip
+#       - name: Create/Update GitHub Release
+#         uses: softprops/action-gh-release@v2
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           name: ${{ github.ref_name }}
+#           tag_name: ${{ github.ref_name }}
+#           generate_release_notes: true
+#           preserve_order: true
+#           overwrite_files: true
+#           fail_on_unmatched_files: true
+#           files: |
+#             dist/**/*.whl
+#             dist/**/*.tar.gz
+#             dist/**/*.zip
