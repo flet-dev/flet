@@ -394,7 +394,7 @@ jobs:
             echo "::endgroup::"
 
             echo "::group::($PACKAGE_NAME) Flutter build"
-            flutter build linux --build-name="$BUILD_VER"
+            flutter build linux --build-name="$BUILD_VER" -v
 
             # Remove any previous build output, so mv below works as expected
             rm -rf "build/linux/${BUILD_ARCH}/release/flet"
