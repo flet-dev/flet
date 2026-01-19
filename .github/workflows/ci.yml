@@ -76,56 +76,56 @@ jobs:
 #           name: docs-coverage
 #           path: sdk/python/docstr_coverage.log
 
-#   # ===========================
-#   # Build Flet Flutter package
-#   # ===========================
-#   build_flet_package:
-#     name: Build Flet Flutter package
-#     runs-on: ubuntu-latest
-#     permissions:
-#       id-token: write # Required for authentication using OIDC
-#     outputs:
-#       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
-#       BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
-#       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0   # fetch all history
-#           fetch-tags: true # ensure tags are available
+  # ===========================
+  # Build Flet Flutter package
+  # ===========================
+  build_flet_package:
+    name: Build Flet Flutter package
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    outputs:
+      PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
+      BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
+      PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # fetch all history
+          fetch-tags: true # ensure tags are available
 
-#       - name: Setup uv
-#         uses: astral-sh/setup-uv@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
 
-#       - name: Compute versions
-#         id: versions
-#         run: source "${SCRIPTS}/update_build_version.sh"
+      - name: Compute versions
+        id: versions
+        run: source "${SCRIPTS}/update_build_version.sh"
 
-#       - name: Setup Dart (OIDC for pub.dev)
-#         uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
+      - name: Setup Dart (OIDC for pub.dev)
+        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
 
-#       - name: Setup Flutter
-#         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-#         with:
-#           path: '.fvmrc'
-#           cache: true
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
 
-#       - name: Run tests
-#         shell: bash
-#         working-directory: packages/flet
-#         run: flutter test
+      - name: Run tests
+        shell: bash
+        working-directory: packages/flet
+        run: flutter test
 
-#       - name: Publish to pub.dev (Dry Run)
-#         shell: bash
-#         working-directory: packages/flet
-#         run: dart pub publish --dry-run
+      - name: Publish to pub.dev (Dry Run)
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub publish --dry-run
 
-#       - name: Publish to pub.dev
-#         if: ${{ github.ref_type == 'tag' }}
-#         shell: bash
-#         working-directory: packages/flet
-#         run: dart pub publish -f
+      - name: Publish to pub.dev
+        if: ${{ github.ref_type == 'tag' }}
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub publish -f
 
 #   # =============================
 #   # Build Flet Client for Windows
@@ -278,9 +278,9 @@ jobs:
     runs-on: ${{ matrix.runner }}
     container:
       image: ubuntu:20.04
-    # needs:
-    #   - python_tests
-    #   - build_flet_package
+    needs:
+      # - python_tests
+      - build_flet_package
     strategy:
       matrix:
         include:
@@ -411,8 +411,8 @@ jobs:
             echo "::endgroup::"
           }
 
-          build_flutter "flet-desktop"
           build_flutter "flet-desktop-light"
+          build_flutter "flet-desktop"
 
       - name: Build flet-desktop and flet-desktop-light Python packages
         shell: bash
