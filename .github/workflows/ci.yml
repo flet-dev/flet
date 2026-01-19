@@ -131,15 +131,31 @@ jobs:
   # Build Flet Client for Windows
   # =============================
   build_windows:
-    name: Build Flet Client for Windows
-    runs-on: windows-latest
+    name: Build Flet Client for Windows ${{ matrix.title }}
+    runs-on: ${{ matrix.runner }}
     needs:
       - python_tests
       - build_flet_package
+    strategy:
+      matrix:
+        include:
+          - arch: x64
+            build_arch: x64
+            runner: windows-latest
+            wheel_tag: win_amd64
+            title: X64
+          - arch: arm64
+            build_arch: arm64
+            runner: windows-11-arm
+            wheel_tag: win_arm64
+            title: ARM64
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
       BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      ARCH: ${{ matrix.arch }}
+      BUILD_ARCH: ${{ matrix.build_arch }}
+      WHEEL_TAG: ${{ matrix.wheel_tag }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -163,8 +179,8 @@ jobs:
 
       - name: Build Flutter Windows client
         env:
-          RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner
-          RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner/Release
+          RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/${{ env.BUILD_ARCH }}/runner
+          RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/${{ env.BUILD_ARCH }}/runner/Release
         shell: bash
         working-directory: client
         run: |
@@ -180,7 +196,7 @@ jobs:
 
           # Zip up the runner
           cd "$RUNNER_DIR"
-          7z a "${ROOT}/client/flet-windows.zip" "flet"
+          7z a "${ROOT}/client/flet-windows-${ARCH}.zip" "flet"
 
           # Stage app into flet-desktop package
           FLET_DESKTOP_APP="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
@@ -199,17 +215,17 @@ jobs:
           shopt -s nullglob
 
           for wheel in dist/*-py3-none-any.whl; do
-            repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
+            repackage_wheel_with_tag "$wheel" "py3-none-${WHEEL_TAG}"
             rm -f "$wheel"
           done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-artifacts
+          name: windows-${{ matrix.arch }}-artifacts
           if-no-files-found: error
           path: |
-            client/flet-windows.zip
+            client/flet-windows-${{ matrix.arch }}.zip
             sdk/python/dist/*.whl
 
   # ===========================
