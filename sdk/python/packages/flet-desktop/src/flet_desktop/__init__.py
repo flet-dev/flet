@@ -92,7 +92,6 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
         if not flet_path:
             flet_exe = "flet.exe"
-            temp_flet_dir = __get_client_storage_dir()
 
             # check if flet_view.exe exists in "bin" directory (user mode)
             flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
@@ -106,11 +105,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                     logger.info(f"Flet View found in PATH: {flet_path}")
                     flet_path = os.path.join(flet_path, flet_exe)
                 else:
-                    if not temp_flet_dir.exists():
-                        raise FileNotFoundError(
-                            f"Flet client archive not found at {get_package_bin_dir()}"
-                        )
-                    flet_path = str(temp_flet_dir.joinpath("flet", flet_exe))
+                    raise FileNotFoundError(
+                        f"Flet executable not found at {get_package_bin_dir()}"
+                    )
         args = [flet_path, page_url, pid_file]
     elif is_macos():
         app_path = None
