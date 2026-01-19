@@ -277,29 +277,112 @@ jobs:
     name: Build Flet Client for Linux ${{ matrix.title }}
     runs-on: ${{ matrix.runner }}
     container:
-      image: ubuntu:20.04
+      image: ${{ matrix.container }}
     needs:
       # - python_tests
       - build_flet_package
     strategy:
       matrix:
         include:
-          - arch: arm64
-            runner: ubuntu-24.04-arm
-            build_arch: arm64
-            platform_arch: aarch64
-            title: ARM64
-          - arch: amd64
+          - distro_id: debian10
+            container: debian:10
+            manylinux_tag: manylinux_2_28
+            arch: amd64
             runner: ubuntu-24.04
             build_arch: x64
             platform_arch: x86_64
-            title: AMD64
+            rive_enabled: false
+            title: Debian 10 AMD64
+          - distro_id: debian10
+            container: debian:10
+            manylinux_tag: manylinux_2_28
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Debian 10 ARM64
+          - distro_id: debian12
+            container: debian:12
+            manylinux_tag: manylinux_2_36
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: true
+            title: Debian 12 AMD64
+          - distro_id: debian12
+            container: debian:12
+            manylinux_tag: manylinux_2_36
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Debian 12 ARM64
+          - distro_id: ubuntu20.04
+            container: ubuntu:20.04
+            manylinux_tag: manylinux_2_31
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: false
+            title: Ubuntu 20.04 AMD64
+          - distro_id: ubuntu20.04
+            container: ubuntu:20.04
+            manylinux_tag: manylinux_2_31
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 20.04 ARM64
+          - distro_id: ubuntu22.04
+            container: ubuntu:22.04
+            manylinux_tag: manylinux_2_35
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: false
+            title: Ubuntu 22.04 AMD64
+          - distro_id: ubuntu22.04
+            container: ubuntu:22.04
+            manylinux_tag: manylinux_2_35
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 22.04 ARM64
+          - distro_id: ubuntu24.04
+            container: ubuntu:24.04
+            manylinux_tag: manylinux_2_39
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: true
+            title: Ubuntu 24.04 AMD64
+          - distro_id: ubuntu24.04
+            container: ubuntu:24.04
+            manylinux_tag: manylinux_2_39
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 24.04 ARM64
     env:
       BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
       ARCH: ${{ matrix.arch }}
       BUILD_ARCH: ${{ matrix.build_arch }}
       PLATFORM_ARCH: ${{ matrix.platform_arch }}
+      DISTRO_ID: ${{ matrix.distro_id }}
+      MANYLINUX_TAG: ${{ matrix.manylinux_tag }}
+      RIVE_ENABLED: ${{ matrix.rive_enabled }}
     steps:
       - name: Install base packages
         shell: bash
@@ -363,6 +446,7 @@ jobs:
         working-directory: client
         run: |
           STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
+          STAGING_DIR="${STAGING_DIR}_${DISTRO_ID}"
           echo "STAGING_DIR=$STAGING_DIR" >> "$GITHUB_ENV"
           mkdir -p "$STAGING_DIR"
 
@@ -385,8 +469,8 @@ jobs:
               sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
             fi
 
-            if [[ "$ARCH" == "arm64" ]]; then
-              # flet_rive is excluded for Linux ARM64 builds
+            if [[ "$RIVE_ENABLED" != "true" ]]; then
+              # flet_rive is excluded unless explicitly enabled
               sed -i '/--RIVE_CLIENT_START--/,/--RIVE_CLIENT_END--/d' pubspec.yaml
               sed -i '/--RIVE_IMPORT_START--/,/--RIVE_IMPORT_END--/d' lib/main.dart
               sed -i '/--RIVE_EXTENSION_START--/,/--RIVE_EXTENSION_END--/d' lib/main.dart
@@ -394,7 +478,7 @@ jobs:
             echo "::endgroup::"
 
             echo "::group::($PACKAGE_NAME) Flutter build"
-            flutter build linux --build-name="$BUILD_VER" -v
+            flutter build linux --build-name="$BUILD_VER"
 
             # Remove any previous build output, so mv below works as expected
             rm -rf "build/linux/${BUILD_ARCH}/release/flet"
@@ -403,10 +487,10 @@ jobs:
             mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
 
             # Create a compressed tarball of the "flet" directory for distribution
-            tar -czvf "flet-linux${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
+            tar -czvf "flet-linux-${DISTRO_ID}${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
             # Stage the archive
-            cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
+            cp -f "flet-linux-${DISTRO_ID}${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${DISTRO_ID}-${FLAVOR}-${ARCH}.tar.gz"
 
             echo "::endgroup::"
           }
@@ -448,7 +532,7 @@ jobs:
 
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
-            mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
+            mv -f "${STAGING_DIR}/flet-linux-${DISTRO_ID}-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
             uv build --wheel
 
@@ -468,8 +552,7 @@ jobs:
 
             # Wheel tags to generate from the universal wheel
             wheel_tags=(
-              "py3-none-manylinux_2_17_${PLATFORM_ARCH},py3-none-manylinux2014_${PLATFORM_ARCH}"
-              "py3-none-musllinux_1_2_${PLATFORM_ARCH}"
+              "py3-none-${MANYLINUX_TAG}_${PLATFORM_ARCH}"
             )
 
             # Repackage each universal wheel with all specified platform tags
@@ -492,7 +575,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: linux-${{ matrix.arch }}-artifacts
+          name: linux-${{ matrix.distro_id }}-${{ matrix.arch }}-artifacts
           if-no-files-found: error
           path: |
             client/flet-linux*.tar.gz
