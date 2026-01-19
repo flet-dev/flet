@@ -435,7 +435,9 @@ jobs:
             SUDO="sudo"
           fi
 
-          $SUDO sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
+          if [[ -f /etc/apt/sources.list ]]; then
+            $SUDO sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
+          fi
           $SUDO apt-get update --allow-releaseinfo-change
           $SUDO apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
           $SUDO apt-get install -y \
