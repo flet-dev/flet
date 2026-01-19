@@ -200,7 +200,6 @@ jobs:
 
           for wheel in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
-            repackage_wheel_with_tag "$wheel" "py3-none-win32"
             rm -f "$wheel"
           done
 
@@ -259,7 +258,7 @@ jobs:
 
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
-            repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
+            repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_x86_64"
             rm "$file"
           done
 
