@@ -52,6 +52,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Allow git safe directories
+        shell: bash
+        run: |
+          git config --global --add safe.directory /__w/flet/flet
+          git config --global --add safe.directory /__t/flutter
+
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
         with:
