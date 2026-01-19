@@ -86,7 +86,7 @@ jobs:
       id-token: write # Required for authentication using OIDC
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
-      BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
+      BUILD_NUM: ${{ steps.versions.outputs.BUILD_NUM }}
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -137,7 +137,8 @@ jobs:
       - python_tests
       - build_flet_package
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -167,7 +168,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          flutter build windows --build-name="$BUILD_VER"
+          flutter build windows --build-name="$PKG_VER" --build-number="$BUILD_NUM"
 
           # Copy needed runtime DLLs
           cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
@@ -222,7 +223,8 @@ jobs:
       - python_tests
       - build_flet_package
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -241,7 +243,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          flutter build macos --build-name="$BUILD_VER"
+          flutter build macos --build-name="$PKG_VER" --build-number="$BUILD_NUM"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
@@ -375,7 +377,8 @@ jobs:
             rive_enabled: false
             title: Ubuntu 24.04 ARM64
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
       ARCH: ${{ matrix.arch }}
       BUILD_ARCH: ${{ matrix.build_arch }}
@@ -483,7 +486,7 @@ jobs:
             echo "::endgroup::"
 
             echo "::group::($PACKAGE_NAME) Flutter build"
-            flutter build linux --build-name="$BUILD_VER"
+            flutter build linux --build-name="$PKG_VER" --build-number="$BUILD_NUM"
 
             # Remove any previous build output, so mv below works as expected
             rm -rf "build/linux/${BUILD_ARCH}/release/flet"
