@@ -430,17 +430,12 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          SUDO=""
-          if command -v sudo >/dev/null 2>&1; then
-            SUDO="sudo"
-          fi
-
           if [[ -f /etc/apt/sources.list ]]; then
-            $SUDO sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
+            sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
-          $SUDO apt-get update --allow-releaseinfo-change
-          $SUDO apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
-          $SUDO apt-get install -y \
+          apt-get update --allow-releaseinfo-change
+          apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
+          apt-get install -y \
             libmpv-dev mpv \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
