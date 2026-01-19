@@ -304,8 +304,10 @@ jobs:
       - name: Install base packages
         shell: bash
         run: |
+          export DEBIAN_FRONTEND=noninteractive
+          export TZ=Etc/UTC
           apt-get update
-          apt-get install -y git curl unzip xz-utils zip ca-certificates jq
+          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
         uses: actions/checkout@v4
