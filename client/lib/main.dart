@@ -15,6 +15,7 @@ import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 // --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
+// --RIVE_IMPORT_END--
 import 'package:flet_secure_storage/flet_secure_storage.dart'
     as flet_secure_storage;
 // --FAT_CLIENT_START--
