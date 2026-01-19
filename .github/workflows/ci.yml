@@ -276,6 +276,8 @@ jobs:
   build_linux:
     name: Build Flet Client for Linux ${{ matrix.title }}
     runs-on: ${{ matrix.runner }}
+    container:
+      image: ubuntu:20.04
     needs:
       - python_tests
       - build_flet_package
@@ -299,6 +301,12 @@ jobs:
       BUILD_ARCH: ${{ matrix.build_arch }}
       PLATFORM_ARCH: ${{ matrix.platform_arch }}
     steps:
+      - name: Install base packages
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y git curl unzip xz-utils zip ca-certificates
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -321,10 +329,15 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          sudo sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
-          sudo apt update --allow-releaseinfo-change
-          sudo apt install -y clang libgtk-3-dev libasound2-dev
-          sudo apt install -y \
+          SUDO=""
+          if command -v sudo >/dev/null 2>&1; then
+            SUDO="sudo"
+          fi
+
+          $SUDO sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
+          $SUDO apt-get update --allow-releaseinfo-change
+          $SUDO apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
+          $SUDO apt-get install -y \
             libmpv-dev mpv \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
