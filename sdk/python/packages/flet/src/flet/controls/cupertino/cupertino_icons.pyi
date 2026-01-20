@@ -21,50 +21,16 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     ALARM_FILL: IconData
     ALT: IconData
     ANT: IconData
-    ANTENNA_RADIOWAVES_LEFT_RIGHT: IconData
     ANT_CIRCLE: IconData
     ANT_CIRCLE_FILL: IconData
     ANT_FILL: IconData
+    ANTENNA_RADIOWAVES_LEFT_RIGHT: IconData
     APP: IconData
     APP_BADGE: IconData
     APP_BADGE_FILL: IconData
     APP_FILL: IconData
     ARCHIVEBOX: IconData
     ARCHIVEBOX_FILL: IconData
-    ARROWSHAPE_TURN_UP_LEFT: IconData
-    ARROWSHAPE_TURN_UP_LEFT_2: IconData
-    ARROWSHAPE_TURN_UP_LEFT_2_FILL: IconData
-    ARROWSHAPE_TURN_UP_LEFT_CIRCLE: IconData
-    ARROWSHAPE_TURN_UP_LEFT_CIRCLE_FILL: IconData
-    ARROWSHAPE_TURN_UP_LEFT_FILL: IconData
-    ARROWSHAPE_TURN_UP_RIGHT: IconData
-    ARROWSHAPE_TURN_UP_RIGHT_CIRCLE: IconData
-    ARROWSHAPE_TURN_UP_RIGHT_CIRCLE_FILL: IconData
-    ARROWSHAPE_TURN_UP_RIGHT_FILL: IconData
-    ARROWTRIANGLE_DOWN: IconData
-    ARROWTRIANGLE_DOWN_CIRCLE: IconData
-    ARROWTRIANGLE_DOWN_CIRCLE_FILL: IconData
-    ARROWTRIANGLE_DOWN_FILL: IconData
-    ARROWTRIANGLE_DOWN_SQUARE: IconData
-    ARROWTRIANGLE_DOWN_SQUARE_FILL: IconData
-    ARROWTRIANGLE_LEFT: IconData
-    ARROWTRIANGLE_LEFT_CIRCLE: IconData
-    ARROWTRIANGLE_LEFT_CIRCLE_FILL: IconData
-    ARROWTRIANGLE_LEFT_FILL: IconData
-    ARROWTRIANGLE_LEFT_SQUARE: IconData
-    ARROWTRIANGLE_LEFT_SQUARE_FILL: IconData
-    ARROWTRIANGLE_RIGHT: IconData
-    ARROWTRIANGLE_RIGHT_CIRCLE: IconData
-    ARROWTRIANGLE_RIGHT_CIRCLE_FILL: IconData
-    ARROWTRIANGLE_RIGHT_FILL: IconData
-    ARROWTRIANGLE_RIGHT_SQUARE: IconData
-    ARROWTRIANGLE_RIGHT_SQUARE_FILL: IconData
-    ARROWTRIANGLE_UP: IconData
-    ARROWTRIANGLE_UP_CIRCLE: IconData
-    ARROWTRIANGLE_UP_CIRCLE_FILL: IconData
-    ARROWTRIANGLE_UP_FILL: IconData
-    ARROWTRIANGLE_UP_SQUARE: IconData
-    ARROWTRIANGLE_UP_SQUARE_FILL: IconData
     ARROW_2_CIRCLEPATH: IconData
     ARROW_2_CIRCLEPATH_CIRCLE: IconData
     ARROW_2_CIRCLEPATH_CIRCLE_FILL: IconData
@@ -185,6 +151,40 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     ARROW_UTURN_UP_CIRCLE_FILL: IconData
     ARROW_UTURN_UP_SQUARE: IconData
     ARROW_UTURN_UP_SQUARE_FILL: IconData
+    ARROWSHAPE_TURN_UP_LEFT: IconData
+    ARROWSHAPE_TURN_UP_LEFT_2: IconData
+    ARROWSHAPE_TURN_UP_LEFT_2_FILL: IconData
+    ARROWSHAPE_TURN_UP_LEFT_CIRCLE: IconData
+    ARROWSHAPE_TURN_UP_LEFT_CIRCLE_FILL: IconData
+    ARROWSHAPE_TURN_UP_LEFT_FILL: IconData
+    ARROWSHAPE_TURN_UP_RIGHT: IconData
+    ARROWSHAPE_TURN_UP_RIGHT_CIRCLE: IconData
+    ARROWSHAPE_TURN_UP_RIGHT_CIRCLE_FILL: IconData
+    ARROWSHAPE_TURN_UP_RIGHT_FILL: IconData
+    ARROWTRIANGLE_DOWN: IconData
+    ARROWTRIANGLE_DOWN_CIRCLE: IconData
+    ARROWTRIANGLE_DOWN_CIRCLE_FILL: IconData
+    ARROWTRIANGLE_DOWN_FILL: IconData
+    ARROWTRIANGLE_DOWN_SQUARE: IconData
+    ARROWTRIANGLE_DOWN_SQUARE_FILL: IconData
+    ARROWTRIANGLE_LEFT: IconData
+    ARROWTRIANGLE_LEFT_CIRCLE: IconData
+    ARROWTRIANGLE_LEFT_CIRCLE_FILL: IconData
+    ARROWTRIANGLE_LEFT_FILL: IconData
+    ARROWTRIANGLE_LEFT_SQUARE: IconData
+    ARROWTRIANGLE_LEFT_SQUARE_FILL: IconData
+    ARROWTRIANGLE_RIGHT: IconData
+    ARROWTRIANGLE_RIGHT_CIRCLE: IconData
+    ARROWTRIANGLE_RIGHT_CIRCLE_FILL: IconData
+    ARROWTRIANGLE_RIGHT_FILL: IconData
+    ARROWTRIANGLE_RIGHT_SQUARE: IconData
+    ARROWTRIANGLE_RIGHT_SQUARE_FILL: IconData
+    ARROWTRIANGLE_UP: IconData
+    ARROWTRIANGLE_UP_CIRCLE: IconData
+    ARROWTRIANGLE_UP_CIRCLE_FILL: IconData
+    ARROWTRIANGLE_UP_FILL: IconData
+    ARROWTRIANGLE_UP_SQUARE: IconData
+    ARROWTRIANGLE_UP_SQUARE_FILL: IconData
     ASTERISK_CIRCLE: IconData
     ASTERISK_CIRCLE_FILL: IconData
     AT: IconData
@@ -250,13 +250,13 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     BOLT_SLASH: IconData
     BOLT_SLASH_FILL: IconData
     BOOK: IconData
-    BOOKMARK: IconData
-    BOOKMARK_FILL: IconData
-    BOOKMARK_SOLID: IconData
     BOOK_CIRCLE: IconData
     BOOK_CIRCLE_FILL: IconData
     BOOK_FILL: IconData
     BOOK_SOLID: IconData
+    BOOKMARK: IconData
+    BOOKMARK_FILL: IconData
+    BOOKMARK_SOLID: IconData
     BRIEFCASE: IconData
     BRIEFCASE_FILL: IconData
     BRIGHTNESS: IconData
@@ -298,14 +298,14 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     CAPTIONS_BUBBLE: IconData
     CAPTIONS_BUBBLE_FILL: IconData
     CAR: IconData
+    CAR_DETAILED: IconData
+    CAR_FILL: IconData
     CART: IconData
     CART_BADGE_MINUS: IconData
     CART_BADGE_PLUS: IconData
     CART_FILL: IconData
     CART_FILL_BADGE_MINUS: IconData
     CART_FILL_BADGE_PLUS: IconData
-    CAR_DETAILED: IconData
-    CAR_FILL: IconData
     CHART_BAR: IconData
     CHART_BAR_ALT_FILL: IconData
     CHART_BAR_CIRCLE: IconData
@@ -321,6 +321,9 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     CHAT_BUBBLE_FILL: IconData
     CHAT_BUBBLE_TEXT: IconData
     CHAT_BUBBLE_TEXT_FILL: IconData
+    CHECK_MARK: IconData
+    CHECK_MARK_CIRCLED: IconData
+    CHECK_MARK_CIRCLED_SOLID: IconData
     CHECKMARK: IconData
     CHECKMARK_ALT: IconData
     CHECKMARK_ALT_CIRCLE: IconData
@@ -335,9 +338,6 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     CHECKMARK_SHIELD_FILL: IconData
     CHECKMARK_SQUARE: IconData
     CHECKMARK_SQUARE_FILL: IconData
-    CHECK_MARK: IconData
-    CHECK_MARK_CIRCLED: IconData
-    CHECK_MARK_CIRCLED_SOLID: IconData
     CHEVRON_BACK: IconData
     CHEVRON_COMPACT_DOWN: IconData
     CHEVRON_COMPACT_LEFT: IconData
@@ -490,9 +490,9 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     DOT_SQUARE: IconData
     DOT_SQUARE_FILL: IconData
     DOUBLE_MUSIC_NOTE: IconData
+    DOWN_ARROW: IconData
     DOWNLOAD_CIRCLE: IconData
     DOWNLOAD_CIRCLE_FILL: IconData
-    DOWN_ARROW: IconData
     DROP: IconData
     DROP_FILL: IconData
     DROP_TRIANGLE: IconData
@@ -536,14 +536,17 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     EXCLAMATIONMARK_TRIANGLE: IconData
     EXCLAMATIONMARK_TRIANGLE_FILL: IconData
     EYE: IconData
-    EYEDROPPER: IconData
-    EYEDROPPER_FULL: IconData
-    EYEDROPPER_HALFFULL: IconData
-    EYEGLASSES: IconData
     EYE_FILL: IconData
     EYE_SLASH: IconData
     EYE_SLASH_FILL: IconData
     EYE_SOLID: IconData
+    EYEDROPPER: IconData
+    EYEDROPPER_FULL: IconData
+    EYEDROPPER_HALFFULL: IconData
+    EYEGLASSES: IconData
+    F_CURSIVE: IconData
+    F_CURSIVE_CIRCLE: IconData
+    F_CURSIVE_CIRCLE_FILL: IconData
     FILM: IconData
     FILM_FILL: IconData
     FLAG: IconData
@@ -579,14 +582,11 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     FULLSCREEN_EXIT: IconData
     FUNCTION: IconData
     FX: IconData
-    F_CURSIVE: IconData
-    F_CURSIVE_CIRCLE: IconData
-    F_CURSIVE_CIRCLE_FILL: IconData
+    GAME_CONTROLLER: IconData
+    GAME_CONTROLLER_SOLID: IconData
     GAMECONTROLLER: IconData
     GAMECONTROLLER_ALT_FILL: IconData
     GAMECONTROLLER_FILL: IconData
-    GAME_CONTROLLER: IconData
-    GAME_CONTROLLER_SOLID: IconData
     GAUGE: IconData
     GAUGE_BADGE_MINUS: IconData
     GAUGE_BADGE_PLUS: IconData
@@ -699,12 +699,12 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     LESSTHAN_CIRCLE_FILL: IconData
     LESSTHAN_SQUARE: IconData
     LESSTHAN_SQUARE_FILL: IconData
+    LIGHT_MAX: IconData
+    LIGHT_MIN: IconData
     LIGHTBULB: IconData
     LIGHTBULB_FILL: IconData
     LIGHTBULB_SLASH: IconData
     LIGHTBULB_SLASH_FILL: IconData
-    LIGHT_MAX: IconData
-    LIGHT_MIN: IconData
     LINE_HORIZONTAL_3: IconData
     LINE_HORIZONTAL_3_DECREASE: IconData
     LINE_HORIZONTAL_3_DECREASE_CIRCLE: IconData
@@ -765,8 +765,8 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     MIC_SOLID: IconData
     MINUS: IconData
     MINUS_CIRCLE: IconData
-    MINUS_CIRCLED: IconData
     MINUS_CIRCLE_FILL: IconData
+    MINUS_CIRCLED: IconData
     MINUS_RECTANGLE: IconData
     MINUS_RECTANGLE_FILL: IconData
     MINUS_SLASH_PLUS: IconData
@@ -846,7 +846,6 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     PENCIL_SLASH: IconData
     PERCENT: IconData
     PERSON: IconData
-    PERSONALHOTSPOT: IconData
     PERSON_2: IconData
     PERSON_2_ALT: IconData
     PERSON_2_FILL: IconData
@@ -883,6 +882,7 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     PERSON_CROP_SQUARE_FILL: IconData
     PERSON_FILL: IconData
     PERSON_SOLID: IconData
+    PERSONALHOTSPOT: IconData
     PERSPECTIVE: IconData
     PHONE: IconData
     PHONE_ARROW_DOWN_LEFT: IconData
@@ -915,8 +915,6 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     PLACEMARK: IconData
     PLACEMARK_FILL: IconData
     PLAY: IconData
-    PLAYPAUSE: IconData
-    PLAYPAUSE_FILL: IconData
     PLAY_ARROW: IconData
     PLAY_ARROW_SOLID: IconData
     PLAY_CIRCLE: IconData
@@ -924,17 +922,16 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     PLAY_FILL: IconData
     PLAY_RECTANGLE: IconData
     PLAY_RECTANGLE_FILL: IconData
+    PLAYPAUSE: IconData
+    PLAYPAUSE_FILL: IconData
     PLUS: IconData
-    PLUSMINUS: IconData
-    PLUSMINUS_CIRCLE: IconData
-    PLUSMINUS_CIRCLE_FILL: IconData
     PLUS_APP: IconData
     PLUS_APP_FILL: IconData
     PLUS_BUBBLE: IconData
     PLUS_BUBBLE_FILL: IconData
     PLUS_CIRCLE: IconData
-    PLUS_CIRCLED: IconData
     PLUS_CIRCLE_FILL: IconData
+    PLUS_CIRCLED: IconData
     PLUS_RECTANGLE: IconData
     PLUS_RECTANGLE_FILL: IconData
     PLUS_RECTANGLE_FILL_ON_RECTANGLE_FILL: IconData
@@ -944,6 +941,9 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     PLUS_SQUARE_FILL: IconData
     PLUS_SQUARE_FILL_ON_SQUARE_FILL: IconData
     PLUS_SQUARE_ON_SQUARE: IconData
+    PLUSMINUS: IconData
+    PLUSMINUS_CIRCLE: IconData
+    PLUSMINUS_CIRCLE_FILL: IconData
     POWER: IconData
     PRINTER: IconData
     PRINTER_FILL: IconData
@@ -1100,7 +1100,6 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     SPORTSCOURT: IconData
     SPORTSCOURT_FILL: IconData
     SQUARE: IconData
-    SQUARES_BELOW_RECTANGLE: IconData
     SQUARE_ARROW_DOWN: IconData
     SQUARE_ARROW_DOWN_FILL: IconData
     SQUARE_ARROW_DOWN_ON_SQUARE: IconData
@@ -1152,21 +1151,22 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     SQUARE_STACK_3D_UP_SLASH: IconData
     SQUARE_STACK_3D_UP_SLASH_FILL: IconData
     SQUARE_STACK_FILL: IconData
+    SQUARES_BELOW_RECTANGLE: IconData
     STAR: IconData
-    STAROFLIFE: IconData
-    STAROFLIFE_FILL: IconData
     STAR_CIRCLE: IconData
     STAR_CIRCLE_FILL: IconData
     STAR_FILL: IconData
     STAR_LEFTHALF_FILL: IconData
     STAR_SLASH: IconData
     STAR_SLASH_FILL: IconData
+    STAROFLIFE: IconData
+    STAROFLIFE_FILL: IconData
     STOP: IconData
-    STOPWATCH: IconData
-    STOPWATCH_FILL: IconData
     STOP_CIRCLE: IconData
     STOP_CIRCLE_FILL: IconData
     STOP_FILL: IconData
+    STOPWATCH: IconData
+    STOPWATCH_FILL: IconData
     STRIKETHROUGH: IconData
     SUIT_CLUB: IconData
     SUIT_CLUB_FILL: IconData
@@ -1177,10 +1177,6 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     SUIT_SPADE: IconData
     SUIT_SPADE_FILL: IconData
     SUM: IconData
-    SUNRISE: IconData
-    SUNRISE_FILL: IconData
-    SUNSET: IconData
-    SUNSET_FILL: IconData
     SUN_DUST: IconData
     SUN_DUST_FILL: IconData
     SUN_HAZE: IconData
@@ -1189,28 +1185,25 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     SUN_MAX_FILL: IconData
     SUN_MIN: IconData
     SUN_MIN_FILL: IconData
+    SUNRISE: IconData
+    SUNRISE_FILL: IconData
+    SUNSET: IconData
+    SUNSET_FILL: IconData
     SWITCH_CAMERA: IconData
     SWITCH_CAMERA_SOLID: IconData
+    T_BUBBLE: IconData
+    T_BUBBLE_FILL: IconData
     TABLE: IconData
     TABLE_BADGE_MORE: IconData
     TABLE_BADGE_MORE_FILL: IconData
     TABLE_FILL: IconData
     TAG: IconData
-    TAGS: IconData
-    TAGS_SOLID: IconData
     TAG_CIRCLE: IconData
     TAG_CIRCLE_FILL: IconData
     TAG_FILL: IconData
     TAG_SOLID: IconData
-    TEXTBOX: IconData
-    TEXTFORMAT: IconData
-    TEXTFORMAT_123: IconData
-    TEXTFORMAT_ABC: IconData
-    TEXTFORMAT_ABC_DOTTEDUNDERLINE: IconData
-    TEXTFORMAT_ALT: IconData
-    TEXTFORMAT_SIZE: IconData
-    TEXTFORMAT_SUBSCRIPT: IconData
-    TEXTFORMAT_SUPERSCRIPT: IconData
+    TAGS: IconData
+    TAGS_SOLID: IconData
     TEXT_ALIGNCENTER: IconData
     TEXT_ALIGNLEFT: IconData
     TEXT_ALIGNRIGHT: IconData
@@ -1228,18 +1221,27 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     TEXT_JUSTIFYLEFT: IconData
     TEXT_JUSTIFYRIGHT: IconData
     TEXT_QUOTE: IconData
+    TEXTBOX: IconData
+    TEXTFORMAT: IconData
+    TEXTFORMAT_123: IconData
+    TEXTFORMAT_ABC: IconData
+    TEXTFORMAT_ABC_DOTTEDUNDERLINE: IconData
+    TEXTFORMAT_ALT: IconData
+    TEXTFORMAT_SIZE: IconData
+    TEXTFORMAT_SUBSCRIPT: IconData
+    TEXTFORMAT_SUPERSCRIPT: IconData
     THERMOMETER: IconData
     THERMOMETER_SNOWFLAKE: IconData
     THERMOMETER_SUN: IconData
     TICKET: IconData
+    TICKET_FILL: IconData
     TICKETS: IconData
     TICKETS_FILL: IconData
-    TICKET_FILL: IconData
     TIME: IconData
+    TIME_SOLID: IconData
     TIMELAPSE: IconData
     TIMER: IconData
     TIMER_FILL: IconData
-    TIME_SOLID: IconData
     TODAY: IconData
     TODAY_FILL: IconData
     TORNADO: IconData
@@ -1277,26 +1279,24 @@ class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons")
     TV_FILL: IconData
     TV_MUSIC_NOTE: IconData
     TV_MUSIC_NOTE_FILL: IconData
-    T_BUBBLE: IconData
-    T_BUBBLE_FILL: IconData
     UIWINDOW_SPLIT_2X1: IconData
     UMBRELLA: IconData
     UMBRELLA_FILL: IconData
     UNDERLINE: IconData
+    UP_ARROW: IconData
     UPLOAD_CIRCLE: IconData
     UPLOAD_CIRCLE_FILL: IconData
-    UP_ARROW: IconData
+    VIDEO_CAMERA: IconData
+    VIDEO_CAMERA_SOLID: IconData
     VIDEOCAM: IconData
     VIDEOCAM_CIRCLE: IconData
     VIDEOCAM_CIRCLE_FILL: IconData
     VIDEOCAM_FILL: IconData
-    VIDEO_CAMERA: IconData
-    VIDEO_CAMERA_SOLID: IconData
+    VIEW_2D: IconData
+    VIEW_3D: IconData
     VIEWFINDER: IconData
     VIEWFINDER_CIRCLE: IconData
     VIEWFINDER_CIRCLE_FILL: IconData
-    VIEW_2D: IconData
-    VIEW_3D: IconData
     VOLUME_DOWN: IconData
     VOLUME_MUTE: IconData
     VOLUME_OFF: IconData

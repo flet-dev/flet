@@ -17,6 +17,26 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ABC_OUTLINED: IconData
     ABC_ROUNDED: IconData
     ABC_SHARP: IconData
+    AC_UNIT: IconData
+    AC_UNIT_OUTLINED: IconData
+    AC_UNIT_ROUNDED: IconData
+    AC_UNIT_SHARP: IconData
+    ACCESS_ALARM: IconData
+    ACCESS_ALARM_OUTLINED: IconData
+    ACCESS_ALARM_ROUNDED: IconData
+    ACCESS_ALARM_SHARP: IconData
+    ACCESS_ALARMS: IconData
+    ACCESS_ALARMS_OUTLINED: IconData
+    ACCESS_ALARMS_ROUNDED: IconData
+    ACCESS_ALARMS_SHARP: IconData
+    ACCESS_TIME: IconData
+    ACCESS_TIME_FILLED: IconData
+    ACCESS_TIME_FILLED_OUTLINED: IconData
+    ACCESS_TIME_FILLED_ROUNDED: IconData
+    ACCESS_TIME_FILLED_SHARP: IconData
+    ACCESS_TIME_OUTLINED: IconData
+    ACCESS_TIME_ROUNDED: IconData
+    ACCESS_TIME_SHARP: IconData
     ACCESSIBILITY: IconData
     ACCESSIBILITY_NEW: IconData
     ACCESSIBILITY_NEW_OUTLINED: IconData
@@ -33,22 +53,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ACCESSIBLE_OUTLINED: IconData
     ACCESSIBLE_ROUNDED: IconData
     ACCESSIBLE_SHARP: IconData
-    ACCESS_ALARM: IconData
-    ACCESS_ALARMS: IconData
-    ACCESS_ALARMS_OUTLINED: IconData
-    ACCESS_ALARMS_ROUNDED: IconData
-    ACCESS_ALARMS_SHARP: IconData
-    ACCESS_ALARM_OUTLINED: IconData
-    ACCESS_ALARM_ROUNDED: IconData
-    ACCESS_ALARM_SHARP: IconData
-    ACCESS_TIME: IconData
-    ACCESS_TIME_FILLED: IconData
-    ACCESS_TIME_FILLED_OUTLINED: IconData
-    ACCESS_TIME_FILLED_ROUNDED: IconData
-    ACCESS_TIME_FILLED_SHARP: IconData
-    ACCESS_TIME_OUTLINED: IconData
-    ACCESS_TIME_ROUNDED: IconData
-    ACCESS_TIME_SHARP: IconData
     ACCOUNT_BALANCE: IconData
     ACCOUNT_BALANCE_OUTLINED: IconData
     ACCOUNT_BALANCE_ROUNDED: IconData
@@ -69,19 +73,19 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ACCOUNT_TREE_OUTLINED: IconData
     ACCOUNT_TREE_ROUNDED: IconData
     ACCOUNT_TREE_SHARP: IconData
-    AC_UNIT: IconData
-    AC_UNIT_OUTLINED: IconData
-    AC_UNIT_ROUNDED: IconData
-    AC_UNIT_SHARP: IconData
+    AD_UNITS: IconData
+    AD_UNITS_OUTLINED: IconData
+    AD_UNITS_ROUNDED: IconData
+    AD_UNITS_SHARP: IconData
     ADB: IconData
     ADB_OUTLINED: IconData
     ADB_ROUNDED: IconData
     ADB_SHARP: IconData
     ADD: IconData
-    ADDCHART: IconData
-    ADDCHART_OUTLINED: IconData
-    ADDCHART_ROUNDED: IconData
-    ADDCHART_SHARP: IconData
+    ADD_A_PHOTO: IconData
+    ADD_A_PHOTO_OUTLINED: IconData
+    ADD_A_PHOTO_ROUNDED: IconData
+    ADD_A_PHOTO_SHARP: IconData
     ADD_ALARM: IconData
     ADD_ALARM_OUTLINED: IconData
     ADD_ALARM_ROUNDED: IconData
@@ -90,10 +94,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ADD_ALERT_OUTLINED: IconData
     ADD_ALERT_ROUNDED: IconData
     ADD_ALERT_SHARP: IconData
-    ADD_A_PHOTO: IconData
-    ADD_A_PHOTO_OUTLINED: IconData
-    ADD_A_PHOTO_ROUNDED: IconData
-    ADD_A_PHOTO_SHARP: IconData
     ADD_BOX: IconData
     ADD_BOX_OUTLINED: IconData
     ADD_BOX_ROUNDED: IconData
@@ -113,10 +113,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ADD_CHART_SHARP: IconData
     ADD_CIRCLE: IconData
     ADD_CIRCLE_OUTLINE: IconData
-    ADD_CIRCLE_OUTLINED: IconData
     ADD_CIRCLE_OUTLINE_OUTLINED: IconData
     ADD_CIRCLE_OUTLINE_ROUNDED: IconData
     ADD_CIRCLE_OUTLINE_SHARP: IconData
+    ADD_CIRCLE_OUTLINED: IconData
     ADD_CIRCLE_ROUNDED: IconData
     ADD_CIRCLE_SHARP: IconData
     ADD_COMMENT: IconData
@@ -190,6 +190,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ADD_TO_QUEUE_OUTLINED: IconData
     ADD_TO_QUEUE_ROUNDED: IconData
     ADD_TO_QUEUE_SHARP: IconData
+    ADDCHART: IconData
+    ADDCHART_OUTLINED: IconData
+    ADDCHART_ROUNDED: IconData
+    ADDCHART_SHARP: IconData
     ADF_SCANNER: IconData
     ADF_SCANNER_OUTLINED: IconData
     ADF_SCANNER_ROUNDED: IconData
@@ -210,19 +214,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ADS_CLICK_OUTLINED: IconData
     ADS_CLICK_ROUNDED: IconData
     ADS_CLICK_SHARP: IconData
-    AD_UNITS: IconData
-    AD_UNITS_OUTLINED: IconData
-    AD_UNITS_ROUNDED: IconData
-    AD_UNITS_SHARP: IconData
     AGRICULTURE: IconData
     AGRICULTURE_OUTLINED: IconData
     AGRICULTURE_ROUNDED: IconData
     AGRICULTURE_SHARP: IconData
     AIR: IconData
-    AIRLINES: IconData
-    AIRLINES_OUTLINED: IconData
-    AIRLINES_ROUNDED: IconData
-    AIRLINES_SHARP: IconData
+    AIR_OUTLINED: IconData
+    AIR_ROUNDED: IconData
+    AIR_SHARP: IconData
     AIRLINE_SEAT_FLAT: IconData
     AIRLINE_SEAT_FLAT_ANGLED: IconData
     AIRLINE_SEAT_FLAT_ANGLED_OUTLINED: IconData
@@ -259,6 +258,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     AIRLINE_STOPS_OUTLINED: IconData
     AIRLINE_STOPS_ROUNDED: IconData
     AIRLINE_STOPS_SHARP: IconData
+    AIRLINES: IconData
+    AIRLINES_OUTLINED: IconData
+    AIRLINES_ROUNDED: IconData
+    AIRLINES_SHARP: IconData
+    AIRPLANE_TICKET: IconData
+    AIRPLANE_TICKET_OUTLINED: IconData
+    AIRPLANE_TICKET_ROUNDED: IconData
+    AIRPLANE_TICKET_SHARP: IconData
     AIRPLANEMODE_ACTIVE: IconData
     AIRPLANEMODE_ACTIVE_OUTLINED: IconData
     AIRPLANEMODE_ACTIVE_ROUNDED: IconData
@@ -275,10 +282,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     AIRPLANEMODE_ON_OUTLINED: IconData
     AIRPLANEMODE_ON_ROUNDED: IconData
     AIRPLANEMODE_ON_SHARP: IconData
-    AIRPLANE_TICKET: IconData
-    AIRPLANE_TICKET_OUTLINED: IconData
-    AIRPLANE_TICKET_ROUNDED: IconData
-    AIRPLANE_TICKET_SHARP: IconData
     AIRPLAY: IconData
     AIRPLAY_OUTLINED: IconData
     AIRPLAY_ROUNDED: IconData
@@ -287,9 +290,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     AIRPORT_SHUTTLE_OUTLINED: IconData
     AIRPORT_SHUTTLE_ROUNDED: IconData
     AIRPORT_SHUTTLE_SHARP: IconData
-    AIR_OUTLINED: IconData
-    AIR_ROUNDED: IconData
-    AIR_SHARP: IconData
     ALARM: IconData
     ALARM_ADD: IconData
     ALARM_ADD_OUTLINED: IconData
@@ -346,14 +346,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ALL_OUT_OUTLINED: IconData
     ALL_OUT_ROUNDED: IconData
     ALL_OUT_SHARP: IconData
-    ALTERNATE_EMAIL: IconData
-    ALTERNATE_EMAIL_OUTLINED: IconData
-    ALTERNATE_EMAIL_ROUNDED: IconData
-    ALTERNATE_EMAIL_SHARP: IconData
     ALT_ROUTE: IconData
     ALT_ROUTE_OUTLINED: IconData
     ALT_ROUTE_ROUNDED: IconData
     ALT_ROUTE_SHARP: IconData
+    ALTERNATE_EMAIL: IconData
+    ALTERNATE_EMAIL_OUTLINED: IconData
+    ALTERNATE_EMAIL_ROUNDED: IconData
+    ALTERNATE_EMAIL_SHARP: IconData
     AMP_STORIES: IconData
     AMP_STORIES_OUTLINED: IconData
     AMP_STORIES_ROUNDED: IconData
@@ -390,22 +390,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     API_OUTLINED: IconData
     API_ROUNDED: IconData
     API_SHARP: IconData
-    APPLE: IconData
-    APPLE_OUTLINED: IconData
-    APPLE_ROUNDED: IconData
-    APPLE_SHARP: IconData
-    APPROVAL: IconData
-    APPROVAL_OUTLINED: IconData
-    APPROVAL_ROUNDED: IconData
-    APPROVAL_SHARP: IconData
-    APPS: IconData
-    APPS_OUTAGE: IconData
-    APPS_OUTAGE_OUTLINED: IconData
-    APPS_OUTAGE_ROUNDED: IconData
-    APPS_OUTAGE_SHARP: IconData
-    APPS_OUTLINED: IconData
-    APPS_ROUNDED: IconData
-    APPS_SHARP: IconData
     APP_BLOCKING: IconData
     APP_BLOCKING_OUTLINED: IconData
     APP_BLOCKING_ROUNDED: IconData
@@ -422,6 +406,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     APP_SHORTCUT_OUTLINED: IconData
     APP_SHORTCUT_ROUNDED: IconData
     APP_SHORTCUT_SHARP: IconData
+    APPLE: IconData
+    APPLE_OUTLINED: IconData
+    APPLE_ROUNDED: IconData
+    APPLE_SHARP: IconData
+    APPROVAL: IconData
+    APPROVAL_OUTLINED: IconData
+    APPROVAL_ROUNDED: IconData
+    APPROVAL_SHARP: IconData
+    APPS: IconData
+    APPS_OUTAGE: IconData
+    APPS_OUTAGE_OUTLINED: IconData
+    APPS_OUTAGE_ROUNDED: IconData
+    APPS_OUTAGE_SHARP: IconData
+    APPS_OUTLINED: IconData
+    APPS_ROUNDED: IconData
+    APPS_SHARP: IconData
     ARCHITECTURE: IconData
     ARCHITECTURE_OUTLINED: IconData
     ARCHITECTURE_ROUNDED: IconData
@@ -506,14 +506,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ARROW_UPWARD_OUTLINED: IconData
     ARROW_UPWARD_ROUNDED: IconData
     ARROW_UPWARD_SHARP: IconData
-    ARTICLE: IconData
-    ARTICLE_OUTLINED: IconData
-    ARTICLE_ROUNDED: IconData
-    ARTICLE_SHARP: IconData
     ART_TRACK: IconData
     ART_TRACK_OUTLINED: IconData
     ART_TRACK_ROUNDED: IconData
     ART_TRACK_SHARP: IconData
+    ARTICLE: IconData
+    ARTICLE_OUTLINED: IconData
+    ARTICLE_ROUNDED: IconData
+    ARTICLE_SHARP: IconData
     ASPECT_RATIO: IconData
     ASPECT_RATIO_OUTLINED: IconData
     ASPECT_RATIO_ROUNDED: IconData
@@ -534,19 +534,23 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ASSIGNMENT_LATE_SHARP: IconData
     ASSIGNMENT_OUTLINED: IconData
     ASSIGNMENT_RETURN: IconData
+    ASSIGNMENT_RETURN_OUTLINED: IconData
+    ASSIGNMENT_RETURN_ROUNDED: IconData
+    ASSIGNMENT_RETURN_SHARP: IconData
     ASSIGNMENT_RETURNED: IconData
     ASSIGNMENT_RETURNED_OUTLINED: IconData
     ASSIGNMENT_RETURNED_ROUNDED: IconData
     ASSIGNMENT_RETURNED_SHARP: IconData
-    ASSIGNMENT_RETURN_OUTLINED: IconData
-    ASSIGNMENT_RETURN_ROUNDED: IconData
-    ASSIGNMENT_RETURN_SHARP: IconData
     ASSIGNMENT_ROUNDED: IconData
     ASSIGNMENT_SHARP: IconData
     ASSIGNMENT_TURNED_IN: IconData
     ASSIGNMENT_TURNED_IN_OUTLINED: IconData
     ASSIGNMENT_TURNED_IN_ROUNDED: IconData
     ASSIGNMENT_TURNED_IN_SHARP: IconData
+    ASSIST_WALKER: IconData
+    ASSIST_WALKER_OUTLINED: IconData
+    ASSIST_WALKER_ROUNDED: IconData
+    ASSIST_WALKER_SHARP: IconData
     ASSISTANT: IconData
     ASSISTANT_DIRECTION: IconData
     ASSISTANT_DIRECTION_OUTLINED: IconData
@@ -560,10 +564,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ASSISTANT_PHOTO_SHARP: IconData
     ASSISTANT_ROUNDED: IconData
     ASSISTANT_SHARP: IconData
-    ASSIST_WALKER: IconData
-    ASSIST_WALKER_OUTLINED: IconData
-    ASSIST_WALKER_ROUNDED: IconData
-    ASSIST_WALKER_SHARP: IconData
     ASSURED_WORKLOAD: IconData
     ASSURED_WORKLOAD_OUTLINED: IconData
     ASSURED_WORKLOAD_ROUNDED: IconData
@@ -572,10 +572,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ATM_OUTLINED: IconData
     ATM_ROUNDED: IconData
     ATM_SHARP: IconData
-    ATTACHMENT: IconData
-    ATTACHMENT_OUTLINED: IconData
-    ATTACHMENT_ROUNDED: IconData
-    ATTACHMENT_SHARP: IconData
     ATTACH_EMAIL: IconData
     ATTACH_EMAIL_OUTLINED: IconData
     ATTACH_EMAIL_ROUNDED: IconData
@@ -588,6 +584,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ATTACH_MONEY_OUTLINED: IconData
     ATTACH_MONEY_ROUNDED: IconData
     ATTACH_MONEY_SHARP: IconData
+    ATTACHMENT: IconData
+    ATTACHMENT_OUTLINED: IconData
+    ATTACHMENT_ROUNDED: IconData
+    ATTACHMENT_SHARP: IconData
     ATTRACTIONS: IconData
     ATTRACTIONS_OUTLINED: IconData
     ATTRACTIONS_ROUNDED: IconData
@@ -596,22 +596,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ATTRIBUTION_OUTLINED: IconData
     ATTRIBUTION_ROUNDED: IconData
     ATTRIBUTION_SHARP: IconData
-    AUDIOTRACK: IconData
-    AUDIOTRACK_OUTLINED: IconData
-    AUDIOTRACK_ROUNDED: IconData
-    AUDIOTRACK_SHARP: IconData
     AUDIO_FILE: IconData
     AUDIO_FILE_OUTLINED: IconData
     AUDIO_FILE_ROUNDED: IconData
     AUDIO_FILE_SHARP: IconData
-    AUTOFPS_SELECT: IconData
-    AUTOFPS_SELECT_OUTLINED: IconData
-    AUTOFPS_SELECT_ROUNDED: IconData
-    AUTOFPS_SELECT_SHARP: IconData
-    AUTORENEW: IconData
-    AUTORENEW_OUTLINED: IconData
-    AUTORENEW_ROUNDED: IconData
-    AUTORENEW_SHARP: IconData
+    AUDIOTRACK: IconData
+    AUDIOTRACK_OUTLINED: IconData
+    AUDIOTRACK_ROUNDED: IconData
+    AUDIOTRACK_SHARP: IconData
     AUTO_AWESOME: IconData
     AUTO_AWESOME_MOSAIC: IconData
     AUTO_AWESOME_MOSAIC_OUTLINED: IconData
@@ -652,6 +644,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     AUTO_STORIES_OUTLINED: IconData
     AUTO_STORIES_ROUNDED: IconData
     AUTO_STORIES_SHARP: IconData
+    AUTOFPS_SELECT: IconData
+    AUTOFPS_SELECT_OUTLINED: IconData
+    AUTOFPS_SELECT_ROUNDED: IconData
+    AUTOFPS_SELECT_SHARP: IconData
+    AUTORENEW: IconData
+    AUTORENEW_OUTLINED: IconData
+    AUTORENEW_ROUNDED: IconData
+    AUTORENEW_SHARP: IconData
     AV_TIMER: IconData
     AV_TIMER_OUTLINED: IconData
     AV_TIMER_ROUNDED: IconData
@@ -660,6 +660,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BABY_CHANGING_STATION_OUTLINED: IconData
     BABY_CHANGING_STATION_ROUNDED: IconData
     BABY_CHANGING_STATION_SHARP: IconData
+    BACK_HAND: IconData
+    BACK_HAND_OUTLINED: IconData
+    BACK_HAND_ROUNDED: IconData
+    BACK_HAND_SHARP: IconData
     BACKPACK: IconData
     BACKPACK_OUTLINED: IconData
     BACKPACK_ROUNDED: IconData
@@ -676,10 +680,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BACKUP_TABLE_OUTLINED: IconData
     BACKUP_TABLE_ROUNDED: IconData
     BACKUP_TABLE_SHARP: IconData
-    BACK_HAND: IconData
-    BACK_HAND_OUTLINED: IconData
-    BACK_HAND_ROUNDED: IconData
-    BACK_HAND_SHARP: IconData
     BADGE: IconData
     BADGE_OUTLINED: IconData
     BADGE_ROUNDED: IconData
@@ -700,11 +700,11 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BALLOT_OUTLINED: IconData
     BALLOT_ROUNDED: IconData
     BALLOT_SHARP: IconData
-    BARCODE_READER: IconData
     BAR_CHART: IconData
     BAR_CHART_OUTLINED: IconData
     BAR_CHART_ROUNDED: IconData
     BAR_CHART_SHARP: IconData
+    BARCODE_READER: IconData
     BATCH_PREDICTION: IconData
     BATCH_PREDICTION_OUTLINED: IconData
     BATCH_PREDICTION_ROUNDED: IconData
@@ -774,6 +774,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BEACH_ACCESS_ROUNDED: IconData
     BEACH_ACCESS_SHARP: IconData
     BED: IconData
+    BED_OUTLINED: IconData
+    BED_ROUNDED: IconData
+    BED_SHARP: IconData
     BEDROOM_BABY: IconData
     BEDROOM_BABY_OUTLINED: IconData
     BEDROOM_BABY_ROUNDED: IconData
@@ -794,9 +797,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BEDTIME_OUTLINED: IconData
     BEDTIME_ROUNDED: IconData
     BEDTIME_SHARP: IconData
-    BED_OUTLINED: IconData
-    BED_ROUNDED: IconData
-    BED_SHARP: IconData
     BEENHERE: IconData
     BEENHERE_OUTLINED: IconData
     BEENHERE_ROUNDED: IconData
@@ -818,6 +818,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BLENDER_ROUNDED: IconData
     BLENDER_SHARP: IconData
     BLIND: IconData
+    BLIND_OUTLINED: IconData
+    BLIND_ROUNDED: IconData
+    BLIND_SHARP: IconData
     BLINDS: IconData
     BLINDS_CLOSED: IconData
     BLINDS_CLOSED_OUTLINED: IconData
@@ -826,9 +829,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BLINDS_OUTLINED: IconData
     BLINDS_ROUNDED: IconData
     BLINDS_SHARP: IconData
-    BLIND_OUTLINED: IconData
-    BLIND_ROUNDED: IconData
-    BLIND_SHARP: IconData
     BLOCK: IconData
     BLOCK_FLIPPED: IconData
     BLOCK_OUTLINED: IconData
@@ -883,34 +883,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BOLT_ROUNDED: IconData
     BOLT_SHARP: IconData
     BOOK: IconData
-    BOOKMARK: IconData
-    BOOKMARKS: IconData
-    BOOKMARKS_OUTLINED: IconData
-    BOOKMARKS_ROUNDED: IconData
-    BOOKMARKS_SHARP: IconData
-    BOOKMARK_ADD: IconData
-    BOOKMARK_ADDED: IconData
-    BOOKMARK_ADDED_OUTLINED: IconData
-    BOOKMARK_ADDED_ROUNDED: IconData
-    BOOKMARK_ADDED_SHARP: IconData
-    BOOKMARK_ADD_OUTLINED: IconData
-    BOOKMARK_ADD_ROUNDED: IconData
-    BOOKMARK_ADD_SHARP: IconData
-    BOOKMARK_BORDER: IconData
-    BOOKMARK_BORDER_OUTLINED: IconData
-    BOOKMARK_BORDER_ROUNDED: IconData
-    BOOKMARK_BORDER_SHARP: IconData
-    BOOKMARK_OUTLINE: IconData
-    BOOKMARK_OUTLINED: IconData
-    BOOKMARK_OUTLINE_OUTLINED: IconData
-    BOOKMARK_OUTLINE_ROUNDED: IconData
-    BOOKMARK_OUTLINE_SHARP: IconData
-    BOOKMARK_REMOVE: IconData
-    BOOKMARK_REMOVE_OUTLINED: IconData
-    BOOKMARK_REMOVE_ROUNDED: IconData
-    BOOKMARK_REMOVE_SHARP: IconData
-    BOOKMARK_ROUNDED: IconData
-    BOOKMARK_SHARP: IconData
     BOOK_ONLINE: IconData
     BOOK_ONLINE_OUTLINED: IconData
     BOOK_ONLINE_ROUNDED: IconData
@@ -918,6 +890,34 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BOOK_OUTLINED: IconData
     BOOK_ROUNDED: IconData
     BOOK_SHARP: IconData
+    BOOKMARK: IconData
+    BOOKMARK_ADD: IconData
+    BOOKMARK_ADD_OUTLINED: IconData
+    BOOKMARK_ADD_ROUNDED: IconData
+    BOOKMARK_ADD_SHARP: IconData
+    BOOKMARK_ADDED: IconData
+    BOOKMARK_ADDED_OUTLINED: IconData
+    BOOKMARK_ADDED_ROUNDED: IconData
+    BOOKMARK_ADDED_SHARP: IconData
+    BOOKMARK_BORDER: IconData
+    BOOKMARK_BORDER_OUTLINED: IconData
+    BOOKMARK_BORDER_ROUNDED: IconData
+    BOOKMARK_BORDER_SHARP: IconData
+    BOOKMARK_OUTLINE: IconData
+    BOOKMARK_OUTLINE_OUTLINED: IconData
+    BOOKMARK_OUTLINE_ROUNDED: IconData
+    BOOKMARK_OUTLINE_SHARP: IconData
+    BOOKMARK_OUTLINED: IconData
+    BOOKMARK_REMOVE: IconData
+    BOOKMARK_REMOVE_OUTLINED: IconData
+    BOOKMARK_REMOVE_ROUNDED: IconData
+    BOOKMARK_REMOVE_SHARP: IconData
+    BOOKMARK_ROUNDED: IconData
+    BOOKMARK_SHARP: IconData
+    BOOKMARKS: IconData
+    BOOKMARKS_OUTLINED: IconData
+    BOOKMARKS_ROUNDED: IconData
+    BOOKMARKS_SHARP: IconData
     BORDER_ALL: IconData
     BORDER_ALL_OUTLINED: IconData
     BORDER_ALL_ROUNDED: IconData
@@ -1034,6 +1034,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BROKEN_IMAGE_OUTLINED: IconData
     BROKEN_IMAGE_ROUNDED: IconData
     BROKEN_IMAGE_SHARP: IconData
+    BROWSE_GALLERY: IconData
+    BROWSE_GALLERY_OUTLINED: IconData
+    BROWSE_GALLERY_ROUNDED: IconData
+    BROWSE_GALLERY_SHARP: IconData
     BROWSER_NOT_SUPPORTED: IconData
     BROWSER_NOT_SUPPORTED_OUTLINED: IconData
     BROWSER_NOT_SUPPORTED_ROUNDED: IconData
@@ -1042,10 +1046,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BROWSER_UPDATED_OUTLINED: IconData
     BROWSER_UPDATED_ROUNDED: IconData
     BROWSER_UPDATED_SHARP: IconData
-    BROWSE_GALLERY: IconData
-    BROWSE_GALLERY_OUTLINED: IconData
-    BROWSE_GALLERY_ROUNDED: IconData
-    BROWSE_GALLERY_SHARP: IconData
     BRUNCH_DINING: IconData
     BRUNCH_DINING_OUTLINED: IconData
     BRUNCH_DINING_ROUNDED: IconData
@@ -1078,6 +1078,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BURST_MODE_OUTLINED: IconData
     BURST_MODE_ROUNDED: IconData
     BURST_MODE_SHARP: IconData
+    BUS_ALERT: IconData
+    BUS_ALERT_OUTLINED: IconData
+    BUS_ALERT_ROUNDED: IconData
+    BUS_ALERT_SHARP: IconData
     BUSINESS: IconData
     BUSINESS_CENTER: IconData
     BUSINESS_CENTER_OUTLINED: IconData
@@ -1086,10 +1090,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     BUSINESS_OUTLINED: IconData
     BUSINESS_ROUNDED: IconData
     BUSINESS_SHARP: IconData
-    BUS_ALERT: IconData
-    BUS_ALERT_OUTLINED: IconData
-    BUS_ALERT_ROUNDED: IconData
-    BUS_ALERT_SHARP: IconData
     CABIN: IconData
     CABIN_OUTLINED: IconData
     CABIN_ROUNDED: IconData
@@ -1167,10 +1167,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CALL_TO_ACTION_ROUNDED: IconData
     CALL_TO_ACTION_SHARP: IconData
     CAMERA: IconData
-    CAMERASWITCH: IconData
-    CAMERASWITCH_OUTLINED: IconData
-    CAMERASWITCH_ROUNDED: IconData
-    CAMERASWITCH_SHARP: IconData
     CAMERA_ALT: IconData
     CAMERA_ALT_OUTLINED: IconData
     CAMERA_ALT_ROUNDED: IconData
@@ -1202,6 +1198,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CAMERA_ROLL_SHARP: IconData
     CAMERA_ROUNDED: IconData
     CAMERA_SHARP: IconData
+    CAMERASWITCH: IconData
+    CAMERASWITCH_OUTLINED: IconData
+    CAMERASWITCH_ROUNDED: IconData
+    CAMERASWITCH_SHARP: IconData
     CAMPAIGN: IconData
     CAMPAIGN_OUTLINED: IconData
     CAMPAIGN_ROUNDED: IconData
@@ -1222,6 +1222,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CANDLESTICK_CHART_OUTLINED: IconData
     CANDLESTICK_CHART_ROUNDED: IconData
     CANDLESTICK_CHART_SHARP: IconData
+    CAR_CRASH: IconData
+    CAR_CRASH_OUTLINED: IconData
+    CAR_CRASH_ROUNDED: IconData
+    CAR_CRASH_SHARP: IconData
+    CAR_RENTAL: IconData
+    CAR_RENTAL_OUTLINED: IconData
+    CAR_RENTAL_ROUNDED: IconData
+    CAR_RENTAL_SHARP: IconData
+    CAR_REPAIR: IconData
+    CAR_REPAIR_OUTLINED: IconData
+    CAR_REPAIR_ROUNDED: IconData
+    CAR_REPAIR_SHARP: IconData
     CARD_GIFTCARD: IconData
     CARD_GIFTCARD_OUTLINED: IconData
     CARD_GIFTCARD_ROUNDED: IconData
@@ -1238,18 +1250,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CARPENTER_OUTLINED: IconData
     CARPENTER_ROUNDED: IconData
     CARPENTER_SHARP: IconData
-    CAR_CRASH: IconData
-    CAR_CRASH_OUTLINED: IconData
-    CAR_CRASH_ROUNDED: IconData
-    CAR_CRASH_SHARP: IconData
-    CAR_RENTAL: IconData
-    CAR_RENTAL_OUTLINED: IconData
-    CAR_RENTAL_ROUNDED: IconData
-    CAR_RENTAL_SHARP: IconData
-    CAR_REPAIR: IconData
-    CAR_REPAIR_OUTLINED: IconData
-    CAR_REPAIR_ROUNDED: IconData
-    CAR_REPAIR_SHARP: IconData
     CASES: IconData
     CASES_OUTLINED: IconData
     CASES_ROUNDED: IconData
@@ -1259,10 +1259,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CASINO_ROUNDED: IconData
     CASINO_SHARP: IconData
     CAST: IconData
-    CASTLE: IconData
-    CASTLE_OUTLINED: IconData
-    CASTLE_ROUNDED: IconData
-    CASTLE_SHARP: IconData
     CAST_CONNECTED: IconData
     CAST_CONNECTED_OUTLINED: IconData
     CAST_CONNECTED_ROUNDED: IconData
@@ -1274,6 +1270,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CAST_OUTLINED: IconData
     CAST_ROUNDED: IconData
     CAST_SHARP: IconData
+    CASTLE: IconData
+    CASTLE_OUTLINED: IconData
+    CASTLE_ROUNDED: IconData
+    CASTLE_SHARP: IconData
     CATCHING_POKEMON: IconData
     CATCHING_POKEMON_OUTLINED: IconData
     CATCHING_POKEMON_ROUNDED: IconData
@@ -1329,16 +1329,35 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CHAT: IconData
     CHAT_BUBBLE: IconData
     CHAT_BUBBLE_OUTLINE: IconData
-    CHAT_BUBBLE_OUTLINED: IconData
     CHAT_BUBBLE_OUTLINE_OUTLINED: IconData
     CHAT_BUBBLE_OUTLINE_ROUNDED: IconData
     CHAT_BUBBLE_OUTLINE_SHARP: IconData
+    CHAT_BUBBLE_OUTLINED: IconData
     CHAT_BUBBLE_ROUNDED: IconData
     CHAT_BUBBLE_SHARP: IconData
     CHAT_OUTLINED: IconData
     CHAT_ROUNDED: IconData
     CHAT_SHARP: IconData
     CHECK: IconData
+    CHECK_BOX: IconData
+    CHECK_BOX_OUTLINE_BLANK: IconData
+    CHECK_BOX_OUTLINE_BLANK_OUTLINED: IconData
+    CHECK_BOX_OUTLINE_BLANK_ROUNDED: IconData
+    CHECK_BOX_OUTLINE_BLANK_SHARP: IconData
+    CHECK_BOX_OUTLINED: IconData
+    CHECK_BOX_ROUNDED: IconData
+    CHECK_BOX_SHARP: IconData
+    CHECK_CIRCLE: IconData
+    CHECK_CIRCLE_OUTLINE: IconData
+    CHECK_CIRCLE_OUTLINE_OUTLINED: IconData
+    CHECK_CIRCLE_OUTLINE_ROUNDED: IconData
+    CHECK_CIRCLE_OUTLINE_SHARP: IconData
+    CHECK_CIRCLE_OUTLINED: IconData
+    CHECK_CIRCLE_ROUNDED: IconData
+    CHECK_CIRCLE_SHARP: IconData
+    CHECK_OUTLINED: IconData
+    CHECK_ROUNDED: IconData
+    CHECK_SHARP: IconData
     CHECKLIST: IconData
     CHECKLIST_OUTLINED: IconData
     CHECKLIST_ROUNDED: IconData
@@ -1351,25 +1370,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CHECKROOM_OUTLINED: IconData
     CHECKROOM_ROUNDED: IconData
     CHECKROOM_SHARP: IconData
-    CHECK_BOX: IconData
-    CHECK_BOX_OUTLINED: IconData
-    CHECK_BOX_OUTLINE_BLANK: IconData
-    CHECK_BOX_OUTLINE_BLANK_OUTLINED: IconData
-    CHECK_BOX_OUTLINE_BLANK_ROUNDED: IconData
-    CHECK_BOX_OUTLINE_BLANK_SHARP: IconData
-    CHECK_BOX_ROUNDED: IconData
-    CHECK_BOX_SHARP: IconData
-    CHECK_CIRCLE: IconData
-    CHECK_CIRCLE_OUTLINE: IconData
-    CHECK_CIRCLE_OUTLINED: IconData
-    CHECK_CIRCLE_OUTLINE_OUTLINED: IconData
-    CHECK_CIRCLE_OUTLINE_ROUNDED: IconData
-    CHECK_CIRCLE_OUTLINE_SHARP: IconData
-    CHECK_CIRCLE_ROUNDED: IconData
-    CHECK_CIRCLE_SHARP: IconData
-    CHECK_OUTLINED: IconData
-    CHECK_ROUNDED: IconData
-    CHECK_SHARP: IconData
     CHEVRON_LEFT: IconData
     CHEVRON_LEFT_OUTLINED: IconData
     CHEVRON_LEFT_ROUNDED: IconData
@@ -1406,14 +1406,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CLASS_OUTLINED: IconData
     CLASS_ROUNDED: IconData
     CLASS_SHARP: IconData
-    CLEANING_SERVICES: IconData
-    CLEANING_SERVICES_OUTLINED: IconData
-    CLEANING_SERVICES_ROUNDED: IconData
-    CLEANING_SERVICES_SHARP: IconData
     CLEAN_HANDS: IconData
     CLEAN_HANDS_OUTLINED: IconData
     CLEAN_HANDS_ROUNDED: IconData
     CLEAN_HANDS_SHARP: IconData
+    CLEANING_SERVICES: IconData
+    CLEANING_SERVICES_OUTLINED: IconData
+    CLEANING_SERVICES_ROUNDED: IconData
+    CLEANING_SERVICES_SHARP: IconData
     CLEAR: IconData
     CLEAR_ALL: IconData
     CLEAR_ALL_OUTLINED: IconData
@@ -1423,6 +1423,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CLEAR_ROUNDED: IconData
     CLEAR_SHARP: IconData
     CLOSE: IconData
+    CLOSE_FULLSCREEN: IconData
+    CLOSE_FULLSCREEN_OUTLINED: IconData
+    CLOSE_FULLSCREEN_ROUNDED: IconData
+    CLOSE_FULLSCREEN_SHARP: IconData
+    CLOSE_OUTLINED: IconData
+    CLOSE_ROUNDED: IconData
+    CLOSE_SHARP: IconData
     CLOSED_CAPTION: IconData
     CLOSED_CAPTION_DISABLED: IconData
     CLOSED_CAPTION_DISABLED_OUTLINED: IconData
@@ -1435,15 +1442,7 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CLOSED_CAPTION_OUTLINED: IconData
     CLOSED_CAPTION_ROUNDED: IconData
     CLOSED_CAPTION_SHARP: IconData
-    CLOSE_FULLSCREEN: IconData
-    CLOSE_FULLSCREEN_OUTLINED: IconData
-    CLOSE_FULLSCREEN_ROUNDED: IconData
-    CLOSE_FULLSCREEN_SHARP: IconData
-    CLOSE_OUTLINED: IconData
-    CLOSE_ROUNDED: IconData
-    CLOSE_SHARP: IconData
     CLOUD: IconData
-    CLOUDY_SNOWING: IconData
     CLOUD_CIRCLE: IconData
     CLOUD_CIRCLE_OUTLINED: IconData
     CLOUD_CIRCLE_ROUNDED: IconData
@@ -1475,10 +1474,15 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CLOUD_UPLOAD_OUTLINED: IconData
     CLOUD_UPLOAD_ROUNDED: IconData
     CLOUD_UPLOAD_SHARP: IconData
+    CLOUDY_SNOWING: IconData
     CO2: IconData
     CO2_OUTLINED: IconData
     CO2_ROUNDED: IconData
     CO2_SHARP: IconData
+    CO_PRESENT: IconData
+    CO_PRESENT_OUTLINED: IconData
+    CO_PRESENT_ROUNDED: IconData
+    CO_PRESENT_SHARP: IconData
     CODE: IconData
     CODE_OFF: IconData
     CODE_OFF_OUTLINED: IconData
@@ -1503,19 +1507,15 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COLLECTIONS_OUTLINED: IconData
     COLLECTIONS_ROUNDED: IconData
     COLLECTIONS_SHARP: IconData
-    COLORIZE: IconData
-    COLORIZE_OUTLINED: IconData
-    COLORIZE_ROUNDED: IconData
-    COLORIZE_SHARP: IconData
     COLOR_LENS: IconData
     COLOR_LENS_OUTLINED: IconData
     COLOR_LENS_ROUNDED: IconData
     COLOR_LENS_SHARP: IconData
+    COLORIZE: IconData
+    COLORIZE_OUTLINED: IconData
+    COLORIZE_ROUNDED: IconData
+    COLORIZE_SHARP: IconData
     COMMENT: IconData
-    COMMENTS_DISABLED: IconData
-    COMMENTS_DISABLED_OUTLINED: IconData
-    COMMENTS_DISABLED_ROUNDED: IconData
-    COMMENTS_DISABLED_SHARP: IconData
     COMMENT_BANK: IconData
     COMMENT_BANK_OUTLINED: IconData
     COMMENT_BANK_ROUNDED: IconData
@@ -1523,6 +1523,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COMMENT_OUTLINED: IconData
     COMMENT_ROUNDED: IconData
     COMMENT_SHARP: IconData
+    COMMENTS_DISABLED: IconData
+    COMMENTS_DISABLED_OUTLINED: IconData
+    COMMENTS_DISABLED_ROUNDED: IconData
+    COMMENTS_DISABLED_SHARP: IconData
     COMMIT: IconData
     COMMIT_OUTLINED: IconData
     COMMIT_ROUNDED: IconData
@@ -1556,13 +1560,17 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COMPUTER_ROUNDED: IconData
     COMPUTER_SHARP: IconData
     CONFIRMATION_NUM: IconData
+    CONFIRMATION_NUM_OUTLINED: IconData
+    CONFIRMATION_NUM_ROUNDED: IconData
+    CONFIRMATION_NUM_SHARP: IconData
     CONFIRMATION_NUMBER: IconData
     CONFIRMATION_NUMBER_OUTLINED: IconData
     CONFIRMATION_NUMBER_ROUNDED: IconData
     CONFIRMATION_NUMBER_SHARP: IconData
-    CONFIRMATION_NUM_OUTLINED: IconData
-    CONFIRMATION_NUM_ROUNDED: IconData
-    CONFIRMATION_NUM_SHARP: IconData
+    CONNECT_WITHOUT_CONTACT: IconData
+    CONNECT_WITHOUT_CONTACT_OUTLINED: IconData
+    CONNECT_WITHOUT_CONTACT_ROUNDED: IconData
+    CONNECT_WITHOUT_CONTACT_SHARP: IconData
     CONNECTED_TV: IconData
     CONNECTED_TV_OUTLINED: IconData
     CONNECTED_TV_ROUNDED: IconData
@@ -1571,22 +1579,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CONNECTING_AIRPORTS_OUTLINED: IconData
     CONNECTING_AIRPORTS_ROUNDED: IconData
     CONNECTING_AIRPORTS_SHARP: IconData
-    CONNECT_WITHOUT_CONTACT: IconData
-    CONNECT_WITHOUT_CONTACT_OUTLINED: IconData
-    CONNECT_WITHOUT_CONTACT_ROUNDED: IconData
-    CONNECT_WITHOUT_CONTACT_SHARP: IconData
     CONSTRUCTION: IconData
     CONSTRUCTION_OUTLINED: IconData
     CONSTRUCTION_ROUNDED: IconData
     CONSTRUCTION_SHARP: IconData
-    CONTACTLESS: IconData
-    CONTACTLESS_OUTLINED: IconData
-    CONTACTLESS_ROUNDED: IconData
-    CONTACTLESS_SHARP: IconData
-    CONTACTS: IconData
-    CONTACTS_OUTLINED: IconData
-    CONTACTS_ROUNDED: IconData
-    CONTACTS_SHARP: IconData
     CONTACT_EMERGENCY: IconData
     CONTACT_EMERGENCY_OUTLINED: IconData
     CONTACT_EMERGENCY_ROUNDED: IconData
@@ -1607,6 +1603,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     CONTACT_SUPPORT_OUTLINED: IconData
     CONTACT_SUPPORT_ROUNDED: IconData
     CONTACT_SUPPORT_SHARP: IconData
+    CONTACTLESS: IconData
+    CONTACTLESS_OUTLINED: IconData
+    CONTACTLESS_ROUNDED: IconData
+    CONTACTLESS_SHARP: IconData
+    CONTACTS: IconData
+    CONTACTS_OUTLINED: IconData
+    CONTACTS_ROUNDED: IconData
+    CONTACTS_SHARP: IconData
     CONTENT_COPY: IconData
     CONTENT_COPY_OUTLINED: IconData
     CONTENT_COPY_ROUNDED: IconData
@@ -1653,10 +1657,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COOKIE_ROUNDED: IconData
     COOKIE_SHARP: IconData
     COPY: IconData
-    COPYRIGHT: IconData
-    COPYRIGHT_OUTLINED: IconData
-    COPYRIGHT_ROUNDED: IconData
-    COPYRIGHT_SHARP: IconData
     COPY_ALL: IconData
     COPY_ALL_OUTLINED: IconData
     COPY_ALL_ROUNDED: IconData
@@ -1664,6 +1664,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COPY_OUTLINED: IconData
     COPY_ROUNDED: IconData
     COPY_SHARP: IconData
+    COPYRIGHT: IconData
+    COPYRIGHT_OUTLINED: IconData
+    COPYRIGHT_ROUNDED: IconData
+    COPYRIGHT_SHARP: IconData
     CORONAVIRUS: IconData
     CORONAVIRUS_OUTLINED: IconData
     CORONAVIRUS_ROUNDED: IconData
@@ -1680,10 +1684,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     COUNTERTOPS_OUTLINED: IconData
     COUNTERTOPS_ROUNDED: IconData
     COUNTERTOPS_SHARP: IconData
-    CO_PRESENT: IconData
-    CO_PRESENT_OUTLINED: IconData
-    CO_PRESENT_ROUNDED: IconData
-    CO_PRESENT_SHARP: IconData
     CREATE: IconData
     CREATE_NEW_FOLDER: IconData
     CREATE_NEW_FOLDER_OUTLINED: IconData
@@ -1836,14 +1836,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DASHBOARD_OUTLINED: IconData
     DASHBOARD_ROUNDED: IconData
     DASHBOARD_SHARP: IconData
-    DATASET: IconData
-    DATASET_LINKED: IconData
-    DATASET_LINKED_OUTLINED: IconData
-    DATASET_LINKED_ROUNDED: IconData
-    DATASET_LINKED_SHARP: IconData
-    DATASET_OUTLINED: IconData
-    DATASET_ROUNDED: IconData
-    DATASET_SHARP: IconData
     DATA_ARRAY: IconData
     DATA_ARRAY_OUTLINED: IconData
     DATA_ARRAY_ROUNDED: IconData
@@ -1872,6 +1864,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DATA_USAGE_OUTLINED: IconData
     DATA_USAGE_ROUNDED: IconData
     DATA_USAGE_SHARP: IconData
+    DATASET: IconData
+    DATASET_LINKED: IconData
+    DATASET_LINKED_OUTLINED: IconData
+    DATASET_LINKED_ROUNDED: IconData
+    DATASET_LINKED_SHARP: IconData
+    DATASET_OUTLINED: IconData
+    DATASET_ROUNDED: IconData
+    DATASET_SHARP: IconData
     DATE_RANGE: IconData
     DATE_RANGE_OUTLINED: IconData
     DATE_RANGE_ROUNDED: IconData
@@ -1894,10 +1894,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DELETE_FOREVER_ROUNDED: IconData
     DELETE_FOREVER_SHARP: IconData
     DELETE_OUTLINE: IconData
-    DELETE_OUTLINED: IconData
     DELETE_OUTLINE_OUTLINED: IconData
     DELETE_OUTLINE_ROUNDED: IconData
     DELETE_OUTLINE_SHARP: IconData
+    DELETE_OUTLINED: IconData
     DELETE_ROUNDED: IconData
     DELETE_SHARP: IconData
     DELETE_SWEEP: IconData
@@ -1937,6 +1937,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DESIGN_SERVICES_ROUNDED: IconData
     DESIGN_SERVICES_SHARP: IconData
     DESK: IconData
+    DESK_OUTLINED: IconData
+    DESK_ROUNDED: IconData
+    DESK_SHARP: IconData
     DESKTOP_ACCESS_DISABLED: IconData
     DESKTOP_ACCESS_DISABLED_OUTLINED: IconData
     DESKTOP_ACCESS_DISABLED_ROUNDED: IconData
@@ -1949,9 +1952,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DESKTOP_WINDOWS_OUTLINED: IconData
     DESKTOP_WINDOWS_ROUNDED: IconData
     DESKTOP_WINDOWS_SHARP: IconData
-    DESK_OUTLINED: IconData
-    DESK_ROUNDED: IconData
-    DESK_SHARP: IconData
     DETAILS: IconData
     DETAILS_OUTLINED: IconData
     DETAILS_ROUNDED: IconData
@@ -1968,18 +1968,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DEVELOPER_MODE_OUTLINED: IconData
     DEVELOPER_MODE_ROUNDED: IconData
     DEVELOPER_MODE_SHARP: IconData
-    DEVICES: IconData
-    DEVICES_FOLD: IconData
-    DEVICES_FOLD_OUTLINED: IconData
-    DEVICES_FOLD_ROUNDED: IconData
-    DEVICES_FOLD_SHARP: IconData
-    DEVICES_OTHER: IconData
-    DEVICES_OTHER_OUTLINED: IconData
-    DEVICES_OTHER_ROUNDED: IconData
-    DEVICES_OTHER_SHARP: IconData
-    DEVICES_OUTLINED: IconData
-    DEVICES_ROUNDED: IconData
-    DEVICES_SHARP: IconData
     DEVICE_HUB: IconData
     DEVICE_HUB_OUTLINED: IconData
     DEVICE_HUB_ROUNDED: IconData
@@ -1992,6 +1980,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DEVICE_UNKNOWN_OUTLINED: IconData
     DEVICE_UNKNOWN_ROUNDED: IconData
     DEVICE_UNKNOWN_SHARP: IconData
+    DEVICES: IconData
+    DEVICES_FOLD: IconData
+    DEVICES_FOLD_OUTLINED: IconData
+    DEVICES_FOLD_ROUNDED: IconData
+    DEVICES_FOLD_SHARP: IconData
+    DEVICES_OTHER: IconData
+    DEVICES_OTHER_OUTLINED: IconData
+    DEVICES_OTHER_ROUNDED: IconData
+    DEVICES_OTHER_SHARP: IconData
+    DEVICES_OUTLINED: IconData
+    DEVICES_ROUNDED: IconData
+    DEVICES_SHARP: IconData
     DEW_POINT: IconData
     DIALER_SIP: IconData
     DIALER_SIP_OUTLINED: IconData
@@ -2105,6 +2105,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DISABLED_VISIBLE_OUTLINED: IconData
     DISABLED_VISIBLE_ROUNDED: IconData
     DISABLED_VISIBLE_SHARP: IconData
+    DISC_FULL: IconData
+    DISC_FULL_OUTLINED: IconData
+    DISC_FULL_ROUNDED: IconData
+    DISC_FULL_SHARP: IconData
     DISCORD: IconData
     DISCORD_OUTLINED: IconData
     DISCORD_ROUNDED: IconData
@@ -2113,10 +2117,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DISCOUNT_OUTLINED: IconData
     DISCOUNT_ROUNDED: IconData
     DISCOUNT_SHARP: IconData
-    DISC_FULL: IconData
-    DISC_FULL_OUTLINED: IconData
-    DISC_FULL_ROUNDED: IconData
-    DISC_FULL_SHARP: IconData
     DISPLAY_SETTINGS: IconData
     DISPLAY_SETTINGS_OUTLINED: IconData
     DISPLAY_SETTINGS_ROUNDED: IconData
@@ -2141,90 +2141,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DNS_OUTLINED: IconData
     DNS_ROUNDED: IconData
     DNS_SHARP: IconData
-    DOCK: IconData
-    DOCK_OUTLINED: IconData
-    DOCK_ROUNDED: IconData
-    DOCK_SHARP: IconData
-    DOCUMENT_SCANNER: IconData
-    DOCUMENT_SCANNER_OUTLINED: IconData
-    DOCUMENT_SCANNER_ROUNDED: IconData
-    DOCUMENT_SCANNER_SHARP: IconData
-    DOMAIN: IconData
-    DOMAIN_ADD: IconData
-    DOMAIN_ADD_OUTLINED: IconData
-    DOMAIN_ADD_ROUNDED: IconData
-    DOMAIN_ADD_SHARP: IconData
-    DOMAIN_DISABLED: IconData
-    DOMAIN_DISABLED_OUTLINED: IconData
-    DOMAIN_DISABLED_ROUNDED: IconData
-    DOMAIN_DISABLED_SHARP: IconData
-    DOMAIN_OUTLINED: IconData
-    DOMAIN_ROUNDED: IconData
-    DOMAIN_SHARP: IconData
-    DOMAIN_VERIFICATION: IconData
-    DOMAIN_VERIFICATION_OUTLINED: IconData
-    DOMAIN_VERIFICATION_ROUNDED: IconData
-    DOMAIN_VERIFICATION_SHARP: IconData
-    DONE: IconData
-    DONE_ALL: IconData
-    DONE_ALL_OUTLINED: IconData
-    DONE_ALL_ROUNDED: IconData
-    DONE_ALL_SHARP: IconData
-    DONE_OUTLINE: IconData
-    DONE_OUTLINED: IconData
-    DONE_OUTLINE_OUTLINED: IconData
-    DONE_OUTLINE_ROUNDED: IconData
-    DONE_OUTLINE_SHARP: IconData
-    DONE_ROUNDED: IconData
-    DONE_SHARP: IconData
-    DONUT_LARGE: IconData
-    DONUT_LARGE_OUTLINED: IconData
-    DONUT_LARGE_ROUNDED: IconData
-    DONUT_LARGE_SHARP: IconData
-    DONUT_SMALL: IconData
-    DONUT_SMALL_OUTLINED: IconData
-    DONUT_SMALL_ROUNDED: IconData
-    DONUT_SMALL_SHARP: IconData
-    DOORBELL: IconData
-    DOORBELL_OUTLINED: IconData
-    DOORBELL_ROUNDED: IconData
-    DOORBELL_SHARP: IconData
-    DOOR_BACK_DOOR: IconData
-    DOOR_BACK_DOOR_OUTLINED: IconData
-    DOOR_BACK_DOOR_ROUNDED: IconData
-    DOOR_BACK_DOOR_SHARP: IconData
-    DOOR_FRONT_DOOR: IconData
-    DOOR_FRONT_DOOR_OUTLINED: IconData
-    DOOR_FRONT_DOOR_ROUNDED: IconData
-    DOOR_FRONT_DOOR_SHARP: IconData
-    DOOR_SLIDING: IconData
-    DOOR_SLIDING_OUTLINED: IconData
-    DOOR_SLIDING_ROUNDED: IconData
-    DOOR_SLIDING_SHARP: IconData
-    DOUBLE_ARROW: IconData
-    DOUBLE_ARROW_OUTLINED: IconData
-    DOUBLE_ARROW_ROUNDED: IconData
-    DOUBLE_ARROW_SHARP: IconData
-    DOWNHILL_SKIING: IconData
-    DOWNHILL_SKIING_OUTLINED: IconData
-    DOWNHILL_SKIING_ROUNDED: IconData
-    DOWNHILL_SKIING_SHARP: IconData
-    DOWNLOAD: IconData
-    DOWNLOADING: IconData
-    DOWNLOADING_OUTLINED: IconData
-    DOWNLOADING_ROUNDED: IconData
-    DOWNLOADING_SHARP: IconData
-    DOWNLOAD_DONE: IconData
-    DOWNLOAD_DONE_OUTLINED: IconData
-    DOWNLOAD_DONE_ROUNDED: IconData
-    DOWNLOAD_DONE_SHARP: IconData
-    DOWNLOAD_FOR_OFFLINE: IconData
-    DOWNLOAD_FOR_OFFLINE_OUTLINED: IconData
-    DOWNLOAD_FOR_OFFLINE_ROUNDED: IconData
-    DOWNLOAD_FOR_OFFLINE_SHARP: IconData
-    DOWNLOAD_OUTLINED: IconData
-    DOWNLOAD_ROUNDED: IconData
-    DOWNLOAD_SHARP: IconData
     DO_DISTURB: IconData
     DO_DISTURB_ALT: IconData
     DO_DISTURB_ALT_OUTLINED: IconData
@@ -2269,6 +2185,90 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DO_NOT_TOUCH_OUTLINED: IconData
     DO_NOT_TOUCH_ROUNDED: IconData
     DO_NOT_TOUCH_SHARP: IconData
+    DOCK: IconData
+    DOCK_OUTLINED: IconData
+    DOCK_ROUNDED: IconData
+    DOCK_SHARP: IconData
+    DOCUMENT_SCANNER: IconData
+    DOCUMENT_SCANNER_OUTLINED: IconData
+    DOCUMENT_SCANNER_ROUNDED: IconData
+    DOCUMENT_SCANNER_SHARP: IconData
+    DOMAIN: IconData
+    DOMAIN_ADD: IconData
+    DOMAIN_ADD_OUTLINED: IconData
+    DOMAIN_ADD_ROUNDED: IconData
+    DOMAIN_ADD_SHARP: IconData
+    DOMAIN_DISABLED: IconData
+    DOMAIN_DISABLED_OUTLINED: IconData
+    DOMAIN_DISABLED_ROUNDED: IconData
+    DOMAIN_DISABLED_SHARP: IconData
+    DOMAIN_OUTLINED: IconData
+    DOMAIN_ROUNDED: IconData
+    DOMAIN_SHARP: IconData
+    DOMAIN_VERIFICATION: IconData
+    DOMAIN_VERIFICATION_OUTLINED: IconData
+    DOMAIN_VERIFICATION_ROUNDED: IconData
+    DOMAIN_VERIFICATION_SHARP: IconData
+    DONE: IconData
+    DONE_ALL: IconData
+    DONE_ALL_OUTLINED: IconData
+    DONE_ALL_ROUNDED: IconData
+    DONE_ALL_SHARP: IconData
+    DONE_OUTLINE: IconData
+    DONE_OUTLINE_OUTLINED: IconData
+    DONE_OUTLINE_ROUNDED: IconData
+    DONE_OUTLINE_SHARP: IconData
+    DONE_OUTLINED: IconData
+    DONE_ROUNDED: IconData
+    DONE_SHARP: IconData
+    DONUT_LARGE: IconData
+    DONUT_LARGE_OUTLINED: IconData
+    DONUT_LARGE_ROUNDED: IconData
+    DONUT_LARGE_SHARP: IconData
+    DONUT_SMALL: IconData
+    DONUT_SMALL_OUTLINED: IconData
+    DONUT_SMALL_ROUNDED: IconData
+    DONUT_SMALL_SHARP: IconData
+    DOOR_BACK_DOOR: IconData
+    DOOR_BACK_DOOR_OUTLINED: IconData
+    DOOR_BACK_DOOR_ROUNDED: IconData
+    DOOR_BACK_DOOR_SHARP: IconData
+    DOOR_FRONT_DOOR: IconData
+    DOOR_FRONT_DOOR_OUTLINED: IconData
+    DOOR_FRONT_DOOR_ROUNDED: IconData
+    DOOR_FRONT_DOOR_SHARP: IconData
+    DOOR_SLIDING: IconData
+    DOOR_SLIDING_OUTLINED: IconData
+    DOOR_SLIDING_ROUNDED: IconData
+    DOOR_SLIDING_SHARP: IconData
+    DOORBELL: IconData
+    DOORBELL_OUTLINED: IconData
+    DOORBELL_ROUNDED: IconData
+    DOORBELL_SHARP: IconData
+    DOUBLE_ARROW: IconData
+    DOUBLE_ARROW_OUTLINED: IconData
+    DOUBLE_ARROW_ROUNDED: IconData
+    DOUBLE_ARROW_SHARP: IconData
+    DOWNHILL_SKIING: IconData
+    DOWNHILL_SKIING_OUTLINED: IconData
+    DOWNHILL_SKIING_ROUNDED: IconData
+    DOWNHILL_SKIING_SHARP: IconData
+    DOWNLOAD: IconData
+    DOWNLOAD_DONE: IconData
+    DOWNLOAD_DONE_OUTLINED: IconData
+    DOWNLOAD_DONE_ROUNDED: IconData
+    DOWNLOAD_DONE_SHARP: IconData
+    DOWNLOAD_FOR_OFFLINE: IconData
+    DOWNLOAD_FOR_OFFLINE_OUTLINED: IconData
+    DOWNLOAD_FOR_OFFLINE_ROUNDED: IconData
+    DOWNLOAD_FOR_OFFLINE_SHARP: IconData
+    DOWNLOAD_OUTLINED: IconData
+    DOWNLOAD_ROUNDED: IconData
+    DOWNLOAD_SHARP: IconData
+    DOWNLOADING: IconData
+    DOWNLOADING_OUTLINED: IconData
+    DOWNLOADING_ROUNDED: IconData
+    DOWNLOADING_SHARP: IconData
     DRAFTS: IconData
     DRAFTS_OUTLINED: IconData
     DRAFTS_ROUNDED: IconData
@@ -2330,6 +2330,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     DYNAMIC_FORM_OUTLINED: IconData
     DYNAMIC_FORM_ROUNDED: IconData
     DYNAMIC_FORM_SHARP: IconData
+    E_MOBILEDATA: IconData
+    E_MOBILEDATA_OUTLINED: IconData
+    E_MOBILEDATA_ROUNDED: IconData
+    E_MOBILEDATA_SHARP: IconData
     EARBUDS: IconData
     EARBUDS_BATTERY: IconData
     EARBUDS_BATTERY_OUTLINED: IconData
@@ -2400,14 +2404,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     EGG_OUTLINED: IconData
     EGG_ROUNDED: IconData
     EGG_SHARP: IconData
-    EIGHTEEN_MP: IconData
-    EIGHTEEN_MP_OUTLINED: IconData
-    EIGHTEEN_MP_ROUNDED: IconData
-    EIGHTEEN_MP_SHARP: IconData
-    EIGHTEEN_UP_RATING: IconData
-    EIGHTEEN_UP_RATING_OUTLINED: IconData
-    EIGHTEEN_UP_RATING_ROUNDED: IconData
-    EIGHTEEN_UP_RATING_SHARP: IconData
     EIGHT_K: IconData
     EIGHT_K_OUTLINED: IconData
     EIGHT_K_PLUS: IconData
@@ -2420,6 +2416,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     EIGHT_MP_OUTLINED: IconData
     EIGHT_MP_ROUNDED: IconData
     EIGHT_MP_SHARP: IconData
+    EIGHTEEN_MP: IconData
+    EIGHTEEN_MP_OUTLINED: IconData
+    EIGHTEEN_MP_ROUNDED: IconData
+    EIGHTEEN_MP_SHARP: IconData
+    EIGHTEEN_UP_RATING: IconData
+    EIGHTEEN_UP_RATING_OUTLINED: IconData
+    EIGHTEEN_UP_RATING_ROUNDED: IconData
+    EIGHTEEN_UP_RATING_SHARP: IconData
     EJECT: IconData
     EJECT_OUTLINED: IconData
     EJECT_ROUNDED: IconData
@@ -2432,10 +2436,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ELDERLY_WOMAN_OUTLINED: IconData
     ELDERLY_WOMAN_ROUNDED: IconData
     ELDERLY_WOMAN_SHARP: IconData
-    ELECTRICAL_SERVICES: IconData
-    ELECTRICAL_SERVICES_OUTLINED: IconData
-    ELECTRICAL_SERVICES_ROUNDED: IconData
-    ELECTRICAL_SERVICES_SHARP: IconData
     ELECTRIC_BIKE: IconData
     ELECTRIC_BIKE_OUTLINED: IconData
     ELECTRIC_BIKE_ROUNDED: IconData
@@ -2464,6 +2464,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ELECTRIC_SCOOTER_OUTLINED: IconData
     ELECTRIC_SCOOTER_ROUNDED: IconData
     ELECTRIC_SCOOTER_SHARP: IconData
+    ELECTRICAL_SERVICES: IconData
+    ELECTRICAL_SERVICES_OUTLINED: IconData
+    ELECTRICAL_SERVICES_ROUNDED: IconData
+    ELECTRICAL_SERVICES_SHARP: IconData
     ELEVATOR: IconData
     ELEVATOR_OUTLINED: IconData
     ELEVATOR_ROUNDED: IconData
@@ -2532,24 +2536,24 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ENGINEERING_OUTLINED: IconData
     ENGINEERING_ROUNDED: IconData
     ENGINEERING_SHARP: IconData
-    ENHANCED_ENCRYPTION: IconData
-    ENHANCED_ENCRYPTION_OUTLINED: IconData
-    ENHANCED_ENCRYPTION_ROUNDED: IconData
-    ENHANCED_ENCRYPTION_SHARP: IconData
     ENHANCE_PHOTO_TRANSLATE: IconData
     ENHANCE_PHOTO_TRANSLATE_OUTLINED: IconData
     ENHANCE_PHOTO_TRANSLATE_ROUNDED: IconData
     ENHANCE_PHOTO_TRANSLATE_SHARP: IconData
+    ENHANCED_ENCRYPTION: IconData
+    ENHANCED_ENCRYPTION_OUTLINED: IconData
+    ENHANCED_ENCRYPTION_ROUNDED: IconData
+    ENHANCED_ENCRYPTION_SHARP: IconData
     EQUALIZER: IconData
     EQUALIZER_OUTLINED: IconData
     EQUALIZER_ROUNDED: IconData
     EQUALIZER_SHARP: IconData
     ERROR: IconData
     ERROR_OUTLINE: IconData
-    ERROR_OUTLINED: IconData
     ERROR_OUTLINE_OUTLINED: IconData
     ERROR_OUTLINE_ROUNDED: IconData
     ERROR_OUTLINE_SHARP: IconData
+    ERROR_OUTLINED: IconData
     ERROR_ROUNDED: IconData
     ERROR_SHARP: IconData
     ESCALATOR: IconData
@@ -2568,6 +2572,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     EURO_SYMBOL_OUTLINED: IconData
     EURO_SYMBOL_ROUNDED: IconData
     EURO_SYMBOL_SHARP: IconData
+    EV_STATION: IconData
+    EV_STATION_OUTLINED: IconData
+    EV_STATION_ROUNDED: IconData
+    EV_STATION_SHARP: IconData
     EVENT: IconData
     EVENT_AVAILABLE: IconData
     EVENT_AVAILABLE_OUTLINED: IconData
@@ -2592,10 +2600,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     EVENT_SEAT_ROUNDED: IconData
     EVENT_SEAT_SHARP: IconData
     EVENT_SHARP: IconData
-    EV_STATION: IconData
-    EV_STATION_OUTLINED: IconData
-    EV_STATION_ROUNDED: IconData
-    EV_STATION_SHARP: IconData
     EXIT_TO_APP: IconData
     EXIT_TO_APP_OUTLINED: IconData
     EXIT_TO_APP_ROUNDED: IconData
@@ -2668,15 +2672,7 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     EXTENSION_OUTLINED: IconData
     EXTENSION_ROUNDED: IconData
     EXTENSION_SHARP: IconData
-    E_MOBILEDATA: IconData
-    E_MOBILEDATA_OUTLINED: IconData
-    E_MOBILEDATA_ROUNDED: IconData
-    E_MOBILEDATA_SHARP: IconData
     FACE: IconData
-    FACEBOOK: IconData
-    FACEBOOK_OUTLINED: IconData
-    FACEBOOK_ROUNDED: IconData
-    FACEBOOK_SHARP: IconData
     FACE_2: IconData
     FACE_2_OUTLINED: IconData
     FACE_2_ROUNDED: IconData
@@ -2711,22 +2707,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FACE_UNLOCK_OUTLINED: IconData
     FACE_UNLOCK_ROUNDED: IconData
     FACE_UNLOCK_SHARP: IconData
-    FACTORY: IconData
-    FACTORY_OUTLINED: IconData
-    FACTORY_ROUNDED: IconData
-    FACTORY_SHARP: IconData
+    FACEBOOK: IconData
+    FACEBOOK_OUTLINED: IconData
+    FACEBOOK_ROUNDED: IconData
+    FACEBOOK_SHARP: IconData
     FACT_CHECK: IconData
     FACT_CHECK_OUTLINED: IconData
     FACT_CHECK_ROUNDED: IconData
     FACT_CHECK_SHARP: IconData
+    FACTORY: IconData
+    FACTORY_OUTLINED: IconData
+    FACTORY_ROUNDED: IconData
+    FACTORY_SHARP: IconData
     FAMILY_RESTROOM: IconData
     FAMILY_RESTROOM_OUTLINED: IconData
     FAMILY_RESTROOM_ROUNDED: IconData
     FAMILY_RESTROOM_SHARP: IconData
-    FASTFOOD: IconData
-    FASTFOOD_OUTLINED: IconData
-    FASTFOOD_ROUNDED: IconData
-    FASTFOOD_SHARP: IconData
     FAST_FORWARD: IconData
     FAST_FORWARD_OUTLINED: IconData
     FAST_FORWARD_ROUNDED: IconData
@@ -2735,16 +2731,20 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FAST_REWIND_OUTLINED: IconData
     FAST_REWIND_ROUNDED: IconData
     FAST_REWIND_SHARP: IconData
+    FASTFOOD: IconData
+    FASTFOOD_OUTLINED: IconData
+    FASTFOOD_ROUNDED: IconData
+    FASTFOOD_SHARP: IconData
     FAVORITE: IconData
     FAVORITE_BORDER: IconData
     FAVORITE_BORDER_OUTLINED: IconData
     FAVORITE_BORDER_ROUNDED: IconData
     FAVORITE_BORDER_SHARP: IconData
     FAVORITE_OUTLINE: IconData
-    FAVORITE_OUTLINED: IconData
     FAVORITE_OUTLINE_OUTLINED: IconData
     FAVORITE_OUTLINE_ROUNDED: IconData
     FAVORITE_OUTLINE_SHARP: IconData
+    FAVORITE_OUTLINED: IconData
     FAVORITE_ROUNDED: IconData
     FAVORITE_SHARP: IconData
     FAX: IconData
@@ -2760,13 +2760,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FEATURED_VIDEO_ROUNDED: IconData
     FEATURED_VIDEO_SHARP: IconData
     FEED: IconData
+    FEED_OUTLINED: IconData
+    FEED_ROUNDED: IconData
+    FEED_SHARP: IconData
     FEEDBACK: IconData
     FEEDBACK_OUTLINED: IconData
     FEEDBACK_ROUNDED: IconData
     FEEDBACK_SHARP: IconData
-    FEED_OUTLINED: IconData
-    FEED_ROUNDED: IconData
-    FEED_SHARP: IconData
     FEMALE: IconData
     FEMALE_OUTLINED: IconData
     FEMALE_ROUNDED: IconData
@@ -2937,10 +2937,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FINGERPRINT_OUTLINED: IconData
     FINGERPRINT_ROUNDED: IconData
     FINGERPRINT_SHARP: IconData
-    FIREPLACE: IconData
-    FIREPLACE_OUTLINED: IconData
-    FIREPLACE_ROUNDED: IconData
-    FIREPLACE_SHARP: IconData
     FIRE_EXTINGUISHER: IconData
     FIRE_EXTINGUISHER_OUTLINED: IconData
     FIRE_EXTINGUISHER_ROUNDED: IconData
@@ -2954,10 +2950,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FIRE_TRUCK_OUTLINED: IconData
     FIRE_TRUCK_ROUNDED: IconData
     FIRE_TRUCK_SHARP: IconData
+    FIREPLACE: IconData
+    FIREPLACE_OUTLINED: IconData
+    FIREPLACE_ROUNDED: IconData
+    FIREPLACE_SHARP: IconData
     FIRST_PAGE: IconData
     FIRST_PAGE_OUTLINED: IconData
     FIRST_PAGE_ROUNDED: IconData
     FIRST_PAGE_SHARP: IconData
+    FIT_SCREEN: IconData
+    FIT_SCREEN_OUTLINED: IconData
+    FIT_SCREEN_ROUNDED: IconData
+    FIT_SCREEN_SHARP: IconData
     FITBIT: IconData
     FITBIT_OUTLINED: IconData
     FITBIT_ROUNDED: IconData
@@ -2966,10 +2970,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FITNESS_CENTER_OUTLINED: IconData
     FITNESS_CENTER_ROUNDED: IconData
     FITNESS_CENTER_SHARP: IconData
-    FIT_SCREEN: IconData
-    FIT_SCREEN_OUTLINED: IconData
-    FIT_SCREEN_ROUNDED: IconData
-    FIT_SCREEN_SHARP: IconData
     FIVE_G: IconData
     FIVE_G_OUTLINED: IconData
     FIVE_G_ROUNDED: IconData
@@ -3002,14 +3002,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FLARE_OUTLINED: IconData
     FLARE_ROUNDED: IconData
     FLARE_SHARP: IconData
-    FLASHLIGHT_OFF: IconData
-    FLASHLIGHT_OFF_OUTLINED: IconData
-    FLASHLIGHT_OFF_ROUNDED: IconData
-    FLASHLIGHT_OFF_SHARP: IconData
-    FLASHLIGHT_ON: IconData
-    FLASHLIGHT_ON_OUTLINED: IconData
-    FLASHLIGHT_ON_ROUNDED: IconData
-    FLASHLIGHT_ON_SHARP: IconData
     FLASH_AUTO: IconData
     FLASH_AUTO_OUTLINED: IconData
     FLASH_AUTO_ROUNDED: IconData
@@ -3022,6 +3014,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FLASH_ON_OUTLINED: IconData
     FLASH_ON_ROUNDED: IconData
     FLASH_ON_SHARP: IconData
+    FLASHLIGHT_OFF: IconData
+    FLASHLIGHT_OFF_OUTLINED: IconData
+    FLASHLIGHT_OFF_ROUNDED: IconData
+    FLASHLIGHT_OFF_SHARP: IconData
+    FLASHLIGHT_ON: IconData
+    FLASHLIGHT_ON_OUTLINED: IconData
+    FLASHLIGHT_ON_ROUNDED: IconData
+    FLASHLIGHT_ON_SHARP: IconData
     FLATWARE: IconData
     FLATWARE_OUTLINED: IconData
     FLATWARE_ROUNDED: IconData
@@ -3139,7 +3139,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FOREST_OUTLINED: IconData
     FOREST_ROUNDED: IconData
     FOREST_SHARP: IconData
-    FORKLIFT: IconData
     FORK_LEFT: IconData
     FORK_LEFT_OUTLINED: IconData
     FORK_LEFT_ROUNDED: IconData
@@ -3148,6 +3147,7 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FORK_RIGHT_OUTLINED: IconData
     FORK_RIGHT_ROUNDED: IconData
     FORK_RIGHT_SHARP: IconData
+    FORKLIFT: IconData
     FORMAT_ALIGN_CENTER: IconData
     FORMAT_ALIGN_CENTER_OUTLINED: IconData
     FORMAT_ALIGN_CENTER_ROUNDED: IconData
@@ -3246,13 +3246,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FORMAT_TEXTDIRECTION_R_TO_L_ROUNDED: IconData
     FORMAT_TEXTDIRECTION_R_TO_L_SHARP: IconData
     FORMAT_UNDERLINE: IconData
+    FORMAT_UNDERLINE_OUTLINED: IconData
+    FORMAT_UNDERLINE_ROUNDED: IconData
+    FORMAT_UNDERLINE_SHARP: IconData
     FORMAT_UNDERLINED: IconData
     FORMAT_UNDERLINED_OUTLINED: IconData
     FORMAT_UNDERLINED_ROUNDED: IconData
     FORMAT_UNDERLINED_SHARP: IconData
-    FORMAT_UNDERLINE_OUTLINED: IconData
-    FORMAT_UNDERLINE_ROUNDED: IconData
-    FORMAT_UNDERLINE_SHARP: IconData
     FORT: IconData
     FORT_OUTLINED: IconData
     FORT_ROUNDED: IconData
@@ -3285,10 +3285,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FOUNDATION_OUTLINED: IconData
     FOUNDATION_ROUNDED: IconData
     FOUNDATION_SHARP: IconData
-    FOURTEEN_MP: IconData
-    FOURTEEN_MP_OUTLINED: IconData
-    FOURTEEN_MP_ROUNDED: IconData
-    FOURTEEN_MP_SHARP: IconData
     FOUR_G_MOBILEDATA: IconData
     FOUR_G_MOBILEDATA_OUTLINED: IconData
     FOUR_G_MOBILEDATA_ROUNDED: IconData
@@ -3309,6 +3305,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FOUR_MP_OUTLINED: IconData
     FOUR_MP_ROUNDED: IconData
     FOUR_MP_SHARP: IconData
+    FOURTEEN_MP: IconData
+    FOURTEEN_MP_OUTLINED: IconData
+    FOURTEEN_MP_ROUNDED: IconData
+    FOURTEEN_MP_SHARP: IconData
     FREE_BREAKFAST: IconData
     FREE_BREAKFAST_OUTLINED: IconData
     FREE_BREAKFAST_ROUNDED: IconData
@@ -3334,6 +3334,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     FUNCTIONS_OUTLINED: IconData
     FUNCTIONS_ROUNDED: IconData
     FUNCTIONS_SHARP: IconData
+    G_MOBILEDATA: IconData
+    G_MOBILEDATA_OUTLINED: IconData
+    G_MOBILEDATA_ROUNDED: IconData
+    G_MOBILEDATA_SHARP: IconData
+    G_TRANSLATE: IconData
+    G_TRANSLATE_OUTLINED: IconData
+    G_TRANSLATE_ROUNDED: IconData
+    G_TRANSLATE_SHARP: IconData
     GAMEPAD: IconData
     GAMEPAD_OUTLINED: IconData
     GAMEPAD_ROUNDED: IconData
@@ -3459,18 +3467,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     GRID_VIEW_ROUNDED: IconData
     GRID_VIEW_SHARP: IconData
     GROUP: IconData
-    GROUPS: IconData
-    GROUPS_2: IconData
-    GROUPS_2_OUTLINED: IconData
-    GROUPS_2_ROUNDED: IconData
-    GROUPS_2_SHARP: IconData
-    GROUPS_3: IconData
-    GROUPS_3_OUTLINED: IconData
-    GROUPS_3_ROUNDED: IconData
-    GROUPS_3_SHARP: IconData
-    GROUPS_OUTLINED: IconData
-    GROUPS_ROUNDED: IconData
-    GROUPS_SHARP: IconData
     GROUP_ADD: IconData
     GROUP_ADD_OUTLINED: IconData
     GROUP_ADD_ROUNDED: IconData
@@ -3490,14 +3486,26 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     GROUP_WORK_OUTLINED: IconData
     GROUP_WORK_ROUNDED: IconData
     GROUP_WORK_SHARP: IconData
-    G_MOBILEDATA: IconData
-    G_MOBILEDATA_OUTLINED: IconData
-    G_MOBILEDATA_ROUNDED: IconData
-    G_MOBILEDATA_SHARP: IconData
-    G_TRANSLATE: IconData
-    G_TRANSLATE_OUTLINED: IconData
-    G_TRANSLATE_ROUNDED: IconData
-    G_TRANSLATE_SHARP: IconData
+    GROUPS: IconData
+    GROUPS_2: IconData
+    GROUPS_2_OUTLINED: IconData
+    GROUPS_2_ROUNDED: IconData
+    GROUPS_2_SHARP: IconData
+    GROUPS_3: IconData
+    GROUPS_3_OUTLINED: IconData
+    GROUPS_3_ROUNDED: IconData
+    GROUPS_3_SHARP: IconData
+    GROUPS_OUTLINED: IconData
+    GROUPS_ROUNDED: IconData
+    GROUPS_SHARP: IconData
+    H_MOBILEDATA: IconData
+    H_MOBILEDATA_OUTLINED: IconData
+    H_MOBILEDATA_ROUNDED: IconData
+    H_MOBILEDATA_SHARP: IconData
+    H_PLUS_MOBILEDATA: IconData
+    H_PLUS_MOBILEDATA_OUTLINED: IconData
+    H_PLUS_MOBILEDATA_ROUNDED: IconData
+    H_PLUS_MOBILEDATA_SHARP: IconData
     HAIL: IconData
     HAIL_OUTLINED: IconData
     HAIL_ROUNDED: IconData
@@ -3515,6 +3523,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HARDWARE_ROUNDED: IconData
     HARDWARE_SHARP: IconData
     HD: IconData
+    HD_OUTLINED: IconData
+    HD_ROUNDED: IconData
+    HD_SHARP: IconData
     HDR_AUTO: IconData
     HDR_AUTO_OUTLINED: IconData
     HDR_AUTO_ROUNDED: IconData
@@ -3555,9 +3566,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HDR_WEAK_OUTLINED: IconData
     HDR_WEAK_ROUNDED: IconData
     HDR_WEAK_SHARP: IconData
-    HD_OUTLINED: IconData
-    HD_ROUNDED: IconData
-    HD_SHARP: IconData
     HEADPHONES: IconData
     HEADPHONES_BATTERY: IconData
     HEADPHONES_BATTERY_OUTLINED: IconData
@@ -3612,10 +3620,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HELP_CENTER_ROUNDED: IconData
     HELP_CENTER_SHARP: IconData
     HELP_OUTLINE: IconData
-    HELP_OUTLINED: IconData
     HELP_OUTLINE_OUTLINED: IconData
     HELP_OUTLINE_ROUNDED: IconData
     HELP_OUTLINE_SHARP: IconData
+    HELP_OUTLINED: IconData
     HELP_ROUNDED: IconData
     HELP_SHARP: IconData
     HEVC: IconData
@@ -3634,6 +3642,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HIDE_SOURCE_OUTLINED: IconData
     HIDE_SOURCE_ROUNDED: IconData
     HIDE_SOURCE_SHARP: IconData
+    HIGH_QUALITY: IconData
+    HIGH_QUALITY_OUTLINED: IconData
+    HIGH_QUALITY_ROUNDED: IconData
+    HIGH_QUALITY_SHARP: IconData
     HIGHLIGHT: IconData
     HIGHLIGHT_ALT: IconData
     HIGHLIGHT_ALT_OUTLINED: IconData
@@ -3650,10 +3662,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HIGHLIGHT_REMOVE_SHARP: IconData
     HIGHLIGHT_ROUNDED: IconData
     HIGHLIGHT_SHARP: IconData
-    HIGH_QUALITY: IconData
-    HIGH_QUALITY_OUTLINED: IconData
-    HIGH_QUALITY_ROUNDED: IconData
-    HIGH_QUALITY_SHARP: IconData
     HIKING: IconData
     HIKING_OUTLINED: IconData
     HIKING_ROUNDED: IconData
@@ -3719,6 +3727,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HORIZONTAL_SPLIT_OUTLINED: IconData
     HORIZONTAL_SPLIT_ROUNDED: IconData
     HORIZONTAL_SPLIT_SHARP: IconData
+    HOT_TUB: IconData
+    HOT_TUB_OUTLINED: IconData
+    HOT_TUB_ROUNDED: IconData
+    HOT_TUB_SHARP: IconData
     HOTEL: IconData
     HOTEL_CLASS: IconData
     HOTEL_CLASS_OUTLINED: IconData
@@ -3727,10 +3739,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HOTEL_OUTLINED: IconData
     HOTEL_ROUNDED: IconData
     HOTEL_SHARP: IconData
-    HOT_TUB: IconData
-    HOT_TUB_OUTLINED: IconData
-    HOT_TUB_ROUNDED: IconData
-    HOT_TUB_SHARP: IconData
     HOURGLASS_BOTTOM: IconData
     HOURGLASS_BOTTOM_OUTLINED: IconData
     HOURGLASS_BOTTOM_ROUNDED: IconData
@@ -3752,10 +3760,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HOURGLASS_TOP_ROUNDED: IconData
     HOURGLASS_TOP_SHARP: IconData
     HOUSE: IconData
-    HOUSEBOAT: IconData
-    HOUSEBOAT_OUTLINED: IconData
-    HOUSEBOAT_ROUNDED: IconData
-    HOUSEBOAT_SHARP: IconData
     HOUSE_OUTLINED: IconData
     HOUSE_ROUNDED: IconData
     HOUSE_SHARP: IconData
@@ -3763,6 +3767,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HOUSE_SIDING_OUTLINED: IconData
     HOUSE_SIDING_ROUNDED: IconData
     HOUSE_SIDING_SHARP: IconData
+    HOUSEBOAT: IconData
+    HOUSEBOAT_OUTLINED: IconData
+    HOUSEBOAT_ROUNDED: IconData
+    HOUSEBOAT_SHARP: IconData
     HOW_TO_REG: IconData
     HOW_TO_REG_OUTLINED: IconData
     HOW_TO_REG_ROUNDED: IconData
@@ -3776,13 +3784,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HTML_ROUNDED: IconData
     HTML_SHARP: IconData
     HTTP: IconData
+    HTTP_OUTLINED: IconData
+    HTTP_ROUNDED: IconData
+    HTTP_SHARP: IconData
     HTTPS: IconData
     HTTPS_OUTLINED: IconData
     HTTPS_ROUNDED: IconData
     HTTPS_SHARP: IconData
-    HTTP_OUTLINED: IconData
-    HTTP_ROUNDED: IconData
-    HTTP_SHARP: IconData
     HUB: IconData
     HUB_OUTLINED: IconData
     HUB_ROUNDED: IconData
@@ -3791,27 +3799,15 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     HVAC_OUTLINED: IconData
     HVAC_ROUNDED: IconData
     HVAC_SHARP: IconData
-    H_MOBILEDATA: IconData
-    H_MOBILEDATA_OUTLINED: IconData
-    H_MOBILEDATA_ROUNDED: IconData
-    H_MOBILEDATA_SHARP: IconData
-    H_PLUS_MOBILEDATA: IconData
-    H_PLUS_MOBILEDATA_OUTLINED: IconData
-    H_PLUS_MOBILEDATA_ROUNDED: IconData
-    H_PLUS_MOBILEDATA_SHARP: IconData
-    ICECREAM: IconData
-    ICECREAM_OUTLINED: IconData
-    ICECREAM_ROUNDED: IconData
-    ICECREAM_SHARP: IconData
     ICE_SKATING: IconData
     ICE_SKATING_OUTLINED: IconData
     ICE_SKATING_ROUNDED: IconData
     ICE_SKATING_SHARP: IconData
+    ICECREAM: IconData
+    ICECREAM_OUTLINED: IconData
+    ICECREAM_ROUNDED: IconData
+    ICECREAM_SHARP: IconData
     IMAGE: IconData
-    IMAGESEARCH_ROLLER: IconData
-    IMAGESEARCH_ROLLER_OUTLINED: IconData
-    IMAGESEARCH_ROLLER_ROUNDED: IconData
-    IMAGESEARCH_ROLLER_SHARP: IconData
     IMAGE_ASPECT_RATIO: IconData
     IMAGE_ASPECT_RATIO_OUTLINED: IconData
     IMAGE_ASPECT_RATIO_ROUNDED: IconData
@@ -3827,10 +3823,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     IMAGE_SEARCH_ROUNDED: IconData
     IMAGE_SEARCH_SHARP: IconData
     IMAGE_SHARP: IconData
-    IMPORTANT_DEVICES: IconData
-    IMPORTANT_DEVICES_OUTLINED: IconData
-    IMPORTANT_DEVICES_ROUNDED: IconData
-    IMPORTANT_DEVICES_SHARP: IconData
+    IMAGESEARCH_ROLLER: IconData
+    IMAGESEARCH_ROLLER_OUTLINED: IconData
+    IMAGESEARCH_ROLLER_ROUNDED: IconData
+    IMAGESEARCH_ROLLER_SHARP: IconData
     IMPORT_CONTACTS: IconData
     IMPORT_CONTACTS_OUTLINED: IconData
     IMPORT_CONTACTS_ROUNDED: IconData
@@ -3839,6 +3835,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     IMPORT_EXPORT_OUTLINED: IconData
     IMPORT_EXPORT_ROUNDED: IconData
     IMPORT_EXPORT_SHARP: IconData
+    IMPORTANT_DEVICES: IconData
+    IMPORTANT_DEVICES_OUTLINED: IconData
+    IMPORTANT_DEVICES_ROUNDED: IconData
+    IMPORTANT_DEVICES_SHARP: IconData
     INBOX: IconData
     INBOX_OUTLINED: IconData
     INBOX_ROUNDED: IconData
@@ -3853,9 +3853,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     INDETERMINATE_CHECK_BOX_SHARP: IconData
     INFO: IconData
     INFO_OUTLINE: IconData
-    INFO_OUTLINED: IconData
     INFO_OUTLINE_ROUNDED: IconData
     INFO_OUTLINE_SHARP: IconData
+    INFO_OUTLINED: IconData
     INFO_ROUNDED: IconData
     INFO_SHARP: IconData
     INPUT: IconData
@@ -3982,6 +3982,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     KEBAB_DINING_ROUNDED: IconData
     KEBAB_DINING_SHARP: IconData
     KEY: IconData
+    KEY_OFF: IconData
+    KEY_OFF_OUTLINED: IconData
+    KEY_OFF_ROUNDED: IconData
+    KEY_OFF_SHARP: IconData
+    KEY_OUTLINED: IconData
+    KEY_ROUNDED: IconData
+    KEY_SHARP: IconData
     KEYBOARD: IconData
     KEYBOARD_ALT: IconData
     KEYBOARD_ALT_OUTLINED: IconData
@@ -4062,13 +4069,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     KEYBOARD_VOICE_OUTLINED: IconData
     KEYBOARD_VOICE_ROUNDED: IconData
     KEYBOARD_VOICE_SHARP: IconData
-    KEY_OFF: IconData
-    KEY_OFF_OUTLINED: IconData
-    KEY_OFF_ROUNDED: IconData
-    KEY_OFF_SHARP: IconData
-    KEY_OUTLINED: IconData
-    KEY_ROUNDED: IconData
-    KEY_SHARP: IconData
     KING_BED: IconData
     KING_BED_OUTLINED: IconData
     KING_BED_ROUNDED: IconData
@@ -4084,9 +4084,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LABEL: IconData
     LABEL_IMPORTANT: IconData
     LABEL_IMPORTANT_OUTLINE: IconData
-    LABEL_IMPORTANT_OUTLINED: IconData
     LABEL_IMPORTANT_OUTLINE_ROUNDED: IconData
     LABEL_IMPORTANT_OUTLINE_SHARP: IconData
+    LABEL_IMPORTANT_OUTLINED: IconData
     LABEL_IMPORTANT_ROUNDED: IconData
     LABEL_IMPORTANT_SHARP: IconData
     LABEL_OFF: IconData
@@ -4094,12 +4094,15 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LABEL_OFF_ROUNDED: IconData
     LABEL_OFF_SHARP: IconData
     LABEL_OUTLINE: IconData
-    LABEL_OUTLINED: IconData
     LABEL_OUTLINE_ROUNDED: IconData
     LABEL_OUTLINE_SHARP: IconData
+    LABEL_OUTLINED: IconData
     LABEL_ROUNDED: IconData
     LABEL_SHARP: IconData
     LAN: IconData
+    LAN_OUTLINED: IconData
+    LAN_ROUNDED: IconData
+    LAN_SHARP: IconData
     LANDSCAPE: IconData
     LANDSCAPE_OUTLINED: IconData
     LANDSCAPE_ROUNDED: IconData
@@ -4112,9 +4115,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LANGUAGE_OUTLINED: IconData
     LANGUAGE_ROUNDED: IconData
     LANGUAGE_SHARP: IconData
-    LAN_OUTLINED: IconData
-    LAN_ROUNDED: IconData
-    LAN_SHARP: IconData
     LAPTOP: IconData
     LAPTOP_CHROMEBOOK: IconData
     LAPTOP_CHROMEBOOK_OUTLINED: IconData
@@ -4192,17 +4192,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LIBRARY_MUSIC_ROUNDED: IconData
     LIBRARY_MUSIC_SHARP: IconData
     LIGHT: IconData
-    LIGHTBULB: IconData
-    LIGHTBULB_CIRCLE: IconData
-    LIGHTBULB_CIRCLE_OUTLINED: IconData
-    LIGHTBULB_CIRCLE_ROUNDED: IconData
-    LIGHTBULB_CIRCLE_SHARP: IconData
-    LIGHTBULB_OUTLINE: IconData
-    LIGHTBULB_OUTLINED: IconData
-    LIGHTBULB_OUTLINE_ROUNDED: IconData
-    LIGHTBULB_OUTLINE_SHARP: IconData
-    LIGHTBULB_ROUNDED: IconData
-    LIGHTBULB_SHARP: IconData
     LIGHT_MODE: IconData
     LIGHT_MODE_OUTLINED: IconData
     LIGHT_MODE_ROUNDED: IconData
@@ -4210,10 +4199,17 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LIGHT_OUTLINED: IconData
     LIGHT_ROUNDED: IconData
     LIGHT_SHARP: IconData
-    LINEAR_SCALE: IconData
-    LINEAR_SCALE_OUTLINED: IconData
-    LINEAR_SCALE_ROUNDED: IconData
-    LINEAR_SCALE_SHARP: IconData
+    LIGHTBULB: IconData
+    LIGHTBULB_CIRCLE: IconData
+    LIGHTBULB_CIRCLE_OUTLINED: IconData
+    LIGHTBULB_CIRCLE_ROUNDED: IconData
+    LIGHTBULB_CIRCLE_SHARP: IconData
+    LIGHTBULB_OUTLINE: IconData
+    LIGHTBULB_OUTLINE_ROUNDED: IconData
+    LIGHTBULB_OUTLINE_SHARP: IconData
+    LIGHTBULB_OUTLINED: IconData
+    LIGHTBULB_ROUNDED: IconData
+    LIGHTBULB_SHARP: IconData
     LINE_AXIS: IconData
     LINE_AXIS_OUTLINED: IconData
     LINE_AXIS_ROUNDED: IconData
@@ -4226,11 +4222,11 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LINE_WEIGHT_OUTLINED: IconData
     LINE_WEIGHT_ROUNDED: IconData
     LINE_WEIGHT_SHARP: IconData
+    LINEAR_SCALE: IconData
+    LINEAR_SCALE_OUTLINED: IconData
+    LINEAR_SCALE_ROUNDED: IconData
+    LINEAR_SCALE_SHARP: IconData
     LINK: IconData
-    LINKED_CAMERA: IconData
-    LINKED_CAMERA_OUTLINED: IconData
-    LINKED_CAMERA_ROUNDED: IconData
-    LINKED_CAMERA_SHARP: IconData
     LINK_OFF: IconData
     LINK_OFF_OUTLINED: IconData
     LINK_OFF_ROUNDED: IconData
@@ -4238,6 +4234,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LINK_OUTLINED: IconData
     LINK_ROUNDED: IconData
     LINK_SHARP: IconData
+    LINKED_CAMERA: IconData
+    LINKED_CAMERA_OUTLINED: IconData
+    LINKED_CAMERA_ROUNDED: IconData
+    LINKED_CAMERA_SHARP: IconData
     LIQUOR: IconData
     LIQUOR_OUTLINED: IconData
     LIQUOR_ROUNDED: IconData
@@ -4374,14 +4374,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LOCAL_POST_OFFICE_OUTLINED: IconData
     LOCAL_POST_OFFICE_ROUNDED: IconData
     LOCAL_POST_OFFICE_SHARP: IconData
-    LOCAL_PRINTSHOP: IconData
-    LOCAL_PRINTSHOP_OUTLINED: IconData
-    LOCAL_PRINTSHOP_ROUNDED: IconData
-    LOCAL_PRINTSHOP_SHARP: IconData
     LOCAL_PRINT_SHOP: IconData
     LOCAL_PRINT_SHOP_OUTLINED: IconData
     LOCAL_PRINT_SHOP_ROUNDED: IconData
     LOCAL_PRINT_SHOP_SHARP: IconData
+    LOCAL_PRINTSHOP: IconData
+    LOCAL_PRINTSHOP_OUTLINED: IconData
+    LOCAL_PRINTSHOP_ROUNDED: IconData
+    LOCAL_PRINTSHOP_SHARP: IconData
     LOCAL_RESTAURANT: IconData
     LOCAL_RESTAURANT_OUTLINED: IconData
     LOCAL_RESTAURANT_ROUNDED: IconData
@@ -4433,9 +4433,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LOCK_OPEN_ROUNDED: IconData
     LOCK_OPEN_SHARP: IconData
     LOCK_OUTLINE: IconData
-    LOCK_OUTLINED: IconData
     LOCK_OUTLINE_ROUNDED: IconData
     LOCK_OUTLINE_SHARP: IconData
+    LOCK_OUTLINED: IconData
     LOCK_PERSON: IconData
     LOCK_PERSON_OUTLINED: IconData
     LOCK_PERSON_ROUNDED: IconData
@@ -4450,14 +4450,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     LOGIN_OUTLINED: IconData
     LOGIN_ROUNDED: IconData
     LOGIN_SHARP: IconData
-    LOGOUT: IconData
-    LOGOUT_OUTLINED: IconData
-    LOGOUT_ROUNDED: IconData
-    LOGOUT_SHARP: IconData
     LOGO_DEV: IconData
     LOGO_DEV_OUTLINED: IconData
     LOGO_DEV_ROUNDED: IconData
     LOGO_DEV_SHARP: IconData
+    LOGOUT: IconData
+    LOGOUT_OUTLINED: IconData
+    LOGOUT_ROUNDED: IconData
+    LOGOUT_SHARP: IconData
     LOOKS: IconData
     LOOKS_3: IconData
     LOOKS_3_OUTLINED: IconData
@@ -4532,10 +4532,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MAIL_LOCK_ROUNDED: IconData
     MAIL_LOCK_SHARP: IconData
     MAIL_OUTLINE: IconData
-    MAIL_OUTLINED: IconData
     MAIL_OUTLINE_OUTLINED: IconData
     MAIL_OUTLINE_ROUNDED: IconData
     MAIL_OUTLINE_SHARP: IconData
+    MAIL_OUTLINED: IconData
     MAIL_ROUNDED: IconData
     MAIL_SHARP: IconData
     MALE: IconData
@@ -4543,18 +4543,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MALE_ROUNDED: IconData
     MALE_SHARP: IconData
     MAN: IconData
-    MANAGE_ACCOUNTS: IconData
-    MANAGE_ACCOUNTS_OUTLINED: IconData
-    MANAGE_ACCOUNTS_ROUNDED: IconData
-    MANAGE_ACCOUNTS_SHARP: IconData
-    MANAGE_HISTORY: IconData
-    MANAGE_HISTORY_OUTLINED: IconData
-    MANAGE_HISTORY_ROUNDED: IconData
-    MANAGE_HISTORY_SHARP: IconData
-    MANAGE_SEARCH: IconData
-    MANAGE_SEARCH_OUTLINED: IconData
-    MANAGE_SEARCH_ROUNDED: IconData
-    MANAGE_SEARCH_SHARP: IconData
     MAN_2: IconData
     MAN_2_OUTLINED: IconData
     MAN_2_ROUNDED: IconData
@@ -4570,7 +4558,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MAN_OUTLINED: IconData
     MAN_ROUNDED: IconData
     MAN_SHARP: IconData
+    MANAGE_ACCOUNTS: IconData
+    MANAGE_ACCOUNTS_OUTLINED: IconData
+    MANAGE_ACCOUNTS_ROUNDED: IconData
+    MANAGE_ACCOUNTS_SHARP: IconData
+    MANAGE_HISTORY: IconData
+    MANAGE_HISTORY_OUTLINED: IconData
+    MANAGE_HISTORY_ROUNDED: IconData
+    MANAGE_HISTORY_SHARP: IconData
+    MANAGE_SEARCH: IconData
+    MANAGE_SEARCH_OUTLINED: IconData
+    MANAGE_SEARCH_ROUNDED: IconData
+    MANAGE_SEARCH_SHARP: IconData
     MAP: IconData
+    MAP_OUTLINED: IconData
+    MAP_ROUNDED: IconData
+    MAP_SHARP: IconData
     MAPS_HOME_WORK: IconData
     MAPS_HOME_WORK_OUTLINED: IconData
     MAPS_HOME_WORK_ROUNDED: IconData
@@ -4579,21 +4582,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MAPS_UGC_OUTLINED: IconData
     MAPS_UGC_ROUNDED: IconData
     MAPS_UGC_SHARP: IconData
-    MAP_OUTLINED: IconData
-    MAP_ROUNDED: IconData
-    MAP_SHARP: IconData
     MARGIN: IconData
     MARGIN_OUTLINED: IconData
     MARGIN_ROUNDED: IconData
     MARGIN_SHARP: IconData
-    MARKUNREAD: IconData
-    MARKUNREAD_MAILBOX: IconData
-    MARKUNREAD_MAILBOX_OUTLINED: IconData
-    MARKUNREAD_MAILBOX_ROUNDED: IconData
-    MARKUNREAD_MAILBOX_SHARP: IconData
-    MARKUNREAD_OUTLINED: IconData
-    MARKUNREAD_ROUNDED: IconData
-    MARKUNREAD_SHARP: IconData
     MARK_AS_UNREAD: IconData
     MARK_AS_UNREAD_OUTLINED: IconData
     MARK_AS_UNREAD_ROUNDED: IconData
@@ -4618,6 +4610,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MARK_UNREAD_CHAT_ALT_OUTLINED: IconData
     MARK_UNREAD_CHAT_ALT_ROUNDED: IconData
     MARK_UNREAD_CHAT_ALT_SHARP: IconData
+    MARKUNREAD: IconData
+    MARKUNREAD_MAILBOX: IconData
+    MARKUNREAD_MAILBOX_OUTLINED: IconData
+    MARKUNREAD_MAILBOX_ROUNDED: IconData
+    MARKUNREAD_MAILBOX_SHARP: IconData
+    MARKUNREAD_OUTLINED: IconData
+    MARKUNREAD_ROUNDED: IconData
+    MARKUNREAD_SHARP: IconData
     MASKS: IconData
     MASKS_OUTLINED: IconData
     MASKS_ROUNDED: IconData
@@ -4626,10 +4626,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MAXIMIZE_OUTLINED: IconData
     MAXIMIZE_ROUNDED: IconData
     MAXIMIZE_SHARP: IconData
-    MEDIATION: IconData
-    MEDIATION_OUTLINED: IconData
-    MEDIATION_ROUNDED: IconData
-    MEDIATION_SHARP: IconData
     MEDIA_BLUETOOTH_OFF: IconData
     MEDIA_BLUETOOTH_OFF_OUTLINED: IconData
     MEDIA_BLUETOOTH_OFF_ROUNDED: IconData
@@ -4638,6 +4634,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MEDIA_BLUETOOTH_ON_OUTLINED: IconData
     MEDIA_BLUETOOTH_ON_ROUNDED: IconData
     MEDIA_BLUETOOTH_ON_SHARP: IconData
+    MEDIATION: IconData
+    MEDIATION_OUTLINED: IconData
+    MEDIATION_ROUNDED: IconData
+    MEDIATION_SHARP: IconData
     MEDICAL_INFORMATION: IconData
     MEDICAL_INFORMATION_OUTLINED: IconData
     MEDICAL_INFORMATION_ROUNDED: IconData
@@ -4688,17 +4688,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MESSAGE_SHARP: IconData
     MESSENGER: IconData
     MESSENGER_OUTLINE: IconData
-    MESSENGER_OUTLINED: IconData
     MESSENGER_OUTLINE_OUTLINED: IconData
     MESSENGER_OUTLINE_ROUNDED: IconData
     MESSENGER_OUTLINE_SHARP: IconData
+    MESSENGER_OUTLINED: IconData
     MESSENGER_ROUNDED: IconData
     MESSENGER_SHARP: IconData
     MIC: IconData
-    MICROWAVE: IconData
-    MICROWAVE_OUTLINED: IconData
-    MICROWAVE_ROUNDED: IconData
-    MICROWAVE_SHARP: IconData
     MIC_EXTERNAL_OFF: IconData
     MIC_EXTERNAL_OFF_OUTLINED: IconData
     MIC_EXTERNAL_OFF_ROUNDED: IconData
@@ -4718,6 +4714,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MIC_OUTLINED: IconData
     MIC_ROUNDED: IconData
     MIC_SHARP: IconData
+    MICROWAVE: IconData
+    MICROWAVE_OUTLINED: IconData
+    MICROWAVE_ROUNDED: IconData
+    MICROWAVE_SHARP: IconData
     MILITARY_TECH: IconData
     MILITARY_TECH_OUTLINED: IconData
     MILITARY_TECH_ROUNDED: IconData
@@ -4742,10 +4742,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MMS_OUTLINED: IconData
     MMS_ROUNDED: IconData
     MMS_SHARP: IconData
-    MOBILEDATA_OFF: IconData
-    MOBILEDATA_OFF_OUTLINED: IconData
-    MOBILEDATA_OFF_ROUNDED: IconData
-    MOBILEDATA_OFF_SHARP: IconData
     MOBILE_FRIENDLY: IconData
     MOBILE_FRIENDLY_OUTLINED: IconData
     MOBILE_FRIENDLY_ROUNDED: IconData
@@ -4758,21 +4754,21 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MOBILE_SCREEN_SHARE_OUTLINED: IconData
     MOBILE_SCREEN_SHARE_ROUNDED: IconData
     MOBILE_SCREEN_SHARE_SHARP: IconData
+    MOBILEDATA_OFF: IconData
+    MOBILEDATA_OFF_OUTLINED: IconData
+    MOBILEDATA_OFF_ROUNDED: IconData
+    MOBILEDATA_OFF_SHARP: IconData
     MODE: IconData
-    MODEL_TRAINING: IconData
-    MODEL_TRAINING_OUTLINED: IconData
-    MODEL_TRAINING_ROUNDED: IconData
-    MODEL_TRAINING_SHARP: IconData
     MODE_COMMENT: IconData
     MODE_COMMENT_OUTLINED: IconData
     MODE_COMMENT_ROUNDED: IconData
     MODE_COMMENT_SHARP: IconData
     MODE_EDIT: IconData
     MODE_EDIT_OUTLINE: IconData
-    MODE_EDIT_OUTLINED: IconData
     MODE_EDIT_OUTLINE_OUTLINED: IconData
     MODE_EDIT_OUTLINE_ROUNDED: IconData
     MODE_EDIT_OUTLINE_SHARP: IconData
+    MODE_EDIT_OUTLINED: IconData
     MODE_EDIT_ROUNDED: IconData
     MODE_EDIT_SHARP: IconData
     MODE_FAN_OFF: IconData
@@ -4794,6 +4790,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MODE_STANDBY_OUTLINED: IconData
     MODE_STANDBY_ROUNDED: IconData
     MODE_STANDBY_SHARP: IconData
+    MODEL_TRAINING: IconData
+    MODEL_TRAINING_OUTLINED: IconData
+    MODEL_TRAINING_ROUNDED: IconData
+    MODEL_TRAINING_SHARP: IconData
     MONETIZATION_ON: IconData
     MONETIZATION_ON_OUTLINED: IconData
     MONETIZATION_ON_ROUNDED: IconData
@@ -4871,13 +4871,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MOTION_PHOTOS_ON_ROUNDED: IconData
     MOTION_PHOTOS_ON_SHARP: IconData
     MOTION_PHOTOS_PAUSE: IconData
+    MOTION_PHOTOS_PAUSE_OUTLINED: IconData
+    MOTION_PHOTOS_PAUSE_ROUNDED: IconData
+    MOTION_PHOTOS_PAUSE_SHARP: IconData
     MOTION_PHOTOS_PAUSED: IconData
     MOTION_PHOTOS_PAUSED_OUTLINED: IconData
     MOTION_PHOTOS_PAUSED_ROUNDED: IconData
     MOTION_PHOTOS_PAUSED_SHARP: IconData
-    MOTION_PHOTOS_PAUSE_OUTLINED: IconData
-    MOTION_PHOTOS_PAUSE_ROUNDED: IconData
-    MOTION_PHOTOS_PAUSE_SHARP: IconData
     MOTORCYCLE: IconData
     MOTORCYCLE_OUTLINED: IconData
     MOTORCYCLE_ROUNDED: IconData
@@ -4964,6 +4964,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     MY_LOCATION_ROUNDED: IconData
     MY_LOCATION_SHARP: IconData
     NAT: IconData
+    NAT_OUTLINED: IconData
+    NAT_ROUNDED: IconData
+    NAT_SHARP: IconData
     NATURE: IconData
     NATURE_OUTLINED: IconData
     NATURE_PEOPLE: IconData
@@ -4972,9 +4975,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NATURE_PEOPLE_SHARP: IconData
     NATURE_ROUNDED: IconData
     NATURE_SHARP: IconData
-    NAT_OUTLINED: IconData
-    NAT_ROUNDED: IconData
-    NAT_SHARP: IconData
     NAVIGATE_BEFORE: IconData
     NAVIGATE_BEFORE_OUTLINED: IconData
     NAVIGATE_BEFORE_ROUNDED: IconData
@@ -4987,14 +4987,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NAVIGATION_OUTLINED: IconData
     NAVIGATION_ROUNDED: IconData
     NAVIGATION_SHARP: IconData
-    NEARBY_ERROR: IconData
-    NEARBY_ERROR_OUTLINED: IconData
-    NEARBY_ERROR_ROUNDED: IconData
-    NEARBY_ERROR_SHARP: IconData
-    NEARBY_OFF: IconData
-    NEARBY_OFF_OUTLINED: IconData
-    NEARBY_OFF_ROUNDED: IconData
-    NEARBY_OFF_SHARP: IconData
     NEAR_ME: IconData
     NEAR_ME_DISABLED: IconData
     NEAR_ME_DISABLED_OUTLINED: IconData
@@ -5003,6 +4995,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NEAR_ME_OUTLINED: IconData
     NEAR_ME_ROUNDED: IconData
     NEAR_ME_SHARP: IconData
+    NEARBY_ERROR: IconData
+    NEARBY_ERROR_OUTLINED: IconData
+    NEARBY_ERROR_ROUNDED: IconData
+    NEARBY_ERROR_SHARP: IconData
+    NEARBY_OFF: IconData
+    NEARBY_OFF_OUTLINED: IconData
+    NEARBY_OFF_ROUNDED: IconData
+    NEARBY_OFF_SHARP: IconData
     NEST_CAM_WIRED_STAND: IconData
     NEST_CAM_WIRED_STAND_OUTLINED: IconData
     NEST_CAM_WIRED_STAND_ROUNDED: IconData
@@ -5039,10 +5039,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NETWORK_WIFI_OUTLINED: IconData
     NETWORK_WIFI_ROUNDED: IconData
     NETWORK_WIFI_SHARP: IconData
-    NEWSPAPER: IconData
-    NEWSPAPER_OUTLINED: IconData
-    NEWSPAPER_ROUNDED: IconData
-    NEWSPAPER_SHARP: IconData
     NEW_LABEL: IconData
     NEW_LABEL_OUTLINED: IconData
     NEW_LABEL_ROUNDED: IconData
@@ -5051,6 +5047,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NEW_RELEASES_OUTLINED: IconData
     NEW_RELEASES_ROUNDED: IconData
     NEW_RELEASES_SHARP: IconData
+    NEWSPAPER: IconData
+    NEWSPAPER_OUTLINED: IconData
+    NEWSPAPER_ROUNDED: IconData
+    NEWSPAPER_SHARP: IconData
     NEXT_PLAN: IconData
     NEXT_PLAN_OUTLINED: IconData
     NEXT_PLAN_ROUNDED: IconData
@@ -5063,6 +5063,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NFC_OUTLINED: IconData
     NFC_ROUNDED: IconData
     NFC_SHARP: IconData
+    NIGHT_SHELTER: IconData
+    NIGHT_SHELTER_OUTLINED: IconData
+    NIGHT_SHELTER_ROUNDED: IconData
+    NIGHT_SHELTER_SHARP: IconData
     NIGHTLIFE: IconData
     NIGHTLIFE_OUTLINED: IconData
     NIGHTLIFE_ROUNDED: IconData
@@ -5070,23 +5074,15 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NIGHTLIGHT: IconData
     NIGHTLIGHT_OUTLINED: IconData
     NIGHTLIGHT_ROUND: IconData
-    NIGHTLIGHT_ROUNDED: IconData
     NIGHTLIGHT_ROUND_OUTLINED: IconData
     NIGHTLIGHT_ROUND_ROUNDED: IconData
     NIGHTLIGHT_ROUND_SHARP: IconData
+    NIGHTLIGHT_ROUNDED: IconData
     NIGHTLIGHT_SHARP: IconData
     NIGHTS_STAY: IconData
     NIGHTS_STAY_OUTLINED: IconData
     NIGHTS_STAY_ROUNDED: IconData
     NIGHTS_STAY_SHARP: IconData
-    NIGHT_SHELTER: IconData
-    NIGHT_SHELTER_OUTLINED: IconData
-    NIGHT_SHELTER_ROUNDED: IconData
-    NIGHT_SHELTER_SHARP: IconData
-    NINETEEN_MP: IconData
-    NINETEEN_MP_OUTLINED: IconData
-    NINETEEN_MP_ROUNDED: IconData
-    NINETEEN_MP_SHARP: IconData
     NINE_K: IconData
     NINE_K_OUTLINED: IconData
     NINE_K_PLUS: IconData
@@ -5099,102 +5095,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NINE_MP_OUTLINED: IconData
     NINE_MP_ROUNDED: IconData
     NINE_MP_SHARP: IconData
-    NOISE_AWARE: IconData
-    NOISE_AWARE_OUTLINED: IconData
-    NOISE_AWARE_ROUNDED: IconData
-    NOISE_AWARE_SHARP: IconData
-    NOISE_CONTROL_OFF: IconData
-    NOISE_CONTROL_OFF_OUTLINED: IconData
-    NOISE_CONTROL_OFF_ROUNDED: IconData
-    NOISE_CONTROL_OFF_SHARP: IconData
-    NORDIC_WALKING: IconData
-    NORDIC_WALKING_OUTLINED: IconData
-    NORDIC_WALKING_ROUNDED: IconData
-    NORDIC_WALKING_SHARP: IconData
-    NORTH: IconData
-    NORTH_EAST: IconData
-    NORTH_EAST_OUTLINED: IconData
-    NORTH_EAST_ROUNDED: IconData
-    NORTH_EAST_SHARP: IconData
-    NORTH_OUTLINED: IconData
-    NORTH_ROUNDED: IconData
-    NORTH_SHARP: IconData
-    NORTH_WEST: IconData
-    NORTH_WEST_OUTLINED: IconData
-    NORTH_WEST_ROUNDED: IconData
-    NORTH_WEST_SHARP: IconData
-    NOTE: IconData
-    NOTES: IconData
-    NOTES_OUTLINED: IconData
-    NOTES_ROUNDED: IconData
-    NOTES_SHARP: IconData
-    NOTE_ADD: IconData
-    NOTE_ADD_OUTLINED: IconData
-    NOTE_ADD_ROUNDED: IconData
-    NOTE_ADD_SHARP: IconData
-    NOTE_ALT: IconData
-    NOTE_ALT_OUTLINED: IconData
-    NOTE_ALT_ROUNDED: IconData
-    NOTE_ALT_SHARP: IconData
-    NOTE_OUTLINED: IconData
-    NOTE_ROUNDED: IconData
-    NOTE_SHARP: IconData
-    NOTIFICATIONS: IconData
-    NOTIFICATIONS_ACTIVE: IconData
-    NOTIFICATIONS_ACTIVE_OUTLINED: IconData
-    NOTIFICATIONS_ACTIVE_ROUNDED: IconData
-    NOTIFICATIONS_ACTIVE_SHARP: IconData
-    NOTIFICATIONS_NONE: IconData
-    NOTIFICATIONS_NONE_OUTLINED: IconData
-    NOTIFICATIONS_NONE_ROUNDED: IconData
-    NOTIFICATIONS_NONE_SHARP: IconData
-    NOTIFICATIONS_OFF: IconData
-    NOTIFICATIONS_OFF_OUTLINED: IconData
-    NOTIFICATIONS_OFF_ROUNDED: IconData
-    NOTIFICATIONS_OFF_SHARP: IconData
-    NOTIFICATIONS_ON: IconData
-    NOTIFICATIONS_ON_OUTLINED: IconData
-    NOTIFICATIONS_ON_ROUNDED: IconData
-    NOTIFICATIONS_ON_SHARP: IconData
-    NOTIFICATIONS_OUTLINED: IconData
-    NOTIFICATIONS_PAUSED: IconData
-    NOTIFICATIONS_PAUSED_OUTLINED: IconData
-    NOTIFICATIONS_PAUSED_ROUNDED: IconData
-    NOTIFICATIONS_PAUSED_SHARP: IconData
-    NOTIFICATIONS_ROUNDED: IconData
-    NOTIFICATIONS_SHARP: IconData
-    NOTIFICATION_ADD: IconData
-    NOTIFICATION_ADD_OUTLINED: IconData
-    NOTIFICATION_ADD_ROUNDED: IconData
-    NOTIFICATION_ADD_SHARP: IconData
-    NOTIFICATION_IMPORTANT: IconData
-    NOTIFICATION_IMPORTANT_OUTLINED: IconData
-    NOTIFICATION_IMPORTANT_ROUNDED: IconData
-    NOTIFICATION_IMPORTANT_SHARP: IconData
-    NOT_ACCESSIBLE: IconData
-    NOT_ACCESSIBLE_OUTLINED: IconData
-    NOT_ACCESSIBLE_ROUNDED: IconData
-    NOT_ACCESSIBLE_SHARP: IconData
-    NOT_INTERESTED: IconData
-    NOT_INTERESTED_OUTLINED: IconData
-    NOT_INTERESTED_ROUNDED: IconData
-    NOT_INTERESTED_SHARP: IconData
-    NOT_LISTED_LOCATION: IconData
-    NOT_LISTED_LOCATION_OUTLINED: IconData
-    NOT_LISTED_LOCATION_ROUNDED: IconData
-    NOT_LISTED_LOCATION_SHARP: IconData
-    NOT_STARTED: IconData
-    NOT_STARTED_OUTLINED: IconData
-    NOT_STARTED_ROUNDED: IconData
-    NOT_STARTED_SHARP: IconData
-    NOW_WALLPAPER: IconData
-    NOW_WALLPAPER_OUTLINED: IconData
-    NOW_WALLPAPER_ROUNDED: IconData
-    NOW_WALLPAPER_SHARP: IconData
-    NOW_WIDGETS: IconData
-    NOW_WIDGETS_OUTLINED: IconData
-    NOW_WIDGETS_ROUNDED: IconData
-    NOW_WIDGETS_SHARP: IconData
+    NINETEEN_MP: IconData
+    NINETEEN_MP_OUTLINED: IconData
+    NINETEEN_MP_ROUNDED: IconData
+    NINETEEN_MP_SHARP: IconData
     NO_ACCOUNTS: IconData
     NO_ACCOUNTS_OUTLINED: IconData
     NO_ACCOUNTS_ROUNDED: IconData
@@ -5264,6 +5168,102 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     NO_TRANSFER_OUTLINED: IconData
     NO_TRANSFER_ROUNDED: IconData
     NO_TRANSFER_SHARP: IconData
+    NOISE_AWARE: IconData
+    NOISE_AWARE_OUTLINED: IconData
+    NOISE_AWARE_ROUNDED: IconData
+    NOISE_AWARE_SHARP: IconData
+    NOISE_CONTROL_OFF: IconData
+    NOISE_CONTROL_OFF_OUTLINED: IconData
+    NOISE_CONTROL_OFF_ROUNDED: IconData
+    NOISE_CONTROL_OFF_SHARP: IconData
+    NORDIC_WALKING: IconData
+    NORDIC_WALKING_OUTLINED: IconData
+    NORDIC_WALKING_ROUNDED: IconData
+    NORDIC_WALKING_SHARP: IconData
+    NORTH: IconData
+    NORTH_EAST: IconData
+    NORTH_EAST_OUTLINED: IconData
+    NORTH_EAST_ROUNDED: IconData
+    NORTH_EAST_SHARP: IconData
+    NORTH_OUTLINED: IconData
+    NORTH_ROUNDED: IconData
+    NORTH_SHARP: IconData
+    NORTH_WEST: IconData
+    NORTH_WEST_OUTLINED: IconData
+    NORTH_WEST_ROUNDED: IconData
+    NORTH_WEST_SHARP: IconData
+    NOT_ACCESSIBLE: IconData
+    NOT_ACCESSIBLE_OUTLINED: IconData
+    NOT_ACCESSIBLE_ROUNDED: IconData
+    NOT_ACCESSIBLE_SHARP: IconData
+    NOT_INTERESTED: IconData
+    NOT_INTERESTED_OUTLINED: IconData
+    NOT_INTERESTED_ROUNDED: IconData
+    NOT_INTERESTED_SHARP: IconData
+    NOT_LISTED_LOCATION: IconData
+    NOT_LISTED_LOCATION_OUTLINED: IconData
+    NOT_LISTED_LOCATION_ROUNDED: IconData
+    NOT_LISTED_LOCATION_SHARP: IconData
+    NOT_STARTED: IconData
+    NOT_STARTED_OUTLINED: IconData
+    NOT_STARTED_ROUNDED: IconData
+    NOT_STARTED_SHARP: IconData
+    NOTE: IconData
+    NOTE_ADD: IconData
+    NOTE_ADD_OUTLINED: IconData
+    NOTE_ADD_ROUNDED: IconData
+    NOTE_ADD_SHARP: IconData
+    NOTE_ALT: IconData
+    NOTE_ALT_OUTLINED: IconData
+    NOTE_ALT_ROUNDED: IconData
+    NOTE_ALT_SHARP: IconData
+    NOTE_OUTLINED: IconData
+    NOTE_ROUNDED: IconData
+    NOTE_SHARP: IconData
+    NOTES: IconData
+    NOTES_OUTLINED: IconData
+    NOTES_ROUNDED: IconData
+    NOTES_SHARP: IconData
+    NOTIFICATION_ADD: IconData
+    NOTIFICATION_ADD_OUTLINED: IconData
+    NOTIFICATION_ADD_ROUNDED: IconData
+    NOTIFICATION_ADD_SHARP: IconData
+    NOTIFICATION_IMPORTANT: IconData
+    NOTIFICATION_IMPORTANT_OUTLINED: IconData
+    NOTIFICATION_IMPORTANT_ROUNDED: IconData
+    NOTIFICATION_IMPORTANT_SHARP: IconData
+    NOTIFICATIONS: IconData
+    NOTIFICATIONS_ACTIVE: IconData
+    NOTIFICATIONS_ACTIVE_OUTLINED: IconData
+    NOTIFICATIONS_ACTIVE_ROUNDED: IconData
+    NOTIFICATIONS_ACTIVE_SHARP: IconData
+    NOTIFICATIONS_NONE: IconData
+    NOTIFICATIONS_NONE_OUTLINED: IconData
+    NOTIFICATIONS_NONE_ROUNDED: IconData
+    NOTIFICATIONS_NONE_SHARP: IconData
+    NOTIFICATIONS_OFF: IconData
+    NOTIFICATIONS_OFF_OUTLINED: IconData
+    NOTIFICATIONS_OFF_ROUNDED: IconData
+    NOTIFICATIONS_OFF_SHARP: IconData
+    NOTIFICATIONS_ON: IconData
+    NOTIFICATIONS_ON_OUTLINED: IconData
+    NOTIFICATIONS_ON_ROUNDED: IconData
+    NOTIFICATIONS_ON_SHARP: IconData
+    NOTIFICATIONS_OUTLINED: IconData
+    NOTIFICATIONS_PAUSED: IconData
+    NOTIFICATIONS_PAUSED_OUTLINED: IconData
+    NOTIFICATIONS_PAUSED_ROUNDED: IconData
+    NOTIFICATIONS_PAUSED_SHARP: IconData
+    NOTIFICATIONS_ROUNDED: IconData
+    NOTIFICATIONS_SHARP: IconData
+    NOW_WALLPAPER: IconData
+    NOW_WALLPAPER_OUTLINED: IconData
+    NOW_WALLPAPER_ROUNDED: IconData
+    NOW_WALLPAPER_SHARP: IconData
+    NOW_WIDGETS: IconData
+    NOW_WIDGETS_OUTLINED: IconData
+    NOW_WIDGETS_ROUNDED: IconData
+    NOW_WIDGETS_SHARP: IconData
     NUMBERS: IconData
     NUMBERS_OUTLINED: IconData
     NUMBERS_ROUNDED: IconData
@@ -5284,14 +5284,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     OIL_BARREL_OUTLINED: IconData
     OIL_BARREL_ROUNDED: IconData
     OIL_BARREL_SHARP: IconData
+    ON_DEVICE_TRAINING: IconData
+    ON_DEVICE_TRAINING_OUTLINED: IconData
+    ON_DEVICE_TRAINING_ROUNDED: IconData
+    ON_DEVICE_TRAINING_SHARP: IconData
     ONDEMAND_VIDEO: IconData
     ONDEMAND_VIDEO_OUTLINED: IconData
     ONDEMAND_VIDEO_ROUNDED: IconData
     ONDEMAND_VIDEO_SHARP: IconData
-    ONETWOTHREE: IconData
-    ONETWOTHREE_OUTLINED: IconData
-    ONETWOTHREE_ROUNDED: IconData
-    ONETWOTHREE_SHARP: IconData
     ONE_K: IconData
     ONE_K_OUTLINED: IconData
     ONE_K_PLUS: IconData
@@ -5304,14 +5304,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ONE_X_MOBILEDATA_OUTLINED: IconData
     ONE_X_MOBILEDATA_ROUNDED: IconData
     ONE_X_MOBILEDATA_SHARP: IconData
+    ONETWOTHREE: IconData
+    ONETWOTHREE_OUTLINED: IconData
+    ONETWOTHREE_ROUNDED: IconData
+    ONETWOTHREE_SHARP: IconData
     ONLINE_PREDICTION: IconData
     ONLINE_PREDICTION_OUTLINED: IconData
     ONLINE_PREDICTION_ROUNDED: IconData
     ONLINE_PREDICTION_SHARP: IconData
-    ON_DEVICE_TRAINING: IconData
-    ON_DEVICE_TRAINING_OUTLINED: IconData
-    ON_DEVICE_TRAINING_ROUNDED: IconData
-    ON_DEVICE_TRAINING_SHARP: IconData
     OPACITY: IconData
     OPACITY_OUTLINED: IconData
     OPACITY_ROUNDED: IconData
@@ -5390,15 +5390,23 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PALETTE_ROUNDED: IconData
     PALETTE_SHARP: IconData
     PALLET: IconData
+    PAN_TOOL: IconData
+    PAN_TOOL_ALT: IconData
+    PAN_TOOL_ALT_OUTLINED: IconData
+    PAN_TOOL_ALT_ROUNDED: IconData
+    PAN_TOOL_ALT_SHARP: IconData
+    PAN_TOOL_OUTLINED: IconData
+    PAN_TOOL_ROUNDED: IconData
+    PAN_TOOL_SHARP: IconData
     PANORAMA: IconData
-    PANORAMA_FISHEYE: IconData
-    PANORAMA_FISHEYE_OUTLINED: IconData
-    PANORAMA_FISHEYE_ROUNDED: IconData
-    PANORAMA_FISHEYE_SHARP: IconData
     PANORAMA_FISH_EYE: IconData
     PANORAMA_FISH_EYE_OUTLINED: IconData
     PANORAMA_FISH_EYE_ROUNDED: IconData
     PANORAMA_FISH_EYE_SHARP: IconData
+    PANORAMA_FISHEYE: IconData
+    PANORAMA_FISHEYE_OUTLINED: IconData
+    PANORAMA_FISHEYE_ROUNDED: IconData
+    PANORAMA_FISHEYE_SHARP: IconData
     PANORAMA_HORIZONTAL: IconData
     PANORAMA_HORIZONTAL_OUTLINED: IconData
     PANORAMA_HORIZONTAL_ROUNDED: IconData
@@ -5434,14 +5442,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PANORAMA_WIDE_ANGLE_SELECT_ROUNDED: IconData
     PANORAMA_WIDE_ANGLE_SELECT_SHARP: IconData
     PANORAMA_WIDE_ANGLE_SHARP: IconData
-    PAN_TOOL: IconData
-    PAN_TOOL_ALT: IconData
-    PAN_TOOL_ALT_OUTLINED: IconData
-    PAN_TOOL_ALT_ROUNDED: IconData
-    PAN_TOOL_ALT_SHARP: IconData
-    PAN_TOOL_OUTLINED: IconData
-    PAN_TOOL_ROUNDED: IconData
-    PAN_TOOL_SHARP: IconData
     PARAGLIDING: IconData
     PARAGLIDING_OUTLINED: IconData
     PARAGLIDING_ROUNDED: IconData
@@ -5473,10 +5473,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PAUSE_CIRCLE_FILLED_ROUNDED: IconData
     PAUSE_CIRCLE_FILLED_SHARP: IconData
     PAUSE_CIRCLE_OUTLINE: IconData
-    PAUSE_CIRCLE_OUTLINED: IconData
     PAUSE_CIRCLE_OUTLINE_OUTLINED: IconData
     PAUSE_CIRCLE_OUTLINE_ROUNDED: IconData
     PAUSE_CIRCLE_OUTLINE_SHARP: IconData
+    PAUSE_CIRCLE_OUTLINED: IconData
     PAUSE_CIRCLE_ROUNDED: IconData
     PAUSE_CIRCLE_SHARP: IconData
     PAUSE_OUTLINED: IconData
@@ -5487,13 +5487,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PAUSE_ROUNDED: IconData
     PAUSE_SHARP: IconData
     PAYMENT: IconData
+    PAYMENT_OUTLINED: IconData
+    PAYMENT_ROUNDED: IconData
+    PAYMENT_SHARP: IconData
     PAYMENTS: IconData
     PAYMENTS_OUTLINED: IconData
     PAYMENTS_ROUNDED: IconData
     PAYMENTS_SHARP: IconData
-    PAYMENT_OUTLINED: IconData
-    PAYMENT_ROUNDED: IconData
-    PAYMENT_SHARP: IconData
     PAYPAL: IconData
     PAYPAL_OUTLINED: IconData
     PAYPAL_ROUNDED: IconData
@@ -5520,10 +5520,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PEOPLE_ALT_ROUNDED: IconData
     PEOPLE_ALT_SHARP: IconData
     PEOPLE_OUTLINE: IconData
-    PEOPLE_OUTLINED: IconData
     PEOPLE_OUTLINE_OUTLINED: IconData
     PEOPLE_OUTLINE_ROUNDED: IconData
     PEOPLE_OUTLINE_SHARP: IconData
+    PEOPLE_OUTLINED: IconData
     PEOPLE_ROUNDED: IconData
     PEOPLE_SHARP: IconData
     PERCENT: IconData
@@ -5535,25 +5535,25 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PERM_CAMERA_MIC_ROUNDED: IconData
     PERM_CAMERA_MIC_SHARP: IconData
     PERM_CONTACT_CAL: IconData
+    PERM_CONTACT_CAL_OUTLINED: IconData
+    PERM_CONTACT_CAL_ROUNDED: IconData
+    PERM_CONTACT_CAL_SHARP: IconData
     PERM_CONTACT_CALENDAR: IconData
     PERM_CONTACT_CALENDAR_OUTLINED: IconData
     PERM_CONTACT_CALENDAR_ROUNDED: IconData
     PERM_CONTACT_CALENDAR_SHARP: IconData
-    PERM_CONTACT_CAL_OUTLINED: IconData
-    PERM_CONTACT_CAL_ROUNDED: IconData
-    PERM_CONTACT_CAL_SHARP: IconData
     PERM_DATA_SETTING: IconData
     PERM_DATA_SETTING_OUTLINED: IconData
     PERM_DATA_SETTING_ROUNDED: IconData
     PERM_DATA_SETTING_SHARP: IconData
     PERM_DEVICE_INFO: IconData
+    PERM_DEVICE_INFO_OUTLINED: IconData
+    PERM_DEVICE_INFO_ROUNDED: IconData
+    PERM_DEVICE_INFO_SHARP: IconData
     PERM_DEVICE_INFORMATION: IconData
     PERM_DEVICE_INFORMATION_OUTLINED: IconData
     PERM_DEVICE_INFORMATION_ROUNDED: IconData
     PERM_DEVICE_INFORMATION_SHARP: IconData
-    PERM_DEVICE_INFO_OUTLINED: IconData
-    PERM_DEVICE_INFO_ROUNDED: IconData
-    PERM_DEVICE_INFO_SHARP: IconData
     PERM_IDENTITY: IconData
     PERM_IDENTITY_OUTLINED: IconData
     PERM_IDENTITY_ROUNDED: IconData
@@ -5571,14 +5571,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PERM_SCAN_WIFI_ROUNDED: IconData
     PERM_SCAN_WIFI_SHARP: IconData
     PERSON: IconData
-    PERSONAL_INJURY: IconData
-    PERSONAL_INJURY_OUTLINED: IconData
-    PERSONAL_INJURY_ROUNDED: IconData
-    PERSONAL_INJURY_SHARP: IconData
-    PERSONAL_VIDEO: IconData
-    PERSONAL_VIDEO_OUTLINED: IconData
-    PERSONAL_VIDEO_ROUNDED: IconData
-    PERSONAL_VIDEO_SHARP: IconData
     PERSON_2: IconData
     PERSON_2_OUTLINED: IconData
     PERSON_2_ROUNDED: IconData
@@ -5612,10 +5604,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PERSON_OFF_ROUNDED: IconData
     PERSON_OFF_SHARP: IconData
     PERSON_OUTLINE: IconData
-    PERSON_OUTLINED: IconData
     PERSON_OUTLINE_OUTLINED: IconData
     PERSON_OUTLINE_ROUNDED: IconData
     PERSON_OUTLINE_SHARP: IconData
+    PERSON_OUTLINED: IconData
     PERSON_PIN: IconData
     PERSON_PIN_CIRCLE: IconData
     PERSON_PIN_CIRCLE_OUTLINED: IconData
@@ -5638,6 +5630,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PERSON_SEARCH_ROUNDED: IconData
     PERSON_SEARCH_SHARP: IconData
     PERSON_SHARP: IconData
+    PERSONAL_INJURY: IconData
+    PERSONAL_INJURY_OUTLINED: IconData
+    PERSONAL_INJURY_ROUNDED: IconData
+    PERSONAL_INJURY_SHARP: IconData
+    PERSONAL_VIDEO: IconData
+    PERSONAL_VIDEO_OUTLINED: IconData
+    PERSONAL_VIDEO_ROUNDED: IconData
+    PERSONAL_VIDEO_SHARP: IconData
     PEST_CONTROL: IconData
     PEST_CONTROL_OUTLINED: IconData
     PEST_CONTROL_RODENT: IconData
@@ -5655,30 +5655,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PHISHING_ROUNDED: IconData
     PHISHING_SHARP: IconData
     PHONE: IconData
-    PHONELINK: IconData
-    PHONELINK_ERASE: IconData
-    PHONELINK_ERASE_OUTLINED: IconData
-    PHONELINK_ERASE_ROUNDED: IconData
-    PHONELINK_ERASE_SHARP: IconData
-    PHONELINK_LOCK: IconData
-    PHONELINK_LOCK_OUTLINED: IconData
-    PHONELINK_LOCK_ROUNDED: IconData
-    PHONELINK_LOCK_SHARP: IconData
-    PHONELINK_OFF: IconData
-    PHONELINK_OFF_OUTLINED: IconData
-    PHONELINK_OFF_ROUNDED: IconData
-    PHONELINK_OFF_SHARP: IconData
-    PHONELINK_OUTLINED: IconData
-    PHONELINK_RING: IconData
-    PHONELINK_RING_OUTLINED: IconData
-    PHONELINK_RING_ROUNDED: IconData
-    PHONELINK_RING_SHARP: IconData
-    PHONELINK_ROUNDED: IconData
-    PHONELINK_SETUP: IconData
-    PHONELINK_SETUP_OUTLINED: IconData
-    PHONELINK_SETUP_ROUNDED: IconData
-    PHONELINK_SETUP_SHARP: IconData
-    PHONELINK_SHARP: IconData
     PHONE_ANDROID: IconData
     PHONE_ANDROID_OUTLINED: IconData
     PHONE_ANDROID_ROUNDED: IconData
@@ -5726,6 +5702,30 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PHONE_PAUSED_SHARP: IconData
     PHONE_ROUNDED: IconData
     PHONE_SHARP: IconData
+    PHONELINK: IconData
+    PHONELINK_ERASE: IconData
+    PHONELINK_ERASE_OUTLINED: IconData
+    PHONELINK_ERASE_ROUNDED: IconData
+    PHONELINK_ERASE_SHARP: IconData
+    PHONELINK_LOCK: IconData
+    PHONELINK_LOCK_OUTLINED: IconData
+    PHONELINK_LOCK_ROUNDED: IconData
+    PHONELINK_LOCK_SHARP: IconData
+    PHONELINK_OFF: IconData
+    PHONELINK_OFF_OUTLINED: IconData
+    PHONELINK_OFF_ROUNDED: IconData
+    PHONELINK_OFF_SHARP: IconData
+    PHONELINK_OUTLINED: IconData
+    PHONELINK_RING: IconData
+    PHONELINK_RING_OUTLINED: IconData
+    PHONELINK_RING_ROUNDED: IconData
+    PHONELINK_RING_SHARP: IconData
+    PHONELINK_ROUNDED: IconData
+    PHONELINK_SETUP: IconData
+    PHONELINK_SETUP_OUTLINED: IconData
+    PHONELINK_SETUP_ROUNDED: IconData
+    PHONELINK_SETUP_SHARP: IconData
+    PHONELINK_SHARP: IconData
     PHOTO: IconData
     PHOTO_ALBUM: IconData
     PHOTO_ALBUM_OUTLINED: IconData
@@ -5798,10 +5798,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PIE_CHART_ROUNDED: IconData
     PIE_CHART_SHARP: IconData
     PIN: IconData
-    PINCH: IconData
-    PINCH_OUTLINED: IconData
-    PINCH_ROUNDED: IconData
-    PINCH_SHARP: IconData
     PIN_DROP: IconData
     PIN_DROP_OUTLINED: IconData
     PIN_DROP_ROUNDED: IconData
@@ -5817,6 +5813,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PIN_OUTLINED: IconData
     PIN_ROUNDED: IconData
     PIN_SHARP: IconData
+    PINCH: IconData
+    PINCH_OUTLINED: IconData
+    PINCH_ROUNDED: IconData
+    PINCH_SHARP: IconData
     PIVOT_TABLE_CHART: IconData
     PIVOT_TABLE_CHART_OUTLINED: IconData
     PIVOT_TABLE_CHART_ROUNDED: IconData
@@ -5833,6 +5833,38 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PLAGIARISM_OUTLINED: IconData
     PLAGIARISM_ROUNDED: IconData
     PLAGIARISM_SHARP: IconData
+    PLAY_ARROW: IconData
+    PLAY_ARROW_OUTLINED: IconData
+    PLAY_ARROW_ROUNDED: IconData
+    PLAY_ARROW_SHARP: IconData
+    PLAY_CIRCLE: IconData
+    PLAY_CIRCLE_FILL: IconData
+    PLAY_CIRCLE_FILL_OUTLINED: IconData
+    PLAY_CIRCLE_FILL_ROUNDED: IconData
+    PLAY_CIRCLE_FILL_SHARP: IconData
+    PLAY_CIRCLE_FILLED: IconData
+    PLAY_CIRCLE_FILLED_OUTLINED: IconData
+    PLAY_CIRCLE_FILLED_ROUNDED: IconData
+    PLAY_CIRCLE_FILLED_SHARP: IconData
+    PLAY_CIRCLE_OUTLINE: IconData
+    PLAY_CIRCLE_OUTLINE_OUTLINED: IconData
+    PLAY_CIRCLE_OUTLINE_ROUNDED: IconData
+    PLAY_CIRCLE_OUTLINE_SHARP: IconData
+    PLAY_CIRCLE_OUTLINED: IconData
+    PLAY_CIRCLE_ROUNDED: IconData
+    PLAY_CIRCLE_SHARP: IconData
+    PLAY_DISABLED: IconData
+    PLAY_DISABLED_OUTLINED: IconData
+    PLAY_DISABLED_ROUNDED: IconData
+    PLAY_DISABLED_SHARP: IconData
+    PLAY_FOR_WORK: IconData
+    PLAY_FOR_WORK_OUTLINED: IconData
+    PLAY_FOR_WORK_ROUNDED: IconData
+    PLAY_FOR_WORK_SHARP: IconData
+    PLAY_LESSON: IconData
+    PLAY_LESSON_OUTLINED: IconData
+    PLAY_LESSON_ROUNDED: IconData
+    PLAY_LESSON_SHARP: IconData
     PLAYLIST_ADD: IconData
     PLAYLIST_ADD_CHECK: IconData
     PLAYLIST_ADD_CHECK_CIRCLE: IconData
@@ -5857,38 +5889,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PLAYLIST_REMOVE_OUTLINED: IconData
     PLAYLIST_REMOVE_ROUNDED: IconData
     PLAYLIST_REMOVE_SHARP: IconData
-    PLAY_ARROW: IconData
-    PLAY_ARROW_OUTLINED: IconData
-    PLAY_ARROW_ROUNDED: IconData
-    PLAY_ARROW_SHARP: IconData
-    PLAY_CIRCLE: IconData
-    PLAY_CIRCLE_FILL: IconData
-    PLAY_CIRCLE_FILLED: IconData
-    PLAY_CIRCLE_FILLED_OUTLINED: IconData
-    PLAY_CIRCLE_FILLED_ROUNDED: IconData
-    PLAY_CIRCLE_FILLED_SHARP: IconData
-    PLAY_CIRCLE_FILL_OUTLINED: IconData
-    PLAY_CIRCLE_FILL_ROUNDED: IconData
-    PLAY_CIRCLE_FILL_SHARP: IconData
-    PLAY_CIRCLE_OUTLINE: IconData
-    PLAY_CIRCLE_OUTLINED: IconData
-    PLAY_CIRCLE_OUTLINE_OUTLINED: IconData
-    PLAY_CIRCLE_OUTLINE_ROUNDED: IconData
-    PLAY_CIRCLE_OUTLINE_SHARP: IconData
-    PLAY_CIRCLE_ROUNDED: IconData
-    PLAY_CIRCLE_SHARP: IconData
-    PLAY_DISABLED: IconData
-    PLAY_DISABLED_OUTLINED: IconData
-    PLAY_DISABLED_ROUNDED: IconData
-    PLAY_DISABLED_SHARP: IconData
-    PLAY_FOR_WORK: IconData
-    PLAY_FOR_WORK_OUTLINED: IconData
-    PLAY_FOR_WORK_ROUNDED: IconData
-    PLAY_FOR_WORK_SHARP: IconData
-    PLAY_LESSON: IconData
-    PLAY_LESSON_OUTLINED: IconData
-    PLAY_LESSON_ROUNDED: IconData
-    PLAY_LESSON_SHARP: IconData
     PLUMBING: IconData
     PLUMBING_OUTLINED: IconData
     PLUMBING_ROUNDED: IconData
@@ -6026,13 +6026,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     PUBLIC_ROUNDED: IconData
     PUBLIC_SHARP: IconData
     PUBLISH: IconData
+    PUBLISH_OUTLINED: IconData
+    PUBLISH_ROUNDED: IconData
+    PUBLISH_SHARP: IconData
     PUBLISHED_WITH_CHANGES: IconData
     PUBLISHED_WITH_CHANGES_OUTLINED: IconData
     PUBLISHED_WITH_CHANGES_ROUNDED: IconData
     PUBLISHED_WITH_CHANGES_SHARP: IconData
-    PUBLISH_OUTLINED: IconData
-    PUBLISH_ROUNDED: IconData
-    PUBLISH_SHARP: IconData
     PUNCH_CLOCK: IconData
     PUNCH_CLOCK_OUTLINED: IconData
     PUNCH_CLOCK_ROUNDED: IconData
@@ -6081,10 +6081,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     QUEUE_PLAY_NEXT_SHARP: IconData
     QUEUE_ROUNDED: IconData
     QUEUE_SHARP: IconData
-    QUICKREPLY: IconData
-    QUICKREPLY_OUTLINED: IconData
-    QUICKREPLY_ROUNDED: IconData
-    QUICKREPLY_SHARP: IconData
     QUICK_CONTACTS_DIALER: IconData
     QUICK_CONTACTS_DIALER_OUTLINED: IconData
     QUICK_CONTACTS_DIALER_ROUNDED: IconData
@@ -6093,6 +6089,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     QUICK_CONTACTS_MAIL_OUTLINED: IconData
     QUICK_CONTACTS_MAIL_ROUNDED: IconData
     QUICK_CONTACTS_MAIL_SHARP: IconData
+    QUICKREPLY: IconData
+    QUICKREPLY_OUTLINED: IconData
+    QUICKREPLY_ROUNDED: IconData
+    QUICKREPLY_SHARP: IconData
     QUIZ: IconData
     QUIZ_OUTLINED: IconData
     QUIZ_ROUNDED: IconData
@@ -6101,6 +6101,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     QUORA_OUTLINED: IconData
     QUORA_ROUNDED: IconData
     QUORA_SHARP: IconData
+    R_MOBILEDATA: IconData
+    R_MOBILEDATA_OUTLINED: IconData
+    R_MOBILEDATA_ROUNDED: IconData
+    R_MOBILEDATA_SHARP: IconData
     RADAR: IconData
     RADAR_OUTLINED: IconData
     RADAR_ROUNDED: IconData
@@ -6217,10 +6221,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     REMOVE: IconData
     REMOVE_CIRCLE: IconData
     REMOVE_CIRCLE_OUTLINE: IconData
-    REMOVE_CIRCLE_OUTLINED: IconData
     REMOVE_CIRCLE_OUTLINE_OUTLINED: IconData
     REMOVE_CIRCLE_OUTLINE_ROUNDED: IconData
     REMOVE_CIRCLE_OUTLINE_SHARP: IconData
+    REMOVE_CIRCLE_OUTLINED: IconData
     REMOVE_CIRCLE_ROUNDED: IconData
     REMOVE_CIRCLE_SHARP: IconData
     REMOVE_DONE: IconData
@@ -6260,6 +6264,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     REPARTITION_SHARP: IconData
     REPEAT: IconData
     REPEAT_ON: IconData
+    REPEAT_ON_OUTLINED: IconData
+    REPEAT_ON_ROUNDED: IconData
+    REPEAT_ON_SHARP: IconData
     REPEAT_ONE: IconData
     REPEAT_ONE_ON: IconData
     REPEAT_ONE_ON_OUTLINED: IconData
@@ -6268,9 +6275,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     REPEAT_ONE_OUTLINED: IconData
     REPEAT_ONE_ROUNDED: IconData
     REPEAT_ONE_SHARP: IconData
-    REPEAT_ON_OUTLINED: IconData
-    REPEAT_ON_ROUNDED: IconData
-    REPEAT_ON_SHARP: IconData
     REPEAT_OUTLINED: IconData
     REPEAT_ROUNDED: IconData
     REPEAT_SHARP: IconData
@@ -6431,13 +6435,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     ROUNDED_CORNER_ROUNDED: IconData
     ROUNDED_CORNER_SHARP: IconData
     ROUTE: IconData
+    ROUTE_OUTLINED: IconData
+    ROUTE_ROUNDED: IconData
+    ROUTE_SHARP: IconData
     ROUTER: IconData
     ROUTER_OUTLINED: IconData
     ROUTER_ROUNDED: IconData
     ROUTER_SHARP: IconData
-    ROUTE_OUTLINED: IconData
-    ROUTE_ROUNDED: IconData
-    ROUTE_SHARP: IconData
     ROWING: IconData
     ROWING_OUTLINED: IconData
     ROWING_ROUNDED: IconData
@@ -6462,22 +6466,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     RULE_OUTLINED: IconData
     RULE_ROUNDED: IconData
     RULE_SHARP: IconData
-    RUNNING_WITH_ERRORS: IconData
-    RUNNING_WITH_ERRORS_OUTLINED: IconData
-    RUNNING_WITH_ERRORS_ROUNDED: IconData
-    RUNNING_WITH_ERRORS_SHARP: IconData
     RUN_CIRCLE: IconData
     RUN_CIRCLE_OUTLINED: IconData
     RUN_CIRCLE_ROUNDED: IconData
     RUN_CIRCLE_SHARP: IconData
+    RUNNING_WITH_ERRORS: IconData
+    RUNNING_WITH_ERRORS_OUTLINED: IconData
+    RUNNING_WITH_ERRORS_ROUNDED: IconData
+    RUNNING_WITH_ERRORS_SHARP: IconData
     RV_HOOKUP: IconData
     RV_HOOKUP_OUTLINED: IconData
     RV_HOOKUP_ROUNDED: IconData
     RV_HOOKUP_SHARP: IconData
-    R_MOBILEDATA: IconData
-    R_MOBILEDATA_OUTLINED: IconData
-    R_MOBILEDATA_ROUNDED: IconData
-    R_MOBILEDATA_SHARP: IconData
     SAFETY_CHECK: IconData
     SAFETY_CHECK_OUTLINED: IconData
     SAFETY_CHECK_ROUNDED: IconData
@@ -6503,10 +6503,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SATELLITE_ROUNDED: IconData
     SATELLITE_SHARP: IconData
     SAVE: IconData
-    SAVED_SEARCH: IconData
-    SAVED_SEARCH_OUTLINED: IconData
-    SAVED_SEARCH_ROUNDED: IconData
-    SAVED_SEARCH_SHARP: IconData
     SAVE_ALT: IconData
     SAVE_ALT_OUTLINED: IconData
     SAVE_ALT_ROUNDED: IconData
@@ -6518,6 +6514,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SAVE_OUTLINED: IconData
     SAVE_ROUNDED: IconData
     SAVE_SHARP: IconData
+    SAVED_SEARCH: IconData
+    SAVED_SEARCH_OUTLINED: IconData
+    SAVED_SEARCH_ROUNDED: IconData
+    SAVED_SEARCH_SHARP: IconData
     SAVINGS: IconData
     SAVINGS_OUTLINED: IconData
     SAVINGS_ROUNDED: IconData
@@ -6555,21 +6555,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SCIENCE_ROUNDED: IconData
     SCIENCE_SHARP: IconData
     SCORE: IconData
+    SCORE_OUTLINED: IconData
+    SCORE_ROUNDED: IconData
+    SCORE_SHARP: IconData
     SCOREBOARD: IconData
     SCOREBOARD_OUTLINED: IconData
     SCOREBOARD_ROUNDED: IconData
     SCOREBOARD_SHARP: IconData
-    SCORE_OUTLINED: IconData
-    SCORE_ROUNDED: IconData
-    SCORE_SHARP: IconData
-    SCREENSHOT: IconData
-    SCREENSHOT_MONITOR: IconData
-    SCREENSHOT_MONITOR_OUTLINED: IconData
-    SCREENSHOT_MONITOR_ROUNDED: IconData
-    SCREENSHOT_MONITOR_SHARP: IconData
-    SCREENSHOT_OUTLINED: IconData
-    SCREENSHOT_ROUNDED: IconData
-    SCREENSHOT_SHARP: IconData
     SCREEN_LOCK_LANDSCAPE: IconData
     SCREEN_LOCK_LANDSCAPE_OUTLINED: IconData
     SCREEN_LOCK_LANDSCAPE_ROUNDED: IconData
@@ -6598,6 +6590,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SCREEN_SHARE_OUTLINED: IconData
     SCREEN_SHARE_ROUNDED: IconData
     SCREEN_SHARE_SHARP: IconData
+    SCREENSHOT: IconData
+    SCREENSHOT_MONITOR: IconData
+    SCREENSHOT_MONITOR_OUTLINED: IconData
+    SCREENSHOT_MONITOR_ROUNDED: IconData
+    SCREENSHOT_MONITOR_SHARP: IconData
+    SCREENSHOT_OUTLINED: IconData
+    SCREENSHOT_ROUNDED: IconData
+    SCREENSHOT_SHARP: IconData
     SCUBA_DIVING: IconData
     SCUBA_DIVING_OUTLINED: IconData
     SCUBA_DIVING_ROUNDED: IconData
@@ -6674,14 +6674,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SEND_TO_MOBILE_OUTLINED: IconData
     SEND_TO_MOBILE_ROUNDED: IconData
     SEND_TO_MOBILE_SHARP: IconData
-    SENSORS: IconData
-    SENSORS_OFF: IconData
-    SENSORS_OFF_OUTLINED: IconData
-    SENSORS_OFF_ROUNDED: IconData
-    SENSORS_OFF_SHARP: IconData
-    SENSORS_OUTLINED: IconData
-    SENSORS_ROUNDED: IconData
-    SENSORS_SHARP: IconData
     SENSOR_DOOR: IconData
     SENSOR_DOOR_OUTLINED: IconData
     SENSOR_DOOR_ROUNDED: IconData
@@ -6694,6 +6686,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SENSOR_WINDOW_OUTLINED: IconData
     SENSOR_WINDOW_ROUNDED: IconData
     SENSOR_WINDOW_SHARP: IconData
+    SENSORS: IconData
+    SENSORS_OFF: IconData
+    SENSORS_OFF_OUTLINED: IconData
+    SENSORS_OFF_ROUNDED: IconData
+    SENSORS_OFF_SHARP: IconData
+    SENSORS_OUTLINED: IconData
+    SENSORS_ROUNDED: IconData
+    SENSORS_SHARP: IconData
     SENTIMENT_DISSATISFIED: IconData
     SENTIMENT_DISSATISFIED_OUTLINED: IconData
     SENTIMENT_DISSATISFIED_ROUNDED: IconData
@@ -6718,6 +6718,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SENTIMENT_VERY_SATISFIED_OUTLINED: IconData
     SENTIMENT_VERY_SATISFIED_ROUNDED: IconData
     SENTIMENT_VERY_SATISFIED_SHARP: IconData
+    SET_MEAL: IconData
+    SET_MEAL_OUTLINED: IconData
+    SET_MEAL_ROUNDED: IconData
+    SET_MEAL_SHARP: IconData
     SETTINGS: IconData
     SETTINGS_ACCESSIBILITY: IconData
     SETTINGS_ACCESSIBILITY_OUTLINED: IconData
@@ -6802,14 +6806,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SETTINGS_VOICE_OUTLINED: IconData
     SETTINGS_VOICE_ROUNDED: IconData
     SETTINGS_VOICE_SHARP: IconData
-    SET_MEAL: IconData
-    SET_MEAL_OUTLINED: IconData
-    SET_MEAL_ROUNDED: IconData
-    SET_MEAL_SHARP: IconData
-    SEVENTEEN_MP: IconData
-    SEVENTEEN_MP_OUTLINED: IconData
-    SEVENTEEN_MP_ROUNDED: IconData
-    SEVENTEEN_MP_SHARP: IconData
     SEVEN_K: IconData
     SEVEN_K_OUTLINED: IconData
     SEVEN_K_PLUS: IconData
@@ -6822,6 +6818,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SEVEN_MP_OUTLINED: IconData
     SEVEN_MP_ROUNDED: IconData
     SEVEN_MP_SHARP: IconData
+    SEVENTEEN_MP: IconData
+    SEVENTEEN_MP_OUTLINED: IconData
+    SEVENTEEN_MP_ROUNDED: IconData
+    SEVENTEEN_MP_SHARP: IconData
     SEVERE_COLD: IconData
     SEVERE_COLD_OUTLINED: IconData
     SEVERE_COLD_ROUNDED: IconData
@@ -6852,6 +6852,17 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SHIELD_ROUNDED: IconData
     SHIELD_SHARP: IconData
     SHOP: IconData
+    SHOP_2: IconData
+    SHOP_2_OUTLINED: IconData
+    SHOP_2_ROUNDED: IconData
+    SHOP_2_SHARP: IconData
+    SHOP_OUTLINED: IconData
+    SHOP_ROUNDED: IconData
+    SHOP_SHARP: IconData
+    SHOP_TWO: IconData
+    SHOP_TWO_OUTLINED: IconData
+    SHOP_TWO_ROUNDED: IconData
+    SHOP_TWO_SHARP: IconData
     SHOPIFY: IconData
     SHOPIFY_OUTLINED: IconData
     SHOPIFY_ROUNDED: IconData
@@ -6872,33 +6883,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SHOPPING_CART_OUTLINED: IconData
     SHOPPING_CART_ROUNDED: IconData
     SHOPPING_CART_SHARP: IconData
-    SHOP_2: IconData
-    SHOP_2_OUTLINED: IconData
-    SHOP_2_ROUNDED: IconData
-    SHOP_2_SHARP: IconData
-    SHOP_OUTLINED: IconData
-    SHOP_ROUNDED: IconData
-    SHOP_SHARP: IconData
-    SHOP_TWO: IconData
-    SHOP_TWO_OUTLINED: IconData
-    SHOP_TWO_ROUNDED: IconData
-    SHOP_TWO_SHARP: IconData
-    SHORTCUT: IconData
-    SHORTCUT_OUTLINED: IconData
-    SHORTCUT_ROUNDED: IconData
-    SHORTCUT_SHARP: IconData
     SHORT_TEXT: IconData
     SHORT_TEXT_OUTLINED: IconData
     SHORT_TEXT_ROUNDED: IconData
     SHORT_TEXT_SHARP: IconData
-    SHOWER: IconData
-    SHOWER_OUTLINED: IconData
-    SHOWER_ROUNDED: IconData
-    SHOWER_SHARP: IconData
+    SHORTCUT: IconData
+    SHORTCUT_OUTLINED: IconData
+    SHORTCUT_ROUNDED: IconData
+    SHORTCUT_SHARP: IconData
     SHOW_CHART: IconData
     SHOW_CHART_OUTLINED: IconData
     SHOW_CHART_ROUNDED: IconData
     SHOW_CHART_SHARP: IconData
+    SHOWER: IconData
+    SHOWER_OUTLINED: IconData
+    SHOWER_ROUNDED: IconData
+    SHOWER_SHARP: IconData
     SHUFFLE: IconData
     SHUFFLE_ON: IconData
     SHUFFLE_ON_OUTLINED: IconData
@@ -6915,6 +6915,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SICK_OUTLINED: IconData
     SICK_ROUNDED: IconData
     SICK_SHARP: IconData
+    SIGN_LANGUAGE: IconData
+    SIGN_LANGUAGE_OUTLINED: IconData
+    SIGN_LANGUAGE_ROUNDED: IconData
+    SIGN_LANGUAGE_SHARP: IconData
     SIGNAL_CELLULAR_0_BAR: IconData
     SIGNAL_CELLULAR_0_BAR_OUTLINED: IconData
     SIGNAL_CELLULAR_0_BAR_ROUNDED: IconData
@@ -6943,14 +6947,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_OUTLINED: IconData
     SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_ROUNDED: IconData
     SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR_SHARP: IconData
-    SIGNAL_CELLULAR_NODATA: IconData
-    SIGNAL_CELLULAR_NODATA_OUTLINED: IconData
-    SIGNAL_CELLULAR_NODATA_ROUNDED: IconData
-    SIGNAL_CELLULAR_NODATA_SHARP: IconData
     SIGNAL_CELLULAR_NO_SIM: IconData
     SIGNAL_CELLULAR_NO_SIM_OUTLINED: IconData
     SIGNAL_CELLULAR_NO_SIM_ROUNDED: IconData
     SIGNAL_CELLULAR_NO_SIM_SHARP: IconData
+    SIGNAL_CELLULAR_NODATA: IconData
+    SIGNAL_CELLULAR_NODATA_OUTLINED: IconData
+    SIGNAL_CELLULAR_NODATA_ROUNDED: IconData
+    SIGNAL_CELLULAR_NODATA_SHARP: IconData
     SIGNAL_CELLULAR_NULL: IconData
     SIGNAL_CELLULAR_NULL_OUTLINED: IconData
     SIGNAL_CELLULAR_NULL_ROUNDED: IconData
@@ -6999,10 +7003,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SIGNPOST_OUTLINED: IconData
     SIGNPOST_ROUNDED: IconData
     SIGNPOST_SHARP: IconData
-    SIGN_LANGUAGE: IconData
-    SIGN_LANGUAGE_OUTLINED: IconData
-    SIGN_LANGUAGE_ROUNDED: IconData
-    SIGN_LANGUAGE_SHARP: IconData
     SIM_CARD: IconData
     SIM_CARD_ALERT: IconData
     SIM_CARD_ALERT_OUTLINED: IconData
@@ -7023,18 +7023,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SIP_OUTLINED: IconData
     SIP_ROUNDED: IconData
     SIP_SHARP: IconData
-    SIXTEEN_MP: IconData
-    SIXTEEN_MP_OUTLINED: IconData
-    SIXTEEN_MP_ROUNDED: IconData
-    SIXTEEN_MP_SHARP: IconData
-    SIXTY_FPS: IconData
-    SIXTY_FPS_OUTLINED: IconData
-    SIXTY_FPS_ROUNDED: IconData
-    SIXTY_FPS_SELECT: IconData
-    SIXTY_FPS_SELECT_OUTLINED: IconData
-    SIXTY_FPS_SELECT_ROUNDED: IconData
-    SIXTY_FPS_SELECT_SHARP: IconData
-    SIXTY_FPS_SHARP: IconData
     SIX_FT_APART: IconData
     SIX_FT_APART_OUTLINED: IconData
     SIX_FT_APART_ROUNDED: IconData
@@ -7051,6 +7039,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SIX_MP_OUTLINED: IconData
     SIX_MP_ROUNDED: IconData
     SIX_MP_SHARP: IconData
+    SIXTEEN_MP: IconData
+    SIXTEEN_MP_OUTLINED: IconData
+    SIXTEEN_MP_ROUNDED: IconData
+    SIXTEEN_MP_SHARP: IconData
+    SIXTY_FPS: IconData
+    SIXTY_FPS_OUTLINED: IconData
+    SIXTY_FPS_ROUNDED: IconData
+    SIXTY_FPS_SELECT: IconData
+    SIXTY_FPS_SELECT_OUTLINED: IconData
+    SIXTY_FPS_SELECT_ROUNDED: IconData
+    SIXTY_FPS_SELECT_SHARP: IconData
+    SIXTY_FPS_SHARP: IconData
     SKATEBOARDING: IconData
     SKATEBOARDING_OUTLINED: IconData
     SKATEBOARDING_ROUNDED: IconData
@@ -7075,10 +7075,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SLOW_MOTION_VIDEO_OUTLINED: IconData
     SLOW_MOTION_VIDEO_ROUNDED: IconData
     SLOW_MOTION_VIDEO_SHARP: IconData
-    SMARTPHONE: IconData
-    SMARTPHONE_OUTLINED: IconData
-    SMARTPHONE_ROUNDED: IconData
-    SMARTPHONE_SHARP: IconData
     SMART_BUTTON: IconData
     SMART_BUTTON_OUTLINED: IconData
     SMART_BUTTON_ROUNDED: IconData
@@ -7095,6 +7091,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SMART_TOY_OUTLINED: IconData
     SMART_TOY_ROUNDED: IconData
     SMART_TOY_SHARP: IconData
+    SMARTPHONE: IconData
+    SMARTPHONE_OUTLINED: IconData
+    SMARTPHONE_ROUNDED: IconData
+    SMARTPHONE_SHARP: IconData
     SMOKE_FREE: IconData
     SMOKE_FREE_OUTLINED: IconData
     SMOKE_FREE_ROUNDED: IconData
@@ -7185,6 +7185,9 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SOUTH_WEST_ROUNDED: IconData
     SOUTH_WEST_SHARP: IconData
     SPA: IconData
+    SPA_OUTLINED: IconData
+    SPA_ROUNDED: IconData
+    SPA_SHARP: IconData
     SPACE_BAR: IconData
     SPACE_BAR_OUTLINED: IconData
     SPACE_BAR_ROUNDED: IconData
@@ -7205,9 +7208,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SPATIAL_TRACKING_OUTLINED: IconData
     SPATIAL_TRACKING_ROUNDED: IconData
     SPATIAL_TRACKING_SHARP: IconData
-    SPA_OUTLINED: IconData
-    SPA_ROUNDED: IconData
-    SPA_SHARP: IconData
     SPEAKER: IconData
     SPEAKER_GROUP: IconData
     SPEAKER_GROUP_OUTLINED: IconData
@@ -7353,14 +7353,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     STAIRS_ROUNDED: IconData
     STAIRS_SHARP: IconData
     STAR: IconData
-    STARS: IconData
-    STARS_OUTLINED: IconData
-    STARS_ROUNDED: IconData
-    STARS_SHARP: IconData
-    START: IconData
-    START_OUTLINED: IconData
-    START_ROUNDED: IconData
-    START_SHARP: IconData
     STAR_BORDER: IconData
     STAR_BORDER_OUTLINED: IconData
     STAR_BORDER_PURPLE500: IconData
@@ -7374,10 +7366,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     STAR_HALF_ROUNDED: IconData
     STAR_HALF_SHARP: IconData
     STAR_OUTLINE: IconData
-    STAR_OUTLINED: IconData
     STAR_OUTLINE_OUTLINED: IconData
     STAR_OUTLINE_ROUNDED: IconData
     STAR_OUTLINE_SHARP: IconData
+    STAR_OUTLINED: IconData
     STAR_PURPLE500: IconData
     STAR_PURPLE500_OUTLINED: IconData
     STAR_PURPLE500_ROUNDED: IconData
@@ -7388,6 +7380,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     STAR_RATE_SHARP: IconData
     STAR_ROUNDED: IconData
     STAR_SHARP: IconData
+    STARS: IconData
+    STARS_OUTLINED: IconData
+    STARS_ROUNDED: IconData
+    STARS_SHARP: IconData
+    START: IconData
+    START_OUTLINED: IconData
+    START_ROUNDED: IconData
+    START_SHARP: IconData
     STAY_CURRENT_LANDSCAPE: IconData
     STAY_CURRENT_LANDSCAPE_OUTLINED: IconData
     STAY_CURRENT_LANDSCAPE_ROUNDED: IconData
@@ -7425,10 +7425,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     STORAGE_ROUNDED: IconData
     STORAGE_SHARP: IconData
     STORE: IconData
-    STOREFRONT: IconData
-    STOREFRONT_OUTLINED: IconData
-    STOREFRONT_ROUNDED: IconData
-    STOREFRONT_SHARP: IconData
     STORE_MALL_DIRECTORY: IconData
     STORE_MALL_DIRECTORY_OUTLINED: IconData
     STORE_MALL_DIRECTORY_ROUNDED: IconData
@@ -7436,18 +7432,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     STORE_OUTLINED: IconData
     STORE_ROUNDED: IconData
     STORE_SHARP: IconData
+    STOREFRONT: IconData
+    STOREFRONT_OUTLINED: IconData
+    STOREFRONT_ROUNDED: IconData
+    STOREFRONT_SHARP: IconData
     STORM: IconData
     STORM_OUTLINED: IconData
     STORM_ROUNDED: IconData
     STORM_SHARP: IconData
     STRAIGHT: IconData
+    STRAIGHT_OUTLINED: IconData
+    STRAIGHT_ROUNDED: IconData
+    STRAIGHT_SHARP: IconData
     STRAIGHTEN: IconData
     STRAIGHTEN_OUTLINED: IconData
     STRAIGHTEN_ROUNDED: IconData
     STRAIGHTEN_SHARP: IconData
-    STRAIGHT_OUTLINED: IconData
-    STRAIGHT_ROUNDED: IconData
-    STRAIGHT_SHARP: IconData
     STREAM: IconData
     STREAM_OUTLINED: IconData
     STREAM_ROUNDED: IconData
@@ -7481,13 +7481,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SUBJECT_ROUNDED: IconData
     SUBJECT_SHARP: IconData
     SUBSCRIPT: IconData
+    SUBSCRIPT_OUTLINED: IconData
+    SUBSCRIPT_ROUNDED: IconData
+    SUBSCRIPT_SHARP: IconData
     SUBSCRIPTIONS: IconData
     SUBSCRIPTIONS_OUTLINED: IconData
     SUBSCRIPTIONS_ROUNDED: IconData
     SUBSCRIPTIONS_SHARP: IconData
-    SUBSCRIPT_OUTLINED: IconData
-    SUBSCRIPT_ROUNDED: IconData
-    SUBSCRIPT_SHARP: IconData
     SUBTITLES: IconData
     SUBTITLES_OFF: IconData
     SUBTITLES_OFF_OUTLINED: IconData
@@ -7539,18 +7539,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SWAP_CALLS_ROUNDED: IconData
     SWAP_CALLS_SHARP: IconData
     SWAP_HORIZ: IconData
+    SWAP_HORIZ_OUTLINED: IconData
+    SWAP_HORIZ_ROUNDED: IconData
+    SWAP_HORIZ_SHARP: IconData
     SWAP_HORIZONTAL_CIRCLE: IconData
     SWAP_HORIZONTAL_CIRCLE_OUTLINED: IconData
     SWAP_HORIZONTAL_CIRCLE_ROUNDED: IconData
     SWAP_HORIZONTAL_CIRCLE_SHARP: IconData
-    SWAP_HORIZ_OUTLINED: IconData
-    SWAP_HORIZ_ROUNDED: IconData
-    SWAP_HORIZ_SHARP: IconData
     SWAP_VERT: IconData
-    SWAP_VERTICAL_CIRCLE: IconData
-    SWAP_VERTICAL_CIRCLE_OUTLINED: IconData
-    SWAP_VERTICAL_CIRCLE_ROUNDED: IconData
-    SWAP_VERTICAL_CIRCLE_SHARP: IconData
     SWAP_VERT_CIRCLE: IconData
     SWAP_VERT_CIRCLE_OUTLINED: IconData
     SWAP_VERT_CIRCLE_ROUNDED: IconData
@@ -7558,6 +7554,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SWAP_VERT_OUTLINED: IconData
     SWAP_VERT_ROUNDED: IconData
     SWAP_VERT_SHARP: IconData
+    SWAP_VERTICAL_CIRCLE: IconData
+    SWAP_VERTICAL_CIRCLE_OUTLINED: IconData
+    SWAP_VERTICAL_CIRCLE_ROUNDED: IconData
+    SWAP_VERTICAL_CIRCLE_SHARP: IconData
     SWIPE: IconData
     SWIPE_DOWN: IconData
     SWIPE_DOWN_ALT: IconData
@@ -7675,18 +7675,13 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     SYSTEM_UPDATE_TV_ROUNDED: IconData
     SYSTEM_UPDATE_TV_SHARP: IconData
     TAB: IconData
-    TABLET: IconData
-    TABLET_ANDROID: IconData
-    TABLET_ANDROID_OUTLINED: IconData
-    TABLET_ANDROID_ROUNDED: IconData
-    TABLET_ANDROID_SHARP: IconData
-    TABLET_MAC: IconData
-    TABLET_MAC_OUTLINED: IconData
-    TABLET_MAC_ROUNDED: IconData
-    TABLET_MAC_SHARP: IconData
-    TABLET_OUTLINED: IconData
-    TABLET_ROUNDED: IconData
-    TABLET_SHARP: IconData
+    TAB_OUTLINED: IconData
+    TAB_ROUNDED: IconData
+    TAB_SHARP: IconData
+    TAB_UNSELECTED: IconData
+    TAB_UNSELECTED_OUTLINED: IconData
+    TAB_UNSELECTED_ROUNDED: IconData
+    TAB_UNSELECTED_SHARP: IconData
     TABLE_BAR: IconData
     TABLE_BAR_OUTLINED: IconData
     TABLE_BAR_ROUNDED: IconData
@@ -7707,13 +7702,18 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TABLE_VIEW_OUTLINED: IconData
     TABLE_VIEW_ROUNDED: IconData
     TABLE_VIEW_SHARP: IconData
-    TAB_OUTLINED: IconData
-    TAB_ROUNDED: IconData
-    TAB_SHARP: IconData
-    TAB_UNSELECTED: IconData
-    TAB_UNSELECTED_OUTLINED: IconData
-    TAB_UNSELECTED_ROUNDED: IconData
-    TAB_UNSELECTED_SHARP: IconData
+    TABLET: IconData
+    TABLET_ANDROID: IconData
+    TABLET_ANDROID_OUTLINED: IconData
+    TABLET_ANDROID_ROUNDED: IconData
+    TABLET_ANDROID_SHARP: IconData
+    TABLET_MAC: IconData
+    TABLET_MAC_OUTLINED: IconData
+    TABLET_MAC_ROUNDED: IconData
+    TABLET_MAC_SHARP: IconData
+    TABLET_OUTLINED: IconData
+    TABLET_ROUNDED: IconData
+    TABLET_SHARP: IconData
     TAG: IconData
     TAG_FACES: IconData
     TAG_FACES_OUTLINED: IconData
@@ -7726,14 +7726,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TAKEOUT_DINING_OUTLINED: IconData
     TAKEOUT_DINING_ROUNDED: IconData
     TAKEOUT_DINING_SHARP: IconData
-    TAPAS: IconData
-    TAPAS_OUTLINED: IconData
-    TAPAS_ROUNDED: IconData
-    TAPAS_SHARP: IconData
     TAP_AND_PLAY: IconData
     TAP_AND_PLAY_OUTLINED: IconData
     TAP_AND_PLAY_ROUNDED: IconData
     TAP_AND_PLAY_SHARP: IconData
+    TAPAS: IconData
+    TAPAS_OUTLINED: IconData
+    TAPAS_ROUNDED: IconData
+    TAPAS_SHARP: IconData
     TASK: IconData
     TASK_ALT: IconData
     TASK_ALT_OUTLINED: IconData
@@ -7774,14 +7774,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TERRAIN_OUTLINED: IconData
     TERRAIN_ROUNDED: IconData
     TERRAIN_SHARP: IconData
-    TEXTSMS: IconData
-    TEXTSMS_OUTLINED: IconData
-    TEXTSMS_ROUNDED: IconData
-    TEXTSMS_SHARP: IconData
-    TEXTURE: IconData
-    TEXTURE_OUTLINED: IconData
-    TEXTURE_ROUNDED: IconData
-    TEXTURE_SHARP: IconData
     TEXT_DECREASE: IconData
     TEXT_DECREASE_OUTLINED: IconData
     TEXT_DECREASE_ROUNDED: IconData
@@ -7826,14 +7818,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TEXT_SNIPPET_OUTLINED: IconData
     TEXT_SNIPPET_ROUNDED: IconData
     TEXT_SNIPPET_SHARP: IconData
-    THEATERS: IconData
-    THEATERS_OUTLINED: IconData
-    THEATERS_ROUNDED: IconData
-    THEATERS_SHARP: IconData
+    TEXTSMS: IconData
+    TEXTSMS_OUTLINED: IconData
+    TEXTSMS_ROUNDED: IconData
+    TEXTSMS_SHARP: IconData
+    TEXTURE: IconData
+    TEXTURE_OUTLINED: IconData
+    TEXTURE_ROUNDED: IconData
+    TEXTURE_SHARP: IconData
     THEATER_COMEDY: IconData
     THEATER_COMEDY_OUTLINED: IconData
     THEATER_COMEDY_ROUNDED: IconData
     THEATER_COMEDY_SHARP: IconData
+    THEATERS: IconData
+    THEATERS_OUTLINED: IconData
+    THEATERS_ROUNDED: IconData
+    THEATERS_SHARP: IconData
     THERMOSTAT: IconData
     THERMOSTAT_AUTO: IconData
     THERMOSTAT_AUTO_OUTLINED: IconData
@@ -7854,14 +7854,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     THIRTY_FPS_SELECT_ROUNDED: IconData
     THIRTY_FPS_SELECT_SHARP: IconData
     THIRTY_FPS_SHARP: IconData
-    THREED_ROTATION: IconData
-    THREED_ROTATION_OUTLINED: IconData
-    THREED_ROTATION_ROUNDED: IconData
-    THREED_ROTATION_SHARP: IconData
-    THREESIXTY: IconData
-    THREESIXTY_OUTLINED: IconData
-    THREESIXTY_ROUNDED: IconData
-    THREESIXTY_SHARP: IconData
     THREE_G_MOBILEDATA: IconData
     THREE_G_MOBILEDATA_OUTLINED: IconData
     THREE_G_MOBILEDATA_ROUNDED: IconData
@@ -7882,10 +7874,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     THREE_P_OUTLINED: IconData
     THREE_P_ROUNDED: IconData
     THREE_P_SHARP: IconData
-    THUMBS_UP_DOWN: IconData
-    THUMBS_UP_DOWN_OUTLINED: IconData
-    THUMBS_UP_DOWN_ROUNDED: IconData
-    THUMBS_UP_DOWN_SHARP: IconData
+    THREED_ROTATION: IconData
+    THREED_ROTATION_OUTLINED: IconData
+    THREED_ROTATION_ROUNDED: IconData
+    THREED_ROTATION_SHARP: IconData
+    THREESIXTY: IconData
+    THREESIXTY_OUTLINED: IconData
+    THREESIXTY_ROUNDED: IconData
+    THREESIXTY_SHARP: IconData
     THUMB_DOWN: IconData
     THUMB_DOWN_ALT: IconData
     THUMB_DOWN_ALT_OUTLINED: IconData
@@ -7910,6 +7906,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     THUMB_UP_OUTLINED: IconData
     THUMB_UP_ROUNDED: IconData
     THUMB_UP_SHARP: IconData
+    THUMBS_UP_DOWN: IconData
+    THUMBS_UP_DOWN_OUTLINED: IconData
+    THUMBS_UP_DOWN_ROUNDED: IconData
+    THUMBS_UP_DOWN_SHARP: IconData
     THUNDERSTORM: IconData
     THUNDERSTORM_OUTLINED: IconData
     THUNDERSTORM_ROUNDED: IconData
@@ -7918,6 +7918,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TIKTOK_OUTLINED: IconData
     TIKTOK_ROUNDED: IconData
     TIKTOK_SHARP: IconData
+    TIME_TO_LEAVE: IconData
+    TIME_TO_LEAVE_OUTLINED: IconData
+    TIME_TO_LEAVE_ROUNDED: IconData
+    TIME_TO_LEAVE_SHARP: IconData
     TIMELAPSE: IconData
     TIMELAPSE_OUTLINED: IconData
     TIMELAPSE_ROUNDED: IconData
@@ -7950,10 +7954,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TIMER_OUTLINED: IconData
     TIMER_ROUNDED: IconData
     TIMER_SHARP: IconData
-    TIME_TO_LEAVE: IconData
-    TIME_TO_LEAVE_OUTLINED: IconData
-    TIME_TO_LEAVE_ROUNDED: IconData
-    TIME_TO_LEAVE_SHARP: IconData
     TIPS_AND_UPDATES: IconData
     TIPS_AND_UPDATES_OUTLINED: IconData
     TIPS_AND_UPDATES_ROUNDED: IconData
@@ -8103,14 +8103,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TUNGSTEN_OUTLINED: IconData
     TUNGSTEN_ROUNDED: IconData
     TUNGSTEN_SHARP: IconData
-    TURNED_IN: IconData
-    TURNED_IN_NOT: IconData
-    TURNED_IN_NOT_OUTLINED: IconData
-    TURNED_IN_NOT_ROUNDED: IconData
-    TURNED_IN_NOT_SHARP: IconData
-    TURNED_IN_OUTLINED: IconData
-    TURNED_IN_ROUNDED: IconData
-    TURNED_IN_SHARP: IconData
     TURN_LEFT: IconData
     TURN_LEFT_OUTLINED: IconData
     TURN_LEFT_ROUNDED: IconData
@@ -8135,6 +8127,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TURN_SLIGHT_RIGHT_OUTLINED: IconData
     TURN_SLIGHT_RIGHT_ROUNDED: IconData
     TURN_SLIGHT_RIGHT_SHARP: IconData
+    TURNED_IN: IconData
+    TURNED_IN_NOT: IconData
+    TURNED_IN_NOT_OUTLINED: IconData
+    TURNED_IN_NOT_ROUNDED: IconData
+    TURNED_IN_NOT_SHARP: IconData
+    TURNED_IN_OUTLINED: IconData
+    TURNED_IN_ROUNDED: IconData
+    TURNED_IN_SHARP: IconData
     TV: IconData
     TV_OFF: IconData
     TV_OFF_OUTLINED: IconData
@@ -8187,6 +8187,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     TYPE_SPECIMEN_OUTLINED: IconData
     TYPE_SPECIMEN_ROUNDED: IconData
     TYPE_SPECIMEN_SHARP: IconData
+    U_TURN_LEFT: IconData
+    U_TURN_LEFT_OUTLINED: IconData
+    U_TURN_LEFT_ROUNDED: IconData
+    U_TURN_LEFT_SHARP: IconData
+    U_TURN_RIGHT: IconData
+    U_TURN_RIGHT_OUTLINED: IconData
+    U_TURN_RIGHT_ROUNDED: IconData
+    U_TURN_RIGHT_SHARP: IconData
     UMBRELLA: IconData
     UMBRELLA_OUTLINED: IconData
     UMBRELLA_ROUNDED: IconData
@@ -8255,14 +8263,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     USB_OUTLINED: IconData
     USB_ROUNDED: IconData
     USB_SHARP: IconData
-    U_TURN_LEFT: IconData
-    U_TURN_LEFT_OUTLINED: IconData
-    U_TURN_LEFT_ROUNDED: IconData
-    U_TURN_LEFT_SHARP: IconData
-    U_TURN_RIGHT: IconData
-    U_TURN_RIGHT_OUTLINED: IconData
-    U_TURN_RIGHT_ROUNDED: IconData
-    U_TURN_RIGHT_SHARP: IconData
     VACCINES: IconData
     VACCINES_OUTLINED: IconData
     VACCINES_ROUNDED: IconData
@@ -8315,22 +8315,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     VIBRATION_OUTLINED: IconData
     VIBRATION_ROUNDED: IconData
     VIBRATION_SHARP: IconData
-    VIDEOCAM: IconData
-    VIDEOCAM_OFF: IconData
-    VIDEOCAM_OFF_OUTLINED: IconData
-    VIDEOCAM_OFF_ROUNDED: IconData
-    VIDEOCAM_OFF_SHARP: IconData
-    VIDEOCAM_OUTLINED: IconData
-    VIDEOCAM_ROUNDED: IconData
-    VIDEOCAM_SHARP: IconData
-    VIDEOGAME_ASSET: IconData
-    VIDEOGAME_ASSET_OFF: IconData
-    VIDEOGAME_ASSET_OFF_OUTLINED: IconData
-    VIDEOGAME_ASSET_OFF_ROUNDED: IconData
-    VIDEOGAME_ASSET_OFF_SHARP: IconData
-    VIDEOGAME_ASSET_OUTLINED: IconData
-    VIDEOGAME_ASSET_ROUNDED: IconData
-    VIDEOGAME_ASSET_SHARP: IconData
     VIDEO_CALL: IconData
     VIDEO_CALL_OUTLINED: IconData
     VIDEO_CALL_ROUNDED: IconData
@@ -8371,6 +8355,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     VIDEO_STABLE_OUTLINED: IconData
     VIDEO_STABLE_ROUNDED: IconData
     VIDEO_STABLE_SHARP: IconData
+    VIDEOCAM: IconData
+    VIDEOCAM_OFF: IconData
+    VIDEOCAM_OFF_OUTLINED: IconData
+    VIDEOCAM_OFF_ROUNDED: IconData
+    VIDEOCAM_OFF_SHARP: IconData
+    VIDEOCAM_OUTLINED: IconData
+    VIDEOCAM_ROUNDED: IconData
+    VIDEOCAM_SHARP: IconData
+    VIDEOGAME_ASSET: IconData
+    VIDEOGAME_ASSET_OFF: IconData
+    VIDEOGAME_ASSET_OFF_OUTLINED: IconData
+    VIDEOGAME_ASSET_OFF_ROUNDED: IconData
+    VIDEOGAME_ASSET_OFF_SHARP: IconData
+    VIDEOGAME_ASSET_OUTLINED: IconData
+    VIDEOGAME_ASSET_ROUNDED: IconData
+    VIDEOGAME_ASSET_SHARP: IconData
     VIEW_AGENDA: IconData
     VIEW_AGENDA_OUTLINED: IconData
     VIEW_AGENDA_ROUNDED: IconData
@@ -8471,10 +8471,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     VISIBILITY_OUTLINED: IconData
     VISIBILITY_ROUNDED: IconData
     VISIBILITY_SHARP: IconData
-    VOICEMAIL: IconData
-    VOICEMAIL_OUTLINED: IconData
-    VOICEMAIL_ROUNDED: IconData
-    VOICEMAIL_SHARP: IconData
     VOICE_CHAT: IconData
     VOICE_CHAT_OUTLINED: IconData
     VOICE_CHAT_ROUNDED: IconData
@@ -8483,6 +8479,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     VOICE_OVER_OFF_OUTLINED: IconData
     VOICE_OVER_OFF_ROUNDED: IconData
     VOICE_OVER_OFF_SHARP: IconData
+    VOICEMAIL: IconData
+    VOICEMAIL_OUTLINED: IconData
+    VOICEMAIL_ROUNDED: IconData
+    VOICEMAIL_SHARP: IconData
     VOLCANO: IconData
     VOLCANO_OUTLINED: IconData
     VOLCANO_ROUNDED: IconData
@@ -8573,10 +8573,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WATCH_ROUNDED: IconData
     WATCH_SHARP: IconData
     WATER: IconData
-    WATERFALL_CHART: IconData
-    WATERFALL_CHART_OUTLINED: IconData
-    WATERFALL_CHART_ROUNDED: IconData
-    WATERFALL_CHART_SHARP: IconData
     WATER_DAMAGE: IconData
     WATER_DAMAGE_OUTLINED: IconData
     WATER_DAMAGE_ROUNDED: IconData
@@ -8588,6 +8584,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WATER_OUTLINED: IconData
     WATER_ROUNDED: IconData
     WATER_SHARP: IconData
+    WATERFALL_CHART: IconData
+    WATERFALL_CHART_OUTLINED: IconData
+    WATERFALL_CHART_ROUNDED: IconData
+    WATERFALL_CHART_SHARP: IconData
     WAVES: IconData
     WAVES_OUTLINED: IconData
     WAVES_ROUNDED: IconData
@@ -8630,10 +8630,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WC_ROUNDED: IconData
     WC_SHARP: IconData
     WEB: IconData
-    WEBHOOK: IconData
-    WEBHOOK_OUTLINED: IconData
-    WEBHOOK_ROUNDED: IconData
-    WEBHOOK_SHARP: IconData
     WEB_ASSET: IconData
     WEB_ASSET_OFF: IconData
     WEB_ASSET_OFF_OUTLINED: IconData
@@ -8649,6 +8645,10 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WEB_STORIES_OUTLINED: IconData
     WEB_STORIES_ROUNDED: IconData
     WEB_STORIES_SHARP: IconData
+    WEBHOOK: IconData
+    WEBHOOK_OUTLINED: IconData
+    WEBHOOK_ROUNDED: IconData
+    WEBHOOK_SHARP: IconData
     WECHAT: IconData
     WECHAT_OUTLINED: IconData
     WECHAT_ROUNDED: IconData
@@ -8748,14 +8748,14 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WIFI_TETHERING_OUTLINED: IconData
     WIFI_TETHERING_ROUNDED: IconData
     WIFI_TETHERING_SHARP: IconData
-    WINDOW: IconData
-    WINDOW_OUTLINED: IconData
-    WINDOW_ROUNDED: IconData
-    WINDOW_SHARP: IconData
     WIND_POWER: IconData
     WIND_POWER_OUTLINED: IconData
     WIND_POWER_ROUNDED: IconData
     WIND_POWER_SHARP: IconData
+    WINDOW: IconData
+    WINDOW_OUTLINED: IconData
+    WINDOW_ROUNDED: IconData
+    WINDOW_SHARP: IconData
     WINE_BAR: IconData
     WINE_BAR_OUTLINED: IconData
     WINE_BAR_ROUNDED: IconData
@@ -8777,16 +8777,6 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WORDPRESS_ROUNDED: IconData
     WORDPRESS_SHARP: IconData
     WORK: IconData
-    WORKSPACES: IconData
-    WORKSPACES_FILLED: IconData
-    WORKSPACES_OUTLINE: IconData
-    WORKSPACES_OUTLINED: IconData
-    WORKSPACES_ROUNDED: IconData
-    WORKSPACES_SHARP: IconData
-    WORKSPACE_PREMIUM: IconData
-    WORKSPACE_PREMIUM_OUTLINED: IconData
-    WORKSPACE_PREMIUM_ROUNDED: IconData
-    WORKSPACE_PREMIUM_SHARP: IconData
     WORK_HISTORY: IconData
     WORK_HISTORY_OUTLINED: IconData
     WORK_HISTORY_ROUNDED: IconData
@@ -8796,12 +8786,22 @@ class Icons(IconData, package_name="flet", class_name="Icons"):
     WORK_OFF_ROUNDED: IconData
     WORK_OFF_SHARP: IconData
     WORK_OUTLINE: IconData
-    WORK_OUTLINED: IconData
     WORK_OUTLINE_OUTLINED: IconData
     WORK_OUTLINE_ROUNDED: IconData
     WORK_OUTLINE_SHARP: IconData
+    WORK_OUTLINED: IconData
     WORK_ROUNDED: IconData
     WORK_SHARP: IconData
+    WORKSPACE_PREMIUM: IconData
+    WORKSPACE_PREMIUM_OUTLINED: IconData
+    WORKSPACE_PREMIUM_ROUNDED: IconData
+    WORKSPACE_PREMIUM_SHARP: IconData
+    WORKSPACES: IconData
+    WORKSPACES_FILLED: IconData
+    WORKSPACES_OUTLINE: IconData
+    WORKSPACES_OUTLINED: IconData
+    WORKSPACES_ROUNDED: IconData
+    WORKSPACES_SHARP: IconData
     WRAP_TEXT: IconData
     WRAP_TEXT_OUTLINED: IconData
     WRAP_TEXT_ROUNDED: IconData

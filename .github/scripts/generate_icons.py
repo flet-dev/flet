@@ -68,18 +68,18 @@ def main():
     generate_file(
         icons,
         "material_icons.dart",
-        "../packages/flet/lib/src/utils/material_icons.dart",
+        "../../packages/flet/lib/src/utils/material_icons.dart",
     )
 
     generate_file(
         icons,
         "material_icons.pyi",
-        "../sdk/python/packages/flet/src/flet/controls/material/icons.pyi",
+        "../../sdk/python/packages/flet/src/flet/controls/material/icons.pyi",
     )
 
     generate_json(
         icons,
-        "../sdk/python/packages/flet/src/flet/controls/material/icons.json",
+        "../../sdk/python/packages/flet/src/flet/controls/material/icons.json",
     )
 
     # cupertino icons
@@ -91,18 +91,18 @@ def main():
     generate_file(
         icons,
         "cupertino_icons.dart",
-        "../packages/flet/lib/src/utils/cupertino_icons.dart",
+        "../../packages/flet/lib/src/utils/cupertino_icons.dart",
     )
 
     generate_file(
         icons,
         "cupertino_icons.pyi",
-        "../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.pyi",
+        "../../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.pyi",
     )
 
     generate_json(
         icons,
-        "../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.json",
+        "../../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.json",
     )
 
 
