@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import random
 from importlib import resources
 
 from flet.controls.icon_data import IconData
@@ -21,10 +22,11 @@ class _CupertinoIconData(IconData, package_name="flet", class_name="CupertinoIco
 
 
 class _CupertinoIconsProxy:
-    __slots__ = ("_map",)
+    __slots__ = ("_map", "_values")
 
     def __init__(self) -> None:
         self._map: dict[str, int] | None = None
+        self._values: list[_CupertinoIconData] | None = None
 
     def _load(self) -> None:
         if self._map is not None:
@@ -35,6 +37,13 @@ class _CupertinoIconsProxy:
             .read_text(encoding="utf-8")
         )
         self._map = json.loads(data)
+
+    def _get_values(self) -> list[_CupertinoIconData]:
+        self._load()
+        if self._values is None:
+            assert self._map is not None
+            self._values = [_CupertinoIconData(v) for v in self._map.values()]
+        return self._values
 
     def __getattr__(self, name: str) -> IconData:
         self._load()
@@ -48,6 +57,22 @@ class _CupertinoIconsProxy:
         self._load()
         assert self._map is not None
         return sorted(self._map.keys())
+
+    def random(
+        self,
+        exclude: list[IconData] | None = None,
+        weights: dict[IconData, int] | None = None,
+    ) -> IconData | None:
+        choices = list(self._get_values())
+        if exclude:
+            excluded = set(exclude)
+            choices = [icon for icon in choices if icon not in excluded]
+            if not choices:
+                return None
+        if weights:
+            weights_list = [weights.get(icon, 1) for icon in choices]
+            return random.choices(choices, weights=weights_list)[0]
+        return random.choice(choices)
 
 
 CupertinoIcons = _CupertinoIconsProxy()
