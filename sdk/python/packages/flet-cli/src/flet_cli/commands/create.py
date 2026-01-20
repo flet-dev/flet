@@ -1,5 +1,6 @@
 import argparse
 import os
+import platform
 from pathlib import Path
 
 from packaging import version
@@ -68,10 +69,18 @@ class Command(BaseCommand):
 
         self.verbose = options.verbose
 
+        system_name = platform.system().lower()
+        platform_name = {
+            "windows": "windows",
+            "darwin": "darwin",
+            "linux": "linux",
+        }.get(system_name, system_name)
+
         template_data = {
             "template_name": options.template,
             "flet_version": flet.version.flet_version,
             "sep": os.sep,
+            "platform": platform_name,
         }
 
         template_ref = options.template_ref
