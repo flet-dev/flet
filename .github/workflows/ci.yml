@@ -437,6 +437,7 @@ jobs:
           fi
           apt-get update --allow-releaseinfo-change
           apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
+          apt-get install -y pkg-config libsecret-1-0 libsecret-1-dev
           apt-get install -y \
             libmpv-dev mpv \
             libgstreamer1.0-dev \
@@ -718,6 +719,7 @@ jobs:
             flet-map
             flet-permission-handler
             flet-rive
+            flet-secure-storage
             flet-video
             flet-webview
           )
@@ -835,6 +837,7 @@ jobs:
             flet_map \
             flet_permission_handler \
             flet_rive \
+            flet_secure_storage \
             flet_video \
             flet_webview; do
             uv publish dist/**/${pkg}-*
