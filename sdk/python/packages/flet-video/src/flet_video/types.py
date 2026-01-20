@@ -91,6 +91,20 @@ class VideoConfiguration:
     """
 
 
+    mpv_properties: Optional[dict[str, str | int | float | bool]] = None
+    """
+    Extra mpv/libmpv properties to set on native backend only (Windows/macOS/Linux/iOS/Android).
+    This dictionary is applied to the underlying media_kit `NativePlayer` before opening media.
+    Keys correspond to mpv option/property names without the leading '--'.
+
+    Example:
+        `{
+            'profile': 'low-latency',
+            'untimed': 'yes',
+        }`
+    """
+
+
 @dataclass
 class VideoSubtitleTrack:
     """Represents a subtitle track for a video."""
