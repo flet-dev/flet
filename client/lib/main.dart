@@ -13,6 +13,8 @@ import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
+import 'package:flet_secure_storage/flet_secure_storage.dart'
+    as flet_secure_storage;
 // --FAT_CLIENT_START--
 // --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
@@ -48,6 +50,7 @@ void main([List<String>? args]) async {
     flet_flashlight.Extension(),
     flet_datatable2.Extension(),
     flet_charts.Extension(),
+    flet_secure_storage.Extension(),
     // --FAT_CLIENT_START--
     // --RIVE_EXTENSION_START--
     flet_rive.Extension(),
@@ -90,10 +93,8 @@ void main([List<String>? args]) async {
         assetsDir = args[2];
         debugPrint("Args contain a path assets directory: $assetsDir}");
       }
-    } else if (!kDebugMode &&
-        (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
-      throw Exception(
-          'In desktop mode Flet app URL must be provided as a first argument.');
+    } else if (!kDebugMode && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+      throw Exception('In desktop mode Flet app URL must be provided as a first argument.');
     }
   }
 
