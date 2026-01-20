@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass, field
 from typing import (
+    TYPE_CHECKING,
     Optional,
     Union,
 )
@@ -27,7 +28,6 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.services.service import Service
-from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     ColorValue,
@@ -42,6 +42,9 @@ from flet.controls.types import (
 )
 
 logger = logging.getLogger("flet")
+
+if TYPE_CHECKING:
+    from flet.controls.theme import Theme
 
 
 @dataclass
@@ -159,14 +162,14 @@ class BasePage(AdaptiveControl):
     The page's theme mode.
     """
 
-    theme: Optional[Theme] = None
+    theme: Optional["Theme"] = None
     """
     Customizes the theme of the application when in light theme mode. Currently, a
     theme can only be automatically generated from a "seed" color. For example, to
     generate light theme from a green color.
     """
 
-    dark_theme: Optional[Theme] = None
+    dark_theme: Optional["Theme"] = None
     """
     Customizes the theme of the application when in dark theme mode.
     """

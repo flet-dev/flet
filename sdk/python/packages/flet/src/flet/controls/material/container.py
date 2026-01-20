@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -20,7 +20,6 @@ from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
-from flet.controls.theme import Theme
 from flet.controls.types import (
     BlendMode,
     ClipBehavior,
@@ -30,6 +29,9 @@ from flet.controls.types import (
 )
 
 __all__ = ["Container"]
+
+if TYPE_CHECKING:
+    from flet.controls.theme import Theme
 
 
 @control("Container")
@@ -176,13 +178,13 @@ class Container(LayoutControl, AdaptiveControl):
     it is fired after that.
     """
 
-    theme: Optional[Theme] = None
+    theme: Optional["Theme"] = None
     """
     Allows setting a nested theme for all controls inside this container and down its
     tree.
     """
 
-    dark_theme: Optional[Theme] = None
+    dark_theme: Optional["Theme"] = None
     """
     Allows setting a nested theme to be used when in dark theme mode for all controls
     inside the container and down its tree.
