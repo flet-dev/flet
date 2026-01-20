@@ -5,8 +5,10 @@ repos:
       # Run the linter.
       - id: ruff
         args: [ --fix ]
+        exclude: ^\.github/
       # Run the formatter.
       - id: ruff-format
+        exclude: ^\.github/
 
   - repo: https://github.com/aio-libs/sort-all
     rev: v1.3.0

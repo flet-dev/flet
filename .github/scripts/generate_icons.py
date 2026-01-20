@@ -5,6 +5,7 @@
 # ]
 # ///
 
+import json
 import re
 from pathlib import Path
 
@@ -49,6 +50,14 @@ def generate_file(icons, template_name, output_file: str):
     print(f"✅ File written to {output_file}")
 
 
+def generate_json(icons, output_file: str):
+    payload = {name.upper(): value for name, value in icons}
+    output_path = Path(__file__).parent.joinpath(output_file).resolve()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    print(f"✅ JSON written to {output_file}")
+
+
 def main():
     # material icons
     url = "https://raw.githubusercontent.com/flutter/flutter/refs/heads/stable/packages/flutter/lib/src/material/icons.dart"
@@ -64,8 +73,13 @@ def main():
 
     generate_file(
         icons,
-        "material_icons.py",
-        "../sdk/python/packages/flet/src/flet/controls/material/icons.py",
+        "material_icons.pyi",
+        "../sdk/python/packages/flet/src/flet/controls/material/icons.pyi",
+    )
+
+    generate_json(
+        icons,
+        "../sdk/python/packages/flet/src/flet/controls/material/icons.json",
     )
 
     # cupertino icons
@@ -82,8 +96,13 @@ def main():
 
     generate_file(
         icons,
-        "cupertino_icons.py",
-        "../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.py",
+        "cupertino_icons.pyi",
+        "../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.pyi",
+    )
+
+    generate_json(
+        icons,
+        "../sdk/python/packages/flet/src/flet/controls/cupertino/cupertino_icons.json",
     )
 
 
