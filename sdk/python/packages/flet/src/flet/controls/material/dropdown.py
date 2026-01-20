@@ -9,7 +9,6 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
-from flet.controls.material.icons import Icons
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
@@ -196,7 +195,7 @@ class Dropdown(LayoutControl):
     Configures how the text input should be capitalized.
     """
 
-    trailing_icon: IconDataOrControl = Icons.ARROW_DROP_DOWN
+    trailing_icon: Optional[IconDataOrControl] = None
     """
     An icon to display at the end of the text field.
     """
@@ -209,7 +208,7 @@ class Dropdown(LayoutControl):
     be aligned with the text in the text field.
     """
 
-    selected_trailing_icon: IconDataOrControl = Icons.ARROW_DROP_UP
+    selected_trailing_icon: Optional[IconDataOrControl] = None
     """
     An optional icon at the end of the text field to indicate that the text field is
     pressed.
@@ -241,6 +240,16 @@ class Dropdown(LayoutControl):
     """
     Called when the control has lost focus.
     """
+
+    def before_update(self):
+        super().before_update()
+        if self.trailing_icon is None or self.selected_trailing_icon is None:
+            from flet.controls.material.icons import Icons
+
+            if self.trailing_icon is None:
+                self.trailing_icon = Icons.ARROW_DROP_DOWN
+            if self.selected_trailing_icon is None:
+                self.selected_trailing_icon = Icons.ARROW_DROP_UP
 
     # From FormField
 

@@ -10,7 +10,7 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
-from flet.controls.material.icons import IconData
+from flet.controls.icon_data import IconData
 from flet.controls.types import (
     ColorValue,
     Orientation,
