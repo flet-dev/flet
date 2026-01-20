@@ -86,7 +86,7 @@ jobs:
       id-token: write # Required for authentication using OIDC
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
-      BUILD_VER: ${{ steps.versions.outputs.BUILD_VER }}
+      BUILD_NUM: ${{ steps.versions.outputs.BUILD_NUM }}
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -137,7 +137,8 @@ jobs:
       - python_tests
       - build_flet_package
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -167,7 +168,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          flutter build windows --build-name="$BUILD_VER"
+          flutter build windows --build-name="$PKG_VER" --build-number="$BUILD_NUM"
 
           # Copy needed runtime DLLs
           cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
@@ -199,7 +200,6 @@ jobs:
 
           for wheel in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$wheel" "py3-none-win_amd64"
-            repackage_wheel_with_tag "$wheel" "py3-none-win32"
             rm -f "$wheel"
           done
 
@@ -222,7 +222,8 @@ jobs:
       - python_tests
       - build_flet_package
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
@@ -241,7 +242,7 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          flutter build macos --build-name="$BUILD_VER"
+          flutter build macos --build-name="$PKG_VER" --build-number="$BUILD_NUM"
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
           mkdir -p "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
           cp flet-macos.tar.gz "${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
@@ -257,7 +258,7 @@ jobs:
 
           for file in dist/*-py3-none-any.whl; do
             repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_arm64"
-            repackage_wheel_with_tag "$file" "py3-none-macosx_10_14_x86_64"
+            repackage_wheel_with_tag "$file" "py3-none-macosx_12_0_x86_64"
             rm "$file"
           done
 
@@ -276,29 +277,131 @@ jobs:
   build_linux:
     name: Build Flet Client for Linux ${{ matrix.title }}
     runs-on: ${{ matrix.runner }}
+    container:
+      image: ${{ matrix.container }}
     needs:
       - python_tests
       - build_flet_package
     strategy:
       matrix:
         include:
-          - arch: arm64
-            runner: ubuntu-24.04-arm
-            build_arch: arm64
-            platform_arch: aarch64
-            title: ARM64
-          - arch: amd64
+          - distro_id: debian10
+            container: debian:10
+            manylinux_tag: manylinux_2_28
+            arch: amd64
             runner: ubuntu-24.04
             build_arch: x64
             platform_arch: x86_64
-            title: AMD64
+            rive_enabled: false
+            title: Debian 10 AMD64
+          - distro_id: debian10
+            container: debian:10
+            manylinux_tag: manylinux_2_28
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Debian 10 ARM64
+          - distro_id: debian12
+            container: debian:12
+            manylinux_tag: manylinux_2_36
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: false
+            title: Debian 12 AMD64
+          - distro_id: debian12
+            container: debian:12
+            manylinux_tag: manylinux_2_36
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Debian 12 ARM64
+          - distro_id: ubuntu20.04
+            container: ubuntu:20.04
+            manylinux_tag: manylinux_2_31
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: false
+            title: Ubuntu 20.04 AMD64
+          - distro_id: ubuntu20.04
+            container: ubuntu:20.04
+            manylinux_tag: manylinux_2_31
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 20.04 ARM64
+          - distro_id: ubuntu22.04
+            container: ubuntu:22.04
+            manylinux_tag: manylinux_2_35
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: false
+            title: Ubuntu 22.04 AMD64
+          - distro_id: ubuntu22.04
+            container: ubuntu:22.04
+            manylinux_tag: manylinux_2_35
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 22.04 ARM64
+          - distro_id: ubuntu24.04
+            container: ubuntu:24.04
+            manylinux_tag: manylinux_2_39
+            arch: amd64
+            runner: ubuntu-24.04
+            build_arch: x64
+            platform_arch: x86_64
+            rive_enabled: true
+            title: Ubuntu 24.04 AMD64
+          - distro_id: ubuntu24.04
+            container: ubuntu:24.04
+            manylinux_tag: manylinux_2_39
+            arch: arm64
+            runner: ubuntu-24.04-arm
+            build_arch: arm64
+            platform_arch: aarch64
+            rive_enabled: false
+            title: Ubuntu 24.04 ARM64
     env:
-      BUILD_VER: ${{ needs.build_flet_package.outputs.BUILD_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
+      BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
       ARCH: ${{ matrix.arch }}
       BUILD_ARCH: ${{ matrix.build_arch }}
       PLATFORM_ARCH: ${{ matrix.platform_arch }}
+      DISTRO_ID: ${{ matrix.distro_id }}
+      MANYLINUX_TAG: ${{ matrix.manylinux_tag }}
+      RIVE_ENABLED: ${{ matrix.rive_enabled }}
     steps:
+      - name: Install base packages
+        shell: bash
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          export TZ=Etc/UTC
+          if [[ "$DISTRO_ID" == "debian10" ]]; then
+            printf '%s\n' \
+              'deb http://archive.debian.org/debian buster main' \
+              'deb http://archive.debian.org/debian buster-updates main' \
+              'deb http://archive.debian.org/debian-security buster/updates main' \
+              > /etc/apt/sources.list
+            echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+          fi
+          apt-get update
+          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -318,14 +421,24 @@ jobs:
           channel: ${{ matrix.arch == 'arm64' && 'master' || 'stable' }}  # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
           cache: true
 
+      - name: Mark git safe directories
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [[ -n "${FLUTTER_ROOT:-}" ]]; then
+            git config --global --add safe.directory "$FLUTTER_ROOT"
+          fi
+
       - name: Install dependencies
         shell: bash
         run: |
-          sudo sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
-          sudo apt update --allow-releaseinfo-change
-          sudo apt install -y clang libgtk-3-dev libasound2-dev
-          sudo apt install -y pkg-config libsecret-1-0 libsecret-1-dev
-          sudo apt install -y \
+          if [[ -f /etc/apt/sources.list ]]; then
+            sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
+          fi
+          apt-get update --allow-releaseinfo-change
+          apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libasound2-dev libunwind-dev
+          apt-get install -y pkg-config libsecret-1-0 libsecret-1-dev
+          apt-get install -y \
             libmpv-dev mpv \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
@@ -341,6 +454,7 @@ jobs:
         working-directory: client
         run: |
           STAGING_DIR="${RUNNER_TEMP:-/tmp}/flet_tars_${ARCH}"
+          STAGING_DIR="${STAGING_DIR}_${DISTRO_ID}"
           echo "STAGING_DIR=$STAGING_DIR" >> "$GITHUB_ENV"
           mkdir -p "$STAGING_DIR"
 
@@ -363,8 +477,8 @@ jobs:
               sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
             fi
 
-            if [[ "$ARCH" == "arm64" ]]; then
-              # flet_rive is excluded for Linux ARM64 builds
+            if [[ "$RIVE_ENABLED" != "true" ]]; then
+              # flet_rive is excluded unless explicitly enabled
               sed -i '/--RIVE_CLIENT_START--/,/--RIVE_CLIENT_END--/d' pubspec.yaml
               sed -i '/--RIVE_IMPORT_START--/,/--RIVE_IMPORT_END--/d' lib/main.dart
               sed -i '/--RIVE_EXTENSION_START--/,/--RIVE_EXTENSION_END--/d' lib/main.dart
@@ -372,7 +486,7 @@ jobs:
             echo "::endgroup::"
 
             echo "::group::($PACKAGE_NAME) Flutter build"
-            flutter build linux --build-name="$BUILD_VER"
+            flutter build linux --build-name="$PKG_VER" --build-number="$BUILD_NUM"
 
             # Remove any previous build output, so mv below works as expected
             rm -rf "build/linux/${BUILD_ARCH}/release/flet"
@@ -381,16 +495,16 @@ jobs:
             mv "build/linux/${BUILD_ARCH}/release/bundle" "build/linux/${BUILD_ARCH}/release/flet"
 
             # Create a compressed tarball of the "flet" directory for distribution
-            tar -czvf "flet-linux${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
+            tar -czvf "flet-linux-${DISTRO_ID}${SUFFIX}-${ARCH}.tar.gz" -C "build/linux/${BUILD_ARCH}/release" flet
 
             # Stage the archive
-            cp -f "flet-linux${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz"
+            cp -f "flet-linux-${DISTRO_ID}${SUFFIX}-${ARCH}.tar.gz" "${STAGING_DIR}/flet-linux-${DISTRO_ID}-${FLAVOR}-${ARCH}.tar.gz"
 
             echo "::endgroup::"
           }
 
-          build_flutter "flet-desktop"
           build_flutter "flet-desktop-light"
+          build_flutter "flet-desktop"
 
       - name: Build flet-desktop and flet-desktop-light Python packages
         shell: bash
@@ -426,7 +540,7 @@ jobs:
 
             # Move corresponding staged Linux client to the app directory, so it is part of wheel
             rm -f "${FLET_DESKTOP_APP}"/flet-linux-${ARCH}.tar.gz
-            mv -f "${STAGING_DIR}/flet-linux-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
+            mv -f "${STAGING_DIR}/flet-linux-${DISTRO_ID}-${FLAVOR}-${ARCH}.tar.gz" "${FLET_DESKTOP_APP}/flet-linux-${ARCH}.tar.gz"
 
             uv build --wheel
 
@@ -446,8 +560,7 @@ jobs:
 
             # Wheel tags to generate from the universal wheel
             wheel_tags=(
-              "py3-none-manylinux_2_17_${PLATFORM_ARCH},py3-none-manylinux2014_${PLATFORM_ARCH}"
-              "py3-none-musllinux_1_2_${PLATFORM_ARCH}"
+              "py3-none-${MANYLINUX_TAG}_${PLATFORM_ARCH}"
             )
 
             # Repackage each universal wheel with all specified platform tags
@@ -470,7 +583,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: linux-${{ matrix.arch }}-artifacts
+          name: linux-${{ matrix.distro_id }}-${{ matrix.arch }}-artifacts
           if-no-files-found: error
           path: |
             client/flet-linux*.tar.gz

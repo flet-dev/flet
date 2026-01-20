@@ -29,6 +29,14 @@ __all__ = [
     "get_event_field_type",
 ]
 
+_EVAL_TYPE_HAS_TYPE_PARAMS = "type_params" in inspect.signature(_eval_type).parameters
+
+
+def _eval_type_compat(annotation, globalns, localns):
+    if _EVAL_TYPE_HAS_TYPE_PARAMS:
+        return _eval_type(annotation, globalns, localns, None)
+    return _eval_type(annotation, globalns, localns)
+
 
 def get_event_field_type(control: Any, field_name: str):
     frame = inspect.currentframe().f_back
@@ -72,14 +80,14 @@ def get_event_field_type(control: Any, field_name: str):
     try:
         # Resolve forward refs manually
         if isinstance(annotation, ForwardRef):
-            annotation = _eval_type(annotation, globalns, localns)
+            annotation = _eval_type_compat(annotation, globalns, localns)
 
         clbs = get_args(annotation)  # callable(s)
         clb = clbs[1] if len(clbs) > 2 else clbs[0]
         event_type = get_args(clb)[0][0]
 
         if isinstance(event_type, ForwardRef):
-            event_type = _eval_type(event_type, globalns, localns)
+            event_type = _eval_type_compat(event_type, globalns, localns)
 
         return event_type
     except Exception as e:

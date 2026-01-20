@@ -13,11 +13,12 @@ import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
+import 'package:flet_secure_storage/flet_secure_storage.dart'
+    as flet_secure_storage;
+// --FAT_CLIENT_START--
 // --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --RIVE_IMPORT_END--
-import 'package:flet_secure_storage/flet_secure_storage.dart'
-    as flet_secure_storage;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
@@ -46,20 +47,19 @@ void main([List<String>? args]) async {
     flet_lottie.Extension(),
     flet_map.Extension(),
     flet_ads.Extension(),
-    // --RIVE_EXTENSION_START--
-    flet_rive.Extension(),
-    // --RIVE_EXTENSION_END--
     flet_webview.Extension(),
     flet_flashlight.Extension(),
     flet_datatable2.Extension(),
     flet_charts.Extension(),
     flet_secure_storage.Extension(),
+    // --FAT_CLIENT_START--
+    // --RIVE_EXTENSION_START--
+    flet_rive.Extension(),
+    // --RIVE_EXTENSION_END--
+    flet_audio.Extension(),
+    flet_video.Extension(),
+    // --FAT_CLIENT_END--
   ];
-
-  // --FAT_CLIENT_START--
-  extensions.add(flet_audio.Extension());
-  extensions.add(flet_video.Extension());
-  // --FAT_CLIENT_END--
 
   // initialize extensions
   for (var extension in extensions) {

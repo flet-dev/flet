@@ -41,6 +41,12 @@ dependencies:
 
   flet_video:
     path: ../sdk/python/packages/flet-video/src/flutter/flet_video
+
+  # --RIVE_CLIENT_START--
+  flet_rive:
+    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
+  # --RIVE_CLIENT_END--
+
 # --FAT_CLIENT_END--
 
   flet_audio_recorder:
@@ -66,11 +72,6 @@ dependencies:
 
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
-
-  # --RIVE_CLIENT_START--
-  flet_rive:
-    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
-  # --RIVE_CLIENT_END--
 
   flet_secure_storage:
     path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
