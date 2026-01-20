@@ -19,7 +19,6 @@ import 'package:flet_secure_storage/flet_secure_storage.dart'
 // --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --RIVE_IMPORT_END--
-// --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
