@@ -32,8 +32,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     final mpvPropsRaw = cfg["mpv_properties"];
     if (mpvPropsRaw is! Map) return;
 
-    if (_player.platform is! NativePlayer) return;
-    final native = _player.platform as NativePlayer;
+    final platform = _player.platform;
+    if (platform is! NativePlayer) return;
+    final native = platform as dynamic;
 
     for (final entry in mpvPropsRaw.entries) {
       final key = entry.key.toString();
