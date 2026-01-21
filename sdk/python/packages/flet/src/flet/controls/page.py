@@ -539,7 +539,7 @@ class Page(BasePage):
 
     @deprecated(
         "Use push_route() instead.",
-        version="0.70.0",
+        version="0.80.0",
         delete_version="0.90.0",
         show_parentheses=True,
     )
@@ -889,7 +889,7 @@ class Page(BasePage):
         return self.session.pubsub_client
 
     @property
-    @deprecated("Use UrlLauncher() instead.", version="0.70.0", delete_version="0.90.0")
+    @deprecated("Use UrlLauncher() instead.", version="0.80.0", delete_version="0.90.0")
     def url_launcher(self) -> UrlLauncher:
         """
         DEPRECATED: The UrlLauncher service for the current page.
@@ -898,7 +898,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use BrowserContextMenu() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use BrowserContextMenu() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def browser_context_menu(self):
         """
@@ -909,7 +909,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use SharedPreferences() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use SharedPreferences() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def shared_preferences(self):
         """
@@ -919,7 +919,7 @@ class Page(BasePage):
         return SharedPreferences()
 
     @property
-    @deprecated("Use Clipboard() instead.", version="0.70.0", delete_version="0.90.0")
+    @deprecated("Use Clipboard() instead.", version="0.80.0", delete_version="0.90.0")
     def clipboard(self):
         """
         DEPRECATED: The Clipboard service for the current page.
@@ -929,7 +929,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use StoragePaths() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use StoragePaths() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def storage_paths(self):
         """

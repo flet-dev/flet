@@ -1,17 +1,19 @@
+from typing import Optional
+
 import flet as ft
 
 
 @ft.control(isolated=True)
 class MyPanel(ft.Container):
     # control properties
-    color: ft.OptionalColorValue = None
+    color: Optional[ft.ColorValue] = None
     greeting: str = "Hi"
 
     # called only once
     def build(self):
         print(self.page.platform)
         self.content = ft.Column(
-            [
+            controls=[
                 ft.Button(
                     f"Make {self.color.value}", on_click=self.on_change_color_click
                 ),
@@ -32,11 +34,11 @@ class MyPanel(ft.Container):
 def main(page: ft.Page):
     page.controls.append(
         ft.Row(
-            [
+            vertical_alignment=ft.CrossAxisAlignment.START,
+            controls=[
                 MyPanel(color=ft.Colors.RED, width=200),
                 MyPanel(color=ft.Colors.GREEN, greeting="whoops", width=200),
             ],
-            vertical_alignment=ft.CrossAxisAlignment.START,
         )
     )
 

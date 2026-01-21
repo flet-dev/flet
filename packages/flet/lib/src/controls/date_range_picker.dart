@@ -4,6 +4,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
+import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
 
@@ -30,6 +31,7 @@ class DateRangePickerControl extends StatelessWidget {
         control.getIconData("switch_to_calendar_icon");
     var switchToInputEntryModeIcon =
         control.getIconData("switch_to_input_icon");
+    var locale = control.getLocale("locale");
 
     void onClosed(DateTimeRange<DateTime>? dateRangeValue) {
       control.updateProperties({"_open": false}, python: false);
@@ -74,7 +76,10 @@ class DateRangePickerControl extends StatelessWidget {
             : null,
       );
 
-      return dialog;
+      return locale == null || !locale.isSupportedByDelegates()
+          ? dialog
+          : Localizations.override(
+              context: context, locale: locale, child: dialog);
     }
 
     if (open && (open != lastOpen)) {

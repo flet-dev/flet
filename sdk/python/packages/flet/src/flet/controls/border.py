@@ -266,8 +266,8 @@ class Border:
 
 @deprecated(
     reason="Use Border.all() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> Border:
@@ -277,8 +277,8 @@ def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> B
 
 @deprecated(
     reason="Use Border.symmetric() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def symmetric(
@@ -289,8 +289,8 @@ def symmetric(
 
 @deprecated(
     reason="Use Border.only() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def only(
