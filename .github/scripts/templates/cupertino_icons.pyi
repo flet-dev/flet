@@ -12,8 +12,7 @@ from flet.controls.icon_data import IconData
 
 __all__ = ["CupertinoIcons"]
 
-
-class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons"):
+class CupertinoIcons:
     {% for name, code in icons -%}
     {{ name.upper() }}: IconData
     {% endfor -%}

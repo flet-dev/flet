@@ -12,7 +12,7 @@ from flet.controls.icon_data import IconData
 
 __all__ = ["Icons"]
 
-class Icons(IconData, package_name="flet", class_name="Icons"):
+class Icons:
     ABC: IconData
     ABC_OUTLINED: IconData
     ABC_ROUNDED: IconData

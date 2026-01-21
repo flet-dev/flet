@@ -12,7 +12,7 @@ from flet.controls.icon_data import IconData
 
 __all__ = ["CupertinoIcons"]
 
-class CupertinoIcons(IconData, package_name="flet", class_name="CupertinoIcons"):
+class CupertinoIcons:
     ADD: IconData
     ADD_CIRCLED: IconData
     ADD_CIRCLED_SOLID: IconData
