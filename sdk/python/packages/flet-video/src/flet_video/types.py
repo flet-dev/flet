@@ -95,12 +95,14 @@ class VideoConfiguration:
     """
     Extra mpv/libmpv properties to set on native backend only (Windows/macOS/Linux/iOS/Android).
     This dictionary is applied to the underlying media_kit `NativePlayer` before opening media.
-    Keys correspond to mpv option/property names without the leading '--'.
+    Keys correspond to mpv option/property names without the leading '--' (`--hdr-compute-peak` becomes `hdr-compute-peak`).
+    All values are converted to String. Boolean values are converted to `yes`/`no`.
+    See the full list of parameters: https://mpv.io/manual/stable/#options
 
     Example:
         `{
             'profile': 'low-latency',
-            'untimed': 'yes',
+            'untimed': True,
         }`
     """
 
