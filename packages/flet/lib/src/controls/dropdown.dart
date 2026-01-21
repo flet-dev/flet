@@ -10,6 +10,7 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/layout.dart';
 import '../utils/menu.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
@@ -291,6 +292,7 @@ class _DropdownControlState extends State<DropdownControl> {
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
       menuStyle: menuStyle,
+      expandedInsets: widget.control.getExpand("expand") == 1 ? EdgeInsets.zero : null,
       inputDecorationTheme: inputDecorationTheme,
       inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
       onSelected: widget.control.disabled
