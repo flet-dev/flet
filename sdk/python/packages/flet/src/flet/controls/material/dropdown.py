@@ -241,16 +241,6 @@ class Dropdown(LayoutControl):
     Called when the control has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.trailing_icon is None or self.selected_trailing_icon is None:
-            from flet.controls.material.icons import Icons
-
-            if self.trailing_icon is None:
-                self.trailing_icon = Icons.ARROW_DROP_DOWN
-            if self.selected_trailing_icon is None:
-                self.selected_trailing_icon = Icons.ARROW_DROP_UP
-
     # From FormField
 
     error_style: Optional[TextStyle] = None
