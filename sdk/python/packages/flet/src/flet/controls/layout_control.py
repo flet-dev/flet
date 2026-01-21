@@ -170,7 +170,7 @@ class LayoutControl(Control):
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.LayoutControl.] property.
+    Enables implicit animation of the [`opacity`][flet.Control.] property.
 
     More information [here](https://docs.flet.dev/cookbook/animations).
     """

@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from flet.app import app, app_async, run, run_async
 from flet.components.component import Component
 from flet.components.component_decorator import component
@@ -149,7 +151,7 @@ from flet.controls.core.window import (
     WindowResizeEdge,
 )
 from flet.controls.core.window_drag_area import WindowDragArea
-from flet.controls.cupertino import cupertino_colors, cupertino_icons
+from flet.controls.cupertino import cupertino_colors
 from flet.controls.cupertino.cupertino_action_sheet import CupertinoActionSheet
 from flet.controls.cupertino.cupertino_action_sheet_action import (
     CupertinoActionSheetAction,
@@ -177,7 +179,6 @@ from flet.controls.cupertino.cupertino_date_picker import (
 )
 from flet.controls.cupertino.cupertino_dialog_action import CupertinoDialogAction
 from flet.controls.cupertino.cupertino_filled_button import CupertinoFilledButton
-from flet.controls.cupertino.cupertino_icons import CupertinoIcons
 from flet.controls.cupertino.cupertino_list_tile import CupertinoListTile
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.cupertino.cupertino_picker import CupertinoPicker
@@ -254,7 +255,7 @@ from flet.controls.id_counter import IdCounter
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.layout_control import ConstrainedControl, LayoutControl
 from flet.controls.margin import Margin, MarginValue
-from flet.controls.material import dropdown, dropdownm2, icons
+from flet.controls.material import dropdown, dropdownm2
 from flet.controls.material.alert_dialog import AlertDialog
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.auto_complete import (
@@ -308,7 +309,6 @@ from flet.controls.material.icon_button import (
     IconButton,
     OutlinedIconButton,
 )
-from flet.controls.material.icons import Icons
 from flet.controls.material.list_tile import (
     ListTile,
     ListTileStyle,
@@ -479,52 +479,6 @@ from flet.controls.text_style import (
     TextStyle,
     TextThemeStyle,
 )
-from flet.controls.theme import (
-    AppBarTheme,
-    BadgeTheme,
-    BannerTheme,
-    BottomAppBarTheme,
-    BottomSheetTheme,
-    ButtonTheme,
-    CardTheme,
-    CheckboxTheme,
-    ChipTheme,
-    ColorScheme,
-    DataTableTheme,
-    DatePickerTheme,
-    DialogTheme,
-    DividerTheme,
-    DropdownTheme,
-    ExpansionTileTheme,
-    FilledButtonTheme,
-    FloatingActionButtonTheme,
-    IconButtonTheme,
-    IconTheme,
-    ListTileTheme,
-    NavigationBarTheme,
-    NavigationDrawerTheme,
-    NavigationRailTheme,
-    OutlinedButtonTheme,
-    PageTransitionsTheme,
-    PageTransitionTheme,
-    PopupMenuTheme,
-    ProgressIndicatorTheme,
-    RadioTheme,
-    ScrollbarTheme,
-    SearchBarTheme,
-    SearchViewTheme,
-    SegmentedButtonTheme,
-    SliderTheme,
-    SnackBarTheme,
-    SwitchTheme,
-    SystemOverlayStyle,
-    TabBarTheme,
-    TextButtonTheme,
-    TextTheme,
-    Theme,
-    TimePickerTheme,
-    TooltipTheme,
-)
 from flet.controls.transform import (
     Offset,
     OffsetValue,
@@ -577,6 +531,58 @@ from flet.controls.types import (
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.version import flet_version as __version__
+
+if TYPE_CHECKING:
+    from flet.controls.cupertino import cupertino_icons
+    from flet.controls.cupertino.cupertino_icons import CupertinoIcons
+    from flet.controls.material import icons
+    from flet.controls.material.icons import Icons
+    from flet.controls.theme import (
+        AppBarTheme,
+        BadgeTheme,
+        BannerTheme,
+        BottomAppBarTheme,
+        BottomSheetTheme,
+        ButtonTheme,
+        CardTheme,
+        CheckboxTheme,
+        ChipTheme,
+        ColorScheme,
+        DataTableTheme,
+        DatePickerTheme,
+        DialogTheme,
+        DividerTheme,
+        DropdownTheme,
+        ExpansionTileTheme,
+        FilledButtonTheme,
+        FloatingActionButtonTheme,
+        IconButtonTheme,
+        IconTheme,
+        ListTileTheme,
+        NavigationBarTheme,
+        NavigationDrawerTheme,
+        NavigationRailTheme,
+        OutlinedButtonTheme,
+        PageTransitionsTheme,
+        PageTransitionTheme,
+        PopupMenuTheme,
+        ProgressIndicatorTheme,
+        RadioTheme,
+        ScrollbarTheme,
+        SearchBarTheme,
+        SearchViewTheme,
+        SegmentedButtonTheme,
+        SliderTheme,
+        SnackBarTheme,
+        SwitchTheme,
+        SystemOverlayStyle,
+        TabBarTheme,
+        TextButtonTheme,
+        TextTheme,
+        Theme,
+        TimePickerTheme,
+        TooltipTheme,
+    )
 
 __all__ = [
     "Accelerometer",
@@ -1080,3 +1086,74 @@ __all__ = [
     "use_ref",
     "use_state",
 ]
+
+_THEME_EXPORTS = {
+    "AppBarTheme",
+    "BadgeTheme",
+    "BannerTheme",
+    "BottomAppBarTheme",
+    "BottomSheetTheme",
+    "ButtonTheme",
+    "CardTheme",
+    "CheckboxTheme",
+    "ChipTheme",
+    "ColorScheme",
+    "DataTableTheme",
+    "DatePickerTheme",
+    "DialogTheme",
+    "DividerTheme",
+    "DropdownTheme",
+    "ExpansionTileTheme",
+    "FilledButtonTheme",
+    "FloatingActionButtonTheme",
+    "IconButtonTheme",
+    "IconTheme",
+    "ListTileTheme",
+    "NavigationBarTheme",
+    "NavigationDrawerTheme",
+    "NavigationRailTheme",
+    "OutlinedButtonTheme",
+    "PageTransitionsTheme",
+    "PageTransitionTheme",
+    "PopupMenuTheme",
+    "ProgressIndicatorTheme",
+    "RadioTheme",
+    "ScrollbarTheme",
+    "SearchBarTheme",
+    "SearchViewTheme",
+    "SegmentedButtonTheme",
+    "SliderTheme",
+    "SnackBarTheme",
+    "SwitchTheme",
+    "SystemOverlayStyle",
+    "TabBarTheme",
+    "TextButtonTheme",
+    "TextTheme",
+    "Theme",
+    "TimePickerTheme",
+    "TooltipTheme",
+}
+
+
+def __getattr__(name: str):
+    if name in _THEME_EXPORTS:
+        from flet.controls import theme
+
+        return getattr(theme, name)
+    if name == "Icons":
+        from flet.controls.material.icons import Icons
+
+        return Icons
+    if name == "CupertinoIcons":
+        from flet.controls.cupertino.cupertino_icons import CupertinoIcons
+
+        return CupertinoIcons
+    if name == "icons":
+        import importlib
+
+        return importlib.import_module("flet.controls.material.icons")
+    if name == "cupertino_icons":
+        import importlib
+
+        return importlib.import_module("flet.controls.cupertino.cupertino_icons")
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
