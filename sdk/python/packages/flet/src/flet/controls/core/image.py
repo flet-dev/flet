@@ -113,7 +113,7 @@ class Image(LayoutControl):
     - Raw bytes.
 
     If `None`, no placeholder is shown while loading; the [`src`][(c).]
-    simply appears (or fades in if [`placeholder`][(c).] or
+    simply appears (or fades in if [`placeholder_src`][(c).] or
     [`placeholder_fade_out_animation`][(c).] is not `None`).
 
     Note:
@@ -132,20 +132,21 @@ class Image(LayoutControl):
     fade_in_animation: Optional[Animation] = None
     """
     Fade-in animation of the [`src`][(c).] image as it appears after loading,
-    replacing the [`placeholder`][(c).].
+    replacing the [`placeholder_src`][(c).].
 
     If `None`, defaults to
     `Animation(Duration(milliseconds=250), AnimationCurve.EASE_IN_OUT)`,
-    if [`placeholder`][(c).] or [`placeholder_fade_out_animation`][(c).] is not `None`.
+    if [`placeholder_src`][(c).] or [`placeholder_fade_out_animation`][(c).]
+    is not `None`.
     """
 
     placeholder_fade_out_animation: Optional[Animation] = None
     """
-    Fade-out animation for the [`placeholder`][(c).], after the [`src`][(c).] loads.
+    Fade-out animation for the [`placeholder_src`][(c).], after the [`src`][(c).] loads.
 
     If `None`, defaults to
     `Animation(Duration(milliseconds=150), AnimationCurve.EASE_OUT)`,
-    if [`placeholder`][(c).] or [`fade_in_animation`][(c).] is not `None`.
+    if [`placeholder_src`][(c).] or [`fade_in_animation`][(c).] is not `None`.
     """
 
     cache_width: Optional[int] = None
