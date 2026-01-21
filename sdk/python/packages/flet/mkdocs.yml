@@ -962,7 +962,6 @@ nav:
       - Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
       - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
       - Expanding Controls: cookbook/expanding-controls.md
-      - File Picker and Uploads: cookbook/file-picker-and-uploads.md
       - Fonts: cookbook/fonts.md
       - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
       - Large Lists: cookbook/large-lists.md

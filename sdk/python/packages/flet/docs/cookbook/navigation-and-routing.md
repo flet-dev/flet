@@ -189,7 +189,7 @@ Flet web apps support two ways of configuring URL-based routing:
 - **Path** (default) - paths are read and written without a hash. For example, `fletapp.dev/path/to/view`.
 - **Hash** - paths are read and written to the [hash fragment](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax). For example, `fletapp.dev/#/path/to/view`.
 
-To change URL strategy use `route_url_strategy` parameter of `flet.app()` method, for example:
+To change URL strategy use `route_url_strategy` parameter of `flet.run()` method, for example:
 
 ```python
 ft.run(main, route_url_strategy="hash")
