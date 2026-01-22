@@ -1,3 +1,7 @@
+## 0.80.4
+
+* Flutter 3.38.7.
+
 ## 0.80.3
 
 * feat: add `locale` prop to `CupertinoDatePicker`, `DatePicker`, `DateRangePicker`, `TimePicker` ([#6030](https://github.com/flet-dev/flet/issues/6030)).

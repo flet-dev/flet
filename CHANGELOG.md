@@ -1,3 +1,7 @@
+## 0.80.4
+
+* Refactor `Icons` and `CupertinoIcons` proxies for member caching and iteration.
+
 ## 0.80.3
 
 * Lazy loading of icons, theme for faster app startup ([#6043](https://github.com/flet-dev/flet/issues/6043)).

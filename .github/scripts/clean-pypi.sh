@@ -1,6 +1,6 @@
 # set PYPI_CLEANUP_PASSWORD with pypi.org password
 
-VER="0\.81\.0\.dev(?!7287)"
+VER="0\.81\.0\.dev(?!7200)"
 uv tool install pypi-cleanup
 uvx pypi-cleanup -u flet -p flet -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-cli -y -r $VER --do-it
