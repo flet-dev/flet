@@ -303,23 +303,23 @@ In the example above, Spinkit control creates a hardcoded Flutter widget. Now le
 
 ### Common properties
 
-Generally, there are two types of controls in Flet:
+Generally, there are three types of controls in Flet:
 
 1. Visual controls that are added to the app/page surface, such as FletSpinkit.
 
-2. Non-visual controls that can be:
+2. Dialog and other popup controls (dialogs, pickers, panels, etc.) that are opened from the page (for example, `page.open(dlg)`).
 
-    * popup controls (dialogs, pickers, panels etc.) that are opened from the page (for example, `page.open(dlg)`).
-
-    * services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
+3. Services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
 
 Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
 
 Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
 
-When creating non-visual control, your Python control should be inherited from [`Control`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/control.py). Then, to be able to use `Control` properties in your app, you need to add them to the constructor of your Python Control. In its dart counterpart (`src/flet_spinkit.dart`) use `baseControl()` to wrap your Flutter widget.
+When creating a visual control that should participate in layout (size, position, transforms, margin, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/layout_control.py). In its Dart counterpart (`src/flet_spinkit.dart`), wrap your Flutter widget with `LayoutControl(...)`.
 
-When creating visual control, your Python control should be inherited from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/layout_control.py). In its dart counterpart (`src/flet_spinkit.dart`) use `LayoutControl()` to wrap your Flutter widget.
+When creating a dialog or other popup control (opened with `page.open(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/dialog_control.py). In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
+
+When creating a service control (Clipboard, Battery, Video, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/services/service.py). In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
 
 Then, to be able to use `Control` and `LayoutControl` properties in your app, you need to add them to the constructor of your Python Control.
 
