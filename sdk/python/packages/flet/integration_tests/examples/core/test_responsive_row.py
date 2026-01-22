@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 import flet as ft
@@ -89,6 +91,7 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(1000, 800)
     flet_app_function.page.update()
+    await asyncio.sleep(1)
     for _ in range(10):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
