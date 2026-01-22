@@ -207,11 +207,7 @@ Package is the component that will be used in your app. It consists of two parts
 
 ##### flet_spinkit.py
 
-Here you create Flet Python control - a Python class that you use in your Flet app.
-
-The minumal requirements for this class is that it has to be inherited from Flet `Control` and it has to
-have `_get_control_name` method that will return the control name. This name should be the same as `args.control.type`
-we check in the `create_control.dart` file.
+Defines the Python-side Flet control. `FletSpinkit` is registered with `@ft.control("flet_spinkit")` and inherits from `ft.LayoutControl`, which ties it to the Flutter `Control.type` handled in the extension. The class currently includes a value: str property and a placeholder docstring.
 
 #### Flutter
 
@@ -251,7 +247,7 @@ Absolute path to your Flet extension folder, for example:
 ```
 dependencies = [
   "flet-spinkit @ file:///Users/user-name/projects/flet-spinkit",
-  "flet>=0.26.0",
+  "flet>=0.80.2",
 ]
 ```
 
@@ -262,7 +258,7 @@ Link to git repository, for example:
 ```
 dependencies = [
   "flet-ads @ git+https://github.com/flet-dev/flet-ads.git",
-  "flet>=0.26.0",
+  "flet>=0.80.2",
 ]
 ```
 
@@ -273,7 +269,7 @@ Name of the package published on pypi.org, for example:
 ```
 dependencies = [
   "flet-ads",
-  "flet>=0.26.0",
+  "flet>=0.80.2",
 ]
 ```
 
@@ -281,9 +277,9 @@ dependencies = [
 
 If you are planning to share your extension with community, you can easily generate documentation from your source code using [mkdocs](https://www.mkdocs.org/).
 
-Flet extension comes with `docs` folder containing initial files for your documentation and `mkdocs.yml`.
+Flet extension comes with a `docs` folder containing initial files for your documentation and a `mkdocs.yml` file at the project root.
 
-Run the following command to see how your docs look locally:
+From the folder that contains `mkdocs.yml`, run the following command to see how your docs look locally:
 
 ```
 mkdocs serve
@@ -313,15 +309,15 @@ Generally, there are two types of controls in Flet:
 
 2. Non-visual controls that can be:
 
-    * popup controls (dialogs, pickers, panels etc.).
+    * popup controls (dialogs, pickers, panels etc.) that are opened from the page (for example, `page.open(dlg)`).
 
-    * services that are added to `overlay`, such as Video or Audio.
+    * services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
 
 Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
 
 Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
 
-When creating non-visual control, your Python control should be inherited from ['Control](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/control.py). Then, to be able to use `Control` properties in your app, you need to add them to the constructor of your Python Control. In its dart counterpart (`src/flet_spinkit.dart`) use `baseControl()` to wrap your Flutter widget.
+When creating non-visual control, your Python control should be inherited from [`Control`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/control.py). Then, to be able to use `Control` properties in your app, you need to add them to the constructor of your Python Control. In its dart counterpart (`src/flet_spinkit.dart`) use `baseControl()` to wrap your Flutter widget.
 
 When creating visual control, your Python control should be inherited from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/layout_control.py). In its dart counterpart (`src/flet_spinkit.dart`) use `LayoutControl()` to wrap your Flutter widget.
 
