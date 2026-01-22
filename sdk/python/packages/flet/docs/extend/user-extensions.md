@@ -311,17 +311,19 @@ Generally, there are three types of controls in Flet:
 
 3. Services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
 
-Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
-
-Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
-
 When creating a visual control that should participate in layout (size, position, transforms, margin, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/layout_control.py). In its Dart counterpart (`src/flet_spinkit.dart`), wrap your Flutter widget with `LayoutControl(...)`.
 
 When creating a dialog or other popup control (opened with `page.open(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/dialog_control.py). In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
 
 When creating a service control (Clipboard, Battery, Video, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/services/service.py). In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
 
-Then, to be able to use `Control` and `LayoutControl` properties in your app, you need to add them to the constructor of your Python Control.
+Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
+
+Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
+
+Flet `DialogControl` class is inherited from `AdaptiveControl` and adds dialog-specific properties like `open` and `on_dismiss`, which are used by popup controls opened with `page.open(...)`.
+
+To be able to use `Control` and `LayoutControl` and `DialogControl` properties in your app, you need to add them to the constructor of your Python Control.
 
 See reference for the common Control properties [here](https://flet.dev/docs/controls).
 
