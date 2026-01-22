@@ -8,8 +8,8 @@ __all__ = [
     "Padding",
     "PaddingValue",
     "all",
-    "symmetric",
     "only",
+    "symmetric",
 ]
 
 
@@ -70,8 +70,8 @@ class Padding:
 
 @deprecated(
     reason="Use Padding.all() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def all(value: float) -> Padding:
@@ -80,8 +80,8 @@ def all(value: float) -> Padding:
 
 @deprecated(
     reason="Use Padding.symmetric() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def symmetric(vertical: float = 0, horizontal: float = 0) -> Padding:
@@ -90,8 +90,8 @@ def symmetric(vertical: float = 0, horizontal: float = 0) -> Padding:
 
 @deprecated(
     reason="Use Padding.only() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def only(

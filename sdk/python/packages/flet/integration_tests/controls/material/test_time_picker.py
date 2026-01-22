@@ -44,7 +44,6 @@ async def test_hour_format_12(flet_app: ftt.FletTestApp, request):
     flet_app.page.enable_screenshots = True
     flet_app.resize_page(600, 450)
     flet_app.page.update()
-    await flet_app.tester.pump_and_settle()
 
     flet_app.page.show_dialog(
         ft.TimePicker(
@@ -71,6 +70,29 @@ async def test_hour_format_24(flet_app: ftt.FletTestApp, request):
 
     flet_app.page.show_dialog(
         ft.TimePicker(
+            value=datetime.time(hour=19, minute=30),
+            hour_format=ft.TimePickerHourFormat.H24,
+        )
+    )
+
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        request.node.name,
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_locale(flet_app: ftt.FletTestApp, request):
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(600, 450)
+    flet_app.page.update()
+
+    flet_app.page.show_dialog(
+        ft.TimePicker(
+            locale=ft.Locale("zh", "Hans"),
             value=datetime.time(hour=19, minute=30),
             hour_format=ft.TimePickerHourFormat.H24,
         )

@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 import flet as ft
@@ -41,7 +43,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive1",
+        "basic_1",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
             delay=ft.Duration(seconds=1),
@@ -53,7 +55,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive2",
+        "basic_2",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
             delay=ft.Duration(seconds=1),
@@ -65,15 +67,15 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive3",
+        "basic_3",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio,
             delay=ft.Duration(seconds=1),
         ),
     )
     flet_app_function.create_gif(
-        ["responsive1", "responsive2", "responsive3"],
-        "responsive_row_basic",
+        ["basic_1", "basic_2", "basic_3"],
+        "basic",
         duration=1600,
         disposal=ftt.DisposalMode.BACKGROUND,
     )
@@ -89,11 +91,12 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(1000, 800)
     flet_app_function.page.update()
+    await asyncio.sleep(1)
     for _ in range(10):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive_custom_1",
+        "custom_breakpoint_1",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
@@ -104,7 +107,7 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive_custom_2",
+        "custom_breakpoint_2",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
@@ -115,14 +118,14 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.pump(100)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "responsive_custom_3",
+        "custom_breakpoint_3",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
     flet_app_function.create_gif(
-        ["responsive_custom_1", "responsive_custom_2", "responsive_custom_3"],
-        "responsive_row_custom_breakpoint",
+        ["custom_breakpoint_1", "custom_breakpoint_2", "custom_breakpoint_3"],
+        "custom_breakpoint",
         duration=1600,
         disposal=ftt.DisposalMode.BACKGROUND,
     )

@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from flet.controls.page import Page
 
 
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
 def app(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:
@@ -43,7 +43,7 @@ def app(*args, **kwargs):
     return run(*new_args, **kwargs)
 
 
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
 def app_async(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:

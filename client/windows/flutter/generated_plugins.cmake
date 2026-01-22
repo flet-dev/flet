@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   battery_plus
   connectivity_plus
+  flutter_secure_storage_windows
   geolocator_windows
   media_kit_libs_windows_video
   media_kit_video

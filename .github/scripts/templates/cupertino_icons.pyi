@@ -1,5 +1,5 @@
 """
-Flet Material Icons
+Flet Cupertino Icons Stub
 
 To generate/update this file run from the root of the repository:
 
@@ -10,10 +10,9 @@ uv run .github/scripts/generate_icons.py
 
 from flet.controls.icon_data import IconData
 
-__all__ = ["Icons"]
+__all__ = ["CupertinoIcons"]
 
-
-class Icons(IconData, package_name="flet", class_name="Icons"):
+class CupertinoIcons:
     {% for name, code in icons -%}
-    {{ name.upper() }} = {{ "0x%X" % code }}
+    {{ name.upper() }}: IconData
     {% endfor -%}
