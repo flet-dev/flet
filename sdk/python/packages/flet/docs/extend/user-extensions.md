@@ -1,4 +1,4 @@
-While Flet controls leverage many built-in Flutter widgets, enabling the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included within the core Flet framework.
+While Flet controls leverage many built-in Flutter widgets to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
 
 To address this, the Flet framework provides an extensibility mechanism. This allows you to incorporate widgets and APIs from your own custom Flutter packages or [third-party libraries](https://pub.dev/packages?sort=popularity) directly into your Flet application.
 
@@ -12,9 +12,9 @@ To integrate custom Flutter package into Flet you need to have basic understandi
 
 Flet now makes it easy to create and build projects with your custom controls based on Flutter widgets or Flutter 3rd-party packages. In the example below, we will be creating a custom Flet extension based on the [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) package.
 
-1. Create new virtual environment and [install Flet](../getting-started/create-flet-app.md) there.
+**Step 1.** Create new virtual environment and [install Flet](../getting-started/create-flet-app.md) there.
 
-2. Create new Flet extension project from template:
+**Step 2.** Create new extension project from template.
 
 ```
 flet create --template extension --project-name flet-spinkit
@@ -22,7 +22,7 @@ flet create --template extension --project-name flet-spinkit
 
 A project with new FletSpinkit control will be created. The control is just a Flutter Text widget with text property, which we will customize later.
 
-3. Build your app.
+**Step 3.** Build example app.
 
 Flet project created from extension template has `examples/flet_spinkit_example` folder with the example app.
 
@@ -38,9 +38,9 @@ Open the app and see the new custom Flet Control:
 open build/macos/flet-spinkit-example.app
 ```
 
-<img src="/img/docs/extending-flet/example.png" className="screenshot-30" />
+<img src="/assets/extensions/example.png" className="screenshot-30" />
 
-4. Change your app.
+#### Change Python files
 
 Once the project was built for desktop once, you can make changes to your python files and run it without re-building.
 
@@ -89,9 +89,9 @@ and run:
 flet run
 ```
 
-<img src="/img/docs/extending-flet/example-pink.png" className="screenshot-30" />
+<img src="/assets/extensions/example-pink.png" className="screenshot-20" />
 
-5. Re-build your app.
+#### Change Flutter package
 
 When you make any changes to your flutter package, you need to re-build:
 
@@ -109,7 +109,7 @@ build/macos/flet-spinkit-example.app/Contents/MacOS/flet-spinkit-example --debug
 
 Let's integrate [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) package into our Flet app.
 
-1. Add dependency.
+**Step 1.** Add dependency
 
 Go to `src/flutter/flet_spinkit` folder and run this command to add dependency to `flutter_spinkit` to `pubspec.yaml`:
 
@@ -119,7 +119,7 @@ flutter pub add flutter_spinkit
 
 Read more information about using Flutter packages [here](https://docs.flutter.dev/packages-and-plugins/using-packages).
 
-2. Modify `dart` file.
+**Step 2.** Modify `dart` file
 
 In the `src/flutter/flet_spinkit/lib/src/flet_spinkit.dart` file, add import statement and replace Text widget with `SpinKitRotatingCircle` widget:
 
@@ -129,29 +129,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FletSpinkitControl extends StatelessWidget {
-  final Control? parent;
+  //final Control? parent;
   final Control control;
 
   const FletSpinkitControl({
     super.key,
-    required this.parent,
+    //required this.parent,
     required this.control,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget myControl = SpinKitRotatingCircle(
-      color: Colors.red,
-      size: 100.0,
-    );
+    Widget myControl = SpinKitRotatingCircle(color: Colors.red, size: 100.0);
 
-
-    return LayoutControl(context, myControl, parent, control);
+    return LayoutControl(control: control, child: myControl);
   }
 }
 ```
 
-3. Rebuild your example app.
+**Step 3.** Rebuild example app
 
 Go to `examples/flet_spinkit_example`, clear cache and rebuild your app:
 
@@ -159,9 +155,9 @@ Go to `examples/flet_spinkit_example`, clear cache and rebuild your app:
 flet build macos -v
 ```
 
-4. Run your app:
+**Step 4.** Run your app
 
-<img src="/img/docs/extending-flet/spinkit1.gif" className="screenshot-30" />
+<img src="/assets/extensions/spinkit1.gif" className="screenshot-30" />
 
 ## Flet extension structure
 
@@ -221,25 +217,22 @@ we check in the `create_control.dart` file.
 
 ##### pubspec.yaml
 
-A yaml file containing metadata that specifies the package's dependencies.
+Flutter package manifest for the extension. Declares SDK constraints and dependencies. Notable deps:
 
-There is already a dependency to `flet` created from template. You need to add there a dependency to Flutter package for which you are creating your extension.
+* `flet` for Flet extension APIs
+* `flutter_spinkit` for the spinner widgets used by the control
 
 ##### flet_spinkit.dart
 
-Two methods are exported:
-* `createControl` - called to create a widget that corresponds to a control on Python side.
-* `ensureInitialized` - called once on Flet program start.
+Library entrypoint. Exports the public `Extension` class from `extension.dart`.
 
-##### src/create_control.dart
+##### src/extension.dart
 
-Creates Flutter widget based on control names returned by the Control's `_get_control_name()` function. This mechanism iterates through all third-party packages and returns the first matching widget.
+Registers the extension with Flet. `Extension.createWidget` maps `Control.type` to the Flutter widget; currently maps "flet_spinkit" to FletSpinkitControl.
 
 ##### src/flet_spinkit.dart
 
-Here you create Flutter "wrapper" widget that will build Flutter widget or API that you want to use in your Flet app.
-
-Wrapper widget passes the state of Python control down to a Flutter widget, that will be displayed on a page, and provides an API to route events from Flutter widget back to Python control.
+Flutter wrapper widget for the control. `FletSpinkitControl` builds a `SpinKitRotatingCircle` and wraps it with `LayoutControl` so layout/state from the Python control are applied.
 
 ### Example app
 
@@ -298,7 +291,7 @@ mkdocs serve
 
 Open http://127.0.0.1:8000 in your browser:
 
-<img src="/img/docs/extending-flet/mkdocs.png" className="screenshot-50" />
+<img src="/assets/extensions/mkdocs.png" className="screenshot-50" />
 
 Once your documentation is ready, if your package is hosted on GitHub, your can run the following command to host your documentation on GitHub pages:
 
@@ -361,7 +354,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<img src="/img/docs/extending-flet/spinkit2.gif" className="screenshot-30" />
+<img src="/assets/extensions/spinkit2.gif" className="screenshot-30" />
 
 ### Control-specific properties
 
@@ -511,7 +504,7 @@ ft.run(main)
 
 Re-build and run:
 
-<img src="/img/docs/extending-flet/spinkit3.gif" className="screenshot-20" />
+<img src="/assets/extensions/spinkit3.gif" className="screenshot-20" />
 
 You can find source code for this example [here](https://github.com/flet-dev/flet-spinkit).
 
