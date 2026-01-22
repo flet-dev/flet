@@ -1,5 +1,10 @@
 ## 0.80.3
 
+* feat: add `locale` prop to `CupertinoDatePicker`, `DatePicker`, `DateRangePicker`, `TimePicker` ([#6030](https://github.com/flet-dev/flet/issues/6030)).
+* Rive 0.14.0 ([#6025](https://github.com/flet-dev/flet/issues/6025)).
+* feat(flet-charts): Allow `badge_position` and `title_position` of `PieChartSection` accept values >= `1.0` ([#6024](https://github.com/flet-dev/flet/issues/6024)).
+* Add position details to `GestureDetector.on_tap` event ([#6016](https://github.com/flet-dev/flet/issues/6016)).
+* Fix Android platform check to exclude web ([#6013](https://github.com/flet-dev/flet/issues/6013)).
 * feat: `parseEnum` utility function.
 
 ## 0.80.3
