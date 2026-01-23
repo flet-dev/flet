@@ -76,7 +76,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "config_platform": "macos",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
-                "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
+                "outputs": ["build/macos/Build/Products/Release/{project_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
@@ -241,8 +241,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--project",
             dest="project_name",
             required=False,
-            help="Project name for the executable/bundle. "
-            "It is used in metadata and bundle IDs",
+            help="Project name for the executable/bundle and bundle IDs.",
         )
         parser.add_argument(
             "--description",
@@ -254,8 +253,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--product",
             dest="product_name",
             required=False,
-            help="Display name of the app that is shown in window titles "
-            "and about app dialogs",
+            help="Display name shown in app launchers, window titles, "
+            "and about dialogs.",
         )
         parser.add_argument(
             "--org",
@@ -706,6 +705,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         project_name_orig = (
             self.options.project_name
+            or self.get_pyproject("tool.flet.project")
             or self.get_pyproject("project.name")
             or self.get_pyproject("tool.poetry.name")
             or self.python_app_path.name
@@ -715,7 +715,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         product_name = (
             self.options.product_name
             or self.get_pyproject("tool.flet.product")
-            or project_name_orig
+            or self.get_pyproject("project.name")
+            or self.get_pyproject("tool.poetry.name")
+            or self.python_app_path.name
         )
 
         split_per_abi = (

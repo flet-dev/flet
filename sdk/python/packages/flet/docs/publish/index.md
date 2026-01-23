@@ -100,20 +100,20 @@ src
     version = "0.1.0"
     description = "An Example."
     readme = "README.md"
-    requires-python = ">=3.9"
+    requires-python = ">=3.10"
     authors = [{ name = "Me", email = "me@example.com" }]
     dependencies = [
       "flet"
     ]
 
-    [tool.flet.app]
-    path = "src"
-
     [tool.flet]
     org = "com.mycompany"
-    product = "Example"
+    product = "My App"
     company = "My Company"
     copyright = "Copyright (C) 2025 by My Company"
+
+    [tool.flet.app]
+    path = "src"
     ```
     ///
 
@@ -155,15 +155,15 @@ Throughout this documentation, the following placeholders are used:
 
 ## How it works
 
-`flet build <target_platform>` command could be run from the root of Flet app directory:
+`flet build <target_platform>` command could be run from the root of Flet app project directory:
 
-```
+```bash
 <flet_app_directory> % flet build <target_platform>
 ```
 
-When running from a different directory you can provide the path to a directory with Flet app:
+When running from a different directory, you can provide the path to a directory with Flet app:
 
-```
+```bash
 flet build <target_platform> <path_to_python_app>
 ```
 
@@ -172,15 +172,15 @@ See [this](#custom-output-directory) to set a custom location for build results.
 
 `flet build` uses Flutter SDK and the number of Flutter packages to build a distribution package from your Flet app.
 
-When you run `flet build <target_platform>` command it:
+When you run `flet build <target_platform>`, the following steps are performed (using the default configuration):
 
-* Creates a new Flutter project in `{flet_app_directory}/build/flutter` directory from https://github.com/flet-dev/flet-build-template template. Flutter app will contain a packaged Python app in the assets and use `flet` and `serious_python` packages to run Python app and render its UI respectively. The project is ephemeral and deleted upon completion.
-* Copies custom icons and splash images (see below) from `assets` directory into a Flutter project.
-* Generates icons for all platforms using [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
-* Generates splash screens for web, iOS and Android targets using [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
-* Packages Python app using `package` command of [`serious_python`](https://pub.dev/packages/serious_python) package. `package` command installs pure and binary Python packages from https://pypi.org and https://pypi.flet.dev for selected platform. If configured, `.py` files of installed packages and/or application will be compiled to `.pyc` files. All files, except `build` directory will be added to a package asset.
-* Runs `flutter build <target_platform>` command to produce an executable or an installable package.
-* Copies build results to `{flet_app_directory}/build/<target_platform>` directory.
+* A new Flutter project is created in `{flet_app_directory}/build/flutter` directory from [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) template. Flutter app will contain a packaged Python app in the assets and use `flet` and `serious_python` packages to run Python app and render its UI respectively. The project is ephemeral and deleted upon completion.
+* Custom icons and splash images are copied from `assets` directory into a Flutter project.
+* Icons are generated for all platforms using [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
+* Splash screens are generated for web, iOS and Android targets using [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
+* Python app is packaged using `package` command of [`serious_python`](https://pub.dev/packages/serious_python), which installs pure and binary Python packages from [pypi.org](https://pypi.org) and [pypi.flet.dev](https://pypi.flet.dev) for the selected platform. If configured, `.py` files of installed packages and/or application will be compiled to `.pyc` files. All files, except `build` directory will be added to a package asset.
+* `flutter build <target_platform>` command is executed to produce an executable or an installable package.
+* Build results are copied to `{flet_app_directory}/build/<target_platform>` directory.
 
 ## Including Extensions
 
@@ -216,8 +216,10 @@ Example of extensions can be found here.
 
 ## Product Name
 
-The display name shown in window titles, about dialogs, and app launchers.
-This is the user-facing name of your application.
+The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
+
+The product name does **not** control the on-disk executable or bundle
+name. Use the [project name](#project-name) for artifact naming.
 
 **Default:** Derived from `project.name`, `tool.poetry.name` in `pyproject.toml`,
 or the name of your Flet app directory.
@@ -233,6 +235,64 @@ flet build <target_platform> --product "My Awesome App"
 ```toml
 [tool.flet]
 product = "My Awesome App"
+```
+///
+
+///
+
+## Project name
+
+The project name in C-style identifier format (lowercase alphanumerics with underscores).
+It is mainly used as name for executables, bundles, and identifiers.
+It is also used to build [bundle ID](#bundle-id) and as the name for the executable/bundle.
+
+Its value is internally slugified (e.g., `my-app` becomes `my_app`) to keep artifact names safe.
+
+/// admonition | Resolution order
+- `--project` CLI option
+- `tool.flet.project`
+- `project.name`
+- `tool.poetry.name`
+- project directory name
+///
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --project my_app
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+project = "my_app"
+```
+///
+
+///
+
+## Organization name
+
+The organization name in reverse domain name notation, typically in the form `com.mycompany`.
+
+If you do not provide an explicit value for the organization name, but specify the [bundle ID](#bundle-id),
+the organization name will be automatically generated by taking the part of the bundle ID before the last dot.
+For example, with a bundle ID of `com.mycompany.myapp`, the organization name becomes `com.mycompany`.
+
+**Default:** `"com.flet"`
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --org com.mycompany
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+org = "com.mycompany"
 ```
 ///
 
@@ -258,6 +318,91 @@ company = "My Company Inc."
 
 ///
 
+## Bundle ID
+
+The bundle ID for the application, typically in the form `"com.mycompany.app-name"`.
+
+If not explicitly specified, it is formed by combining the [organization name](#organization-name)
+and the [project name](#project-name).
+
+**Default:** `"[organization-name].[project-name]"`
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --bundle-id com.mycompany.example-app
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+bundle_id = "com.mycompany.example-app"
+```
+///
+/// tab | `[tool.flet.PLATFORM]`
+```toml
+[tool.flet.PLATFORM]
+bundle_id = "com.mycompany.example-app-platform"
+```
+///
+
+///
+
+## Versioning
+
+### Build Number
+
+An integer identifier (defaults to `1`) used internally to distinguish one build from another.
+Each new build must have a unique, incrementing number; higher numbers indicate more recent builds.
+
+It's value can be set as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+build_number = 1
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --build-number 1
+```
+///
+
+### Build Version
+
+A user‑facing version string in `x.y.z` format (defaults to `1.0.0`).
+Increment this for each new release to differentiate it from previous versions.
+
+It's value can be set as follows:
+
+/// tab | `pyproject.toml`
+
+/// tab | `[project]`
+```toml
+[project]
+version = "1.0.0"
+```
+///
+/// tab | `[tool.poetry]`
+```toml
+[tool.poetry]
+version = "1.0.0"
+```
+///
+
+///
+/// tab | `flet build`
+```bash
+flet build <target_platform> --build-version 1.0.0
+```
+///
+
 ## Copyright
 
 Copyright text displayed in about app dialogs and metadata.
@@ -273,64 +418,6 @@ flet build <target_platform> --copyright "Copyright © 2025 My Company Inc."
 ```toml
 [tool.flet]
 copyright = "Copyright © 2025 My Company Inc."
-```
-///
-
-///
-
-## Flutter dependencies
-
-Adding a Flutter package can be done in the `pyproject.toml` as follows:
-
-/// tab | `flet build`
-```bash
-flet build
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-flutter.dependencies = [
-    "package_1",
-    "package_2",
-]
-```
-///
-/// tab | `[tool.flet.flutter.dependencies]`
-```toml
-[tool.flet.flutter.dependencies]
-package_1 = "x.y.z"
-package_2 = "x.y.z"
-```
-///
-/// tab | `[tool.flet.flutter.dependencies.LOCAL_PACKAGE]`
-```toml
-[tool.flet.flutter.dependencies.LOCAL_PACKAGE]
-path = "/path/to/LOCAL_PACKAGE"
-```
-///
-
-///
-
-## Custom output directory
-
-By default, the build output is saved in the `<flet_app_directory>/build/<target_platform>` directory.
-
-This can be customized as follows:
-
-/// tab | CLI
-```bash
-flet build <target_platform> --output <path-to-output-dir>
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-output = "<path-to-output-dir>"
 ```
 ///
 
@@ -528,6 +615,28 @@ flet build <target_platform> --module-name start.py
 ```
 ///
 
+## Custom output directory
+
+By default, the build output is saved in the `<flet_app_directory>/build/<target_platform>` directory.
+
+This can be customized as follows:
+
+/// tab | CLI
+```bash
+flet build <target_platform> --output <path-to-output-dir>
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+output = "<path-to-output-dir>"
+```
+///
+
+///
+
 ## Compilation and cleanup
 
 By default, Flet does **not** compile your app files during packaging.
@@ -653,60 +762,6 @@ Supported permissions:
 * `photo_library`
     * permissions:
       * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True`
-
-## Versioning
-
-### Build Number
-
-An integer identifier (defaults to `1`) used internally to distinguish one build from another.
-Each new build must have a unique, incrementing number; higher numbers indicate more recent builds.
-
-It's value can be set as follows:
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-build_number = 1
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --build-number 1
-```
-///
-
-### Build Version
-
-A user‑facing version string in `x.y.z` format (defaults to `1.0.0`).
-Increment this for each new release to differentiate it from previous versions.
-
-It's value can be set as follows:
-
-/// tab | `pyproject.toml`
-
-/// tab | `[project]`
-```toml
-[project]
-version = "1.0.0"
-```
-///
-/// tab | `[tool.poetry]`
-```toml
-[tool.poetry]
-version = "1.0.0"
-```
-///
-
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --build-version 1.0.0
-```
-///
 
 ## Customizing build template
 
@@ -836,18 +891,13 @@ host = "mydomain.com"
 
 ///
 
+## Flutter dependencies
 
-
-### Project name
-
-The project name in C-style identifier format (lowercase alphanumerics with underscores).
-It is used to build [bundle ID](#bundle-id) and as a name for bundle executable.
-
-**Default:** the name of your Flet project directory
+Adding a Flutter package can be done in the `pyproject.toml` as follows:
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --project my-app
+flet build
 ```
 ///
 /// tab | `pyproject.toml`
@@ -855,64 +905,23 @@ flet build <target_platform> --project my-app
 /// tab | `[tool.flet]`
 ```toml
 [tool.flet]
-project = "my-app"
+flutter.dependencies = [
+    "package_1",
+    "package_2",
+]
 ```
 ///
-
-///
-
-### Organization name
-
-The organization name in reverse domain name notation, typically in the form `com.mycompany`.
-
-If you do not provide an explicit value for the organization name, but specify the [bundle ID](#bundle-id),
-the organization name will be automatically generated by taking the part of the bundle ID before the last dot.
-For example, with a bundle ID of `com.mycompany.myapp`, the organization name becomes `com.mycompany`.
-
-**Default:** `"com.flet"`
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --org com.mycompany
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
+/// tab | `[tool.flet.flutter.dependencies]`
 ```toml
-[tool.flet]
-org = "com.mycompany"
+[tool.flet.flutter.dependencies]
+package_1 = "x.y.z"
+package_2 = "x.y.z"
 ```
 ///
-
-///
-
-## Bundle ID
-
-The bundle ID for the application, typically in the form `"com.mycompany.app-name"`.
-
-If not explicitly specified, it is formed by combining the [organization name](#organization-name)
-and the [project name](#project-name).
-
-**Default:** `"[organization-name].[project-name]"`
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --bundle-id com.mycompany.example-app
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
+/// tab | `[tool.flet.flutter.dependencies.LOCAL_PACKAGE]`
 ```toml
-[tool.flet]
-bundle_id = "com.mycompany.example-app"
-```
-///
-/// tab | `[tool.flet.PLATFORM]`
-```toml
-[tool.flet.PLATFORM]
-bundle_id = "com.mycompany.example-app-platform"
+[tool.flet.flutter.dependencies.LOCAL_PACKAGE]
+path = "/path/to/LOCAL_PACKAGE"
 ```
 ///
 
