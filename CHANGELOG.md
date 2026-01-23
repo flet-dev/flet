@@ -1,6 +1,9 @@
 ## 0.80.4
 
-* Refactor `Icons` and `CupertinoIcons` proxies for member caching and iteration.
+* fix: Enable TextButton style and full-width Dropdown ([#6048](https://github.com/flet-dev/flet/issues/6048)).
+* flet-video: add mpv_properties to VideoConfiguration ([#6041](https://github.com/flet-dev/flet/issues/6041)).
+* Refactor `Icons` and `CupertinoIcons` proxies for member caching and iteration ([#6055](https://github.com/flet-dev/flet/issues/6055)).
+* Flutter 3.38.7.
 
 ## 0.80.3
 
