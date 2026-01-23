@@ -101,10 +101,5 @@ class TextButton(LayoutControl, AdaptiveControl):
     Called when this button has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.style is not None:
-            self._internals["style"] = self.style.copy()
-
     async def focus(self):
         await self._invoke_method("focus")
