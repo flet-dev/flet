@@ -323,7 +323,7 @@ Flet `LayoutControl` class is inherited from `Control` and has many additional p
 
 Flet `DialogControl` class is inherited from `AdaptiveControl` and adds dialog-specific properties like `open` and `on_dismiss`, which are used by popup controls opened with `page.open(...)`.
 
-To be able to use `Control` and `LayoutControl` and `DialogControl` properties in your app, you need to add them to the constructor of your Python Control.
+To use `Control`, `LayoutControl`, and `DialogControl` properties in your app, declare them as dataclass fields on your Python control so they are part of its public API.
 
 See reference for the common Control properties [here](https://flet.dev/docs/controls).
 
