@@ -311,21 +311,13 @@ Generally, there are three types of controls in Flet:
 
 3. Services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
 
-When creating a visual control that should participate in layout (size, position, transforms, margin, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`LayoutControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/layout_control.py). In its Dart counterpart (`src/flet_spinkit.dart`), wrap your Flutter widget with `LayoutControl(...)`.
+When creating a visual control that should participate in layout (size, position, transforms, margin, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`LayoutControl`][flet.LayoutControl]. In its Dart counterpart (`src/flet_spinkit.dart`), wrap your Flutter widget with `LayoutControl(...)`.
 
-When creating a dialog or other popup control (opened with `page.open(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/dialog_control.py). In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
+When creating a dialog or other popup control (opened with `page.open(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`][flet.DialogControl]. In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
 
-When creating a service control (Clipboard, Battery, Video, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/controls/services/service.py). In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
+When creating a service control (Clipboard, Battery, Video, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`][flet.Service]. In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
 
-Flet `Control` class has properties common for all controls such as `visible`, `opacity` and `tooltip`, to name a few.
-
-Flet `LayoutControl` class is inherited from `Control` and has many additional properties such as `top` and `left` for its position within Stack and a bunch of animation properties.
-
-Flet `DialogControl` class is inherited from `AdaptiveControl` and adds dialog-specific properties like `open` and `on_dismiss`, which are used by popup controls opened with `page.open(...)`.
-
-To use `Control`, `LayoutControl`, and `DialogControl` properties in your app, declare them as dataclass fields on your Python control so they are part of its public API.
-
-See reference for the common Control properties [here](https://flet.dev/docs/controls).
+You can use all `LayoutControl`, `DialogControl`, and `Service` properties inherited by your dataclass-based control without re-declaring them as fields (unless you want to override defaults or metadata).
 
 If you have created your extension project from Flet extension template, your Python Control is already inherited from `LayoutControl` and you can use its properties in your example app:
 
@@ -356,7 +348,7 @@ ft.run(main)
 
 ### Control-specific properties
 
-Now that you have taken full advantage of the properties Flet `Control` and `LayoutControl` offer, let's define the properties that are specific to the new Control you are building.
+Now that you have taken full advantage of the properties Flet `LayoutControl` offer, let's define the properties that are specific to the new Control you are building.
 
 In the FletSpinkit example, let's define its `color` and `size`.
 
