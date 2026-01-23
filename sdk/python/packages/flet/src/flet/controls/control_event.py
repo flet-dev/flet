@@ -10,10 +10,11 @@ from typing import (
     Optional,
     TypeVar,
     Union,
-    _eval_type,
     get_args,
     get_origin,
 )
+
+from flet.utils.typing_utils import eval_type
 
 if TYPE_CHECKING:
     from .base_control import BaseControl  # noqa
@@ -28,14 +29,6 @@ __all__ = [
     "EventHandler",
     "get_event_field_type",
 ]
-
-_EVAL_TYPE_HAS_TYPE_PARAMS = "type_params" in inspect.signature(_eval_type).parameters
-
-
-def _eval_type_compat(annotation, globalns, localns):
-    if _EVAL_TYPE_HAS_TYPE_PARAMS:
-        return _eval_type(annotation, globalns, localns, None)
-    return _eval_type(annotation, globalns, localns)
 
 
 def get_event_field_type(control: Any, field_name: str):
@@ -76,18 +69,23 @@ def get_event_field_type(control: Any, field_name: str):
             globalns.setdefault(key, value)
 
     globalns.setdefault("__builtins__", __builtins__)
+    type_params = getattr(control.__class__, "__type_params__", ())
 
     try:
         # Resolve forward refs manually
         if isinstance(annotation, ForwardRef):
-            annotation = _eval_type_compat(annotation, globalns, localns)
+            annotation = eval_type(
+                annotation, globalns, localns, type_params=type_params
+            )
 
         clbs = get_args(annotation)  # callable(s)
         clb = clbs[1] if len(clbs) > 2 else clbs[0]
         event_type = get_args(clb)[0][0]
 
         if isinstance(event_type, ForwardRef):
-            event_type = _eval_type_compat(event_type, globalns, localns)
+            event_type = eval_type(
+                event_type, globalns, localns, type_params=type_params
+            )
 
         return event_type
     except Exception as e:

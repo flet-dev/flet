@@ -52,6 +52,9 @@ dependencies:
   flet_audio_recorder:
     path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
 
+  flet_charts:
+    path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
+
   flet_datatable2:
     path: ../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2
 
@@ -70,11 +73,11 @@ dependencies:
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
 
+  flet_secure_storage:
+    path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
+
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
-
-  flet_charts:
-    path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
 
   cupertino_icons: ^1.0.6
   wakelock_plus: ^1.4.0

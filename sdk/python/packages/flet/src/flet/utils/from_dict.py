@@ -1,5 +1,4 @@
 import dataclasses
-import inspect
 import sys
 from enum import Enum
 from typing import (
@@ -7,21 +6,14 @@ from typing import (
     ForwardRef,
     TypeVar,
     Union,
-    _eval_type,
     get_args,
     get_origin,
     get_type_hints,
 )
 
+from flet.utils.typing_utils import eval_type
+
 T = TypeVar("T")
-
-_EVAL_TYPE_HAS_TYPE_PARAMS = "type_params" in inspect.signature(_eval_type).parameters
-
-
-def _eval_type_compat(annotation, globalns, localns):
-    if _EVAL_TYPE_HAS_TYPE_PARAMS:
-        return _eval_type(annotation, globalns, localns, None)
-    return _eval_type(annotation, globalns, localns)
 
 
 def from_dict(cls: type[T], data: Any) -> T:
@@ -36,7 +28,7 @@ def from_dict(cls: type[T], data: Any) -> T:
     # If cls is a ForwardRef, resolve it
     if isinstance(cls, ForwardRef):
         globalns = sys.modules[cls.__module__].__dict__
-        cls = _eval_type_compat(cls, globalns, None)
+        cls = eval_type(cls, globalns, None)
 
     if dataclasses.is_dataclass(cls):
         try:

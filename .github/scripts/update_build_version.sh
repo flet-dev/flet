@@ -41,16 +41,16 @@ else
     # Remove leading "v" if present
     cv=${cv#v}
 
-    # Split into major/minor components
+    # Split into major/minor/patch components
     major=$(echo "$cv" | cut -d. -f1)
     minor=$(echo "$cv" | cut -d. -f2)
+    patch=$(echo "$cv" | cut -d. -f3)
 
-    # Increment the minor version (e.g. "1.2" → "1.3")
-    minor=$((minor + 1))
+    # Increment patch version (e.g. "1.2.3" → "1.2.4")
+    patch=$((patch + 1))
 
-    # Construct the package version: <major>.<minor>.0
-    export PKG_VER="${major}.${minor}.0"
-
+    # Construct the package version: <major>.<minor>.<patch>
+    export PKG_VER="${major}.${minor}.${patch}"
     # PyPI build version: <PKG_VER>+<BUILD_NUM>
     export PYPI_VER="${PKG_VER}.dev${BUILD_NUM}"
 fi

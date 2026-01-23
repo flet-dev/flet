@@ -1,6 +1,20 @@
+## 0.80.4
+
+* Refactor `Icons` and `CupertinoIcons` proxies for member caching and iteration.
+
 ## 0.80.3
 
+* Lazy loading of icons, theme for faster app startup ([#6043](https://github.com/flet-dev/flet/issues/6043)).
+* feat: add `locale` prop to `CupertinoDatePicker`, `DatePicker`, `DateRangePicker`, `TimePicker` ([#6030](https://github.com/flet-dev/flet/issues/6030)).
+* Allow installing Flet packages in runtime with uv ([#6037](https://github.com/flet-dev/flet/issues/6037)).
+* Python wheels for Ubuntu 20.04-24.04 ([#6035](https://github.com/flet-dev/flet/issues/6035)).
+* Disable Rive in desktop client light ([#6032](https://github.com/flet-dev/flet/issues/6032)).
+* Fix desktop light package versioning ([#6031](https://github.com/flet-dev/flet/issues/6031)).
+* Rive 0.14.0 ([#6025](https://github.com/flet-dev/flet/issues/6025)).
+* fix: Convert `datetime` instances to UTC while passing over the wire ([#6023](https://github.com/flet-dev/flet/issues/6023)).
+* feat(flet-charts): Allow `badge_position` and `title_position` of `PieChartSection` accept values >= `1.0` ([#6024](https://github.com/flet-dev/flet/issues/6024)).
 * Add position details to `GestureDetector.on_tap` event ([#6016](https://github.com/flet-dev/flet/issues/6016)).
+* Fix Android platform check to exclude web ([#6013](https://github.com/flet-dev/flet/issues/6013)).
 
 ## 0.80.2
 

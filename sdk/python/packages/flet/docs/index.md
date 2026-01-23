@@ -48,7 +48,7 @@ flet run counter.py
 This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/macos.png" width="45%" />
+    <img src="assets/getting-started/counter-app/macos.png" width="60%" />
 </p>
 
 To run the same app as a web app use `--web` option with `flet run` command:
@@ -58,5 +58,5 @@ flet run --web counter.py
 ```
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/safari.png" width="60%" />
+    <img src="assets/getting-started/counter-app/safari.png" width="60%" />
 </p>

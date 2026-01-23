@@ -40,12 +40,12 @@ The app will be started in a native OS window:
 -   **macOS**
 
     ---
-    ![macOS](../assets/getting-started/counter-app/macos.png)
+    {{ image("../assets/getting-started/counter-app/macos.png", alt="macOS", width="100%") }}
 
 -   **Windows**
 
     ---
-    ![Windows](../assets/getting-started/counter-app/windows.png)
+    {{ image("../assets/getting-started/counter-app/windows.png", alt="windows", width="95%") }}
 
 </div>
 
@@ -69,7 +69,7 @@ flet run --web [script]  # (1)!
 
 A new browser window/tab will be opened and the app will be using a random TCP port:
 
-{{ image("../assets/getting-started/counter-app/safari.png", alt="Web", width="80%", caption="Web app") }}
+{{ image("../assets/getting-started/counter-app/safari.png", alt="Web", width="70%", caption="Running Flet app as a web app") }}
 
 
 ## Watching for changes
