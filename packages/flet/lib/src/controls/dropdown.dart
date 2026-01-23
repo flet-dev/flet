@@ -271,10 +271,8 @@ class _DropdownControlState extends State<DropdownControl> {
 
     _focusNode.canRequestFocus = editable;
 
-    int? expand = widget.control.getExpand("expand");
-    EdgeInsets? expandedInsets = (expand ?? 0) > 0
-        ? EdgeInsets.all((expand ?? 0).toDouble())
-        : null;
+    int expand = widget.control.getExpand("expand", 0)!;
+    EdgeInsets? expandedInsets = expand > 0 ? EdgeInsets.zero : null;
 
     Widget dropDown = DropdownMenu<String>(
       enabled: !widget.control.disabled,
