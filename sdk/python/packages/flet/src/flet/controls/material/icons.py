@@ -21,6 +21,10 @@ class _MaterialIconData(IconData, package_name="flet", class_name="Icons"):
         return obj
 
 
+_MaterialIconData.__name__ = "Icons"
+_MaterialIconData.__qualname__ = "Icons"
+
+
 class _IconsProxy:
     __slots__ = ("_map", "_values")
 
@@ -38,18 +42,32 @@ class _IconsProxy:
         )
         self._map = json.loads(data)
 
+    def _get_member(self, name: str) -> _MaterialIconData:
+        self._load()
+        assert self._map is not None
+        cls = _MaterialIconData
+        existing = cls._member_map_.get(name)
+        if existing is not None:
+            return existing
+        value = self._map[name]
+        member = int.__new__(cls, value)
+        member._value_ = value
+        member._name_ = name
+        cls._member_map_[name] = member
+        cls._value2member_map_[value] = member
+        cls._member_names_.append(name)
+        return member
+
     def _get_values(self) -> list[_MaterialIconData]:
         self._load()
         if self._values is None:
             assert self._map is not None
-            self._values = [_MaterialIconData(v) for v in self._map.values()]
+            self._values = [self._get_member(name) for name in self._map]
         return self._values
 
     def __getattr__(self, name: str) -> IconData:
-        self._load()
-        assert self._map is not None
         try:
-            return _MaterialIconData(self._map[name])
+            return self._get_member(name)
         except KeyError:
             raise AttributeError(name) from None
 
@@ -57,6 +75,14 @@ class _IconsProxy:
         self._load()
         assert self._map is not None
         return sorted(self._map.keys())
+
+    def __iter__(self):
+        return iter(self._get_values())
+
+    def __len__(self) -> int:
+        self._load()
+        assert self._map is not None
+        return len(self._map)
 
     def random(
         self,
