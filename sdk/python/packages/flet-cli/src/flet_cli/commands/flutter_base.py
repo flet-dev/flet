@@ -71,7 +71,8 @@ class BaseFlutterCommand(BaseCommand):
             "--no-rich-output",
             action="store_true",
             default=False,
-            help="Disable rich output and prefer plain text. Useful on Windows builds",
+            help="Disable rich output and prefer plain text. Useful on Windows builds"
+            "[env: FLET_CLI_NO_RICH_OUTPUT=]",
         )
         parser.add_argument(
             "--yes",
@@ -85,7 +86,8 @@ class BaseFlutterCommand(BaseCommand):
             "--skip-flutter-doctor",
             action="store_true",
             default=False,
-            help="Skip running Flutter doctor upon failed builds",
+            help="Skip running Flutter doctor upon failed builds"
+            "[env: FLET_CLI_SKIP_FLUTTER_DOCTOR=]",
         )
 
     def handle(self, options: argparse.Namespace) -> None:

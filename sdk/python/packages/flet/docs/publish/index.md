@@ -118,21 +118,10 @@ src
     ///
 
 2. An optional directory that contains application assets
-    (images, sound, text and other files required by your app) as well as images
+    (images, sound, text, and other files required by your app) as well as images
     used for package [icons](#icons) and [splash screens](#splash-screen).
 3. The main [entry point](#entry-point) of your Flet app. It usually contains the call to `ft.run()`.
 
-
-/// admonition | Using `requirements.txt` instead of `pyproject.toml`
-Instead of a `pyproject.toml` file, you can also use `requirements.txt` file to specify dependencies.
-
-In this case, two things to keep in mind:
-
-- if both files are present, `flet build` will ignore `requirements.txt`.
-- don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies,
-  as it may include packages incompatible with the target platform. Instead, hand-pick and include
-  only the direct dependencies required by your app, including `flet`.
-///
 
 /// admonition | Tip
     type: tip
@@ -145,12 +134,15 @@ flet create <project-name>
 Where `<project-name>` is the name for your project directory.
 ///
 
-/// admonition | Note
-Throughout this documentation, the following placeholders are used:
+/// admonition | Using `requirements.txt` instead of `pyproject.toml`
+Instead of a `pyproject.toml` file, you can also use `requirements.txt` file to specify dependencies.
 
-- `<target_platform>` - one of the following: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
-- `<flet_app_directory>` - the path to the directory containing your Flet project/app.
-- `PLATFORM` - one of the following: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
+In this case, two things to keep in mind:
+
+- if both files are present, `flet build` will ignore `requirements.txt`.
+- don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies,
+  as it may include packages incompatible with the target platform. Instead, hand-pick and include
+  only the direct dependencies required by your app, including `flet`.
 ///
 
 ## How it works
@@ -182,10 +174,230 @@ When you run `flet build <target_platform>`, the following steps are performed (
 * `flutter build <target_platform>` command is executed to produce an executable or an installable package.
 * Build results are copied to `{flet_app_directory}/build/<target_platform>` directory.
 
-## Including Extensions
+## Configuration options
+
+/// admonition | Understanding `pyproject.toml` structure
+Flet loads `pyproject.toml` as a nested dictionary and looks up settings by
+dot-separated paths (for example, `tool.flet.web.base_url`).
+
+For example, the two forms below are equivalent (will be internally resolved to the same key-value pair):
+
+- **Form 1** (will be used/preferred throughout this documentation)
+    ```toml
+    [tool.flet.section]
+    key = "value"
+    ```
+
+- **Form 2**
+    ```toml
+    [tool.flet]
+    section.key = "value"
+    ```
+
+But they are different or should not be confused with the
+below ("quoted keys" are literals and do not create nesting):
+
+```toml
+[tool.flet]
+"section.key" = "value"
+```
+///
+
+/// admonition | Placeholders
+Throughout this documentation, the following placeholders are used:
+
+- [`<target_platform>`](../cli/flet-build.md#target_platform) - one of the following: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
+- `<PLATFORM>` - one of the following: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
+- `<flet_app_directory>` - the path to the directory containing your Flet project/app.
+- [`<python_app_path>`](../cli/flet-build.md#python_app_path)
+///
+
+### Product name
+
+The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
+
+It does **not** control the on-disk executable or bundle
+name. Use the [artifact name](#artifact-name) for artifact naming.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--product`
+2. `[tool.flet].product`
+3. `--project`
+4. `[project].name`
+5. project/app directory name
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --product "My Awesome App"
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]
+product = "My Awesome App"
+```
+///
+
+### Artifact name
+
+The on-disk name for executables and/or app bundles. For example, on Windows it
+determines the name of the `.exe` file, and on macOS it sets the name of the `.app` bundle.
+
+It does **not** affect [bundle ID](#bundle-id)s or package identifiers.
+
+It can contain spaces or accents.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--artifact`
+2. `[tool.flet].artifact`
+3. `--project`
+4. `[project].name`
+5. project/app directory name
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --artifact "My Awesome App"
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]
+artifact = "My Awesome App"
+```
+///
+
+### Project name
+
+The project name in C-style identifier format (lowercase alphanumerics with underscores).
+It is used for [bundle IDs](#bundle-id) and other internal identifiers.
+
+Its value is internally slugified and hyphens become underscores
+(e.g., `my-app` becomes `my_app`) to keep identifier names safe.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--project`
+2. `[project].name`
+3. project/app directory name
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --project my_app
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[project]
+name = "my_app"
+```
+///
+
+### Organization name
+
+The organization name in reverse domain name notation, typically in the form `com.mycompany`.
+
+If you do not provide an explicit value for the organization name,
+but specify the [bundle ID](#bundle-id), the organization name will be
+internally constructed by taking the part of this [bundle ID](#bundle-id)
+before the last dot. For example, with a bundle ID of `com.mycompany.myapp`,
+the organization name becomes `com.mycompany`.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--org`
+2. `[tool.flet.<PLATFORM>].org`
+3. `[tool.flet].org`
+4. Default: `"com.flet"`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --org com.mycompany
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]     # or [tool.flet.<PLATFORM>]
+org = "com.mycompany"
+```
+///
+
+### Company Name
+
+The company name displayed in about app dialogs and metadata.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--company`
+2. `[tool.flet].company`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --company "My Company Inc."
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]
+company = "My Company Inc."
+```
+///
+
+### Bundle ID
+
+The bundle ID for the application, typically in the form `"com.mycompany.my_app"`.
+
+If not explicitly specified, it is formed by combining the [organization name](#organization-name)
+and the [project name](#project-name).
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--bundle-id`
+2. `[tool.flet.<PLATFORM>].bundle_id`
+3. `[tool.flet].bundle_id`
+4. Default: `"[organization-name].[project-name]"`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --bundle-id com.mycompany.my_app
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet] # or [tool.flet.<PLATFORM>]
+bundle_id = "com.mycompany.my_app"
+```
+///
+
+### Including Extensions
 
 If your app uses Flet extensions (third-party packages),
-simply add them to your project's dependencies:
+they must equally be part of your app's dependencies.
 
 /// tab | PyPI
 ```toml
@@ -212,255 +424,89 @@ dependencies = [
 ```
 ///
 
-Example of extensions can be found here.
+Example of extensions can be found [here](../extend/built-in-extensions.md).
 
-## Product Name
+### Versioning
 
-The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
-
-The product name does **not** control the on-disk executable or bundle
-name. Use the [artifact name](#artifact-name) for artifact naming.
-
-**Default:** Derived from `project.name` in `pyproject.toml` or the name of your
-Flet app directory.
-
-/// admonition | Resolution order
-- `--product` CLI option
-- `tool.flet.product`
-- `--project` CLI option
-- `project.name`
-- project directory name
-///
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --product "My Awesome App"
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-product = "My Awesome App"
-```
-///
-
-///
-
-## Artifact name
-
-The on-disk name for executables and app bundles.
-It does **not** affect bundle IDs or package identifiers.
-
-Its value is used as-is (no slugification), so it can include spaces or accents.
-
-/// admonition | Resolution order
-- `--artifact` CLI option
-- `tool.flet.artifact`
-- `--project` CLI option
-- `project.name`
-- project directory name
-///
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --artifact "My Awesome App"
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-artifact = "My Awesome App"
-```
-///
-
-///
-
-## Project name
-
-The project name in C-style identifier format (lowercase alphanumerics with underscores).
-It is used for bundle IDs and other internal identifiers.
-
-Its value is internally slugified (e.g., `my-app` becomes `my_app`) to keep
-identifier names safe.
-
-/// admonition | Resolution order
-- `--project` CLI option
-- `project.name`
-- project directory name
-///
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --project my_app
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[project]`
-```toml
-[project]
-name = "my_app"
-```
-///
-
-///
-
-## Organization name
-
-The organization name in reverse domain name notation, typically in the form `com.mycompany`.
-
-If you do not provide an explicit value for the organization name, but specify the [bundle ID](#bundle-id),
-the organization name will be automatically generated by taking the part of the bundle ID before the last dot.
-For example, with a bundle ID of `com.mycompany.myapp`, the organization name becomes `com.mycompany`.
-
-**Default:** `"com.flet"`
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --org com.mycompany
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-org = "com.mycompany"
-```
-///
-
-///
-
-## Company Name
-
-The company name displayed in about app dialogs and metadata.
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --company "My Company Inc."
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-company = "My Company Inc."
-```
-///
-
-///
-
-## Bundle ID
-
-The bundle ID for the application, typically in the form `"com.mycompany.app-name"`.
-
-If not explicitly specified, it is formed by combining the [organization name](#organization-name)
-and the [project name](#project-name).
-
-**Default:** `"[organization-name].[project-name]"`
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --bundle-id com.mycompany.example-app
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-bundle_id = "com.mycompany.example-app"
-```
-///
-/// tab | `[tool.flet.PLATFORM]`
-```toml
-[tool.flet.PLATFORM]
-bundle_id = "com.mycompany.example-app-platform"
-```
-///
-
-///
-
-## Versioning
-
-### Build Number
+#### Build Number
 
 An integer identifier (defaults to `1`) used internally to distinguish one build from another.
 Each new build must have a unique, incrementing number; higher numbers indicate more recent builds.
 
-It's value can be set as follows:
+##### Resolution order
 
+Its value is determined in the following order of precedence:
+
+1. `--build-number`
+2. `[tool.flet].build_number`
+
+##### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --build-number 1
+```
+///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
 build_number = 1
 ```
 ///
 
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --build-number 1
-```
-///
-
-### Build Version
+#### Build Version
 
 A user‑facing version string in `x.y.z` format (defaults to `1.0.0`).
 Increment this for each new release to differentiate it from previous versions.
 
-It's value can be set as follows:
+##### Resolution order
 
-/// tab | `pyproject.toml`
+Its value is determined in the following order of precedence:
 
-/// tab | `[project]`
-```toml
-[project]
-version = "1.0.0"
-```
-///
-/// tab | `[tool.poetry]`
-```toml
-[tool.poetry]
-version = "1.0.0"
-```
-///
+1. `--build-version`
+2. `[project].version`
+3. `[tool.poetry].version`
 
-///
+##### Example
+
 /// tab | `flet build`
 ```bash
 flet build <target_platform> --build-version 1.0.0
 ```
 ///
+/// tab | `pyproject.toml`
+```toml
+[project]
+version = "1.0.0"
+```
+///
 
-## Copyright
+### Copyright
 
 Copyright text displayed in about app dialogs and metadata.
 
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--copyright`
+2. `[tool.flet].copyright`
+
+#### Example
+
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --copyright "Copyright © 2025 My Company Inc."
+flet build <target_platform> --copyright "Copyright © 2026 My Company Inc."
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
-copyright = "Copyright © 2025 My Company Inc."
+copyright = "Copyright © 2026 My Company Inc."
 ```
 ///
 
-///
-
-## Icons
+### Icons
 
 You can customize app icons for all platforms (except Linux) using image files placed in
 the `assets` directory of your Flet app.
@@ -474,11 +520,11 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 | iOS      | `icon_ios.png`                           | ≥ 1024×1024 px   | Transparency (alpha channel) is not supported and will be automatically removed if present. |
 | Android  | `icon_android.png`                       | ≥ 192×192 px     |                                                                                             |
 | Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
-| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                        |
+| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                       |
 | macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
 
 
-## Splash screen
+### Splash screen
 
 A splash screen is a visual element displayed when an app is launching,
 typically showing a logo or image while the app loads.
@@ -489,7 +535,7 @@ the `assets` directory of your Flet app.
 If platform-specific splash images are not provided, Flet will fall back to `splash.png`.
 If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
 
-### Splash images
+#### Splash images
 
 | Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
 |----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
@@ -497,23 +543,30 @@ If that is also missing, it will use `icon.png` or any supported format such as 
 | Android  | `splash_dark_android.png` → `splash_android.png` → `splash_dark.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
 | Web      | `splash_dark_web.png` → `splash_web.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
 
-### Splash Background Colors
+#### Splash Background Colors
 
 You can customize splash background colors using the following options:
 
-- **Splash Color:** Background color for light mode splash screens (defaults to `#ffffff`)
-- **Splash Dark Color:** Background color for dark mode splash screens (defaults to `#333333`)
+- **Splash Color**: Background color for light mode splash screens.
+- **Splash Dark Color**: Background color for dark mode splash screens.
 
-/// tab | `pyproject.toml`
+##### Resolution order
 
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-splash.color = "#ffffff"
-splash.dark_color = "#333333"
+Their values are respectively determined in the following order of precedence:
+
+1. `--splash-color` / `--splash-dark-color`
+2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
+3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
+4. `#ffffff` / `#333333`
+
+##### Example
+
+/// tab | `flet build`
+```
+flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
 ```
 ///
-/// tab | `[tool.flet.splash]`
+/// tab | `pyproject.toml`
 ```toml
 [tool.flet.splash]
 color = "#ffffff"
@@ -521,224 +574,237 @@ dark_color = "#333333"
 ```
 ///
 
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
-```
-///
+#### Disabling Splash Screens
 
-### Disabling Splash Screens
+Splash screens are enabled by default. To disable it for a particular platform,
+see the corresponding documentation: [iOS](ios.md#disable-splash-screen),[Android](android.md#disable-splash-screen), and [Web](web/static-website/index.md#disable-splash-screen).
 
-Splash screens are enabled by default.
+### Boot screen
 
-See the respective platform docs for more information: [iOS](ios.md#disable-splash-screen),
-[Android](android.md#disable-splash-screen), and [Web](web/static-website/index.md#disable-splash-screen).
+The boot screen is shown while the archive with Python app is being unpacked to a
+device file system. It is shown after the [splash screen](#splash-screen) and
+before the [startup screen](#startup-screen). App archive does not include
+3rd-party site packages. If the archive is small and its
+unpacking is fast you could leave this screen disabled (default).
 
-## Boot screen
+#### Example
 
-The boot screen is shown while the archive with Python app is being unpacked to a device file system.
-It is shown after splash screen and before startup screen. App archive does not include 3rd-party site packages.
-If the archive is small and its unpacking is fast you could leave this screen disabled (default).
-
-Below are its customizable properties and respective defaults:
-
-/// tab | `[tool.flet.app.boot_screen]`
+/// tab | `pyproject.toml`
 ```toml
-[tool.flet.app.boot_screen]
-show = false
-message = "Preparing the app for its first launch…"
-```
-///
-/// tab | `[tool.flet.PLATFORM.app.boot_screen]`
-Its values can be set platform-specific too:
-
-```toml
-[tool.flet.android.app.boot_screen]
+[tool.flet.app.boot_screen]     # or [tool.flet.<PLATFORM>.app.boot_screen]
 show = false
 message = "Preparing the app for its first launch…"
 ```
 ///
 
-## Startup screen
+### Startup screen
 
-The startup screen is shown while the archive (`app.zip`), which contains the 3rd-party site packages (Android only),
+The startup screen is shown while the archive (`app.zip`),
+which contains the 3rd-party site packages (Android only),
 is being unpacked and the Python app is starting.
 
-/// admonition | Note
-Startup screen is shown after the [boot screen](#boot-screen).
-///
+It is shown after the [boot screen](#boot-screen).
 
-Below are its customizable properties and respective defaults:
+#### Example
 
-/// tab | `[tool.flet.app.startup_screen]`
+/// tab | `pyproject.toml`
 ```toml
-[tool.flet.app.startup_screen]
-show = false
-message = "Starting up the app…"
-```
-///
-/// tab | `[tool.flet.PLATFORM.app.startup_screen]`
-Its values can be set platform-specific too:
-
-```toml
-[tool.flet.android.app.startup_screen]
+[tool.flet.app.startup_screen]      # or [tool.flet.<PLATFORM>.app.startup_screen]
 show = false
 message = "Starting up the app…"
 ```
 ///
 
-## Launch an app with a hidden window
+### Hidden app window on startup
 
-A Flet desktop app on Windows, macOS, or Linux can start with its window hidden. This allows you to add initial content, resize the window, and position it on the screen before revealing it to the user.
+A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden.
+This lets your app perform initial setup (for example, add content, resize or
+position the window) before showing it to the user.
 
-In the example below, the window is resized and centered before becoming visible:
+See this [code example](../controls/page.md#hidden-app-window-on-startup).
 
-```py
-import flet as ft
+#### Example
 
-async def main(page: ft.Page):
-    page.add(ft.Text("Hello!"))
-    page.window.width = 300
-    page.window.height = 200
-    page.update()
-    await page.window.center()
-    await asyncio.sleep(3)
-    page.window.visible = True
-    page.update()
-
-ft.run(main)
-```
-
-To enable hidden window during development use `flet run` with `-n` option:
-
-```
-flet run -n your_app.py
-```
-
-To start an app with hidden window packaged with `flet build` add the following to your `pyproject.toml`:
-
+/// tab | `pyproject.toml`
 ```toml
 [tool.flet.app]
 hide_window_on_start = true
 ```
-
-## Entry point
-
-The Flet application entry (or starting) point refers to the file that contains the call to `ft.run()`.
-
-By default, Flet assumes this file is named `main.py`.
-However, if your entry point is different (for example, `start.py`), you can specify it as follows:
-
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-app.module = "start.py"
-```
-///
-/// tab | `[tool.flet.app]`
-```toml
-[tool.flet.app]
-module = "start.py"
-```
 ///
 
-///
+### Entry point
+
+This is where the execution of your Flet app begins. It is the Python file that
+contains the call to `flet.run()` or `flet.render()`.
+If provided without the Python file extension (`.py`), it will be appended internally.
+
+[//]: # (Also, it must exist in the `package_app_path`.)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--module-name`
+2. `[tool.flet.app].module`
+3. `"main.py"`
+
+#### Example
+
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --module-name start.py
+flet build <target_platform> --module-name app.py
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.app]
+module = "app.py"
 ```
 ///
 
-## Custom output directory
+### Source packages
 
-By default, the build output is saved in the `<flet_app_directory>/build/<target_platform>` directory.
+If one or more of your app dependencies do not provide a pre-built binary distribution (wheels),
+they must be built from source distribution and packaged as `.whl` files.
+A source distribution is a source archive (usually .tar.gz or .zip) that contains:
+the package's Python source code, package metadata, and instructions on how to build and install the package.
 
-This can be customized as follows:
+#### Resolution order
 
-/// tab | CLI
+Its value is determined in the following order of precedence:
+
+1. `--source-packages`
+2. `[tool.flet.<PLATFORM>].source_packages`
+3. `[tool.flet].source_packages`
+4. `SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS` (environment variable; comma-separated packages)
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --source-packages package1 package2
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]
+source_packages = ["package1", "package2"]
+```
+///
+/// tab | `.env`
+```dotenv
+SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS="package1,package2"
+```
+///
+
+### Output directory
+
+The directory where the build output is saved.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--output` or `-o`
+2. `[tool.flet].output`
+3. `<python_app_path>/build/<target_platform>`
+
+#### Example
+
+/// tab | `flet build`
 ```bash
 flet build <target_platform> --output <path-to-output-dir>
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
 ```toml
 [tool.flet]
 output = "<path-to-output-dir>"
 ```
 ///
 
-///
+### Compilation and cleanup
 
-## Compilation and cleanup
+Flet can compile your app's `.py` files and/or installed packages' `.py` files into
+`.pyc` files during the packaging process. Additionally, it can remove/cleanup
+unnecessary package files upon successful compilation.
+
+- Compilation:
+    * `compile-app`: compile app's `.py` files
+    * `compile-packages`: compile site/installed packages' `.py` files
+
+- Cleanup:
+    * `cleanup-app`:
+    * `cleanup-app-files`:
+    * `cleanup-packages-files`:
+    * `cleanup-packages`: remove unnecessary package files upon successful compilation
 
 By default, Flet does **not** compile your app files during packaging.
 This allows the build process to complete even if there are syntax errors,
 which can be useful for debugging or rapid iteration.
 
-* `compile-app`: compile app's `.py` files
-* `compile-packages`: compile site/installed packages' `.py` files
-* `cleanup-packages`: remove unnecessary package files upon successful compilation
+#### Resolution order
 
-Enable one or more of them as follows:
+The values of `compile-app` and `cleanup-app` are respectively determined in the following order of precedence:
 
-/// tab | `pyproject.toml`
+1. `--compile-app` / `--cleanup-app`
+2. `[tool.flet.<PLATFORM>.compile].app` / `[tool.flet.<PLATFORM>.cleanup].app`
+3. `[tool.flet.compile].app` / `[tool.flet.cleanup].app`
+4. `False` / `False`
 
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-compile.app = true
-compile.packages = true
-compile.cleanup = true
+The values of `compile-packages` and `cleanup-packages` are respectively determined in the following order of precedence:
+
+1. `--compile-packages` / `--cleanup-packages`
+2. `[tool.flet.<PLATFORM>.compile].packages` / `[tool.flet.<PLATFORM>.cleanup].packages`
+3. `[tool.flet.compile].packages` / `[tool.flet.cleanup].packages`
+4. `False` / `True`
+
+The values of `cleanup-app-files` and `cleanup-packages-files` are respectively determined in the following order of precedence:
+
+1. `--cleanup-app-files` / `--cleanup-package-files`
+2. `[tool.flet.<PLATFORM>.cleanup].app_files` / `[tool.flet.<PLATFORM>.cleanup].package_files`
+3. `[tool.flet.cleanup].app_files` / `[tool.flet.cleanup].package_files`
+4. `False` / `False`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --compile-app --compile-packages --cleanup-packages
 ```
 ///
-/// tab | `[tool.flet.compile]`
+/// tab | `pyproject.toml`
 ```toml
-[tool.flet.compile]
+[tool.flet.compile]     # or [tool.flet.<PLATFORM>.compile]
 app = true
 packages = true
 cleanup = true
 ```
 ///
 
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --compile-app --compile-packages --cleanup-packages
-```
-///
+### Permissions
 
-## Permissions
-
-`flet build` command allows granular control over permissions, features and entitlements
+`flet build` command allows granular control over permissions, features, and entitlements
 embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
 See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
 
-### Cross-platform permissions
+#### Cross-platform permissions
 
 There are pre-defined permissions that mapped to `Info.plist`, `*.entitlements` and `AndroidManifest.xml`
 for respective platforms.
 
 Setting permissions can be done as follows:
 
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-permissions = ["camera", "microphone"]
-```
-///
-
-///
 /// tab | `flet build`
 ```bash
 flet build <target_platform> --permissions camera microphone
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet]
+permissions = ["camera", "microphone"]
 ```
 ///
 
@@ -749,7 +815,7 @@ Supported permissions:
 * `microphone`
 * `photo_library`
 
-#### iOS mapping to `Info.plist` entries
+##### iOS mapping to `Info.plist` entries
 
 * `location`
     * `NSLocationWhenInUseUsageDescription = This app uses location service when in use.`
@@ -761,7 +827,7 @@ Supported permissions:
 * `photo_library`
     * `NSPhotoLibraryUsageDescription = This app saves photos and videos to the photo library.`
 
-#### macOS mapping to entitlements
+##### macOS mapping to entitlements
 
 * `location`
     * `com.apple.security.personal-information.location = True`
@@ -772,7 +838,7 @@ Supported permissions:
 * `photo_library`
     * `com.apple.security.personal-information.photos-library = True`
 
-#### Android mappings
+##### Android mappings
 
 * `location`
   * permissions:
@@ -800,7 +866,7 @@ Supported permissions:
     * permissions:
       * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True`
 
-## Customizing build template
+### Customizing build template
 
 By default, `flet build` creates a temporary Flutter project using a
 [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
@@ -809,7 +875,7 @@ which defaults to the current Flet version.
 
 You can customize this behavior by specifying your own template source, reference, and subdirectory.
 
-### Template Source
+#### Template Source
 
 Defines the location of the template to be used. Defaults to `gh:flet-dev/flet-build-template`,
 the [official Flet template](https://github.com/flet-dev/flet-build-template).
@@ -820,53 +886,53 @@ Valid values include:
 - A full Git URL (e.g., `https://github.com/org/template.git`)
 - A local directory path
 
-It's value can be set in either of the following ways:
+Its value can be set in either of the following ways:
 
-- via Command Line:
-  ```bash
-  flet build apk --template gh:flet-dev/flet-build-template
-  ```
+/// tab | `flet build`
+```bash
+flet build apk --template gh:flet-dev/flet-build-template
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.template]
+url = "gh:flet-dev/flet-build-template"
+```
+///
 
-- via `pyproject.toml`:
-  ```toml
-  [tool.flet.template]
-  url = "gh:flet-dev/flet-build-template"
-  ```
-
-### Template Reference
+#### Template Reference
 
 Defines the branch, tag, or commit to check out from the [template source](#template-source).
 Defaults to the version of Flet installed.
 
-It's value can be set as follows:
+Its value can be set in either of the following ways:
 
+/// tab | `flet build`
+```bash
+flet build <target_platform> --template-ref main
+```
+///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.template]`
 ```toml
 [tool.flet.template]
 ref = "main"
 ```
 ///
 
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --template-ref main
-```
-///
-
-### Template Directory
+#### Template Directory
 
 Defines the relative path to the cookiecutter template.
 If [template source](#template-source) is set, the path is treated as a
 subdirectory within its root; otherwise, it is relative to`<user-directory>/.cookiecutters/flet-build-template`.
 
-It's value can be set as follows:
+Its value can be set in either of the following ways:
 
+/// tab | `flet build`
+```bash
+flet build <target_platform> --template gh:org/template --template-dir sub/directory
+```
+///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.template]`
 ```toml
 [tool.flet.template]
 url = "gh:org/template"
@@ -874,17 +940,9 @@ dir = "sub/directory"
 ```
 ///
 
-///
-/// tab | `flet build`
-```bash
-flet build <target_platform> --template gh:org/template --template-dir sub/directory
-```
-///
+### Deep linking
 
-## Deep linking
-
-[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to
-navigate directly to specific content within a mobile app
+[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to navigate directly to specific content within a mobile app
 using a URI (Uniform Resource Identifier). Instead of opening the app's homepage, deep
 links direct users to a specific page, feature, or content within the app, enhancing
 user experience and engagement.
@@ -892,43 +950,32 @@ user experience and engagement.
 - **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
 - **Host**: deep linking URL host.
 
-See [this](https://docs.flutter.dev/ui/navigation/deep-linking) Flutter guide for more information.
+See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
 
-It can be configured as follows:
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--deep-linking-scheme` / `--deep-linking-host`
+2. `[tool.flet.<PLATFORM>.deep_linking].scheme` / `[tool.flet.<PLATFORM>.deep_linking].host`, where `<PLATFORM>` can be android or ios
+3. `[tool.flet.deep_linking].scheme` / `[tool.flet.deep_linking].host`
+
+#### Example
 
 /// tab | `flet build`
 ```bash
-flet build ipa --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+flet build <target_platform> --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
 ```toml
-[tool.flet]
-deep_linking.scheme = "https"
-deep_linking.host = "mydomain.com"
-```
-///
-/// tab | `[tool.flet.deep_linking]`
-```toml
-[tool.flet.deep_linking]
-scheme = "https"
-host = "mydomain.com"
-```
-///
-/// tab | `[tool.flet.PLATFORM.deep_linking]`
-`PLATFORM` can be `android` or `ios`.
-```toml
-[tool.flet.PLATFORM.deep_linking]
+[tool.flet.deep_linking]    # or [tool.flet.<PLATFORM>.deep_linking]
 scheme = "https"
 host = "mydomain.com"
 ```
 ///
 
-///
-
-## Flutter dependencies
+### Flutter dependencies
 
 Adding a Flutter package can be done in the `pyproject.toml` as follows:
 
@@ -938,51 +985,36 @@ flet build
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-flutter.dependencies = [
-    "package_1",
-    "package_2",
-]
-```
-///
-/// tab | `[tool.flet.flutter.dependencies]`
 ```toml
 [tool.flet.flutter.dependencies]
 package_1 = "x.y.z"
-package_2 = "x.y.z"
-```
-///
-/// tab | `[tool.flet.flutter.dependencies.LOCAL_PACKAGE]`
-```toml
-[tool.flet.flutter.dependencies.LOCAL_PACKAGE]
+
+# or
+
+[tool.flet.flutter.dependencies.<LOCAL_PACKAGE>]
 path = "/path/to/LOCAL_PACKAGE"
 ```
 ///
 
-///
-
-## Additional `flutter build` Arguments
+### Additional `flutter build` Arguments
 
 During the `flet build` process, `flutter build` command gets called internally to
-package your app for the specified platform.
+package your app for the specified platform. Not all `flutter build` arguments are exposed or usable throgh `flet build` command.
 
-It's value can be set in either of the following ways:
+Passing additional arguments to `flutter build` can be done as follows:
 
-/// tab | `pyproject.toml`
+/// tab | `flet build`
+```bash
+flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
 
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-flutter.build_args = [
-  "--no-tree-shake-icons",
-  "--export-method", "development"
-]
+# or as key-value
+
+flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
 ```
+
+1. `--flutter-build-args` can be used multiple times.
 ///
-/// tab | `[tool.flet.flutter]`
+/// tab | `pyproject.toml`
 ```toml
 [tool.flet.flutter]
 build_args = [
@@ -992,19 +1024,7 @@ build_args = [
 ```
 ///
 
-/// tab | `flet build`
-```bash
-flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
-
-# OR as key-value
-
-flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
-```
-
-1. `--flutter-build-args` can be used multiple times.
-///
-
-## Verbose logging
+### Verbose logging
 
 The `-v` (or `--verbose`) and `-vv` flags enables detailed output from all commands during the flet build process.
 Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed output (higher verbosity level).
@@ -1013,19 +1033,29 @@ If you need support, we may ask you to share this verbose log.
 ## Console output
 
 All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python
-logging module—is now redirected to a `console.log` file. The full path to this file is available via the
+logging module is redirected to a `console.log` file. The full path to this file is available via
+[`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename] or the
 `FLET_APP_CONSOLE` environment variable.
 
 The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
 
 ```python
-with open(os.getenv("FLET_APP_CONSOLE"), "r") as f:
-  log = f.read()
+import os
+import flet as ft
+
+async def main(page: ft.Page):
+    log_file = await ft.StoragePaths().get_console_log_filename()
+    # or
+    # log_file = os.getenv("FLET_APP_CONSOLE")
+
+    with open(log_file, "r") as f:
+        logs = f.read()
+        page.add(ft.Text(logs)) # display on UI
+
+ft.run(main)
 ```
 
-You can then display the `log` content using an `AlertDialog` or any other Flet control.
-
-If your program calls sys.exit(100), the complete log will automatically be shown in a scrollable window.
+If your program calls `sys.exit(100)`, the complete log will automatically be shown in a scrollable window.
 This is a special “magic” exit code for debugging purposes:
 
 ```python
@@ -1034,3 +1064,11 @@ sys.exit(100)
 ```
 
 Calling `sys.exit()` with any other code will terminate the app without displaying the log.
+
+## Continuous Integration/Continuous Deployment (CI/CD)
+
+You can use `flet build` command in your CI/CD pipelines to automate the build and release process of your Flet apps.
+
+### GitHub Actions
+
+TBA
