@@ -1279,9 +1279,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 capture_output=self.verbose < 1,
             )
             if icons_result.returncode != 0:
-                if icons_result.stdout:
+                if isinstance(icons_result.stdout, str):
                     console.log(icons_result.stdout, style=verbose1_style)
-                if icons_result.stderr:
+                if isinstance(icons_result.stderr, str):
                     console.log(icons_result.stderr, style=error_style)
                 self.cleanup(icons_result.returncode)
             console.log(f"Generated app icons {self.emojis['checkmark']}")
@@ -1529,9 +1529,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 capture_output=self.verbose < 1,
             )
             if splash_result.returncode != 0:
-                if splash_result.stdout:
+                if isinstance(splash_result.stdout, str):
                     console.log(splash_result.stdout, style=verbose1_style)
-                if splash_result.stderr:
+                if isinstance(splash_result.stderr, str):
                     console.log(splash_result.stderr, style=error_style)
                 self.cleanup(splash_result.returncode)
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
@@ -1743,9 +1743,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         if package_result.returncode != 0:
-            if package_result.stdout:
+            if isinstance(package_result.stdout, str):
                 console.log(package_result.stdout, style=verbose1_style)
-            if package_result.stderr:
+            if isinstance(package_result.stderr, str):
                 console.log(package_result.stderr, style=error_style)
             self.cleanup(package_result.returncode)
 
@@ -1858,9 +1858,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_result.returncode != 0
             or "Encountered error while creating the IPA" in str(build_result.stderr)
         ):
-            if build_result.stdout:
+            if isinstance(build_result.stdout, str):
                 console.log(build_result.stdout, style=verbose1_style)
-            if build_result.stderr:
+            if isinstance(build_result.stderr, str):
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
