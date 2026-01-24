@@ -76,7 +76,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "config_platform": "macos",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
-                "outputs": ["build/macos/Build/Products/Release/{project_name}.app"],
+                "outputs": ["build/macos/Build/Products/Release/{artifact_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
@@ -241,7 +241,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--project",
             dest="project_name",
             required=False,
-            help="Project name for the executable/bundle and bundle IDs.",
+            help="Project name for bundle IDs and identifiers; used as the default "
+            "for artifact and product names",
+        )
+        parser.add_argument(
+            "--artifact",
+            dest="artifact_name",
+            required=False,
+            help="Executable or bundle name on disk",
         )
         parser.add_argument(
             "--description",
@@ -703,20 +710,25 @@ class BaseBuildCommand(BaseFlutterCommand):
             .strip("/")
             .strip()
         )
-        project_name_orig = (
+        project_name_raw = (
             self.options.project_name
-            or self.get_pyproject("tool.flet.project")
             or self.get_pyproject("project.name")
-            or self.get_pyproject("tool.poetry.name")
             or self.python_app_path.name
         )
-        project_name_slug = slugify(cast(str, project_name_orig))
+        project_name_slug = slugify(cast(str, project_name_raw))
         project_name = project_name_slug.replace("-", "_")
+        artifact_name = (
+            self.options.artifact_name
+            or self.get_pyproject("tool.flet.artifact")
+            or self.options.project_name
+            or self.get_pyproject("project.name")
+            or self.python_app_path.name
+        )
         product_name = (
             self.options.product_name
             or self.get_pyproject("tool.flet.product")
+            or self.options.project_name
             or self.get_pyproject("project.name")
-            or self.get_pyproject("tool.poetry.name")
             or self.python_app_path.name
         )
 
@@ -949,6 +961,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "split_per_abi": split_per_abi,
             "project_name": project_name,
             "project_name_slug": project_name_slug,
+            "artifact_name": artifact_name,
             "product_name": product_name,
             "description": (
                 self.options.description
@@ -1880,6 +1893,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_output_dir = (
                 str(self.flutter_dir.joinpath(build_output))
                 .replace("{arch}", arch)
+                .replace("{artifact_name}", self.template_data["artifact_name"])
                 .replace("{project_name}", self.template_data["project_name"])
                 .replace("{product_name}", self.template_data["product_name"])
             )

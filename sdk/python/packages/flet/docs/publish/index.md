@@ -219,10 +219,18 @@ Example of extensions can be found here.
 The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
 
 The product name does **not** control the on-disk executable or bundle
-name. Use the [project name](#project-name) for artifact naming.
+name. Use the [artifact name](#artifact-name) for artifact naming.
 
-**Default:** Derived from `project.name`, `tool.poetry.name` in `pyproject.toml`,
-or the name of your Flet app directory.
+**Default:** Derived from `project.name` in `pyproject.toml` or the name of your
+Flet app directory.
+
+/// admonition | Resolution order
+- `--product` CLI option
+- `tool.flet.product`
+- `--project` CLI option
+- `project.name`
+- project directory name
+///
 
 /// tab | `flet build`
 ```bash
@@ -240,19 +248,48 @@ product = "My Awesome App"
 
 ///
 
+## Artifact name
+
+The on-disk name for executables and app bundles.
+It does **not** affect bundle IDs or package identifiers.
+
+Its value is used as-is (no slugification), so it can include spaces or accents.
+
+/// admonition | Resolution order
+- `--artifact` CLI option
+- `tool.flet.artifact`
+- `--project` CLI option
+- `project.name`
+- project directory name
+///
+
+/// tab | `flet build`
+```bash
+flet build <target_platform> --artifact "My Awesome App"
+```
+///
+/// tab | `pyproject.toml`
+
+/// tab | `[tool.flet]`
+```toml
+[tool.flet]
+artifact = "My Awesome App"
+```
+///
+
+///
+
 ## Project name
 
 The project name in C-style identifier format (lowercase alphanumerics with underscores).
-It is mainly used as name for executables, bundles, and identifiers.
-It is also used to build [bundle ID](#bundle-id) and as the name for the executable/bundle.
+It is used for bundle IDs and other internal identifiers.
 
-Its value is internally slugified (e.g., `my-app` becomes `my_app`) to keep artifact names safe.
+Its value is internally slugified (e.g., `my-app` becomes `my_app`) to keep
+identifier names safe.
 
 /// admonition | Resolution order
 - `--project` CLI option
-- `tool.flet.project`
 - `project.name`
-- `tool.poetry.name`
 - project directory name
 ///
 
@@ -263,10 +300,10 @@ flet build <target_platform> --project my_app
 ///
 /// tab | `pyproject.toml`
 
-/// tab | `[tool.flet]`
+/// tab | `[project]`
 ```toml
-[tool.flet]
-project = "my_app"
+[project]
+name = "my_app"
 ```
 ///
 
