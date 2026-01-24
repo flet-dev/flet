@@ -535,23 +535,26 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-signing-key-store",
             dest="android_signing_key_store",
-            help="path to an upload keystore `.jks` file for Android apps",
+            help="path to an upload keystore `.jks` file for Android apps "
+            "[env: FLET_ANDROID_SIGNING_KEY_STORE=]",
         )
         parser.add_argument(
             "--android-signing-key-store-password",
             dest="android_signing_key_store_password",
-            help="Android signing store password",
+            help="Android signing store password "
+            "[env: FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD=]",
         )
         parser.add_argument(
             "--android-signing-key-password",
             dest="android_signing_key_password",
-            help="Android signing key password",
+            help="Android signing key password "
+            "[env: FLET_ANDROID_SIGNING_KEY_PASSWORD=]",
         )
         parser.add_argument(
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
             default="upload",
-            help="Android signing key alias",
+            help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
             "--build-number",
@@ -1840,9 +1843,16 @@ class BaseBuildCommand(BaseFlutterCommand):
         if android_signing_key_alias:
             build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
-        if self.options.flutter_build_args:
-            for flutter_build_arg_arr in self.options.flutter_build_args:
-                build_args.extend(flutter_build_arg_arr)
+        flutter_build_args = (
+            self.options.flutter_build_args
+            or self.get_pyproject(
+                f"tool.flet.{self.config_platform}.flutter.build_args"
+            )
+            or self.get_pyproject("tool.flet.flutter.build_args")
+        )
+        if flutter_build_args:
+            for arg in self.options.flutter_build_args:
+                build_args.extend(arg)
 
         if self.verbose > 1:
             build_args.append("--verbose")

@@ -210,6 +210,7 @@ Throughout this documentation, the following placeholders are used:
 - `<PLATFORM>` - one of the following: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
 - `<flet_app_directory>` - the path to the directory containing your Flet project/app.
 - [`<python_app_path>`](../cli/flet-build.md#python_app_path)
+- `<flet_version>` - the version of Flet in use. Can be known by running `flet --version` or `uv run python -c "import flet; print(flet.__version__)"` in the terminal.
 ///
 
 ### Product name
@@ -323,7 +324,7 @@ Its value is determined in the following order of precedence:
 1. `--org`
 2. `[tool.flet.<PLATFORM>].org`
 3. `[tool.flet].org`
-4. Default: `"com.flet"`
+4. `"com.flet"`
 
 #### Example
 
@@ -349,6 +350,7 @@ Its value is determined in the following order of precedence:
 
 1. `--company`
 2. `[tool.flet].company`
+3. `"Your Company"`
 
 #### Example
 
@@ -491,6 +493,7 @@ Its value is determined in the following order of precedence:
 
 1. `--copyright`
 2. `[tool.flet].copyright`
+3. `"Copyright (c) 2023 Your Company"`
 
 #### Example
 
@@ -886,7 +889,15 @@ Valid values include:
 - A full Git URL (e.g., `https://github.com/org/template.git`)
 - A local directory path
 
-Its value can be set in either of the following ways:
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--template` (can be used multiple times)
+2. `[tool.flet.template].url`
+3. [`"gh:flet-dev/flet-build-template"`](https://github.com/flet-dev/flet-build-template)
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -905,7 +916,15 @@ url = "gh:flet-dev/flet-build-template"
 Defines the branch, tag, or commit to check out from the [template source](#template-source).
 Defaults to the version of Flet installed.
 
-Its value can be set in either of the following ways:
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--template-ref` (can be used multiple times)
+2. `[tool.flet.template].ref`
+3. `<flet_version>`
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -925,7 +944,15 @@ Defines the relative path to the cookiecutter template.
 If [template source](#template-source) is set, the path is treated as a
 subdirectory within its root; otherwise, it is relative to`<user-directory>/.cookiecutters/flet-build-template`.
 
-Its value can be set in either of the following ways:
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--template-dir` (can be used multiple times)
+2. `[tool.flet.template].dir`
+3. root of the [template source](#template-source)
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -999,36 +1026,94 @@ path = "/path/to/LOCAL_PACKAGE"
 ### Additional `flutter build` Arguments
 
 During the `flet build` process, `flutter build` command gets called internally to
-package your app for the specified platform. Not all `flutter build` arguments are exposed or usable throgh `flet build` command.
+package your app for the specified platform. However, not all `flutter build`
+arguments are exposed or usable through the `flet build` command directly.
 
-Passing additional arguments to `flutter build` can be done as follows:
+For possible `flutter build` arguments, see [Flutter docs](https://docs.flutter.dev/deployment)
+guide, or run `flutter build <target_platform> --help`.
+
+/// admonition | Note
+Passing additional `flutter build` arguments might cause unexpected behavior.
+Use at your own risk, and only if you fully know what you're doing!
+///
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--flutter-build-args` (can be used multiple times)
+2. `[tool.flet.<PLATFORM>.flutter].build_args`
+3. `[tool.flet.flutter].build_args`
+
+#### Example
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --flutter-build-args=--no-tree-shake-icons # (1)!
-
-# or as key-value
-
-flet build <target_platform> --flutter-build-args=--export-method --flutter-build-args=development
+flet build apk \
+  --flutter-build-args=--obfuscate \
+  --flutter-build-args=--export-method=development
+  --flutter-build-args=--dart-define=API_URL=https://api.example.com
 ```
-
-1. `--flutter-build-args` can be used multiple times.
 ///
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.flutter]
+[tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
 build_args = [
-  "--no-tree-shake-icons",
-  "--export-method", "development"
+  "--obfuscate",
+  "--export-method=development",
+  "--dart-define=API_URL=https://api.example.com",
 ]
+```
+///
+
+### Target Architecture
+
+By default, Flet packages your app for all supported
+CPU architectures for the target platform. It is, however,
+possible to limit the build to one or more specific architecture(s).
+
+
+
+#### Supported architectures
+
+The following architectures are supported for each platform:
+
+- Android: `arm64-v8a`, `armeabi-v7a`, `x86_64`, `x86`
+- macOS: `arm64`, `x86_64`
+
+- [//]: # (- iOS: `iphoneos.arm64`, `iphonesimulator.arm64`, `iphonesimulator.x86_64`)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--arch`
+2. `[tool.flet.<PLATFORM>].target_arch`, where `<PLATFORM>` can be `android` or `ios`
+3. `[tool.flet].target_arch`
+4. All supported architectures for the `<target_platform>`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build macos --arch arm64 x86_64
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.macos]     # or [tool.flet].target_arch
+target_arch = ["arm64", "x86_64"]
 ```
 ///
 
 ### Verbose logging
 
-The `-v` (or `--verbose`) and `-vv` flags enables detailed output from all commands during the flet build process.
-Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed output (higher verbosity level).
-If you need support, we may ask you to share this verbose log.
+The [`-v`](../cli/flet-build.md/#-verbose) (or `--verbose`) and `-vv` flags
+enables detailed output from all commands during the flet build process.
+
+Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed
+output (higher verbosity level). If you need support,
+we may ask you to share this verbose log.
 
 ## Console output
 
