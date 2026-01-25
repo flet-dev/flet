@@ -170,47 +170,25 @@ In this case, two things to keep in mind:
 
 ## How it works
 
-You can run `flet build <target_platform>` from the root of your Flet project:
+When you run `flet build <target_platform>`, the pipeline is:
 
-```bash
-<flet_app_directory> % flet build <target_platform>
-```
-
-When running from a different directory, pass the path to your app directory:
-
-```bash
-flet build <target_platform> <path_to_python_app>
-```
-
-Build results are copied to `<flet_app_directory>/build/<target_platform>` by default.
-See [Output directory](#output-directory) to set a custom location for build results.
-
-`flet build` uses Flutter SDK and a number of Flutter packages
-to build a distribution package from your Flet app.
-
-When you run `flet build <target_platform>`,
-the following steps are performed (using the default configuration):
-
-- A new Flutter project is created in `{flet_app_directory}/build/flutter` from the
-  [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) template.
-  The Flutter app contains a packaged Python app in its assets and uses the `flet` and
-  [`serious_python`](https://pub.dev/packages/serious_python) packages to run the
-  Python app and render its UI. The project is ephemeral and deleted upon completion.
-- Custom icons and splash images are copied from the `assets` directory into the Flutter project.
-- Icons are generated for all platforms using the
-  [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
-- Splash screens are generated for web, iOS, and Android targets using the
-  [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
-- The Python app is packaged using the `package` command of
-  [`serious_python`](https://pub.dev/packages/serious_python), which installs pure and binary
-  Python packages from [pypi.org](https://pypi.org) and [pypi.flet.dev](https://pypi.flet.dev)
-  for the selected platform. If [configured](#compilation-and-cleanup), `.py` files
-  of installed packages and/or the application are compiled to `.pyc` files.
-  All project files, except those [excluded](#excluding-files-and-directories), are
-  added to a package asset.
-- [`flutter build <target_platform>`](https://docs.flutter.dev/deployment) is
-  executed to produce an executable or an installable package.
-- Build results are copied to the [output directory](#output-directory).
+1. Create a Flutter project in `{flet_app_directory}/build/flutter` from the [template](#template-source).
+   The Flutter app embeds your packaged Python app in its assets and uses `flet` and
+   [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
+   The project is ephemeral and deleted upon completion.
+2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
+   Flutter project, then generate:
+   - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
+   - Splash screens for web, iOS, and Android via [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash).
+3. Package the Python app using `serious_python package`:
+   - Install app dependencies from [pypi.org](https://pypi.org) and
+     [pypi.flet.dev](https://pypi.flet.dev) for the selected platform, as configured in
+     [App dependencies](#app-dependencies) and [Source packages](#source-packages).
+   - If [configured](#compilation-and-cleanup), compile `.py` files to `.pyc`.
+   - Add all project files, except those [excluded](#excluding-files-and-directories), to the app asset.
+4. Run [`flutter build <target_platform>`](https://docs.flutter.dev/deployment) to produce the
+   executable or installable package.
+5. Copy the build outputs to the [output directory](#output-directory).
 
 ## Configuration options
 
