@@ -1,14 +1,14 @@
-# Publishing Flet app
+# Publishing a Flet app
 
-Flet CLI provides [`flet build`](../cli/flet-build.md) command that allows packaging Flet app into a standalone executable
-or install package for distribution.
+Flet CLI provides the [`flet build`](../cli/flet-build.md) command to package a
+Flet app into a standalone executable or installable package for distribution.
 
 ## Prerequisites
 
 ### Platform matrix
 
-The following matrix shows which OS you should run `flet build` command on in
-order to build a package for specific platform:
+Use the following matrix to choose which OS to run `flet build`
+on for each target platform:
 
 <style>
     table {
@@ -75,11 +75,31 @@ available in the system `PATH`, it will be automatically downloaded
 and installed (in the `$HOME/flutter/{version}` directory) during
 the first build process.
 
-<!-- TODO: Add a link to a table containing a map for Flet to min Flutter version required -->
+/// admonition | Tip
+    type: tip
+The recommended (minimum required) Flutter SDK version
+depends on the Flet version installed or in use.
+
+It can be viewed by running one of the following commands:
+
+```bash
+flet --version
+```
+```bash
+uv run python -c "import flet.version; print(flet.version.flutter_version)"
+```
+
+or the below Python code snippet:
+
+```python
+import flet.version
+print(flet.version.flutter_version)
+```
+///
 
 ## Project structure
 
-`flet build` command assumes the following minimal Flet project structure:
+The `flet build` command assumes the following minimal Flet project structure:
 
 ```tree
 README.md
@@ -138,7 +158,7 @@ Where `<project-name>` is the name for your project directory.
 ///
 
 /// admonition | Using `requirements.txt` instead of `pyproject.toml`
-Instead of a `pyproject.toml` file, you can also use `requirements.txt` file to specify dependencies.
+Instead of a `pyproject.toml` file, you can also use a `requirements.txt` file to specify dependencies.
 
 In this case, two things to keep in mind:
 
@@ -150,32 +170,47 @@ In this case, two things to keep in mind:
 
 ## How it works
 
-`flet build <target_platform>` command could be run from the root of Flet app project directory:
+You can run `flet build <target_platform>` from the root of your Flet project:
 
 ```bash
 <flet_app_directory> % flet build <target_platform>
 ```
 
-When running from a different directory, you can provide the path to a directory with Flet app:
+When running from a different directory, pass the path to your app directory:
 
 ```bash
 flet build <target_platform> <path_to_python_app>
 ```
 
 Build results are copied to `<flet_app_directory>/build/<target_platform>` by default.
-See [this](#custom-output-directory) to set a custom location for build results.
+See [Output directory](#output-directory) to set a custom location for build results.
 
-`flet build` uses Flutter SDK and the number of Flutter packages to build a distribution package from your Flet app.
+`flet build` uses Flutter SDK and a number of Flutter packages
+to build a distribution package from your Flet app.
 
-When you run `flet build <target_platform>`, the following steps are performed (using the default configuration):
+When you run `flet build <target_platform>`,
+the following steps are performed (using the default configuration):
 
-* A new Flutter project is created in `{flet_app_directory}/build/flutter` directory from [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) template. Flutter app will contain a packaged Python app in the assets and use `flet` and `serious_python` packages to run Python app and render its UI respectively. The project is ephemeral and deleted upon completion.
-* Custom icons and splash images are copied from `assets` directory into a Flutter project.
-* Icons are generated for all platforms using [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
-* Splash screens are generated for web, iOS and Android targets using [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
-* Python app is packaged using `package` command of [`serious_python`](https://pub.dev/packages/serious_python), which installs pure and binary Python packages from [pypi.org](https://pypi.org) and [pypi.flet.dev](https://pypi.flet.dev) for the selected platform. If configured, `.py` files of installed packages and/or application will be compiled to `.pyc` files. All files, except `build` directory will be added to a package asset.
-* `flutter build <target_platform>` command is executed to produce an executable or an installable package.
-* Build results are copied to `{flet_app_directory}/build/<target_platform>` directory.
+- A new Flutter project is created in `{flet_app_directory}/build/flutter` from the
+  [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) template.
+  The Flutter app contains a packaged Python app in its assets and uses the `flet` and
+  [`serious_python`](https://pub.dev/packages/serious_python) packages to run the
+  Python app and render its UI. The project is ephemeral and deleted upon completion.
+- Custom icons and splash images are copied from the `assets` directory into the Flutter project.
+- Icons are generated for all platforms using the
+  [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons) package.
+- Splash screens are generated for web, iOS, and Android targets using the
+  [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash) package.
+- The Python app is packaged using the `package` command of
+  [`serious_python`](https://pub.dev/packages/serious_python), which installs pure and binary
+  Python packages from [pypi.org](https://pypi.org) and [pypi.flet.dev](https://pypi.flet.dev)
+  for the selected platform. If [configured](#compilation-and-cleanup), `.py` files
+  of installed packages and/or the application are compiled to `.pyc` files.
+  All project files, except those [excluded](#excluding-files-and-directories), are
+  added to a package asset.
+- [`flutter build <target_platform>`](https://docs.flutter.dev/deployment) is
+  executed to produce an executable or an installable package.
+- Build results are copied to the [output directory](#output-directory).
 
 ## Configuration options
 
