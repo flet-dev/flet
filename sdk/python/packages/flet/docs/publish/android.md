@@ -30,7 +30,7 @@ written in C, Rust or other languages producing native code. Example packages ar
 Make sure all non-pure (binary) packages used in your Flet app have
 [pre-built wheels for Android](../reference/binary-packages-android-ios.md).
 
-## <code class="doc-symbol doc-symbol-command"></code> `flet build apk`
+## `flet build apk`
 
 /// admonition | Note
 This command can be run on a **macOS**, **Linux**, or **Windows**.
@@ -53,31 +53,50 @@ Each combination of CPU and instruction set has its own [Application Binary Inte
 
 By default, Flet will build a "fat" APK which includes binaries for both
 [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) and
-[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) architectures.
+[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) architectures. This can be useful when
+deploying to a wide range of devices, but it can also result in a large APK file.
 
-You can split fat APK into smaller APKs for each platform as follows:
+Splitting the APK allows you to build separate APKs for each target architecture.
+The resulting APKs will be individually smaller.
 
-/// tab | `pyproject.toml`
+When targeting specific architectures, make sure to distribute the correct
+resulting executable/bundle to users based on their device's CPU architecture,
+as installing an incompatible one will result in errors.
 
-/// tab | `[tool.flet.android]`
-```toml
-[tool.flet.android]
-split_per_abi = true
-```
-///
+The following target architectures are supported:
 
-///
+- [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#v7a)
+- [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a)
+- [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64)
+- [`x86`](https://developer.android.com/ndk/guides/abis#x86)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--split-per-abi`
+2. `[tool.flet.android].split_per_abi`
+3. `false`
+
+When enabled, it will, by default, produce the following ABIs:
+[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#v7a),
+[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) and
+[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64).
+More information on how to customize the target architecture(s) can be
+found [here](index.md#target-architecture).
+
+#### Example
+
 /// tab | `flet build`
 ```bash
 flet build apk --split-per-abi
 ```
 ///
-
-/// admonition | Note
-    type: caution
-Splitting APKs per ABI will generate multiple APK files, each targeting a specific architecture.
-Make sure to distribute the correct APK to users based on their device's CPU architecture,
-as installing an incompatible APK will result in installation failure.
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android]
+split_per_abi = true
+```
 ///
 
 ### Installing APK to a device
@@ -94,14 +113,14 @@ more information about installing and using `adb` on various platforms.
 
 To install an APK to a device run the following command:
 
-```
+```bash
 adb install <path-to-your.apk>
 ```
 
 If more than one device is connected to your computer (say, emulator and a physical phone) you can
 use `-s` option to specify which device you want to install `.apk` on:
 
-```
+```bash
 adb -s <device> install <path-to-your.apk>
 ```
 
@@ -195,23 +214,13 @@ flet build aab --android-signing-key-alias value
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.android]`
-```toml
-[tool.flet.android]
-signing.key_alias = "value"
-```
-///
-/// tab | `[tool.flet.android.signing]`
 ```toml
 [tool.flet.android.signing]
 key_alias = "value"
 ```
 ///
-
-///
-/// tab | Environment Variable
-```bash
+/// tab | `.env`
+```dotenv
 FLET_ANDROID_SIGNING_KEY_ALIAS="value"
 ```
 ///
@@ -229,20 +238,10 @@ flet build aab --android-signing-key-store path/to/store.jks
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.android]`
-```toml
-[tool.flet.android]
-signing.key_store = "path/to/store.jks"
-```
-///
-/// tab | `[tool.flet.android.signing]`
 ```toml
 [tool.flet.android.signing]
 key_store = "path/to/store.jks"
 ```
-///
-
 ///
 
 #### Key store password
@@ -303,20 +302,10 @@ flet build apk --no-android-splash
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-splash.android = false
-```
-///
-/// tab | `[tool.flet.splash]`
 ```toml
 [tool.flet.splash]
 android = false
 ```
-///
-
 ///
 
 ## Android Manifest
@@ -348,22 +337,12 @@ flet build apk --android-meta-data name_1=value_1 name_2=value_2
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.android]`
-```toml
-[tool.flet.android]
-meta_data."name_1" = value_1
-meta_data."name_2" = value_2
-```
-///
 /// tab | `[tool.flet.android.meta_data]`
 ```toml
 [tool.flet.android.meta_data]
 "name_1" = value_1
 "name_2" = value_2
 ```
-///
-
 ///
 
 And it will be translated accordingly into this in the `AndroidManifest.xml`:
@@ -393,22 +372,11 @@ flet build apk --android-features name_1=required_1 name_2=required_2
 ```
 ///
 /// tab | `pyproject.toml`
-
-/// tab | `[tool.flet.android]`
-```toml
-[tool.flet.android]
-feature."name_1" = required_1
-feature."name_2" = required_2
-```
-///
-/// tab | `[tool.flet.android.feature]`
 ```toml
 [tool.flet.android.meta_data]
 "name_1" = required_1
 "name_2" = required_2
 ```
-///
-
 ///
 
 And it will be translated accordingly into this in the `AndroidManifest.xml`:
@@ -431,13 +399,13 @@ Below are default/pre-configured features:
 
 Configuring Android permissions and features to be written into `AndroidManifest.xml`:
 
-```
+```bash
 flet build --android-permissions permission=True|False ... --android-features feature_name=True|False
 ```
 
 For example:
 
-```
+```bash
 flet build \
     --android-permissions android.permission.READ_EXTERNAL_STORAGE=True \
       android.permission.WRITE_EXTERNAL_STORAGE=True \
@@ -450,7 +418,7 @@ Default Android permissions:
 
 Default permissions can be disabled with `--android-permissions` option and `False` value, for example:
 
-```
+```bash
 flet build --android-permissions android.permission.INTERNET=False
 ```
 
@@ -474,18 +442,18 @@ Configuring permissions and features in `pyproject.toml` (notice quotes `"` arou
 
 To run interactive commands inside simulator or device:
 
-```
+```bash
 adb shell
 ```
 
 To overcome "permissions denied" error while trying to browse file system in interactive Android shell:
 
-```
+```bash
 su
 ```
 
 To download a file from a device to your local computer:
 
-```
+```bash
 adb pull <device-path> <local-path>
 ```
