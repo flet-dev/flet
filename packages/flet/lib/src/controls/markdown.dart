@@ -1,15 +1,9 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../extensions/control.dart';
-import '../models/control.dart';
-import '../utils/images.dart';
-import '../utils/launch_url.dart';
-import '../utils/markdown.dart';
-import '../utils/numbers.dart';
-import '../utils/uri.dart';
-import 'base_controls.dart';
 import 'highlight_view.dart';
 
 class MarkdownControl extends StatelessWidget {
@@ -37,15 +31,23 @@ class MarkdownControl extends StatelessWidget {
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
     var mdStyleSheet = control.getMarkdownStyleSheet("md_style_sheet", context);
     var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
+    var latexStyle = control.getTextStyle("latex_style", theme);
+    var latexScaleFactor = control.getDouble("latex_scale_factor");
 
     Widget markdown = MarkdownBody(
         data: value,
         imageDirectory: control.backend.assetsDir != ""
             ? control.backend.assetsDir
             : getBaseUri(control.backend.pageUri).toString(),
-        extensionSet: extensionSet,
+        extensionSet: md.ExtensionSet(
+          [...extensionSet.blockSyntaxes, LatexBlockSyntax()],
+          [...extensionSet.inlineSyntaxes, LatexInlineSyntax()],
+        ),
         builders: {
           'code': CodeElementBuilder(codeTheme, codeStyleSheet),
+          'latex': LatexElementBuilder(
+            textStyle: latexStyle, textScaleFactor: latexScaleFactor
+          ),
         },
         styleSheet: mdStyleSheet,
         imageBuilder: (Uri uri, String? title, String? alt) {

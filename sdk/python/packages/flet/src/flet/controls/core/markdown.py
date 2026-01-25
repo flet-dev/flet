@@ -308,6 +308,19 @@ class Markdown(LayoutControl):
     The styles to use when displaying the markdown.
     """
 
+    latex_scale_factor: Optional[float] = None
+    """
+    The scale factor for LaTeX formulas rendering.
+    Controls the size of rendered mathematical expressions.
+    """
+
+    latex_style: Optional[TextStyle] = None
+    """
+    The text style to apply to LaTeX formulas.
+    Allows customization of font, color, and other text properties
+    for mathematical expressions.
+    """
+
     on_tap_text: Optional[ControlEventHandler["Markdown"]] = None
     """
     Called when some text is clicked/tapped.
