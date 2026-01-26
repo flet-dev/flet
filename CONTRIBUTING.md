@@ -90,6 +90,9 @@ Pytest should be run with `uv run`:
 uv run pytest
 ```
 
+For details on running and updating integration tests (including golden images),
+see [integration tests README](sdk/python/packages/flet/integration_tests/README.md).
+
 ### Code formatting
 
 The project uses [Black](https://github.com/psf/black) formatting style. All `.py` files in a PR must be black-formatted.
