@@ -1,4 +1,4 @@
-While Flet controls leverage many built-in Flutter widgets to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
+While [Flet controls](../controls/) leverage many built-in Flutter widgets to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
 
 To address this, the Flet framework provides an extensibility mechanism. This allows you to incorporate widgets and APIs from your own custom Flutter packages or [third-party libraries](https://pub.dev/packages?sort=popularity) directly into your Flet application.
 
@@ -411,15 +411,15 @@ def main(page: ft.Page):
 
     page.add(
         ft.Stack(
-            [
+            controls=[
                 ft.Container(height=200, width=200, bgcolor=ft.Colors.BLUE_100),
                 FletSpinkit(
+                    color=ft.Colors.YELLOW,
+                    size=150,
                     opacity=0.5,
                     tooltip="Spinkit tooltip",
                     top=0,
                     left=0,
-                    color=ft.Colors.YELLOW,
-                    size=150,
                 ),
             ]
         )
@@ -429,123 +429,11 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-Re-build and run:
+Rebuild and run:
 
 <img src="/assets/extensions/spinkit3.gif" className="screenshot-20" />
 
 You can find source code for this example [here](https://github.com/flet-dev/flet-spinkit).
-
-#### Examples for different types of properties and events
-
-##### Enum properties
-
-For example, `clip_behaviour` for `AppBar`.
-
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/app_bar.py):
-
-```python
-# clip_behavior
-@property
-def clip_behavior(self) -> Optional[ClipBehavior]:
-    return self._get_attr("clipBehavior")
-
-@clip_behavior.setter
-def clip_behavior(self, value: Optional[ClipBehavior]):
-    self._set_attr(
-        "clipBehavior",
-        value.value if isinstance(value, ClipBehavior) else value,
-    )
-```
-
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/app_bar.dart):
-
-```dart
-var clipBehavior = Clip.values.firstWhere(
-    (e) =>
-        e.name.toLowerCase() ==
-        widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-    orElse: () => Clip.none);
-```
-##### Json properties
-
-For example, `shape` property for `Card`.
-
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/card.py):
-
-```python
-def before_update(self):
-    super().before_update()
-    self._set_attr_json("shape", self.__shape)
-
-# shape
-@property
-def shape(self) -> Optional[OutlinedBorder]:
-    return self.__shape
-
-@shape.setter
-def shape(self, value: Optional[OutlinedBorder]):
-    self.__shape = value
-```
-
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/card.dart):
-
-```dart
-var shape = parseOutlinedBorder(control, "shape")
-```
-
-##### Children
-
-For example, `content` for `AlertDialog`:
-
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/alert_dialog.py):
-
-```python
-    def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
-```
-
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/alert_dialog.dart):
-
-```dart
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-```
-
-##### Events
-
-For example, `on_click` event for `Button`.
-
-In [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet/src/flet/core/button.py):
-
-```python
-# on_click
-@property
-def on_click(self):
-    return self._get_event_handler("click")
-
-@on_click.setter
-def on_click(self, handler):
-    self._add_event_handler("click", handler)
-```
-
-In [Dart](https://github.com/flet-dev/flet/blob/main/packages/flet/lib/src/controls/button.dart):
-
-```dart
-Function()? onPressed = !disabled
-    ? () {
-        debugPrint("Button ${widget.control.id} clicked!");
-        if (url != "") {
-        openWebBrowser(url,
-            webWindowName: widget.control.attrString("urlTarget"));
-        }
-        widget.backend.triggerControlEvent(widget.control.id, "click");
-    }
-    : null;
-```
 
 ## Examples
 
