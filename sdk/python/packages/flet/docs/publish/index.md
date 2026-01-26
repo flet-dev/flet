@@ -175,7 +175,8 @@ When you run `flet build <target_platform>`, the pipeline is:
 1. Create a Flutter project in `{flet_app_directory}/build/flutter` from the [template](#template-source).
    The Flutter app embeds your packaged Python app in its assets and uses `flet` and
    [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
-   The project is ephemeral and deleted upon completion.
+   The project is cached and reused across builds for rapid iterations;
+   use [`--clear-cache`](../cli/flet-build.md#-clear-cache) to force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
    - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
@@ -188,25 +189,27 @@ When you run `flet build <target_platform>`, the pipeline is:
    - Add all project files, except those [excluded](#excluding-files-and-directories), to the app asset.
 4. Run [`flutter build <target_platform>`](https://docs.flutter.dev/deployment) to produce the
    executable or installable package.
-5. Copy the build outputs to the [output directory](#output-directory).
+5. Copy build outputs from Step 4 into the [output directory](#output-directory).
 
 ## Configuration options
 
 /// admonition | Placeholders
 Throughout this documentation, the following placeholders are used:
 
-- [`<target_platform>`](../cli/flet-build.md#target_platform) - one of the following: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
-- `<PLATFORM>` - one of the following: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
-- `<flet_app_directory>` - the path to the directory containing your Flet project/app.
-- [`<python_app_path>`](../cli/flet-build.md#python_app_path)
-- `<flet_version>` - the version of Flet in use. Can be known by running `flet --version` or `uv run python -c "import flet; print(flet.__version__)"` in the terminal.
+- [`<target_platform>`](../cli/flet-build.md#target_platform) - one of: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
+- `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
+  - `apk`/`aab` map to `android`, `ipa` maps to `ios`.
+- [`<python_app_path>`](../cli/flet-build.md#python_app_path) - the path passed to `flet build` (defaults to the current directory).
+- `<flet_app_directory>` - the resolved project root for `<python_app_path>`; `pyproject.toml` and `requirements.txt` are read from here.
+- `<flet_version>` - the version of Flet in use. You can check with `flet --version` or
+  `uv run python -c "import flet; print(flet.__version__)"`.
 ///
 
 /// admonition | Understanding `pyproject.toml` structure
-Flet loads `pyproject.toml` as a nested dictionary and looks up settings by
+Flet loads `pyproject.toml` as a nested dictionary and looks up settings using
 dot-separated paths (for example, `tool.flet.web.base_url`).
 
-For example, the two forms below are equivalent (will be internally resolved to the same key-value pair):
+The two forms below are equivalent and resolve to the same key-value pair:
 
 - **Form 1** (will be used/preferred throughout this documentation)
     ```toml
@@ -229,13 +232,35 @@ below ("quoted keys" are literals and do not create nesting):
 ```
 ///
 
+### App path
+
+Defines the root directory of your Python app within `<python_app_path>`.
+Flet looks for the [entry point](#entry-point), the `assets` directory, and
+[exclude paths](#excluding-files-and-directories) relative to this directory.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.app].path`
+2. `<python_app_path>`
+
+`path` is resolved relative to `<python_app_path>`.
+
+#### Example
+
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.app]
+path = "src"
+```
+///
+
 ### Entry point
 
-This is where the execution of your Flet app begins. It is the Python file that
-contains the call to `flet.run()` or `flet.render()`.
-If provided without the Python file extension (`.py`), it will be appended internally.
-
-[//]: # (Also, it must exist in the `package_app_path`.)
+This is the Python module that starts your app and contains the call to
+`flet.run()` or `flet.render()`. Flet uses the module *stem* and looks for
+`<module>.py` in your [app path](#app-path).
 
 #### Resolution order
 
@@ -243,7 +268,9 @@ Its value is determined in the following order of precedence:
 
 1. [`--module-name`](../cli/flet-build.md#-module-name)
 2. `[tool.flet.app].module`
-3. `"main.py"`
+3. `"main"` (entry file `main.py`)
+
+Its value can either be `<module>` or `<module>.py`; both resolve to the same Python module.
 
 #### Example
 
@@ -261,11 +288,10 @@ module = "app.py"
 
 ### Project name
 
-The project name in C-style identifier format (lowercase alphanumerics with underscores).
-It is used for [bundle IDs](#bundle-id) and other internal identifiers.
-
-Its value is internally slugified and hyphens become underscores
-(e.g., `my-app` becomes `my_app`) to keep identifier names safe.
+The project name is the base identifier for [bundle IDs](#bundle-id) and other internal
+names. The source value is normalized to a safe identifier: lowercased, punctuation
+and spaces removed or collapsed, and hyphens converted to underscores (for example,
+`My App` or `my-app` becomes `my_app`).
 
 #### Resolution order
 
@@ -293,8 +319,8 @@ name = "my_app"
 
 The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
 
-It does **not** control the on-disk executable or bundle
-name. Use the [artifact name](#artifact-name) for artifact naming.
+It does **not** control the on-disk executable or bundle name. Use the
+[artifact name](#artifact-name) for artifact naming.
 
 #### Resolution order
 
@@ -327,7 +353,8 @@ determines the name of the `.exe` file, and on macOS it sets the name of the `.a
 
 It does **not** affect [bundle ID](#bundle-id)s or package identifiers.
 
-It can contain spaces or accents.
+It can contain spaces or accents, but keep file system restrictions in mind on
+your target platforms.
 
 #### Resolution order
 
@@ -355,13 +382,9 @@ artifact = "My Awesome App"
 
 ### Organization name
 
-The organization name in reverse domain name notation, typically in the form `com.mycompany`.
-
-If you do not provide an explicit value for the organization name,
-but specify the [bundle ID](#bundle-id), the organization name will be
-internally constructed by taking the part of this [bundle ID](#bundle-id)
-before the last dot. For example, with a bundle ID of `com.mycompany.myapp`,
-the organization name becomes `com.mycompany`.
+The organization name in reverse domain name notation, typically in the form
+`com.mycompany`. It is used as the prefix for the [bundle ID](#bundle-id) and
+for package identifiers on mobile and desktop targets.
 
 #### Resolution order
 
@@ -390,8 +413,8 @@ org = "com.mycompany"
 
 The bundle ID for the application, typically in the form `"com.mycompany.my_app"`.
 
-If not explicitly specified, it is formed by combining the [organization name](#organization-name)
-and the [project name](#project-name).
+If not explicitly specified, it is derived from the [organization name](#organization-name)
+and the [project name](#project-name) used by the build template.
 
 #### Resolution order
 
@@ -400,7 +423,6 @@ Its value is determined in the following order of precedence:
 1. [`--bundle-id`](../cli/flet-build.md#-bundle-id)
 2. `[tool.flet.<PLATFORM>].bundle_id`
 3. `[tool.flet].bundle_id`
-4. Default: `"[organization-name].[project-name]"`
 
 #### Example
 
@@ -418,7 +440,7 @@ bundle_id = "com.mycompany.my_app"
 
 ### Company Name
 
-The company name displayed in about app dialogs and metadata.
+The company name displayed in about app dialogs and metadata (notably on desktop builds).
 
 #### Resolution order
 
@@ -426,7 +448,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--company`](../cli/flet-build.md#-company)
 2. `[tool.flet].company`
-3. `"Your Company"`
+3. Build template default (see [Template Source](#template-source))
 
 #### Example
 
@@ -452,7 +474,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--copyright`](../cli/flet-build.md#-copyright)
 2. `[tool.flet].copyright`
-3. `"Copyright (c) 2023 Your Company"`
+3. Build template default (see [Template Source](#template-source))
 
 #### Example
 
@@ -472,8 +494,10 @@ copyright = "Copyright © 2026 My Company Inc."
 
 #### Build Number
 
-An integer identifier (defaults to `1`) used internally to distinguish one build from another.
-Each new build must have a unique, incrementing number; higher numbers indicate more recent builds.
+An integer identifier used internally to distinguish one build from another.
+
+Each new build must have a unique, incrementing number;
+higher numbers indicate more recent builds.
 
 ##### Resolution order
 
@@ -481,6 +505,8 @@ Its value is determined in the following order of precedence:
 
 1. [`--build-number`](../cli/flet-build.md#-build-number)
 2. `[tool.flet].build_number`
+3. Otherwise, the build number from the generated `pubspec.yaml`
+   (see [Template Source](#template-source)) will be used.
 
 ##### Example
 
@@ -498,7 +524,7 @@ build_number = 1
 
 #### Build Version
 
-A user‑facing version string in `x.y.z` format (defaults to `1.0.0`).
+A user‑facing version string in `x.y.z` format.
 Increment this for each new release to differentiate it from previous versions.
 
 ##### Resolution order
@@ -508,6 +534,8 @@ Its value is determined in the following order of precedence:
 1. `--build-version`
 2. `[project].version`
 3. `[tool.poetry].version`
+4. Otherwise, the build version from the generated `pubspec.yaml`
+   (see [Template Source](#template-source)) will be used.
 
 ##### Example
 
@@ -526,26 +554,22 @@ version = "1.0.0"
 ### Output directory
 
 The directory where the build output is saved.
+If the directory already exists, it is deleted and recreated on each build.
+
+For web builds, the app's `assets` directory is copied into the output directory.
 
 #### Resolution order
 
 Its value is determined in the following order of precedence:
 
 1. [`--output`](../cli/flet-build.md#-output) (or `-o`)
-2. `[tool.flet].output`
-3. `<python_app_path>/build/<target_platform>`
+2. `<python_app_path>/build/<target_platform>`
 
 #### Example
 
 /// tab | `flet build`
 ```bash
 flet build <target_platform> --output <path-to-output-dir>
-```
-///
-/// tab | `pyproject.toml`
-```toml
-[tool.flet]
-output = "<path-to-output-dir>"
 ```
 ///
 
@@ -557,10 +581,18 @@ These are the Python packages that your Flet app depends on to function correctl
 
 Its value is determined in the following order of precedence:
 
-- `[project].dependencies` (PEP 621) or `[tool.poetry].dependencies`
-- If `[tool.flet.<PLATFORM>].dependencies` is set, its values are appended to the above list.
+- `[tool.poetry].dependencies` if present; otherwise `[project].dependencies` (PEP 621).
+- If `[tool.flet.<PLATFORM>].dependencies` is set (where `<PLATFORM>` corresponds to `<target_platform>`), its values are appended to the list above.
 - If the result of all above is empty and `requirements.txt` exists in `<python_app_path>`, it is used.
 - If the result of all the above is empty, `flet==<flet_version>` is used.
+
+To use a local development version of a dependency during builds, configure
+`[tool.flet].dev_packages` or `[tool.flet.<PLATFORM>].dev_packages` with a
+package name to path mapping.
+
+If your app uses Flet extensions (third-party packages), list them in your
+Python dependencies so they are packaged with the app. Examples of extensions
+can be found in [Built-in extensions](../extend/built-in-extensions.md).
 
 #### Example
 
@@ -570,9 +602,12 @@ Its value is determined in the following order of precedence:
 dependencies = [
     "flet",
     "requests",
+    "flet-extension1",
+    "flet-extension2 @ git+https://github.com/account/flet-extension2.git",   # git repo
+    "flet-extension3 @ file:///path/to/flet-extension3",  # local package
 ]
 
-[tool.flet.<PLATFORM>]
+[tool.flet.<PLATFORM>]  # will be used/appended only if <PLATFORM> corresponds to <target_platform>
 dependencies = [
     "dep1",
     "dep2",
@@ -582,15 +617,10 @@ dependencies = [
 
 ### Source packages
 
-If one or more of your app dependencies do not provide a pre-built binary distribution (wheels),
-they must be built from source distribution and packaged as `.whl` files.
-
-A source distribution is a source archive (usually `.tar.gz` or `.zip`) that contains:
-the package's Python source code, package metadata, and instructions on how to build
-and install the package.
-
-To know which packages require source distributions, you can run `pipdeptree` and look for
-packages with a `No binaries` column.
+By default, packaging for mobile and web only installs binary wheels. Use source packages
+to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
+On desktop targets, source installs are already allowed, so this setting is mainly for
+Android, iOS, and web builds.
 
 #### Resolution order
 
@@ -599,7 +629,7 @@ Its value is determined in the following order of precedence:
 1. [`--source-packages`](../cli/flet-build.md#-source-packages)
 2. `[tool.flet.<PLATFORM>].source_packages`
 3. `[tool.flet].source_packages`
-4. `SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS` (environment variable; comma-separated packages)
+4. set `SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS` env var to a comma-separated list of packages
 
 #### Example
 
@@ -620,56 +650,21 @@ SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS="package1,package2"
 ```
 ///
 
-### Including Extensions
-
-If your app uses Flet extensions (third-party packages),
-they must equally be part of your app's dependencies.
-
-/// tab | PyPI
-```toml
-dependencies = [
-  "flet-extension",
-  "flet",
-]
-```
-///
-/// tab | Git Repo
-```toml
-dependencies = [
-"flet-extension @ git+https://github.com/account/flet-extension.git",
-"flet",
-]
-```
-///
-/// tab | Local Package
-```toml
-dependencies = [
-"flet-extension @ file:///path/to/flet-extension",
-"flet",
-]
-```
-///
-
-Example of extensions can be found [here](../extend/built-in-extensions.md).
-
 ### Flutter dependencies
 
-Adding a Flutter package can be done in the `pyproject.toml` as follows:
+To add Flutter packages or other `pubspec.yaml` entries, use
+`[tool.flet.flutter].pubspec` to merge into the generated
+Flutter project (from the [template](#template-source)).
 
-/// tab | `flet build`
-```bash
-flet build
-```
-///
+#### Example
+
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.flutter.dependencies]
-package_1 = "x.y.z"
+[tool.flet.flutter.pubspec.dependencies]
+package_1 = "^1.2.3"
 
-# or
-
-[tool.flet.flutter.dependencies.<LOCAL_PACKAGE>]
-path = "/path/to/LOCAL_PACKAGE"
+[tool.flet.flutter.pubspec.dependency_overrides]
+package_2 = { git = "https://github.com/org/package_2.git", ref = "main" }
 ```
 ///
 
@@ -706,9 +701,9 @@ If that is also missing, it will use `icon.png` or any supported format such as 
 
 | Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
 |----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| iOS      | `splash_dark_ios.png` → `splash_ios.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
-| Android  | `splash_dark_android.png` → `splash_android.png` → `splash_dark.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
-| Web      | `splash_dark_web.png` → `splash_web.png` → `splash_dark.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
+| iOS      | `splash_dark_ios.png` → `splash_dark.png` → `splash_ios.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
+| Android  | `splash_dark_android.png` → `splash_dark.png` → `splash_android.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
+| Web      | `splash_dark_web.png` → `splash_dark.png` → `splash_web.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
 
 #### Splash Background Colors
 
@@ -724,7 +719,7 @@ Their values are respectively determined in the following order of precedence:
 1. [`--splash-color`](../cli/flet-build.md#-splash-color) / [`--splash-dark-color`](../cli/flet-build.md#-splash-dark-color)
 2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
 3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
-4. `#ffffff` / `#333333`
+4. Build template defaults (see [Template Source](#template-source))
 
 ##### Example
 
@@ -743,41 +738,73 @@ dark_color = "#333333"
 
 #### Disabling Splash Screens
 
-Splash screens are enabled by default. To disable it for a particular platform,
-see the corresponding documentation: [iOS](ios.md#disable-splash-screen),[Android](android.md#disable-splash-screen), and [Web](web/static-website/index.md#disable-splash-screen).
+Splash screens are enabled by default but can be disabled.
+
+##### Resolution order
+
+Its value is determined in the following order of precedence:
+
+- on Android:
+  - [`--no-android-splash`](../cli/flet-build.md#-no-android-splash)
+  - `[tool.flet.splash].android`
+- on iOS:
+  - [`--no-ios-splash`](../cli/flet-build.md#-no-ios-splash)
+  - `[tool.flet.splash].ios`
+- on Web:
+  - [`--no-web-splash`](../cli/flet-build.md#-no-web-splash)
+  - `[tool.flet.splash].web`
+
+##### Example
+
+/// tab | `flet build`
+```bash
+flet build apk --no-android-splash
+flet build ipa --no-ios-splash
+flet build web --no-web-splash
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.splash]
+android = false
+ios = false
+web = false
+```
+///
 
 ### Boot screen
 
-The boot screen is shown while the archive with Python app is being unpacked to a
-device file system. It is shown after the [splash screen](#splash-screen) and
-before the [startup screen](#startup-screen). App archive does not include
-3rd-party site packages. If the archive is small and its
-unpacking is fast you could leave this screen disabled (default).
+The boot screen is shown while the packaged app archive (`app.zip`) is extracted
+to the app data directory (typically on first launch or after the app bundle changes).
+It appears after the [splash screen](#splash-screen) and before the
+[startup screen](#startup-screen).
+
+It is not shown by default. Enable it, for example, when then extraction time is noticeable.
 
 #### Example
 
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.app.boot_screen]     # or [tool.flet.<PLATFORM>.app.boot_screen]
-show = false
+show = true
 message = "Preparing the app for its first launch…"
 ```
 ///
 
 ### Startup screen
 
-The startup screen is shown while the archive (`app.zip`),
-which contains the 3rd-party site packages (Android only),
-is being unpacked and the Python app is starting.
+The startup screen is shown while the Python runtime and your app are starting.
+On mobile targets this can include preparing packaged dependencies. It appears
+after the [boot screen](#boot-screen).
 
-It is shown after the [boot screen](#boot-screen).
+It is not shown by default.
 
 #### Example
 
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.app.startup_screen]      # or [tool.flet.<PLATFORM>.app.startup_screen]
-show = false
+show = true
 message = "Starting up the app…"
 ```
 ///
@@ -790,26 +817,34 @@ position the window) before showing it to the user.
 
 See this [code example](../controls/page.md#hidden-app-window-on-startup).
 
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+- `[tool.flet.<PLATFORM>.app].hide_window_on_start`, where `<PLATFORM>` can be `windows`, `macos` or `linux`
+- `[tool.flet.app].hide_window_on_start`
+
 #### Example
 
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.app]
+[tool.flet.app]    # or [tool.flet.<PLATFORM>.app]
 hide_window_on_start = true
 ```
 ///
 
 ### Permissions
 
-`flet build` command allows granular control over permissions, features, and entitlements
+`flet build` allows granular control over permissions, features, and entitlements
 embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
 
 See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
 
 #### Cross-platform permissions
 
-There are pre-defined permissions that mapped to `Info.plist`, `*.entitlements` and `AndroidManifest.xml`
-for respective platforms.
+There are pre-defined permissions that map to `Info.plist`, `*.entitlements`, and
+`AndroidManifest.xml` on their respective platforms. These are applied on top of
+platform defaults, then you can add or override platform-specific entries.
 
 Setting permissions can be done as follows:
 
@@ -831,6 +866,20 @@ Supported permissions:
 * `camera`
 * `microphone`
 * `photo_library`
+
+Platform-specific additions:
+
+- iOS: [`--info-plist`](../cli/flet-build.md#-info-plist) or `[tool.flet.ios.info]`
+- macOS: [`--macos-entitlements`](../cli/flet-build.md#-macos-entitlements) or `[tool.flet.macos.entitlement]`
+- Android: [`--android-permissions`](../cli/flet-build.md#-android-permissions),
+  [`--android-features`](../cli/flet-build.md#-android-features),
+  [`--android-meta-data`](../cli/flet-build.md#-android-meta-data) or the
+  corresponding `[tool.flet.android.permission]`, `[tool.flet.android.feature]`,
+  `[tool.flet.android.meta_data]`
+
+Android also includes `android.permission.INTERNET` by default and sets
+`android.software.leanback` and `android.hardware.touchscreen` to `False`
+unless overridden.
 
 ##### iOS mapping to `Info.plist` entries
 
@@ -859,49 +908,55 @@ Supported permissions:
 
 * `location`
   * permissions:
-      * `android.permission.ACCESS_FINE_LOCATION": True`
-      * `android.permission.ACCESS_COARSE_LOCATION": True`
-      * `android.permission.ACCESS_BACKGROUND_LOCATION": True`
+      * `android.permission.ACCESS_FINE_LOCATION = True`
+      * `android.permission.ACCESS_COARSE_LOCATION = True`
+      * `android.permission.ACCESS_BACKGROUND_LOCATION = True`
   * features:
-      * `android.hardware.location.network": False`
-      * `android.hardware.location.gps": False`
+      * `android.hardware.location.network = False`
+      * `android.hardware.location.gps = False`
 * `camera`
-    * permissions:
-        * `android.permission.CAMERA": True`
+  * permissions:
+      * `android.permission.CAMERA = True`
   * features:
-      * `android.hardware.camera": False`
-      * `android.hardware.camera.any": False`
-      * `android.hardware.camera.front": False`
-      * `android.hardware.camera.external": False`
-      * `android.hardware.camera.autofocus": False`
+      * `android.hardware.camera = False`
+      * `android.hardware.camera.any = False`
+      * `android.hardware.camera.front = False`
+      * `android.hardware.camera.external = False`
+      * `android.hardware.camera.autofocus = False`
 * `microphone`
-    * permissions:
-      * `android.permission.RECORD_AUDIO": True`
-      * `android.permission.WRITE_EXTERNAL_STORAGE": True`
-      * `android.permission.READ_EXTERNAL_STORAGE": True`
+  * permissions:
+      * `android.permission.RECORD_AUDIO = True`
+      * `android.permission.WRITE_EXTERNAL_STORAGE = True`
+      * `android.permission.READ_EXTERNAL_STORAGE = True`
 * `photo_library`
-    * permissions:
-      * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True`
+  * permissions:
+      * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED = True`
 
 ### Deep linking
 
-[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users to navigate directly to specific content within a mobile app
-using a URI (Uniform Resource Identifier). Instead of opening the app's homepage, deep
-links direct users to a specific page, feature, or content within the app, enhancing
-user experience and engagement.
+[Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users
+to navigate directly to specific content within a mobile app
+using a [URI (Uniform Resource Identifier)](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
+Instead of opening the app's homepage, deep links direct users to a specific page,
+feature, or content within the app, enhancing user experience and engagement.
 
 - **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
 - **Host**: deep linking URL host.
 
 See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
 
+Deep linking is configured for Android and iOS only.
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:
 
-1. [`--deep-linking-scheme`](../cli/flet-build.md#-deep-linking-scheme) / [`--deep-linking-host`](../cli/flet-build.md#-deep-linking-host)
+1. [`--deep-linking-scheme`](../cli/flet-build.md#-deep-linking-scheme) and
+   [`--deep-linking-host`](../cli/flet-build.md#-deep-linking-host) (only when both are provided)
 2. `[tool.flet.<PLATFORM>.deep_linking].scheme` / `[tool.flet.<PLATFORM>.deep_linking].host`, where `<PLATFORM>` can be android or ios
 3. `[tool.flet.deep_linking].scheme` / `[tool.flet.deep_linking].host`
+
+Both scheme and host are required; if either is missing, the deep-linking entries are not added.
 
 #### Example
 
@@ -920,15 +975,32 @@ host = "mydomain.com"
 
 ### Target Architecture
 
-A target platform can have different CPUs architectures,
+A target platform can have different CPU architectures,
 which in turn support different instruction sets.
 
 It is possible to build your app for specific CPU architectures.
 This is useful for reducing the size of the resulting binary or package,
 or for targeting specific devices.
 
+Target architecture is only supported for Android (`apk`/`aab`) and macOS.
+
+On Android:
+
+- When `split_per_abi = true` (APK only), Flutter handles per-ABI outputs and
+  `target_arch` is ignored.
+- When `split_per_abi = false`, `target_arch` is applied to Gradle
+  `ndk.abiFilters` for both APK and AAB builds. If you do not specify it,
+  the template defaults to `arm64-v8a`, `armeabi-v7a`, and `x86_64`.
+
 For more/complementary information on supported architectures, see the specific platform guides:
 [Android](android.md#split-apk-per-abi), [macOS](macos.md#target-architecture).
+
+#### Supported architectures
+
+The following architectures are supported for each platform:
+
+- Android: `arm64-v8a`, `armeabi-v7a`, `x86_64`, `x86`
+- macOS: `arm64`, `x86_64`
 
 #### Resolution order
 
@@ -937,7 +1009,7 @@ Its value is determined in the following order of precedence:
 1. [`--arch`](../cli/flet-build.md#-arch)
 2. `[tool.flet.<PLATFORM>].target_arch`, where `<PLATFORM>` can be `android` or `macos`
 3. `[tool.flet].target_arch`
-4. All supported architectures for the `<target_platform>`
+4. Platform defaults for the `<target_platform>`
 
 #### Example
 
@@ -967,7 +1039,8 @@ Its value is determined in the following order of precedence:
 3. `[tool.flet.app].exclude` (type: list of strings)
 
 The files and/or directories specified should be provided as relative
-paths to the app root directory, `python_app_path`.
+paths to the [app path](#app-path) directory. Paths are matched exactly (no globs), and
+directories are excluded recursively.
 
 By default, the `build` directory is always excluded.
 Additionally, when the target_platform is web, the `assets`
@@ -990,18 +1063,23 @@ exclude = [".git", ".venv"]
 ### Compilation and cleanup
 
 Flet can compile your app's `.py` files and/or installed packages' `.py` files into
-`.pyc` files during the packaging process. Additionally, it can remove/cleanup
-unnecessary package files upon successful compilation.
+`.pyc` files during the packaging process (via `python -m compileall -b`). Cleanup
+removes known junk files and any additional globs you specify.
 
-- Compilation:
+1. Compilation:
     * `compile-app`: compile app's `.py` files
     * `compile-packages`: compile site/installed packages' `.py` files
 
-- Cleanup:
-    * `cleanup-app`:
-    * `cleanup-app-files`:
-    * `cleanup-packages-files`:
-    * `cleanup-packages`: remove unnecessary package files upon successful compilation
+2. Cleanup:
+    * `cleanup-app`: remove junk files from the app directory
+    * `cleanup-app-files`: additional globs to delete from the app directory
+      (implies `cleanup-app`)
+    * `cleanup-package-files`: additional globs to delete from site-packages
+      (implies `cleanup-packages`)
+    * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
+
+`[tool.flet.compile].cleanup` (deprecated) enables both `cleanup-app` and
+`cleanup-packages` when set to `true`.
 
 By default, Flet does **not** compile your app files during packaging.
 This allows the build process to complete even if there are syntax errors,
@@ -1014,7 +1092,7 @@ The values of `compile-app` and `cleanup-app` are respectively determined in the
 1. [`--compile-app`](../cli/flet-build.md#-compile-app) / [`--cleanup-app`](../cli/flet-build.md#-cleanup-app)
 2. `[tool.flet.<PLATFORM>.compile].app` / `[tool.flet.<PLATFORM>.cleanup].app`
 3. `[tool.flet.compile].app` / `[tool.flet.cleanup].app`
-4. `False` / `False`
+4. empty list / empty list
 
 The values of `compile-packages` and `cleanup-packages` are respectively determined in the following order of precedence:
 
@@ -1023,7 +1101,7 @@ The values of `compile-packages` and `cleanup-packages` are respectively determi
 3. `[tool.flet.compile].packages` / `[tool.flet.cleanup].packages`
 4. `False` / `True`
 
-The values of `cleanup-app-files` and `cleanup-packages-files` are respectively determined in the following order of precedence:
+The values of `cleanup-app-files` and `cleanup-package-files` are respectively determined in the following order of precedence:
 
 1. [`--cleanup-app-files`](../cli/flet-build.md#-cleanup-app-files) / [`--cleanup-package-files`](../cli/flet-build.md#-cleanup-package-files)
 2. `[tool.flet.<PLATFORM>.cleanup].app_files` / `[tool.flet.<PLATFORM>.cleanup].package_files`
@@ -1034,7 +1112,7 @@ The values of `cleanup-app-files` and `cleanup-packages-files` are respectively 
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --compile-app --compile-packages --cleanup-packages
+flet build <target_platform> --compile-app --compile-packages --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
 ```
 ///
 /// tab | `pyproject.toml`
@@ -1042,7 +1120,12 @@ flet build <target_platform> --compile-app --compile-packages --cleanup-packages
 [tool.flet.compile]     # or [tool.flet.<PLATFORM>.compile]
 app = true
 packages = true
-cleanup = true
+
+[tool.flet.cleanup]     # or [tool.flet.<PLATFORM>.cleanup]
+app = true
+packages = true
+app_files = ["**/*.c", "**/*.h"]
+package_files = ["**/*.pyi"]
 ```
 ///
 
@@ -1074,7 +1157,7 @@ Its value is determined in the following order of precedence:
 ```bash
 flet build apk \
   --flutter-build-args=--obfuscate \
-  --flutter-build-args=--export-method=development
+  --flutter-build-args=--export-method=development \
   --flutter-build-args=--dart-define=API_URL=https://api.example.com
 ```
 ///
@@ -1089,15 +1172,15 @@ build_args = [
 ```
 ///
 
-### Customizing build template
+### Build template
 
-By default, `flet build` creates a temporary Flutter project using a
+`flet build` creates (and reuses) a Flutter project under `<app_root>/build/flutter` using a
 [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
-repository. The version of the template used is determined by the [template reference](#template-reference)
-option, which defaults to the current Flet version.
+repository. The version of the template used is determined by the
+[template reference](#template-reference) option.
 
-You can customize this behavior by specifying your own template
-source, reference, and subdirectory.
+The cached project is refreshed when template inputs change or when you pass
+[`--clear-cache`](../cli/flet-build.md#-clear-cache).
 
 #### Template Source
 
@@ -1113,7 +1196,7 @@ Supported values include:
 
 Its value is determined in the following order of precedence:
 
-1. [`--template`](../cli/flet-build.md#-template) (can be used multiple times)
+1. [`--template`](../cli/flet-build.md#-template)
 2. `[tool.flet.template].url`
 3. [`"gh:flet-dev/flet-build-template"`](https://github.com/flet-dev/flet-build-template)
 
@@ -1139,7 +1222,7 @@ Defines the branch, tag, or commit to check out from the [template source](#temp
 
 Its value is determined in the following order of precedence:
 
-1. [`--template-ref`](../cli/flet-build.md#-template-ref) (can be used multiple times)
+1. [`--template-ref`](../cli/flet-build.md#-template-ref)
 2. `[tool.flet.template].ref`
 3. [`<flet_version>`](#configuration-options)
 
@@ -1161,14 +1244,13 @@ ref = "main"
 
 Defines the relative path to the cookiecutter template.
 If [template source](#template-source) is set, the path is treated as a
-subdirectory within its root; otherwise, it is relative to
-`<user-directory>/.cookiecutters/flet-build-template`.
+subdirectory within its root; otherwise, it is relative to the template root.
 
 #### Resolution order
 
 Its value is determined in the following order of precedence:
 
-1. [`--template-dir`](../cli/flet-build.md#-template-dir) (can be used multiple times)
+1. [`--template-dir`](../cli/flet-build.md#-template-dir)
 2. `[tool.flet.template].dir`
 3. root of the [template source](#template-source)
 
@@ -1189,8 +1271,8 @@ dir = "sub/directory"
 
 ### Verbose logging
 
-The [`-v`](../cli/flet-build.md/#-verbose) (or `--verbose`) and `-vv` flags
-enables detailed output from all commands during the flet build process.
+The [`-v`](../cli/flet-build.md#-verbose) (or `--verbose`) and `-vv` flags
+enable detailed output from all commands during the flet build process.
 
 Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed
 output (higher verbosity level). If you need support,
@@ -1198,12 +1280,17 @@ we may ask you to share this verbose log.
 
 ## Console output
 
-All output from Flet apps—such as `print()` statements, `sys.stdout.write()` calls, and messages from the Python
-logging module is redirected to a `console.log` file. The full path to this file is available via
+In packaged apps (`flet build` output), all output from your Python code such as
+`print()` statements, `sys.stdout.write()` calls, and messages from the Python
+`logging` module is redirected to a `console.log` file. The full path to this file is available via
 [`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename] or the
 `FLET_APP_CONSOLE` environment variable.
 
-The log file is written in an unbuffered manner, allowing you to read it at any point in your Python program using:
+Note: `FLET_APP_CONSOLE` is set in production builds;
+in development runs, output stays in your terminal.
+
+The log file is written in an unbuffered manner, allowing you to read
+it at any point in your Python program using:
 
 ```python
 import os
@@ -1222,7 +1309,7 @@ ft.run(main)
 ```
 
 If your program calls `sys.exit(100)`, the complete log will automatically be shown in a scrollable window.
-This is a special “magic” exit code for debugging purposes:
+This is a special "magic" exit code for debugging purposes:
 
 ```python
 import sys

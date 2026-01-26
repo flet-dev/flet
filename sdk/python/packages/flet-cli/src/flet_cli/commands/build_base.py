@@ -1851,8 +1851,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("tool.flet.flutter.build_args")
         )
         if flutter_build_args:
-            for arg in self.options.flutter_build_args:
-                build_args.extend(arg)
+            if isinstance(flutter_build_args, (list, tuple)):
+                for arg in flutter_build_args:
+                    if isinstance(arg, (list, tuple)):
+                        build_args.extend(arg)
+                    elif isinstance(arg, str):
+                        build_args.append(arg)
+            elif isinstance(flutter_build_args, str):
+                build_args.append(flutter_build_args)
 
         if self.verbose > 1:
             build_args.append("--verbose")
