@@ -176,7 +176,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].signing_certificate`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].signing_certificate`
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -286,7 +286,7 @@ Its value is determined in the following order of precedence:
 
 The profile must match your [Bundle ID](index.md#bundle-id).
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -300,12 +300,14 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 ```
 ///
 
-## Export options
+## Export configuration
+
+### Export options
 
 Additional keys to include in the generated `exportOptions.plist`
 of the [template](index.md#template-source).
 
-### Resolution order
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -313,7 +315,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
 3. `{}` (no extra keys)
 
-### Example
+#### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -322,7 +324,7 @@ export_options = { uploadSymbols = false }
 ```
 ///
 
-## Export method
+### Export method
 
 Defines how the app should be packaged when exporting the `.ipa` file.
 
@@ -335,7 +337,7 @@ Can be one of the following:
 
 To configure individual settings for one or more export methods, see [export methods](#export-methods).
 
-### Resolution order
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -343,7 +345,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].export_method`
 3. `"debugging"`
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -357,14 +359,21 @@ export_method = "debugging"
 ```
 ///
 
-## Export methods
+### Export methods
 
 Signing settings can be configured individually per [export method](#export-method).
 
 Per-method values are used only when the corresponding top-level
 `[tool.flet.ios]` setting is not set. The method key must match the `export_method` value exactly.
 
-### Example
+Supported keys (same as the top-level settings):
+
+- [`provisioning_profile`](#provisioning-profile)
+- [`signing_certificate`](#signing-certificate)
+- [`export_options`](#export-options)
+- [`team_id`](#team-id)
+
+#### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -383,6 +392,32 @@ provisioning_profile = "app-store-connect com.mycompany.example-app"
 team_id = "ABCDEFE234"
 signing_certificate = "Apple Distribution"
 export_options = { uploadSymbols = true }
+```
+///
+
+## Permissions
+
+You can use the cross-platform [`--permissions`](index.md#permissions) list for
+common permissions, and add custom iOS entries via `Info.plist`.
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--info-plist`](../cli/flet-build.md#-info-plist)
+2. `[tool.flet.ios.info]`
+
+### Example
+
+/// tab | `flet build`
+```bash
+flet build ipa --info-plist NSLocationWhenInUseUsageDescription="This app uses location service when in use."
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.ios.info]
+NSCameraUsageDescription = "This app uses the camera to ..."
 ```
 ///
 
@@ -453,29 +488,3 @@ you'll need to manually trust the developer:
 - Navigate to **Apps → Your App → TestFlight or App Store Version**.
 - Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
 - Once processing completes, your build will become available for submission. You can now **submit the app for review**.
-
-## Permissions
-
-You can use the cross-platform [`--permissions`](index.md#permissions) list for
-common permissions, and add custom iOS entries via `Info.plist`.
-
-### Resolution order
-
-Its value is determined in the following order of precedence:
-
-1. [`--info-plist`](../cli/flet-build.md#-info-plist)
-2. `[tool.flet.ios.info]`
-
-### Example
-
-/// tab | `flet build`
-```bash
-flet build ipa --info-plist NSLocationWhenInUseUsageDescription="This app uses location service when in use."
-```
-///
-/// tab | `pyproject.toml`
-```toml
-[tool.flet.ios.info]
-NSCameraUsageDescription = "This app uses the camera to ..."
-```
-///
