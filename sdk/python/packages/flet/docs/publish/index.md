@@ -197,7 +197,7 @@ When you run `flet build <target_platform>`, the pipeline is:
 Throughout this documentation, the following placeholders are used:
 
 - [`<target_platform>`](../cli/flet-build.md#target_platform) - one of: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
-- `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android`, `ios`, `web`, `macos`, `windows`, `linux`.
+- `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android` (for `apk` and `aab` targets), `ios` (for `ipa` target), `web`, `macos`, `windows`, `linux`.
   - `apk`/`aab` map to `android`, `ipa` maps to `ios`.
 - [`<python_app_path>`](../cli/flet-build.md#python_app_path) - the path passed to `flet build` (defaults to the current directory).
 - `<flet_app_directory>` - the resolved project root for `<python_app_path>`; `pyproject.toml` and `requirements.txt` are read from here.
