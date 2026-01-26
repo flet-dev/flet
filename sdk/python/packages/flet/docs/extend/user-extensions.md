@@ -1,8 +1,8 @@
-While [Flet controls](../controls/) leverage many built-in Flutter widgets to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
+While [Flet controls](../controls/index.md) leverage many built-in [Flutter widgets](https://docs.flutter.dev/ui/widgets) to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
 
 To address this, the Flet framework provides an extensibility mechanism. This allows you to incorporate widgets and APIs from your own custom Flutter packages or [third-party libraries](https://pub.dev/packages?sort=popularity) directly into your Flet application.
 
-In this guide, you will learn how to create Flet extension from template and then customize it to integrate 3rd-party Flutter package into your Flet app or share it with community.
+In this guide, you will learn how to create Flet extension from template and then customize it to integrate 3rd-party Flutter package into your Flet app.
 
 ### Prerequisites
 
@@ -12,7 +12,7 @@ To integrate custom Flutter package into Flet you need to have basic understandi
 
 Flet now makes it easy to create and build projects with your custom controls based on Flutter widgets or Flutter 3rd-party packages. In the example below, we will be creating a custom Flet extension based on the [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) package.
 
-**Step 1.** Create new virtual environment and [install Flet](../getting-started/create-flet-app.md) there.
+**Step 1.** Create new virtual environment and [install Flet](../getting-started/installation.md) there.
 
 **Step 2.** Create new extension project from template.
 
@@ -42,7 +42,7 @@ open build/macos/flet-spinkit-example.app
 
 #### Change Python files
 
-Once the project was built for desktop once, you can make changes to your python files and run it without re-building.
+Once the project was built for desktop once, you can make changes to your python files and run it without rebuilding.
 
 First, if you are not using uv, install dependencies from pyproject.toml:
 
@@ -56,7 +56,7 @@ poetry install
 
 Now you can make changes to your example app main.py:
 
-```
+```python
 import flet as ft
 
 from flet_spinkit import FletSpinkit
@@ -93,7 +93,7 @@ flet run
 
 #### Change Flutter package
 
-When you make any changes to your flutter package, you need to re-build:
+When you make any changes to your flutter package, you need to rebuild:
 
 ```
 flet build macos -v
@@ -129,12 +129,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FletSpinkitControl extends StatelessWidget {
-  //final Control? parent;
   final Control control;
 
   const FletSpinkitControl({
     super.key,
-    //required this.parent,
     required this.control,
   });
 
@@ -432,6 +430,15 @@ ft.run(main)
 Rebuild and run:
 
 <img src="/assets/extensions/spinkit3.gif" className="screenshot-20" />
+
+/// admonition | Note
+    type: note
+
+In `flet_spinkit.py`, the default values on the Python control exist only to make the class easier to use and discover in Python—they are not automatically passed through to the Dart side. On the Flutter side in `flet_spinkit.dart`, `size` is a required runtime value, so you must explicitly provide a fallback like `control.getDouble("size") ?? 100.0`. Otherwise, if size is not provided, Dart receives null for a required parameter and will throw a runtime error.
+
+///
+
+
 
 You can find source code for this example [here](https://github.com/flet-dev/flet-spinkit).
 
