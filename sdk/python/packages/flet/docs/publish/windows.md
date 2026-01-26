@@ -4,17 +4,22 @@ title: Packaging app for Windows
 
 Instructions for packaging a Flet app into a Windows application.
 
-**See complementary information [here](index.md).**
+/// admonition | Note
+    type: tip
+This guide provides detailed on Windows-specific information.
+Complementary and more general information is available [here](index.md).
+///
 
 ## Prerequisites
 
 ### Visual Studio 2022
 
-[Visual Studio 2022](https://learn.microsoft.com/visualstudio/install/install-visual-studio?view=vs-2022) is required 
+[Visual Studio 2022](https://learn.microsoft.com/visualstudio/install/install-visual-studio?view=vs-2022) is required
 with **Desktop development with C++** workload installed.
 
-Follow this [guide](https://medium.com/@teamcode20233/a-guide-to-install-desktop-development-with-c-workload-542bb92cfe90) 
-for instructions on downloading & installing correct Visual Studio components for Flutter desktop development.
+Follow this [guide](https://medium.com/@teamcode20233/a-guide-to-install-desktop-development-with-c-workload-542bb92cfe90)
+for instructions on downloading & installing correct Visual Studio
+components for Flutter desktop development.
 
 ## `flet build windows`
 

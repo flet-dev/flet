@@ -4,7 +4,11 @@ title: Packaging app for macOS
 
 Instructions for packaging a Flet app into a macOS application bundle.
 
-**See complementary information [here](index.md).**
+/// admonition | Note
+    type: tip
+This guide provides detailed on macOS-specific information.
+Complementary and more general information is available [here](index.md).
+///
 
 ## Prerequisites
 
@@ -60,7 +64,7 @@ target_arch = ["arm64"] # (1)!
 
 ## Entitlements
 
-Key-value pairs that grant an executable permission to use a service or technology. 
+Key-value pairs that grant an executable permission to use a service or technology.
 Supported entitlements are defined in [Apple Developer Entitlements Reference](https://developer.apple.com/documentation/bundleresources/entitlements).
 
 They can be set as follows:

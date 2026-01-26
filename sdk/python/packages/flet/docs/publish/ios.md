@@ -307,6 +307,14 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 Additional keys to include in the generated `exportOptions.plist`
 of the [template](index.md#template-source).
 
+For a complete list of supported keys and values, run the following command:
+
+```bash
+xcodebuild -help
+```
+
+and find the section titled **"Available keys for -exportOptionsPlist"**.
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:

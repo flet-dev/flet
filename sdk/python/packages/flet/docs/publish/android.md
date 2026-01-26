@@ -5,27 +5,36 @@ title: Packaging app for Android
 Instructions for packaging a Flet app into an
 Android APK and Android App Bundle (AAB).
 
-**See complementary information [here](index.md).**
+/// admonition | Note
+    type: tip
+This guide provides detailed on Android-specific information.
+Complementary and more general information is available [here](index.md).
+///
 
 ## Prerequisites
 
 ### Android SDK
 
-The build process requires both **Java** ([JDK](https://de.wikipedia.org/wiki/Java_Development_Kit))
-and the **Android SDK**.
+The build process requires both **Java** (JDK 17) and the **Android SDK**.
 
 If either component is missing or an incompatible version is detected, the required tools will be
 **automatically installed** during the first run of the [`flet build`](../cli/flet-build.md) command.
 
-- The JDK will be installed in `$HOME/java/{version}`.
-- If **Android Studio** is installed, Flet CLI will automatically use the Android SDK bundled with it.
-  Otherwise, a standalone Android SDK will be installed in:
-  `$HOME/Android/sdk`
+- The JDK is installed in `$HOME/java/<version>` (for example, `17.0.13+11`).
+- If **Android Studio** is installed, Flet CLI will use its SDK:
+  - macOS: `~/Library/Android/sdk`
+  - Windows: `%LOCALAPPDATA%\Android\Sdk`
+  - Linux: `~/Android/Sdk`
+- Otherwise, a standalone Android SDK is installed in:
+  - macOS/Linux: `~/Android/sdk`
+  - Windows: `%USERPROFILE%\Android\sdk`
+
+`ANDROID_HOME` and `ANDROID_SDK_ROOT` are also respected if set.
 
 ### Android wheels for binary Python packages
 
-Binary Python packages (in contrast to "pure" Python packages written in Python only) are packages that partially
-written in C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
+Binary Python packages (in contrast to "pure" Python packages written in Python only) are packages that are partially
+written in C, Rust, or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
 Make sure all non-pure (binary) packages used in your Flet app have
 [pre-built wheels for Android](../reference/binary-packages-android-ios.md).
@@ -49,11 +58,13 @@ For Play Store deployment, it’s recommended to:
 ### Split APK per ABI
 
 Different Android devices use different CPUs, which in turn support different instruction sets.
-Each combination of CPU and instruction set has its own [Application Binary Interface (ABI)](https://developer.android.com/ndk/guides/abis).
+Each combination of CPU and instruction set has its own
+[Application Binary Interface (ABI)](https://developer.android.com/ndk/guides/abis).
 
-By default, Flet will build a "fat" APK which includes binaries for both
-[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) and
-[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) architectures. This can be useful when
+By default, Flet will build a "fat" APK which includes binaries for
+[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a),
+[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a), and
+[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64). This can be useful when
 deploying to a wide range of devices, but it can also result in a large APK file.
 
 Splitting the APK allows you to build separate APKs for each target architecture.
@@ -65,7 +76,7 @@ as installing an incompatible one will result in errors.
 
 The following target architectures are supported:
 
-- [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#v7a)
+- [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a)
 - [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a)
 - [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64)
 - [`x86`](https://developer.android.com/ndk/guides/abis#x86)
@@ -74,16 +85,20 @@ The following target architectures are supported:
 
 Its value is determined in the following order of precedence:
 
-1. `--split-per-abi`
+1. [`--split-per-abi`](../cli/flet-build.md#-split-per-abi)
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
 When enabled, it will, by default, produce the following ABIs:
-[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#v7a),
+[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a),
 [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) and
 [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64).
 More information on how to customize the target architecture(s) can be
 found [here](index.md#target-architecture).
+
+split-per-abi applies to APK builds only. For limiting ABIs in both APK and AAB
+outputs, use [`--arch`](index.md#target-architecture) / `[tool.flet.android].target_arch`
+when `split_per_abi` is `false`.
 
 #### Example
 
@@ -126,7 +141,11 @@ adb -s <device> install <path-to-your.apk>
 
 where `<device>` can be found with `adb devices` command.
 
-## <code class="doc-symbol doc-symbol-command"></code> `flet build aab`
+## `flet build aab`
+
+/// admonition | Note
+This command can be run on a **macOS**, **Linux**, or **Windows**.
+///
 
 Builds a **release** [Android App Bundle (AAB)](https://developer.android.com/guide/app-bundle) file.
 
@@ -135,6 +154,10 @@ and are intended for publishing to app stores such as the [Google Play Store](ht
 
 It is recommended to use this AAB format (instead of [APK](#flet-build-apk)) for publishing to the
 Google Play Store due to its optimized app size.
+
+If you need to limit the ABIs included in the bundle, use
+[`--arch`](index.md#target-architecture) / `[tool.flet.android].target_arch`
+while `split_per_abi` is `false`.
 
 ## Signing an Android bundle
 
@@ -156,6 +179,11 @@ To create your app signing key, use Play App Signing as described in the
 [official Play Store documentation](https://support.google.com/googleplay/android-developer/answer/7384423?hl=en).
 
 To sign your app, use the following instructions.
+
+/// admonition | Note
+If you don't provide an upload keystore, release builds are signed with the
+debug key. This is fine for local testing but cannot be uploaded to the Play Store.
+///
 
 ### Create an upload keystore
 
@@ -202,11 +230,21 @@ If not, create one using one of the following methods:
 Keep your `keystore` file private; never check it into public source control!
 ///
 
-### Configuration
-
-#### Key alias
+### Key alias
 
 An alias name for the key within the keystore.
+Defaults to `"upload"` when not specified.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-signing-key-alias`](../cli/flet-build.md#-android-signing-key-alias)
+2. `[tool.flet.android.signing].key_alias`
+3. `FLET_ANDROID_SIGNING_KEY_ALIAS`
+4. `"upload"`
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -225,12 +263,23 @@ FLET_ANDROID_SIGNING_KEY_ALIAS="value"
 ```
 ///
 
-#### Key store
+### Key store
 
 The path to the keystore file (with extension `.jks`).
 
-If you used the cli commands above as-is, this file might be located at `/Users/<user name>/upload-keystore.jks` on macOS
-or `C:\\Users\\<user name>\\upload-keystore.jks` on Windows.
+If you used the CLI commands above as-is, this file might be
+located at `/Users/<user name>/upload-keystore.jks` on macOS
+or `C:\Users\<user name>\upload-keystore.jks` on Windows.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-signing-key-store`](../cli/flet-build.md#-android-signing-key-store)
+2. `[tool.flet.android.signing].key_store`
+3. `FLET_ANDROID_SIGNING_KEY_STORE`
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -243,12 +292,27 @@ flet build aab --android-signing-key-store path/to/store.jks
 key_store = "path/to/store.jks"
 ```
 ///
+/// tab | `.env`
+```dotenv
+FLET_ANDROID_SIGNING_KEY_STORE="path/to/store.jks"
+```
+///
 
-#### Key store password
+### Key store password
 
 A password to unlock the keystore file (can contain multiple key entries).
 
-If not provided, defaults to the [key password](#key-password)
+If not provided, defaults to the [key password](#key-password).
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-signing-key-store-password`](../cli/flet-build.md#-android-signing-key-store-password)
+2. `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
+3. [key password](#key-password)
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -261,17 +325,25 @@ For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 
 ///
-/// tab | Environment Variable
-```bash
+/// tab | `.env`
+```dotenv
 FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD="value"
 ```
 ///
 
-#### Key password
+### Key password
 
 A password used to access the private key inside the keystore.
 
-If not provided, defaults to the [key store password](#key-store-password)
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-signing-key-password`](../cli/flet-build.md#-android-signing-key-password)
+2. `FLET_ANDROID_SIGNING_KEY_PASSWORD`
+3. [key store password](#key-store-password)
+
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -279,32 +351,12 @@ flet build aab --android-signing-key-password value
 ```
 ///
 /// tab | `pyproject.toml`
-
 For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
-
 ///
-/// tab | Environment Variable
-```bash
+/// tab | `.env`
+```dotenv
 FLET_ANDROID_SIGNING_KEY_PASSWORD="value"
-```
-///
-
-## Disable splash screen
-
-The [splash screen](index.md#splash-screen) is enabled/shown by default.
-
-It can be disabled as follows:
-
-/// tab | `flet build`
-```bash
-flet build apk --no-android-splash
-```
-///
-/// tab | `pyproject.toml`
-```toml
-[tool.flet.splash]
-android = false
 ```
 ///
 
@@ -315,6 +367,32 @@ essential information about your app to the Android build tools,
 the Android operating system, and Google Play. The file in which this information is written
 is `AndroidManifest.xml`, which gets populated with the information you provide.
 
+### Application attributes
+
+To add or override attributes on the `<application>` element (of the
+`AndroidManifest.xml` file in the [template](index.md#template-source)), use
+`[tool.flet.android.manifest_application]`. Keys are written as
+`android:<key>="<value>"` in the `AndroidManifest.xml`.
+
+#### Example
+
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android.manifest_application]
+usesCleartextTraffic = "true"
+allowBackup = "false"
+```
+///
+
+In the [template](index.md#template-source)'s `AndroidManifest.xml`, it will be translated accordingly into this:
+
+```xml
+<application
+    android:usesCleartextTraffic="true"
+    android:allowBackup="false"
+</application>
+```
+
 ### Meta-data
 
 A name-value pair for an item of additional, arbitrary data that can be supplied to the parent component.
@@ -323,13 +401,11 @@ More information [here](https://developer.android.com/guide/topics/manifest/meta
 A meta-data item is composed of:
 
 - `name`: A unique name for the item, usually with a Java-style naming convention, for example `"com.sample.project.activity.fred"`.
-- `value`: The value of the item. The following types are supported:
-    - **String**: use double backslashes (`\\`) to escape characters, such as `\\n` for a new line and `\\uxxxxx` for a Unicode character
-    - **Integer**: for example `123`
-    - **Boolean**: either `"true"` or `"false"`
-    - **Float**: for example `1.23`
+- `value`: The value of the item. Android supports strings, integers, booleans, and floats.
+  Flet writes values as strings, so pass the literal value you want Android to read
+  (for example `"true"`, `"123"`, `"1.23"`).
 
-You can configure meta-data as follows:
+#### Example
 
 /// tab | `flet build`
 ```bash
@@ -337,15 +413,14 @@ flet build apk --android-meta-data name_1=value_1 name_2=value_2
 ```
 ///
 /// tab | `pyproject.toml`
-/// tab | `[tool.flet.android.meta_data]`
 ```toml
 [tool.flet.android.meta_data]
-"name_1" = value_1
-"name_2" = value_2
+"name_1" = "value_1"
+"name_2" = "value_2"
 ```
 ///
 
-And it will be translated accordingly into this in the `AndroidManifest.xml`:
+In the [template](index.md#template-source)'s `AndroidManifest.xml`, it will be translated accordingly into this:
 
 ```xml
 <application>
@@ -364,27 +439,27 @@ More information [here](https://developer.android.com/guide/topics/manifest/uses
     These attribute values are case-sensitive.
 - `required`: A boolean value (`True` or `False`) that indicates whether the application requires the feature specified by the `name`.
 
-You can configure features as follows:
+#### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk --android-features name_1=required_1 name_2=required_2
+flet build apk --android-features android.hardware.camera=True android.hardware.location.gps=False
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.android.meta_data]
-"name_1" = required_1
-"name_2" = required_2
+[tool.flet.android.feature]
+"android.hardware.camera" = true
+"android.hardware.location.gps" = false
 ```
 ///
 
-And it will be translated accordingly into this in the `AndroidManifest.xml`:
+In the [template](index.md#template-source)'s `AndroidManifest.xml`, it will be translated accordingly into this:
 
 ```xml
 <manifest>
-    <uses-feature android:name="name_1" android:required="required_1" />
-    <uses-feature android:name="name_2" android:required="required_2" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>
 ```
 
@@ -392,25 +467,38 @@ Where the `required` value is either `true` or `false`.
 
 Below are default/pre-configured features:
 
-- `"android.software.leanback" = False`
-- `"android.hardware.touchscreen" = False`
+- `"android.software.leanback" = false`
+- `"android.hardware.touchscreen" = false`
 
 ### Permissions
+
+Use cross-platform permissions from [Permissions](index.md#permissions) when possible,
+and add Android-specific permissions or features here.
 
 Configuring Android permissions and features to be written into `AndroidManifest.xml`:
 
 ```bash
-flet build --android-permissions permission=True|False ... --android-features feature_name=True|False
+flet build apk --android-permissions permission=True|False ... --android-features feature_name=True|False
 ```
 
-For example:
+#### Example
 
+/// tab | `flet build`
 ```bash
-flet build \
+flet build apk \
     --android-permissions android.permission.READ_EXTERNAL_STORAGE=True \
       android.permission.WRITE_EXTERNAL_STORAGE=True \
     --android-features android.hardware.location.network=False
 ```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android.permission]
+"android.permission.READ_EXTERNAL_STORAGE" = true
+"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.hardware.location.network" = false
+```
+///
 
 Default Android permissions:
 
@@ -419,24 +507,26 @@ Default Android permissions:
 Default permissions can be disabled with `--android-permissions` option and `False` value, for example:
 
 ```bash
-flet build --android-permissions android.permission.INTERNET=False
+flet build apk --android-permissions android.permission.INTERNET=False
 ```
 
 Default Android features:
 
-* `android.software.leanback=False` (`False` means it's written in manifest as `android:required="false"`)
-* `android.hardware.touchscreen=False`
+* `android.software.leanback=false` (`false` means it's written in manifest as `android:required="false"`)
+* `android.hardware.touchscreen=false`
 
 Configuring permissions and features in `pyproject.toml` (notice quotes `"` around key names):
 
 ```toml
 [tool.flet.android.permission] # --android-permissions
 "android.permission.CAMERA" = true
-"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
 
 [tool.flet.android.feature] # --android-features
 "android.hardware.camera" = false
 ```
+
+CLI values are `True` or `False` (case-sensitive). In `pyproject.toml`, use `true`/`false`.
 
 ## ADB Tips
 

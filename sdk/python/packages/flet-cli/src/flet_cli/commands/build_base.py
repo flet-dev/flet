@@ -553,7 +553,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
-            default="upload",
+            default=None,
             help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
@@ -1006,7 +1006,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
                 },
-                "android_signing": self.options.android_signing_key_store is not None,
+                "android_signing": bool(
+                    self.options.android_signing_key_store
+                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+                    or self.get_pyproject("tool.flet.android.signing.key_store")
+                ),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "pyproject": self.get_pyproject(),
@@ -1817,6 +1821,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         android_signing_key_store = (
             self.options.android_signing_key_store
             or self.get_pyproject("tool.flet.android.signing.key_store")
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
         )
         if android_signing_key_store:
             build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
@@ -1836,11 +1841,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 key_password if key_password else key_store_password
             )
 
-        android_signing_key_alias = (
-            self.options.android_signing_key_alias
-            or self.get_pyproject("tool.flet.android.signing.key_alias")
-        )
-        if android_signing_key_alias:
+        if android_signing_key_store:
+            android_signing_key_alias = (
+                self.options.android_signing_key_alias
+                or self.get_pyproject("tool.flet.android.signing.key_alias")
+                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
+                or "upload"
+            )
             build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
         flutter_build_args = (
