@@ -355,80 +355,22 @@ In the FletSpinkit example, let's define its `color` and `size`.
 In Python class, define new `color` and `size` properties:
 
 ```python
-from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 
-from flet.core.layout_control import LayoutControl
-from flet.core.control import OptionalNumber
-from flet.core.types import ColorEnums, ColorValue
+import flet as ft
 
 
-class FletSpinkit(LayoutControl):
+@ft.control("flet_spinkit")
+class FletSpinkit(ft.LayoutControl):
     """
-    FletSpinkit Control.
+    FletSpinkit Control description.
     """
 
-    def __init__(
-        self,
-        #
-        # Control
-        #
-        opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        #
-        # LayoutControl
-        #
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        #
-        # FletSpinkit specific
-        #
-        color: Optional[ColorValue] = None,
-        size: OptionalNumber = None,
-    ):
-        LayoutControl.__init__(
-            self,
-            tooltip=tooltip,
-            opacity=opacity,
-            visible=visible,
-            data=data,
-            left=left,
-            top=top,
-            right=right,
-            bottom=bottom,
-        )
-
-        self.color = color
-        self.size = size
-
-    def _get_control_name(self):
-        return "flet_spinkit"
-
-    # color
-    @property
-    def color(self) -> Optional[ColorValue]:
-        return self.__color
-
-    @color.setter
-    def color(self, value: Optional[ColorValue]):
-        self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
-
-    # size
-    @property
-    def size(self):
-        return self._get_attr("size")
-
-    @size.setter
-    def size(self, value):
-        self._set_attr("size", value)
+    color: Optional[ft.ColorValue] = None
+    size: float = 100.00
 ```
 
-In `src/flet_spinkit.dart` file, use helper methods `attrColor` and `attrDouble` to access color and size values:
+In `src/flet_spinkit.dart` file, use helper methods `getColor` and `getDouble` to access color and size values:
 
 ```dart
 import 'package:flet/flet.dart';
@@ -436,26 +378,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FletSpinkitControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
 
   const FletSpinkitControl({
     super.key,
-    required this.parent,
     required this.control,
   });
 
   @override
   Widget build(BuildContext context) {
-    var color = control.attrColor("color", context);
-    var size = control.attrDouble("size");
     Widget myControl = SpinKitRotatingCircle(
-      color: color,
-      size: size ?? 100,
+      color: control.getColor("color", context),
+      size: control.getDouble("size") ?? 100.0,
     );
 
-
-    return LayoutControl(context, myControl, parent, control);
+    return LayoutControl(control: control, child: myControl);
   }
 }
 ```
