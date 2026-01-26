@@ -1,9 +1,17 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/images.dart';
+import '../utils/launch_url.dart';
+import '../utils/markdown.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import '../utils/uri.dart';
+import 'base_controls.dart';
 import 'highlight_view.dart';
 
 class MarkdownControl extends StatelessWidget {
