@@ -694,12 +694,6 @@ It's value can be set as follows:
 version = "1.0.0"
 ```
 ///
-/// tab | `[tool.poetry]`
-```toml
-[tool.poetry]
-version = "1.0.0"
-```
-///
 
 ///
 /// tab | `flet build`
