@@ -5,7 +5,11 @@ title: Packaging app for iOS
 Instructions for packaging a Flet app into an Xcode archive and, when signing
 is configured, an IPA for distribution.
 
-**See complementary information [here](index.md).**
+/// admonition | Note
+    type: tip
+This guide provides detailed on iOS-specific information.
+Complementary and more general information is available [here](index.md).
+///
 
 ## Prerequisites
 
@@ -22,6 +26,7 @@ sudo softwareupdate --install-rosetta --agree-to-license
 ### Xcode
 
 [Xcode](https://developer.apple.com/xcode/) 15 or later to compile native Swift or Objective-C code.
+Open Xcode once after installation to accept the license and install additional components.
 
 ### CocoaPods
 
@@ -38,7 +43,8 @@ Make sure all non-pure (binary) packages used in your Flet app have
 
 ## `flet build ipa`
 
-/// admonition | Note
+/// admonition | Supported host platforms
+    type: caution
 This command can be run on **macOS only**.
 ///
 
@@ -55,6 +61,8 @@ for distribution, you will need the following:
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
 
+Build outputs are copied into the [output directory](index.md#output-directory):
+
 ## Application Identifier (App ID)
 
 A unique string that identifies your app within the Apple ecosystem.
@@ -63,8 +71,8 @@ Push Notifications, App Groups, iCloud, and In-App Purchases.
 
 It consists of two parts:
 
-1. **Team ID**: A unique 10-character string assigned by Apple to your developer account.
-2. **Bundle ID**: A reverse domain-style identifier for your app (e.g., `com.example.myapp`).
+1. [**Team ID**](#team-id): A unique 10-character string assigned by Apple to your developer account.
+2. [**Bundle ID**](index.md#bundle-id): A reverse domain-style identifier for your app (e.g., `com.example.myapp`).
 
 ```mermaid
 graph TD
@@ -93,9 +101,7 @@ in the App ID.
 
 Now you have **Bundle ID** and **Team ID** that will be used to identify your app.
 
-### Configuration
-
-#### Team ID
+### Team ID
 
 The developer team ID to include in export options.
 
@@ -123,6 +129,19 @@ team_id = "ABCDEFE234"
 
 ## Signing Certificate
 
+The certificate name, SHA-1 hash, or automatic selector to use for signing the iOS app bundle.
+Automatic selectors allow Xcode to pick the newest installed certificate of a particular type.
+
+The available automatic selectors are:
+
+- `"Apple Development"`
+- `"Apple Distribution"`
+- `"Developer ID Application"`
+- `"iOS Developer"`
+- `"iOS Distribution"`
+- `"Mac App Distribution"`
+- `"Mac Developer"`
+
 ### Generating a Certificate Signing Request (CSR)
 
 Before creating a development or distribution certificate, you need a **CSR (Certificate Signing Request)**.
@@ -149,16 +168,7 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
    The name of the development certificate usually starts with **"Apple development:"** and the name of
     the distribution certificate starts with **"Apple distribution:"**.
 
-### Configuration
-
-The certificate name, SHA-1 hash, or automatic selector to use for signing the iOS app bundle.
-Automatic selectors allow Xcode to pick the newest installed certificate of a particular type.
-
-The available automatic selectors are `"Apple Development"`, `"Apple Distribution"`,
-`"Developer ID Application"`, `"iOS Developer"`, `"iOS Distribution"`, `"Mac App Distribution"`,
-and `"Mac Developer"`.
-
-#### Resolution order
+### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -166,7 +176,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].signing_certificate`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].signing_certificate`
 
-#### Example
+### Example
 
 /// tab | `flet build`
 ```bash
@@ -266,11 +276,7 @@ Finally, you can use the command below to list all installed provisioning profil
 for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do security cms -D -i "$profile" | grep -E -A1 '<key>(Name|UUID)</key>' | sed -n 's/.*<string>\(.*\)<\/string>/\1/p' | paste -d ' | ' - -; done
 ```
 
-### Configuration
-
-The provisioning profile name or UUID used to sign and export the iOS app.
-
-#### Resolution order
+### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -278,7 +284,9 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].provisioning_profile`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].provisioning_profile`
 
-#### Example
+The profile must match your [Bundle ID](index.md#bundle-id).
+
+### Example
 
 /// tab | `flet build`
 ```bash
@@ -292,30 +300,20 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 ```
 ///
 
-## Additional Configuration
+## Export options
 
-Some additional configuration to successfully generate a signed IPA:
+Additional keys to include in the generated `exportOptions.plist`
+of the [template](index.md#template-source).
 
-/// admonition | Development package
-To export an `.ipa` for testing on your device, provide a
-[provisioning profile](#provisioning-profile). `flet build` defaults to the
-`debugging` export method. If no provisioning profile is provided,
-an `.xcarchive` is produced only.
-///
-
-### Export options
-
-Additional keys to include in the generated `exportOptions.plist`.
-
-#### Resolution order
+### Resolution order
 
 Its value is determined in the following order of precedence:
 
-1. `[tool.flet.ios].export_options`
-2. `[tool.flet.ios.export_methods."<EXPORT_METHOD>"].export_options` (see [export methods](#export-methods))
+1. `[tool.flet.ios].export_options` (if set, per-method export options are ignored)
+2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
 3. `{}` (no extra keys)
 
-#### Example
+### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -324,7 +322,7 @@ export_options = { uploadSymbols = false }
 ```
 ///
 
-### Export method
+## Export method
 
 Defines how the app should be packaged when exporting the `.ipa` file.
 
@@ -335,9 +333,9 @@ Can be one of the following:
 - `app-store-connect` (or deprecated `app-store`): used for submitting the app to the App Store.
 - `enterprise`: used for internal distribution within an organization (requires an enterprise account).
 
-To configure build settings for one or more export methods, see [export methods](#export-methods).
+To configure individual settings for one or more export methods, see [export methods](#export-methods).
 
-#### Resolution order
+### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -345,7 +343,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].export_method`
 3. `"debugging"`
 
-#### Example
+### Example
 
 /// tab | `flet build`
 ```bash
@@ -359,17 +357,14 @@ export_method = "debugging"
 ```
 ///
 
-### Export methods
+## Export methods
 
-Configure signing settings per export methods.
-
-When building, the specified [export method](#export-method)
-and its respective configuration above will be used.
+Signing settings can be configured individually per [export method](#export-method).
 
 Per-method values are used only when the corresponding top-level
-`[tool.flet.ios]` setting is not set.
+`[tool.flet.ios]` setting is not set. The method key must match the `export_method` value exactly.
 
-#### Example
+### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -396,7 +391,7 @@ export_options = { uploadSymbols = true }
 You can deploy `.ipa` files directly to an iPhone or iPad on macOS—ideal for
 internal testing without publishing to the App Store.
 
-Follow the following steps:
+Follow these steps:
 
 #### Install and Launch Apple Configurator
 
@@ -464,41 +459,23 @@ you'll need to manually trust the developer:
 You can use the cross-platform [`--permissions`](index.md#permissions) list for
 common permissions, and add custom iOS entries via `Info.plist`.
 
-Setting iOS-specific entries written into `Info.plist`:
+### Resolution order
 
-```bash
-flet build ipa --info-plist <key>=<value> <key>=<value> ...
-```
+Its value is determined in the following order of precedence:
 
-For example:
+1. [`--info-plist`](../cli/flet-build.md#-info-plist)
+2. `[tool.flet.ios.info]`
 
-```bash
-flet build ipa --info-plist NSLocationWhenInUseUsageDescription="This app uses location service when in use."
-```
-
-`True` and `False` are parsed as booleans; any other value is treated as a string.
-
-Configuring iOS entries in `pyproject.toml`:
-
-```toml
-[tool.flet.ios.info] # --info-plist
-NSCameraUsageDescription = "This app uses the camera to ..."
-```
-
-## Disable splash screen
-
-The [splash screen](index.md#splash-screen) is enabled/shown by default.
-
-It can be disabled as follows:
+### Example
 
 /// tab | `flet build`
 ```bash
-flet build ipa --no-ios-splash
+flet build ipa --info-plist NSLocationWhenInUseUsageDescription="This app uses location service when in use."
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.splash]
-ios = false
+[tool.flet.ios.info]
+NSCameraUsageDescription = "This app uses the camera to ..."
 ```
 ///
