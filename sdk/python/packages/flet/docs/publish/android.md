@@ -325,9 +325,8 @@ is `AndroidManifest.xml`, which gets populated with the information you provide.
 
 ### Application attributes
 
-To add or override attributes on the `<application>` element of the
-`AndroidManifest.xml` file in the [template](index.md#template-source), use
-`[tool.flet.android.manifest_application]`.
+You can add or override attributes on the `<application>` element of the
+`AndroidManifest.xml` file in the [build template](index.md#build-template).
 
 #### Resolution order
 
@@ -345,7 +344,7 @@ allowBackup = "false"
 ```
 ///
 
-In the [`AndroidManifest.xml`](index.md#template-source), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
 <application
@@ -388,7 +387,7 @@ flet build apk --android-meta-data name_1=value_1 name_2=value_2
 ```
 ///
 
-In the [`AndroidManifest.xml`](index.md#template-source), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
 <application>
@@ -431,7 +430,7 @@ flet build apk --android-features android.hardware.camera=True android.hardware.
 ```
 ///
 
-In the [`AndroidManifest.xml`](index.md#template-source), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
 <manifest>
@@ -471,7 +470,7 @@ flet build apk --android-permissions android.permission.READ_EXTERNAL_STORAGE=Tr
 ```
 ///
 
-In the [`AndroidManifest.xml`](index.md#template-source), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
 <manifest>

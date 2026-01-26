@@ -305,7 +305,7 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 ### Export options
 
 Additional keys to include in the generated `exportOptions.plist`
-of the [template](index.md#template-source).
+of the [build template](index.md#build-template).
 
 For a complete list of supported keys and values, run the following command:
 

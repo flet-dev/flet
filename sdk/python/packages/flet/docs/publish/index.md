@@ -719,7 +719,7 @@ Their values are respectively determined in the following order of precedence:
 1. [`--splash-color`](../cli/flet-build.md#-splash-color) / [`--splash-dark-color`](../cli/flet-build.md#-splash-dark-color)
 2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
 3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
-4. Build template defaults (see [Template Source](#template-source))
+4. [Build template](#build-template) defaults
 
 ##### Example
 
@@ -934,6 +934,10 @@ unless overridden.
 
 ### Deep linking
 
+/// admonition | Note
+[Android](android.md) and [iOS](ios.md) only.
+///
+
 [Deep linking](https://en.wikipedia.org/wiki/Mobile_deep_linking) allows users
 to navigate directly to specific content within a mobile app
 using a [URI (Uniform Resource Identifier)](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
@@ -944,8 +948,6 @@ feature, or content within the app, enhancing user experience and engagement.
 - **Host**: deep linking URL host.
 
 See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
-
-Deep linking is configured for Android and iOS only.
 
 #### Resolution order
 
