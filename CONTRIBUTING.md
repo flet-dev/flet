@@ -2,6 +2,24 @@
 
 Thank you for your interest in contributing to Flet!
 
+## Contents
+
+- [Clone repo](#clone-repo)
+- [Python SDK](#python-sdk)
+  - [Install uv](#install-uv)
+  - [Open worker directory](#open-worker-directory)
+  - [Install dependencies](#install-dependencies)
+  - [Check the installation](#check-the-installation)
+  - [Running tests](#running-tests)
+  - [Code formatting](#code-formatting)
+  - [pre-commit](#pre-commit)
+- [Flutter client](#flutter-client)
+  - [Building the Flutter client](#building-the-flutter-client)
+  - [Running the Flutter client](#running-the-flutter-client)
+  - [Restarting/Rebuilding](#restartingrebuilding)
+- [Releasing Flet](#releasing-flet)
+- [New macOS environment for Flet developer](#new-macos-environment-for-flet-developer)
+
 ## Clone repo
 
 ```
