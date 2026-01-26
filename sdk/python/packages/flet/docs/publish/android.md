@@ -85,13 +85,9 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
-If enabled, it produces one APK per target ABI.
-See [`target architecture`](index.md#target-architecture) to customize
-which ABIs are included. If unset, the defaults listed [above](#split-apk-per-abi) are used.
-
-split-per-abi applies to APK builds only. To limit ABIs in both APK and AAB
-outputs, set [`target architecture`](index.md#target-architecture) together
-with `split_per_abi = false`.
+When enabled, Flutter produces one APK per ABI using the default ABI
+list shown [above](#split-apk-per-abi), which can customized by setting
+[`target architectures`](index.md#target-architecture)
 
 #### Example
 
