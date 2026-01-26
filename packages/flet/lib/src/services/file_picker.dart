@@ -46,7 +46,7 @@ class FilePickerService extends FletService {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
-        _files = (await FilePicker.platform.pickFiles(
+        _files = (await FilePicker.pickFiles(
                 dialogTitle: dialogTitle,
                 initialDirectory: initialDirectory,
                 lockParentWindow: true,
@@ -76,7 +76,7 @@ class FilePickerService extends FletService {
           throw Exception(
               "\"file_name\" is required when saving a file on Web.");
         }
-        return await FilePicker.platform.saveFile(
+        return await FilePicker.saveFile(
             dialogTitle: dialogTitle,
             fileName: args["file_name"] != null || !isIOSMobile()
                 ? args["file_name"]
@@ -90,7 +90,7 @@ class FilePickerService extends FletService {
         if (kIsWeb) {
           throw Exception("Get Directory Path dialog is not supported on web.");
         }
-        return await FilePicker.platform.getDirectoryPath(
+        return await FilePicker.getDirectoryPath(
           dialogTitle: dialogTitle,
           initialDirectory: initialDirectory,
           lockParentWindow: true,
