@@ -33,8 +33,9 @@ If either component is missing or an incompatible version is detected, the requi
 
 ### Android wheels for binary Python packages
 
-Binary Python packages (in contrast to "pure" Python packages written in Python only) are packages that are partially
-written in C, Rust, or other languages producing native code. Example packages are `numpy`, `cryptography`, or `pydantic-core`.
+Binary Python packages (in contrast to "pure" Python packages written in Python only)
+are packages that are partially written in C, Rust, or other languages producing native code.
+Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 
 Make sure all non-pure (binary) packages used in your Flet app have
 [pre-built wheels for Android](../reference/binary-packages-android-ios.md).
@@ -57,22 +58,17 @@ For Play Store deployment, it’s recommended to:
 
 ### Split APK per ABI
 
-Different Android devices use different CPUs, which in turn support different instruction sets.
-Each combination of CPU and instruction set has its own
-[Application Binary Interface (ABI)](https://developer.android.com/ndk/guides/abis).
+Android devices use different CPUs, so APKs can target different
+[Application Binary Interfaces (ABIs)](https://developer.android.com/ndk/guides/abis).
 
-By default, Flet will build a "fat" APK which includes binaries for
+By default, Flet builds a single "fat" APK that includes
 [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a),
 [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a), and
-[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64). This can be useful when
-deploying to a wide range of devices, but it can also result in a large APK file.
+[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64) ABIs. This maximizes
+device compatibility but increases APK size.
 
-Splitting the APK allows you to build separate APKs for each target architecture.
-The resulting APKs will be individually smaller.
-
-When targeting specific architectures, make sure to distribute the correct
-resulting executable/bundle to users based on their device's CPU architecture,
-as installing an incompatible one will result in errors.
+Enabling ABI splits produces one APK per ABI, which reduces file size but
+requires distributing the correct APK for each device.
 
 The following target architectures are supported:
 
@@ -89,16 +85,13 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
-When enabled, it will, by default, produce the following ABIs:
-[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a),
-[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) and
-[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64).
-More information on how to customize the target architecture(s) can be
-found [here](index.md#target-architecture).
+If enabled, it produces one APK per target ABI.
+See [`target architecture`](index.md#target-architecture) to customize
+which ABIs are included. If unset, the defaults listed [above](#split-apk-per-abi) are used.
 
-split-per-abi applies to APK builds only. For limiting ABIs in both APK and AAB
-outputs, use [`--arch`](index.md#target-architecture) / `[tool.flet.android].target_arch`
-when `split_per_abi` is `false`.
+split-per-abi applies to APK builds only. To limit ABIs in both APK and AAB
+outputs, set [`target architecture`](index.md#target-architecture) together
+with `split_per_abi = false`.
 
 #### Example
 
@@ -180,7 +173,7 @@ If not, create one using one of the following methods:
         -alias upload
     ```
     You will be prompted for several details, such as a keystore password,
-    a key alias, your names and location. Remember the password and alias
+    a key alias, your names, and location. Remember the password and alias
     for use in the [configuration](#configuration) step below.
 
     A file named `upload-keystore.jks` will be created in your home directory.
