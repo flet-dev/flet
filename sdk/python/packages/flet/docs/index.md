@@ -33,7 +33,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-To run the app, [install `flet`](/getting-started/installation/):
+To run the app, [install `flet`](getting-started/installation.md):
 
 ```bash
 pip install 'flet[all]'
