@@ -29,7 +29,6 @@ This command can be run on **Windows only**.
 ///
 
 Builds a Windows application.
-Builds a **release** Windows application.
 
 ## Troubleshooting
 

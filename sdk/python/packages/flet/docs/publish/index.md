@@ -629,7 +629,6 @@ Its value is determined in the following order of precedence:
 1. [`--source-packages`](../cli/flet-build.md#-source-packages)
 2. `[tool.flet.<PLATFORM>].source_packages`
 3. `[tool.flet].source_packages`
-4. set `SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS` env var to a comma-separated list of packages
 
 #### Example
 
@@ -642,11 +641,6 @@ flet build <target_platform> --source-packages package1 package2
 ```toml
 [tool.flet]
 source_packages = ["package1", "package2"]
-```
-///
-/// tab | `.env`
-```dotenv
-SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS="package1,package2"
 ```
 ///
 
