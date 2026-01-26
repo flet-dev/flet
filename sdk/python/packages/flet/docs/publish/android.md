@@ -61,14 +61,14 @@ For Play Store deployment, it’s recommended to:
 Android devices use different CPUs, so APKs can target different
 [Application Binary Interfaces (ABIs)](https://developer.android.com/ndk/guides/abis).
 
-By default, Flet builds a single "fat" APK that includes
-[`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a),
-[`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a), and
-[`x86_64`](https://developer.android.com/ndk/guides/abis#86-64) ABIs. This maximizes
+By default, Flet builds a single "fat" APK that contains
+native binaries for all supported ABIs. This maximizes
 device compatibility but increases APK size.
 
 Enabling ABI splits produces one APK per ABI, which reduces file size but
 requires distributing the correct APK for each device.
+
+#### Supported target architectures
 
 The following target architectures are supported:
 
@@ -85,9 +85,8 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
-When enabled, Flutter produces one APK per ABI using the default ABI
-list shown [above](#split-apk-per-abi), which can customized by setting
-[`target architectures`](index.md#target-architecture)
+When enabled, 3 APKs are produced by default, one for each of the following ABIs: `arm64-v8a`,
+`armeabi-v7a`, and `x86_64`. These can be customized by setting [`target architectures`](index.md#target-architecture).
 
 #### Example
 
@@ -414,7 +413,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--android-features`](../cli/flet-build.md#-android-features)
 2. `[tool.flet.android.feature]`
-3. [`--permissions`](index.md#permissions) / `[tool.flet].permissions`
+3. [`Permissions`](index.md#permissions)
 4. defaults: `android.software.leanback=false`, `android.hardware.touchscreen=false`
 
 #### Example

@@ -982,25 +982,8 @@ It is possible to build your app for specific CPU architectures.
 This is useful for reducing the size of the resulting binary or package,
 or for targeting specific devices.
 
-Target architecture is only supported for Android (`apk`/`aab`) and macOS.
-
-On Android:
-
-- When `split_per_abi = true` (APK only), Flutter handles per-ABI outputs and
-  `target_arch` is ignored.
-- When `split_per_abi = false`, `target_arch` is applied to Gradle
-  `ndk.abiFilters` for both APK and AAB builds. If you do not specify it,
-  the template defaults to `arm64-v8a`, `armeabi-v7a`, and `x86_64`.
-
-For more/complementary information on supported architectures, see the specific platform guides:
-[Android](android.md#split-apk-per-abi), [macOS](macos.md#target-architecture).
-
-#### Supported architectures
-
-The following architectures are supported for each platform:
-
-- Android: `arm64-v8a`, `armeabi-v7a`, `x86_64`, `x86`
-- macOS: `arm64`, `x86_64`
+For more/complementary information, see the specific platform guides:
+[Android](android.md#supported-target-architectures), [macOS](macos.md#target-architecture).
 
 #### Resolution order
 
