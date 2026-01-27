@@ -179,16 +179,9 @@ jobs:
 
       - name: Build app
         shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
         run: |
-          # install deps
-          cd sdk/python
-          uv sync
-
-          # build app
-          cd examples/apps/flet_build_test
-          uv pip list
-          uv run --active ${{ matrix.build_cmd }}
-          uv pip list
+          uv run ${{ matrix.build_cmd }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
