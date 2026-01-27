@@ -186,7 +186,9 @@ jobs:
 
           # build app
           cd examples/apps/flet_build_test
+          uv pip list
           uv run --active ${{ matrix.build_cmd }}
+          uv pip list
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0

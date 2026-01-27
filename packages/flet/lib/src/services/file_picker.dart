@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../flet_service.dart';
@@ -47,32 +46,26 @@ class FilePickerService extends FletService {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
-        try {
-          _files = (await FilePicker.platform.pickFiles(
-                  dialogTitle: dialogTitle,
-                  initialDirectory: initialDirectory,
-                  lockParentWindow: true,
-                  type: fileType,
-                  allowedExtensions: allowedExtensions,
-                  allowMultiple: args["allow_multiple"],
-                  withData: false,
-                  withReadStream: true))
-              ?.files;
-          return _files != null
-              ? _files!.asMap().entries.map((file) {
-                  return FilePickerFile(
-                          id: file.key, // use entry's index as id
-                          name: file.value.name,
-                          path: kIsWeb ? null : file.value.path,
-                          size: file.value.size)
-                      .toMap();
-                }).toList()
-              : [];
-        } on PlatformException catch (e) {
-          debugPrint('Unsupported operation: $e');
-        } catch (e) {
-          debugPrint(e.toString());
-        }
+        _files = (await FilePicker.platform.pickFiles(
+                dialogTitle: dialogTitle,
+                initialDirectory: initialDirectory,
+                lockParentWindow: true,
+                type: fileType,
+                allowedExtensions: allowedExtensions,
+                allowMultiple: args["allow_multiple"],
+                withData: false,
+                withReadStream: true))
+            ?.files;
+        return _files != null
+            ? _files!.asMap().entries.map((file) {
+                return FilePickerFile(
+                        id: file.key, // use entry's index as id
+                        name: file.value.name,
+                        path: kIsWeb ? null : file.value.path,
+                        size: file.value.size)
+                    .toMap();
+              }).toList()
+            : [];
       case "save_file":
         if ((kIsWeb || isAndroidMobile() || isIOSMobile()) &&
             srcBytes == null) {
