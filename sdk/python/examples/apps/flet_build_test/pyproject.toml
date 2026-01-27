@@ -23,14 +23,6 @@ dependencies = [
     "flet-webview",
 ]
 
-[dependency-groups]
-dev = [
-    "flet[all]",
-]
-
-[tool.uv]
-prerelease = "disallow"
-
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
 product = "Flet Build Test"
