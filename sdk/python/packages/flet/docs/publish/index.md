@@ -587,7 +587,7 @@ Its value is determined in the following order of precedence:
 - If the result of all the above is empty, `flet==<flet_version>` is used.
 
 To use a local development version of a dependency during builds, configure
-`[tool.flet.dev_packages]` or `[tool.flet.<PLATFORM>].dev_packages` with a
+`[tool.flet].dev_packages` or `[tool.flet.<PLATFORM>].dev_packages` with a
 package name to path mapping.
 
 If your app uses Flet extensions (third-party packages), list them in your

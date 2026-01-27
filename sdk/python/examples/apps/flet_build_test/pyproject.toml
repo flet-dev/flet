@@ -11,8 +11,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "flet-project @ file:../../../"
+    "flet-project"
 ]
+
+[tool.uv.sources]
+flet-project = { path = "../../../" }
 
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
