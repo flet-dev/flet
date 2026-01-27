@@ -1,0 +1,198 @@
+
+name: Flet Build Test
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-test.yml'
+      - '.fvmrc'
+      - 'client/**'
+      - 'sdk/python/packages/**'
+      - 'packages/flet/**'
+      - 'sdk/python/examples/apps/flet_build_test'
+  pull_request:
+    paths:
+      - '.github/workflows/build-test.yml'
+      - '.fvmrc'
+      - 'client/**'
+      - 'sdk/python/packages/**'
+      - 'packages/flet/**'
+      - 'sdk/python/examples/apps/flet_build_test'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  UV_PYTHON: 3.12
+  PYTHONUTF8: 1
+
+  # https://docs.flet.dev/publish/#versioning
+  BUILD_NUMBER: 1
+  BUILD_VERSION: 1.0.0
+
+  # https://docs.flet.dev/reference/environment-variables
+  FLET_CLI_NO_RICH_OUTPUT: 1
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # -------- Desktop --------
+          - name: linux
+            runner: ubuntu-latest
+            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: linux-build-artifact
+            artifact_path: build/linux
+            needs_linux_deps: true
+
+          - name: macos
+            runner: macos-latest
+            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: macos-build-artifact
+            artifact_path: build/macos
+            needs_linux_deps: false
+
+          - name: windows
+            runner: windows-latest
+            build_cmd: "flet build windows --yes --verbose --no-rich-output --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: windows-build-artifact
+            artifact_path: build/windows
+            needs_linux_deps: false
+
+          # -------- Android --------
+          - name: aab-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: aab-build-ubuntu-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: aab-macos
+            runner: macos-latest
+            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: aab-build-macos-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: aab-windows
+            runner: windows-latest
+            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: aab-build-windows-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: apk-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: apk-build-ubuntu-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          - name: apk-macos
+            runner: macos-latest
+            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: apk-build-macos-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          - name: apk-windows
+            runner: windows-latest
+            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: apk-build-windows-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          # -------- iOS --------
+          - name: ipa
+            runner: macos-latest
+            build_cmd: "flet build ipa --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: ipa-build-artifact
+            artifact_path: build/ipa
+            needs_linux_deps: false
+
+          # -------- Web --------
+          - name: web-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build web --yes --verbose"
+            artifact_name: web-build-ubuntu-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+          - name: web-macos
+            runner: macos-latest
+            build_cmd: "flet build web --yes --verbose"
+            artifact_name: web-build-macos-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+          - name: web-windows
+            runner: windows-latest
+            build_cmd: "flet build web --yes --verbose"
+            artifact_name: web-build-windows-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install Linux dependencies
+        if: matrix.needs_linux_deps
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          sudo apt-get install -y --no-install-recommends \
+            clang \
+            ninja-build \
+            libgtk-3-dev \
+            libasound2-dev \
+            libmpv-dev \
+            mpv \
+            libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libgstreamer-plugins-bad1.0-dev \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-bad \
+            gstreamer1.0-plugins-ugly \
+            gstreamer1.0-libav \
+            gstreamer1.0-tools \
+            gstreamer1.0-x \
+            gstreamer1.0-alsa \
+            gstreamer1.0-gl \
+            gstreamer1.0-gtk3 \
+            gstreamer1.0-qt5 \
+            gstreamer1.0-pulseaudio \
+            pkg-config \
+            libsecret-1-0 \
+            libsecret-1-dev
+          sudo apt-get clean
+
+      - name: Install Python dependencies
+        shell: bash
+        working-directory: sdk/python
+        run: |
+          uv sync
+
+      - name: Build app
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          uv run ${{ matrix.build_cmd }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_path }}
+          if-no-files-found: warn
+          overwrite: false
