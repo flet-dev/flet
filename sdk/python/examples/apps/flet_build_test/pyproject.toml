@@ -6,16 +6,69 @@ requires-python = ">=3.10"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 
 dependencies = [
-
+    "flet",
+    "flet-ads",
+    "flet-audio",
+    "flet-audio-recorder",
+    "flet-charts",
+    "flet-datatable2",
+    "flet-flashlight",
+    "flet-geolocator",
+    "flet-lottie",
+    "flet-map",
+    "flet-permission-handler",
+    "flet-rive",
+    "flet-secure-storage",
+    "flet-video",
+    "flet-webview",
 ]
 
 [dependency-groups]
 dev = [
-    "flet-project"
+    "flet-cli",
+    "flet-desktop",
+    "flet-desktop-light",
+    "flet-web",
 ]
 
 [tool.uv.sources]
 flet-project = { path = "../../../" }
+flet = { path = "../../../packages/flet" }
+flet-cli = { path = "../../../packages/flet-cli" }
+flet-desktop = { path = "../../../packages/flet-desktop" }
+flet-desktop-light = { path = "../../../packages/flet-desktop-light" }
+flet-web = { path = "../../../packages/flet-web" }
+flet-ads = { path = "../../../packages/flet-ads" }
+flet-audio = { path = "../../../packages/flet-audio" }
+flet-audio-recorder = { path = "../../../packages/flet-audio-recorder" }
+flet-charts = { path = "../../../packages/flet-charts" }
+flet-datatable2 = { path = "../../../packages/flet-datatable2" }
+flet-flashlight = { path = "../../../packages/flet-flashlight" }
+flet-geolocator = { path = "../../../packages/flet-geolocator" }
+flet-lottie = { path = "../../../packages/flet-lottie" }
+flet-map = { path = "../../../packages/flet-map" }
+flet-permission-handler = { path = "../../../packages/flet-permission-handler" }
+flet-rive = { path = "../../../packages/flet-rive" }
+flet-secure-storage = { path = "../../../packages/flet-secure-storage" }
+flet-video = { path = "../../../packages/flet-video" }
+flet-webview = { path = "../../../packages/flet-webview" }
+
+[tool.flet.dev_packages]
+flet = "../../../packages/flet"
+flet-ads = "../../../packages/flet-ads"
+flet-audio = "../../../packages/flet-audio"
+flet-audio-recorder = "../../../packages/flet-audio-recorder"
+flet-charts = "../../../packages/flet-charts"
+flet-datatable2 = "../../../packages/flet-datatable2"
+flet-flashlight = "../../../packages/flet-flashlight"
+flet-geolocator = "../../../packages/flet-geolocator"
+flet-lottie = "../../../packages/flet-lottie"
+flet-map = "../../../packages/flet-map"
+flet-permission-handler = "../../../packages/flet-permission-handler"
+flet-rive = "../../../packages/flet-rive"
+flet-secure-storage = "../../../packages/flet-secure-storage"
+flet-video = "../../../packages/flet-video"
+flet-webview = "../../../packages/flet-webview"
 
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
@@ -25,7 +78,6 @@ project = "flet_build_test"
 company = "Flet"
 org = "com.flet"
 copyright = "Copyright (C) 2025 by Flet"
-dev_packages = { flet = "../../../packages/flet", flet-ads = "../../../packages/flet-ads", flet-audio = "../../../packages/flet-audio", flet-audio-recorder = "../../../packages/flet-audio-recorder", flet-charts = "../../../packages/flet-charts", flet-datatable2 = "../../../packages/flet-datatable2", flet-flashlight = "../../../packages/flet-flashlight", flet-geolocator = "../../../packages/flet-geolocator", flet-lottie = "../../../packages/flet-lottie", flet-map = "../../../packages/flet-map", flet-permission-handler = "../../../packages/flet-permission-handler", flet-rive = "../../../packages/flet-rive", flet-secure-storage = "../../../packages/flet-secure-storage", flet-video = "../../../packages/flet-video", flet-webview = "../../../packages/flet-webview" }
 
 [tool.flet.app]
 path = "src"
