@@ -28,9 +28,10 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://docs.flet.dev/publish/#versioning
+  # https://docs.flet.dev/publish/
   BUILD_NUMBER: 1
   BUILD_VERSION: 1.0.0
+  TEMPLATE_REF: 0.81.0
 
   # https://docs.flet.dev/reference/environment-variables
   FLET_CLI_NO_RICH_OUTPUT: 1
