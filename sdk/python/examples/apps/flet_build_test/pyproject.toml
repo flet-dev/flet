@@ -14,23 +14,6 @@ dev = [
     "flet-project @ file:../../../"
 ]
 
-[tool.flet.dev_packages]
-flet = "../../../packages/flet"
-flet-ads = "../../../packages/flet-ads"
-flet-audio = "../../../packages/flet-audio"
-flet-audio-recorder = "../../../packages/flet-audio-recorder"
-flet-charts = "../../../packages/flet-charts"
-flet-datatable2 = "../../../packages/flet-datatable2"
-flet-flashlight = "../../../packages/flet-flashlight"
-flet-geolocator = "../../../packages/flet-geolocator"
-flet-lottie = "../../../packages/flet-lottie"
-flet-map = "../../../packages/flet-map"
-flet-permission-handler = "../../../packages/flet-permission-handler"
-flet-rive = "../../../packages/flet-rive"
-flet-secure-storage = "../../../packages/flet-secure-storage"
-flet-video = "../../../packages/flet-video"
-flet-webview = "../../../packages/flet-webview"
-
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
 product = "Flet Build Test"
@@ -39,6 +22,7 @@ project = "flet_build_test"
 company = "Flet"
 org = "com.flet"
 copyright = "Copyright (C) 2025 by Flet"
+dev_packages = { flet = "../../../packages/flet", flet-ads = "../../../packages/flet-ads", flet-audio = "../../../packages/flet-audio", flet-audio-recorder = "../../../packages/flet-audio-recorder", flet-charts = "../../../packages/flet-charts", flet-datatable2 = "../../../packages/flet-datatable2", flet-flashlight = "../../../packages/flet-flashlight", flet-geolocator = "../../../packages/flet-geolocator", flet-lottie = "../../../packages/flet-lottie", flet-map = "../../../packages/flet-map", flet-permission-handler = "../../../packages/flet-permission-handler", flet-rive = "../../../packages/flet-rive", flet-secure-storage = "../../../packages/flet-secure-storage", flet-video = "../../../packages/flet-video", flet-webview = "../../../packages/flet-webview" }
 
 [tool.flet.app]
 path = "src"
