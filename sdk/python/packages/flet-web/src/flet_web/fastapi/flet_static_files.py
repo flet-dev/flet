@@ -33,7 +33,7 @@ class FletStaticFiles(StaticFiles):
         app_description: PWA application description.
         web_renderer: Type of web renderer.
         route_url_strategy: Routing URL strategy.
-        no_cdn: Whether not load CanvasKit, Pyodide and fonts from CDN.
+        no_cdn: Whether not load CanvasKit, Pyodide, and fonts from CDN.
         websocket_endpoint_path: Absolute URL of Flet app WebSocket handler.
             Defaults to `/ws`.
     """

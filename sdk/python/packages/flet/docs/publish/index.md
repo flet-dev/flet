@@ -179,14 +179,14 @@ When you run `flet build <target_platform>`, the pipeline is:
    use [`--clear-cache`](../cli/flet-build.md#-clear-cache) to force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
-   - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
-   - Splash screens for web, iOS, and Android via [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash).
+     - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
+     - Splash screens for web, iOS, and Android via [`flutter_native_splash`](https://pub.dev/packages/flutter_native_splash).
 3. Package the Python app using `serious_python package`:
-   - Install app dependencies from [pypi.org](https://pypi.org) and
-     [pypi.flet.dev](https://pypi.flet.dev) for the selected platform, as configured in
-     [App dependencies](#app-dependencies) and [Source packages](#source-packages).
-   - If [configured](#compilation-and-cleanup), compile `.py` files to `.pyc`.
-   - Add all project files, except those [excluded](#excluding-files-and-directories), to the app asset.
+      - Install app dependencies from [pypi.org](https://pypi.org) and
+         [pypi.flet.dev](https://pypi.flet.dev) for the selected platform, as configured in
+         [App dependencies](#app-dependencies) and [Source packages](#source-packages).
+     - If [configured](#compilation-and-cleanup), compile `.py` files to `.pyc`.
+     - Add all project files, except those [excluded](#excluding-files-and-directories), to the app asset.
 4. Run [`flutter build <target_platform>`](https://docs.flutter.dev/deployment) to produce the
    executable or installable package.
 5. Copy build outputs from Step 4 into the [output directory](#output-directory).

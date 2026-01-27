@@ -155,6 +155,7 @@ plugins:
             - url: https://docs.python.org/3/objects.inv
               domains: [py, std]
             - url: https://typing-extensions.readthedocs.io/en/latest/objects.inv
+            - url: https://fastapi.tiangolo.com/objects.inv
   - external-images:
       mappings:
         - source_dir: ../../examples
@@ -932,6 +933,13 @@ nav:
               - FletPageDisconnectedException: types/fletpagedisconnectedexception.md
               - FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
               - FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+          - FastAPI:
+              - app: fastapi/app.md
+              - app_manager: fastapi/app_manager.md
+              - FastAPI: fastapi/fastapi.md
+              - FletApp: fastapi/fletapp.md
+              - FletStaticFiles: fastapi/fletstaticfiles.md
+              - FletUpload: fastapi/fletupload.md
           - Methods:
               - create_context: types/createcontext.md
               - memo: types/memo.md

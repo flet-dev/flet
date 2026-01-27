@@ -518,5 +518,5 @@ help installing and using adb on different platforms.
 
     You can list available devices with:
     ```bash
-    adb -s <device> install <path-to-your.apk>
+    adb devices
     ```

@@ -16,12 +16,10 @@ class FletUpload:
     """
     Flet app uploads handler.
 
-    Parameters:
-
-    * `upload_dir` (str) - an absolute path to a directory with uploaded files.
-    * `max_upload_size` (str, int) - maximum size of a single upload, bytes.
-       Unlimited if `None`.
-    * `secret_key` (str, optional) - secret key to sign and verify upload requests.
+    Args:
+        upload_dir: An absolute path to a directory with uploaded files.
+        max_upload_size: maximum size of a single upload, bytes. Unlimited if `None`.
+        secret_key: secret key to sign and verify upload requests.
     """
 
     def __init__(
@@ -45,13 +43,12 @@ class FletUpload:
 
         logger.info(f"Upload path configured: {self.__upload_dir}")
 
-    """
-    Handle file upload.
-
-    Upload must be an non-encoded (raw) file in the request body.
-    """
-
     async def handle(self, request: Request):
+        """
+        Handle file upload.
+
+        Upload must be an non-encoded (raw) file in the request body.
+        """
         query_params = request.query_params
         file_name = query_params.get("f")
         expire_str = query_params.get("e")
@@ -100,7 +97,7 @@ class FletUpload:
                 detail="Invalid upload destination",
             )
 
-        # create directory if not exists
+        # create a directory if it doesn't exist
         dest_dir = os.path.dirname(full_path)
         os.makedirs(dest_dir, exist_ok=True)
 

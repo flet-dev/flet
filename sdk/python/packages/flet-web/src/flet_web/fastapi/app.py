@@ -58,10 +58,11 @@ def app(
         upload_endpoint_path: absolute URL of upload endpoint, e.g. `/upload`.
         max_upload_size: maximum size of a single upload, bytes. Unlimited if `None`.
         secret_key: secret key to sign and verify upload requests.
-        session_timeout_seconds: session lifetime, in seconds, after user disconnected.
+        session_timeout_seconds: session lifetime, in seconds,
+            after the user disconnected.
         oauth_state_timeout_seconds: OAuth state lifetime, in seconds,
-           which is the maximum allowed time between starting OAuth flow and redirecting
-           to OAuth callback URL.
+            which is the maximum allowed time between starting OAuth flow and
+            redirecting to OAuth callback URL.
     """
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
