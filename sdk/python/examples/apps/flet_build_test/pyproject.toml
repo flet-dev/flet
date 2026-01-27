@@ -24,21 +24,21 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-flet = { path = "../../../" }
-flet-ads = { path = "../../../" }
-flet-audio = { path = "../../../" }
-flet-audio-recorder = { path = "../../../" }
-flet-charts = { path = "../../../" }
-flet-datatable2 = { path = "../../../" }
-flet-flashlight = { path = "../../../" }
-flet-geolocator = { path = "../../../" }
-flet-lottie = { path = "../../../" }
-flet-map = { path = "../../../" }
-flet-permission-handler = { path = "../../../" }
-flet-rive = { path = "../../../" }
-flet-secure-storage = { path = "../../../" }
-flet-video = { path = "../../../" }
-flet-webview = { path = "../../../" }
+flet = { path = "../../../packages/flet" }
+flet-ads = { path = "../../../packages/flet-ads" }
+flet-audio = { path = "../../../packages/flet-audio" }
+flet-audio-recorder = { path = "../../../packages/flet-audio-recorder" }
+flet-charts = { path = "../../../packages/flet-charts" }
+flet-datatable2 = { path = "../../../packages/flet-datatable2" }
+flet-flashlight = { path = "../../../packages/flet-flashlight" }
+flet-geolocator = { path = "../../../packages/flet-geolocator" }
+flet-lottie = { path = "../../../packages/flet-lottie" }
+flet-map = { path = "../../../packages/flet-map" }
+flet-permission-handler = { path = "../../../packages/flet-permission-handler" }
+flet-rive = { path = "../../../packages/flet-rive" }
+flet-secure-storage = { path = "../../../packages/flet-secure-storage" }
+flet-video = { path = "../../../packages/flet-video" }
+flet-webview = { path = "../../../packages/flet-webview" }
 
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
