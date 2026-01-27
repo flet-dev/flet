@@ -25,6 +25,27 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   late VideoController _controller;
   bool _initialized = false;
 
+  Future<void> _applyMpvProperties(Control control) async {
+    final cfg = control.get("configuration");
+    if (cfg is! Map) return;
+
+    final mpvPropsRaw = cfg["mpv_properties"];
+    if (mpvPropsRaw is! Map) return;
+
+    final platform = _player.platform;
+    if (platform is! NativePlayer) return;
+    final native = platform as dynamic;
+
+    for (final entry in mpvPropsRaw.entries) {
+      final key = entry.key.toString();
+      final val = entry.value;
+      if (val == null) continue;
+      final valueStr = val is bool ? (val ? "yes" : "no") : val.toString();
+      await native.setProperty(key, valueStr);
+    }
+  }
+
+
   void _setup(Control control) {
     final playerConfig = PlayerConfiguration(
       title: control.getString("title", "flet-video")!,
@@ -64,8 +85,14 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       });
     }
 
-    _player.open(Playlist(parseVideoMedias(control.get("playlist"), [])!),
-        play: control.getBool("autoplay", false)!);
+    final playlist =
+        Playlist(parseVideoMedias(control.get("playlist"), [])!);
+    final autoplay = control.getBool("autoplay", false)!;
+
+    () async {
+      await _applyMpvProperties(control);
+      await _player.open(playlist, play: autoplay);
+    }();
   }
 
   void _teardown(Control control) {
