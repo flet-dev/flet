@@ -1,0 +1,47 @@
+[project]
+name = "flet_build_test"
+version = "0.1.0"
+description = "App to test flet build."
+requires-python = ">=3.10"
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
+
+dependencies = [
+    "flet",
+    "flet-ads",
+    "flet-audio",
+    "flet-audio-recorder",
+    "flet-charts",
+    "flet-datatable2",
+    "flet-flashlight",
+    "flet-geolocator",
+    "flet-lottie",
+    "flet-map",
+    "flet-permission-handler",
+    "flet-rive",
+    "flet-secure-storage",
+    "flet-video",
+    "flet-webview",
+]
+
+[dependency-groups]
+dev = [
+    "flet[all]",
+]
+
+[tool.uv]
+prerelease = "disallow"
+
+# Docs: https://docs.flet.dev/publish/
+[tool.flet]
+product = "Flet Build Test"
+artifact = "flet-build-test"
+project = "flet_build_test"
+company = "Flet"
+org = "com.flet"
+copyright = "Copyright (C) 2025 by Flet"
+
+[tool.flet.app]
+path = "src"
+
+[tool.flet.android.meta_data]
+"com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"

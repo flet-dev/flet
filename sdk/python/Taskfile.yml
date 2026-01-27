@@ -13,17 +13,39 @@ tasks:
       - task --list
 
   setup:
-    desc: "Setup environment by installing all pyproject.toml dependencies and pre-commit hooks."
-    cmds:
-      - task: install
-      - task: pre-commit-install
-
-  venv-init:
-    desc: "Initialize virtual environment."
+    desc: "Setup/Sync environment by installing all Python dependencies and pre-commit hooks."
     aliases:
-      - venv
+      - sync
+    cmds:
+      - task: uv sync --group all
+      - task: pre-commit
+
+  venv:
+    desc: "Initialize virtual environment."
     cmds:
       - uv venv
+
+  pre-commit:
+    desc: "Install pre-commit hooks."
+    aliases:
+      - pc
+      - sync-pc
+    cmds:
+      - uv run pre-commit install
+
+  pre-commit-run:
+    desc: "Run pre-commit hooks on all files of the repo."
+    aliases:
+      - run-pc
+    cmds:
+      - uv run pre-commit run --all-files
+
+  pre-commit-update:
+    desc: "Upgrade versions of repos in .pre-commit-config.yaml to their latest."
+    aliases:
+      - update-pc
+    cmds:
+      - uv run pre-commit autoupdate
 
   unit-tests:
     desc: "Run all unit tests."
@@ -35,93 +57,29 @@ tasks:
       - uv run --group test pytest packages/flet/tests
 
   integration-tests:
-    desc: "Run all integration tests."
+    desc: "Run all integration tests. (can take a long while)"
     aliases:
       - itest
       - integration-test
     cmds:
-      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
-
-  control-integration-tests:
-    desc: "Run all controls integration tests."
-    aliases:
-      - control-itest
-      - control-integration-test
-    cmds:
-      - uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls
-
-  install:
-    desc: "Install all pyproject.toml dependencies present in 'all' dependency-group."
-    aliases:
-      - pyproject
-      - pyproject-setup
-    cmds:
-      - uv pip install -r pyproject.toml --group all
+      - uv run --group test pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 
   serve-docs:
     desc: "Serve MkDocs documentation from the 'packages/flet' directory."
     aliases:
       - docs
     cmds:
-      - uv run --directory packages/flet --group docs mkdocs serve --dirtyreload
+      - uv run -group docs --directory packages/flet mkdocs serve --dirtyreload
 
   docs-coverage:
     desc: "Run docstring coverage report in the 'packages/flet' directory."
     cmds:
-      - uv run --directory packages/flet --group docs-coverage docstr-coverage
-
-  pre-commit-install:
-    desc: "Install pre-commit hooks."
-    aliases:
-      - precommit-install
-      - pc-install
-    cmds:
-      - uv run pre-commit install
-
-  pre-commit-run:
-    desc: "Run pre-commit hooks on all files of the repo."
-    aliases:
-      - precommit-run
-      - pc-run
-    cmds:
-      - uv run pre-commit run --all-files
-
-  pre-commit-autoupdate:
-    desc: "Upgrade versions of repos in .pre-commit-config.yaml to their latest."
-    aliases:
-      - pc-update
-      - pc-autoupdate
-      - pre-commit-autoupdate
-      - precommit-autoupdate
-    cmds:
-      - uv run pre-commit autoupdate
+      - uv run -group docs-coverage --directory packages/flet docstr-coverage
 
   free-port-8550:
     desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."
     prompt: "This will kill any process using port 8550. Do you want to continue?"
     aliases:
-      - free-port
       - free-8550
     cmds:
       - kill -9 $(lsof -ti :8550)
-
-  extensions-pre-commit-install:
-    desc: "Installs pre-commit hooks of all extensions."
-    aliases:
-      - pc-extensions
-      - extensions-pre-commit
-      - extensions-precommit
-    cmds:
-      - uv run --package flet-ads pre-commit install
-      - uv run --package flet-audio pre-commit install
-      - uv run --package flet-audio-recorder pre-commit install
-      - uv run --package flet-charts pre-commit install
-      - uv run --package flet-datatable2 pre-commit install
-      - uv run --package flet-flashlight pre-commit install
-      - uv run --package flet-geolocator pre-commit install
-      - uv run --package flet-lottie pre-commit install
-      - uv run --package flet-map pre-commit install
-      - uv run --package flet-permission-handler pre-commit install
-      - uv run --package flet-rive pre-commit install
-      - uv run --package flet-video pre-commit install
-      - uv run --package flet-webview pre-commit install
