@@ -5,7 +5,7 @@ title: Packaging app for Android
 Instructions for packaging a Flet app into an
 Android APK and Android App Bundle (AAB).
 
-/// admonition | Note
+/// admonition | Info
     type: tip
 This guide provides detailed on Android-specific information.
 Complementary and more general information is available [here](index.md).
@@ -21,13 +21,13 @@ If either component is missing or an incompatible version is detected, the requi
 **automatically installed** during the first run of the [`flet build`](../cli/flet-build.md) command.
 
 - The JDK is installed in `$HOME/java/<version>` (for example, `17.0.13+11`).
-- If **Android Studio** is installed, Flet CLI will use its SDK:
-  - macOS: `~/Library/Android/sdk`
-  - Windows: `%LOCALAPPDATA%\Android\Sdk`
-  - Linux: `~/Android/Sdk`
+- If [**Android Studio**](https://developer.android.com/studio) is installed, Flet CLI will use its SDK:
+    - macOS: `~/Library/Android/sdk`
+    - Windows: `%LOCALAPPDATA%\Android\Sdk`
+    - Linux: `~/Android/Sdk`
 - Otherwise, a standalone Android SDK is installed in:
-  - macOS/Linux: `~/Android/sdk`
-  - Windows: `%USERPROFILE%\Android\sdk`
+    - macOS/Linux: `~/Android/sdk`
+    - Windows: `%USERPROFILE%\Android\sdk`
 
 `ANDROID_HOME` and `ANDROID_SDK_ROOT` are also respected if set.
 

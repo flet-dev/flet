@@ -4,7 +4,7 @@ title: Packaging app for macOS
 
 Instructions for packaging a Flet app into a macOS application bundle.
 
-/// admonition | Note
+/// admonition | Info
     type: tip
 This guide provides detailed macOS-specific information.
 Complementary and more general information is available [here](index.md).

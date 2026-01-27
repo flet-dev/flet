@@ -4,7 +4,7 @@ title: Packaging app for Windows
 
 Instructions for packaging a Flet app into a Windows application.
 
-/// admonition | Note
+/// admonition | Info
     type: tip
 This guide provides detailed Windows-specific information.
 Complementary and more general information is available [here](index.md).

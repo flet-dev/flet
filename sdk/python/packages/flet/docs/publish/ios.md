@@ -5,7 +5,7 @@ title: Packaging app for iOS
 Instructions for packaging a Flet app into an Xcode archive and, when signing
 is configured, an IPA for distribution.
 
-/// admonition | Note
+/// admonition | Info
     type: tip
 This guide provides detailed on iOS-specific information.
 Complementary and more general information is available [here](index.md).

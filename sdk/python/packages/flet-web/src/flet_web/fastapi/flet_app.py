@@ -55,19 +55,20 @@ class FletApp(Connection):
         """
         Handle Flet app WebSocket connections.
 
-        Parameters:
-
-        * `session_handler` (Coroutine) - application entry point - an async method
-           called for newly connected user. Handler coroutine must have
-           1 parameter: `page` - `Page` instance.
-        * `session_timeout_seconds` (int, optional) - session lifetime, in seconds,
-           after user disconnected.
-        * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime,
-           in seconds, which is a maximum allowed time between starting OAuth flow
-           and redirecting to OAuth callback URL.
-        * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
-           e.g. `/upload`.
-        * `secret_key` (str, optional) - secret key to sign upload requests.
+        Args:
+            loop: `asyncio` event loop (`asyncio.get_running_loop()`).
+            executor: Thread pool executor (`app_manager.executor`).
+            main: Application entry point - an async method
+                called for newly connected user. Handler coroutine must have
+                1 parameter of instance `Page`.
+            before_main: Called before `main`.
+            session_timeout_seconds: Session lifetime, in seconds,
+                after user disconnected.
+            oauth_state_timeout_seconds: OAuth state lifetime, in seconds, which
+                is a maximum allowed time between starting OAuth flow
+                and redirecting to OAuth callback URL.
+            upload_endpoint_path: Absolute URL of upload endpoint, e.g. `/upload`.
+            secret_key: Secret key to sign upload requests.
         """
         super().__init__()
         self.__id = random_string(8)

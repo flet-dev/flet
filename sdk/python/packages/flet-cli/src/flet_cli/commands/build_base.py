@@ -372,7 +372,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="web_renderer",
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
-            help="Flutter web renderer to use (web only)",
+            help="Flutter web renderer to use (web only) [env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",
@@ -380,7 +380,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             type=str.lower,
             choices=["path", "hash"],
             help="Base URL path to serve the app from. "
-            "Useful if the app is hosted in a subdirectory (web only)",
+            "Useful if the app is hosted in a subdirectory (web only) "
+            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
@@ -406,7 +407,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="no_cdn",
             action="store_true",
             default=False,
-            help="Disable loading of CanvasKit, Pyodide and fonts from CDN",
+            help="Disable loading of CanvasKit, Pyodide and fonts from CDN "
+            "[env: FLET_WEB_NO_CDN=]",
         )
         parser.add_argument(
             "--split-per-abi",
