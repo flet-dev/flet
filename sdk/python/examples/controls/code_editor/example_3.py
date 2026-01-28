@@ -17,7 +17,7 @@ def main(page: ft.Page):
         language="python",
         value=fce.TextEditingValue(
             text=CODE,
-            selection=ft.TextSelection(base_offset=0, extent_offset=0),
+            selection=ft.TextSelection(base_offset=0, extent_offset=10),
         ),
         # read_only_section_names=["imports"],
         # visible_section_names=["main"],

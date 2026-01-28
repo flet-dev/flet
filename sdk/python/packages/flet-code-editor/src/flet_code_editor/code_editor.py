@@ -31,15 +31,6 @@ class CodeEditor(ft.LayoutControl):
     gutter_style: Optional[GutterStyle] = None
     """Gutter styling."""
 
-    read_only_section_names: Optional[list[str]] = None
-    """Names of read-only sections."""
-
-    read_only_section_mames: Optional[list[str]] = None
-    """Alias for `read_only_section_names`."""
-
-    visible_section_names: Optional[list[str]] = None
-    """Names of sections that should remain visible."""
-
     autocompletion_enabled: Optional[bool] = False
     """Whether autocompletion is enabled."""
 
@@ -71,12 +62,6 @@ class CodeEditor(ft.LayoutControl):
     async def fold_imports(self):
         """Fold import sections."""
         await self._invoke_method("fold_imports")
-
-    async def fold_outside_sections(self, section_names: list[str]):
-        """Fold everything outside the given sections."""
-        await self._invoke_method(
-            "fold_outside_sections", arguments={"section_names": section_names}
-        )
 
     async def fold_at(self, line_number: int):
         """Fold the block starting at the given line number."""

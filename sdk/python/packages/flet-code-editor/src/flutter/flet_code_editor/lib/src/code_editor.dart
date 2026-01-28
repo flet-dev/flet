@@ -20,8 +20,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   String _text = "";
   String? _fullText;
   String? _languageName;
-  List<String>? _readOnlySectionNames;
-  List<String>? _visibleSectionNames;
 
   @override
   void initState() {
@@ -55,10 +53,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       case "fold_imports":
         (_controller as dynamic).foldImports();
         break;
-      case "fold_outside_sections":
-        final sections = _stringList(args["section_names"]);
-        (_controller as dynamic).foldOutsideSections(sections ?? []);
-        break;
       case "fold_at":
         final line = parseInt(args["line_number"]);
         if (line != null) {
@@ -76,25 +70,15 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
   _FletCodeController _createController() {
     _languageName = _resolveLanguageName();
-    _readOnlySectionNames = _readSectionNames(
-      "read_only_section_names",
-      fallback: "read_only_section_mames",
-    );
-    _visibleSectionNames =
-        _stringList(widget.control.get("visible_section_names"));
 
     final initialText = _initialTextFromControl();
     final language = _languageName != null
         ? allLanguages[_languageName!.toLowerCase()]
         : null;
-    final namedSectionParser = _buildNamedSectionParser(_readOnlySectionNames);
 
     return _FletCodeController(
       text: initialText,
       language: language,
-      namedSectionParser: namedSectionParser,
-      readOnlySectionNames: _readOnlySectionNames?.toSet() ?? const {},
-      visibleSectionNames: _visibleSectionNames?.toSet() ?? const {},
     );
   }
 
@@ -116,31 +100,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return null;
   }
 
-  fce.AbstractNamedSectionParser? _buildNamedSectionParser(
-    List<String>? readOnlySectionNames,
-  ) {
-    if (readOnlySectionNames == null) {
-      return null;
-    }
-    return const fce.BracketsStartEndNamedSectionParser();
-  }
-
   List<String>? _stringList(dynamic value) {
     if (value is List) {
       return value.map((e) => e.toString()).toList();
     }
     return null;
-  }
-
-  List<String>? _readSectionNames(String primary, {String? fallback}) {
-    final primaryValue = _stringList(widget.control.get(primary));
-    if (primaryValue != null) {
-      return primaryValue;
-    }
-    if (fallback == null) {
-      return null;
-    }
-    return _stringList(widget.control.get(fallback));
   }
 
   String _readFullText() => _controller.fullText;
@@ -198,38 +162,30 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
   fce.CodeThemeData? _buildThemeData(BuildContext context) {
     final codeTheme = widget.control.get("code_theme");
-    if (codeTheme is! Map) {
-      if (codeTheme is String) {
-        final named = themeMap[codeTheme.toLowerCase()];
-        return named == null ? null : fce.CodeThemeData(styles: named);
+    if (codeTheme is Map) {
+      final styles = codeTheme["styles"];
+      if (styles is! Map) {
+        return null;
       }
-      return null;
-    }
-    final themeName = codeTheme["name"];
-    if (themeName is String) {
-      final named = themeMap[themeName.toLowerCase()];
-      if (named != null) {
-        return fce.CodeThemeData(styles: named);
+
+      final parsedStyles = <String, TextStyle>{};
+      styles.forEach((key, value) {
+        final style = parseTextStyle(value, Theme.of(context));
+        if (style != null) {
+          parsedStyles[key.toString()] = style;
+        }
+      });
+
+      if (parsedStyles.isEmpty) {
+        return null;
       }
-    }
-    final styles = codeTheme["styles"];
-    if (styles is! Map) {
-      return null;
-    }
 
-    final parsedStyles = <String, TextStyle>{};
-    styles.forEach((key, value) {
-      final style = parseTextStyle(value, Theme.of(context));
-      if (style != null) {
-        parsedStyles[key.toString()] = style;
-      }
-    });
-
-    if (parsedStyles.isEmpty) {
-      return null;
+      return fce.CodeThemeData(styles: parsedStyles);
+    } else if (codeTheme is String) {
+      final named = themeMap[codeTheme.toLowerCase()];
+      return named == null ? null : fce.CodeThemeData(styles: named);
     }
-
-    return fce.CodeThemeData(styles: parsedStyles);
+    return null;
   }
 
   fce.GutterStyle? _buildGutterStyle(BuildContext context) {
@@ -238,39 +194,16 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       return null;
     }
 
-    final textStyle =
-        parseTextStyle(gutterStyle["text_style"], Theme.of(context));
-    final background =
-        parseColor(gutterStyle["background_color"], Theme.of(context));
-    final width = parseDouble(gutterStyle["width"]);
-    final margin = _parseGutterMargin(gutterStyle["margin"]);
-
-    final showErrors = gutterStyle["show_errors"];
-    final showFoldingHandles = gutterStyle["show_folding_handles"];
-    final showLineNumbers = gutterStyle["show_line_numbers"];
-
     return fce.GutterStyle(
-      textStyle: textStyle,
-      background: background,
-      width: width ?? 80.0,
-      margin: margin ?? 10.0,
-      showErrors: showErrors is bool ? showErrors : true,
-      showFoldingHandles:
-          showFoldingHandles is bool ? showFoldingHandles : true,
-      showLineNumbers: showLineNumbers is bool ? showLineNumbers : true,
+      textStyle: parseTextStyle(gutterStyle["text_style"], Theme.of(context)),
+      background:
+          parseColor(gutterStyle["background_color"], Theme.of(context)),
+      width: parseDouble(gutterStyle["width"], 80.0)!,
+      margin: parseDouble(gutterStyle["margin"], 10.0)!,
+      showErrors: parseBool(gutterStyle["show_errors"], true)!,
+      showFoldingHandles: parseBool(gutterStyle["show_folding_handles"], true)!,
+      showLineNumbers: parseBool(gutterStyle["show_line_numbers"], true)!,
     );
-  }
-
-  double? _parseGutterMargin(dynamic value) {
-    final margin = parseDouble(value);
-    if (margin != null) {
-      return margin;
-    }
-    final edgeInsets = parseEdgeInsets(value);
-    if (edgeInsets == null) {
-      return null;
-    }
-    return (edgeInsets.left + edgeInsets.right) / 2;
   }
 
   @override
@@ -278,22 +211,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     debugPrint("CodeEditor build: ${widget.control.id}");
 
     final languageName = _resolveLanguageName();
-    final readOnlySectionNames = _readSectionNames(
-      "read_only_section_names",
-      fallback: "read_only_section_mames",
-    );
-    final visibleSectionNames =
-        _stringList(widget.control.get("visible_section_names"));
-
-    if (languageName != _languageName ||
-        !_listEquals(readOnlySectionNames, _readOnlySectionNames) ||
-        !_listEquals(visibleSectionNames, _visibleSectionNames)) {
+    if (languageName != _languageName) {
       final previousSelection = _controller.selection;
       _controller.removeListener(_handleControllerChange);
       _controller.dispose();
       _languageName = languageName;
-      _readOnlySectionNames = readOnlySectionNames;
-      _visibleSectionNames = visibleSectionNames;
       _controller = _createController();
       _controller.addListener(_handleControllerChange);
       if (previousSelection.isValid) {
@@ -367,39 +289,12 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     return LayoutControl(control: widget.control, child: editor);
   }
-
-  bool _listEquals(List<String>? left, List<String>? right) {
-    if (left == null && right == null) {
-      return true;
-    }
-    if (left == null || right == null) {
-      return false;
-    }
-    if (left.length != right.length) {
-      return false;
-    }
-    for (var i = 0; i < left.length; i++) {
-      if (left[i] != right[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
 }
 
 class _FletCodeController extends fce.CodeController {
   _FletCodeController({
     super.text,
     super.language,
-    super.analyzer,
-    super.namedSectionParser,
-    super.readOnlySectionNames,
-    super.visibleSectionNames,
-    super.analysisResult,
-    super.patternMap,
-    super.readOnly,
-    super.params,
-    super.modifiers,
   });
 
   bool autocompletionEnabled = false;
