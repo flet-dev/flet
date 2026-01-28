@@ -1,8 +1,10 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart' as fce;
-import 'package:flutter_highlight/theme_map.dart';
 import 'package:highlight/languages/all.dart';
+
+import 'utils/code_editor.dart';
+import 'utils/flet_code_controller.dart';
 
 class CodeEditorControl extends StatefulWidget {
   final Control control;
@@ -14,7 +16,7 @@ class CodeEditorControl extends StatefulWidget {
 }
 
 class _CodeEditorControlState extends State<CodeEditorControl> {
-  late _FletCodeController _controller;
+  late FletCodeController _controller;
   late final FocusNode _focusNode;
   TextSelection? _selection;
   String _text = "";
@@ -68,9 +70,9 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
-  _FletCodeController _createController() {
+  FletCodeController _createController() {
     _languageName = widget.control.get("language", "")!;
-    return _FletCodeController(
+    return FletCodeController(
       text: _initialTextFromControl(),
       language: allLanguages[_languageName!.toLowerCase()],
     );
@@ -144,52 +146,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     }
   }
 
-  fce.CodeThemeData? _buildThemeData(BuildContext context) {
-    final codeTheme = widget.control.get("code_theme");
-    if (codeTheme is Map) {
-      final styles = codeTheme["styles"];
-      if (styles is! Map) {
-        return null;
-      }
-
-      final parsedStyles = <String, TextStyle>{};
-      styles.forEach((key, value) {
-        final style = parseTextStyle(value, Theme.of(context));
-        if (style != null) {
-          parsedStyles[key.toString()] = style;
-        }
-      });
-
-      if (parsedStyles.isEmpty) {
-        return null;
-      }
-
-      return fce.CodeThemeData(styles: parsedStyles);
-    } else if (codeTheme is String) {
-      final named = themeMap[codeTheme.toLowerCase()];
-      return named == null ? null : fce.CodeThemeData(styles: named);
-    }
-    return null;
-  }
-
-  fce.GutterStyle? _buildGutterStyle(BuildContext context) {
-    final gutterStyle = widget.control.get("gutter_style");
-    if (gutterStyle is! Map) {
-      return null;
-    }
-
-    return fce.GutterStyle(
-      textStyle: parseTextStyle(gutterStyle["text_style"], Theme.of(context)),
-      background:
-          parseColor(gutterStyle["background_color"], Theme.of(context)),
-      width: parseDouble(gutterStyle["width"], 80.0)!,
-      margin: parseDouble(gutterStyle["margin"], 10.0)!,
-      showErrors: parseBool(gutterStyle["show_errors"], true)!,
-      showFoldingHandles: parseBool(gutterStyle["show_folding_handles"], true)!,
-      showLineNumbers: parseBool(gutterStyle["show_line_numbers"], true)!,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("CodeEditor build: ${widget.control.id}");
@@ -239,12 +195,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       }
     }
 
-    final themeData = _buildThemeData(context);
-    final gutterStyle = _buildGutterStyle(context);
-    final textStyle = parseTextStyle(
-      widget.control.get("text_style"),
-      Theme.of(context),
-    );
+    final themeData = parseCodeThemeData(widget.control, context);
+    final gutterStyle = parseGutterStyle(widget.control, context);
     final autocompletionEnabled =
         widget.control.getBool("autocompletion_enabled", false)!;
     final autocompletionWords =
@@ -261,9 +213,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         child: fce.CodeField(
       controller: _controller,
       focusNode: _focusNode,
-      readOnly: widget.control.disabled,
-      textStyle: textStyle,
+      readOnly: widget.control.getBool("read_only", false)!,
+      textStyle:
+          parseTextStyle(widget.control.get("text_style"), Theme.of(context)),
       gutterStyle: gutterStyle,
+      enabled: !widget.control.disabled,
     ));
 
     if (themeData != null) {
@@ -271,57 +225,5 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     }
 
     return LayoutControl(control: widget.control, child: editor);
-  }
-}
-
-class _FletCodeController extends fce.CodeController {
-  _FletCodeController({
-    super.text,
-    super.language,
-  });
-
-  bool autocompletionEnabled = false;
-
-  @override
-  Future<void> generateSuggestions() async {
-    if (!autocompletionEnabled) {
-      popupController.hide();
-      return;
-    }
-    return super.generateSuggestions();
-  }
-
-  @override
-  void insertSelectedWord() {
-    final previousSelection = selection;
-    final selectedWord = popupController.getSelectedWord();
-    final startPosition = value.wordAtCursorStart;
-    final currentWord = value.wordAtCursor;
-
-    if (startPosition == null || currentWord == null) {
-      popupController.hide();
-      return;
-    }
-
-    final endReplacingPosition = startPosition + currentWord.length;
-    final endSelectionPosition = startPosition + selectedWord.length;
-
-    final replacedText = text.replaceRange(
-      startPosition,
-      endReplacingPosition,
-      selectedWord,
-    );
-
-    final adjustedSelection = previousSelection.copyWith(
-      baseOffset: endSelectionPosition,
-      extentOffset: endSelectionPosition,
-    );
-
-    value = TextEditingValue(
-      text: replacedText,
-      selection: adjustedSelection,
-    );
-
-    popupController.hide();
   }
 }

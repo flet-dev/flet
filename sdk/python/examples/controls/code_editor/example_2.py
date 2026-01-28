@@ -36,13 +36,13 @@ def main(page: ft.Page):
 
     text_style = ft.TextStyle(
         font_family="monospace",
-        height=1.5,
+        height=1.2,
     )
 
     gutter_style = fce.GutterStyle(
         text_style=ft.TextStyle(
             font_family="monospace",
-            height=1.5,
+            height=1.2,
         ),
         show_line_numbers=True,
         show_folding_handles=True,

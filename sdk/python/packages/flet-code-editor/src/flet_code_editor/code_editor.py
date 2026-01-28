@@ -37,6 +37,9 @@ class CodeEditor(ft.LayoutControl):
     autocompletion_words: Optional[list[str]] = None
     """Words offered by autocompletion."""
 
+    read_only: Optional[bool] = False
+    """Whether the editor is read-only."""
+
     on_change: Optional[ft.ControlEventHandler["CodeEditor"]] = None
     """Called when the editor text changes."""
 

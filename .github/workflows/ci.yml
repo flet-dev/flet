@@ -713,6 +713,7 @@ jobs:
             flet-audio
             flet-audio-recorder
             flet-charts
+            flet-code-editor
             flet-datatable2
             flet-flashlight
             flet-geolocator
@@ -831,6 +832,7 @@ jobs:
             flet_audio \
             flet_audio_recorder \
             flet_charts \
+            flet_code_editor \
             flet_datatable2 \
             flet_flashlight \
             flet_geolocator \
