@@ -182,7 +182,7 @@ jobs:
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
-          uv run ${{ matrix.build_cmd }} --template-ref 0.81.0
+          uv run ${{ matrix.build_cmd }} --template-ref 0.80.4
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
