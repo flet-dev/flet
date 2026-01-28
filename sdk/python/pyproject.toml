@@ -25,6 +25,7 @@ dependencies = [
     "flet-secure-storage",
     "flet-video",
     "flet-webview",
+    "flet-code-editor",
 ]
 
 [tool.uv.sources]
@@ -47,6 +48,7 @@ flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
+flet-code-editor = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
 
 [tool.uv.workspace]

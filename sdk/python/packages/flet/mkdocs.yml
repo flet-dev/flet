@@ -449,6 +449,7 @@ nav:
           - Text: controls/text.md
           - TextButton: controls/textbutton.md
           - TextField: controls/textfield.md
+          - CodeEditor: code_editor/index.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
           - VerticalDivider: controls/verticaldivider.md
@@ -751,6 +752,10 @@ nav:
               - Url: types/url.md
               - WebViewConfiguration: types/webviewconfiguration.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
+              - CodeEditor:
+                  - CodeTheme: code_editor/types/code_theme.md
+                  - GutterStyle: code_editor/types/gutter_style.md
+                  - TextEditingValue: code_editor/types/text_editing_value.md
               - Video:
                   - PlaylistMode: video/types/playlist_mode.md
                   - VideoConfiguration: video/types/video_configuration.md

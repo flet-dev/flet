@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.1"
+  autotrie:
+    dependency: transitive
+    description:
+      name: autotrie
+      sha256: "55da6faefb53cfcb0abb2f2ca8636123fb40e35286bb57440d2cf467568188f8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   battery_plus:
     dependency: transitive
     description:
@@ -110,6 +118,14 @@ packages:
     description:
       name: characters
       sha256: f71061c654a3380576a52b451dd5532377954cf9dbd272a78fc8479606670803
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb0f1107cac15a5ea6ef0a6ef71a807b9e4267c713bb93e00e92d737cc8dbd8a
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
@@ -324,6 +340,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  flet_code_editor:
+    dependency: "direct main"
+    description:
+      path: "../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_datatable2:
     dependency: "direct main"
     description:
@@ -399,6 +422,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_code_editor:
+    dependency: transitive
+    description:
+      name: flutter_code_editor
+      sha256: "9af48ba8e3558b6ea4bb98b84c5eb1649702acf53e61a84d88383eeb79b239b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.5"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -632,6 +663,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  hive:
+    dependency: transitive
+    description:
+      name: hive
+      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   http:
     dependency: transitive
     description:
@@ -709,6 +748,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  linked_scroll_controller:
+    dependency: transitive
+    description:
+      name: linked_scroll_controller
+      sha256: e6020062bcf4ffc907ee7fd090fa971e65d8dfaac3c62baf601a3ced0b37986a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   lints:
     dependency: transitive
     description:
@@ -861,6 +908,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mocktail:
+    dependency: transitive
+    description:
+      name: mocktail
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   msgpack_dart:
     dependency: transitive
     description:
@@ -1261,6 +1316,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  scrollable_positioned_list:
+    dependency: transitive
+    description:
+      name: scrollable_positioned_list
+      sha256: "1b54d5f1329a1e263269abc9e2543d90806131aa14fe7c6062a8054d57249287"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.8"
   sensors_plus:
     dependency: transitive
     description:
@@ -1434,6 +1497,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:
