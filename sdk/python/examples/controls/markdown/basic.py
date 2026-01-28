@@ -64,7 +64,7 @@ Style text as _italic_, __bold__, ~~strikethrough~~, or `inline code`.
 
 Formatted Dart code looks really pretty too:
 
-```
+~~~dart
 void main() {
   runApp(MaterialApp(
     home: Scaffold(
@@ -72,7 +72,7 @@ void main() {
     ),
   ));
 }
-```
+~~~
 """
 
 

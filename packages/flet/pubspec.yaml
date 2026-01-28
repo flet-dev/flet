@@ -26,7 +26,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   device_info_plus: ^12.3.0
   equatable: ^2.0.3
-  file_picker: ^10.3.3
+  file_picker: ^10.3.10
   flutter_highlight: ^0.7.0
   flutter_markdown_plus: ^1.0.7
   flutter_markdown_plus_latex: ^1.0.5
