@@ -51,8 +51,8 @@ def main(page: ft.Page):
         width=180,
     )
 
-    page.scroll = ft.ScrollMode.AUTO
     page.add(
+        ft.Text("Dart Code Editor Example", size=20),
         fce.CodeEditor(
             language="dart",
             code_theme=theme,
@@ -66,8 +66,8 @@ def main(page: ft.Page):
             text=DART_SAMPLE,
             text_style=text_style,
             gutter_style=gutter_style,
-            # expand=True,
-        )
+            expand=True,
+        ),
     )
 
 

@@ -273,7 +273,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return (edgeInsets.left + edgeInsets.right) / 2;
   }
 
-
   @override
   Widget build(BuildContext context) {
     debugPrint("CodeEditor build: ${widget.control.id}");
@@ -353,13 +352,14 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       _controller.popupController.hide();
     }
 
-    Widget editor = fce.CodeField(
+    Widget editor = SingleChildScrollView(
+        child: fce.CodeField(
       controller: _controller,
       focusNode: _focusNode,
       readOnly: widget.control.disabled,
       textStyle: textStyle,
       gutterStyle: gutterStyle,
-    );
+    ));
 
     if (themeData != null) {
       editor = fce.CodeTheme(data: themeData, child: editor);
