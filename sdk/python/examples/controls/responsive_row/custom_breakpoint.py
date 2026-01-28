@@ -7,8 +7,8 @@ def main(page: ft.Page):
 
     breakpoints = {
         "phone": 0,
-        "tablet": 640,
-        "desktop": 1000,
+        "tablet": 540,
+        "desktop": 800,
     }
 
     sorted_breakpoints = sorted(breakpoints.items(), key=lambda item: item[1])
