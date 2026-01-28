@@ -14,7 +14,7 @@ class CodeEditorControl extends StatefulWidget {
 }
 
 class _CodeEditorControlState extends State<CodeEditorControl> {
-  late fce.CodeController _controller;
+  late _FletCodeController _controller;
   late final FocusNode _focusNode;
   TextSelection? _selection;
   String _text = "";
@@ -74,7 +74,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
-  fce.CodeController _createController() {
+  _FletCodeController _createController() {
     _languageName = _resolveLanguageName();
     _readOnlySectionNames = _readSectionNames(
       "read_only_section_names",
@@ -89,7 +89,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         : null;
     final namedSectionParser = _buildNamedSectionParser(_readOnlySectionNames);
 
-    return fce.CodeController(
+    return _FletCodeController(
       text: initialText,
       language: language,
       namedSectionParser: namedSectionParser,
@@ -273,87 +273,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return (edgeInsets.left + edgeInsets.right) / 2;
   }
 
-  Iterable<String> _buildAutocompleteOptions(
-    TextEditingValue value,
-    List<String> words,
-  ) {
-    final cursor = value.selection.baseOffset;
-    if (cursor < 0 || cursor > value.text.length) {
-      return const Iterable<String>.empty();
-    }
-
-    final token = _currentToken(value.text, cursor);
-    if (token.isEmpty) {
-      return const Iterable<String>.empty();
-    }
-
-    return words
-        .where((word) => word.startsWith(token) && word != token)
-        .take(20);
-  }
-
-  String _currentToken(String text, int cursor) {
-    final beforeCursor = text.substring(0, cursor);
-    final match = RegExp(r"[A-Za-z0-9_]+$").firstMatch(beforeCursor);
-    return match?.group(0) ?? "";
-  }
-
-  void _applyAutocomplete(String word) {
-    final value = _controller.value;
-    final cursor = value.selection.baseOffset;
-    if (cursor < 0 || cursor > value.text.length) {
-      return;
-    }
-
-    final token = _currentToken(value.text, cursor);
-    if (token.isEmpty) {
-      return;
-    }
-
-    final start = cursor - token.length;
-    final newText = value.text.replaceRange(start, cursor, word);
-    _controller.value = value.copyWith(
-      text: newText,
-      selection: TextSelection.collapsed(offset: start + word.length),
-      composing: TextRange.empty,
-    );
-  }
-
-  Widget _wrapWithAutocomplete(Widget editor, List<String> words) {
-    return RawAutocomplete<String>(
-      textEditingController: _controller,
-      focusNode: _focusNode,
-      displayStringForOption: (option) => option,
-      optionsBuilder: (value) => _buildAutocompleteOptions(value, words),
-      onSelected: _applyAutocomplete,
-      fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        return editor;
-      },
-      optionsViewBuilder: (context, onSelected, options) {
-        return Align(
-          alignment: Alignment.topLeft,
-          child: Material(
-            elevation: 4,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 240, maxWidth: 320),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: options.length,
-                itemBuilder: (context, index) {
-                  final option = options.elementAt(index);
-                  return ListTile(
-                    dense: true,
-                    title: Text(option),
-                    onTap: () => onSelected(option),
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -426,6 +345,13 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         widget.control.getBool("autocompletion_enabled", false)!;
     final autocompletionWords =
         _stringList(widget.control.get("autocompletion_words")) ?? const [];
+    _controller.autocompletionEnabled = autocompletionEnabled;
+    if (autocompletionEnabled) {
+      _controller.autocompleter.setCustomWords(autocompletionWords);
+    } else {
+      _controller.autocompleter.setCustomWords(const []);
+      _controller.popupController.hide();
+    }
 
     Widget editor = fce.CodeField(
       controller: _controller,
@@ -437,10 +363,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     if (themeData != null) {
       editor = fce.CodeTheme(data: themeData, child: editor);
-    }
-
-    if (autocompletionEnabled && autocompletionWords.isNotEmpty) {
-      editor = _wrapWithAutocomplete(editor, autocompletionWords);
     }
 
     return LayoutControl(control: widget.control, child: editor);
@@ -462,5 +384,66 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       }
     }
     return true;
+  }
+}
+
+class _FletCodeController extends fce.CodeController {
+  _FletCodeController({
+    super.text,
+    super.language,
+    super.analyzer,
+    super.namedSectionParser,
+    super.readOnlySectionNames,
+    super.visibleSectionNames,
+    super.analysisResult,
+    super.patternMap,
+    super.readOnly,
+    super.params,
+    super.modifiers,
+  });
+
+  bool autocompletionEnabled = false;
+
+  @override
+  Future<void> generateSuggestions() async {
+    if (!autocompletionEnabled) {
+      popupController.hide();
+      return;
+    }
+    return super.generateSuggestions();
+  }
+
+  @override
+  void insertSelectedWord() {
+    final previousSelection = selection;
+    final selectedWord = popupController.getSelectedWord();
+    final startPosition = value.wordAtCursorStart;
+    final currentWord = value.wordAtCursor;
+
+    if (startPosition == null || currentWord == null) {
+      popupController.hide();
+      return;
+    }
+
+    final endReplacingPosition = startPosition + currentWord.length;
+    final endSelectionPosition = startPosition + selectedWord.length;
+
+    final replacedText = text.replaceRange(
+      startPosition,
+      endReplacingPosition,
+      selectedWord,
+    );
+
+    final adjustedSelection = previousSelection.copyWith(
+      baseOffset: endSelectionPosition,
+      extentOffset: endSelectionPosition,
+    );
+
+    value = TextEditingValue(
+      text: replacedText,
+      selection: adjustedSelection,
+    );
+
+    popupController.hide();
   }
 }
