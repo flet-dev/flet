@@ -217,6 +217,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       textStyle:
           parseTextStyle(widget.control.get("text_style"), Theme.of(context)),
       gutterStyle: gutterStyle,
+      padding: widget.control.getEdgeInsets("padding", EdgeInsets.zero)!,
       enabled: !widget.control.disabled,
     ));
 

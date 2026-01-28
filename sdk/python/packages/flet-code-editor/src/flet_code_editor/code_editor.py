@@ -19,6 +19,9 @@ class CodeEditor(ft.LayoutControl):
     text_style: Optional[ft.TextStyle] = None
     """Text style for the editor content."""
 
+    padding: Optional[ft.PaddingValue] = None
+    """Padding around the editor."""
+
     text: Optional[str] = None
     """Visible text (excludes folded sections)."""
 
