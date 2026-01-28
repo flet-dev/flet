@@ -89,7 +89,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(800, 800)
+    flet_app_function.resize_page(800, 600)
     flet_app_function.page.update()
     await asyncio.sleep(1)
     for _ in range(10):
@@ -101,7 +101,7 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    flet_app_function.resize_page(650, 800)
+    flet_app_function.resize_page(650, 600)
     flet_app_function.page.update()
     for _ in range(10):
         await flet_app_function.tester.pump(100)
@@ -112,7 +112,7 @@ async def test_custom_breakpoint(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
-    flet_app_function.resize_page(200, 800)
+    flet_app_function.resize_page(300, 600)
     flet_app_function.page.update()
     for _ in range(10):
         await flet_app_function.tester.pump(100)
