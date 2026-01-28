@@ -26,7 +26,7 @@ example_media: ../examples/controls/markdown/media
 --8<-- "{{ examples }}/code_syntax_highlight.py"
 ```
 
-{{ image(example_images + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
+{{ image(example_media + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
 
 
 ### Custom text theme
