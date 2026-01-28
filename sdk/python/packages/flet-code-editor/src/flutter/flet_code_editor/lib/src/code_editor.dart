@@ -69,16 +69,10 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   }
 
   _FletCodeController _createController() {
-    _languageName = _resolveLanguageName();
-
-    final initialText = _initialTextFromControl();
-    final language = _languageName != null
-        ? allLanguages[_languageName!.toLowerCase()]
-        : null;
-
+    _languageName = widget.control.get("language", "")!;
     return _FletCodeController(
-      text: initialText,
-      language: language,
+      text: _initialTextFromControl(),
+      language: allLanguages[_languageName!.toLowerCase()],
     );
   }
 
@@ -90,14 +84,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return widget.control.getString("full_text") ??
         widget.control.getString("text") ??
         "";
-  }
-
-  String? _resolveLanguageName() {
-    final language = widget.control.get("language");
-    if (language is String) {
-      return language;
-    }
-    return null;
   }
 
   List<String>? _stringList(dynamic value) {
@@ -150,9 +136,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       widget.control.triggerEvent("change", text);
     }
 
-    if (selectionChanged &&
-        selection.isValid &&
-        widget.control.getBool("on_selection_change", false)!) {
+    if (selectionChanged && selection.isValid) {
       widget.control.triggerEvent("selection_change", {
         "selected_text": text.substring(selection.start, selection.end),
         "selection": selection.toMap(),
@@ -210,12 +194,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   Widget build(BuildContext context) {
     debugPrint("CodeEditor build: ${widget.control.id}");
 
-    final languageName = _resolveLanguageName();
+    final languageName = widget.control.get("language", "")!;
     if (languageName != _languageName) {
       final previousSelection = _controller.selection;
       _controller.removeListener(_handleControllerChange);
       _controller.dispose();
-      _languageName = languageName;
       _controller = _createController();
       _controller.addListener(_handleControllerChange);
       if (previousSelection.isValid) {

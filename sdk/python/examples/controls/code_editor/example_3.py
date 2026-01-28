@@ -17,12 +17,10 @@ def main(page: ft.Page):
         language="python",
         value=fce.TextEditingValue(
             text=CODE,
-            selection=ft.TextSelection(base_offset=0, extent_offset=10),
+            selection=ft.TextSelection(base_offset=31, extent_offset=39),
         ),
-        # read_only_section_names=["imports"],
-        # visible_section_names=["main"],
         expand=True,
-        on_selection_change=lambda e: print("Selection:", e.data),
+        on_selection_change=lambda e: print("Selection:", e),
     )
 
     async def fold_imports():
