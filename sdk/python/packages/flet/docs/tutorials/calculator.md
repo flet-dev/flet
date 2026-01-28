@@ -12,7 +12,7 @@ similar to iPhone calculator app UI:
 {{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
 
 
-You can find a live demo [here](https://gallery.flet.dev/calculator/).
+You can find a live demo [here](https://examples.flet.dev/calculator/).
 
 In this tutorial, we will cover all of the basic concepts for creating a Flet app:
 building a page layout, adding controls, making reusable UI components, handling

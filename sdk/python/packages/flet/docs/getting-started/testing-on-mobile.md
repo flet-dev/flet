@@ -1,11 +1,5 @@
 Start building awesome mobile apps in Python using just your computer and mobile phone!
 
-/// admonition | Work in progress
-    type: warning
-The App Store and Google Play currently host a Flet app built for Flet 0.28.3.
-An updated app supporting Flet API 0.80.0 is under development and coming soon.
-///
-
 /// admonition | Important
     type: note
 - Make sure your computer fulfills [these requirements](installation.md#prerequisites).
@@ -38,13 +32,6 @@ flet run --ios [script]  # (1)!
 
 1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
-/// tab | poetry
-```bash
-poetry run flet run --ios [script]  # (1)!
-```
-
-1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
-///
 
 ///
 /// tab | Android
@@ -67,13 +54,6 @@ uv run flet run --android [script]  # (1)!
 /// tab | pip
 ```bash
 flet run --android [script]  # (1)!
-```
-
-1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
-///
-/// tab | poetry
-```bash
-poetry run flet run --android [script]  # (1)!
 ```
 
 1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
