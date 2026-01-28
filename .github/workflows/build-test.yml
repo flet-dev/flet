@@ -188,6 +188,6 @@ jobs:
         uses: actions/upload-artifact@v5.0.0
         with:
           name: ${{ matrix.artifact_name }}
-          path: ${{ matrix.artifact_path }}
+          path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
           if-no-files-found: warn
           overwrite: false
