@@ -10,7 +10,7 @@ yet it is a multi-platform application with rich, responsive UI:
 {{ image("../examples/tutorials/todo/media/complete-demo-web.gif", alt="complete-demo-web.gif", width="80%") }}
 
 
-You can see the live demo [here](https://gallery.flet.dev/todo/).
+You can see the live demo [here](https://examples.flet.dev/todo/).
 
 We chose a To-Do app for the tutorial, because it covers all of the basic concepts you would need to create a Flet app: building a page layout, adding controls, handling events, displaying and editing lists, making reusable UI components, and publishing options.
 
