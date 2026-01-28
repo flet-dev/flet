@@ -49,7 +49,6 @@ class FletLocalRouteInformationProvider extends RouteInformationProvider
     _setValue(routeInformation);
   }
 
-  @override
   Future<bool> didPushRouteInformation(RouteInformation routeInformation) async {
     _setValue(routeInformation);
     return true;
