@@ -31,9 +31,18 @@ Shows how to lock your app to specific device orientations
 
 ### Hidden app window on startup
 
+A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden.
+This lets your app perform initial setup (for example, add content, resize
+or position the window) before showing it to the user.
+
+In the example below, the window is resized and centered before becoming visible:
+
 ```python
 --8<-- "{{ examples }}/window_hidden_on_start.py"
 ```
+
+If you need this feature when packaging a desktop app using
+[`flet build`](../cli/flet-build.md), see [this](../publish/index.md#hidden-app-window-on-startup).
 
 ### Toggle semantics debugger
 

@@ -41,8 +41,8 @@ pip install flet-map  # (1)!
 ## Reference
 
 - [`Map`](map.md)
-- Layers: [`TileLayer`](tile_layer.md), [`MarkerLayer`](marker_layer.md), [`CircleLayer`](circle_layer.md), [`PolygonLayer`](polygon_layer.md), [`PolylineLayer`](polyline_layer.md)
-- Markers and overlays: [`Marker`](marker.md), [`CircleMarker`](circle_marker.md), [`PolygonMarker`](polygon_marker.md), [`PolylineMarker`](polyline_marker.md)
-- Attributions: [`SimpleAttribution`](simple_attribution.md), [`RichAttribution`](rich_attribution.md), [`SourceAttribution`](source_attribution.md)
+- Layers: [`TileLayer`](tilelayer.md), [`MarkerLayer`](markerlayer.md), [`CircleLayer`](circlelayer.md), [`PolygonLayer`](polygonlayer.md), [`PolylineLayer`](polylinelayer.md)
+- Markers and overlays: [`Marker`](marker.md), [`CircleMarker`](circlemarker.md), [`PolygonMarker`](polygonmarker.md), [`PolylineMarker`](polylinemarker.md)
+- Attributions: [`SimpleAttribution`](simpleattribution.md), [`RichAttribution`](richattribution.md), [`SourceAttribution`](sourceattribution.md)
 
-See the [types](types/attribution_alignment.md) section for additional configuration helpers.
+See the [types](types/attributionalignment.md) section for additional configuration helpers.

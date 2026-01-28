@@ -109,6 +109,10 @@ A URL path after domain name to host web app under, e.g. `"/apps/myapp"`.
 
 Defaults to `"/"` - host app in the root.
 
+### `FLET_WEB_NO_CDN`
+
+Set to `true` to avoid loading CanvasKit, Pyodide, and fonts from CDNs.
+
 ### `FLET_WEBSOCKET_HANDLER_ENDPOINT`
 
 Custom path for WebSocket handler.
@@ -117,7 +121,7 @@ Defaults to `"/ws"`.
 
 ### `FLET_WEB_RENDERER`
 
-Web rendering mode: `"canvaskit"` (default), `"html"` or `"auto"`.
+Web rendering mode: `"canvaskit"` (default), `"skwasm"` or `"auto"`.
 
 ### `FLET_WEB_USE_COLOR_EMOJI`
 

@@ -71,7 +71,8 @@ class BaseFlutterCommand(BaseCommand):
             "--no-rich-output",
             action="store_true",
             default=False,
-            help="Disable rich output and prefer plain text. Useful on Windows builds",
+            help="Disable rich output and prefer plain text. Useful on Windows builds"
+            "[env: FLET_CLI_NO_RICH_OUTPUT=]",
         )
         parser.add_argument(
             "--yes",
@@ -85,7 +86,8 @@ class BaseFlutterCommand(BaseCommand):
             "--skip-flutter-doctor",
             action="store_true",
             default=False,
-            help="Skip running Flutter doctor upon failed builds",
+            help="Skip running Flutter doctor upon failed builds"
+            "[env: FLET_CLI_SKIP_FLUTTER_DOCTOR=]",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -223,9 +225,9 @@ class BaseFlutterCommand(BaseCommand):
                 capture_output=self.verbose < 1,
             )
             if config_result.returncode != 0:
-                if config_result.stdout:
+                if isinstance(config_result.stdout, str):
                     console.log(config_result.stdout, style=verbose1_style)
-                if config_result.stderr:
+                if isinstance(config_result.stderr, str):
                     console.log(config_result.stderr, style=error_style)
                 self.cleanup(config_result.returncode)
 
@@ -260,9 +262,9 @@ class BaseFlutterCommand(BaseCommand):
             capture_output=self.verbose < 1,
         )
         if config_result.returncode != 0:
-            if config_result.stdout:
+            if isinstance(config_result.stdout, str):
                 console.log(config_result.stdout, style=verbose1_style)
-            if config_result.stderr:
+            if isinstance(config_result.stderr, str):
                 console.log(config_result.stderr, style=error_style)
             self.cleanup(config_result.returncode)
 
@@ -375,8 +377,10 @@ class BaseFlutterCommand(BaseCommand):
             cwd=os.getcwd(),
             capture_output=True,
         )
-        if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
+        if flutter_doctor.stdout:
             console.log(flutter_doctor.stdout, style=verbose1_style)
+        if flutter_doctor.stderr:
+            console.log(flutter_doctor.stderr, style=error_style)
 
     def update_status(self, status):
         if self.no_rich_output:

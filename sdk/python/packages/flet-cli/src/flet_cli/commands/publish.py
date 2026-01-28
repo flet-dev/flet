@@ -44,7 +44,7 @@ class Command(BaseCommand):
             type=str,
             default=None,
             help="Path to a directory containing static assets "
-            "used by the app (e.g., images, fonts, icons)",
+            "used by the app (e.g., images, fonts, icons). [env: FLET_ASSETS_DIR=]",
         )
         parser.add_argument(
             "--distpath",
@@ -90,7 +90,7 @@ class Command(BaseCommand):
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             default="auto",
-            help="Flutter web renderer to use",
+            help="Flutter web renderer to use [env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",
@@ -98,7 +98,8 @@ class Command(BaseCommand):
             type=str.lower,
             choices=["path", "hash"],
             default="path",
-            help="Controls how routes are handled in the browser",
+            help="Controls how routes are handled in the browser "
+            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
