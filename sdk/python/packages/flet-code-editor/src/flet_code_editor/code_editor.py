@@ -13,7 +13,7 @@ class CodeEditor(ft.LayoutControl):
     language: Optional[str] = None
     """Syntax highlighting language."""
 
-    theme: Optional[Union[str, CodeTheme]] = None
+    code_theme: Optional[Union[str, CodeTheme]] = None
     """Highlighting theme or a named theme (e.g. "atom-one-light")."""
 
     text_style: Optional[ft.TextStyle] = None
@@ -30,9 +30,6 @@ class CodeEditor(ft.LayoutControl):
 
     gutter_style: Optional[GutterStyle] = None
     """Gutter styling."""
-
-    line_number_style: Optional[GutterStyle] = None
-    """Line number gutter style (legacy alternative to `gutter_style`)."""
 
     read_only_section_names: Optional[list[str]] = None
     """Names of read-only sections."""

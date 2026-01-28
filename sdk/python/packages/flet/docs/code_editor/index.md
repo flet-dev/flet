@@ -37,7 +37,7 @@ pip install flet-code-editor  # (1)!
 
 ### Named themes
 
-You can pass a theme name (string) to `theme`, for example `"atom-one-light"`.
+You can pass a theme name (string) to `code_theme`, for example `"atom-one-light"`.
 
 See also types:
 - [`CodeTheme`](types/code_theme.md)

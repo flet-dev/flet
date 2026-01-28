@@ -1,6 +1,5 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart' as fce;
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:highlight/languages/all.dart';
@@ -191,30 +190,29 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         selection.isValid &&
         widget.control.getBool("on_selection_change", false)!) {
       widget.control.triggerEvent("selection_change", {
-        "selected_text":
-            text.substring(selection.start, selection.end),
+        "selected_text": text.substring(selection.start, selection.end),
         "selection": selection.toMap(),
       });
     }
   }
 
   fce.CodeThemeData? _buildThemeData(BuildContext context) {
-    final theme = widget.control.get("theme");
-    if (theme is! Map) {
-      if (theme is String) {
-        final named = themeMap[theme.toLowerCase()];
+    final codeTheme = widget.control.get("code_theme");
+    if (codeTheme is! Map) {
+      if (codeTheme is String) {
+        final named = themeMap[codeTheme.toLowerCase()];
         return named == null ? null : fce.CodeThemeData(styles: named);
       }
       return null;
     }
-    final themeName = theme["name"];
+    final themeName = codeTheme["name"];
     if (themeName is String) {
       final named = themeMap[themeName.toLowerCase()];
       if (named != null) {
         return fce.CodeThemeData(styles: named);
       }
     }
-    final styles = theme["styles"];
+    final styles = codeTheme["styles"];
     if (styles is! Map) {
       return null;
     }
@@ -250,34 +248,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     final showErrors = gutterStyle["show_errors"];
     final showFoldingHandles = gutterStyle["show_folding_handles"];
     final showLineNumbers = gutterStyle["show_line_numbers"];
-
-    return fce.GutterStyle(
-      textStyle: textStyle,
-      background: background,
-      width: width ?? 80.0,
-      margin: margin ?? 10.0,
-      showErrors: showErrors is bool ? showErrors : true,
-      showFoldingHandles:
-          showFoldingHandles is bool ? showFoldingHandles : true,
-      showLineNumbers: showLineNumbers is bool ? showLineNumbers : true,
-    );
-  }
-
-  fce.GutterStyle? _buildLineNumberStyle(BuildContext context) {
-    final lineNumberStyle = widget.control.get("line_number_style");
-    if (lineNumberStyle is! Map) {
-      return null;
-    }
-
-    final textStyle =
-        parseTextStyle(lineNumberStyle["text_style"], Theme.of(context));
-    final background =
-        parseColor(lineNumberStyle["background_color"], Theme.of(context));
-    final width = parseDouble(lineNumberStyle["width"]);
-    final margin = _parseGutterMargin(lineNumberStyle["margin"]);
-    final showErrors = lineNumberStyle["show_errors"];
-    final showFoldingHandles = lineNumberStyle["show_folding_handles"];
-    final showLineNumbers = lineNumberStyle["show_line_numbers"];
 
     return fce.GutterStyle(
       textStyle: textStyle,
@@ -448,8 +418,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     final themeData = _buildThemeData(context);
     final gutterStyle = _buildGutterStyle(context);
-    final lineNumberStyle =
-        gutterStyle == null ? _buildLineNumberStyle(context) : null;
     final textStyle = parseTextStyle(
       widget.control.get("text_style"),
       Theme.of(context),
@@ -465,7 +433,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       readOnly: widget.control.disabled,
       textStyle: textStyle,
       gutterStyle: gutterStyle,
-      lineNumberStyle: lineNumberStyle ?? const fce.GutterStyle(),
     );
 
     if (themeData != null) {

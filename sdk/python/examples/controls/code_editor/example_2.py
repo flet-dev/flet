@@ -26,13 +26,6 @@ class MyApp extends StatelessWidget {
 def main(page: ft.Page):
     theme = fce.CodeTheme(
         styles={
-            "root": ft.TextStyle(
-                color=ft.Colors.BLACK,
-                bgcolor=ft.Colors.GREY_100,
-                font_family="monospace",
-                size=24,
-                height=1.9,
-            ),
             "keyword": ft.TextStyle(
                 color=ft.Colors.INDIGO_600, weight=ft.FontWeight.W_600
             ),
@@ -41,13 +34,15 @@ def main(page: ft.Page):
         }
     )
 
-    line_number_style = fce.GutterStyle(
+    text_style = ft.TextStyle(
+        font_family="monospace",
+        height=1.5,
+    )
+
+    gutter_style = fce.GutterStyle(
         text_style=ft.TextStyle(
-            color=ft.Colors.BLACK,
-            bgcolor=ft.Colors.GREY_100,
             font_family="monospace",
-            size=24,
-            # height=2.9,
+            height=1.5,
         ),
         show_line_numbers=True,
         show_folding_handles=True,
@@ -60,8 +55,7 @@ def main(page: ft.Page):
     page.add(
         fce.CodeEditor(
             language="dart",
-            theme=theme,
-            line_number_style=line_number_style,
+            code_theme=theme,
             autocompletion_enabled=True,
             autocompletion_words=[
                 "MaterialApp",
@@ -70,6 +64,8 @@ def main(page: ft.Page):
                 "Widget",
             ],
             text=DART_SAMPLE,
+            text_style=text_style,
+            gutter_style=gutter_style,
             # expand=True,
         )
     )
