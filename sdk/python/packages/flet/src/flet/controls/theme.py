@@ -3311,7 +3311,15 @@ class Theme:
     """
 
     font_family: Optional[str] = None
+    """
+    Overrides a default font for the app.
+    """
+
     use_material3: Optional[bool] = None
+    """
+    A temporary flag that can be used to opt-out of Material 3 features.
+    """
+
     appbar_theme: Optional[AppBarTheme] = None
     badge_theme: Optional[BadgeTheme] = None
     banner_theme: Optional[BannerTheme] = None
