@@ -54,17 +54,14 @@ class MarkdownControl extends StatelessWidget {
         builders: {
           'code': CodeElementBuilder(codeTheme, codeStyleSheet),
           'latex': LatexElementBuilder(
-            textStyle: latexStyle, textScaleFactor: latexScaleFactor
-          ),
+              textStyle: latexStyle, textScaleFactor: latexScaleFactor),
         },
         styleSheet: mdStyleSheet,
-        sizedImageBuilder: (MarkdownImageConfig config) {
+        imageBuilder: (Uri uri, String? title, String? alt) {
           return buildImage(
               context: context,
-              src: config.uri.toString(),
-              width: config.width,
-              height: config.height,
-              semanticsLabel: config.alt,
+              src: uri.toString(),
+              semanticsLabel: alt,
               disabled: control.disabled,
               errorCtrl: control.buildWidget("image_error_content"));
         },
