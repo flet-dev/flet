@@ -221,8 +221,10 @@ class FletBackend extends ChangeNotifier {
   _onClientRegistered(RegisterClientResponseBody resp) {
     if (resp.error?.isEmpty ?? true) {
       // all good!
-      // store session ID in a cookie
-      SessionStore.setSessionId(resp.sessionId);
+      // if a root FletApp, store session ID globally
+      if (controlId == null) {
+        SessionStore.setSessionId(resp.sessionId);
+      }
       isLoading = false;
       _reconnectDelayMs = 0;
       error = "";
