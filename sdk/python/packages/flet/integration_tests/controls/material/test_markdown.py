@@ -77,6 +77,22 @@ void main() {
 ```
 """
 
+sample_3 = r"""
+Regular inline: $y = mx + b$
+
+Block equation:
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+
+With brackets: \[ \sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6} \]
+
+Greek letters: $\alpha, \beta, \gamma, \Delta, \Omega$
+
+Fractions and roots: $\frac{a}{b}, \sqrt{x}, \sqrt[3]{y}$
+"""
+
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_md_1(flet_app: ftt.FletTestApp, request):
@@ -98,5 +114,17 @@ async def test_md_2(flet_app: ftt.FletTestApp, request):
             value=sample_2,
             selectable=True,
             extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_md_3(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Markdown(
+            value=sample_3,
+            latex_style=ft.TextStyle(color="orange"),
+            latex_scale_factor=1.5,
         ),
     )
