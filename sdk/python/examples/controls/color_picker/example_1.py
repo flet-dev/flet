@@ -16,7 +16,8 @@ def main(page: ft.Page):
 
     picker = ColorPicker(
         picker_color="#ff0000",
-        color_picker_width=320,
+        display_thumb_color=False,
+        color_picker_width=420,
         on_color_change=on_color_change,
     )
 
