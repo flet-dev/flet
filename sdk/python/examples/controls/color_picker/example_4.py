@@ -1,22 +1,21 @@
 import flet as ft
-from flet_color_picker import ColorPicker
+from flet_color_picker import MaterialPicker
 
 
 def main(page: ft.Page):
-    page.title = "ColorPicker"
+    page.title = "MaterialPicker"
     page.padding = 20
 
-    selected = ft.Text("#ff0000")
-    swatch = ft.Container(width=40, height=40, bgcolor="#ff0000", border_radius=6)
+    selected = ft.Text("#ff9800")
+    swatch = ft.Container(width=40, height=40, bgcolor="#ff9800", border_radius=6)
 
     def on_color_change(e: ft.ControlEvent):
         selected.value = e.data
         swatch.bgcolor = e.data
         page.update()
 
-    picker = ColorPicker(
-        picker_color="#ff0000",
-        color_picker_width=320,
+    picker = MaterialPicker(
+        picker_color="#ff9800",
         on_color_change=on_color_change,
     )
 

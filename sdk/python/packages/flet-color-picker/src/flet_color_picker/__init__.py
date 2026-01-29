@@ -1,4 +1,6 @@
 from flet_color_picker.color_picker import ColorPicker
 from flet_color_picker.hue_ring_picker import HueRingPicker
+from flet_color_picker.material_picker import MaterialPicker
+from flet_color_picker.slide_picker import SlidePicker
 
-__all__ = ["ColorPicker", "HueRingPicker"]
+__all__ = ["ColorPicker", "HueRingPicker", "MaterialPicker", "SlidePicker"]
