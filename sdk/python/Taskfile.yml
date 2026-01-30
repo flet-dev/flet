@@ -69,12 +69,12 @@ tasks:
     aliases:
       - docs
     cmds:
-      - uv run -group docs --directory packages/flet mkdocs serve --dirtyreload
+      - uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
 
   docs-coverage:
     desc: "Run docstring coverage report in the 'packages/flet' directory."
     cmds:
-      - uv run -group docs-coverage --directory packages/flet docstr-coverage
+      - uv run --group docs-coverage --directory packages/flet docstr-coverage
 
   free-port-8550:
     desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."
