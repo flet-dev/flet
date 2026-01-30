@@ -97,6 +97,13 @@ class ColorPicker(ft.LayoutControl):
     Height of the picker area as a percentage of the picker width.
     """
 
+    picker_hsv_color: Optional[dict[str, ft.Number]] = None
+    """
+    The currently selected HSV color.
+
+    Expected keys: `alpha`, `hue`, `saturation`, `value`.
+    """
+
     on_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None
     """
     Called when the picker color is changed.
@@ -111,4 +118,12 @@ class ColorPicker(ft.LayoutControl):
 
     The [`data`][flet.Event.data] property of the event handler argument contains
     the list of color values as hex strings.
+    """
+
+    on_hsv_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None
+    """
+    Called when the picker HSV color is changed.
+
+    The [`data`][flet.Event.data] property of the event handler argument contains
+    the HSV values as a dict with keys: `alpha`, `hue`, `saturation`, `value`.
     """
