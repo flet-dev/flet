@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import ColorPicker
+from flet_color_picker import ColorLabelType, ColorPicker
 
 
 def main(page: ft.Page):
@@ -14,11 +14,33 @@ def main(page: ft.Page):
         swatch.bgcolor = e.data
         page.update()
 
+    def on_history_change(e: ft.ControlEvent):
+        # e.data is a list of hex strings
+        print(f"history: {e.data}")
+
     picker = ColorPicker(
         picker_color="#ff0000",
         display_thumb_color=False,
+        enable_alpha=False,
+        hex_input_bar=False,
+        label_text_style=ft.TextStyle(color=ft.Colors.BLUE, size=14, italic=True),
+        color_history=[
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#00ffff",
+            "#ff00ff",
+        ],
         color_picker_width=420,
         on_color_change=on_color_change,
+        # on_history_change=on_history_change,
+        label_types=[
+            ColorLabelType.HEX,
+            # ColorLabelType.RGB,
+            ColorLabelType.HSV,
+            ColorLabelType.HSL,
+        ],
     )
 
     page.add(
