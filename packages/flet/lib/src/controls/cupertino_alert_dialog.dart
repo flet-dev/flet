@@ -8,29 +8,51 @@ import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class CupertinoAlertDialogControl extends StatelessWidget {
   final Control control;
 
   const CupertinoAlertDialogControl({super.key, required this.control});
 
+  Color _resolveBarrierColor(BuildContext context) {
+    return control.getColor("barrier_color", context) ??
+        DialogTheme.of(context).barrierColor ??
+        Theme.of(context).dialogTheme.barrierColor ??
+        Colors.black54;
+  }
+
   Widget _createCupertinoAlertDialog() {
     return ControlInheritedNotifier(
       notifier: control,
       child: Builder(builder: (context) {
         ControlInheritedNotifier.of(context);
+        final routeAnimation = ModalRoute.of(context)?.animation ??
+            const AlwaysStoppedAnimation(1.0);
         var insetAnimation = parseAnimation(
             control.get("inset_animation"),
             ImplicitAnimationDetails(
                 duration: const Duration(milliseconds: 100),
                 curve: Curves.decelerate))!;
 
-        return CupertinoAlertDialog(
+        final dialog = CupertinoAlertDialog(
           insetAnimationCurve: insetAnimation.curve,
           insetAnimationDuration: insetAnimation.duration,
           title: control.buildTextOrWidget("title"),
           content: control.buildWidget("content"),
           actions: control.buildWidgets("actions"),
+        );
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            IgnorePointer(
+              child: FadeTransition(
+                opacity: routeAnimation,
+                child: ColoredBox(color: _resolveBarrierColor(context)),
+              ),
+            ),
+            SafeArea(child: BaseControl(control: control, child: dialog)),
+          ],
         );
       }),
     );
@@ -57,7 +79,9 @@ class CupertinoAlertDialogControl extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: control.getColor("barrier_color", context),
+            // Render the barrier in the dialog widget so it updates live.
+            barrierColor: Colors.transparent,
+            useSafeArea: false,
             useRootNavigator: false,
             context: context,
             builder: (context) => _createCupertinoAlertDialog()).then((value) {
