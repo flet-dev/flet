@@ -230,8 +230,7 @@ class AlertDialog(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    The color of the modal barrier that
-    darkens everything below this dialog.
+    The color of the modal barrier below this dialog.
 
     If `None`, then [`DialogTheme.barrier_color`][flet.] is used.
     If that is also `None`, the default is `Colors.BLACK_54`.
