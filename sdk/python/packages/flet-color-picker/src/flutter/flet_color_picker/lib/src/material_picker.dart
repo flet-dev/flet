@@ -23,6 +23,11 @@ class _MaterialPickerControlState extends State<MaterialPickerControl> {
     widget.control.triggerEvent("color_change", colorHex);
   }
 
+  void _onPrimaryChanged(Color color) {
+    final colorHex = color.toHex();
+    widget.control.triggerEvent("primary_change", colorHex);
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("MaterialPickerControl build: ${widget.control.id}");
@@ -33,9 +38,15 @@ class _MaterialPickerControlState extends State<MaterialPickerControl> {
       _pickerColor = controlColor;
     }
 
+    final enableLabel = widget.control.getBool("enable_label", false)!;
+    final portraitOnly = widget.control.getBool("portrait_only", false)!;
+
     final picker = MaterialPicker(
       pickerColor: _pickerColor,
       onColorChanged: _onColorChanged,
+      onPrimaryChanged: _onPrimaryChanged,
+      enableLabel: enableLabel,
+      portraitOnly: portraitOnly,
     );
 
     return LayoutControl(control: widget.control, child: picker);

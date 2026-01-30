@@ -14,9 +14,15 @@ def main(page: ft.Page):
         swatch.bgcolor = e.data
         page.update()
 
+    def on_primary_change(e: ft.ControlEvent):
+        print(f"primary: {e.data}")
+
     picker = MaterialPicker(
         picker_color="#ff9800",
+        enable_label=False,
+        portrait_only=True,
         on_color_change=on_color_change,
+        on_primary_change=on_primary_change,
     )
 
     page.add(
