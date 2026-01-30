@@ -43,6 +43,7 @@ def main(page: ft.Page):
         ],
         palette_type=PaletteType.RGB_WITH_BLUE,
         picker_area_border_radius=ft.BorderRadius.all(20),
+        picker_area_height_percent=0.3,
     )
 
     page.add(

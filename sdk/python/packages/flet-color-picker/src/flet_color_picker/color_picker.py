@@ -92,6 +92,11 @@ class ColorPicker(ft.LayoutControl):
     Border radius for the picker area.
     """
 
+    picker_area_height_percent: Optional[ft.Number] = None
+    """
+    Height of the picker area as a percentage of the picker width.
+    """
+
     on_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None
     """
     Called when the picker color is changed.
