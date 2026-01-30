@@ -14,6 +14,7 @@ import flet_lottie  # noqa: F401
 import flet_map  # noqa: F401
 import flet_permission_handler  # noqa: F401
 import flet_rive  # noqa: F401
+import flet_secure_storage  # noqa: F401
 import flet_video  # noqa: F401
 import flet_webview  # noqa: F401
 
