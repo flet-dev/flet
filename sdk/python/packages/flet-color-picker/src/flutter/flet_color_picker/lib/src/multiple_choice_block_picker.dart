@@ -49,10 +49,27 @@ class _MultipleChoiceBlockPickerControlState
       _pickerColors = [Colors.black];
     }
 
-    final picker = MultipleChoiceBlockPicker(
-      pickerColors: _pickerColors,
-      onColorsChanged: _onColorsChanged,
-    );
+    final rawAvailableColors = widget.control.get("available_colors");
+    final availableColors = <Color>[];
+    if (rawAvailableColors is List) {
+      for (final raw in rawAvailableColors) {
+        final parsed = parseColor(raw?.toString(), theme);
+        if (parsed != null) {
+          availableColors.add(parsed);
+        }
+      }
+    }
+
+    final picker = availableColors.isNotEmpty
+        ? MultipleChoiceBlockPicker(
+            pickerColors: _pickerColors,
+            onColorsChanged: _onColorsChanged,
+            availableColors: availableColors,
+          )
+        : MultipleChoiceBlockPicker(
+            pickerColors: _pickerColors,
+            onColorsChanged: _onColorsChanged,
+          );
 
     return LayoutControl(control: widget.control, child: picker);
   }

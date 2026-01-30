@@ -16,6 +16,11 @@ class MultipleChoiceBlockPicker(ft.LayoutControl):
     The currently selected colors.
     """
 
+    available_colors: Optional[list[ft.ColorValue]] = None
+    """
+    A list of available colors to pick from.
+    """
+
     on_colors_change: Optional[ft.ControlEventHandler["MultipleChoiceBlockPicker"]] = (
         None
     )
