@@ -312,18 +312,31 @@ class BaseFlutterCommand(BaseCommand):
             self.live.start()
 
     def find_flutter_batch(self, exe_filename: str):
+        """Locate the Flutter/Dart executable, preferring the managed SDK install."""
         assert self.required_flutter_version
+
         install_dir = get_flutter_dir(str(self.required_flutter_version))
         ext = ".bat" if is_windows() else ""
         batch_path = os.path.join(install_dir, "bin", f"{exe_filename}{ext}")
+
         if os.path.exists(batch_path):
             return batch_path
 
+        # Fall back to system-installed executable
         batch_path = shutil.which(exe_filename)
         if not batch_path:
             return None
-        if is_windows() and batch_path.endswith(".file"):
-            return batch_path.replace(".file", ".bat")
+
+        if is_windows():
+            # convert shim paths
+            if batch_path.endswith(".file"):
+                return batch_path.replace(".file", ".bat")
+
+            # normalize .exe casing
+            root, ext = os.path.splitext(batch_path)
+            if ext.lower() == ".exe":
+                return f"{root}.exe"
+
         return batch_path
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
