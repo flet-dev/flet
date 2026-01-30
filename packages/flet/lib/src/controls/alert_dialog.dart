@@ -18,13 +18,6 @@ class AlertDialogControl extends StatelessWidget {
 
   const AlertDialogControl({super.key, required this.control});
 
-  Color _resolveBarrierColor(BuildContext context) {
-    return control.getColor("barrier_color", context) ??
-        DialogTheme.of(context).barrierColor ??
-        Theme.of(context).dialogTheme.barrierColor ??
-        Colors.black54;
-  }
-
   Widget _createAlertDialog(BuildContext context) {
     return ControlInheritedNotifier(
       notifier: control,
@@ -69,7 +62,12 @@ class AlertDialogControl extends StatelessWidget {
             IgnorePointer(
               child: FadeTransition(
                 opacity: routeAnimation,
-                child: ColoredBox(color: _resolveBarrierColor(context)),
+                child: ColoredBox(
+                  color: control.getColor("barrier_color", context) ??
+                      DialogTheme.of(context).barrierColor ??
+                      Theme.of(context).dialogTheme.barrierColor ??
+                      Colors.black54,
+                ),
               ),
             ),
             SafeArea(child: BaseControl(control: control, child: dialog)),
