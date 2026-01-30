@@ -42,6 +42,7 @@ def main(page: ft.Page):
             ColorLabelType.HSL,
         ],
         palette_type=PaletteType.RGB_WITH_BLUE,
+        picker_area_border_radius=ft.BorderRadius.all(20),
     )
 
     page.add(

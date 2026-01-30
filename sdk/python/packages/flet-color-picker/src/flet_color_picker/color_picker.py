@@ -87,6 +87,11 @@ class ColorPicker(ft.LayoutControl):
     Palette type for the picker area.
     """
 
+    picker_area_border_radius: Optional[ft.BorderRadiusValue] = None
+    """
+    Border radius for the picker area.
+    """
+
     on_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None
     """
     Called when the picker color is changed.
