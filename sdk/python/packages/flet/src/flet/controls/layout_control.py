@@ -16,11 +16,11 @@ from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
 from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl", "LayoutControl", "SizeChangeEvent"]
+__all__ = ["ConstrainedControl", "LayoutControl", "LayoutSizeChangeEvent"]
 
 
 @dataclass
-class SizeChangeEvent(Event[EventControlType]):
+class LayoutSizeChangeEvent(Event[EventControlType]):
     """
     Event fired when a control's rendered size changes after layout.
     """
@@ -248,7 +248,9 @@ class LayoutControl(Control):
     on every change.
     """
 
-    on_size_change: Optional[EventHandler[SizeChangeEvent["LayoutControl"]]] = None
+    on_size_change: Optional[EventHandler[LayoutSizeChangeEvent["LayoutControl"]]] = (
+        None
+    )
     """
     Called when the size of this control changes.
 

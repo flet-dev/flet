@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def handle_size_change(e: ft.SizeChangeEvent[ft.Container]):
+    def handle_size_change(e: ft.LayoutSizeChangeEvent[ft.Container]):
         e.control.content.value = f"{int(e.width)} x {int(e.height)}"
 
     page.add(
