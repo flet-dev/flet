@@ -25,11 +25,7 @@ class _SlidePickerControlState extends State<SlidePickerControl> {
   }
 
   void _onColorChanged(Color color) {
-    setState(() {
-      _pickerColor = color;
-    });
     final colorHex = color.toHex();
-    widget.control.updateProperties({"picker_color": colorHex}, notify: true);
     widget.control.triggerEvent("color_change", colorHex);
   }
 
