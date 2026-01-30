@@ -2,6 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import 'package:flet/src/utils/colors.dart';
+
 class BlockPickerControl extends StatefulWidget {
   final Control control;
 
@@ -33,10 +35,32 @@ class _BlockPickerControlState extends State<BlockPickerControl> {
       _pickerColor = controlColor;
     }
 
-    final picker = BlockPicker(
-      pickerColor: _pickerColor,
-      onColorChanged: _onColorChanged,
-    );
+    final rawColors = widget.control.get("available_colors");
+    final theme = Theme.of(context);
+    final availableColors = <Color>[];
+    if (rawColors is List) {
+      for (final raw in rawColors) {
+        final parsed = parseColor(raw?.toString(), theme);
+        if (parsed != null) {
+          availableColors.add(parsed);
+        }
+      }
+    }
+    final useInShowDialog =
+        widget.control.getBool("use_in_show_dialog", true)!;
+
+    final picker = availableColors.isNotEmpty
+        ? BlockPicker(
+            pickerColor: _pickerColor,
+            onColorChanged: _onColorChanged,
+            availableColors: availableColors,
+            useInShowDialog: useInShowDialog,
+          )
+        : BlockPicker(
+            pickerColor: _pickerColor,
+            onColorChanged: _onColorChanged,
+            useInShowDialog: useInShowDialog,
+          );
 
     return LayoutControl(control: widget.control, child: picker);
   }

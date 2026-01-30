@@ -16,6 +16,18 @@ def main(page: ft.Page):
 
     picker = BlockPicker(
         picker_color="#9c27b0",
+        available_colors=[
+            "#f44336",
+            "#e91e63",
+            "#9c27b0",
+            "#3f51b5",
+            "#2196f3",
+            "#009688",
+            "#4caf50",
+            "#ff9800",
+            "#795548",
+        ],
+        use_in_show_dialog=True,
         on_color_change=on_color_change,
     )
 
