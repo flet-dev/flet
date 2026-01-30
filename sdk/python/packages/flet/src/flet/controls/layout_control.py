@@ -241,7 +241,7 @@ class LayoutControl(Control):
 
     on_layout: Optional[EventHandler[LayoutEvent]] = None
     """
-    Called when the control's size changes after layout.
+    Called when the size of this control changes.
 
     [`layout_interval`][(c).] defines how often this event is called.
     """
