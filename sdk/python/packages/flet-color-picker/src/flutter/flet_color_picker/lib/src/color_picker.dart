@@ -2,9 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/text.dart';
-
 class ColorPickerControl extends StatefulWidget {
   final Control control;
 
@@ -33,7 +30,8 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
       "saturation": color.saturation,
       "value": color.value,
     };
-    widget.control.updateProperties({"picker_hsv_color": hsvData}, notify: true);
+    widget.control
+        .updateProperties({"picker_hsv_color": hsvData}, notify: true);
     widget.control.triggerEvent("hsv_color_change", hsvData);
   }
 
@@ -114,7 +112,8 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
   Widget build(BuildContext context) {
     debugPrint("ColorPickerControl build: ${widget.control.id}");
 
-    final pickerHsvColor = _parseHsvColor(widget.control.get("picker_hsv_color"));
+    final pickerHsvColor =
+        _parseHsvColor(widget.control.get("picker_hsv_color"));
     final controlColor =
         widget.control.getColor("picker_color", context) ?? Colors.black;
     if (pickerHsvColor != null) {
@@ -143,13 +142,15 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
         }
       }
     }
-    final hasLabelTypes = labelTypes.isNotEmpty;
     final paletteType =
         _parsePaletteType(widget.control.get("palette_type")?.toString());
     final pickerAreaBorderRadius =
         widget.control.getBorderRadius("picker_area_border_radius");
     final pickerAreaHeightPercent =
         widget.control.getDouble("picker_area_height_percent") ?? 1.0;
+    final labelTypesArg = rawLabelTypes is List
+        ? labelTypes
+        : const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl];
 
     final rawHistory = widget.control.get("color_history");
     final theme = Theme.of(context);
@@ -163,144 +164,23 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
       }
     }
 
-    Widget picker;
-    if (colorPickerWidth != null) {
-      if (hasLabelTypes && paletteType != null) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorPickerWidth: colorPickerWidth,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          labelTypes: labelTypes,
-          paletteType: paletteType,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else if (hasLabelTypes) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorPickerWidth: colorPickerWidth,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          labelTypes: labelTypes,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else if (paletteType != null) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorPickerWidth: colorPickerWidth,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          paletteType: paletteType,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorPickerWidth: colorPickerWidth,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      }
-    } else {
-      if (hasLabelTypes && paletteType != null) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          labelTypes: labelTypes,
-          paletteType: paletteType,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else if (hasLabelTypes) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          labelTypes: labelTypes,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else if (paletteType != null) {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          paletteType: paletteType,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      } else {
-        picker = ColorPicker(
-          pickerColor: _pickerColor,
-          onColorChanged: _onColorChanged,
-          colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
-          onHistoryChanged: _onHistoryChanged,
-          displayThumbColor: displayThumbColor,
-          enableAlpha: enableAlpha,
-          hexInputBar: hexInputBar,
-          labelTextStyle: labelTextStyle,
-          pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-          pickerAreaHeightPercent: pickerAreaHeightPercent,
-          pickerHsvColor: pickerHsvColor,
-          onHsvColorChanged: _onHsvColorChanged,
-        );
-      }
-    }
+    final picker = ColorPicker(
+      pickerColor: _pickerColor,
+      onColorChanged: _onColorChanged,
+      colorPickerWidth: colorPickerWidth ?? 300.0,
+      colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
+      onHistoryChanged: _onHistoryChanged,
+      displayThumbColor: displayThumbColor,
+      enableAlpha: enableAlpha,
+      hexInputBar: hexInputBar,
+      labelTextStyle: labelTextStyle,
+      labelTypes: labelTypesArg,
+      paletteType: paletteType ?? PaletteType.hsvWithHue,
+      pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
+      pickerAreaHeightPercent: pickerAreaHeightPercent,
+      pickerHsvColor: pickerHsvColor,
+      onHsvColorChanged: _onHsvColorChanged,
+    );
 
     return LayoutControl(control: widget.control, child: picker);
   }
