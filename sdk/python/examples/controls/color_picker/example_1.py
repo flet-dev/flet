@@ -54,7 +54,7 @@ def main(page: ft.Page):
             ColorLabelType.HSV,
             ColorLabelType.HSL,
         ],
-        palette_type=PaletteType.RGB_WITH_BLUE,
+        palette_type=PaletteType.HSV_WITH_HUE,
         picker_area_border_radius=ft.BorderRadius.all(20),
         picker_area_height_percent=0.3,
     )

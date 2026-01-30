@@ -1,6 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flet/src/utils/enums.dart';
 
 class ColorPickerControl extends StatefulWidget {
   final Control control;
@@ -41,48 +42,13 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     widget.control.triggerEvent("history_change", colorsHex);
   }
 
-  ColorLabelType? _parseLabelType(String? value) {
-    switch (value?.toLowerCase()) {
-      case "hex":
-        return ColorLabelType.hex;
-      case "rgb":
-        return ColorLabelType.rgb;
-      case "hsv":
-        return ColorLabelType.hsv;
-      case "hsl":
-        return ColorLabelType.hsl;
-    }
-    return null;
+  ColorLabelType? _parseLabelType(String? value,
+      [ColorLabelType? defaultValue]) {
+    return parseEnum(ColorLabelType.values, value, defaultValue);
   }
 
-  PaletteType? _parsePaletteType(String? value) {
-    switch (value) {
-      case "hsv":
-        return PaletteType.hsv;
-      case "hsvWithHue":
-        return PaletteType.hsvWithHue;
-      case "hsvWithValue":
-        return PaletteType.hsvWithValue;
-      case "hsvWithSaturation":
-        return PaletteType.hsvWithSaturation;
-      case "hsl":
-        return PaletteType.hsl;
-      case "hslWithHue":
-        return PaletteType.hslWithHue;
-      case "hslWithLightness":
-        return PaletteType.hslWithLightness;
-      case "hslWithSaturation":
-        return PaletteType.hslWithSaturation;
-      case "rgbWithBlue":
-        return PaletteType.rgbWithBlue;
-      case "rgbWithGreen":
-        return PaletteType.rgbWithGreen;
-      case "rgbWithRed":
-        return PaletteType.rgbWithRed;
-      case "hueWheel":
-        return PaletteType.hueWheel;
-    }
-    return null;
+  PaletteType? _parsePaletteType(String? value, [PaletteType? defaultValue]) {
+    return parseEnum(PaletteType.values, value, defaultValue);
   }
 
   HSVColor? _parseHsvColor(dynamic value) {
