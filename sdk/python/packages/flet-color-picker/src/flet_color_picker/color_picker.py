@@ -3,7 +3,7 @@ from typing import Optional
 
 import flet as ft
 
-__all__ = ["ColorLabelType", "ColorPicker"]
+__all__ = ["ColorLabelType", "ColorPicker", "PaletteType"]
 
 
 class ColorLabelType(Enum):
@@ -11,6 +11,21 @@ class ColorLabelType(Enum):
     RGB = "rgb"
     HSV = "hsv"
     HSL = "hsl"
+
+
+class PaletteType(Enum):
+    HSV = "hsv"
+    HSV_WITH_HUE = "hsvWithHue"
+    HSV_WITH_VALUE = "hsvWithValue"
+    HSV_WITH_SATURATION = "hsvWithSaturation"
+    HSL = "hsl"
+    HSL_WITH_HUE = "hslWithHue"
+    HSL_WITH_LIGHTNESS = "hslWithLightness"
+    HSL_WITH_SATURATION = "hslWithSaturation"
+    RGB_WITH_BLUE = "rgbWithBlue"
+    RGB_WITH_GREEN = "rgbWithGreen"
+    RGB_WITH_RED = "rgbWithRed"
+    HUE_WHEEL = "hueWheel"
 
 
 @ft.control("ColorPicker")
@@ -65,6 +80,11 @@ class ColorPicker(ft.LayoutControl):
         - `ColorLabelType.RGB`
         - `ColorLabelType.HSV`
         - `ColorLabelType.HSL`
+    """
+
+    palette_type: Optional[PaletteType] = None
+    """
+    Palette type for the picker area.
     """
 
     on_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None

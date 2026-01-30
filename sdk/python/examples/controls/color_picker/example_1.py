@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import ColorLabelType, ColorPicker
+from flet_color_picker import ColorLabelType, ColorPicker, PaletteType
 
 
 def main(page: ft.Page):
@@ -41,6 +41,7 @@ def main(page: ft.Page):
             ColorLabelType.HSV,
             ColorLabelType.HSL,
         ],
+        palette_type=PaletteType.RGB_WITH_BLUE,
     )
 
     page.add(
