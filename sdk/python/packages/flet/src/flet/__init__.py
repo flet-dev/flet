@@ -256,7 +256,7 @@ from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
 from flet.controls.layout_control import (
     ConstrainedControl,
     LayoutControl,
-    LayoutEvent,
+    SizeChangeEvent,
 )
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2
@@ -825,7 +825,6 @@ __all__ = [
     "LabelPosition",
     "LaunchMode",
     "LayoutControl",
-    "LayoutEvent",
     "LinearGradient",
     "LinuxDeviceInfo",
     "ListTile",
@@ -971,6 +970,7 @@ __all__ = [
     "Shimmer",
     "ShimmerDirection",
     "Size",
+    "SizeChangeEvent",
     "Slider",
     "SliderInteraction",
     "SliderTheme",

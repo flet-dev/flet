@@ -55,7 +55,7 @@ class LayoutControl extends StatelessWidget {
     w = _marginControl(context, w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
-    w = _layoutObserver(w, control);
+    w = _sizeChangeObserver(w, control);
     return _expandable(w, control);
   }
 }
@@ -74,12 +74,13 @@ Widget _badge(Widget widget, ThemeData theme, Control control) {
   return control.wrapWithBadge("badge", widget, theme);
 }
 
-Widget _layoutObserver(Widget widget, Control control) {
-  if (!control.getBool("on_layout", false)!) return widget;
+Widget _sizeChangeObserver(Widget widget, Control control) {
+  if (!control.getBool("on_size_change", false)!) return widget;
 
-  return LayoutObserver(
+  // Opt-in size reporting to avoid extra layout work by default.
+  return SizeChangeObserver(
     control: control,
-    interval: control.getInt("layout_interval", 10)!,
+    interval: control.getInt("size_change_interval", 10)!,
     child: widget,
   );
 }
@@ -337,12 +338,12 @@ Widget _sizedControl(Widget widget, Control control) {
   }
 }
 
-class LayoutObserver extends StatefulWidget {
+class SizeChangeObserver extends StatefulWidget {
   final Control control;
   final int interval;
   final Widget child;
 
-  const LayoutObserver({
+  const SizeChangeObserver({
     super.key,
     required this.control,
     required this.interval,
@@ -350,17 +351,17 @@ class LayoutObserver extends StatefulWidget {
   });
 
   @override
-  State<LayoutObserver> createState() => _LayoutObserverState();
+  State<SizeChangeObserver> createState() => _SizeChangeObserverState();
 }
 
-class _LayoutObserverState extends State<LayoutObserver> {
+class _SizeChangeObserverState extends State<SizeChangeObserver> {
   Size? _lastSize;
   Size? _pendingSize;
   int _lastDispatch = 0;
   Timer? _timer;
 
   void _onSizeChanged(Size size) {
-    if (!mounted || widget.control.getBool("on_layout", false) != true) {
+    if (!mounted || widget.control.getBool("on_size_change", false) != true) {
       return;
     }
 
@@ -386,15 +387,17 @@ class _LayoutObserverState extends State<LayoutObserver> {
     _timer?.cancel();
     _lastSize = size;
     _lastDispatch = now;
-    widget.control.triggerEvent("layout", {"w": size.width, "h": size.height});
+    widget.control
+        .triggerEvent("size_change", {"w": size.width, "h": size.height});
   }
 
   void _schedulePending(int interval, int now) {
+    // Coalesce rapid changes into a trailing dispatch.
     _timer?.cancel();
     final remaining = interval - (now - _lastDispatch);
     final delay = Duration(milliseconds: remaining > 0 ? remaining : 0);
     _timer = Timer(delay, () {
-      if (!mounted || widget.control.getBool("on_layout", false) != true) {
+      if (!mounted || !widget.control.getBool("on_size_change", false)!) {
         return;
       }
       final size = _pendingSize;
@@ -444,6 +447,7 @@ class _MeasureSizeRenderObject extends RenderProxyBox {
   @override
   void performLayout() {
     super.performLayout();
+    // Post-frame to avoid re-entrant layout callbacks.
     final newSize = child?.size ?? size;
     if (_lastSize == newSize) {
       return;

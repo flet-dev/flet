@@ -5,17 +5,26 @@ from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler, Event, EventHandler
+from flet.controls.control_event import (
+    ControlEventHandler,
+    Event,
+    EventControlType,
+    EventHandler,
+)
 from flet.controls.margin import MarginValue
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
 from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl", "LayoutControl", "LayoutEvent"]
+__all__ = ["ConstrainedControl", "LayoutControl", "SizeChangeEvent"]
 
 
 @dataclass
-class LayoutEvent(Event["LayoutControl"]):
+class SizeChangeEvent(Event[EventControlType]):
+    """
+    Event fired when a control's rendered size changes after layout.
+    """
+
     width: float = field(metadata={"data_field": "w"})
     """
     Width of the control after layout.
@@ -231,19 +240,19 @@ class LayoutControl(Control):
     More information [here](https://docs.flet.dev/cookbook/animations).
     """
 
-    layout_interval: int = 10
+    size_change_interval: int = 10
     """
-    Sampling interval in milliseconds for [`on_layout`][(c).] event.
+    Sampling interval in milliseconds for [`on_size_change`][(c).] event.
 
-    Setting to `0` calls [`on_layout`][(c).] immediately
+    Setting to `0` calls [`on_size_change`][(c).] immediately
     on every change.
     """
 
-    on_layout: Optional[EventHandler[LayoutEvent]] = None
+    on_size_change: Optional[EventHandler[SizeChangeEvent["LayoutControl"]]] = None
     """
     Called when the size of this control changes.
 
-    [`layout_interval`][(c).] defines how often this event is called.
+    [`size_change_interval`][(c).] defines how often this event is called.
     """
 
     on_animation_end: Optional[ControlEventHandler["LayoutControl"]] = None
