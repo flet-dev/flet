@@ -16,6 +16,31 @@ class HueRingPicker(ft.LayoutControl):
     The currently selected color.
     """
 
+    color_picker_height: Optional[ft.Number] = None
+    """
+    Height of the color picker in virtual pixels.
+    """
+
+    enable_alpha: bool = False
+    """
+    Whether to enable alpha (opacity) slider.
+    """
+
+    hue_ring_stroke_width: Optional[ft.Number] = None
+    """
+    Stroke width for the hue ring.
+    """
+
+    picker_area_border_radius: Optional[ft.BorderRadiusValue] = None
+    """
+    Border radius for the picker area.
+    """
+
+    portrait_only: bool = False
+    """
+    Whether to force portrait layout.
+    """
+
     on_color_change: Optional[ft.ControlEventHandler["HueRingPicker"]] = None
     """
     Called when the picker color is changed.

@@ -16,6 +16,11 @@ def main(page: ft.Page):
 
     picker = HueRingPicker(
         picker_color="#00ff00",
+        color_picker_height=300,
+        enable_alpha=False,
+        hue_ring_stroke_width=40,
+        picker_area_border_radius=ft.BorderRadius.all(0),
+        portrait_only=True,
         on_color_change=on_color_change,
     )
 
