@@ -169,7 +169,7 @@ If not, create one using one of the following methods:
     ```
     You will be prompted for several details, such as a keystore password,
     a key alias, your names, and location. Remember the password and alias
-    for use in the [configuration](#configuration) step below.
+    for use in the configuration steps below.
 
     A file named `upload-keystore.jks` will be created in your home directory.
     If you want to store it elsewhere, change the argument passed to the `-keystore` parameter.

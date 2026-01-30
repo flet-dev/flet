@@ -382,6 +382,11 @@ artifact = "My Awesome App"
 
 ### Organization name
 
+/// admonition | Note
+[Android](android.md), [iOS](ios.md),
+[macOS](macos.md), and [Linux](linux.md) only.
+///
+
 The organization name in reverse domain name notation, typically in the form
 `com.mycompany`. It is used as the prefix for the [bundle ID](#bundle-id) and
 for package identifiers on mobile and desktop targets.
@@ -410,6 +415,11 @@ org = "com.mycompany"
 ///
 
 ### Bundle ID
+
+/// admonition | Note
+[Android](android.md), [iOS](ios.md),
+[macOS](macos.md), and [Linux](linux.md) only.
+///
 
 The bundle ID for the application, typically in the form `"com.mycompany.my_app"`.
 
@@ -440,6 +450,10 @@ bundle_id = "com.mycompany.my_app"
 
 ### Company Name
 
+/// admonition | Note
+[Windows](windows.md) and [macOS](macos.md) only.
+///
+
 The company name displayed in about app dialogs and metadata (notably on desktop builds).
 
 #### Resolution order
@@ -465,6 +479,10 @@ company = "My Company Inc."
 ///
 
 ### Copyright
+
+/// admonition | Note
+[Windows](windows.md) and [macOS](macos.md) only.
+///
 
 Copyright text displayed in about app dialogs and metadata.
 
@@ -617,10 +635,15 @@ dependencies = [
 
 ### Source packages
 
+/// admonition | Note
+[Android](android.md) and [iOS](ios.md) only.
+///
+
 By default, packaging for mobile and web only installs binary wheels. Use source packages
 to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
+
 On desktop targets, source installs are already allowed, so this setting is mainly for
-Android, iOS, and web builds.
+[Android](android.md) and [iOS](ios.md) builds.
 
 #### Resolution order
 
@@ -664,6 +687,11 @@ package_2 = { git = "https://github.com/org/package_2.git", ref = "main" }
 
 ### Icons
 
+/// admonition | Note
+[Android](android.md), [iOS](ios.md), [macOS](macos.md), [Windows](windows.md)
+and [Web](web/static-website/index.md#flet-build-web) only.
+///
+
 You can customize app icons for all platforms (except Linux) using image files placed in
 the `assets` directory of your Flet app.
 
@@ -681,6 +709,11 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 
 
 ### Splash screen
+
+/// admonition | Note
+[Android](android.md), [iOS](ios.md),
+and [Web](web/static-website/index.md#flet-build-web) only.
+///
 
 A splash screen is a visual element displayed when an app is launching,
 typically showing a logo or image while the app loads.
@@ -768,6 +801,11 @@ web = false
 
 ### Boot screen
 
+/// admonition | Note
+[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
+[Android](android.md), and [iOS](ios.md) only.
+///
+
 The boot screen is shown while the packaged app archive (`app.zip`) is extracted
 to the app data directory (typically on first launch or after the app bundle changes).
 It appears after the [splash screen](#splash-screen) and before the
@@ -787,6 +825,11 @@ message = "Preparing the app for its first launch…"
 
 ### Startup screen
 
+/// admonition | Note
+[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
+[Android](android.md), and [iOS](ios.md) only.
+///
+
 The startup screen is shown while the Python runtime and your app are starting.
 On mobile targets this can include preparing packaged dependencies. It appears
 after the [boot screen](#boot-screen).
@@ -804,6 +847,10 @@ message = "Starting up the app…"
 ///
 
 ### Hidden app window on startup
+
+/// admonition | Note
+[Windows](windows.md), [macOS](macos.md), and [Linux](linux.md) only.
+///
 
 A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden.
 This lets your app perform initial setup (for example, add content, resize or
@@ -826,105 +873,6 @@ Its value is determined in the following order of precedence:
 hide_window_on_start = true
 ```
 ///
-
-### Permissions
-
-`flet build` allows granular control over permissions, features, and entitlements
-embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
-
-See platform guides for setting specific [iOS](ios.md), [Android](android.md) and [macOS](macos.md) permissions.
-
-#### Cross-platform permissions
-
-There are pre-defined permissions that map to `Info.plist`, `*.entitlements`, and
-`AndroidManifest.xml` on their respective platforms. These are applied on top of
-platform defaults, then you can add or override platform-specific entries.
-
-Setting permissions can be done as follows:
-
-/// tab | `flet build`
-```bash
-flet build <target_platform> --permissions camera microphone
-```
-///
-/// tab | `pyproject.toml`
-```toml
-[tool.flet]
-permissions = ["camera", "microphone"]
-```
-///
-
-Supported permissions:
-
-* `location`
-* `camera`
-* `microphone`
-* `photo_library`
-
-Platform-specific additions:
-
-- iOS: [`--info-plist`](../cli/flet-build.md#-info-plist) or `[tool.flet.ios.info]`
-- macOS: [`--macos-entitlements`](../cli/flet-build.md#-macos-entitlements) or `[tool.flet.macos.entitlement]`
-- Android: [`--android-permissions`](../cli/flet-build.md#-android-permissions),
-  [`--android-features`](../cli/flet-build.md#-android-features),
-  [`--android-meta-data`](../cli/flet-build.md#-android-meta-data) or the
-  corresponding `[tool.flet.android.permission]`, `[tool.flet.android.feature]`,
-  `[tool.flet.android.meta_data]`
-
-Android also includes `android.permission.INTERNET` by default and sets
-`android.software.leanback` and `android.hardware.touchscreen` to `False`
-unless overridden.
-
-##### iOS mapping to `Info.plist` entries
-
-* `location`
-    * `NSLocationWhenInUseUsageDescription = This app uses location service when in use.`
-    * `NSLocationAlwaysAndWhenInUseUsageDescription = This app uses location service.`
-* `camera`
-    * `NSCameraUsageDescription = This app uses the camera to capture photos and videos.`
-* `microphone`
-    * `NSMicrophoneUsageDescription = This app uses microphone to record sounds.`
-* `photo_library`
-    * `NSPhotoLibraryUsageDescription = This app saves photos and videos to the photo library.`
-
-##### macOS mapping to entitlements
-
-* `location`
-    * `com.apple.security.personal-information.location = True`
-* `camera`
-    * `com.apple.security.device.camera = True`
-* `microphone`
-    * `com.apple.security.device.audio-input = True`
-* `photo_library`
-    * `com.apple.security.personal-information.photos-library = True`
-
-##### Android mappings
-
-* `location`
-  * permissions:
-      * `android.permission.ACCESS_FINE_LOCATION = True`
-      * `android.permission.ACCESS_COARSE_LOCATION = True`
-      * `android.permission.ACCESS_BACKGROUND_LOCATION = True`
-  * features:
-      * `android.hardware.location.network = False`
-      * `android.hardware.location.gps = False`
-* `camera`
-  * permissions:
-      * `android.permission.CAMERA = True`
-  * features:
-      * `android.hardware.camera = False`
-      * `android.hardware.camera.any = False`
-      * `android.hardware.camera.front = False`
-      * `android.hardware.camera.external = False`
-      * `android.hardware.camera.autofocus = False`
-* `microphone`
-  * permissions:
-      * `android.permission.RECORD_AUDIO = True`
-      * `android.permission.WRITE_EXTERNAL_STORAGE = True`
-      * `android.permission.READ_EXTERNAL_STORAGE = True`
-* `photo_library`
-  * permissions:
-      * `android.permission.READ_MEDIA_VISUAL_USER_SELECTED = True`
 
 ### Deep linking
 
@@ -970,6 +918,10 @@ host = "mydomain.com"
 ///
 
 ### Target Architecture
+
+/// admonition | Note
+For [Android](android.md) and [macOS](macos.md) only.
+///
 
 A target platform can have different CPU architectures,
 which in turn support different instruction sets.
@@ -1108,46 +1060,52 @@ package_files = ["**/*.pyi"]
 ```
 ///
 
-### Additional `flutter build` Arguments
-
-During the `flet build` process, `flutter build` command gets called internally to
-package your app for the specified platform. However, not all `flutter build`
-arguments are exposed or usable through the `flet build` command directly.
-
-For possible `flutter build` arguments, see [Flutter docs](https://docs.flutter.dev/deployment)
-guide, or run `flutter build <target_platform> --help`.
+### Permissions
 
 /// admonition | Note
-Passing additional `flutter build` arguments might cause unexpected behavior.
-Use at your own risk, and only if you fully know what you're doing!
+[Android](android.md), [iOS](ios.md), and [macOS](macos.md) only.
 ///
 
-#### Resolution order
+`flet build` allows granular control over permissions, features, and entitlements
+embedded into `AndroidManifest.xml`, `Info.plist` and `.entitlements` files.
+
+See platform guides for setting specific [iOS](ios.md#permissions),
+[Android](android.md#permissions) and [macOS](macos.md) permissions.
+
+#### Predefined cross-platform permission bundles
+
+Cross-platform permissions are named and predefined bundles that apply a baseline set of
+platform-specific entries required for a feature. Each bundle expands into the
+corresponding platform-specific equivalents. This is especially useful for beginners
+who may be unfamiliar with the underlying platform APIs or prefer not to interact with them directly.
+
+Only the bundles you list are applied. If you need different wording or extra
+entries, set the platform-specific tables directly; those values are merged on top and
+can override the bundle defaults. The examples below show the exact `pyproject.toml` equivalents for each bundle.
+
+Below is a list of current bundles:
+
+{{ cross_platform_permissions() }}
+
+##### Resolution order
 
 Its value is determined in the following order of precedence:
 
-1. `--flutter-build-args` (can be used multiple times)
-2. `[tool.flet.<PLATFORM>.flutter].build_args`
-3. `[tool.flet.flutter].build_args`
+1. [`--permissions`](../cli/flet-build.md#-permissions)
+2. `[tool.flet].permissions` (type: list of strings)
+3. `[]`
 
-#### Example
+##### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk \
-  --flutter-build-args=--obfuscate \
-  --flutter-build-args=--export-method=development \
-  --flutter-build-args=--dart-define=API_URL=https://api.example.com
+flet build <target_platform> --permissions location microphone
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
-build_args = [
-  "--obfuscate",
-  "--export-method=development",
-  "--dart-define=API_URL=https://api.example.com",
-]
+[tool.flet]
+permissions = ["location", "microphone"]
 ```
 ///
 
@@ -1248,6 +1206,49 @@ dir = "sub/directory"
 ```
 ///
 
+### Additional `flutter build` Arguments
+
+During the `flet build` process, `flutter build` command gets called internally to
+package your app for the specified platform. However, not all `flutter build`
+arguments are exposed or usable through the `flet build` command directly.
+
+For possible `flutter build` arguments, see [Flutter docs](https://docs.flutter.dev/deployment)
+guide, or run `flutter build <target_platform> --help`.
+
+/// admonition | Note
+Passing additional `flutter build` arguments might cause unexpected behavior.
+Use at your own risk, and only if you fully know what you're doing!
+///
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--flutter-build-args` (can be used multiple times)
+2. `[tool.flet.<PLATFORM>.flutter].build_args`
+3. `[tool.flet.flutter].build_args`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build apk \
+  --flutter-build-args=--obfuscate \
+  --flutter-build-args=--export-method=development \
+  --flutter-build-args=--dart-define=API_URL=https://api.example.com
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
+build_args = [
+  "--obfuscate",
+  "--export-method=development",
+  "--dart-define=API_URL=https://api.example.com",
+]
+```
+///
+
 ### Verbose logging
 
 The [`-v`](../cli/flet-build.md#-verbose) (or `--verbose`) and `-vv` flags
@@ -1265,7 +1266,7 @@ In packaged apps (`flet build` output), all output from your Python code such as
 [`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename] or the
 `FLET_APP_CONSOLE` environment variable.
 
-Note: `FLET_APP_CONSOLE` is set in production builds;
+Note: `FLET_APP_CONSOLE` is only set in production builds;
 in development runs, output stays in your terminal.
 
 The log file is written in an unbuffered manner, allowing you to read
@@ -1299,7 +1300,8 @@ Calling `sys.exit()` with any other code will terminate the app without displayi
 
 ## Continuous Integration/Continuous Deployment (CI/CD)
 
-You can use `flet build` command in your CI/CD pipelines to automate the build and release process of your Flet apps.
+You can use `flet build` command in your CI/CD pipelines to automate
+the build and release process of your Flet apps.
 
 ### GitHub Actions
 

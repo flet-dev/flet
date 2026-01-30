@@ -49,12 +49,18 @@ To limit packaging to a specific architecture, see [this](index.md#target-archit
 This affects which Python wheels are bundled and, in turn, which CPU architectures the app will run on.
 You will then have to provide your users with the correct build for their Macs.
 
-## Info.plist
+## Permissions
 
-It is possible to add or override `Info.plist` entries for macOS builds.
-These values are written to `macos/Runner/Info.plist` in the [build template](index.md#build-template).
+macOS permissions are declared through [`Info.plist`](#infoplist) privacy usage strings and
+app [entitlements](#entitlements). You can also use the [cross-platform permission bundles](index.md#predefined-cross-platform-permission-bundles)
+to inject common entries, then override or extend them with platform-specific values.
 
-### Resolution order
+### Info.plist
+
+Add or override `Info.plist` entries for macOS builds.
+These values are written to `macos/Runner/Info.plist` of the [build project](index.md#build-template).
+
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -65,7 +71,7 @@ Its value is determined in the following order of precedence:
 CLI booleans must be `True` or `False` (case-sensitive). For lists or nested
 structures, use TOML in `[tool.flet.macos].info`.
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```
@@ -79,7 +85,7 @@ LSApplicationCategoryType = "public.app-category.utilities"
 ```
 ///
 
-## Entitlements
+### Entitlements
 
 Entitlements are boolean key-value pairs that grant an executable permission
 to use a service or technology. Supported entitlements are defined in the
@@ -88,7 +94,7 @@ to use a service or technology. Supported entitlements are defined in the
 Entitlements are written to `macos/Runner/DebugProfile.entitlements` and
 `macos/Runner/Release.entitlements` in the [build template](index.md#build-template).
 
-### Resolution order
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -108,7 +114,7 @@ Its value is determined in the following order of precedence:
 CLI values are `True` or `False` (case-sensitive). In `pyproject.toml`, use
 `true`/`false`.
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```bash

@@ -405,17 +405,23 @@ export_options = { uploadSymbols = true }
 
 ## Permissions
 
-You can use the cross-platform [`--permissions`](index.md#permissions) list for
-common permissions, and add custom iOS entries via `Info.plist`.
+iOS permissions are declared through [`Info.plist`](#infoplist) privacy usage strings.
+You can also use the [cross-platform permission bundles](index.md#predefined-cross-platform-permission-bundles)
+to inject common entries, then override or extend them with platform-specific values.
 
-### Resolution order
+### Info.plist
+
+Add or override `Info.plist` entries for macOS builds.
+These values are written to `ios/Runner/Info.plist` of the [build project](index.md#build-template).
+
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
 2. `[tool.flet.ios.info]`
 
-### Example
+#### Example
 
 /// tab | `flet build`
 ```bash
