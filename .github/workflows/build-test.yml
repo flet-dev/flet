@@ -178,6 +178,13 @@ jobs:
             libsecret-1-dev
           sudo apt-get clean
 
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
       - name: Build app
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
