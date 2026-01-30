@@ -14,7 +14,7 @@ def main(page: ft.Page):
         swatch.bgcolor = e.data
         page.update()
 
-    picker = BlockPicker(
+    dialog_picker = BlockPicker(
         picker_color="#9c27b0",
         available_colors=[
             "#f44336",
@@ -24,11 +24,18 @@ def main(page: ft.Page):
             "#2196f3",
             "#009688",
             "#4caf50",
-            "#ff9800",
             "#795548",
         ],
-        use_in_show_dialog=True,
         on_color_change=on_color_change,
+    )
+
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Pick a color"),
+        content=dialog_picker,
+        actions=[
+            ft.TextButton("Close", on_click=lambda e: page.pop_dialog()),
+        ],
     )
 
     page.add(
@@ -36,7 +43,7 @@ def main(page: ft.Page):
             spacing=12,
             controls=[swatch, selected],
         ),
-        picker,
+        ft.Button("Open dialog", on_click=lambda e: page.show_dialog(dialog)),
     )
 
 

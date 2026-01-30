@@ -21,11 +21,6 @@ class BlockPicker(ft.LayoutControl):
     A list of available colors to pick from.
     """
 
-    use_in_show_dialog: bool = True
-    """
-    Whether to show the currently selected color when used in a dialog.
-    """
-
     on_color_change: Optional[ft.ControlEventHandler["BlockPicker"]] = None
     """
     Called when the picker color is changed.

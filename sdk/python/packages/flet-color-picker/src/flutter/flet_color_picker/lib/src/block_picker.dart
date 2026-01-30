@@ -46,20 +46,15 @@ class _BlockPickerControlState extends State<BlockPickerControl> {
         }
       }
     }
-    final useInShowDialog =
-        widget.control.getBool("use_in_show_dialog", true)!;
-
     final picker = availableColors.isNotEmpty
         ? BlockPicker(
             pickerColor: _pickerColor,
             onColorChanged: _onColorChanged,
             availableColors: availableColors,
-            useInShowDialog: useInShowDialog,
           )
         : BlockPicker(
             pickerColor: _pickerColor,
             onColorChanged: _onColorChanged,
-            useInShowDialog: useInShowDialog,
           );
 
     return LayoutControl(control: widget.control, child: picker);
