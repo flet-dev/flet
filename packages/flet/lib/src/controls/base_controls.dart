@@ -29,15 +29,6 @@ class BaseControl extends StatelessWidget {
   }
 }
 
-// TODO - remove when extensions migrated to LayoutControl
-class ConstrainedControl extends LayoutControl {
-  const ConstrainedControl({
-    super.key,
-    required super.control,
-    required super.child,
-  });
-}
-
 class LayoutControl extends StatelessWidget {
   final Control control;
   final Widget child;
