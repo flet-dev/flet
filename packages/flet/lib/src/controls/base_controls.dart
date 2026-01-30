@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -53,6 +55,7 @@ class LayoutControl extends StatelessWidget {
     w = _marginControl(context, w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
+    w = _layoutObserver(w, control);
     return _expandable(w, control);
   }
 }
@@ -69,6 +72,16 @@ Widget _badge(Widget widget, ThemeData theme, Control control) {
   if (skipProps?.contains("badge") == true) return widget;
 
   return control.wrapWithBadge("badge", widget, theme);
+}
+
+Widget _layoutObserver(Widget widget, Control control) {
+  if (!control.getBool("on_layout", false)!) return widget;
+
+  return LayoutObserver(
+    control: control,
+    interval: control.getInt("layout_interval", 10)!,
+    child: widget,
+  );
 }
 
 Widget _aspectRatio(Widget widget, Control control) {
@@ -321,5 +334,123 @@ Widget _sizedControl(Widget widget, Control control) {
     return hasFixedSize
         ? SizedBox(width: width, height: height, child: widget)
         : widget;
+  }
+}
+
+class LayoutObserver extends StatefulWidget {
+  final Control control;
+  final int interval;
+  final Widget child;
+
+  const LayoutObserver({
+    super.key,
+    required this.control,
+    required this.interval,
+    required this.child,
+  });
+
+  @override
+  State<LayoutObserver> createState() => _LayoutObserverState();
+}
+
+class _LayoutObserverState extends State<LayoutObserver> {
+  Size? _lastSize;
+  Size? _pendingSize;
+  int _lastDispatch = 0;
+  Timer? _timer;
+
+  void _onSizeChanged(Size size) {
+    if (!mounted || widget.control.getBool("on_layout", false) != true) {
+      return;
+    }
+
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final interval = widget.interval;
+    final sizeChanged = _lastSize != size;
+
+    if (!sizeChanged) {
+      return;
+    }
+
+    if (_lastSize != null && interval > 0 && (now - _lastDispatch) < interval) {
+      _pendingSize = size;
+      _schedulePending(interval, now);
+      return;
+    }
+
+    _dispatchSize(size, now);
+  }
+
+  void _dispatchSize(Size size, int now) {
+    _pendingSize = null;
+    _timer?.cancel();
+    _lastSize = size;
+    _lastDispatch = now;
+    widget.control.triggerEvent("layout", {"w": size.width, "h": size.height});
+  }
+
+  void _schedulePending(int interval, int now) {
+    _timer?.cancel();
+    final remaining = interval - (now - _lastDispatch);
+    final delay = Duration(milliseconds: remaining > 0 ? remaining : 0);
+    _timer = Timer(delay, () {
+      if (!mounted || widget.control.getBool("on_layout", false) != true) {
+        return;
+      }
+      final size = _pendingSize;
+      if (size == null) {
+        return;
+      }
+      _dispatchSize(size, DateTime.now().millisecondsSinceEpoch);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MeasureSize(onChange: _onSizeChanged, child: widget.child);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+}
+
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final ValueChanged<Size> onChange;
+
+  const MeasureSize({super.key, required this.onChange, required Widget child})
+      : super(child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _MeasureSizeRenderObject(onChange);
+  }
+
+  @override
+  void updateRenderObject(
+      BuildContext context, covariant RenderObject renderObject) {
+    (renderObject as _MeasureSizeRenderObject).onChange = onChange;
+  }
+}
+
+class _MeasureSizeRenderObject extends RenderProxyBox {
+  ValueChanged<Size> onChange;
+  Size? _lastSize;
+
+  _MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    final newSize = child?.size ?? size;
+    if (_lastSize == newSize) {
+      return;
+    }
+    _lastSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
   }
 }
