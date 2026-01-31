@@ -2,7 +2,14 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from flet_color_picker import ColorPicker
+from flet_color_picker import (
+    BlockPicker,
+    ColorPicker,
+    HueRingPicker,
+    MaterialPicker,
+    MultipleChoiceBlockPicker,
+    SlidePicker,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -17,17 +24,67 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     )
 
 
-# @pytest.mark.parametrize(
-#     "flet_app_function",
-#     [{"flet_app_main": basic.main}],
-#     indirect=True,
-# )
-# @pytest.mark.asyncio(loop_scope="function")
-# async def test_basic(flet_app_function: ftt.FletTestApp):
-#     button = await flet_app_function.tester.find_by_text("Submit")
-#     await flet_app_function.tester.tap(button)
-#     await flet_app_function.tester.pump_and_settle()
-#     flet_app_function.assert_screenshot(
-#         "basic",
-#         await flet_app_function.take_page_controls_screenshot(),
-#     )
+@pytest.mark.asyncio(loop_scope="function")
+async def test_hue_ring_picker(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            intrinsic_width=True,
+            controls=[HueRingPicker(picker_color="#00ff00")],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_slide_picker(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            intrinsic_width=True,
+            controls=[SlidePicker(picker_color="#0000ff")],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_material_picker(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            intrinsic_width=True,
+            controls=[MaterialPicker(picker_color="#ff9800")],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_block_picker(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            intrinsic_width=True,
+            controls=[BlockPicker(picker_color="#9c27b0")],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_multiple_choice_block_picker(
+    flet_app_function: ftt.FletTestApp, request
+):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            intrinsic_width=True,
+            controls=[
+                MultipleChoiceBlockPicker(
+                    picker_colors=["#03a9f4", "#4caf50", "#ffeb3b"]
+                )
+            ],
+        ),
+    )

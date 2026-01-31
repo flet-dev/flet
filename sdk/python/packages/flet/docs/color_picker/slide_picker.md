@@ -1,6 +1,7 @@
 ---
 class_name: flet_color_picker.SlidePicker
 examples: ../../examples/controls/color_picker
+example_images: ../test-images/examples/color_picker/golden/macos/color_picker_examples
 ---
 
 # SlidePicker
@@ -8,6 +9,8 @@ examples: ../../examples/controls/color_picker
 Pick a color using a slide picker from the `flet-color-picker` extension, which
 wraps Flutter's [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker)
 package.
+
+{{ class_summary(class_name, example_images + "/slide_picker.png", image_caption="Basic SlidePicker") }}
 
 ## Usage
 

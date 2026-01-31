@@ -1,6 +1,7 @@
 ---
 class_name: flet_color_picker.HueRingPicker
 examples: ../../examples/controls/color_picker
+example_images: ../../integration_tests/examples/color_picker/golden/macos/color_picker_examples
 ---
 
 # HueRingPicker
@@ -8,6 +9,8 @@ examples: ../../examples/controls/color_picker
 Pick a color using a hue ring picker from the `flet-color-picker` extension, which
 wraps Flutter's [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker)
 package.
+
+{{ class_summary(class_name, example_images + "/hue_ring_picker.png", image_caption="Basic HueRingPicker") }}
 
 ## Usage
 
