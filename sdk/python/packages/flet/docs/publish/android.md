@@ -133,8 +133,8 @@ To publish on the Play Store, you need to sign your app with a digital certifica
 
 Android uses two signing keys: upload and app signing.
 
-- Developers upload an .aab or .apk file signed with an upload key to the Play Store.
-- The end-users download the .apk file signed with an app signing key.
+- Developers upload an `.aab` or `.apk` file signed with an upload key to the Play Store.
+- The end-users download the `.apk` file signed with an app signing key.
 
 To create your app signing key, use Play App Signing as described in the
 [official Play Store documentation](https://support.google.com/googleplay/android-developer/answer/7384423?hl=en).

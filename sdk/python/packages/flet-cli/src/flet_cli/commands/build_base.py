@@ -1010,8 +1010,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
                 "android_signing": bool(
                     self.options.android_signing_key_store
-                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
                     or self.get_pyproject("tool.flet.android.signing.key_store")
+                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
                 ),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},

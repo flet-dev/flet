@@ -198,7 +198,6 @@ Throughout this documentation, the following placeholders are used:
 
 - [`<target_platform>`](../cli/flet-build.md#target_platform) - one of: `apk`, `aab`, `ipa`, `web`, `macos`, `windows`, `linux`.
 - `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android` (for `apk` and `aab` targets), `ios` (for `ipa` target), `web`, `macos`, `windows`, `linux`.
-  - `apk`/`aab` map to `android`, `ipa` maps to `ios`.
 - [`<python_app_path>`](../cli/flet-build.md#python_app_path) - the path passed to `flet build` (defaults to the current directory).
 - `<flet_app_directory>` - the resolved project root for `<python_app_path>`; `pyproject.toml` and `requirements.txt` are read from here.
 - `<flet_version>` - the version of Flet in use. You can check with `flet --version` or
@@ -1215,7 +1214,8 @@ arguments are exposed or usable through the `flet build` command directly.
 For possible `flutter build` arguments, see [Flutter docs](https://docs.flutter.dev/deployment)
 guide, or run `flutter build <target_platform> --help`.
 
-/// admonition | Note
+/// admonition | Important
+    type: warning
 Passing additional `flutter build` arguments might cause unexpected behavior.
 Use at your own risk, and only if you fully know what you're doing!
 ///
