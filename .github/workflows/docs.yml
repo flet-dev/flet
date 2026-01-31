@@ -1,8 +1,6 @@
 name: Build docs
 
 on:
-  push:
-    branches: [product-project-artifact]
   workflow_dispatch:
 
 jobs:
