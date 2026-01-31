@@ -1,5 +1,7 @@
 import sys
 
+import numpy
+import pillow
 from modules.utils import greet
 
 import flet as ft
@@ -26,12 +28,13 @@ def main(page: ft.Page):
 
     page.appbar = ft.AppBar(
         title=ft.Text("Flet Build Test"),
-        actions=[
-            ft.Container(
-                content=ft.Text(f"v{ft.__version__}", weight=ft.FontWeight.BOLD),
-                padding=ft.Padding.only(right=15),
-            )
-        ],
+        center_title=True,
+        # actions=[
+        #     ft.Container(
+        #         content=ft.Text(f"v{ft.__version__}", weight=ft.FontWeight.BOLD),
+        #         padding=ft.Padding.only(right=15),
+        #     )
+        # ],
     )
 
     page.floating_action_button = ft.FloatingActionButton(
@@ -40,7 +43,13 @@ def main(page: ft.Page):
         on_click=lambda: page.show_dialog(
             ft.AlertDialog(
                 title="Debug Info",
-                content=ft.Text(f"sys.path: {sys.path}"),
+                content=ft.Column(
+                    controls=[
+                        ft.Text(f"Numpy: v{numpy.__version__}"),
+                        ft.Text(f"Pillow: v{pillow.__version__}"),
+                        ft.Text(f"sys.path: {sys.path}"),
+                    ]
+                ),
             )
         ),
     )
