@@ -6,6 +6,8 @@ requires-python = ">=3.10"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 
 dependencies = [
+    "numpy",
+    "pillow",
     "flet",
     "flet-ads",
     "flet-audio",
