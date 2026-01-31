@@ -1,11 +1,10 @@
 ---
-class_name: flet_color_picker.ColorPicker
 examples: ../../examples/controls/color_picker
 ---
 
-# ColorPicker
+# Color pickers
 
-Pick a color using the `flet-color-picker` extension, which wraps Flutter's
+`flet-color-picker` provides multiple picker controls built on Flutter's
 [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker) package.
 
 ## Usage
@@ -26,12 +25,11 @@ pip install flet-color-picker  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Example
+## Pickers
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-## Description
-
-{{ class_all_options(class_name) }}
+- [ColorPicker](color_picker.md)
+- [BlockPicker](block_picker.md)
+- [HueRingPicker](hue_ring_picker.md)
+- [MaterialPicker](material_picker.md)
+- [MultipleChoiceBlockPicker](multiple_choice_block_picker.md)
+- [SlidePicker](slide_picker.md)

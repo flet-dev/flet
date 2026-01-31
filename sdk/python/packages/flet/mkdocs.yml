@@ -310,6 +310,7 @@ nav:
           - CircleAvatar: controls/circleavatar.md
           - ColorPicker:
               - color_picker/index.md
+              - ColorPicker: color_picker/color_picker.md
               - BlockPicker: color_picker/block_picker.md
               - HueRingPicker: color_picker/hue_ring_picker.md
               - MaterialPicker: color_picker/material_picker.md
