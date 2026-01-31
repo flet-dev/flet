@@ -131,7 +131,7 @@ def test_page_forward_ref_resolution_uses_base_module():
 
 
 def test_get_type_hints_control_event_forward_ref():
-    def handler(e: ControlEvent) -> None:
+    def handler(event: ControlEvent) -> None:
         pass
 
     hints = get_type_hints(handler, include_extras=True)
