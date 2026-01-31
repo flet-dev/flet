@@ -1305,4 +1305,131 @@ the build and release process of your Flet apps.
 
 ### GitHub Actions
 
-TBA
+The below example shows how to use `flet build` in a GitHub Actions workflow.
+It builds the app for all platforms and uploads the resulting artifacts to the workflow run.
+
+```yaml
+name: Build Flet App
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  UV_PYTHON: 3.12
+  PYTHONUTF8: 1
+
+  # https://docs.flet.dev/publish/
+  BUILD_NUMBER: 1
+  BUILD_VERSION: 1.0.0
+
+  # https://docs.flet.dev/reference/environment-variables
+  FLET_CLI_NO_RICH_OUTPUT: 1
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # -------- Desktop --------
+          - name: linux
+            runner: ubuntu-latest
+            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/linux
+            needs_linux_deps: true
+
+          - name: macos
+            runner: macos-latest
+            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/macos
+            needs_linux_deps: false
+
+          - name: windows
+            runner: windows-latest
+            build_cmd: "flet build windows --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/windows
+            needs_linux_deps: false
+
+          # -------- Android --------
+          - name: aab
+            runner: ubuntu-latest
+            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: apk
+            runner: ubuntu-latest
+            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          # -------- iOS --------
+          - name: ipa
+            runner: macos-latest
+            build_cmd: "flet build ipa --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_path: build/ipa
+            needs_linux_deps: false
+
+          # -------- Web --------
+          - name: web
+            runner: ubuntu-latest
+            build_cmd: "flet build web --yes --verbose"
+            artifact_path: build/web
+            needs_linux_deps: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install Linux dependencies
+        if: matrix.needs_linux_deps
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          sudo apt-get install -y --no-install-recommends \
+            clang \
+            ninja-build \
+            libgtk-3-dev \
+            libasound2-dev \
+            libmpv-dev \
+            mpv \
+            libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libgstreamer-plugins-bad1.0-dev \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-bad \
+            gstreamer1.0-plugins-ugly \
+            gstreamer1.0-libav \
+            gstreamer1.0-tools \
+            gstreamer1.0-x \
+            gstreamer1.0-alsa \
+            gstreamer1.0-gl \
+            gstreamer1.0-gtk3 \
+            gstreamer1.0-qt5 \
+            gstreamer1.0-pulseaudio \
+            pkg-config \
+            libsecret-1-0 \
+            libsecret-1-dev
+          sudo apt-get clean
+
+      - name: Build app
+        shell: bash
+        run: |
+          uv run ${{ matrix.build_cmd }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: ${{ matrix.name }}-build-artifact
+          path: ${{ matrix.artifact_path }}
+          if-no-files-found: warn
+          overwrite: false
+```
