@@ -1,261 +1,265 @@
-Instructions for publishing Flet app into a standalone static website (SPA) that runs entirely in the browser with
-[Pyodide](https://pyodide.org/en/stable/index.html) and does not require any code running on the server side.
+Instructions for publishing a Flet app as a standalone static website (SPA) that
+runs entirely in the browser with [Pyodide](https://pyodide.org/en/stable/index.html).
+No Python code runs on the server.
 
-Pyodide is a port of CPython to WebAssembly (WASM) which is an emerging technology with [some limitations](https://pyodide.org/en/stable/usage/wasm-constraints.html).
+Pyodide is a port of CPython to WebAssembly (WASM) and has
+some [limitations](https://pyodide.org/en/stable/usage/wasm-constraints.html).
 
-::note Native Python packages
-Native Python packages (vs "pure" Python packages written in Python only) are packages that partially written in
-C, Rust or other languages producing native code. Example packages are `numpy`, `cryptography`, `lxml`, `pydantic`.
+/// admonition | Native Python packages
+Native Python packages (vs "pure" Python packages written in Python only) are packages
+partially written in C, Rust, or other languages producing native code.
+Example packages are `numpy`, `cryptography`, `lxml`, `pydantic-core`.
 
-Pyodide comes with a big list of [built-in packages](https://pyodide.org/en/stable/usage/packages-in-pyodide.html). However, to use a Python package from PyPI it must be a
-pure Python package or provide a wheel with binaries [built for Emscripten](https://pyodide.org/en/stable/development/new-packages.html).
-::
-
-### Async and threading
-
-Flet app that published to a static website could use both sync and async event handlers and methods.
-Pyodide is a WebAssembly application which does not support threading. The entire Flet is running in a single thread
-and all sync and async control event handlers are running in the same thread. If your app has CPU-bound logic
-(e.g. calculating Fibonacci 😀) or "sleeps" to make UI prettier it may "hang" UI. Consider moving that logic to
-a server and calling it via web API. Using `asyncio.sleep` in async methods is OK though.
-
-## <code class="doc-symbol doc-symbol-command"></code> `flet build web`
-
-Publish Flet app as a static website.
-
-This is the recommended publishing method for static website.
-
-### Prerequisites
-
-Flutter SDK [must be installed](../../../publish/index.md#flutter-sdk) on your computer for `flet build web` command to work.
-
-### Building website
-
-To publish Flet app as a static website run the following command from the root of your Flet app:
-
-```
-flet build web
-```
-
-A static website is published into `./build/web` directory.
-
-### Testing website
-
-You can test a published Flet app using [`flet serve`](../../../cli/flet-serve.md) command:
-
-```
-flet serve
-```
-
-Open `http://localhost:8000` in your browser to check the published app.
-
-### Packaging assets
-
-Once the website is published all files from `assets` directory will be copied "as is" to the root of the website.
-
-This allows overriding such things as `favicon.png` or ` manifest.json` with your own content.
-
-### URL strategy
-
-Flet apps support two ways of configuring URL-based routing:
-
-* **path** (default) - paths are read and written without a hash. For example, `fletapp.dev/path/to/view`.
-* **hash** - paths are read and written to the [hash fragment](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax). For example, `fletapp.dev/#/path/to/view`.
-
-If a hosting provider supports [Single-page application (SPA) rendering](https://developers.cloudflare.com/pages/platform/serving-pages/#single-page-application-spa-rendering) you can leave default "path" URL strategy as it gives pretty URLs.
-
-However, if a hosting provider (like GitHub Pages) doesn't support SPA mode then you need to publish your app with "hash" URL strategy.
-
-Use `--route-url-strategy` argument to change URL strategy.
-
-### Web renderer
-
-You can change default "canvaskit" web renderer ([more about renderers here](../../../cookbook/fonts.md) to "html" with `--web-renderer` option:
-
-```
-flet build web --web-renderer html
-```
-
-### Color emojis
-
-To reduce app size default "CanvasKit" renderer does not use colorful emojis, because the font file with color emojies weights around 8 MB.
-
-You can, however, opt-in for color emojis with `--use-color-emoji` flag:
-
-```
-flet build web --use-color-emoji
-```
-
-Alternatively, switch to `html` renderer which uses browser fonts.
-
-### Hosting website in a sub-directory
-
-Multiple Flet apps can be hosted on a single domain - each app in it's own sub-directory.
-
-To make a published Flet app work in a sub-directory you have to publish it with `--base-url` option:
-
-```
-flet build web --base-url <sub-directory>
-```
-
-For example, if app's URL is `https://mywebsite.com/myapp` then it must be published with `--base-url myapp`.
-
-## Disable splash screen
-
-The [splash screen](../../index.md#splash-screen) is enabled/shown by default.
-
-It can be disabled as follows:
-
-/// tab | `flet build`
-```bash
-flet build apk --no-android-splash
-```
-///
-/// tab | `pyproject.toml`
-
-/// tab | `[tool.flet]`
-```toml
-[tool.flet]
-splash.android = false
-```
-///
-/// tab | `[tool.flet.splash]`
-```toml
-[tool.flet.splash]
-android = false
-```
+Pyodide comes with a list of [built-in packages](https://pyodide.org/en/stable/usage/packages-in-pyodide.html).
+To use a package from PyPI, it must be pure Python or provide a wheel built for
+[Emscripten](https://pyodide.org/en/stable/development/new-packages.html).
 ///
 
+/// admonition | Async and threading
+Static websites run in a single browser thread. You can use sync and async handlers,
+but long-running CPU work or blocking calls will freeze the UI. Prefer async I/O,
+or move heavy work to a server and call it via a web API.
 ///
-
-## <code class="doc-symbol doc-symbol-command"></code> `flet publish`
-
-An alternative method to publish Flet app as a static website.
-
-Compared to [`flet build web`](#flet-build-web) command it does not require Flutter SDK to be installed on your computer.
-
-However, static websites built with `flet build web` command, compared to `flet publish`, have faster load time
-as all Python dependencies are now packaged into a single archive instead of being pulled in runtime with `micropip`.
-`flet build web` also detects native Python [packages built into Pyodide](https://pyodide.org/en/stable/usage/packages-in-pyodide.html), such as `bcrypt`, `html5lib`, `numpy`
-and many others, and installs them from Pyodide package registry.
-
-### Publish app as a static website
-
-Run the following command to publish Flet app to a standalone website:
-
-```
-flet publish <your-flet-app.py>
-```
-
-A static website is published into `./dist` directory.
-
-Command optional arguments:
-
-* `--pre` - allow micropip to install pre-release Python packages.
-* `-a ASSETS_DIR`, `--assets ASSETS_DIR` - path to an assets directory.
-* `--app-name APP_NAME` - application namee.
-* `--app-description APP_DESCRIPTION` - application description.
-* `--base-url BASE_URL` - base URL for the app.
-* `--web-renderer {canvaskit,html}` - web renderer to use.
-* `--route-url-strategy {path,hash}` - URL routing strategy.
-
-### Testing website
-
-You can test a published Flet app using [`flet serve`](../../../cli/flet-serve.md) command:
-
-```
-flet serve dist
-```
-
-Open `http://localhost:8000` in your browser to check the published app.
-
-### Loading packages
-
-You can load custom packages from PyPI during app start by listing them in `requirements.txt`. `requirements.txt` must be created in the same directory with `<your-flet-app.py>`.
-
-Each line of `requirements.txt` contains a package name followed by an optional version specifier.
 
 /// admonition | Micropip
     type: tip
-
-To install custom packages Pyodide uses [micropip](https://pypi.org/project/micropip/) - a lightweight version of `pip` that works in a browser.
-
-You can use [Micropip API](https://micropip.pyodide.org/en/stable/project/api.html) directly in your Flet app:
+Pyodide installs packages with [micropip](https://pypi.org/project/micropip/).
+You can use the [Micropip API](https://micropip.pyodide.org/en/stable/project/api.html)
+directly in your Flet app:
 
 ```python
 import sys
 
-if sys.platform == "emscripten": # check if run in Pyodide environment
+if sys.platform == "emscripten":
     import micropip
     await micropip.install("regex")
 ```
 ///
 
-#### Pre-release Python packages
+There are two ways to publish a static website:
 
-You can allow loading pre-release versions of PyPI packages, by adding `--pre` option to `flet publish` command:
+- [`flet build web`](#flet-build-web) - recommended; uses Flutter and packages dependencies into the output.
+- [`flet publish`](#flet-publish) - no Flutter required; installs dependencies at runtime with micropip.
 
+## `flet publish`
+
+[`flet publish`](../../../cli/flet-publish.md) is alternative to
+[`flet build web`](#flet-build-web) that does not require Flutter. It packages
+your app and installs dependencies in the browser at runtime via [micropip](https://pypi.org/project/micropip/).
+Initial load time is usually higher than `flet build web`.
+
+To publish an app, run:
+
+```bash
+flet publish <path-to-app.py>
 ```
-flet publish <your-flet-app.py> --pre
+
+The website is published to [`--distpath`](../../../cli/flet-publish.md#-distpath) (default: `./dist`).
+
+### Testing the site
+
+You can try published Flet app using [`flet serve`](../../../cli/flet-serve.md) command:
+
+```bash
+flet serve dist
 ```
+
+Then, open `http://localhost:8000` in your browser to check the published app.
 
 ### Assets
 
-If your app requires assets (images, fonts, etc.) you can copy them into website directory by using `--assets <directory>` option with `flet publish` command:
+If the [assets](../../../cookbook/assets.md) directory exists (default: `./assets`), its contents are copied
+to the published site root. Use [`--assets`](../../../cli/flet-publish.md#-assets) to point to a different
+folder. Assets are not packaged inside the `app.tar.gz`.
 
+## `flet build web`
+
+Publish a static website using Flutter and Pyodide.
+
+/// admonition | Note
+    type: tip
+Complementary and more general information is available [here](../../index.md).
+///
+
+### Testing the site
+
+[`flet serve`](../../../cli/flet-serve.md) serves the default
+[output directory](../../index.md#output-directory) (`./build/web`):
+
+```bash
+flet serve
 ```
-flet publish <your-flet-app.py> --assets assets
+
+## Configuration options
+
+These settings apply to `flet build web` and `flet publish`, unless noted.
+
+### Base URL
+
+Use a base URL when hosting your app in a subdirectory. Flet normalizes it to
+`/<value>/` and uses `/` when unset.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--base-url`
+2. `[tool.flet.web].base_url`
+3. `"/"`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --base-url /myapp/
 ```
-
-::caution
-If you have `assets` directory in your app's directory and don't specify `--assets` option then the contents of `assets` will be packaged along with a Python application rather than copied to `dist`.
-::
-
-### URL strategy
-
-Flet apps support two ways of configuring URL-based routing:
-
-* **Path** (default) - paths are read and written without a hash. For example, `fletapp.dev/path/to/view`.
-* **Hash** - paths are read and written to the [hash fragment](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax). For example, `fletapp.dev/#/path/to/view`.
-
-If a hosting provider supports [Single-page application (SPA) rendering](https://developers.cloudflare.com/pages/platform/serving-pages/#single-page-application-spa-rendering) you can leave default "path" URL strategy as it gives pretty URLs.
-
-However, if a hosting provider (like GitHub Pages) doesn't support SPA mode then you need to publish your app with "hash" URL strategy.
-
-To specify "hash" URL strategy during static app publishing use `--route-url-strategy` option:
-
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+base_url = "/myapp/"
 ```
-flet publish <your-flet-app.py> --route-url-strategy hash
+///
+
+### Route URL strategy
+
+Controls how routes are represented in the URL:
+
+- `path` - clean paths; requires SPA-capable hosting.
+- `hash` - uses the URL hash; works on static hosts without SPA support.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--route-url-strategy`
+2. `[tool.flet.web].route_url_strategy`
+3. `"path"`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --route-url-strategy hash
 ```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+route_url_strategy = "hash"
+```
+///
 
 ### Web renderer
 
-You can change default "canvaskit" web renderer ([more about renderers here][flet.WebRenderer]) to "html" with `--web-renderer` option:
+Selects the Flutter web renderer:
 
+- `auto` (default) - let Flutter choose the best renderer
+- `canvaskit`
+- `skwasm`
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `--web-renderer`
+2. `[tool.flet.web].renderer`
+3. `"auto"`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --web-renderer canvaskit
 ```
-flet publish <your-flet-app.py> --web-renderer html
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+renderer = "canvaskit"
 ```
+///
 
-### Color emojis
+### CDN assets
 
-To reduce app size default "CanvasKit" renderer does not use colorful emojis, because the font file with color emojies weights around 8 MB.
+By default, Pyodide, CanvasKit, and fonts are loaded from CDNs to keep the output
+small. Disable CDN loading for offline or air-gapped deployments.
 
-You can, however, opt-in for color emojis with `--use-color-emoji` flag:
+#### Resolution order
 
+CDN loading is disabled in the following order of precedence:
+
+1. `--no-cdn`
+2. `[tool.flet.web].cdn = false`
+3. default: CDN enabled
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --no-cdn
 ```
-flet publish <your-flet-app.py> --use-color-emoji
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+cdn = false
 ```
+///
 
-Alternatively, switch to `html` renderer which uses browser fonts.
+### PWA colors
 
-### Hosting website in a sub-directory
+Configure PWA colors used in `manifest.json` and browser UI.
 
-Multiple Flet apps can be hosted on a single domain - each app in it's own sub-directory.
+#### Resolution order
 
-To make a published Flet app work in a sub-directory you have to publish it with `--base-url` option:
+For each setting:
 
+1. `--pwa-background-color` / `--pwa-theme-color`
+2. `[tool.flet.web].pwa_background_color` / `[tool.flet.web].pwa_theme_color`
+3. `#FFFFFF` / `#0175C2`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --pwa-background-color "#000000" --pwa-theme-color "#FF0000"
 ```
-flet publish <your-flet-app.py> --base-url <sub-directory>
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+pwa_background_color = "#000000"
+pwa_theme_color = "#FF0000"
 ```
+///
 
-For example, if app's URL is `https://mywebsite.com/myapp` then it must be published with `--base-url myapp`.
+### WASM output
+
+By default, [`flet build web`](#flet-build-web) enables Flutter's WASM output.
+
+/// admonition | Note
+[`flet build web`](#flet-build-web) only.
+///
+
+#### Resolution order
+
+The WASM output is disabled in the following order of precedence:
+
+1. [`--no-wasm`](../../../cli/flet-build.md#-no-wasm)
+2. `[tool.flet.web].wasm = false`
+3. default: WASM enabled
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build web --no-wasm
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.web]
+wasm = false
+```
+///

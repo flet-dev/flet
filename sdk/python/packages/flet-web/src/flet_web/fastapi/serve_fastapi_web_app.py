@@ -3,10 +3,10 @@ import logging
 from typing import Any, Optional, Union
 
 import uvicorn
-from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 import flet_web.fastapi
 import flet_web.fastapi as flet_fastapi
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 logger = logging.getLogger(flet_fastapi.__name__)
 

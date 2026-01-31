@@ -54,9 +54,9 @@ Run this app and you will see a new window with a greeting:
 
 For the proof of concept, we will only be using three types of controls:
 
-* [`Stack`][flet.] - will be used as a parent control for absolute positioning of slots and cards
-* [`GestureDetector`][flet.] - the card that will be moved within the [`Stack`][flet.]
-* [`Container`][flet.] - the slot where the card will be dropped. Will also be used as `content` for the [`GestureDetector`][flet.].
+* [`Stack`][flet.Stack] - will be used as a parent control for absolute positioning of slots and cards
+* [`GestureDetector`][flet.GestureDetector] - the card that will be moved within the [`Stack`][flet.Stack]
+* [`Container`][flet.Container] - the slot where the card will be dropped. Will also be used as `content` for the [`GestureDetector`][flet.GestureDetector].
 
 We have broken down the proof of concept app into four easy steps, so that after each step you have
 a complete short program to run and test.
@@ -65,8 +65,8 @@ a complete short program to run and test.
 
 In this step we will create a [`Stack`][flet.Stack] (Solitaire game field)
 and a [`GestureDetector`][flet.GestureDetector] (Solitaire card).
-The card will then be added to the list of the [`Stack.controls`][flet.].
-[`top`][flet.GestureDetector.] and [`left`][flet.GestureDetector.] properties of the
+The card will then be added to the list of the [`Stack.controls`][flet.Stack.controls].
+[`top`][flet.GestureDetector.top] and [`left`][flet.GestureDetector.left] properties of the
 `GestureDetector` are used for absolute positioning of the card in the `Stack`.
 
 ```python
@@ -89,11 +89,11 @@ Run the app to see the card added to the stack:
 {{ image("../examples/tutorials/solitaire/media/drag-and-drop1.png", alt="drag_and_drop1", width="80%") }}
 
 
-To be able to move the card, we'll create a `drag` method that will be called in [`on_pan_update`][flet.GestureDetector.]
-event of `GestureDetector` which happens every [`drag_interval`][flet.GestureDetector.] while the user drags the card with their mouse.
+To be able to move the card, we'll create a `drag` method that will be called in [`on_pan_update`][flet.GestureDetector.on_pan_update]
+event of `GestureDetector` which happens every [`drag_interval`][flet.GestureDetector.drag_interval] while the user drags the card with their mouse.
 
-To show the card's movement, we’ll be updating the card’s [`top`][flet.GestureDetector.] and [`left`][flet.GestureDetector.] properties in the `drag`
-callback each time the [`on_pan_update`][flet.GestureDetector.] event happens.
+To show the card's movement, we’ll be updating the card’s [`top`][flet.GestureDetector.top] and [`left`][flet.GestureDetector.left] properties in the `drag`
+callback each time the [`on_pan_update`][flet.GestureDetector.on_pan_update] event happens.
 
 Below is the simplest code for dragging `GestureDetector` in `Stack`:
 
@@ -139,7 +139,7 @@ The goal of this step is to be able to drop a card into a slot if it is close en
 {{ image("../examples/tutorials/solitaire/media/drag-and-drop3.gif", alt="drag-and-drop3", width="50%") }}
 
 
-Let’s create a [`Container`][flet.] control that will represent a slot to which we’ll be dropping the card:
+Let’s create a [`Container`][flet.Container] control that will represent a slot to which we’ll be dropping the card:
 
 ```python
 slot = ft.Container(
@@ -189,7 +189,7 @@ Now, if the card is not close enough, we need to bounce it back to its original 
 Unfortunately, we don’t know the original position coordinates, since the card’s `top` and `left` properties were changed on `on_pan_update` event.
 
 To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of
-the card when [`on_pan_start`][flet.GestureDetector.] event of the card is called:
+the card when [`on_pan_start`][flet.GestureDetector.on_pan_start] event of the card is called:
 
 ```python
 class Solitaire:
@@ -205,7 +205,7 @@ def start_drag(e: ft.DragStartEvent):
     e.control.update()
 ```
 
-Now let’s update [`on_pan_end`][flet.GestureDetector.] event with the option to bounce card back:
+Now let’s update [`on_pan_end`][flet.GestureDetector.on_pan_end] event with the option to bounce card back:
 ```python
 def bounce_back(game, card):
     """return card to its original position"""
@@ -255,8 +255,8 @@ yellow card (`card2`) is moving as expected but the green the card (`card1`) is 
 {{ image("../examples/tutorials/solitaire/media/drag-and-drop4.gif", alt="drag_and_drop4.gif", width="80%") }}
 
 
-It happens because `card2` is added to the list of stack's [`controls`][flet.Stack.] after `card1`. To fix this problem,
-we need to move the draggable card to the top of the list of controls on [`on_pan_start`][flet.GestureDetector.] event:
+It happens because `card2` is added to the list of stack's [`controls`][flet.Stack.controls] after `card1`. To fix this problem,
+we need to move the draggable card to the top of the list of controls on [`on_pan_start`][flet.GestureDetector.on_pan_start] event:
 
 ```python
 def move_on_top(card, controls):
@@ -332,7 +332,7 @@ As a result, the two cards can be dragged between the three slots:
 The full code for this step can be found [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/solitaire/solitaire-drag-and-drop/step4.py).
 
 Congratulations on completing the proof of concept app for the Solitaire game!
-Now you can work with [`GestureDetector`][flet.] to move cards inside [`Stack`][flet.] and place them to
+Now you can work with [`GestureDetector`][flet.GestureDetector] to move cards inside [`Stack`][flet.Stack] and place them to
 certain `Container`s, which is a great part of the game to begin with.
 
 ## Fanned card piles
@@ -358,7 +358,7 @@ Let’s restructure our program and get it ready for the implementation of the f
 ### Slot, Card and Solitaire classes
 
 A slot could have a `pile` property that would hold a list of cards that were placed there.
-Now the slot is a [`Container`][flet.] control object, and we can’t add any new properties to it.
+Now the slot is a [`Container`][flet.Container] control object, and we can’t add any new properties to it.
 Let’s create a new `Slot` class that will inherit from `Container` and add a `pile` property to it:
 
 ```python
@@ -379,7 +379,7 @@ class Slot(ft.Container):
 ```
 
 Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides.
-It will inherit from [`GestureDetector`][flet.] and we’ll move all card-related methods to it:
+It will inherit from [`GestureDetector`][flet.GestureDetector] and we’ll move all card-related methods to it:
 ```python
 CARD_WIDTH = 70
 CARD_HEIGHT = 100
@@ -447,7 +447,7 @@ Since each card has `slot` property now, there is no need to remember `start_lef
 position of the draggable card in Solitaire class anymore, because we can just bounce it back to its slot.
 ///
 
-Let’s update `Solitaire` class to inherit from [`Stack`][flet.], and move the creation of cards and slots there:
+Let’s update `Solitaire` class to inherit from [`Stack`][flet.Stack], and move the creation of cards and slots there:
 
 ```python
 SOLITAIRE_WIDTH = 1000
@@ -1220,9 +1220,9 @@ Now it's time to share your app with the world!
 In this tutorial, you have learnt how to:
 
 * [Create](../getting-started/create-flet-app.md) a simple Flet app;
-* Drag and drop cards with [`GestureDetector`][flet.];
+* Drag and drop cards with [`GestureDetector`][flet.GestureDetector];
 * [Create your own classes](../cookbook/custom-controls.md) that inherit from Flet controls;
-* Design UI layout using absolute positioning of controls in [`Stack`][flet.];
+* Design UI layout using absolute positioning of controls in [`Stack`][flet.Stack];
 * Implement [implicit animations](../cookbook/animations.md);
 * [Deploy](../publish/web/index.md) your Flet app to the web;
 

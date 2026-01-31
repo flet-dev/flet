@@ -11,9 +11,9 @@ It is powered by the [media_kit](https://pub.dev/packages/media_kit) Flutter pac
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -33,9 +33,17 @@ pip install flet-video  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-/// admonition | Windows Subsystem for Linux (WSL)
+/// admonition | Linux requirements
     type: note
-Install the [`libmpv`](https://github.com/mpv-player/mpv) library when running on WSL.
+[`libmpv`](https://github.com/mpv-player/mpv) libraries must be installed when using the `flet-video` package.
+These are system dependencies and must be present on the machine running the app.
+
+On Ubuntu/Debian they can be installed by running:
+
+```bash
+sudo apt install libmpv-dev mpv
+```
+
 If you encounter `libmpv.so.1` load errors, run:
 
 ```bash
@@ -45,7 +53,9 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
 ```
 ///
 
-## Example
+## Examples
+
+### Basic example
 
 ```python
 --8<-- "{{ examples }}/example_1.py"
