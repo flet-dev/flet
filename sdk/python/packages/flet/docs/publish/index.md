@@ -1308,6 +1308,7 @@ the build and release process of your Flet apps.
 The below example shows how to use `flet build` in a GitHub Actions workflow.
 It builds the app for all platforms and uploads the resulting artifacts to the workflow run.
 
+{% raw %}
 ```yaml
 name: Build Flet App
 
@@ -1433,3 +1434,4 @@ jobs:
           if-no-files-found: warn
           overwrite: false
 ```
+{% endraw %}
