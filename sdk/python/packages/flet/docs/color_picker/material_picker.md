@@ -1,7 +1,7 @@
 ---
 class_name: flet_color_picker.MaterialPicker
 examples: ../../examples/controls/color_picker
-example_images: ../../integration_tests/examples/color_picker/golden/macos/color_picker_examples
+example_images: ../test-images/examples/color_picker/golden/macos/color_picker_examples
 ---
 
 # MaterialPicker
