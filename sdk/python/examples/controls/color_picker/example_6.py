@@ -6,17 +6,10 @@ def main(page: ft.Page):
     page.title = "MultipleChoiceBlockPicker"
     page.padding = 20
 
-    selected = ft.Text("#03a9f4, #4caf50")
-    swatch = ft.Container(width=40, height=40, bgcolor="#03a9f4", border_radius=6)
-
     def on_colors_change(e: ft.ControlEvent):
-        colors = e.data or []
-        selected.value = ", ".join(colors)
-        if colors:
-            swatch.bgcolor = colors[0]
-        page.update()
+        print(f"colors: {e.data}")
 
-    picker = MultipleChoiceBlockPicker(
+    dialog_picker = MultipleChoiceBlockPicker(
         picker_colors=["#03a9f4", "#4caf50"],
         available_colors=[
             "#f44336",
@@ -33,12 +26,17 @@ def main(page: ft.Page):
         on_colors_change=on_colors_change,
     )
 
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Pick colors"),
+        content=dialog_picker,
+        actions=[
+            ft.TextButton("Close", on_click=lambda e: page.pop_dialog()),
+        ],
+    )
+
     page.add(
-        ft.Row(
-            spacing=12,
-            controls=[swatch, selected],
-        ),
-        picker,
+        ft.IconButton(icon=ft.Icons.BRUSH, on_click=lambda e: page.show_dialog(dialog)),
     )
 
 
