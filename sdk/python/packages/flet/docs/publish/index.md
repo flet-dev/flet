@@ -1305,11 +1305,12 @@ the build and release process of your Flet apps.
 
 ### GitHub Actions
 
-The below example shows how to use `flet build` in a GitHub Actions workflow.
+The below example shows how to use `flet build` in a [GitHub Actions](https://docs.github.com/en/actions) workflow.
 It builds the app for all platforms and uploads the resulting artifacts to the workflow run.
+You could further customize/tailor it to best fit your specific needs.
 
 {% raw %}
-```yaml
+```yaml title=build.yml
 name: Build Flet App
 
 on:
@@ -1318,7 +1319,7 @@ on:
   workflow_dispatch:
 
 env:
-  UV_PYTHON: 3.12
+  UV_PYTHON: 3.12   # Python version
   PYTHONUTF8: 1
 
   # https://docs.flet.dev/publish/
@@ -1431,7 +1432,7 @@ jobs:
         with:
           name: ${{ matrix.name }}-build-artifact
           path: ${{ matrix.artifact_path }}
-          if-no-files-found: warn
+          if-no-files-found: fail
           overwrite: false
 ```
 {% endraw %}
