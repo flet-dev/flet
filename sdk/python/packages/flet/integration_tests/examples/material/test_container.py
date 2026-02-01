@@ -56,7 +56,7 @@ async def test_nested_themes_1(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_nested_themes_2(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(650, 450)
+    flet_app_function.resize_page(650, 350)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 

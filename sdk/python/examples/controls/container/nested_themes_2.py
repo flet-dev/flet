@@ -66,24 +66,6 @@ def main(page: ft.Page):
                 ]
             ),
         ),
-        ft.Container(
-            padding=20,
-            bgcolor=ft.Colors.SURFACE_TINT,
-            border=ft.Border.all(3, ft.Colors.OUTLINE),
-            border_radius=10,
-            theme_mode=ft.ThemeMode.SYSTEM,
-            theme=ft.Theme(),
-            content=ft.Row(
-                controls=[
-                    ft.Button("SYSTEM theme"),
-                    ft.TextButton("Text button"),
-                    ft.Text(
-                        "Text in primary container color",
-                        color=ft.Colors.PRIMARY_CONTAINER,
-                    ),
-                ]
-            ),
-        ),
     )
 
 
