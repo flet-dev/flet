@@ -26,7 +26,7 @@ concurrency:
 env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
-  FLET_BUILD_TEMPLATE_REF: 0.80.5
+  FLET_BUILD_TEMPLATE_REF: product-project-artifact
 
   # https://docs.flet.dev/publish/
   BUILD_NUMBER: 1
