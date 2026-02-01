@@ -48,11 +48,12 @@ class Session:
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
         self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
+        self.__updates_task: Optional[asyncio.Task] = None
         self.__closed = False
 
         session_id = self.__id
         weakref.finalize(
-            self, lambda: logger.debug(f"Session was garbage collected: {session_id}")
+            self, lambda: logger.info(f"Session was garbage collected: {session_id}")
         )
 
     @property
@@ -106,6 +107,9 @@ class Session:
     def close(self):
         logger.debug(f"Closing expired session: {self.id}")
         self.__closed = True
+        self.__updates_ready.set()
+        if self.__updates_task and not self.__updates_task.done():
+            self.__updates_task.cancel()
         self.__pubsub_client.unsubscribe_all()
         self.__cancel_method_calls()
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
@@ -326,44 +330,49 @@ class Session:
 
     def start_updates_scheduler(self):
         logger.debug(f"Starting updates scheduler: {self.id}")
-        asyncio.create_task(self.__updates_scheduler())
+        if self.__updates_task and not self.__updates_task.done():
+            return
+        self.__updates_task = asyncio.create_task(self.__updates_scheduler())
 
     async def __updates_scheduler(self):
-        while not self.__closed:
-            await self.__updates_ready.wait()
-            self.__updates_ready.clear()
+        try:
+            while not self.__closed:
+                await self.__updates_ready.wait()
+                self.__updates_ready.clear()
 
-            # Process pending updates
-            pending_updates = list(self.__pending_updates)
-            self.__pending_updates.clear()
+                # Process pending updates
+                pending_updates = list(self.__pending_updates)
+                self.__pending_updates.clear()
 
-            for control in pending_updates:
-                control.update()
+                for control in pending_updates:
+                    control.update()
 
-            # Process pending effects
-            pending_effects = list(self.__pending_effects)
-            self.__pending_effects.clear()
+                # Process pending effects
+                pending_effects = list(self.__pending_effects)
+                self.__pending_effects.clear()
 
-            for effect in pending_effects:
-                try:
-                    hook = effect[0]()
-                    is_cleanup = effect[1]
-                    # print(f"**** Running effect: {hook} {is_cleanup}")
-                    if hook and hook.setup and not is_cleanup:
-                        hook.cancel()
-                        res = None
-                        if inspect.iscoroutinefunction(hook.setup):
-                            hook._setup_task = asyncio.create_task(hook.setup())
-                        else:
-                            res = hook.setup()
-                        if callable(res):
-                            hook.cleanup = res
-                    elif hook and hook.cleanup and is_cleanup:
-                        hook.cancel()
-                        if inspect.iscoroutinefunction(hook.cleanup):
-                            hook._cleanup_task = asyncio.create_task(hook.cleanup())
-                        else:
-                            hook.cleanup()
-                except Exception as ex:
-                    tb = traceback.format_exc()
-                    self.error(f"Exception in effect: {ex}\n{tb}")
+                for effect in pending_effects:
+                    try:
+                        hook = effect[0]()
+                        is_cleanup = effect[1]
+                        # print(f"**** Running effect: {hook} {is_cleanup}")
+                        if hook and hook.setup and not is_cleanup:
+                            hook.cancel()
+                            res = None
+                            if inspect.iscoroutinefunction(hook.setup):
+                                hook._setup_task = asyncio.create_task(hook.setup())
+                            else:
+                                res = hook.setup()
+                            if callable(res):
+                                hook.cleanup = res
+                        elif hook and hook.cleanup and is_cleanup:
+                            hook.cancel()
+                            if inspect.iscoroutinefunction(hook.cleanup):
+                                hook._cleanup_task = asyncio.create_task(hook.cleanup())
+                            else:
+                                hook.cleanup()
+                    except Exception as ex:
+                        tb = traceback.format_exc()
+                        self.error(f"Exception in effect: {ex}\n{tb}")
+        except asyncio.CancelledError:
+            pass

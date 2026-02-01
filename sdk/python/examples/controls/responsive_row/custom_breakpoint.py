@@ -7,8 +7,8 @@ def main(page: ft.Page):
 
     breakpoints = {
         "phone": 0,
-        "tablet": 640,
-        "desktop": 1000,
+        "tablet": 540,
+        "desktop": 800,
     }
 
     sorted_breakpoints = sorted(breakpoints.items(), key=lambda item: item[1])
@@ -67,28 +67,28 @@ def main(page: ft.Page):
                     content=ft.Text("Card 1", size=16, weight=ft.FontWeight.W_600),
                     alignment=ft.Alignment.CENTER,
                     bgcolor=ft.Colors.AMBER_200,
-                    height=90,
+                    height=60,
                     col={"phone": 4, "tablet": 4, "desktop": 3},
                 ),
                 ft.Container(
                     content=ft.Text("Card 2", size=16, weight=ft.FontWeight.W_600),
                     alignment=ft.Alignment.CENTER,
                     bgcolor=ft.Colors.GREEN_200,
-                    height=90,
+                    height=60,
                     col={"phone": 4, "tablet": 4, "desktop": 3},
                 ),
                 ft.Container(
                     content=ft.Text("Card 3", size=16, weight=ft.FontWeight.W_600),
                     alignment=ft.Alignment.CENTER,
                     bgcolor=ft.Colors.BLUE_200,
-                    height=90,
+                    height=60,
                     col={"phone": 4, "tablet": 4, "desktop": 3},
                 ),
                 ft.Container(
                     content=ft.Text("Card 4", size=16, weight=ft.FontWeight.W_600),
                     alignment=ft.Alignment.CENTER,
                     bgcolor=ft.Colors.PINK_200,
-                    height=90,
+                    height=60,
                     col={"phone": 4, "tablet": 4, "desktop": 3},
                 ),
             ],

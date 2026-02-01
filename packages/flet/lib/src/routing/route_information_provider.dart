@@ -27,3 +27,39 @@ class FletRouteInformationProvider extends PlatformRouteInformationProvider {
     return super.didPushRouteInformation(normalized);
   }
 }
+
+class FletLocalRouteInformationProvider extends RouteInformationProvider
+    with ChangeNotifier {
+  RouteInformation _value;
+
+  FletLocalRouteInformationProvider({
+    required RouteInformation initialRouteInformation,
+  }) : _value = FletRouteInformationProvider.normalize(
+            initialRouteInformation,
+          );
+
+  @override
+  RouteInformation get value => _value;
+
+  @override
+  void routerReportsNewRouteInformation(
+    RouteInformation routeInformation, {
+    RouteInformationReportingType type = RouteInformationReportingType.none,
+  }) {
+    _setValue(routeInformation);
+  }
+
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) async {
+    _setValue(routeInformation);
+    return true;
+  }
+
+  void _setValue(RouteInformation routeInformation) {
+    final normalized = FletRouteInformationProvider.normalize(routeInformation);
+    if (_value.uri == normalized.uri && _value.state == normalized.state) {
+      return;
+    }
+    _value = normalized;
+    notifyListeners();
+  }
+}

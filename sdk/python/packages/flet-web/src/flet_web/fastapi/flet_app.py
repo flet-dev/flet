@@ -97,7 +97,7 @@ class FletApp(Connection):
 
         app_id = self.__id
         weakref.finalize(
-            self, lambda: logger.debug(f"FletApp was garbage collected: {app_id}")
+            self, lambda: logger.info(f"FletApp was garbage collected: {app_id}")
         )
 
     async def handle(self, websocket: WebSocket):

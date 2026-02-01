@@ -21,6 +21,10 @@ if TYPE_CHECKING:
     from .page import Page
     from .base_page import BasePage
 
+    _BaseControlType = BaseControl
+else:
+    _BaseControlType = Any
+
 __all__ = [
     "ControlEvent",
     "ControlEventHandler",
@@ -92,7 +96,7 @@ def get_event_field_type(control: Any, field_name: str):
         raise RuntimeError(f"[resolve error] {field_name}: {e}") from e
 
 
-EventControlType = TypeVar("EventControlType", bound="BaseControl")
+EventControlType = TypeVar("EventControlType", bound=_BaseControlType)
 
 
 @dataclass
@@ -118,4 +122,4 @@ ControlEventHandler = Union[Callable[[], Any], Callable[[Event[EventControlType]
 
 EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
 
-ControlEvent = Event["BaseControl"]
+ControlEvent = Event[_BaseControlType]
