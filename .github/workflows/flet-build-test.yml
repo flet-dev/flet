@@ -195,5 +195,5 @@ jobs:
         with:
           name: ${{ matrix.artifact_name }}
           path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
-          if-no-files-found: fail
+          if-no-files-found: error
           overwrite: false

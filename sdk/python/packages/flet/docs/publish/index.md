@@ -1432,7 +1432,7 @@ jobs:
         with:
           name: ${{ matrix.name }}-build-artifact
           path: ${{ matrix.artifact_path }}
-          if-no-files-found: fail
+          if-no-files-found: error
           overwrite: false
 ```
 {% endraw %}
