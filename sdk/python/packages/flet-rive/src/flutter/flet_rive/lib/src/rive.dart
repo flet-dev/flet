@@ -69,7 +69,7 @@ class _RiveControlState extends State<RiveControl> {
     final fileFuture = _fileFuture;
     final painter = _painter;
     if (fileFuture == null || painter == null) {
-      return ConstrainedControl(
+      return LayoutControl(
         control: widget.control,
         child: placeholder ?? const SizedBox.shrink(),
       );
@@ -122,7 +122,7 @@ class _RiveControlState extends State<RiveControl> {
       },
     );
 
-    return ConstrainedControl(control: widget.control, child: riveWidget);
+    return LayoutControl(control: widget.control, child: riveWidget);
   }
 
   void _syncLoadedFile(rive.File file) {

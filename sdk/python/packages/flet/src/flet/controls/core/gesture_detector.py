@@ -58,8 +58,8 @@ class GestureDetector(LayoutControl, AdaptiveControl):
     tracking. `drag_interval` allows sending drag update events to a Flet program every
     X milliseconds, thus preserving the bandwidth (web and mobile apps).
 
-    Default is `0` - no throttling, all events are sent to a Flet program, very smooth
-    tracking.
+    `0` means no throttling: all events are sent to a Flet program,
+    resulting in very smooth tracking.
     """
 
     hover_interval: int = 0

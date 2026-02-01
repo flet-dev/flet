@@ -16,17 +16,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/clickable.py"
 ```
 
-{{ image(example_images + "/clickable.gif", alt="clickable", width="80%") }}
-
-
-### Background color
-
-```python
---8<-- "{{ examples }}/background_color.py"
-```
-
-{{ image(example_images + "/background_color.png", alt="background-color", width="80%") }}
-
+{{ image(example_images + "/clickable.gif", width="80%") }}
 
 ### Handling clicks
 
@@ -34,7 +24,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_clicks.py"
 ```
 
-{{ image(example_images + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}
+{{ image(example_images + "/handling_clicks.gif", width="80%") }}
 
 
 ### Handling hovers
@@ -43,7 +33,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/handling_hovers.py"
 ```
 
-{{ image(example_images + "/handling_hovers.gif", alt="handling-hovers", width="80%") }}
+{{ image(example_images + "/handling_hovers.gif", width="80%") }}
 
 
 ### Animate 1
@@ -52,7 +42,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/animate_1.py"
 ```
 
-{{ image(example_images + "/animate_1.gif", alt="animate-1", width="80%") }}
+{{ image(example_images + "/animate_1.gif", width="80%") }}
 
 
 ### Animate 2
@@ -79,11 +69,15 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_1.py"
 ```
 
+{{ image(example_images + "/nested_themes_1.png", width="80%") }}
+
 ### Nested themes 2
 
 ```python
 --8<-- "{{ examples }}/nested_themes_2.py"
 ```
+
+{{ image(example_images + "/nested_themes_2.png", width="80%") }}
 
 ### Nested themes 3
 
@@ -91,7 +85,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_3.py"
 ```
 
-{{ image(example_images + "/nested_themes_3.gif", alt="nested-themes-3", width="80%") }}
+{{ image(example_images + "/nested_themes_3.gif", width="80%") }}
 
 
 ### Size aware
@@ -99,5 +93,7 @@ example_images: ../examples/controls/container/media
 ```python
 --8<-- "{{ examples }}/size_aware.py"
 ```
+
+{{ image(example_images + "/size_aware.png", width="80%") }}
 
 {{ class_members(class_name) }}

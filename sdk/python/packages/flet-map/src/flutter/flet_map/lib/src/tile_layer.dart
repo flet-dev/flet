@@ -61,6 +61,6 @@ class TileLayerControl extends StatelessWidget {
         },
         additionalOptions: control.get("additional_options", {})!);
 
-    return ConstrainedControl(control: control, child: tileLayer);
+    return LayoutControl(control: control, child: tileLayer);
   }
 }

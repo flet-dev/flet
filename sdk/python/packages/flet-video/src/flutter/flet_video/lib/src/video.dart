@@ -45,7 +45,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     }
   }
 
-
   void _setup(Control control) {
     final playerConfig = PlayerConfiguration(
       title: control.getString("title", "flet-video")!,
@@ -85,8 +84,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       });
     }
 
-    final playlist =
-        Playlist(parseVideoMedias(control.get("playlist"), [])!);
+    final playlist = Playlist(parseVideoMedias(control.get("playlist"), [])!);
     final autoplay = control.getBool("autoplay", false)!;
 
     () async {
@@ -319,6 +317,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       }
     }();
 
-    return ConstrainedControl(control: widget.control, child: video);
+    return LayoutControl(control: widget.control, child: video);
   }
 }

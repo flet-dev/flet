@@ -253,7 +253,11 @@ from flet.controls.gradients import (
 from flet.controls.icon_data import IconData
 from flet.controls.id_counter import IdCounter
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
-from flet.controls.layout_control import ConstrainedControl, LayoutControl
+from flet.controls.layout_control import (
+    ConstrainedControl,
+    LayoutControl,
+    LayoutSizeChangeEvent,
+)
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2
 from flet.controls.material.alert_dialog import AlertDialog
@@ -821,6 +825,7 @@ __all__ = [
     "LabelPosition",
     "LaunchMode",
     "LayoutControl",
+    "LayoutSizeChangeEvent",
     "LinearGradient",
     "LinuxDeviceInfo",
     "ListTile",

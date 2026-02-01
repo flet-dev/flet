@@ -67,7 +67,7 @@ class _NativeAdControlState extends State<NativeAdControl> with FletStoreMixin {
       nativeAd.load();
     }
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: widget.control, child: AdWidget(ad: nativeAd));
   }
 }

@@ -190,6 +190,6 @@ class _DataTable2ControlState extends State<DataTable2Control> {
       }).toList(),
     );
 
-    return ConstrainedControl(control: widget.control, child: datatable2);
+    return LayoutControl(control: widget.control, child: datatable2);
   }
 }

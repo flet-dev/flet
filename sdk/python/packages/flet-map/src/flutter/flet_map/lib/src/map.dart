@@ -123,6 +123,6 @@ class _MapControlState extends State<MapControl>
       children: widget.control.buildWidgets("layers"),
     );
 
-    return ConstrainedControl(control: widget.control, child: map);
+    return LayoutControl(control: widget.control, child: map);
   }
 }
