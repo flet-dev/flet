@@ -63,7 +63,7 @@ jobs:
   build_and_release:
     name: Build & Release
     needs: changes
-    if: needs.changes.outputs.build_and_release == 'true'
+    if: needs.changes.outputs.build_and_release == 'true' || startsWith(github.ref, 'refs/tags/v')
     uses: ./.github/workflows/build-and-release.yml
     permissions:
       id-token: write

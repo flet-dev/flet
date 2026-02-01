@@ -3,11 +3,6 @@ name: Build & Release
 on:
   workflow_call:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - '**'
-#    tags:
-#      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   id-token: write
