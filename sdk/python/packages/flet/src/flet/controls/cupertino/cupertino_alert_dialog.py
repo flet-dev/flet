@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
-from flet.controls.types import StrOrControl
+from flet.controls.types import ColorValue, StrOrControl
 
 __all__ = ["CupertinoAlertDialog"]
 
@@ -56,6 +56,14 @@ class CupertinoAlertDialog(DialogControl):
     """
     The animation style to be used when the system keyboard intrudes into the space
     that the dialog is placed in.
+    """
+
+    barrier_color: Optional[ColorValue] = None
+    """
+    The color of the modal barrier below this dialog.
+
+    If `None`, then [`DialogTheme.barrier_color`][flet.] is used.
+    If that is also `None`, the default is `Colors.BLACK_54`.
     """
 
     def before_update(self):
