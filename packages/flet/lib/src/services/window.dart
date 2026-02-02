@@ -355,8 +355,9 @@ class WindowService extends FletService with WindowListener {
         _frameless = frameless;
       }
 
-      if (progressBar != null && progressBar != _progressBar) {
-        await setWindowProgressBar(progressBar);
+      if (progressBar != _progressBar) {
+        // window_manager uses -1 to clear the native progress indicator.
+        await setWindowProgressBar(progressBar ?? -1);
         _progressBar = progressBar;
       }
 
