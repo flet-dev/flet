@@ -47,6 +47,7 @@ class WindowService extends FletService with WindowListener {
   bool? _focused;
   bool? _frameless;
   bool? _titleBarHidden;
+  bool? _titleBarButtonsHidden;
   bool? _skipTaskBar;
   double? _progressBar;
   bool? _ignoreMouseEvents;
@@ -313,10 +314,14 @@ class WindowService extends FletService with WindowListener {
         _preventClose = preventClose;
       }
 
-      if (titleBarHidden != null && titleBarHidden != _titleBarHidden) {
+      final effectiveTitleBarHidden =
+          titleBarHidden ?? _titleBarHidden ?? false;
+      if (effectiveTitleBarHidden != _titleBarHidden ||
+          titleBarButtonsHidden != _titleBarButtonsHidden) {
         await setWindowTitleBarVisibility(
-            titleBarHidden, titleBarButtonsHidden);
-        _titleBarHidden = titleBarHidden;
+            effectiveTitleBarHidden, titleBarButtonsHidden);
+        _titleBarHidden = effectiveTitleBarHidden;
+        _titleBarButtonsHidden = titleBarButtonsHidden;
       }
 
       if (visible != null && visible != _visible) {
