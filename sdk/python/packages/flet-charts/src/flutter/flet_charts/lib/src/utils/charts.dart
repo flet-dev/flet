@@ -138,6 +138,12 @@ AxisTitles parseAxisTitles(Control? control) {
     return const AxisTitles(sideTitles: SideTitles(showTitles: false));
   }
 
+  control.notifyParent = true;
+  final labels = control.children("labels");
+  for (final label in labels) {
+    label.notifyParent = true;
+  }
+
   return AxisTitles(
       axisNameWidget: control.buildWidget("title"),
       axisNameSize: control.getDouble("title_size", 16)!,
@@ -147,11 +153,10 @@ AxisTitles parseAxisTitles(Control? control) {
         interval: control.getDouble("label_spacing"),
         minIncluded: control.getBool("show_min", true)!,
         maxIncluded: control.getBool("show_max", true)!,
-        getTitlesWidget: control.children("labels").isEmpty
+        getTitlesWidget: labels.isEmpty
             ? defaultGetTitle
             : (double value, TitleMeta meta) {
-                var label = control
-                    .children("labels")
+                var label = labels
                     .firstWhereOrNull((l) => l.getDouble("value") == value);
                 return label?.buildTextOrWidget("label") ??
                     const SizedBox.shrink();
