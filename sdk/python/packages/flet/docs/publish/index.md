@@ -1310,7 +1310,7 @@ It builds the app for all platforms and uploads the resulting artifacts to the w
 You could further customize/tailor it to best fit your specific needs.
 
 {% raw %}
-```yaml title=build.yml
+```yaml
 name: Build Flet App
 
 on:
