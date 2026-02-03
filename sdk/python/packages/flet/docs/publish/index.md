@@ -668,19 +668,50 @@ source_packages = ["package1", "package2"]
 
 ### Flutter dependencies
 
-To add Flutter packages or other `pubspec.yaml` entries, use
-`[tool.flet.flutter].pubspec` to merge into the generated
-Flutter project (from the [template](#template-source)).
+When you run `flet build`, Flet generates a Flutter shell project and then
+updates its [`pubspec.yaml`](#build-template) using values from `pyproject.toml`.
+
+Use:
+
+- `[tool.flet.flutter.pubspec.dependencies]` for normal package declarations.
+    ([Dart docs](https://dart.dev/tools/pub/dependencies))
+- `[tool.flet.flutter.pubspec.dependency_overrides]` when you must force a
+    version or source, for example, a local path or Git fork.
+    ([Dart docs](https://dart.dev/tools/pub/dependencies#dependency-overrides))
+
+Values follow [standard Pub dependency syntax](https://dart.dev/tools/pub/dependencies#dependency-sources),
+expressed in TOML.
+
+/// admonition | Note
+- If the same package appears in both `pyproject.toml` and the resulting `pubspec.yaml`,
+  the value from `pyproject.toml` wins.
+- **Important:** In most cases, you usually do not need to add/override Flutter dependencies.
+  We recommend doing it only if you fully know what you are doing, as it can lead to
+  unexpected behavior.
+///
 
 #### Example
 
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.flutter.pubspec.dependencies]
-package_1 = "^1.2.3"
+[tool.flet.flutter.pubspec.dependencies]    # or [tool.flet.flutter.pubspec.dependency_overrides]
+# Version
+pkg_1 = "^1.2.3"
 
-[tool.flet.flutter.pubspec.dependency_overrides]
-package_2 = { git = "https://github.com/org/package_2.git", ref = "main" }
+# Local path
+pkg_2 = { path = "../pkg_2" }
+
+# Git (short form)
+pkg_3 = { git = "https://github.com/org/pkg_3.git" }
+
+# Git (expanded form: URL + ref + subdirectory)
+pkg_4 = { git = { url = "https://github.com/org/mono_repo.git", ref = "main", path = "packages/pkg_4" } }
+
+# Hosted source
+pkg_5 = { hosted = { name = "pkg_5", url = "https://pub.dev" }, version = "^1.0.0" }
+
+# SDK package (dependencies only; typically not used in dependency_overrides)
+flutter_test = { sdk = "flutter" }
 ```
 ///
 
