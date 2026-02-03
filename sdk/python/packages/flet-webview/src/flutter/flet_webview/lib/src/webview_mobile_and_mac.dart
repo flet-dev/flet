@@ -14,6 +14,65 @@ class WebviewMobileAndMac extends StatefulWidget {
 
 class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
   late WebViewController controller;
+  bool _scrollHandlerRegistered = false;
+  bool _consoleHandlerRegistered = false;
+  bool _alertHandlerRegistered = false;
+
+  bool _shouldPreventNavigation(String url) {
+    final links = widget.control.get<List>("prevent_links");
+    if (links == null || links.isEmpty) return false;
+    return links.any((link) => link is String && url.startsWith(link));
+  }
+
+  void _setOptionalEventHandlers() {
+    // macOS currently does not surface scroll callbacks via webview_flutter.
+    if (!isMacOSDesktop() &&
+        !_scrollHandlerRegistered &&
+        widget.control.hasEventHandler("scroll")) {
+      try {
+        controller.setOnScrollPositionChange((ScrollPositionChange position) {
+          widget.control
+              .triggerEvent("scroll", {"x": position.x, "y": position.y});
+        });
+        _scrollHandlerRegistered = true;
+      } catch (e) {
+        debugPrint("WebView.on_scroll is not available on this platform: $e");
+      }
+    }
+
+    if (!_consoleHandlerRegistered &&
+        widget.control.hasEventHandler("console_message")) {
+      try {
+        controller.setOnConsoleMessage((JavaScriptConsoleMessage message) {
+          widget.control.triggerEvent("console_message", {
+            "message": message.message,
+            "severity_level": message.level.name,
+          });
+        });
+        _consoleHandlerRegistered = true;
+      } catch (e) {
+        debugPrint(
+            "WebView.on_console_message is not available on this platform: $e");
+      }
+    }
+
+    if (!_alertHandlerRegistered &&
+        widget.control.hasEventHandler("javascript_alert_dialog")) {
+      try {
+        controller.setOnJavaScriptAlertDialog(
+            (JavaScriptAlertDialogRequest request) async {
+          widget.control.triggerEvent(
+            "javascript_alert_dialog",
+            {"message": request.message, "url": request.url},
+          );
+        });
+        _alertHandlerRegistered = true;
+      } catch (e) {
+        debugPrint(
+            "WebView.on_javascript_alert_dialog is not available on this platform: $e");
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -41,11 +100,7 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
           widget.control.triggerEvent("web_resource_error", error.description);
         },
         onNavigationRequest: (NavigationRequest request) {
-          var links = widget.control.get("prevent_link");
-          var prevent = links is List &&
-              links.isNotEmpty &&
-              links.any((l) => request.url.startsWith(l));
-          return prevent
+          return _shouldPreventNavigation(request.url)
               ? NavigationDecision.prevent
               : NavigationDecision.navigate;
         },
@@ -58,26 +113,7 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
         method: parseLoadRequestMethod(
             widget.control.getString("method"), LoadRequestMethod.get)!);
 
-    // scroll
-    if (!isMacOSDesktop()) {
-      controller.setOnScrollPositionChange((ScrollPositionChange position) {
-        widget.control
-            .triggerEvent("scroll", {"x": position.x, "y": position.y});
-      });
-    }
-
-    // console
-    controller.setOnConsoleMessage((JavaScriptConsoleMessage message) {
-      widget.control.triggerEvent("console_message",
-          {"message": message.message, "level": message.level.name});
-    });
-
-    // alert
-    controller.setOnJavaScriptAlertDialog(
-        (JavaScriptAlertDialogRequest request) async {
-      widget.control.triggerEvent("javascript_alert_dialog",
-          {"message": request.message, "url": request.url});
-    });
+    _setOptionalEventHandlers();
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -87,9 +123,9 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
         await controller.reload();
         break;
       case "can_go_back":
-        return controller.canGoBack().toString();
+        return controller.canGoBack();
       case "can_go_forward":
-        return controller.canGoForward().toString();
+        return controller.canGoForward();
       case "go_back":
         if (await controller.canGoBack()) {
           await controller.goBack();
@@ -174,6 +210,8 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
   @override
   Widget build(BuildContext context) {
     debugPrint("WebViewControl build: ${widget.control.id}");
+
+    _setOptionalEventHandlers();
 
     var bgcolor = widget.control.getColor("bgcolor", context);
 
