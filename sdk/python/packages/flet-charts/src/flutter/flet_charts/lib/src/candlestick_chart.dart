@@ -113,7 +113,7 @@ class _CandlestickChartControlState extends State<CandlestickChartControl> {
       curve: animation.curve,
     );
 
-    return ConstrainedControl(
+    return LayoutControl(
       control: widget.control,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {

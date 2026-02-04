@@ -24,6 +24,6 @@ class WebViewControl extends StatelessWidget {
       view = const WebviewDesktop();
     }
 
-    return ConstrainedControl(control: control, child: view);
+    return LayoutControl(control: control, child: view);
   }
 }

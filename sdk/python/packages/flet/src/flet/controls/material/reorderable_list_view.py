@@ -41,6 +41,7 @@ class ReorderableListView(ListView):
         To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
         define your own drag handle or region.
 
+    Example:
     ```python
     ft.ReorderableListView(
         controls=[
