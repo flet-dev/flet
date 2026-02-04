@@ -280,9 +280,9 @@ def test_button_basic_diff():
         patch,
         [
             {
-                "op": "add",
-                "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+                "op": "replace",
+                "path": ["_internals"],
+                "value": {"style": ft.ButtonStyle(color=ft.Colors.RED, elevation=1)},
             },
             {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
             {"op": "replace", "path": ["content"], "value": "Click me"},
@@ -297,9 +297,9 @@ def test_button_basic_diff():
         patch,
         [
             {
-                "op": "remove",
-                "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+                "op": "replace",
+                "path": ["_internals"],
+                "value": {},
             },
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
             {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
