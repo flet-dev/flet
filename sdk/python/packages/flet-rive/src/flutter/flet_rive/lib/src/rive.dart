@@ -227,7 +227,6 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
   double speedMultiplier;
   final List<rive.Animation> _animations = [];
   final List<rive.StateMachine> _stateMachines = [];
-  final List<rive.CallbackHandler> _inputHandlers = [];
   bool _previousHit = false;
 
   @override
@@ -239,7 +238,7 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
       final machine = artboard.defaultStateMachine();
       if (machine != null) {
         _stateMachines.add(machine);
-        _inputHandlers.add(machine.onInputChanged(_onInputChanged));
+        machine.addAdvanceRequestListener(_onAdvanceRequested);
       } else if (artboard.animationCount() > 0) {
         _animations.add(artboard.animationAt(0));
       }
@@ -255,7 +254,7 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
         final machine = artboard.stateMachine(name);
         if (machine != null) {
           _stateMachines.add(machine);
-          _inputHandlers.add(machine.onInputChanged(_onInputChanged));
+          machine.addAdvanceRequestListener(_onAdvanceRequested);
         }
       }
     }
@@ -263,7 +262,7 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
     notifyListeners();
   }
 
-  void _onInputChanged(int inputId) {
+  void _onAdvanceRequested() {
     notifyListeners();
   }
 
@@ -334,7 +333,7 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
         return false;
       }
       final scaled = elapsedSeconds * speedMultiplier;
-      return artboard.advance(scaled) || artboard.updatePass();
+      return artboard.advance(scaled);
     }
 
     var advanced = false;
@@ -354,13 +353,10 @@ base class _RiveMultiAnimationPainter extends rive.BasicArtboardPainter
     }
     _animations.clear();
     for (final machine in _stateMachines) {
+      machine.removeAdvanceRequestListener(_onAdvanceRequested);
       machine.dispose();
     }
     _stateMachines.clear();
-    for (final handler in _inputHandlers) {
-      handler.dispose();
-    }
-    _inputHandlers.clear();
   }
 
   @override
