@@ -333,8 +333,8 @@ class Control extends ChangeNotifier {
 
     /// Resolves a path-index node into a concrete patch target.
     ///
-    /// - Returns a `PatchTarget` instance. Its `obj` field is the mutable container
-    ///   (Control.properties/Map/List) where the operation should be applied.
+    /// - Returns `PatchTarget.obj` as a mutable container (Control.properties/Map/List)
+    ///   where the operation should be applied.
     /// - Tracks the nearest Control while traversing so listeners can be notified.
     /// - When `createMissingMaps` is true (used by ADD), missing intermediate map
     ///   segments are materialized on demand, e.g. creating `_internals` before
