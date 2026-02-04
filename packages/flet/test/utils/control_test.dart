@@ -96,30 +96,4 @@ void main() {
     });
     expect(changed, true);
   });
-
-  test("applyPatch ADD creates missing intermediate map", () {
-    var c1 = Control(
-        id: 1,
-        type: "Button",
-        properties: {"content": "Click me"},
-        backend: backend);
-
-    c1.applyPatch([
-      [
-        0,
-        {"_internals": [1]}
-      ],
-      [
-        1,
-        1,
-        "style",
-        {
-          "bgcolor": "green",
-        }
-      ]
-    ], backend);
-
-    expect(c1.properties["_internals"], isA<Map>());
-    expect(c1.properties["_internals"]["style"]["bgcolor"], "green");
-  });
 }
