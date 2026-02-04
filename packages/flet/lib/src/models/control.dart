@@ -331,33 +331,15 @@ class Control extends ChangeNotifier {
 
     //debugPrint("PATH INDEX: $pathIndex");
 
-    /// Resolves a path-index node into a concrete patch target.
-    ///
-    /// - Returns `PatchTarget.obj` as a mutable container (Control.properties/Map/List)
-    ///   where the operation should be applied.
-    /// - Tracks the nearest Control while traversing so listeners can be notified.
-    /// - When `createMissingMaps` is true (used by ADD), missing intermediate map
-    ///   segments are materialized on demand, e.g. creating `_internals` before
-    ///   adding `_internals.style`.
-    getPatchTarget(int index, {bool createMissingMaps = false}) {
+    getPatchTarget(int index) {
       var path = pathIndex[index]!;
       dynamic obj = this;
       Control? control = this;
       for (var p in path) {
         if (obj is Control) {
-          var next = obj.properties[p];
-          if (next == null && createMissingMaps) {
-            next = <dynamic, dynamic>{};
-            obj.properties[p] = next;
-          }
-          obj = next;
+          obj = obj.properties[p];
         } else if (obj is Map) {
-          var next = obj[p];
-          if (next == null && createMissingMaps) {
-            next = <dynamic, dynamic>{};
-            obj[p] = next;
-          }
-          obj = next;
+          obj = obj[p];
         } else if (obj is List) {
           obj = obj[p];
         }
@@ -386,17 +368,15 @@ class Control extends ChangeNotifier {
         }
       } else if (opType == OperationType.add) {
         // ADD
-        var node = getPatchTarget(op[1], createMissingMaps: true);
+        var node = getPatchTarget(op[1]);
         var index = op[2];
         var value = op[3];
         if (node.obj is Map) {
           node.obj[index] = _transformIfControl(value, node.control, backend);
         } else if (node.obj is List) {
-          node.obj
-              .insert(index, _transformIfControl(value, node.control, backend));
+          node.obj.insert(index, _transformIfControl(value, node.control, backend));
         } else {
-          throw Exception(
-              "Add operation can only be applied to lists or maps: $op");
+          throw Exception("Add operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.remove) {
@@ -408,8 +388,7 @@ class Control extends ChangeNotifier {
         } else if (node.obj is Map) {
           node.obj.remove(index);
         } else {
-          throw Exception(
-              "Remove operation can be applied to lists or maps: $op");
+          throw Exception("Remove operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.move) {
@@ -423,8 +402,7 @@ class Control extends ChangeNotifier {
         } else if (fromNode.obj is Map && toNode.obj is Map) {
           toNode.obj[toIndex] = fromNode.obj.remove(fromIndex);
         } else {
-          throw Exception(
-              "Move operation can only be applied to lists or maps: $op");
+            throw Exception("Move operation can only be applied to lists or maps: $op");
         }
         if (shouldNotify) {
           if (fromNode.control.id != toNode.control.id) {
