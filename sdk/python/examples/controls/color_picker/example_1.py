@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import ColorLabelType, ColorPicker
+from flet_color_picker import ColorLabelType, ColorPicker, PaletteType
 
 
 def main(page: ft.Page):
@@ -33,6 +33,7 @@ def main(page: ft.Page):
             "#ff00ff",
         ],
         on_color_change=on_color_change,
+        palette_type=PaletteType.RGB_WITH_GREEN,
         on_history_change=on_history_change,
         on_hsv_color_change=on_hsv_color_change,
         label_types=[

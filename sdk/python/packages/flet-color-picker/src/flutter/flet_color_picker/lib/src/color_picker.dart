@@ -48,10 +48,6 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     return parseEnum(ColorLabelType.values, value, defaultValue);
   }
 
-  PaletteType? _parsePaletteType(String? value, [PaletteType? defaultValue]) {
-    return parseEnum(PaletteType.values, value, defaultValue);
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("ColorPickerControl build: ${widget.control.id}");
@@ -87,7 +83,7 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
       }
     }
     final paletteType =
-        _parsePaletteType(widget.control.get("palette_type")?.toString());
+        parsePaletteType(widget.control.get("palette_type")?.toString());
     final pickerAreaBorderRadius =
         widget.control.getBorderRadius("picker_area_border_radius");
     final pickerAreaHeightPercent =

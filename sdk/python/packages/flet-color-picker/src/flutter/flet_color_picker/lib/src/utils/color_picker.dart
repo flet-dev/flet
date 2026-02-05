@@ -1,5 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 HSVColor? parseHsvColor(dynamic value) {
   if (value is Map) {
@@ -12,4 +13,8 @@ HSVColor? parseHsvColor(dynamic value) {
     }
   }
   return null;
+}
+
+PaletteType? parsePaletteType(String? value, [PaletteType? defaultValue]) {
+  return parseEnum(PaletteType.values, value, defaultValue);
 }
