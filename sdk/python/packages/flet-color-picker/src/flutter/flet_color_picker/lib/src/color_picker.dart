@@ -53,23 +53,13 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
 
   HSVColor? _parseHsvColor(dynamic value) {
     if (value is Map) {
-      final alpha = _toDouble(value["alpha"]);
-      final hue = _toDouble(value["hue"]);
-      final saturation = _toDouble(value["saturation"]);
-      final val = _toDouble(value["value"]);
+      final alpha = parseDouble(value["alpha"]);
+      final hue = parseDouble(value["hue"]);
+      final saturation = parseDouble(value["saturation"]);
+      final val = parseDouble(value["value"]);
       if (alpha != null && hue != null && saturation != null && val != null) {
         return HSVColor.fromAHSV(alpha, hue, saturation, val);
       }
-    }
-    return null;
-  }
-
-  double? _toDouble(dynamic value) {
-    if (value is num) {
-      return value.toDouble();
-    }
-    if (value is String) {
-      return double.tryParse(value);
     }
     return null;
   }
