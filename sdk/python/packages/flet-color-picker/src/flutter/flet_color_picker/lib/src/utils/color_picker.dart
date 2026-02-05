@@ -18,3 +18,7 @@ HSVColor? parseHsvColor(dynamic value) {
 PaletteType? parsePaletteType(String? value, [PaletteType? defaultValue]) {
   return parseEnum(PaletteType.values, value, defaultValue);
 }
+
+ColorLabelType? parseLabelType(String? value, [ColorLabelType? defaultValue]) {
+  return parseEnum(ColorLabelType.values, value, defaultValue);
+}

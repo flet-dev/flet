@@ -43,11 +43,6 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     widget.control.triggerEvent("history_change", colorsHex);
   }
 
-  ColorLabelType? _parseLabelType(String? value,
-      [ColorLabelType? defaultValue]) {
-    return parseEnum(ColorLabelType.values, value, defaultValue);
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("ColorPickerControl build: ${widget.control.id}");
@@ -76,7 +71,7 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     final labelTypes = <ColorLabelType>[];
     if (rawLabelTypes is List) {
       for (final raw in rawLabelTypes) {
-        final parsed = _parseLabelType(raw?.toString());
+        final parsed = parseLabelType(raw?.toString());
         if (parsed != null) {
           labelTypes.add(parsed);
         }
