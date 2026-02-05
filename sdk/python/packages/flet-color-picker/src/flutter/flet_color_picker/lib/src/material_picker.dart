@@ -38,15 +38,12 @@ class _MaterialPickerControlState extends State<MaterialPickerControl> {
       _pickerColor = controlColor;
     }
 
-    final enableLabel = widget.control.getBool("enable_label", false)!;
-    final portraitOnly = widget.control.getBool("portrait_only", false)!;
-
     final picker = MaterialPicker(
       pickerColor: _pickerColor,
       onColorChanged: _onColorChanged,
       onPrimaryChanged: _onPrimaryChanged,
-      enableLabel: enableLabel,
-      portraitOnly: portraitOnly,
+      enableLabel: widget.control.getBool("enable_label", false)!,
+      portraitOnly: widget.control.getBool("portrait_only", false)!,
     );
 
     return LayoutControl(control: widget.control, child: picker);

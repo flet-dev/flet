@@ -33,24 +33,18 @@ class _HueRingPickerControlState extends State<HueRingPickerControl> {
       _pickerColor = controlColor;
     }
 
-    final colorPickerHeight =
-        widget.control.getDouble("color_picker_height") ?? 250.0;
-    final enableAlpha = widget.control.getBool("enable_alpha", false)!;
-    final hueRingStrokeWidth =
-        widget.control.getDouble("hue_ring_stroke_width") ?? 20.0;
-    final pickerAreaBorderRadius =
-        widget.control.getBorderRadius("picker_area_border_radius") ??
-            BorderRadius.zero;
-    final portraitOnly = widget.control.getBool("portrait_only", false)!;
-
     final picker = HueRingPicker(
       pickerColor: _pickerColor,
       onColorChanged: _onColorChanged,
-      colorPickerHeight: colorPickerHeight,
-      enableAlpha: enableAlpha,
-      hueRingStrokeWidth: hueRingStrokeWidth,
-      pickerAreaBorderRadius: pickerAreaBorderRadius,
-      portraitOnly: portraitOnly,
+      colorPickerHeight:
+          widget.control.getDouble("color_picker_height") ?? 250.0,
+      enableAlpha: widget.control.getBool("enable_alpha", false)!,
+      hueRingStrokeWidth:
+          widget.control.getDouble("hue_ring_stroke_width") ?? 20.0,
+      pickerAreaBorderRadius:
+          widget.control.getBorderRadius("picker_area_border_radius") ??
+              const BorderRadius.all(Radius.zero),
+      portraitOnly: widget.control.getBool("portrait_only", false)!,
     );
 
     return LayoutControl(control: widget.control, child: picker);

@@ -1,7 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flet/src/utils/enums.dart';
+
 import 'utils/color_picker.dart';
 
 class ColorPickerControl extends StatefulWidget {
@@ -60,13 +60,6 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
       _pickerColor = controlColor;
     }
 
-    final colorPickerWidth = widget.control.getDouble("color_picker_width");
-    final displayThumbColor =
-        widget.control.getBool("display_thumb_color", true)!;
-    final enableAlpha = widget.control.getBool("enable_alpha", true)!;
-    final hexInputBar = widget.control.getBool("hex_input_bar", true)!;
-    final labelTextStyle =
-        widget.control.getTextStyle("label_text_style", Theme.of(context));
     final rawLabelTypes = widget.control.get("label_types");
     final labelTypes = <ColorLabelType>[];
     if (rawLabelTypes is List) {
@@ -77,12 +70,7 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
         }
       }
     }
-    final paletteType =
-        parsePaletteType(widget.control.get("palette_type")?.toString());
-    final pickerAreaBorderRadius =
-        widget.control.getBorderRadius("picker_area_border_radius");
-    final pickerAreaHeightPercent =
-        widget.control.getDouble("picker_area_height_percent") ?? 1.0;
+
     final labelTypesArg = rawLabelTypes is List
         ? labelTypes
         : const [ColorLabelType.rgb, ColorLabelType.hsv, ColorLabelType.hsl];
@@ -102,17 +90,23 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     final picker = ColorPicker(
       pickerColor: _pickerColor,
       onColorChanged: _onColorChanged,
-      colorPickerWidth: colorPickerWidth ?? 300.0,
+      colorPickerWidth: widget.control.getDouble("color_picker_width") ?? 300.0,
       colorHistory: colorHistory.isNotEmpty ? colorHistory : null,
       onHistoryChanged: _onHistoryChanged,
-      displayThumbColor: displayThumbColor,
-      enableAlpha: enableAlpha,
-      hexInputBar: hexInputBar,
-      labelTextStyle: labelTextStyle,
+      displayThumbColor: widget.control.getBool("display_thumb_color", true)!,
+      enableAlpha: widget.control.getBool("enable_alpha", true)!,
+      hexInputBar: widget.control.getBool("hex_input_bar", true)!,
+      labelTextStyle:
+          widget.control.getTextStyle("label_text_style", Theme.of(context)),
       labelTypes: labelTypesArg,
-      paletteType: paletteType ?? PaletteType.hsvWithHue,
-      pickerAreaBorderRadius: pickerAreaBorderRadius ?? BorderRadius.zero,
-      pickerAreaHeightPercent: pickerAreaHeightPercent,
+      paletteType:
+          parsePaletteType(widget.control.get("palette_type")?.toString()) ??
+              PaletteType.hsvWithHue,
+      pickerAreaBorderRadius:
+          widget.control.getBorderRadius("picker_area_border_radius") ??
+              const BorderRadius.all(Radius.zero),
+      pickerAreaHeightPercent:
+          widget.control.getDouble("picker_area_height_percent") ?? 1.0,
       pickerHsvColor: pickerHsvColor,
       onHsvColorChanged: _onHsvColorChanged,
     );
