@@ -17,7 +17,13 @@ def main(page: ft.Page):
         print("hsv: ", e.control.picker_hsv_color)
 
     picker = ColorPicker(
-        picker_color="#ff0000",
+        # picker_color="#ff0000",
+        picker_hsv_color={
+            "alpha": 1.0,
+            "hue": 60.0,
+            "saturation": 1.0,
+            "value": 1.0,
+        },
         color_history=[
             "#ff0000",
             "#00ff00",

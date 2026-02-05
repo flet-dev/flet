@@ -2,6 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flet/src/utils/enums.dart';
+import 'utils/color_picker.dart';
 
 class ColorPickerControl extends StatefulWidget {
   final Control control;
@@ -51,25 +52,12 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
     return parseEnum(PaletteType.values, value, defaultValue);
   }
 
-  HSVColor? _parseHsvColor(dynamic value) {
-    if (value is Map) {
-      final alpha = parseDouble(value["alpha"]);
-      final hue = parseDouble(value["hue"]);
-      final saturation = parseDouble(value["saturation"]);
-      final val = parseDouble(value["value"]);
-      if (alpha != null && hue != null && saturation != null && val != null) {
-        return HSVColor.fromAHSV(alpha, hue, saturation, val);
-      }
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("ColorPickerControl build: ${widget.control.id}");
 
     final pickerHsvColor =
-        _parseHsvColor(widget.control.get("picker_hsv_color"));
+        parseHsvColor(widget.control.get("picker_hsv_color"));
     final controlColor =
         widget.control.getColor("picker_color", context) ?? Colors.black;
     if (pickerHsvColor != null) {
