@@ -2,6 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import 'utils/color_pickers.dart';
+
 class SlidePickerControl extends StatefulWidget {
   final Control control;
 
@@ -13,15 +15,6 @@ class SlidePickerControl extends StatefulWidget {
 
 class _SlidePickerControlState extends State<SlidePickerControl> {
   Color _pickerColor = Colors.black;
-
-  ColorLabelType? _parseLabelType(String? value,
-      [ColorLabelType? defaultValue]) {
-    return parseEnum(ColorLabelType.values, value, defaultValue);
-  }
-
-  ColorModel? _parseColorModel(String? value, [ColorModel? defaultValue]) {
-    return parseEnum(ColorModel.values, value, defaultValue);
-  }
 
   void _onColorChanged(Color color) {
     final colorHex = color.toHex();
@@ -38,13 +31,13 @@ class _SlidePickerControlState extends State<SlidePickerControl> {
       _pickerColor = controlColor;
     }
 
-    final colorModel = _parseColorModel(
+    final colorModel = parseColorModel(
         widget.control.get("color_model")?.toString(), ColorModel.rgb);
     final rawLabelTypes = widget.control.get("label_types");
     final labelTypes = <ColorLabelType>[];
     if (rawLabelTypes is List) {
       for (final raw in rawLabelTypes) {
-        final parsed = _parseLabelType(raw?.toString());
+        final parsed = parseLabelType(raw?.toString());
         if (parsed != null) {
           labelTypes.add(parsed);
         }

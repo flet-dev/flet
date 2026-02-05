@@ -2,7 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'utils/color_picker.dart';
+import 'utils/color_pickers.dart';
 
 class ColorPickerControl extends StatefulWidget {
   final Control control;

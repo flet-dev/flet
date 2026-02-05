@@ -22,3 +22,7 @@ PaletteType? parsePaletteType(String? value, [PaletteType? defaultValue]) {
 ColorLabelType? parseLabelType(String? value, [ColorLabelType? defaultValue]) {
   return parseEnum(ColorLabelType.values, value, defaultValue);
 }
+
+ColorModel? parseColorModel(String? value, [ColorModel? defaultValue]) {
+  return parseEnum(ColorModel.values, value, defaultValue);
+}
