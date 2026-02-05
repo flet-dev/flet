@@ -27,9 +27,9 @@ pip install flet-color-picker  # (1)!
 
 ## Pickers
 
-- [ColorPicker](color_picker.md)
-- [BlockPicker](block_picker.md)
-- [HueRingPicker](hue_ring_picker.md)
-- [MaterialPicker](material_picker.md)
-- [MultipleChoiceBlockPicker](multiple_choice_block_picker.md)
-- [SlidePicker](slide_picker.md)
+- [ColorPicker](colorpicker.md)
+- [BlockPicker](blockpicker.md)
+- [HueRingPicker](hueringpicker.md)
+- [MaterialPicker](materialpicker.md)
+- [MultipleChoiceBlockPicker](multiplechoiceblockpicker.md)
+- [SlidePicker](slidepicker.md)

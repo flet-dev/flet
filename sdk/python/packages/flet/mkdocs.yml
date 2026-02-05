@@ -310,12 +310,12 @@ nav:
           - CircleAvatar: controls/circleavatar.md
           - ColorPicker:
               - color_picker/index.md
-              - ColorPicker: color_picker/color_picker.md
-              - BlockPicker: color_picker/block_picker.md
-              - HueRingPicker: color_picker/hue_ring_picker.md
-              - MaterialPicker: color_picker/material_picker.md
-              - MultipleChoiceBlockPicker: color_picker/multiple_choice_block_picker.md
-              - SlidePicker: color_picker/slide_picker.md
+              - ColorPicker: color_picker/colorpicker.md
+              - BlockPicker: color_picker/blockpicker.md
+              - HueRingPicker: color_picker/hueringpicker.md
+              - MaterialPicker: color_picker/materialpicker.md
+              - MultipleChoiceBlockPicker: color_picker/multiplechoiceblockpicker.md
+              - SlidePicker: color_picker/slidepicker.md
           - Column: controls/column.md
           - Container: controls/container.md
           - ContextMenu: controls/contextmenu.md
