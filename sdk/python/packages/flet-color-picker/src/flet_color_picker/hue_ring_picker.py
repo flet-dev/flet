@@ -8,7 +8,8 @@ __all__ = ["HueRingPicker"]
 @ft.control("HueRingPicker")
 class HueRingPicker(ft.LayoutControl):
     """
-    A hue ring color picker control based on flutter_colorpicker.
+    A hue ring color picker that lets users select a hue on a circular ring,
+    with an optional alpha slider.
     """
 
     picker_color: Optional[ft.ColorValue] = None

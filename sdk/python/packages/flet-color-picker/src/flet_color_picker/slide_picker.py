@@ -16,7 +16,8 @@ class ColorModel(Enum):
 @ft.control("SlidePicker")
 class SlidePicker(ft.LayoutControl):
     """
-    A slide color picker control based on flutter_colorpicker.
+    A slider-based color picker that exposes RGB/HSV/HSL channels with optional
+    labels and indicators.
     """
 
     picker_color: Optional[ft.ColorValue] = None

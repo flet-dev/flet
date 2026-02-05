@@ -8,7 +8,8 @@ __all__ = ["MaterialPicker"]
 @ft.control("MaterialPicker")
 class MaterialPicker(ft.LayoutControl):
     """
-    A material color picker control based on flutter_colorpicker.
+    A material palette picker for selecting primary and shade colors, with
+    optional shade labels.
     """
 
     picker_color: Optional[ft.ColorValue] = None

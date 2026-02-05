@@ -31,7 +31,8 @@ class PaletteType(Enum):
 @ft.control("ColorPicker")
 class ColorPicker(ft.LayoutControl):
     """
-    A color picker control based on flutter_colorpicker.
+    A full-featured color picker with palette, sliders, labels, and optional
+    history.
     """
 
     picker_color: Optional[ft.ColorValue] = None

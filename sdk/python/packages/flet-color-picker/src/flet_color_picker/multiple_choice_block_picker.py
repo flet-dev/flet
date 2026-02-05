@@ -8,7 +8,8 @@ __all__ = ["MultipleChoiceBlockPicker"]
 @ft.control("MultipleChoiceBlockPicker")
 class MultipleChoiceBlockPicker(ft.LayoutControl):
     """
-    A multiple choice block color picker control based on flutter_colorpicker.
+    A color picker that lets users choose multiple colors from a grid of available
+    colors.
     """
 
     picker_colors: Optional[list[ft.ColorValue]] = None

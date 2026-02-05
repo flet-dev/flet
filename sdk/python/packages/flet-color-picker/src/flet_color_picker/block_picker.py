@@ -8,7 +8,8 @@ __all__ = ["BlockPicker"]
 @ft.control("BlockPicker")
 class BlockPicker(ft.LayoutControl):
     """
-    A block color picker control based on flutter_colorpicker.
+    A color picker that lets users choose a color from a grid of available
+    colors.
     """
 
     picker_color: Optional[ft.ColorValue] = None
