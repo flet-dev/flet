@@ -14,6 +14,4 @@ example_images: ../test-images/examples/color_picker/golden/macos/color_picker_e
 --8<-- "{{ examples }}/example_6.py"
 ```
 
-## Description
-
-{{ class_all_options(class_name) }}
+{{ class_members(class_name) }}

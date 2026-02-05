@@ -4,7 +4,7 @@ examples: ../../examples/controls/color_picker
 
 # Color pickers
 
-`flet-color-picker` provides multiple picker controls built on Flutter's
+Multiple color picker controls built on Flutter's
 [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker) package.
 
 ## Usage
@@ -25,7 +25,7 @@ pip install flet-color-picker  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Pickers
+## Available color pickers
 
 - [ColorPicker](colorpicker.md)
 - [BlockPicker](blockpicker.md)
