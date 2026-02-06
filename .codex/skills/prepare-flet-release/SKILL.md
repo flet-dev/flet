@@ -1,6 +1,6 @@
 ---
 name: prepare-flet-release
-description: Prepare new Flet release by bumping versions and author release notes.
+description: Use when asked to prepare new Flet release by bumping versions and author release notes.
 ---
 
 ## Inputs

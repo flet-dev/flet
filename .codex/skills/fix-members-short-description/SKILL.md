@@ -1,6 +1,6 @@
 ---
 name: fix-members-short-description
-description: Fix short descriptions of Python type members.
+description: Use when asked to fix short descriptions of Python type members.
 ---
 
 ## Inputs
@@ -41,3 +41,7 @@ class MyControl:
 ```
 
 Your goal is to go through all members (properties, methods, etc.) of all types (classes, enums) in input file or directory and ensure the first sentence in their docstrings is broken into multiple lines correctly with `\` symbol.
+
+Scope the fixes to the first sentence only. Do not modify any later sentences or paragraphs.
+
+Apply the fix regardless of whether the first sentence starts on the same line as the opening `"""` or on a following line.
