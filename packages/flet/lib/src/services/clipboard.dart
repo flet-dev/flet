@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:pasteboard/pasteboard.dart';
 
 import '../flet_service.dart';
 
@@ -26,6 +27,13 @@ class ClipboardService extends FletService {
       case "get":
         var data = await Clipboard.getData(Clipboard.kTextPlain);
         return data?.text;
+      case "get_image":
+        try {
+          return await Pasteboard.image;
+        } catch (e) {
+          debugPrint("ClipboardService.get_image error: $e");
+          return null;
+        }
       default:
         throw Exception("Unknown Clipboard method: $name");
     }

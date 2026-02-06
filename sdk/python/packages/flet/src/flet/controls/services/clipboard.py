@@ -23,3 +23,9 @@ class Clipboard(Service):
         Retrieves data from the clipboard.
         """
         return await self._invoke_method("get")
+
+    async def get_image(self) -> Optional[bytes]:
+        """
+        Retrieves image data from the clipboard.
+        """
+        return await self._invoke_method("get_image")
