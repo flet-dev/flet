@@ -2,6 +2,8 @@ name: Flet Build Test
 
 on:
   push:
+    branches-ignore:
+      - main
     paths:
       - '.github/workflows/flet-build-test.yml'
       - '.fvmrc'
@@ -26,7 +28,6 @@ concurrency:
 env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
-  FLET_BUILD_TEMPLATE_REF: product-project-artifact
 
   # https://docs.flet.dev/publish/
   BUILD_NUMBER: 1
@@ -188,7 +189,7 @@ jobs:
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
-          uv run ${{ matrix.build_cmd }} --template-ref $FLET_BUILD_TEMPLATE_REF
+          uv run ${{ matrix.build_cmd }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
