@@ -7,7 +7,7 @@ from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 from flet.controls.transform import OffsetValue
 
-__all__ = ["Points", "PointMode"]
+__all__ = ["PointMode", "Points"]
 
 
 class PointMode(Enum):
@@ -17,23 +17,23 @@ class PointMode(Enum):
 
     POINTS = "points"
     """
-    Draw each point separately. If the `Paint.stroke_cap` is `StrokeCap.ROUND`,
-    then each point is drawn as a circle with the diameter of the `Paint.stroke_width`,
-    filled as described by the `Paint` (ignoring `Paint.style`). Otherwise, each point
-    is drawn as an axis-aligned square with sides of length `Paint.stroke_width`, filled
-    as described by the `Paint` (ignoring `Paint.style`).
+    Draw each point separately. If the `Paint.stroke_cap` is `StrokeCap.ROUND`, then \
+    each point is drawn as a circle with the diameter of the `Paint.stroke_width`, \
+    filled as described by the `Paint` (ignoring `Paint.style`). Otherwise, each point \
+    is drawn as an axis-aligned square with sides of length `Paint.stroke_width`, \
+    filled as described by the `Paint` (ignoring `Paint.style`).
     """
 
     LINES = "lines"
     """
-    Draw each sequence of two points as a line segment. If the number of points is odd,
-    then the last point is ignored. The lines are stroked as described by the `Paint`
-    (ignoring `Paint.style`).
+    Draw each sequence of two points as a line segment. If the number of points is \
+    odd, then the last point is ignored. The lines are stroked as described by the \
+    `Paint` (ignoring `Paint.style`).
     """
 
     POLYGON = "polygon"
     """
-    Draw the entire sequence of point as one line. The lines are stroked as described
+    Draw the entire sequence of point as one line. The lines are stroked as described \
     by the `Paint` (ignoring `Paint.style`).
     """
 
@@ -41,8 +41,7 @@ class PointMode(Enum):
 @control("Points")
 class Points(Shape):
     """
-    Draws a sequence of points according to
-    the given [`point_mode`][(c).].
+    Draws a sequence of points according to the given [`point_mode`][(c).].
     """
 
     points: Optional[list[OffsetValue]] = None

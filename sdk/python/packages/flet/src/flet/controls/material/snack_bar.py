@@ -91,8 +91,8 @@ class SnackBarAction(Control):
 @control("SnackBar")
 class SnackBar(DialogControl):
     """
-    A lightweight message with an optional action which briefly displays at the
-    bottom of the screen.
+    A lightweight message with an optional action which briefly displays at the bottom \
+    of the screen.
 
     ```python
     page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
@@ -196,7 +196,7 @@ class SnackBar(DialogControl):
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate at which to place the snack bar. This controls the size of the
+    The z-coordinate at which to place the snack bar. This controls the size of the \
     shadow below the snack bar.
 
     Raises:
@@ -215,8 +215,8 @@ class SnackBar(DialogControl):
 
     action_overflow_threshold: Number = 0.25
     """
-    The percentage threshold for [`action`][(c).]'s width before
-    it overflows to a new line.
+    The percentage threshold for [`action`][(c).]'s width before it overflows to a new \
+    line.
 
     If the width of the snackbar's [`content`][(c).] is greater than this percentage
     of the width of the snackbar minus the width of its `action`, then the `action`

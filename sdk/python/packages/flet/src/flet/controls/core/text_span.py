@@ -64,8 +64,8 @@ class TextSpan(Control):
 
     spell_out: Optional[bool] = None
     """
-    Whether the assistive technologies should spell out this text
-    character by character.
+    Whether the assistive technologies should spell out this text character by \
+    character.
 
     If the text is 'hello world', setting this to true causes the assistive
     technologies, such as VoiceOver or TalkBack, to pronounce

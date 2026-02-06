@@ -30,7 +30,7 @@ def use_ref(
     initial_value: RefValueT | Callable[[], RefValueT] | None = None,
 ) -> MutableRef[RefValueT]:
     """
-    Preserve a mutable value for the lifetime of the component without causing
+    Preserve a mutable value for the lifetime of the component without causing \
     re-renders.
 
     Args:

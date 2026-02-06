@@ -10,8 +10,9 @@ __all__ = ["TransparentPointer"]
 @control("TransparentPointer")
 class TransparentPointer(LayoutControl):
     """
-    TransparentPointer is the solution to ["How to pass through all gestures between
-    two widgets in Stack"](https://stackoverflow.com/questions/65269190/pass-trough-all-
+    TransparentPointer is the solution to ["How to pass through all gestures between \
+    two widgets in \
+    Stack"](https://stackoverflow.com/questions/65269190/pass-trough-all- \
     gestures-between-two-widgets-in-stack) problem.
 
     For example, if there is an [`Button`][flet.]

@@ -23,7 +23,7 @@ class Alignment:
     ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
     /// caption
     ///
-    """
+    """  # noqa: E501
 
     x: Number
     """

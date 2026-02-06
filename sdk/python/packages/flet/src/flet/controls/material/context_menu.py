@@ -22,14 +22,14 @@ class ContextMenuTrigger(Enum):
 
     DOWN = "down"
     """
-    Represents a trigger mode where the menu is shown
-    when the mouse button is pressed down.
+    Represents a trigger mode where the menu is shown when the mouse button is pressed \
+    down.
     """
 
     LONG_PRESS = "longPress"
     """
-    Represents a trigger mode where the menu is shown
-    after a long press of the mouse button.
+    Represents a trigger mode where the menu is shown after a long press of the mouse \
+    button.
     """
 
 
@@ -93,8 +93,8 @@ class ContextMenuSelectEvent(ContextMenuDismissEvent):
 @control("ContextMenu")
 class ContextMenu(LayoutControl):
     """
-    Wraps its [`content`][(c).] and displays contextual
-    menus for specific mouse events.
+    Wraps its [`content`][(c).] and displays contextual menus for specific mouse \
+    events.
 
     Tip:
         On web, call [`disable()`][flet.BrowserContextMenu.disable] method of
@@ -112,14 +112,14 @@ class ContextMenu(LayoutControl):
 
     items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu,
-    when [`open()`][(c).open] is called.
+    A list of menu items to display in the context menu, when [`open()`][(c).open] is \
+    called.
     """
 
     primary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu,
-    for primary (usually left) mouse button actions.
+    A list of menu items to display in the context menu, for primary (usually left) \
+    mouse button actions.
 
     These items are displayed when the corresponding
     [`primary_trigger`][(c).] is activated.
@@ -127,8 +127,8 @@ class ContextMenu(LayoutControl):
 
     secondary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu
-    for secondary (usually right) mouse button actions.
+    A list of menu items to display in the context menu for secondary (usually right) \
+    mouse button actions.
 
     These items are displayed when the corresponding
     [`secondary_trigger`][(c).] is activated.
@@ -136,8 +136,8 @@ class ContextMenu(LayoutControl):
 
     tertiary_items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu
-    for tertiary (usually middle) mouse button actions.
+    A list of menu items to display in the context menu for tertiary (usually middle) \
+    mouse button actions.
 
     These items are displayed when the corresponding
     [`tertiary_trigger`][(c).] is activated.
@@ -171,8 +171,8 @@ class ContextMenu(LayoutControl):
 
     on_dismiss: Optional[EventHandler[ContextMenuDismissEvent]] = None
     """
-    Fires when the menu is dismissed without a selection,
-    or when an attempt is made to open the menu but no items are available.
+    Fires when the menu is dismissed without a selection, or when an attempt is made \
+    to open the menu but no items are available.
     """
 
     async def open(

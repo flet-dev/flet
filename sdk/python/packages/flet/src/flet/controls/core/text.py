@@ -35,12 +35,12 @@ class TextAffinity(Enum):
 
     UPSTREAM = "upstream"
     """
-    The position has affinity for the downstream side of the text position, i.e. in the
-    direction of the end of the string.
+    The position has affinity for the downstream side of the text position, i.e. in \
+    the direction of the end of the string.
     """
     DOWNSTREAM = "downstream"
     """
-    The position has affinity for the upstream side of the text position, i.e. in the
+    The position has affinity for the upstream side of the text position, i.e. in the \
     direction of the beginning of the string.
     """
 
@@ -63,7 +63,7 @@ class TextSelection:
 
     affinity: "TextAffinity" = TextAffinity.DOWNSTREAM
     """
-    If the text range is collapsed and has more than one visual location (e.g., occurs
+    If the text range is collapsed and has more than one visual location (e.g., occurs \
     at a line break), which of the two locations to use when painting the caret.
     """
 
@@ -155,25 +155,25 @@ class TextSelectionChangeCause(Enum):
 
     TAP = "tap"
     """
-    The user tapped on the text and that caused the selection (or the location of the
+    The user tapped on the text and that caused the selection (or the location of the \
     cursor) to change.
     """
 
     DOUBLE_TAP = "doubleTap"
     """
-    The user tapped twice in quick succession on the text and that caused the
+    The user tapped twice in quick succession on the text and that caused the \
     selection (or the location of the cursor) to change.
     """
 
     LONG_PRESS = "longPress"
     """
-    The user long-pressed the text and that caused the selection (or the location of
+    The user long-pressed the text and that caused the selection (or the location of \
     the cursor) to change.
     """
 
     FORCE_PRESS = "forcePress"
     """
-    The user force-pressed the text and that caused the selection (or the location of
+    The user force-pressed the text and that caused the selection (or the location of \
     the cursor) to change.
     """
 
@@ -187,8 +187,8 @@ class TextSelectionChangeCause(Enum):
 
     TOOLBAR = "toolbar"
     """
-    The user used the selection toolbar to change the selection or the location of
-    the cursor.
+    The user used the selection toolbar to change the selection or the location of the \
+    cursor.
 
     An example is when the user taps on select all in the tool bar.
     """
@@ -249,8 +249,8 @@ class Text(LayoutControl):
 
     font_family: Optional[str] = None
     """
-    System or custom font family to render text with. See
-    [`Fonts`](https://flet.dev/docs/controls/page#fonts) cookbook guide for
+    System or custom font family to render text with. See \
+    [`Fonts`](https://flet.dev/docs/controls/page#fonts) cookbook guide for \
     instructions on how to import and use custom fonts in your application.
     """
 
@@ -400,7 +400,8 @@ class Text(LayoutControl):
 
     on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
     """
-    Called when the user changes the selection of text (including the cursor location).
+    Called when the user changes the selection of text (including the cursor \
+    location).
 
     Note:
         Has effect only when [`selectable`][(c).] is `True`.

@@ -99,8 +99,8 @@ class UrlLauncher(Service):
 
     async def can_launch_url(self, url: Union[str, Url]) -> bool:
         """
-        Checks whether the specified URL can be handled by some app
-        installed on the device.
+        Checks whether the specified URL can be handled by some app installed on the \
+        device.
 
         Args:
             url: The URL to check.

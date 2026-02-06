@@ -26,7 +26,7 @@ class SliderInteraction(Enum):
 @control("Slider")
 class Slider(LayoutControl, AdaptiveControl):
     """
-    A slider provides a visual indication of adjustable content, as well as the
+    A slider provides a visual indication of adjustable content, as well as the \
     current setting in the total range of content.
 
     Use a slider when you want people to set defined values (such as volume or
@@ -54,9 +54,9 @@ class Slider(LayoutControl, AdaptiveControl):
 
     label: Optional[str] = None
     """
-    A label to show above the slider when the slider is active. The value of
-    `label` may contain `{value}` which will be dynamically replaced with a current
-    slider value. For example, `"Volume: {value}"`.
+    A label to show above the slider when the slider is active. The value of `label` \
+    may contain `{value}` which will be dynamically replaced with a current slider \
+    value. For example, `"Volume: {value}"`.
 
     It is used to display the value of a discrete slider, and it is displayed as
     part of the value indicator shape.
@@ -109,15 +109,14 @@ class Slider(LayoutControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more
-    than one control on a page with autofocus set, then the first one added to the
-    page will get focus.
+    True if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use for the portion of
-    the slider track that is active.
+    The color to use for the portion of the slider track that is active.
 
     The "active" side of the slider is the side between the thumb and the minimum
     value.
@@ -125,8 +124,7 @@ class Slider(LayoutControl, AdaptiveControl):
 
     inactive_color: Optional[ColorValue] = None
     """
-    The color for the inactive portion of
-    the slider track.
+    The color for the inactive portion of the slider track.
 
     The "inactive" side of the slider is the side between the thumb and the maximum
     value.
@@ -148,17 +146,14 @@ class Slider(LayoutControl, AdaptiveControl):
 
     secondary_active_color: Optional[ColorValue] = None
     """
-    The color to use for the portion of
-    the slider track between the thumb and
-    the [`secondary_track_value`][(c).].
+    The color to use for the portion of the slider track between the thumb and the \
+    [`secondary_track_value`][(c).].
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color that's typically
-    used to indicate that the range slider thumb is in
-    [`ControlState.HOVERED`][flet.] or
-    [`ControlState.DRAGGED`][flet.] states.
+    The highlight color that's typically used to indicate that the range slider thumb \
+    is in [`ControlState.HOVERED`][flet.] or [`ControlState.DRAGGED`][flet.] states.
     """
 
     secondary_track_value: Optional[Number] = None
@@ -175,7 +170,7 @@ class Slider(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.
     """
 
@@ -186,8 +181,8 @@ class Slider(LayoutControl, AdaptiveControl):
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, this slider will use the latest
-    Material Design 3 appearance, which was introduced in December 2023.
+    If this is set to `False`, this slider will use the latest Material Design 3 \
+    appearance, which was introduced in December 2023.
 
     When `True`, the Slider will use the 2023 Material Design 3 appearance.
 

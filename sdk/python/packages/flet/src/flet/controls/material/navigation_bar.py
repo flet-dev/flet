@@ -22,8 +22,8 @@ __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehav
 
 class NavigationBarLabelBehavior(Enum):
     """
-    Defines how the destinations' labels will be laid out and when they'll
-    be displayed.
+    Defines how the destinations' labels will be laid out and when they'll be \
+    displayed.
     """
 
     ALWAYS_SHOW = "alwaysShow"
@@ -34,15 +34,15 @@ class NavigationBarLabelBehavior(Enum):
 @control("NavigationBarDestination")
 class NavigationBarDestination(AdaptiveControl):
     """
-    Defines the appearance of the button items that are arrayed within the
-    navigation bar.
+    Defines the appearance of the button items that are arrayed within the navigation \
+    bar.
 
     The value must be a list of two or more NavigationBarDestination instances.
     """
 
     icon: IconDataOrControl
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the \
     destination.
 
     Example with icon name:
@@ -69,7 +69,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
+    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     Example with icon name:
@@ -112,7 +112,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     destinations: list[NavigationBarDestination] = field(default_factory=list)
     """
-    Defines the appearance of the button items that are arrayed within the navigation
+    Defines the appearance of the button items that are arrayed within the navigation \
     bar.
 
     The value must be a list of two or more `NavigationBarDestination` instances.
@@ -120,8 +120,8 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     selected_index: int = 0
     """
-    The index into `destinations` for the current selected `NavigationBarDestination` or
-    `None` if no destination is selected.
+    The index into `destinations` for the current selected `NavigationBarDestination` \
+    or `None` if no destination is selected.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -131,7 +131,8 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     label_behavior: Optional[NavigationBarLabelBehavior] = None
     """
-    Defines how the destinations' labels will be laid out and when they'll be displayed.
+    Defines how the destinations' labels will be laid out and when they'll be \
+    displayed.
 
     Can be used to show all labels, show only the selected label, or hide all labels.
 
@@ -140,8 +141,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     label_padding: Optional[PaddingValue] = None
     """
-    The padding around the
-    [`NavigationBarDestination.label`][flet.].
+    The padding around the [`NavigationBarDestination.label`][flet.].
     """
 
     elevation: Optional[Number] = None
@@ -151,14 +151,12 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used for the drop shadow to
-    indicate `elevation`.
+    The color used for the drop shadow to indicate `elevation`.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the selected destination
-    indicator.
+    The color of the selected destination indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -173,12 +171,13 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     animation_duration: Optional[DurationValue] = None
     """
-    The transition time for each destination as it goes between selected and unselected.
+    The transition time for each destination as it goes between selected and \
+    unselected.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color of the `NavigationBarDestination` in various
+    The highlight color of the `NavigationBarDestination` in various \
     [`ControlState`][flet.] states.
 
     The following [`ControlState`][flet.]

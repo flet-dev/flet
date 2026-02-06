@@ -14,8 +14,8 @@ __all__ = ["Text"]
 @control("Text")
 class Text(Shape):
     """
-    Draws [`value`][(c).] with [`style`][(c).] at
-    the given ([`x`][(c).], [`y`][(c).]) point.
+    Draws [`value`][(c).] with [`style`][(c).] at the given ([`x`][(c).], [`y`][(c).]) \
+    point.
     """
 
     x: Number
@@ -56,7 +56,7 @@ class Text(Shape):
 
     max_lines: Optional[int] = None
     """
-    The maximum number of lines painted. Lines beyond this number are silently
+    The maximum number of lines painted. Lines beyond this number are silently \
     dropped. For example, if `max_lines = 1`, then only one line is rendered.
     If `max_lines = None`, but `ellipsis != None`, then lines after the first one
     that overflows the width constraints are dropped.
@@ -76,6 +76,6 @@ class Text(Shape):
 
     rotate: Number = 0
     """
-    The rotation of this text in radians. Text is rotated around the point determined by
-    `alignment`.
+    The rotation of this text in radians. Text is rotated around the point determined \
+    by `alignment`.
     """

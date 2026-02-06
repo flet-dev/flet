@@ -57,8 +57,8 @@ class CupertinoDatePicker(LayoutControl):
 
     locale: Optional[Locale] = None
     """
-    The locale for this date picker. It is intended for rare cases where this
-    control should be localized differently from the rest of the page.
+    The locale for this date picker. It is intended for rare cases where this control \
+    should be localized differently from the rest of the page.
 
     Notes:
         - The locale must be supported by Flutter's global localization delegates;
@@ -106,7 +106,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minute_interval: int = 1
     """
-    The granularity of the minutes spinner, if it is shown in the current
+    The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
     Note:
@@ -119,7 +119,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minimum_year: int = 1
     """
-    Minimum year to which the picker can be scrolled when in
+    Minimum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Raises:
@@ -128,7 +128,7 @@ class CupertinoDatePicker(LayoutControl):
 
     maximum_year: Optional[int] = None
     """
-    Maximum year to which the picker can be scrolled when in
+    Maximum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Defaults to `None` - no limit.

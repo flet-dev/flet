@@ -85,8 +85,7 @@ class BottomAppBar(LayoutControl):
 
     notch_margin: Number = 4.0
     """
-    The margin between the [`FloatingActionButton`][flet.] and this
-    app bar's notch.
+    The margin between the [`FloatingActionButton`][flet.] and this app bar's notch.
 
     Note:
         Has effect only if [`shape`][(c).] is not `None`.
@@ -94,8 +93,8 @@ class BottomAppBar(LayoutControl):
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate at which to place this bottom app bar relative to its
-    parent. It controls the size of the shadow below this app bar.
+    The z-coordinate at which to place this bottom app bar relative to its parent. It \
+    controls the size of the shadow below this app bar.
 
     If `None`, [`BottomAppBarTheme.elevation`][flet.] is used;
     if that is also `None`, then defaults to `3`.

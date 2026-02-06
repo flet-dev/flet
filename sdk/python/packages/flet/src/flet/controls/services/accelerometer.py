@@ -15,8 +15,8 @@ __all__ = ["Accelerometer", "AccelerometerReadingEvent"]
 @dataclass(kw_only=True)
 class AccelerometerReadingEvent(Event["Accelerometer"]):
     """
-    Discrete reading from an accelerometer. Accelerometers measure the velocity
-    of the device. Note that these readings include the effects of gravity.
+    Discrete reading from an accelerometer. Accelerometers measure the velocity of the \
+    device. Note that these readings include the effects of gravity.
     Put simply, you can use accelerometer readings to tell if the device
     is moving in a particular direction.
     """
@@ -37,9 +37,9 @@ class AccelerometerReadingEvent(Event["Accelerometer"]):
 @control("Accelerometer")
 class Accelerometer(Service):
     """
-    Streams raw accelerometer [readings][flet.AccelerometerReadingEvent],
-    which describe the acceleration of the device, in `m/s^2`, including
-    the effects of gravity.
+    Streams raw accelerometer [readings][flet.AccelerometerReadingEvent], which \
+    describe the acceleration of the device, in `m/s^2`, including the effects of \
+    gravity.
 
     Unlike [UserAccelerometer][flet.],
     this service reports raw data from the accelerometer (physical sensor
@@ -88,8 +88,8 @@ class Accelerometer(Service):
 
     on_error: Optional[EventHandler[SensorErrorEvent]] = None
     """
-    Fired when the platform reports a sensor error (for example when the device
-    does not expose the accelerometer). `event.message` contains the error text.
+    Fired when the platform reports a sensor error (for example when the device does \
+    not expose the accelerometer). `event.message` contains the error text.
     """
 
     def before_update(self):
