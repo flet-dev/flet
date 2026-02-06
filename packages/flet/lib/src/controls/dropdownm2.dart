@@ -92,6 +92,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
     var items = widget.control
         .children("options")
         .map<DropdownMenuItem<String>>((Control item) {
+      item.notifyParent = true;
       var textStyle = item.getTextStyle("text_style", Theme.of(context));
       if (item.disabled && textStyle != null) {
         textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
