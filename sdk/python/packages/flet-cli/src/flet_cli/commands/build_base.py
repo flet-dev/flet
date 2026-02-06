@@ -724,6 +724,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         project_name = project_name_slug.replace("-", "_")
         artifact_name = (
             self.options.artifact_name
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
             or self.get_pyproject("tool.flet.artifact")
             or self.options.project_name
             or self.get_pyproject("project.name")

@@ -360,7 +360,7 @@ your target platforms.
 Its value is determined in the following order of precedence:
 
 1. [`--artifact`](../cli/flet-build.md#-artifact)
-2. `[tool.flet].artifact`
+2. `[tool.flet.<PLATFORM>].artifact`
 3. [`--project`](../cli/flet-build.md#-project)
 4. `[project].name`
 5. project/app directory name
