@@ -63,6 +63,6 @@ class TileLayerControl extends StatelessWidget {
           const {},
     );
 
-    return ConstrainedControl(control: control, child: tileLayer);
+    return LayoutControl(control: control, child: tileLayer);
   }
 }
