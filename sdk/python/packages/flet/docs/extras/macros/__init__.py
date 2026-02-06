@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_nav_overview, render_sub_nav_overview
+from .cross_platform_permissions import cross_platform_permissions_list
 from .pypi_index import render_pypi_index
 
 
@@ -158,3 +159,7 @@ def define_env(env):
             base_dir="cookbook",
             skip_paths={"cookbook/index.md"},
         )
+
+    @env.macro
+    def cross_platform_permissions():
+        return cross_platform_permissions_list()
