@@ -79,14 +79,14 @@ class Window(BaseControl):
 
     top: Optional[Number] = None
     """
-    Defines the vertical position of a native OS window - a distance in virtual
-    pixels from the top edge of the screen.
+    Defines the vertical position of a native OS window - a distance in virtual pixels \
+    from the top edge of the screen.
     """
 
     left: Optional[Number] = None
     """
-    Defines the horizontal position of the app window - a distance in virtual
-    pixels from the left edge of the screen.
+    Defines the horizontal position of the app window - a distance in virtual pixels \
+    from the left edge of the screen.
     """
 
     max_width: Optional[Number] = None
@@ -191,8 +191,8 @@ class Window(BaseControl):
 
     skip_task_bar: bool = False
     """
-    Whether the app window should be hidden from the Task Bar (on Windows)
-    or Dock (on macOS).
+    Whether the app window should be hidden from the Task Bar (on Windows) or Dock (on \
+    macOS).
     """
 
     title_bar_hidden: bool = False
@@ -262,7 +262,7 @@ class Window(BaseControl):
 
     ignore_mouse_events: bool = False
     """
-    Whether the app window should ignore mouse events, passing them to the window
+    Whether the app window should ignore mouse events, passing them to the window \
     below it. If this window has focus, it will still receive keyboard events.
     """
 

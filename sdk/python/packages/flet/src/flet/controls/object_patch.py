@@ -439,15 +439,14 @@ class DiffBuilder:
 
     def _index_key(self, item, item_key, path):
         """
-        Return the composite key used to pair add/remove
-        (by control key if present).
+        Return the composite key used to pair add/remove (by control key if present).
         """
         return item_key if item_key is not None else item
 
     def _maybe_compare_dataclasses(self, parent, path, src, dst, frozen):
         """
-        Compare dataclasses only when both are dataclasses and
-        identity/"frozen" rules allow it.
+        Compare dataclasses only when both are dataclasses and identity/"frozen" rules \
+        allow it.
         """
         if (
             dataclasses.is_dataclass(src)

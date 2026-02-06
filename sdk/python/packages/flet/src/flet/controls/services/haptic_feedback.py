@@ -24,7 +24,8 @@ class HapticFeedback(Service):
 
     async def medium_impact(self):
         """
-        Provides a haptic feedback corresponding a collision impact with a medium mass.
+        Provides a haptic feedback corresponding a collision impact with a medium \
+        mass.
         """
         await self._invoke_method("medium_impact")
 

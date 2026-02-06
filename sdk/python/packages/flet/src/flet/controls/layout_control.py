@@ -119,8 +119,8 @@ class LayoutControl(Control):
 
     scale: Optional[ScaleValue] = None
     """
-    Scales this control along the 2D plane. Default scale factor is `1.0`,
-    meaning no-scale.
+    Scales this control along the 2D plane. Default scale factor is `1.0`, meaning \
+    no-scale.
 
     Setting this property to `0.5`, for example, makes this control twice smaller,
     while `2.0` makes it twice larger.
@@ -198,8 +198,8 @@ class LayoutControl(Control):
 
     animate_position: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the positioning properties
-    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.],
+    Enables implicit animation of the positioning properties \
+    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.], \
     [`top`][flet.LayoutControl.] and [`bottom`][flet.LayoutControl.]).
 
     More information [here](https://docs.flet.dev/cookbook/animations).

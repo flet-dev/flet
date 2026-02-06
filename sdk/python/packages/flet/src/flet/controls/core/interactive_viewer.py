@@ -51,7 +51,7 @@ class InteractiveViewer(LayoutControl):
 
     constrained: bool = True
     """
-    Whether the normal size constraints at this point in the control tree are applied
+    Whether the normal size constraints at this point in the control tree are applied \
     to the [`content`][(c).].
 
     If set to `False`, then the content will be given infinite constraints. This
@@ -141,8 +141,8 @@ class InteractiveViewer(LayoutControl):
 
     interaction_update_interval: int = 200
     """
-    The interval (in milliseconds) at which the
-    [`on_interaction_update`][(c).] event is fired.
+    The interval (in milliseconds) at which the [`on_interaction_update`][(c).] event \
+    is fired.
     """
 
     on_interaction_start: Optional[

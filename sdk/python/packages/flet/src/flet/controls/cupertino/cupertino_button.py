@@ -90,7 +90,7 @@ class CupertinoButton(LayoutControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space to surround the `content` control inside the bounds of the
+    The amount of space to surround the `content` control inside the bounds of the \
     button.
     """
 
@@ -120,8 +120,8 @@ class CupertinoButton(LayoutControl):
 
     autofocus: bool = False
     """
-    Whether this button should be selected as the initial focus when no other
-    node in its scope is currently focused.
+    Whether this button should be selected as the initial focus when no other node in \
+    its scope is currently focused.
     """
 
     focus_color: Optional[ColorValue] = None

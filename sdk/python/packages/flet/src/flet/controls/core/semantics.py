@@ -12,8 +12,8 @@ __all__ = ["Semantics"]
 @control("Semantics")
 class Semantics(Control):
     """
-    Provides semantic annotations for the control tree, describing the meaning
-    and purpose of controls.
+    Provides semantic annotations for the control tree, describing the meaning and \
+    purpose of controls.
 
     These annotations are utilized by accessibility tools, search engines,
     and semantic analysis software to better understand the structure and
@@ -32,7 +32,7 @@ class Semantics(Control):
 
     expanded: Optional[bool] = None
     """
-    Whether this subtree represents something that can be in an "expanded" or
+    Whether this subtree represents something that can be in an "expanded" or \
     "collapsed" state.
     """
 
@@ -43,7 +43,7 @@ class Semantics(Control):
 
     selected: Optional[bool] = None
     """
-    Whether this subtree represents something that can be in a selected or unselected
+    Whether this subtree represents something that can be in a selected or unselected \
     state, and what its current state is.
     """
 
@@ -59,8 +59,8 @@ class Semantics(Control):
 
     multiline: Optional[bool] = None
     """
-    Whether the [`value`][(c).] is coming from a field that supports multiline
-    text editing.
+    Whether the [`value`][(c).] is coming from a field that supports multiline text \
+    editing.
     """
 
     focusable: Optional[bool] = None
@@ -95,7 +95,7 @@ class Semantics(Control):
 
     toggled: Optional[bool] = None
     """
-    Whether this subtree represents a toggle switch or similar widget with an "on"
+    Whether this subtree represents a toggle switch or similar widget with an "on" \
     state, and what its current state is.
     """
 
@@ -106,7 +106,7 @@ class Semantics(Control):
 
     checked: Optional[bool] = None
     """
-    Whether this subtree represents a checkbox or similar widget with a "checked"
+    Whether this subtree represents a checkbox or similar widget with a "checked" \
     state, and what its current state is.
     """
 
@@ -127,7 +127,7 @@ class Semantics(Control):
 
     hint_text: Optional[str] = None
     """
-    A brief textual description of the result of an action performed on the `content`
+    A brief textual description of the result of an action performed on the `content` \
     control.
     """
 
@@ -138,7 +138,7 @@ class Semantics(Control):
 
     current_value_length: Optional[int] = None
     """
-    The current number of characters that have been entered into an editable text
+    The current number of characters that have been entered into an editable text \
     field.
     """
 
@@ -154,8 +154,9 @@ class Semantics(Control):
 
     mixed: Optional[bool] = None
     """
-    Whether this subtree represents a checkbox or similar control with a "half-checked"
-    state or similar, and whether it is currently in this half-checked state.
+    Whether this subtree represents a checkbox or similar control with a \
+    "half-checked" state or similar, and whether it is currently in this half-checked \
+    state.
     """
 
     on_long_press_hint_text: Optional[str] = None
@@ -175,7 +176,7 @@ class Semantics(Control):
 
     textfield: Optional[bool] = None
     """
-    Whether  this subtree represents a text field.
+    Whether this subtree represents a text field.
     """
 
     link: Optional[bool] = None
@@ -255,7 +256,7 @@ class Semantics(Control):
 
     on_long_press: Optional[ControlEventHandler["Semantics"]] = None
     """
-    Called when the node is long-pressed (pressing and holding the screen with the
+    Called when the node is long-pressed (pressing and holding the screen with the \
     finger for a few seconds without moving it).
     """
 
@@ -285,7 +286,7 @@ class Semantics(Control):
 
     on_set_text: Optional[ControlEventHandler["Semantics"]] = None
     """
-    Called when a user wants to replace the current text in the text field with a new
+    Called when a user wants to replace the current text in the text field with a new \
     text.
 
     Voice access users can trigger this handler by speaking type `<text>` to their

@@ -52,7 +52,7 @@ class ScrollableControl(Control):
 
     auto_scroll: bool = False
     """
-    Whether the scrollbar should automatically move its position to the end when
+    Whether the scrollbar should automatically move its position to the end when \
     children updated.
 
     Note:

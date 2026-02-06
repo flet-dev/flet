@@ -22,8 +22,8 @@ class CupertinoBottomSheet(DialogControl):
 
     modal: bool = False
     """
-    Whether this bottom sheet can be dismissed/closed by
-    clicking the area outside of it.
+    Whether this bottom sheet can be dismissed/closed by clicking the area outside of \
+    it.
     """
 
     bgcolor: Optional[ColorValue] = None

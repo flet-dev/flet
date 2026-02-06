@@ -273,7 +273,7 @@ class Markdown(LayoutControl):
 
     shrink_wrap: bool = True
     """
-    Whether the extent of the scroll view in the scroll direction should be determined
+    Whether the extent of the scroll view in the scroll direction should be determined \
     by the contents being viewed.
     """
 
@@ -284,7 +284,7 @@ class Markdown(LayoutControl):
 
     soft_line_break: bool = False
     """
-    The soft line break is used to identify the spaces at the end of a line of text
+    The soft line break is used to identify the spaces at the end of a line of text \
     and the leading spaces in the immediately following the line of text.
     """
 
@@ -342,4 +342,4 @@ class Markdown(LayoutControl):
 
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py
-    """
+    """  # noqa: E501

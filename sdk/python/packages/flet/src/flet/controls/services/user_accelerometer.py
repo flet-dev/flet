@@ -15,10 +15,10 @@ __all__ = ["UserAccelerometer", "UserAccelerometerReadingEvent"]
 @dataclass(kw_only=True)
 class UserAccelerometerReadingEvent(Event["UserAccelerometer"]):
     """
-    Like [`AccelerometerReadingEvent`][flet.], this is a discrete reading from
-    an accelerometer and measures the velocity of the device. However,
-    unlike [`AccelerometerReadingEvent`][flet.], this event does not include
-    the effects of gravity.
+    Like [`AccelerometerReadingEvent`][flet.], this is a discrete reading from an \
+    accelerometer and measures the velocity of the device. However, unlike \
+    [`AccelerometerReadingEvent`][flet.], this event does not include the effects of \
+    gravity.
     """
 
     x: float
@@ -78,7 +78,7 @@ class UserAccelerometer(Service):
 
     on_error: Optional[EventHandler[SensorErrorEvent]] = None
     """
-    Fired when the platform reports a sensor error. `event.message` is the error
+    Fired when the platform reports a sensor error. `event.message` is the error \
     description.
     """
 

@@ -19,7 +19,7 @@ class Control(BaseControl):
 
     expand: Optional[Union[bool, int]] = None
     """
-    Specifies whether/how this control should expand to fill available space in its
+    Specifies whether/how this control should expand to fill available space in its \
     parent layout.
 
     More information
@@ -36,8 +36,8 @@ class Control(BaseControl):
 
     expand_loose: bool = False
     """
-    Allows the control to expand along the main axis if space is available,
-    but does not require it to fill all available space.
+    Allows the control to expand along the main axis if space is available, but does \
+    not require it to fill all available space.
 
     More information
     [here](https://docs.flet.dev/cookbook/expanding-controls/#expand_loose).
@@ -54,9 +54,8 @@ class Control(BaseControl):
     # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     col: ResponsiveNumber = 12
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.],
-    this property is used to determine
-    how many virtual columns of a screen this control will span.
+    If a parent of this control is a [`ResponsiveRow`][flet.], this property is used \
+    to determine how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
@@ -99,16 +98,17 @@ class Control(BaseControl):
 
     visible: bool = True
     """
-    Every control has `visible` property which is `True` by default - control is
-    rendered on the page. Setting `visible` to `False` completely prevents control (and
-    all its children if any) from rendering on a page canvas. Hidden controls cannot be
-    focused or selected with a keyboard or mouse and they do not emit any events.
+    Every control has `visible` property which is `True` by default - control is \
+    rendered on the page. Setting `visible` to `False` completely prevents control \
+    (and all its children if any) from rendering on a page canvas. Hidden controls \
+    cannot be focused or selected with a keyboard or mouse and they do not emit any \
+    events.
     """
 
     disabled: bool = False
     """
-    Every control has `disabled` property which is `False` by default - control and all
-    its children are enabled.
+    Every control has `disabled` property which is `False` by default - control and \
+    all its children are enabled.
 
     Note:
         The value of this property will be propagated down to all children controls

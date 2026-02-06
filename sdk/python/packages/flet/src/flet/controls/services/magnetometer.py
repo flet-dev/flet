@@ -43,9 +43,8 @@ class MagnetometerReadingEvent(Event["Magnetometer"]):
 @control("Magnetometer")
 class Magnetometer(Service):
     """
-    Streams magnetometer [readings][flet.MagnetometerReadingEvent]
-    reporting the ambient magnetic field (`uT`) per axis for compass-style
-    use cases.
+    Streams magnetometer [readings][flet.MagnetometerReadingEvent] reporting the \
+    ambient magnetic field (`uT`) per axis for compass-style use cases.
 
     Note:
         * Supported platforms: Android, iOS.
@@ -79,7 +78,7 @@ class Magnetometer(Service):
 
     on_error: Optional[EventHandler[SensorErrorEvent]] = None
     """
-    Fired when the platform reports a sensor error. `event.message` is the error
+    Fired when the platform reports a sensor error. `event.message` is the error \
     description.
     """
 

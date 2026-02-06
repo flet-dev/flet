@@ -93,7 +93,7 @@ class Radio(LayoutControl, AdaptiveControl):
 
     toggleable: bool = False
     """
-    Set to `True` if this radio button is allowed to be returned to an indeterminate
+    Set to `True` if this radio button is allowed to be returned to an indeterminate \
     state by selecting it again when selected.
     """
 

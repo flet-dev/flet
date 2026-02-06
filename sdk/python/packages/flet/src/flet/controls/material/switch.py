@@ -22,8 +22,8 @@ __all__ = ["Switch"]
 @control("Switch")
 class Switch(LayoutControl, AdaptiveControl):
     """
-    A toggle represents a physical switch that allows someone to choose between
-    two mutually exclusive options.
+    A toggle represents a physical switch that allows someone to choose between two \
+    mutually exclusive options.
 
     For example, "On/Off", "Show/Hide".
 
@@ -55,21 +55,19 @@ class Switch(LayoutControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    Whether this switch will be selected as the initial focus. If there is more
-    than one control on a page with autofocus set, then the first one added to
-    the page will get focus.
+    Whether this switch will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use when this switch
-    is on.
+    The color to use when this switch is on.
     """
 
     active_track_color: Optional[ColorValue] = None
     """
-    The color to use on the track when
-    this switch is on.
+    The color to use on the track when this switch is on.
 
     If [`track_color`][(c).] returns a non-none color in
     the `ControlState.SELECTED` state, it will
@@ -78,14 +76,12 @@ class Switch(LayoutControl, AdaptiveControl):
 
     focus_color: Optional[ColorValue] = None
     """
-    The color to use for the focus
-    highlight for keyboard interactions.
+    The color to use for the focus highlight for keyboard interactions.
     """
 
     inactive_thumb_color: Optional[ColorValue] = None
     """
-    The color to use on the thumb when
-    this switch is off.
+    The color to use on the thumb when this switch is off.
 
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
@@ -97,8 +93,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    The color to use on the track when
-    this switch is off.
+    The color to use on the track when this switch is off.
 
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
@@ -110,8 +105,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color of this switch's thumb
-    in various [`ControlState`][flet.]
+    The color of this switch's thumb in various [`ControlState`][flet.]
     states.
 
     The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
@@ -121,8 +115,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
-    The icon of this Switch's thumb in various
-    [`ControlState`][flet.] states.
+    The icon of this Switch's thumb in various [`ControlState`][flet.] states.
 
     The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
     `ControlState.DISABLED`, `ControlState.FOCUSED` and
@@ -131,8 +124,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color of this switch's track
-    in various [`ControlState`][flet.]  states.
+    The color of this switch's track in various [`ControlState`][flet.] states.
 
     The following states are supported: `ControlState.SELECTED`,
     `ControlState.HOVERED`, `ControlState.DISABLED`, `ControlState.FOCUSED` and
@@ -150,12 +142,11 @@ class Switch(LayoutControl, AdaptiveControl):
 
     Defaults to `False`. See the example of usage
     [here](https://flet.dev/docs/controls/cupertinoswitch#cupertinoswitch-and-adaptive-switch).
-    """
+    """  # noqa: E501
 
     hover_color: Optional[ColorValue] = None
     """
-    The color to be used when it is
-    being hovered over by the mouse pointer.
+    The color to be used when it is being hovered over by the mouse pointer.
     """
 
     splash_radius: Optional[Number] = None
@@ -168,9 +159,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color for the switch's
-    Material in various
-    [`ControlState`][flet.] states.
+    The color for the switch's Material in various [`ControlState`][flet.] states.
 
     The following states are supported: `ControlState.PRESSED`,
     `ControlState.SELECTED`, `ControlState.HOVERED`, `ControlState.FOCUSED` and
@@ -179,8 +168,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline color of this switch's
-    track in various [`ControlState`][flet.]
+    The outline color of this switch's track in various [`ControlState`][flet.]
     states.
 
     The following states are supported: `ControlState.SELECTED`, `
@@ -190,7 +178,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    The outline width of this switch's track in all or specific
+    The outline width of this switch's track in all or specific \
     [`ControlState`][flet.] states.
 
     The following states are supported: `ControlState.SELECTED`,
@@ -200,8 +188,8 @@ class Switch(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over
-    this control.
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
+    control.
     """
 
     padding: Optional[PaddingValue] = None

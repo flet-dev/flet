@@ -27,7 +27,9 @@ class Vector(complex):
 
     >>> Vector(1, 1) + 2
     Vector(3.0, 1.0)
-    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2)  == Vector(0.3, 0.3)  # Float tolerance 10 decimals
+    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2) == Vector(
+    ...     0.3, 0.3
+    ... )  # Float tolerance 10 decimals
     True
     >>> Vector(2, 3) - Vector(1, 1)
     Vector(1.0, 2.0)
@@ -63,14 +65,24 @@ class Vector(complex):
 
     x = complex.real
     y = complex.imag
-    __add__ = lambda self, other: type(self)(complex.__add__(self, other))
-    __sub__ = lambda self, other: type(self)(complex.__sub__(self, other))
-    __mul__ = lambda self, other: type(self)(complex.__mul__(self, other))
-    __truediv__ = lambda self, other: type(self)(complex.__truediv__(self, other))
-    __len__ = lambda self: 2
-    __round__ = lambda self, ndigits=None: type(self)(
-        round(self.x, ndigits), round(self.y, ndigits)
-    )
+
+    def __add__(self, other):
+        return type(self)(complex.__add__(self, other))
+
+    def __sub__(self, other):
+        return type(self)(complex.__sub__(self, other))
+
+    def __mul__(self, other):
+        return type(self)(complex.__mul__(self, other))
+
+    def __truediv__(self, other):
+        return type(self)(complex.__truediv__(self, other))
+
+    def __len__(self):
+        return 2
+
+    def __round__(self, ndigits=None):
+        return type(self)(round(self.x, ndigits), round(self.y, ndigits))
 
     def __eq__(self, other):
         return math.isclose(self.x, other.x, abs_tol=self.abs_tol) and math.isclose(

@@ -18,8 +18,7 @@ __all__ = [
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the
-    [`FilePicker`][flet.].
+    Defines the file types that can be selected using the [`FilePicker`][flet.].
     """
 
     ANY = "any"
@@ -94,7 +93,7 @@ class FilePickerFile:
 @dataclass
 class FilePickerUploadEvent(Event["FilePicker"]):
     """
-    Event emitted when a file is uploaded via
+    Event emitted when a file is uploaded via \
     [`FilePicker.upload()`][flet.FilePicker.upload] method.
     """
 
@@ -117,8 +116,8 @@ class FilePickerUploadEvent(Event["FilePicker"]):
 @control("FilePicker")
 class FilePicker(Service):
     """
-    A control that allows you to use the native file explorer to pick single
-    or multiple files, with extensions filtering support and upload.
+    A control that allows you to use the native file explorer to pick single or \
+    multiple files, with extensions filtering support and upload.
 
     Danger: Important
         On Linux, this control requires
@@ -205,8 +204,8 @@ class FilePicker(Service):
         src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
         """
-        Opens a save file dialog which lets the user select a file path and a file name
-        to save a file.
+        Opens a save file dialog which lets the user select a file path and a file \
+        name to save a file.
 
         Note:
             - On desktop this method only opens a dialog for the user to select

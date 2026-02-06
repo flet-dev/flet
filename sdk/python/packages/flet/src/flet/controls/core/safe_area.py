@@ -10,7 +10,7 @@ __all__ = ["SafeArea"]
 @control("SafeArea")
 class SafeArea(LayoutControl, AdaptiveControl):
     """
-    A control that insets its [`content`][(c).] by sufficient padding to avoid
+    A control that insets its [`content`][(c).] by sufficient padding to avoid \
     intrusions by the operating system.
 
     For example, this will indent the `content` by enough to avoid the status bar at
@@ -40,7 +40,7 @@ class SafeArea(LayoutControl, AdaptiveControl):
 
     avoid_intrusions_top: bool = True
     """
-    Whether to avoid system intrusions at the top of the screen, typically the system
+    Whether to avoid system intrusions at the top of the screen, typically the system \
     status bar.
     """
 
@@ -57,7 +57,7 @@ class SafeArea(LayoutControl, AdaptiveControl):
     # TODO: improve docstring (remove Flutter specific details)
     maintain_bottom_view_padding: bool = False
     """
-    Specifies whether the `SafeArea` should maintain the bottom
+    Specifies whether the `SafeArea` should maintain the bottom \
     `MediaQueryData.viewPadding` instead of the bottom `MediaQueryData.padding`.
 
     This avoids layout shifts caused by keyboard overlays, useful when flexible

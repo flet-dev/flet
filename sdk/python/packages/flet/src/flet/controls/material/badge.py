@@ -13,8 +13,8 @@ __all__ = ["Badge", "BadgeValue"]
 @control("Badge")
 class Badge(BaseControl):
     """
-    Badges are used to show notifications, counts, or status information on navigation
-    items such as [`NavigationBar`][flet.] or [`NavigationRail`][flet.] destinations
+    Badges are used to show notifications, counts, or status information on navigation \
+    items such as [`NavigationBar`][flet.] or [`NavigationRail`][flet.] destinations \
     or a button's icon.
 
     ```python
@@ -40,8 +40,8 @@ class Badge(BaseControl):
 
     offset: Optional[OffsetValue] = None
     """
-    Combined with `alignment` to determine the location of the
-    [`label`][(c).] relative to the content.
+    Combined with `alignment` to determine the location of the [`label`][(c).] \
+    relative to the content.
 
     Note:
         Has effect only used if [`label`][(c).] is also provided.

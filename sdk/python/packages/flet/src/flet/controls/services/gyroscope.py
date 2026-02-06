@@ -37,8 +37,8 @@ class GyroscopeReadingEvent(Event["Gyroscope"]):
 @control("Gyroscope")
 class Gyroscope(Service):
     """
-    Streams gyroscope [readings][flet.GyroscopeReadingEvent],
-    reporting device rotation rate around each axis in `rad/s`.
+    Streams gyroscope [readings][flet.GyroscopeReadingEvent], reporting device \
+    rotation rate around each axis in `rad/s`.
 
     Note:
         * Supported platforms: Android, iOS and web.
@@ -71,7 +71,7 @@ class Gyroscope(Service):
 
     on_error: Optional[EventHandler[SensorErrorEvent]] = None
     """
-    Fired when the platform reports a sensor error. `event.message` is the error
+    Fired when the platform reports a sensor error. `event.message` is the error \
     description.
     """
 

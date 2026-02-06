@@ -10,9 +10,9 @@ from flet.controls.duration import Duration
 
 def _get_root_dataclass_field(cls, field_name):
     """
-    Returns the field definition from the earliest dataclass in the MRO
-    that declares `field_name`. This lets us recover defaults configured
-    on base controls before subclasses override them.
+    Returns the field definition from the earliest dataclass in the MRO that declares \
+    `field_name`. This lets us recover defaults configured on base controls before \
+    subclasses override them.
     """
 
     for base in reversed(cls.__mro__):

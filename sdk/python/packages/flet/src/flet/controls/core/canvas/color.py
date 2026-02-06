@@ -9,7 +9,7 @@ __all__ = ["Color"]
 @control("Color")
 class Color(Shape):
     """
-    Paints the given `color` onto the canvas, applying the given `blend_mode`, with
+    Paints the given `color` onto the canvas, applying the given `blend_mode`, with \
     the given color being the source and the background being the destination.
     """
 

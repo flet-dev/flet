@@ -32,7 +32,7 @@ class CupertinoTextField(TextField):
 
     placeholder_text: Optional[str] = None
     """
-    A lighter colored placeholder hint that appears on the first line of the text
+    A lighter colored placeholder hint that appears on the first line of the text \
     field when the text entry is empty.
 
     Defaults to an empty string.
@@ -50,8 +50,7 @@ class CupertinoTextField(TextField):
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the
-    [`bgcolor`][flet.FormFieldControl.]
+    The blend mode applied to the [`bgcolor`][flet.FormFieldControl.]
     or [`gradient`][(c).] background.
     """
 
@@ -62,8 +61,7 @@ class CupertinoTextField(TextField):
 
     prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the
-    [`prefix`][flet.FormFieldControl.]
+    Defines the visibility of the [`prefix`][flet.FormFieldControl.]
     control based on the state of text entry.
 
     Note:
@@ -74,8 +72,7 @@ class CupertinoTextField(TextField):
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the
-    [`suffix`][flet.FormFieldControl.]
+    Defines the visibility of the [`suffix`][flet.FormFieldControl.]
     control based on the state of text entry.
 
     Note:
@@ -102,14 +99,13 @@ class CupertinoTextField(TextField):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the
-    [`bgcolor`][flet.FormFieldControl.]
+    An image to paint above the [`bgcolor`][flet.FormFieldControl.]
     or [`gradient`][(c).] background.
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
-    The padding around the text entry area between the
+    The padding around the text entry area between the \
     [`prefix`][flet.FormFieldControl.]
     and [`suffix`][flet.FormFieldControl.]
     or the clear button when [`clear_button_visibility_mode`][(c).]

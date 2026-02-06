@@ -59,8 +59,7 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be
-    placed horizontally.
+    Defines how the child [`controls`][(c).] should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
@@ -94,9 +93,9 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
         }
     )
     """
-    Defines the minimum widths (in px) for each breakpoint key used by responsive
-    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.],
-    and [`run_spacing`][flet.ResponsiveRow.].
+    Defines the minimum widths (in px) for each breakpoint key used by responsive \
+    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.], and \
+    [`run_spacing`][flet.ResponsiveRow.].
 
     Keys can be [`ResponsiveRowBreakpoint`][flet.] values or custom strings.
     Breakpoint names in responsive values must match the names used here.

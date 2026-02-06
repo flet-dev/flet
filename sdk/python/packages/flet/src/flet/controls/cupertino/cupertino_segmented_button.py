@@ -41,8 +41,8 @@ class CupertinoSegmentedButton(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the
-    [`controls`][(c).] list.
+    The index (starting from 0) of the selected segment in the [`controls`][(c).] \
+    list.
 
     Raises:
         IndexError: If [`selected_index`][(c).] is out of range relative to the
@@ -71,8 +71,8 @@ class CupertinoSegmentedButton(LayoutControl):
 
     click_color: Optional[ColorValue] = None
     """
-    The color used to fill the background
-    of this control when temporarily interacting with through a long press or drag.
+    The color used to fill the background of this control when temporarily interacting \
+    with through a long press or drag.
 
     Defaults to the [`selected_color`][(c).]
     with 20% opacity.
@@ -95,7 +95,7 @@ class CupertinoSegmentedButton(LayoutControl):
 
     on_change: Optional[ControlEventHandler["CupertinoSegmentedButton"]] = None
     """
-    Called when the state of the button is changed - when one of the `controls` is
+    Called when the state of the button is changed - when one of the `controls` is \
     clicked.
     """
 

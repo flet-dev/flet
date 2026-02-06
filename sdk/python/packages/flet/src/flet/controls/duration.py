@@ -216,8 +216,8 @@ class Duration:
         days: Optional[int] = None,
     ) -> "Duration":
         """
-        Returns a copy of this `Duration` instance with the given fields replaced
-        with the new values.
+        Returns a copy of this `Duration` instance with the given fields replaced with \
+        the new values.
         """
         return Duration(
             microseconds=microseconds
