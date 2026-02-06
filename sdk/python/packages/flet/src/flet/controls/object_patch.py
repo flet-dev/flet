@@ -1022,7 +1022,12 @@ class DiffBuilder:
         )
 
         if isinstance(src, dict) and isinstance(dst, dict):
-            self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
+            if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
+                self._item_replaced(path, key, dst)
+                self._dataclass_removed(src)
+                self._dataclass_added(dst, parent, frozen)
+            else:
+                self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
 
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):

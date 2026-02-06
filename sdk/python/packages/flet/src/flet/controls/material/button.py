@@ -145,6 +145,8 @@ class Button(LayoutControl, AdaptiveControl):
                 bgcolor=self.bgcolor,
                 elevation=self.elevation,
             )
+        else:
+            self._internals.pop("style", None)
 
     async def focus(self):
         """Requests focus for this control."""

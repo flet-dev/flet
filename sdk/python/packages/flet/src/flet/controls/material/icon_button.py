@@ -232,6 +232,8 @@ class IconButton(LayoutControl, AdaptiveControl):
                 visual_density=self.visual_density,
                 mouse_cursor=self.mouse_cursor,
             )
+        else:
+            self._internals.pop("style", None)
 
     async def focus(self):
         """
