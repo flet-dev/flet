@@ -20,6 +20,11 @@ on:
       - 'packages/flet/**'
       - 'sdk/python/examples/apps/flet_build_test'
   workflow_dispatch:
+    inputs:
+      extra_args:
+        description: "Extra CLI args appended to `flet build ...` command (ex: --template-ref 0.1.0)"
+        required: false
+        default: ""
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -35,6 +40,9 @@ env:
 
   # https://docs.flet.dev/reference/environment-variables
   FLET_CLI_NO_RICH_OUTPUT: 1
+
+  # Extra args passed via workflow_dispatch (empty for push/PR)
+  FLET_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_args || '' }}
 
 jobs:
   build:
@@ -181,7 +189,6 @@ jobs:
             libsecret-1-dev
           sudo apt-get clean
 
-
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
@@ -192,7 +199,8 @@ jobs:
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
-          uv run ${{ matrix.build_cmd }}
+          echo "FLET_EXTRA_ARGS='${FLET_EXTRA_ARGS}'"
+          uv run ${{ matrix.build_cmd }} $FLET_EXTRA_ARGS
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
