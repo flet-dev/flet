@@ -57,11 +57,9 @@ class MacOsDeviceInfo(DeviceInfo):
     """Machine kernel version.
 
     Examples:
-        - `"Darwin Kernel Version 15.3.0: Thu Dec 10 18:40:58 PST 2015;
-        root:xnu-3248.30.4~1/RELEASE_X86_64"`
-        - `"Darwin Kernel Version 15.0.0: Wed Dec 9 22:19:38 PST 2015;
-        root:xnu-3248.31.3~2/RELEASE_ARM64_S8000"`
-    """
+        - `"Darwin Kernel Version 15.3.0: Thu Dec 10 18:40:58 PST 2015; root:xnu-3248.30.4~1/RELEASE_X86_64"`
+        - `"Darwin Kernel Version 15.0.0: Wed Dec 9 22:19:38 PST 2015; root:xnu-3248.31.3~2/RELEASE_ARM64_S8000"`
+    """  # noqa: E501
 
     major_version: int
     """The major release number, such as `10` in version 10.9.3."""

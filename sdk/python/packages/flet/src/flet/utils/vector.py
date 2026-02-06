@@ -27,8 +27,9 @@ class Vector(complex):
 
     >>> Vector(1, 1) + 2
     Vector(3.0, 1.0)
-    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2) == Vector(0.3, 0.3)  # Float tolerance 10
-    decimals
+    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2) == Vector(
+    ...     0.3, 0.3
+    ... )  # Float tolerance 10 decimals
     True
     >>> Vector(2, 3) - Vector(1, 1)
     Vector(1.0, 2.0)

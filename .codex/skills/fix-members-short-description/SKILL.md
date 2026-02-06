@@ -9,7 +9,7 @@ description: Use when asked to fix short descriptions of Python type members.
 
 ## Instructions
 
-When Flet documentation is generated from docstrings the first sentense of a member docstrings is used as a short description, for example:
+When Flet documentation is generated from docstrings the first sentence of a member docstring is used as a short description, for example:
 
 ```py
 @dataclass

@@ -16,7 +16,7 @@ class ProgressBar(LayoutControl):
     A control that shows progress along a line.
 
     ```python
-    (ft.ProgressBar(width=400, value=0.8),)
+    ft.ProgressBar(width=400, value=0.8)
     ```
 
     """

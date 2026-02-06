@@ -58,8 +58,7 @@ class Barometer(Service):
     For example, add the following to your `pyproject.toml` file:
     ```toml
     [tool.flet.ios.info]
-    NSMotionUsageDescription = "This app requires access to the barometer to provide
-    altitude information."
+    NSMotionUsageDescription = "This app requires access to the barometer to provide altitude information."
     ```
 
     **Adding `NSMotionUsageDescription` is a requirement and not doing so will
