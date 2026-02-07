@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:pasteboard/pasteboard.dart';
 
 import '../flet_service.dart';
+import '../utils/images.dart';
 
 class ClipboardService extends FletService {
   ClipboardService({required super.control});
@@ -27,13 +28,10 @@ class ClipboardService extends FletService {
       case "get":
         var data = await Clipboard.getData(Clipboard.kTextPlain);
         return data?.text;
+      case "set_image":
+        await Pasteboard.writeImage(convertToUint8List(args["data"]));
       case "get_image":
-        try {
-          return await Pasteboard.image;
-        } catch (e) {
-          debugPrint("ClipboardService.get_image error: $e");
-          return null;
-        }
+        return await Pasteboard.image;
       default:
         throw Exception("Unknown Clipboard method: $name");
     }
