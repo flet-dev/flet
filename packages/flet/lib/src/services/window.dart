@@ -47,6 +47,7 @@ class WindowService extends FletService with WindowListener {
   bool? _focused;
   bool? _frameless;
   bool? _titleBarHidden;
+  bool? _titleBarButtonsHidden;
   bool? _skipTaskBar;
   double? _progressBar;
   bool? _ignoreMouseEvents;
@@ -313,10 +314,14 @@ class WindowService extends FletService with WindowListener {
         _preventClose = preventClose;
       }
 
-      if (titleBarHidden != null && titleBarHidden != _titleBarHidden) {
+      final effectiveTitleBarHidden =
+          titleBarHidden ?? _titleBarHidden ?? false;
+      if (effectiveTitleBarHidden != _titleBarHidden ||
+          titleBarButtonsHidden != _titleBarButtonsHidden) {
         await setWindowTitleBarVisibility(
-            titleBarHidden, titleBarButtonsHidden);
-        _titleBarHidden = titleBarHidden;
+            effectiveTitleBarHidden, titleBarButtonsHidden);
+        _titleBarHidden = effectiveTitleBarHidden;
+        _titleBarButtonsHidden = titleBarButtonsHidden;
       }
 
       if (visible != null && visible != _visible) {
@@ -337,13 +342,22 @@ class WindowService extends FletService with WindowListener {
         _focused = focused;
       }
 
-      if (frameless != null && frameless != _frameless && frameless == true) {
-        await setWindowFrameless();
+      if (frameless != null && frameless != _frameless) {
+        if (frameless) {
+          await setWindowFrameless();
+        } else {
+          // Restore non-frameless window chrome using cached state
+          await setWindowTitleBarVisibility(
+            _titleBarHidden ?? false,
+            _titleBarButtonsHidden,
+          );
+        }
         _frameless = frameless;
       }
 
-      if (progressBar != null && progressBar != _progressBar) {
-        await setWindowProgressBar(progressBar);
+      if (progressBar != _progressBar) {
+        // window_manager uses -1 to clear the native progress indicator.
+        await setWindowProgressBar(progressBar ?? -1);
         _progressBar = progressBar;
       }
 

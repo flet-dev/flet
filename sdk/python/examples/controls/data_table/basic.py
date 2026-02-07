@@ -4,6 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     page.add(
         ft.DataTable(
+            expand=True,
             columns=[
                 ft.DataColumn(label=ft.Text("First name")),
                 ft.DataColumn(label=ft.Text("Last name")),
@@ -36,4 +37,5 @@ def main(page: ft.Page):
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

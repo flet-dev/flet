@@ -119,7 +119,7 @@ In the `handler` we will be adding new message (`Text`) to the list of chat `con
 Finally, you need to call `pubsub.send_all()` method when the user clicks on "Send" button:
 ```python
     def send_click(e):
-        page.pubsub.send_all(Message(user=page.session.id, text=new_message.value))
+        page.pubsub.send_all(Message(user=page.session.index, text=new_message.value))
         new_message.value = ""
         page.update()
 
@@ -201,10 +201,10 @@ Let's create `join_click` method:
 ```python
 def join_click(e):
     if not user_name.value:
-        user_name.error_text = "Name cannot be blank!"
+        user_name.error = "Name cannot be blank!"
         user_name.update()
     else:
-        page.session.set("user_name", user_name.value)
+        page.session.store.set("user_name", user_name.value)
         page.pop_dialog()
         page.pubsub.send_all(Message(user=user_name.value, text=f"{user_name.value} has joined the chat.", message_type="login_message"))
 ```
@@ -215,11 +215,11 @@ We used [page session storage](../cookbook/session-storage.md) to store user_nam
 User name dialog will close as soon as we call `page.pop_dialog()` method.
 ///
 
-Finally, let's update `send_click` method to use `user_name` that we previously saved using `page.session`:
+Finally, let's update `send_click` method to use `user_name` that we previously saved using `page.session.store`:
 
 ```python
 def send_click(e):
-    page.pubsub.send_all(Message(user=page.session.get('user_name'), text=new_message.value, message_type="chat_message"))
+    page.pubsub.send_all(Message(user=page.session.store.get('user_name'), text=new_message.value, message_type="chat_message"))
     new_message.value = ""
 ```
 
