@@ -309,6 +309,14 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
+          - ColorPicker:
+              - color_picker/index.md
+              - ColorPicker: color_picker/colorpicker.md
+              - BlockPicker: color_picker/blockpicker.md
+              - HueRingPicker: color_picker/hueringpicker.md
+              - MaterialPicker: color_picker/materialpicker.md
+              - MultipleChoiceBlockPicker: color_picker/multiplechoiceblockpicker.md
+              - SlidePicker: color_picker/slidepicker.md
           - Column: controls/column.md
           - Container: controls/container.md
           - ContextMenu: controls/contextmenu.md

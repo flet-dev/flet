@@ -332,6 +332,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  flet_color_picker:
+    dependency: "direct main"
+    description:
+      path: "../sdk/python/packages/flet-color-picker/src/flutter/flet_color_picker"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_datatable2:
     dependency: "direct main"
     description:
@@ -407,6 +414,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_colorpicker:
+    dependency: transitive
+    description:
+      name: flutter_colorpicker
+      sha256: "969de5f6f9e2a570ac660fb7b501551451ea2a1ab9e2097e89475f60e07816ea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_driver:
     dependency: transitive
     description: flutter
