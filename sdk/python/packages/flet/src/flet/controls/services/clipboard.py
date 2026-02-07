@@ -3,6 +3,7 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.exceptions import FletUnimplementedPlatformException
 from flet.controls.services.service import Service
+from flet.controls.types import PagePlatform
 
 __all__ = ["Clipboard"]
 
@@ -36,11 +37,12 @@ class Clipboard(Service):
         """
         Stores image bytes on the clipboard.
 
-        Note:
-            Supported on the following platforms only: Android, iOS, Web.
-
         Args:
             value: The image data (in bytes) to be stored on the clipboard.
+
+        Raises:
+            FletUnimplementedPlatformException: If called on platforms other than the
+                following: Android, iOS, Web.
         """
         if not (self.page.web or self.page.platform.is_mobile()):
             raise FletUnimplementedPlatformException(
@@ -57,3 +59,44 @@ class Clipboard(Service):
                 if the clipboard is empty or does not contain image data.
         """
         return await self._invoke_method("get_image")
+
+    async def set_files(self, files: list[str]) -> bool:
+        """
+        Stores file references on the clipboard.
+
+        Args:
+            files: A list of file paths.
+
+        Returns:
+            `True` if the operation succeeded, otherwise `False`.
+
+        Raises:
+            FletUnimplementedPlatformException: If called on platforms other than the
+                following: macOS, Windows, Linux.
+        """
+        if self.page.web or not self.page.platform.is_desktop():
+            raise FletUnimplementedPlatformException(
+                "set_files is supported on desktop platforms only"
+            )
+        return await self._invoke_method("set_files", {"files": files})
+
+    async def get_files(self) -> list[str]:
+        """
+        Retrieves file references from the clipboard.
+
+        Returns:
+            A list of file references available in the clipboard.
+            On Android these are typically content URIs.
+
+        Raises:
+            FletUnimplementedPlatformException: If called on platforms other than the
+                following: Android, macOS, Windows, Linux.
+        """
+        if self.page.web or (
+            not self.page.platform.is_desktop()
+            and self.page.platform != PagePlatform.ANDROID
+        ):
+            raise FletUnimplementedPlatformException(
+                "get_files is supported on desktop and Android platforms only"
+            )
+        return await self._invoke_method("get_files")

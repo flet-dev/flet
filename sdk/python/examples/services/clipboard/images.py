@@ -8,17 +8,15 @@ SAMPLE_PNG = base64.b64decode(
 
 
 async def main(page: ft.Page):
-    clipboard = ft.Clipboard()
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     async def set_image_to_clipboard(e: ft.Event[ft.Button]):
-        await clipboard.set_image(SAMPLE_PNG)
+        await ft.Clipboard().set_image(SAMPLE_PNG)
         status.value = f"Sample image copied to clipboard ({len(SAMPLE_PNG)} bytes)."
         preview.content = ft.Image(src=SAMPLE_PNG)
 
     async def get_image_from_clipboard(e: ft.Event[ft.Button]):
-        clipboard_image = await clipboard.get_image()
+        clipboard_image = await ft.Clipboard().get_image()
         if clipboard_image is None:
             status.value = "No image found in clipboard."
             preview.content = None
@@ -38,6 +36,9 @@ async def main(page: ft.Page):
                         "Set example image to clipboard",
                         on_click=set_image_to_clipboard,
                         disabled=not (page.web or page.platform.is_mobile()),
+                        tooltip="Supported on mobile platforms only."
+                        if not (page.web or page.platform.is_mobile())
+                        else None,
                     ),
                     ft.Button(
                         "Get image from clipboard",

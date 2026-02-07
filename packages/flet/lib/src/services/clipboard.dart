@@ -25,13 +25,22 @@ class ClipboardService extends FletService {
     switch (name) {
       case "set":
         await Clipboard.setData(ClipboardData(text: args["data"]));
+        return;
       case "get":
         var data = await Clipboard.getData(Clipboard.kTextPlain);
         return data?.text;
       case "set_image":
         await Pasteboard.writeImage(convertToUint8List(args["data"]));
+        return;
       case "get_image":
         return await Pasteboard.image;
+      case "set_files":
+        final files = (args["files"] as List)
+            .map((f) => f.toString())
+            .toList(growable: false);
+        return await Pasteboard.writeFiles(files);
+      case "get_files":
+        return await Pasteboard.files();
       default:
         throw Exception("Unknown Clipboard method: $name");
     }
