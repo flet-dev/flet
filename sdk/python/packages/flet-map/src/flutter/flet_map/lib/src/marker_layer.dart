@@ -17,6 +17,7 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
         .children("markers")
         .where((c) => c.type == "Marker")
         .map((marker) {
+      marker.notifyParent = true;
       return AnimatedMarker(
           point: parseLatLng(marker.get("coordinates"))!,
           rotate: marker.getBool("rotate"),

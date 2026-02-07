@@ -14,7 +14,7 @@ __all__ = ["MenuItemButton"]
 @control("MenuItemButton")
 class MenuItemButton(LayoutControl):
     """
-    A button for use in a MenuBar or on its own, that can be activated by click or
+    A button for use in a MenuBar or on its own, that can be activated by click or \
     keyboard navigation.
 
     ```python

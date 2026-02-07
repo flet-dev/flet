@@ -69,9 +69,9 @@ class CupertinoCheckbox(LayoutControl):
 
     autofocus: bool = False
     """
-    Whether this checkbox will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    Whether this checkbox will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     check_color: Optional[ColorValue] = None
@@ -81,8 +81,7 @@ class CupertinoCheckbox(LayoutControl):
 
     active_color: Optional[ColorValue] = CupertinoColors.ACTIVE_BLUE
     """
-    The color used to fill checkbox when it
-    is checked/selected.
+    The color used to fill checkbox when it is checked/selected.
 
     If [`fill_color`][(c).] returns a non-null color in the
     [`ControlState.SELECTED`][flet.] state, it will be used instead of this color.
@@ -132,8 +131,8 @@ class CupertinoCheckbox(LayoutControl):
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    Defines the checkbox's border sides in all or specific
-    [`ControlState`][flet.] states.
+    Defines the checkbox's border sides in all or specific [`ControlState`][flet.] \
+    states.
 
     Note:
         Supported states: [`ControlState.SELECTED`][flet.],

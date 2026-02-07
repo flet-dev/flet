@@ -35,8 +35,8 @@ class TooltipTriggerMode:
 @dataclass
 class Tooltip:
     """
-    Provide text labels which help explain the function of a button or
-    other user interface action.
+    Provide text labels which help explain the function of a button or other user \
+    interface action.
     """
 
     message: str
@@ -53,8 +53,7 @@ class Tooltip:
 
     enable_feedback: Optional[bool] = None
     """
-    When `True` (default) the tooltip should provide acoustic and/or haptic
-    feedback.
+    When `True` (default) the tooltip should provide acoustic and/or haptic feedback.
 
     For example, on Android a tap will produce a clicking sound and a long-press
     will produce a short vibration, when feedback is enabled.
@@ -97,8 +96,7 @@ class Tooltip:
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for the
-    message of the tooltip.
+    The [`TextStyle`][flet.] to use for the message of the tooltip.
     """
 
     text_align: Optional[TextAlign] = None
@@ -122,8 +120,8 @@ class Tooltip:
 
     show_duration: Optional[DurationValue] = None
     """
-    The length of time that the tooltip will be shown after a long press is released
-    (if triggerMode is [`TooltipTriggerMode.LONG_PRESS`][flet.]) or a tap is released
+    The length of time that the tooltip will be shown after a long press is released \
+    (if triggerMode is [`TooltipTriggerMode.LONG_PRESS`][flet.]) or a tap is released \
     (if triggerMode is [`TooltipTriggerMode.TAP`][flet.]).
     This property does not affect mouse pointer devices.
 
@@ -133,8 +131,8 @@ class Tooltip:
 
     wait_duration: Optional[DurationValue] = None
     """
-    The length of time, in milliseconds, that a pointer must hover over a
-    tooltip's control before the tooltip will be shown.
+    The length of time, in milliseconds, that a pointer must hover over a tooltip's \
+    control before the tooltip will be shown.
 
     If `None`, [`TooltipTheme.wait_duration`][flet.] is used.
     If that's is also `None`, defaults to `100` milliseconds.
@@ -142,8 +140,8 @@ class Tooltip:
 
     exit_duration: Optional[DurationValue] = None
     """
-    The length of time that the tooltip will be shown after a
-    long press is released or a tap is released or mouse pointer exits the control.
+    The length of time that the tooltip will be shown after a long press is released \
+    or a tap is released or mouse pointer exits the control.
 
     If `None`, [`TooltipTheme.exit_duration`][flet.] is used.
     If that's is also `None`, defaults to 0 milliseconds - no delay.

@@ -210,6 +210,7 @@ class _DropdownControlState extends State<DropdownControl> {
     var options = widget.control
         .children("options")
         .map<DropdownMenuEntry<String>?>((Control itemCtrl) {
+          itemCtrl.notifyParent = true;
           bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
           ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
 

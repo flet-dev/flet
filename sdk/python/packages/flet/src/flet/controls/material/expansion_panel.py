@@ -18,7 +18,7 @@ __all__ = ["ExpansionPanel", "ExpansionPanelList"]
 @control("ExpansionPanel")
 class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
-    A material expansion panel. It can either be expanded or collapsed. Its body is
+    A material expansion panel. It can either be expanded or collapsed. Its body is \
     only visible when it is expanded.
 
     ```python
@@ -41,7 +41,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 
     header: Optional[Control] = None
     """
-    The control to be found in the header of the `ExpansionPanel`. If `can_tap_header`
+    The control to be found in the header of the `ExpansionPanel`. If `can_tap_header` \
     is `True`, tapping on the header will expand or collapse the panel.
 
     If this property is `None`, the `ExpansionPanel` will have a placeholder `Text` as
@@ -50,7 +50,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 
     content: Optional[Control] = None
     """
-    The control to be found in the body of the `ExpansionPanel`. It is displayed below
+    The control to be found in the body of the `ExpansionPanel`. It is displayed below \
     the `header` when the panel is expanded.
 
     If this property is `None`, the `ExpansionPanel` will have a placeholder `Text` as
@@ -86,7 +86,8 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 @control("ExpansionPanelList")
 class ExpansionPanelList(LayoutControl):
     """
-    A material expansion panel list that lays out its children and animates expansions.
+    A material expansion panel list that lays out its children and animates \
+    expansions.
 
     ```python
     ft.ExpansionPanelList(
@@ -113,8 +114,7 @@ class ExpansionPanelList(LayoutControl):
 
     divider_color: Optional[ColorValue] = None
     """
-    The color of the divider when
-    [`ExpansionPanel.expanded`][flet.] is `False`.
+    The color of the divider when [`ExpansionPanel.expanded`][flet.] is `False`.
     """
 
     elevation: Number = 2

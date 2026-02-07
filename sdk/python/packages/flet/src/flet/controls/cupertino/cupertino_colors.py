@@ -21,7 +21,7 @@ s = sorted(CupertinoColors, key=lambda i: i.name)
 for i in s:
     print(f'{i.name} = "{i.value}"')
 ```
-"""
+"""  # noqa: E501
 
 import random
 from enum import Enum

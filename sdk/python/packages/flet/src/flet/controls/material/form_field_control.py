@@ -32,8 +32,7 @@ class FormFieldControl(LayoutControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for the
-    text being edited.
+    The [`TextStyle`][flet.] to use for the text being edited.
     """
 
     text_vertical_align: Optional[Union[VerticalAlignment, Number]] = None
@@ -141,7 +140,7 @@ class FormFieldControl(LayoutControl):
 
     filled: Optional[bool] = None
     """
-    If `True` the decoration's container is filled with theme
+    If `True` the decoration's container is filled with theme \
     [`fill_color`][flet.FormFieldControl.].
 
     If `filled=None` (the default), then it is implicitly set to `True` when at least
@@ -201,7 +200,7 @@ class FormFieldControl(LayoutControl):
 
     helper: Optional[StrOrControl] = None
     """
-    Text that provides context about the input's value, such as how the value will be
+    Text that provides context about the input's value, such as how the value will be \
     used.
 
     If non-null, the text is displayed below the input decorator, in the same location
@@ -263,8 +262,8 @@ class FormFieldControl(LayoutControl):
 
     prefix_icon: Optional[IconDataOrControl] = None
     """
-    An icon that appears before the editable part of the text field,
-    within the decoration's container.
+    An icon that appears before the editable part of the text field, within the \
+    decoration's container.
 
     If [`prefix`][flet.FormFieldControl.] is specified and visible,
     this icon will appear to its left.
@@ -294,7 +293,7 @@ class FormFieldControl(LayoutControl):
 
     suffix_icon: Optional[IconDataOrControl] = None
     """
-    An icon that appears after the editable part of the text field and after the
+    An icon that appears after the editable part of the text field and after the \
     [`suffix`][flet.FormFieldControl.], within the decoration's container.
     """
 

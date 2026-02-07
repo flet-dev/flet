@@ -1,8 +1,7 @@
-# Skill: Prepare new Flet release
-
-## Purpose
-
-Bump versions and author release notes.
+---
+name: prepare-flet-release
+description: Use when asked to prepare new Flet release by bumping versions and author release notes.
+---
 
 ## Inputs
 

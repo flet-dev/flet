@@ -108,8 +108,8 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     cache_extent: Optional[Number] = None
     """
-    Items that fall in the cache area (area before or after the visible area that are
-    about to become visible when the user scrolls) are laid out even though they are
+    Items that fall in the cache area (area before or after the visible area that are \
+    about to become visible when the user scrolls) are laid out even though they are \
     not (yet) visible on screen.
 
     The cacheExtent describes how many pixels the cache area extends before the leading

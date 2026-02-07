@@ -45,21 +45,20 @@ class TabAlignment(Enum):
 
     START = "start"
     """
-    If [`TabBar.scrollable`][flet.] is `True`,
-    tabs are aligned to the start of the [`TabBar`][flet.].
+    If [`TabBar.scrollable`][flet.] is `True`, tabs are aligned to the start of the \
+    [`TabBar`][flet.].
     """
 
     START_OFFSET = "startOffset"
     """
-    If [`TabBar.scrollable`][flet.] is `True`,
-    tabs are aligned to the start of the
+    If [`TabBar.scrollable`][flet.] is `True`, tabs are aligned to the start of the \
     [`TabBar`][flet.] with an offset of `52.0` pixels.
     """
 
     FILL = "fill"
     """
-    If [`TabBar.scrollable`][flet.] is `False`,
-    tabs are stretched to fill the [`TabBar`][flet.].
+    If [`TabBar.scrollable`][flet.] is `False`, tabs are stretched to fill the \
+    [`TabBar`][flet.].
     """
 
     CENTER = "center"
@@ -91,9 +90,8 @@ class TabBarIndicatorSize(Enum):
 
     TAB = "tab"
     """
-    The tab indicator's bounds are as wide as the space occupied by the tab
-    in the tab bar: from the right edge of the previous tab to the left edge
-    of the next tab.
+    The tab indicator's bounds are as wide as the space occupied by the tab in the tab \
+    bar: from the right edge of the previous tab to the left edge of the next tab.
     """
 
     LABEL = "label"
@@ -109,8 +107,8 @@ class TabBarIndicatorSize(Enum):
 class TabBarHoverEvent(Event["TabBar"]):
     hovering: bool
     """
-    Whether a pointer has entered (`True`) or exited (`False`) the tab bar
-    at [`index`][(c).].
+    Whether a pointer has entered (`True`) or exited (`False`) the tab bar at \
+    [`index`][(c).].
     """
 
     index: int
@@ -150,9 +148,9 @@ class UnderlineTabIndicator:
 @control("Tabs")
 class Tabs(LayoutControl, AdaptiveControl):
     """
-    Used for navigating frequently accessed, distinct content
-    categories. Tabs allow for navigation between two or more content views and relies
-    on text headers to articulate the different sections of content.
+    Used for navigating frequently accessed, distinct content categories. Tabs allow \
+    for navigation between two or more content views and relies on text headers to \
+    articulate the different sections of content.
     """
 
     content: Control
@@ -198,8 +196,8 @@ class Tabs(LayoutControl, AdaptiveControl):
         default_factory=lambda: Duration(milliseconds=100),
     )
     """
-    The duration of tab animations. For example, the animation that occurs
-    when the selected tab changes.
+    The duration of tab animations. For example, the animation that occurs when the \
+    selected tab changes.
     """
 
     on_change: Optional[ControlEventHandler["Tabs"]] = None
@@ -286,9 +284,9 @@ class TabBarView(LayoutControl, AdaptiveControl):
 
     controls: list[Control]
     """
-    A list of controls, where each control represents the
-    content of a corresponding tab. So, a control at index `i` in this list is
-    displayed when the [`Tab`][flet.] at index `i` is selected.
+    A list of controls, where each control represents the content of a corresponding \
+    tab. So, a control at index `i` in this list is displayed when the [`Tab`][flet.] \
+    at index `i` is selected.
 
     Note:
         The length of this list must be equal to the number of tabs specified in an
@@ -312,9 +310,9 @@ class TabBarView(LayoutControl, AdaptiveControl):
 @control("TabBar")
 class TabBar(LayoutControl, AdaptiveControl):
     """
-    Used for navigating frequently accessed, distinct content
-    categories. Tabs allow for navigation between two or more content views and relies
-    on text headers to articulate the different sections of content.
+    Used for navigating frequently accessed, distinct content categories. Tabs allow \
+    for navigation between two or more content views and relies on text headers to \
+    articulate the different sections of content.
     """
 
     tabs: list[Control]
@@ -458,8 +456,8 @@ class TabBar(LayoutControl, AdaptiveControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the ink response focus, hover, and splash
-    colors in various [`ControlState`][flet.] states.
+    Defines the ink response focus, hover, and splash colors in various \
+    [`ControlState`][flet.] states.
 
     The following states are supported: `ControlState.PRESSED`,
     `ControlState.HOVERED` and
@@ -500,7 +498,7 @@ class TabBar(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.
     """
 
@@ -524,8 +522,7 @@ class TabBar(LayoutControl, AdaptiveControl):
 
     on_hover: Optional[EventHandler[TabBarHoverEvent]] = None
     """
-    Called when a tab's (from [`tabs`][(c).]) hover state in the
-    tab bar changes.
+    Called when a tab's (from [`tabs`][(c).]) hover state in the tab bar changes.
 
     When hover is moved from one tab directly to another, this will be called
     twice. First to represent hover exiting the initial tab, and then second

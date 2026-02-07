@@ -153,8 +153,7 @@ class AppBar(AdaptiveControl):
 
     exclude_header_semantics: bool = False
     """
-    Whether the [`title`][(c).] should be wrapped with header
-    [`Semantics`][flet.].
+    Whether the [`title`][(c).] should be wrapped with header [`Semantics`][flet.].
     """
 
     actions: Optional[list[Control]] = None
@@ -197,8 +196,8 @@ class AppBar(AdaptiveControl):
 
     toolbar_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the [`Text`][flet.] controls in the
-    app bar's [`leading`][(c).] and [`actions`][(c).].
+    The style to be used for the [`Text`][flet.] controls in the app bar's \
+    [`leading`][(c).] and [`actions`][(c).].
     """
 
     shape: Optional[OutlinedBorder] = None

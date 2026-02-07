@@ -40,9 +40,8 @@ class BarometerReadingEvent(Event["Barometer"]):
 @control("Barometer")
 class Barometer(Service):
     """
-    Streams barometer [readings][flet.BarometerReadingEvent]
-    (atmospheric pressure in `hPa`). Useful for altitude calculations
-    and weather-related experiences.
+    Streams barometer [readings][flet.BarometerReadingEvent] (atmospheric pressure in \
+    `hPa`). Useful for altitude calculations and weather-related experiences.
 
     Note:
         * Supported platforms: Android, iOS.
@@ -94,7 +93,7 @@ class Barometer(Service):
 
     on_error: Optional[EventHandler[SensorErrorEvent]] = None
     """
-    Fired when the platform reports a sensor error. `event.message` is the error
+    Fired when the platform reports a sensor error. `event.message` is the error \
     description.
     """
 

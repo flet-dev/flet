@@ -68,26 +68,23 @@ class View(ScrollableControl, LayoutControl):
 
     route: Optional[str] = field(default_factory=lambda: "/")
     """
-    View's route - not currently used by Flet framework, but can be used in a user
+    View's route - not currently used by Flet framework, but can be used in a user \
     program to update [`Page.route`][flet.Page.route] when a view popped.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`][flet.] control to display at the top of
-    the `Page`.
+    An [`AppBar`][flet.] control to display at the top of the `Page`.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.] control to display at the bottom of
-    the `Page`.
+    A [`BottomAppBar`][flet.] control to display at the bottom of the `Page`.
     """
 
     floating_action_button: Optional[FloatingActionButton] = None
     """
-    A [`FloatingActionButton`][flet.] control to display on top
-    of `Page` content.
+    A [`FloatingActionButton`][flet.] control to display on top of `Page` content.
     """
 
     floating_action_button_location: Optional[
@@ -99,21 +96,20 @@ class View(ScrollableControl, LayoutControl):
 
     navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
     """
-    A navigation bar ([`NavigationBar`][flet.] or
-    [`CupertinoNavigationBar`][flet.]) control to display
-    at the bottom of the `Page`.
+    A navigation bar ([`NavigationBar`][flet.] or [`CupertinoNavigationBar`][flet.]) \
+    control to display at the bottom of the `Page`.
     """
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to
-    display as a panel sliding from the start edge of the view.
+    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the start \
+    edge of the view.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to
-    display as a panel sliding from the end edge of the view.
+    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the end \
+    edge of the view.
     """
 
     vertical_alignment: MainAxisAlignment = MainAxisAlignment.START

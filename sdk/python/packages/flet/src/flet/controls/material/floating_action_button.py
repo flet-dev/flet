@@ -21,10 +21,10 @@ __all__ = ["FloatingActionButton"]
 @control("FloatingActionButton")
 class FloatingActionButton(LayoutControl):
     """
-    A floating action button is a circular icon button that hovers over content to
-    promote a primary action in the application. Floating action button is usually set
-    to `page.floating_action_button`, but can also be added as a regular control at any
-    place on a page.
+    A floating action button is a circular icon button that hovers over content to \
+    promote a primary action in the application. Floating action button is usually set \
+    to `page.floating_action_button`, but can also be added as a regular control at \
+    any place on a page.
 
     ```python
     ft.FloatingActionButton(icon=ft.Icons.ADD)
@@ -57,9 +57,9 @@ class FloatingActionButton(LayoutControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    True if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     mini: bool = False
@@ -73,14 +73,12 @@ class FloatingActionButton(LayoutControl):
 
     foreground_color: Optional[ColorValue] = None
     """
-    The default foreground color for icons
-    and text within this button.
+    The default foreground color for icons and text within this button.
     """
 
     focus_color: Optional[ColorValue] = None
     """
-    The color to use for filling this button
-    when it has input focus.
+    The color to use for filling this button when it has input focus.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -150,8 +148,8 @@ class FloatingActionButton(LayoutControl):
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On
-    Android, for example, setting this to `True` will produce a click sound and a
+    Whether detected gestures should provide acoustic and/or haptic feedback. On \
+    Android, for example, setting this to `True` will produce a click sound and a \
     long-press will produce a short vibration.
     """
 
@@ -165,7 +163,7 @@ class FloatingActionButton(LayoutControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.
     """
 

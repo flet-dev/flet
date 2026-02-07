@@ -76,8 +76,8 @@ class PopupMenuItem(Control):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or
-    is hovering over this item.
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
+    item.
     """
 
     on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
@@ -131,8 +131,7 @@ class PopupMenuButton(LayoutControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used to paint the shadow below
-    the menu.
+    The color used to paint the shadow below the menu.
     """
 
     icon_size: Optional[Number] = None

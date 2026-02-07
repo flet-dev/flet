@@ -76,7 +76,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "config_platform": "macos",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
-                "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
+                "outputs": ["build/macos/Build/Products/Release/{artifact_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
@@ -241,8 +241,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--project",
             dest="project_name",
             required=False,
-            help="Project name for the executable/bundle. "
-            "It is used in metadata and bundle IDs",
+            help="Project name for bundle IDs and identifiers; used as the default "
+            "for artifact and product names",
+        )
+        parser.add_argument(
+            "--artifact",
+            dest="artifact_name",
+            required=False,
+            help="Executable or bundle name on disk",
         )
         parser.add_argument(
             "--description",
@@ -254,8 +260,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--product",
             dest="product_name",
             required=False,
-            help="Display name of the app that is shown in window titles "
-            "and about app dialogs",
+            help="Display name shown in app launchers, window titles, "
+            "and about dialogs.",
         )
         parser.add_argument(
             "--org",
@@ -366,7 +372,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="web_renderer",
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
-            help="Flutter web renderer to use (web only)",
+            help="Flutter web renderer to use (web only) [env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",
@@ -374,7 +380,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             type=str.lower,
             choices=["path", "hash"],
             help="Base URL path to serve the app from. "
-            "Useful if the app is hosted in a subdirectory (web only)",
+            "Useful if the app is hosted in a subdirectory (web only) "
+            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
@@ -400,7 +407,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="no_cdn",
             action="store_true",
             default=False,
-            help="Disable loading of CanvasKit, Pyodide and fonts from CDN",
+            help="Disable loading of CanvasKit, Pyodide and fonts from CDN "
+            "[env: FLET_WEB_NO_CDN=]",
         )
         parser.add_argument(
             "--split-per-abi",
@@ -529,23 +537,26 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-signing-key-store",
             dest="android_signing_key_store",
-            help="path to an upload keystore `.jks` file for Android apps",
+            help="path to an upload keystore `.jks` file for Android apps "
+            "[env: FLET_ANDROID_SIGNING_KEY_STORE=]",
         )
         parser.add_argument(
             "--android-signing-key-store-password",
             dest="android_signing_key_store_password",
-            help="Android signing store password",
+            help="Android signing store password "
+            "[env: FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD=]",
         )
         parser.add_argument(
             "--android-signing-key-password",
             dest="android_signing_key_password",
-            help="Android signing key password",
+            help="Android signing key password "
+            "[env: FLET_ANDROID_SIGNING_KEY_PASSWORD=]",
         )
         parser.add_argument(
             "--android-signing-key-alias",
             dest="android_signing_key_alias",
-            default="upload",
-            help="Android signing key alias",
+            default=None,
+            help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
             "--build-number",
@@ -704,18 +715,27 @@ class BaseBuildCommand(BaseFlutterCommand):
             .strip("/")
             .strip()
         )
-        project_name_orig = (
+        project_name_raw = (
             self.options.project_name
             or self.get_pyproject("project.name")
-            or self.get_pyproject("tool.poetry.name")
             or self.python_app_path.name
         )
-        project_name_slug = slugify(cast(str, project_name_orig))
+        project_name_slug = slugify(cast(str, project_name_raw))
         project_name = project_name_slug.replace("-", "_")
+        artifact_name = (
+            self.options.artifact_name
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
+            or self.get_pyproject("tool.flet.artifact")
+            or self.options.project_name
+            or self.get_pyproject("project.name")
+            or self.python_app_path.name
+        )
         product_name = (
             self.options.product_name
             or self.get_pyproject("tool.flet.product")
-            or project_name_orig
+            or self.options.project_name
+            or self.get_pyproject("project.name")
+            or self.python_app_path.name
         )
 
         split_per_abi = (
@@ -947,6 +967,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "split_per_abi": split_per_abi,
             "project_name": project_name,
             "project_name_slug": project_name_slug,
+            "artifact_name": artifact_name,
             "product_name": product_name,
             "description": (
                 self.options.description
@@ -988,7 +1009,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
                 },
-                "android_signing": self.options.android_signing_key_store is not None,
+                "android_signing": bool(
+                    self.options.android_signing_key_store
+                    or self.get_pyproject("tool.flet.android.signing.key_store")
+                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+                ),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "pyproject": self.get_pyproject(),
@@ -1264,9 +1289,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 capture_output=self.verbose < 1,
             )
             if icons_result.returncode != 0:
-                if icons_result.stdout:
+                if isinstance(icons_result.stdout, str):
                     console.log(icons_result.stdout, style=verbose1_style)
-                if icons_result.stderr:
+                if isinstance(icons_result.stderr, str):
                     console.log(icons_result.stderr, style=error_style)
                 self.cleanup(icons_result.returncode)
             console.log(f"Generated app icons {self.emojis['checkmark']}")
@@ -1514,9 +1539,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 capture_output=self.verbose < 1,
             )
             if splash_result.returncode != 0:
-                if splash_result.stdout:
+                if isinstance(splash_result.stdout, str):
                     console.log(splash_result.stdout, style=verbose1_style)
-                if splash_result.stderr:
+                if isinstance(splash_result.stderr, str):
                     console.log(splash_result.stderr, style=error_style)
                 self.cleanup(splash_result.returncode)
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
@@ -1728,9 +1753,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         if package_result.returncode != 0:
-            if package_result.stdout:
+            if isinstance(package_result.stdout, str):
                 console.log(package_result.stdout, style=verbose1_style)
-            if package_result.stderr:
+            if isinstance(package_result.stderr, str):
                 console.log(package_result.stderr, style=error_style)
             self.cleanup(package_result.returncode)
 
@@ -1799,6 +1824,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         android_signing_key_store = (
             self.options.android_signing_key_store
             or self.get_pyproject("tool.flet.android.signing.key_store")
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
         )
         if android_signing_key_store:
             build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
@@ -1818,16 +1844,31 @@ class BaseBuildCommand(BaseFlutterCommand):
                 key_password if key_password else key_store_password
             )
 
-        android_signing_key_alias = (
-            self.options.android_signing_key_alias
-            or self.get_pyproject("tool.flet.android.signing.key_alias")
-        )
-        if android_signing_key_alias:
+        if android_signing_key_store:
+            android_signing_key_alias = (
+                self.options.android_signing_key_alias
+                or self.get_pyproject("tool.flet.android.signing.key_alias")
+                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
+                or "upload"
+            )
             build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
-        if self.options.flutter_build_args:
-            for flutter_build_arg_arr in self.options.flutter_build_args:
-                build_args.extend(flutter_build_arg_arr)
+        flutter_build_args = (
+            self.options.flutter_build_args
+            or self.get_pyproject(
+                f"tool.flet.{self.config_platform}.flutter.build_args"
+            )
+            or self.get_pyproject("tool.flet.flutter.build_args")
+        )
+        if flutter_build_args:
+            if isinstance(flutter_build_args, (list, tuple)):
+                for arg in flutter_build_args:
+                    if isinstance(arg, (list, tuple)):
+                        build_args.extend(arg)
+                    elif isinstance(arg, str):
+                        build_args.append(arg)
+            elif isinstance(flutter_build_args, str):
+                build_args.append(flutter_build_args)
 
         if self.verbose > 1:
             build_args.append("--verbose")
@@ -1843,9 +1884,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_result.returncode != 0
             or "Encountered error while creating the IPA" in str(build_result.stderr)
         ):
-            if build_result.stdout:
+            if isinstance(build_result.stdout, str):
                 console.log(build_result.stdout, style=verbose1_style)
-            if build_result.stderr:
+            if isinstance(build_result.stderr, str):
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
@@ -1878,6 +1919,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_output_dir = (
                 str(self.flutter_dir.joinpath(build_output))
                 .replace("{arch}", arch)
+                .replace("{artifact_name}", self.template_data["artifact_name"])
                 .replace("{project_name}", self.template_data["project_name"])
                 .replace("{product_name}", self.template_data["product_name"])
             )

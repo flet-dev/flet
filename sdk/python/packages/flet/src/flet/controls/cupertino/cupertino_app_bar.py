@@ -74,7 +74,7 @@ class CupertinoAppBar(Control):
 
     border: Optional[Border] = None
     """
-    The border of the app bar. By default, a single pixel bottom border side is
+    The border of the app bar. By default, a single pixel bottom border side is \
     rendered.
     """
 
@@ -112,8 +112,8 @@ class CupertinoAppBar(Control):
 
     previous_page_title: Optional[str] = None
     """
-    Manually specify the previous route's title when automatically implying
-    the leading back button.
+    Manually specify the previous route's title when automatically implying the \
+    leading back button.
 
     Overrides the text shown with the back chevron instead of automatically showing the
     previous route's title when [`automatically_imply_leading`][(c).] is `True`.
@@ -136,8 +136,8 @@ class CupertinoAppBar(Control):
 
     automatic_background_visibility: Optional[bool] = None
     """
-    Whether the navigation bar should appear transparent
-    when content is scrolled under it.
+    Whether the navigation bar should appear transparent when content is scrolled \
+    under it.
 
     If `False`, the navigation bar will display its [`bgcolor`][(c).].
     """

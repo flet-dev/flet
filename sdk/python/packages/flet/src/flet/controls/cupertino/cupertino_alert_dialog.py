@@ -35,7 +35,8 @@ class CupertinoAlertDialog(DialogControl):
 
     content: Optional[Control] = None
     """
-    The content of this dialog, displayed in a light font at the center of this dialog.
+    The content of this dialog, displayed in a light font at the center of this \
+    dialog.
 
     Typically a [`Column`][flet.] that contains
     the dialog's [`Text`][flet.] message.
@@ -54,7 +55,7 @@ class CupertinoAlertDialog(DialogControl):
         )
     )
     """
-    The animation style to be used when the system keyboard intrudes into the space
+    The animation style to be used when the system keyboard intrudes into the space \
     that the dialog is placed in.
     """
 

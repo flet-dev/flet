@@ -4,10 +4,10 @@ from collections.abc import Awaitable
 from typing import Callable, Optional, Union
 
 from fastapi import Request, WebSocket
-from flet.controls.page import Page
-from flet.controls.types import RouteUrlStrategy, WebRenderer
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from flet.controls.page import Page
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
@@ -22,7 +22,7 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 def app(
     main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
-    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]] = None,
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
@@ -41,30 +41,28 @@ def app(
     """
     Mount all Flet FastAPI handlers in one call.
 
-    Parameters:
-    * `main` (function or coroutine) - application entry point - a method
-       called for newly connected user. Handler must have 1 parameter: `page` - `Page`
-       instance.
-    * `before_main` - a function that is called after Page was created, but before
-       calling `main`.
-    * `assets_dir` (str, optional) - an absolute path to app's assets directory.
-    * `app_name` (str, optional) - PWA application name.
-    * `app_short_name` (str, optional) - PWA application short name.
-    * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
-    * `no_cdn` (bool) - do not load resources from CDN.
-    * `upload_dir` (str) - an absolute path to a directory with uploaded files.
-    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
-       e.g. `/upload`.
-    * `max_upload_size` (str, int) - maximum size of a single upload, bytes.
-       Unlimited if `None`.
-    * `secret_key` (str, optional) - secret key to sign and verify upload requests.
-    * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after
-       user disconnected.
-    * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds,
-       which is a maximum allowed time between starting OAuth flow and redirecting
-       to OAuth callback URL.
+    Args:
+        main: Application entry point. It is called for newly connected users.
+            Handler (function or coroutine) must have 1 parameter of
+            instance [`Page`][flet.Page].
+        before_main: Called after `Page` was created, but before calling `main`.
+        proxy_path: URL prefix when the app is mounted under a proxy.
+        assets_dir: an absolute path to app's assets directory.
+        app_name: PWA application name.
+        app_short_name: PWA application short name.
+        app_description: PWA application description.
+        web_renderer: web renderer defaulting to `WebRenderer.AUTO`.
+        route_url_strategy: routing URL strategy: `path` (default) or `hash`.
+        no_cdn: do not load resources from CDN.
+        upload_dir: an absolute path to a directory with uploaded files.
+        upload_endpoint_path: absolute URL of upload endpoint, e.g. `/upload`.
+        max_upload_size: maximum size of a single upload, bytes. Unlimited if `None`.
+        secret_key: secret key to sign and verify upload requests.
+        session_timeout_seconds: session lifetime, in seconds,
+            after the user disconnected.
+        oauth_state_timeout_seconds: OAuth state lifetime, in seconds,
+            which is the maximum allowed time between starting OAuth flow and
+            redirecting to OAuth callback URL.
     """
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")

@@ -94,7 +94,7 @@ class WebView(ft.LayoutControl):
     Fires when the web page's scroll position changes.
 
     Note:
-        Works only on the following platforms: iOS, Android and macOS.
+        Works only on the following platforms: iOS and Android.
     """
 
     on_console_message: Optional[ft.EventHandler[WebViewConsoleMessageEvent]] = None
