@@ -1,4 +1,5 @@
 import logging
+import mimetypes
 import os
 import shutil
 import tempfile
@@ -20,6 +21,11 @@ from flet_web import (
 from flet_web.fastapi.flet_app_manager import app_manager
 
 logger = logging.getLogger(flet_fastapi.__name__)
+
+# Ensure correct MIME types on platforms (e.g. Windows)
+# that do not register them by default.
+mimetypes.add_type("text/javascript", ".mjs")
+mimetypes.add_type("application/wasm", ".wasm")
 
 
 class FletStaticFiles(StaticFiles):
