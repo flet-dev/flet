@@ -346,10 +346,10 @@ class WindowService extends FletService with WindowListener {
         if (frameless) {
           await setWindowFrameless();
         } else {
-          // Restore non-frameless window chrome
+          // Restore non-frameless window chrome using cached state
           await setWindowTitleBarVisibility(
-            titleBarHidden ?? false,
-            titleBarButtonsHidden,
+            _titleBarHidden ?? false,
+            _titleBarButtonsHidden,
           );
         }
         _frameless = frameless;
