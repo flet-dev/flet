@@ -15,6 +15,8 @@ import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/gradient.dart';
+import '../utils/images.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/loading_page.dart';
@@ -268,14 +270,27 @@ class _ViewControlState extends State<ViewControl> {
               )
             : scaffold);
 
+    var shaderGradient = control.getGradient("shader", Theme.of(context));
+    if (shaderGradient != null) {
+      result = ShaderMask(
+        shaderCallback: (bounds) => shaderGradient.createShader(bounds),
+        blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
+        child: result,
+      );
+    }
+
     var backgroundDecoration = control.getBoxDecoration("decoration", context);
     var foregroundDecoration =
         control.getBoxDecoration("foreground_decoration", context);
     if (backgroundDecoration != null || foregroundDecoration != null) {
-      result = Container(
+      var bgContainer = Container(
         decoration: backgroundDecoration,
         foregroundDecoration: foregroundDecoration,
         child: result,
+      );
+      result = Stack(
+        fit: StackFit.expand,
+        children: [bgContainer, result],
       );
     }
 
