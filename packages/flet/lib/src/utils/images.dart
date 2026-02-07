@@ -387,7 +387,7 @@ class ResolvedAssetSource {
   /// - `String` → URL, asset path, or Base64-encoded data
   factory ResolvedAssetSource.from(dynamic src) {
     // bytes
-    final listBytes = _bytesFromList(src);
+    final listBytes = convertToUint8List(src);
     if (listBytes != null) {
       return listBytes.isEmpty
           ? const ResolvedAssetSource()
@@ -425,7 +425,7 @@ class ResolvedAssetSource {
 
 /// Converts various list-like inputs into a Uint8List,
 /// or returns null if unsupported.
-Uint8List? _bytesFromList(dynamic value) {
+Uint8List? convertToUint8List(dynamic value) {
   if (value is Uint8List) {
     return value;
   } else if (value is List<int>) {

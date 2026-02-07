@@ -13,7 +13,7 @@ async def main(page: ft.Page):
 
     page.add(
         ft.Column(
-            [
+            controls=[
                 text_to_copy := ft.TextField(label="Text to copy"),
                 ft.Button("Set to clipboard", on_click=set_to_clipboard),
                 ft.Button("Get from clipboard", on_click=get_from_clipboard),

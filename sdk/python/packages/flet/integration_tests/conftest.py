@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest_asyncio
 
 import flet.testing as ftt
+from flet.controls.context import _context_page, context
 
 
 def create_flet_app(request):
@@ -20,13 +21,29 @@ def create_flet_app(request):
 async def flet_app(request):
     flet_app = create_flet_app(request)
     await flet_app.start()
-    yield flet_app
-    await flet_app.teardown()
+
+    # make page available via ft.context.page
+    token = _context_page.set(flet_app.page)
+    context.reset_auto_update()
+
+    try:
+        yield flet_app
+    finally:
+        _context_page.reset(token)  # restore previous context to avoid leakage
+        await flet_app.teardown()
 
 
 @pytest_asyncio.fixture(scope="function")
 async def flet_app_function(request):
     flet_app = create_flet_app(request)
     await flet_app.start()
-    yield flet_app
-    await flet_app.teardown()
+
+    # make page available via ft.context.page
+    token = _context_page.set(flet_app.page)
+    context.reset_auto_update()
+
+    try:
+        yield flet_app
+    finally:
+        _context_page.reset(token)  # restore previous context to avoid leakage
+        await flet_app.teardown()
