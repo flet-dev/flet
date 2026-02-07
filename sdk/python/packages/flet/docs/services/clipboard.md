@@ -7,10 +7,10 @@ examples: ../../examples/services/clipboard
 
 ## Examples
 
-### Strings
+### Text
 
 ```python
---8<-- "{{ examples }}/strings.py"
+--8<-- "{{ examples }}/text.py"
 ```
 
 ### Images
