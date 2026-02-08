@@ -1,0 +1,137 @@
+{
+    "Daily Routine": {
+        "Morning": [
+            [
+                "7:00 AM",
+                "Wake up & Meditation",
+                false
+            ],
+            [
+                "7:15 AM",
+                "Walk",
+                true
+            ],
+            [
+                "7:45 AM",
+                "Breakfast",
+                false
+            ],
+            [
+                "8:00 AM",
+                "Cooking & Cleaning",
+                true
+            ],
+            [
+                "9:00 AM",
+                "Bath & Ready for office",
+                false
+            ]
+        ],
+        "Work": [
+            [
+                "10:00 AM",
+                "Log in",
+                true
+            ],
+            [
+                "2:00 PM",
+                "Lunch",
+                false
+            ],
+            [
+                "7:00 PM",
+                "Log out",
+                false
+            ]
+        ],
+        "Night": [
+            [
+                "8:30 PM",
+                "Reach Home",
+                false
+            ],
+            [
+                "9:00 PM",
+                "Dinner",
+                false
+            ],
+            [
+                "9:30 PM",
+                "Productivity",
+                true
+            ],
+            [
+                "11:00 PM",
+                "No phone, self-care, meditation",
+                false
+            ],
+            [
+                "12:00 AM",
+                "Sleep",
+                false
+            ]
+        ]
+    },
+    "House Chores": {
+        "Monday": [
+            [
+                "Morning",
+                "Cook Meal",
+                true
+            ],
+            [
+                "Evening",
+                "Vacuum",
+                false
+            ]
+        ],
+        "Tuesday": [
+            [
+                "Morning",
+                "Cook Meal",
+                false
+            ],
+            [
+                "Evening",
+                "Mopping",
+                true
+            ]
+        ],
+        "Wednesday": [
+            [
+                "Morning",
+                "Washing Clothes",
+                false
+            ],
+            [
+                "Evening",
+                "Vacuum",
+                false
+            ]
+        ],
+        "Thursday": [
+            [
+                "Morning",
+                "Cook Meal",
+                true
+            ],
+            [
+                "Evening",
+                "Mopping",
+                true
+            ]
+        ],
+        "Friday": [
+            [
+                "Morning",
+                "Washing Clothes",
+                true
+            ],
+            [
+                "Evening",
+                "Deep Cleaning",
+                false
+            ]
+        ]
+    }
+}
