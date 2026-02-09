@@ -31,7 +31,7 @@ async def test_hue_ring_picker(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         ft.Column(
             intrinsic_width=True,
-            controls=[HueRingPicker(picker_color="#00ff00")],
+            controls=[HueRingPicker(color="#00ff00")],
         ),
     )
 
@@ -43,7 +43,7 @@ async def test_slide_picker(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         ft.Column(
             intrinsic_width=True,
-            controls=[SlidePicker(picker_color="#0000ff")],
+            controls=[SlidePicker(color="#0000ff")],
         ),
     )
 
@@ -55,7 +55,7 @@ async def test_material_picker(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         ft.Column(
             intrinsic_width=True,
-            controls=[MaterialPicker(picker_color="#ff9800")],
+            controls=[MaterialPicker(color="#ff9800")],
         ),
     )
 
@@ -67,7 +67,7 @@ async def test_block_picker(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         ft.Column(
             intrinsic_width=True,
-            controls=[BlockPicker(picker_color="#9c27b0")],
+            controls=[BlockPicker(color="#9c27b0")],
         ),
     )
 
@@ -82,9 +82,7 @@ async def test_multiple_choice_block_picker(
         ft.Column(
             intrinsic_width=True,
             controls=[
-                MultipleChoiceBlockPicker(
-                    picker_colors=["#03a9f4", "#4caf50", "#ffeb3b"]
-                )
+                MultipleChoiceBlockPicker(colors=["#03a9f4", "#4caf50", "#ffeb3b"])
             ],
         ),
     )

@@ -10,7 +10,7 @@ def main(page: ft.Page):
         print(f"color: {e.data}")
 
     dialog_picker = BlockPicker(
-        picker_color="#9c27b0",
+        color="#9c27b0",
         available_colors=[
             "#f44336",
             "#e91e63",

@@ -20,7 +20,7 @@ class SlidePicker(ft.LayoutControl):
     labels and indicators.
     """
 
-    picker_color: Optional[ft.ColorValue] = None
+    color: Optional[ft.ColorValue] = None
     """
     The currently selected color.
     """
@@ -43,27 +43,11 @@ class SlidePicker(ft.LayoutControl):
     indicator_alignment_begin: Optional[ft.Alignment] = None
     """
     Alignment for the indicator split begin.
-
-    Examples:
-        - `Alignment(-1, 0)` for left
-        - `Alignment(1, 0)` for right
-        - `Alignment(0, -1)` for top
-        - `Alignment(0, 1)` for bottom
-        - `Alignment(-1, -1)` for top-left
-        - `Alignment(1, 1)` for bottom-right
     """
 
     indicator_alignment_end: Optional[ft.Alignment] = None
     """
     Alignment for the indicator split end.
-
-    Examples:
-        - `Alignment(-1, 0)` for left
-        - `Alignment(1, 0)` for right
-        - `Alignment(0, -1)` for top
-        - `Alignment(0, 1)` for bottom
-        - `Alignment(-1, -1)` for top-left
-        - `Alignment(1, 1)` for bottom-right
     """
 
     indicator_border_radius: Optional[ft.BorderRadiusValue] = None

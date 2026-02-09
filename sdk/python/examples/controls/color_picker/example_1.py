@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import ColorLabelType, ColorPicker, PaletteType
+from flet_color_picker import ColorLabelType, ColorPicker, HsvColor, PaletteType
 
 
 def main(page: ft.Page):
@@ -14,16 +14,11 @@ def main(page: ft.Page):
         print(f"history: {e.data}")
 
     def on_hsv_color_change(e: ft.ControlEvent):
-        print("hsv: ", e.control.picker_hsv_color)
+        print("hsv: ", e.control.hsv_color)
 
     picker = ColorPicker(
         # picker_color="#ff0000",
-        picker_hsv_color={
-            "alpha": 1.0,
-            "hue": 60.0,
-            "saturation": 1.0,
-            "value": 1.0,
-        },
+        hsv_color=HsvColor(alpha=1, hue=0, saturation=1, value=1),
         color_history=[
             "#ff0000",
             "#00ff00",

@@ -12,7 +12,7 @@ class MaterialPicker(ft.LayoutControl):
     optional shade labels.
     """
 
-    picker_color: Optional[ft.ColorValue] = None
+    color: Optional[ft.ColorValue] = None
     """
     The currently selected color.
     """

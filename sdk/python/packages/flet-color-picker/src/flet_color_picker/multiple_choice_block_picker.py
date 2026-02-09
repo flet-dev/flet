@@ -12,7 +12,7 @@ class MultipleChoiceBlockPicker(ft.LayoutControl):
     colors.
     """
 
-    picker_colors: Optional[list[ft.ColorValue]] = None
+    colors: Optional[list[ft.ColorValue]] = None
     """
     The currently selected colors.
     """

@@ -1,9 +1,10 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
 import flet as ft
 
-__all__ = ["ColorLabelType", "ColorPicker", "PaletteType"]
+__all__ = ["ColorLabelType", "ColorPicker", "HsvColor", "PaletteType"]
 
 
 class ColorLabelType(Enum):
@@ -28,6 +29,14 @@ class PaletteType(Enum):
     HUE_WHEEL = "hueWheel"
 
 
+@dataclass
+class HsvColor:
+    alpha: ft.Number
+    hue: ft.Number
+    saturation: ft.Number
+    value: ft.Number
+
+
 @ft.control("ColorPicker")
 class ColorPicker(ft.LayoutControl):
     """
@@ -35,7 +44,7 @@ class ColorPicker(ft.LayoutControl):
     history.
     """
 
-    picker_color: Optional[ft.ColorValue] = None
+    color: Optional[ft.ColorValue] = None
     """
     The currently selected color.
     """
@@ -75,12 +84,6 @@ class ColorPicker(ft.LayoutControl):
     label_types: Optional[list[ColorLabelType]] = None
     """
     Color label types to display.
-
-    Values:
-        - `ColorLabelType.HEX`
-        - `ColorLabelType.RGB`
-        - `ColorLabelType.HSV`
-        - `ColorLabelType.HSL`
     """
 
     palette_type: Optional[PaletteType] = None
@@ -98,11 +101,12 @@ class ColorPicker(ft.LayoutControl):
     Height of the picker area as a percentage of the picker width.
     """
 
-    picker_hsv_color: Optional[dict[str, ft.Number]] = None
+    hsv_color: Optional[HsvColor] = None
     """
     The currently selected HSV color.
 
-    Expected keys: `alpha`, `hue`, `saturation`, `value`.
+    Provide an `HsvColor` instance with fields: `alpha`, `hue`, `saturation`,
+    `value`.
     """
 
     on_color_change: Optional[ft.ControlEventHandler["ColorPicker"]] = None

@@ -12,7 +12,7 @@ class HueRingPicker(ft.LayoutControl):
     with an optional alpha slider.
     """
 
-    picker_color: Optional[ft.ColorValue] = None
+    color: Optional[ft.ColorValue] = None
     """
     The currently selected color.
     """

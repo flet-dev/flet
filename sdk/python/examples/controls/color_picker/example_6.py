@@ -10,7 +10,7 @@ def main(page: ft.Page):
         print(f"colors: {e.data}")
 
     dialog_picker = MultipleChoiceBlockPicker(
-        picker_colors=["#03a9f4", "#4caf50"],
+        colors=["#03a9f4", "#4caf50"],
         available_colors=[
             "#f44336",
             "#e91e63",

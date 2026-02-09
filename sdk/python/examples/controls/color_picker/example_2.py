@@ -10,7 +10,7 @@ def main(page: ft.Page):
         print(f"color: {e.data}")
 
     picker = HueRingPicker(
-        picker_color="#00ff00",
+        color="#00ff00",
         hue_ring_stroke_width=20,
         picker_area_border_radius=ft.BorderRadius.all(5),
         on_color_change=on_color_change,

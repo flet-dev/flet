@@ -13,7 +13,7 @@ def main(page: ft.Page):
         print(f"primary: {e.data}")
 
     picker = MaterialPicker(
-        picker_color="#ff9800",
+        color="#ff9800",
         on_color_change=on_color_change,
         on_primary_change=on_primary_change,
     )

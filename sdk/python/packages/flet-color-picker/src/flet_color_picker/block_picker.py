@@ -12,7 +12,7 @@ class BlockPicker(ft.LayoutControl):
     colors.
     """
 
-    picker_color: Optional[ft.ColorValue] = None
+    color: Optional[ft.ColorValue] = None
     """
     The currently selected color.
     """

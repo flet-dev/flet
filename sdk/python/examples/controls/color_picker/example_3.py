@@ -10,7 +10,7 @@ def main(page: ft.Page):
         print(f"color: {e.data}")
 
     picker = SlidePicker(
-        picker_color="#0000ff",
+        color="#0000ff",
         color_model=ColorModel.RGB,
         indicator_border_radius=ft.BorderRadius.all(5),
         on_color_change=on_color_change,

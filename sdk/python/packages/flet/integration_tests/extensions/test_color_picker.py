@@ -16,7 +16,7 @@ async def test_color_picker_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ColorPicker(
-            picker_color="#ff0000",
+            color="#ff0000",
             color_picker_width=320,
         ),
     )
@@ -27,7 +27,7 @@ async def test_color_picker_hue_ring(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         HueRingPicker(
-            picker_color="#00ff00",
+            color="#00ff00",
         ),
     )
 
@@ -37,7 +37,7 @@ async def test_color_picker_slide(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         SlidePicker(
-            picker_color="#0000ff",
+            color="#0000ff",
         ),
     )
 
@@ -47,7 +47,7 @@ async def test_color_picker_material(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         MaterialPicker(
-            picker_color="#ff9800",
+            color="#ff9800",
         ),
     )
 
@@ -57,7 +57,7 @@ async def test_color_picker_block(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         BlockPicker(
-            picker_color="#9c27b0",
+            color="#9c27b0",
         ),
     )
 
@@ -67,6 +67,6 @@ async def test_color_picker_multiple_choice_block(flet_app: ftt.FletTestApp, req
     await flet_app.assert_control_screenshot(
         request.node.name,
         MultipleChoiceBlockPicker(
-            picker_colors=["#03a9f4", "#4caf50", "#ffeb3b"],
+            colors=["#03a9f4", "#4caf50", "#ffeb3b"],
         ),
     )
