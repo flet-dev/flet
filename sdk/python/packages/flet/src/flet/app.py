@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from flet.controls.page import Page
 
 
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
 def app(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:
@@ -43,7 +43,7 @@ def app(*args, **kwargs):
     return run(*new_args, **kwargs)
 
 
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
 def app_async(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:
@@ -68,6 +68,26 @@ def run(
     export_asgi_app: Optional[bool] = False,
     target=None,
 ):
+    """
+    Runs the Flet app.
+
+    Args:
+        main: Application entry point. Handler (function or coroutine) must
+            have 1 parameter of instance [`Page`][flet.Page].
+        before_main: Called after `Page` is created but before `main`.
+        name:
+        host:
+        port:
+        view:
+        assets_dir: A path to app's assets directory.
+        upload_dir: A path to a directory with uploaded files,
+            or where uploaded files should be saved.
+        web_renderer: The type of web renderer to use.
+        route_url_strategy: The strategy to use for generating URLs.
+        no_cdn: Whether not load CanvasKit, Pyodide, or fonts from CDN.
+        export_asgi_app:
+        target:
+    """
     if is_pyodide():
         __run_pyodide(main=main or target, before_main=before_main)
         return

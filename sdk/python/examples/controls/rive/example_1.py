@@ -1,6 +1,5 @@
-import flet_rive as ftr
-
 import flet as ft
+import flet_rive as ftr
 
 
 def main(page: ft.Page):

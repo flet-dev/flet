@@ -22,6 +22,7 @@ class _RichAttributionControlState extends State<RichAttributionControl>
     var attributions = widget.control
         .children("attributions")
         .map((Control c) {
+          c.notifyParent = true;
           if (c.type == "TextSourceAttribution") {
             return TextSourceAttribution(
               c.getString("text", "Placeholder Text")!,

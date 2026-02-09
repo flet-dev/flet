@@ -7,7 +7,7 @@ from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
-from flet.controls.types import ColorValue, Number
+from flet.controls.types import ColorValue, Locale, Number
 
 __all__ = [
     "CupertinoDatePicker",
@@ -55,6 +55,18 @@ class CupertinoDatePicker(LayoutControl):
             [`minute_interval`][(c).].
     """
 
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker. It is intended for rare cases where this control \
+    should be localized differently from the rest of the page.
+
+    Notes:
+        - The locale must be supported by Flutter's global localization delegates;
+          otherwise the override is ignored and the control uses the page or system
+          locale.
+        - If `None` (the default), the page or system locale is used.
+    """
+
     first_date: Optional[DateTimeValue] = None
     """
     The earliest allowable date that the user can select.
@@ -94,7 +106,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minute_interval: int = 1
     """
-    The granularity of the minutes spinner, if it is shown in the current
+    The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
     Note:
@@ -107,7 +119,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minimum_year: int = 1
     """
-    Minimum year to which the picker can be scrolled when in
+    Minimum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Raises:
@@ -116,7 +128,7 @@ class CupertinoDatePicker(LayoutControl):
 
     maximum_year: Optional[int] = None
     """
-    Maximum year to which the picker can be scrolled when in
+    Maximum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Defaults to `None` - no limit.

@@ -59,19 +59,12 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be
-    placed horizontally.
+    Defines how the child [`controls`][(c).] should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     Defines how the child [`controls`][(c).] should be placed vertically.
-
-    Note:
-        When [`wrap`][(c).] is `True`, this property doesn't support
-        [`CrossAxisAlignment.STRETCH`][flet.] or
-        [`CrossAxisAlignment.BASELINE`][flet.]. If either is used,
-        [`CrossAxisAlignment.START`][flet.] will be applied instead.
     """
 
     spacing: ResponsiveNumber = 10
@@ -86,7 +79,7 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     run_spacing: ResponsiveNumber = 10
     """
-    The spacing between runs when [`wrap`][(c).] is `True`.
+    The spacing between runs.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(
@@ -100,16 +93,12 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
         }
     )
     """
-    Defines the minimum widths (in px) for each breakpoint key used by responsive
-    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.],
-    and [`run_spacing`][flet.ResponsiveRow.].
+    Defines the minimum widths (in px) for each breakpoint key used by responsive \
+    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.], and \
+    [`run_spacing`][flet.ResponsiveRow.].
 
     Keys can be [`ResponsiveRowBreakpoint`][flet.] values or custom strings.
     Breakpoint names in responsive values must match the names used here.
 
     The default mirrors Bootstrap breakpoints.
     """
-
-    def clean(self):
-        super().clean()
-        self.controls.clear()

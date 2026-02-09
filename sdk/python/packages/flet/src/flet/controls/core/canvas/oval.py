@@ -11,8 +11,8 @@ __all__ = ["Oval"]
 @control("Oval")
 class Oval(Shape):
     """
-    Draws an axis-aligned oval that fills the given
-    axis-aligned rectangle with the given [`paint`][(c).].
+    Draws an axis-aligned oval that fills the given axis-aligned rectangle with the \
+    given [`paint`][(c).].
 
     The [`style`][flet.Paint.] property of [`paint`][(c).] indicates
     whether this oval is filled, stroked, or both.

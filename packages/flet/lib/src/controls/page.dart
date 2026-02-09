@@ -81,19 +81,27 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     _routeParser = RouteParser();
+    final backend = FletBackend.of(context);
+    final isEmbedded = backend.controlId != null;
     final defaultRouteName =
         WidgetsBinding.instance.platformDispatcher.defaultRouteName;
-    final pendingInitial =
-        FletDeepLinkingBootstrap.takePendingInitialRouteInformation();
-    final initial = FletRouteInformationProvider.normalize(
-      pendingInitial ??
-          RouteInformation(
-            uri: Uri.tryParse(defaultRouteName) ?? Uri(path: '/'),
-          ),
-    );
-    _routeInformationProvider =
-        FletRouteInformationProvider(initialRouteInformation: initial);
-    FletDeepLinkingBootstrap.markRouterReady();
+    final pendingInitial = isEmbedded
+        ? null
+        : FletDeepLinkingBootstrap.takePendingInitialRouteInformation();
+    final initial = isEmbedded
+        ? RouteInformation(uri: Uri(path: '/'))
+        : FletRouteInformationProvider.normalize(
+            pendingInitial ??
+                RouteInformation(
+                  uri: Uri.tryParse(defaultRouteName) ?? Uri(path: '/'),
+                ),
+          );
+    _routeInformationProvider = isEmbedded
+        ? FletLocalRouteInformationProvider(initialRouteInformation: initial)
+        : FletRouteInformationProvider(initialRouteInformation: initial);
+    if (!isEmbedded) {
+      FletDeepLinkingBootstrap.markRouterReady();
+    }
 
     _routeState = RouteState(_routeParser);
     _routeState.addListener(_routeChanged);

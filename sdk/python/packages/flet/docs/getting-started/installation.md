@@ -11,15 +11,15 @@ Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)
 
 #### macOS
 
-Flet supports macOS 11 (Big Sur) or later.
+Flet supports macOS 12 (Monterey) or later.
 
 #### Windows
 
-Flet supports 64-bit version of Microsoft Windows 10 or later.
+Flet supports 64-bit version of Microsoft Windows 10 and Windows 11.
 
 #### Linux
 
-Flet supports Debian Linux 11 or later and Ubuntu Linux 20.04 LTS or later.
+Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
 
 /// details | Windows Subsystem for Linux (WSL)
     type: note

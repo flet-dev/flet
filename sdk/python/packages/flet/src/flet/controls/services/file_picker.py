@@ -18,8 +18,7 @@ __all__ = [
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the
-    [`FilePicker`][flet.].
+    Defines the file types that can be selected using the [`FilePicker`][flet.].
     """
 
     ANY = "any"
@@ -63,9 +62,13 @@ class FilePickerUploadFile:
 
 @dataclass
 class FilePickerFile:
+    """
+    A file selected via the [`FilePicker`][flet.]
+    """
+
     id: int
     """
-    TBD
+    Unique file identifier.
     """
 
     name: str
@@ -89,6 +92,11 @@ class FilePickerFile:
 
 @dataclass
 class FilePickerUploadEvent(Event["FilePicker"]):
+    """
+    Event emitted when a file is uploaded via \
+    [`FilePicker.upload()`][flet.FilePicker.upload] method.
+    """
+
     file_name: str
     """
     The name of the uploaded file.
@@ -108,13 +116,13 @@ class FilePickerUploadEvent(Event["FilePicker"]):
 @control("FilePicker")
 class FilePicker(Service):
     """
-    A control that allows you to use the native file explorer to pick single
-    or multiple files, with extensions filtering support and upload.
+    A control that allows you to use the native file explorer to pick single or \
+    multiple files, with extensions filtering support and upload.
 
     Danger: Important
-        In Linux, the FilePicker control depends on
+        On Linux, this control requires
         [Zenity](https://help.gnome.org/users/zenity/stable/) when running Flet
-        as an app. This is not a requirement when running Flet in a browser.
+        as a desktop app. It is not required when running Flet in a browser.
 
         To install Zenity on Ubuntu/Debian run the following commands:
         ```bash
@@ -124,21 +132,30 @@ class FilePicker(Service):
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
-    Called when a file upload progress is updated.
+    Called when a file is uploaded via [`upload()`][(c).upload] method.
+
+    This callback is invoked at least twice for each uploaded file: once with `0.0`
+    [`progress`][flet.FilePickerUploadEvent.] before the upload starts, and once with
+    `1.0` [`progress`][flet.FilePickerUploadEvent.] when the upload completes.
+
+    For files larger than 1 MB, additional progress events are emitted
+    at every 10% increment (for example, `0.1`, `0.2`, ...).
     """
 
     async def upload(self, files: list[FilePickerUploadFile]):
         """
-        Uploads selected files to specified upload URLs.
+        Uploads picked files to specified upload URLs.
 
-        Before calling this method,
-        [`pick_files()`][(c).pick_files]
-        must be called, so that the internal file picker selection is not empty.
+        Before calling this method, [`pick_files()`][(c).pick_files] first has to be
+        called to ensure the internal file picker selection is not empty.
+
+        Once called, Flet asynchronously starts uploading selected files
+        one-by-one and reports the progress via [`on_upload`][(c).] event.
 
         Args:
             files: A list of [`FilePickerUploadFile`][flet.], where
                 each item specifies which file to upload, and where
-                (with PUT or POST).
+                (with `PUT` or `POST`).
         """
         await self._invoke_method(
             "upload",
@@ -187,8 +204,8 @@ class FilePicker(Service):
         src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
         """
-        Opens a save file dialog which lets the user select a file path and a file name
-        to save a file.
+        Opens a save file dialog which lets the user select a file path and a file \
+        name to save a file.
 
         Note:
             - On desktop this method only opens a dialog for the user to select
@@ -242,7 +259,11 @@ class FilePicker(Service):
         allow_multiple: bool = False,
     ) -> list[FilePickerFile]:
         """
-        Retrieves the file(s) from the underlying platform.
+        Opens a pick file dialog.
+
+        Tip:
+            To upload the picked files, pass them to [`upload()`][(c).upload] method,
+            along with their upload URLs.
 
         Args:
             dialog_title: The title of the dialog window.

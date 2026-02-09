@@ -69,8 +69,8 @@ class KeyRepeatEvent(Event["KeyboardListener"]):
 @control("KeyboardListener")
 class KeyboardListener(Control):
     """
-    A control that calls a callback whenever the user presses or releases
-    a key on a keyboard.
+    A control that calls a callback whenever the user presses or releases a key on a \
+    keyboard.
     """
 
     content: Control
@@ -80,8 +80,8 @@ class KeyboardListener(Control):
 
     autofocus: bool = False
     """
-    True if this control will be selected as the initial focus when no other node
-    in its scope is currently focused.
+    True if this control will be selected as the initial focus when no other node in \
+    its scope is currently focused.
     """
 
     include_semantics: bool = True

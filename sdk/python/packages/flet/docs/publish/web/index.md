@@ -2,9 +2,9 @@
 
 Flet allows publishing your app as a **static** or **dynamic** website.
 
-**[Static website]** - content is not changing and delivered exactly as it's stored. Python code is running in the web browser.
+1. **[Static website]** - content is delivered as-is and Python runs in the browser (Pyodide).
 
-**[Dynamic website]** - content is dynamically generated for each user. Python code is running on the server.
+2. **[Dynamic website]** - content is generated per user and Python runs on the server.
 
 Here is a table comparing Flet app running as a static vs dynamic website:
 

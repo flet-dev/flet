@@ -32,17 +32,21 @@ pip install flet-datatable2  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Example
+## Examples
+
+### Example 1
 
 ```python
 --8<-- "{{ examples }}/example_1.py"
 ```
 
+### Example 2
+
 ```python
 --8<-- "{{ examples }}/example_2.py"
 ```
 
-![DataTable2 example]({{ examples }}/media/example_2.gif)
+{{ image(examples + "/media/example_2.gif", width="80%") }}
 
 ## Description
 

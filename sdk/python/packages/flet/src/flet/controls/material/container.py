@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -20,7 +20,6 @@ from flet.controls.events import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
-from flet.controls.theme import Theme
 from flet.controls.types import (
     BlendMode,
     ClipBehavior,
@@ -31,12 +30,15 @@ from flet.controls.types import (
 
 __all__ = ["Container"]
 
+if TYPE_CHECKING:
+    from flet.controls.theme import Theme
+
 
 @control("Container")
 class Container(LayoutControl, AdaptiveControl):
     """
-    Allows to decorate a control with background color and border and
-    position it with padding, margin and alignment.
+    Allows to decorate a control with background color and border and position it with \
+    padding, margin and alignment.
 
     ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/container/media/overview-padding-margin-border.png){width="80%"}
     /// caption
@@ -50,7 +52,7 @@ class Container(LayoutControl, AdaptiveControl):
 
     padding: Optional[PaddingValue] = None
     """
-    Empty space to inscribe inside a container decoration (background, border). The
+    Empty space to inscribe inside a container decoration (background, border). The \
     child control is placed inside this padding.
     """
 
@@ -106,8 +108,8 @@ class Container(LayoutControl, AdaptiveControl):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the `bgcolor` or `gradient`. If `shape=BoxShape.CIRCLE`
-    then this image is clipped to the circle's boundary; if `border_radius` is not
+    An image to paint above the `bgcolor` or `gradient`. If `shape=BoxShape.CIRCLE` \
+    then this image is clipped to the circle's boundary; if `border_radius` is not \
     `None` then the image is clipped to the given radii.
     """
 
@@ -118,7 +120,7 @@ class Container(LayoutControl, AdaptiveControl):
 
     animate: Optional[AnimationValue] = None
     """
-    Enables container "implicit" animation that gradually changes its values over a
+    Enables container "implicit" animation that gradually changes its values over a \
     period of time.
     """
 
@@ -176,24 +178,23 @@ class Container(LayoutControl, AdaptiveControl):
     it is fired after that.
     """
 
-    theme: Optional[Theme] = None
+    theme: Optional["Theme"] = None
     """
-    Allows setting a nested theme for all controls inside this container and down its
+    Allows setting a nested theme for all controls inside this container and down its \
     tree.
     """
 
-    dark_theme: Optional[Theme] = None
+    dark_theme: Optional["Theme"] = None
     """
-    Allows setting a nested theme to be used when in dark theme mode for all controls
+    Allows setting a nested theme to be used when in dark theme mode for all controls \
     inside the container and down its tree.
     """
 
     theme_mode: Optional[ThemeMode] = None
     """
-    "Resets" parent theme and creates a new, unique scheme for all
-    controls inside the container. Otherwise the styles defined in container's
-    [`theme`][(c).] property override corresponding styles from
-    the parent, inherited theme.
+    "Resets" parent theme and creates a new, unique scheme for all controls inside the \
+    container. Otherwise the styles defined in container's [`theme`][(c).] property \
+    override corresponding styles from the parent, inherited theme.
 
     Defaults to `ThemeMode.SYSTEM`.
     """

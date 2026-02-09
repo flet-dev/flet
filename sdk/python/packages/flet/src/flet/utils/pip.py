@@ -1,13 +1,16 @@
+import os
 import subprocess
 import sys
+from importlib.util import find_spec
 
 import flet.version
 from flet.utils import is_linux
 
 
-def install_flet_package(name: str):
-    print(f"Installing {name} {flet.version.flet_version} package...", end="")
-    retcode = subprocess.call(
+def _install_with_pip(package_spec: str) -> int:
+    if find_spec("pip") is None:
+        return 1
+    return subprocess.call(
         [
             sys.executable,
             "-m",
@@ -15,17 +18,37 @@ def install_flet_package(name: str):
             "install",
             "-q",
             "--disable-pip-version-check",
-            f"{name}=={flet.version.flet_version}",
+            package_spec,
         ]
     )
+
+
+def _install_with_uv(package_spec: str) -> int:
+    try:
+        return subprocess.call(["uv", "pip", "install", package_spec])
+    except FileNotFoundError:
+        return 1
+
+
+def install_flet_package(name: str):
+    package_spec = f"{name}=={flet.version.flet_version}"
+    print(f"Installing {name} {flet.version.flet_version} package...", end="")
+    if os.environ.get("UV"):
+        retcode = _install_with_uv(package_spec)
+        if retcode != 0:
+            retcode = _install_with_pip(package_spec)
+    else:
+        retcode = _install_with_pip(package_spec)
+        if retcode != 0:
+            retcode = _install_with_uv(package_spec)
     if retcode == 0:
         print("OK")
     else:
         print(
-            f'Unable to upgrade "{name}" package to version '
-            f"{flet.version.flet_version}. Please use "
-            f"\"pip install 'flet[all]=={flet.version.flet_version}' --upgrade\" "
-            f"command to upgrade Flet."
+            f'Unable to install "{name}" package. Please run '
+            f'"pip install {package_spec} --upgrade" '
+            f'or "uv pip install {package_spec} --upgrade" '
+            f"command."
         )
         exit(1)
 

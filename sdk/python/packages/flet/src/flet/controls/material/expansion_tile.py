@@ -25,34 +25,33 @@ __all__ = ["ExpansionTile", "TileAffinity"]
 
 class TileAffinity(Enum):
     """
-    Where to place a control in controls that use [`ListTile`][flet.] to position a
+    Where to place a control in controls that use [`ListTile`][flet.] to position a \
     control next to a label.
     """
 
     LEADING = "leading"
     """
-    Positions the control on the leading edge, and the secondary control, if
-    any, on the trailing edge.
+    Positions the control on the leading edge, and the secondary control, if any, on \
+    the trailing edge.
     """
 
     TRAILING = "trailing"
     """
-    Positions the control on the trailing edge, and the secondary control, if
-    any, on the leading edge.
+    Positions the control on the trailing edge, and the secondary control, if any, on \
+    the leading edge.
     """
 
     PLATFORM = "platform"
     """
-    Positions the control relative to the text in the fashion that is typical
-    for the current platform, and place the secondary control on the opposite
-    side.
+    Positions the control relative to the text in the fashion that is typical for the \
+    current platform, and place the secondary control on the opposite side.
     """
 
 
 @control("ExpansionTile")
 class ExpansionTile(LayoutControl, AdaptiveControl):
     """
-    A single-line ListTile with an expansion arrow icon that expands or collapses the
+    A single-line ListTile with an expansion arrow icon that expands or collapses the \
     tile to reveal or hide its controls.
 
     ```python
@@ -136,8 +135,8 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     affinity: Optional[TileAffinity] = None
     """
-    Typically used to force the expansion arrow icon to the tile's [`leading`][(c).] or
-    [`trailing`][(c).] edge.
+    Typically used to force the expansion arrow icon to the tile's [`leading`][(c).] \
+    or [`trailing`][(c).] edge.
 
     If `None`, [`ListTileTheme.affinity`][flet.] is used;
     if that is also `None`, then defaults to [`TileAffinity.TRAILING`][flet.]
@@ -146,7 +145,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     expanded_alignment: Optional[Alignment] = None
     """
-    Defines the alignment of [`controls`][(c).], which are arranged in a column when
+    Defines the alignment of [`controls`][(c).], which are arranged in a column when \
     the tile is expanded.
 
     If `None`, [`ExpansionTileTheme.expanded_alignment`][flet.] is used;
@@ -155,7 +154,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
-    Defines the alignment of each child control within [`controls`][(c).] when the
+    Defines the alignment of each child control within [`controls`][(c).] when the \
     tile is expanded.
 
     Raises:
@@ -175,7 +174,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     maintain_state: bool = False
     """
-    A boolean value which defines whether the state of the [`controls`][(c).] is
+    A boolean value which defines whether the state of the [`controls`][(c).] is \
     maintained when this tile [expands][(c).expanded] and collapses.
 
     When `True`, the children are kept in the tree while the tile is collapsed.
@@ -194,8 +193,8 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    The icon color of this tile's expansion arrow icon
-    when the sublist is [`expanded`][(c).].
+    The icon color of this tile's expansion arrow icon when the sublist is \
+    [`expanded`][(c).].
 
     If `None`, [`ExpansionTileTheme.icon_color`][flet.] is used;
     if that is also `None`, then defaults to [`ColorScheme.primary`][flet.]
@@ -221,8 +220,8 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
-    Defines the background color of this tile when the sublist
-    is collapsed ([`expanded`][(c).] is False).
+    Defines the background color of this tile when the sublist is collapsed \
+    ([`expanded`][(c).] is False).
 
     If `None`, [`ExpansionTileTheme.collapsed_bgcolor`][flet.] is used;
     if that is also `None`, then defaults to [`Colors.TRANSPARENT`][flet.].
@@ -230,8 +229,8 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
-    The icon color of this tile's expansion arrow icon when the sublist
-    is collapsed ([`expanded`][(c).] is False).
+    The icon color of this tile's expansion arrow icon when the sublist is collapsed \
+    ([`expanded`][(c).] is False).
 
     If `None`, [`ExpansionTileTheme.collapsed_icon_color`][flet.] is used;
     if that is also `None`, then defaults to [`ColorScheme.on_surface`][flet.]
@@ -240,8 +239,8 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    The color of this tile's titles when the sublist
-    is collapsed ([`expanded`][(c).] is False).
+    The color of this tile's titles when the sublist is collapsed ([`expanded`][(c).] \
+    is False).
 
     If `None`, [`ExpansionTileTheme.collapsed_text_color`][flet.] is used;
     if that is also `None`, then defaults to [`body_large`][flet.TextTheme.]
@@ -270,15 +269,15 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     enable_feedback: bool = True
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. For
-    example, on Android a tap will produce a clicking sound and a long-press will
+    Whether detected gestures should provide acoustic and/or haptic feedback. For \
+    example, on Android a tap will produce a clicking sound and a long-press will \
     produce a short vibration, when feedback is enabled.
     """
 
     show_trailing_icon: bool = True
     """
-    Whether this tile should build/show a default trailing icon, if
-    [`trailing`][(c).] is `None`.
+    Whether this tile should build/show a default trailing icon, if [`trailing`][(c).] \
+    is `None`.
     """
 
     min_tile_height: Optional[Number] = None
@@ -305,7 +304,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     animation_style: Optional[AnimationStyle] = None
     """
-    Defines the animation style (curve and duration) for this tile's expansion and
+    Defines the animation style (curve and duration) for this tile's expansion and \
     collapse.
 
     If [`AnimationStyle.duration`][flet.] is provided, it will be used to override

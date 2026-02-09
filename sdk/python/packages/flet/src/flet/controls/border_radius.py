@@ -48,7 +48,7 @@ class BorderRadius:
     @classmethod
     def horizontal(cls, *, left: Number = 0, right: Number = 0) -> "BorderRadius":
         """
-        Creates a horizontally symmetrical `BorderRadius` where the `left` and `right`
+        Creates a horizontally symmetrical `BorderRadius` where the `left` and `right` \
         sides of the rectangle have the same radii.
         """
         return BorderRadius(
@@ -58,7 +58,7 @@ class BorderRadius:
     @classmethod
     def vertical(cls, *, top: Number = 0, bottom: Number = 0) -> "BorderRadius":
         """
-        Creates a vertically symmetric `BorderRadius` where the `top` and `bottom`
+        Creates a vertically symmetric `BorderRadius` where the `top` and `bottom` \
         sides of the rectangle have the same radii.
         """
         return BorderRadius(
@@ -163,8 +163,8 @@ class BorderRadius:
 
 @deprecated(
     reason="Use BorderRadius.all() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def all(value: float) -> BorderRadius:
@@ -175,8 +175,8 @@ def all(value: float) -> BorderRadius:
 
 @deprecated(
     reason="Use BorderRadius.horizontal() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def horizontal(left: float = 0, right: float = 0) -> BorderRadius:
@@ -187,8 +187,8 @@ def horizontal(left: float = 0, right: float = 0) -> BorderRadius:
 
 @deprecated(
     reason="Use BorderRadius.vertical() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def vertical(top: float = 0, bottom: float = 0) -> BorderRadius:
@@ -199,8 +199,8 @@ def vertical(top: float = 0, bottom: float = 0) -> BorderRadius:
 
 @deprecated(
     reason="Use BorderRadius.only() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def only(

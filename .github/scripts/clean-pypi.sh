@@ -1,6 +1,6 @@
 # set PYPI_CLEANUP_PASSWORD with pypi.org password
 
-VER="0\.70\.0\.dev(?!6907)"
+VER="0\.81\.0\.dev(?!7200)"
 uv tool install pypi-cleanup
 uvx pypi-cleanup -u flet -p flet -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-cli -y -r $VER --do-it
@@ -20,5 +20,6 @@ uvx pypi-cleanup -u flet -p flet-lottie -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-map -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-permission-handler -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-rive -y -r $VER --do-it
+uvx pypi-cleanup -u flet -p flet-secure-storage -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-video -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-webview -y -r $VER --do-it

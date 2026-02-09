@@ -147,8 +147,8 @@ class KeyboardType(Enum):
 
 class TextCapitalization(Enum):
     """
-    Configures how the platform keyboard will select an uppercase or
-    lowercase keyboard.
+    Configures how the platform keyboard will select an uppercase or lowercase \
+    keyboard.
 
     Only supports text keyboards, other keyboard types will ignore this
     configuration. Capitalization is locale-aware.
@@ -190,7 +190,7 @@ class TextCapitalization(Enum):
 @dataclass
 class InputFilter:
     """
-    An input filter that uses a regular expression to allow or deny/block certain
+    An input filter that uses a regular expression to allow or deny/block certain \
     patterns in the input.
     """
 
@@ -271,7 +271,7 @@ class TextOnlyInputFilter(InputFilter):
 @control("TextField")
 class TextField(FormFieldControl, AdaptiveControl):
     """
-    A text field lets the user enter text, either with hardware keyboard or with an
+    A text field lets the user enter text, either with hardware keyboard or with an \
     onscreen keyboard.
 
     ```python
@@ -353,7 +353,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown
+    Displays a toggle icon button that allows revealing the entered password. Is shown \
     if both `password` and `can_reveal_password` are `True`.
 
     The icon is displayed in the same location as `suffix` and in case both
@@ -373,8 +373,8 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like,
-    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires
+    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, \
+    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires \
     `on_submit` event.
     """
 
@@ -387,9 +387,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    True if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     capitalization: Optional[TextCapitalization] = None

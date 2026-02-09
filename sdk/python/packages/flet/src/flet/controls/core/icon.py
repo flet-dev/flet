@@ -26,7 +26,7 @@ class Icon(LayoutControl):
     The icon to display, selected from a predefined icon set.
 
     You can explore available icons using the
-    [Flet Icons Browser](https://gallery.flet.dev/icons-browser/).
+    [Flet Icons Browser](https://examples.flet.dev/icons_browser/).
     """
 
     color: Optional[ColorValue] = None
@@ -99,7 +99,8 @@ class Icon(LayoutControl):
 
     optical_size: Optional[Number] = None
     """
-    Adjusts the icon's visual style for different sizes to maintain clarity and balance.
+    Adjusts the icon's visual style for different sizes to maintain clarity and \
+    balance.
 
     This requires the icon font to support optical sizing.
     Must be greater than `0`.

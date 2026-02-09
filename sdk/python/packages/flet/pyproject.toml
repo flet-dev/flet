@@ -51,6 +51,7 @@ extensions = [
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
+    "flet-secure-storage",
     "flet-video",
     "flet-webview",
 ]
@@ -95,6 +96,7 @@ docs = [
     "mkdocs-macros-plugin>=1.5.0",
     "packaging >=23.0",
     "flet-cli",
+    "flet-web",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]
@@ -106,6 +108,14 @@ all = [
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+flet = [
+    "controls/material/icons.json",
+    "controls/material/icons.pyi",
+    "controls/cupertino/cupertino_icons.json",
+    "controls/cupertino/cupertino_icons.pyi",
+]
 
 [tool.uv.sources]
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }

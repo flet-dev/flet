@@ -2,6 +2,8 @@ name: macOS Integration Tests
 
 on:
   push:
+    branches-ignore:
+      - main
     paths:
       - '.github/workflows/macos-integration-tests.yml'
       - 'sdk/python/packages/flet/src/**'
@@ -32,7 +34,7 @@ env:
 
 jobs:
   test-macos:
-    runs-on: macos-15
+    runs-on: macos-26
     strategy:
       fail-fast: false
       matrix:

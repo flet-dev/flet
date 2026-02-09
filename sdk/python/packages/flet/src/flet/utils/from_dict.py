@@ -6,11 +6,12 @@ from typing import (
     ForwardRef,
     TypeVar,
     Union,
-    _eval_type,
     get_args,
     get_origin,
     get_type_hints,
 )
+
+from flet.utils.typing_utils import eval_type
 
 T = TypeVar("T")
 
@@ -27,7 +28,7 @@ def from_dict(cls: type[T], data: Any) -> T:
     # If cls is a ForwardRef, resolve it
     if isinstance(cls, ForwardRef):
         globalns = sys.modules[cls.__module__].__dict__
-        cls = _eval_type(cls, globalns, None)
+        cls = eval_type(cls, globalns, None)
 
     if dataclasses.is_dataclass(cls):
         try:

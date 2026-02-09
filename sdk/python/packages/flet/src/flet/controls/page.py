@@ -199,8 +199,8 @@ class Page(BasePage):
 
     window: Window = field(default_factory=lambda: Window())
     """
-    Provides properties/methods/events to monitor and control the
-    app's native OS window.
+    Provides properties/methods/events to monitor and control the app's native OS \
+    window.
     """
 
     route: str = "/"
@@ -325,14 +325,13 @@ class Page(BasePage):
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Called when page route changes either programmatically, by editing
-    application URL or using browser Back/Forward buttons.
+    Called when page route changes either programmatically, by editing application URL \
+    or using browser Back/Forward buttons.
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
-    Called when the user clicks automatic "Back" button in
-    [`AppBar`][flet.] control.
+    Called when the user clicks automatic "Back" button in [`AppBar`][flet.] control.
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
@@ -352,14 +351,14 @@ class Page(BasePage):
 
     on_disconnect: Optional[ControlEventHandler["Page"]] = None
     """
-    Called when a web user disconnects from a page session, i.e. closes browser
+    Called when a web user disconnects from a page session, i.e. closes browser \
     tab/window.
     """
 
     on_close: Optional[ControlEventHandler["Page"]] = None
     """
-    Called when a session has expired after configured amount of time
-    (60 minutes by default).
+    Called when a session has expired after configured amount of time (60 minutes by \
+    default).
     """
 
     on_login: Optional[EventHandler[LoginEvent]] = None
@@ -368,7 +367,7 @@ class Page(BasePage):
 
     See [Authentication](https://docs.flet.dev/cookbook/authentication#checking-authentication-results)
     guide for more information and examples.
-    """
+    """  # noqa: E501
 
     on_logout: Optional[ControlEventHandler["Page"]] = None
     """
@@ -486,7 +485,7 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
         """
-        Run `handler` coroutine as a new Task in the event loop associated with the
+        Run `handler` coroutine as a new Task in the event loop associated with the \
         current page.
         """
         _context_page.set(self)
@@ -523,7 +522,7 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the
+        Run `handler` function as a new Thread in the executor associated with the \
         current page.
         """
         handler_with_context = self.__context_wrapper(handler)
@@ -539,7 +538,7 @@ class Page(BasePage):
 
     @deprecated(
         "Use push_route() instead.",
-        version="0.70.0",
+        version="0.80.0",
         delete_version="0.90.0",
         show_parentheses=True,
     )
@@ -547,8 +546,8 @@ class Page(BasePage):
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
         """
-        A helper method that updates [`page.route`](#route), calls
-        [`page.on_route_change`](#on_route_change) event handler to update views and
+        A helper method that updates [`page.route`](#route), calls \
+        [`page.on_route_change`](#on_route_change) event handler to update views and \
         finally calls `page.update()`.
         """
 
@@ -743,9 +742,9 @@ class Page(BasePage):
 
     def logout(self) -> None:
         """
-        Clears current authentication context. See
-        [Authentication](https://docs.flet.dev/cookbook/authentication#signing-out) guide for more
-        information and examples.
+        Clears current authentication context. See \
+        [Authentication](https://docs.flet.dev/cookbook/authentication#signing-out) \
+        guide for more information and examples.
         """  # noqa: E501
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
@@ -797,8 +796,8 @@ class Page(BasePage):
     )
     async def can_launch_url(self, url: str) -> bool:
         """
-        Checks whether the specified URL can be handled by some app
-        installed on the device.
+        Checks whether the specified URL can be handled by some app installed on the \
+        device.
 
         Args:
             url: The URL to check.
@@ -889,7 +888,7 @@ class Page(BasePage):
         return self.session.pubsub_client
 
     @property
-    @deprecated("Use UrlLauncher() instead.", version="0.70.0", delete_version="0.90.0")
+    @deprecated("Use UrlLauncher() instead.", version="0.80.0", delete_version="0.90.0")
     def url_launcher(self) -> UrlLauncher:
         """
         DEPRECATED: The UrlLauncher service for the current page.
@@ -898,7 +897,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use BrowserContextMenu() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use BrowserContextMenu() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def browser_context_menu(self):
         """
@@ -909,7 +908,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use SharedPreferences() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use SharedPreferences() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def shared_preferences(self):
         """
@@ -919,7 +918,7 @@ class Page(BasePage):
         return SharedPreferences()
 
     @property
-    @deprecated("Use Clipboard() instead.", version="0.70.0", delete_version="0.90.0")
+    @deprecated("Use Clipboard() instead.", version="0.80.0", delete_version="0.90.0")
     def clipboard(self):
         """
         DEPRECATED: The Clipboard service for the current page.
@@ -929,7 +928,7 @@ class Page(BasePage):
 
     @property
     @deprecated(
-        "Use StoragePaths() instead.", version="0.70.0", delete_version="0.90.0"
+        "Use StoragePaths() instead.", version="0.80.0", delete_version="0.90.0"
     )
     def storage_paths(self):
         """
@@ -967,7 +966,8 @@ class Page(BasePage):
         self, orientations: list[DeviceOrientation]
     ) -> None:
         """
-        Constrains the allowed orientations for the app when running on a mobile device.
+        Constrains the allowed orientations for the app when running on a mobile \
+        device.
 
         Args:
             orientations: A list of allowed device orientations.
@@ -991,9 +991,11 @@ class Page(BasePage):
                     - `[LANDSCAPE_RIGHT]` → `reverseLandscape`
                     - `[LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `userLandscape`
                     - `[PORTRAIT_UP, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `user`
-                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `fullUser`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` →
+                    `fullUser`
 
-            - **iOS**: This setting will only be respected on iPad if multitasking is disabled.
+            - **iOS**: This setting will only be respected on iPad if multitasking is
+            disabled.
                 You can decide to opt out of multitasking on iPad, then this will work
                 but your app will not support Slide Over and Split View multitasking
                 anymore. Should you decide to opt out of multitasking you can do this by

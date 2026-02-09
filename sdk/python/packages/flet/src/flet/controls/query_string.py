@@ -7,20 +7,19 @@ __all__ = ["QueryString", "UrlComponents"]
 
 class UrlComponents:
     """
-    `UrlComponents` are meant to be used internally for decoding-encoding, it has no external use
+    `UrlComponents` are meant to be used internally for decoding-encoding, it has no \
+    external use
     """
 
     def _encode_url_component(self, url: str) -> str:
         """
-        Function encodes querystring part of URL\n
-        Ex. q=dom & dogs -> q=dom+%26+dogs
+        Function encodes querystring part of URL\n Ex. q=dom & dogs -> q=dom+%26+dogs
         """
         return urllib.parse.quote(url)
 
     def _decode_url_component(self, url: str) -> str:
         """
-        Function decodes querystring part of URL\n
-        Ex. q=dom+%26+dogs -> q=dom & dogs
+        Function decodes querystring part of URL\n Ex. q=dom+%26+dogs -> q=dom & dogs
         """
         return urllib.parse.unquote(url)
 
@@ -39,8 +38,8 @@ class UrlComponents:
 
     def _querystring_part(self, url_string: bool = False):
         """
-        Function sliced url part and returns querystring part.\n
-        Use case: checking querystring part for encode, assigning decoded value
+        Function sliced url part and returns querystring part.\n Use case: checking \
+        querystring part for encode, assigning decoded value
         """
         pattern = re.compile(r"\?[\w\D]+")
         data = pattern.search(self.url)
@@ -49,21 +48,22 @@ class UrlComponents:
 
 class QueryString(UrlComponents):
     """
-    Note:
-        `QueryString` class is meant to be for internal use inside of page. Hence, methods such as `get()` or `to_dict()` must be\n
-        called from `page` object\n
+    Note: `QueryString` class is meant to be for internal use inside of page. Hence, \
+    methods such as `get()` or `to_dict()` must be\n called from `page` object\n
 
     Constructor:
             `page` takes `Page` class an argument and extracts URL automatically\n
 
     Methods:
             Public:
-                `get()` method takes `key` an argument and returns value according to key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
+                `get()` method takes `key` an argument and returns value according to
+                key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
                 `to_dict` returns all the key-value pairs of querystring as a `dict`\n
                 `path` returns url path (Ex: .../products?id=1 -> /products)
 
             Private(meant to be used only inside of page class):
-                `post()` method takes key-value pair as an argument and returns proceeded querystring ready to be merged with URL
+                `post()` method takes key-value pair as an argument and returns
+                proceeded querystring ready to be merged with URL
 
     """
 

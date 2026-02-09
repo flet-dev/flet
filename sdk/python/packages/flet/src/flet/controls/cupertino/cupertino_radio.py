@@ -16,7 +16,7 @@ __all__ = ["CupertinoRadio"]
 @control("CupertinoRadio")
 class CupertinoRadio(LayoutControl):
     """
-    A macOS-styled radio button, allowing the user to select a single option from two
+    A macOS-styled radio button, allowing the user to select a single option from two \
     or more choices.
 
     ```python
@@ -41,8 +41,8 @@ class CupertinoRadio(LayoutControl):
 
     value: str = ""
     """
-    The value to set to [`RadioGroup`][flet.] ancestor/parent when this radio
-    is selected.
+    The value to set to [`RadioGroup`][flet.] ancestor/parent when this radio is \
+    selected.
     """
 
     label_position: LabelPosition = LabelPosition.RIGHT
@@ -80,8 +80,8 @@ class CupertinoRadio(LayoutControl):
 
     toggleable: bool = False
     """
-    Whether this radio button can return to an indeterminate state
-    by selecting it again when already selected.
+    Whether this radio button can return to an indeterminate state by selecting it \
+    again when already selected.
     """
 
     focus_color: Optional[ColorValue] = None

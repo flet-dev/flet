@@ -110,8 +110,7 @@ class CupertinoSwitch(LayoutControl):
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline color of this switch's track
-    in various [`ControlState`][flet.]s.
+    The outline color of this switch's track in various [`ControlState`][flet.]s.
 
     Supported states: [`ControlState.SELECTED`][flet.],
     [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
@@ -120,7 +119,7 @@ class CupertinoSwitch(LayoutControl):
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    The outline width of this switch's track in all or specific
+    The outline width of this switch's track in all or specific \
     [`ControlState`][flet.]s.
 
     Supported states: [`ControlState.SELECTED`][flet.],
@@ -130,8 +129,7 @@ class CupertinoSwitch(LayoutControl):
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
-    The icon of this Switch's thumb in various
-    [`ControlState`][flet.]s.
+    The icon of this Switch's thumb in various [`ControlState`][flet.]s.
 
     Supported states: [`ControlState.SELECTED`][flet.],
     [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
@@ -155,6 +153,6 @@ class CupertinoSwitch(LayoutControl):
 
     on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when [`active_thumb_image_src`][(c).] or
-    [`inactive_thumb_image_src`][(c).] fails to load.
+    Called when [`active_thumb_image_src`][(c).] or [`inactive_thumb_image_src`][(c).] \
+    fails to load.
     """

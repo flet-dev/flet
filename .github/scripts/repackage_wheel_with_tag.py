@@ -30,8 +30,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-import wheel.cli.pack
-import wheel.cli.unpack
+import wheel._commands.pack
+import wheel._commands.unpack
 
 
 def repackage_wheel(wheel_path: str, new_tag: str) -> None:
@@ -42,7 +42,7 @@ def repackage_wheel(wheel_path: str, new_tag: str) -> None:
         tmp_dir_path = Path(tmp_dir)
 
         # Unpack the wheel file
-        wheel.cli.unpack.unpack(str(wheel_path), tmp_dir)
+        wheel._commands.unpack.unpack(str(wheel_path), tmp_dir)
 
         # Find the unpacked wheel directory
         wheel_dirs = list(tmp_dir_path.glob("flet_*"))
@@ -62,7 +62,7 @@ def repackage_wheel(wheel_path: str, new_tag: str) -> None:
             print(f"Updated tags in {metadata_file}:\n{new_content}")
 
         # Repack the wheel
-        wheel.cli.pack.pack(str(wheel_dir), str(wheel_path.parent), None)
+        wheel._commands.pack.pack(str(wheel_dir), str(wheel_path.parent), None)
 
     print(f"Successfully generated wheel with new tag(s): {new_tag}")
 

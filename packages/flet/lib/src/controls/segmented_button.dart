@@ -91,6 +91,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
         direction: widget.control.getAxis("direction", Axis.horizontal)!,
         expandedInsets: widget.control.getPadding("padding"),
         segments: segments.map((segment) {
+          segment.notifyParent = true;
           return ButtonSegment(
               value: segment.getString("value")!,
               enabled: !segment.disabled,

@@ -10,7 +10,7 @@ __all__ = ["SelectionArea"]
 @control("SelectionArea")
 class SelectionArea(Control):
     """
-    Flet controls are not selectable by default. SelectionArea is used to enable
+    Flet controls are not selectable by default. SelectionArea is used to enable \
     selection for its child control.
     """
 

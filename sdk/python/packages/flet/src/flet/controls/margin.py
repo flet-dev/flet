@@ -4,7 +4,7 @@ from typing import Union
 from flet.controls.types import Number
 from flet.utils import deprecated
 
-__all__ = ["Margin", "MarginValue", "all", "symmetric", "only"]
+__all__ = ["Margin", "MarginValue", "all", "only", "symmetric"]
 
 
 @dataclass
@@ -43,7 +43,7 @@ class Margin:
     @classmethod
     def symmetric(cls, *, vertical: Number = 0, horizontal: Number = 0) -> "Margin":
         """
-        Applies `vertical` margin to top and bottom sides and `horizontal` margin to
+        Applies `vertical` margin to top and bottom sides and `horizontal` margin to \
         left and right sides.
         """
         return Margin(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
@@ -60,8 +60,8 @@ class Margin:
 
 @deprecated(
     reason="Use Margin.all() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def all(value: float) -> Margin:
@@ -70,8 +70,8 @@ def all(value: float) -> Margin:
 
 @deprecated(
     reason="Use Margin.symmetric() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def symmetric(vertical: float = 0, horizontal: float = 0) -> Margin:
@@ -80,8 +80,8 @@ def symmetric(vertical: float = 0, horizontal: float = 0) -> Margin:
 
 @deprecated(
     reason="Use Margin.only() instead",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def only(

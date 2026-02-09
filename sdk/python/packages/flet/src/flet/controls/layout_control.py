@@ -1,16 +1,39 @@
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import (
+    ControlEventHandler,
+    Event,
+    EventControlType,
+    EventHandler,
+)
 from flet.controls.margin import MarginValue
 from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import Number
 from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl", "LayoutControl"]
+__all__ = ["ConstrainedControl", "LayoutControl", "LayoutSizeChangeEvent"]
+
+
+@dataclass
+class LayoutSizeChangeEvent(Event[EventControlType]):
+    """
+    Event fired when a control's rendered size changes after layout.
+    """
+
+    width: float = field(metadata={"data_field": "w"})
+    """
+    Width of the control after layout.
+    """
+
+    height: float = field(metadata={"data_field": "h"})
+    """
+    Height of the control after layout.
+    """
 
 
 @control(kw_only=True)
@@ -82,25 +105,22 @@ class LayoutControl(Control):
     * `Rotate` - allows to specify rotation `angle` as well as `alignment` -
     the location of rotation center.
 
-    /// details | Example
-        type: example
-    For example:
-    ```python
-    ft.Image(
-        src="https://picsum.photos/100/100",
-        width=100,
-        height=100,
-        border_radius=5,
-        rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.CENTER_LEFT)
-    )
-    ```
-    ///
+    Example:
+        ```python
+        ft.Image(
+            src="https://picsum.photos/100/100",
+            width=100,
+            height=100,
+            border_radius=5,
+            rotate=Rotate(angle=0.25 * pi, alignment=ft.Alignment.CENTER_LEFT)
+        )
+        ```
     """
 
     scale: Optional[ScaleValue] = None
     """
-    Scales this control along the 2D plane. Default scale factor is `1.0`,
-    meaning no-scale.
+    Scales this control along the 2D plane. Default scale factor is `1.0`, meaning \
+    no-scale.
 
     Setting this property to `0.5`, for example, makes this control twice smaller,
     while `2.0` makes it twice larger.
@@ -109,18 +129,16 @@ class LayoutControl(Control):
     `Control.scale` property to an instance of `Scale` class.
     Either `scale` or `scale_x` and `scale_y` could be specified, but not all of them.
 
-    /// details | Example
-        type: example
-    ```python
-    ft.Image(
-        src="https://picsum.photos/100/100",
-        width=100,
-        height=100,
-        border_radius=5,
-        scale=ft.Scale(scale_x=2, scale_y=0.5)
-    )
-    ```
-    ///
+    Example:
+        ```python
+        ft.Image(
+            src="https://picsum.photos/100/100",
+            width=100,
+            height=100,
+            border_radius=5,
+            scale=ft.Scale(scale_x=2, scale_y=0.5)
+        )
+        ```
     """
 
     offset: Optional[OffsetValue] = None
@@ -131,36 +149,34 @@ class LayoutControl(Control):
     So, `Offset(x=0.25, y=0)`, for example, will result in a horizontal translation
     of one quarter the width of this control.
 
-    /// details | Example
-        type: example
-    The following example displays container at `0, 0` top left corner of a stack as
-    transform applies `-1 * 100, -1 * 100` (`offset * control's size`) horizontal and
-    vertical translations to the control:
+    Example
+        The following example displays container at `0, 0` top left corner of a stack
+        as transform applies `-1 * 100, -1 * 100` (`offset * control's size`)
+        horizontal and vertical translations to the control:
 
-    ```python
-    import flet as ft
+        ```python
+        import flet as ft
 
-    def main(page: ft.Page):
-        page.add(
-            ft.Stack(
-                width=1000,
-                height=1000,
-                controls=[
-                    ft.Container(
-                        bgcolor="red",
-                        width=100,
-                        height=100,
-                        left=100,
-                        top=100,
-                        offset=ft.Offset(-1, -1),
-                    )
-                ],
+        def main(page: ft.Page):
+            page.add(
+                ft.Stack(
+                    width=1000,
+                    height=1000,
+                    controls=[
+                        ft.Container(
+                            bgcolor=ft.Colors.RED,
+                            width=100,
+                            height=100,
+                            left=100,
+                            top=100,
+                            offset=ft.Offset(-1, -1),
+                        )
+                    ],
+                )
             )
-        )
 
-    ft.run(main)
-    ```
-    ///
+        ft.run(main)
+        ```
     """
     aspect_ratio: Optional[Number] = None
     """
@@ -170,7 +186,7 @@ class LayoutControl(Control):
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.LayoutControl.] property.
+    Enables implicit animation of the [`opacity`][flet.Control.] property.
 
     More information [here](https://docs.flet.dev/cookbook/animations).
     """
@@ -182,8 +198,8 @@ class LayoutControl(Control):
 
     animate_position: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the positioning properties
-    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.],
+    Enables implicit animation of the positioning properties \
+    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.], \
     [`top`][flet.LayoutControl.] and [`bottom`][flet.LayoutControl.]).
 
     More information [here](https://docs.flet.dev/cookbook/animations).
@@ -224,6 +240,23 @@ class LayoutControl(Control):
     More information [here](https://docs.flet.dev/cookbook/animations).
     """
 
+    size_change_interval: int = 10
+    """
+    Sampling interval in milliseconds for [`on_size_change`][(c).] event.
+
+    Setting to `0` calls [`on_size_change`][(c).] immediately
+    on every change.
+    """
+
+    on_size_change: Optional[EventHandler[LayoutSizeChangeEvent["LayoutControl"]]] = (
+        None
+    )
+    """
+    Called when the size of this control changes.
+
+    [`size_change_interval`][(c).] defines how often this event is called.
+    """
+
     on_animation_end: Optional[ControlEventHandler["LayoutControl"]] = None
     """
     Called when animation completes.
@@ -239,7 +272,7 @@ class LayoutControl(Control):
 
 @deprecated_class(
     reason="Inherit from LayoutControl instead.",
-    version="0.70.0",
+    version="0.80.0",
     delete_version="1.0",
 )
 class ConstrainedControl(LayoutControl):

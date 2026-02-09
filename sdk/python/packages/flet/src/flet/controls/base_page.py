@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass, field
 from typing import (
+    TYPE_CHECKING,
     Optional,
     Union,
 )
@@ -27,7 +28,6 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.services.service import Service
-from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
     ColorValue,
@@ -43,6 +43,9 @@ from flet.controls.types import (
 
 logger = logging.getLogger("flet")
 
+if TYPE_CHECKING:
+    from flet.controls.theme import Theme
+
 
 @dataclass
 class PageMediaData:
@@ -56,20 +59,20 @@ class PageMediaData:
 
     padding: Padding
     """
-    The space surrounding the entire display, accounting for system UI
-    like notches and status bars.
+    The space surrounding the entire display, accounting for system UI like notches \
+    and status bars.
     """
 
     view_padding: Padding
     """
-    Similar to [`padding`][(c).], but includes padding that is always reserved
-    (even when the system UI is hidden).
+    Similar to [`padding`][(c).], but includes padding that is always reserved (even \
+    when the system UI is hidden).
     """
 
     view_insets: Padding
     """
-    Areas obscured by system UI overlays, such as the on-screen keyboard
-    or system gesture areas.
+    Areas obscured by system UI overlays, such as the on-screen keyboard or system \
+    gesture areas.
     """
 
     device_pixel_ratio: float
@@ -159,14 +162,14 @@ class BasePage(AdaptiveControl):
     The page's theme mode.
     """
 
-    theme: Optional[Theme] = None
+    theme: Optional["Theme"] = None
     """
-    Customizes the theme of the application when in light theme mode. Currently, a
-    theme can only be automatically generated from a "seed" color. For example, to
+    Customizes the theme of the application when in light theme mode. Currently, a \
+    theme can only be automatically generated from a "seed" color. For example, to \
     generate light theme from a green color.
     """
 
-    dark_theme: Optional[Theme] = None
+    dark_theme: Optional["Theme"] = None
     """
     Customizes the theme of the application when in dark theme mode.
     """
@@ -178,8 +181,8 @@ class BasePage(AdaptiveControl):
 
     show_semantics_debugger: Optional[bool] = None
     """
-    Whether to turn on an overlay that shows the accessibility information
-    reported by the framework.
+    Whether to turn on an overlay that shows the accessibility information reported by \
+    the framework.
     """
 
     title: Optional[str] = None
@@ -321,7 +324,7 @@ class BasePage(AdaptiveControl):
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         """
-        Moves scroll position to either absolute `offset`, relative `delta` or jump to
+        Moves scroll position to either absolute `offset`, relative `delta` or jump to \
         the control with specified `scroll_key`.
 
         See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
@@ -465,7 +468,7 @@ class BasePage(AdaptiveControl):
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         """
-        Gets or sets the top application bar ([AppBar][flet.AppBar] or
+        Gets or sets the top application bar ([AppBar][flet.AppBar] or \
         [CupertinoAppBar][flet.CupertinoAppBar]) for the view.
 
         The app bar typically displays the page title and optional actions

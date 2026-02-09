@@ -19,7 +19,7 @@ from flet.controls.types import (
 @dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
     """
-    Represents an event triggered during the reordering of items in a
+    Represents an event triggered during the reordering of items in a \
     [`ReorderableListView`][flet.].
     """
 
@@ -41,6 +41,7 @@ class ReorderableListView(ListView):
         To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
         define your own drag handle or region.
 
+    Example:
     ```python
     ft.ReorderableListView(
         controls=[
@@ -79,7 +80,8 @@ class ReorderableListView(ListView):
 
     item_extent: Optional[Number] = None
     """
-    Defines the extent that the [`controls`][(c).] should have in the scroll direction.
+    Defines the extent that the [`controls`][(c).] should have in the scroll \
+    direction.
 
     Specifying an `item_extent` is more efficient than letting the [`controls`][(c).]
     determine their own extent because the scrolling machinery can make use of the
@@ -89,8 +91,8 @@ class ReorderableListView(ListView):
 
     first_item_prototype: bool = False
     """
-    Whether the dimensions of the first item should be used as a "prototype"
-    for all other items.
+    Whether the dimensions of the first item should be used as a "prototype" for all \
+    other items.
 
     If `True`, their height or width will be the same as the first item.
     """
@@ -107,7 +109,7 @@ class ReorderableListView(ListView):
 
     cache_extent: Optional[Number] = None
     """
-    The viewport has an area before and after the visible area to cache items that are
+    The viewport has an area before and after the visible area to cache items that are \
     about to become visible when the user scrolls.
 
     Items that fall in this cache area are laid out even though they are not (yet)
@@ -149,8 +151,8 @@ class ReorderableListView(ListView):
 
     build_controls_on_demand: bool = True
     """
-    Whether the [`controls`][(c).] should be built lazily/on-demand,
-    i.e. only when they are about to become visible.
+    Whether the [`controls`][(c).] should be built lazily/on-demand, i.e. only when \
+    they are about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
     """
@@ -198,7 +200,7 @@ class ReorderableListView(ListView):
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a [`controls`][(c).] item has been dragged to a new location/position
+    Called when a [`controls`][(c).] item has been dragged to a new location/position \
     and the order of the items gets updated.
     """
 

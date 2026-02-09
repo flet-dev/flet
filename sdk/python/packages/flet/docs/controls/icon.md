@@ -10,7 +10,7 @@ example_media: ../examples/controls/icon/media
 ## Examples
 
 To browse and visualize all available icons,
-visit our [icons browser](https://gallery.flet.dev/icons-browser/)
+visit our [icons browser](https://examples.flet.dev/icons_browser/)
 
 [Live example](https://flet-controls-gallery.fly.dev/displays/icon)
 

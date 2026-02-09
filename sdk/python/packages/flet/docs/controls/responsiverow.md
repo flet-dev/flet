@@ -16,7 +16,7 @@ example_images: ../test-images/examples/core/golden/macos/responsive_row
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_images + "/responsive_row_basic.gif", alt="basic", width="80%") }}
+{{ image(example_images + "/basic.gif", width="80%") }}
 
 
 ### Custom breakpoints
@@ -25,6 +25,6 @@ example_images: ../test-images/examples/core/golden/macos/responsive_row
 --8<-- "{{ examples }}/custom_breakpoint.py"
 ```
 
-{{ image(example_images + "/responsive_row_custom_breakpoint.gif", alt="basic", width="80%") }}
+{{ image(example_images + "/custom_breakpoint.gif", width="80%") }}
 
 {{ class_members(class_name) }}
