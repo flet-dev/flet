@@ -309,13 +309,13 @@ nav:
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
           - ColorPicker:
-              - color_picker/index.md
-              - ColorPicker: color_picker/colorpicker.md
-              - BlockPicker: color_picker/blockpicker.md
-              - HueRingPicker: color_picker/hueringpicker.md
-              - MaterialPicker: color_picker/materialpicker.md
-              - MultipleChoiceBlockPicker: color_picker/multiplechoiceblockpicker.md
-              - SlidePicker: color_picker/slidepicker.md
+              - colorpickers/index.md
+              - ColorPicker: colorpickers/colorpicker.md
+              - BlockPicker: colorpickers/blockpicker.md
+              - HueRingPicker: colorpickers/hueringpicker.md
+              - MaterialPicker: colorpickers/materialpicker.md
+              - MultipleChoiceBlockPicker: colorpickers/multiplechoiceblockpicker.md
+              - SlidePicker: colorpickers/slidepicker.md
           - Column: controls/column.md
           - Container: controls/container.md
           - ContextMenu: controls/contextmenu.md
