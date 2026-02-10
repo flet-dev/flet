@@ -19,7 +19,7 @@ class _MaterialPickerControlState extends State<MaterialPickerControl> {
       _pickerColor = color;
     });
     final colorHex = color.toHex();
-    widget.control.updateProperties({"picker_color": colorHex}, notify: true);
+    widget.control.updateProperties({"color": colorHex}, notify: true);
     widget.control.triggerEvent("color_change", colorHex);
   }
 
@@ -33,7 +33,7 @@ class _MaterialPickerControlState extends State<MaterialPickerControl> {
     debugPrint("MaterialPickerControl build: ${widget.control.id}");
 
     final controlColor =
-        widget.control.getColor("picker_color", context) ?? Colors.black;
+        widget.control.getColor("color", context) ?? Colors.black;
     if (controlColor.value != _pickerColor.value) {
       _pickerColor = controlColor;
     }

@@ -2,8 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'package:flet/src/utils/colors.dart';
-
 class MultipleChoiceBlockPickerControl extends StatefulWidget {
   final Control control;
 
@@ -23,16 +21,15 @@ class _MultipleChoiceBlockPickerControlState
       _pickerColors = colors;
     });
     final colorsHex = colors.map((color) => color.toHex()).toList();
-    widget.control.updateProperties({"picker_colors": colorsHex}, notify: true);
+    widget.control.updateProperties({"colors": colorsHex}, notify: true);
     widget.control.triggerEvent("colors_change", colorsHex);
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "MultipleChoiceBlockPickerControl build: ${widget.control.id}");
+    debugPrint("MultipleChoiceBlockPickerControl build: ${widget.control.id}");
 
-    final rawColors = widget.control.get("picker_colors");
+    final rawColors = widget.control.get("colors");
     final theme = Theme.of(context);
     final parsedColors = <Color>[];
     if (rawColors is List) {

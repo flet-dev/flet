@@ -26,7 +26,7 @@ class _SlidePickerControlState extends State<SlidePickerControl> {
     debugPrint("SlidePickerControl build: ${widget.control.id}");
 
     final controlColor =
-        widget.control.getColor("picker_color", context) ?? Colors.black;
+        widget.control.getColor("color", context) ?? Colors.black;
     if (controlColor.value != _pickerColor.value) {
       _pickerColor = controlColor;
     }

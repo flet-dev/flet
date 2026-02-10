@@ -2,8 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'package:flet/src/utils/colors.dart';
-
 class BlockPickerControl extends StatefulWidget {
   final Control control;
 
@@ -21,7 +19,7 @@ class _BlockPickerControlState extends State<BlockPickerControl> {
       _pickerColor = color;
     });
     final colorHex = color.toHex();
-    widget.control.updateProperties({"picker_color": colorHex}, notify: true);
+    widget.control.updateProperties({"color": colorHex}, notify: true);
     widget.control.triggerEvent("color_change", colorHex);
   }
 
@@ -30,7 +28,7 @@ class _BlockPickerControlState extends State<BlockPickerControl> {
     debugPrint("BlockPickerControl build: ${widget.control.id}");
 
     final controlColor =
-        widget.control.getColor("picker_color", context) ?? Colors.black;
+        widget.control.getColor("color", context) ?? Colors.black;
     if (controlColor.value != _pickerColor.value) {
       _pickerColor = controlColor;
     }

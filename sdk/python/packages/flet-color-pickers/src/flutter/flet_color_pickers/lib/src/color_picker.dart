@@ -32,8 +32,7 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
       "saturation": color.saturation,
       "value": color.value,
     };
-    widget.control
-        .updateProperties({"picker_hsv_color": hsvData}, notify: true);
+    widget.control.updateProperties({"hsv_color": hsvData}, notify: true);
     widget.control.triggerEvent("hsv_color_change", hsvData);
   }
 
@@ -47,10 +46,9 @@ class _ColorPickerControlState extends State<ColorPickerControl> {
   Widget build(BuildContext context) {
     debugPrint("ColorPickerControl build: ${widget.control.id}");
 
-    final pickerHsvColor =
-        parseHsvColor(widget.control.get("picker_hsv_color"));
+    final pickerHsvColor = parseHsvColor(widget.control.get("hsv_color"));
     final controlColor =
-        widget.control.getColor("picker_color", context) ?? Colors.black;
+        widget.control.getColor("color", context) ?? Colors.black;
     if (pickerHsvColor != null) {
       final hsvColor = pickerHsvColor.toColor();
       if (hsvColor.value != _pickerColor.value) {

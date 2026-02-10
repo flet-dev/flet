@@ -1,12 +1,12 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'block_picker.dart';
 import 'color_picker.dart';
 import 'hue_ring_picker.dart';
 import 'material_picker.dart';
-import 'slide_picker.dart';
-import 'block_picker.dart';
 import 'multiple_choice_block_picker.dart';
+import 'slide_picker.dart';
 
 class Extension extends FletExtension {
   @override
