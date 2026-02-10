@@ -12,12 +12,12 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/color_picker"
-Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-color-picker"
+Documentation = "https://docs.flet.dev/colorpickers"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-color-pickers"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_color_picker" = ["**/*"]
+"flutter.flet_color_pickers" = ["**/*"]
 
 [build-system]
 requires = ["setuptools"]

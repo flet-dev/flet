@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import BlockPicker
+from flet_color_pickers import BlockPicker
 
 
 def main(page: ft.Page):

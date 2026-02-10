@@ -1,3 +1,3 @@
-library flet_color_picker;
+library flet_color_pickers;
 
 export "src/extension.dart" show Extension;

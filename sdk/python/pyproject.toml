@@ -15,7 +15,6 @@ dependencies = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
-    "flet-color-picker",
     "flet-datatable2",
     "flet-flashlight",
     "flet-geolocator",
@@ -26,6 +25,7 @@ dependencies = [
     "flet-secure-storage",
     "flet-video",
     "flet-webview",
+    "flet-color-picker",
 ]
 
 [tool.uv.sources]
@@ -38,7 +38,6 @@ flet-ads = { workspace = true }
 flet-audio = { workspace = true }
 flet-audio-recorder = { workspace = true }
 flet-charts = { workspace = true }
-flet-color-picker = { workspace = true }
 flet-datatable2 = { workspace = true }
 flet-flashlight = { workspace = true }
 flet-geolocator = { workspace = true }
@@ -50,6 +49,7 @@ flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
+flet-color-picker = { workspace = true }
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -126,7 +126,7 @@ isort = { known-first-party = [
     "flet_audio",
     "flet_audio_recorder",
     "flet_charts",
-    "flet_color_picker",
+    "flet_color_pickers",
     "flet_datatable2",
     "flet_flashlight",
     "flet_geolocator",

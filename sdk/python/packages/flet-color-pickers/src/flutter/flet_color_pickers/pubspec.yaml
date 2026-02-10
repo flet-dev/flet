@@ -1,5 +1,5 @@
-name: flet_color_picker
-description: Flet ColorPicker control
+name: flet_color_pickers
+description: Flet color picker controls
 version: 0.1.0
 publish_to: none
 

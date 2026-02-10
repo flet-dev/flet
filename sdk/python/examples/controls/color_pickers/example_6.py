@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import MultipleChoiceBlockPicker
+from flet_color_pickers import MultipleChoiceBlockPicker
 
 
 def main(page: ft.Page):

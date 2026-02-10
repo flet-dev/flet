@@ -2,7 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from flet_color_picker import (
+from flet_color_pickers import (
     BlockPicker,
     ColorPicker,
     HueRingPicker,

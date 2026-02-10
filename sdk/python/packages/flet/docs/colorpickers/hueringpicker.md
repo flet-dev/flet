@@ -1,5 +1,5 @@
 ---
-class_name: flet_color_picker.HueRingPicker
+class_name: flet_color_pickers.HueRingPicker
 examples: ../../examples/controls/color_picker
 example_images: ../test-images/examples/color_picker/golden/macos/color_picker_examples
 ---

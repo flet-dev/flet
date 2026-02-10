@@ -2,7 +2,7 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-color-picker.svg)](https://pypi.python.org/pypi/flet-color-picker)
 [![downloads](https://static.pepy.tech/badge/flet-color-picker/month)](https://pepy.tech/project/flet-color-picker)
-[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-color-picker/LICENSE)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-color-pickers/LICENSE)
 
 A [Flet](https://flet.dev) extension package for picking colors.
 

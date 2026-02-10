@@ -1,18 +1,18 @@
 import flet as ft
-from flet_color_picker import ColorModel, SlidePicker
+from flet_color_pickers import HueRingPicker
 
 
 def main(page: ft.Page):
-    page.title = "SlidePicker"
+    page.title = "HueRingPicker"
     page.padding = 20
 
     def on_color_change(e: ft.ControlEvent):
         print(f"color: {e.data}")
 
-    picker = SlidePicker(
-        color="#0000ff",
-        color_model=ColorModel.RGB,
-        indicator_border_radius=ft.BorderRadius.all(5),
+    picker = HueRingPicker(
+        color="#00ff00",
+        hue_ring_stroke_width=20,
+        picker_area_border_radius=ft.BorderRadius.all(5),
         on_color_change=on_color_change,
     )
 

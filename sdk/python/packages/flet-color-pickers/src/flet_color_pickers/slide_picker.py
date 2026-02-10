@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Optional
 
 import flet as ft
-from flet_color_picker.color_picker import ColorLabelType
+from flet_color_pickers.color_picker import ColorLabelType
 
 __all__ = ["ColorModel", "SlidePicker"]
 

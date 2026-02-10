@@ -1,5 +1,5 @@
 import flet as ft
-from flet_color_picker import MaterialPicker
+from flet_color_pickers import MaterialPicker
 
 
 def main(page: ft.Page):
