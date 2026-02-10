@@ -25,7 +25,7 @@ dependencies = [
     "flet-secure-storage",
     "flet-video",
     "flet-webview",
-    "flet-color-picker",
+    "flet-color-pickers",
 ]
 
 [tool.uv.sources]
@@ -49,7 +49,7 @@ flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
-flet-color-picker = { workspace = true }
+flet-color-pickers = { workspace = true }
 
 [tool.uv.workspace]
 members = ["packages/*"]

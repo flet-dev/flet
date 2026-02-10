@@ -9,17 +9,17 @@ Multiple color picker controls built on Flutter's
 
 ## Usage
 
-Add `flet-color-picker` to your project dependencies:
+Add `flet-color-pickers` to your project dependencies:
 
 /// tab | uv
 ```bash
-uv add flet-color-picker
+uv add flet-color-pickers
 ```
 
 ///
 /// tab | pip
 ```bash
-pip install flet-color-picker  # (1)!
+pip install flet-color-pickers  # (1)!
 ```
 
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.

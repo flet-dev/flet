@@ -1,5 +1,5 @@
 [project]
-name = "flet-color-picker"
+name = "flet-color-pickers"
 version = "0.1.0"
 description = "Pick colors in Flet apps."
 readme = "README.md"

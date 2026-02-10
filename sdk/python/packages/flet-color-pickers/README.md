@@ -1,7 +1,7 @@
-# flet-color-picker
+# flet-color-pickers
 
-[![pypi](https://img.shields.io/pypi/v/flet-color-picker.svg)](https://pypi.python.org/pypi/flet-color-picker)
-[![downloads](https://static.pepy.tech/badge/flet-color-picker/month)](https://pepy.tech/project/flet-color-picker)
+[![pypi](https://img.shields.io/pypi/v/flet-color-pickers.svg)](https://pypi.python.org/pypi/flet-color-pickers)
+[![downloads](https://static.pepy.tech/badge/flet-color-pickers/month)](https://pepy.tech/project/flet-color-pickers)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-color-pickers/LICENSE)
 
 A [Flet](https://flet.dev) extension package for picking colors.
@@ -22,16 +22,16 @@ Detailed documentation to this package can be found [here](https://docs.flet.dev
 
 ### Installation
 
-To install the `flet-color-picker` package and add it to your project dependencies:
+To install the `flet-color-pickers` package and add it to your project dependencies:
 
 - Using `uv`:
     ```bash
-    uv add flet-color-picker
+    uv add flet-color-pickers
     ```
 
 - Using `pip`:
     ```bash
-    pip install flet-color-picker
+    pip install flet-color-pickers
     ```
     After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
