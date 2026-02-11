@@ -58,6 +58,7 @@ import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
 import 'controls/gesture_detector.dart';
 import 'controls/grid_view.dart';
+import 'controls/hero.dart';
 import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
@@ -263,6 +264,8 @@ class FletCoreExtension extends FletExtension {
         return GestureDetectorControl(key: key, control: control);
       case "GridView":
         return GridViewControl(key: key, control: control);
+      case "Hero":
+        return HeroControl(key: key, control: control);
       case "Icon":
         return IconControl(key: key, control: control);
       case "IconButton":
