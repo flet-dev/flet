@@ -2,7 +2,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "Hero animation"
     hero_tag = "demo-hero-card"
 
     def build_card(size: int, label: str) -> ft.Container:
@@ -105,7 +104,7 @@ def main(page: ft.Page):
             ],
         )
 
-    def route_change(_):
+    def route_change(e: ft.RouteChangeEvent = None):
         page.views.clear()
         page.views.append(build_home_view())
         if page.route == "/details":
@@ -119,7 +118,7 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-    route_change(None)
+    route_change()
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@
 {{ class_summary("flet.DurationValue", show_root_heading=True) }}
 {{ class_summary("flet.EventControlType", show_root_heading=True) }}
 {{ class_summary("flet.EventHandler", show_root_heading=True) }}
+{{ class_summary("flet.HeroTag", show_root_heading=True) }}
 {{ class_summary("flet.IconData", show_root_heading=True) }}
 {{ class_summary("flet.IconDataOrControl", show_root_heading=True) }}
 {{ class_summary("flet.KeyValue", show_root_heading=True) }}

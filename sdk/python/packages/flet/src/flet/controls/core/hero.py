@@ -7,6 +7,11 @@ from flet.controls.layout_control import LayoutControl
 __all__ = ["Hero", "HeroTag"]
 
 HeroTag = Union[str, int, float, bool]
+"""Type alias for Hero tag values.
+
+Represents an identifier used to match source and destination [`Hero`][flet.]
+controls during route transitions.
+"""
 
 
 @control("Hero")
