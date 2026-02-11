@@ -16,5 +16,11 @@ example_images: ../test-images/examples/core/golden/macos/hero
 
 {{ image(example_images + "/basic.gif", width="80%") }}
 
+### Gallery
+
+```python
+--8<-- "{{ examples }}/gallery.py"
+```
+
 
 {{ class_members(class_name) }}
