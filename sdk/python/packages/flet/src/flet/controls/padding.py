@@ -101,3 +101,9 @@ def only(
 
 
 PaddingValue = Union[Number, Padding]
+"""Type alias for padding values.
+
+Represents padding as either:
+- a single numeric value applied to all sides,
+- or an explicit [`Padding`][flet.] configuration.
+"""

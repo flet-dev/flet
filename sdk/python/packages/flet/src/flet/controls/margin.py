@@ -91,3 +91,9 @@ def only(
 
 
 MarginValue = Union[Number, Margin]
+"""Type alias for margin values.
+
+Represents margin as either:
+- a single numeric value applied to all sides,
+- or an explicit [`Margin`][flet.] configuration.
+"""

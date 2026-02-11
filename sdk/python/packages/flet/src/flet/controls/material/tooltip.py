@@ -185,3 +185,9 @@ class Tooltip:
 
 
 TooltipValue = Union[str, Tooltip]
+"""Type alias for tooltip values.
+
+Represents a tooltip as either:
+- a `str` message,
+- or a [`Tooltip`][flet.].
+"""
