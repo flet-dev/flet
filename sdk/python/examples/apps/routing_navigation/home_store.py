@@ -44,7 +44,7 @@ def main(page: ft.Page):
             print("View pop:", e.view)
             page.views.remove(e.view)
             top_view = page.views[-1]
-            await page.push_route(top_view.route)
+            await page.push_route(str(top_view.route))
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
