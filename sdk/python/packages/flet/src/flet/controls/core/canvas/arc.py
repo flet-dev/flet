@@ -13,7 +13,8 @@ class Arc(Shape):
     """
     Draws an arc scaled to fit inside the given rectangle.
 
-    It starts from [`start_angle`][(c).] radians around the oval up to [`start_angle`][(c).] +
+    It starts from [`start_angle`][(c).] radians around the oval up to
+    [`start_angle`][(c).] +
     [`sweep_angle`][(c).] radians around the oval, with zero radians being the point on
     the right hand side of the oval that crosses the horizontal line that
     intersects the center of the rectangle and with positive angles going
@@ -56,8 +57,8 @@ class Arc(Shape):
 
     use_center: bool = False
     """
-    Whether this arc is closed back to the center, forming a
-    circle sector. If not closed (`False`), this arc forms a circle segment.
+    Whether this arc is closed back to the center, forming a circle sector. If not \
+    closed (`False`), this arc forms a circle segment.
     """
 
     paint: Paint = field(default_factory=lambda: Paint())

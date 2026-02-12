@@ -45,8 +45,8 @@ class Image(LayoutControl):
 
     error_content: Optional[Control] = None
     """
-    Fallback control to display if the image cannot be loaded
-    from the provided source.
+    Fallback control to display if the image cannot be loaded from the provided \
+    source.
     """
 
     repeat: ImageRepeat = ImageRepeat.NO_REPEAT
@@ -66,8 +66,8 @@ class Image(LayoutControl):
 
     color: Optional[ColorValue] = None
     """
-    If set, this color is blended with each
-    image pixel using [`color_blend_mode`][(c).].
+    If set, this color is blended with each image pixel using \
+    [`color_blend_mode`][(c).].
     """
 
     color_blend_mode: Optional[BlendMode] = None
@@ -79,7 +79,7 @@ class Image(LayoutControl):
 
     gapless_playback: bool = False
     """
-    Whether to continue showing the old image (`True`), or briefly show nothing
+    Whether to continue showing the old image (`True`), or briefly show nothing \
     (`False`), when the image provider changes.
 
     Has no effect on svg images.
@@ -131,7 +131,7 @@ class Image(LayoutControl):
 
     fade_in_animation: Optional[Animation] = None
     """
-    Fade-in animation of the [`src`][(c).] image as it appears after loading,
+    Fade-in animation of the [`src`][(c).] image as it appears after loading, \
     replacing the [`placeholder_src`][(c).].
 
     If `None`, defaults to
@@ -142,7 +142,8 @@ class Image(LayoutControl):
 
     placeholder_fade_out_animation: Optional[Animation] = None
     """
-    Fade-out animation for the [`placeholder_src`][(c).], after the [`src`][(c).] loads.
+    Fade-out animation for the [`placeholder_src`][(c).], after the [`src`][(c).] \
+    loads.
 
     If `None`, defaults to
     `Animation(Duration(milliseconds=150), AnimationCurve.EASE_OUT)`,

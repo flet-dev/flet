@@ -303,7 +303,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.80.4"
+    version: "0.80.5"
   flet_ads:
     dependency: "direct main"
     description:
@@ -472,14 +472,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.0"
-  flutter_markdown:
+  flutter_markdown_plus:
     dependency: transitive
     description:
-      name: flutter_markdown
-      sha256: "08fb8315236099ff8e90cb87bb2b935e0a724a3af1623000a9cec930468e0f27"
+      name: flutter_markdown_plus
+      sha256: "039177906850278e8fb1cd364115ee0a46281135932fa8ecea8455522166d2de"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.7+1"
+    version: "1.0.7"
+  flutter_markdown_plus_latex:
+    dependency: transitive
+    description:
+      name: flutter_markdown_plus_latex
+      sha256: "2e7698b291f0657ca445efab730bb25a8c5851037e882cb7bf47d16a5c218de7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
+  flutter_math_fork:
+    dependency: transitive
+    description:
+      name: flutter_math_fork
+      sha256: "6d5f2f1aa57ae539ffb0a04bb39d2da67af74601d685a161aff7ce5bda5fa407"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.4"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1497,6 +1513,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:

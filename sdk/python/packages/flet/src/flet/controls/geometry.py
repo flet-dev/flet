@@ -84,8 +84,8 @@ class Size:
 @dataclass
 class Rect:
     """
-    A 2D, axis-aligned, floating-point rectangle whose coordinates are relative
-    to a given origin.
+    A 2D, axis-aligned, floating-point rectangle whose coordinates are relative to a \
+    given origin.
     """
 
     left: Number
@@ -131,8 +131,8 @@ class Rect:
     @property
     def size(self) -> Size:
         """
-        The distance between the upper-left corner
-        and the lower-right corner of this rectangle.
+        The distance between the upper-left corner and the lower-right corner of this \
+        rectangle.
         """
         return Size(self.width, self.height)
 
@@ -141,8 +141,7 @@ class Rect:
         cls, *, left: Number, top: Number, width: Number, height: Number
     ) -> "Rect":
         """
-        Construct a rectangle from its left and top edges,
-        its width, and its height.
+        Construct a rectangle from its left and top edges, its width, and its height.
         """
         return Rect(left, top, left + width, top + height)
 
@@ -162,8 +161,8 @@ class Rect:
     @classmethod
     def from_points(cls, a: Offset, b: Offset):
         """
-        Construct the smallest rectangle that encloses the given offsets,
-        treating them as vectors from the origin.
+        Construct the smallest rectangle that encloses the given offsets, treating \
+        them as vectors from the origin.
         """
         return Rect(
             min(a.x, b.x),

@@ -37,7 +37,8 @@ class StoragePaths(Service):
     async def get_application_documents_directory(self) -> str:
         """Returns the path to a directory for user-generated data.
 
-        This directory is intended for data that cannot be recreated by your application.
+        This directory is intended for data that cannot be recreated by your
+        application.
 
         For non-user-generated data, consider using:
 
@@ -190,7 +191,8 @@ class StoragePaths(Service):
         """Returns the path to a `console.log` file for debugging.
 
         This file is located in the
-        [application cache directory][flet.StoragePaths.get_application_cache_directory].
+        [application cache
+        directory][flet.StoragePaths.get_application_cache_directory].
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.

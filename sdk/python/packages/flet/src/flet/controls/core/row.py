@@ -73,8 +73,8 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     tight: bool = False
     """
-    Whether this row should occupy all available horizontal space (`True`),
-    or only as much as needed by its children [`controls`][(c).] (`False`).
+    Whether this row should occupy all available horizontal space (`True`), or only as \
+    much as needed by its children [`controls`][(c).] (`False`).
 
     Note:
         Has effect only when [`wrap`][(c).] is `False`.
@@ -82,8 +82,8 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     wrap: bool = False
     """
-    Whether this row should put child [`controls`][(c).] into additional rows (runs) if
-    they don't fit in a single row.
+    Whether this row should put child [`controls`][(c).] into additional rows (runs) \
+    if they don't fit in a single row.
     """
 
     run_spacing: Number = 10
@@ -98,7 +98,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     intrinsic_height: bool = False
     """
-    Whether this row should be as tall as the tallest child control in
+    Whether this row should be as tall as the tallest child control in \
     [`controls`][(c).].
     """
 

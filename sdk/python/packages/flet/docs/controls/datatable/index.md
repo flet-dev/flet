@@ -2,7 +2,6 @@
 class_name: flet.DataTable
 examples: ../../examples/controls/data_table
 example_images: ../../test-images/examples/material/golden/macos/datatable
-example_media: ../../examples/controls/data_table/media
 ---
 
 # DataTable
@@ -19,16 +18,19 @@ example_media: ../../examples/controls/data_table/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.png", alt="basic", width="80%") }}
+{{ image(example_images + "/basic.png", width="80%") }}
 
 
 ### Sortable columns and selectable rows
+
+This example demonstrates row selection (including select-all),
+sortable string and numeric columns, and stable selection across sorts and refreshes.
 
 ```python
 --8<-- "{{ examples }}/sortable_and_selectable.py"
 ```
 
-{{ image(example_media + "/sortable_and_selectable.png", alt="sortable-and-selectable", width="80%") }}
+{{ image(example_images + "/sortable_and_selectable.png", width="80%") }}
 
 
 ### Handling events

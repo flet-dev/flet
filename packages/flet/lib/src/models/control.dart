@@ -149,6 +149,16 @@ class Control extends ChangeNotifier {
     return backend.triggerControlEvent(this, eventName, data);
   }
 
+  /// Whether this control currently has a handler subscribed to [eventName].
+  ///
+  /// Accepts both `"event_name"` and `"on_event_name"` forms.
+  /// Internally this checks the boolean `on_<eventName>` property.
+  bool hasEventHandler(String eventName) {
+    final String propName =
+        eventName.startsWith("on_") ? eventName : "on_$eventName";
+    return get<bool>(propName, false)!;
+  }
+
   /// Triggers a control event without checking for subscribers.
   ///
   /// This method directly triggers the event for the control identified by its
@@ -374,7 +384,8 @@ class Control extends ChangeNotifier {
         if (node.obj is Map) {
           node.obj[index] = _transformIfControl(value, node.control, backend);
         } else if (node.obj is List) {
-          node.obj.insert(index, _transformIfControl(value, node.control, backend));
+          node.obj
+              .insert(index, _transformIfControl(value, node.control, backend));
         } else {
           throw Exception("Add operation can be applied to lists or maps: $op");
         }
@@ -388,7 +399,8 @@ class Control extends ChangeNotifier {
         } else if (node.obj is Map) {
           node.obj.remove(index);
         } else {
-          throw Exception("Remove operation can be applied to lists or maps: $op");
+          throw Exception(
+              "Remove operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.move) {
@@ -402,7 +414,8 @@ class Control extends ChangeNotifier {
         } else if (fromNode.obj is Map && toNode.obj is Map) {
           toNode.obj[toIndex] = fromNode.obj.remove(fromIndex);
         } else {
-            throw Exception("Move operation can only be applied to lists or maps: $op");
+          throw Exception(
+              "Move operation can only be applied to lists or maps: $op");
         }
         if (shouldNotify) {
           if (fromNode.control.id != toNode.control.id) {

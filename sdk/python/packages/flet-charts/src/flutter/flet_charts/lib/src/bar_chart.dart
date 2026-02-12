@@ -83,7 +83,7 @@ class _BarChartControlState extends State<BarChartControl> {
       curve: animation.curve,
     );
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: widget.control,
         child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {

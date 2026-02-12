@@ -41,8 +41,8 @@ class Draggable(Control):
 
     content_when_dragging: Optional[Control] = None
     """
-    The control to display instead of [`content`][(c).] when this draggable
-    is being dragged.
+    The control to display instead of [`content`][(c).] when this draggable is being \
+    dragged.
 
     If set, this control visually replaces `content` during an active drag operation,
     allowing you to show a different appearance or an "empty" placeholder.
@@ -65,7 +65,7 @@ class Draggable(Control):
 
     affinity: Optional[Axis] = None
     """
-    Specifies the axis along which this control competes with other gestures to
+    Specifies the axis along which this control competes with other gestures to \
     initiate a drag.
 
     - If `None`, the drag starts as soon as a tap down gesture is recognized,

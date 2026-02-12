@@ -125,6 +125,6 @@ class _LottieControlState extends State<LottieControl> {
       }
     }
 
-    return ConstrainedControl(control: widget.control, child: lottie);
+    return LayoutControl(control: widget.control, child: lottie);
   }
 }

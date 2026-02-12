@@ -78,7 +78,7 @@ class _BannerAdControlState extends State<BannerAdControl> with FletStoreMixin {
       bannerAd.load();
     }
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: widget.control, child: AdWidget(ad: bannerAd));
   }
 }

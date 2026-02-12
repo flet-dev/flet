@@ -439,15 +439,14 @@ class DiffBuilder:
 
     def _index_key(self, item, item_key, path):
         """
-        Return the composite key used to pair add/remove
-        (by control key if present).
+        Return the composite key used to pair add/remove (by control key if present).
         """
         return item_key if item_key is not None else item
 
     def _maybe_compare_dataclasses(self, parent, path, src, dst, frozen):
         """
-        Compare dataclasses only when both are dataclasses and
-        identity/"frozen" rules allow it.
+        Compare dataclasses only when both are dataclasses and identity/"frozen" rules \
+        allow it.
         """
         if (
             dataclasses.is_dataclass(src)
@@ -1022,7 +1021,12 @@ class DiffBuilder:
         )
 
         if isinstance(src, dict) and isinstance(dst, dict):
-            self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
+            if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
+                self._item_replaced(path, key, dst)
+                self._dataclass_removed(src)
+                self._dataclass_added(dst, parent, frozen)
+            else:
+                self._compare_dicts(parent, _path_join(path, key), src, dst, frozen)
 
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):

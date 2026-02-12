@@ -23,7 +23,7 @@ __all__ = ["Checkbox"]
 @control("Checkbox")
 class Checkbox(LayoutControl, AdaptiveControl):
     """
-    Checkbox allows to select one or more items from a group, or switch between two
+    Checkbox allows to select one or more items from a group, or switch between two \
     mutually exclusive options (checked or unchecked, on or off).
 
     ```python
@@ -65,9 +65,9 @@ class Checkbox(LayoutControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    True if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
@@ -118,7 +118,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
 
     semantics_label: Optional[str] = None
     """
-    The semantic label for the checkbox that is not shown in the UI, but will be
+    The semantic label for the checkbox that is not shown in the UI, but will be \
     announced by screen readers in accessibility modes (e.g TalkBack/VoiceOver).
     """
 
@@ -140,7 +140,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    The color and width of this checkbox's border in all or specific
+    The color and width of this checkbox's border in all or specific \
     [`ControlState`][flet.]s.
 
     Defaults to [`CheckboxTheme.border_side`][flet.], or if that is `None`,
@@ -168,7 +168,7 @@ class Checkbox(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     checkbox.
 
     Defaults to [`CheckboxTheme.mouse_cursor`][flet.],

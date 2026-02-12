@@ -20,8 +20,8 @@ class Assertiveness(Enum):
 
     ASSERTIVE = "assertive"
     """
-    The assistive technology will interrupt any announcement that it is
-    currently making to notify the user about the change.
+    The assistive technology will interrupt any announcement that it is currently \
+    making to notify the user about the change.
 
     It should only be used for time-sensitive/critical notifications.
     """
@@ -40,8 +40,8 @@ class AccessibilityFeatures:
 
     accessible_navigation: bool
     """
-    Whether there is a running accessibility service which is changing the
-    interaction model of the device.
+    Whether there is a running accessibility service which is changing the interaction \
+    model of the device.
 
     For example, TalkBack on Android and VoiceOver on iOS enable this flag.
     """
@@ -74,8 +74,8 @@ class AccessibilityFeatures:
 
     reduce_motion: bool
     """
-    The platform is requesting that certain animations be simplified and
-    parallax effects removed.
+    The platform is requesting that certain animations be simplified and parallax \
+    effects removed.
 
     Note:
         Only supported on iOS.

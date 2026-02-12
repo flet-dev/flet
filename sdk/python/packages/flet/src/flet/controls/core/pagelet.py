@@ -39,15 +39,13 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`][flet.] control to display at the top
-    of the Pagelet.
+    An [`AppBar`][flet.] control to display at the top of the Pagelet.
     """
 
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
     """
-    A navigation bar ([`NavigationBar`][flet.] or
-    [`CupertinoNavigationBar`][flet.]) control to display
-    at the bottom of the `Pagelet`.
+    A navigation bar ([`NavigationBar`][flet.] or [`CupertinoNavigationBar`][flet.]) \
+    control to display at the bottom of the `Pagelet`.
 
     Note:
         If both the `navigation_bar` and [`bottom_appbar`][(c).]
@@ -57,8 +55,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.] control to display at
-    the bottom of the `Pagelet`.
+    A [`BottomAppBar`][flet.] control to display at the bottom of the `Pagelet`.
 
     Note:
         If both the `bottom_appbar` and [`navigation_bar`][(c).]
@@ -68,20 +65,20 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     bottom_sheet: Optional[Control] = None
     """
-    The persistent bottom sheet to show information that supplements the primary
+    The persistent bottom sheet to show information that supplements the primary \
     content of the Pagelet.
     """
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to
-    display as a panel sliding from the start edge of the page.
+    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the start \
+    edge of the page.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to
-    display as a panel sliding from the end edge of the page.
+    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the end \
+    edge of the page.
     """
 
     floating_action_button: Optional[Control] = None

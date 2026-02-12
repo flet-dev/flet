@@ -26,9 +26,8 @@ class BorderSideStrokeAlign(float, Enum):
 
     CENTER = 0.0
     """
-    The border is drawn on the center of the border path, with half of the
-    `BorderSide.width` on the inside, and the other half on the outside of
-    the path.
+    The border is drawn on the center of the border path, with half of the \
+    `BorderSide.width` on the inside, and the other half on the outside of the path.
     """
 
     OUTSIDE = 1.0
@@ -78,8 +77,8 @@ class BorderSide:
 
     stroke_align: "BorderSideStrokeAlignValue" = BorderSideStrokeAlign.INSIDE
     """
-    The relative position of the stroke on a `BorderSide` in an
-    `OutlinedBorder` or `Border`.
+    The relative position of the stroke on a `BorderSide` in an `OutlinedBorder` or \
+    `Border`.
     """
 
     style: BorderStyle = BorderStyle.SOLID

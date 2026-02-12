@@ -1,54 +1,57 @@
 Flet provides an API for storing key-value data in user's session on a server side.
 
-Writing data to the session:
+/// admonition
+    type: caution
+In the current Flet implementation the data stored in a session store
+is transient and is not preserved between app restarts.
+///
+
+### Write data
 
 ```python
 # strings
-page.session.set("key", "value")
+page.session.store.set("key", "value")
 
-# numbers, booleans
-page.session.set("number.setting", 12345)
-page.session.set("bool_setting", True)
+# numbers
+page.session.store.set("number.setting", 12345)
+
+# booleans
+page.session.store.set("bool_setting", True)
 
 # lists
-page.session.set("favorite_colors", ["red", "green", "blue"])
+page.session.store.set("favorite_colors", ["red", "green", "blue"])
 ```
 
-/// admonition
-    type: caution
-In the current Flet implementation the data stored in a session store is transient and is not preserved between app restarts.
-///
-
-Reading data:
+### Read data
 
 ```python
 # The value is automatically converted back to the original type
-value = page.session.get("key")
+value = page.session.store.get("key")
 
-colors = page.session.get("favorite_colors")
+colors = page.session.store.get("favorite_colors")
 # colors = ["red", "green", "blue"]
 ```
 
-Check if a key exists:
+### Check key existence
 
 ```python
-page.session.contains_key("key") # True if the key exists
+page.session.store.contains_key("key") # True if the key exists
 ```
 
-Get all keys:
+### Get all keys
 
 ```python
-page.session.get_keys()
+page.session.store.get_keys()
 ```
 
-Remove a value:
+#### Remove data by key
 
 ```python
-page.session.remove("key")
+page.session.store.remove("key")
 ```
 
-Clear the session storage:
+#### Clear all data
 
 ```python
-page.session.clear()
+page.session.store.clear()
 ```

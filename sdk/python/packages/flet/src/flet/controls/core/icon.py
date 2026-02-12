@@ -99,7 +99,8 @@ class Icon(LayoutControl):
 
     optical_size: Optional[Number] = None
     """
-    Adjusts the icon's visual style for different sizes to maintain clarity and balance.
+    Adjusts the icon's visual style for different sizes to maintain clarity and \
+    balance.
 
     This requires the icon font to support optical sizing.
     Must be greater than `0`.

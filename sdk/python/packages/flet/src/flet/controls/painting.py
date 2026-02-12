@@ -37,25 +37,23 @@ class PaintGradient:
 @dataclass
 class PaintLinearGradient(PaintGradient):
     """
-    More information on Linear gradient
+    More information on Linear gradient \
     https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html
     """
 
     begin: Optional[OffsetValue]
     """
-    The offset at which
-    stop 0.0 of the gradient is placed.
+    The offset at which stop 0.0 of the gradient is placed.
     """
 
     end: Optional[OffsetValue]
     """
-    The offset at which
-    stop 1.0 of the gradient is placed.
+    The offset at which stop 1.0 of the gradient is placed.
     """
 
     colors: list[str]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     Note:
@@ -78,7 +76,7 @@ class PaintLinearGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and
+    How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.
     """
 
@@ -111,7 +109,7 @@ class PaintLinearGradient(PaintGradient):
 @dataclass
 class PaintRadialGradient(PaintGradient):
     """
-    More information on Radial gradient
+    More information on Radial gradient \
     https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.radial.html
     """
 
@@ -127,7 +125,7 @@ class PaintRadialGradient(PaintGradient):
 
     colors: list[ColorValue]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -145,19 +143,19 @@ class PaintRadialGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and
+    How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.
     """
 
     focal: Optional[OffsetValue] = None
     """
-    The focal point of the gradient. If specified, the gradient will appear to be
+    The focal point of the gradient. If specified, the gradient will appear to be \
     focused along the vector from `center` to focal.
     """
 
     focal_radius: Number = 0.0
     """
-    The radius of the focal point of gradient, as a fraction of the shortest side of
+    The radius of the focal point of gradient, as a fraction of the shortest side of \
     the paint box.
 
     For example, if a radial gradient is painted on a box that is `100.0` pixels wide
@@ -200,7 +198,7 @@ class PaintRadialGradient(PaintGradient):
 @dataclass
 class PaintSweepGradient(PaintGradient):
     """
-    More information on Sweep gradient
+    More information on Sweep gradient \
     https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.sweep.html
     """
 
@@ -211,7 +209,7 @@ class PaintSweepGradient(PaintGradient):
 
     colors: list[str]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of
+    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -229,25 +227,25 @@ class PaintSweepGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and
+    How this gradient should tile the plane beyond in the region before `begin` and \
     after `end`.
     """
 
     start_angle: Number = 0.0
     """
-    The angle in https://en.wikipedia.org/wiki/Radian at which stop 0.0 of the
+    The angle in https://en.wikipedia.org/wiki/Radian at which stop 0.0 of the \
     gradient is placed. Defaults to 0.0.
     """
 
     end_angle: Number = math.pi * 2
     """
-    The angle in radians at which stop 1.0 of the gradient is placed. Defaults to
+    The angle in radians at which stop 1.0 of the gradient is placed. Defaults to \
     math.pi * 2.
     """
 
     rotation: Optional[Number] = None
     """
-    The rotation of the gradient in https://en.wikipedia.org/wiki/Radian, around the
+    The rotation of the gradient in https://en.wikipedia.org/wiki/Radian, around the \
     center-point of its bounding box.
     """
 
@@ -289,7 +287,8 @@ class Paint:
 
     color: Optional[ColorValue] = None
     """
-    The https://flet.dev/docs/reference/colors to use when stroking or filling a shape.
+    The https://flet.dev/docs/reference/colors to use when stroking or filling a \
+    shape.
     Defaults to opaque black.
     """
 

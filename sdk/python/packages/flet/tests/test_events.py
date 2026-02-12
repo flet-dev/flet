@@ -1,5 +1,5 @@
 import sys
-from typing import ForwardRef, get_args, get_origin
+from typing import ForwardRef, get_args, get_origin, get_type_hints
 
 from flet.controls.base_page import PageResizeEvent
 from flet.controls.control_event import ControlEvent, Event, get_event_field_type
@@ -128,3 +128,11 @@ def test_page_forward_ref_resolution_uses_base_module():
     finally:
         if removed is not None:
             page_module.PageResizeEvent = removed
+
+
+def test_get_type_hints_control_event_forward_ref():
+    def handler(event: ControlEvent) -> None:
+        pass
+
+    hints = get_type_hints(handler, include_extras=True)
+    assert hints["event"] == ControlEvent

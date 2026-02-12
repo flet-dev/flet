@@ -8,7 +8,8 @@ __all__ = ["CupertinoContextMenu"]
 @control("CupertinoContextMenu")
 class CupertinoContextMenu(AdaptiveControl):
     """
-    A full-screen modal route that opens up when the [`content`][(c).] is long-pressed.
+    A full-screen modal route that opens up when the [`content`][(c).] is \
+    long-pressed.
     """
 
     content: Control

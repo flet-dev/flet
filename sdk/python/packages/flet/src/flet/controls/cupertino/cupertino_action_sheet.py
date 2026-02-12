@@ -41,7 +41,7 @@ class CupertinoActionSheet(LayoutControl):
 
     message: Optional[StrOrControl] = None
     """
-    A control containing a descriptive message that provides more details about the
+    A control containing a descriptive message that provides more details about the \
     reason for the alert.
 
     Typically a [`Text`][flet.] control.
@@ -60,7 +60,8 @@ class CupertinoActionSheet(LayoutControl):
 
     cancel: Optional[Control] = None
     """
-    An optional control to be shown below the actions but grouped separately from them.
+    An optional control to be shown below the actions but grouped separately from \
+    them.
 
     Typically a [`CupertinoActionSheetAction`][flet.] button.
     """

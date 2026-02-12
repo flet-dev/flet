@@ -74,9 +74,9 @@ class CircleAvatar(LayoutControl):
 
     radius: Optional[Number] = None
     """
-    The size of the avatar, expressed as the radius (half the diameter). If `radius` is
-    specified, then neither [`min_radius`][(c).] nor
-    [`max_radius`][(c).] may be specified.
+    The size of the avatar, expressed as the radius (half the diameter). If `radius` \
+    is specified, then neither [`min_radius`][(c).] nor [`max_radius`][(c).] may be \
+    specified.
 
     Raises:
         ValueError: If it is less than `0.0` or if it is
@@ -85,7 +85,7 @@ class CircleAvatar(LayoutControl):
 
     min_radius: Optional[Number] = None
     """
-    The minimum size of the avatar, expressed as the radius (half the diameter). If
+    The minimum size of the avatar, expressed as the radius (half the diameter). If \
     `min_radius` is specified, then [`radius`][(c).] should not be specified.
 
     Defaults to `0.0`.
@@ -110,7 +110,7 @@ class CircleAvatar(LayoutControl):
 
     on_image_error: Optional[ControlEventHandler["CircleAvatar"]] = None
     """
-    Called when an error occurs while loading the [`background_image_src`][(c).] or
+    Called when an error occurs while loading the [`background_image_src`][(c).] or \
     [`foreground_image_src`][(c).].
 
     The [`data`][flet.Event.] property of the event handler argument is
