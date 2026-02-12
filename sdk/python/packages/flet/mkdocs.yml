@@ -423,6 +423,7 @@ nav:
           - OutlinedIconButton: controls/outlinediconbutton.md
           - Page: controls/page.md
           - Pagelet: controls/pagelet.md
+          - PageView: controls/pageview.md
           - Placeholder: controls/placeholder.md
           - PopupMenuButton: controls/popupmenubutton.md
           - ProgressBar: controls/progressbar.md

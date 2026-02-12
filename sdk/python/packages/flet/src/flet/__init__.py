@@ -123,6 +123,7 @@ from flet.controls.core.markdown import (
     MarkdownStyleSheet,
 )
 from flet.controls.core.merge_semantics import MergeSemantics
+from flet.controls.core.page_view import PageView
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
@@ -893,6 +894,7 @@ __all__ = [
     "PageResizeEvent",
     "PageTransitionTheme",
     "PageTransitionsTheme",
+    "PageView",
     "Pagelet",
     "Paint",
     "PaintGradient",
