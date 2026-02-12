@@ -1,6 +1,6 @@
 # set PYPI_CLEANUP_PASSWORD with pypi.org password
 
-VER="0\.81\.0\.dev(?!7200)"
+VER="0\.80\.[56]\.dev(?!7200)"
 uv tool install pypi-cleanup
 uvx pypi-cleanup -u flet -p flet -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-cli -y -r $VER --do-it
@@ -13,6 +13,7 @@ uvx pypi-cleanup -u flet -p flet-ads -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-audio -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-audio-recorder -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-charts -y -r $VER --do-it
+uvx pypi-cleanup -u flet -p flet-color-pickers -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-datatable2 -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-flashlight -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-geolocator -y -r $VER --do-it
