@@ -309,7 +309,7 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
-          - ColorPicker:
+          - Color pickers:
               - colorpickers/index.md
               - ColorPicker: colorpickers/colorpicker.md
               - BlockPicker: colorpickers/blockpicker.md
