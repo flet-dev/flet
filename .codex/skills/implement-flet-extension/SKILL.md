@@ -3,11 +3,11 @@ name: implement-flet-extension
 description: Implement a new Flet extension/control that wraps a third-party Flutter package end-to-end, including dependency selection, version pinning, compatibility checks, Python/Flutter integration, docs, examples, tests, and CI updates. Use when adding any flet_* package backed by an external pub.dev package.
 ---
 
-Implement a Flet control extension around an external Flutter package using existing `flet_*` packages as implementation templates.
+Implement a Flet extension around an external Flutter package using existing `flet_*` packages as implementation templates.
 
 ## Inputs
 
-- Control name and Python package name (`flet_<extension>`).
+- Control/service name and Python package name (`flet_<extension>`).
 - Target pub.dev package and intended version/range.
 - API surface to expose in Python (properties, methods, events, types/enums).
 
@@ -20,6 +20,15 @@ Implement a Flet control extension around an external Flutter package using exis
 - Use bounded ranges when required by ecosystem constraints.
 4. Record key constraints and reasons in PR notes/commit message.
 
+## Control/Service Classification
+
+- Classify wrapped functionality before implementation:
+1. `LayoutControl` for visual controls that participate in page/layout positioning.
+2. Base `Control` for simple visual controls that do not require page positioning or define their own positioning rules/props (for example `Draggable`, `Divider`, `MenuBar`, `NavigationRail`).
+3. Non-visual Service when functionality is not a renderable UI control.
+- Inspect the wrapped Flutter package API to determine whether it includes non-visual/service functionality.
+- For service patterns, follow existing extension examples: `sdk/python/packages/flet-audio`, `sdk/python/packages/flet-flashlight`, `sdk/python/packages/flet-secure-storage`.
+
 ## API Mapping Rules
 
 - Expose only stable and useful features first; avoid mirroring every upstream option.
@@ -29,9 +38,9 @@ Implement a Flet control extension around an external Flutter package using exis
 
 ## Python-side Rules
 
-- Inherit visual controls from `LayoutControl` unless explicitly required otherwise.
+- Use `LayoutControl`, base `Control`, or Service base class according to classification.
 - Implement typed properties, methods, and events exactly for chosen public API.
-- Reuse existing serialization/event patterns from sibling controls.
+- Reuse existing serialization/event patterns from sibling controls/services.
 
 ## Flutter-side Rules
 
@@ -53,13 +62,12 @@ Implement a Flet control extension around an external Flutter package using exis
 
 ## Docs, Examples, Tests
 
-- Add control docs under `sdk/python/packages/flet/docs/<control>`.
+- Add control/service docs under `sdk/python/packages/flet/docs/<name>`.
 - Add all custom enums/types docs and update `sdk/python/packages/flet/mkdocs.yml` navigation.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
-- Add control examples under `sdk/python/examples/controls/<control>`.
-- Add integration tests under `packages/flet/integration_tests/controls`.
-- Add example integration tests under `packages/flet/integration_tests/examples/<extension-or-control>`.
-- Ensure generated screenshots are suitable for docs usage.
+- Add examples under `sdk/python/examples` in the appropriate category for control vs service.
+- Add integration tests under `packages/flet/integration_tests` in the appropriate category for control vs service.
+- Ensure generated screenshots are suitable for docs usage when visual examples are added.
 
 ## Upgrade and Compatibility Guardrails
 
