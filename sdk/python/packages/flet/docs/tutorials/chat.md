@@ -397,7 +397,7 @@ initial focus to the control. If there is more than one control on a page with `
 We set `autofocus=True` on a username TextField inside a dialog and then on a TextField for entering chat message to set initial focus on it when the dialog is closed.
 
 When a user click "Send" button or presses Enter to submit a chat message, TextField loses focus.
-To programmatically set control focus we used [`TextField.focus`][flet.TextField.focus] method.
+To programmatically set control focus we used [`TextField.focus()`][flet.FormFieldControl.focus] method.
 
 #### Submitting forms on `Enter`
 
