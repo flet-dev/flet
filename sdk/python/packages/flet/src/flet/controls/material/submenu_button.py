@@ -31,11 +31,11 @@ class SubmenuButton(LayoutControl):
         controls=[
             ft.MenuItemButton(
                 content=ft.Text("Underlined"),
-                on_click=lambda e: print(f"{e.control.content.value}.on_click")
+                on_click=lambda e: print(f"{e.control.content.value}.on_click"),
             ),
             ft.MenuItemButton(...),
-            ...
-        ]
+            ...,
+        ],
     )
     ```
     """
@@ -88,9 +88,8 @@ class SubmenuButton(LayoutControl):
 
     alignment_offset: Optional[OffsetValue] = None
     """
-    The offset of the menu relative to the alignment origin determined by
-    [`MenuStyle.alignment`][flet.] on the
-    [`style`][(c).] attribute.
+    The offset of the menu relative to the alignment origin determined by \
+    [`MenuStyle.alignment`][flet.] on the [`style`][(c).] attribute.
     """
 
     on_open: Optional[ControlEventHandler["SubmenuButton"]] = None

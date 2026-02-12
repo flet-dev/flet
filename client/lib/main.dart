@@ -6,6 +6,8 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
 import 'package:flet_charts/flet_charts.dart' as flet_charts;
+import 'package:flet_color_pickers/flet_color_pickers.dart'
+    as flet_color_picker;
 import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
@@ -51,6 +53,7 @@ void main([List<String>? args]) async {
     flet_flashlight.Extension(),
     flet_datatable2.Extension(),
     flet_charts.Extension(),
+    flet_color_picker.Extension(),
     flet_secure_storage.Extension(),
     flet_code_editor.Extension(),
     // --FAT_CLIENT_START--

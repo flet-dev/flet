@@ -32,7 +32,7 @@ class NavigationDrawerDestination(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the \
     destination.
 
     Example with icon name:
@@ -50,7 +50,7 @@ class NavigationDrawerDestination(Control):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
+    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     Example with icon name:
@@ -103,7 +103,7 @@ class NavigationDrawer(AdaptiveControl):
 
     selected_index: int = 0
     """
-    The index for the current selected `NavigationDrawerDestination` or null if no
+    The index for the current selected `NavigationDrawerDestination` or null if no \
     destination is selected.
 
     A valid selected_index is an integer between 0 and number of destinations - `1`. For
@@ -123,8 +123,7 @@ class NavigationDrawer(AdaptiveControl):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the selected destination
-    indicator.
+    The color of the selected destination indicator.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -134,8 +133,7 @@ class NavigationDrawer(AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used for the drop shadow to
-    indicate `elevation`.
+    The color used for the drop shadow to indicate `elevation`.
     """
 
     tile_padding: Optional[PaddingValue] = None

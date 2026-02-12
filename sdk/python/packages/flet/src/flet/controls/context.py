@@ -7,8 +7,8 @@ if TYPE_CHECKING:
 
 class Context:
     """
-    Manages the context for Flet controls, including page reference
-    and auto-update behavior.
+    Manages the context for Flet controls, including page reference and auto-update \
+    behavior.
 
     Context instance is accessed via [`flet.context`][flet.context].
     """

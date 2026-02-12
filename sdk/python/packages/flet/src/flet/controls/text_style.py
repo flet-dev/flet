@@ -159,7 +159,7 @@ class TextStyle:
 
     decoration_thickness: Optional[Number] = None
     """
-    The thickness of the decoration stroke as a multiplier of the thickness defined by
+    The thickness of the decoration stroke as a multiplier of the thickness defined by \
     the font.
     """
 
@@ -197,13 +197,13 @@ class TextStyle:
 
     letter_spacing: Optional[Number] = None
     """
-    The amount of space (in logical pixels) to add between each letter. A negative
+    The amount of space (in logical pixels) to add between each letter. A negative \
     value can be used to bring the letters closer.
     """
 
     word_spacing: Optional[Number] = None
     """
-    The amount of space (in logical pixels) to add at each sequence of white-space
+    The amount of space (in logical pixels) to add at each sequence of white-space \
     (i.e. between each word). A negative value can be used to bring the words closer.
     """
 
@@ -214,7 +214,7 @@ class TextStyle:
 
     baseline: Optional[TextBaseline] = None
     """
-    The common baseline that should be aligned between this text span and its parent
+    The common baseline that should be aligned between this text span and its parent \
     text span, or, for the root text spans, with the line box.
     """
 

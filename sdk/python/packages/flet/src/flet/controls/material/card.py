@@ -20,7 +20,7 @@ class CardVariant(Enum):
 @control("Card")
 class Card(LayoutControl, AdaptiveControl):
     """
-    A material design card: a panel with slightly rounded corners and an elevation
+    A material design card: a panel with slightly rounded corners and an elevation \
     shadow.
 
     ```python
@@ -88,14 +88,13 @@ class Card(LayoutControl, AdaptiveControl):
 
     semantic_container: bool = True
     """
-    Whether this card represents a single semantic container, or
-    if it instead represents a collection of individual semantic nodes
-    (different types of content).
+    Whether this card represents a single semantic container, or if it instead \
+    represents a collection of individual semantic nodes (different types of content).
     """
 
     show_border_on_foreground: bool = True
     """
-    Whether the shape of the border should be painted in front of the
+    Whether the shape of the border should be painted in front of the \
     [`content`][(c).] or behind.
     """
 

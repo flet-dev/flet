@@ -48,7 +48,7 @@ class BorderRadius:
     @classmethod
     def horizontal(cls, *, left: Number = 0, right: Number = 0) -> "BorderRadius":
         """
-        Creates a horizontally symmetrical `BorderRadius` where the `left` and `right`
+        Creates a horizontally symmetrical `BorderRadius` where the `left` and `right` \
         sides of the rectangle have the same radii.
         """
         return BorderRadius(
@@ -58,7 +58,7 @@ class BorderRadius:
     @classmethod
     def vertical(cls, *, top: Number = 0, bottom: Number = 0) -> "BorderRadius":
         """
-        Creates a vertically symmetric `BorderRadius` where the `top` and `bottom`
+        Creates a vertically symmetric `BorderRadius` where the `top` and `bottom` \
         sides of the rectangle have the same radii.
         """
         return BorderRadius(

@@ -11,8 +11,8 @@ from flet.controls.layout_control import LayoutControl
 @control("WindowDragArea")
 class WindowDragArea(LayoutControl):
     """
-    It mimics the behavior (drag, move, maximize, restore) of a native OS window
-    title bar on the [`content`][(c).] control.
+    It mimics the behavior (drag, move, maximize, restore) of a native OS window title \
+    bar on the [`content`][(c).] control.
     """
 
     content: Control
@@ -27,7 +27,7 @@ class WindowDragArea(LayoutControl):
 
     maximizable: bool = True
     """
-    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's
+    Whether double-clicking on the `WindowDragArea` should maximize/maximize the app's \
     window.
     """
 
@@ -48,7 +48,7 @@ class WindowDragArea(LayoutControl):
 
     on_drag_end: Optional[EventHandler[DragEndEvent["WindowDragArea"]]] = None
     """
-    Called when a pointer that was previously in contact with the screen and
+    Called when a pointer that was previously in contact with the screen and \
     moving/dragging is no longer in contact with the screen.
     """
 

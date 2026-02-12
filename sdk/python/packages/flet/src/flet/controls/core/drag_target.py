@@ -48,8 +48,8 @@ class DragTargetLeaveEvent(DragEventBase):
 @control("DragTarget")
 class DragTarget(Control):
     """
-    A control that completes drag operation when a [`Draggable`][flet.] control
-    is dropped.
+    A control that completes drag operation when a [`Draggable`][flet.] control is \
+    dropped.
 
     When a `Draggable` is dragged on top of a `DragTarget`, the `DragTarget` is asked
     whether it will accept the data the `Draggable` is carrying. The `DragTarget` will
@@ -85,7 +85,7 @@ class DragTarget(Control):
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same [`group`][(c).]) draggable on
+    Called when the user does drop an acceptable (same [`group`][(c).]) draggable on \
     this target.
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.

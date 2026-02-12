@@ -273,7 +273,7 @@ class Markdown(LayoutControl):
 
     shrink_wrap: bool = True
     """
-    Whether the extent of the scroll view in the scroll direction should be determined
+    Whether the extent of the scroll view in the scroll direction should be determined \
     by the contents being viewed.
     """
 
@@ -284,7 +284,7 @@ class Markdown(LayoutControl):
 
     soft_line_break: bool = False
     """
-    The soft line break is used to identify the spaces at the end of a line of text
+    The soft line break is used to identify the spaces at the end of a line of text \
     and the leading spaces in the immediately following the line of text.
     """
 
@@ -308,6 +308,19 @@ class Markdown(LayoutControl):
     The styles to use when displaying the markdown.
     """
 
+    latex_scale_factor: Optional[float] = None
+    """
+    The scale factor for LaTeX formulas rendering.
+    Controls the size of rendered mathematical expressions.
+    """
+
+    latex_style: Optional[TextStyle] = None
+    """
+    The text style to apply to LaTeX formulas.
+    Allows customization of font, color, and other text properties
+    for mathematical expressions.
+    """
+
     on_tap_text: Optional[ControlEventHandler["Markdown"]] = None
     """
     Called when some text is clicked/tapped.
@@ -329,4 +342,4 @@ class Markdown(LayoutControl):
 
     Example:
     https://github.com/flet-dev/examples/blob/main/python/controls/information-displays/markdown/markdown-event-example.py
-    """
+    """  # noqa: E501

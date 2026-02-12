@@ -1,3 +1,10 @@
+## 0.80.5
+
+* Fix memory leak in Flet web apps ([#6089](https://github.com/flet-dev/flet/issues/6089)).
+* feat: add LaTeX support in `ft.Markdown` ([#6069](https://github.com/flet-dev/flet/issues/6069)).
+* Avoid `FletApp` control messing with root app routing ([#6086](https://github.com/flet-dev/flet/issues/6086)).
+* Include material and cupertino icon data in PyInstaller hook ([#6072](https://github.com/flet-dev/flet/issues/6072)).
+
 ## 0.80.4
 
 * fix: Enable TextButton style and full-width Dropdown ([#6048](https://github.com/flet-dev/flet/issues/6048)).

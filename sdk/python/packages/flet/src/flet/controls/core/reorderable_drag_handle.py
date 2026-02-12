@@ -35,8 +35,8 @@ class ReorderableDragHandle(LayoutControl, AdaptiveControl):
 
     content: Control
     """
-    The control for which the application would like to respond to a tap and
-    drag gesture by starting a reordering drag on a reorderable list.
+    The control for which the application would like to respond to a tap and drag \
+    gesture by starting a reordering drag on a reorderable list.
 
     Must be visible.
 

@@ -13,7 +13,7 @@ __all__ = ["Column"]
 @control("Column")
 class Column(LayoutControl, ScrollableControl, AdaptiveControl):
     """
-    Arranges child controls vertically, optionally aligning and spacing them within
+    Arranges child controls vertically, optionally aligning and spacing them within \
     the available space.
 
     ```python
@@ -63,8 +63,8 @@ class Column(LayoutControl, ScrollableControl, AdaptiveControl):
 
     wrap: bool = False
     """
-    Whether the [`controls`][(c).] should wrap into additional
-    columns (runs) when they don't fit in a single vertical column.
+    Whether the [`controls`][(c).] should wrap into additional columns (runs) when \
+    they don't fit in a single vertical column.
     """
 
     run_spacing: Number = 10

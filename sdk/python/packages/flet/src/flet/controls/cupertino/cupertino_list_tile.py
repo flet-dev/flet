@@ -75,9 +75,9 @@ class CupertinoListTile(LayoutControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The tile's internal padding. Insets a CupertinoListTile's contents:
-    its [`leading`][(c).], [`title`][(c).], [`subtitle`][(c).],
-    [`additional_info`][(c).] and [`trailing`][(c).] controls.
+    The tile's internal padding. Insets a CupertinoListTile's contents: its \
+    [`leading`][(c).], [`title`][(c).], [`subtitle`][(c).], [`additional_info`][(c).] \
+    and [`trailing`][(c).] controls.
     """
 
     url: Optional[Union[str, Url]] = None
@@ -90,8 +90,9 @@ class CupertinoListTile(LayoutControl):
 
     toggle_inputs: bool = False
     """
-    Whether clicking on this tile should toggle the state of (visible) toggleable
-    controls like [`Radio`][flet.], [`Checkbox`][flet.] or [`Switch`][flet.] inside it.
+    Whether clicking on this tile should toggle the state of (visible) toggleable \
+    controls like [`Radio`][flet.], [`Checkbox`][flet.] or [`Switch`][flet.] inside \
+    it.
     """
 
     additional_info: Optional[StrOrControl] = None
@@ -120,7 +121,7 @@ class CupertinoListTile(LayoutControl):
 
     notched: bool = False
     """
-    Whether this list tile should be created in an "Inset Grouped" form, known from
+    Whether this list tile should be created in an "Inset Grouped" form, known from \
     either iOS Notes or Reminders app.
     """
 

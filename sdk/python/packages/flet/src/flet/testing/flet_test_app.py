@@ -5,10 +5,10 @@ import os
 import platform
 import tempfile
 from collections.abc import Iterable
+from enum import Enum
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
-from enum import Enum
 
 import numpy as np
 from PIL import Image
@@ -51,8 +51,8 @@ class DisposalMode(Enum):
 
 class FletTestApp:
     """
-    Flet app test controller coordinates running a Python-based
-    Flet app alongside a Flutter integration test.
+    Flet app test controller coordinates running a Python-based Flet app alongside a \
+    Flutter integration test.
 
     This class launches the Python Flet app, starts the Flutter test process,
     and facilitates programmatic interaction with the app's controls for
@@ -176,8 +176,8 @@ class FletTestApp:
     @property
     def tester(self) -> Tester:
         """
-        Returns an instance of [`Tester`][flet.testing.] class
-        that programmatically interacts with page controls and the test environment.
+        Returns an instance of [`Tester`][flet.testing.] class that programmatically \
+        interacts with page controls and the test environment.
         """
         if self.__tester is None:
             raise RuntimeError("tester is not initialized")
@@ -354,9 +354,9 @@ class FletTestApp:
         similarity_threshold: float = 0,
     ):
         """
-        Adds control to a clean page, takes a screenshot and compares it with
-        a golden copy or takes golden screenshot if `FLET_TEST_GOLDEN=1`
-        environment variable is set.
+        Adds control to a clean page, takes a screenshot and compares it with a golden \
+        copy or takes golden screenshot if `FLET_TEST_GOLDEN=1` environment variable \
+        is set.
 
         Args:
             name: Screenshot name - will be used as a base for a screenshot filename.
@@ -382,8 +382,8 @@ class FletTestApp:
         self, name: str, screenshot: bytes, similarity_threshold: float = 0
     ):
         """
-        Compares provided screenshot with a golden copy or takes golden screenshot
-        if `FLET_TEST_GOLDEN=1` environment variable is set.
+        Compares provided screenshot with a golden copy or takes golden screenshot if \
+        `FLET_TEST_GOLDEN=1` environment variable is set.
 
         Args:
             name: Screenshot name - will be used as a base for a screenshot filename.

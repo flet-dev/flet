@@ -53,7 +53,8 @@ class DateRangePicker(DialogControl):
 
     error_invalid_range_text: Optional[str] = None
     """
-    The message used when the date range is invalid (e.g. start date is after end date).
+    The message used when the date range is invalid (e.g. start date is after end \
+    date).
     """
 
     modal: bool = False
@@ -82,7 +83,7 @@ class DateRangePicker(DialogControl):
 
     locale: Optional[Locale] = None
     """
-    The locale for this date picker dialog. It is intended for (rare) cases where this
+    The locale for this date picker dialog. It is intended for (rare) cases where this \
     dialog should be localized differently from the rest of the page.
 
     It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
@@ -122,15 +123,14 @@ class DateRangePicker(DialogControl):
 
     error_format_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the entered date is not in the
+    The error message displayed below the TextField if the entered date is not in the \
     correct format.
     """
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the TextField if the date is earlier than
-    [`first_date`][(c).] or
-    later than [`last_date`][(c).].
+    The error message displayed below the TextField if the date is earlier than \
+    [`first_date`][(c).] or later than [`last_date`][(c).].
     """
 
     field_start_hint_text: Optional[str] = None
@@ -155,7 +155,7 @@ class DateRangePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconData] = None
     """
-    The name of the icon displayed in the corner of the dialog when
+    The name of the icon displayed in the corner of the dialog when \
     [`entry_mode`][(c).]
     is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
 
@@ -167,7 +167,7 @@ class DateRangePicker(DialogControl):
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The name of the icon displayed in the corner of the dialog when
+    The name of the icon displayed in the corner of the dialog when \
     [`entry_mode`][(c).]
     is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
 
@@ -179,8 +179,7 @@ class DateRangePicker(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    The color of the modal barrier that
-    darkens everything below the date picker.
+    The color of the modal barrier that darkens everything below the date picker.
 
     If `None`, the [`DialogTheme.barrier_color`][flet.DialogTheme.barrier_color]
     is used.

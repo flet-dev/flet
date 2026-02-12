@@ -27,7 +27,7 @@ class CanvasResizeEvent(Event["Canvas"]):
 @control("Canvas")
 class Canvas(LayoutControl):
     """
-    Canvas is a control for drawing arbitrary graphics using a set of primitives or
+    Canvas is a control for drawing arbitrary graphics using a set of primitives or \
     "shapes" such as line, arc, path and text.
 
     ```python

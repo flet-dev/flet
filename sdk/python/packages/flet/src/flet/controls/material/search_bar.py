@@ -23,7 +23,7 @@ __all__ = ["SearchBar"]
 @control("SearchBar")
 class SearchBar(LayoutControl):
     """
-    Manages a "search view" route that allows the user to select one of the suggested
+    Manages a "search view" route that allows the user to select one of the suggested \
     completions for a search query.
 
     ```python
@@ -54,8 +54,8 @@ class SearchBar(LayoutControl):
 
     bar_trailing: Optional[list[Control]] = None
     """
-    A list of controls to display after the text input field when
-    the search view is close.
+    A list of controls to display after the text input field when the search view is \
+    close.
 
     These controls can represent additional modes of searching (e.g voice search),
     an avatar, or an overflow menu and are usually not more than two.
@@ -63,7 +63,7 @@ class SearchBar(LayoutControl):
 
     bar_hint_text: Optional[str] = None
     """
-    Defines the text to be shown in the search bar when it is empty and the search
+    Defines the text to be shown in the search bar when it is empty and the search \
     view is close.
 
     Usually some text that suggests what sort of input the field accepts.
@@ -71,15 +71,15 @@ class SearchBar(LayoutControl):
 
     bar_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the background color of the search bar in all or specific
+    Defines the background color of the search bar in all or specific \
     [`ControlState`][flet.] states.
     """
 
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Defines the highlight color that's typically used to indicate that the
-    search bar is in [`FOCUSED`][flet.ControlState.], [`HOVERED`][flet.ControlState.],
-    or [`PRESSED`][flet.ControlState.] states.
+    Defines the highlight color that's typically used to indicate that the search bar \
+    is in [`FOCUSED`][flet.ControlState.], [`HOVERED`][flet.ControlState.], or \
+    [`PRESSED`][flet.ControlState.] states.
     """
 
     bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None
@@ -148,7 +148,7 @@ class SearchBar(LayoutControl):
 
     view_trailing: Optional[list[Control]] = None
     """
-    A list of `Control`s to display after the text input field when the search view is
+    A list of `Control`s to display after the text input field when the search view is \
     open.
 
     Defaults to a close button which closes/pops the search view.
@@ -235,7 +235,7 @@ class SearchBar(LayoutControl):
 
     full_screen: bool = False
     """
-    Defines whether the search view grows to fill the entire screen when the search
+    Defines whether the search view grows to fill the entire screen when the search \
     bar is tapped.
     """
 

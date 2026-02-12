@@ -190,7 +190,7 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
 @dataclass
 class ButtonStyle:
     """
-    Allows controlling all visual aspects of a button, such as shape, foreground,
+    Allows controlling all visual aspects of a button, such as shape, foreground, \
     background and shadow colors, content padding, border width and radius.
 
     Most of these style attributes could be configured for all or particular
@@ -210,8 +210,8 @@ class ButtonStyle:
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color that's typically used to indicate that the button is
-    focused, hovered, or pressed.
+    The highlight color that's typically used to indicate that the button is focused, \
+    hovered, or pressed.
     """
 
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
@@ -226,8 +226,7 @@ class ButtonStyle:
 
     animation_duration: Optional[DurationValue] = None
     """
-    Defines the duration in milliseconds of animated changes for shape and
-    elevation.
+    Defines the duration in milliseconds of animated changes for shape and elevation.
     """
 
     padding: Optional[ControlStateValue[PaddingValue]] = None
@@ -279,8 +278,8 @@ class ButtonStyle:
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    The cursor to be displayed when the mouse pointer enters or is hovering
-    over the button.
+    The cursor to be displayed when the mouse pointer enters or is hovering over the \
+    button.
     """
 
     def copy(

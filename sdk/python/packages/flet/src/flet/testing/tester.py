@@ -4,10 +4,9 @@ from flet.controls.base_control import control
 from flet.controls.duration import DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
+from flet.controls.transform import Offset
 from flet.controls.types import IconData
 from flet.testing.finder import Finder
-from flet.controls.transform import Offset
-
 
 __all__ = ["Tester"]
 
@@ -108,8 +107,8 @@ class Tester(Service):
 
     async def tap(self, finder: Finder):
         """
-        Dispatch a pointer down / pointer up sequence at the center
-        of the given control, assuming it is exposed.
+        Dispatch a pointer down / pointer up sequence at the center of the given \
+        control, assuming it is exposed.
 
         Args:
             finder: Finder to search for a control.
@@ -129,9 +128,8 @@ class Tester(Service):
 
     async def long_press(self, finder: Finder):
         """
-        Dispatch a pointer down / pointer up sequence (with a delay of
-        600 ms between the two events) at the center of the given control,
-        assuming it is exposed.
+        Dispatch a pointer down / pointer up sequence (with a delay of 600 ms between \
+        the two events) at the center of the given control, assuming it is exposed.
 
         Args:
             finder: Finder to search for a control.
@@ -142,9 +140,8 @@ class Tester(Service):
 
     async def enter_text(self, finder: Finder, text: str):
         """
-        Give the text input control specified by `finder` the focus and
-        replace its content with `text`, as if it had been provided by
-        the onscreen keyboard.
+        Give the text input control specified by `finder` the focus and replace its \
+        content with `text`, as if it had been provided by the onscreen keyboard.
 
         Args:
             finder: Finder to search for a control.

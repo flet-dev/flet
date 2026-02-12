@@ -123,6 +123,7 @@ from flet.controls.core.markdown import (
     MarkdownStyleSheet,
 )
 from flet.controls.core.merge_semantics import MergeSemantics
+from flet.controls.core.page_view import PageView
 from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
@@ -253,7 +254,11 @@ from flet.controls.gradients import (
 from flet.controls.icon_data import IconData
 from flet.controls.id_counter import IdCounter
 from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
-from flet.controls.layout_control import ConstrainedControl, LayoutControl
+from flet.controls.layout_control import (
+    ConstrainedControl,
+    LayoutControl,
+    LayoutSizeChangeEvent,
+)
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.material import dropdown, dropdownm2
 from flet.controls.material.alert_dialog import AlertDialog
@@ -821,6 +826,7 @@ __all__ = [
     "LabelPosition",
     "LaunchMode",
     "LayoutControl",
+    "LayoutSizeChangeEvent",
     "LinearGradient",
     "LinuxDeviceInfo",
     "ListTile",
@@ -888,6 +894,7 @@ __all__ = [
     "PageResizeEvent",
     "PageTransitionTheme",
     "PageTransitionsTheme",
+    "PageView",
     "Pagelet",
     "Paint",
     "PaintGradient",

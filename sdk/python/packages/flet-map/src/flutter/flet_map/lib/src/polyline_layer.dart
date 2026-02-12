@@ -17,6 +17,7 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
         .children("polylines")
         .where((c) => c.type == "PolylineMarker")
         .map((polyline) {
+      polyline.notifyParent = true;
       return Polyline(
           borderStrokeWidth: polyline.getDouble("border_stroke_width", 0)!,
           borderColor:

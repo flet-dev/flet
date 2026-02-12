@@ -77,7 +77,7 @@ class FilterQuality(Enum):
 
     MEDIUM = "medium"
     """
-    The best all around filtering method that is only worse than high at extremely
+    The best all around filtering method that is only worse than high at extremely \
     large scale factors.
     """
 
@@ -116,10 +116,10 @@ class BoxShadow:
 
     offset: OffsetValue = field(default_factory=lambda: Offset())
     """
-    The displacement of the shadow from the casting
-    element. Positive x/y offsets will shift the shadow to the right and down, while
-    negative offsets shift the shadow to the left and up. The offsets are relative to
-    the position of the element that is casting it.
+    The displacement of the shadow from the casting element. Positive x/y offsets will \
+    shift the shadow to the right and down, while negative offsets shift the shadow to \
+    the left and up. The offsets are relative to the position of the element that is \
+    casting it.
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
@@ -283,8 +283,7 @@ class BoxDecoration:
 
     bgcolor: Optional[ColorValue] = None
     """
-    The color to fill in the background of
-    the box.
+    The color to fill in the background of the box.
     """
 
     image: Optional[DecorationImage] = None
@@ -294,8 +293,8 @@ class BoxDecoration:
 
     border: Optional[Border] = None
     """
-    A border to draw above the background [`bgcolor`][(c).], [`gradient`][(c).],
-    and [`image`][(c).].
+    A border to draw above the background [`bgcolor`][(c).], [`gradient`][(c).], and \
+    [`image`][(c).].
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -380,26 +379,26 @@ class BoxConstraints:
 
     min_width: Number = 0
     """
-    The minimum width that satisfies the constraints, such that
-    `0.0 <= min_width <= max_width`.
+    The minimum width that satisfies the constraints, such that `0.0 <= min_width <= \
+    max_width`.
     """
 
     min_height: Number = 0
     """
-    The minimum height that satisfies the constraints, such that
-    `0.0 <= min_height <= max_height`.
+    The minimum height that satisfies the constraints, such that `0.0 <= min_height <= \
+    max_height`.
     """
 
     max_width: Number = float("inf")
     """
-    The maximum width that satisfies the constraints, such that
-    `min_width <= max_width <= float("inf")`.
+    The maximum width that satisfies the constraints, such that `min_width <= \
+    max_width <= float("inf")`.
     """
 
     max_height: Number = float("inf")
     """
-    The maximum height that satisfies the constraints, such that
-    `min_height <= max_height <= float("inf")`.
+    The maximum height that satisfies the constraints, such that `min_height <= \
+    max_height <= float("inf")`.
     """
 
     def __post_init__(self):

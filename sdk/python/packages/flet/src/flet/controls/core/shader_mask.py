@@ -47,8 +47,7 @@ class ShaderMask(LayoutControl):
 
     blend_mode: BlendMode = BlendMode.MODULATE
     """
-    The blend mode to use when applying the shader to the
-    [`content`][(c).].
+    The blend mode to use when applying the shader to the [`content`][(c).].
     """
 
     border_radius: Optional[BorderRadiusValue] = None

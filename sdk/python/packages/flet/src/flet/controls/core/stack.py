@@ -21,7 +21,7 @@ class StackFit(Enum):
 @control("Stack")
 class Stack(LayoutControl, AdaptiveControl):
     """
-    Positions its children on top of each other, following a LIFO (Last In First Out)
+    Positions its children on top of each other, following a LIFO (Last In First Out) \
     order.
 
     This control is useful if you want to overlap several children in a simple way.
@@ -75,8 +75,8 @@ class Stack(LayoutControl, AdaptiveControl):
 
     alignment: Optional[Alignment] = None
     """
-    Specifies the alignment for non-positioned (those without explicit
-    alignment properties such as [`top`][flet.LayoutControl.]
+    Specifies the alignment for non-positioned (those without explicit alignment \
+    properties such as [`top`][flet.LayoutControl.]
     or [`bottom`][flet.LayoutControl.]) and
     partially-positioned [`controls`][(c).].
     """

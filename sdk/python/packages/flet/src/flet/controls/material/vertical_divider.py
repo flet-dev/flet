@@ -17,32 +17,32 @@ class VerticalDivider(Control):
 
     ```python
     ft.Row(
-            width=120,
-            height=60,
-            expand=True,
-            spacing=0,
-            controls=[
-                ft.Container(
-                    bgcolor=ft.Colors.BLUE_GREY_200,
-                    alignment=ft.Alignment.CENTER,
-                    expand=True,
-                ),
-                ft.VerticalDivider(),
-                ft.Container(
-                    bgcolor=ft.Colors.GREY_500,
-                    alignment=ft.Alignment.CENTER,
-                    expand=True,
-                ),
-            ],
-        )
+        width=120,
+        height=60,
+        expand=True,
+        spacing=0,
+        controls=[
+            ft.Container(
+                bgcolor=ft.Colors.BLUE_GREY_200,
+                alignment=ft.Alignment.CENTER,
+                expand=True,
+            ),
+            ft.VerticalDivider(),
+            ft.Container(
+                bgcolor=ft.Colors.GREY_500,
+                alignment=ft.Alignment.CENTER,
+                expand=True,
+            ),
+        ],
+    )
     ```
 
     """
 
     width: Optional[Number] = None
     """
-    The divider's width. The divider itself is always drawn as a vertical line
-    that is centered within the width specified by this value.
+    The divider's width. The divider itself is always drawn as a vertical line that is \
+    centered within the width specified by this value.
 
     If `None`, [`DividerTheme.space`][flet.] is used.
     If that's is also `None`, defaults to `16.0`.
@@ -68,8 +68,7 @@ class VerticalDivider(Control):
 
     color: Optional[ColorValue] = None
     """
-    The color to use when painting the
-    line.
+    The color to use when painting the line.
 
     If `None`, [`DividerTheme.color`][flet.] is used.
     """
