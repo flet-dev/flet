@@ -6,14 +6,14 @@ def main(page: ft.Page):
 
     async def show_previous_page(e: ft.Event[ft.FloatingActionButton]):
         await view.previous_page(
-            animation_curve=ft.AnimationCurve.BOUNCE_IN_OUT,
-            animation_duration=ft.Duration(seconds=3),
+            animation_curve=ft.AnimationCurve.BOUNCE_OUT,
+            animation_duration=ft.Duration(seconds=1),
         )
 
     async def show_next_page(e: ft.Event[ft.FloatingActionButton]):
         await view.next_page(
-            animation_curve=ft.AnimationCurve.BOUNCE_IN_OUT,
-            animation_duration=ft.Duration(seconds=3),
+            animation_curve=ft.AnimationCurve.BOUNCE_OUT,
+            animation_duration=ft.Duration(seconds=1),
         )
 
     page.floating_action_button = ft.Row(
