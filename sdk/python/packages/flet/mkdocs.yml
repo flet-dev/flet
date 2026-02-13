@@ -309,6 +309,7 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
+          - CodeEditor: code_editor/index.md
           - Color pickers:
               - colorpickers/index.md
               - ColorPicker: colorpickers/colorpicker.md
@@ -459,7 +460,6 @@ nav:
           - Text: controls/text.md
           - TextButton: controls/textbutton.md
           - TextField: controls/textfield.md
-          - CodeEditor: code_editor/index.md
           - TimePicker: controls/timepicker.md
           - TransparentPointer: controls/transparentpointer.md
           - VerticalDivider: controls/verticaldivider.md
