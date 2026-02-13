@@ -1,5 +1,9 @@
 /* Material Symbols font with selected icons */
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=account_tree,bolt,build,category,deployed_code");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Round");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Sharp");
 
 /* Hide the original label text */
 code.doc-symbol { font-size: 0; }
@@ -87,4 +91,38 @@ code.doc-symbol-command::after {
 
 /* Command symbol */
 
+/* Icon previews */
+.flet-icon-preview {
+  align-items: center;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.45rem;
+  display: inline-flex;
+  font-size: 1.45rem;
+  justify-content: center;
+  line-height: 1;
+  margin: 0.1rem 0 0.9rem;
+  min-height: 2.2rem;
+  min-width: 2.2rem;
+  padding: 0.3rem;
+}
 
+.flet-icon-preview-material {
+  font-family: "Material Icons";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-outlined {
+  font-family: "Material Icons Outlined";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-rounded {
+  font-family: "Material Icons Round";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-sharp {
+  font-family: "Material Icons Sharp";
+  font-feature-settings: "liga";
+}
+/* Icon previews */

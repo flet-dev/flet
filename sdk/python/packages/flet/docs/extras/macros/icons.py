@@ -2,17 +2,27 @@ import json
 from pathlib import Path
 
 
+def _material_ligature_and_class(name: str) -> tuple[str, str]:
+    if name.endswith("_OUTLINED"):
+        return name[: -len("_OUTLINED")].lower(), "flet-icon-preview-material-outlined"
+    if name.endswith("_ROUNDED"):
+        return name[: -len("_ROUNDED")].lower(), "flet-icon-preview-material-rounded"
+    if name.endswith("_SHARP"):
+        return name[: -len("_SHARP")].lower(), "flet-icon-preview-material-sharp"
+    return name.lower(), "flet-icon-preview-material"
+
+
 def render_icon_members(icon_set: str = "material") -> str:
     controls_dir = Path(__file__).resolve().parents[3] / "src" / "flet" / "controls"
 
     if icon_set == "material":
         json_path = controls_dir / "material" / "icons.json"
-        symbol = "ft.Icons"
         xref_prefix = "flet.Icons"
+        render_preview = True
     elif icon_set == "cupertino":
         json_path = controls_dir / "cupertino" / "cupertino_icons.json"
-        symbol = "ft.CupertinoIcons"
         xref_prefix = "flet.CupertinoIcons"
+        render_preview = False
     else:
         raise ValueError("icon_set must be either 'material' or 'cupertino'")
 
@@ -22,11 +32,25 @@ def render_icon_members(icon_set: str = "material") -> str:
     lines = [
         f'<a id="{xref_prefix}"></a>',
     ]
+    if not render_preview:
+        lines.extend(
+            [
+                "Cupertino icon previews are not rendered here because Flet icon",
+                "values are packed IDs rather than direct font codepoints.",
+                "",
+            ]
+        )
 
     for name in names:
         value = icon_map[name]
         lines.append(f'<a id="{xref_prefix}.{name}"></a>')
-        lines.append(f"### `{symbol}.{name} = {value}`")
+        lines.append(f"### `{name} = {value}`")
+        if render_preview:
+            ligature, preview_class = _material_ligature_and_class(name)
+            lines.append(
+                f'<span class="flet-icon-preview {preview_class}" '
+                f'title="{name}">{ligature}</span>'
+            )
         lines.append("")
 
     return "\n".join(lines)
