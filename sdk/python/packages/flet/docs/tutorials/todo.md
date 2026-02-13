@@ -231,6 +231,8 @@ Run the app and try filtering tasks by clicking on the tabs:
 
 {{ image("../examples/tutorials/todo/media/filtering.gif", alt="filtering", width="80%") }}
 
+## Final touches
+
 Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control) displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
 
 /// details | Full code
