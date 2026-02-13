@@ -20,7 +20,7 @@
           <b><code><autoref identifier="{{ obj.path }}.{{ attribute.name }}" optional hover>{{ attribute.name }}</autoref></code></b>
           {%- if attribute.annotation %}
             {%- with expression = attribute.annotation -%}
-              (<code>{% include "expression"|get_template with context %}</code>)
+              (<code>{% include "expression.html.jinja" with context %}</code>)
             {%- endwith %}
           {%- endif %}
           –
