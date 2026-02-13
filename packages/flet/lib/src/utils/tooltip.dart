@@ -1,5 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 import 'box.dart';
@@ -12,10 +12,7 @@ import 'time.dart';
 
 TooltipTriggerMode? parseTooltipTriggerMode(String? value,
     [TooltipTriggerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TooltipTriggerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TooltipTriggerMode.values, value, defaultValue);
 }
 
 Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
@@ -23,7 +20,7 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
     return null;
   } else if (value is String) {
     return Tooltip(
-      message: value,
+        message: value,
         waitDuration: const Duration(milliseconds: 800),
         child: widget);
   }
@@ -33,13 +30,13 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
   var defaultDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(4.0),
-    color: parseColor(
-        value["bgcolor"],
-        theme,
-        theme.brightness == Brightness.light
-            ? Colors.grey[700]
-            : Colors.white));
+      borderRadius: BorderRadius.circular(4.0),
+      color: parseColor(
+          value["bgcolor"],
+          theme,
+          theme.brightness == Brightness.light
+              ? Colors.grey[700]
+              : Colors.white));
   var decoration = parseBoxDecoration(value["decoration"], context);
   var finalDecoration = defaultDecoration.copyWith(
     color: decoration?.color,

@@ -1,6 +1,6 @@
 ---
-name: flet-docstring-cross-refs
-description: Apply mkdocstrings-python-xref cross-reference conventions in Python docstrings for SDK Python API docs. Use when adding or editing docstrings under sdk/python/packages/*/src, fixing broken cross-links, or reviewing Python docstring links that should resolve through mkdocs python_xref.
+name: docs-cross-refs
+description: Documentation cross-reference conventions. Use when adding or editing docstrings under sdk/python/packages, fixing broken cross-links, or reviewing Python docstring links that should resolve through mkdocs python_xref.
 ---
 
 ## Instructions
@@ -8,18 +8,18 @@ description: Apply mkdocstrings-python-xref cross-reference conventions in Pytho
 Use these rules when writing or fixing cross-references in Python docstrings for SDK Python package docs.
 
 1. Confirm scope and context
-- Apply this skill to Python docstrings used by MkDocs in `sdk/python/packages/*/src`.
+- Apply this skill to Python docstrings used by MkDocs in `sdk/python/packages`.
 - Prefer cross-references to plain code formatting when referring to documented symbols.
-- Apply these relative cross-reference rules only in Python docstrings. Markdown files (for example cookbook docs) must use full explicit paths.
+- Apply these relative cross-reference rules only in Python docstrings. Markdown files must always use full explicit paths, for example, [`Page`][flet.Page].
 
 2. Use python_xref target forms
-- Use fully qualified targets when needed: [`Page`][flet.Page], [`dataclass`][dataclasses.dataclass].
+- Use fully qualified targets when needed (usually, only in Markdown files): [`Page`][flet.Page], [`dataclass`][dataclasses.dataclass].
 - Use module-short targets when symbol is in that module: [`Page`][flet.], [`Tester`][flet.testing.], [`Arc`][flet.canvas.].
 - Prefer `(c)` forms for same-class references: [`value`][(c).], [`that_method`][(c).that_method].
 - `..` forms are valid and may be used, but are secondary: [`value`][..], [`that_method`][..].
 - Use class/module/package shorthands for explicit targets: [`MyClass`][(c)], [`that_method`][(c).that_method], [`this module`][(m)], [`this package`][(p)].
 - Use parent-scope shorthand when referencing a parent symbol: [`Color`][(p).color.].
-- Use `^` forms only when they stay readable: [`MyClass`][^], [`some_func`][^^.].
+- `^` forms are supported but not recommended: [`MyClass`][^], [`some_func`][^^.].
 - Remember: if a target ends with `.`, the link title is appended to form the final path.
 
 3. Keep link text and punctuation consistent
@@ -30,7 +30,7 @@ Use these rules when writing or fixing cross-references in Python docstrings for
 - Use `[(c).member]` when label has extra characters (for example `()`).
 - If link-checking reports a known false-positive stdlib target, prefix the target with `?`, for example [`Path`][?pathlib.].
 
-4. Prefer local shorthand where it improves maintainability
+4. Prefer local shorthand
 - Prefer [`Foo`][(c).] for same-class references instead of hardcoding full paths.
 - Use [`Foo`][(c)] and [`bar`][(c).bar] when label and target differ or class-level clarity is needed.
 - `[..]` is acceptable when it improves readability in local context.

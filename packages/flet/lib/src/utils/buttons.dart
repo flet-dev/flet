@@ -1,6 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 import 'alignment.dart';
@@ -144,10 +144,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
 CupertinoButtonSize? parseCupertinoButtonSize(String? value,
     [CupertinoButtonSize? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoButtonSize.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CupertinoButtonSize.values, value, defaultValue);
 }
 
 extension ButtonParsers on Control {

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:typed_data';
 import 'dart:ui';
+import 'enums.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -22,24 +22,15 @@ import 'numbers.dart';
 export "images_web.dart" if (dart.library.io) 'images_io.dart';
 
 ImageRepeat? parseImageRepeat(String? value, [ImageRepeat? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ImageRepeat.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ImageRepeat.values, value, defaultValue);
 }
 
 BlendMode? parseBlendMode(String? value, [BlendMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return BlendMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(BlendMode.values, value, defaultValue);
 }
 
 BoxFit? parseBoxFit(String? value, [BoxFit? defaultValue]) {
-  if (value == null) return defaultValue;
-  return BoxFit.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(BoxFit.values, value, defaultValue);
 }
 
 ImageFilter? parseBlur(dynamic value, [ImageFilter? defaultValue]) {
@@ -72,10 +63,7 @@ ColorFilter? parseColorFilter(dynamic value, ThemeData theme,
 
 FilterQuality? parseFilterQuality(String? value,
     [FilterQuality? defaultValue]) {
-  if (value == null) return defaultValue;
-  return FilterQuality.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(FilterQuality.values, value, defaultValue);
 }
 
 /// Returns a Flutter [ImageProvider]

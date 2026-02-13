@@ -1,6 +1,6 @@
 import 'dart:math';
+import 'enums.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -97,47 +97,29 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
 }
 
 TextAlign? parseTextAlign(String? value, [TextAlign? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextAlign.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextAlign.values, value, defaultValue);
 }
 
 TextOverflow? parseTextOverflow(String? value, [TextOverflow? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextOverflow.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextOverflow.values, value, defaultValue);
 }
 
 TextDecorationStyle? parseTextDecorationStyle(String? value,
     [TextDecorationStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextDecorationStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextDecorationStyle.values, value, defaultValue);
 }
 
 TextCapitalization? parseTextCapitalization(String? value,
     [TextCapitalization? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextCapitalization.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextCapitalization.values, value, defaultValue);
 }
 
 TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextBaseline.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextBaseline.values, value, defaultValue);
 }
 
 TextAffinity? parseTextAffinity(String? value, [TextAffinity? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextAffinity.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextAffinity.values, value, defaultValue);
 }
 
 List<FontVariation>? parseFontVariations(dynamic fontWeight,

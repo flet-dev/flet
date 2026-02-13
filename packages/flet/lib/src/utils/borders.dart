@@ -1,6 +1,6 @@
 import 'dart:collection';
+import 'enums.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -30,10 +30,7 @@ Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
 }
 
 BorderStyle? parseBorderStyle(String? value, [BorderStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return BorderStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(BorderStyle.values, value, defaultValue);
 }
 
 Border? parseBorder(dynamic value, ThemeData? theme,

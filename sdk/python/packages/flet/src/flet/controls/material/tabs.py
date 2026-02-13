@@ -105,6 +105,15 @@ class TabBarIndicatorSize(Enum):
 
 @dataclass
 class TabBarHoverEvent(Event["TabBar"]):
+    """
+    Represents a hover-state change for a tab in a [`TabBar`][flet.].
+
+    This event is emitted by [`TabBar.on_hover`][flet.TabBar.on_hover] when a pointer
+    enters or exits a tab item. When moving directly from one tab to another, the
+    handler is typically called twice: first with [`hovering`][(c).] set to `False`
+    for the previous tab, then with [`hovering`][(c).] set to `True` for the next tab.
+    """
+
     hovering: bool
     """
     Whether a pointer has entered (`True`) or exited (`False`) the tab bar at \

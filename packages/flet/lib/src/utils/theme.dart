@@ -1,7 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'enums.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
@@ -76,17 +76,11 @@ CupertinoThemeData fixCupertinoTheme(
 }
 
 Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Brightness.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(Brightness.values, value, defaultValue);
 }
 
 ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ThemeMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ThemeMode.values, value, defaultValue);
 }
 
 ThemeData parseTheme(

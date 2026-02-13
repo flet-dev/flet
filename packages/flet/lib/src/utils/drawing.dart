@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'enums.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -30,10 +30,7 @@ Paint? parsePaint(dynamic value, ThemeData theme, [Paint? defaultValue]) {
 
 PaintingStyle? parsePaintingStyle(String? value,
     [PaintingStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return PaintingStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(PaintingStyle.values, value, defaultValue);
 }
 
 List<double>? parsePaintStrokeDashPattern(dynamic value,
