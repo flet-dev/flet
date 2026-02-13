@@ -19,10 +19,16 @@ def render_icon_members(icon_set: str = "material") -> str:
         json_path = controls_dir / "material" / "icons.json"
         xref_prefix = "flet.Icons"
         render_preview = True
+        codepoint_map = {}
     elif icon_set == "cupertino":
         json_path = controls_dir / "cupertino" / "cupertino_icons.json"
+        codepoint_json_path = (
+            controls_dir / "cupertino" / "cupertino_icons_codepoints.json"
+        )
         xref_prefix = "flet.CupertinoIcons"
-        render_preview = False
+        render_preview = True
+        # Flet stores packed icon IDs; docs previews need real Cupertino font codepoints
+        codepoint_map = json.loads(codepoint_json_path.read_text(encoding="utf-8"))
     else:
         raise ValueError("icon_set must be either 'material' or 'cupertino'")
 
@@ -32,25 +38,30 @@ def render_icon_members(icon_set: str = "material") -> str:
     lines = [
         f'<a id="{xref_prefix}"></a>',
     ]
-    if not render_preview:
-        lines.extend(
-            [
-                "Cupertino icon previews are not rendered here because Flet icon",
-                "values are packed IDs rather than direct font codepoints.",
-                "",
-            ]
-        )
 
     for name in names:
         value = icon_map[name]
         lines.append(f'<a id="{xref_prefix}.{name}"></a>')
         lines.append(f"### `{name} = {value}`")
         if render_preview:
-            ligature, preview_class = _material_ligature_and_class(name)
-            lines.append(
-                f'<span class="flet-icon-preview {preview_class}" '
-                f'title="{name}">{ligature}</span>'
-            )
+            if icon_set == "material":
+                ligature, preview_class = _material_ligature_and_class(name)
+                lines.append(
+                    f'<span class="flet-icon-preview {preview_class}" '
+                    f'title="{name}">{ligature}</span>'
+                )
+            else:
+                codepoint = codepoint_map.get(name)
+                if codepoint is None:
+                    lines.append(
+                        '<span class="flet-icon-preview-missing">'
+                        "preview unavailable</span>"
+                    )
+                else:
+                    lines.append(
+                        f'<span class="flet-icon-preview flet-icon-preview-cupertino" '
+                        f'title="{name}">{chr(codepoint)}</span>'
+                    )
         lines.append("")
 
     return "\n".join(lines)

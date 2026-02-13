@@ -5,6 +5,12 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Round");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Sharp");
 
+@font-face {
+  font-family: "CupertinoIcons";
+  src: url("../fonts/CupertinoIcons.ttf") format("truetype");
+  font-display: swap;
+}
+
 /* Hide the original label text */
 code.doc-symbol { font-size: 0; }
 
@@ -124,5 +130,16 @@ code.doc-symbol-command::after {
 .flet-icon-preview-material-sharp {
   font-family: "Material Icons Sharp";
   font-feature-settings: "liga";
+}
+
+.flet-icon-preview-cupertino {
+  font-family: "CupertinoIcons";
+}
+
+.flet-icon-preview-missing {
+  color: var(--md-default-fg-color--light);
+  display: inline-block;
+  font-size: 0.85rem;
+  margin: 0.1rem 0 0.9rem;
 }
 /* Icon previews */
