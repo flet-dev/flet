@@ -66,7 +66,7 @@ class View(ScrollableControl, LayoutControl):
     ///
     """
 
-    route: Optional[str] = field(default_factory=lambda: "/")
+    route: str = field(default_factory=lambda: "/")
     """
     View's route - not currently used by Flet framework, but can be used in a user \
     program to update [`Page.route`][flet.Page.route] when a view popped.
