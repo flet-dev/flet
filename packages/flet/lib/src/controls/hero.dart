@@ -11,6 +11,23 @@ class HeroControl extends StatelessWidget {
 
   const HeroControl({super.key, required this.control});
 
+  Widget _buildFlightShuttle(
+    BuildContext flightContext,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    final toHero = toHeroContext.widget as Hero;
+    return Material(
+      type: MaterialType.transparency,
+      child: DefaultTextStyle(
+        style: DefaultTextStyle.of(toHeroContext).style,
+        child: toHero.child,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Hero build: ${control.id}");
@@ -29,8 +46,11 @@ class HeroControl extends StatelessWidget {
       control: control,
       child: Hero(
         tag: tag,
-        transitionOnUserGestures:
-            control.getBool("transition_on_user_gestures", false)!,
+        flightShuttleBuilder: _buildFlightShuttle,
+        transitionOnUserGestures: control.getBool(
+          "transition_on_user_gestures",
+          false,
+        )!,
         child: content,
       ),
     );
