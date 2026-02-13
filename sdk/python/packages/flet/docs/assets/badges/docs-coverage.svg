@@ -14,7 +14,7 @@
     <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="110">
         <text x="505" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="890">docstr-coverage</text>
         <text x="505" y="140" transform="scale(.1)" textLength="890">docstr-coverage</text>
-        <text x="1195" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">42%</text>
-        <text x="1195" y="140" transform="scale(.1)">42%</text>
+        <text x="1195" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">55%</text>
+        <text x="1195" y="140" transform="scale(.1)">55%</text>
     </g>
 </svg>

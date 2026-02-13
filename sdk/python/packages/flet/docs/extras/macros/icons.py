@@ -41,8 +41,8 @@ def render_icon_members(icon_set: str = "material") -> str:
 
     for name in names:
         value = icon_map[name]
-        lines.append(f'<a id="{xref_prefix}.{name}"></a>')
-        lines.append(f"### `{name} = {value}`")
+        heading_id = f"{xref_prefix}.{name}"
+        lines.append(f"### `{name} = {value}` {{ #{heading_id} }}")
         if render_preview:
             if icon_set == "material":
                 ligature, preview_class = _material_ligature_and_class(name)
