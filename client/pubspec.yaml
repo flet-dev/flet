@@ -55,6 +55,9 @@ dependencies:
   flet_charts:
     path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
 
+  flet_color_pickers:
+    path: ../sdk/python/packages/flet-color-pickers/src/flutter/flet_color_pickers
+
   flet_datatable2:
     path: ../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2
 
