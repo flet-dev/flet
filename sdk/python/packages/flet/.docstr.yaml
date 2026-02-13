@@ -7,4 +7,6 @@ skip_private: False
 ignore_patterns: # Dict with key/value pairs of file-pattern/node-pattern
   .*:
     - before_update  # Ignore framework lifecycle hook in all files
+    - init           # Ignore init hook in all classes; documented on BaseControl
+    - _migrate_state # Ignore state migration hook in all classes; documented on BaseControl
 fail_under: 40

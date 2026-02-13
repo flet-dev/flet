@@ -143,6 +143,13 @@ class BaseControl:
     """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
+        """
+        Finalize control bootstrap after dataclass initialization.
+
+        Assigns an internal id, validates `@control` metadata, attaches `ref`
+        when provided, and then calls `init()`. Override `init()` for setup
+        logic; avoid overriding this method in normal controls.
+        """
         self.__class__.__hash__ = BaseControl.__hash__
         self._i = ControlId.next()
         if not hasattr(self, "_c") or self._c is None:
@@ -169,6 +176,9 @@ class BaseControl:
         # )
 
     def __hash__(self) -> int:
+        """
+        Preserve object-identity hashing for mutable dataclass controls.
+        """
         return object.__hash__(self)
 
     @property
@@ -194,7 +204,7 @@ class BaseControl:
 
         parent = self
         while parent:
-            if isinstance(parent, (Page)):
+            if isinstance(parent, Page):
                 return parent
             parent = parent.parent
         raise RuntimeError(
@@ -203,9 +213,22 @@ class BaseControl:
         )
 
     def is_isolated(self):
+        """
+        Return whether this control is marked as isolated.
+
+        Isolated controls are excluded from parent-driven update traversal and
+        are expected to manage their own update boundaries.
+        """
         return hasattr(self, "_isolated") and self._isolated
 
     def init(self):
+        """
+        Called after control instance initialization and before \
+        the first build / update cycle.
+
+        Override this hook to perform lightweight setup that depends on initialized
+        fields. Do not call `update()` here.
+        """
         pass
 
     def build(self):
@@ -219,13 +242,18 @@ class BaseControl:
         """
         This method is called every time when this control is being updated.
 
-        /// details | Note
-        Make sure not to call/request an `update()` here.
-        ///
+        Note:
+            Make sure not to call/request an `update()` here.
         """
         pass
 
     def _before_update_safe(self):
+        """
+        Run `before_update()` while preserving the frozen marker.
+
+        Internal runtime helper. It temporarily removes `_frozen` so the hook
+        can adjust properties and then restores the previous frozen state.
+        """
         frozen = getattr(self, "_frozen", None)
         if frozen is not None:
             del self._frozen
@@ -236,18 +264,42 @@ class BaseControl:
             self._frozen = frozen
 
     def before_event(self, e: ControlEvent):
+        """
+        Intercept an event before its handler is executed.
+
+        Return `False` to cancel dispatch. Return `True` or `None` to continue
+        normal event processing.
+        """
         return True
 
     def did_mount(self):
+        """
+        Called after the control is mounted into the page tree.
+
+        Override to start resources that require an attached page, for example
+        subscriptions, timers, or service listeners.
+        """
         controls_log.debug(f"{self}.did_mount()")
         pass
 
     def will_unmount(self):
+        """
+        Called before the control is removed from the page tree.
+
+        Override to dispose resources created in `did_mount()`, such as
+        subscriptions, timers, or external handles.
+        """
         controls_log.debug(f"{self}.will_unmount()")
         pass
 
     # public methods
     def update(self) -> None:
+        """
+        Request a UI update for this control.
+
+        Call after changing control state or properties. The control must be
+        attached to a page and not marked as frozen.
+        """
         if hasattr(self, "_frozen"):
             raise RuntimeError("Frozen control cannot be updated.")
         if not self.page:
@@ -262,6 +314,12 @@ class BaseControl:
         arguments: Optional[dict[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
+        """
+        Invoke a runtime method for this control via the active session.
+
+        Internal async bridge used by controls and services for imperative
+        method calls on the backend/runtime side.
+        """
         if not self.page:
             raise RuntimeError(
                 f"{self.__class__.__qualname__} Control must be added to the page first"
@@ -274,6 +332,12 @@ class BaseControl:
     async def _trigger_event(
         self, event_name: str, event_data: Any, e: Optional[ControlEvent] = None
     ):
+        """
+        Resolve and dispatch an event to the matching `on_<event>` handler.
+
+        Internal helper that builds event objects, calls `before_event()`,
+        executes sync/async handlers, and notifies session progress.
+        """
         field_name = f"on_{event_name}"
         if not hasattr(self, field_name):
             # field_name not defined
@@ -346,6 +410,13 @@ class BaseControl:
             await session.after_event(session.index.get(self._i))
 
     def _migrate_state(self, other: "BaseControl"):
+        """
+        Transfer transient runtime state from a previous control instance.
+
+        This hook is used by reconciliation when replacing controls with newer
+        instances of the same logical node. Override to copy extra runtime
+        fields, and always call ``super()._migrate_state(other)`` first.
+        """
         if not isinstance(other, BaseControl):
             return
         self._i = other._i
@@ -353,4 +424,7 @@ class BaseControl:
             self.data = other.data
 
     def __str__(self):
+        """
+        Return a debug-friendly control identifier string.
+        """
         return f"{self._c}({self._i} - {id(self)})"

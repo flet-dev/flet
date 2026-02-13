@@ -169,4 +169,5 @@ class CupertinoButton(LayoutControl):
             )
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")
