@@ -2,21 +2,32 @@
 title: Fly.io
 ---
 
-[Fly.io](https://fly.io) has robust WebSocket support and can deploy your app to a [data center](https://fly.io/docs/reference/regions/) that is close to your users. They have very attractive pricing with a [generous free tier](https://fly.io/docs/about/pricing/#free-allowances) which allows you to host up to 3 applications for free.
+[Fly.io](https://fly.io) works well for Flet apps: it supports WebSockets, deploys close to users via multiple [regions](https://fly.io/docs/reference/regions/), and has a [free tier](https://fly.io/docs/about/pricing/#free-allowances) suitable for small projects.
 
-To get started with Fly install [flyctl](https://fly.io/docs/getting-started/installing-flyctl/) and then authenticate:
+## Prerequisites
 
-    fly auth login
+1. Install [flyctl](https://fly.io/docs/getting-started/installing-flyctl/).
+2. Authenticate:
 
-To deploy the app with `flyctl` you have to add the following 3 files into the folder with your Python app.
+```bash
+fly auth login
+```
 
-Create `requirements.txt` with a list of application dependencies. At minimum it should contain `flet` module:
+## Project files
+
+Place the following files in your app directory.
+
+### `requirements.txt`
+
+At minimum:
 
 ```txt title="requirements.txt"
 flet
 ```
 
-Create `fly.toml` describing Fly application:
+### `fly.toml`
+
+Fly app configuration:
 
 ```toml title="fly.toml"
 app = "<your-app-name>"
@@ -41,15 +52,16 @@ processes = []
     hard_limit = 250
 ```
 
-Replace `<your-app-name>` with desired application name which will be also used in application URL, such as `https://<your-app-name>.fly.dev`.
+- Replace `<your-app-name>` with the app name you want. It will also be used in the final
+    URL of your app, in the form, `https://<your-app-name>.fly.dev`.
+- `internal_port` must correspond to the [`FLET_SERVER_PORT`](../../../../reference/environment-variables.md#flet_server_port), which is `8000` by default.
+- [`FLET_SESSION_TIMEOUT`](../../../../reference/environment-variables.md#flet_session_timeout) controls session lifetime (seconds).
+- For other variables, see [environment variables reference](../../../../reference/environment-variables.md).
 
-By default, Flet web app will be running on port `8000`, but you can change that by setting up `FLET_SERVER_PORT` environment variable.
+### `Dockerfile`
 
-`FLET_SESSION_TIMEOUT` is a user session lifetime, in seconds.
-
-[Complete list of environment variables](../../../../publish/web/dynamic-website/index.md#environment-variables) supported by a web app.
-
-Create `Dockerfile` containing the commands to build your application container:
+Create a `Dockerfile` containing the commands to build your application container,
+for example:
 
 ```Dockerfile title="Dockerfile"
 FROM python:3-alpine
@@ -66,26 +78,29 @@ EXPOSE 8000
 CMD ["python", "main.py"]
 ```
 
-`main.py` is a file with your Python program.
+`main.py` is the app's [entry point](../../../index.md#entry-point). If your file name differs, update accordingly.
 
-::note
-Fly.io deploys every app as a Docker container, but a great thing about Fly is that it provides a free remote Docker builder, so you don't need Docker installed on your machine.
-::
+/// admonition | Info
+    type: info
+Fly.io deploys apps as Docker containers and provides a free remote Docker builder,
+so you don’t need Docker installed locally.
+///
 
-Next, switch command line to a folder with your app and run the following command to create and initialize a new Fly app:
+## Deploy
 
-```
-fly apps create --name <your-app-name>
-```
+From your app directory:
 
-Deploy the app by running:
+1. Create the Fly app:
+    ```bash
+    fly apps create --name <your-app-name>
+    ```
 
-```
-fly deploy
-```
+2. Deploy:
+    ```bash
+    fly deploy
+    ```
 
-That's it! Open your app in the browser by running:
-
-```
-fly apps open
-```
+3. Open app in browser:
+    ```bash
+    fly apps open
+    ```
