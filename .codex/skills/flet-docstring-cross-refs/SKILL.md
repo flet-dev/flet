@@ -24,6 +24,7 @@ Use these rules when writing or fixing cross-references in Python docstrings for
 
 3. Keep link text and punctuation consistent
 - Wrap the label in backticks for API symbols: [`Control`][flet.].
+- Use single backticks for inline code and symbol names; never double-wrap inline code (for example, use `x`, not ``x``).
 - Keep punctuation outside the link target unless it is part of the label text.
 - Keep method call parentheses in the label when referring to calls: [`pick_files()`][(c).pick_files].
 - Use `[(c).member]` when label has extra characters (for example `()`).

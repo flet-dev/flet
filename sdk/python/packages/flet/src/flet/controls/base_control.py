@@ -123,8 +123,20 @@ def _apply_control(
 
 @dataclass(kw_only=True)
 class BaseControl:
+    """
+    Base class for all Flet controls and services.
+    """
+
     _i: int = field(init=False, compare=False)
+    """
+    Runtime-generated internal control id used by the session protocol.
+    """
+
     _c: str = field(init=False)
+    """
+    Dart-side control type name set by the `@control` decorator.
+    """
+
     data: Any = skip_field()
     """
     Arbitrary data of any type.
@@ -234,7 +246,7 @@ class BaseControl:
     def build(self):
         """
         Called once during control initialization to define its child controls.
-        self.page is available in this method.
+        `page` property is available/usable in this method.
         """
         pass
 
@@ -415,7 +427,7 @@ class BaseControl:
 
         This hook is used by reconciliation when replacing controls with newer
         instances of the same logical node. Override to copy extra runtime
-        fields, and always call ``super()._migrate_state(other)`` first.
+        fields, and always call `super()._migrate_state(other)` first.
         """
         if not isinstance(other, BaseControl):
             return

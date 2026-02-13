@@ -36,6 +36,12 @@ __all__ = [
 
 
 def get_event_field_type(control: Any, field_name: str):
+    """
+    Resolve the concrete event payload type for an event-handler field.
+
+    Inspects merged annotations across the control MRO and evaluates forward
+    references so runtime event objects can be created with the right type.
+    """
     frame = inspect.currentframe().f_back
     localns = frame.f_globals.copy()
     localns.update(frame.f_locals)
@@ -101,18 +107,28 @@ EventControlType = TypeVar("EventControlType", bound=_BaseControlType)
 
 @dataclass
 class Event(Generic[EventControlType]):
+    """
+    Base event payload passed to control event handlers.
+    """
+
     name: str
     data: Optional[Any] = field(default=None, kw_only=True)
     control: EventControlType = field(repr=False)
 
     @property
     def page(self) -> Union["Page", "BasePage"]:
+        """
+        Page that owns the event source control.
+        """
         if not self.control.page:
             raise RuntimeError("event control is not attached to a page")
         return self.control.page
 
     @property
     def target(self) -> int:
+        """
+        Internal id of the control that emitted this event.
+        """
         return self.control._i
 
 

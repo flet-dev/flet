@@ -72,20 +72,38 @@ class QueryString(UrlComponents):
         self.url = None
 
     def get(self, key: str) -> str:
+        """
+        Return the query parameter value for `key` from the current URL.
+
+        Raises:
+            KeyError: If `key` does not exist in the parsed query parameters.
+        """
         self._data = self.to_dict
         return self._data[key]
 
     def post(self, kwargs: dict):
+        """
+        Build an encoded querystring from key-value pairs.
+
+        Returns:
+            A querystring that starts with `?` and is ready to append to a URL.
+        """
         return "?" + urllib.parse.urlencode(kwargs)
 
     @property
     def to_dict(self) -> dict:
+        """
+        Parse the current URL query component into a dictionary.
+        """
         self._data = urllib.parse.urlparse(self.url).query
         return dict(urllib.parse.parse_qsl(self._data))
 
     # Path
     @property
     def path(self):
+        """
+        Return the URL path, normalizing hash-style routes when present.
+        """
         self._updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
         return urllib.parse.urlparse(self._updated_url).path
 

@@ -76,6 +76,10 @@ class UrlTarget(Enum):
 
 @dataclass
 class Url:
+    """
+    URL descriptor used by APIs that open links in a browser context.
+    """
+
     url: str
     """
     The url to open.
@@ -1241,4 +1245,8 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
+    """
+    Structural protocol for objects that provide a string representation.
+    """
+
     def __str__(self) -> str: ...
