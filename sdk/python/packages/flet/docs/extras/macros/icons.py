@@ -16,15 +16,17 @@ def render_icon_members(icon_set: str = "material") -> str:
     else:
         raise ValueError("icon_set must be either 'material' or 'cupertino'")
 
-    names = sorted(json.loads(json_path.read_text(encoding="utf-8")).keys())[:100]
+    icon_map = json.loads(json_path.read_text(encoding="utf-8"))
+    names = sorted(icon_map.keys())
 
     lines = [
         f'<a id="{xref_prefix}"></a>',
     ]
 
     for name in names:
+        value = icon_map[name]
         lines.append(f'<a id="{xref_prefix}.{name}"></a>')
-        lines.append(f"### `{symbol}.{name}`")
+        lines.append(f"### `{symbol}.{name} = {value}`")
         lines.append("")
 
     return "\n".join(lines)
