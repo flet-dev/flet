@@ -304,6 +304,7 @@ nav:
               - CandlestickChart: charts/candlestickchart.md
               - LineChart: charts/linechart.md
               - MatplotlibChart: charts/matplotlibchart.md
+              - MatplotlibChartWithToolbar: charts/matplotlibchartwithtoolbar.md
               - PieChart: charts/piechart.md
               - PlotlyChart: charts/plotlychart.md
               - RadarChart: charts/radarchart.md

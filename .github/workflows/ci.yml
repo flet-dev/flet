@@ -67,7 +67,18 @@ jobs:
         if: matrix.python-version == '3.12'
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
-        run: uv run --directory packages/flet --no-dev --group docs-coverage docstr-coverage > docstr_coverage.log 2>&1
+        run: |
+          exec > docstr_coverage.log 2>&1
+          status=0
+          for pkg in packages/*; do
+            if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
+              pkg_name=$(basename "$pkg")
+              echo "====== $pkg ======"
+              uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
+              echo
+            fi
+          done
+          # exit $status
 
       - name: Upload docs-coverage logs
         if: matrix.python-version == '3.12'

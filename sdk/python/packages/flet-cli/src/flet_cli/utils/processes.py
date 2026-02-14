@@ -9,6 +9,30 @@ if is_windows():
 
 
 def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
+    """
+    Execute a subprocess command with optional streamed logging.
+
+    On Windows, the console output code page is temporarily switched to UTF-8
+    while the command runs, then restored.
+
+    Args:
+        args: Command and arguments passed to the subprocess.
+        cwd: Working directory for the command.
+        env: Extra environment variables merged into the current process env.
+        capture_output: If `True`, run with [`subprocess.run`][subprocess.run] and
+            capture output in memory. If `False`, stream combined output line by line.
+        log: Optional callback receiving each output line when `capture_output=False`.
+
+    Returns:
+        A completed [`subprocess.CompletedProcess`][subprocess.CompletedProcess]
+            when `capture_output=True`, otherwise a finished
+            [`subprocess.Popen`][subprocess.Popen] instance.
+
+    Raises:
+        KeyboardInterrupt: Re-raised after terminating the child process when
+            interactive streaming is interrupted.
+    """
+
     if is_windows():
         # Source: https://stackoverflow.com/a/77374899/1435891
         # Save the current console output code page and switch to 65001 (UTF-8)
