@@ -75,18 +75,23 @@ def run(
         main: Application entry point. Handler (function or coroutine) must
             have 1 parameter of instance [`Page`][flet.Page].
         before_main: Called after `Page` is created but before `main`.
-        name:
-        host:
-        port:
-        view:
+        name: Page/app name used in web URL path when applicable.
+        host: Host/IP to bind the web server to.
+        port: TCP port to bind. If `0`, an available port is chosen when needed.
+        view: Preferred app presentation mode.
         assets_dir: A path to app's assets directory.
         upload_dir: A path to a directory with uploaded files,
             or where uploaded files should be saved.
         web_renderer: The type of web renderer to use.
         route_url_strategy: The strategy to use for generating URLs.
         no_cdn: Whether not load CanvasKit, Pyodide, or fonts from CDN.
-        export_asgi_app:
-        target:
+        export_asgi_app: If `True`, returns a configured ASGI app instead of
+            running an event loop.
+        target: Deprecated alias for `main`.
+
+    Returns:
+        When `export_asgi_app=True`, returns a FastAPI ASGI app.
+            Otherwise, runs the app and returns `None`.
     """
     if is_pyodide():
         __run_pyodide(main=main or target, before_main=before_main)
@@ -146,6 +151,25 @@ async def run_async(
     no_cdn: Optional[bool] = False,
     target=None,
 ):
+    """
+    Asynchronously run a Flet app using socket or web server transport.
+
+    Args:
+        main: Application entry point. Handler (function or coroutine) must
+            have 1 parameter of instance [`Page`][flet.Page].
+        before_main: Called after `Page` is created but before `main`.
+        name: Page/app name used in web URL path when applicable.
+        host: Host/IP to bind the web server to.
+        port: TCP port to bind. If `0`, default/free port is selected.
+        view: Preferred app presentation mode.
+        assets_dir: Path to app assets directory.
+        upload_dir: Path to upload directory.
+        web_renderer: Web renderer type for web-hosted mode.
+        route_url_strategy: Route URL strategy (`path` or `hash`).
+        no_cdn: Whether to avoid loading CanvasKit, Pyodide, and fonts from CDN.
+        target: Deprecated alias for `main`.
+    """
+
     if is_pyodide():
         __run_pyodide(main=main or target, before_main=before_main)
         return
@@ -184,7 +208,14 @@ async def run_async(
 
     url_prefix = os.getenv("FLET_DISPLAY_URL_PREFIX")
 
-    def on_app_startup(page_url):
+    def on_app_startup(page_url: str):
+        """
+        Handle app-start notification by logging/printing URL and optional browser open.
+
+        Args:
+            page_url: Resolved URL of the running app.
+        """
+
         if url_prefix is not None:
             print(url_prefix, page_url)
         else:
@@ -200,6 +231,14 @@ async def run_async(
     if not is_embedded():
 
         def exit_gracefully(signum, frame):
+            """
+            Signal handler that requests graceful app termination.
+
+            Args:
+                signum: Received OS signal number.
+                frame: Current stack frame (unused).
+            """
+
             logger.debug("Gracefully terminating Flet app...")
             loop.call_soon_threadsafe(terminate.set)
             signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -270,7 +309,24 @@ async def run_async(
 
 
 def __get_on_session_created(main):
+    """
+    Build session-start callback that executes the user `main` handler.
+
+    Args:
+        main: User-provided app entry handler.
+
+    Returns:
+        Async callback that initializes page context and runs `main`.
+    """
+
     async def on_session_created(session: Session):
+        """
+        Initialize per-session context and execute app entry handler.
+
+        Args:
+            session: Active page session.
+        """
+
         logger.info("App session started")
         try:
             assert main is not None
@@ -300,6 +356,19 @@ def __get_on_session_created(main):
 
 
 async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
+    """
+    Start Flet socket server transport and return active connection object.
+
+    Args:
+        port: TCP port to bind (`0` lets OS choose).
+        main: User app entry handler.
+        before_main: Optional hook called before `main`.
+        blocking: Whether server should run in blocking mode.
+
+    Returns:
+        Started socket-server connection instance.
+    """
+
     from flet.messaging.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
@@ -332,6 +401,26 @@ async def __run_web_server(
     no_cdn,
     on_startup,
 ):
+    """
+    Start FastAPI/uvicorn web transport for Flet and return server handle.
+
+    Args:
+        main: User app entry handler.
+        before_main: Optional hook called before `main`.
+        host: Host/IP to bind the server to.
+        port: TCP port to bind.
+        page_name: Web path segment used for page URL.
+        assets_dir: Resolved assets directory path.
+        upload_dir: Resolved upload directory path.
+        web_renderer: Web renderer mode.
+        route_url_strategy: Route URL strategy (`path` or `hash`).
+        no_cdn: Whether to disable CDN resources.
+        on_startup: Callback invoked with resolved page URL.
+
+    Returns:
+        Running web-server handle with `.page_url` and `.close()`.
+    """
+
     ensure_flet_web_package_installed()
     from flet_web.fastapi.serve_fastapi_web_app import serve_fastapi_web_app
 
@@ -364,6 +453,14 @@ async def __run_web_server(
 
 
 def __run_pyodide(main=None, before_main=None):
+    """
+    Initialize Pyodide connection for browser-embedded execution.
+
+    Args:
+        main: User app entry handler.
+        before_main: Optional hook called before `main`.
+    """
+
     from flet.messaging.pyodide_connection import PyodideConnection
 
     PyodideConnection(
@@ -372,11 +469,33 @@ def __run_pyodide(main=None, before_main=None):
 
 
 def __get_page_name(name: str):
+    """
+    Resolve effective page name using argument and environment override.
+
+    Args:
+        name: Explicit page name from API call.
+
+    Returns:
+        Effective page name, preferring `FLET_WEB_APP_PATH` when `name` is empty.
+    """
+
     env_page_name = os.getenv("FLET_WEB_APP_PATH")
     return env_page_name if not name and env_page_name else name
 
 
 def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
+    """
+    Resolve assets directory to an absolute path and apply env override.
+
+    Args:
+        assets_dir: Input assets directory path.
+        relative_to_cwd: Resolve relative paths from current working directory
+            instead of current script directory.
+
+    Returns:
+        Resolved assets directory path or `None`.
+    """
+
     if assets_dir:
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
@@ -399,6 +518,18 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
 
 
 def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
+    """
+    Resolve upload directory to an absolute path.
+
+    Args:
+        upload_dir: Input upload directory path.
+        relative_to_cwd: Resolve relative paths from current working directory
+            instead of current script directory.
+
+    Returns:
+        Resolved upload directory path or `None`.
+    """
+
     if upload_dir and not Path(upload_dir).is_absolute():
         upload_dir = str(
             Path(os.getcwd() if relative_to_cwd else get_current_script_dir())

@@ -7,9 +7,9 @@ import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
 import 'geometry.dart';
-import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
+import 'widget_state.dart';
 
 MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
     {Color? defaultBackgroundColor,

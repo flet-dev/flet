@@ -13,9 +13,37 @@ __all__ = ["Stack", "StackFit"]
 
 
 class StackFit(Enum):
+    """
+    How to size the non-positioned children of a [`Stack`][flet.].
+    """
+
     LOOSE = "loose"
+    """
+    The constraints passed to the stack from its parent are loosened.
+
+    For example, if the stack has constraints that force it to `350x600`, then
+    this would allow the non-positioned children of the stack to have any
+    width from zero to `350` and any height from zero to `600`.
+    """
+
     EXPAND = "expand"
+    """
+    The constraints passed to the stack from its parent are tightened to the
+    biggest size allowed.
+
+    For example, if the [`Stack`][flet.] has loose constraints with a width in the range
+    `10` to `100` and a height in the range `0` to `600`, then the non-positioned
+    children of the stack would all be sized as `100` pixels wide and `600` high.
+    """
+
     PASS_THROUGH = "passThrough"
+    """
+    The constraints passed to the stack from its parent are passed unmodified
+    to the non-positioned children.
+
+    For example, if a [`Stack`][flet.] is an expanded child of a [`Row`][flet.], the
+    horizontal constraints will be tight and the vertical constraints will be loose.
+    """
 
 
 @control("Stack")

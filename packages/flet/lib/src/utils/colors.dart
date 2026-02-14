@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'cupertino_colors.dart';
-import 'material_state.dart';
 import 'numbers.dart';
+import 'widget_state.dart';
 
 Color? _getThemeColor(ThemeData theme, String colorName) {
   var scheme = theme.colorScheme;
@@ -263,8 +263,7 @@ extension HexColor on Color {
 
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
   String toHex({bool leadingHashSign = true}) {
-    int to8bit(double component) =>
-        (component * 255.0).round().clamp(0, 255);
+    int to8bit(double component) => (component * 255.0).round().clamp(0, 255);
 
     final alpha8 = to8bit(a);
     final red8 = to8bit(r);
@@ -284,8 +283,7 @@ extension ColorExtension on Color {
   Color darken([int percent = 40]) {
     assert(1 <= percent && percent <= 100);
     final value = 1 - percent / 100;
-    int to8bit(double component) =>
-        (component * 255.0).round().clamp(0, 255);
+    int to8bit(double component) => (component * 255.0).round().clamp(0, 255);
 
     return Color.fromARGB(
       to8bit(a),

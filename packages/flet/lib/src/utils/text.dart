@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'enums.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +8,9 @@ import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
+import 'enums.dart';
 import 'launch_url.dart';
-import 'material_state.dart';
+import 'widget_state.dart';
 
 TextStyle? parseTextThemeStyle(String? styleName, BuildContext context) {
   var textTheme = Theme.of(context).textTheme;

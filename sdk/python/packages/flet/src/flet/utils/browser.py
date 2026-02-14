@@ -1,7 +1,7 @@
 from flet.utils.platform_utils import is_mobile
 
 
-def open_in_browser(url):
+def open_in_browser(url: str):
     """
     Opens a URL in the system default browser on non-mobile platforms.
 

@@ -19,6 +19,10 @@ __all__ = [
 
 
 class BorderSideStrokeAlign(float, Enum):
+    """
+    Defines where a border stroke is painted relative to the border path.
+    """
+
     INSIDE = -1.0
     """
     The border is drawn fully inside of the border path.
@@ -37,6 +41,10 @@ class BorderSideStrokeAlign(float, Enum):
 
 
 class BorderStyle(Enum):
+    """
+    Defines how a border side is rendered.
+    """
+
     NONE = "none"
     """Skip the border."""
 
@@ -86,7 +94,7 @@ class BorderSide:
     The style of this side of the border.
 
     Tip:
-        To omit a side, set `style` to [`BorderStyle.NONE`][flet.]. This skips
+        To omit a side, set [`style`][(c).] to [`BorderStyle.NONE`][flet.]. This skips
         painting the border, but the border still has a `width`.
     """
 
@@ -103,8 +111,9 @@ class BorderSide:
         """
         The amount of the stroke width that lies inside this `BorderSide`.
 
-        For example, this will return the `width` for a `stroke_align` of `-`1, half
-        the `width` for a `stroke_align` of `0`, and `0` for a `stroke_align` of `1`.
+        For example, this will return the [`width`][(c).] for a [`stroke_align`][(c).]
+        of `-`1, half the [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and `0`
+        for a `stroke_align` of `1`.
         """
         return self.width * (1 - (1 + self.stroke_align) / 2)
 
@@ -113,9 +122,9 @@ class BorderSide:
         """
         The amount of the stroke width that lies outside this `BorderSide`.
 
-        For example, this will return `0` for a `stroke_align` of `-1`, half the
-        `width` for a `stroke_align` of `0`, and the `width` for a
-        `stroke_align` of `1`.
+        For example, this will return `0` for a [`stroke_align`][(c).] of `-1`, half the
+        [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and the [`width`][(c).]
+        for a [`stroke_align`][(c).] of `1`.
         """
         return self.width * (1 + self.stroke_align) / 2
 
@@ -124,9 +133,9 @@ class BorderSide:
         """
         The offset of the stroke, taking into account the stroke alignment.
 
-        For example, this will return the negative `width` of the stroke
-        for a `stroke_align` of -1, 0 for a `stroke_align` of 0, and the
-        `width` for a `stroke_align` of -1.
+        For example, this will return the negative [`width`][(c).] of the stroke
+        for a [`stroke_align`][(c).] of -1, 0 for a [`stroke_align`][(c).] of 0, and the
+        [`width`][(c).] for a [`stroke_align`][(c).] of -1.
         """
         return self.width * self.stroke_align
 

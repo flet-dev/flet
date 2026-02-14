@@ -16,6 +16,10 @@ __all__ = [
 
 @dataclasses.dataclass
 class BorderRadius:
+    """
+    Corner radii for a rectangle, defined for all four corners.
+    """
+
     top_left: Number
     """
     Radius of the top left border corner.

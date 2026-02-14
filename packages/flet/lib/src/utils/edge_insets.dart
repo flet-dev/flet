@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
-import 'material_state.dart';
 import 'numbers.dart';
+import 'widget_state.dart';
 
 EdgeInsets? parseEdgeInsets(dynamic value, [EdgeInsets? defaultValue]) {
   if (value == null) return defaultValue;

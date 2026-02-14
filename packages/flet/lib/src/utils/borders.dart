@@ -1,12 +1,12 @@
 import 'dart:collection';
-import 'enums.dart';
 
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'colors.dart';
-import 'material_state.dart';
+import 'enums.dart';
 import 'numbers.dart';
+import 'widget_state.dart';
 
 BorderRadius? parseBorderRadius(dynamic value, [BorderRadius? defaultValue]) {
   if (value == null) return defaultValue;

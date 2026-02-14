@@ -183,8 +183,26 @@ BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
 
 
 class BoxShape(Enum):
+    """
+    The shape to use when rendering a [`Border`][flet.] or [`BoxDecoration`][flet.].
+    """
+
     RECTANGLE = "rectangle"
+    """
+    An axis-aligned rectangle, optionally with rounded corners.
+
+    The amount of corner rounding, if any, is determined by the border radius
+    specified by classes such as [`BoxDecoration`][flet.] or [`Border`][flet.].
+    The rectangle's edges match those of the box in which it is painted.
+    """
+
     CIRCLE = "circle"
+    """
+    A circle centered in the middle of the box into which the [`Border`][flet.] or
+    [`BoxDecoration`][flet.] is painted. The diameter of the circle is the shortest
+    dimension of the box, either the width or the height, such that the circle
+    touches the edges of the box.
+    """
 
 
 class BoxFit(Enum):
