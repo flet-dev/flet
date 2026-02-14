@@ -22,8 +22,8 @@ class CodeEditor(ft.LayoutControl):
     padding: Optional[ft.PaddingValue] = None
     """Padding around the editor."""
 
-    text: Optional[str] = None
-    """Visible text (excludes folded sections)."""
+    value: Optional[str] = None
+    """Full text including folded sections and service comments."""
 
     selection: Optional[ft.TextSelection] = None
     """
@@ -32,9 +32,6 @@ class CodeEditor(ft.LayoutControl):
     Setting this property updates the editor selection and may trigger
     [`on_selection_change`][(c).] when the editor is focused.
     """
-
-    full_text: Optional[str] = None
-    """Full text including folded sections and service comments."""
 
     gutter_style: Optional[GutterStyle] = None
     """Gutter styling."""

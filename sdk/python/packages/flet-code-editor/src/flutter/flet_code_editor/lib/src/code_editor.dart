@@ -20,8 +20,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   late final FocusNode _focusNode;
   bool _didAutoFocus = false;
   TextSelection? _selection;
-  String _text = "";
-  String? _fullText;
+  String _value = "";
   String? _languageName;
 
   @override
@@ -30,6 +29,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
     _controller = _createController();
+    _value = _readValue();
+    _selection = _controller.selection;
     _controller.addListener(_handleControllerChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
   }
@@ -74,15 +75,13 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   FletCodeController _createController() {
     _languageName = widget.control.get("language", "")!;
     return FletCodeController(
-      text: _initialTextFromControl(),
+      text: _initialValueFromControl(),
       language: allLanguages[_languageName!.toLowerCase()],
     );
   }
 
-  String _initialTextFromControl() {
-    return widget.control.getString("full_text") ??
-        widget.control.getString("text") ??
-        "";
+  String _initialValueFromControl() {
+    return widget.control.getString("value") ?? "";
   }
 
   List<String>? _stringList(dynamic value) {
@@ -92,31 +91,29 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return null;
   }
 
-  String _readFullText() => _controller.fullText;
+  String _readValue() => _controller.fullText;
 
-  void _setFullText(String value) {
+  void _setValue(String value) {
     _controller.fullText = value;
   }
 
   void _handleControllerChange() {
-    final text = _controller.text;
+    final value = _readValue();
     final selection = _controller.selection;
     final selectionChanged = selection != _selection;
-    final textChanged = text != _text;
+    final valueChanged = value != _value;
 
-    if (!textChanged && !selectionChanged) {
+    if (!valueChanged && !selectionChanged) {
       return;
     }
 
-    _text = text;
+    _value = value;
     _selection = selection;
-    _fullText = _readFullText();
 
     final updates = <String, dynamic>{};
 
-    if (textChanged) {
-      updates["text"] = text;
-      updates["full_text"] = _fullText;
+    if (valueChanged) {
+      updates["value"] = value;
     }
 
     if (selectionChanged) {
@@ -131,13 +128,14 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       widget.control.updateProperties(updates);
     }
 
-    if (textChanged && widget.control.getBool("on_change", false)!) {
-      widget.control.triggerEvent("change", text);
+    if (valueChanged && widget.control.getBool("on_change", false)!) {
+      widget.control.triggerEvent("change", value);
     }
 
     if (selectionChanged && selection.isValid) {
+      final visibleText = _controller.text;
       widget.control.triggerEvent("selection_change", {
-        "selected_text": text.substring(selection.start, selection.end),
+        "selected_text": visibleText.substring(selection.start, selection.end),
         "selection": selection.toMap(),
       });
     }
@@ -153,24 +151,18 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       _controller.removeListener(_handleControllerChange);
       _controller.dispose();
       _controller = _createController();
+      _value = _readValue();
       _controller.addListener(_handleControllerChange);
       if (previousSelection.isValid) {
         _controller.selection = previousSelection;
       }
     }
 
-    final fullText = widget.control.getString("full_text");
-    if (fullText != null && fullText != _fullText) {
-      _fullText = fullText;
-      _setFullText(fullText);
-    } else {
-      final text = widget.control.getString("text");
-      if (text != null && text != _controller.text) {
-        _controller.value = TextEditingValue(
-          text: text,
-          selection: TextSelection.collapsed(offset: text.length),
-        );
-      }
+    final value = widget.control.getString("value");
+    final controllerValue = _readValue();
+    if (value != null && value != controllerValue) {
+      _setValue(value);
+      _value = value;
     }
 
     final explicitSelection = parseTextSelection(

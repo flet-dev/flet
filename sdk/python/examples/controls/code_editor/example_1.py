@@ -36,7 +36,7 @@ def main(page: ft.Page):
             language="python",
             code_theme="atom-one-light",
             # text_style=ft.TextStyle(font_family="monospace", size=14),
-            text=CODE,
+            value=CODE,
             expand=True,
             on_change=lambda e: print("Changed:", e.data),
         )

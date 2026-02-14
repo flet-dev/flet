@@ -76,7 +76,7 @@ def main(page: ft.Page):
         await editor.focus()
         editor.selection = ft.TextSelection(
             base_offset=0,
-            extent_offset=len(editor.text or ""),
+            extent_offset=len(editor.value or ""),
         )
 
     async def move_caret_to_start(e: ft.Event[ft.Button]):
@@ -99,7 +99,7 @@ def main(page: ft.Page):
                         "Row",
                         "Column",
                     ],
-                    text=CODE,
+                    value=CODE,
                     text_style=text_style,
                     gutter_style=gutter_style,
                     on_selection_change=handle_selection_change,
