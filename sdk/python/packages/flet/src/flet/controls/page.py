@@ -306,7 +306,7 @@ class Page(BasePage):
         local asset. The following font file formats are supported `.ttc`, `.ttf`
         and `.otf`.
 
-    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
+    Usage example [here](https://docs.flet.dev/cookbook/fonts#importing-fonts).
     """
 
     on_platform_brightness_change: Optional[

@@ -43,17 +43,17 @@ class PaintLinearGradient(PaintGradient):
 
     begin: Optional[OffsetValue]
     """
-    The offset at which stop 0.0 of the gradient is placed.
+    The offset at which stop `0.0` of the gradient is placed.
     """
 
     end: Optional[OffsetValue]
     """
-    The offset at which stop 1.0 of the gradient is placed.
+    The offset at which stop `1.0` of the gradient is placed.
     """
 
-    colors: list[str]
+    colors: list[ColorValue]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     Note:
@@ -76,8 +76,8 @@ class PaintLinearGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and \
-    after `end`.
+    How this gradient should tile the plane beyond in the \
+    region before [`begin`][(c).] and after [`end`][(c).].
     """
 
     def __post_init__(self):
@@ -125,7 +125,7 @@ class PaintRadialGradient(PaintGradient):
 
     colors: list[ColorValue]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -209,10 +209,10 @@ class PaintSweepGradient(PaintGradient):
 
     colors: list[str]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
-    If `stops` is provided, this list must have the same length as `stops`.
+    If [`stops`][(c).] is provided, this list must have the same length as `stops`.
     """
 
     color_stops: Optional[list[Number]] = None
@@ -287,8 +287,8 @@ class Paint:
 
     color: Optional[ColorValue] = None
     """
-    The https://flet.dev/docs/reference/colors to use when stroking or filling a \
-    shape.
+    The color to use when stroking or filling a shape.
+
     Defaults to opaque black.
     """
 
@@ -296,7 +296,7 @@ class Paint:
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
 
-    Defaults to `BlendMode.SRC_OVER`.
+    Defaults to [`BlendMode.SRC_OVER`][(c).].
     """
 
     blur_image: Optional[BlurValue] = None

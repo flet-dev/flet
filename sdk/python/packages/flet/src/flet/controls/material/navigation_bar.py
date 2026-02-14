@@ -42,7 +42,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     icon: IconDataOrControl
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the \
+    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
     destination.
 
     Example with icon name:
@@ -69,7 +69,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control` \
+    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     Example with icon name:
