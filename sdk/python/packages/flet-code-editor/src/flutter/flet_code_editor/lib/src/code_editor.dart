@@ -18,6 +18,7 @@ class CodeEditorControl extends StatefulWidget {
 class _CodeEditorControlState extends State<CodeEditorControl> {
   late FletCodeController _controller;
   late final FocusNode _focusNode;
+  bool _didAutoFocus = false;
   TextSelection? _selection;
   String _text = "";
   String? _fullText;
@@ -79,10 +80,6 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   }
 
   String _initialTextFromControl() {
-    final value = widget.control.get("value");
-    if (value is Map && value["text"] != null) {
-      return value["text"].toString();
-    }
     return widget.control.getString("full_text") ??
         widget.control.getString("text") ??
         "";
@@ -122,12 +119,12 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       updates["full_text"] = _fullText;
     }
 
-    if (textChanged || selectionChanged) {
-      final value = <String, dynamic>{"text": text};
+    if (selectionChanged) {
       if (selection.isValid) {
-        value["selection"] = selection.toMap();
+        updates["selection"] = selection.toMap();
+      } else {
+        updates["selection"] = null;
       }
-      updates["value"] = value;
     }
 
     if (updates.isNotEmpty) {
@@ -162,37 +159,37 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       }
     }
 
-    final value = widget.control.get("value");
-    if (value is Map) {
-      final valueText = value["text"]?.toString() ?? "";
-      if (valueText != _controller.text) {
+    final fullText = widget.control.getString("full_text");
+    if (fullText != null && fullText != _fullText) {
+      _fullText = fullText;
+      _setFullText(fullText);
+    } else {
+      final text = widget.control.getString("text");
+      if (text != null && text != _controller.text) {
         _controller.value = TextEditingValue(
-          text: valueText,
-          selection: TextSelection.collapsed(offset: valueText.length),
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
         );
       }
-      final selection = parseTextSelection(
-        value["selection"],
-        minOffset: 0,
-        maxOffset: valueText.length,
-      );
-      if (selection != null && selection != _controller.selection) {
-        _controller.selection = selection;
-      }
-    } else {
-      final fullText = widget.control.getString("full_text");
-      if (fullText != null && fullText != _fullText) {
-        _fullText = fullText;
-        _setFullText(fullText);
-      } else {
-        final text = widget.control.getString("text");
-        if (text != null && text != _controller.text) {
-          _controller.value = TextEditingValue(
-            text: text,
-            selection: TextSelection.collapsed(offset: text.length),
-          );
+    }
+
+    final explicitSelection = parseTextSelection(
+      widget.control.get("selection"),
+      minOffset: 0,
+      maxOffset: _controller.text.length,
+    );
+    if (explicitSelection != null && explicitSelection != _controller.selection) {
+      _controller.selection = explicitSelection;
+    }
+
+    final autofocus = widget.control.getBool("autofocus", false)!;
+    if (!_didAutoFocus && autofocus) {
+      _didAutoFocus = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          FocusScope.of(context).autofocus(_focusNode);
         }
-      }
+      });
     }
 
     final themeData = parseCodeThemeData(widget.control, context);

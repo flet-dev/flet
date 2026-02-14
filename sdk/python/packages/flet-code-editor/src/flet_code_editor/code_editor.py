@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 import flet as ft
-from flet_code_editor.types import CodeTheme, GutterStyle, TextEditingValue
+from flet_code_editor.types import CodeTheme, GutterStyle
 
 __all__ = ["CodeEditor"]
 
@@ -25,8 +25,13 @@ class CodeEditor(ft.LayoutControl):
     text: Optional[str] = None
     """Visible text (excludes folded sections)."""
 
-    value: Optional[TextEditingValue] = None
-    """Visible text with selection (excludes folded sections)."""
+    selection: Optional[ft.TextSelection] = None
+    """
+    Represents the current text selection or caret position in the editor.
+
+    Setting this property updates the editor selection and may trigger
+    [`on_selection_change`][(c).] when the editor is focused.
+    """
 
     full_text: Optional[str] = None
     """Full text including folded sections and service comments."""
@@ -43,13 +48,16 @@ class CodeEditor(ft.LayoutControl):
     read_only: Optional[bool] = False
     """Whether the editor is read-only."""
 
+    autofocus: Optional[bool] = False
+    """Whether this editor should focus itself if nothing else is focused."""
+
     on_change: Optional[ft.ControlEventHandler["CodeEditor"]] = None
     """Called when the editor text changes."""
 
     on_selection_change: Optional[
         ft.EventHandler[ft.TextSelectionChangeEvent["CodeEditor"]]
     ] = None
-    """Called when the text selection changes."""
+    """Called when the text selection or caret position changes."""
 
     on_focus: Optional[ft.ControlEventHandler["CodeEditor"]] = None
     """Called when the editor receives focus."""

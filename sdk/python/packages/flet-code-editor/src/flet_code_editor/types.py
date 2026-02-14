@@ -3,7 +3,7 @@ from typing import Optional
 
 import flet as ft
 
-__all__ = ["CodeTheme", "GutterStyle", "TextEditingValue"]
+__all__ = ["CodeTheme", "GutterStyle"]
 
 
 @dataclass
@@ -38,14 +38,3 @@ class GutterStyle:
 
     show_line_numbers: bool = True
     """Whether to show line numbers in the gutter."""
-
-
-@dataclass
-class TextEditingValue:
-    """Represents the current text and selection."""
-
-    text: str
-    """The visible text."""
-
-    selection: Optional[ft.TextSelection] = None
-    """The current text selection."""
