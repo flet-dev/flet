@@ -1,11 +1,10 @@
 ---
 class_name: flet_code_editor.CodeEditor
 examples: ../../examples/controls/code_editor
+example_images: ../test-images/examples/extensions/code_editor/golden/macos/code_editor_examples
 ---
 
-# CodeEditor
-
-Edit and highlight source code inside your [Flet](https://flet.dev) app using the `flet-code-editor` extension, which wraps Flutter's [`flutter_code_editor`](https://pub.dev/packages/flutter_code_editor) package.
+{{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic CodeEditor") }}
 
 ## Usage
 
@@ -25,16 +24,33 @@ pip install flet-code-editor  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Example
+## Examples
 
+### Basic example
 ```python
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-## Description
+{{ image(example_images + "/example_1.png", alt="code-editor-example-1", width="80%") }}
 
-{{ class_all_options(class_name) }}
+### Selection handling
+
+```python
+--8<-- "{{ examples }}/example_2.py"
+```
+
+{{ image(example_images + "/example_2.png", alt="code-editor-example-2", width="80%") }}
+
+### Folding and initial selection
+
+```python
+--8<-- "{{ examples }}/example_3.py"
+```
+
+{{ image(example_images + "/example_3.png", alt="code-editor-example-3", width="80%") }}
 
 See also types:
 - [`CodeTheme`](types/codetheme.md)
 - [`GutterStyle`](types/gutterstyle.md)
+
+{{ class_members(class_name) }}
