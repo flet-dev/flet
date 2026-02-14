@@ -33,6 +33,13 @@ __all__ = [
 
 
 def skip_field():
+    """
+    Creates a dataclass field excluded from control tree traversal and patching.
+
+    The returned field uses `metadata={"skip": True}` so runtime diff/configuration
+    logic ignores it. This is intended for Python-side state that must not
+    participate in UI reconciliation/serialization.
+    """
     return field(default=None, metadata={"skip": True})
 
 
@@ -40,7 +47,13 @@ T = TypeVar("T", bound="BaseControl")
 
 
 @overload
-def control(cls: type[T]) -> type[T]: ...
+def control(cls: type[T]) -> type[T]:
+    """
+    Overload for using `@control` without arguments.
+
+    Applies dataclass behavior and control wiring to `cls` using default options.
+    """
+    ...
 
 
 @overload
@@ -50,7 +63,14 @@ def control(
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
     **dataclass_kwargs: Any,
-) -> Callable[[type[T]], type[T]]: ...
+) -> Callable[[type[T]], type[T]]:
+    """
+    Overload for using `@control(...)` with explicit decorator arguments.
+
+    Returns a class decorator that applies dataclass behavior and optional
+    control metadata (`dart_widget_name`, `isolated`, `post_init_args`).
+    """
+    ...
 
 
 @dataclass_transform()

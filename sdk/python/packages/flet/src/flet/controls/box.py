@@ -348,6 +348,7 @@ class BoxDecoration:
         shape: Optional[BoxShape] = None,
         blend_mode: Optional[BlendMode] = None,
     ):
+        """Returns a new `BoxDecoration` with selected fields overridden."""
         return BoxDecoration(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
             image=image if image is not None else self.image,

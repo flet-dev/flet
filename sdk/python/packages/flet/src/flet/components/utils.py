@@ -13,6 +13,18 @@ _CURRENT_RENDERER: "contextvars.ContextVar[Renderer | None]" = contextvars.Conte
 
 
 def current_renderer() -> "Renderer":
+    """
+    Returns the renderer bound to the current execution context.
+
+    The active renderer is stored in a context variable and is set while running
+    inside `Renderer.render(...)` or `Renderer.with_context(...)`.
+
+    Returns:
+        The current [`Renderer`][flet.Renderer].
+
+    Raises:
+        RuntimeError: If no renderer is currently bound.
+    """
     r = _CURRENT_RENDERER.get()
     if r is None:
         raise RuntimeError(
@@ -23,6 +35,18 @@ def current_renderer() -> "Renderer":
 
 
 def current_component() -> "Component":
+    """
+    Returns the component currently being rendered.
+
+    This is the top item of the current renderer render stack and is used by
+    hooks to access component-local state.
+
+    Returns:
+        The currently rendering [`Component`][flet.Component].
+
+    Raises:
+        RuntimeError: If called outside an active component render frame.
+    """
     r = current_renderer()
     if not r._render_stack:
         raise RuntimeError("Hooks must be called inside a component render.")
@@ -30,6 +54,22 @@ def current_component() -> "Component":
 
 
 def value_equal(a, b) -> bool:
+    """
+    Compares two values with tolerant semantics for reactive updates.
+
+    Comparison order:
+    - identity check (`a is b`);
+    - equality check (`a == b`) with exception suppression;
+    - special-case `float('nan')` so NaN compares equal to NaN.
+
+    Args:
+        a: First value.
+        b: Second value.
+
+    Returns:
+        `True` when values are considered equivalent for change detection;
+        otherwise `False`.
+    """
     # Fast path
     if a is b:
         return True
@@ -52,6 +92,20 @@ def shallow_compare_args(
     prev_args: Sequence[Any],
     args: Sequence[Any],
 ) -> bool:
+    """
+    Performs shallow positional-argument comparison.
+
+    Two argument sequences are considered equal when they are the same object,
+    or when they have equal length and each pair is either identical
+    (`is`) or equal (`==`).
+
+    Args:
+        prev_args: Previously stored positional arguments.
+        args: New positional arguments.
+
+    Returns:
+        `True` if arguments are shallow-equal; otherwise `False`.
+    """
     if prev_args is args:
         return True
     if len(prev_args) != len(args):
@@ -63,6 +117,20 @@ def shallow_compare_kwargs(
     prev_kwargs: dict[str, Any],
     kwargs: dict[str, Any],
 ) -> bool:
+    """
+    Performs shallow keyword-argument comparison.
+
+    Two mappings are considered equal when they are the same object, have the
+    same key set, and each corresponding value is either identical (`is`) or
+    equal (`==`).
+
+    Args:
+        prev_kwargs: Previously stored keyword arguments.
+        kwargs: New keyword arguments.
+
+    Returns:
+        `True` if keyword arguments are shallow-equal; otherwise `False`.
+    """
     if prev_kwargs is kwargs:
         return True
     if prev_kwargs.keys() != kwargs.keys():
@@ -80,6 +148,18 @@ def shallow_compare_args_and_kwargs(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
 ) -> bool:
+    """
+    Performs combined shallow comparison of positional and keyword arguments.
+
+    Args:
+        prev_args: Previously stored positional arguments.
+        prev_kwargs: Previously stored keyword arguments.
+        args: New positional arguments.
+        kwargs: New keyword arguments.
+
+    Returns:
+        `True` only if both positional and keyword arguments are shallow-equal.
+    """
     return shallow_compare_args(prev_args, args) and shallow_compare_kwargs(
         prev_kwargs, kwargs
     )

@@ -23,6 +23,14 @@ class MutableRef(Generic[RefValueT]):
 
 @dataclass
 class RefHook(Hook, Generic[RefValueT]):
+    """
+    Hook state container backing [`use_ref()`][flet.use_ref].
+
+    Stores the stable [`MutableRef`][flet.MutableRef] instance for a component so
+    it can be reused across renders without triggering updates when `.current`
+    changes.
+    """
+
     ref: MutableRef[RefValueT]
 
 
@@ -43,6 +51,12 @@ def use_ref(
     component = current_component()
 
     def resolve_initial() -> RefValueT | None:
+        """
+        Resolves the initial ref value from literal or lazy initializer.
+
+        If `initial_value` is callable, it is invoked and its return value is
+        used. Otherwise, `initial_value` is returned as-is.
+        """
         return initial_value() if callable(initial_value) else initial_value
 
     hook = component.use_hook(

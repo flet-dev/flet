@@ -17,11 +17,26 @@ __all__ = ["OnScrollEvent", "ScrollDirection", "ScrollType", "ScrollableControl"
 
 
 class ScrollType(Enum):
+    """
+    Logical kind of scroll notification emitted by `ScrollableControl`.
+
+    Used by [`OnScrollEvent.event_type`][flet.OnScrollEvent.event_type].
+    """
+
     START = "start"
+    """Scrolling has started."""
+
     UPDATE = "update"
+    """Scroll position changed; `OnScrollEvent.scroll_delta` is available."""
+
     END = "end"
+    """Scrolling has ended."""
+
     USER = "user"
+    """User scroll direction changed; `OnScrollEvent.direction` is available."""
+
     OVERSCROLL = "overscroll"
+    """Viewport was overscrolled; `overscroll` and `velocity` are available."""
 
 
 class ScrollDirection(Enum):
@@ -32,6 +47,15 @@ class ScrollDirection(Enum):
 
 @dataclass
 class OnScrollEvent(Event["ScrollableControl"]):
+    """
+    Payload for `ScrollableControl.on_scroll` handlers.
+
+    This event is produced from Flutter scroll notifications and includes the
+    current viewport metrics together with type-specific values.
+    `pixels`, `min_scroll_extent`, `max_scroll_extent`, and
+    `viewport_dimension` are always present.
+    """
+
     event_type: ScrollType
     pixels: float
     min_scroll_extent: float
@@ -45,6 +69,21 @@ class OnScrollEvent(Event["ScrollableControl"]):
 
 @control(kw_only=True)
 class ScrollableControl(Control):
+    """
+    Shared scroll behavior for controls that expose a scrollable viewport.
+
+    This mixin-style control is inherited by controls such as
+    [`Column`][flet.Column], [`Row`][flet.Row], [`View`][flet.View],
+    [`ListView`][flet.ListView], and [`GridView`][flet.GridView]. It provides a
+    common API for:
+
+    - enabling/disabling scrolling and scrollbar visibility via
+      [`scroll`][(c).];
+    - receiving throttled scroll notifications via [`on_scroll`][(c).] and
+      [`scroll_interval`][(c).];
+    - imperatively changing position with [`scroll_to()`][(c).scroll_to].
+    """
+
     scroll: Optional[ScrollMode] = None
     """
     Enables a vertical scrolling for the Column to prevent its content overflow.
