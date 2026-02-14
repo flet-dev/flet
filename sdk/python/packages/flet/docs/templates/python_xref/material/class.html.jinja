@@ -11,7 +11,7 @@
         <code>
             {%- with backlink_type = "subclassed-by" -%}
             {#- YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. -#}
-            {%- include "expression"|get_template with context -%}
+            {%- include "expression.html.jinja" with context -%}
             {%- endwith -%}
         </code>{% if not loop.last %}, {% endif %}
         {% endfor -%}
@@ -27,7 +27,7 @@
     {% if config.extra.show_class_docstring %}
         {% with docstring_sections = class.docstring.parsed %}
         {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
-        {% include "docstring"|get_template with context %}
+        {% include "docstring.html.jinja" with context %}
         {% endwith %}
         {% if config.merge_init_into_class %}
         {# We don't want to merge the inherited `__init__` method docstring into the class docstring #}
@@ -37,7 +37,7 @@
             {% with function = check_members["__init__"] %}
                 {% with obj = function, docstring_sections = function.docstring.parsed %}
                 {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
-                {% include "docstring"|get_template with context %}
+                {% include "docstring.html.jinja" with context %}
                 {% endwith %}
             {% endwith %}
             {% endif %}
@@ -55,6 +55,6 @@
         {% set root = False %}
         {% set heading_level = heading_level + 1 %}
         {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
-        {% include "children"|get_template with context %}
+        {% include "children.html.jinja" with context %}
     {% endif %}
 {% endblock children %}
