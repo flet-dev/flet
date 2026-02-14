@@ -78,17 +78,17 @@ tasks:
         status=0
         for pkg in packages/*; do
           if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
-            echo "=== $pkg ==="
-            uv run --group docs-coverage docstr-coverage "$pkg/src" || status=$?
+            echo "====== $pkg ======"
+            uv run --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage-$pkg" || status=$?
             echo
           fi
         done
         exit $status
 
   docs-coverage-flet:
-    desc: "Run docstring coverage report for the core 'packages/flet' package only."
+    desc: "Run docstring coverage report for 'flet' package only."
     cmds:
-      - uv run --group docs-coverage docstr-coverage packages/flet/src
+      - uv run --group docs-coverage --directory packages/flet docstr-coverage
 
   free-port-8550:
     desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."
