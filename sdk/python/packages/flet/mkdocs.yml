@@ -224,6 +224,8 @@ markdown_extensions:
           case: lower
 
 # Navigation
+not_in_nav: |
+  - /ads/nativead.md
 nav:
   - Learn:
       - Getting started:

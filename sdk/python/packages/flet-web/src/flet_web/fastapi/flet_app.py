@@ -6,7 +6,7 @@ import traceback
 import weakref
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
@@ -64,8 +64,8 @@ class FletApp(Connection):
         self,
         loop: asyncio.AbstractEventLoop,
         executor: ThreadPoolExecutor,
-        main,
-        before_main,
+        main: Callable[[Any], Any],
+        before_main: Optional[Callable[[Any], Any]],
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,

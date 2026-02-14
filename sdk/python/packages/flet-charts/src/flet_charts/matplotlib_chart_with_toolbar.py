@@ -35,6 +35,10 @@ def _require_matplotlib() -> None:
 
 @ft.control(kw_only=True, isolated=True)
 class MatplotlibChartWithToolbar(ft.Column):
+    """
+    Composite control that combines a Matplotlib chart with a ready-made toolbar UI.
+    """
+
     figure: Figure = field(metadata={"skip": True})
     """
     Matplotlib figure to draw - an instance of

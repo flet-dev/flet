@@ -116,6 +116,10 @@ class ScatterChartTooltip:
 
 @dataclass
 class ScatterChartEvent(ft.Event["ScatterChart"]):
+    """
+    Event payload emitted when the user interacts with a scatter chart.
+    """
+
     type: ChartEventType
     """
     The type of the event that occurred.
@@ -136,14 +140,15 @@ class ScatterChart(ft.LayoutControl):
     points are defined by [`ScatterChartSpot`][(p).]s.
 
     ```python
-
     fch.ScatterChart(
         aspect_ratio=1.0,
-        spots=[fch.ScatterChartSpot(
-            x=random.uniform(4, 50),
-            y=random.uniform(4, 50),
-        )
-        for _ in range(30)]
+        spots=[
+            fch.ScatterChartSpot(
+                x=random.uniform(4, 50),
+                y=random.uniform(4, 50),
+            )
+            for _ in range(30)
+        ],
     )
     ```
 

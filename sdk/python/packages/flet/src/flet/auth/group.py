@@ -3,7 +3,7 @@ from typing import Any
 
 class Group(dict):
     """
-    Group or role entry associated with an authenticated [`User`][flet.].
+    Group or role entry associated with an authenticated [`User`][(p).].
 
     The instance behaves like a mutable mapping with provider-specific metadata,
     while exposing a normalized [`name`][(c).] attribute commonly used by app logic.

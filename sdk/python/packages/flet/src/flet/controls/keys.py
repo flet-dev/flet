@@ -36,8 +36,6 @@ class ValueKey(Key):
     """
     General-purpose key for control identity.
 
-    This is the default key kind used by control `key` properties and by
-    testing APIs such as [`Tester.find_by_key()`][flet.Tester.find_by_key].
     Prefer it when you need a stable identifier across rebuilds but do not need
     scroll-specific behavior.
     """
@@ -53,8 +51,7 @@ class ScrollKey(Key):
 
     Use this key to identify an item when calling
     [`ScrollableControl.scroll_to()`][flet.ScrollableControl.scroll_to] with
-    `scroll_key`. The `_type` discriminator allows Flutter to resolve this key
-    as a scroll target rather than a generic value key.
+    `scroll_key`.
     """
 
     def __post_init__(self):

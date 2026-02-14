@@ -14,9 +14,9 @@ __all__ = ["Canvas", "CanvasResizeEvent"]
 @dataclass
 class CanvasResizeEvent(Event["Canvas"]):
     """
-    Event emitted when a [`Canvas`][flet.] reports a new rendered size.
+    Event emitted when a [`Canvas`][(p).] reports a new rendered size.
 
-    This event is delivered through [`Canvas.on_resize`][flet.Canvas.on_resize]
+    This event is delivered through [`on_resize`][(p).Canvas.]
     and carries the latest measured dimensions in logical pixels.
     """
 
@@ -37,6 +37,7 @@ class Canvas(LayoutControl):
     Canvas is a control for drawing arbitrary graphics using a set of primitives or \
     "shapes" such as line, arc, path and text.
 
+    Example:
     ```python
     cv.Canvas(
         width=160,

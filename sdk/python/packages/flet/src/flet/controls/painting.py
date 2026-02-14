@@ -242,7 +242,8 @@ class PaintSweepGradient(PaintGradient):
     The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
-    If [`stops`][(c).] is provided, this list must have the same length as `stops`.
+    If [`color_stops`][(c).color_stops] is provided, this list must have the same
+    length as `color_stops`.
     """
 
     color_stops: Optional[list[Number]] = None
@@ -326,7 +327,7 @@ class Paint:
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
 
-    Defaults to [`BlendMode.SRC_OVER`][(c).].
+    Defaults to [`BlendMode.SRC_OVER`][flet.BlendMode.SRC_OVER].
     """
 
     blur_image: Optional[BlurValue] = None

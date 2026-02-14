@@ -47,6 +47,10 @@ def _require_matplotlib() -> None:
 
 @dataclass
 class MatplotlibChartMessageEvent(ft.Event["MatplotlibChart"]):
+    """
+    Event carrying status text produced by the Matplotlib backend.
+    """
+
     message: str
     """
     Message text.
@@ -55,6 +59,10 @@ class MatplotlibChartMessageEvent(ft.Event["MatplotlibChart"]):
 
 @dataclass
 class MatplotlibChartToolbarButtonsUpdateEvent(ft.Event["MatplotlibChart"]):
+    """
+    Event describing enabled/disabled state changes for toolbar navigation buttons.
+    """
+
     back_enabled: bool
     """
     Whether Back button is enabled or not.

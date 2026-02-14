@@ -10,7 +10,7 @@ class OAuthProvider:
 
     Instances describe OAuth endpoints, client credentials, optional PKCE
     parameters, and optional user/group retrieval behavior used by
-    [`AuthorizationService`][flet.].
+    `AuthorizationService`.
     """
 
     def __init__(
@@ -59,7 +59,7 @@ class OAuthProvider:
             access_token: OAuth access token.
 
         Returns:
-            A list of [`Group`][flet.]. The base implementation returns
+            A list of [`Group`][(p).]. The base implementation returns
                 an empty list.
         """
         return []
@@ -72,7 +72,7 @@ class OAuthProvider:
             access_token: OAuth access token.
 
         Returns:
-            A [`User`][flet.] instance, or `None` to let authorization
+            A [`User`][(p).] instance, or `None` to let authorization
                 fallback logic use `user_endpoint` / `user_id_fn`.
         """
         return None

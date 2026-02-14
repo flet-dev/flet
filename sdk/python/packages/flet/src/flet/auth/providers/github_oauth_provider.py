@@ -36,7 +36,7 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A list of [`Group`][flet.Group] mapped from `/user/teams`.
+            A list of [`Group`][flet.auth.] mapped from `/user/teams`.
         """
         async with httpx.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
@@ -66,7 +66,7 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A [`User`][flet.] built from `/user`; its `email` is populated
+            A [`User`][flet.auth.] built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
         async with httpx.AsyncClient(follow_redirects=True) as client:

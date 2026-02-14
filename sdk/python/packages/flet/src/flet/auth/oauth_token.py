@@ -28,7 +28,7 @@ class OAuthToken:
         self.expires_at = expires_at
         self.refresh_token = refresh_token
 
-    def to_json(self):
+    def to_json(self) -> str:
         """
         Serializes this token to a compact JSON string.
 
@@ -39,15 +39,15 @@ class OAuthToken:
         return json.dumps(self, cls=EmbedJsonEncoder, separators=(",", ":"))
 
     @staticmethod
-    def from_json(data: str):
+    def from_json(data: str) -> "OAuthToken":
         """
         Deserializes a token from JSON.
 
         Args:
-            data: JSON produced by [`to_json()`][flet.OAuthToken.to_json].
+            data: JSON produced by [`to_json()`][(c).to_json].
 
         Returns:
-            A new [`OAuthToken`][flet.] instance.
+            A new `OAuthToken` instance.
         """
         t = json.loads(data)
         return OAuthToken(**t)
