@@ -309,7 +309,7 @@ nav:
           - Checkbox: controls/checkbox.md
           - Chip: controls/chip.md
           - CircleAvatar: controls/circleavatar.md
-          - CodeEditor: code_editor/index.md
+          - CodeEditor: codeeditor/index.md
           - Color pickers:
               - colorpickers/index.md
               - ColorPicker: colorpickers/colorpicker.md
@@ -763,9 +763,8 @@ nav:
               - WebViewConfiguration: types/webviewconfiguration.md
               - UnderlineTabIndicator: types/underlinetabindicator.md
               - CodeEditor:
-                  - CodeTheme: code_editor/types/code_theme.md
-                  - GutterStyle: code_editor/types/gutter_style.md
-                  - TextEditingValue: code_editor/types/text_editing_value.md
+                  - CodeTheme: codeeditor/types/codetheme.md
+                  - GutterStyle: codeeditor/types/gutterstyle.md
               - Video:
                   - PlaylistMode: video/types/playlistmode.md
                   - VideoConfiguration: video/types/videoconfiguration.md
