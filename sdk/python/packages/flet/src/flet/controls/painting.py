@@ -25,20 +25,50 @@ __all__ = [
 
 
 class PaintingStyle(Enum):
+    """
+    Strategy used by [`Paint.style`][flet.] when drawing geometry.
+
+    Determines whether a shape is rendered as a filled interior or as an
+    outlined contour.
+    """
+
     FILL = "fill"
+    """
+    Paint the interior of the shape.
+
+    For example, circles and polygons are rendered as solid filled regions.
+    """
+
     STROKE = "stroke"
+    """
+    Paint only the shape outline.
+
+    Stroke thickness and joins/caps are controlled by properties such as
+    [`Paint.stroke_width`][flet.], [`Paint.stroke_join`][flet.], and
+    [`Paint.stroke_cap`][flet.].
+    """
 
 
 @dataclass(kw_only=True)
 class PaintGradient:
+    """
+    Base class for gradients applied via [`Paint.gradient`][flet.].
+
+    Use one of its concrete variants:
+    - [`PaintLinearGradient`][flet.]
+    - [`PaintRadialGradient`][flet.]
+    - [`PaintSweepGradient`][flet.]
+    """
+
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
+    """Internal gradient kind discriminator serialized to Flutter."""
 
 
 @dataclass
 class PaintLinearGradient(PaintGradient):
     """
-    More information on Linear gradient \
-    https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html
+    More information on Linear gradient
+    [here](https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html).
     """
 
     begin: Optional[OffsetValue]
