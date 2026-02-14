@@ -141,7 +141,7 @@ plugins:
             summary:
                 attributes: false
                 functions: false
-            preload_modules: [ flet, flet_ads ]
+            preload_modules: [ flet ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
               - "!^(init|before_update|build|will_unmount|did_mount)$"
