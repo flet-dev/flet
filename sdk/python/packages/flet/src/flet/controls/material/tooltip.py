@@ -18,8 +18,16 @@ from flet.controls.types import (
 
 
 class TooltipTriggerMode:
+    """
+    The method of interaction that will trigger a tooltip.
+    Used in [`Tooltip.trigger_mode`][flet.] and
+    [`TooltipThemeData.trigger_mode`][flet.].
+
+    On desktop, a tooltip will be shown as soon as a pointer hovers over
+    the widget, regardless of the value of [`Tooltip.trigger_mode`][flet.].
+    """
+
     MANUAL = "manual"
-    """"""
 
     TAP = "tap"
     """

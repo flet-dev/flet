@@ -522,6 +522,17 @@ nav:
           - Classes:
               - Ads:
                   - AdRequest: ads/types/adrequest.md
+              - Authentication:
+                  - Authorization: types/authorization.md
+                  - OAuthProvider: types/oauthprovider.md
+                  - OAuthToken: types/oauthtoken.md
+                  - User: types/user.md
+                  - Group: types/group.md
+                  - Providers:
+                      - Auth0OAuthProvider: types/auth0oauthprovider.md
+                      - AzureOAuthProvider: types/azureoauthprovider.md
+                      - GitHubOAuthProvider: types/githuboauthprovider.md
+                      - GoogleOAuthProvider: types/googleoauthprovider.md
               - Alignment: types/alignment.md
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md

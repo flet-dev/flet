@@ -11,8 +11,21 @@ __all__ = [
 
 @dataclass()
 class Key:
+    """
+    Base class for control keys.
+
+    Concrete subclasses define `_type` and therefore behavior on the Flutter
+    side. Use [`ValueKey`][flet.] for general control identity and
+    [`ScrollKey`][flet.] for scroll-target lookups.
+    """
+
     value: Union[str, int, float, bool]
+    """
+    Stable primitive identifier used to match a control.
+    """
+
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
+    """Discriminator used on Flutter end to select the key kind."""
 
     def __str__(self) -> str:
         return str(self.value)
@@ -20,12 +33,30 @@ class Key:
 
 @dataclass
 class ValueKey(Key):
+    """
+    General-purpose key for control identity.
+
+    This is the default key kind used by control `key` properties and by
+    testing APIs such as [`Tester.find_by_key()`][flet.Tester.find_by_key].
+    Prefer it when you need a stable identifier across rebuilds but do not need
+    scroll-specific behavior.
+    """
+
     def __post_init__(self):
         self._type = "value"
 
 
 @dataclass
 class ScrollKey(Key):
+    """
+    Key type used for imperative scroll targeting.
+
+    Use this key to identify an item when calling
+    [`ScrollableControl.scroll_to()`][flet.ScrollableControl.scroll_to] with
+    `scroll_key`. The `_type` discriminator allows Flutter to resolve this key
+    as a scroll target rather than a generic value key.
+    """
+
     def __post_init__(self):
         self._type = "scroll"
 

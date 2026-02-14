@@ -40,30 +40,49 @@ class Size:
 
     @classmethod
     def square(cls, dimension: Number) -> "Size":
-        """Creates a square Size where width and height are the same."""
+        """
+        Creates a square `Size` where [`width`][(c).]
+        and [`height`][(c).] are the same.
+        """
         return Size(dimension, dimension)
 
     @classmethod
     def from_width(cls, width: Number) -> "Size":
-        """Creates a Size with the given width and an infinite height."""
+        """
+        Creates a `Size` with the given [`width`][(c).]
+        and an infinite [`height`][(c).].
+        """
         return Size(width, float("inf"))
 
     @classmethod
     def from_height(cls, height: Number) -> "Size":
-        """Creates a Size with the given height and an infinite width."""
+        """
+        Creates a `Size` with the given [`height`][(c).]
+        and an infinite [`width`][(c).].
+        """
         return Size(float("inf"), height)
 
     @classmethod
     def from_radius(cls, radius: Number) -> "Size":
-        """Creates a square Size whose width and height are twice the given radius."""
+        """
+        Creates a square `Size` whose [`width`][(c).] and
+        [`height`][(c).] are twice the given radius.
+        """
         return Size(radius * 2.0, radius * 2.0)
 
     @classmethod
     def zero(cls):
+        """
+        Creates a `Size` whose [`width`][(c).] and [`height`][(c).] are both `0.0`.
+        """
         return Size(0.0, 0.0)
 
     @classmethod
     def infinite(cls):
+        """
+        Creates a `Size` whose [`width`][(c).] and
+        [`height`][(c).] are both positive infinity.
+        """
         return Size(float("inf"), float("inf"))
 
     def copy(

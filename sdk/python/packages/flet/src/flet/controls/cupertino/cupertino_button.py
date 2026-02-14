@@ -32,6 +32,7 @@ class CupertinoButton(LayoutControl):
     """
     An iOS-style button.
 
+    Example:
     ```python
     ft.CupertinoButton("Tap me")
     ```

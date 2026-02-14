@@ -17,7 +17,7 @@ tasks:
     aliases:
       - sync
     cmds:
-      - task: uv sync --group all
+      - uv sync --group all
       - task: pre-commit
 
   venv:

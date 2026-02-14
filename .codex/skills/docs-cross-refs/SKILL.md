@@ -13,7 +13,7 @@ Use these rules when writing or fixing cross-references in Python docstrings for
 - Apply these relative cross-reference rules only in Python docstrings. Markdown files must always use full explicit paths, for example, [`Page`][flet.Page].
 
 2. Use python_xref target forms
-- Use fully qualified targets when needed (usually, only in Markdown files): [`Page`][flet.Page], [`dataclass`][dataclasses.dataclass].
+- Use fully qualified targets when needed (usually, only in Markdown files): [`Page`][flet.Page], [`dataclass`][dataclasses.dataclass]. In Python docstrings, the short forms should be preferred, when possible.
 - Use module-short targets when symbol is in that module: [`Page`][flet.], [`Tester`][flet.testing.], [`Arc`][flet.canvas.].
 - Prefer `(c)` forms for same-class references: [`value`][(c).], [`that_method`][(c).that_method].
 - `..` forms are valid and may be used, but are secondary: [`value`][..], [`that_method`][..].

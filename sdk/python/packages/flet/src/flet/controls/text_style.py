@@ -18,15 +18,43 @@ __all__ = [
 
 
 class TextOverflow(Enum):
+    """
+    How overflowing text should be handled.
+    """
+
     CLIP = "clip"
+    """
+    Clip the overflowing text to fix its container.
+    """
+
     ELLIPSIS = "ellipsis"
+    """
+    Use an ellipsis to indicate that the text has overflowed.
+    """
+
     FADE = "fade"
+    """
+    Fade the overflowing text to transparent.
+    """
+
     VISIBLE = "visible"
+    """
+    Render overflowing text outside of its container.
+    """
 
 
 class TextBaseline(Enum):
+    """A horizontal line used for aligning text."""
+
     ALPHABETIC = "alphabetic"
+    """
+    The horizontal line used to align the bottom of glyphs for alphabetic characters.
+    """
+
     IDEOGRAPHIC = "ideographic"
+    """
+    The horizontal line used to align ideographic characters.
+    """
 
 
 class TextThemeStyle(Enum):
@@ -336,6 +364,9 @@ class TextStyle:
         overflow: Optional[TextOverflow] = None,
         baseline: Optional[TextBaseline] = None,
     ):
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
         return TextStyle(
             size=size if size is not None else self.size,
             height=height if height is not None else self.height,
