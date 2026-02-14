@@ -12,11 +12,13 @@
     <a href="https://pypi.org/project/flet" target="_blank">
         <img src="https://img.shields.io/pypi/v/flet?color=%2334D058&label=pypi" alt="Package version" /></a>
     <a href="https://pepy.tech/project/flet" target="_blank">
-        <img src="https://static.pepy.tech/badge/flet/month" alt="Supported Python versions" /></a>
+        <img src="https://static.pepy.tech/badge/flet/month" alt="Monthly downloads" /></a>
     <a href="https://pypi.org/project/flet" target="_blank">
-        <img src="https://img.shields.io/pypi/pyversions/flet.svg?color=%2334D058" alt="Supported Python versions" /></a>
+        <img src="https://img.shields.io/badge/python-%3E%3D3.10-%2334D058" alt="Python >= 3.10" /></a>
     <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
         <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
+    <a href="https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage" target="_blank">
+        <img src="https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
 ---

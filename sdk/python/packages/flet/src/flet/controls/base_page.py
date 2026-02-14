@@ -258,16 +258,44 @@ class BasePage(AdaptiveControl):
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
     def __root_view(self) -> View:
+        """
+        Return the root view of this page container.
+
+        Returns:
+            The first [`View`][flet.] in [`views`][(c).].
+
+        Raises:
+            RuntimeError: If no views are available.
+        """
+
         if len(self.views) == 0:
             raise RuntimeError("views list is empty.")
         return self.views[0]
 
     def __top_view(self) -> View:
+        """
+        Return the top-most (active) view in the view stack.
+
+        Returns:
+            The last [`View`][flet.] in [`views`][(c).].
+
+        Raises:
+            RuntimeError: If no views are available.
+        """
+
         if len(self.views) == 0:
             raise RuntimeError("views list is empty.")
         return self.views[-1]
 
     def update(self, *controls) -> None:
+        """
+        Push pending updates to the connected client.
+
+        Args:
+            *controls: Specific controls to update. When omitted, updates this
+                page object.
+        """
+
         if len(controls) == 0:
             self.page.update(self)
         else:
@@ -311,6 +339,10 @@ class BasePage(AdaptiveControl):
         self.update()
 
     def clean(self) -> None:
+        """
+        Remove all root view controls and send update to the client.
+        """
+
         self.controls.clear()
         self.update()
 
@@ -359,6 +391,13 @@ class BasePage(AdaptiveControl):
         original_on_dismiss = dialog.on_dismiss
 
         async def wrapped_on_dismiss(*args):
+            """
+            Remove dialog from stack and forward dismiss event to original handler.
+
+            Args:
+                *args: Dismiss event arguments passed by the framework.
+            """
+
             if dialog in self._dialogs.controls:
                 self._dialogs.controls.remove(dialog)
                 self._dialogs.update()
@@ -451,11 +490,19 @@ class BasePage(AdaptiveControl):
     # overlay
     @property
     def overlay(self) -> list[BaseControl]:
+        """
+        The list of overlay controls rendered above page content.
+        """
+
         return self._overlay.controls
 
     # controls
     @property
     def controls(self) -> list[BaseControl]:
+        """
+        Root view content controls displayed by this page.
+        """
+
         return self.__root_view().controls
 
     @controls.setter
@@ -481,6 +528,10 @@ class BasePage(AdaptiveControl):
     # bottom_appbar
     @property
     def bottom_appbar(self) -> Optional[BottomAppBar]:
+        """
+        Bottom app bar displayed in the root view.
+        """
+
         return self.__root_view().bottom_appbar
 
     @bottom_appbar.setter
@@ -490,6 +541,10 @@ class BasePage(AdaptiveControl):
     # navigation_bar
     @property
     def navigation_bar(self) -> Optional[Union[NavigationBar, CupertinoNavigationBar]]:
+        """
+        Bottom navigation bar for the root view.
+        """
+
         return self.__root_view().navigation_bar
 
     @navigation_bar.setter
@@ -502,6 +557,10 @@ class BasePage(AdaptiveControl):
     # drawer
     @property
     def drawer(self) -> Optional[NavigationDrawer]:
+        """
+        Navigation drawer opened from the leading edge.
+        """
+
         return self.__root_view().drawer
 
     @drawer.setter
@@ -511,6 +570,10 @@ class BasePage(AdaptiveControl):
     # end_drawer
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:
+        """
+        Navigation drawer opened from the trailing edge.
+        """
+
         return self.__root_view().end_drawer
 
     @end_drawer.setter
@@ -520,6 +583,10 @@ class BasePage(AdaptiveControl):
     # decoration
     @property
     def decoration(self) -> Optional[BoxDecoration]:
+        """
+        Background decoration of the root view container.
+        """
+
         return self.__root_view().decoration
 
     @decoration.setter
@@ -529,6 +596,10 @@ class BasePage(AdaptiveControl):
     # foreground_decoration
     @property
     def foreground_decoration(self) -> Optional[BoxDecoration]:
+        """
+        Foreground decoration painted above root view content.
+        """
+
         return self.__root_view().foreground_decoration
 
     @foreground_decoration.setter
@@ -538,6 +609,10 @@ class BasePage(AdaptiveControl):
     # floating_action_button
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
+        """
+        Floating action button shown for the root view.
+        """
+
         return self.__root_view().floating_action_button
 
     @floating_action_button.setter
@@ -549,6 +624,10 @@ class BasePage(AdaptiveControl):
     def floating_action_button_location(
         self,
     ) -> Optional[Union[FloatingActionButtonLocation, OffsetValue]]:
+        """
+        Placement of the floating action button in the root view.
+        """
+
         return self.__root_view().floating_action_button_location
 
     @floating_action_button_location.setter
@@ -560,6 +639,10 @@ class BasePage(AdaptiveControl):
     # horizontal_alignment
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
+        """
+        Horizontal alignment of root view child controls.
+        """
+
         return self.__root_view().horizontal_alignment
 
     @horizontal_alignment.setter
@@ -569,6 +652,10 @@ class BasePage(AdaptiveControl):
     # vertical_alignment
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
+        """
+        Vertical alignment of root view child controls.
+        """
+
         return self.__root_view().vertical_alignment
 
     @vertical_alignment.setter
@@ -578,6 +665,10 @@ class BasePage(AdaptiveControl):
     # spacing
     @property
     def spacing(self) -> Number:
+        """
+        Default spacing between root view child controls.
+        """
+
         return self.__root_view().spacing
 
     @spacing.setter
@@ -587,6 +678,10 @@ class BasePage(AdaptiveControl):
     # padding
     @property
     def padding(self) -> Optional[PaddingValue]:
+        """
+        Inner padding for the root view content.
+        """
+
         return self.__root_view().padding
 
     @padding.setter
@@ -596,6 +691,10 @@ class BasePage(AdaptiveControl):
     # bgcolor
     @property
     def bgcolor(self) -> Optional[ColorValue]:
+        """
+        Background color of the root view.
+        """
+
         return self.__root_view().bgcolor
 
     @bgcolor.setter
@@ -605,6 +704,10 @@ class BasePage(AdaptiveControl):
     # scroll
     @property
     def scroll(self) -> Optional[ScrollMode]:
+        """
+        Scroll behavior mode for root view content.
+        """
+
         return self.__root_view().scroll
 
     @scroll.setter
@@ -614,6 +717,10 @@ class BasePage(AdaptiveControl):
     # auto_scroll
     @property
     def auto_scroll(self) -> bool:
+        """
+        Whether root view should auto-scroll to the end on content changes.
+        """
+
         return self.__root_view().auto_scroll
 
     @auto_scroll.setter
@@ -623,6 +730,10 @@ class BasePage(AdaptiveControl):
     # services
     @property
     def services(self) -> list[Service]:
+        """
+        Service instances attached to the root view lifecycle.
+        """
+
         return self.__root_view().services
 
     @services.setter
@@ -636,7 +747,14 @@ class BasePage(AdaptiveControl):
 
 @control("Overlay")
 class Overlay(BaseControl):
+    """
+    Internal container for controls displayed above main page content.
+    """
+
     controls: list[BaseControl] = field(default_factory=list)
+    """
+    Overlay controls rendered in stacking order.
+    """
 
     def init(self):
         super().init()
@@ -645,4 +763,11 @@ class Overlay(BaseControl):
 
 @control("Dialogs")
 class Dialogs(BaseControl):
+    """
+    Internal container tracking dialogs currently managed by a page.
+    """
+
     controls: list[DialogControl] = field(default_factory=list)
+    """
+    Stack of active dialog controls.
+    """
