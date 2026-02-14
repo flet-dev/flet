@@ -62,8 +62,9 @@ class AppBar(AdaptiveControl):
     control that contains a description of the current contents of this app.
 
     Note:
-        If [`AppBar.adaptive=True`][(c).adaptive] and this app is opened on
-        an iOS or macOS device, this [`title`][(c).] control will be
+        If [`AppBar.adaptive=True`][flet.AdaptiveControl.adaptive]
+        and this app is opened on an iOS or macOS device,
+        this [`title`][(c).] control will be
         automatically centered, independent of the value of [`center_title`][(c).].
     """
 
@@ -166,8 +167,9 @@ class AppBar(AdaptiveControl):
     action.
 
     Info:
-        If [`AppBar.adaptive`][(c).adaptive] is `True` and this app is opened on an
-        iOS or macOS device, these `actions` will be automatically placed in a
+        If [`AppBar.adaptive`][flet.AdaptiveControl.adaptive] is `True`
+        and this app is opened on an iOS or macOS device,
+        these `actions` will be automatically placed in a
         [`Row`][flet.].
         This is because [`CupertinoAppBar.trailing`][flet.]
         (which is the counterpart property of `actions`) takes only a single `Control`.

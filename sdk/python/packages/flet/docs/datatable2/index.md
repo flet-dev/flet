@@ -46,7 +46,7 @@ pip install flet-datatable2  # (1)!
 --8<-- "{{ examples }}/example_2.py"
 ```
 
-{{ image(examples + "/media/example_2.gif", width="80%") }}
+{{ image("../assets/datatable2/example_2.gif", width="80%") }}
 
 ## Description
 

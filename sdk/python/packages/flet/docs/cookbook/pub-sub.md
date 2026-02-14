@@ -6,10 +6,10 @@ Flet PubSub allows broadcasting messages to all app sessions or sending only to 
 
 A typical PubSub usage would be:
 
-* [subscribe][flet.PubSubClient.subscribe] to broadcast messages or [subscribe to a topic][flet.PubSubClient.subscribe_topic] on app session start.
-* [send][flet.PubSubClient.send_all] broadcast message or [send to a topic][flet.PubSubClient.send_all_on_topic] on some event, like "Send" button click.
-* [unsubscribe][flet.PubSubClient.subscribe] from broadcast messages or [unsubscribe from a topic][flet.PubSubClient.unsubscribe_topic] on some event, like "Leave" button click.
-* [unsubscribe_all][flet.PubSubClient.unsubscribe_all] from everything on [`page.on_close`][flet.Page.on_close].
+* [`subscribe()`][flet.pubsub.PubSubClient.subscribe] to broadcast messages or [`subscribe_topic()`][flet.pubsub.PubSubClient.subscribe_topic] on app session start.
+* [`send_all()`][flet.pubsub.PubSubClient.send_all] broadcast message or [`send_all_on_topic()`][flet.pubsub.PubSubClient.send_all_on_topic] on some event, like "Send" button click.
+* [`unsubscribe()`][flet.pubsub.PubSubClient.unsubscribe] from broadcast messages or [`unsubscribe_topic()`][flet.pubsub.PubSubClient.unsubscribe_topic] on some event, like "Leave" button click.
+* [`unsubscribe_all()`][flet.pubsub.PubSubClient.unsubscribe_all] from everything on [`page.on_close`][flet.Page.on_close].
 
 This is an example of a simple chat application that uses PubSub:
 

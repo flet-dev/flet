@@ -179,7 +179,6 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 -   [:octicons-arrow-right-24: `Slider`][flet.Slider]
 
     ---
-    ![Slider](../examples/controls/slider/media/index.png){width="45%"}
 
 -   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
 

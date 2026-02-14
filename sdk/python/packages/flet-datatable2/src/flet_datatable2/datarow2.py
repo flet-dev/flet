@@ -20,7 +20,9 @@ class DataRow2(ft.DataRow):
     Decoration to be applied to this row.
 
     Note:
-        If provided, [`DataTable2.divider_thickness`][(p).] has no effect.
+        If provided,
+        [`DataTable.divider_thickness`][flet.DataTable.divider_thickness]
+        has no effect.
     """
 
     specific_row_height: Optional[ft.Number] = None
