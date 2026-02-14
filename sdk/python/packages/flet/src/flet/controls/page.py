@@ -291,13 +291,35 @@ class AppLifecycleStateChangeEvent(Event["Page"]):
 
 @dataclass
 class MultiViewAddEvent(Event["Page"]):
+    """
+    Event payload emitted when a new multi-view is created.
+
+    Delivered to [`Page.on_multi_view_add`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the newly created view.
+    """
+
     initial_data: Any
+    """
+    Optional initial payload provided when the view was opened.
+    """
 
 
 @dataclass
 class MultiViewRemoveEvent(Event["Page"]):
+    """
+    Event payload emitted when a multi-view is removed.
+
+    Delivered to [`Page.on_multi_view_remove`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the removed view.
+    """
 
 
 @control("Page", isolated=True, post_init_args=2)
@@ -544,6 +566,18 @@ class Page(BasePage):
         *args,
         **kwargs,
     ):
+        """
+        Render a component tree into controls of the root view.
+
+        The rendered result replaces `page.views[0].controls`, then triggers
+        initial page update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -555,33 +589,86 @@ class Page(BasePage):
         *args,
         **kwargs,
     ):
+        """
+        Render a component tree as the full list of page views.
+
+        The rendered result replaces `page.views`, then triggers initial page
+        update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render_views()")
         self._notify = self.__notify
         self.views = Renderer().render(component, *args, **kwargs)
         self.__render()
 
     def __render(self):
+        """
+        Finalize component rendering setup.
+
+        Performs initial page update, enables components mode, and starts
+        batched updates scheduler for component-driven state changes.
+        """
+
         self.update()
         context.enable_components_mode()
         self.session.start_updates_scheduler()
 
     def schedule_update(self):
+        """
+        Queue this page for a deferred batched update.
+        """
+
         self.session.schedule_update(self)
 
     def update(self, *controls) -> None:
+        """
+        Push pending state changes to the client.
+
+        Args:
+            *controls: Specific controls to patch. When omitted, patches the
+                whole page state.
+        """
+
         if len(controls) == 0:
             self.__update(self)
         else:
             self.__update(*controls)
 
     def __notify(self, name: str, value: Any):
+        """
+        Schedule page update when reactive component state changes.
+
+        Args:
+            name: Changed value identifier.
+            value: New value.
+        """
+
         self.schedule_update()
 
     def __update(self, *controls: Control):
+        """
+        Send control patches for the provided controls.
+
+        Args:
+            *controls: Controls whose updates should be sent to the client.
+        """
+
         for c in controls:
             self.session.patch_control(c)
 
     def error(self, message: str) -> None:
+        """
+        Report an application error to the current session/client.
+
+        Args:
+            message: Error message to send.
+        """
+
         self.session.error(message)
 
     def before_event(self, e: ControlEvent):
@@ -619,6 +706,13 @@ class Page(BasePage):
         )
 
         def _on_completion(f):
+            """
+            Surface background task exceptions to default error handling.
+
+            Args:
+                f: Completed future returned by `run_coroutine_threadsafe()`.
+            """
+
             try:
                 exception = f.exception()
                 if exception:
@@ -631,7 +725,25 @@ class Page(BasePage):
         return future
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
+        """
+        Wrap a callable to execute with this page bound to context vars.
+
+        Args:
+            handler: Handler function to wrap.
+
+        Returns:
+            Wrapped callable that restores page context before invocation.
+        """
+
         def wrapper(*args, **kwargs):
+            """
+            Execute wrapped handler with page context initialized.
+
+            Args:
+                *args: Positional arguments forwarded to wrapped handler.
+                **kwargs: Keyword arguments forwarded to wrapped handler.
+            """
+
             _context_page.set(self)
             handler(*args, **kwargs)
 
@@ -833,6 +945,18 @@ class Page(BasePage):
         return self.__authorization
 
     async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
+        """
+        Complete OAuth flow using callback payload returned by provider.
+
+        Validates state token, optionally closes/foregrounds app UI, exchanges
+        authorization code for access token, and raises `login` event with
+        success or failure details.
+
+        Args:
+            data: OAuth callback query payload (e.g. `state`, `code`,
+                `error`, `error_description`).
+        """
+
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state

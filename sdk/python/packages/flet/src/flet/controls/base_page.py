@@ -127,23 +127,21 @@ class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
-    `BasePage` serves as the base class for [Page][flet.Page] and
-    [MultiView][flet.MultiView], and provides a unified surface for rendering
-    application content, app bars,
-    navigation elements, dialogs, overlays, and more. It manages one
-    or more [View][flet.View] instances and exposes high-level layout,
+    `BasePage` serves as the base class for [Page][flet.] and [`MultiView`][flet.],
+    and provides a unified surface for rendering application content, app bars,
+    navigation elements, dialogs, overlays, and more. It manages one or more
+    [`View`][flet.] instances and exposes high-level layout,
     scrolling, and theming properties.
 
-    Unlike lower-level layout controls (e.g., [Column][flet.Column],
-    [Container][flet.Container]), [BasePage][flet.BasePage] represents
+    Unlike lower-level layout controls (e.g., [`Column`][flet.],
+    [`Container`][flet.]), [`BasePage`][flet.] represents
     an entire logical view or screen of the app. It provides direct access
-    to view-level controls such as [AppBar][flet.AppBar],
-    [NavigationBar][flet.NavigationBar],
-    [FloatingActionButton][flet.FloatingActionButton],
-    and supports system-level events like window resizing and media changes.
+    to view-level controls such as [`AppBar`][flet.], [`NavigationBar`][flet.],
+    [`FloatingActionButton`][flet.], and supports system-level events like window
+    resizing and media changes.
 
     This class is not intended to be used directly in most apps; instead,
-    use [Page][flet.Page] or [MultiView][flet.MultiView], which extend this base
+    use [`Page`][flet.] or [`MultiView`][flet.], which extend this base
     functionality.
     """
 
@@ -151,7 +149,7 @@ class BasePage(AdaptiveControl):
     """
     A list of views managed by the page.
 
-    Each [View][flet.View] represents a distinct navigation state or screen
+    Each [`View`][flet.] represents a distinct navigation state or screen
     in the application.
 
     The first view in the list is considered the active one by default.
@@ -240,8 +238,8 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`width`][flet.Window.width] property of
-            [`Page.window`][flet.Page.window] instead.
+            use the [`width`][flet.Window.] property of
+            [`Page.window`][flet.Page.] instead.
     """
 
     height: Optional[Number] = None
@@ -252,8 +250,8 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`height`][flet.Window.height] property of
-            [`Page.window`][flet.Page.window] instead.
+            use the [`height`][flet.Window.] property of
+            [`Page.window`][flet.] instead.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
@@ -279,6 +277,7 @@ class BasePage(AdaptiveControl):
         """
         Adds controls to the page.
 
+        Example:
         ```python
         page.add(ft.Text("Hello!"), ft.FilledButton("Button"))
         ```
@@ -343,8 +342,7 @@ class BasePage(AdaptiveControl):
         Displays a dialog and manages its dismissal lifecycle.
 
         This method adds the specified `dialog` to the active dialog stack
-        and renders it on the page. If the dialog is already open, a `RuntimeError`
-        is raised.
+        and renders it on the page.
         The [`on_dismiss`][flet.DialogControl.] handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.

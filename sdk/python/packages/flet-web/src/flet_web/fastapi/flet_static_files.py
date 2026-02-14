@@ -109,6 +109,19 @@ class FletStaticFiles(StaticFiles):
         return full_path, stat_result
 
     async def __config(self, root_path: str):
+        """
+        Prepare a patched temporary web root and initialize static file serving.
+
+        The method resolves app mount path, copies baseline web files
+        (`index.html`, `manifest.json`, and optionally `FontManifest.json`)
+        from either user assets or packaged web assets, applies runtime
+        substitutions, and configures the underlying
+        [`StaticFiles`][fastapi.staticfiles.] instance.
+
+        Args:
+            root_path: ASGI root path used to compute mounted base URL.
+        """
+
         if self.__proxy_path:
             self.__app_mount_path = self.__proxy_path + root_path
         else:
@@ -138,6 +151,16 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Assets dir: {self.__assets_dir}")
 
         def copy_temp_web_file(paths: list[str]):
+            """
+            Copy a web asset into the temporary patched web directory.
+
+            Source precedence is user-provided assets directory first, then
+            the packaged web directory.
+
+            Args:
+                paths: Path segments relative to the web root.
+            """
+
             if self.__assets_dir and os.path.exists(
                 p := os.path.join(self.__assets_dir, *paths)
             ):

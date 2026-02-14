@@ -78,7 +78,7 @@ jobs:
               echo
             fi
           done
-          # exit $status
+          exit $status
 
       - name: Upload docs-coverage logs
         if: matrix.python-version == '3.12'

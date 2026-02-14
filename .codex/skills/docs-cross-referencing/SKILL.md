@@ -1,5 +1,5 @@
 ---
-name: docs-cross-refs
+name: docs-cross-referencing
 description: Documentation cross-reference conventions. Use when adding or editing docstrings under sdk/python/packages, fixing broken cross-links, or reviewing Python docstring links that should resolve through mkdocs python_xref.
 ---
 

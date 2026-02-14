@@ -8,5 +8,6 @@ ignore_patterns:
     - before_update
     - before_event
     - build
+    - main
     - _migrate_state
-fail_under: 40
+fail_under: 50
