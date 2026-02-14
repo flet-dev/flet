@@ -39,6 +39,13 @@ figure_cursors = {
 
 
 def _require_matplotlib() -> None:
+    """
+    Ensure optional matplotlib dependency is available.
+
+    Raises:
+        ModuleNotFoundError: If `matplotlib` is not installed.
+    """
+
     if matplotlib is None:
         raise ModuleNotFoundError(
             'Install "matplotlib" Python package to use MatplotlibChart control.'
@@ -146,12 +153,33 @@ class MatplotlibChart(ft.GestureDetector):
         self._waiting = False
 
     def _on_key_down(self, e):
+        """
+        Handle key-down notifications from keyboard listener.
+
+        Args:
+            e: Keyboard event payload.
+        """
+
         logger.debug(f"ON KEY DOWN: {e}")
 
     def _on_key_up(self, e):
+        """
+        Handle key-up notifications from keyboard listener.
+
+        Args:
+            e: Keyboard event payload.
+        """
+
         logger.debug(f"ON KEY UP: {e}")
 
     def _on_enter(self, e: ft.HoverEvent):
+        """
+        Notify backend that pointer entered the chart area.
+
+        Args:
+            e: Hover event containing local pointer coordinates.
+        """
+
         logger.debug(f"_on_enter: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -165,6 +193,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _on_hover(self, e: ft.HoverEvent):
+        """
+        Notify backend about pointer movement over chart area.
+
+        Args:
+            e: Hover event containing local pointer coordinates.
+        """
+
         logger.debug(f"_on_hover: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -178,6 +213,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _on_exit(self, e: ft.HoverEvent):
+        """
+        Notify backend that pointer left the chart area.
+
+        Args:
+            e: Hover event containing local pointer coordinates.
+        """
+
         logger.debug(f"_on_exit: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -191,6 +233,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _pan_start(self, e: ft.DragStartEvent):
+        """
+        Start primary-button drag interaction.
+
+        Args:
+            e: Drag start event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_start: {e.local_position.x}, {e.local_position.y}")
         asyncio.create_task(self.keyboard_listener.focus())
         self.send_message(
@@ -205,6 +254,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _pan_update(self, e: ft.DragUpdateEvent):
+        """
+        Continue primary-button drag interaction.
+
+        Args:
+            e: Drag update event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_update: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -218,6 +274,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _pan_end(self, e: ft.DragEndEvent):
+        """
+        End primary-button drag interaction.
+
+        Args:
+            e: Drag end event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_end: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -231,6 +294,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _right_pan_start(self, e: ft.PointerEvent):
+        """
+        Start secondary-button drag interaction.
+
+        Args:
+            e: Pointer event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_start: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -244,6 +314,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _right_pan_update(self, e: ft.PointerEvent):
+        """
+        Continue secondary-button drag interaction.
+
+        Args:
+            e: Pointer event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_update: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -257,6 +334,13 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def _right_pan_end(self, e: ft.PointerEvent):
+        """
+        End secondary-button drag interaction.
+
+        Args:
+            e: Pointer event containing local pointer coordinates.
+        """
+
         logger.debug(f"_pan_end: {e.local_position.x}, {e.local_position.y}")
         self.send_message(
             {
@@ -325,6 +409,14 @@ class MatplotlibChart(ft.GestureDetector):
         return buff.getvalue()
 
     async def _receive_loop(self):
+        """
+        Consume backend messages and apply canvas/state updates.
+
+        The loop handles both binary image frames and JSON control messages
+        (cursor updates, draw requests, rubber-band overlays, status text, and
+        toolbar history state).
+        """
+
         while True:
             is_binary, content = await self._receive_queue.get()
             if is_binary:
@@ -417,6 +509,17 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     async def _on_canvas_resize(self, e: fc.CanvasResizeEvent):
+        """
+        Handle canvas resize and initialize backend session on first resize.
+
+        On first call, starts receive loop, registers this control with figure
+        manager, and requests initial image state. On every call, stores current
+        dimensions and sends a resize message to backend.
+
+        Args:
+            e: Canvas resize event.
+        """
+
         logger.debug(f"on_canvas_resize: {e.width}, {e.height}")
 
         if not self.__started:

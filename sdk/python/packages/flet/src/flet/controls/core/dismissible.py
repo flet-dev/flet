@@ -21,15 +21,44 @@ __all__ = ["Dismissible", "DismissibleDismissEvent", "DismissibleUpdateEvent"]
 
 @dataclass
 class DismissibleDismissEvent(Event["Dismissible"]):
+    """
+    Event payload for dismissal confirmation and completion callbacks.
+
+    Used by [`on_confirm_dismiss`][flet.Dismissible.] and
+    [`on_dismiss`][flet.Dismissible.].
+    """
+
     direction: DismissDirection
+    """
+    Direction in which the control is being (or was) dismissed.
+    """
 
 
 @dataclass
 class DismissibleUpdateEvent(Event["Dismissible"]):
+    """
+    Event payload emitted while a dismiss gesture is in progress.
+    """
+
     direction: DismissDirection
+    """
+    Direction of the current drag gesture.
+    """
+
     progress: float
+    """
+    Drag progress from `0.0` to `1.0` relative to dismissal threshold.
+    """
+
     reached: bool
+    """
+    Whether the dismiss threshold is currently reached.
+    """
+
     previous_reached: bool
+    """
+    Whether threshold was reached on the previous update event.
+    """
 
 
 @control("Dismissible")
@@ -166,4 +195,15 @@ class Dismissible(LayoutControl, AdaptiveControl):
             )
 
     async def confirm_dismiss(self, dismiss: bool):
+        """
+        Resolve a pending dismissal decision triggered by [`on_confirm_dismiss`][(c).].
+
+        Call this method from your confirmation flow after handling
+        [`on_confirm_dismiss`][(c).].
+
+        Args:
+            dismiss: `True` to continue dismissing the control, `False` to cancel
+                and return it to the original position.
+        """
+
         await self._invoke_method("confirm_dismiss", {"dismiss": dismiss})

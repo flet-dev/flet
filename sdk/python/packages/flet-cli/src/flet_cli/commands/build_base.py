@@ -206,6 +206,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register shared build arguments used by all concrete build commands.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "python_app_path",
             type=str,
@@ -604,11 +611,22 @@ class BaseBuildCommand(BaseFlutterCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Store build command options and resolve requested target platform.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         super().handle(options)
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
 
     def initialize_command(self):
+        """
+        Initialize build paths, target metadata, and shared Flutter prerequisites.
+        """
+
         assert self.options
         assert self.target_platform
 
@@ -648,6 +666,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
 
     def validate_target_platform(self):
+        """
+        Validate whether current host OS can build the selected target platform.
+
+        Displays build matrix context and exits when target is unsupported or
+        when matrix display is explicitly requested.
+        """
+
         assert self.options
         assert self.target_platform
         if (
@@ -677,6 +702,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.cleanup(1, message)
 
     def validate_entry_point(self):
+        """
+        Resolve app entry-point module and ensure corresponding Python file exists.
+        """
+
         assert self.options
         assert self.python_app_path
         assert self.get_pyproject
@@ -702,6 +731,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
     def setup_template_data(self):
+        """
+        Build template context by merging CLI options, project config, and defaults.
+
+        The resulting context is stored in `self.template_data` and later used
+        to render Flutter bootstrap templates.
+        """
+
         assert self.options
         assert self.python_app_path
         assert self.get_pyproject
@@ -1020,6 +1056,17 @@ class BaseBuildCommand(BaseFlutterCommand):
         }
 
     def create_flutter_project(self, second_pass=False):
+        """
+        Render Flutter bootstrap project from template if template inputs changed.
+
+        Args:
+            second_pass: Whether this render happens after extension registration.
+
+        Returns:
+            `True` when template output changed and files were regenerated,
+            otherwise `False`.
+        """
+
         assert self.options
         assert self.get_pyproject
         assert self.flutter_dir
@@ -1109,6 +1156,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         return hash_changed
 
     def register_flutter_extensions(self):
+        """
+        Discover local Flutter extension packages and inject them into dependencies.
+        """
+
         assert self.flutter_packages_dir
         assert self.flutter_packages_temp_dir
         assert isinstance(self.flutter_dependencies, dict)
@@ -1140,6 +1191,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
     def update_flutter_dependencies(self):
+        """
+        Merge resolved Flutter extension dependencies into `pubspec.yaml`.
+        """
+
         assert self.pubspec_path
         assert self.template_data
         assert self.get_pyproject
@@ -1165,6 +1220,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.save_yaml(self.pubspec_path, pubspec)
 
     def customize_icons(self):
+        """
+        Resolve platform icon assets, patch pubspec icon config, and generate icons.
+        """
+
         assert self.package_app_path
         assert self.flutter_dir
         assert self.options
@@ -1299,6 +1358,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.commit()
 
     def customize_splash_images(self):
+        """
+        Resolve splash assets/colors, patch splash config, and generate splash files.
+        """
+
         assert self.package_app_path
         assert self.flutter_dir
         assert self.options
@@ -1549,6 +1612,16 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.commit()
 
     def fallback_image(self, pubspec, yaml_path: str, images: list, images_dir: str):
+        """
+        Assign first available image from candidates to a nested pubspec key path.
+
+        Args:
+            pubspec: Parsed pubspec document.
+            yaml_path: Dot-separated key path to image setting.
+            images: Candidate image file names in fallback order.
+            images_dir: Relative image directory prefix.
+        """
+
         d = pubspec
         pp = yaml_path.split(".")
         for p in pp[:-1]:
@@ -1559,6 +1632,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return
 
     def package_python_app(self):
+        """
+        Package Python app and dependencies into Flutter-consumable app archive.
+
+        Handles dependency resolution, cleanup/compile flags, cache checks, and
+        invokes `serious_python` packaging command.
+        """
+
         assert self.options
         assert self.get_pyproject
         assert self.python_app_path
@@ -1769,6 +1849,19 @@ class BaseBuildCommand(BaseFlutterCommand):
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
+        """
+        Resolve a boolean setting with precedence: CLI option, pyproject, default.
+
+        Args:
+            cli_option: Value from CLI argument.
+            pyproj_setting: Relative key under `tool.flet.<platform>.` and
+                `tool.flet.`.
+            default_value: Fallback value when no override is defined.
+
+        Returns:
+            Resolved boolean-like setting value.
+        """
+
         assert self.get_pyproject
         return (
             cli_option
@@ -1788,12 +1881,27 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
     def add_flutter_command_args(self, args: list[str]):
+        """
+        Hook for subclasses to append command-specific Flutter arguments.
+
+        Args:
+            args: Mutable argument list to extend.
+        """
+
         pass
 
     def run_flutter(self):
+        """
+        Execute Flutter command for the current build target.
+        """
+
         self._run_flutter_command()
 
     def _run_flutter_command(self):
+        """
+        Build final Flutter CLI command, configure environment, and run it.
+        """
+
         assert self.options
         assert self.build_dir
         assert self.get_pyproject
@@ -1891,6 +1999,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
     def copy_build_output(self):
+        """
+        Copy generated platform artifacts into the requested output directory.
+        """
+
         assert self.template_data
         assert self.options
         assert self.flutter_dir
@@ -1908,7 +2020,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             arch = "arm64"
 
         def make_ignore_fn(out_dir, out_glob):
+            """
+            Create a shutil ignore callback that keeps only one selected output glob.
+            """
+
             def ignore(path, names):
+                """
+                Filter sibling entries at `out_dir` so only `out_glob` is copied.
+                """
+
                 if path == out_dir and out_glob != "*":
                     return [f for f in os.listdir(path) if f != out_glob]
                 return []
@@ -1963,6 +2083,20 @@ class BaseBuildCommand(BaseFlutterCommand):
         copy_ops: list,
         hash: HashStamp,
     ):
+        """
+        Find first matching image file by base name and queue it for copy.
+
+        Args:
+            src_path: Source assets directory.
+            dest_path: Destination image directory.
+            image_name: Base image name (without extension).
+            copy_ops: Mutable copy operation list to append to.
+            hash: Hash accumulator used for change detection.
+
+        Returns:
+            File name of matched image, or `None` if not found.
+        """
+
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
             if self.verbose > 0:
@@ -1976,6 +2110,19 @@ class BaseBuildCommand(BaseFlutterCommand):
         return None
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
+        """
+        Run subprocess with merged environment and optional verbose logging.
+
+        Args:
+            args: Command and arguments to execute.
+            cwd: Working directory for the process.
+            env: Additional environment variables merged on top of `self.env`.
+            capture_output: Whether process output should be captured.
+
+        Returns:
+            Process result object returned by `flet_cli.utils.processes.run`.
+        """
+
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}", style=verbose1_style)
 
@@ -1988,9 +2135,27 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
     def load_yaml(self, path):
+        """
+        Load and parse a YAML document from disk.
+
+        Args:
+            path: YAML file path.
+
+        Returns:
+            Parsed YAML object.
+        """
+
         with open(str(path), encoding="utf-8") as f:
             return yaml.safe_load(f)
 
     def save_yaml(self, path, doc):
+        """
+        Serialize YAML document to disk.
+
+        Args:
+            path: Destination YAML file path.
+            doc: YAML-serializable document object.
+        """
+
         with open(str(path), "w", encoding="utf-8") as f:
             yaml.dump(doc, f)
