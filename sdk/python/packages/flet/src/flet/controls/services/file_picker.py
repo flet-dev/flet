@@ -54,26 +54,66 @@ class FilePickerFileType(Enum):
 
 @dataclass
 class FilePickerUploadFile:
+    """
+    Upload descriptor for one file selected by [`FilePicker`][flet.].
+
+    Instances are passed to [`FilePicker.upload()`][flet.FilePicker.upload].
+    During upload, Flet resolves the selected file by [`id`][(c).] first and,
+    when `id` is absent or not found, falls back to [`name`][(c).].
+
+    At least one of [`id`][(c).] or [`name`][(c).] should be provided.
+    """
+
     upload_url: str
+    """
+    Upload destination URL.
+
+    Can be an absolute URL or a page-relative URL returned by
+    [`Page.get_upload_url()`][flet.Page.get_upload_url].
+    """
+
     method: str = "PUT"
+    """
+    HTTP method used for the upload request, usually `PUT` or `POST`.
+    """
+
     id: Optional[int] = None
+    """
+    Selected file identifier returned by
+    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+
+    This is the preferred lookup key when both `id` and `name` are specified.
+    """
+
     name: Optional[str] = None
+    """
+    Selected file name used as fallback lookup when [`id`][(c).] is missing
+    or does not match any currently selected file.
+    """
 
 
 @dataclass
 class FilePickerFile:
     """
-    A file selected via the [`FilePicker`][flet.]
+    Metadata for a file selected via
+    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+
+    Returned by [`FilePicker.pick_files()`][flet.FilePicker.pick_files] and
+    used as input context for [`FilePickerUploadFile`][flet.FilePickerUploadFile]
+    when uploading selected files.
     """
 
     id: int
     """
-    Unique file identifier.
+    Selection-scoped file identifier assigned by Flet.
+
+    This value is stable for the current picker selection and is preferred for
+    upload matching in [`FilePickerUploadFile`][flet.FilePickerUploadFile].
     """
 
     name: str
     """
-    File name without a path.
+    File name (basename), without directory path.
     """
 
     size: int
@@ -83,10 +123,12 @@ class FilePickerFile:
 
     path: Optional[str] = None
     """
-    Full path to a file.
+    Absolute path to the selected file, when available.
 
     Note:
-        Works for desktop and mobile only. Will be `None` in web mode.
+        - Web mode always returns `None`.
+        - On native platforms, this can still be `None` if the platform picker
+            does not expose a filesystem path.
     """
 
 
