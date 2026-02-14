@@ -44,6 +44,7 @@ extensions = [
     "flet-audio",
     "flet-audio-recorder",
     "flet-charts",
+    "flet-code-editor",
     "flet-datatable2",
     "flet-flashlight",
     "flet-geolocator",
