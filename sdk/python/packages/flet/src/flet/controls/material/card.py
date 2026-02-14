@@ -12,9 +12,26 @@ __all__ = ["Card", "CardVariant"]
 
 
 class CardVariant(Enum):
+    """
+    Material card visual style preset.
+
+    Used to define the [`Card.variant`][flet.].
+    """
+
     ELEVATED = "elevated"
+    """
+    Standard elevated card style.
+    """
+
     FILLED = "filled"
+    """
+    Filled card style emphasizing container color.
+    """
+
     OUTLINED = "outlined"
+    """
+    Outlined card style with a visible border.
+    """
 
 
 @control("Card")

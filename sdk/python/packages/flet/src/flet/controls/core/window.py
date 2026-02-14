@@ -365,6 +365,14 @@ class Window(BaseControl):
         await self._invoke_method("center")
 
     async def close(self):
+        """
+        Requests graceful closing of the app window.
+
+        This sends a native close request equivalent to pressing the window
+        close button. If [`prevent_close`][(c).] is enabled, the close may be
+        intercepted and reported via [`on_event`][(c).] with
+        [`WindowEventType.CLOSE`][flet.].
+        """
         await self._invoke_method("close")
 
     async def to_front(self):
