@@ -13,6 +13,13 @@ __all__ = ["Canvas", "CanvasResizeEvent"]
 
 @dataclass
 class CanvasResizeEvent(Event["Canvas"]):
+    """
+    Event emitted when a [`Canvas`][flet.] reports a new rendered size.
+
+    This event is delivered through [`Canvas.on_resize`][flet.Canvas.on_resize]
+    and carries the latest measured dimensions in logical pixels.
+    """
+
     width: float = field(metadata={"data_field": "w"})
     """
     New width of the canvas.
