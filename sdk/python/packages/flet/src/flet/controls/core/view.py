@@ -160,6 +160,21 @@ class View(ScrollableControl, LayoutControl):
         return item in self.controls
 
     async def confirm_pop(self, should_pop: bool) -> None:
+        """
+        Resolves a pending pop-confirmation request for this view.
+
+        Call this from [`on_confirm_pop`][(c).] to allow or cancel the current
+        back-navigation attempt.
+
+        Args:
+            should_pop: `True` to proceed with popping this view, `False` to
+                keep the view on the navigation stack.
+
+        Notes:
+            - This method only has effect while a pop confirmation is pending.
+            - If not called, the frontend confirmation wait times out and the
+                pop is canceled.
+        """
         await self._invoke_method("confirm_pop", {"should_pop": should_pop})
 
     async def show_drawer(self):

@@ -94,7 +94,18 @@ RetT = TypeVar("RetT")
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
+    """
+    Internal container that hosts page-level service controls.
+
+    Services register themselves through this registry so they can be mounted
+    under [`Page`][flet.Page] and synchronized with the frontend service
+    bindings.
+    """
+
     _services: list[Service] = field(default_factory=list)
+    """
+    Tracked service instances currently attached to this page.
+    """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
@@ -102,6 +113,12 @@ class ServiceRegistry(Service):
         self._lock: threading.Lock = threading.Lock()
 
     def register_service(self, service: Service):
+        """
+        Registers a service in this registry and pushes an update.
+
+        Args:
+            service: Service instance to register.
+        """
         with self._lock:
             logger.debug(
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
@@ -110,6 +127,13 @@ class ServiceRegistry(Service):
             self.update()
 
     def unregister_services(self):
+        """
+        Unregisters services that are no longer strongly referenced.
+
+        This keeps the registry aligned with live Python references by removing
+        service instances whose reference count indicates they are no longer in
+        active use, then updating the control tree if removals happened.
+        """
         with self._lock:
             original_len = len(self._services)
             min_refs = 3 if sys.version_info >= (3, 14) else 4
@@ -126,45 +150,143 @@ class ServiceRegistry(Service):
 
 @dataclass
 class RouteChangeEvent(Event["Page"]):
+    """
+    Event payload for [`Page.on_route_change`][flet.Page.on_route_change].
+    """
+
     route: str
+    """
+    New route value after navigation state changed.
+    """
 
 
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
+    """
+    Event payload for platform brightness changes.
+
+    Delivered to
+    [`Page.on_platform_brightness_change`][flet.Page.on_platform_brightness_change].
+    """
+
     brightness: Brightness
+    """
+    Current platform brightness mode.
+    """
 
 
 @dataclass
 class ViewPopEvent(Event["Page"]):
+    """
+    Event payload for view-pop navigation actions.
+
+    Delivered to [`Page.on_view_pop`][flet.Page.on_view_pop] when the top view
+    is being popped by system or app-bar back behavior.
+    """
+
     route: str
+    """
+    Route of the view being popped.
+    """
+
     view: Optional[View] = None
+    """
+    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    """
 
 
 @dataclass
 class KeyboardEvent(Event["Page"]):
+    """
+    Event payload for keyboard key-down notifications.
+
+    Delivered to [`Page.on_keyboard_event`][flet.Page.on_keyboard_event].
+    """
+
     key: str
+    """
+    Human-readable key label for the pressed key.
+    """
+
     shift: bool
+    """
+    Whether Shift was pressed when the key event was emitted.
+    """
+
     ctrl: bool
+    """
+    Whether Control was pressed when the key event was emitted.
+    """
+
     alt: bool
+    """
+    Whether Alt was pressed when the key event was emitted.
+    """
+
     meta: bool
+    """
+    Whether Meta (Command/Windows) was pressed when the key event was emitted.
+    """
 
 
 @dataclass
 class LoginEvent(Event["Page"]):
+    """
+    Event payload for OAuth login completion.
+
+    Emitted to [`Page.on_login`][flet.Page.on_login] for both successful and
+    failed authorization attempts.
+    """
+
     error: Optional[str]
+    """
+    Error code or message when login failed; empty/`None` on success.
+    """
+
     error_description: Optional[str]
+    """
+    Provider-specific error details when login failed.
+    """
 
 
 @dataclass
 class InvokeMethodResults:
+    """
+    Result envelope for a control invoke-method response.
+
+    Stores the correlation identifier and either a serialized result payload or
+    an error string.
+    """
+
     method_id: str
+    """
+    Identifier of the invoke-method call this response belongs to.
+    """
+
     result: Optional[str]
+    """
+    Serialized method result payload when the call succeeded.
+    """
+
     error: Optional[str]
+    """
+    Error message when the invoke-method call failed.
+    """
 
 
 @dataclass
 class AppLifecycleStateChangeEvent(Event["Page"]):
+    """
+    Event payload for app lifecycle transitions.
+
+    Delivered to
+    [`Page.on_app_lifecycle_state_change`][flet.Page.on_app_lifecycle_state_change].
+    """
+
     state: AppLifecycleState
+    """
+    New application lifecycle state.
+    """
 
 
 @dataclass
