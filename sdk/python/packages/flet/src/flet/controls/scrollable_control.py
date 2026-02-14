@@ -18,34 +18,48 @@ __all__ = ["OnScrollEvent", "ScrollDirection", "ScrollType", "ScrollableControl"
 
 class ScrollType(Enum):
     """
-    Logical kind of scroll notification emitted by `ScrollableControl`.
-
-    Used by [`OnScrollEvent.event_type`][flet.OnScrollEvent.event_type].
+    The kind of scroll notification emitted by `ScrollableControl`.
     """
 
     START = "start"
-    """Scrolling has started."""
+    """
+    Scrolling has started.
+    """
 
     UPDATE = "update"
-    """Scroll position changed; `OnScrollEvent.scroll_delta` is available."""
+    """
+    Scroll position changed.
+
+    See [`OnScrollEvent.scroll_delta`][flet.].
+    """
 
     END = "end"
-    """Scrolling has ended."""
+    """
+    Scrolling has ended.
+    """
 
     USER = "user"
-    """User scroll direction changed; `OnScrollEvent.direction` is available."""
+    """
+    User scroll direction changed.
+
+    See [`OnScrollEvent.direction`][flet.].
+    """
 
     OVERSCROLL = "overscroll"
-    """Viewport was overscrolled; `overscroll` and `velocity` are available."""
+    """
+    Viewport was overscrolled.
+
+    See [`overscroll`][flet.OnScrollEvent.] and
+    [`velocity`][flet.OnScrollEvent.] are available.
+    """
 
 
 class ScrollDirection(Enum):
     """
     User scroll direction reported by Flutter user-scroll notifications.
 
-    Used by [`OnScrollEvent.direction`][flet.OnScrollEvent.direction] when
-    [`OnScrollEvent.event_type`][flet.OnScrollEvent.event_type] is
-    [`ScrollType.USER`][flet.ScrollType.USER].
+    Used by [`OnScrollEvent.direction`][flet.] when
+    [`OnScrollEvent.event_type`][flet.] is [`ScrollType.USER`][flet.].
     """
 
     IDLE = "idle"
@@ -204,7 +218,7 @@ class ScrollableControl(Control):
 
     - enabling/disabling scrolling and scrollbar visibility via [`scroll`][(c).];
     - receiving throttled scroll notifications via [`on_scroll`][(c).] and
-      [`scroll_interval`][(c).];
+        [`scroll_interval`][(c).];
     - imperatively changing position with [`scroll_to()`][(c).scroll_to].
     """
 
