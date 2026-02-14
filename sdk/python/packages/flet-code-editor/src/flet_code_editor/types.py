@@ -8,7 +8,22 @@ __all__ = ["CodeTheme", "GutterStyle"]
 
 @dataclass
 class CodeTheme:
-    """Defines syntax highlighting styles for code tokens."""
+    """
+    Defines syntax highlighting styles for code tokens.
+
+    /// details | Supported style names
+        type: note
+
+    `addition`, `attr`, `attribute`, `built_in`, `builtin-name`, `bullet`, `class`,
+    `code`, `comment`, `deletion`, `doctag`, `emphasis`, `formula`, `function`,
+    `keyword`, `link`, `link_label`, `literal`, `meta`, `meta-keyword`,
+    `meta-string`, `name`, `number`, `operator`, `params`, `pattern-match`, `quote`,
+    `regexp`, `root`, `section`, `selector-attr`, `selector-class`, `selector-id`,
+    `selector-pseudo`, `selector-tag`, `string`, `strong`, `stronge`, `subst`,
+    `subtr`, `symbol`, `tag`, `template-tag`, `template-variable`, `title`, `type`,
+    `variable`.
+    ///
+    """
 
     styles: dict[str, ft.TextStyle]
     """Map of token names to text styles."""
