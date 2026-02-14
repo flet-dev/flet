@@ -5,7 +5,7 @@ example_images: ../test-images-charts/examples/golden/macos/matplotlib_chart
 example_media: ../examples/controls/charts/matplotlib_chart/media
 ---
 
-{{ class_summary(class_name, image_url=example_images + "/toolbar.png", image_width="80%") }}
+{{ class_summary(class_name) }}
 
 ## Examples
 

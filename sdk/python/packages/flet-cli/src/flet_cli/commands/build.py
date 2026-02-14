@@ -18,6 +18,13 @@ class Command(BaseBuildCommand):
         super().__init__(parser)
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register build-specific CLI arguments.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "target_platform",
             type=str.lower,
@@ -35,6 +42,13 @@ class Command(BaseBuildCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Execute the full build pipeline for the selected target platform.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         super().handle(options)
         assert self.target_platform
         self.status = console.status(
@@ -74,6 +88,13 @@ class Command(BaseBuildCommand):
             )
 
     def add_flutter_command_args(self, args: list[str]):
+        """
+        Append `flutter build` arguments derived from CLI options and project config.
+
+        Args:
+            args: Mutable command argument list to extend.
+        """
+
         assert self.options
         assert self.build_dir
         assert self.get_pyproject
@@ -120,6 +141,10 @@ class Command(BaseBuildCommand):
             args.append(arg)
 
     def run_flutter(self):
+        """
+        Run Flutter build command and log completion status.
+        """
+
         assert self.platforms
         assert self.target_platform
 

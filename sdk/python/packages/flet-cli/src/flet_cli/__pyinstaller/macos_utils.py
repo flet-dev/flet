@@ -5,11 +5,22 @@ import subprocess
 import tarfile
 from pathlib import Path
 
-from flet.utils import safe_tar_extractall
 from PyInstaller.building.icon import normalize_icon_type
+
+from flet.utils import safe_tar_extractall
 
 
 def unpack_app_bundle(tar_path):
+    """
+    Extract a macOS app bundle archive and remove the source tarball.
+
+    Args:
+        tar_path: Path to a `*.tar.gz` archive containing `Flet.app`.
+
+    Returns:
+        Path to extracted `Flet.app`.
+    """
+
     bin_dir = str(Path(tar_path).parent)
 
     with tarfile.open(tar_path, "r:gz") as tar_arch:
@@ -20,6 +31,14 @@ def unpack_app_bundle(tar_path):
 
 
 def update_flet_view_icon(app_path, icon_path):
+    """
+    Replace app icon in a macOS app bundle and update Info.plist metadata.
+
+    Args:
+        app_path: Path to app bundle directory.
+        icon_path: Path to source icon file.
+    """
+
     print("Updating Flet View icon", app_path, icon_path)
 
     icon_file = "AppIcon.icns"
@@ -50,6 +69,20 @@ def update_flet_view_version_info(
     product_version,
     copyright,
 ):
+    """
+    Update selected Info.plist metadata fields in a macOS app bundle.
+
+    Args:
+        app_path: Path to app bundle directory.
+        bundle_id: Optional bundle identifier override.
+        product_name: Optional display/bundle name override.
+        product_version: Optional version string.
+        copyright: Optional copyright text.
+
+    Returns:
+        Final app bundle path (may change when app bundle is renamed).
+    """
+
     print("Updating Flet View plist", app_path)
 
     pl = __load_info_plist(app_path)
@@ -75,6 +108,17 @@ def update_flet_view_version_info(
 
 
 def assemble_app_bundle(app_path, tar_path):
+    """
+    Code-sign a macOS app bundle, package it as tar.gz, and remove unpacked bundle.
+
+    Args:
+        app_path: Path to app bundle directory.
+        tar_path: Destination tar.gz path.
+
+    Raises:
+        SystemError: If `codesign` fails.
+    """
+
     # sign app bundle
     print(f"Signing file {app_path}")
     cmd_args = [
@@ -91,11 +135,12 @@ def assemble_app_bundle(app_path, tar_path):
         cmd_args,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        universal_newlines=True,
+        text=True,
     )
     if p.returncode:
         raise SystemError(
-            f"codesign command ({cmd_args}) failed with error code {p.returncode}!\noutput: {p.stdout}"
+            f"codesign command ({cmd_args}) failed with "
+            f"error code {p.returncode}!\noutput: {p.stdout}"
         )
 
     # pack tar
@@ -107,14 +152,30 @@ def assemble_app_bundle(app_path, tar_path):
 
 
 def __load_info_plist(app_path):
+    """
+    Load Info.plist content from a macOS app bundle.
+    """
+
     with open(__get_plist_path(app_path), "rb") as fp:
         return plistlib.load(fp)
 
 
 def __save_info_plist(app_path, pl):
+    """
+    Save Info.plist content to a macOS app bundle.
+
+    Args:
+        app_path: Path to app bundle directory.
+        pl: Parsed plist dictionary to persist.
+    """
+
     with open(__get_plist_path(app_path), "wb") as fp:
         plistlib.dump(pl, fp)
 
 
 def __get_plist_path(app_path):
+    """
+    Return path to `Info.plist` inside a macOS app bundle.
+    """
+
     return os.path.join(app_path, "Contents", "Info.plist")

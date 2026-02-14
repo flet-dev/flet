@@ -8,9 +8,18 @@ __all__ = ["ColorModel", "SlidePicker"]
 
 
 class ColorModel(Enum):
+    """
+    Defines color models.
+    """
+
     RGB = "rgb"
+    """Red, green, blue channels."""
+
     HSV = "hsv"
+    """Hue, saturation, value channels."""
+
     HSL = "hsl"
+    """Hue, saturation, lightness channels."""
 
 
 @ft.control("SlidePicker")

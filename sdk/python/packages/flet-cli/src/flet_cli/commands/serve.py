@@ -13,10 +13,18 @@ console = Console(log_path=False)
 
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
+    """
+    Static-file request handler that injects cross-origin isolation headers.
+    """
+
     def __init__(self, *args, directory=None, **kwargs):
         super().__init__(*args, directory=directory, **kwargs)
 
     def end_headers(self):
+        """
+        Append CORS/COOP/COEP headers before finalizing HTTP response headers.
+        """
+
         self.send_header("Cross-Origin-Opener-Policy", "same-origin")
         self.send_header("Cross-Origin-Embedder-Policy", "require-corp")
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -30,6 +38,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line arguments for the local static file server.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "web_root",
             type=str,
@@ -47,6 +62,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Serve files from the selected directory on a local HTTP port.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         directory = Path(options.web_root).resolve()
         if not directory.is_dir():
             console.print(
@@ -56,6 +78,10 @@ class Command(BaseCommand):
             exit(1)
 
         def handler(*args, **kwargs):
+            """
+            Factory that binds [`CustomHandler`][(m).] to `directory`.
+            """
+
             return CustomHandler(
                 *args,
                 directory=str(directory),

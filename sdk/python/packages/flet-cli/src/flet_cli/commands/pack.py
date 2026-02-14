@@ -16,6 +16,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line options for desktop packaging via PyInstaller.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "script",
             type=str,
@@ -146,6 +153,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Package the app into a standalone desktop artifact.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         from flet.utils.pip import ensure_flet_desktop_package_installed
 
         ensure_flet_desktop_package_installed()

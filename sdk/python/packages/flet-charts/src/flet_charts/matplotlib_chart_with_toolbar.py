@@ -44,6 +44,12 @@ def _require_matplotlib() -> None:
 class MatplotlibChartWithToolbar(ft.Column):
     """
     Composite control that combines a `MatplotlibChart` with a ready-made toolbar UI.
+
+    Warning:
+        This control requires the [`matplotlib`](https://matplotlib.org/)
+        Python package to be installed.
+
+        See this [installation guide](index.md#installation) for more information.
     """
 
     figure: Figure = field(metadata={"skip": True})

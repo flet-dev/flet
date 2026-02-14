@@ -16,6 +16,17 @@ class CustomArgumentDefaultsHelpFormatter(argparse.HelpFormatter):
     """
 
     def _get_help_string(self, action: argparse.Action) -> str:
+        """
+        Return help text for an argparse action with optional default annotation.
+
+        Args:
+            action: Parser action whose help text should be formatted.
+
+        Returns:
+            The action help string, optionally suffixed with
+            `"(default: %(default)s)"` when the default is meaningful.
+        """
+
         help_text = action.help or ""
         default = action.default
 
