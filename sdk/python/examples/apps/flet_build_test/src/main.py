@@ -5,6 +5,7 @@ import PIL
 from modules.utils import greet
 
 import flet as ft
+import flet.version as fv
 import flet_ads  # noqa: F401
 import flet_audio  # noqa: F401
 import flet_audio_recorder  # noqa: F401
@@ -43,8 +44,13 @@ def main(page: ft.Page):
         on_click=lambda: page.show_dialog(
             ft.AlertDialog(
                 title="Debug Info",
+                scrollable=True,
                 content=ft.Column(
                     controls=[
+                        ft.Text(f"Python: v{sys.version}"),
+                        ft.Text(f"Flet: v{ft.__version__}"),
+                        ft.Text(f"Flutter: v{fv.flutter_version}"),
+                        ft.Text(f"Numpy: v{numpy.__version__}"),
                         ft.Text(f"Numpy: v{numpy.__version__}"),
                         ft.Text(f"Pillow: v{PIL.__version__}"),
                         ft.Text(f"sys.path: {sys.path}"),
