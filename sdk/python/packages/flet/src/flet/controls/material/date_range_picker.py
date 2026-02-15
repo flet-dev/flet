@@ -29,7 +29,7 @@ class DateRangePicker(DialogControl):
     It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
 
     Depending on the [`entry_mode`][(c).], it will show either a Calendar
-    or an Input (TextField) for picking a date range.
+    or an Input (text field) for picking a date range.
     """
 
     start_value: Optional[DateTimeValue] = None
@@ -156,41 +156,39 @@ class DateRangePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when \
-    [`entry_mode`][(c).]
-    is [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
+    [`entry_mode`][(c).] is [`DatePickerEntryMode.INPUT`][flet.].
 
     Clicking on this icon changes the `entry_mode` to
-    [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
+    [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    If `None`, [`Icons.CALENDAR_TODAY`][flet.Icons.CALENDAR_TODAY] is used.
+    If `None`, `Icons.CALENDAR_TODAY` is used.
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when \
-    [`entry_mode`][(c).]
-    is [`DatePickerEntryMode.CALENDAR`][flet.DatePickerEntryMode.CALENDAR].
+    [`entry_mode`][(c).] is [`DatePickerEntryMode.CALENDAR`][flet.].
 
     Clicking on this icon changes the `entry_mode` to
-    [`DatePickerEntryMode.INPUT`][flet.DatePickerEntryMode.INPUT].
+    [`DatePickerEntryMode.INPUT`][flet.].
 
-    If `None`, [`Icons.EDIT_OUTLINED`][flet.Icons.EDIT_OUTLINED] is used.
+    If `None`, `Icons.EDIT_OUTLINED` is used.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
     The color of the modal barrier that darkens everything below the date picker.
 
-    If `None`, the [`DialogTheme.barrier_color`][flet.DialogTheme.barrier_color]
-    is used.
+    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
     on_change: Optional[ControlEventHandler["DateRangePicker"]] = None
     """
     Called when user clicks confirm button.
-    [`start_value`][(c).] and
-    [`end_value`][(c).] are updated with selected dates.
 
-    The `data` property of the event handler argument contains the selected dates.
+    [`start_value`][(c).] and [`end_value`][(c).] are updated with selected dates.
+
+    The [`data`][flet.Event.] property of the event handler
+    argument contains the selected dates.
     """

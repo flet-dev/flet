@@ -216,7 +216,7 @@ class DatePicker(DialogControl):
     Clicking on this icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    If `None`, defaults to [`Icons.CALENDAR_TODAY`][flet.].
+    If `None`, defaults to `Icons.CALENDAR_TODAY`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
@@ -227,7 +227,7 @@ class DatePicker(DialogControl):
     Clicking on icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.INPUT`][flet.].
 
-    If `None`, defaults to [`Icons.EDIT_OUTLINED`][flet.].
+    If `None`, defaults to `Icons.EDIT_OUTLINED`.
     """
 
     barrier_color: Optional[ColorValue] = None

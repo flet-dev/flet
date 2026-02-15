@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Literal
 
 
 def _material_ligature_and_class(name: str) -> tuple[str, str]:
@@ -12,7 +13,7 @@ def _material_ligature_and_class(name: str) -> tuple[str, str]:
     return name.lower(), "flet-icon-preview-material"
 
 
-def render_icon_members(icon_set: str = "material") -> str:
+def render_icon_members(icon_set: str = Literal["material", "cupertino"]) -> str:
     controls_dir = Path(__file__).resolve().parents[3] / "src" / "flet" / "controls"
 
     if icon_set == "material":
