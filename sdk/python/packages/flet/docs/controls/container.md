@@ -2,6 +2,7 @@
 class_name: flet.Container
 examples: ../../examples/controls/container
 example_images: ../examples/controls/container/media
+golden_example_images: ../test-images/examples/material/golden/macos/container
 ---
 
 {{ class_summary(class_name) }}
@@ -69,7 +70,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_1.py"
 ```
 
-{{ image(example_images + "/nested_themes_1.png", width="80%") }}
+{{ image(golden_example_images + "/nested_themes_1.png", width="80%") }}
 
 ### Nested themes 2
 
@@ -77,7 +78,7 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/nested_themes_2.py"
 ```
 
-{{ image(example_images + "/nested_themes_2.png", width="80%") }}
+{{ image(golden_example_images + "/nested_themes_2.png", width="80%") }}
 
 ### Nested themes 3
 
@@ -94,6 +95,6 @@ example_images: ../examples/controls/container/media
 --8<-- "{{ examples }}/size_aware.py"
 ```
 
-{{ image(example_images + "/size_aware.png", width="80%") }}
+{{ image(golden_example_images + "/size_aware.png", width="80%") }}
 
 {{ class_members(class_name) }}
