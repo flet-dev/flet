@@ -234,4 +234,15 @@ class Duration:
 
 
 DurationValue = Union[Duration, int]
+"""Type alias for duration values.
+
+Represents duration as either:
+- a [`Duration`][flet.] object,
+- or an integer number of milliseconds (or seconds, depending on context).
+"""
+
 DateTimeValue = Union[datetime, date]
+"""Type alias for date/time values.
+
+Represents either a `datetime` or a `date`.
+"""
