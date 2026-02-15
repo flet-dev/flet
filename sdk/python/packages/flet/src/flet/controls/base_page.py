@@ -238,8 +238,7 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`width`][flet.Window.] property of
-            [`Page.window`][flet.Page.] instead.
+            use the [`width`][flet.Window.] property of [`Page.window`][flet.] instead.
     """
 
     height: Optional[Number] = None
@@ -287,7 +286,7 @@ class BasePage(AdaptiveControl):
             raise RuntimeError("views list is empty.")
         return self.views[-1]
 
-    def update(self, *controls) -> None:
+    def update(self, *controls: Control) -> None:
         """
         Push pending updates to the connected client.
 

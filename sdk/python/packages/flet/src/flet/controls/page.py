@@ -563,8 +563,8 @@ class Page(BasePage):
     def render(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
         """
         Render a component tree into controls of the root view.
@@ -586,8 +586,8 @@ class Page(BasePage):
     def render_views(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
         """
         Render a component tree as the full list of page views.
@@ -625,7 +625,7 @@ class Page(BasePage):
 
         self.session.schedule_update(self)
 
-    def update(self, *controls) -> None:
+    def update(self, *controls: Control) -> None:
         """
         Push pending state changes to the client.
 

@@ -234,7 +234,7 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         """
         Handle one decoded client message and dispatch
-        by [`ClientAction`][flet.messaging.protocol.].
+        by `ClientAction`.
 
         Args:
             data: Decoded message payload from msgpack transport.

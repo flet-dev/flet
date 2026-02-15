@@ -103,6 +103,8 @@ plugins:
   - exclude:
       glob:
         - archive/*
+        - contributing.md
+        - ads/nativead.md
   - search:
       lang: en
   - macros:
@@ -224,8 +226,6 @@ markdown_extensions:
           case: lower
 
 # Navigation
-not_in_nav: |
-  - /ads/nativead.md
 nav:
   - Learn:
       - Getting started:
