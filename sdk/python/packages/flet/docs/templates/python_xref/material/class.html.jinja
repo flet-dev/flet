@@ -10,7 +10,6 @@
         Inherits: {% for expression in class.bases -%}
         <code>
             {%- with backlink_type = "subclassed-by" -%}
-            {#- YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. -#}
             {%- include "expression.html.jinja" with context -%}
             {%- endwith -%}
         </code>{% if not loop.last %}, {% endif %}
@@ -26,7 +25,6 @@
     -#}
     {% if config.extra.show_class_docstring %}
         {% with docstring_sections = class.docstring.parsed %}
-        {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
         {% include "docstring.html.jinja" with context %}
         {% endwith %}
         {% if config.merge_init_into_class %}
@@ -36,7 +34,6 @@
             {% if "__init__" in check_members and check_members["__init__"].has_docstring %}
             {% with function = check_members["__init__"] %}
                 {% with obj = function, docstring_sections = function.docstring.parsed %}
-                {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
                 {% include "docstring.html.jinja" with context %}
                 {% endwith %}
             {% endwith %}
@@ -54,7 +51,6 @@
     {% if config.extra.show_children %}
         {% set root = False %}
         {% set heading_level = heading_level + 1 %}
-        {# YORE: Bump 2: Replace `"|get_template` with `.html.jinja"` within line. #}
         {% include "children.html.jinja" with context %}
     {% endif %}
 {% endblock children %}

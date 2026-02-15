@@ -377,6 +377,7 @@ nav:
           - FloatingActionButton: controls/floatingactionbutton.md
           - GestureDetector: controls/gesturedetector.md
           - GridView: controls/gridview.md
+          - Hero: controls/hero.md
           - Icon: controls/icon.md
           - IconButton: controls/iconbutton.md
           - Image: controls/image.md

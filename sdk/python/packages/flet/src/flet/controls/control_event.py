@@ -97,6 +97,7 @@ def get_event_field_type(control: Any, field_name: str):
 
 
 EventControlType = TypeVar("EventControlType", bound=_BaseControlType)
+"""Type variable bound to a control type for typed event payloads."""
 
 
 @dataclass
@@ -119,7 +120,20 @@ class Event(Generic[EventControlType]):
 EventType = TypeVar("EventType", bound=Event)
 
 ControlEventHandler = Union[Callable[[], Any], Callable[[Event[EventControlType]], Any]]
+"""Type alias for typed control event callback handlers.
+
+Represents a callback that accepts either:
+- no arguments,
+- or a typed [`Event`][flet.] for a specific control type.
+"""
 
 EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
+"""Type alias for generic event callback handlers.
+
+Represents a callback that accepts either:
+- no arguments,
+- or an [`Event`][flet.]-derived payload.
+"""
 
 ControlEvent = Event[_BaseControlType]
+"""Type alias for an event emitted by any base control."""

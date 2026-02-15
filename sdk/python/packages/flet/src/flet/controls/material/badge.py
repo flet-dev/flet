@@ -116,3 +116,9 @@ class Badge(BaseControl):
 
 
 BadgeValue = Union[str, Badge]
+"""Type alias for badge content values.
+
+Represents a badge as either:
+- a `str` value, rendered as a text label badge,
+- or a [`Badge`][flet.].
+"""
