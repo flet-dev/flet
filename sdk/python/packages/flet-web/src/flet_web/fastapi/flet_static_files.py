@@ -116,7 +116,7 @@ class FletStaticFiles(StaticFiles):
         (`index.html`, `manifest.json`, and optionally `FontManifest.json`)
         from either user assets or packaged web assets, applies runtime
         substitutions, and configures the underlying
-        [`StaticFiles`][fastapi.staticfiles.] instance.
+        fastapi `StaticFiles` instance.
 
         Args:
             root_path: ASGI root path used to compute mounted base URL.

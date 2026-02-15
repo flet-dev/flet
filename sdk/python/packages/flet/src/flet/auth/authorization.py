@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class Authorization:
     """
     Abstract authorization contract used by Flet authentication workflows.
@@ -6,7 +9,7 @@ class Authorization:
     token exchange, token hydration from persisted storage, and token retrieval.
     """
 
-    async def dehydrate_token(self, saved_token: str):
+    async def dehydrate_token(self, saved_token: str) -> None:
         """
         Restore token state from previously persisted token data.
 
@@ -16,7 +19,7 @@ class Authorization:
 
         raise NotImplementedError()
 
-    async def get_token(self):
+    async def get_token(self) -> Any:
         """
         Return the current token, refreshing it when needed.
 
@@ -36,7 +39,7 @@ class Authorization:
 
         raise NotImplementedError()
 
-    async def request_token(self, code: str):
+    async def request_token(self, code: str) -> None:
         """
         Exchange authorization code for access/refresh token data.
 

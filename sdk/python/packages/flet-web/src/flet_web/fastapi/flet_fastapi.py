@@ -20,7 +20,7 @@ class FastAPI(fastapi.FastAPI):
     """
     FastAPI wrapper that integrates Flet app-manager startup/shutdown lifecycle.
 
-    It mirrors [`fastapi.FastAPI`][fastapi.FastAPI] constructor options while
+    It mirrors `fastapi.FastAPI` constructor options while
     wiring a custom lifespan context that starts and stops
     `flet_web.fastapi.app_manager`.
     """
@@ -84,8 +84,7 @@ class FastAPI(fastapi.FastAPI):
                 app-manager shutdown.
             generate_unique_id_function: Function used to generate OpenAPI
                 operation IDs.
-            **extra: Additional keyword arguments forwarded to
-                [`fastapi.FastAPI`][fastapi.FastAPI].
+            **extra: Additional keyword arguments forwarded to `fastapi.FastAPI`.
         """
 
         @asynccontextmanager

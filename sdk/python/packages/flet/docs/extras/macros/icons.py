@@ -4,6 +4,16 @@ from typing import Literal
 
 
 def _material_ligature_and_class(name: str) -> tuple[str, str]:
+    """
+    Convert a Material icon constant name into preview text and CSS class.
+
+    Args:
+        name: Material icon enum member name (for example `HOME_OUTLINED`).
+
+    Returns:
+        A tuple of `(ligature_text, css_class)` used by docs icon preview HTML.
+    """
+
     if name.endswith("_OUTLINED"):
         return name[: -len("_OUTLINED")].lower(), "flet-icon-preview-material-outlined"
     if name.endswith("_ROUNDED"):
@@ -14,6 +24,23 @@ def _material_ligature_and_class(name: str) -> tuple[str, str]:
 
 
 def render_icon_members(icon_set: str = Literal["material", "cupertino"]) -> str:
+    """
+    Render markdown sections for all icon members in a selected icon set.
+
+    Generates headings with stable anchor IDs plus inline HTML previews used by
+    `types/icons.md` and `types/cupertinoicons.md`.
+
+    Args:
+        icon_set: Icon collection to render (`"material"` or `"cupertino"`).
+
+    Returns:
+        Markdown/HTML content listing icon names, encoded values, and previews.
+
+    Raises:
+        ValueError: If `icon_set` is not `"material"` or `"cupertino"`.
+    """
+
+    # Resolve control asset files relative to this docs macro module.
     controls_dir = Path(__file__).resolve().parents[3] / "src" / "flet" / "controls"
 
     if icon_set == "material":
@@ -37,11 +64,13 @@ def render_icon_members(icon_set: str = Literal["material", "cupertino"]) -> str
     names = sorted(icon_map.keys())
 
     lines = [
+        # top-level anchor so xrefs to flet.Icons / flet.CupertinoIcons resolve
         f'<a id="{xref_prefix}"></a>',
     ]
 
     for name in names:
         value = icon_map[name]
+        # Each icon gets its own anchor (for example: flet.Icons.ADD).
         heading_id = f"{xref_prefix}.{name}"
         lines.append(f"### `{name} = {value}` {{ #{heading_id} }}")
         if render_preview:
@@ -59,6 +88,7 @@ def render_icon_members(icon_set: str = Literal["material", "cupertino"]) -> str
                         "preview unavailable</span>"
                     )
                 else:
+                    # Use the real codepoint character for Cupertino previews.
                     lines.append(
                         f'<span class="flet-icon-preview flet-icon-preview-cupertino" '
                         f'title="{name}">{chr(codepoint)}</span>'

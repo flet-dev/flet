@@ -96,7 +96,6 @@ watch:
   - ../../../../LICENSE
   - ../../../../README.md
 
-
 # Plugins
 plugins:
   # - footnotes
@@ -140,15 +139,14 @@ plugins:
             docstring_section_style: list
             separate_signature: true
             inherited_members: false
+            modernize_annotations: true
             summary:
                 attributes: false
                 functions: false
-            preload_modules: [ flet, flet_ads ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
               - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
-              - griffe_modernized_annotations
               - griffe_warnings_deprecated
             extra:
               show_children: false
