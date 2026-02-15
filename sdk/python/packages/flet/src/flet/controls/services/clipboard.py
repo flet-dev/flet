@@ -1,7 +1,7 @@
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.exceptions import FletUnimplementedPlatformException
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 from flet.controls.types import PagePlatform
 
@@ -41,11 +41,11 @@ class Clipboard(Service):
             value: The image data (in bytes) to be stored on the clipboard.
 
         Raises:
-            FletUnimplementedPlatformException: If called on platforms other than the
+            FletUnsupportedPlatformException: If called on platforms other than the
                 following: Android, iOS, Web.
         """
         if not (self.page.web or self.page.platform.is_mobile()):
-            raise FletUnimplementedPlatformException(
+            raise FletUnsupportedPlatformException(
                 "set_image is not supported on this platform"
             )
         await self._invoke_method("set_image", {"data": value})
@@ -71,11 +71,11 @@ class Clipboard(Service):
             `True` if the operation succeeded, otherwise `False`.
 
         Raises:
-            FletUnimplementedPlatformException: If called on platforms other than the
+            FletUnsupportedPlatformException: If called on platforms other than the
                 following: macOS, Windows, Linux.
         """
         if self.page.web or not self.page.platform.is_desktop():
-            raise FletUnimplementedPlatformException(
+            raise FletUnsupportedPlatformException(
                 "set_files is supported on desktop platforms only"
             )
         return await self._invoke_method("set_files", {"files": files})
@@ -89,14 +89,14 @@ class Clipboard(Service):
             On Android these are typically content URIs.
 
         Raises:
-            FletUnimplementedPlatformException: If called on platforms other than the
+            FletUnsupportedPlatformException: If called on platforms other than the
                 following: Android, macOS, Windows, Linux.
         """
         if self.page.web or (
             not self.page.platform.is_desktop()
             and self.page.platform != PagePlatform.ANDROID
         ):
-            raise FletUnimplementedPlatformException(
+            raise FletUnsupportedPlatformException(
                 "get_files is supported on desktop and Android platforms only"
             )
         return await self._invoke_method("get_files")

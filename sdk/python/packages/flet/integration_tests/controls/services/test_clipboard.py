@@ -7,7 +7,7 @@ import pytest_asyncio
 
 import flet as ft
 import flet.testing as ftt
-from flet.controls.exceptions import FletUnimplementedPlatformException
+from flet.controls.exceptions import FletUnsupportedPlatformException
 
 
 # Create a new flet_app instance for each test method.
@@ -35,7 +35,7 @@ async def test_image(flet_app: ftt.FletTestApp):
     clipboard = ft.Clipboard()
 
     if not (flet_app.page.web or flet_app.page.platform.is_mobile()):
-        with pytest.raises(FletUnimplementedPlatformException):
+        with pytest.raises(FletUnsupportedPlatformException):
             await clipboard.set_image(bytes_image)
         return
 
@@ -50,7 +50,7 @@ async def test_files(flet_app: ftt.FletTestApp):
     clipboard = ft.Clipboard()
 
     if flet_app.page.web or not flet_app.page.platform.is_desktop():
-        with pytest.raises(FletUnimplementedPlatformException):
+        with pytest.raises(FletUnsupportedPlatformException):
             await clipboard.set_files(["/tmp/not-used.txt"])
         return
 
