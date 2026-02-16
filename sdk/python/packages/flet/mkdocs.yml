@@ -238,7 +238,7 @@ nav:
           - Solitaire: tutorials/solitaire.md
           - ToDo: tutorials/todo.md
       - Publishing Flet app:
-          - Overview: publish/index.md
+          - publish/index.md
           - Android: publish/android.md
           - iOS: publish/ios.md
           - Linux: publish/linux.md
