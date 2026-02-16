@@ -51,6 +51,7 @@ pip install flet-code-editor  # (1)!
 
 See also types:
 - [`CodeTheme`](types/codetheme.md)
+- [`CustomCodeTheme`](types/customcodetheme.md)
 - [`GutterStyle`](types/gutterstyle.md)
 
 {{ class_members(class_name) }}

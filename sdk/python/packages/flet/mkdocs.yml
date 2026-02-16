@@ -764,6 +764,7 @@ nav:
               - UnderlineTabIndicator: types/underlinetabindicator.md
               - CodeEditor:
                   - CodeTheme: codeeditor/types/codetheme.md
+                  - CustomCodeTheme: codeeditor/types/customcodetheme.md
                   - GutterStyle: codeeditor/types/gutterstyle.md
               - Video:
                   - PlaylistMode: video/types/playlistmode.md

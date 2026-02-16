@@ -34,14 +34,10 @@ def main(page: ft.Page):
     page.title = "CodeEditor selection"
     max_selection_preview = 80
 
-    theme = fce.CodeTheme(
-        styles={
-            "keyword": ft.TextStyle(
-                color=ft.Colors.INDIGO_600, weight=ft.FontWeight.W_600
-            ),
-            "string": ft.TextStyle(color=ft.Colors.RED_700),
-            "comment": ft.TextStyle(color=ft.Colors.GREY_600, italic=True),
-        }
+    theme = fce.CustomCodeTheme(
+        keyword=ft.TextStyle(color=ft.Colors.INDIGO_600, weight=ft.FontWeight.W_600),
+        string=ft.TextStyle(color=ft.Colors.RED_700),
+        comment=ft.TextStyle(color=ft.Colors.GREY_600, italic=True),
     )
 
     text_style = ft.TextStyle(

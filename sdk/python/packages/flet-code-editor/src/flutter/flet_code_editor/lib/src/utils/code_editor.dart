@@ -12,6 +12,7 @@ fce.CodeThemeData? parseCodeThemeData(Control control, BuildContext context) {
     }
     return null;
   }
+
   final themeName = codeTheme["name"];
   if (themeName is String) {
     final named = themeMap[themeName.toLowerCase()];
@@ -19,13 +20,20 @@ fce.CodeThemeData? parseCodeThemeData(Control control, BuildContext context) {
       return fce.CodeThemeData(styles: named);
     }
   }
+
   final styles = codeTheme["styles"];
-  if (styles is! Map) {
-    return null;
+  final Map<dynamic, dynamic> stylesSource;
+  if (styles is Map) {
+    stylesSource = styles.cast<dynamic, dynamic>();
+  } else {
+    // CustomCodeTheme is serialized as a flat map of token -> TextStyle.
+    final flattened = Map.of(codeTheme);
+    flattened.remove("name");
+    stylesSource = flattened;
   }
 
   final parsedStyles = <String, TextStyle>{};
-  styles.forEach((key, value) {
+  stylesSource.forEach((key, value) {
     final style = parseTextStyle(value, Theme.of(context));
     if (style != null) {
       parsedStyles[key.toString()] = style;

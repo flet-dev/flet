@@ -3,8 +3,9 @@ from enum import Enum
 from typing import Optional
 
 import flet as ft
+from flet.controls.core.markdown import MarkdownCodeTheme, MarkdownCustomCodeTheme
 
-__all__ = ["CodeLanguage", "CodeTheme", "GutterStyle"]
+__all__ = ["CodeLanguage", "CodeTheme", "CustomCodeTheme", "GutterStyle"]
 
 
 class CodeLanguage(Enum):
@@ -815,27 +816,11 @@ class CodeLanguage(Enum):
     """
 
 
-@dataclass
-class CodeTheme:
-    """
-    Defines syntax highlighting styles for code tokens.
+CodeTheme = MarkdownCodeTheme
+"""Alias for `flet.MarkdownCodeTheme`."""
 
-    /// details | Supported style names
-        type: note
-
-    `addition`, `attr`, `attribute`, `built_in`, `builtin-name`, `bullet`, `class`,
-    `code`, `comment`, `deletion`, `doctag`, `emphasis`, `formula`, `function`,
-    `keyword`, `link`, `link_label`, `literal`, `meta`, `meta-keyword`,
-    `meta-string`, `name`, `number`, `operator`, `params`, `pattern-match`, `quote`,
-    `regexp`, `root`, `section`, `selector-attr`, `selector-class`, `selector-id`,
-    `selector-pseudo`, `selector-tag`, `string`, `strong`, `stronge`, `subst`,
-    `subtr`, `symbol`, `tag`, `template-tag`, `template-variable`, `title`, `type`,
-    `variable`.
-    ///
-    """
-
-    styles: dict[str, ft.TextStyle]
-    """Map of token names to text styles."""
+CustomCodeTheme = MarkdownCustomCodeTheme
+"""Alias for `flet.MarkdownCustomCodeTheme`."""
 
 
 @dataclass
