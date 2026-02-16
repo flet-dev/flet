@@ -286,7 +286,6 @@ class _ViewControlState extends State<ViewControl> {
       var bgContainer = Container(
         decoration: backgroundDecoration,
         foregroundDecoration: foregroundDecoration,
-        child: result,
       );
       result = Stack(
         fit: StackFit.expand,
