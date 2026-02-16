@@ -7,7 +7,7 @@ from pathlib import Path
 import flet as ft
 
 
-def open_file(path: str):
+def open_file(_, path: str):
     """Open a desktop file in the default application."""
     if os.path.isfile(path):
         if sys.platform == "darwin":  # macOS
@@ -59,7 +59,7 @@ async def main(page: ft.Page):
                         ft.IconButton(
                             icon=ft.Icons.OPEN_IN_NEW,
                             icon_size=15,
-                            on_click=lambda f=f: open_file(f),
+                            on_click=lambda e, f=f: open_file(e, f),
                             tooltip="Open file",
                         ),
                     ],
