@@ -753,14 +753,14 @@ Splash screens are enabled by default but can be disabled.
 Its value is determined in the following order of precedence:
 
 - on Android:
-  - [`--no-android-splash`](../cli/flet-build.md#-no-android-splash)
-  - `[tool.flet.splash].android`
+    - [`--no-android-splash`](../cli/flet-build.md#-no-android-splash)
+    - `[tool.flet.splash].android`
 - on iOS:
-  - [`--no-ios-splash`](../cli/flet-build.md#-no-ios-splash)
-  - `[tool.flet.splash].ios`
+    - [`--no-ios-splash`](../cli/flet-build.md#-no-ios-splash)
+    - `[tool.flet.splash].ios`
 - on Web:
-  - [`--no-web-splash`](../cli/flet-build.md#-no-web-splash)
-  - `[tool.flet.splash].web`
+    - [`--no-web-splash`](../cli/flet-build.md#-no-web-splash)
+    - `[tool.flet.splash].web`
 
 ##### Example
 
@@ -1064,7 +1064,7 @@ Only the bundles you list are applied. If you need different wording or extra
 entries, set the platform-specific tables directly; those values are merged on top and
 can override the bundle defaults. The examples below show the exact `pyproject.toml` equivalents for each bundle.
 
-Below is a list of current bundles:
+Below is a list of available bundles:
 
 {{ cross_platform_permissions() }}
 
