@@ -1,7 +1,7 @@
 ---
 class_name: flet_code_editor.CodeEditor
 examples: ../../examples/controls/code_editor
-example_images: ../test-images/examples/extensions/code_editor/golden/macos/code_editor_examples
+example_images: ../test-images/examples/extensions/code_editor/golden/macos/code_editor
 ---
 
 {{ class_summary(class_name, example_images + "/image_for_docs.png", image_caption="Basic CodeEditor") }}
@@ -48,10 +48,5 @@ pip install flet-code-editor  # (1)!
 ```
 
 {{ image(example_images + "/example_3.png", alt="code-editor-example-3", width="80%") }}
-
-See also types:
-- [`CodeTheme`](types/codetheme.md)
-- [`CustomCodeTheme`](types/customcodetheme.md)
-- [`GutterStyle`](types/gutterstyle.md)
 
 {{ class_members(class_name) }}
