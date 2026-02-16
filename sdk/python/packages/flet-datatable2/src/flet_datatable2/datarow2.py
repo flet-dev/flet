@@ -21,7 +21,7 @@ class DataRow2(ft.DataRow):
 
     Note:
         If provided,
-        [`DataTable.divider_thickness`][flet.DataTable.divider_thickness]
+        [`DataTable2.divider_thickness`][flet.DataTable.divider_thickness]
         has no effect.
     """
 
