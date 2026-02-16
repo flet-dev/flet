@@ -10,8 +10,8 @@ class Command(BaseBuildCommand):
     """
     Build a Flet Python app into a platform-specific executable or
     installable bundle. It supports building for desktop (macOS, Linux, Windows), web,
-    Android (APK/AAB), and iOS (IPA), with a wide range of customization options for
-    metadata, assets, splash screens, and signing.
+    Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
+    customization options for metadata, assets, splash screens, and signing.
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -21,7 +21,16 @@ class Command(BaseBuildCommand):
         parser.add_argument(
             "target_platform",
             type=str.lower,
-            choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
+            choices=[
+                "macos",
+                "linux",
+                "windows",
+                "web",
+                "apk",
+                "aab",
+                "ipa",
+                "ipa-simulator",
+            ],
             help="The target platform or type of package to build",
         )
         parser.add_argument(
@@ -97,6 +106,8 @@ class Command(BaseBuildCommand):
                 )
             else:
                 args.append("--no-codesign")
+        elif self.target_platform == "ipa-simulator":
+            args.append("--simulator")
 
         build_number = self.options.build_number or self.get_pyproject(
             "tool.flet.build_number"

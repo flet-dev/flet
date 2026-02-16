@@ -125,6 +125,15 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "dist": "ipa",
                 "can_be_run_on": ["Darwin"],
             },
+            "ipa-simulator": {
+                "package_platform": "iOS",
+                "config_platform": "ios",
+                "flutter_build_command": "ios",
+                "status_text": ".app bundle for iOS Simulator",
+                "outputs": ["build/ios/iphonesimulator/*"],
+                "dist": "ipa-simulator",
+                "can_be_run_on": ["Darwin"],
+            },
         }
 
         self.cross_platform_permissions = {
@@ -479,7 +488,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
-            "for macOS and iOS builds (macos and ipa only)",
+            "for macOS and iOS builds (macos, ipa and ipa-simulator only)",
         )
         parser.add_argument(
             "--macos-entitlements",
@@ -1307,7 +1316,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.build_dir
         assert self.target_platform
 
-        if self.target_platform not in ["web", "ipa", "apk", "aab"]:
+        if self.target_platform not in ["web", "ipa", "ipa-simulator", "apk", "aab"]:
             return
 
         hash = HashStamp(self.build_dir / ".hash" / "splashes")

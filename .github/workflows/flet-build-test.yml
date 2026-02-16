@@ -125,6 +125,13 @@ jobs:
             artifact_path: build/ipa
             needs_linux_deps: false
 
+          - name: ipa-simulator
+            runner: macos-latest
+            build_cmd: "flet build ipa-simulator --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            artifact_name: ipa-simulator-build-artifact
+            artifact_path: build/ipa-simulator
+            needs_linux_deps: false
+
           # -------- Web --------
           - name: web-ubuntu
             runner: ubuntu-latest
