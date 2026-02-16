@@ -15,7 +15,7 @@ from examples.controls.code_editor import example_1, example_2, example_3
     indirect=["flet_app_function"],
 )
 @pytest.mark.asyncio(loop_scope="function")
-async def test_code_editor_examples(
+async def test_images_for_docs(
     flet_app_function: ftt.FletTestApp,
     screenshot_name: str,
     page_size: tuple[int, int],

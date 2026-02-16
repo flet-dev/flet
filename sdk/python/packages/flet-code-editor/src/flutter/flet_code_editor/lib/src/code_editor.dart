@@ -165,8 +165,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       _value = value;
     }
 
-    final explicitSelection = parseTextSelection(
-      widget.control.get("selection"),
+    final explicitSelection = widget.control.getTextSelection(
+      "selection",
       minOffset: 0,
       maxOffset: _controller.text.length,
     );
@@ -186,13 +186,13 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     final themeData = parseCodeThemeData(widget.control, context);
     final gutterStyle = parseGutterStyle(widget.control, context);
-    final autocompletionEnabled =
-        widget.control.getBool("autocompletion_enabled", false)!;
-    final autocompletionWords =
-        _stringList(widget.control.get("autocompletion_words")) ?? const [];
-    _controller.autocompletionEnabled = autocompletionEnabled;
-    if (autocompletionEnabled) {
-      _controller.autocompleter.setCustomWords(autocompletionWords);
+    final autocompleteEnabled =
+        widget.control.getBool("autocomplete", false)!;
+    final autocompleteWords =
+        _stringList(widget.control.get("autocomplete_words")) ?? const [];
+    _controller.autocompletionEnabled = autocompleteEnabled;
+    if (autocompleteEnabled) {
+      _controller.autocompleter.setCustomWords(autocompleteWords);
     } else {
       _controller.autocompleter.setCustomWords(const []);
       _controller.popupController.hide();
@@ -203,8 +203,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       controller: _controller,
       focusNode: _focusNode,
       readOnly: widget.control.getBool("read_only", false)!,
-      textStyle:
-          parseTextStyle(widget.control.get("text_style"), Theme.of(context)),
+      textStyle: widget.control.getTextStyle("text_style", Theme.of(context)),
       gutterStyle: gutterStyle,
       padding: widget.control.getEdgeInsets("padding", EdgeInsets.zero)!,
       enabled: !widget.control.disabled,

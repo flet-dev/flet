@@ -87,8 +87,8 @@ def main(page: ft.Page):
                 editor := fce.CodeEditor(
                     language=fce.CodeLanguage.PYTHON,
                     code_theme=theme,
-                    autocompletion_enabled=True,
-                    autocompletion_words=[
+                    autocomplete=True,
+                    autocomplete_words=[
                         "Container",
                         "Button",
                         "Text",

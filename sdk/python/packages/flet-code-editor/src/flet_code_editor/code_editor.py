@@ -40,11 +40,11 @@ class CodeEditor(ft.LayoutControl):
     gutter_style: Optional[GutterStyle] = None
     """Gutter styling."""
 
-    autocompletion_enabled: Optional[bool] = False
-    """Whether autocompletion is enabled."""
+    autocomplete: Optional[bool] = False
+    """Whether autocomplete is enabled."""
 
-    autocompletion_words: Optional[list[str]] = None
-    """Words offered by autocompletion."""
+    autocomplete_words: Optional[list[str]] = None
+    """Words offered by autocomplete."""
 
     read_only: Optional[bool] = False
     """Whether the editor is read-only."""
