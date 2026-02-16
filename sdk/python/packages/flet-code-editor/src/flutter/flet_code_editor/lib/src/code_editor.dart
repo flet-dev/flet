@@ -52,15 +52,15 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         _focusNode.requestFocus();
         break;
       case "fold_comment_at_line_zero":
-        (_controller as dynamic).foldCommentAtLineZero();
+        _controller.foldCommentAtLineZero();
         break;
       case "fold_imports":
-        (_controller as dynamic).foldImports();
+        _controller.foldImports();
         break;
       case "fold_at":
         final line = parseInt(args["line_number"]);
         if (line != null) {
-          (_controller as dynamic).foldAt(line);
+          _controller.foldAt(line);
         }
         break;
       default:
