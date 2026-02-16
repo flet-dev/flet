@@ -33,7 +33,7 @@ ft.run(main)
 def main(page: ft.Page):
     page.add(
         fce.CodeEditor(
-            language="python",
+            language=fce.CodeLanguage.PYTHON,
             code_theme="atom-one-light",
             # text_style=ft.TextStyle(font_family="monospace", size=14),
             value=CODE,

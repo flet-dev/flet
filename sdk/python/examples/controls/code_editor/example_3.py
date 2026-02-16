@@ -14,7 +14,7 @@ print("Folding demo")
 
 def main(page: ft.Page):
     editor = fce.CodeEditor(
-        language="python",
+        language=fce.CodeLanguage.PYTHON,
         value=CODE,
         selection=ft.TextSelection(base_offset=41, extent_offset=62),
         autofocus=True,

@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 import flet as ft
-from flet_code_editor.types import CodeTheme, GutterStyle
+from flet_code_editor.types import CodeLanguage, CodeTheme, GutterStyle
 
 __all__ = ["CodeEditor"]
 
@@ -10,37 +10,9 @@ __all__ = ["CodeEditor"]
 class CodeEditor(ft.LayoutControl):
     """Edit and highlight source code."""
 
-    language: Optional[str] = None
+    language: Optional[CodeLanguage] = None
     """
     Syntax highlighting language.
-
-    /// details | Supported languages
-        type: note
-
-    `1c`, `abnf`, `accesslog`, `actionscript`, `ada`, `angelscript`, `apache`,
-    `applescript`, `arcade`, `arduino`, `armasm`, `asciidoc`, `aspectj`, `autohotkey`,
-    `autoit`, `avrasm`, `awk`, `axapta`, `bash`, `basic`, `bnf`, `brainfuck`, `cal`,
-    `capnproto`, `ceylon`, `clean`, `clojure`, `clojure-repl`, `cmake`, `coffeescript`,
-    `coq`, `cos`, `cpp`, `crmsh`, `crystal`, `cs`, `csp`, `css`, `d`, `dart`, `delphi`,
-    `diff`, `django`, `dns`, `dockerfile`, `dos`, `dsconfig`, `dts`, `dust`, `ebnf`,
-    `elixir`, `elm`, `erb`, `erlang`, `erlang-repl`, `excel`, `fix`, `flix`, `fortran`,
-    `fsharp`, `gams`, `gauss`, `gcode`, `gherkin`, `glsl`, `gml`, `gn`, `go`, `golo`,
-    `gradle`, `graphql`, `groovy`, `haml`, `handlebars`, `haskell`, `haxe`, `hsp`,
-    `htmlbars`, `http`, `hy`, `inform7`, `ini`, `irpf90`, `isbl`, `java`, `javascript`,
-    `jboss-cli`, `json`, `julia`, `julia-repl`, `kotlin`, `lasso`, `ldif`, `leaf`,
-    `less`, `lisp`, `livecodeserver`, `livescript`, `llvm`, `lsl`, `lua`, `makefile`,
-    `markdown`, `mathematica`, `matlab`, `maxima`, `mel`, `mercury`, `mipsasm`, `mizar`,
-    `mojolicious`, `monkey`, `moonscript`, `n1ql`, `nginx`, `nimrod`, `nix`, `nsis`,
-    `objectivec`, `ocaml`, `openscad`, `oxygene`, `parser3`, `perl`, `pf`, `pgsql`,
-    `php`, `plaintext`, `pony`, `powershell`, `processing`, `profile`, `prolog`,
-    `properties`, `protobuf`, `puppet`, `purebasic`, `python`, `q`, `qml`, `r`,
-    `reasonml`, `rib`, `roboconf`, `routeros`, `rsl`, `ruby`, `ruleslanguage`, `rust`,
-    `sas`, `scala`, `scheme`, `scilab`, `scss`, `shell`, `smali`, `smalltalk`, `sml`,
-    `solidity`, `sqf`, `sql`, `stan`, `stata`, `step21`, `stylus`, `subunit`, `swift`,
-    `taggerscript`, `tap`, `tcl`, `tex`, `thrift`, `tp`, `twig`, `typescript`, `vala`,
-    `vbnet`, `vbscript`, `vbscript-html`, `verilog`, `vhdl`, `vim`, `vue`, `x86asm`,
-    `xl`, `xml`, `xquery`, `yaml`, `zephir`.
-    ///
     """
 
     code_theme: Optional[Union[str, CodeTheme]] = None

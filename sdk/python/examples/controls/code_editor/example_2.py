@@ -89,7 +89,7 @@ def main(page: ft.Page):
             spacing=10,
             controls=[
                 editor := fce.CodeEditor(
-                    language="python",
+                    language=fce.CodeLanguage.PYTHON,
                     code_theme=theme,
                     autocompletion_enabled=True,
                     autocompletion_words=[
