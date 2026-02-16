@@ -25,6 +25,9 @@ uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integratio
 
 # Types
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/types
+
+# Services
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/services
 ```
 
 Running **single file** tests with output and log debug output:
