@@ -47,6 +47,7 @@ jobs:
         - controls/core
         - controls/cupertino
         - controls/material
+        - controls/services
         - controls/theme
         - controls/types
 
