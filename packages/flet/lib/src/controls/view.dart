@@ -270,15 +270,6 @@ class _ViewControlState extends State<ViewControl> {
               )
             : scaffold);
 
-    var shaderGradient = control.getGradient("shader", Theme.of(context));
-    if (shaderGradient != null) {
-      result = ShaderMask(
-        shaderCallback: (bounds) => shaderGradient.createShader(bounds),
-        blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
-        child: result,
-      );
-    }
-
     var backgroundDecoration = control.getBoxDecoration("decoration", context);
     var foregroundDecoration =
         control.getBoxDecoration("foreground_decoration", context);
@@ -290,6 +281,15 @@ class _ViewControlState extends State<ViewControl> {
       result = Stack(
         fit: StackFit.expand,
         children: [bgContainer, result],
+      );
+    }
+
+    var shaderGradient = control.getGradient("shader", Theme.of(context));
+    if (shaderGradient != null) {
+      result = ShaderMask(
+        shaderCallback: (bounds) => shaderGradient.createShader(bounds),
+        blendMode: control.getBlendMode("blend_mode", BlendMode.modulate)!,
+        child: result,
       );
     }
 
