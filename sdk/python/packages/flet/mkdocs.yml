@@ -269,7 +269,6 @@ nav:
               - BannerAd: ads/bannerad.md
               - BaseAd: ads/basead.md
               - InterstitialAd: ads/interstitialad.md
-              - NativeAd: ads/nativead.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
