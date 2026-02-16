@@ -26,9 +26,9 @@ on:
         required: false
         default: ""
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
-  cancel-in-progress: true
+#concurrency:
+#  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+#  cancel-in-progress: true
 
 env:
   UV_PYTHON: 3.12
@@ -207,7 +207,7 @@ jobs:
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
           echo "FLET_EXTRA_ARGS='${FLET_EXTRA_ARGS}'"
-          uv run ${{ matrix.build_cmd }} $FLET_EXTRA_ARGS
+          uv run ${{ matrix.build_cmd }} $FLET_EXTRA_ARGS --template-ref 0.80.6-artifact-test
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0

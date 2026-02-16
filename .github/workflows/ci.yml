@@ -1,26 +1,26 @@
 name: Build & Publish
 
 on:
-  push:
-    branches:
-      - '**'
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-    paths:
-      - '.github/workflows/ci.yml'
-      - '.github/scripts/**'
-      - 'client/**'
-      - 'sdk/python/packages/**'
-      - 'packages/flet/**'
-      - '.fvmrc'
-  pull_request:
-    paths:
-      - '.github/workflows/ci.yml'
-      - '.github/scripts/**'
-      - 'client/**'
-      - 'sdk/python/packages/**'
-      - 'packages/flet/**'
-      - '.fvmrc'
+  #  push:
+  #    branches:
+  #      - '**'
+  #    tags:
+  #      - 'v[0-9]+.[0-9]+.[0-9]+'
+  #    paths:
+  #      - '.github/workflows/ci.yml'
+  #      - '.github/scripts/**'
+  #      - 'client/**'
+  #      - 'sdk/python/packages/**'
+  #      - 'packages/flet/**'
+  #      - '.fvmrc'
+  #  pull_request:
+  #    paths:
+  #      - '.github/workflows/ci.yml'
+  #      - '.github/scripts/**'
+  #      - 'client/**'
+  #      - 'sdk/python/packages/**'
+  #      - 'packages/flet/**'
+  #      - '.fvmrc'
   workflow_dispatch:
 
 permissions:
