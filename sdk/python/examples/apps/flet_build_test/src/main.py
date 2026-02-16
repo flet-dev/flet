@@ -1,7 +1,7 @@
 import sys
 
 import numpy
-import pillow
+import PIL
 from modules.utils import greet
 
 import flet as ft
@@ -17,7 +17,6 @@ import flet_map  # noqa: F401
 import flet_permission_handler  # noqa: F401
 import flet_rive  # noqa: F401
 import flet_secure_storage  # noqa: F401
-import flet_video  # noqa: F401
 import flet_webview  # noqa: F401
 
 
@@ -43,10 +42,11 @@ def main(page: ft.Page):
         on_click=lambda: page.show_dialog(
             ft.AlertDialog(
                 title="Debug Info",
+                scrollable=True,
                 content=ft.Column(
                     controls=[
                         ft.Text(f"Numpy: v{numpy.__version__}"),
-                        ft.Text(f"Pillow: v{pillow.__version__}"),
+                        ft.Text(f"Pillow: v{PIL.__version__}"),
                         ft.Text(f"sys.path: {sys.path}"),
                     ]
                 ),

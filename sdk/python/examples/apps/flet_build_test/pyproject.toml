@@ -21,7 +21,7 @@ dependencies = [
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
-    "flet-video",
+    # "flet-video",
     "flet-webview",
 ]
 
@@ -51,7 +51,7 @@ flet-map = { path = "../../../packages/flet-map", editable = true }
 flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
 flet-rive = { path = "../../../packages/flet-rive", editable = true }
 flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
-flet-video = { path = "../../../packages/flet-video", editable = true }
+# flet-video = { path = "../../../packages/flet-video", editable = true }
 flet-webview = { path = "../../../packages/flet-webview", editable = true }
 
 [tool.flet.dev_packages]
@@ -68,17 +68,20 @@ flet-map = "../../../packages/flet-map"
 flet-permission-handler = "../../../packages/flet-permission-handler"
 flet-rive = "../../../packages/flet-rive"
 flet-secure-storage = "../../../packages/flet-secure-storage"
-flet-video = "../../../packages/flet-video"
+# flet-video = "../../../packages/flet-video"
 flet-webview = "../../../packages/flet-webview"
 
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
 product = "Flet Build Test"
-artifact = "flet_build_test artifact"
+artifact = "flet-build-test"
 project = "flet_build_test"
 company = "Flet"
 org = "com.flet"
 copyright = "Copyright (C) 2025 by Flet"
+
+#[tool.flet.macos]
+#artifact = "Flet Build Test"
 
 [tool.flet.app]
 path = "src"
