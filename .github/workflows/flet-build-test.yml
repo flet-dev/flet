@@ -131,28 +131,28 @@ jobs:
             artifact_name: ipa-simulator-build-artifact
             artifact_path: build/ipa-simulator
             needs_linux_deps: false
-
-          # -------- Web --------
-          - name: web-ubuntu
-            runner: ubuntu-latest
-            build_cmd: "flet build web --yes --verbose"
-            artifact_name: web-build-ubuntu-artifact
-            artifact_path: build/web
-            needs_linux_deps: false
-
-          - name: web-macos
-            runner: macos-latest
-            build_cmd: "flet build web --yes --verbose"
-            artifact_name: web-build-macos-artifact
-            artifact_path: build/web
-            needs_linux_deps: false
-
-          - name: web-windows
-            runner: windows-latest
-            build_cmd: "flet build web --yes --verbose"
-            artifact_name: web-build-windows-artifact
-            artifact_path: build/web
-            needs_linux_deps: false
+    #
+    #          # -------- Web --------
+    #          - name: web-ubuntu
+    #            runner: ubuntu-latest
+    #            build_cmd: "flet build web --yes --verbose"
+    #            artifact_name: web-build-ubuntu-artifact
+    #            artifact_path: build/web
+    #            needs_linux_deps: false
+    #
+    #          - name: web-macos
+    #            runner: macos-latest
+    #            build_cmd: "flet build web --yes --verbose"
+    #            artifact_name: web-build-macos-artifact
+    #            artifact_path: build/web
+    #            needs_linux_deps: false
+    #
+    #          - name: web-windows
+    #            runner: windows-latest
+    #            build_cmd: "flet build web --yes --verbose"
+    #            artifact_name: web-build-windows-artifact
+    #            artifact_path: build/web
+    #            needs_linux_deps: false
 
     steps:
       - name: Checkout repository
