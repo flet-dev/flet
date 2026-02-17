@@ -17,6 +17,7 @@ import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_secure_storage/flet_secure_storage.dart'
     as flet_secure_storage;
+import 'package:flet_code_editor/flet_code_editor.dart' as flet_code_editor;
 // --FAT_CLIENT_START--
 // --RIVE_IMPORT_START--
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
@@ -54,6 +55,7 @@ void main([List<String>? args]) async {
     flet_charts.Extension(),
     flet_color_picker.Extension(),
     flet_secure_storage.Extension(),
+    flet_code_editor.Extension(),
     // --FAT_CLIENT_START--
     // --RIVE_EXTENSION_START--
     flet_rive.Extension(),

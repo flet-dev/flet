@@ -20,7 +20,7 @@ class Marker(ft.Control):
     The content to be displayed at [`coordinates`][(c).].
 
     Raises:
-        ValueError: If it is not [`visible`][(c).].
+        ValueError: If it is not [`visible`][flet.Control.visible].
     """
 
     coordinates: MapLatitudeLongitude

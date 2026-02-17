@@ -1,5 +1,5 @@
 ---
-examples: ../../examples/controls/color_picker
+examples: ../../examples/controls/color_pickers
 ---
 
 # Color pickers

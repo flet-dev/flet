@@ -713,6 +713,7 @@ jobs:
             flet-audio
             flet-audio-recorder
             flet-charts
+            flet-code-editor
             flet-color-pickers
             flet-datatable2
             flet-flashlight
@@ -825,7 +826,6 @@ jobs:
           for pkg in \
             flet \
             flet_cli \
-            flet_color_pickers \
             flet_desktop \
             flet_desktop_light \
             flet_web \
@@ -833,6 +833,8 @@ jobs:
             flet_audio \
             flet_audio_recorder \
             flet_charts \
+            flet_code_editor \
+            flet_color_pickers \
             flet_datatable2 \
             flet_flashlight \
             flet_geolocator \

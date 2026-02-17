@@ -15,7 +15,8 @@ class LineChartDataPointTooltip(ChartDataPointTooltip):
     """
     The text to display in the tooltip.
 
-    When `None`, defaults to [`LineChartDataPoint.y`][(p).].
+    When `None`, defaults to
+    [`LineChartDataPoint.y`][flet_charts.line_chart_data_point.LineChartDataPoint.y].
     """
 
     def copy(
@@ -57,7 +58,8 @@ class LineChartDataPoint(ft.BaseControl):
 
     selected: bool = False
     """
-    Draw the point as selected when [`LineChart.interactive`][(p).]
+    Draw the point as selected when
+    [`LineChart.interactive`][flet_charts.line_chart.LineChart.interactive]
     is set to `False`.
     """
 

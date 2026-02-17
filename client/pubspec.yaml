@@ -82,6 +82,9 @@ dependencies:
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
+  flet_code_editor:
+    path: ../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor
+
   cupertino_icons: ^1.0.6
   wakelock_plus: ^1.4.0
   package_info_plus: ^9.0.0

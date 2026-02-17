@@ -135,6 +135,13 @@ def define_env(env):
         *,
         max_versions: Optional[int] = None,
     ) -> str:
+        if os.getenv("FLET_DOCS_SKIP_PYPI_INDEX", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }:
+            return "_Package index fetch is skipped in local fast docs mode._\n"
         return render_pypi_index(
             base_url="https://pypi.flet.dev/",
             timeout_s=20.0,

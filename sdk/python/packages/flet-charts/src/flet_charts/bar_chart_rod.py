@@ -18,7 +18,8 @@ class BarChartRodTooltip(ChartDataPointTooltip):
     """
     The text to display in the tooltip.
 
-    When `None`, defaults to [`BarChartRod.to_y`][(p).].
+    When `None`, defaults to
+    [`BarChartRod.to_y`][flet_charts.bar_chart_rod.BarChartRod.to_y].
     """
 
     def copy(
@@ -112,7 +113,8 @@ class BarChartRod(ft.BaseControl):
     selected: bool = False
     """
     If set to `True` a tooltip is always shown on top of the bar when
-    [`BarChart.interactive`][(p).] is set to `False`.
+    [`BarChart.interactive`][flet_charts.bar_chart.BarChart.interactive]
+    is set to `False`.
     """
 
     tooltip: Union[BarChartRodTooltip, str] = field(

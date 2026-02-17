@@ -71,6 +71,13 @@ tasks:
     cmds:
       - uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
 
+  serve-docs-fast:
+    desc: "Serve MkDocs documentation from the 'packages/flet' directory without watching for file changes. Use this if you don't want to restart the server on every file change."
+    aliases:
+      - docs-fast
+    cmds:
+      - FLET_DOCS_SKIP_PYPI_INDEX=1 uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
+
   docs-coverage:
     desc: "Run docstring coverage report in the 'packages/flet' directory."
     cmds:
