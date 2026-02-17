@@ -239,7 +239,16 @@ class ResponsiveRowBreakpoint(Enum):
 
 
 Number = Union[int, float]
+"""Type alias for numeric values (`int` or `float`)."""
+
 ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
+"""Type alias for responsive numeric values.
+
+Represents either:
+- a single numeric value used for all breakpoints,
+- or a breakpoint-to-value mapping keyed by string or
+  [`ResponsiveRowBreakpoint`][flet.].
+"""
 
 
 class MainAxisAlignment(Enum):
@@ -1228,6 +1237,13 @@ More information [here](https://docs.flet.dev/cookbook/cookbook/cookbook/colors)
 
 # Icons
 IconDataOrControl = Union[IconData, "Control"]
+"""Type alias for icon-like values.
+
+Represents either:
+- an [`IconData`][flet.] value
+    (for example, a member of [`Icons`][flet.] or [`CupertinoIcons`][flet.]),
+- or a custom icon [`Control`][flet.].
+"""
 
 # Content
 StrOrControl = Union[str, "Control"]

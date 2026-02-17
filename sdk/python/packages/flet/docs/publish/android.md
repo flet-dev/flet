@@ -173,7 +173,7 @@ If not, create one using one of the following methods:
 
     A file named `upload-keystore.jks` will be created in your home directory.
     If you want to store it elsewhere, change the argument passed to the `-keystore` parameter.
-    The location of the keystore file is will be required in the [key store step](#key-store) below.
+    The location of the keystore file is equally important for the [key store](#key-store) step below.
 
     /// admonition | Note
     - The `keytool` command might not be in your path—it's part of Java, which is installed as part of Android Studio.

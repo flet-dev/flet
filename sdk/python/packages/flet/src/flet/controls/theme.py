@@ -862,7 +862,8 @@ class FilledButtonTheme:
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`FilledButton.style`][flet.] in all descendant \
+    Overrides the default value of [`Button.style`][flet.Button.style]
+    in all descendant \
     [`FilledButton`][flet.] controls.
     """
 

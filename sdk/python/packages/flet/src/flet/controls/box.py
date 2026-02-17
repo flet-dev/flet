@@ -180,6 +180,12 @@ class BoxShadow:
 
 
 BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
+"""Type alias for box shadow values.
+
+Represents shadows as either:
+- a single [`BoxShadow`][flet.] object,
+- or a list of [`BoxShadow`][flet.] objects.
+"""
 
 
 class BoxShape(Enum):

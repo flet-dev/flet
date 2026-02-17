@@ -90,3 +90,9 @@ class ControlState(Enum):
 
 T = TypeVar("T")
 ControlStateValue = Union[T, dict[ControlState, T]]
+"""Type alias for state-dependent control values.
+
+Represents either:
+- a single value applied to all (supported) states,
+- or a mapping from [`ControlState`][flet.] to per-state values.
+"""

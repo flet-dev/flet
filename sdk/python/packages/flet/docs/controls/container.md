@@ -1,8 +1,8 @@
 ---
 class_name: flet.Container
 examples: ../../examples/controls/container
-example_images: ../test-images/examples/material/golden/macos/container
 example_media: ../examples/controls/container/media
+example_images: ../test-images/examples/material/golden/macos/container
 ---
 
 {{ class_summary(class_name) }}

@@ -333,3 +333,10 @@ class AnimationStyle:
 
 
 AnimationValue = Union[bool, int, Animation]
+"""Type alias for animation configuration values.
+
+Represents animation input as either:
+- `True` or `False` to enable or disable animation,
+- an `int` duration in milliseconds,
+- or an explicit [`Animation`][flet.] configuration.
+"""

@@ -4,13 +4,13 @@
 
 Running **all** tests in directory with output and log debug output:
 
-```
+```bash
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 ```
 
 Running tests by suite:
 
-```
+```bash
 # Core
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/core
 
@@ -25,35 +25,38 @@ uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integratio
 
 # Types
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/types
+
+# Services
+uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/services
 ```
 
 Running **single file** tests with output and log debug output:
 
-```
+```bash
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/material/test_button.py
 ```
 
 Running **single test** with output and log debug output:
 
-```
+```bash
 uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/controls/material/test_button.py -k test_basic
 ```
 
 Running tests on iOS simulator:
 
-```
+```bash
 FLET_TEST_DEVICE=<simulator-guid> uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 ```
 
 Running tests on Android simulator:
 
-```
+```bash
 FLET_TEST_DEVICE=<simulator-name> FLET_TEST_PLATFORM=android uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 ```
 
 Running test to create golden images:
 
-```
+```bash
 FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material/test_button.py
 ```
 

@@ -23,8 +23,8 @@ The tutorial consists of the following steps:
 * [Adding page controls and handling events](#adding-page-controls-and-handling-events)
 * [View, edit and delete list items](#view-edit-and-delete-list-items)
 * [Filtering list items](#filtering-list-items)
+* [Final touches](#final-touches)
 * [Publishing the app](#publishing-the-app)
-* [Summary](#summary)
 
 ## Getting started with Flet
 
@@ -254,8 +254,9 @@ Run the app and try filtering tasks by clicking on the tabs:
 
 {{ image("../examples/tutorials/todo/media/filtering.gif", width="80%") }}
 
-Our Todo app is almost complete now. As a final touch, we will add a footer
-(`Column` control) displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
+## Final touches
+
+Our Todo app is almost complete now. As a final touch, we will add a footer (`Column` control) displaying the number of incomplete tasks (`Text` control) and a "Clear completed" button.
 
 /// details | Full code
     type: example

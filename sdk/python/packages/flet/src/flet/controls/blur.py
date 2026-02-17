@@ -64,3 +64,10 @@ class Blur:
 
 
 BlurValue = Union[Number, tuple[Number, Number], Blur]
+"""Type alias for blur configuration values.
+
+Represents blur as either:
+- a single sigma value applied to both axes,
+- a `(sigma_x, sigma_y)` tuple,
+- or an explicit [`Blur`][flet.] object.
+"""

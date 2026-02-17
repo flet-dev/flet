@@ -128,5 +128,25 @@ class Offset:
 
 # typing
 RotateValue = Union[Number, Rotate]
+"""Type alias for rotation values.
+
+Represents rotation as either:
+- a numeric angle in radians,
+- or an explicit [`Rotate`][flet.] transform.
+"""
+
 ScaleValue = Union[Number, Scale]
+"""Type alias for scale values.
+
+Represents scale as either:
+- a numeric uniform scale factor,
+- or an explicit [`Scale`][flet.] transform.
+"""
+
 OffsetValue = Union[Offset, tuple[Number, Number]]
+"""Type alias for offset values.
+
+Represents offset as either:
+- an [`Offset`][flet.] object,
+- or an `(x, y)` tuple.
+"""

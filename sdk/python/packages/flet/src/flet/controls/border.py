@@ -311,3 +311,9 @@ def only(
 
 
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
+"""Type alias for border stroke alignment values.
+
+Represents stroke alignment as either:
+- a [`BorderSideStrokeAlign`][flet.] enum value,
+- or a numeric alignment value.
+"""

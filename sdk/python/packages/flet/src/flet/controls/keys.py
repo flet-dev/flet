@@ -59,3 +59,9 @@ class ScrollKey(Key):
 
 
 KeyValue = Union[ValueKey, ScrollKey, str, int, float, bool]
+"""Type alias for control key values.
+
+Represents keys as either:
+- a [`ValueKey`][flet.] or [`ScrollKey`][flet.] object,
+- or a primitive `str`, `int`, `float`, or `bool` value.
+"""

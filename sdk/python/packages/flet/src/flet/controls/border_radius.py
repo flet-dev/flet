@@ -222,3 +222,9 @@ def only(
 
 
 BorderRadiusValue = Union[Number, BorderRadius]
+"""Type alias for border radius values.
+
+Represents radius as either:
+- a single numeric radius applied to all corners,
+- or an explicit [`BorderRadius`][flet.] configuration.
+"""
