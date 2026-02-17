@@ -257,6 +257,7 @@ nav:
                   - Publish web app as static website: publish/web/static-website/index.md
                   - Hosting:
                       - Cloudflare: publish/web/static-website/hosting/cloudflare.md
+                      - GitHub Pages: publish/web/static-website/hosting/github-pages.md
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
