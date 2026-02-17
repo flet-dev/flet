@@ -61,11 +61,6 @@ for distribution, you will need the following:
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
 
-Build outputs are copied into the [output directory](index.md#output-directory):
-
-- `.xcarchive` from `build/ios/archive/*`
-- `.ipa` from `build/ios/ipa/*` (when signing is configured)
-
 ## `flet build ipa-simulator`
 
 /// admonition | Supported host platforms
@@ -73,12 +68,8 @@ Build outputs are copied into the [output directory](index.md#output-directory):
 This command can be run on **macOS only**.
 ///
 
-Builds an unsigned iOS Simulator `.app` bundle, intended for testing on iOS Simulator and does not require a signing
-certificate, provisioning profile, or Apple Developer Program setup.
-
-Build outputs are copied into the [output directory](index.md#output-directory):
-
-- `.app` bundle from `build/ios/iphonesimulator/*`
+Builds an (unsigned) iOS Simulator `.app` bundle, intended for testing on iOS Simulator
+and does **not** require a signing certificate, provisioning profile, or Apple Developer Program setup.
 
 ## Configuration options
 

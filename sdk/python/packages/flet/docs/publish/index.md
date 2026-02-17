@@ -1338,140 +1338,141 @@ the build and release process of your Flet apps.
 
 ### GitHub Actions
 
-The below example shows how to use `flet build` in a [GitHub Actions](https://docs.github.com/en/actions) workflow.
-It builds the app for all platforms and uploads the resulting artifacts to the workflow run.
-You could further customize/tailor it to best fit your specific needs.
+You can use [GitHub Actions](https://docs.github.com/en/actions) to build your
+Flet app automatically on every push, pull request, or manual run.
 
 {% raw %}
 ```yaml
-name: Build Flet App
+name: Build Flet App # (1)!
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: # (2)!
+  push: # (3)!
+  pull_request: # (4)!
+  workflow_dispatch: # (5)!
 
-env:
-  UV_PYTHON: 3.12   # Python version
-  PYTHONUTF8: 1
-
-  # https://docs.flet.dev/publish/
-  BUILD_NUMBER: 1
-  BUILD_VERSION: 1.0.0
+env: # (6)!
+  UV_PYTHON: 3.12 # (7)!
+  PYTHONUTF8: 1 # (8)!
 
   # https://docs.flet.dev/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1
+  FLET_CLI_NO_RICH_OUTPUT: 1 # (9)!
 
 jobs:
   build:
     name: Build ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
-    strategy:
+    strategy: # (10)!
       fail-fast: false
       matrix:
         include:
           # -------- Desktop --------
           - name: linux
             runner: ubuntu-latest
-            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build linux"
             artifact_path: build/linux
             needs_linux_deps: true
 
           - name: macos
             runner: macos-latest
-            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build macos"
             artifact_path: build/macos
             needs_linux_deps: false
 
           - name: windows
             runner: windows-latest
-            build_cmd: "flet build windows --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build windows"
             artifact_path: build/windows
             needs_linux_deps: false
 
           # -------- Android --------
           - name: aab
             runner: ubuntu-latest
-            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build aab"
             artifact_path: build/aab
             needs_linux_deps: false
 
           - name: apk
             runner: ubuntu-latest
-            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build apk"
             artifact_path: build/apk
             needs_linux_deps: false
 
           # -------- iOS --------
           - name: ipa
             runner: macos-latest
-            build_cmd: "flet build ipa --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build ipa"
             artifact_path: build/ipa
             needs_linux_deps: false
 
           - name: ipa-simulator
             runner: macos-latest
-            build_cmd: "flet build ipa-simulator --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build ipa-simulator"
             artifact_path: build/ipa-simulator
             needs_linux_deps: false
 
           # -------- Web --------
           - name: web
             runner: ubuntu-latest
-            build_cmd: "flet build web --yes --verbose"
+            build_cmd: "flet build web"
             artifact_path: build/web
             needs_linux_deps: false
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository # (11)!
         uses: actions/checkout@v4
 
-      - name: Setup uv
+      - name: Setup uv # (12)!
         uses: astral-sh/setup-uv@v6
 
-      - name: Install Linux dependencies
-        if: matrix.needs_linux_deps
+      - name: Install Linux dependencies # (13)!
+        if: matrix.needs_linux_deps # (14)!
         shell: bash
         run: |
-          sudo apt update --allow-releaseinfo-change
-          sudo apt-get install -y --no-install-recommends \
-            clang \
-            ninja-build \
-            libgtk-3-dev \
-            libasound2-dev \
-            libmpv-dev \
-            mpv \
-            libgstreamer1.0-dev \
-            libgstreamer-plugins-base1.0-dev \
-            libgstreamer-plugins-bad1.0-dev \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good \
-            gstreamer1.0-plugins-bad \
-            gstreamer1.0-plugins-ugly \
-            gstreamer1.0-libav \
-            gstreamer1.0-tools \
-            gstreamer1.0-x \
-            gstreamer1.0-alsa \
-            gstreamer1.0-gl \
-            gstreamer1.0-gtk3 \
-            gstreamer1.0-qt5 \
-            gstreamer1.0-pulseaudio \
-            pkg-config \
-            libsecret-1-0 \
-            libsecret-1-dev
-          sudo apt-get clean
+            sudo apt update --allow-releaseinfo-change
+            sudo apt-get install -y --no-install-recommends \
+              clang ninja-build libgtk-3-dev libasound2-dev libmpv-dev mpv \
+              libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
+              gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+              gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
+              gstreamer1.0-qt5 gstreamer1.0-pulseaudio pkg-config libsecret-1-0 libsecret-1-dev
+            sudo apt-get clean
 
-      - name: Build app
+      - name: Build app # (15)!
         shell: bash
         run: |
-          uv run ${{ matrix.build_cmd }}
+          uv run ${{ matrix.build_cmd }} --yes --verbose
 
-      - name: Upload Artifact
+      - name: Upload Artifact # (16)!
         uses: actions/upload-artifact@v5.0.0
         with:
           name: ${{ matrix.name }}-build-artifact
-          path: ${{ matrix.artifact_path }}
-          if-no-files-found: error
+          path: ${{ matrix.artifact_path }} # (17)!
+          if-no-files-found: error # (18)!
           overwrite: false
 ```
 {% endraw %}
+
+1. Workflow display name shown in the **Actions** tab.
+2. Trigger block for automatic and manual workflow runs.
+3. Runs this workflow on every push (unless you restrict branches).
+4. Runs this workflow when pull requests are opened/updated.
+5. Enables manual runs from GitHub UI (**Actions** → **Run workflow**).
+6. Environment variables shared by all jobs and steps.
+7. Python version used by `uv`.
+8. Forces UTF-8 mode for Python output/IO. Especially useful on Windows builds.
+9. Disables rich output from `flet build` for better readability in CI logs.
+10. Matrix strategy: each `include` item becomes a parallel build job.
+11. Checks out your repository so this workflow can access project files.
+12. Installs `uv` on the runner.
+13. Installs Linux system packages required by Linux desktop builds.
+14. Runs Linux package installation only for matrix entries that need it.
+15. Main build step for each target. Executes the target-specific command defined by `matrix.build_cmd`.
+16. Uploads build output files as downloadable artifacts.
+17. Artifact path expected from each build target.
+18. If no files were found to upload, the workflow fails, indicating something went wrong during the build.
+
+The workflow file above builds for all major targets and uploads each build output as an artifact.
+You can further customize the workflow for your specific needs, for example,
+restricting the build targets or adding additional steps.
+
+See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).
