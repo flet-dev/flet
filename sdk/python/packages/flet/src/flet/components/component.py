@@ -63,6 +63,10 @@ class Component(BaseControl):
         logger.debug("%s._migrate_state(%s)", self, other)
         if not isinstance(other, Component):
             return
+        # Hooks are positional. Migrating state between different component
+        # functions can mix incompatible hook types (e.g. ContextHook -> StateHook).
+        if self.fn is not other.fn:
+            return
         self._state = other._state
         self._state.change_owner(self)
         other._stale = True
