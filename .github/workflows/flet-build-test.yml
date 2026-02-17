@@ -53,26 +53,26 @@ jobs:
       matrix:
         include:
           # -------- Desktop --------
-          - name: linux
-            runner: ubuntu-latest
-            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
-            artifact_name: linux-build-artifact
-            artifact_path: build/linux
-            needs_linux_deps: true
-
-          - name: macos
-            runner: macos-latest
-            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
-            artifact_name: macos-build-artifact
-            artifact_path: build/macos
-            needs_linux_deps: false
-
-          - name: windows
-            runner: windows-latest
-            build_cmd: "flet build windows --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
-            artifact_name: windows-build-artifact
-            artifact_path: build/windows
-            needs_linux_deps: false
+          #          - name: linux
+          #            runner: ubuntu-latest
+          #            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+          #            artifact_name: linux-build-artifact
+          #            artifact_path: build/linux
+          #            needs_linux_deps: true
+          #
+          #          - name: macos
+          #            runner: macos-latest
+          #            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+          #            artifact_name: macos-build-artifact
+          #            artifact_path: build/macos
+          #            needs_linux_deps: false
+          #
+          #          - name: windows
+          #            runner: windows-latest
+          #            build_cmd: "flet build windows --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+          #            artifact_name: windows-build-artifact
+          #            artifact_path: build/windows
+          #            needs_linux_deps: false
 
           # -------- Android --------
           - name: aab-ubuntu
@@ -98,7 +98,7 @@ jobs:
 
           - name: apk-ubuntu
             runner: ubuntu-latest
-            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION --split-per-abi"
             artifact_name: apk-build-ubuntu-artifact
             artifact_path: build/apk
             needs_linux_deps: false
