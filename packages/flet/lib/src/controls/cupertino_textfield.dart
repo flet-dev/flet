@@ -43,26 +43,44 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
   String? _lastBlurValue;
   TextSelection? _selection;
 
+  KeyEventResult _handleTextFieldKeyEvent(KeyEvent event,
+      {required bool submitOnEnter}) {
+    // ignore up/down arrow keys if flag is set
+    if ((event is KeyDownEvent || event is KeyRepeatEvent) &&
+        widget.control.getBool("ignore_up_down_keys", false)! &&
+        (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+            event.logicalKey == LogicalKeyboardKey.arrowDown)) {
+      return KeyEventResult.handled;
+    }
+
+    // submit on Enter if flag is set and shift is not pressed
+    if (submitOnEnter &&
+        event is KeyDownEvent &&
+        !HardwareKeyboard.instance.isShiftPressed &&
+        (event.logicalKey == LogicalKeyboardKey.enter ||
+            event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+      widget.control.triggerEvent("submit");
+      return KeyEventResult.handled;
+    }
+
+    // let the system handle other key events
+    return KeyEventResult.ignored;
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _controller.addListener(_handleControllerChange);
     _shiftEnterfocusNode = FocusNode(
-      onKeyEvent: (FocusNode node, KeyEvent evt) {
-        if (!HardwareKeyboard.instance.isShiftPressed &&
-            evt.logicalKey.keyLabel == 'Enter') {
-          if (evt is KeyDownEvent) {
-            widget.control.triggerEvent("submit");
-          }
-          return KeyEventResult.handled;
-        } else {
-          return KeyEventResult.ignored;
-        }
-      },
+      onKeyEvent: (FocusNode node, KeyEvent event) =>
+          _handleTextFieldKeyEvent(event, submitOnEnter: true),
     );
     _shiftEnterfocusNode.addListener(_onShiftEnterFocusChange);
-    _focusNode = FocusNode();
+    _focusNode = FocusNode(
+      onKeyEvent: (FocusNode node, KeyEvent event) =>
+          _handleTextFieldKeyEvent(event, submitOnEnter: false),
+    );
     _focusNode.addListener(_onFocusChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
   }
