@@ -238,6 +238,11 @@ class Component(BaseControl):
         self._state.mounted = False
         self._detach_observable_subscriptions()
         self._run_unmount_effects()
+        self._b = None
+        self._state.last_b = None
+        self._state.last_args = ()
+        self._state.last_kwargs = {}
+        self._contexts.clear()
 
     def __str__(self):
         return f"{self._c}:{self.fn.__name__}({self._i} - {id(self)})"
