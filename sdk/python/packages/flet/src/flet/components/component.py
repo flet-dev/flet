@@ -209,13 +209,14 @@ class Component(BaseControl):
             logger.debug("%s._run_render_effects()", self)
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
-                if callable(hook.cleanup):
-                    self._schedule_effect(hook, is_cleanup=False)
-                if (
+                deps_changed = (
                     hook.deps is None
                     or hook.prev_deps is None
                     or hook.deps != hook.prev_deps
-                ):
+                )
+                if deps_changed:
+                    if callable(hook.cleanup):
+                        self._schedule_effect(hook, is_cleanup=True)
                     self._schedule_effect(hook, is_cleanup=False)
 
     def _run_unmount_effects(self):

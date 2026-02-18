@@ -99,6 +99,10 @@ class Session:
         self.__expires_at = datetime.now(timezone.utc) + timedelta(
             seconds=session_timeout_seconds
         )
+        self.__send_buffer.clear()
+        self.__pending_updates.clear()
+        self.__pending_effects.clear()
+        self.__updates_ready.clear()
         if self.__conn:
             self.__conn.dispose()
             self.__conn = None
@@ -284,6 +288,10 @@ class Session:
     def __send_message(self, message: ClientMessage):
         if self.__conn:
             self.__conn.send_message(message)
+        elif self.__expires_at is not None:
+            # Session is disconnected and waiting for eviction/reconnect.
+            # Drop incremental traffic to avoid unbounded buffering.
+            return
         else:
             self.__send_buffer.append(message)
 
@@ -320,11 +328,15 @@ class Session:
 
     def schedule_update(self, control: BaseControl):
         logger.debug("Schedule_update(%s)", control)
+        if self.__conn is None and self.__expires_at is not None:
+            return
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
     def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
+        if self.__conn is None and self.__expires_at is not None:
+            return
         self.__pending_effects.append((weakref.ref(hook), is_cleanup))
         self.__updates_ready.set()
 
