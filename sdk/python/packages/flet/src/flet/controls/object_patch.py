@@ -917,10 +917,9 @@ class DiffBuilder:
 
             # TODO - should optimize performance?
             fields = {f.name: f for f in dataclasses.fields(dst)}
-            for field_name, change in changes.items():
+            for field_name, old in changes.items():
                 if field_name in fields:
-                    old = change[0]
-                    new = change[1]
+                    new = getattr(dst, field_name)
 
                     if field_name.startswith("on_") and fields[field_name].metadata.get(
                         "event", True
@@ -952,7 +951,8 @@ class DiffBuilder:
             # compare lists
             for field_name, old in list(prev_lists.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_lists[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -965,7 +965,8 @@ class DiffBuilder:
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_dicts[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -978,7 +979,8 @@ class DiffBuilder:
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_classes[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -1172,14 +1174,17 @@ class DiffBuilder:
                         ) from None
 
                     if hasattr(obj, "__changes"):
-                        old_value = getattr(obj, name, None)
-                        if old_value != value:
+                        current_value = getattr(obj, name, None)
+                        if current_value != value:
                             # logger.debug(
                             #     f"\n\nset_attr: {obj.__class__.__name__}.{name} = "
                             #     f"{new_value}, old: {old_value}"
                             # )
                             changes = getattr(obj, "__changes")
-                            changes[name] = (old_value, value)
+                            if name not in changes:
+                                changes[name] = current_value
+                            elif changes[name] == value:
+                                del changes[name]
                             if hasattr(obj, "_notify"):
                                 obj._notify(name, value)
                 object.__setattr__(obj, name, value)
