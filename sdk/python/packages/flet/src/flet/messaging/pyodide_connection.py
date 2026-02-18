@@ -2,7 +2,8 @@ import asyncio
 import inspect
 import logging
 import traceback
-from typing import Any
+from collections.abc import Awaitable
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 import flet_js
 import msgpack
@@ -23,12 +24,19 @@ from flet.messaging.protocol import (
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
+if TYPE_CHECKING:
+    from flet.app import AppCallable
+
 logger = logging.getLogger("flet")
 transport_log = logging.getLogger("flet_transport")
 
 
 class PyodideConnection(Connection):
-    def __init__(self, on_session_created, before_main):
+    def __init__(
+        self,
+        on_session_created: Optional[Callable[[Session], Awaitable[Any]]],
+        before_main: Optional["AppCallable"],
+    ):
         super().__init__()
         self.__receive_queue = asyncio.Queue()
         self.__on_session_created = on_session_created

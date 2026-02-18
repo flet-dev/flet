@@ -1,3 +1,4 @@
+{{ class_summary("flet.AppCallable", show_root_heading=True) }}
 {{ class_summary("flet.AnimationValue", show_root_heading=True) }}
 {{ class_summary("flet.BadgeValue", show_root_heading=True) }}
 {{ class_summary("flet.BlurValue", show_root_heading=True) }}

@@ -5,9 +5,10 @@ import logging
 import os
 import tempfile
 import traceback
+from collections.abc import Awaitable
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 import msgpack
 
@@ -28,6 +29,9 @@ from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
+if TYPE_CHECKING:
+    from flet.app import AppCallable
+
 logger = logging.getLogger("flet")
 transport_log = logging.getLogger("flet_transport")
 
@@ -38,9 +42,9 @@ class FletSocketServer(Connection):
         loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
-        on_session_created=None,
-        before_main=None,
-        blocking=False,
+        on_session_created: Optional[Callable[[Session], Awaitable[Any]]] = None,
+        before_main: Optional["AppCallable"] = None,
+        blocking: bool = False,
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()

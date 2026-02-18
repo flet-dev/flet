@@ -8,7 +8,7 @@ import signal
 import traceback
 from collections.abc import Awaitable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import Any, Callable, Optional
 
 from flet.controls.context import _context_page, context
 from flet.controls.page import Page
@@ -31,8 +31,12 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
-if TYPE_CHECKING:
-    from flet.controls.page import Page
+AppCallable = Callable[[Page], Any]
+"""Type alias for Flet app lifecycle callbacks.
+
+Represents a callable that accepts a single [`Page`][flet.] argument.
+Used for both `main` and `before_main` handlers.
+"""
 
 
 @deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
@@ -52,10 +56,8 @@ def app_async(*args, **kwargs):
 
 
 def run(
-    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
-    before_main: Optional[
-        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
-    ] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     name: str = "",
     host: Optional[str] = None,
     port: int = 0,
@@ -131,10 +133,8 @@ def run(
 
 
 async def run_async(
-    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
-    before_main: Optional[
-        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
-    ] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     name: str = "",
     host: Optional[str] = None,
     port: int = 0,
@@ -269,7 +269,9 @@ async def run_async(
         await conn.close()
 
 
-def __get_on_session_created(main):
+def __get_on_session_created(
+    main: Optional[AppCallable],
+) -> Callable[[Session], Awaitable[None]]:
     async def on_session_created(session: Session):
         logger.info("App session started")
         try:
@@ -299,7 +301,12 @@ def __get_on_session_created(main):
     return on_session_created
 
 
-async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
+async def __run_socket_server(
+    port: int = 0,
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+    blocking: bool = False,
+):
     from flet.messaging.flet_socket_server import FletSocketServer
 
     uds_path = os.getenv("FLET_SERVER_UDS_PATH")
@@ -320,17 +327,17 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
 
 
 async def __run_web_server(
-    main,
-    before_main,
-    host,
-    port,
-    page_name,
-    assets_dir,
-    upload_dir,
+    main: Optional[AppCallable],
+    before_main: Optional[AppCallable],
+    host: Optional[str],
+    port: int,
+    page_name: str,
+    assets_dir: str,
+    upload_dir: Optional[str],
     web_renderer: Optional[WebRenderer],
-    route_url_strategy,
-    no_cdn,
-    on_startup,
+    route_url_strategy: RouteUrlStrategy,
+    no_cdn: Optional[bool],
+    on_startup: Callable[[str], None],
 ):
     ensure_flet_web_package_installed()
     from flet_web.fastapi.serve_fastapi_web_app import serve_fastapi_web_app
@@ -363,7 +370,10 @@ async def __run_web_server(
     )
 
 
-def __run_pyodide(main=None, before_main=None):
+def __run_pyodide(
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+):
     from flet.messaging.pyodide_connection import PyodideConnection
 
     PyodideConnection(
