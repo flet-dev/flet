@@ -671,10 +671,19 @@ class DiffBuilder:
                         )
                         old_control_key = k(old)
                         new_control_key = k(new)
+                        same_component_fn = True
+                        if (
+                            getattr(old, "_c", None) == "C"
+                            and getattr(new, "_c", None) == "C"
+                        ):
+                            same_component_fn = getattr(old, "fn", None) is getattr(
+                                new, "fn", None
+                            )
                         if (not frozen_local and old is new) or (
                             frozen_local
                             and old is not new
                             and type(old) is type(new)
+                            and same_component_fn
                             and (
                                 old_control_key is None
                                 or new_control_key is None
@@ -726,9 +735,20 @@ class DiffBuilder:
                 elif isinstance(old, list) and isinstance(new, list):
                     self._compare_lists(parent, _path_join(path, idx), old, new, frozen)
                 elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
-                    self._compare_dataclasses(
-                        parent, _path_join(path, idx), old, new, frozen
-                    )
+                    same_component_fn = True
+                    if (
+                        getattr(old, "_c", None) == "C"
+                        and getattr(new, "_c", None) == "C"
+                    ):
+                        same_component_fn = getattr(old, "fn", None) is getattr(
+                            new, "fn", None
+                        )
+                    if same_component_fn:
+                        self._compare_dataclasses(
+                            parent, _path_join(path, idx), old, new, frozen
+                        )
+                    else:
+                        self._item_replaced(path, idx, new)
                 elif type(old) is not type(new) or old != new:
                     self._item_replaced(path, idx, new)
             return
@@ -785,11 +805,23 @@ class DiffBuilder:
                     )
 
                 same_type = type(old_item) is type(new_item)
+                same_component_fn = True
+                # Component controls (type "C") must only be diffed/migrated when
+                # their underlying component function is the same. Otherwise we
+                # need a replace to force remount and fresh hook state.
+                if (
+                    getattr(old_item, "_c", None) == "C"
+                    and getattr(new_item, "_c", None) == "C"
+                ):
+                    same_component_fn = getattr(old_item, "fn", None) is getattr(
+                        new_item, "fn", None
+                    )
 
                 if (not frozen_local and old_item is new_item) or (
                     frozen_local
                     and old_item is not new_item
                     and same_type
+                    and same_component_fn
                     and _keys_match()
                 ):
                     self._compare_dataclasses(
