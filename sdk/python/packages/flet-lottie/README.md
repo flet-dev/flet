@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-lottie.svg)](https://pypi.python.org/pypi/flet-lottie)
 [![downloads](https://static.pepy.tech/badge/flet-lottie/month)](https://pepy.tech/project/flet-lottie)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-lottie)
-[![docstring coverage](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet-lottie.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-lottie.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-lottie/LICENSE)
 
 A [Flet](https://flet.dev) extension package for displaying Lottie animations.

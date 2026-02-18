@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-map.svg)](https://pypi.python.org/pypi/flet-map)
 [![downloads](https://static.pepy.tech/badge/flet-map/month)](https://pepy.tech/project/flet-map)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-map)
-[![docstring coverage](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet-map.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-map.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-map/LICENSE)
 
 A [Flet](https://flet.dev) extension for displaying interactive maps.

@@ -18,7 +18,7 @@
     <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
         <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
     <a href="https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage" target="_blank">
-        <img src="https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
+        <img src="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
 ---

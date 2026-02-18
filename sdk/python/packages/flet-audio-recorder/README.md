@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-audio-recorder.svg)](https://pypi.python.org/pypi/flet-audio-recorder)
 [![downloads](https://static.pepy.tech/badge/flet-audio-recorder/month)](https://pepy.tech/project/flet-audio-recorder)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-audio-recorder)
-[![docstring coverage](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet-audio-recorder.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-audio-recorder.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio-recorder/LICENSE)
 
 Adds audio recording support to [Flet](https://flet.dev) apps.

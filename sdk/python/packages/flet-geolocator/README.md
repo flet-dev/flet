@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-geolocator.svg)](https://pypi.python.org/pypi/flet-geolocator)
 [![downloads](https://static.pepy.tech/badge/flet-geolocator/month)](https://pepy.tech/project/flet-geolocator)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-geolocator)
-[![docstring coverage](https://raw.githubusercontent.com/flet-dev/flet/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage/flet-geolocator.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-geolocator.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-geolocator/LICENSE)
 
 Adds geolocation capabilities to your [Flet](https://flet.dev) apps.
