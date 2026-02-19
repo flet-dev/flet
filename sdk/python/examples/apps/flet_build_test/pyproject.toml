@@ -9,20 +9,20 @@ dependencies = [
     "numpy",
     "pillow",
     "flet",
-    # "flet-ads",
-    # "flet-audio",
-    # "flet-audio-recorder",
-    # "flet-charts",
-    # "flet-datatable2",
-    # "flet-flashlight",
-    # "flet-geolocator",
-    # "flet-lottie",
-    # "flet-map",
-    # "flet-permission-handler",
-    # "flet-rive",
-    # "flet-secure-storage",
-    # "flet-video",
-    # "flet-webview",
+    "flet-ads",
+    "flet-audio",
+    "flet-audio-recorder",
+    "flet-charts",
+    "flet-datatable2",
+    "flet-flashlight",
+    "flet-geolocator",
+    "flet-lottie",
+    "flet-map",
+    "flet-permission-handler",
+    "flet-rive",
+    "flet-secure-storage",
+    "flet-video",
+    "flet-webview",
 ]
 
 [dependency-groups]
@@ -39,37 +39,37 @@ flet-cli = { path = "../../../packages/flet-cli", editable = true }
 flet-desktop = { path = "../../../packages/flet-desktop", editable = true }
 flet-desktop-light = { path = "../../../packages/flet-desktop-light", editable = true }
 flet-web = { path = "../../../packages/flet-web", editable = true }
-# flet-ads = { path = "../../../packages/flet-ads", editable = true }
-# flet-audio = { path = "../../../packages/flet-audio", editable = true }
-# flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable = true }
-# flet-charts = { path = "../../../packages/flet-charts", editable = true }
-# flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
-# flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
-# flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
-# flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
-# flet-map = { path = "../../../packages/flet-map", editable = true }
-# flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
-# flet-rive = { path = "../../../packages/flet-rive", editable = true }
-# flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
-# flet-video = { path = "../../../packages/flet-video", editable = true }
-# flet-webview = { path = "../../../packages/flet-webview", editable = true }
+flet-ads = { path = "../../../packages/flet-ads", editable = true }
+flet-audio = { path = "../../../packages/flet-audio", editable = true }
+flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable = true }
+flet-charts = { path = "../../../packages/flet-charts", editable = true }
+flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
+flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
+flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
+flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
+flet-map = { path = "../../../packages/flet-map", editable = true }
+flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
+flet-rive = { path = "../../../packages/flet-rive", editable = true }
+flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
+flet-video = { path = "../../../packages/flet-video", editable = true }
+flet-webview = { path = "../../../packages/flet-webview", editable = true }
 
 [tool.flet.dev_packages]
 flet = "../../../packages/flet"
-# flet-ads = "../../../packages/flet-ads"
-# flet-audio = "../../../packages/flet-audio"
-# flet-audio-recorder = "../../../packages/flet-audio-recorder"
-# flet-charts = "../../../packages/flet-charts"
-# flet-datatable2 = "../../../packages/flet-datatable2"
-# flet-flashlight = "../../../packages/flet-flashlight"
-# flet-geolocator = "../../../packages/flet-geolocator"
-# flet-lottie = "../../../packages/flet-lottie"
-# flet-map = "../../../packages/flet-map"
-# flet-permission-handler = "../../../packages/flet-permission-handler"
-# flet-rive = "../../../packages/flet-rive"
-# flet-secure-storage = "../../../packages/flet-secure-storage"
-# flet-video = "../../../packages/flet-video"
-# flet-webview = "../../../packages/flet-webview"
+flet-ads = "../../../packages/flet-ads"
+flet-audio = "../../../packages/flet-audio"
+flet-audio-recorder = "../../../packages/flet-audio-recorder"
+flet-charts = "../../../packages/flet-charts"
+flet-datatable2 = "../../../packages/flet-datatable2"
+flet-flashlight = "../../../packages/flet-flashlight"
+flet-geolocator = "../../../packages/flet-geolocator"
+flet-lottie = "../../../packages/flet-lottie"
+flet-map = "../../../packages/flet-map"
+flet-permission-handler = "../../../packages/flet-permission-handler"
+flet-rive = "../../../packages/flet-rive"
+flet-secure-storage = "../../../packages/flet-secure-storage"
+flet-video = "../../../packages/flet-video"
+flet-webview = "../../../packages/flet-webview"
 
 # Docs: https://docs.flet.dev/publish/
 [tool.flet]
@@ -80,14 +80,11 @@ company = "Flet"
 org = "com.flet"
 copyright = "Copyright (C) 2025 by Flet"
 
-#[tool.flet.macos]
-#artifact = "Flet Build Test"
-
 [tool.flet.app]
 path = "src"
 
-# [tool.flet.android.meta_data]
-# "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"
+[tool.flet.android.meta_data]
+"com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"
 
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { path = "../../../../../../../packages/flet" }
