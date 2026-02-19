@@ -92,7 +92,7 @@ class _CameraControlState extends State<CameraControl> {
     }
 
     final resolutionPreset =
-        parseResolutionPreset(args["resolution_preset"] ?? "max");
+        parseResolutionPreset(args["resolution_preset"], ResolutionPreset.max);
     final enableAudio =
         args["enable_audio"] is bool ? args["enable_audio"] as bool : true;
     final fps = args["fps"] is num ? (args["fps"] as num).round() : null;
@@ -226,7 +226,7 @@ class _CameraControlState extends State<CameraControl> {
         }
         break;
       case "set_exposure_point":
-        final point = parseOffsetFromJson(args["point"]);
+        final point = parseOffset(args["point"]);
         await _requireController().setExposurePoint(point);
         break;
       case "set_flash_mode":
@@ -242,7 +242,7 @@ class _CameraControlState extends State<CameraControl> {
         }
         break;
       case "set_focus_point":
-        final point = parseOffsetFromJson(args["point"]);
+        final point = parseOffset(args["point"]);
         await _requireController().setFocusPoint(point);
         break;
       case "set_zoom_level":

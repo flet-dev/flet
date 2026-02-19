@@ -1,8 +1,7 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 
@@ -10,12 +9,10 @@ CameraDescription? parseCameraDescription(dynamic value) {
   if (value == null) return null;
   if (value is CameraDescription) return value;
   if (value is Map) {
-    final lensDirection =
-        parseEnum(CameraLensDirection.values, value["lens_direction"]) ??
-            CameraLensDirection.back;
-    final lensType =
-        parseEnum(CameraLensType.values, value["lens_type"]) ??
-            CameraLensType.unknown;
+    final lensDirection = parseEnum(CameraLensDirection.values,
+        value["lens_direction"], CameraLensDirection.back)!;
+    final lensType = parseEnum(
+        CameraLensType.values, value["lens_type"], CameraLensType.unknown)!;
     final sensorOrientation = value["sensor_orientation"];
     final name = value["name"];
     if (name is String && sensorOrientation is int) {
@@ -31,8 +28,8 @@ CameraDescription? parseCameraDescription(dynamic value) {
 }
 
 ResolutionPreset parseResolutionPreset(dynamic value,
-    [ResolutionPreset defaultValue = ResolutionPreset.max]) {
-  return parseEnum(ResolutionPreset.values, value) ?? defaultValue;
+    [ResolutionPreset? defaultValue]) {
+  return parseEnum(ResolutionPreset.values, value, defaultValue)!;
 }
 
 ImageFormatGroup? parseImageFormatGroup(dynamic value) {
@@ -53,39 +50,6 @@ FocusMode? parseFocusMode(dynamic value) {
 
 DeviceOrientation? parseDeviceOrientation(dynamic value) {
   return parseEnum(DeviceOrientation.values, value);
-}
-
-Offset? parseOffsetFromJson(dynamic value) {
-  if (value == null) return null;
-  if (value is Offset) return value;
-  if (value is List && value.length >= 2) {
-    final dx = value[0];
-    final dy = value[1];
-    if (dx is num && dy is num) {
-      return Offset(dx.toDouble(), dy.toDouble());
-    }
-  }
-  if (value is Map) {
-    final dx = value["dx"] ?? value["x"];
-    final dy = value["dy"] ?? value["y"];
-    if (dx is num && dy is num) {
-      return Offset(dx.toDouble(), dy.toDouble());
-    }
-  }
-  return null;
-}
-
-T? parseEnum<T extends Enum>(List<T> values, dynamic value) {
-  if (value is T) return value;
-  if (value is String) {
-    final normalized = value.toLowerCase();
-    for (final v in values) {
-      if (v.name.toLowerCase() == normalized) {
-        return v;
-      }
-    }
-  }
-  return null;
 }
 
 Map<String, dynamic> cameraDescriptionToMap(CameraDescription description) {
