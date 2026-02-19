@@ -44,6 +44,7 @@ async def main(page: ft.Page):
         src="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgMBAp0YVwAAAABJRU5ErkJggg==",
         height=200,
         fit=ft.BoxFit.CONTAIN,
+        gapless_playback=True,
     )
     selector = ft.Dropdown(label="Camera", options=[])
     recorded_video_path = ft.Text(value="Recorded video: not saved yet", size=12)
