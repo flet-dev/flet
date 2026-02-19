@@ -138,7 +138,11 @@ async def main(page: ft.Page):
         await preview.stop_image_stream()
 
     def on_stream_image(e: ft.Event[fc.CameraImage]):
-        print("Stream image received:", e)
+        try:
+            last_image.src = e.bytes
+            last_image.update()
+        except Exception as ex:
+            logging.exception("Failed to render stream frame: %s", ex)
 
     preview.on_stream_image = on_stream_image
 
