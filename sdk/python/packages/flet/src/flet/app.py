@@ -8,7 +8,7 @@ import signal
 import traceback
 from collections.abc import Awaitable
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
 
 from flet.controls.context import _context_page, context
 from flet.controls.page import Page
@@ -31,10 +31,12 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
-AppCallable = Callable[[Page], Any]
+AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
 
-Represents a callable that accepts a single [`Page`][flet.] argument.
+Represents a callable (synchronous or asynchronous) that accepts a single argument of
+type [`Page`][flet.]. The return value is ignored.
+
 Used for both `main` and `before_main` handlers.
 """
 
