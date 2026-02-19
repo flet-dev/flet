@@ -4,19 +4,21 @@ title: Hosting Flet website on GitHub Pages
 
 This guide shows how to build a Flet static web app and deploy it to [GitHub Pages](https://pages.github.com/) with GitHub Actions.
 
-## Create workflow file
+## Setup
 
 1. Open your repository root.
 2. Create this folder if it does not exist: `.github/workflows/`
-3. Create a workflow file, for example: `.github/workflows/github-pages.yml`
-4. Paste the workflow below.
+3. Create a workflow file in that folder, for example: `.github/workflows/build-deploy.yml` - must have the `.yml` or `.yaml` file extension.
+4. Copy the [workflow configuration](#workflow) below into that file and adjust to your needs.
 5. Commit and push to GitHub.
 6. Open the **Actions** tab to monitor build/deploy progress.
 
 /// admonition | Repository settings
-    type: tip
-In GitHub, open **Settings** -> **Pages** and make sure deployment source is **GitHub Actions**.
+    type: danger
+In GitHub, open **Settings** → **Pages** and make sure deployment source is **GitHub Actions**.
 ///
+
+## Workflow
 
 {% raw %}
 ```yaml
@@ -51,8 +53,8 @@ jobs:
 
       - name: Build app
         shell: bash
-        run: |
-          uv run flet build web --yes --verbose --base-url ${GITHUB_REPOSITORY#*/} --route-url-strategy hash # (15)!
+        run: | # (15)!
+          uv run flet build web --yes --verbose --base-url ${GITHUB_REPOSITORY#*/} --route-url-strategy hash
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4.0.0 # (16)!
@@ -99,31 +101,22 @@ jobs:
 10. Python version used by `uv`.
 11. Produces cleaner CI logs by disabling rich output.
 12. Runs the build job on GitHub-hosted Ubuntu.
-13. Checks out repository code.
-14. Installs `uv`.
+13. Checks out repository code. View its docs [here](https://github.com/actions/checkout).
+14. Installs `uv`. View its docs [here](https://github.com/astral-sh/setup-uv).
 15. Builds static web output and sets:
     - `--base-url ${GITHUB_REPOSITORY#*/}` so project pages deploy under `/<repo>/`.
-    - `--route-url-strategy hash` so routing works on static hosting without server-side rewrites.
-16. Uploads static files as a Pages artifact.
+        If your repository is `<username>.github.io`, use `--base-url /` instead of repository name. ([docs](../index.md#base-url))
+    - `--route-url-strategy hash` so routing works on static hosting without server-side rewrites. ([docs](../index.md#route-url-strategy))
+16. Uploads static files as a Pages artifact. View its docs [here](https://github.com/actions/upload-pages-artifact).
 17. Uses `build/web` as artifact source.
 18. Artifact name used later by deploy step.
 19. Keeps the artifact for 20 days.
-20. Deploys only on pushes to `main` (PRs only build).
+20. Deploys only on pushes to `main`. PRs only build but don't deploy. Adjust as needed.
 21. Waits for successful build job before deploy.
 22. Required permissions for Pages deployment.
 23. Connects deployment output URL to the GitHub environment.
-24. Configures Pages runtime.
-25. Deploys artifact to GitHub Pages.
+24. Configures Pages runtime. View its docs [here](https://github.com/actions/configure-pages).
+25. Deploys artifact to GitHub Pages. View its docs [here](https://github.com/actions/deploy-pages).
 26. Must match the uploaded artifact name.
 
-/// admonition | If your default branch is not `main`
-Update the deploy condition:
-```yaml
-if: github.event_name == 'push' && github.ref == 'refs/heads/<your-branch>'
-```
-///
-
-/// admonition | User/Org Pages repositories
-    type: note
-If your repository is `<username>.github.io`, use `--base-url /` instead of repository name.
-///
+See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).

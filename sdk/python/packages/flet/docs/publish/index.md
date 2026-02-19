@@ -1422,11 +1422,11 @@ jobs:
             needs_linux_deps: false
 
     steps:
-      - name: Checkout repository # (11)!
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4 # (11)!
 
-      - name: Setup uv # (12)!
-        uses: astral-sh/setup-uv@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6 # (12)!
 
       - name: Install Linux dependencies # (13)!
         if: matrix.needs_linux_deps # (14)!
@@ -1446,8 +1446,8 @@ jobs:
         run: |
           uv run ${{ matrix.build_cmd }} --yes --verbose
 
-      - name: Upload Artifact # (16)!
-        uses: actions/upload-artifact@v5.0.0
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5.0.0 # (16)!
         with:
           name: ${{ matrix.name }}-build-artifact
           path: ${{ matrix.artifact_path }} # (17)!
@@ -1466,12 +1466,12 @@ jobs:
 8. Forces UTF-8 mode for Python output/IO. Especially useful on Windows builds.
 9. Disables rich output from `flet build` for better readability in CI logs.
 10. Matrix strategy: each `include` item becomes a parallel build job.
-11. Checks out your repository so this workflow can access project files.
-12. Installs `uv` on the runner.
+11. Checks out your repository so this workflow can access project files. View its docs [here](https://github.com/actions/checkout).
+12. Installs `uv` on the runner. View its docs [here](https://github.com/astral-sh/setup-uv).
 13. Installs Linux system packages required by Linux desktop builds.
 14. Runs Linux package installation only for matrix entries that need it.
 15. Main build step for each target. Executes the target-specific command defined by `matrix.build_cmd`.
-16. Uploads build output files as downloadable artifacts.
+16. Uploads build output files as downloadable artifacts. View its docs [here](https://github.com/actions/upload-artifact).
 17. Artifact path expected from each build target.
 18. If no files were found to upload, the workflow fails, indicating something went wrong during the build.
 
