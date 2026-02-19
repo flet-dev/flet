@@ -34,15 +34,11 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://docs.flet.dev/publish/
-  BUILD_NUMBER: 1
-  BUILD_VERSION: 1.0.0
-
   # https://docs.flet.dev/reference/environment-variables
   FLET_CLI_NO_RICH_OUTPUT: 1
 
   # Extra args passed via workflow_dispatch (empty for push/PR)
-  FLET_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_args || '' }}
+  FLET_BUILD_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_args || '' }}
 
 jobs:
   build:
@@ -206,8 +202,8 @@ jobs:
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
-          echo "FLET_EXTRA_ARGS='${FLET_EXTRA_ARGS}'"
-          uv run ${{ matrix.build_cmd }} --yes --verbose $FLET_EXTRA_ARGS
+          echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
+          uv run ${{ matrix.build_cmd }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
