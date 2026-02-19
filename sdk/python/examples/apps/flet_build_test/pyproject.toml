@@ -87,5 +87,8 @@ path = "src"
 [tool.flet.android.meta_data]
 "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"
 
+[tool.flet.ios.info]
+GADApplicationIdentifier = "ca-app-pub-3940256099942544~3347511713"
+
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { path = "../../../../../../../packages/flet" }
