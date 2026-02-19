@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass, field
+from datetime import datetime
 
 import flet as ft
 import flet_camera as fc
@@ -41,7 +42,8 @@ async def main(page: ft.Page):
         height=200,
         fit=ft.BoxFit.CONTAIN,
     )
-    selector = ft.Dropdown(label="Camera", options=[])
+    selector = ft.Dropdown(label="Select camera", options=[])
+    recorded_video_path = ft.Text(value="Recorded video: not saved yet", size=12)
 
     def has_human_readable_name(camera: fc.CameraDescription) -> bool:
         name = camera.name.strip()
@@ -64,6 +66,20 @@ async def main(page: ft.Page):
         }
         lens_type = lens_map.get(camera.lens_type.value, camera.lens_type.value)
         return f"{direction} ({lens_type})"
+
+    def detect_video_extension(data: bytes) -> str:
+        # Matroska/WebM EBML header.
+        if data.startswith(b"\x1a\x45\xdf\xa3"):
+            return "webm"
+
+        # ISO BMFF (mp4/mov) starts with a box size + "ftyp".
+        if len(data) >= 12 and data[4:8] == b"ftyp":
+            brand = data[8:12]
+            if brand == b"qt  ":
+                return "mov"
+            return "mp4"
+
+        return "bin"
 
     async def get_cameras():
         state.cameras = await preview.get_available_cameras()
@@ -110,6 +126,44 @@ async def main(page: ft.Page):
         last_image.src = data
         last_image.update()
 
+    async def start_recording(_):
+        await preview.prepare_for_video_recording()
+        await preview.start_video_recording()
+        status.value = "Recording video..."
+        status.update()
+
+    async def pause_recording(_):
+        await preview.pause_video_recording()
+        status.value = "Recording paused"
+        status.update()
+
+    async def resume_recording(_):
+        await preview.resume_video_recording()
+        status.value = "Recording resumed"
+        status.update()
+
+    async def stop_recording(_):
+        data = await preview.stop_video_recording()
+        if not data:
+            status.value = "No video data returned"
+            status.update()
+            return
+
+        ext = detect_video_extension(data)
+        filename = f"recording_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{ext}"
+        saved_path = await ft.FilePicker().save_file(
+            file_name=filename,
+            src_bytes=data,
+        )
+
+        kb_size = len(data) / 1024
+        status.value = f"Video recorded: {kb_size:.1f} KB"
+        if saved_path:
+            recorded_video_path.value = f"Recorded video: {saved_path}"
+        else:
+            recorded_video_path.value = "Recorded video save canceled"
+        page.update()
+
     async def on_state_change(e: ft.Event[fc.CameraState]):
         if e.description == state.selected_camera:
             print("Camera state changed:", e)
@@ -117,10 +171,10 @@ async def main(page: ft.Page):
                 status.value = f"Camera error: {e.error_description}"
             elif e.is_taking_picture:
                 status.value = "Taking picture..."
-            elif e.is_recording_video:
-                status.value = "Recording video..."
             elif e.is_recording_paused:
                 status.value = "Recording paused"
+            elif e.is_recording_video:
+                status.value = "Recording video..."
             elif e.is_streaming_images:
                 status.value = "Streaming images..."
             elif e.is_preview_paused:
@@ -175,6 +229,15 @@ async def main(page: ft.Page):
                     ft.Row(
                         [
                             ft.Button("Take photo", on_click=take_photo),
+                            ft.Button("Start rec", on_click=start_recording),
+                            ft.Button("Pause rec", on_click=pause_recording),
+                            ft.Button("Resume rec", on_click=resume_recording),
+                            ft.Button("Stop rec", on_click=stop_recording),
+                        ],
+                        wrap=True,
+                    ),
+                    ft.Row(
+                        [
                             ft.Button("Start streaming", on_click=start_streaming),
                             ft.Button("Stop streaming", on_click=stop_streaming),
                         ],
@@ -187,6 +250,7 @@ async def main(page: ft.Page):
                         ],
                         wrap=True,
                     ),
+                    recorded_video_path,
                     ft.Text("Last photo"),
                     last_image,
                 ]
