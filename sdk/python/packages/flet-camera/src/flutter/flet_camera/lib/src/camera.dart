@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -137,7 +138,11 @@ class _CameraControlState extends State<CameraControl> {
 
   Future<void> _processStreamImage(CameraImage image) async {
     try {
-      final Uint8List encoded = encodeCameraImage(image);
+      final Uint8List encoded = image.format.group == ImageFormatGroup.jpeg
+          ? encodeCameraImage(image)
+          : await Isolate.run(
+              () => encodeCameraImagePayload(cameraImageToPayload(image)),
+            );
       if (encoded.isEmpty) {
         return;
       }

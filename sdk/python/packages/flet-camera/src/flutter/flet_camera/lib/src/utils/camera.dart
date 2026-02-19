@@ -109,50 +109,132 @@ Map<String, dynamic> cameraImageToMap(
 Uint8List encodeCameraImage(CameraImage image) {
   switch (image.format.group) {
     case ImageFormatGroup.bgra8888:
-      return _encodeBgra8888(image);
     case ImageFormatGroup.nv21:
-      return _encodeNv21(image);
     case ImageFormatGroup.yuv420:
-      return _encodeYuv420(image);
+      return encodeCameraImagePayload(cameraImageToPayload(image));
     case ImageFormatGroup.jpeg:
+      if (image.planes.isEmpty) {
+        return Uint8List(0);
+      }
       return image.planes.first.bytes;
     default:
       return Uint8List(0);
   }
 }
 
-Uint8List _encodeBgra8888(CameraImage image) {
-  final plane = image.planes.first;
+Map<String, dynamic> cameraImageToPayload(CameraImage image) {
+  return {
+    "width": image.width,
+    "height": image.height,
+    "format": image.format.group.name,
+    "planes": image.planes
+        .map(
+          (p) => {
+            "bytes": Uint8List.fromList(p.bytes),
+            "bytes_per_row": p.bytesPerRow,
+            "bytes_per_pixel": p.bytesPerPixel,
+          },
+        )
+        .toList(),
+  };
+}
+
+Uint8List encodeCameraImagePayload(Map<String, dynamic> payload) {
+  final format = payload["format"];
+  switch (format) {
+    case "bgra8888":
+      return _encodeBgra8888Payload(payload);
+    case "nv21":
+      return _encodeNv21Payload(payload);
+    case "yuv420":
+      return _encodeYuv420Payload(payload);
+    case "jpeg":
+      final planes = payload["planes"];
+      if (planes is List && planes.isNotEmpty) {
+        final first = planes.first;
+        if (first is Map && first["bytes"] is Uint8List) {
+          return first["bytes"] as Uint8List;
+        }
+      }
+      return Uint8List(0);
+    default:
+      return Uint8List(0);
+  }
+}
+
+Uint8List _encodeBgra8888Payload(Map<String, dynamic> payload) {
+  final width = payload["width"];
+  final height = payload["height"];
+  final planes = payload["planes"];
+  if (width is! int || height is! int || planes is! List || planes.isEmpty) {
+    return Uint8List(0);
+  }
+  final plane = planes.first;
+  if (plane is! Map || plane["bytes"] is! Uint8List) {
+    return Uint8List(0);
+  }
+  final bytes = plane["bytes"] as Uint8List;
+  final bytesPerRow = plane["bytes_per_row"];
+  if (bytesPerRow is! int) {
+    return Uint8List(0);
+  }
   final img.Image converted = img.Image.fromBytes(
-    width: image.width,
-    height: image.height,
-    bytes: plane.bytes.buffer,
+    width: width,
+    height: height,
+    bytes: bytes.buffer,
     numChannels: 4,
-    rowStride: plane.bytesPerRow,
+    rowStride: bytesPerRow,
     order: img.ChannelOrder.bgra,
   );
   return Uint8List.fromList(img.encodeJpg(converted));
 }
 
-Uint8List _encodeYuv420(CameraImage image) {
-  final img.Image converted = img.Image(
-    width: image.width,
-    height: image.height,
-  );
-  final plane = image.planes[0];
-  final uPlane = image.planes.length > 1 ? image.planes[1] : null;
-  final vPlane = image.planes.length > 2 ? image.planes[2] : null;
-  final uvPixelStride = uPlane?.bytesPerPixel ?? 1;
-  final uvRowStride = uPlane?.bytesPerRow ?? 0;
+Uint8List _encodeYuv420Payload(Map<String, dynamic> payload) {
+  final width = payload["width"];
+  final height = payload["height"];
+  final planes = payload["planes"];
+  if (width is! int || height is! int || planes is! List || planes.isEmpty) {
+    return Uint8List(0);
+  }
+  final yPlane = planes[0];
+  final uPlane = planes.length > 1 ? planes[1] : null;
+  final vPlane = planes.length > 2 ? planes[2] : null;
+  if (yPlane is! Map || yPlane["bytes"] is! Uint8List) {
+    return Uint8List(0);
+  }
+  final yBytes = yPlane["bytes"] as Uint8List;
+  final yBytesPerRow = yPlane["bytes_per_row"];
+  if (yBytesPerRow is! int) {
+    return Uint8List(0);
+  }
+  final uBytes = uPlane is Map && uPlane["bytes"] is Uint8List
+      ? uPlane["bytes"] as Uint8List
+      : null;
+  final vBytes = vPlane is Map && vPlane["bytes"] is Uint8List
+      ? vPlane["bytes"] as Uint8List
+      : null;
+  final uvPixelStride = uPlane is Map && uPlane["bytes_per_pixel"] is int
+      ? uPlane["bytes_per_pixel"] as int
+      : 1;
+  final uvRowStride = uPlane is Map && uPlane["bytes_per_row"] is int
+      ? uPlane["bytes_per_row"] as int
+      : 0;
 
-  for (int y = 0; y < image.height; y++) {
-    final int yRow = y * plane.bytesPerRow;
+  final img.Image converted = img.Image(width: width, height: height);
+  for (int y = 0; y < height; y++) {
+    final int yRow = y * yBytesPerRow;
     final int uvRow = uvRowStride * (y >> 1);
-    for (int x = 0; x < image.width; x++) {
+    for (int x = 0; x < width; x++) {
+      final int yIndex = yRow + x;
+      if (yIndex >= yBytes.length) {
+        continue;
+      }
       final int uvIndex = uvRow + (x >> 1) * uvPixelStride;
-      final int yp = plane.bytes[yRow + x];
-      final int up = uPlane?.bytes[uvIndex] ?? 128;
-      final int vp = vPlane?.bytes[uvIndex] ?? 128;
+      final int yp = yBytes[yIndex];
+      final int up =
+          (uBytes != null && uvIndex < uBytes.length) ? uBytes[uvIndex] : 128;
+      final int vp =
+          (vBytes != null && uvIndex < vBytes.length) ? vBytes[uvIndex] : 128;
       final (int r, int g, int b) = _yuvToRgb(yp, up, vp);
       converted.setPixelRgba(x, y, r, g, b, 255);
     }
@@ -160,35 +242,51 @@ Uint8List _encodeYuv420(CameraImage image) {
   return Uint8List.fromList(img.encodeJpg(converted));
 }
 
-Uint8List _encodeNv21(CameraImage image) {
-  if (image.planes.length < 2) {
+Uint8List _encodeNv21Payload(Map<String, dynamic> payload) {
+  final width = payload["width"];
+  final height = payload["height"];
+  final planes = payload["planes"];
+  if (width is! int || height is! int || planes is! List || planes.length < 2) {
     return Uint8List(0);
   }
-  final yPlane = image.planes[0];
-  final uvPlane = image.planes[1];
-  final uvPixelStride = uvPlane.bytesPerPixel ?? 2;
-  final uvRowStride = uvPlane.bytesPerRow;
-  final img.Image converted = img.Image(
-    width: image.width,
-    height: image.height,
-  );
-
-  for (int y = 0; y < image.height; y++) {
-    final int yRow = y * yPlane.bytesPerRow;
+  final yPlane = planes[0];
+  final uvPlane = planes[1];
+  if (yPlane is! Map ||
+      uvPlane is! Map ||
+      yPlane["bytes"] is! Uint8List ||
+      uvPlane["bytes"] is! Uint8List) {
+    return Uint8List(0);
+  }
+  final yBytes = yPlane["bytes"] as Uint8List;
+  final uvBytes = uvPlane["bytes"] as Uint8List;
+  final yBytesPerRow = yPlane["bytes_per_row"];
+  final uvRowStride = uvPlane["bytes_per_row"];
+  if (yBytesPerRow is! int || uvRowStride is! int) {
+    return Uint8List(0);
+  }
+  final uvPixelStride = uvPlane["bytes_per_pixel"] is int
+      ? uvPlane["bytes_per_pixel"] as int
+      : 2;
+  final img.Image converted = img.Image(width: width, height: height);
+  for (int y = 0; y < height; y++) {
+    final int yRow = y * yBytesPerRow;
     final int uvRow = uvRowStride * (y >> 1);
-    for (int x = 0; x < image.width; x++) {
-      final int uvIndex = uvRow + (x >> 1) * uvPixelStride;
-      if (uvIndex + 1 >= uvPlane.bytes.length) {
+    for (int x = 0; x < width; x++) {
+      final int yIndex = yRow + x;
+      if (yIndex >= yBytes.length) {
         continue;
       }
-      final int yp = yPlane.bytes[yRow + x];
-      final int vp = uvPlane.bytes[uvIndex];
-      final int up = uvPlane.bytes[uvIndex + 1];
+      final int uvIndex = uvRow + (x >> 1) * uvPixelStride;
+      if (uvIndex + 1 >= uvBytes.length) {
+        continue;
+      }
+      final int yp = yBytes[yIndex];
+      final int vp = uvBytes[uvIndex];
+      final int up = uvBytes[uvIndex + 1];
       final (int r, int g, int b) = _yuvToRgb(yp, up, vp);
       converted.setPixelRgba(x, y, r, g, b, 255);
     }
   }
-
   return Uint8List.fromList(img.encodeJpg(converted));
 }
 
