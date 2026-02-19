@@ -671,10 +671,19 @@ class DiffBuilder:
                         )
                         old_control_key = k(old)
                         new_control_key = k(new)
+                        same_component_fn = True
+                        if (
+                            getattr(old, "_c", None) == "C"
+                            and getattr(new, "_c", None) == "C"
+                        ):
+                            same_component_fn = getattr(old, "fn", None) is getattr(
+                                new, "fn", None
+                            )
                         if (not frozen_local and old is new) or (
                             frozen_local
                             and old is not new
                             and type(old) is type(new)
+                            and same_component_fn
                             and (
                                 old_control_key is None
                                 or new_control_key is None
@@ -726,9 +735,20 @@ class DiffBuilder:
                 elif isinstance(old, list) and isinstance(new, list):
                     self._compare_lists(parent, _path_join(path, idx), old, new, frozen)
                 elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
-                    self._compare_dataclasses(
-                        parent, _path_join(path, idx), old, new, frozen
-                    )
+                    same_component_fn = True
+                    if (
+                        getattr(old, "_c", None) == "C"
+                        and getattr(new, "_c", None) == "C"
+                    ):
+                        same_component_fn = getattr(old, "fn", None) is getattr(
+                            new, "fn", None
+                        )
+                    if same_component_fn:
+                        self._compare_dataclasses(
+                            parent, _path_join(path, idx), old, new, frozen
+                        )
+                    else:
+                        self._item_replaced(path, idx, new)
                 elif type(old) is not type(new) or old != new:
                     self._item_replaced(path, idx, new)
             return
@@ -785,11 +805,23 @@ class DiffBuilder:
                     )
 
                 same_type = type(old_item) is type(new_item)
+                same_component_fn = True
+                # Component controls (type "C") must only be diffed/migrated when
+                # their underlying component function is the same. Otherwise we
+                # need a replace to force remount and fresh hook state.
+                if (
+                    getattr(old_item, "_c", None) == "C"
+                    and getattr(new_item, "_c", None) == "C"
+                ):
+                    same_component_fn = getattr(old_item, "fn", None) is getattr(
+                        new_item, "fn", None
+                    )
 
                 if (not frozen_local and old_item is new_item) or (
                     frozen_local
                     and old_item is not new_item
                     and same_type
+                    and same_component_fn
                     and _keys_match()
                 ):
                     self._compare_dataclasses(
@@ -917,10 +949,9 @@ class DiffBuilder:
 
             # TODO - should optimize performance?
             fields = {f.name: f for f in dataclasses.fields(dst)}
-            for field_name, change in changes.items():
+            for field_name, old in changes.items():
                 if field_name in fields:
-                    old = change[0]
-                    new = change[1]
+                    new = getattr(dst, field_name)
 
                     if field_name.startswith("on_") and fields[field_name].metadata.get(
                         "event", True
@@ -952,7 +983,8 @@ class DiffBuilder:
             # compare lists
             for field_name, old in list(prev_lists.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_lists[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -965,7 +997,8 @@ class DiffBuilder:
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_dicts[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -978,7 +1011,8 @@ class DiffBuilder:
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
                 if field_name in changes:
-                    if new is None:
+                    changed_value = getattr(dst, field_name, None)
+                    if changed_value is None:
                         del prev_classes[field_name]
                     continue
                 new = getattr(dst, field_name)
@@ -1172,14 +1206,17 @@ class DiffBuilder:
                         ) from None
 
                     if hasattr(obj, "__changes"):
-                        old_value = getattr(obj, name, None)
-                        if old_value != value:
+                        current_value = getattr(obj, name, None)
+                        if current_value != value:
                             # logger.debug(
                             #     f"\n\nset_attr: {obj.__class__.__name__}.{name} = "
                             #     f"{new_value}, old: {old_value}"
                             # )
                             changes = getattr(obj, "__changes")
-                            changes[name] = (old_value, value)
+                            if name not in changes:
+                                changes[name] = current_value
+                            elif changes[name] == value:
+                                del changes[name]
                             if hasattr(obj, "_notify"):
                                 obj._notify(name, value)
                 object.__setattr__(obj, name, value)

@@ -35,7 +35,7 @@ class PageView(LayoutControl):
     """
     The zero-based index of the currently visible page.
 
-    Changing it later on (followed by [`update()`][flet.Control.update])
+    Changing it later on (followed by [`update()`][flet.BaseControl.update])
     jumps to the specified page without animation.
 
     Raises:

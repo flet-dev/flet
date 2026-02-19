@@ -37,7 +37,7 @@ properties, described below, to enable implicit animation of its appearance:
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opacity] property.
+enables implicit animation of [`Control.opacity`][flet.Control.opacity] property.
 
 ```python
 --8<-- "../../examples/controls/layout_control/animate_opacity.py"

@@ -1250,11 +1250,15 @@ Values follow [standard Pub dependency syntax](https://dart.dev/tools/pub/depend
 expressed in TOML.
 
 /// admonition | Note
-- If the same package appears in both `pyproject.toml` and the resulting `pubspec.yaml`,
-  the value from `pyproject.toml` wins.
 - **Important:** In most cases, you usually do not need to add/override Flutter dependencies.
   We recommend doing it only if you fully know what you are doing, as it can lead to
   unexpected behavior.
+- If the same package appears in both `pyproject.toml` and the resulting `pubspec.yaml`,
+  the value from `pyproject.toml` wins.
+- If you use `{ path = "..." }` under `[tool.flet.flutter.pubspec.dependencies]`
+  or `[tool.flet.flutter.pubspec.dependency_overrides]`, that path is resolved by
+  Flutter from the generated `pubspec.yaml` location: `<flet_app_directory>/build/flutter/pubspec.yaml`.
+  This means relative paths are **not** resolved from your `pyproject.toml` file.
 ///
 
 #### Example

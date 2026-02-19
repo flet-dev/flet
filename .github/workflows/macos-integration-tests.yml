@@ -43,12 +43,15 @@ jobs:
         - examples/apps
         - examples/core
         - examples/cupertino
+        - examples/extensions
         - examples/material
         - controls/core
         - controls/cupertino
         - controls/material
+        - controls/services
         - controls/theme
         - controls/types
+        - extensions
 
     name: ${{ matrix.suite }} Integration Tests
     steps:

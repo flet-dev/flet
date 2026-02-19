@@ -16,7 +16,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     Displays its children in a horizontal array.
 
     To cause a child control to expand and fill the available horizontal space, set
-    its [`expand`][(c).] property.
+    its [`expand`][flet.Control.expand] property.
 
     Example:
     ```python
