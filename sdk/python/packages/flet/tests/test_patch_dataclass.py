@@ -155,3 +155,52 @@ def test_page_patch_dataclass():
     )
 
     print("Message 2:", msg)
+
+
+def test_changes_track_original_value_without_tuple_growth():
+    @control("DirtyTrackControl")
+    class DirtyTrackControl(BaseControl):
+        value: int = 0
+
+    c = DirtyTrackControl()
+
+    # Configure dataclass tracking internals on initial add.
+    ObjectPatch.from_diff(None, c, control_cls=BaseControl)
+
+    c.value = 1
+    c.value = 2
+
+    changes = getattr(c, "__changes")
+    assert changes["value"] == 0
+
+    patch, _, _ = ObjectPatch.from_diff(c, c, control_cls=BaseControl)
+
+    assert changes == {}
+    assert any(
+        op["op"] == "replace" and op["path"] == ["value"] and op["value"] == 2
+        for op in patch.patch
+    )
+
+
+def test_prev_snapshots_are_released_when_changed_field_becomes_none():
+    @control("ListTrackControl")
+    class ListTrackControl(BaseControl):
+        items: list[int] | None = None
+        title: str = ""
+
+    c = ListTrackControl(items=[1], title="a")
+
+    # Configure dataclass tracking internals on initial add.
+    ObjectPatch.from_diff(None, c, control_cls=BaseControl)
+
+    # Seed __prev_lists with a tracked list snapshot as done by protocol encoding.
+    setattr(c, "__prev_lists", {"items": [1, 2]})
+    assert "items" in getattr(c, "__prev_lists")
+
+    # Change list field to None and another field afterwards; __prev_lists must still
+    # release "items" regardless of other changed field values.
+    c.items = None
+    c.title = "b"
+    ObjectPatch.from_diff(c, c, control_cls=BaseControl)
+
+    assert "items" not in getattr(c, "__prev_lists")

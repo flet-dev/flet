@@ -297,7 +297,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             border: border,
             borderRadius: borderRadius,
             boxShadow:
-                widget.control.getBoxShadows("shadow", Theme.of(context))),
+                widget.control.getBoxShadows("shadows", Theme.of(context))),
         cursorHeight: widget.control.getDouble("cursor_height"),
         showCursor: widget.control.getBool("show_cursor"),
         cursorWidth: widget.control.getDouble("cursor_width", 2.0)!,

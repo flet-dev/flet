@@ -649,6 +649,31 @@ def test_component_list_diff():
     assert txt1.parent == comp
 
 
+def test_component_list_replaces_when_component_fn_changes():
+    def c1_fn():
+        return ft.Text("one")
+
+    def c2_fn():
+        return ft.Text("two")
+
+    host = Component(fn=lambda: None, args=(), kwargs={})
+    old = [Component(fn=c1_fn, args=(), kwargs={})]
+    new = [Component(fn=c2_fn, args=(), kwargs={})]
+
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=host, path=["_b"], frozen=True
+    )
+
+    assert cmp_ops(
+        patch.patch,
+        [
+            {"op": "replace", "path": ["_b", 0], "value_type": Component},
+        ],
+    )
+    assert any(isinstance(c, Component) for c in added_controls)
+    assert any(isinstance(c, Component) for c in removed_controls)
+
+
 def test_list_insertions_with_keys():
     col_1 = ft.Column(
         [

@@ -37,6 +37,7 @@ dependencies:
   msgpack_dart: ^1.0.1
   path: ^1.9.0
   path_provider: ^2.1.5
+  pasteboard: ^0.4.0
   provider: ^6.1.2
   screenshot: ^3.0.0
   screen_brightness: ^2.1.7

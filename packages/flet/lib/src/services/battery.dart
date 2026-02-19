@@ -28,7 +28,13 @@ class BatteryService extends FletService {
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     switch (name) {
       case "get_battery_level":
-        return _battery.batteryLevel;
+        try {
+          return await _battery.batteryLevel;
+        } catch (e) {
+          debugPrint(
+              "BatteryService.get_battery_level: unavailable battery level ($e)");
+          return null;
+        }
       case "get_battery_state":
         final state = await _battery.batteryState;
         return state.name;

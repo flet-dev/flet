@@ -59,9 +59,13 @@ class Battery(Service):
     Called when battery state changes (charging, discharging, full, unknown).
     """
 
-    async def get_battery_level(self) -> int:
+    async def get_battery_level(self) -> Optional[int]:
         """
-        Returns current battery level as a percentage `0..100`.
+        Gets the current battery level as a percentage, in the range `0` to `100`.
+
+        Returns:
+            The battery level, or `None` when it is unavailable on the current
+            environment.
         """
 
         return await self._invoke_method("get_battery_level")
