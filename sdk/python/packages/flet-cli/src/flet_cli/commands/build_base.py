@@ -125,6 +125,15 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "dist": "ipa",
                 "can_be_run_on": ["Darwin"],
             },
+            "ios-simulator": {
+                "package_platform": "iOS",
+                "config_platform": "ios",
+                "flutter_build_command": "ios",
+                "status_text": ".app bundle for iOS Simulator",
+                "outputs": ["build/ios/iphonesimulator/*"],
+                "dist": "ios-simulator",
+                "can_be_run_on": ["Darwin"],
+            },
         }
 
         self.cross_platform_permissions = {
@@ -486,7 +495,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
-            "for macOS and iOS builds (macos and ipa only)",
+            "for macOS and iOS builds (macos, ipa and ios-simulator only)",
         )
         parser.add_argument(
             "--macos-entitlements",
@@ -1370,7 +1379,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.build_dir
         assert self.target_platform
 
-        if self.target_platform not in ["web", "ipa", "apk", "aab"]:
+        if self.target_platform not in ["web", "ipa", "ios-simulator", "apk", "aab"]:
             return
 
         hash = HashStamp(self.build_dir / ".hash" / "splashes")
@@ -2069,11 +2078,77 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.target_platform == "web" and self.assets_path.exists():
             # copy `assets` directory contents to the output directory
             copy_tree(str(self.assets_path), str(self.out_dir))
+        elif self.target_platform in {"apk", "aab"}:
+            self.rename_android_build_outputs()
 
         console.log(
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
             f"directory {self.emojis['checkmark']}"
         )
+
+    def rename_android_build_outputs(self):
+        """
+        Rename copied Android release artifacts so they honor user-configured
+        artifact names.
+
+        Flutter outputs APK/AAB release files with an `app` prefix
+        (`app-release.*`, `app-<abi>-release.*`), plus optional `.sha1` files.
+        This method removes the `-release` segment and replaces only the
+        leading `app` token with the resolved Flet artifact name.
+        """
+        assert self.target_platform
+        assert self.out_dir
+        assert self.template_data
+
+        artifact_name = str(self.template_data["artifact_name"])
+        output_ext = "apk" if self.target_platform == "apk" else "aab"
+        release_suffix = f"-release.{output_ext}"
+        release_hash_suffix = f"{release_suffix}.sha1"
+        final_suffix = f".{output_ext}"
+        final_hash_suffix = f"{final_suffix}.sha1"
+
+        for output_file in self.out_dir.iterdir():
+            if not output_file.is_file():
+                continue
+
+            name = output_file.name
+            suffix = None
+            final_file_suffix = None
+            if name.endswith(release_hash_suffix):
+                suffix = release_hash_suffix
+                final_file_suffix = final_hash_suffix
+            elif name.endswith(release_suffix):
+                suffix = release_suffix
+                final_file_suffix = final_suffix
+            if suffix is None or final_file_suffix is None:
+                continue
+
+            prefix = name[: -len(suffix)]
+            # Only rewrite Flutter default release outputs that start with `app`.
+            if prefix != "app" and not prefix.startswith("app-"):
+                continue
+
+            # Keep ABI and hash suffixes, but drop `-release`.
+            renamed = f"{artifact_name}{prefix[len('app') :]}{final_file_suffix}"
+            if renamed == name:
+                continue
+
+            renamed_path = output_file.with_name(renamed)
+            if renamed_path.exists():
+                console.log(
+                    f"Skipping rename of [cyan]{name}[/cyan] because "
+                    f"[cyan]{renamed}[/cyan] already exists.",
+                    style=warning_style,
+                )
+                continue
+
+            output_file.rename(renamed_path)
+            if self.verbose > 0:
+                console.log(
+                    f"Renamed build output from [cyan]{name}[/cyan] to "
+                    f"[cyan]{renamed}[/cyan].",
+                    style=verbose1_style,
+                )
 
     def find_platform_image(
         self,
