@@ -36,7 +36,7 @@ class Command(BaseBuildCommand):
                 "apk",
                 "aab",
                 "ipa",
-                "ipa-simulator",
+                "ios-simulator",
             ],
             help="The target platform or type of package to build",
         )
@@ -127,7 +127,7 @@ class Command(BaseBuildCommand):
                 )
             else:
                 args.append("--no-codesign")
-        elif self.target_platform == "ipa-simulator":
+        elif self.target_platform == "ios-simulator":
             args.append("--simulator")
 
         build_number = self.options.build_number or self.get_pyproject(

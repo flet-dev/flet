@@ -61,7 +61,7 @@ for distribution, you will need the following:
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
 
-## `flet build ipa-simulator`
+## `flet build ios-simulator`
 
 /// admonition | Supported host platforms
     type: caution

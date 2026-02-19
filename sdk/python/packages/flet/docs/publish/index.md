@@ -28,7 +28,7 @@ on for each target platform:
     </tr>
     <tr>
       <th style="text-align: center;"><a href="android.md">apk/aab</a></th>
-      <th style="text-align: center;"><a href="ios.md">ipa/ipa-simulator</a></th>
+      <th style="text-align: center;"><a href="ios.md">ipa/ios-simulator</a></th>
       <th style="text-align: center;"><a href="macos.md">macos</a></th>
       <th style="text-align: center;"><a href="linux.md">linux</a></th>
       <th style="text-align: center;"><a href="windows.md">windows</a></th>
@@ -196,8 +196,8 @@ When you run `flet build <target_platform>`, the pipeline is:
 /// admonition | Placeholders
 Throughout this documentation, the following placeholders are used:
 
-- [`<target_platform>`](../cli/flet-build.md#target_platform) - one of: `apk`, `aab`, `ipa`, `ipa-simulator`, `web`, `macos`, `windows`, `linux`.
-- `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android` (for `apk` and `aab` targets), `ios` (for `ipa` and `ipa-simulator` targets), `web`, `macos`, `windows`, `linux`.
+- [`<target_platform>`](../cli/flet-build.md#target_platform) - one of: `apk`, `aab`, `ipa`, `ios-simulator`, `web`, `macos`, `windows`, `linux`.
+- `<PLATFORM>` - the config namespace under `[tool.flet.<PLATFORM>]`; one of: `android` (for `apk` and `aab` targets), `ios` (for `ipa` and `ios-simulator` targets), `web`, `macos`, `windows`, `linux`.
 - [`<python_app_path>`](../cli/flet-build.md#python_app_path) - the path passed to `flet build` (defaults to the current directory).
 - `<flet_app_directory>` - the resolved project root for `<python_app_path>`; `pyproject.toml` and `requirements.txt` are read from here.
 - `<flet_version>` - the version of Flet in use. You can check with `flet --version` or
@@ -768,7 +768,7 @@ Its value is determined in the following order of precedence:
 ```bash
 flet build apk --no-android-splash
 flet build ipa --no-ios-splash
-flet build ipa-simulator --no-ios-splash
+flet build ios-simulator --no-ios-splash
 flet build web --no-web-splash
 ```
 ///
@@ -1196,7 +1196,7 @@ arguments are exposed or usable through the `flet build` command directly.
 
 For possible `flutter build` arguments, see [Flutter docs](https://docs.flutter.dev/deployment)
 guide. For most targets, run `flutter build <target_platform> --help`; for
-[`ipa-simulator`](ios.md#flet-build-ipa-simulator), run `flutter build ios --simulator --help`.
+[`ios-simulator`](ios.md#flet-build-ios-simulator), run `flutter build ios --simulator --help`.
 
 /// admonition | Important
     type: warning
@@ -1408,10 +1408,10 @@ jobs:
             artifact_path: build/ipa
             needs_linux_deps: false
 
-          - name: ipa-simulator
+          - name: ios-simulator
             runner: macos-latest
-            build_cmd: "flet build ipa-simulator"
-            artifact_path: build/ipa-simulator
+            build_cmd: "flet build ios-simulator"
+            artifact_path: build/ios-simulator
             needs_linux_deps: false
 
           # -------- Web --------

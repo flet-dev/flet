@@ -55,21 +55,21 @@ jobs:
           # -------- Desktop --------
           - name: linux
             runner: ubuntu-latest
-            build_cmd: "flet build linux --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build linux"
             artifact_name: linux-build-artifact
             artifact_path: build/linux
             needs_linux_deps: true
 
           - name: macos
             runner: macos-latest
-            build_cmd: "flet build macos --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build macos "
             artifact_name: macos-build-artifact
             artifact_path: build/macos
             needs_linux_deps: false
 
           - name: windows
             runner: windows-latest
-            build_cmd: "flet build windows --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build windows"
             artifact_name: windows-build-artifact
             artifact_path: build/windows
             needs_linux_deps: false
@@ -77,42 +77,42 @@ jobs:
           # -------- Android --------
           - name: aab-ubuntu
             runner: ubuntu-latest
-            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build aab"
             artifact_name: aab-build-ubuntu-artifact
             artifact_path: build/aab
             needs_linux_deps: false
 
           - name: aab-macos
             runner: macos-latest
-            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build aab"
             artifact_name: aab-build-macos-artifact
             artifact_path: build/aab
             needs_linux_deps: false
 
           - name: aab-windows
             runner: windows-latest
-            build_cmd: "flet build aab --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build aab"
             artifact_name: aab-build-windows-artifact
             artifact_path: build/aab
             needs_linux_deps: false
 
           - name: apk-ubuntu
             runner: ubuntu-latest
-            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build apk"
             artifact_name: apk-build-ubuntu-artifact
             artifact_path: build/apk
             needs_linux_deps: false
 
           - name: apk-macos
             runner: macos-latest
-            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build apk"
             artifact_name: apk-build-macos-artifact
             artifact_path: build/apk
             needs_linux_deps: false
 
           - name: apk-windows
             runner: windows-latest
-            build_cmd: "flet build apk --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build apk"
             artifact_name: apk-build-windows-artifact
             artifact_path: build/apk
             needs_linux_deps: false
@@ -120,36 +120,36 @@ jobs:
           # -------- iOS --------
           - name: ipa
             runner: macos-latest
-            build_cmd: "flet build ipa --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
+            build_cmd: "flet build ipa"
             artifact_name: ipa-build-artifact
             artifact_path: build/ipa
             needs_linux_deps: false
 
-          - name: ipa-simulator
+          - name: ios-simulator
             runner: macos-latest
-            build_cmd: "flet build ipa-simulator --yes --verbose --build-number=$BUILD_NUMBER --build-version=$BUILD_VERSION"
-            artifact_name: ipa-simulator-build-artifact
-            artifact_path: build/ipa-simulator
+            build_cmd: "flet build ios-simulator"
+            artifact_name: ios-simulator-build-artifact
+            artifact_path: build/ios-simulator
             needs_linux_deps: false
 
           # -------- Web --------
           - name: web-ubuntu
             runner: ubuntu-latest
-            build_cmd: "flet build web --yes --verbose"
+            build_cmd: "flet build web"
             artifact_name: web-build-ubuntu-artifact
             artifact_path: build/web
             needs_linux_deps: false
 
           - name: web-macos
             runner: macos-latest
-            build_cmd: "flet build web --yes --verbose"
+            build_cmd: "flet build web"
             artifact_name: web-build-macos-artifact
             artifact_path: build/web
             needs_linux_deps: false
 
           - name: web-windows
             runner: windows-latest
-            build_cmd: "flet build web --yes --verbose"
+            build_cmd: "flet build web"
             artifact_name: web-build-windows-artifact
             artifact_path: build/web
             needs_linux_deps: false
@@ -207,7 +207,7 @@ jobs:
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
           echo "FLET_EXTRA_ARGS='${FLET_EXTRA_ARGS}'"
-          uv run ${{ matrix.build_cmd }} $FLET_EXTRA_ARGS
+          uv run ${{ matrix.build_cmd }} --yes --verbose $FLET_EXTRA_ARGS
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
