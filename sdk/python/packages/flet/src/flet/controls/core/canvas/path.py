@@ -22,9 +22,20 @@ class Path(Shape):
 
     @dataclass(kw_only=True)
     class PathElement:
+        """
+        Base type for elements stored in `Path.elements`.
+
+        Use concrete subclasses such as [`MoveTo`][..],
+        [`LineTo`][..], [`Arc`][..], and [`Close`][..]
+        to build drawing commands in order.
+        """
+
         _type: Optional[str] = field(
             init=False, repr=False, compare=False, default=None
         )
+        """
+        Internal element discriminator used during serialization.
+        """
 
     elements: list[PathElement] = field(default_factory=list)
     """
@@ -51,7 +62,7 @@ class Path(Shape):
     @dataclass
     class LineTo(PathElement):
         """
-        Adds a straight line segment from the current point to the given point
+        Adds a straight line segment from the current point to the given point \
         (`x`,`y`).
         """
 
@@ -64,7 +75,7 @@ class Path(Shape):
     @dataclass
     class QuadraticTo(PathElement):
         """
-        Adds a bezier segment that curves from the current point to the given point
+        Adds a bezier segment that curves from the current point to the given point \
         (`x`,`y`), using the control points (`cp1x`,`cp1y`) and the weight `w`.
         """
 
@@ -74,9 +85,8 @@ class Path(Shape):
         y: float
         w: float = 1
         """
-        If the weight is greater than 1, then the curve is a hyperbola;
-        if the weight equals 1, it's a parabola;
-        and if it is less than 1, it is an ellipse.
+        If the weight is greater than 1, then the curve is a hyperbola; if the weight \
+        equals 1, it's a parabola; and if it is less than 1, it is an ellipse.
         """
 
         def __post_init__(self):
@@ -85,7 +95,7 @@ class Path(Shape):
     @dataclass
     class CubicTo(PathElement):
         """
-        Adds a cubic bezier segment that curves from the current point to the given
+        Adds a cubic bezier segment that curves from the current point to the given \
         point (`x`,`y`), using the control points (`cp1x`,`cp1y`) and (`cp2x`,`cp2y`).
         """
 
@@ -115,13 +125,13 @@ class Path(Shape):
     @dataclass
     class Arc(PathElement):
         """
-        Adds a new sub-path with one arc segment that consists of the arc that follows
-        the edge of the oval bounded by the given rectangle with top left corner at `x`
-        and `y` and dimensions `width` and `height`, from `start_angle` radians around
-        the oval up to `start_angle` + `sweep_angle` radians around the oval, with zero
-        radians being the point on the right hand side of the oval that crosses the
-        horizontal line that intersects the center of the rectangle and with positive
-        angles going clockwise around the oval.
+        Adds a new sub-path with one arc segment that consists of the arc that follows \
+        the edge of the oval bounded by the given rectangle with top left corner at \
+        `x` and `y` and dimensions `width` and `height`, from `start_angle` radians \
+        around the oval up to `start_angle` + `sweep_angle` radians around the oval, \
+        with zero radians being the point on the right hand side of the oval that \
+        crosses the horizontal line that intersects the center of the rectangle and \
+        with positive angles going clockwise around the oval.
         """
 
         x: float
@@ -160,7 +170,7 @@ class Path(Shape):
     @dataclass
     class ArcTo(PathElement):
         """
-        Appends up to four conic curves weighted to describe an oval of `radius` and
+        Appends up to four conic curves weighted to describe an oval of `radius` and \
         rotated by `rotation` (measured in degrees and clockwise).
 
         The first curve begins from the last point in the path and the last ends at `x`
@@ -209,7 +219,7 @@ class Path(Shape):
     @dataclass
     class Oval(PathElement):
         """
-        Adds a new sub-path that consists of a curve that forms the ellipse that fills
+        Adds a new sub-path that consists of a curve that forms the ellipse that fills \
         the given rectangle.
         """
 
@@ -273,7 +283,7 @@ class Path(Shape):
     @dataclass
     class Close(PathElement):
         """
-        Closes the last sub-path, as if a straight line had been drawn from the
+        Closes the last sub-path, as if a straight line had been drawn from the \
         current point to the first point of the sub-path.
         """
 

@@ -22,16 +22,57 @@ __all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 
 class ListTileTitleAlignment(Enum):
+    """
+    Defines how [`ListTile`][flet.] aligns [`leading`][flet.ListTile.]
+    and [`trailing`][flet.ListTile.] relative to the tile's title area.
+
+    The alignment is computed against the text block formed by
+    [`title`][flet.ListTile.] and [`subtitle`][flet.ListTile.].
+    Use this to tune the visual balance between icon/avatar controls and text,
+    especially when tiles switch between one-line, two-line, and three-line layouts.
+    """
+
     TOP = "top"
+    """
+    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    toward the top of the title area.
+
+    Top placement respects [`ListTile.min_vertical_padding`][flet.].
+    """
+
     CENTER = "center"
+    """
+    Centers [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    relative to the title/subtitle block.
+    """
+
     BOTTOM = "bottom"
+    """
+    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    toward the bottom of the title area.
+
+    Bottom placement respects [`ListTile.min_vertical_padding`][flet.].
+    """
+
     THREE_LINE = "threeLine"
+    """
+    Uses alignment behavior optimized for three-line list tile layouts.
+
+    This is the default alignment style in Material 3.
+    """
+
     TITLE_HEIGHT = "titleHeight"
+    """
+    Uses alignment behavior based on title-height rules from legacy list tile layouts.
+
+    This is the default alignment style in Material 2.
+    """
 
 
 class ListTileStyle(Enum):
     """
-    Defines the title font used for ListTile descendants of a ListTileTheme.
+    Defines the title font used for [`ListTile`][flet.]
+    descendants of a [`ListTileTheme`][flet.].
 
     List tiles that appear in a Drawer use the theme's TextTheme.body_large text style,
     which is a little smaller than the theme's TextTheme.title_medium text style, which
@@ -45,9 +86,10 @@ class ListTileStyle(Enum):
 @control("ListTile")
 class ListTile(LayoutControl, AdaptiveControl):
     """
-    A single fixed-height row that typically contains some text as well as a leading or
-    trailing icon.
+    A single fixed-height row that typically contains some text as well as a leading \
+    or trailing icon.
 
+    Example:
     ```python
     ft.ListTile(
         width=400,
@@ -126,9 +168,8 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's color when hovered. Only takes effect if
-    [`toggle_inputs`][(c).] is True or if
-    [`on_click`][(c).] is provided.
+    The tile's color when hovered. Only takes effect if [`toggle_inputs`][(c).] is \
+    True or if [`on_click`][(c).] is provided.
     """
 
     selected: bool = False
@@ -146,27 +187,25 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    `True` if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    `True` if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of [`Radio`][flet.],
+    Whether clicking on a list tile should toggle the state of [`Radio`][flet.], \
     [`Checkbox`][flet.] or [`Switch`][flet.] inside this tile.
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Defines the color used for icons and text
-    when `selected=True`.
+    Defines the color used for icons and text when `selected=True`.
     """
 
     selected_tile_color: Optional[ColorValue] = None
     """
-    Defines the background color of ListTile
-    when `selected=True`.
+    Defines the background color of ListTile when `selected=True`.
     """
 
     style: Optional[ListTileStyle] = None
@@ -185,8 +224,8 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     horizontal_spacing: Optional[Number] = None
     """
-    The horizontal gap between the `title` and the
-    [`leading`][(c).] and [`trailing`][(c).]
+    The horizontal gap between the `title` and the [`leading`][(c).] and \
+    [`trailing`][(c).]
     controls.
     """
 
@@ -210,7 +249,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     title_alignment: Optional[ListTileTitleAlignment] = None
     """
-    Defines how `leading` and `trailing` are vertically aligned relative to the titles
+    Defines how `leading` and `trailing` are vertically aligned relative to the titles \
     (`title` and `subtitle`).
 
     Defaults to `ListTileTitleAlignment.THREE_LINE` in Material 3 or
@@ -219,15 +258,13 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Defines the default color for the icons
-    present in [`leading`][(c).] and
+    Defines the default color for the icons present in [`leading`][(c).] and \
     [`trailing`][(c).].
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color used for
-    texts in [`title`][(c).], [`subtitle`][(c).],
+    The color used for texts in [`title`][(c).], [`subtitle`][(c).], \
     [`leading`][(c).], and [`trailing`][(c).].
     """
 
@@ -243,7 +280,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control. The value is [`MouseCursor`][flet.]
     enum.
     """
@@ -256,14 +293,12 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] for the
-    `subtitle` control.
+    The [`TextStyle`][flet.] for the `subtitle` control.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] for the
-    `leading` and `trailing` controls.
+    The [`TextStyle`][flet.] for the `leading` and `trailing` controls.
     """
 
     min_height: Optional[Number] = None

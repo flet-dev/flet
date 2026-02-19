@@ -7,7 +7,7 @@ from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
-from flet.controls.types import ColorValue, Number
+from flet.controls.types import ColorValue, Locale, Number
 
 __all__ = [
     "CupertinoDatePicker",
@@ -17,17 +17,83 @@ __all__ = [
 
 
 class CupertinoDatePickerMode(Enum):
+    """
+    Different display modes of [`CupertinoDatePicker`][flet.].
+    """
+
     TIME = "time"
+    """
+    Mode that shows the date in hour, minute, and (optional) an AM/PM designation.
+    The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
+    format, i.e. if [`use_24h_format`][flet.CupertinoDatePicker.] is `False`.
+    Column order is subject to internationalization.
+
+    Example: `4 | 14 | PM`
+    """
+
     DATE = "date"
+    """
+    Mode that shows the date in month, day of month, and year.
+    Name of month is spelled in full.
+    Column order is subject to internationalization.
+
+    Example: `July | 13 | 2012`
+    """
+
     DATE_AND_TIME = "dateAndTime"
+    """
+    Mode that shows the date as day of the week, month, day of month and
+    the time in hour, minute, and (optional) an AM/PM designation.
+    The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
+    format, i.e. if [`use_24h_format`][flet.CupertinoDatePicker.] is `False`.
+    Column order is subject to internationalization.
+
+    Example: `Fri Jul 13 | 4 | 14 | PM`
+    """
+
     MONTH_YEAR = "monthYear"
+    """
+    Mode that shows the date in month and year.
+    Name of month is spelled in full.
+    Column order is subject to internationalization.
+
+    Example: `July | 2012`
+    """
 
 
 class CupertinoDatePickerDateOrder(Enum):
+    """
+    Determines the order of the columns inside
+    [`CupertinoDatePicker`][flet.] in date mode.
+    """
+
     DAY_MONTH_YEAR = "dmy"
+    """
+    Order of the columns, from left to right: day, month, year.
+
+    Example: `12 | March | 1996`
+    """
+
     MONTH_DAY_YEAR = "mdy"
+    """
+    Order of the columns, from left to right: month, day, year.
+
+    Example: `March | 12 | 1996`
+    """
+
     YEAR_MONTH_DAY = "ymd"
+    """
+    Order of the columns, from left to right: year, month, day.
+
+    Example: `1996 | March | 12`
+    """
+
     YEAR_DAY_MONTH = "ydm"
+    """
+    Order of the columns, from left to right: year, day, month.
+
+    Example: `1996 | 12 | March`
+    """
 
 
 @control("CupertinoDatePicker")
@@ -53,6 +119,18 @@ class CupertinoDatePicker(LayoutControl):
             greater than [`maximum_year`][(c).].
         ValueError: If [`value`][(c).] minute is not divisible by
             [`minute_interval`][(c).].
+    """
+
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker. It is intended for rare cases where this control \
+    should be localized differently from the rest of the page.
+
+    Notes:
+        - The locale must be supported by Flutter's global localization delegates;
+          otherwise the override is ignored and the control uses the page or system
+          locale.
+        - If `None` (the default), the page or system locale is used.
     """
 
     first_date: Optional[DateTimeValue] = None
@@ -94,7 +172,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minute_interval: int = 1
     """
-    The granularity of the minutes spinner, if it is shown in the current
+    The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
     Note:
@@ -107,7 +185,7 @@ class CupertinoDatePicker(LayoutControl):
 
     minimum_year: int = 1
     """
-    Minimum year to which the picker can be scrolled when in
+    Minimum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Raises:
@@ -116,7 +194,7 @@ class CupertinoDatePicker(LayoutControl):
 
     maximum_year: Optional[int] = None
     """
-    Maximum year to which the picker can be scrolled when in
+    Maximum year to which the picker can be scrolled when in \
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Defaults to `None` - no limit.

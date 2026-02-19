@@ -1,7 +1,5 @@
-
-/// admonition | Important
-    type: danger
 ## Prerequisites
+
 ### Python version
 
 Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)
@@ -13,15 +11,15 @@ Flet requires [Python](https://www.python.org/downloads/) 3.10 or later. (1)
 
 #### macOS
 
-Flet supports macOS 11 (Big Sur) or later.
+Flet supports macOS 12 (Monterey) or later.
 
 #### Windows
 
-Flet supports 64-bit version of Microsoft Windows 10 or later.
+Flet supports 64-bit version of Microsoft Windows 10 and Windows 11.
 
 #### Linux
 
-Flet supports Debian Linux 11 or later and Ubuntu Linux 20.04 LTS or later.
+Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
 
 /// details | Windows Subsystem for Linux (WSL)
     type: note
@@ -30,8 +28,6 @@ Flet apps can be run on WSL 2 (Windows Subsystem for Linux 2).
 
 However, if you are getting `cannot open display` error follow this
 [guide](https://github.com/microsoft/wslg/wiki/Diagnosing-%22cannot-open-display%22-type-issues-with-WSLg) for troubleshooting.
-///
-
 ///
 
 ##  Creating a virtual environment (venv)
@@ -71,15 +67,6 @@ source .venv/bin/activate # (2)!
 1. On Unix-like systems (Linux, macOS), use `python3 -m venv .venv` if `python` points to Python 2.x.
 2. If you are on Windows, use `.venv\Scripts\activate` instead.
 ///
-/// tab | poetry
-[Poetry](https://python-poetry.org/docs/) is a Python dependency manager and package manager.
-
-[Install Poetry](https://python-poetry.org/docs/#installation) if you haven't already, then run the following commands:
-
-```bash
-poetry init --python='>=3.10' --no-interaction
-```
-///
 
 ## Install Flet
 
@@ -97,11 +84,6 @@ pip install 'flet[all]' # (1)!
 ```
 
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
-///
-/// tab | poetry
-```bash
-poetry add 'flet[all]'
-```
 ///
 
 ## Verify installation
@@ -122,13 +104,6 @@ flet --version
 flet doctor
 ```
 ///
-/// tab | poetry
-```bash
-poetry run flet --version
-# or
-poetry run flet doctor
-```
-///
 
 Now you are ready to [create your first Flet app](create-flet-app.md).
 
@@ -144,10 +119,5 @@ uv add 'flet[all]' --upgrade
 /// tab | pip
 ```bash
 pip install 'flet[all]' --upgrade
-```
-///
-/// tab | poetry
-```bash
-poetry add flet[all]@latest
 ```
 ///

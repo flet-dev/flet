@@ -4,9 +4,10 @@ import shutil
 from pathlib import Path
 from typing import Optional
 
-from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
 from rich.progress import Progress
+
+from flet_cli.utils.distros import download_with_progress, extract_with_progress
 
 
 def get_flutter_url(version):
@@ -28,9 +29,40 @@ def get_flutter_url(version):
         raise ValueError(f"Unsupported platform: {system}")
 
 
-def install_flutter(version, log, progress: Optional[Progress] = None):
+def get_flutter_dir(version):
+    """
+    Return the local install directory for a specific SDK version.
+
+    Args:
+        version: SDK version string.
+
+    Returns:
+        Absolute path under the user's home directory: `~/flutter/<version>`.
+    """
+
     home_dir = Path.home()
-    install_dir = os.path.join(home_dir, "flutter", version)
+    return os.path.join(home_dir, "flutter", version)
+
+
+def install_flutter(version, log, progress: Optional[Progress] = None):
+    """
+    Ensure the requested SDK version is installed and return its directory.
+
+    If the version is not present, this function downloads the platform archive,
+    extracts it into a temporary directory, moves the extracted runtime to
+    `~/flutter/<version>`, and removes temporary files.
+
+    Args:
+        version: SDK version string to install.
+        log: Callback used for status messages.
+        progress: Optional rich progress instance used for download/extract UI.
+
+    Returns:
+        Absolute path to the installed SDK directory.
+    """
+
+    install_dir = get_flutter_dir(version)
+    home_dir = Path.home()
 
     if not os.path.exists(install_dir):
         url = get_flutter_url(version)

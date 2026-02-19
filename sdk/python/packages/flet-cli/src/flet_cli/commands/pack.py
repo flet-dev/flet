@@ -16,6 +16,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line options for desktop packaging via PyInstaller.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "script",
             type=str,
@@ -47,7 +54,7 @@ class Command(BaseCommand):
             "--distpath",
             dest="distpath",
             default="dist",
-            help="Directory where the packaged app will be placed (default: ./dist)",
+            help="Directory where the packaged app will be placed",
         )
         parser.add_argument(
             "--add-data",
@@ -146,11 +153,18 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Package the app into a standalone desktop artifact.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         from flet.utils.pip import ensure_flet_desktop_package_installed
 
         ensure_flet_desktop_package_installed()
 
-        is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
+        is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0  # noqa: E731
 
         # delete "build" directory
         build_dir = os.path.join(os.getcwd(), "build")
@@ -161,7 +175,7 @@ class Command(BaseCommand):
                 delete_dir_prompt = input(
                     'Do you want to delete "build" directory? (y/n) '
                 )
-                if not delete_dir_prompt.lower() == "n":
+                if delete_dir_prompt.lower() != "n":
                     shutil.rmtree(build_dir, ignore_errors=True)
                 else:
                     print('Failing... "build" directory must be empty to proceed.')
@@ -179,13 +193,15 @@ class Command(BaseCommand):
                 shutil.rmtree(dist_dir, ignore_errors=True)
             else:
                 delete_dir_prompt = input(
-                    f'Do you want to delete "{os.path.basename(dist_dir)}" directory? (y/n) '
+                    f'Do you want to delete "{os.path.basename(dist_dir)}" '
+                    f"directory? (y/n) "
                 )
-                if not delete_dir_prompt.lower() == "n":
+                if delete_dir_prompt.lower() != "n":
                     shutil.rmtree(dist_dir, ignore_errors=True)
                 else:
                     print(
-                        f'Failing... DISTPATH "{os.path.basename(dist_dir)}" directory must be empty to proceed.'
+                        f'Failing... DISTPATH "{os.path.basename(dist_dir)}" directory '
+                        f"must be empty to proceed."
                     )
                     exit(1)
 

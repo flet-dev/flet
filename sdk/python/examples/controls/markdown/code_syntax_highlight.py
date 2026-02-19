@@ -19,9 +19,9 @@ On the server side Flet provides an easy to learn programming model that enables
 
 Flet requires Python 3.7 or above. To start with Flet, you need to install flet module first:
 
-```
+~~~bash
 pip install flet
-```
+~~~
 
 ### Create Python program
 
@@ -29,7 +29,7 @@ Create a new Python program using Flet which will be driving the content of `Fle
 
 Let's do a simple `counter.py` app similar to a Flutter new project template:
 
-```python
+~~~python
 import flet
 from flet import IconButton, Page, Row, TextField, icons
 
@@ -59,13 +59,13 @@ def main(page: Page):
     )
 
 flet.app(main, port=8550)
-```
+~~~
 
 Run the app:
 
-```
+~~~bash
 python counter.py
-```
+~~~
 
 You should see the app running in a native OS window.
 
@@ -73,7 +73,7 @@ There is a web server (Fletd) running in the background on a fixed port `8550`. 
 
 `FletApp` widget in your Flutter application will be communicating with Fletd web server via WebSockets to receive UI updates and send user-generated UI events.
 
-For production use Python app along with Fletd could be [deployed to a public web host](https://flet.dev/docs/guides/python/deploying-web-app) and be accessible via HTTPS with domain name.
+For production use Python app along with Fletd could be [deployed to a public web host](https://docs.flet.dev/publish/web/dynamic-website/) and be accessible via HTTPS with domain name.
 
 ### Add Flet widget to a Flutter app
 
@@ -81,13 +81,13 @@ Create a new or open existing Flutter project.
 
 Install Flutter `flet` package:
 
-```
+~~~bash
 flutter pub add flet
-```
+~~~
 
 For a new project replace `main.dart` with the following:
 
-```dart
+~~~dart
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
@@ -107,13 +107,13 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-```
+~~~
 
 In the app above `FletApp` widget is hosted inside `MaterialApp` widget.
 
 If Flet app must be able to handle page route change events (web browser URL changes, mobile app deep linking) it must be the top most widget as it contains its own `MaterialApp` widget handling route changes:
 
-```dart
+~~~dart
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
@@ -121,7 +121,7 @@ void main() async {
   await setupDesktop();
   runApp(const FletApp(pageUrl: "http://localhost:8550"));
 }
-```
+~~~
 
 Run the program and see Flet app running inside a Flutter app.
 
@@ -129,9 +129,9 @@ When adding `FletApp` widget to the existing desktop Flutter app make sure `setu
 
 ## Flet learning resources
 
-* [Getting started for Python](https://flet.dev/docs/guides/python/getting-started/)
-* [Controls reference](https://flet.dev/docs/controls)
-* [Tutorials](https://flet.dev/docs/tutorials)
+* [Getting started for Python](https://docs.flet.dev/getting-started/installation/)
+* [Controls reference](https://docs.flet.dev/controls)
+* [Tutorials](https://docs.flet.dev/tutorials)
 * [Examples](https://github.com/flet-dev/examples/tree/main/python)
 
 ## Flet community

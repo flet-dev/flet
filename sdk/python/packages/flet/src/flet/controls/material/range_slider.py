@@ -20,6 +20,17 @@ class RangeSlider(LayoutControl):
     A range slider can be used to select from either a continuous or a discrete
     set of values.
     The default is to use a continuous range of values from min to max.
+
+    ```python
+    ft.RangeSlider(
+        min=0,
+        max=10,
+        start_value=2,
+        divisions=10,
+        end_value=7,
+    )
+    ```
+
     """
 
     start_value: Number
@@ -46,8 +57,8 @@ class RangeSlider(LayoutControl):
 
     label: Optional[str] = None
     """
-    A label to show above the slider thumbs when the slider is active. The value of
-    `label` may contain `{value}` which will be replaced with a current slider
+    A label to show above the slider thumbs when the slider is active. The value of \
+    `label` may contain `{value}` which will be replaced with a current slider \
     `start_value` and `end_value`.
 
     If not set, then the labels will not be displayed.
@@ -95,16 +106,14 @@ class RangeSlider(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The color to use for the portion of the
-    slider track that is active.
+    The color to use for the portion of the slider track that is active.
 
     The "active" segment of the range slider is the span between the thumbs.
     """
 
     inactive_color: Optional[ColorValue] = None
     """
-    The color for the inactive portions of
-    the slider track.
+    The color for the inactive portions of the slider track.
 
     The "inactive" segments of the slider are the span of tracks between the min and
     the start thumb, and the end thumb and the max.
@@ -112,9 +121,8 @@ class RangeSlider(LayoutControl):
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The highlight color that's typically
-    used to indicate that the range slider thumb is in `HOVERED` or `DRAGGED`
-    [`ControlState`][flet.] .
+    The highlight color that's typically used to indicate that the range slider thumb \
+    is in `HOVERED` or `DRAGGED` [`ControlState`][flet.] .
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None

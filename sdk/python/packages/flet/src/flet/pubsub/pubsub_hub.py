@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import threading
 from collections.abc import Awaitable, Iterable
@@ -12,6 +13,18 @@ logger = logging.getLogger("flet")
 
 
 class PubSubHub:
+    """
+    Thread-safe in-memory pub/sub router scoped to a Flet server process.
+
+    Subscribers are grouped by session ID and optionally by topic. Handlers can
+    be synchronous callables or async coroutine functions:
+    - global subscribers receive `(message)`;
+    - topic subscribers receive `(topic, message)`.
+
+    This hub is used by session-scoped [`PubSubClient`][flet.PubSubClient]
+    instances to fan out messages between connected sessions.
+    """
+
     def __init__(
         self,
         loop: Optional[asyncio.AbstractEventLoop] = None,
@@ -32,6 +45,12 @@ class PubSubHub:
         ] = {}  # key: session_id, value: dict[topic, handler]
 
     def send_all(self, message: Any):
+        """
+        Sends a message to all global subscribers across all sessions.
+
+        Args:
+            message: Payload to deliver.
+        """
         logger.debug(f"pubsub.send_all({message})")
         with self.__lock:
             for handlers in self.__subscribers.values():
@@ -39,6 +58,13 @@ class PubSubHub:
                     self.__send(handler, [message])
 
     def send_all_on_topic(self, topic: str, message: Any):
+        """
+        Sends a topic message to all subscribers of `topic`.
+
+        Args:
+            topic: Topic name to broadcast on.
+            message: Payload to deliver.
+        """
         logger.debug(f"pubsub.send_all_on_topic({topic}, {message})")
         with self.__lock:
             if topic in self.__topic_subscribers:
@@ -47,6 +73,13 @@ class PubSubHub:
                         self.__send(handler, [topic, message])
 
     def send_others(self, except_session_id: str, message: Any):
+        """
+        Sends a global message to all sessions except one.
+
+        Args:
+            except_session_id: Session ID to exclude from delivery.
+            message: Payload to deliver.
+        """
         logger.debug(f"pubsub.send_others({except_session_id}, {message})")
         with self.__lock:
             for session_id, handlers in self.__subscribers.items():
@@ -55,6 +88,14 @@ class PubSubHub:
                         self.__send(handler, [message])
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
+        """
+        Sends a topic message to all subscribers except one session.
+
+        Args:
+            except_session_id: Session ID to exclude from delivery.
+            topic: Topic name to publish on.
+            message: Payload to deliver.
+        """
         logger.debug(
             f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
         )
@@ -66,6 +107,17 @@ class PubSubHub:
                             self.__send(handler, [topic, message])
 
     def subscribe(self, session_id: str, handler: Callable):
+        """
+        Registers a global subscriber for a session.
+
+        The handler will receive one positional argument: `message`.
+        Duplicate registrations of the same handler are ignored because
+        handlers are stored in a set.
+
+        Args:
+            session_id: Session identifier that owns this subscription.
+            handler: Sync or async callback invoked for global messages.
+        """
         logger.debug(f"pubsub.subscribe({session_id})")
         with self.__lock:
             handlers = self.__subscribers.get(session_id)
@@ -80,6 +132,16 @@ class PubSubHub:
         topic: str,
         handler: Union[Callable, Callable[..., Awaitable[Any]]],
     ):
+        """
+        Registers a topic subscriber for a session.
+
+        The handler will receive two positional arguments: `(topic, message)`.
+
+        Args:
+            session_id: Session identifier that owns this subscription.
+            topic: Topic name to subscribe to.
+            handler: Sync or async callback invoked for topic messages.
+        """
         logger.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
         with self.__lock:
             self.__subscribe_topic(session_id, topic, handler)
@@ -90,6 +152,18 @@ class PubSubHub:
         topic: str,
         handler: Union[Callable, Callable[..., Awaitable[Any]]],
     ):
+        """
+        Internal implementation of topic subscription bookkeeping.
+
+        Maintains both forward (`topic -> session -> handlers`) and reverse
+        (`session -> topic -> handlers`) indexes for efficient publish and
+        cleanup operations.
+
+        Args:
+            session_id: Session identifier that owns this subscription.
+            topic: Topic name to subscribe to.
+            handler: Sync or async callback invoked for topic messages.
+        """
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is None:
             topic_subscribers = {}
@@ -110,16 +184,38 @@ class PubSubHub:
         handlers.add(handler)
 
     def unsubscribe(self, session_id: str):
+        """
+        Removes all global subscribers for a session.
+
+        This does not remove topic subscriptions; use
+        [`unsubscribe_all()`][(c).unsubscribe_all] to remove both.
+
+        Args:
+            session_id: Session identifier to remove.
+        """
         logger.debug(f"pubsub.unsubscribe({session_id})")
         with self.__lock:
             self.__unsubscribe(session_id)
 
     def unsubscribe_topic(self, session_id: str, topic: str):
+        """
+        Removes all handlers for a specific session/topic pair.
+
+        Args:
+            session_id: Session identifier to remove from the topic.
+            topic: Topic to unsubscribe from.
+        """
         logger.debug(f"pubsub.unsubscribe({session_id}, {topic})")
         with self.__lock:
             self.__unsubscribe_topic(session_id, topic)
 
     def unsubscribe_all(self, session_id: str):
+        """
+        Removes both global and topic subscriptions for a session.
+
+        Args:
+            session_id: Session identifier to fully unsubscribe.
+        """
         logger.debug(f"pubsub.unsubscribe_all({session_id})")
         with self.__lock:
             self.__unsubscribe(session_id)
@@ -128,10 +224,25 @@ class PubSubHub:
                     self.__unsubscribe_topic(session_id, topic)
 
     def __unsubscribe(self, session_id: str):
+        """
+        Internal helper that removes global subscribers for a session.
+
+        Args:
+            session_id: Session identifier to remove.
+        """
         logger.debug(f"pubsub.__unsubscribe({session_id})")
         self.__subscribers.pop(session_id, None)
 
     def __unsubscribe_topic(self, session_id: str, topic: str):
+        """
+        Internal helper that removes one session/topic subscription entry.
+
+        Cleans up empty topic and session containers after removal.
+
+        Args:
+            session_id: Session identifier to remove from the topic.
+            topic: Topic to unsubscribe from.
+        """
         logger.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is not None:
@@ -147,10 +258,24 @@ class PubSubHub:
     def __send(
         self, handler: Union[Callable, Callable[..., Awaitable[Any]]], args: Iterable
     ):
+        """
+        Dispatches a message to a handler in the configured execution context.
+
+        Async handlers are scheduled on the hub event loop using
+        `run_coroutine_threadsafe`. Sync handlers are either submitted to the
+        configured executor or invoked inline when no executor is provided.
+
+        Args:
+            handler: Subscriber callback to invoke.
+            args: Positional arguments to pass to the callback.
+
+        Raises:
+            RuntimeError: If the hub has no event loop configured.
+        """
         if not self.__loop:
             raise RuntimeError("PubSub event loop is not set")
 
-        if asyncio.iscoroutinefunction(handler):
+        if inspect.iscoroutinefunction(handler):
             asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
         else:
             if self.__executor:

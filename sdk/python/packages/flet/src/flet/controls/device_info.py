@@ -34,6 +34,14 @@ class DeviceInfo:
 
 @dataclass
 class MacOsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for macOS hosts.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] when the
+    current platform is macOS. Includes CPU, memory, model, and OS version
+    fields collected from native system APIs.
+    """
+
     active_cpus: int
     """Number of active CPUs."""
 
@@ -59,7 +67,7 @@ class MacOsDeviceInfo(DeviceInfo):
     Examples:
         - `"Darwin Kernel Version 15.3.0: Thu Dec 10 18:40:58 PST 2015; root:xnu-3248.30.4~1/RELEASE_X86_64"`
         - `"Darwin Kernel Version 15.0.0: Wed Dec 9 22:19:38 PST 2015; root:xnu-3248.31.3~2/RELEASE_ARM64_S8000"`
-    """
+    """  # noqa: E501
 
     major_version: int
     """The major release number, such as `10` in version 10.9.3."""
@@ -170,7 +178,7 @@ class WebDeviceInfo(DeviceInfo):
     """
 
     language: Optional[str] = None
-    """A string representing the preferred language of the user, usually the language
+    """A string representing the preferred language of the user, usually the language \
     of the browser UI.
 
     Will be `None` if unknown.
@@ -179,7 +187,7 @@ class WebDeviceInfo(DeviceInfo):
     """
 
     languages: Optional[list[str]] = None
-    """A list of strings representing the languages known to the user, by order of
+    """A list of strings representing the languages known to the user, by order of \
     preference.
 
     More info: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/languages
@@ -235,8 +243,8 @@ class WebDeviceInfo(DeviceInfo):
     """
 
     max_touch_points: Optional[int] = None
-    """The maximum number of simultaneous touch contact points supported
-    by the current device.
+    """The maximum number of simultaneous touch contact points supported by the \
+    current device.
 
     More info: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/maxTouchPoints
     """
@@ -251,6 +259,12 @@ class WebDeviceInfo(DeviceInfo):
 
 @dataclass
 class AndroidBuildVersion:
+    """
+    Android OS version details derived from `android.os.Build.VERSION`.
+
+    This object is exposed as [`AndroidDeviceInfo.version`][flet.].
+    """
+
     code_name: str
     """
     The current development codename, or the string "REL" if this is a release build.
@@ -294,6 +308,12 @@ class AndroidBuildVersion:
 
 @dataclass
 class AndroidDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Android devices and emulators.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Android.
+    """
+
     available_ram_size: int
     """Total available RAM size in bytes."""
 
@@ -310,7 +330,7 @@ class AndroidDeviceInfo(DeviceInfo):
     """
 
     brand: str
-    """The consumer-visible brand with which the product/hardware will be associated,
+    """The consumer-visible brand with which the product/hardware will be associated, \
     if any.
 
     More info: https://developer.android.com/reference/android/os/Build#BRAND
@@ -457,8 +477,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     name: str
-    """A string identifying the operating system, without a version component,
-    and suitable for presentation to the user.
+    """A string identifying the operating system, without a version component, and \
+    suitable for presentation to the user.
 
     Examples: `"Fedora"`, `"Debian GNU/Linux"`.
 
@@ -466,8 +486,9 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     id: str
-    """A lower-case string identifying the operating system, excluding any version
-    information and suitable for processing by scripts or usage in generated filenames.
+    """A lower-case string identifying the operating system, excluding any version \
+    information and suitable for processing by scripts or usage in generated \
+    filenames.
 
     The ID contains no spaces or other characters outside of 0–9, a–z, '.', '_' and '-'.
 
@@ -477,9 +498,9 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     pretty_name: str
-    """A pretty operating system name in a format suitable for presentation to the
-    user. May or may not contain a release code name or OS version of some kind,
-    as suitable.
+    """A pretty operating system name in a format suitable for presentation to the \
+    user. May or may not contain a release code name or OS version of some kind, as \
+    suitable.
 
     Examples: `"Fedora 17 (Beefy Miracle)"`.
 
@@ -487,8 +508,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     version: Optional[str] = None
-    """A string identifying the operating system version, excluding any OS name
-    information, possibly including a release code name, and suitable for presentation
+    """A string identifying the operating system version, excluding any OS name \
+    information, possibly including a release code name, and suitable for presentation \
     to the user.
 
     Examples: `"17"`, `"17 (Beefy Miracle)"`.
@@ -497,9 +518,9 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     id_like: Optional[list[str]] = None
-    """A space-separated list of operating system identifiers in the same syntax as
-    the id value. It lists identifiers of operating systems that are closely related
-    to the local operating system in regards to packaging and programming interfaces,
+    """A space-separated list of operating system identifiers in the same syntax as \
+    the id value. It lists identifiers of operating systems that are closely related \
+    to the local operating system in regards to packaging and programming interfaces, \
     for example listing one or more OS identifiers the local OS is a derivative from.
 
     Examples: an operating system with id `"centos"`, would list `"rhel"`
@@ -509,8 +530,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     version_code_name: Optional[str] = None
-    """A lower-case string identifying the operating system release code name,
-    excluding any OS name information or release version, and suitable for processing
+    """A lower-case string identifying the operating system release code name, \
+    excluding any OS name information or release version, and suitable for processing \
     by scripts or usage in generated filenames.
 
     The codename contains no spaces or other characters outside of 0–9, a–z, '.', '_'
@@ -522,8 +543,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     version_id: Optional[str] = None
-    """A lower-case string identifying the operating system version, excluding any
-    OS name information or release code name, and suitable for processing by scripts or
+    """A lower-case string identifying the operating system version, excluding any OS \
+    name information or release code name, and suitable for processing by scripts or \
     usage in generated filenames.
 
     The version is mostly numeric, and contains no spaces or other characters outside
@@ -535,9 +556,9 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     build_id: Optional[str] = None
-    """A string uniquely identifying the system image used as the origin for a
-    distribution (it is not updated with system updates). The field can be identical
-    between different version_id values as build_id is only a unique identifier to a
+    """A string uniquely identifying the system image used as the origin for a \
+    distribution (it is not updated with system updates). The field can be identical \
+    between different version_id values as build_id is only a unique identifier to a \
     specific version.
 
     Examples: `"2013-03-20.3"`, `"201303203"`.
@@ -546,9 +567,9 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     variant: Optional[str] = None
-    """A string identifying a specific variant or edition of the operating system
-    suitable for presentation to the user. This field may be used to inform the user
-    that the configuration of this system is subject to a specific divergent set of
+    """A string identifying a specific variant or edition of the operating system \
+    suitable for presentation to the user. This field may be used to inform the user \
+    that the configuration of this system is subject to a specific divergent set of \
     rules or default configuration settings.
 
     Examples: `"Server Edition"`, `"Smart Refrigerator Edition"`.
@@ -560,8 +581,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     variant_id: Optional[str] = None
-    """A lower-case string identifying a specific variant or edition of the operating
-    system. This may be interpreted in order to determine a divergent default
+    """A lower-case string identifying a specific variant or edition of the operating \
+    system. This may be interpreted in order to determine a divergent default \
     configuration.
 
     The variant ID contains no spaces or other characters outside of
@@ -573,7 +594,8 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
     machine_id: Optional[str] = None
-    """A unique machine ID of the local system that is set during installation or boot.
+    """A unique machine ID of the local system that is set during installation or \
+    boot.
     The machine ID is hexadecimal, 32-character, lowercase ID. When decoded from
     hexadecimal, this corresponds to a 16-byte/128-bit value.
     """
@@ -581,6 +603,12 @@ class LinuxDeviceInfo(DeviceInfo):
 
 @dataclass
 class WindowsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Windows systems.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Windows.
+    """
+
     computer_name: str
     """The computer's fully-qualified DNS name, where available."""
 
@@ -602,7 +630,7 @@ class WindowsDeviceInfo(DeviceInfo):
 
     For more info, see the table in Remarks:
     https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_osversioninfoexw#remarks
-    """
+    """  # noqa: E501
 
     minor_version: int
     """The minor version number of the operating system.
@@ -611,7 +639,7 @@ class WindowsDeviceInfo(DeviceInfo):
 
     For more info, see the table in Remarks:
     https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_osversioninfoexw#remarks
-    """
+    """  # noqa: E501
 
     build_number: int
     """The build number of the operating system.
@@ -661,37 +689,32 @@ class WindowsDeviceInfo(DeviceInfo):
     """Reserved for future use."""
 
     build_lab: str
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLab`
-    registry key.
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLab` registry key.
 
     For example: `"22000.co_release.210604-1628"`.
-    """
+    """  # noqa: E501
 
     build_lab_ex: str
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx`
-    registry key.
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx` registry key.
 
     For example: `"22000.1.amd64fre.co_release.210604-1628"`.
-    """
+    """  # noqa: E501
 
     # digital_product_id: str
 
     display_version: str
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion`
-    registry key.
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion` registry key.
 
     For example: `"21H2"`.
-    """
+    """  # noqa: E501
 
     edition_id: str
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\EditionID`
-    registry key.
-    """
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\EditionID` registry key.
+    """  # noqa: E501
 
     install_date: datetime
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\InstallDate`
-    registry key.
-    """
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\InstallDate` registry key.
+    """  # noqa: E501
 
     product_id: str
     """Displayed as "Product ID" in Windows Settings.
@@ -700,29 +723,26 @@ class WindowsDeviceInfo(DeviceInfo):
     registry key.
 
     For example: `"00000-00000-0000-AAAAA"`.
-    """
+    """  # noqa: E501
 
     product_name: str
-    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProductName`
-    registry key.
+    """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProductName` registry key.
 
     For example: `"Windows 10 Home Single Language"`.
-    """
+    """  # noqa: E501
 
     registered_owner: str
-    """Value of the `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\RegisteredOwner`
-    registry key.
+    """Value of the `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\RegisteredOwner` registry key.
 
     For example: `"Microsoft Corporation"`.
-    """
+    """  # noqa: E501
 
     release_id: str
     """
-    Value of the `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ReleaseId`
-    registry key.
+    Value of the `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ReleaseId` registry key.
 
     For example: `"1903"`.
-    """
+    """  # noqa: E501
 
     device_id: str
     """Displayed as "Device ID" in Windows Settings.
@@ -758,6 +778,12 @@ class IosUtsname:
 
 @dataclass
 class IosDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for iOS/iPadOS runtimes.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on iOS.
+    """
+
     available_ram_size: int
     """Current unallocated RAM size of the device in megabytes."""
 
@@ -769,7 +795,7 @@ class IosDeviceInfo(DeviceInfo):
 
     More info:
     https://developer.apple.com/documentation/foundation/nsprocessinfo/3608556-iosapponmac
-    """
+    """  # noqa: E501
 
     is_physical_device: bool
     """`False` if the application is running in a simulator, `True` otherwise."""

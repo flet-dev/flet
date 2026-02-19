@@ -36,7 +36,6 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     debugPrint("NavigationDrawerControl build: ${widget.control.id}");
 
     var selectedIndex = widget.control.getInt("selected_index", 0)!;
-    var endDrawer = widget.control.get("position") == "end";
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;

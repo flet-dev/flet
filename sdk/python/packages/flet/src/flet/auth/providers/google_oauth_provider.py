@@ -2,6 +2,13 @@ from flet.auth.oauth_provider import OAuthProvider
 
 
 class GoogleOAuthProvider(OAuthProvider):
+    """
+    OAuth provider preset for Google accounts.
+
+    Configures Google OAuth endpoints and user-info retrieval via the OpenID
+    Connect userinfo endpoint, using `sub` as the user id.
+    """
+
     def __init__(self, client_id: str, client_secret: str, redirect_url: str) -> None:
         super().__init__(
             client_id=client_id,

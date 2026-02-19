@@ -28,6 +28,7 @@ class ProgressBarControl extends StatelessWidget {
       stopIndicatorColor: control.getColor("stop_indicator_color", context),
       stopIndicatorRadius: control.getDouble("stop_indicator_radius"),
       trackGap: control.getDouble("track_gap"),
+      // ignore: deprecated_member_use
       year2023: control.getBool(
           "year_2023"), // todo: deprecated and to be removed in future versions
     );

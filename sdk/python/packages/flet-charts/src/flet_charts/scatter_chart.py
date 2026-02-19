@@ -84,30 +84,42 @@ class ScatterChartTooltip:
         """
         return ScatterChartTooltip(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
-            border_radius=border_radius
-            if border_radius is not None
-            else self.border_radius,
+            border_radius=(
+                border_radius if border_radius is not None else self.border_radius
+            ),
             padding=padding if padding is not None else self.padding,
             max_width=max_width if max_width is not None else self.max_width,
             rotation=rotation if rotation is not None else self.rotation,
-            horizontal_offset=horizontal_offset
-            if horizontal_offset is not None
-            else self.horizontal_offset,
-            horizontal_alignment=horizontal_alignment
-            if horizontal_alignment is not None
-            else self.horizontal_alignment,
+            horizontal_offset=(
+                horizontal_offset
+                if horizontal_offset is not None
+                else self.horizontal_offset
+            ),
+            horizontal_alignment=(
+                horizontal_alignment
+                if horizontal_alignment is not None
+                else self.horizontal_alignment
+            ),
             border_side=border_side if border_side is not None else self.border_side,
-            fit_inside_horizontally=fit_inside_horizontally
-            if fit_inside_horizontally is not None
-            else self.fit_inside_horizontally,
-            fit_inside_vertically=fit_inside_vertically
-            if fit_inside_vertically is not None
-            else self.fit_inside_vertically,
+            fit_inside_horizontally=(
+                fit_inside_horizontally
+                if fit_inside_horizontally is not None
+                else self.fit_inside_horizontally
+            ),
+            fit_inside_vertically=(
+                fit_inside_vertically
+                if fit_inside_vertically is not None
+                else self.fit_inside_vertically
+            ),
         )
 
 
 @dataclass
 class ScatterChartEvent(ft.Event["ScatterChart"]):
+    """
+    Event payload emitted when the user interacts with a scatter chart.
+    """
+
     type: ChartEventType
     """
     The type of the event that occurred.
@@ -126,6 +138,20 @@ class ScatterChart(ft.LayoutControl):
 
     ScatterChart draws some points in a square space,
     points are defined by [`ScatterChartSpot`][(p).]s.
+
+    ```python
+    fch.ScatterChart(
+        aspect_ratio=1.0,
+        spots=[
+            fch.ScatterChartSpot(
+                x=random.uniform(4, 50),
+                y=random.uniform(4, 50),
+            )
+            for _ in range(30)
+        ],
+    )
+    ```
+
     """
 
     spots: list[ScatterChartSpot] = field(default_factory=list)

@@ -1,6 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../utils/enums.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -64,10 +64,5 @@ class ShimmerControl extends StatelessWidget {
 
 ShimmerDirection _parseDirection(String? value,
     [ShimmerDirection defaultValue = ShimmerDirection.ltr]) {
-  if (value == null) {
-    return defaultValue;
-  }
-  return ShimmerDirection.values.firstWhereOrNull(
-          (dir) => dir.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ShimmerDirection.values, value, defaultValue)!;
 }

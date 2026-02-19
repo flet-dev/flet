@@ -18,33 +18,158 @@ __all__ = [
 
 
 class TextOverflow(Enum):
+    """
+    How overflowing text should be handled.
+    """
+
     CLIP = "clip"
+    """
+    Clip the overflowing text to fix its container.
+    """
+
     ELLIPSIS = "ellipsis"
+    """
+    Use an ellipsis to indicate that the text has overflowed.
+    """
+
     FADE = "fade"
+    """
+    Fade the overflowing text to transparent.
+    """
+
     VISIBLE = "visible"
+    """
+    Render overflowing text outside of its container.
+    """
 
 
 class TextBaseline(Enum):
+    """A horizontal line used for aligning text."""
+
     ALPHABETIC = "alphabetic"
+    """
+    The horizontal line used to align the bottom of glyphs for alphabetic characters.
+    """
+
     IDEOGRAPHIC = "ideographic"
+    """
+    The horizontal line used to align ideographic characters.
+    """
 
 
 class TextThemeStyle(Enum):
+    """
+    Predefined Material text style roles from the active theme.
+
+    Use these values with properties such as [`Text.theme_style`][flet.]
+    to reference semantic typography slots (display, headline, title, body, label)
+    instead of hard-coding font metrics in each control.
+    """
+
     DISPLAY_LARGE = "displayLarge"
+    """
+    Largest display style.
+
+    Intended for very prominent, short text on large surfaces, such as hero headlines.
+    """
+
     DISPLAY_MEDIUM = "displayMedium"
+    """
+    Medium display style.
+
+    Intended for high-impact short text when [`DISPLAY_LARGE`][(c).] is too dominant.
+    """
+
     DISPLAY_SMALL = "displaySmall"
+    """
+    Smallest display style.
+
+    Intended for concise, emphasized text that still needs display-level prominence.
+    """
+
     HEADLINE_LARGE = "headlineLarge"
+    """
+    Largest headline style.
+
+    Headline styles are below display styles and suit short, high-emphasis headings.
+    """
+
     HEADLINE_MEDIUM = "headlineMedium"
+    """
+    Medium headline style.
+
+    Suitable for section headers and prominent in-content headings.
+    """
+
     HEADLINE_SMALL = "headlineSmall"
+    """
+    Smallest headline style.
+
+    Suitable for compact headline usage on dense layouts.
+    """
+
     TITLE_LARGE = "titleLarge"
+    """
+    Largest title style.
+
+    Titles are typically used for medium-emphasis, short text such as card titles.
+    """
+
     TITLE_MEDIUM = "titleMedium"
+    """
+    Medium title style.
+
+    Suitable for secondary titles and emphasized labels in structured content.
+    """
+
     TITLE_SMALL = "titleSmall"
+    """
+    Smallest title style.
+
+    Suitable for compact title text where space is limited.
+    """
+
     LABEL_LARGE = "labelLarge"
+    """
+    Largest label style.
+
+    Commonly used for component text, such as button labels and prominent captions.
+    """
+
     LABEL_MEDIUM = "labelMedium"
+    """
+    Medium label style.
+
+    Suitable for compact UI labels in controls and supporting interface text.
+    """
+
     LABEL_SMALL = "labelSmall"
+    """
+    Smallest label style.
+
+    Suitable for dense, low-footprint labels and small supporting annotations.
+    """
+
     BODY_LARGE = "bodyLarge"
+    """
+    Largest body style.
+
+    Body styles are intended for longer passages and primary reading content.
+    """
+
     BODY_MEDIUM = "bodyMedium"
+    """
+    Medium body style.
+
+    Common default style for standard paragraph text in Material-themed UIs.
+    """
+
     BODY_SMALL = "bodySmall"
+    """
+    Smallest body style.
+
+    Suitable for secondary body text, footnotes, and compact long-form content.
+    """
 
 
 class TextDecoration(IntFlag):
@@ -159,7 +284,7 @@ class TextStyle:
 
     decoration_thickness: Optional[Number] = None
     """
-    The thickness of the decoration stroke as a multiplier of the thickness defined by
+    The thickness of the decoration stroke as a multiplier of the thickness defined by \
     the font.
     """
 
@@ -172,17 +297,17 @@ class TextStyle:
 
     font_family: Optional[str] = None
     """
-    See https://flet.dev/docs/controls/text#font_family.
+    See https://docs.flet.dev/controls/text#font_family.
     """
 
     color: Optional[ColorValue] = None
     """
-    Text foreground https://flet.dev/docs/reference/colors.
+    Text foreground https://docs.flet.dev/types/colors.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Text background https://flet.dev/docs/reference/colors.
+    Text background https://docs.flet.dev/types/colors.
     """
 
     shadow: Optional[BoxShadowValue] = None
@@ -197,13 +322,13 @@ class TextStyle:
 
     letter_spacing: Optional[Number] = None
     """
-    The amount of space (in logical pixels) to add between each letter. A negative
+    The amount of space (in logical pixels) to add between each letter. A negative \
     value can be used to bring the letters closer.
     """
 
     word_spacing: Optional[Number] = None
     """
-    The amount of space (in logical pixels) to add at each sequence of white-space
+    The amount of space (in logical pixels) to add at each sequence of white-space \
     (i.e. between each word). A negative value can be used to bring the words closer.
     """
 
@@ -214,7 +339,7 @@ class TextStyle:
 
     baseline: Optional[TextBaseline] = None
     """
-    The common baseline that should be aligned between this text span and its parent
+    The common baseline that should be aligned between this text span and its parent \
     text span, or, for the root text spans, with the line box.
     """
 
@@ -239,6 +364,9 @@ class TextStyle:
         overflow: Optional[TextOverflow] = None,
         baseline: Optional[TextBaseline] = None,
     ):
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
         return TextStyle(
             size=size if size is not None else self.size,
             height=height if height is not None else self.height,
@@ -285,7 +413,7 @@ class StrutStyle:
 
     height: Optional[Number] = None
     """
-    The minimum height of the strut, as a multiple of `size`.
+    The minimum height of the strut, as a multiple of [`size`][(c).].
 
     See detailed explanation here:
     https://api.flutter.dev/flutter/painting/StrutStyle/height.html
@@ -295,7 +423,7 @@ class StrutStyle:
     """
     The typeface thickness to use when calculating the strut.
 
-    Defaults to `FontWeight.W_400`.
+    Defaults to [`FontWeight.W_400`][flet.].
     """
 
     italic: bool = False
@@ -305,7 +433,7 @@ class StrutStyle:
 
     font_family: Optional[str] = None
     """
-    See https://flet.dev/docs/controls/text#font_family.
+    See [`Text.font_family`][flet.].
     """
 
     leading: Optional[Number] = None

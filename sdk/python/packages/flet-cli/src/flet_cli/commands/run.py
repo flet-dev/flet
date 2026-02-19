@@ -31,12 +31,19 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register CLI arguments for the `flet run` command.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "script",
             type=str,
             nargs="?",
             default=".",
-            help="Path to the Python script that starts your Flet app (default: .)",
+            help="Path to the Python script that starts your Flet app",
         )
         parser.add_argument(
             "-p",
@@ -139,6 +146,18 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Resolve runtime settings, start file watching, and run hot-reload loop.
+
+        This method prepares the script/module path, selects transport
+        configuration (port or UDS), resolves assets and ignore directories,
+        starts the child app process through [`Handler`][(m).], and keeps the
+        observer running until termination.
+
+        Args:
+            options: Parsed command options produced by [`add_arguments`][(c).].
+        """
+
         from flet.utils.pip import (
             ensure_flet_desktop_package_installed,
             ensure_flet_web_package_installed,
@@ -241,6 +260,14 @@ class Command(BaseCommand):
 
 
 class Handler(FileSystemEventHandler):
+    """
+    File-system event handler that manages app process lifecycle for hot reload.
+
+    The handler starts the Python app process, watches for code changes, and
+    restarts the process when relevant files change. It also handles launch of
+    desktop view or browser/QR output depending on runtime mode.
+    """
+
     def __init__(
         self,
         args,
@@ -285,6 +312,13 @@ class Handler(FileSystemEventHandler):
         self.start_process()
 
     def start_process(self):
+        """
+        Start the application subprocess with computed Flet environment variables.
+
+        The method configures server/display settings, storage paths, encoding
+        behavior, and then starts background output processing.
+        """
+
         p_env = {**os.environ}
         if self.web or self.ios or self.android:
             p_env["FLET_FORCE_WEB_SERVER"] = "true"
@@ -319,6 +353,14 @@ class Handler(FileSystemEventHandler):
         th.start()
 
     def on_any_event(self, event):
+        """
+        React to file-system events and trigger a debounced process restart.
+
+        Events coming from ignored directories are skipped. Restart is performed
+        for create/modify/delete/move events either on the target script or
+        within the watched directory tree.
+        """
+
         for directory in self.ignore_dirs:
             child = os.path.abspath(event.src_path)
             # check if the file which triggered the reload is in the (ignored) directory
@@ -337,6 +379,17 @@ class Handler(FileSystemEventHandler):
                 th.start()
 
     def print_output(self, p):
+        """
+        Stream subprocess output and react to initial app display URL signal.
+
+        When a display URL line is detected, this method either prints/open it,
+        renders a QR code for mobile mode, or opens desktop view and waits for
+        that process to finish.
+
+        Args:
+            p: Running child process whose stdout is consumed.
+        """
+
         while True:
             line = p.stdout.readline()
             if not line:
@@ -364,6 +417,13 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
+        """
+        Open desktop view for the current page URL and block until it exits.
+
+        After the desktop view process exits, the child app process is
+        terminated and the handler termination event is set.
+        """
+
         from flet_desktop import open_flet_view
 
         self.fvp, self.pid_file = open_flet_view(
@@ -378,12 +438,27 @@ class Handler(FileSystemEventHandler):
         self.terminate.set()
 
     def restart_program(self):
+        """
+        Restart the child app process used for hot reload.
+
+        The current process is terminated first, then a fresh process is started
+        with the same runtime arguments and environment.
+        """
+
         self.is_running = False
         self.p.send_signal(signal.SIGTERM)
         self.p.wait()
         self.start_process()
 
     def print_qr_code(self, orig_url: str, android: bool):
+        """
+        Print a LAN URL and terminal QR code for connecting from a mobile device.
+
+        Args:
+            orig_url: URL emitted by the running app process.
+            android: Whether to generate an Android launcher URL format.
+        """
+
         u = urlparse(orig_url)
         ip_addr = get_local_ip()
         lan_url = urlunparse(
@@ -417,6 +492,10 @@ class Handler(FileSystemEventHandler):
         print("Scan QR code above with Camera app.")
 
     def clear_console(self):
+        """
+        Clear the current terminal screen on supported platforms.
+        """
+
         if platform.system() == "Windows":
             if platform.release() in {"10", "11"}:
                 subprocess.run(

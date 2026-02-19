@@ -21,7 +21,7 @@ s = sorted(CupertinoColors, key=lambda i: i.name)
 for i in s:
     print(f'{i.name} = "{i.value}"')
 ```
-"""
+"""  # noqa: E501
 
 import random
 from enum import Enum
@@ -34,6 +34,10 @@ __all__ = ["CupertinoColors"]
 
 
 class CupertinoColors(str, Enum):
+    """
+    Named cupertino colors.
+    """
+
     def __eq__(self, other):
         if isinstance(other, str):
             return self.value.lower() == other.lower()

@@ -11,8 +11,22 @@ __all__ = [
 
 
 class Axis(Enum):
+    """
+    The two cardinal directions in two dimensions.
+
+    The axis is always relative to the current coordinate space. This means, for
+    example, that a [horizontal] axis might actually be diagonally from top
+    right to bottom left, due to some local transform applied to the scene.
+    """
+
     HORIZONTAL = "horizontal"
+    """
+    Left and right.
+    """
     VERTICAL = "vertical"
+    """
+    Up and down.
+    """
 
 
 @dataclass
@@ -23,7 +37,7 @@ class Alignment:
     ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
     /// caption
     ///
-    """
+    """  # noqa: E501
 
     x: Number
     """
@@ -100,6 +114,8 @@ class Alignment:
 
 
 class AlignmentProperty:
+    """Descriptor used to expose predefined [`Alignment`][flet.] constants."""
+
     def __init__(self, factory):
         self.factory = factory
 

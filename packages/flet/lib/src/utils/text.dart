@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +8,9 @@ import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
+import 'enums.dart';
 import 'launch_url.dart';
-import 'material_state.dart';
+import 'widget_state.dart';
 
 TextStyle? parseTextThemeStyle(String? styleName, BuildContext context) {
   var textTheme = Theme.of(context).textTheme;
@@ -97,63 +97,44 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
 }
 
 TextAlign? parseTextAlign(String? value, [TextAlign? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextAlign.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextAlign.values, value, defaultValue);
 }
 
 TextOverflow? parseTextOverflow(String? value, [TextOverflow? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextOverflow.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextOverflow.values, value, defaultValue);
 }
 
 TextDecorationStyle? parseTextDecorationStyle(String? value,
     [TextDecorationStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextDecorationStyle.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextDecorationStyle.values, value, defaultValue);
 }
 
 TextCapitalization? parseTextCapitalization(String? value,
     [TextCapitalization? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextCapitalization.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextCapitalization.values, value, defaultValue);
 }
 
 TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextBaseline.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextBaseline.values, value, defaultValue);
 }
 
 TextAffinity? parseTextAffinity(String? value, [TextAffinity? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TextAffinity.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TextAffinity.values, value, defaultValue);
 }
 
-TextStyle? parseTextStyle(dynamic value, ThemeData theme,
-    [TextStyle? defaultValue]) {
-  if (value == null) return defaultValue;
-  var fontWeight = value["weight"];
-
-  List<FontVariation>? variations;
-  if (fontWeight != null && fontWeight.startsWith("w")) {
-    variations = [
-      FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)
-    ];
+List<FontVariation>? parseFontVariations(dynamic fontWeight,
+    [List<FontVariation>? defaultValue]) {
+  if (fontWeight != null &&
+      fontWeight is String &&
+      fontWeight.startsWith("w")) {
+    return [FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)];
   }
+  return defaultValue;
+}
 
+List<TextDecoration> parseTextDecorations(dynamic decorationValue) {
   List<TextDecoration> decorations = [];
-  var decor = parseInt(value["decoration"], 0)!;
+  var decor = parseInt(decorationValue, 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }
@@ -163,6 +144,16 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
   if (decor & 0x4 > 0) {
     decorations.add(TextDecoration.lineThrough);
   }
+  return decorations;
+}
+
+TextStyle? parseTextStyle(dynamic value, ThemeData theme,
+    [TextStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  var fontWeight = value["weight"];
+  List<FontVariation>? variations = parseFontVariations(fontWeight);
+  List<TextDecoration> decorations = parseTextDecorations(value["decoration"]);
 
   return TextStyle(
     fontSize: parseDouble(value["size"]),

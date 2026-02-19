@@ -4,7 +4,7 @@ Type definitions and configuration objects for flet-video.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 import flet as ft
 
@@ -88,6 +88,29 @@ class VideoConfiguration:
     """
     The scale for the video output.
     Specifying this option will cause [`width`][(c).] & [`height`][(c).] to be ignored.
+    """
+
+    mpv_properties: Optional[dict[str, Union[str, int, float, bool]]] = None
+    """
+    Extra mpv/libmpv properties to set on
+    native backends (Windows/macOS/Linux/iOS/Android).
+
+    The keys are mpv option/property names without the leading `--`. Values can be
+    `str`, `int`, `float` or `bool`. All values are converted to strings before being
+    passed to mpv; boolean values are converted to `"yes"` / `"no"`.
+
+    Full list of mpv options: https://mpv.io/manual/stable/#options
+
+    Example:
+        ```python
+        >>> VideoConfiguration(
+                mpv_properties={
+                    "profile": "low-latency",   # --profile=low-latency
+                    "untimed": True,            # --untimed
+                    "volume": 80,               # --volume=80
+                }
+            )
+        ```
     """
 
 

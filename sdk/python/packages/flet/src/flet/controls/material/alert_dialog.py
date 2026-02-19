@@ -40,8 +40,8 @@ class AlertDialog(DialogControl):
 
     content: Optional[Control] = None
     """
-    The content of this dialog is displayed in the center of this dialog in a
-    lighter font.
+    The content of this dialog is displayed in the center of this dialog in a lighter \
+    font.
 
     Typically this is a [`Column`][flet.]
     that contains this dialog's [`Text`][flet.] message.
@@ -156,8 +156,8 @@ class AlertDialog(DialogControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used to paint a drop shadow
-    under this dialog, which reflects this dialog's [`elevation`][(c).].
+    The color used to paint a drop shadow under this dialog, which reflects this \
+    dialog's [`elevation`][(c).].
     """
 
     icon_color: Optional[ColorValue] = None
@@ -171,8 +171,8 @@ class AlertDialog(DialogControl):
 
     scrollable: bool = False
     """
-    Determines whether the [`title`][(c).] and
-    [`content`][(c).] controls are wrapped in a scrollable.
+    Determines whether the [`title`][(c).] and [`content`][(c).] controls are wrapped \
+    in a scrollable.
 
     This configuration is used when the `title` and `content` are expected to overflow.
     Both `title` and `content` are wrapped in a scroll view, allowing all overflowed
@@ -181,8 +181,8 @@ class AlertDialog(DialogControl):
 
     actions_overflow_button_spacing: Optional[Number] = None
     """
-    The spacing between [`actions`][(c).] when the `OverflowBar`
-    switches to a column layout because the actions don't fit horizontally.
+    The spacing between [`actions`][(c).] when the `OverflowBar` switches to a column \
+    layout because the actions don't fit horizontally.
 
     If the controls in `actions` do not fit into a single row, they are arranged into a
     column. This parameter provides additional vertical space between buttons when it
@@ -215,13 +215,13 @@ class AlertDialog(DialogControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the contents of this dialog are clipped (or not)
-    to the given [`shape`][(c).].
+    Defines how the contents of this dialog are clipped (or not) to the given \
+    [`shape`][(c).].
     """
 
     semantics_label: Optional[str] = None
     """
-    The semantic label of this dialog used by accessibility frameworks to announce
+    The semantic label of this dialog used by accessibility frameworks to announce \
     screen transitions when this dialog is opened and closed.
 
     On iOS, if this label is not provided, a semantic label will be inferred from the
@@ -230,8 +230,7 @@ class AlertDialog(DialogControl):
 
     barrier_color: Optional[ColorValue] = None
     """
-    The color of the modal barrier that
-    darkens everything below this dialog.
+    The color of the modal barrier below this dialog.
 
     If `None`, then [`DialogTheme.barrier_color`][flet.] is used.
     If that is also `None`, the default is `Colors.BLACK_54`.

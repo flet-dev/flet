@@ -8,6 +8,13 @@ from flet_desktop import get_package_bin_dir
 
 
 def get_flet_bin_path():
+    """
+    Return path to packaged Flet desktop binaries, if available.
+
+    Returns:
+        Absolute binaries directory path or `None` when not found.
+    """
+
     bin_path = get_package_bin_dir()
     if not os.path.exists(bin_path):
         return None
@@ -15,6 +22,14 @@ def get_flet_bin_path():
 
 
 def copy_flet_bin():
+    """
+    Copy packaged Flet desktop binaries into a temporary directory.
+
+    Returns:
+        Path to the temporary copied binaries directory, or `None` when source
+        binaries are unavailable.
+    """
+
     bin_path = get_flet_bin_path()
     if not bin_path:
         return None

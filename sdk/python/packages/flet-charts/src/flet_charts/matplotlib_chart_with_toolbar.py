@@ -27,6 +27,13 @@ _download_formats = [
 
 
 def _require_matplotlib() -> None:
+    """
+    Ensure matplotlib dependency is available.
+
+    Raises:
+        ModuleNotFoundError: If `matplotlib` is not installed.
+    """
+
     if _MATPLOTLIB_IMPORT_ERROR is not None:
         raise ModuleNotFoundError(
             'Install "matplotlib" Python package to use MatplotlibChart control.'
@@ -35,11 +42,21 @@ def _require_matplotlib() -> None:
 
 @ft.control(kw_only=True, isolated=True)
 class MatplotlibChartWithToolbar(ft.Column):
+    """
+    Composite control that combines a `MatplotlibChart` with a ready-made toolbar UI.
+
+    Warning:
+        This control requires the [`matplotlib`](https://matplotlib.org/)
+        Python package to be installed.
+
+        See this [installation guide](index.md#installation) for more information.
+    """
+
     figure: Figure = field(metadata={"skip": True})
     """
     Matplotlib figure to draw - an instance of
     [`matplotlib.figure.Figure`](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure).
-    """
+    """  # noqa: E501
 
     def build(self):
         _require_matplotlib()
@@ -98,27 +115,54 @@ class MatplotlibChartWithToolbar(ft.Column):
                 self.width = self.figure.bbox.width
 
     def on_message(self, e: flet_charts.MatplotlibChartMessageEvent):
+        """
+        Show status text produced by the underlying chart toolbar backend.
+
+        Args:
+            e: Message event emitted by [`MatplotlibChart`][flet_charts.].
+        """
+
         self.msg.value = e.message
         self.msg.update()
 
     def on_toolbar_update(
         self, e: flet_charts.MatplotlibChartToolbarButtonsUpdateEvent
     ):
+        """
+        Synchronize back/forward button enabled state with chart history.
+
+        Args:
+            e: Toolbar state update event from
+                [`MatplotlibChart`][flet_charts.MatplotlibChart].
+        """
+
         self.back_btn.disabled = not e.back_enabled
         self.fwd_btn.disabled = not e.forward_enabled
         self.update()
 
     def pan_click(self):
+        """
+        Toggle pan mode and ensure zoom mode is turned off.
+        """
+
         self.mpl.pan()
         self.pan_btn.selected = not self.pan_btn.selected
         self.zoom_btn.selected = False
 
     def zoom_click(self):
+        """
+        Toggle zoom mode and ensure pan mode is turned off.
+        """
+
         self.mpl.zoom()
         self.pan_btn.selected = False
         self.zoom_btn.selected = not self.zoom_btn.selected
 
     async def download_click(self):
+        """
+        Export the figure in the selected format and prompt user to save it.
+        """
+
         fmt = self.download_fmt.value
         buffer = self.mpl.download(fmt)
         title = self.figure.canvas.manager.get_window_title()

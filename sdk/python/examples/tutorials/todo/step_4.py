@@ -1,11 +1,15 @@
+from dataclasses import field
+from typing import Callable
+
 import flet as ft
 
 
+@ft.control
 class Task(ft.Column):
-    def __init__(self, task_name, task_delete):
-        super().__init__()
-        self.task_name = task_name
-        self.task_delete = task_delete
+    task_name: str = ""
+    on_task_delete: Callable[["Task"], None] = field(default=lambda task: None)
+
+    def init(self):
         self.display_task = ft.Checkbox(value=False, label=self.task_name)
         self.edit_name = ft.TextField(expand=1)
 
@@ -61,13 +65,13 @@ class Task(ft.Column):
         self.update()
 
     def delete_clicked(self, e):
-        self.task_delete(self)
+        self.on_task_delete(self)
 
 
+@ft.control
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
-    def __init__(self):
-        super().__init__()
+    def init(self):
         self.new_task = ft.TextField(hint_text="What needs to be done?", expand=True)
         self.tasks = ft.Column()
         self.width = 600
@@ -84,7 +88,7 @@ class TodoApp(ft.Column):
         ]
 
     def add_clicked(self, e):
-        task = Task(self.new_task.value, self.task_delete)
+        task = Task(task_name=self.new_task.value, on_task_delete=self.task_delete)
         self.tasks.controls.append(task)
         self.new_task.value = ""
         self.update()

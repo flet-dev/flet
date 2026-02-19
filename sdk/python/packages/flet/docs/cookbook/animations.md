@@ -7,7 +7,7 @@ Animation produces interpolated values between the old and the new value over th
 
 By default, the animation is *linearly* increasing the animation value, however, a *curve* can be
 applied to the animation which changes the value according to the provided curve.
-For example, `AnimationCurve.EASE_OUT_CUBIC` curve increases the animation value quickly at the
+For example, [`AnimationCurve.EASE_OUT_CUBIC`][flet.AnimationCurve.EASE_OUT_CUBIC] curve increases the animation value quickly at the
 beginning of the animation and then slows down until the target value is reached:
 
 <video controls>
@@ -30,25 +30,14 @@ properties, described below, to enable implicit animation of its appearance:
 
 * Instance of [`Animation`][flet.Animation] - allows configuring the duration and the curve of the
 * animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`.
-  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is `linear`.
-* `int` value - enables animation with specified duration in milliseconds and `linear` curve.
-* `bool` value - enables animation with the duration of 1000 milliseconds and `linear` curve.
-
-
-```python
---8<-- "../../examples/controls/time_picker/basic.py"
-```
-
-{{ image("../examples/controls/time_picker/media/basic.png", alt="basic", width="80%") }}
-
-
-
-
+  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR].
+* `int` value - enables animation with specified duration in milliseconds and [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR] curve.
+* `bool` value - enables animation with the duration of 1000 milliseconds and [`AnimationCurve.LINEAR`][flet.AnimationCurve.LINEAR] curve.
 
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`LayoutControl.opacity`][flet.LayoutControl.opacity] property.
+enables implicit animation of [`Control.opacity`][flet.Control.opacity] property.
 
 ```python
 --8<-- "../../examples/controls/layout_control/animate_opacity.py"
@@ -134,8 +123,7 @@ enables implicit animation of container properties such as size, background colo
 
 ### Animated content switcher
 
-[`AnimatedSwitcher`][flet.AnimatedSwitcher] allows animated transition between a new control and
-the control previously set on the `AnimatedSwitcher` as a `content`.
+[`AnimatedSwitcher`][flet.AnimatedSwitcher]  allows animated transition between two controls ('new' and 'old').
 
 ```python
 import time

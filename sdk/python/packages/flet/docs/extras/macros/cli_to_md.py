@@ -110,7 +110,7 @@ def render_flet_cli_as_markdown(
             return f"`{a.default}`" if a.default not in (None, 0) else None
         if getattr(a, "const", None) is not None and a.default == a.const:
             return None
-        if a.default not in (None, ""):
+        if a.default not in (None, "", []):
             return f"`{a.default}`"
         return None
 

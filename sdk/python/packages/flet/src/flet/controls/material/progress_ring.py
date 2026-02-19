@@ -12,10 +12,15 @@ __all__ = ["ProgressRing"]
 @control("ProgressRing")
 class ProgressRing(LayoutControl):
     """
-    A material design circular progress indicator, which spins to indicate that the
+    A material design circular progress indicator, which spins to indicate that the \
     application is busy.
 
     A control that shows progress along a circle.
+
+    ```python
+    ft.ProgressRing(value=0.4, padding=ft.Padding.all(10))
+    ```
+
     """
 
     value: Optional[Number] = None
@@ -41,8 +46,7 @@ class ProgressRing(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Color of the circular track being filled
-    by the circular indicator.
+    Color of the circular track being filled by the circular indicator.
     """
 
     stroke_align: Optional[Number] = None
@@ -69,7 +73,7 @@ class ProgressRing(LayoutControl):
 
     semantics_value: Optional[Number] = None
     """
-    Used for determinate progress indicators to indicate how much progress has been
+    Used for determinate progress indicators to indicate how much progress has been \
     made.
     """
 
@@ -115,8 +119,8 @@ class ProgressRing(LayoutControl):
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, the `ProgressRing` will use the latest Material Design 3
-    appearance, which was introduced in December 2023.
+    If this is set to `False`, the `ProgressRing` will use the latest Material Design \
+    3 appearance, which was introduced in December 2023.
 
     When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
 

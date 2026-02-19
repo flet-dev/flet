@@ -15,10 +15,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
     <!-- Google TV -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-    
+
     <application
         android:label="flet_client"
         android:name="${applicationName}"
@@ -47,6 +49,15 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>   <!-- Google TV -->
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
         <!-- Below is a test AdMob ID.
         Guide: https://developers.google.com/admob/flutter/quick-start#platform_specific_setup -->
         <meta-data

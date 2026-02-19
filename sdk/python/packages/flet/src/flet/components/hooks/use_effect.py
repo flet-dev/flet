@@ -9,6 +9,14 @@ from flet.components.utils import current_component
 
 @dataclass
 class EffectHook(Hook):
+    """
+    Hook state container backing [`use_effect()`][flet.use_effect].
+
+    Stores effect callbacks, dependency snapshots, and runtime task handles used
+    to schedule async setup/cleanup work across mount, update, and unmount
+    phases.
+    """
+
     setup: Callable[[], Any | Awaitable[Any]]
     cleanup: Callable[[], Any | Awaitable[Any]] | None = None
     deps: list[Any] | None = None
@@ -19,6 +27,11 @@ class EffectHook(Hook):
     _cleanup_task: asyncio.Task | None = None  # last scheduled cleanup task
 
     def cancel(self):
+        """
+        Cancels currently scheduled setup and cleanup tasks, if still pending.
+
+        Safe to call repeatedly; completed tasks are ignored.
+        """
         if self._setup_task and not self._setup_task.done():
             self._setup_task.cancel()
         if self._cleanup_task and not self._cleanup_task.done():

@@ -29,7 +29,7 @@ __all__ = [
 @control("IconButton")
 class IconButton(LayoutControl, AdaptiveControl):
     """
-    An icon button is a round button with an icon in the middle that reacts to touches
+    An icon button is a round button with an icon in the middle that reacts to touches \
     by filling with color (ink).
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other
@@ -105,8 +105,8 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     autofocus: bool = False
     """
-    Whether this control will be provided initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
+    Whether this control will be provided initial focus. If there is more than one \
+    control on a page with autofocus set, then the first one added to the page will \
     get focus.
     """
 
@@ -151,7 +151,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     padding: Optional[PaddingValue] = None
     """
-    Defines the padding around this button. The entire padded icon will react to input
+    Defines the padding around this button. The entire padded icon will react to input \
     gestures.
 
     Defaults to `Padding.all(8)`.
@@ -174,7 +174,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     mouse_cursor: Optional[MouseCursor] = field(default=None, metadata={"skip": True})
     """
-    The cursor to be displayed when a mouse pointer enters or is hovering over this
+    The cursor to be displayed when a mouse pointer enters or is hovering over this \
     control.
     """
 
@@ -193,6 +193,16 @@ class IconButton(LayoutControl, AdaptiveControl):
     on_click: Optional[ControlEventHandler["IconButton"]] = None
     """
     Called when a user clicks this button.
+    """
+
+    on_long_press: Optional[ControlEventHandler["IconButton"]] = None
+    """
+    Called when the button is long-pressed.
+    """
+
+    on_hover: Optional[ControlEventHandler["IconButton"]] = None
+    """
+    Called when the button is hovered.
     """
 
     on_focus: Optional[ControlEventHandler["IconButton"]] = None
@@ -222,6 +232,8 @@ class IconButton(LayoutControl, AdaptiveControl):
                 visual_density=self.visual_density,
                 mouse_cursor=self.mouse_cursor,
             )
+        else:
+            self._internals.pop("style", None)
 
     async def focus(self):
         """

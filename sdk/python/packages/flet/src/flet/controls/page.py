@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import sys
 import threading
@@ -93,7 +94,18 @@ RetT = TypeVar("RetT")
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
+    """
+    Internal container that hosts page-level service controls.
+
+    Services register themselves through this registry so they can be mounted
+    under [`Page`][flet.Page] and synchronized with the frontend service
+    bindings.
+    """
+
     _services: list[Service] = field(default_factory=list)
+    """
+    Tracked service instances currently attached to this page.
+    """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
@@ -101,6 +113,12 @@ class ServiceRegistry(Service):
         self._lock: threading.Lock = threading.Lock()
 
     def register_service(self, service: Service):
+        """
+        Registers a service in this registry and pushes an update.
+
+        Args:
+            service: Service instance to register.
+        """
         with self._lock:
             logger.debug(
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
@@ -109,10 +127,20 @@ class ServiceRegistry(Service):
             self.update()
 
     def unregister_services(self):
+        """
+        Unregisters services that are no longer strongly referenced.
+
+        This keeps the registry aligned with live Python references by removing
+        service instances whose reference count indicates they are no longer in
+        active use, then updating the control tree if removals happened.
+        """
         with self._lock:
             original_len = len(self._services)
+            min_refs = 3 if sys.version_info >= (3, 14) else 4
             self._services = [
-                service for service in self._services if sys.getrefcount(service) > 4
+                service
+                for service in self._services
+                if sys.getrefcount(service) > min_refs
             ]
             removed_count = original_len - len(self._services)
             if removed_count > 0:
@@ -122,56 +150,176 @@ class ServiceRegistry(Service):
 
 @dataclass
 class RouteChangeEvent(Event["Page"]):
+    """
+    Event payload for [`Page.on_route_change`][flet.Page.on_route_change].
+    """
+
     route: str
+    """
+    New route value after navigation state changed.
+    """
 
 
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
+    """
+    Event payload for platform brightness changes.
+
+    Delivered to
+    [`Page.on_platform_brightness_change`][flet.Page.on_platform_brightness_change].
+    """
+
     brightness: Brightness
+    """
+    Current platform brightness mode.
+    """
 
 
 @dataclass
 class ViewPopEvent(Event["Page"]):
+    """
+    Event payload for view-pop navigation actions.
+
+    Delivered to [`Page.on_view_pop`][flet.Page.on_view_pop] when the top view
+    is being popped by system or app-bar back behavior.
+    """
+
     route: str
+    """
+    Route of the view being popped.
+    """
+
     view: Optional[View] = None
+    """
+    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    """
 
 
 @dataclass
 class KeyboardEvent(Event["Page"]):
+    """
+    Event payload for keyboard key-down notifications.
+
+    Delivered to [`Page.on_keyboard_event`][flet.Page.on_keyboard_event].
+    """
+
     key: str
+    """
+    Human-readable key label for the pressed key.
+    """
+
     shift: bool
+    """
+    Whether Shift was pressed when the key event was emitted.
+    """
+
     ctrl: bool
+    """
+    Whether Control was pressed when the key event was emitted.
+    """
+
     alt: bool
+    """
+    Whether Alt was pressed when the key event was emitted.
+    """
+
     meta: bool
+    """
+    Whether Meta (Command/Windows) was pressed when the key event was emitted.
+    """
 
 
 @dataclass
 class LoginEvent(Event["Page"]):
+    """
+    Event payload for OAuth login completion.
+
+    Emitted to [`Page.on_login`][flet.Page.on_login] for both successful and
+    failed authorization attempts.
+    """
+
     error: Optional[str]
+    """
+    Error code or message when login failed; empty/`None` on success.
+    """
+
     error_description: Optional[str]
+    """
+    Provider-specific error details when login failed.
+    """
 
 
 @dataclass
 class InvokeMethodResults:
+    """
+    Result envelope for a control invoke-method response.
+
+    Stores the correlation identifier and either a serialized result payload or
+    an error string.
+    """
+
     method_id: str
+    """
+    Identifier of the invoke-method call this response belongs to.
+    """
+
     result: Optional[str]
+    """
+    Serialized method result payload when the call succeeded.
+    """
+
     error: Optional[str]
+    """
+    Error message when the invoke-method call failed.
+    """
 
 
 @dataclass
 class AppLifecycleStateChangeEvent(Event["Page"]):
+    """
+    Event payload for app lifecycle transitions.
+
+    Delivered to
+    [`Page.on_app_lifecycle_state_change`][flet.Page.on_app_lifecycle_state_change].
+    """
+
     state: AppLifecycleState
+    """
+    New application lifecycle state.
+    """
 
 
 @dataclass
 class MultiViewAddEvent(Event["Page"]):
+    """
+    Event payload emitted when a new multi-view is created.
+
+    Delivered to [`Page.on_multi_view_add`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the newly created view.
+    """
+
     initial_data: Any
+    """
+    Optional initial payload provided when the view was opened.
+    """
 
 
 @dataclass
 class MultiViewRemoveEvent(Event["Page"]):
+    """
+    Event payload emitted when a multi-view is removed.
+
+    Delivered to [`Page.on_multi_view_remove`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the removed view.
+    """
 
 
 @control("Page", isolated=True, post_init_args=2)
@@ -193,49 +341,10 @@ class Page(BasePage):
     The list of multi-views associated with this page.
     """
 
-    browser_context_menu: BrowserContextMenu = field(
-        default_factory=lambda: BrowserContextMenu(), metadata={"skip": True}
-    )
-    """
-    Used to enable or disable the context menu that appears when the user
-    right-clicks on the web page.
-
-    Limitation:
-        Web only.
-    """
-
-    shared_preferences: SharedPreferences = field(
-        default_factory=lambda: SharedPreferences(), metadata={"skip": True}
-    )
-    """
-    Provides a persistent key-value storage for simple data types.
-    """
-
-    clipboard: Clipboard = field(
-        default_factory=lambda: Clipboard(), metadata={"skip": True}
-    )
-    """
-    Provides access to the system clipboard.
-    """
-
-    storage_paths: StoragePaths = field(
-        default_factory=lambda: StoragePaths(), metadata={"skip": True}
-    )
-    """
-    Provides the information about common storage paths.
-    """
-
-    url_launcher: UrlLauncher = field(
-        default_factory=lambda: UrlLauncher(), metadata={"skip": True}
-    )
-    """
-    Provides methods for launching URLs.
-    """
-
     window: Window = field(default_factory=lambda: Window())
     """
-    Provides properties/methods/events to monitor and control the
-    app's native OS window.
+    Provides properties/methods/events to monitor and control the app's native OS \
+    window.
     """
 
     route: str = "/"
@@ -341,7 +450,7 @@ class Page(BasePage):
         local asset. The following font file formats are supported `.ttc`, `.ttf`
         and `.otf`.
 
-    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
+    Usage example [here](https://docs.flet.dev/cookbook/fonts#importing-fonts).
     """
 
     on_platform_brightness_change: Optional[
@@ -360,14 +469,13 @@ class Page(BasePage):
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Called when page route changes either programmatically, by editing
-    application URL or using browser Back/Forward buttons.
+    Called when page route changes either programmatically, by editing application URL \
+    or using browser Back/Forward buttons.
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
-    Called when the user clicks automatic "Back" button in
-    [`AppBar`][flet.] control.
+    Called when the user clicks automatic "Back" button in [`AppBar`][flet.] control.
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
@@ -387,23 +495,23 @@ class Page(BasePage):
 
     on_disconnect: Optional[ControlEventHandler["Page"]] = None
     """
-    Called when a web user disconnects from a page session, i.e. closes browser
+    Called when a web user disconnects from a page session, i.e. closes browser \
     tab/window.
     """
 
     on_close: Optional[ControlEventHandler["Page"]] = None
     """
-    Called when a session has expired after configured amount of time
-    (60 minutes by default).
+    Called when a session has expired after configured amount of time (60 minutes by \
+    default).
     """
 
     on_login: Optional[EventHandler[LoginEvent]] = None
     """
     Called upon successful or failed OAuth authorization flow.
 
-    See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#checking-authentication-results)
+    See [Authentication](https://docs.flet.dev/cookbook/authentication#checking-authentication-results)
     guide for more information and examples.
-    """
+    """  # noqa: E501
 
     on_logout: Optional[ControlEventHandler["Page"]] = None
     """
@@ -424,8 +532,7 @@ class Page(BasePage):
     """
     TBD
     """
-    _services: list[Service] = field(default_factory=list)
-    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _services: ServiceRegistry = field(default_factory=ServiceRegistry)
 
     def __post_init__(
         self,
@@ -435,15 +542,6 @@ class Page(BasePage):
         BasePage.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
-
-        # page services
-        self._services = [
-            self.browser_context_menu,
-            self.shared_preferences,
-            self.clipboard,
-            self.url_launcher,
-            self.storage_paths,
-        ]
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None
@@ -465,9 +563,21 @@ class Page(BasePage):
     def render(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
+        """
+        Render a component tree into controls of the root view.
+
+        The rendered result replaces `page.views[0].controls`, then triggers
+        initial page update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -476,36 +586,89 @@ class Page(BasePage):
     def render_views(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
+        """
+        Render a component tree as the full list of page views.
+
+        The rendered result replaces `page.views`, then triggers initial page
+        update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render_views()")
         self._notify = self.__notify
         self.views = Renderer().render(component, *args, **kwargs)
         self.__render()
 
     def __render(self):
+        """
+        Finalize component rendering setup.
+
+        Performs initial page update, enables components mode, and starts
+        batched updates scheduler for component-driven state changes.
+        """
+
         self.update()
         context.enable_components_mode()
         self.session.start_updates_scheduler()
 
     def schedule_update(self):
+        """
+        Queue this page for a deferred batched update.
+        """
+
         self.session.schedule_update(self)
 
-    def update(self, *controls) -> None:
+    def update(self, *controls: Control) -> None:
+        """
+        Push pending state changes to the client.
+
+        Args:
+            *controls: Specific controls to patch. When omitted, patches the
+                whole page state.
+        """
+
         if len(controls) == 0:
             self.__update(self)
         else:
             self.__update(*controls)
 
     def __notify(self, name: str, value: Any):
+        """
+        Schedule page update when reactive component state changes.
+
+        Args:
+            name: Changed value identifier.
+            value: New value.
+        """
+
         self.schedule_update()
 
     def __update(self, *controls: Control):
+        """
+        Send control patches for the provided controls.
+
+        Args:
+            *controls: Controls whose updates should be sent to the client.
+        """
+
         for c in controls:
             self.session.patch_control(c)
 
     def error(self, message: str) -> None:
+        """
+        Report an application error to the current session/client.
+
+        Args:
+            message: Error message to send.
+        """
+
         self.session.error(message)
 
     def before_event(self, e: ControlEvent):
@@ -516,12 +679,11 @@ class Page(BasePage):
             self.query()
 
         elif isinstance(e, ViewPopEvent):
-            views = unwrap_component(self.views)
-            view_index = next(
-                (i for i, v in enumerate(views) if v.route == e.route), None
-            )
-            if view_index is not None:
-                e.view = views[view_index]
+            for v in unwrap_component(self.views):
+                v = unwrap_component(v)
+                if v.route == e.route:
+                    e.view = v
+                    break
 
         return super().before_event(e)
 
@@ -532,11 +694,11 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> Future[RetT]:
         """
-        Run `handler` coroutine as a new Task in the event loop associated with the
+        Run `handler` coroutine as a new Task in the event loop associated with the \
         current page.
         """
         _context_page.set(self)
-        if not asyncio.iscoroutinefunction(handler):
+        if not inspect.iscoroutinefunction(handler):
             raise TypeError("handler must be a coroutine function")
 
         future = asyncio.run_coroutine_threadsafe(
@@ -544,6 +706,13 @@ class Page(BasePage):
         )
 
         def _on_completion(f):
+            """
+            Surface background task exceptions to default error handling.
+
+            Args:
+                f: Completed future returned by `run_coroutine_threadsafe()`.
+            """
+
             try:
                 exception = f.exception()
                 if exception:
@@ -556,7 +725,25 @@ class Page(BasePage):
         return future
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
+        """
+        Wrap a callable to execute with this page bound to context vars.
+
+        Args:
+            handler: Handler function to wrap.
+
+        Returns:
+            Wrapped callable that restores page context before invocation.
+        """
+
         def wrapper(*args, **kwargs):
+            """
+            Execute wrapped handler with page context initialized.
+
+            Args:
+                *args: Positional arguments forwarded to wrapped handler.
+                **kwargs: Keyword arguments forwarded to wrapped handler.
+            """
+
             _context_page.set(self)
             handler(*args, **kwargs)
 
@@ -569,7 +756,7 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the
+        Run `handler` function as a new Thread in the executor associated with the \
         current page.
         """
         handler_with_context = self.__context_wrapper(handler)
@@ -583,13 +770,18 @@ class Page(BasePage):
                 partial(handler_with_context, *args, **kwargs),
             )
 
-    @deprecated("Use push_route() instead.", version="0.70.0", show_parentheses=True)
+    @deprecated(
+        "Use push_route() instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+        show_parentheses=True,
+    )
     def go(
         self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
         """
-        A helper method that updates [`page.route`](#route), calls
-        [`page.on_route_change`](#on_route_change) event handler to update views and
+        A helper method that updates [`page.route`](#route), calls \
+        [`page.on_route_change`](#on_route_change) event handler to update views and \
         finally calls `page.update()`.
         """
 
@@ -611,13 +803,15 @@ class Page(BasePage):
             def main(page: ft.Page):
                 page.title = "Routes Example"
 
-                def route_change(e):
+                def route_change():
                     page.views.clear()
                     page.views.append(
                         ft.View(
                             route="/",
                             controls=[
-                                ft.AppBar(title=ft.Text("Flet app")),
+                                ft.AppBar(
+                                    title=ft.Text("Flet app"),
+                                ),
                                 ft.Button(
                                     "Visit Store",
                                     on_click=lambda: asyncio.create_task(
@@ -632,7 +826,9 @@ class Page(BasePage):
                             ft.View(
                                 route="/store",
                                 controls=[
-                                    ft.AppBar(title=ft.Text("Store")),
+                                    ft.AppBar(
+                                        title=ft.Text("Store"),
+                                    ),
                                     ft.Button(
                                         "Go Home",
                                         on_click=lambda: asyncio.create_task(
@@ -646,17 +842,19 @@ class Page(BasePage):
 
                 async def view_pop(e):
                     if e.view is not None:
+                        print("View pop:", e.view)
                         page.views.remove(e.view)
                         top_view = page.views[-1]
                         await page.push_route(top_view.route)
 
-                    page.on_route_change = route_change
-                    page.on_view_pop = view_pop
+                page.on_route_change = route_change
+                page.on_view_pop = view_pop
 
                 route_change()
 
 
-            ft.run(main)
+            if __name__ == "__main__":
+                ft.run(main)
             ```
 
         Args:
@@ -708,7 +906,7 @@ class Page(BasePage):
         """
         Starts OAuth flow.
 
-        See [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication)
+        See [Authentication](https://docs.flet.dev/cookbook/authentication)
         guide for more information and examples.
         """
         self.__authorization = authorization(
@@ -731,22 +929,34 @@ class Page(BasePage):
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
             else:
-                await self.launch_url(
-                    authorization_url, "flet_oauth_signin", web_popup_window=self.web
-                )
+                if self.web:
+                    await UrlLauncher().open_window(
+                        authorization_url, title="flet_oauth_signin"
+                    )
+                else:
+                    await UrlLauncher().launch_url(authorization_url)
         else:
             await self.__authorization.dehydrate_token(saved_token)
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
             if self.on_login:
-                if asyncio.iscoroutinefunction(self.on_login):
-                    asyncio.create_task(self.on_login(e))
-                elif callable(self.on_login):
-                    self.on_login(e)
+                asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
         return self.__authorization
 
     async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
+        """
+        Complete OAuth flow using callback payload returned by provider.
+
+        Validates state token, optionally closes/foregrounds app UI, exchanges
+        authorization code for access token, and raises `login` event with
+        success or failure details.
+
+        Args:
+            data: OAuth callback query payload (e.g. `state`, `code`,
+                `error`, `error_description`).
+        """
+
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state
@@ -774,25 +984,24 @@ class Page(BasePage):
             except Exception as ex:
                 e.error = str(ex)
         if self.on_login:
-            if asyncio.iscoroutinefunction(self.on_login):
-                asyncio.create_task(self.on_login(e))
-            elif callable(self.on_login):
-                self.on_login(e)
+            asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
     def logout(self) -> None:
         """
-        Clears current authentication context. See
-        [Authentication](https://docs.flet-docs.pages.dev/cookbook/authentication#signing-out) guide for more
-        information and examples.
+        Clears current authentication context. See \
+        [Authentication](https://docs.flet.dev/cookbook/authentication#signing-out) \
+        guide for more information and examples.
         """  # noqa: E501
         self.__authorization = None
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
-            if asyncio.iscoroutinefunction(self.on_logout):
-                asyncio.create_task(self.on_logout(e))
-            elif callable(self.on_logout):
-                self.on_logout(e)
+            asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))
 
+    @deprecated(
+        "Use UrlLauncher().launch_url() instead.",
+        version="0.90.0",
+        show_parentheses=True,
+    )
     async def launch_url(
         self,
         url: Union[str, Url],
@@ -816,18 +1025,25 @@ class Page(BasePage):
             web_popup_window_width: Popup window width.
             web_popup_window_height: Popup window height.
         """
-        await self.url_launcher.launch_url(
-            url,
-            web_popup_window_name=web_popup_window_name,
-            web_popup_window=web_popup_window,
-            web_popup_window_width=web_popup_window_width,
-            web_popup_window_height=web_popup_window_height,
-        )
+        if web_popup_window:
+            await UrlLauncher().open_window(
+                url,
+                title=web_popup_window_name,
+                width=web_popup_window_width,
+                height=web_popup_window_height,
+            )
+        else:
+            await UrlLauncher().launch_url(url)
 
+    @deprecated(
+        "Use UrlLauncher().can_launch_url() instead.",
+        version="0.90.0",
+        show_parentheses=True,
+    )
     async def can_launch_url(self, url: str) -> bool:
         """
-        Checks whether the specified URL can be handled by some app
-        installed on the device.
+        Checks whether the specified URL can be handled by some app installed on the \
+        device.
 
         Args:
             url: The URL to check.
@@ -844,15 +1060,20 @@ class Page(BasePage):
                     schemes that are always assumed to be supported (such as http(s)),
                     as web pages are never allowed to query installed applications.
         """
-        return await self.url_launcher.can_launch_url(url)
+        return await UrlLauncher().can_launch_url(url)
 
+    @deprecated(
+        "Use UrlLauncher().close_in_app_web_view() instead.",
+        version="0.90.0",
+        show_parentheses=True,
+    )
     async def close_in_app_web_view(self) -> None:
         """
         Closes in-app web view opened with `launch_url()`.
 
         📱 Mobile only.
         """
-        await self.url_launcher.close_in_app_web_view()
+        await UrlLauncher().close_in_app_web_view()
 
     @property
     def session(self) -> "Session":
@@ -912,6 +1133,56 @@ class Page(BasePage):
         """
         return self.session.pubsub_client
 
+    @property
+    @deprecated("Use UrlLauncher() instead.", version="0.80.0", delete_version="0.90.0")
+    def url_launcher(self) -> UrlLauncher:
+        """
+        DEPRECATED: The UrlLauncher service for the current page.
+        """
+        return UrlLauncher()
+
+    @property
+    @deprecated(
+        "Use BrowserContextMenu() instead.", version="0.80.0", delete_version="0.90.0"
+    )
+    def browser_context_menu(self):
+        """
+        DEPRECATED: The BrowserContextMenu service for the current page.
+        """
+
+        return BrowserContextMenu()
+
+    @property
+    @deprecated(
+        "Use SharedPreferences() instead.", version="0.80.0", delete_version="0.90.0"
+    )
+    def shared_preferences(self):
+        """
+        DEPRECATED: The SharedPreferences service for the current page.
+        """
+
+        return SharedPreferences()
+
+    @property
+    @deprecated("Use Clipboard() instead.", version="0.80.0", delete_version="0.90.0")
+    def clipboard(self):
+        """
+        DEPRECATED: The Clipboard service for the current page.
+        """
+
+        return Clipboard()
+
+    @property
+    @deprecated(
+        "Use StoragePaths() instead.", version="0.80.0", delete_version="0.90.0"
+    )
+    def storage_paths(self):
+        """
+        DEPRECATED: The StoragePaths service for the current page.
+        """
+
+        return StoragePaths()
+
     async def get_device_info(self) -> Optional[DeviceInfo]:
         """
         Returns device information.
@@ -941,7 +1212,8 @@ class Page(BasePage):
         self, orientations: list[DeviceOrientation]
     ) -> None:
         """
-        Constrains the allowed orientations for the app when running on a mobile device.
+        Constrains the allowed orientations for the app when running on a mobile \
+        device.
 
         Args:
             orientations: A list of allowed device orientations.
@@ -965,9 +1237,11 @@ class Page(BasePage):
                     - `[LANDSCAPE_RIGHT]` → `reverseLandscape`
                     - `[LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `userLandscape`
                     - `[PORTRAIT_UP, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `user`
-                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` → `fullUser`
+                    - `[PORTRAIT_UP, PORTRAIT_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT]` →
+                    `fullUser`
 
-            - **iOS**: This setting will only be respected on iPad if multitasking is disabled.
+            - **iOS**: This setting will only be respected on iPad if multitasking is
+            disabled.
                 You can decide to opt out of multitasking on iPad, then this will work
                 but your app will not support Slide Over and Split View multitasking
                 anymore. Should you decide to opt out of multitasking you can do this by

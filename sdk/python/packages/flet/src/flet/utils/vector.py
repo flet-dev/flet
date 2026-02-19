@@ -27,7 +27,9 @@ class Vector(complex):
 
     >>> Vector(1, 1) + 2
     Vector(3.0, 1.0)
-    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2)  == Vector(0.3, 0.3)  # Float tolerance 10 decimals
+    >>> Vector(0.1, 0.1) + Vector(0.2, 0.2) == Vector(
+    ...     0.3, 0.3
+    ... )  # Float tolerance 10 decimals
     True
     >>> Vector(2, 3) - Vector(1, 1)
     Vector(1.0, 2.0)
@@ -63,14 +65,24 @@ class Vector(complex):
 
     x = complex.real
     y = complex.imag
-    __add__ = lambda self, other: type(self)(complex.__add__(self, other))
-    __sub__ = lambda self, other: type(self)(complex.__sub__(self, other))
-    __mul__ = lambda self, other: type(self)(complex.__mul__(self, other))
-    __truediv__ = lambda self, other: type(self)(complex.__truediv__(self, other))
-    __len__ = lambda self: 2
-    __round__ = lambda self, ndigits=None: type(self)(
-        round(self.x, ndigits), round(self.y, ndigits)
-    )
+
+    def __add__(self, other):
+        return type(self)(complex.__add__(self, other))
+
+    def __sub__(self, other):
+        return type(self)(complex.__sub__(self, other))
+
+    def __mul__(self, other):
+        return type(self)(complex.__mul__(self, other))
+
+    def __truediv__(self, other):
+        return type(self)(complex.__truediv__(self, other))
+
+    def __len__(self):
+        return 2
+
+    def __round__(self, ndigits=None):
+        return type(self)(round(self.x, ndigits), round(self.y, ndigits))
 
     def __eq__(self, other):
         return math.isclose(self.x, other.x, abs_tol=self.abs_tol) and math.isclose(
@@ -91,6 +103,16 @@ class Vector(complex):
 
     @classmethod
     def polar(cls, radians, magnitude):
+        """
+        Creates a vector from polar coordinates.
+
+        Args:
+            radians: Angle in radians.
+            magnitude: Vector length.
+
+        Returns:
+            A new `Vector` with Cartesian coordinates rounded to 10 decimals.
+        """
         return cls(
             round(math.cos(radians) * magnitude, 10),
             round(math.sin(radians) * magnitude, 10),
@@ -98,30 +120,98 @@ class Vector(complex):
 
     @property
     def magnitude(self):
+        """
+        Returns the vector magnitude.
+
+        This is equivalent to `abs(self)`.
+
+        Returns:
+            The vector length.
+        """
         return abs(self)
 
     @property
     def degrees(self):
+        """
+        Returns the vector angle in degrees.
+
+        Returns:
+            Angle measured from the positive x-axis, in degrees.
+        """
         return math.degrees(self.radians)
 
     @property
     def radians(self):
+        """
+        Returns the vector angle in radians.
+
+        Returns:
+            Angle measured from the positive x-axis, in radians.
+        """
         return math.atan2(self.y, self.x)
 
     def with_x(self, value):
+        """
+        Returns a copy with a new x coordinate.
+
+        Args:
+            value: New x coordinate.
+
+        Returns:
+            A new `Vector` with updated x and the same y.
+        """
         return type(self)(value, self.y)
 
     def with_y(self, value):
+        """
+        Returns a copy with a new y coordinate.
+
+        Args:
+            value: New y coordinate.
+
+        Returns:
+            A new `Vector` with updated y and the same x.
+        """
         return type(self)(self.x, value)
 
     def with_magnitude(self, value):
+        """
+        Returns a copy scaled to the specified magnitude.
+
+        Args:
+            value: Target magnitude.
+
+        Returns:
+            A new `Vector` with the same direction and requested magnitude.
+
+        Raises:
+            ZeroDivisionError: If this vector has zero magnitude.
+        """
         return self * value / abs(self)
 
     def with_radians(self, value):
+        """
+        Returns a copy with a new angle in radians.
+
+        Args:
+            value: Target angle in radians.
+
+        Returns:
+            A new `Vector` with the same magnitude and updated angle.
+        """
         magnitude = abs(self)
         return type(self).polar(value, magnitude)
 
     def with_degrees(self, value):
+        """
+        Returns a copy with a new angle in degrees.
+
+        Args:
+            value: Target angle in degrees.
+
+        Returns:
+            A new `Vector` with the same magnitude and updated angle.
+        """
         radians = math.radians(value)
         magnitude = abs(self)
         return type(self).polar(radians, magnitude)

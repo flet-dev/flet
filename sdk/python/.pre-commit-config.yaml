@@ -1,12 +1,14 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.14.13
     hooks:
       # Run the linter.
       - id: ruff
         args: [ --fix ]
+        exclude: ^\.github/
       # Run the formatter.
       - id: ruff-format
+        exclude: ^\.github/
 
   - repo: https://github.com/aio-libs/sort-all
     rev: v1.3.0
@@ -14,7 +16,12 @@ repos:
       - id: sort-all
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.43.4
+    hooks:
+      - id: typos

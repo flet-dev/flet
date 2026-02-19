@@ -149,6 +149,16 @@ class Control extends ChangeNotifier {
     return backend.triggerControlEvent(this, eventName, data);
   }
 
+  /// Whether this control currently has a handler subscribed to [eventName].
+  ///
+  /// Accepts both `"event_name"` and `"on_event_name"` forms.
+  /// Internally this checks the boolean `on_<eventName>` property.
+  bool hasEventHandler(String eventName) {
+    final String propName =
+        eventName.startsWith("on_") ? eventName : "on_$eventName";
+    return get<bool>(propName, false)!;
+  }
+
   /// Triggers a control event without checking for subscribers.
   ///
   /// This method directly triggers the event for the control identified by its
@@ -206,14 +216,15 @@ class Control extends ChangeNotifier {
 
   bool update(Map<dynamic, dynamic> props, {bool shouldNotify = false}) {
     final changes = <String>[];
-    _mergeMaps(this, properties, props, changes, '');
-    if (changes.isNotEmpty) {
-      if (shouldNotify) {
-        notify();
+    final changedControls = <Control>[];
+    _mergeMaps(this, properties, props, changes, changedControls, '');
+    if (shouldNotify) {
+      for (var c in changedControls) {
+        c.notify();
       }
-      if (changes.any((prop) => _notifyParentProperties.contains(prop))) {
-        _parent?.target?.notify();
-      }
+    }
+    if (changes.any((prop) => _notifyParentProperties.contains(prop))) {
+      _parent?.target?.notify();
     }
     return changes.isNotEmpty;
   }
@@ -223,6 +234,7 @@ class Control extends ChangeNotifier {
     Map<dynamic, dynamic> dst,
     Map<dynamic, dynamic> src,
     List<String> changes,
+    List<Control> changedControls,
     String prefix,
   ) {
     for (var entry in src.entries) {
@@ -230,14 +242,19 @@ class Control extends ChangeNotifier {
       final fullKey = prefix.isEmpty ? key : '$prefix.$key';
 
       if (dst[key] is Map && entry.value is Map) {
-        _mergeMaps(parent, dst[key], entry.value, changes, fullKey);
+        _mergeMaps(
+            parent, dst[key], entry.value, changes, changedControls, fullKey);
       } else if (dst[key] is Control &&
           entry.value is Map &&
           (dst[key] as Control).id == entry.value["_i"]) {
-        _mergeMaps(parent, dst[key].properties, entry.value, changes, fullKey);
-      } else if (dst[key] != entry.value) {
+        _mergeMaps(dst[key], dst[key].properties, entry.value, changes,
+            changedControls, fullKey);
+      } else if (dst[key] != entry.value && !["_i", "_c"].contains(key)) {
         dst[key] = _transformIfControl(entry.value, parent, backend);
         changes.add(fullKey);
+        if (parent != null && !changedControls.any((c) => c.id == parent.id)) {
+          changedControls.add(parent);
+        }
       }
     }
   }
@@ -364,35 +381,42 @@ class Control extends ChangeNotifier {
         var node = getPatchTarget(op[1]);
         var index = op[2];
         var value = op[3];
-        if (node.obj is! List) {
-          throw Exception("Add operation can be applied to lists only: $op");
+        if (node.obj is Map) {
+          node.obj[index] = _transformIfControl(value, node.control, backend);
+        } else if (node.obj is List) {
+          node.obj
+              .insert(index, _transformIfControl(value, node.control, backend));
+        } else {
+          throw Exception("Add operation can be applied to lists or maps: $op");
         }
-        node.obj
-            .insert(index, _transformIfControl(value, node.control, backend));
-        if (shouldNotify) {
-          node.control.notify();
-        }
+        if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.remove) {
         // REMOVE
         var node = getPatchTarget(op[1]);
         var index = op[2];
-        if (node.obj is! List) {
-          throw Exception("Remove operation can be applied to lists only: $op");
+        if (node.obj is List) {
+          node.obj.removeAt(index);
+        } else if (node.obj is Map) {
+          node.obj.remove(index);
+        } else {
+          throw Exception(
+              "Remove operation can be applied to lists or maps: $op");
         }
-        node.obj.removeAt(index);
-        if (shouldNotify) {
-          node.control.notify();
-        }
+        if (shouldNotify) node.control.notify();
       } else if (opType == OperationType.move) {
         // MOVE
         var fromNode = getPatchTarget(op[1]);
         var fromIndex = op[2];
         var toNode = getPatchTarget(op[3]);
         var toIndex = op[4];
-        if (fromNode.obj is! List || toNode.obj is! List) {
-          throw Exception("Move operation can be applied to lists only: $op");
+        if (fromNode.obj is List && toNode.obj is List) {
+          toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
+        } else if (fromNode.obj is Map && toNode.obj is Map) {
+          toNode.obj[toIndex] = fromNode.obj.remove(fromIndex);
+        } else {
+          throw Exception(
+              "Move operation can only be applied to lists or maps: $op");
         }
-        toNode.obj.insert(toIndex, fromNode.obj.removeAt(fromIndex));
         if (shouldNotify) {
           if (fromNode.control.id != toNode.control.id) {
             fromNode.control.notify();

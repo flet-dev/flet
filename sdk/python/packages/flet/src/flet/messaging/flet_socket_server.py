@@ -1,12 +1,14 @@
 import asyncio
 import contextlib
+import inspect
 import logging
 import os
 import tempfile
 import traceback
+from collections.abc import Awaitable
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 import msgpack
 
@@ -27,28 +29,42 @@ from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
+if TYPE_CHECKING:
+    from flet.app import AppCallable
+
 logger = logging.getLogger("flet")
 transport_log = logging.getLogger("flet_transport")
 
 
 class FletSocketServer(Connection):
+    """
+    Socket-based transport for Flet backend messaging.
+
+    This connection accepts a single active client at a time over TCP or Unix domain
+    socket (UDS), decodes protocol frames, manages session lifecycle, and forwards
+    outbound messages through an internal send queue.
+    """
+
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
-        on_session_created=None,
-        before_main=None,
-        blocking=False,
+        on_session_created: Optional[Callable[[Session], Awaitable[Any]]] = None,
+        before_main: Optional["AppCallable"] = None,
+        blocking: bool = False,
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
         self.__server = None
-        self.__send_loop_task = None
-        self.__receive_loop_task = None
-        self.__connected = None
+        self.__send_loop_task: asyncio.Task | None = None
+        self.__receive_loop_task: asyncio.Task | None = None
+        self.__connected: bool | None = None
+        self.__writer: asyncio.StreamWriter | None = None
+        self.__connection_lock = asyncio.Lock()
+        self.__connection_token = 0
         self.session = None
-        self.__send_queue = asyncio.Queue()
+        self.__send_queue: asyncio.Queue[bytes] | None = None
         self.__port = port
         self.__uds_path = uds_path
         self.__on_session_created = on_session_created
@@ -60,9 +76,21 @@ class FletSocketServer(Connection):
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)
 
     async def start(self):
+        """
+        Starts listening for client connections.
+
+        Transport selection:
+        - TCP on Windows or when `port > 0`;
+        - UDS on non-Windows when `port == 0`.
+
+        When `blocking=True`, this method waits on `serve_forever()`. Otherwise it
+        schedules serving in a background task and returns.
+        """
         self.__connected = False
         self.__receive_loop_task = None
         self.__send_loop_task = None
+        self.__writer = None
+        self.__send_queue = None
         if is_windows() or self.__port > 0:
             # TCP
             host = "localhost"
@@ -95,30 +123,138 @@ class FletSocketServer(Connection):
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ):
-        if not self.__connected:
+        """
+        Handles an incoming socket connection.
+
+        Only one active connection is allowed. A new connection replaces any existing
+        one, starts paired receive/send loops, and remains active until one loop
+        completes or the connection is superseded.
+
+        Args:
+            reader: Socket stream reader.
+            writer: Socket stream writer.
+        """
+        async with self.__connection_lock:
+            await self.__terminate_active_connection_locked(reason="replaced")
+
             self.__connected = True
-            logger.debug("Connected new TCP client")
+            self.__connection_token += 1
+            connection_token = self.__connection_token
+            self.__writer = writer
+            send_queue: asyncio.Queue[bytes] = asyncio.Queue()
+            self.__send_queue = send_queue
 
-            self.__receive_loop_task = asyncio.create_task(self.__receive_loop(reader))
-            self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
+            logger.debug("Connected new socket client")
 
-            try:
-                done, pending = await asyncio.wait(
-                    [self.__receive_loop_task, self.__send_loop_task],
-                    return_when=asyncio.FIRST_COMPLETED,
-                )
+            receive_task = asyncio.create_task(
+                self.__receive_loop(reader, connection_token)
+            )
+            send_task = asyncio.create_task(
+                self.__send_loop(writer, send_queue, connection_token)
+            )
+            self.__receive_loop_task = receive_task
+            self.__send_loop_task = send_task
 
-                for task in pending:
-                    task.cancel()
-                    with contextlib.suppress(asyncio.CancelledError):
-                        await task
+        try:
+            _, pending = await asyncio.wait(
+                [receive_task, send_task],
+                return_when=asyncio.FIRST_COMPLETED,
+            )
 
-            finally:
+            for task in pending:
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
+        finally:
+            terminated_active = False
+            async with self.__connection_lock:
+                if (
+                    self.__writer is writer
+                    and self.__connection_token == connection_token
+                ):
+                    await self.__terminate_active_connection_locked(
+                        reason="client_disconnected"
+                    )
+                    terminated_active = True
+
+            if not terminated_active:
                 writer.close()
-                await writer.wait_closed()
-                logger.debug("Connection writer closed.")
+                with contextlib.suppress(Exception):
+                    await writer.wait_closed()
+            logger.debug("Connection writer closed.")
 
-    async def __receive_loop(self, reader: asyncio.StreamReader):
+    async def __terminate_active_connection_locked(self, reason: str) -> None:
+        """
+        Terminates the currently active connection and related tasks.
+
+        Locking contract:
+            Caller must hold `self.__connection_lock`.
+
+        Actions performed:
+        - closes current session (if present);
+        - cancels receive/send and running handler tasks;
+        - closes active writer and clears connection state.
+
+        Args:
+            reason: Diagnostic reason used in debug logs.
+        """
+        if not self.__connected and self.__writer is None:
+            logger.debug("No active connection to terminate.")
+            return
+
+        logger.debug(f"Terminating existing connection ({reason}).")
+
+        session_to_close = self.session
+        self.session = None
+
+        if session_to_close is not None:
+            try:
+                session_to_close.close()
+            except Exception:
+                logger.debug("Error closing session.", exc_info=True)
+
+        tasks_to_cancel: list[asyncio.Task] = []
+        for task in [
+            self.__receive_loop_task,
+            self.__send_loop_task,
+            *self.__running_tasks,
+        ]:
+            if task and not task.done():
+                tasks_to_cancel.append(task)
+
+        if tasks_to_cancel:
+            for task in tasks_to_cancel:
+                task.cancel()
+            with contextlib.suppress(Exception):
+                await asyncio.gather(*tasks_to_cancel, return_exceptions=True)
+
+        self.__running_tasks.clear()
+        self.__receive_loop_task = None
+        self.__send_loop_task = None
+
+        old_writer = self.__writer
+        self.__writer = None
+        self.__send_queue = None
+        self.__connected = False
+
+        if old_writer is not None:
+            old_writer.close()
+            with contextlib.suppress(Exception):
+                await old_writer.wait_closed()
+
+    async def __receive_loop(self, reader: asyncio.StreamReader, connection_token: int):
+        """
+        Reads and dispatches inbound MsgPack frames from the socket.
+
+        The loop exits when:
+        - socket EOF is reached;
+        - the connection token no longer matches (connection replaced);
+        - the task is cancelled.
+
+        Args:
+            reader: Socket stream reader to consume bytes from.
+            connection_token: Token identifying the connection generation.
+        """
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         try:
             while True:
@@ -127,6 +263,8 @@ class FletSocketServer(Connection):
                     break
                 unpacker.feed(buf)
                 for msg in unpacker:
+                    if self.__connection_token != connection_token:
+                        return
                     await self.__on_message(msg)
         except asyncio.CancelledError:
             logger.debug("Receive loop cancelled.")
@@ -135,12 +273,28 @@ class FletSocketServer(Connection):
         finally:
             logger.debug("Receive loop exiting.")
 
-    async def __send_loop(self, writer: asyncio.StreamWriter):
+    async def __send_loop(
+        self,
+        writer: asyncio.StreamWriter,
+        send_queue: asyncio.Queue[bytes],
+        connection_token: int,
+    ):
+        """
+        Sends outbound frames from the queue to the active socket writer.
+
+        The loop exits when the connection token changes (connection replaced) or
+        when cancelled.
+
+        Args:
+            writer: Socket writer used to send bytes.
+            send_queue: Queue of pre-encoded MsgPack frames.
+            connection_token: Token identifying the connection generation.
+        """
         try:
             while True:
-                message = await self.__send_queue.get()
-                if message is None:
-                    break  # Sentinel to exit
+                if self.__connection_token != connection_token:
+                    return
+                message = await send_queue.get()
                 writer.write(message)
                 await writer.drain()
         except asyncio.CancelledError:
@@ -151,6 +305,22 @@ class FletSocketServer(Connection):
             logger.debug("Send loop exiting.")
 
     async def __on_message(self, data: Any):
+        """
+        Processes one decoded protocol frame from the client.
+
+        Supported actions:
+        - `REGISTER_CLIENT`: create session, apply initial page patch (for new
+          sessions), run `before_main`, and send register response;
+        - `CONTROL_EVENT`: dispatch control event to session;
+        - `UPDATE_CONTROL_PROPS`: apply property patch to a control;
+        - `INVOKE_METHOD`: deliver invoke-method response back to session waiter.
+
+        Args:
+            data: Decoded frame in the form `[action_code, body]`.
+
+        Raises:
+            RuntimeError: If the action code is unknown.
+        """
         action = ClientAction(data[0])
         body = data[1]
         transport_log.debug(f"_on_message: {action} {body}")
@@ -167,7 +337,7 @@ class FletSocketServer(Connection):
 
             register_error = ""
             try:
-                if asyncio.iscoroutinefunction(self.__before_main):
+                if inspect.iscoroutinefunction(self.__before_main):
                     await self.__before_main(self.session.page)
                 elif callable(self.__before_main):
                     self.__before_main(self.session.page)
@@ -217,18 +387,34 @@ class FletSocketServer(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
+        """
+        Encodes and queues an outbound message for the active connection.
+
+        If no active send queue exists (no connected client), the message is dropped.
+
+        Args:
+            message: Protocol message to send.
+        """
         transport_log.debug(f"send_message: {message}")
         m = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
-        self.__send_queue.put_nowait(m)
+        if self.__send_queue is not None:
+            self.__send_queue.put_nowait(m)
 
     async def close(self):
+        """
+        Gracefully shuts down the socket server and transport resources.
+
+        This method terminates the active connection, stops the listening server,
+        shuts down the optional executor, cancels serving tasks, and removes a UDS
+        socket file when used.
+        """
         logger.debug("Closing connection...")
 
-        # Put a sentinel in send queue to unblock it
-        await self.__send_queue.put(None)
+        async with self.__connection_lock:
+            await self.__terminate_active_connection_locked(reason="close()")
 
         if self.__server:
             logger.debug("Shutting down TCP server...")
@@ -244,8 +430,6 @@ class FletSocketServer(Connection):
         tasks = [
             task
             for task in [
-                self.__receive_loop_task,
-                self.__send_loop_task,
                 self.__serve_task,
             ]
             if task

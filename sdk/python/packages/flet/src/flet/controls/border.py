@@ -19,6 +19,10 @@ __all__ = [
 
 
 class BorderSideStrokeAlign(float, Enum):
+    """
+    Defines where a border stroke is painted relative to the border path.
+    """
+
     INSIDE = -1.0
     """
     The border is drawn fully inside of the border path.
@@ -26,9 +30,8 @@ class BorderSideStrokeAlign(float, Enum):
 
     CENTER = 0.0
     """
-    The border is drawn on the center of the border path, with half of the
-    `BorderSide.width` on the inside, and the other half on the outside of
-    the path.
+    The border is drawn on the center of the border path, with half of the \
+    `BorderSide.width` on the inside, and the other half on the outside of the path.
     """
 
     OUTSIDE = 1.0
@@ -38,6 +41,10 @@ class BorderSideStrokeAlign(float, Enum):
 
 
 class BorderStyle(Enum):
+    """
+    Defines how a border side is rendered.
+    """
+
     NONE = "none"
     """Skip the border."""
 
@@ -78,8 +85,8 @@ class BorderSide:
 
     stroke_align: "BorderSideStrokeAlignValue" = BorderSideStrokeAlign.INSIDE
     """
-    The relative position of the stroke on a `BorderSide` in an
-    `OutlinedBorder` or `Border`.
+    The relative position of the stroke on a `BorderSide` in an `OutlinedBorder` or \
+    `Border`.
     """
 
     style: BorderStyle = BorderStyle.SOLID
@@ -87,7 +94,7 @@ class BorderSide:
     The style of this side of the border.
 
     Tip:
-        To omit a side, set `style` to [`BorderStyle.NONE`][flet.]. This skips
+        To omit a side, set [`style`][(c).] to [`BorderStyle.NONE`][flet.]. This skips
         painting the border, but the border still has a `width`.
     """
 
@@ -104,8 +111,9 @@ class BorderSide:
         """
         The amount of the stroke width that lies inside this `BorderSide`.
 
-        For example, this will return the `width` for a `stroke_align` of `-`1, half
-        the `width` for a `stroke_align` of `0`, and `0` for a `stroke_align` of `1`.
+        For example, this will return the [`width`][(c).] for a [`stroke_align`][(c).]
+        of `-`1, half the [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and `0`
+        for a `stroke_align` of `1`.
         """
         return self.width * (1 - (1 + self.stroke_align) / 2)
 
@@ -114,9 +122,9 @@ class BorderSide:
         """
         The amount of the stroke width that lies outside this `BorderSide`.
 
-        For example, this will return `0` for a `stroke_align` of `-1`, half the
-        `width` for a `stroke_align` of `0`, and the `width` for a
-        `stroke_align` of `1`.
+        For example, this will return `0` for a [`stroke_align`][(c).] of `-1`, half the
+        [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and the [`width`][(c).]
+        for a [`stroke_align`][(c).] of `1`.
         """
         return self.width * (1 + self.stroke_align) / 2
 
@@ -125,9 +133,9 @@ class BorderSide:
         """
         The offset of the stroke, taking into account the stroke alignment.
 
-        For example, this will return the negative `width` of the stroke
-        for a `stroke_align` of -1, 0 for a `stroke_align` of 0, and the
-        `width` for a `stroke_align` of -1.
+        For example, this will return the negative [`width`][(c).] of the stroke
+        for a [`stroke_align`][(c).] of -1, 0 for a [`stroke_align`][(c).] of 0, and the
+        [`width`][(c).] for a [`stroke_align`][(c).] of -1.
         """
         return self.width * self.stroke_align
 
@@ -266,8 +274,8 @@ class Border:
 
 @deprecated(
     reason="Use Border.all() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> Border:
@@ -277,8 +285,8 @@ def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> B
 
 @deprecated(
     reason="Use Border.symmetric() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def symmetric(
@@ -289,8 +297,8 @@ def symmetric(
 
 @deprecated(
     reason="Use Border.only() instead.",
-    version="0.70.0",
-    delete_version="0.73.0",
+    version="0.80.0",
+    delete_version="0.83.0",
     show_parentheses=True,
 )
 def only(
@@ -303,3 +311,9 @@ def only(
 
 
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
+"""Type alias for border stroke alignment values.
+
+Represents stroke alignment as either:
+- a [`BorderSideStrokeAlign`][flet.] enum value,
+- or a numeric alignment value.
+"""

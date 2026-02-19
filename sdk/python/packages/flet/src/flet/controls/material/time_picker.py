@@ -10,9 +10,10 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.dialog_control import DialogControl
-from flet.controls.material.icons import IconData
+from flet.controls.icon_data import IconData
 from flet.controls.types import (
     ColorValue,
+    Locale,
     Orientation,
 )
 
@@ -80,8 +81,8 @@ class TimePickerEntryMode(Enum):
 @dataclass
 class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """
-    Represents the event triggered when the
-    entry mode of a [`TimePicker`][flet.] changes.
+    Represents the event triggered when the entry mode of a [`TimePicker`][flet.] \
+    changes.
     """
 
     entry_mode: TimePickerEntryMode
@@ -114,6 +115,19 @@ class TimePicker(DialogControl):
     The selected time that this picker should display.
 
     The default value is equal to the current time.
+    """
+
+    locale: Optional[Locale] = None
+    """
+    The locale for this time picker dialog. It is intended for (rare) cases where this \
+    dialog should be localized differently from the rest of the page.
+
+    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    but does not participate in page-level locale resolution.
+
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
     """
 
     modal: bool = False
@@ -166,8 +180,8 @@ class TimePicker(DialogControl):
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the input text field if the input is not a
-    valid hour/minute.
+    The error message displayed below the input text field if the input is not a valid \
+    hour/minute.
 
     The default value is `"Enter a valid time"`.
     """
@@ -187,24 +201,24 @@ class TimePicker(DialogControl):
 
     switch_to_timer_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when
-    [`entry_mode`][(c).] is [`TimePickerEntryMode.INPUT`][flet.].
+    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
+    is [`TimePickerEntryMode.INPUT`][flet.].
 
     Clicking on this icon changes the [`entry_mode`][(c).] to
     [`TimePickerEntryMode.DIAL`][flet.].
 
-    If `None`, defaults to [`Icons.ACCESS_TIME`][flet.].
+    If `None`, defaults to `Icons.ACCESS_TIME`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when
-    [`entry_mode`][(c).] is [`TimePickerEntryMode.DIAL`][flet.].
+    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
+    is [`TimePickerEntryMode.DIAL`][flet.].
 
     Clicking on icon changes the [`entry_mode`][(c).] to
     [`TimePickerEntryMode.INPUT`][flet.].
 
-    If `None`, defaults to [`Icons.KEYBOARD_OUTLINED`][flet.].
+    If `None`, defaults to `Icons.KEYBOARD_OUTLINED`.
     """
 
     on_change: Optional[ControlEventHandler["TimePicker"]] = None

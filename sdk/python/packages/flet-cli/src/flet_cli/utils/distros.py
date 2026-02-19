@@ -25,9 +25,14 @@ def download_with_progress(url, dest_path, progress: Optional[Progress] = None):
 
 
 def extract_with_progress(
-    archive_path, extract_to, progress: Optional[Progress] = None
+    archive_path,
+    extract_to,
+    progress: Optional[Progress] = None,
 ):
-    """Extracts an archive with a progress bar and preserves file attributes, including symbolic links."""
+    """
+    Extracts an archive with a progress bar and preserves file attributes,
+    including symbolic links.
+    """
     if archive_path.endswith(".zip"):
         with zipfile.ZipFile(archive_path, "r") as archive:
             total_files = len(archive.namelist())

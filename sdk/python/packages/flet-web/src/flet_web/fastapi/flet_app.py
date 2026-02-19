@@ -12,6 +12,7 @@ import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
 
 import flet_web.fastapi as flet_fastapi
+from flet.app import AppCallable
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
@@ -41,34 +42,36 @@ DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
 
 
 class FletApp(Connection):
+    """
+    Handle Flet app WebSocket connections.
+
+    Args:
+        loop: `asyncio` event loop (`asyncio.get_running_loop()`).
+        executor: Thread pool executor (`app_manager.executor`).
+        main: Application entry point - an async method called for newly
+            connected user. Handler coroutine must have
+            1 parameter of instance `Page`.
+        before_main: Called before `main`.
+        session_timeout_seconds: Session lifetime, in seconds,
+            after user disconnected.
+        oauth_state_timeout_seconds: OAuth state lifetime, in seconds, which
+            is a maximum allowed time between starting OAuth flow
+            and redirecting to OAuth callback URL.
+        upload_endpoint_path: Absolute URL of upload endpoint, e.g. `/upload`.
+        secret_key: Secret key to sign upload requests.
+    """
+
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,
         executor: ThreadPoolExecutor,
-        main,
-        before_main,
+        main: AppCallable,
+        before_main: Optional[AppCallable],
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
     ):
-        """
-        Handle Flet app WebSocket connections.
-
-        Parameters:
-
-        * `session_handler` (Coroutine) - application entry point - an async method
-           called for newly connected user. Handler coroutine must have
-           1 parameter: `page` - `Page` instance.
-        * `session_timeout_seconds` (int, optional) - session lifetime, in seconds,
-           after user disconnected.
-        * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime,
-           in seconds, which is a maximum allowed time between starting OAuth flow
-           and redirecting to OAuth callback URL.
-        * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
-           e.g. `/upload`.
-        * `secret_key` (str, optional) - secret key to sign upload requests.
-        """
         super().__init__()
         self.__id = random_string(8)
         logger.info(f"New FletApp: {self.__id}")
@@ -95,16 +98,15 @@ class FletApp(Connection):
 
         app_id = self.__id
         weakref.finalize(
-            self, lambda: logger.debug(f"FletApp was garbage collected: {app_id}")
+            self, lambda: logger.info(f"FletApp was garbage collected: {app_id}")
         )
 
     async def handle(self, websocket: WebSocket):
         """
         Handle WebSocket connection.
 
-        Parameters:
-
-        * `websocket` (WebSocket) - Websocket instance.
+        Args:
+            websocket: WebSocket instance.
         """
         self.__websocket = websocket
 
@@ -136,6 +138,14 @@ class FletApp(Connection):
         )
 
     async def __on_session_created(self):
+        """
+        Run app entry handler for a newly created session.
+
+        Initializes page context, executes `main` in supported callable forms
+        (coroutine, generator, async generator, sync function), and performs
+        post-event updates.
+        """
+
         assert self.__session
         logger.info(f"Start session: {self.__session.id}")
         try:
@@ -143,7 +153,7 @@ class FletApp(Connection):
             _context_page.set(self.__session.page)
             context.reset_auto_update()
 
-            if asyncio.iscoroutinefunction(self.__main):
+            if inspect.iscoroutinefunction(self.__main):
                 await self.__main(self.__session.page)
 
             elif inspect.isasyncgenfunction(self.__main):
@@ -177,6 +187,13 @@ class FletApp(Connection):
                 self.__session.error(str(e))
 
     async def __send_loop(self):
+        """
+        Drain outbound message queue and forward packed frames to WebSocket.
+
+        The loop stops when `None` sentinel is received, then clears transport
+        references.
+        """
+
         assert self.__websocket
         assert self.__send_queue
         while True:
@@ -194,6 +211,13 @@ class FletApp(Connection):
         self.__send_queue = None
 
     async def __receive_loop(self):
+        """
+        Receive binary frames from WebSocket and dispatch decoded client messages.
+
+        On disconnect/error, terminates send loop via queue sentinel when a
+        session is active.
+        """
+
         assert self.__websocket
         try:
             while True:
@@ -209,6 +233,17 @@ class FletApp(Connection):
                 await self.__send_queue.put(None)
 
     async def __on_message(self, data: Any):
+        """
+        Handle one decoded client message and dispatch
+        by `ClientAction`.
+
+        Args:
+            data: Decoded message payload from msgpack transport.
+
+        Raises:
+            RuntimeError: If message action is unknown.
+        """
+
         action = ClientAction(data[0])
         body = data[1]
         transport_log.debug(f"_on_message: {action} {body}")
@@ -260,7 +295,7 @@ class FletApp(Connection):
 
                 # run before_main
                 try:
-                    if asyncio.iscoroutinefunction(self.__before_main):
+                    if inspect.iscoroutinefunction(self.__before_main):
                         await self.__before_main(self.__session.page)
                     elif callable(self.__before_main):
                         self.__before_main(self.__session.page)
@@ -341,6 +376,13 @@ class FletApp(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
+        """
+        Serialize and enqueue a server message for transport to the client.
+
+        Args:
+            message: Outbound protocol message.
+        """
+
         transport_log.debug(f"send_message: {message}")
         m = msgpack.packb(
             [message.action, message.body],
@@ -349,6 +391,20 @@ class FletApp(Connection):
         self.__send_queue.put_nowait(m)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
+        """
+        Build signed upload URL for a file.
+
+        Args:
+            file_name: File name to be uploaded.
+            expires: URL lifetime in seconds.
+
+        Returns:
+            Signed relative upload URL.
+
+        Raises:
+            RuntimeError: If upload endpoint is not configured.
+        """
+
         if not self.__upload_endpoint_path:
             raise RuntimeError("upload_path should be specified to enable uploads")
         return build_upload_url(
@@ -359,6 +415,14 @@ class FletApp(Connection):
         )
 
     def oauth_authorize(self, attrs: dict[str, Any]):
+        """
+        Persist OAuth state metadata for a pending authorization flow.
+
+        Args:
+            attrs: OAuth attributes payload containing `state` and optional
+                completion page data.
+        """
+
         state_id = attrs["state"]
         state = OAuthState(
             session_id=self.__get_unique_session_id(self.__session.id),
@@ -370,6 +434,16 @@ class FletApp(Connection):
         app_manager.store_state(state_id, state)
 
     def __get_unique_session_id(self, session_id: str):
+        """
+        Compose a stable unique session key scoped to page and client identity.
+
+        Args:
+            session_id: Session identifier generated for current client.
+
+        Returns:
+            Unique session key combining page name, session ID, and client hash.
+        """
+
         ip = self.__client_ip
         if ip in ["127.0.0.1", "::1"]:
             ip = ""
@@ -377,5 +451,9 @@ class FletApp(Connection):
         return f"{self.page_name}_{session_id}_{client_hash}"
 
     def dispose(self):
+        """
+        Release app-level session reference during teardown.
+        """
+
         logger.info(f"Disposing FletApp: {self.__id}")
         self.__session = None

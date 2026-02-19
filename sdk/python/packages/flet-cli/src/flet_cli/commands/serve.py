@@ -13,10 +13,18 @@ console = Console(log_path=False)
 
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
+    """
+    Static-file request handler that injects cross-origin isolation headers.
+    """
+
     def __init__(self, *args, directory=None, **kwargs):
         super().__init__(*args, directory=directory, **kwargs)
 
     def end_headers(self):
+        """
+        Append CORS/COOP/COEP headers before finalizing HTTP response headers.
+        """
+
         self.send_header("Cross-Origin-Opener-Policy", "same-origin")
         self.send_header("Cross-Origin-Embedder-Policy", "require-corp")
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -30,11 +38,18 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line arguments for the local static file server.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "web_root",
             type=str,
             nargs="?",
-            help="Directory to serve (default: ./build/web)",
+            help="Directory to serve",
             default="./build/web",
         )
         parser.add_argument(
@@ -43,10 +58,17 @@ class Command(BaseCommand):
             type=int,
             default=8000,
             help="Port number to serve the files on. Use this to customize the port if "
-            "the default is already in use or needs to be changed (default: 8000)",
+            "the default is already in use or needs to be changed",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Serve files from the selected directory on a local HTTP port.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         directory = Path(options.web_root).resolve()
         if not directory.is_dir():
             console.print(
@@ -56,6 +78,10 @@ class Command(BaseCommand):
             exit(1)
 
         def handler(*args, **kwargs):
+            """
+            Factory that binds [`CustomHandler`][(m).] to `directory`.
+            """
+
             return CustomHandler(
                 *args,
                 directory=str(directory),
@@ -65,7 +91,8 @@ class Command(BaseCommand):
         try:
             with socketserver.TCPServer(("", options.port), handler) as httpd:
                 console.print(
-                    f"Serving [green]{directory}[/green] at [cyan]http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
+                    f"Serving [green]{directory}[/green] at [cyan]"
+                    f"http://localhost:{options.port}[/cyan] (Press Ctrl+C to stop)\n"
                 )
                 httpd.serve_forever()
         except KeyboardInterrupt:

@@ -20,6 +20,13 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     ListView is the most commonly used scrolling control. It displays its children one
     after another in the scroll direction. In the cross axis, the children are required
     to fill the ListView.
+
+    ```python
+    ft.ListView(
+        controls=[ft.Text(f"Item {i}") for i in range(1, 6)],
+    )
+    ```
+
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -52,8 +59,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     item_extent: Optional[Number] = None
     """
-    A fixed height or width (when [`horizontal`][(c).] is `True`)
-    of an item to optimize rendering.
+    A fixed height or width (when [`horizontal`][(c).] is `True`) of an item to \
+    optimize rendering.
 
     Note:
         This property has effect only when [`build_controls_on_demand`][(c).]
@@ -69,8 +76,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     prototype_item: Optional[Control] = None
     """
-    A control to be used as a "prototype" for all items,
-    i.e. their `height` or `width` will be the same as the `prototype_item`.
+    A control to be used as a "prototype" for all items, i.e. their `height` or \
+    `width` will be the same as the `prototype_item`.
 
     Note:
         This property has effect only when [`build_controls_on_demand`][(c).]
@@ -99,9 +106,9 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     cache_extent: Optional[Number] = None
     """
-    Items that fall in the cache area (before or after the visible area that are about
-    to become visible when the user scrolls) are laid out even though they are not
-    yet visible on screen.
+    Items that fall in the cache area (before or after the visible area that are about \
+    to become visible when the user scrolls) are laid out even though they are not yet \
+    visible on screen.
 
     The `cache_extent` describes how many pixels the cache area extends before the
     leading edge and after the trailing edge of the viewport.

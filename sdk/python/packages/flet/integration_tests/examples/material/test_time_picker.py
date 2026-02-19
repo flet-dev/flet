@@ -15,7 +15,6 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(600, 400)
     flet_app_function.page.update()
-    await flet_app_function.tester.pump_and_settle()
 
     flet_app_function.page.show_dialog(
         ft.TimePicker(
@@ -43,7 +42,6 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(600, 400)
     flet_app_function.page.update()
-    await flet_app_function.tester.pump_and_settle()
 
     # open picker
     await flet_app_function.tester.tap(
@@ -80,7 +78,7 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
         )
 
     async def _settle():
-        await flet_app_function.tester.pump_and_settle()
+        await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
 
     async def _open_picker():
         await flet_app_function.tester.tap(

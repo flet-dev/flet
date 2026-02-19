@@ -26,7 +26,6 @@ class SearchBarControl extends StatefulWidget {
 class _SearchBarControlState extends State<SearchBarControl> {
   late final SearchController _controller;
 
-  bool _focused = false;
   TextCapitalization? _textCapitalization;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
@@ -43,9 +42,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
   }
 
   void _onFocusChange() {
-    setState(() {
-      _focused = _focusNode.hasFocus;
-    });
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 

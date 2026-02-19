@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 import traceback
 import weakref
@@ -30,6 +31,14 @@ __all__ = ["Session"]
 
 
 class Session:
+    """
+    Represents a server-side Flet session.
+
+    A session owns the root [`Page`][flet.], tracks mounted controls, dispatches
+    control events, synchronizes UI patches with the client connection, and coordinates
+    deferred updates/effects.
+    """
+
     def __init__(self, conn: Connection):
         self.__conn = conn
         self.__send_buffer: list[ClientMessage] = []
@@ -47,42 +56,92 @@ class Session:
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
         self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
+        self.__updates_task: Optional[asyncio.Task] = None
         self.__closed = False
 
         session_id = self.__id
         weakref.finalize(
-            self, lambda: logger.debug(f"Session was garbage collected: {session_id}")
+            self, lambda: logger.info(f"Session was garbage collected: {session_id}")
         )
 
     @property
     def connection(self) -> Connection:
+        """
+        Returns the current messaging connection for this session.
+
+        Returns:
+            Active `Connection` instance. It may be `None` after
+            [`disconnect()`][(c).disconnect] until a reconnect occurs.
+        """
         return self.__conn
 
     @property
     def id(self):
+        """
+        Returns the unique session identifier.
+
+        Returns:
+            Randomly generated session ID string.
+        """
         return self.__id
 
     @property
     def expires_at(self) -> Optional[datetime]:
+        """
+        Returns the UTC expiration timestamp for a disconnected session.
+
+        Returns:
+            Expiration time in UTC, or `None` when the session is currently connected.
+        """
         return self.__expires_at
 
     @property
     def index(self):
+        """
+        Returns the live control index for this session.
+
+        Returns:
+            Weak mapping of control IDs to mounted [`BaseControl`][flet.] instances.
+        """
         return self.__index
 
     @property
     def page(self):
+        """
+        Returns the root [`Page`][flet.] associated with this session.
+        """
         return self.__page
 
     @property
     def pubsub_client(self) -> PubSubClient:
+        """
+        Returns the session-scoped pub/sub client.
+
+        Returns:
+            `PubSubClient` bound to this session ID.
+        """
         return self.__pubsub_client
 
     @property
     def store(self) -> SessionStore:
+        """
+        Returns the key-value store associated with this session.
+
+        Returns:
+            `SessionStore` instance for session state persistence.
+        """
         return self.__store
 
     async def connect(self, conn: Connection) -> None:
+        """
+        Attaches or re-attaches this session to an active connection.
+
+        This method resets expiration state, flushes buffered outbound messages, and
+        dispatches the page-level `connect` event.
+
+        Args:
+            conn: Active connection to bind to this session.
+        """
         logger.debug(f"Connect session: {self.id}")
         _context_page.set(self.__page)
         self.__conn = conn
@@ -93,18 +152,42 @@ class Session:
         await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
+        """
+        Marks the session disconnected and schedules its expiration window.
+
+        The current connection is disposed, `expires_at` is set to now plus
+        `session_timeout_seconds`, and the page-level `disconnect` event is dispatched.
+
+        Args:
+            session_timeout_seconds: Grace period before the disconnected session is
+                considered expired.
+        """
         logger.debug(f"Disconnect session: {self.id}")
         self.__expires_at = datetime.now(timezone.utc) + timedelta(
             seconds=session_timeout_seconds
         )
+        self.__send_buffer.clear()
+        self.__pending_updates.clear()
+        self.__pending_effects.clear()
+        self.__updates_ready.clear()
         if self.__conn:
             self.__conn.dispose()
             self.__conn = None
         await self.dispatch_event(self.__page._i, "disconnect", None)
 
     def close(self):
+        """
+        Closes the session and stops background scheduling work.
+
+        This method marks the session as closed, cancels the updates scheduler,
+        unsubscribes pub/sub handlers, resolves pending invoke-method calls with
+        a closure error, and dispatches the page-level `close` event.
+        """
         logger.debug(f"Closing expired session: {self.id}")
         self.__closed = True
+        self.__updates_ready.set()
+        if self.__updates_task and not self.__updates_task.done():
+            self.__updates_task.cancel()
         self.__pubsub_client.unsubscribe_all()
         self.__cancel_method_calls()
         asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
@@ -117,6 +200,20 @@ class Session:
         path: Optional[list[Any]] = None,
         frozen: bool = False,
     ):
+        """
+        Computes and sends a patch for a control subtree.
+
+        The patch is calculated from `prev_control` to `control`, sent to the client,
+        and then applied to the local session index by unmounting removed controls and
+        mounting added controls.
+
+        Args:
+            control: Current control state to patch from.
+            prev_control: Previous control snapshot. If `None`, `control` is used.
+            parent: Parent control context used by patch generation.
+            path: Tree path used by patch generation.
+            frozen: Whether object diff should treat controls as frozen.
+        """
         patch, added_controls, removed_controls = self.__get_update_control_patch(
             control=control,
             prev_control=prev_control or control,
@@ -152,13 +249,34 @@ class Session:
                 added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
+        """
+        Applies a partial property patch to a control in the session index.
+
+        Args:
+            control_id: Target control ID.
+            patch: Property/value mapping to apply.
+        """
         if control := self.__index.get(control_id):
             patch_dataclass(control, patch)
 
     def apply_page_patch(self, patch: dict[str, Any]):
+        """
+        Applies a partial patch to the root page control.
+
+        Args:
+            patch: Property/value mapping to apply to the page.
+        """
         self.apply_patch(self.__page._i, patch)
 
     def get_page_patch(self):
+        """
+        Generates a serialized patch payload for the root page.
+
+        During patch generation, newly discovered controls are indexed and mounted.
+
+        Returns:
+            Serialized page patch payload suitable for register-client responses.
+        """
         patch, added_controls, _ = self.__get_update_control_patch(
             self.__page, prev_control=None
         )
@@ -184,6 +302,14 @@ class Session:
         event_name: str,
         event_data: Any,
     ):
+        """
+        Dispatches an event to a control by ID.
+
+        Args:
+            control_id: Target control ID.
+            event_name: Event name without the `on_` prefix.
+            event_data: Raw event payload.
+        """
         control = self.__index.get(control_id)
         if not control:
             logger.debug(f"Control with ID {control_id} not found.")
@@ -202,6 +328,22 @@ class Session:
         args: Any,
         timeout: Optional[float] = None,
     ):
+        """
+        Invokes a client-side control method and waits for the response.
+
+        Args:
+            control_id: Target control ID.
+            method_name: Method name to invoke on the client.
+            args: Method arguments payload.
+            timeout: Optional timeout in seconds.
+
+        Returns:
+            Result returned by the client-side method invocation.
+
+        Raises:
+            TimeoutError: If no invoke-method response is received before timeout.
+            RuntimeError: If the client reports an invocation error.
+        """
         call_id = random_string(10)
 
         # register callback
@@ -235,6 +377,18 @@ class Session:
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
     ):
+        """
+        Stores and signals completion of a pending invoke-method request.
+
+        Args:
+            control_id: Control ID included in the response.
+            call_id: Invoke-method call ID.
+            result: Returned result payload.
+            error: Optional error message returned by the client.
+
+        Raises:
+            RuntimeError: If the referenced control is not registered in the session.
+        """
         if control_id in self.__index:
             evt = self.__method_calls.pop(call_id, None)
             if evt is None:
@@ -248,19 +402,40 @@ class Session:
             )
 
     def __cancel_method_calls(self):
+        """
+        Resolves all pending invoke-method waits with a session-closed error.
+        """
         for evt in list(self.__method_calls.values()):
             self.__method_call_results[evt] = (None, "Session closed")
             evt.set()
 
     async def after_event(self, control: BaseControl | None):
+        """
+        Runs post-event housekeeping operations.
+
+        This currently performs optional auto-update behavior and unregisters
+        unreferenced page services.
+
+        Args:
+            control: Control that handled the event, or `None`.
+        """
         # call auto-update
         if context.auto_update_enabled():
             await self.__auto_update(control)
 
         # unregister unreferenced services
-        self.page._user_services.unregister_services()
+        self.page._services.unregister_services()
 
     async def __auto_update(self, control: BaseControl | None):
+        """
+        Performs auto-update on the nearest eligible isolated ancestor.
+
+        Traverses parent controls until it finds an isolated control that is not
+        frozen and an active connection exists, then calls `update()` on that control.
+
+        Args:
+            control: Starting control for parent traversal.
+        """
         while control:
             if (
                 control.is_isolated()
@@ -272,13 +447,29 @@ class Session:
             control = control.parent
 
     def error(self, message: str):
+        """
+        Sends a session-crashed message to the connected client.
+
+        Args:
+            message: Error message to report.
+        """
         self.__send_message(
             ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
 
     def __send_message(self, message: ClientMessage):
+        """
+        Sends a message immediately or buffers it until reconnection.
+
+        Args:
+            message: Outbound client message.
+        """
         if self.__conn:
             self.__conn.send_message(message)
+        elif self.__expires_at is not None:
+            # Session is disconnected and waiting for eviction/reconnect.
+            # Drop incremental traffic to avoid unbounded buffering.
+            return
         else:
             self.__send_buffer.append(message)
 
@@ -290,6 +481,19 @@ class Session:
         path: Optional[list[Any]] = None,
         frozen: bool = False,
     ):
+        """
+        Computes a serialized object patch and control mount/unmount deltas.
+
+        Args:
+            control: Current control state.
+            prev_control: Previous control state.
+            parent: Parent control context for diff generation.
+            path: Tree path for nested patch generation.
+            frozen: Whether diff generation should treat controls as frozen.
+
+        Returns:
+            Tuple of `(patch_message, added_controls, removed_controls)`.
+        """
         # start_time = datetime.now()
 
         # calculate patch
@@ -314,53 +518,87 @@ class Session:
         return patch.to_message(), added_controls, removed_controls
 
     def schedule_update(self, control: BaseControl):
+        """
+        Queues a control for update by the background scheduler.
+
+        Args:
+            control: Control to update.
+        """
         logger.debug("Schedule_update(%s)", control)
+        if self.__conn is None and self.__expires_at is not None:
+            return
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
     def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
+        """
+        Queues an effect hook setup/cleanup operation for scheduler execution.
+
+        Args:
+            hook: Effect hook to process.
+            is_cleanup: `True` to run cleanup, `False` to run setup.
+        """
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
+        if self.__conn is None and self.__expires_at is not None:
+            return
         self.__pending_effects.append((weakref.ref(hook), is_cleanup))
         self.__updates_ready.set()
 
     def start_updates_scheduler(self):
+        """
+        Starts the deferred updates/effects scheduler task if not already running.
+        """
         logger.debug(f"Starting updates scheduler: {self.id}")
-        asyncio.create_task(self.__updates_scheduler())
+        if self.__updates_task and not self.__updates_task.done():
+            return
+        self.__updates_task = asyncio.create_task(self.__updates_scheduler())
 
     async def __updates_scheduler(self):
-        while not self.__closed:
-            await self.__updates_ready.wait()
-            self.__updates_ready.clear()
+        """
+        Background loop that drains queued updates and effect operations.
 
-            # Process pending updates
-            for control in self.__pending_updates:
-                control.update()
+        The scheduler waits for work signals, updates pending controls, then executes
+        pending effect hook setup/cleanup callbacks. Errors inside effect processing
+        are reported to the client via [`error()`][(c).error].
+        """
+        try:
+            while not self.__closed:
+                await self.__updates_ready.wait()
+                self.__updates_ready.clear()
 
-            self.__pending_updates.clear()
+                # Process pending updates
+                pending_updates = list(self.__pending_updates)
+                self.__pending_updates.clear()
 
-            # Process pending effects
-            for effect in self.__pending_effects:
-                try:
-                    hook = effect[0]()
-                    is_cleanup = effect[1]
-                    # print(f"**** Running effect: {hook} {is_cleanup}")
-                    if hook and hook.setup and not is_cleanup:
-                        hook.cancel()
-                        res = None
-                        if asyncio.iscoroutinefunction(hook.setup):
-                            hook._setup_task = asyncio.create_task(hook.setup())
-                        else:
-                            res = hook.setup()
-                        if callable(res):
-                            hook.cleanup = res
-                    elif hook and hook.cleanup and is_cleanup:
-                        hook.cancel()
-                        if asyncio.iscoroutinefunction(hook.cleanup):
-                            hook._cleanup_task = asyncio.create_task(hook.cleanup())
-                        else:
-                            hook.cleanup()
-                except Exception as ex:
-                    tb = traceback.format_exc()
-                    self.error(f"Exception in effect: {ex}\n{tb}")
+                for control in pending_updates:
+                    control.update()
 
-            self.__pending_effects.clear()
+                # Process pending effects
+                pending_effects = list(self.__pending_effects)
+                self.__pending_effects.clear()
+
+                for effect in pending_effects:
+                    try:
+                        hook = effect[0]()
+                        is_cleanup = effect[1]
+                        # print(f"**** Running effect: {hook} {is_cleanup}")
+                        if hook and hook.setup and not is_cleanup:
+                            hook.cancel()
+                            res = None
+                            if inspect.iscoroutinefunction(hook.setup):
+                                hook._setup_task = asyncio.create_task(hook.setup())
+                            else:
+                                res = hook.setup()
+                            if callable(res):
+                                hook.cleanup = res
+                        elif hook and hook.cleanup and is_cleanup:
+                            hook.cancel()
+                            if inspect.iscoroutinefunction(hook.cleanup):
+                                hook._cleanup_task = asyncio.create_task(hook.cleanup())
+                            else:
+                                hook.cleanup()
+                    except Exception as ex:
+                        tb = traceback.format_exc()
+                        self.error(f"Exception in effect: {ex}\n{tb}")
+        except asyncio.CancelledError:
+            pass

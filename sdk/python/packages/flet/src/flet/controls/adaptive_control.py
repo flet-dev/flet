@@ -9,9 +9,9 @@ __all__ = ["AdaptiveControl"]
 @control(kw_only=True)
 class AdaptiveControl(Control):
     """
-    Base class for controls that support adaptive behavior, which allows them to adjust
-    their appearance and behavior based on the target platform
-    (ex: Material design on Android/Windows/Linux, Cupertino design on iOS/macOS).
+    Base class for controls that support adaptive behavior, which allows them to \
+    adjust their appearance and behavior based on the target platform (ex: Material \
+    design on Android/Windows/Linux, Cupertino design on iOS/macOS).
 
     The [`adaptive`][(c).] property is applicable in two common scenarios:
 
@@ -36,6 +36,6 @@ class AdaptiveControl(Control):
 
     adaptive: Optional[bool] = None
     """
-    Enables platform-specific rendering or inheritance of adaptiveness
-    from parent controls.
+    Enables platform-specific rendering or inheritance of adaptiveness from parent \
+    controls.
     """

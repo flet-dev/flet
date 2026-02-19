@@ -1,13 +1,12 @@
 import asyncio
 import os
-from collections.abc import Awaitable
-from typing import Callable, Optional, Union
+from typing import Optional
 
 from fastapi import Request, WebSocket
-from flet.controls.page import Page
-from flet.controls.types import RouteUrlStrategy, WebRenderer
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from flet.app import AppCallable
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,
@@ -21,8 +20,8 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 
 def app(
-    main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
-    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
@@ -41,30 +40,28 @@ def app(
     """
     Mount all Flet FastAPI handlers in one call.
 
-    Parameters:
-    * `main` (function or coroutine) - application entry point - a method
-       called for newly connected user. Handler must have 1 parameter: `page` - `Page`
-       instance.
-    * `before_main` - a function that is called after Page was created, but before
-       calling `main`.
-    * `assets_dir` (str, optional) - an absolute path to app's assets directory.
-    * `app_name` (str, optional) - PWA application name.
-    * `app_short_name` (str, optional) - PWA application short name.
-    * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
-    * `no_cdn` (bool) - do not load resources from CDN.
-    * `upload_dir` (str) - an absolute path to a directory with uploaded files.
-    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint,
-       e.g. `/upload`.
-    * `max_upload_size` (str, int) - maximum size of a single upload, bytes.
-       Unlimited if `None`.
-    * `secret_key` (str, optional) - secret key to sign and verify upload requests.
-    * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after
-       user disconnected.
-    * `oauth_state_timeout_seconds` (int, optional) - OAuth state lifetime, in seconds,
-       which is a maximum allowed time between starting OAuth flow and redirecting
-       to OAuth callback URL.
+    Args:
+        main: Application entry point. It is called for newly connected users.
+            Handler (function or coroutine) must have 1 parameter of
+            instance [`Page`][flet.Page].
+        before_main: Called after `Page` was created, but before calling `main`.
+        proxy_path: URL prefix when the app is mounted under a proxy.
+        assets_dir: an absolute path to app's assets directory.
+        app_name: PWA application name.
+        app_short_name: PWA application short name.
+        app_description: PWA application description.
+        web_renderer: web renderer defaulting to `WebRenderer.AUTO`.
+        route_url_strategy: routing URL strategy: `path` (default) or `hash`.
+        no_cdn: do not load resources from CDN.
+        upload_dir: an absolute path to a directory with uploaded files.
+        upload_endpoint_path: absolute URL of upload endpoint, e.g. `/upload`.
+        max_upload_size: maximum size of a single upload, bytes. Unlimited if `None`.
+        secret_key: secret key to sign and verify upload requests.
+        session_timeout_seconds: session lifetime, in seconds,
+            after the user disconnected.
+        oauth_state_timeout_seconds: OAuth state lifetime, in seconds,
+            which is the maximum allowed time between starting OAuth flow and
+            redirecting to OAuth callback URL.
     """
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
@@ -92,6 +89,12 @@ def app(
 
     @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
+        """
+        Handles Flet WebSocket session lifecycle for one client connection.
+
+        The handler creates a new [`FletApp`][flet_web.fastapi.flet_app.]
+        instance and delegates message send/receive processing to it.
+        """
         await FletApp(
             loop=asyncio.get_running_loop(),
             executor=app_manager.executor,
@@ -109,6 +112,9 @@ def app(
             f"/{upload_endpoint_path if upload_endpoint_path else upload_endpoint}"
         )
         async def upload_handler(request: Request):
+            """
+            Handles signed file uploads routed through the Flet upload endpoint.
+            """
             await FletUpload(
                 upload_dir=upload_dir,
                 max_upload_size=max_upload_size,
@@ -117,6 +123,9 @@ def app(
 
     @fastapi_app.get(f"/{oauth_callback_endpoint}")
     async def oauth_redirect_handler(request: Request):
+        """
+        Handles OAuth provider callback redirect and returns auth response.
+        """
         return await FletOAuth().handle(request)
 
     fastapi_app.mount(
@@ -136,7 +145,17 @@ def app(
 
     # Add middleware for custom headers
     class CustomHeadersMiddleware(BaseHTTPMiddleware):
+        """
+        Injects security/CORS headers required by browser-side Flet runtime.
+        """
+
         async def dispatch(self, request: Request, call_next):
+            """
+            Adds fixed response headers for isolation and cross-origin access.
+
+            Returns:
+                The downstream response with added headers.
+            """
             response = await call_next(request)
             response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
             response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"

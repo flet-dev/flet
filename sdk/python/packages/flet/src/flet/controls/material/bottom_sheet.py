@@ -68,7 +68,7 @@ class BottomSheet(DialogControl):
 
     draggable: bool = False
     """
-    Specifies whether this bottom sheet can be dragged up and down and dismissed by
+    Specifies whether this bottom sheet can be dragged up and down and dismissed by \
     swiping downwards.
     """
 
@@ -79,7 +79,7 @@ class BottomSheet(DialogControl):
 
     use_safe_area: bool = True
     """
-    Specifies whether the sheet will avoid system intrusions on the top, left, and
+    Specifies whether the sheet will avoid system intrusions on the top, left, and \
     right.
     """
 
@@ -103,8 +103,8 @@ class BottomSheet(DialogControl):
 
     maintain_bottom_view_insets_padding: bool = True
     """
-    Adds a padding at the bottom to avoid obstructing this
-    bottom sheet's [`content`][(c).] with on-screen keyboard or other system elements.
+    Adds a padding at the bottom to avoid obstructing this bottom sheet's \
+    [`content`][(c).] with on-screen keyboard or other system elements.
     """
 
     animation_style: Optional[AnimationStyle] = None

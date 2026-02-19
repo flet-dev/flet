@@ -1,23 +1,23 @@
 ---
 title: Calculator Tutorial
+examples: ../../examples/tutorials/calculator
+example_images: ../test-images/tutorials/golden/macos/calculator
 ---
 
 In this tutorial you will learn, step-by-step, how to create a Calculator app in
-Python using
-Flet framework and publish it as a desktop, mobile or web app.
+Python using Flet framework and publish it as a desktop, mobile or web app.
 The app is a simple console program, yet it is a multi-platform application with
 similar to iPhone calculator app UI:
 
 {{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
 
 
-You can find a live demo [here](https://gallery.flet.dev/calculator/).
+You can find a live demo [here](https://examples.flet.dev/calculator/).
 
 In this tutorial, we will cover all of the basic concepts for creating a Flet app:
 building a page layout, adding controls, making reusable UI components, handling
 events, and publishing options.
 
-The tutorial consists of the following steps:
 
 ## Getting started with Flet
 
@@ -56,42 +56,13 @@ and a few [`Button`][flet.Button]s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
-```python title="calc.py"
-import flet as ft
-
-def main(page: ft.Page):
-    page.title = "Calc App"
-    result = ft.Text(value="0")
-
-    page.add(
-        result,
-        ft.Button(text="AC"),
-        ft.Button(text="+/-"),
-        ft.Button(text="%"),
-        ft.Button(text="/"),
-        ft.Button(text="7"),
-        ft.Button(text="8"),
-        ft.Button(text="9"),
-        ft.Button(text="*"),
-        ft.Button(text="4"),
-        ft.Button(text="5"),
-        ft.Button(text="6"),
-        ft.Button(text="-"),
-        ft.Button(text="1"),
-        ft.Button(text="2"),
-        ft.Button(text="3"),
-        ft.Button(text="+"),
-        ft.Button(text="0"),
-        ft.Button(text="."),
-        ft.Button(text="="),
-    )
-
-ft.run(main)
+```python
+--8<-- "{{ examples }}/calc1.py"
 ```
 
 Run the app and you should see a page like this:
 
-{{ image("../examples/tutorials/calculator/media/app-1.png", alt="app-1", width="80%") }}
+{{ image(example_images + "/calc1.png", alt="calc1", width="50%") }}
 
 
 ## Building page layout
@@ -100,63 +71,13 @@ Now let's arrange the text and buttons in 6 horizontal [`Row`][flet.Row]s.
 
 Replace `calc.py` contents with the following:
 
-```python title="calc.py"
-import flet as ft
-
-
-def main(page: ft.Page):
-    page.title = "Calc App"
-    result = ft.Text(value="0")
-
-    page.add(
-        ft.Row(controls=[result]),
-        ft.Row(
-            controls=[
-                ft.Button(text="AC"),
-                ft.Button(text="+/-"),
-                ft.Button(text="%"),
-                ft.Button(text="/"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                ft.Button(text="7"),
-                ft.Button(text="8"),
-                ft.Button(text="9"),
-                ft.Button(text="*"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                ft.Button(text="4"),
-                ft.Button(text="5"),
-                ft.Button(text="6"),
-                ft.Button(text="-"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                ft.Button(text="1"),
-                ft.Button(text="2"),
-                ft.Button(text="3"),
-                ft.Button(text="+"),
-            ]
-        ),
-        ft.Row(
-             controls=[
-                ft.Button(text="0"),
-                ft.Button(text="."),
-                ft.Button(text="="),
-            ]
-        ),
-    )
-
-ft.run(main)
+```python
+--8<-- "{{ examples }}/calc2.py"
 ```
 
 Run the app and you should see a page like this:
 
-{{ image("../examples/tutorials/calculator/media/app-2.png", alt="app-2", width="80%") }}
+{{ image(example_images + "/calc2.png", alt="calc2", width="50%") }}
 
 
 ### Using Container for decoration
@@ -175,7 +96,7 @@ Here is the code for adding the container to the page:
         ft.Container(
             width=350,
             bgcolor=ft.Colors.BLACK,
-            border_radius=ft.border_radius.all(20),
+            border_radius=ft.BorderRadius.all(20),
             padding=20,
             content=ft.Column(
                 controls= [], # (1)!
@@ -196,91 +117,95 @@ result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 ```
 
 For the buttons, if we look again at the UI we are aiming to achieve, there are 3 types of buttons:
+
 1. **Digit Buttons**. They have dark grey background color and white text, size is the same for all.
+
 2. **Action Buttons**.  They have orange background color and white text, size is the same for all except `0` button which is twice as large.
+
 3. **Extra action buttons**. They have light grey background color and dark text, size is the same for all.
 
 The buttons will be used multiple time in the program, so we will be creating
 custom [Styled Controls](../cookbook/custom-controls.md#styled-controls) to reuse the code.
 
 Since all those types should inherit from `Button` class and have common `text` and `expand` properties, let's create a parent `CalcButton` class:
+
 ```python
+@ft.control
 class CalcButton(ft.Button):
-    def __init__(self, text, expand=1):
-        super().__init__()
-        self.text = text
-        self.expand = expand
+    expand: int = 1
 ```
 
 Now let's create child classes for all three types of buttons:
 
 ```python
+@ft.control
 class DigitButton(CalcButton):
-    def __init__(self, text, expand=1):
-        CalcButton.__init__(self, text, expand)
-        self.bgcolor = ft.Colors.WHITE_24
-        self.color = ft.Colors.WHITE
+    bgcolor: ft.Colors = ft.Colors.WHITE_24
+    color: ft.Colors = ft.Colors.WHITE
 
+
+@ft.control
 class ActionButton(CalcButton):
-    def __init__(self, text):
-        CalcButton.__init__(self, text)
-        self.bgcolor = ft.Colors.ORANGE
-        self.color = ft.Colors.WHITE
+    bgcolor: ft.Colors = ft.Colors.ORANGE
+    color: ft.Colors = ft.Colors.WHITE
 
+
+@ft.control
 class ExtraActionButton(CalcButton):
-    def __init__(self, text):
-        CalcButton.__init__(self, text)
-        self.bgcolor = ft.Colors.BLUE_GREY_100
-        self.color = ft.Colors.BLACK
+    bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
+    color: ft.Colors = ft.Colors.BLACK
 ```
 
 We will be using these new classes now to create rows of buttons in the Container:
 
 ```python
-content=ft.Column(
-    controls=[
-        ft.Row(controls=[result], alignment="end"),
-        ft.Row(
+content = ft.Column(
             controls=[
-                ExtraActionButton(text="AC"),
-                ExtraActionButton(text="+/-"),
-                ExtraActionButton(text="%"),
-                ActionButton(text="/"),
+                ft.Row(
+                    controls=[result],
+                    alignment=ft.MainAxisAlignment.END,
+                ),
+                ft.Row(
+                    controls=[
+                        ExtraActionButton(content="AC"),
+                        ExtraActionButton(content="+/-"),
+                        ExtraActionButton(content="%"),
+                        ActionButton(content="/"),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        DigitButton(content="7"),
+                        DigitButton(content="8"),
+                        DigitButton(content="9"),
+                        ActionButton(content="*"),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        DigitButton(content="4"),
+                        DigitButton(content="5"),
+                        DigitButton(content="6"),
+                        ActionButton(content="-"),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        DigitButton(content="1"),
+                        DigitButton(content="2"),
+                        DigitButton(content="3"),
+                        ActionButton(content="+"),
+                    ]
+                ),
+                ft.Row(
+                    controls=[
+                        DigitButton(content="0", expand=2),
+                        DigitButton(content="."),
+                        ActionButton(content="="),
+                    ]
+                ),
             ]
-        ),
-        ft.Row(
-            controls=[
-                DigitButton(text="7"),
-                DigitButton(text="8"),
-                DigitButton(text="9"),
-                ActionButton(text="*"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                DigitButton(text="4"),
-                DigitButton(text="5"),
-                DigitButton(text="6"),
-                ActionButton(text="-"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                DigitButton(text="1"),
-                DigitButton(text="2"),
-                DigitButton(text="3"),
-                ActionButton(text="+"),
-            ]
-        ),
-        ft.Row(
-            controls=[
-                DigitButton(text="0", expand=2),
-                DigitButton(text="."),
-                ActionButton(text="="),
-            ]
-        ),
-    ]
-),
+        )
 ```
 
 /// details | Full code
@@ -291,7 +216,7 @@ content=ft.Column(
 ```
 ///
 
-{{ image("../examples/tutorials/calculator/media/app.png", alt="calc-app", width="80%") }}
+{{ image(example_images + "/calc3.png", alt="calc3", width="50%") }}
 
 
 Just what we wanted!
@@ -310,7 +235,7 @@ Flet apps with composability and reusability in mind.
 To make a reusable Calc app component, we are going to encapsulate its state and
 presentation logic in a separate `CalculatorApp` class.
 
-Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc4.py).
+Copy the entire code for this step from [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calculator/calc4.py).
 
 /// admonition | Try something
     type: example
@@ -329,33 +254,24 @@ page.add(calc1, calc2)
 ## Handling events
 
 Now let's make the calculator do its job. We will be using the same event handler
-for all the buttons and use `data` property to differentiate between the actions
-depending on the button clicked. For `CalcButton` class, let's specify `on_click=button_clicked`
-event and set `data` property equal to button's text:
-
-```python
-class CalcButton(ft.Button):
-    def __init__(self, text, button_clicked, expand=1):
-        super().__init__()
-        self.text = text
-        self.expand = expand
-        self.on_click = button_clicked
-        self.data = text
-```
+for all the buttons and use `content` property to differentiate between the actions
+depending on the button clicked.
 
 We will define `button_click` method in `CalculatorClass` and pass it to each button.
 Below is `on_click` event handler that will reset the Text value when "AC" button is clicked:
 
 ```python
 def button_clicked(self, e):
-    if e.control.data == "AC":
+    data = e.control.content
+    print(f"Button clicked with data = {data}")
+    if data == "AC":
         self.result.value = "0"
 ```
 
 With similar approach, `button_click` method will handle different calculator actions
-depending on `data` property for each button.
+depending on `content` property for each button.
 Copy the entire code for this step from
-[here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calc/calc.py).
+[here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calculator/calc.py).
 
 Run the app and see it in the action:
 {{ image("../examples/tutorials/calculator/media/app.gif", alt="calc-app2", width="80%") }}

@@ -20,8 +20,9 @@ __all__ = ["Banner"]
 @control("Banner")
 class Banner(DialogControl):
     """
-    A banner displays an important, succinct message, and provides actions for users to
-    address (or dismiss the banner). A user action is required for it to be dismissed.
+    A banner displays an important, succinct message, and provides actions for users \
+    to address (or dismiss the banner). A user action is required for it to be \
+    dismissed.
 
     Banners are displayed at the top of the screen, below a top app bar. They are
     persistent and non-modal, allowing the user to either ignore them or interact with
@@ -51,7 +52,8 @@ class Banner(DialogControl):
 
     actions: list[Control]
     """
-    The set of actions that are displayed at the bottom or trailing side of this banner.
+    The set of actions that are displayed at the bottom or trailing side of this \
+    banner.
 
     Typically this is a list of [`TextButton`][flet.]
     controls.
@@ -89,8 +91,8 @@ class Banner(DialogControl):
 
     force_actions_below: bool = False
     """
-    An override to force the [`actions`][(c).] to be below the
-    [`content`][(c).] regardless of how many there are.
+    An override to force the [`actions`][(c).] to be below the [`content`][(c).] \
+    regardless of how many there are.
 
     If this is `True`, the [`actions`][(c).] will be placed below the content.
     If this is `False`, the [`actions`][(c).] will be placed on the trailing side

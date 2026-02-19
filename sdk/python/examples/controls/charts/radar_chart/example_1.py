@@ -5,7 +5,7 @@ import flet_charts as fch
 def main(page: ft.Page):
     page.title = "Radar chart"
     page.padding = 20
-    page.vertical_alignment = page.horizontal_alignment = "center"
+    # page.vertical_alignment = page.horizontal_alignment = "center"
     page.theme_mode = ft.ThemeMode.LIGHT
 
     categories = ["macOS", "Linux", "Windows"]

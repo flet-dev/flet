@@ -35,7 +35,7 @@ class Divider(Control):
 
     height: Optional[Number] = None
     """
-    The divider's height extent. The divider itself is always drawn as a horizontal
+    The divider's height extent. The divider itself is always drawn as a horizontal \
     line that is centered within the height specified by this value.
 
     If `None`, [`DividerTheme.space`][flet.] is used.

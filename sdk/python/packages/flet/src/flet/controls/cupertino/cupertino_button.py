@@ -22,9 +22,26 @@ __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 
 
 class CupertinoButtonSize(Enum):
+    """
+    Preset size style for [`CupertinoButton`][flet.].
+
+    Influences defaults such as minimum size, padding, border radius, and text style.
+    """
+
     SMALL = "small"
+    """
+    Compact button style with smaller text and tighter sizing.
+    """
+
     MEDIUM = "medium"
+    """
+    Medium button style with regular text and balanced sizing.
+    """
+
     LARGE = "large"
+    """
+    Classic large Cupertino button style.
+    """
 
 
 @control("CupertinoButton")
@@ -32,6 +49,7 @@ class CupertinoButton(LayoutControl):
     """
     An iOS-style button.
 
+    Example:
     ```python
     ft.CupertinoButton("Tap me")
     ```
@@ -90,7 +108,7 @@ class CupertinoButton(LayoutControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space to surround the `content` control inside the bounds of the
+    The amount of space to surround the `content` control inside the bounds of the \
     button.
     """
 
@@ -120,8 +138,8 @@ class CupertinoButton(LayoutControl):
 
     autofocus: bool = False
     """
-    Whether this button should be selected as the initial focus when no other
-    node in its scope is currently focused.
+    Whether this button should be selected as the initial focus when no other node in \
+    its scope is currently focused.
     """
 
     focus_color: Optional[ColorValue] = None
@@ -169,4 +187,5 @@ class CupertinoButton(LayoutControl):
             )
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +6,15 @@ import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
+import 'enums.dart';
 import 'geometry.dart';
-import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'theme.dart';
 import 'time.dart';
 import 'transforms.dart';
+import 'widget_state.dart';
 
 ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     {Color? defaultForegroundColor,
@@ -29,6 +29,22 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     TextStyle? defaultTextStyle,
     ButtonStyle? defaultValue}) {
   if (value == null) return defaultValue;
+
+  WidgetStateProperty<TextStyle?>? parseButtonTextStyle(
+      dynamic value, ThemeData theme,
+      {TextStyle? defaultTextStyle}) {
+    final ts = parseWidgetStateTextStyle(value, theme,
+        defaultTextStyle: defaultTextStyle);
+    if (ts == null) return null;
+
+    // Match Material button defaults to avoid TextStyle.lerp assertions when
+    // animating between states.
+    return WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+      final resolved = ts.resolve(states);
+      return resolved?.copyWith(inherit: false);
+    });
+  }
+
   return ButtonStyle(
     foregroundColor: parseWidgetStateColor(value["color"], theme,
         defaultColor: defaultForegroundColor),
@@ -54,7 +70,7 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
         defaultColor: defaultForegroundColor),
     alignment: parseAlignment(value["alignment"]),
     enableFeedback: parseBool(value["enable_feedback"]),
-    textStyle: parseWidgetStateTextStyle(value["text_style"], theme,
+    textStyle: parseButtonTextStyle(value["text_style"], theme,
         defaultTextStyle: defaultTextStyle),
     iconSize: parseWidgetStateDouble(value["icon_size"]),
     visualDensity: parseVisualDensity(value["visual_density"]),
@@ -128,10 +144,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
 CupertinoButtonSize? parseCupertinoButtonSize(String? value,
     [CupertinoButtonSize? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoButtonSize.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CupertinoButtonSize.values, value, defaultValue);
 }
 
 extension ButtonParsers on Control {

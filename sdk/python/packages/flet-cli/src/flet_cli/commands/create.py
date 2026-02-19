@@ -1,5 +1,6 @@
 import argparse
 import os
+import platform
 from pathlib import Path
 
 from packaging import version
@@ -22,6 +23,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line options for creating a project from templates.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "output_directory",
             type=str,
@@ -47,6 +55,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
+            type=str.lower,
             choices=["app", "extension"],
             default="app",
             required=False,
@@ -63,19 +72,34 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Render and generate a new project using the selected cookiecutter template.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         from cookiecutter.main import cookiecutter
 
         self.verbose = options.verbose
 
+        system_name = platform.system().lower()
+        platform_name = {
+            "windows": "windows",
+            "darwin": "darwin",
+            "linux": "linux",
+        }.get(system_name, system_name)
+
         template_data = {
             "template_name": options.template,
-            "flet_version": flet.version.version,
+            "flet_version": flet.version.flet_version,
             "sep": os.sep,
+            "platform": platform_name,
         }
 
         template_ref = options.template_ref
-        if not template_ref and flet.version.version:
-            template_ref = version.Version(flet.version.version).base_version
+        if not template_ref:
+            template_ref = version.Version(flet.version.flet_version).base_version
 
         out_dir = Path(options.output_directory).resolve()
         template_data["out_dir"] = out_dir.name
@@ -111,7 +135,7 @@ class Command(BaseCommand):
 
         if self.verbose > 0:
             console.print(f"[cyan]Files created at[/cyan] {out_dir}:\n")
-            for root, dirs, files in os.walk(out_dir):
+            for root, _, files in os.walk(out_dir):
                 for file in files:
                     rel_path = os.path.relpath(os.path.join(root, file), out_dir)
                     console.print(rel_path)

@@ -16,6 +16,10 @@ __all__ = [
 
 @dataclass
 class LineChartEventSpot:
+    """
+    Identifies a concrete line/point pair involved in a chart interaction event.
+    """
+
     bar_index: int
     """
     The line's index or `-1` if no line was hovered.
@@ -43,9 +47,13 @@ class LineChartEventSpot:
 
 @dataclass
 class LineChartEvent(ft.Event["LineChart"]):
+    """
+    Event payload emitted when the user interacts with a line chart.
+    """
+
     type: ChartEventType
     """
-    The type of event that occured.
+    The type of event that occurred.
     """
 
     spots: list[LineChartEventSpot]
@@ -140,26 +148,34 @@ class LineChartTooltip:
         """
         return LineChartTooltip(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
-            border_radius=border_radius
-            if border_radius is not None
-            else self.border_radius,
+            border_radius=(
+                border_radius if border_radius is not None else self.border_radius
+            ),
             margin=margin if margin is not None else self.margin,
             padding=padding if padding is not None else self.padding,
             max_width=max_width if max_width is not None else self.max_width,
             rotation=rotation if rotation is not None else self.rotation,
-            horizontal_offset=horizontal_offset
-            if horizontal_offset is not None
-            else self.horizontal_offset,
+            horizontal_offset=(
+                horizontal_offset
+                if horizontal_offset is not None
+                else self.horizontal_offset
+            ),
             border_side=border_side if border_side is not None else self.border_side,
-            fit_inside_horizontally=fit_inside_horizontally
-            if fit_inside_horizontally is not None
-            else self.fit_inside_horizontally,
-            fit_inside_vertically=fit_inside_vertically
-            if fit_inside_vertically is not None
-            else self.fit_inside_vertically,
-            show_on_top_of_chart_box_area=show_on_top_of_chart_box_area
-            if show_on_top_of_chart_box_area is not None
-            else self.show_on_top_of_chart_box_area,
+            fit_inside_horizontally=(
+                fit_inside_horizontally
+                if fit_inside_horizontally is not None
+                else self.fit_inside_horizontally
+            ),
+            fit_inside_vertically=(
+                fit_inside_vertically
+                if fit_inside_vertically is not None
+                else self.fit_inside_vertically
+            ),
+            show_on_top_of_chart_box_area=(
+                show_on_top_of_chart_box_area
+                if show_on_top_of_chart_box_area is not None
+                else self.show_on_top_of_chart_box_area
+            ),
         )
 
 
@@ -167,6 +183,29 @@ class LineChartTooltip:
 class LineChart(ft.LayoutControl):
     """
     Draws a line chart.
+
+    Example:
+    ```python
+    fch.LineChart(
+        min_y=0,
+        max_y=3,
+        min_x=0,
+        max_x=5,
+        data_series=[
+            fch.LineChartData(
+                color=ft.Colors.BLUE_GREY_500,
+                curved=True,
+                points=[
+                    fch.LineChartDataPoint(1, 0.5),
+                    fch.LineChartDataPoint(2, 1.5),
+                    fch.LineChartDataPoint(3, 1),
+                ],
+            ),
+            ...,
+        ],
+    )
+    ```
+
     """
 
     data_series: list[LineChartData] = field(default_factory=list)

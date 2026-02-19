@@ -76,6 +76,10 @@ class UrlTarget(Enum):
 
 @dataclass
 class Url:
+    """
+    URL descriptor used by APIs that open links in a browser context.
+    """
+
     url: str
     """
     The url to open.
@@ -197,8 +201,8 @@ class AutomaticNotchShape(NotchShape):
 
 class ResponsiveRowBreakpoint(Enum):
     """
-    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive
-    properties such as [`Control.col`][flet.Control.].
+    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive properties such \
+    as [`Control.col`][flet.].
 
     To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
     """
@@ -235,7 +239,16 @@ class ResponsiveRowBreakpoint(Enum):
 
 
 Number = Union[int, float]
+"""Type alias for numeric values (`int` or `float`)."""
+
 ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Number]
+"""Type alias for responsive numeric values.
+
+Represents either:
+- a single numeric value used for all breakpoints,
+- or a breakpoint-to-value mapping keyed by string or
+  [`ResponsiveRowBreakpoint`][flet.].
+"""
 
 
 class MainAxisAlignment(Enum):
@@ -265,13 +278,13 @@ class MainAxisAlignment(Enum):
 
     SPACE_AROUND = "spaceAround"
     """
-    Place the free space evenly between the children as well as half of that space
+    Place the free space evenly between the children as well as half of that space \
     before and after the first and last child.
     """
 
     SPACE_EVENLY = "spaceEvenly"
     """
-    Place the free space evenly between the children as well as before and after the
+    Place the free space evenly between the children as well as before and after the \
     first and last child.
     """
 
@@ -283,7 +296,7 @@ class CrossAxisAlignment(Enum):
 
     START = "start"
     """
-    Place the children with their start edge aligned with the start side of the cross
+    Place the children with their start edge aligned with the start side of the cross \
     axis.
     """
 
@@ -333,8 +346,7 @@ class VerticalAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a [`Checkbox`][flet.], [`Radio`][flet.] or
-    [`Switch`][flet.]
+    Position of label in a [`Checkbox`][flet.], [`Radio`][flet.] or [`Switch`][flet.]
     """
 
     RIGHT = "right"
@@ -350,7 +362,7 @@ class LabelPosition(Enum):
 
 class BlendMode(Enum):
     """
-    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from
+    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from \
     Flutter documentation for blend mode examples.
     """
 
@@ -408,7 +420,7 @@ class TextAlign(Enum):
 
     JUSTIFY = "justify"
     """
-    Stretch lines of text that end with a soft line break to fill the width of the
+    Stretch lines of text that end with a soft line break to fill the width of the \
     container.
     """
 
@@ -435,7 +447,7 @@ class ScrollMode(Enum):
 
     ADAPTIVE = "adaptive"
     """
-    Scrolling is enabled and scroll bar is always shown when running app as web or
+    Scrolling is enabled and scroll bar is always shown when running app as web or \
     desktop.
     """
 
@@ -508,8 +520,8 @@ class ImageRepeat(Enum):
 
 class PagePlatform(Enum):
     """
-    Supported platforms for a page, including mobile and desktop systems. Each platform
-    corresponds to a specific operating system or environment.
+    Supported platforms for a page, including mobile and desktop systems. Each \
+    platform corresponds to a specific operating system or environment.
     """
 
     IOS = "ios"
@@ -529,7 +541,7 @@ class PagePlatform(Enum):
 
     def is_desktop(self) -> bool:
         """
-        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux)
+        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) \
         platform.
         """
         return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
@@ -542,7 +554,7 @@ class ThemeMode(Enum):
 
     SYSTEM = "system"
     """
-    Use either the light or dark theme based on what the user has selected in the
+    Use either the light or dark theme based on what the user has selected in the \
     system settings.
     """
 
@@ -564,14 +576,16 @@ class Brightness(Enum):
 
     LIGHT = "light"
     """
-    The color is light and will require a dark text color to achieve readable contrast.
+    The color is light and will require a dark text color to achieve readable \
+    contrast.
 
     For example, the color might be bright white, requiring black text.
     """
 
     DARK = "dark"
     """
-    The color is dark and will require a light text color to achieve readable contrast.
+    The color is dark and will require a light text color to achieve readable \
+    contrast.
 
     For example, the color might be dark grey, requiring white text.
     """
@@ -625,7 +639,7 @@ class FloatingActionButtonLocation(Enum):
 
     See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
     from Flutter documentation for placement location examples.
-    """
+    """  # noqa: E501
 
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
@@ -668,7 +682,7 @@ class AppLifecycleState(Enum):
 
     RESUME = "resume"
     """
-    The application gains input focus. Indicates that the application is entering a
+    The application gains input focus. Indicates that the application is entering a \
     state where it is visible, active, and accepting user input.
     """
 
@@ -733,14 +747,14 @@ class MouseCursor(Enum):
 
     ALIAS = "alias"
     """
-    A cursor indicating that the current operation will create an alias of, or a
-    shortcut of the item. Typically the shape of an arrow with a shortcut icon at the
+    A cursor indicating that the current operation will create an alias of, or a \
+    shortcut of the item. Typically the shape of an arrow with a shortcut icon at the \
     corner.
     """
 
     ALL_SCROLL = "allScroll"
     """
-    A cursor indicating scrolling in any direction. Typically the shape of a dot
+    A cursor indicating scrolling in any direction. Typically the shape of a dot \
     surrounded by 4 arrows.
     """
 
@@ -751,7 +765,7 @@ class MouseCursor(Enum):
 
     CELL = "cell"
     """
-    A cursor indicating selectable table cells. Typically the shape of a hollow plus
+    A cursor indicating selectable table cells. Typically the shape of a hollow plus \
     sign.
     """
 
@@ -763,19 +777,19 @@ class MouseCursor(Enum):
 
     CONTEXT_MENU = "contextMenu"
     """
-    A cursor indicating somewhere the user can trigger a context menu. Typically the
+    A cursor indicating somewhere the user can trigger a context menu. Typically the \
     shape of an arrow with a small menu at the corner.
     """
 
     COPY = "copy"
     """
-    A cursor indicating that the current operation will copy the item. Typically the
+    A cursor indicating that the current operation will copy the item. Typically the \
     shape of an arrow with a boxed plus sign at the corner.
     """
 
     DISAPPEARING = "disappearing"
     """
-    A cursor indicating that the current operation will result in the disappearance of
+    A cursor indicating that the current operation will result in the disappearance of \
     the item. Typically the shape of an arrow with a cloud of smoke at the corner.
     """
 
@@ -787,20 +801,20 @@ class MouseCursor(Enum):
 
     GRAB = "grab"
     """
-    A cursor indicating something that can be dragged. Typically the shape of an open
+    A cursor indicating something that can be dragged. Typically the shape of an open \
     hand.
     """
 
     GRABBING = "grabbing"
     """
-    A cursor indicating something that is being dragged. Typically the shape of a
+    A cursor indicating something that is being dragged. Typically the shape of a \
     closed hand.
     """
 
     HELP = "help"
     """
-    A cursor indicating help information. Typically the shape of a question mark, or an
-    arrow therewith.
+    A cursor indicating help information. Typically the shape of a question mark, or \
+    an arrow therewith.
     """
 
     MOVE = "move"
@@ -827,94 +841,97 @@ class MouseCursor(Enum):
 
     PROGRESS = "progress"
     """
-    A cursor indicating the status that the program is busy but can still be interacted
-    with. Typically the shape of an arrow with an hourglass or a watch at the corner.
+    A cursor indicating the status that the program is busy but can still be \
+    interacted with. Typically the shape of an arrow with an hourglass or a watch at \
+    the corner.
     """
 
     RESIZE_COLUMN = "resizeColumn"
     """
-    A cursor indicating resizing a column, or an item horizontally. Typically the shape
-    of arrows pointing left and right with a vertical bar separating them.
+    A cursor indicating resizing a column, or an item horizontally. Typically the \
+    shape of arrows pointing left and right with a vertical bar separating them.
     """
 
     RESIZE_DOWN = "resizeDown"
     """
-    A cursor indicating resizing an object from its bottom edge. Typically the shape of
-    an arrow pointing down.
+    A cursor indicating resizing an object from its bottom edge. Typically the shape \
+    of an arrow pointing down.
     """
 
     RESIZE_DOWN_LEFT = "resizeDownLeft"
     """
-    A cursor indicating resizing an object from its bottom-left corner. Typically the
+    A cursor indicating resizing an object from its bottom-left corner. Typically the \
     shape of an arrow pointing lower left.
     """
 
     RESIZE_DOWN_RIGHT = "resizeDownRight"
     """
-    A cursor indicating resizing an object from its bottom-right corner. Typically the
+    A cursor indicating resizing an object from its bottom-right corner. Typically the \
     shape of an arrow pointing lower right.
     """
 
     RESIZE_LEFT = "resizeLeft"
     """
-    A cursor indicating resizing an object from its left edge. Typically the shape of
+    A cursor indicating resizing an object from its left edge. Typically the shape of \
     an arrow pointing left.
     """
 
     RESIZE_LEFT_RIGHT = "resizeLeftRight"
     """
-    A cursor indicating resizing an object bidirectionally from its left or right edge.
+    A cursor indicating resizing an object bidirectionally from its left or right \
+    edge.
     Typically the shape of a bidirectional arrow pointing left and right.
     """
 
     RESIZE_RIGHT = "resizeRight"
     """
-    A cursor indicating resizing an object from its right edge. Typically the shape of
+    A cursor indicating resizing an object from its right edge. Typically the shape of \
     an arrow pointing right.
     """
 
     RESIZE_ROW = "resizeRow"
     """
-    A cursor indicating resizing a row, or an item vertically. Typically the shape of
+    A cursor indicating resizing a row, or an item vertically. Typically the shape of \
     arrows pointing up and down with a horizontal bar separating them.
     """
 
     RESIZE_UP = "resizeUp"
     """
-    A cursor indicating resizing an object from its top edge. Typically the shape of an
-    arrow pointing up.
+    A cursor indicating resizing an object from its top edge. Typically the shape of \
+    an arrow pointing up.
     """
 
     RESIZE_UP_DOWN = "resizeUpDown"
     """
-    A cursor indicating resizing an object bidirectionally from its top or bottom edge.
+    A cursor indicating resizing an object bidirectionally from its top or bottom \
+    edge.
     Typically the shape of a bidirectional arrow pointing up and down.
     """
 
     RESIZE_UP_LEFT = "resizeUpLeft"
     """
-    A cursor indicating resizing an object from its top-left corner. Typically the
+    A cursor indicating resizing an object from its top-left corner. Typically the \
     shape of an arrow pointing upper left.
     """
 
     RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
     """
-    A cursor indicating resizing an object bidirectionally from its top left or bottom
-    right corner. Typically the shape of a bidirectional arrow pointing upper left and
+    A cursor indicating resizing an object bidirectionally from its top left or bottom \
+    right corner. Typically the shape of a bidirectional arrow pointing upper left and \
     lower right.
     """
 
     RESIZE_UP_RIGHT = "resizeUpRight"
     """
-    A cursor indicating resizing an object from its top-right corner. Typically the
+    A cursor indicating resizing an object from its top-right corner. Typically the \
     shape of an arrow pointing upper right.
     """
 
     RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
     """
-    A cursor indicating resizing an object bidirectionally from its top right or bottom
-    left corner. Typically the shape of a bidirectional arrow pointing upper right and
-    lower left.
+    A cursor indicating resizing an object bidirectionally from its top right or \
+    bottom left corner. Typically the shape of a bidirectional arrow pointing upper \
+    right and lower left.
     """
 
     TEXT = "text"
@@ -924,13 +941,13 @@ class MouseCursor(Enum):
 
     VERTICAL_TEXT = "verticalText"
     """
-    A cursor indicating selectable vertical text. Typically the shape of a capital I
+    A cursor indicating selectable vertical text. Typically the shape of a capital I \
     rotated to be horizontal.
     """
 
     WAIT = "wait"
     """
-    A cursor indicating the status that the program is busy and therefore can not be
+    A cursor indicating the status that the program is busy and therefore can not be \
     interacted with. Typically the shape of an hourglass or a watch.
 
     This cursor is not available as a system cursor on macOS. Although macOS displays a
@@ -1023,7 +1040,7 @@ class StrokeJoin(Enum):
 
     BEVEL = "bevel"
     """
-    Joins between line segments connect the corners of the butt ends of the line
+    Joins between line segments connect the corners of the butt ends of the line \
     segments to give a beveled appearance.
     """
 
@@ -1082,20 +1099,50 @@ class Locale:
     An identifier used to select a user's language and formatting preferences.
     """
 
-    language_code: Optional[str] = None
+    language_code: str = "und"
     """
-    The language code of the locale.
-    """
+    The primary language subtag/code of the locale, e.g `en` for English.
+
+    Its value is case-sensitive and must be a registered subtag in the
+    [IANA Language Subtag Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry)
+    with the type "language". If you use a deprecated subtag, it will be internally
+    modified to its “Preferred-Value”, if it has one. For example: `Locale("he")`
+    and `Locale("iw")` are equal, and both have the `language_code="he”`,
+    because `iw` is a deprecated language subtag which has been replaced by `he`.
+
+    When there is no language subtag, this parameter should be set
+    to `"und"` (the default), which represents an undefined language code.
+    """  # noqa: E501
 
     country_code: Optional[str] = None
     """
-    The country code of the locale.
-    """
+    The country code or region subtag of the locale, e.g `US` for the United States.
+
+    Its value is case-sensitive and must be a registered subtag in the
+    [IANA Language Subtag Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry)
+    with the type "region". If you use a deprecated subtag, it will be internally
+    modified to its “Preferred-Value”, if it has one. For example: `Locale("de", "DE")`
+    and `Locale("de", "DD")` are equal, and both have the `country_code="DE”`,
+    because `DD` is a deprecated region subtag which has been replaced by `DE`.
+
+    Locales may also be defined without this, to specify a generic fallback for a
+    particular script.
+    """  # noqa: E501
 
     script_code: Optional[str] = None
     """
-    The script code of the locale.
-    """
+    The script code/subtag of the locale, e.g. `Hant` for Traditional Chinese or \
+    `Hans` for Simplified Chinese. It is especially recommended to set this property \
+    explicitly for languages with more than one script.
+
+    Its value must be a valid Unicode Language Identifier script subtag as listed in
+    [Unicode CLDR supplemental
+    data](https://github.com/unicode-org/cldr/blob/master/common/validity/script.xml).
+    """  # noqa: E501
+
+    def __post_init__(self):
+        if self.language_code == "":
+            raise ValueError("language_code cannot be empty")
 
 
 @dataclass
@@ -1104,15 +1151,76 @@ class LocaleConfiguration:
     Represents the configuration for supported locales and the current locale.
     """
 
-    supported_locales: Optional[list[Locale]] = None
+    supported_locales: list[Locale] = field(
+        default_factory=lambda: [Locale("en", "US")]
+    )
     """
-    A list of `Locale` objects representing the locales supported by the application.
-    """
+    A list of locales that the application supports for localization.
+
+    Note:
+        - Locales unsupported/invalid are ignored.
+        - Order matters: Locale resolution is performed by progressively relaxing
+            specificity until a match is found. Matching is attempted in the following
+            priority order:
+
+            1. language + script + country
+            2. language + script
+            3. language + country
+            4. language only
+            5. country only (only if no language-based match is found)
+
+            When multiple supported locales match at the same priority level,
+            the first matching locale in `supported_locales` is selected.
+            If no supported locale matches at any level, the first entry in
+            `supported_locales` is used as the final fallback.
+        - For languages with multiple scripts or regional variants, include locales in
+            increasing order of specificity: language-only → language+script →
+            language+script+country. Defining all of these variants is not strictly
+            required, but doing so greatly improves locale resolution and reduces
+            ambiguous matches. Omitting intermediate fallbacks can lead to incorrect
+            script or regional selection in edge cases—for example, a Simplified
+            Chinese user in Taiwan (`zh_Hans_TW`) may incorrectly resolve to
+            Traditional Chinese if `zh_Hans` and `zh_Hans_CN` are not present.
+
+    Example: Full Chinese support for CN (Mainland China), TW (Taiwan), and HK (Hong
+    Kong)
+        ```python
+        supported_locales = [
+            # Generic Chinese (fallback for all Chinese variants)
+            Locale(language_code="zh"),
+
+            # Script-level variants
+            Locale(language_code="zh", script_code="Hans"), # Simplified Chinese zh_Hans
+            Locale(language_code="zh", script_code="Hant"), # Traditional Chinese
+            zh_Hant
+
+            # Region-specific variants
+            Locale(language_code="zh", script_code="Hans", country_code="CN"), #
+            zh_Hans_CN
+            Locale(language_code="zh", script_code="Hant", country_code="TW"), #
+            zh_Hant_TW
+            Locale(language_code="zh", script_code="Hant", country_code="HK"), #
+            zh_Hant_HK
+        ]
+        ```
+    """  # noqa: E501
 
     current_locale: Optional[Locale] = None
     """
-    The `Locale` object representing the current locale.
+    The current locale.
+
+    Note:
+        - Must be an item of [`supported_locales`][(c).] to take effect.
+        - If `None` or invalid/unsupported, the first supported locale in
+            [`supported_locales`][(c).] is used.
     """
+
+    def __post_init__(self) -> None:
+        if not self.supported_locales:
+            raise ValueError(
+                "supported_locales must contain at least one locale, "
+                "as the first entry is used as the final fallback."
+            )
 
 
 # Colors
@@ -1124,11 +1232,18 @@ Represents a color and can be:
 - a material color from the [`Colors`][flet.] enum,
 - or a Cupertino color from the [`CupertinoColors`][flet.] enum.
 
-More information [here](https://docs.flet-docs.pages.dev/cookbook/cookbook/cookbook/colors).
+More information [here](https://docs.flet.dev/cookbook/cookbook/cookbook/colors).
 """
 
 # Icons
 IconDataOrControl = Union[IconData, "Control"]
+"""Type alias for icon-like values.
+
+Represents either:
+- an [`IconData`][flet.] value
+    (for example, a member of [`Icons`][flet.] or [`CupertinoIcons`][flet.]),
+- or a custom icon [`Control`][flet.].
+"""
 
 # Content
 StrOrControl = Union[str, "Control"]
@@ -1146,4 +1261,8 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
+    """
+    Structural protocol for objects that provide a string representation.
+    """
+
     def __str__(self) -> str: ...

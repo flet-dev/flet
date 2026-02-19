@@ -17,6 +17,7 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
         .children("polygons")
         .where((c) => c.type == "PolygonMarker")
         .map((polygon) {
+      polygon.notifyParent = true;
       return Polygon(
           borderStrokeWidth: polygon.getDouble("border_stroke_width", 0)!,
           borderColor: polygon.getColor("border_color", context, Colors.green)!,

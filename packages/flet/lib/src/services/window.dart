@@ -15,6 +15,7 @@ import '../utils/window.dart';
 
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
+  Future<void> _pendingWindowUpdate = Future.value();
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -46,6 +47,7 @@ class WindowService extends FletService with WindowListener {
   bool? _focused;
   bool? _frameless;
   bool? _titleBarHidden;
+  bool? _titleBarButtonsHidden;
   bool? _skipTaskBar;
   double? _progressBar;
   bool? _ignoreMouseEvents;
@@ -86,6 +88,7 @@ class WindowService extends FletService with WindowListener {
       if (!_listenersAttached) {
         windowManager.addListener(this);
         control.addInvokeMethodListener(_invokeMethod);
+        control.parent?.addListener(_onPageChanged);
         _listenersAttached = true;
       }
 
@@ -107,13 +110,24 @@ class WindowService extends FletService with WindowListener {
     _scheduleWindowUpdate();
   }
 
-  void _scheduleWindowUpdate() {
-    if (_initWindowStateCompleter.isCompleted) {
-      unawaited(_updateWindow(control.backend));
-    } else {
-      _initWindowStateCompleter.future
-          .then((_) => _updateWindow(control.backend));
+  void _onPageChanged() {
+    if (!isDesktopPlatform()) {
+      return;
     }
+    final title = control.parent?.getString("title");
+    if (title != null && title != _title) {
+      _scheduleWindowUpdate();
+    }
+  }
+
+  void _scheduleWindowUpdate() {
+    _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
+      if (_initWindowStateCompleter.isCompleted) {
+        return _updateWindow(control.backend);
+      }
+      return _initWindowStateCompleter.future
+          .then((_) => _updateWindow(control.backend));
+    });
   }
 
   Future<void> _updateWindow(FletBackend backend) async {
@@ -300,10 +314,14 @@ class WindowService extends FletService with WindowListener {
         _preventClose = preventClose;
       }
 
-      if (titleBarHidden != null && titleBarHidden != _titleBarHidden) {
+      final effectiveTitleBarHidden =
+          titleBarHidden ?? _titleBarHidden ?? false;
+      if (effectiveTitleBarHidden != _titleBarHidden ||
+          titleBarButtonsHidden != _titleBarButtonsHidden) {
         await setWindowTitleBarVisibility(
-            titleBarHidden, titleBarButtonsHidden);
-        _titleBarHidden = titleBarHidden;
+            effectiveTitleBarHidden, titleBarButtonsHidden);
+        _titleBarHidden = effectiveTitleBarHidden;
+        _titleBarButtonsHidden = titleBarButtonsHidden;
       }
 
       if (visible != null && visible != _visible) {
@@ -324,13 +342,22 @@ class WindowService extends FletService with WindowListener {
         _focused = focused;
       }
 
-      if (frameless != null && frameless != _frameless && frameless == true) {
-        await setWindowFrameless();
+      if (frameless != null && frameless != _frameless) {
+        if (frameless) {
+          await setWindowFrameless();
+        } else {
+          // Restore non-frameless window chrome using cached state
+          await setWindowTitleBarVisibility(
+            _titleBarHidden ?? false,
+            _titleBarButtonsHidden ?? false,
+          );
+        }
         _frameless = frameless;
       }
 
-      if (progressBar != null && progressBar != _progressBar) {
-        await setWindowProgressBar(progressBar);
+      if (progressBar != _progressBar) {
+        // window_manager uses -1 to clear the native progress indicator.
+        await setWindowProgressBar(progressBar ?? -1);
         _progressBar = progressBar;
       }
 
@@ -358,6 +385,7 @@ class WindowService extends FletService with WindowListener {
         windowToFront();
         break;
       case "center":
+        await _pendingWindowUpdate;
         await centerWindow();
         break;
       case "close":
@@ -385,6 +413,7 @@ class WindowService extends FletService with WindowListener {
     if (_listenersAttached) {
       windowManager.removeListener(this);
       control.removeInvokeMethodListener(_invokeMethod);
+      control.parent?.removeListener(_onPageChanged);
       _listenersAttached = false;
     }
     super.dispose();

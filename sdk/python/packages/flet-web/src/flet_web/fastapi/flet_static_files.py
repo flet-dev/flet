@@ -1,4 +1,5 @@
 import logging
+import mimetypes
 import os
 import shutil
 import tempfile
@@ -21,23 +22,26 @@ from flet_web.fastapi.flet_app_manager import app_manager
 
 logger = logging.getLogger(flet_fastapi.__name__)
 
+# Ensure correct MIME types on platforms (e.g. Windows)
+# that do not register them by default.
+mimetypes.add_type("text/javascript", ".mjs")
+mimetypes.add_type("application/wasm", ".wasm")
+
 
 class FletStaticFiles(StaticFiles):
     """
     Serve Flet app static files.
 
-    Parameters:
-
-    * `app_mount_path` (str) - absolute URL of Flet app. Default is `/`.
-    * `assets_dir` (str, optional) - an absolute path to app's assets directory.
-    * `app_name` (str, optional) - PWA application name.
-    * `app_short_name` (str, optional) - PWA application short name.
-    * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
-    * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
-    * `no_cdn` - do not load CanvasKit, Pyodide and fonts from CDN
-    * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app
-       WebSocket handler. Default is `{app_mount_path}/ws`.
+    Args:
+        assets_dir: An absolute path to app's assets directory.
+        app_name: PWA application name.
+        app_short_name: PWA application short name.
+        app_description: PWA application description.
+        web_renderer: Type of web renderer.
+        route_url_strategy: Routing URL strategy.
+        no_cdn: Whether not load CanvasKit, Pyodide, and fonts from CDN.
+        websocket_endpoint_path: Absolute URL of Flet app WebSocket handler.
+            Defaults to `/ws`.
     """
 
     def __init__(
@@ -105,6 +109,19 @@ class FletStaticFiles(StaticFiles):
         return full_path, stat_result
 
     async def __config(self, root_path: str):
+        """
+        Prepare a patched temporary web root and initialize static file serving.
+
+        The method resolves app mount path, copies baseline web files
+        (`index.html`, `manifest.json`, and optionally `FontManifest.json`)
+        from either user assets or packaged web assets, applies runtime
+        substitutions, and configures the underlying
+        fastapi `StaticFiles` instance.
+
+        Args:
+            root_path: ASGI root path used to compute mounted base URL.
+        """
+
         if self.__proxy_path:
             self.__app_mount_path = self.__proxy_path + root_path
         else:
@@ -134,6 +151,16 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Assets dir: {self.__assets_dir}")
 
         def copy_temp_web_file(paths: list[str]):
+            """
+            Copy a web asset into the temporary patched web directory.
+
+            Source precedence is user-provided assets directory first, then
+            the packaged web directory.
+
+            Args:
+                paths: Path segments relative to the web root.
+            """
+
             if self.__assets_dir and os.path.exists(
                 p := os.path.join(self.__assets_dir, *paths)
             ):

@@ -6,7 +6,7 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from flet.controls.types import WebRenderer
+from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
@@ -22,6 +22,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register CLI arguments used to publish a static web build.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "script",
             type=str,
@@ -44,14 +51,13 @@ class Command(BaseCommand):
             type=str,
             default=None,
             help="Path to a directory containing static assets "
-            "used by the app (e.g., images, fonts, icons)",
+            "used by the app (e.g., images, fonts, icons). [env: FLET_ASSETS_DIR=]",
         )
         parser.add_argument(
             "--distpath",
             dest="distpath",
             default="dist",
-            help="Directory where the published web app "
-            "should be placed (default: ./dist)",
+            help="Directory where the published web app should be placed",
         )
         parser.add_argument(
             "--app-name",
@@ -88,16 +94,19 @@ class Command(BaseCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
+            type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             default="auto",
-            help="Flutter web renderer to use",
+            help="Flutter web renderer to use [env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
+            type=str.lower,
             choices=["path", "hash"],
             default="path",
-            help="Controls how routes are handled in the browser",
+            help="Controls how routes are handled in the browser "
+            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
@@ -123,6 +132,12 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Build and package the app as a static web distribution.
+        Args:
+            options: Parsed command-line options.
+        """
+
         import flet.version
         from flet.utils.pip import ensure_flet_web_package_installed
 
@@ -186,10 +201,9 @@ class Command(BaseCommand):
         # copy assets
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_path.joinpath(assets_dir).resolve())
+            assets_dir = str(script_dir / assets_dir)
         else:
             assets_dir = str(script_dir / assets_name)
-
         if os.path.exists(assets_dir):
             copy_tree(assets_dir, str(dist_dir))
 
@@ -214,7 +228,7 @@ class Command(BaseCommand):
                 print(f"{reqs_filename} dependencies: {deps}")
 
         if len(deps) == 0:
-            deps = [f"flet=={flet.version.version}"]
+            deps = [f"flet=={flet.version.flet_version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w", encoding="utf-8") as f:
@@ -224,6 +238,16 @@ class Command(BaseCommand):
         app_tar_gz_path = os.path.join(dist_dir, app_tar_gz_filename)
 
         def filter_tar(tarinfo: tarfile.TarInfo):
+            """
+            Filter files that should be excluded from packaged app archive.
+
+            Args:
+                tarinfo: Tar member metadata for a candidate file.
+
+            Returns:
+                The original `tarinfo` to include the file, or `None` to skip it.
+            """
+
             full_path = os.path.join(script_dir, tarinfo.name)
             if (
                 (
@@ -303,7 +327,7 @@ class Command(BaseCommand):
                 or get_pyproject("tool.flet.web.renderer")
                 or "auto"
             ),
-            route_url_strategy=str(
+            route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
                 or "path"

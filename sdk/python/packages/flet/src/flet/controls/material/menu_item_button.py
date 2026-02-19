@@ -14,8 +14,28 @@ __all__ = ["MenuItemButton"]
 @control("MenuItemButton")
 class MenuItemButton(LayoutControl):
     """
-    A button for use in a MenuBar or on its own, that can be activated by click or
+    A button for use in a MenuBar or on its own, that can be activated by click or \
     keyboard navigation.
+
+    ```python
+    ft.Row(
+        controls=[
+            ft.MenuItemButton(
+                content=ft.Text("Yes"),
+                on_click=lambda e: print("yes"),
+            ),
+            ft.MenuItemButton(
+                content=ft.Text("No"),
+                on_click=lambda e: print("no"),
+            ),
+            ft.MenuItemButton(
+                content=ft.Text("Maybe"),
+                on_click=lambda e: print("maybe"),
+            ),
+        ],
+    )
+    ```
+
     """
 
     content: Optional[StrOrControl] = None

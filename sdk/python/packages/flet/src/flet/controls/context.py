@@ -7,8 +7,8 @@ if TYPE_CHECKING:
 
 class Context:
     """
-    Manages the context for Flet controls, including page reference
-    and auto-update behavior.
+    Manages the context for Flet controls, including page reference and auto-update \
+    behavior.
 
     Context instance is accessed via [`flet.context`][flet.context].
     """
@@ -150,3 +150,8 @@ _context_page = ContextVar("flet_session_page", default=None)
 _update_behavior_context_var = ContextVar("update_behavior", default=UpdateBehavior())  # noqa: B039
 
 context = Context()
+"""Global context object for the running Flet app.
+
+Use [`flet.context`][flet.context] to access the current page and control
+auto-update behavior inside callbacks.
+"""

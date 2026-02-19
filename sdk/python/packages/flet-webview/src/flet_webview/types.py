@@ -61,6 +61,12 @@ class JavaScriptMode(Enum):
 
 @dataclass
 class WebViewScrollEvent(ft.Event["WebView"]):
+    """
+    Event payload for `WebView.on_scroll`.
+
+    Emitted when the page scroll position changes.
+    """
+
     x: float
     """
     The value of the horizontal offset with the origin being at the
@@ -76,6 +82,10 @@ class WebViewScrollEvent(ft.Event["WebView"]):
 
 @dataclass
 class WebViewConsoleMessageEvent(ft.Event["WebView"]):
+    """
+    Event payload for `WebView.on_console_message`.
+    """
+
     message: str
     """The message written to the console."""
 
@@ -85,6 +95,12 @@ class WebViewConsoleMessageEvent(ft.Event["WebView"]):
 
 @dataclass
 class WebViewJavaScriptEvent(ft.Event["WebView"]):
+    """
+    Event payload for `WebView.on_javascript_alert_dialog`.
+
+    Represents a JavaScript `alert()` dialog request initiated by the loaded page.
+    """
+
     message: str
     """The message to be displayed in the window."""
 

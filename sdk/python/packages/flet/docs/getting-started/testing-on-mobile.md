@@ -1,7 +1,7 @@
 Start building awesome mobile apps in Python using just your computer and mobile phone!
 
 /// admonition | Important
-    type: danger
+    type: note
 - Make sure your computer fulfills [these requirements](installation.md#prerequisites).
 - Your device and computer must be connected to the same Wi-Fi or local network.
 - We recommend starting with the [creation of a new virtual environment](installation.md#creating-a-virtual-environment-venv).
@@ -32,13 +32,6 @@ flet run --ios [script]  # (1)!
 
 1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
 ///
-/// tab | poetry
-```bash
-poetry run flet run --ios [script]  # (1)!
-```
-
-1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
-///
 
 ///
 /// tab | Android
@@ -61,13 +54,6 @@ uv run flet run --android [script]  # (1)!
 /// tab | pip
 ```bash
 flet run --android [script]  # (1)!
-```
-
-1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).
-///
-/// tab | poetry
-```bash
-poetry run flet run --android [script]  # (1)!
 ```
 
 1. [`flet run`](../cli/flet-run.md) starts your app in hot reload mode. More info [here](running-app.md#watching-for-changes).

@@ -19,9 +19,9 @@ __all__ = ["TextButton"]
 @control("TextButton")
 class TextButton(LayoutControl, AdaptiveControl):
     """
-    Text buttons are used for the lowest priority actions, especially when presenting
-    multiple options. Text buttons can be placed on a variety of backgrounds. Until the
-    button is interacted with, its container isn’t visible.
+    Text buttons are used for the lowest priority actions, especially when presenting \
+    multiple options. Text buttons can be placed on a variety of backgrounds. Until \
+    the button is interacted with, its container isn’t visible.
 
     ```python
     ft.TextButton(
@@ -102,4 +102,5 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")

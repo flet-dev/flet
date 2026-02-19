@@ -35,6 +35,12 @@ class AudioRecorderState(Enum):
 
 @dataclass
 class AudioRecorderStateChangeEvent(ft.Event["AudioRecorder"]):
+    """
+    Event payload for recorder state transitions.
+
+    Emitted by `AudioRecorder` when recording state changes.
+    """
+
     state: AudioRecorderState
     """The new state of the audio recorder."""
 
@@ -151,7 +157,7 @@ class AndroidRecorderConfiguration:
     """
     Whether to use the Android MediaRecorder.
 
-    While advanced recorder (the default) unlocks additionnal features,
+    While advanced recorder (the default) unlocks additional features,
     the legacy recorder is stability oriented.
     """
 

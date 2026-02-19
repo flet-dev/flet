@@ -1,4 +1,4 @@
-Create a new directory (or directory with `pyproject.toml` already exists if initialized with `poetry` or `uv`) and switch into it.
+Create a new directory (or directory with `pyproject.toml` already exists if initialized with a project manager) and switch into it.
 
 To create a new "minimal" Flet app run the following command:
 
@@ -12,15 +12,10 @@ uv run flet create
 flet create
 ```
 ///
-/// tab | poetry
-```bash
-poetry run flet create
-```
-///
 
 /// admonition | Important
     type: danger
-Any existing `README.md` or `pyproject.toml` (for example, created by `uv init` or `poetry init`)
+Any existing `README.md` or `pyproject.toml` (for example, created by `uv init`)
 will be replaced by the one created by [`flet create`](../cli/flet-create.md) command.
 ///
 

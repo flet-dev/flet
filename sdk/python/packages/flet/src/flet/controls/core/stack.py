@@ -13,15 +13,43 @@ __all__ = ["Stack", "StackFit"]
 
 
 class StackFit(Enum):
+    """
+    How to size the non-positioned children of a [`Stack`][flet.].
+    """
+
     LOOSE = "loose"
+    """
+    The constraints passed to the stack from its parent are loosened.
+
+    For example, if the stack has constraints that force it to `350x600`, then
+    this would allow the non-positioned children of the stack to have any
+    width from zero to `350` and any height from zero to `600`.
+    """
+
     EXPAND = "expand"
+    """
+    The constraints passed to the stack from its parent are tightened to the
+    biggest size allowed.
+
+    For example, if the [`Stack`][flet.] has loose constraints with a width in the range
+    `10` to `100` and a height in the range `0` to `600`, then the non-positioned
+    children of the stack would all be sized as `100` pixels wide and `600` high.
+    """
+
     PASS_THROUGH = "passThrough"
+    """
+    The constraints passed to the stack from its parent are passed unmodified
+    to the non-positioned children.
+
+    For example, if a [`Stack`][flet.] is an expanded child of a [`Row`][flet.], the
+    horizontal constraints will be tight and the vertical constraints will be loose.
+    """
 
 
 @control("Stack")
 class Stack(LayoutControl, AdaptiveControl):
     """
-    Positions its children on top of each other, following a LIFO (Last In First Out)
+    Positions its children on top of each other, following a LIFO (Last In First Out) \
     order.
 
     This control is useful if you want to overlap several children in a simple way.
@@ -29,9 +57,10 @@ class Stack(LayoutControl, AdaptiveControl):
     attached to the bottom.
 
     Stack is also useful if you want to implement implicit animations
-    (https://flet.dev/docs/guides/python/animations/) that require knowing absolute
+    (https://docs.flet.dev/cookbook/animations) that require knowing absolute
     position of a target value.
 
+    Example:
     ```python
     ft.Stack(
             width=300,
@@ -75,8 +104,8 @@ class Stack(LayoutControl, AdaptiveControl):
 
     alignment: Optional[Alignment] = None
     """
-    Specifies the alignment for non-positioned (those without explicit
-    alignment properties such as [`top`][flet.LayoutControl.]
+    Specifies the alignment for non-positioned (those without explicit alignment \
+    properties such as [`top`][flet.LayoutControl.]
     or [`bottom`][flet.LayoutControl.]) and
     partially-positioned [`controls`][(c).].
     """

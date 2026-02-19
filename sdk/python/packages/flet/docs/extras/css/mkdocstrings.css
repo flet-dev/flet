@@ -87,4 +87,49 @@ code.doc-symbol-command::after {
 
 /* Command symbol */
 
+/* Icon previews */
+.flet-icon-preview {
+  align-items: center;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.45rem;
+  display: inline-flex;
+  font-size: 1.45rem;
+  justify-content: center;
+  line-height: 1;
+  margin: 0.1rem 0 0.9rem;
+  min-height: 2.2rem;
+  min-width: 2.2rem;
+  padding: 0.3rem;
+}
 
+.flet-icon-preview-material {
+  font-family: "Material Icons";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-outlined {
+  font-family: "Material Icons Outlined";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-rounded {
+  font-family: "Material Icons Round";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-material-sharp {
+  font-family: "Material Icons Sharp";
+  font-feature-settings: "liga";
+}
+
+.flet-icon-preview-cupertino {
+  font-family: "CupertinoIcons";
+}
+
+.flet-icon-preview-missing {
+  color: var(--md-default-fg-color--light);
+  display: inline-block;
+  font-size: 0.85rem;
+  margin: 0.1rem 0 0.9rem;
+}
+/* Icon previews */

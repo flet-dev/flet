@@ -1,198 +1,126 @@
-Navigation and routing is an essential feature of Single Page Applications (SPA) which allows organizing application user interface into virtual pages (views) and "navigate" between them while application URL reflects the current state of the app.
+Navigation and routing is the core of building multi-screen Flet apps.
+It lets you organize your UI into virtual pages ([`View`][flet.View] objects),
+keep URL/history in sync, and support deep links to specific app states.
 
-For mobile apps navigation and routing serves as a [deep linking](https://docs.flutter.dev/development/ui/navigation/deep-linking) to specific application parts.
+This page focuses on the current routing model and maintained examples.
 
-Well, it took [more efforts](https://github.com/flet-dev/flet/pull/95/files) than expected to add navigation and routing into Flet as the implementation is based on [Navigator 2.0](https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade) Flutter API and required to replace Flet's "Page" abstraction with "Page and Views". Flutter's newer navigation and routing API has substantial improvements such as:
+## Routing model in Flet
 
-1. Programmatic control over history stack.
-2. An easy way to intercept a call to "Back" button in AppBar.
-3. Robust synchronization with browser history.
+A [`Page`][flet.Page] is a container of views ([`page.views`][flet.Page.views]), where each view represents one route-level screen.
 
-{{ image("../assets/navigation-routing/routing-app-example.gif", alt="Routing app example") }}
+- [`page.route`][flet.Page.route] is the current route string (for example `/`, `/store`, `/settings/mail`).
+- [`page.views`][flet.Page.views] is the active navigation stack.
+- [`page.on_route_change`][flet.Page.on_route_change] rebuilds the stack when route changes.
+- [`page.on_view_pop`][flet.Page.on_view_pop] handles Back navigation (system Back, AppBar Back, browser Back).
 
+A reliable setup uses a single source of truth: derive [`page.views`][flet.Page.views] from [`page.route`][flet.Page.route].
 
-Explore [source code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing-navigation/building_views_on_route_change.py) of the example above.
+## Route basics
 
-## Page route
-
-Page route is a portion of application URL after `#` symbol:
-
-{{ image("../assets/navigation-routing/page-address-route.png", alt="Page address and route") }}
-
-
-Default application route, if not set in application URL by the user, is `/`.
-All routes start with `/`, for example `/store`, `/authors/1/books/2`.
-
-Application route can be obtained by reading `page.route` property, for example:
+The default route is `/` when no route is provided.
 
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(ft.Text(f"Initial route: {page.route}"))
-
-ft.run(main, view=ft.AppView.WEB_BROWSER)
+--8<-- "../../examples/apps/routing_navigation/initial_route.py"
 ```
 
-Grab application URL, open a new browser tab, paste the URL, modify its part after `#` to `/test` and hit enter. You should see "Initial route: /test".
+All routes should start with `/`, for example `/store`, `/products/42`, `/settings/mail`.
 
-Every time the route in the URL is changed (by editing the URL or navigating browser history with Back/Forward buttons) Flet calls `page.on_route_change` event handler:
+## Handling route changes
+
+Whenever route changes (URL edit, browser Back/Forward, or app navigation),
+[`page.on_route_change`][flet.Page.on_route_change] event is triggered.
+Use this event as the place where you decide which views must exist for the current route.
 
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(ft.Text(f"Initial route: {page.route}"))
-
-    def route_change(e: ft.RouteChangeEvent):
-        page.add(ft.Text(f"New route: {e.route}"))
-
-    page.on_route_change = route_change
-    page.update()
-
-ft.run(main, view=ft.AppView.WEB_BROWSER)
+--8<-- "../../examples/apps/routing_navigation/route_change_event.py"
 ```
 
-Now try updating URL hash a few times and then use Back/Forward buttons! You should see a new message added to a page each time the route changes:
+## Building views from route
 
-<img src="/img/docs/navigation-routing/page-route-change-event.gif"className="screenshot-60" />
+The pattern below is the baseline for most apps:
 
-Route can be changed programmatically, by updating `page.route` property:
+1. Clear [`page.views`][flet.Page.views].
+2. Add root view (`/`).
+3. Add extra views conditionally based on [`page.route`][flet.Page.route].
+4. Handle Back in [`page.on_view_pop`][flet.Page.on_view_pop] and navigate to the new top view.
 
-```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(ft.Text(f"Initial route: {page.route}"))
-
-    def route_change(e: ft.RouteChangeEvent):
-        page.add(ft.Text(f"New route: {e.route}"))
-
-    def go_store(e):
-        page.route = "/store"
-        page.update()
-
-    page.on_route_change = route_change
-    page.add(ft.Button("Go to Store", on_click=go_store))
-
-ft.run(main, view=ft.AppView.WEB_BROWSER)
-```
-
-Click "Go to Store" button and you'll see application URL is changed and a new item is pushed in a browser history.
-You can use browser "Back" button to navigate to a previous route.
-
-## Page views
-
-Flet's [`Page`][flet.Page] now is not just a single page, but a container for [`View`][flet.View]
-layered on top of each other like a sandwich:
-
-<img src="/img/docs/navigation-routing/page-views.svg" className="screenshot-100" />
-
-A collection of views represents navigator history. Page has [`page.views`][flet.Page.views] property to access views collection.
-
-The last view in the list is the one currently displayed on a page. Views list must have at least one element (root view).
-
-To simulate a transition between pages change `page.route` and add a new `View` in the end of `page.view` list.
-
-Pop the last view from the collection and change route to a "previous" one in
-[`page.on_view_pop`][flet.Page.on_view_pop] event handler to go back.
-
-## Building views on route change
-
-To build a reliable navigation there must be a single place in the program which builds a list of views
-depending on the current route. Other words, navigation history stack (represented by the list of views)
-must be a function of a route.
-
-This place is [`page.on_route_change`][flet.Page.on_route_change] event handler.
-
-Let's put everything together into a complete example which allows navigating between two pages:
-
-```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.title = "Routes Example"
-
-    def route_change(route):
-        page.views.clear()
-        page.views.append(
-            ft.View(
-                "/",
-                [
-                    ft.AppBar(title=ft.Text("Flet app"), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                    ft.Button("Visit Store", on_click=lambda _: page.go("/store")),
-                ],
-            )
-        )
-        if page.route == "/store":
-            page.views.append(
-                ft.View(
-                    "/store",
-                    [
-                        ft.AppBar(title=ft.Text("Store"), bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
-                        ft.Button("Go Home", on_click=lambda _: page.go("/")),
-                    ],
-                )
-            )
-        page.update()
-
-    def view_pop(view):
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
-
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
-    page.go(page.route)
-
-
-ft.run(main, view=ft.AppView.WEB_BROWSER)
-```
-
-Try navigating between pages using "Visit Store" and "Go Home" buttons, Back/Forward browser buttons,
-manually changing route in the URL - it works no matter what! :)
-
-/// admonition
-    type: note
-To "navigate" between pages we used [`page.go()`][flet.Page.go] - a helper method that updates
-[`page.route`][flet.Page.route], calls [`page.on_route_change`][flet.Page.on_route_change] event handler to update views and finally calls `page.update()`.
+/// admonition | Why is this pattern important?
+    type: tip
+- Keeps URL, history stack, and visible UI synchronized.
+- Supports deep links and reloads naturally.
+- Makes navigation deterministic and easier to debug.
 ///
 
-Notice the usage of [`page.on_view_pop`][flet.Page.on_view_pop] event handler. It fires when the user
-clicks automatic "Back" button in [`AppBar`][flet.AppBar] control. In the handler we remove the last element
-from views collection and navigate to view's root "under" it.
+```python
+--8<-- "../../examples/apps/routing_navigation/building_views_on_route_change.py"
+```
 
-## Route templates
+## Programmatic navigation
 
-Flet offers [`TemplateRoute`][flet.TemplateRoute] - an utility class based on [repath](https://github.com/nickcoutsos/python-repath) library which allows matching
-ExpressJS-like routes and parsing their parameters, for example `/account/:account_id/orders/:order_id`.
+Use [`page.push_route()`][flet.Page.push_route] to navigate.
 
-`TemplateRoute` plays great with route change event:
+You can also pass query parameters as keyword arguments:
 
 ```python
-troute = TemplateRoute(page.route)
+await page.push_route("/search", q="flet", page=2)
+```
+
+## Back navigation and pop confirmation
+
+When users go back, Flet triggers [`page.on_view_pop`][flet.Page.on_view_pop].
+For flows requiring confirmation (for example, unsaved changes), disable automatic pop
+and confirm manually with [`View.can_pop`][flet.View.can_pop] + [`View.on_confirm_pop`][flet.View.on_confirm_pop].
+
+```python
+--8<-- "../../examples/apps/routing_navigation/pop_view_confirm.py"
+```
+
+## Navigation UI patterns
+
+Routing composes well with navigation controls such as drawer, rail, and tabs.
+This example shows route-driven drawer navigation with multiple top-level destinations:
+
+```python
+--8<-- "../../examples/apps/routing_navigation/drawer_navigation.py"
+```
+
+## Route templates (parameterized routes)
+
+Use [`TemplateRoute`][flet.TemplateRoute] to match and parse route parameters, for example `/books/:id`.
+Template syntax is provided by [repath](https://github.com/nickcoutsos/python-repath#parameters).
+
+```python
+import flet as ft
+
+troute = ft.TemplateRoute(page.route)
 
 if troute.match("/books/:id"):
-    print("Book view ID:", troute.id)
+    print("Book ID:", troute.id)
 elif troute.match("/account/:account_id/orders/:order_id"):
     print("Account:", troute.account_id, "Order:", troute.order_id)
 else:
     print("Unknown route")
 ```
 
-You can read more about template syntax supported by `repath` library [here](https://github.com/nickcoutsos/python-repath#parameters).
+## Web URL strategy
 
-## URL strategy for web
+Flet web apps support two URL strategies :
 
-Flet web apps support two ways of configuring URL-based routing:
+- `"path"` (default): in the form `https://myapp.dev/store`
+- `"hash"`: `https://myapp.dev/#/store`
 
-- **Path** (default) - paths are read and written without a hash. For example, `fletapp.dev/path/to/view`.
-- **Hash** - paths are read and written to the [hash fragment](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax). For example, `fletapp.dev/#/path/to/view`.
-
-To change URL strategy use `route_url_strategy` parameter of `flet.app()` method, for example:
-
+It can be set via `route_url_strategy` in `ft.run()`
 ```python
+import flet as ft
 ft.run(main, route_url_strategy="hash")
 ```
 
-URL strategy for Flet Server can be configured with `FLET_ROUTE_URL_STRATEGY` environment variable which could be set to either `path` (default) or `hash`.
+For Flet server deployments, you can also set the [`FLET_ROUTE_URL_STRATEGY`](../reference/environment-variables.md#flet_web_route_url_strategy)
+environment variable.
+
+## Practical recommendations
+
+- Always keep a root `/` view in [`page.views`][flet.Page.views].
+- Keep route handling centralized in [`page.on_route_change`][flet.Page.on_route_change]; avoid mutating [`page.views`][flet.Page.views] from many places.
+- When adding new routes, test these cases: direct deep link, browser Back/Forward, app Back button, and reload.
+- Use route templates for dynamic segments instead of manual string splitting.

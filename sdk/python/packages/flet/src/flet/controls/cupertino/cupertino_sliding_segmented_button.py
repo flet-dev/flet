@@ -44,7 +44,8 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the [`controls`][(c).] list.
+    The index (starting from 0) of the selected segment in the [`controls`][(c).] \
+    list.
 
     Raises:
         IndexError: If it is out of range relative to the visible controls.
@@ -83,8 +84,8 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Called when the state of the button is changed -
-    when one of the [`controls`][(c).] is clicked.
+    Called when the state of the button is changed - when one of the \
+    [`controls`][(c).] is clicked.
     """
 
     def before_update(self):

@@ -12,6 +12,7 @@ Flet controls based on 3rd-party Flutter packages that used to be a part of Flet
 * [flet-map](https://pypi.org/project/flet-map/)
 * [flet-permission-handler](https://pypi.org/project/flet-permission-handler/)
 * [flet-rive](https://pypi.org/project/flet-rive/)
+* [flet-secure-storage](https://pypi.org/project/flet-secure-storage/)
 * [flet-video](https://pypi.org/project/flet-video/)
 * [flet-webview](https://pypi.org/project/flet-webview/)
 

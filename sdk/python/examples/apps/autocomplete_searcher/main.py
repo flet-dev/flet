@@ -1,10 +1,31 @@
-from names import NAMES
-
 import flet as ft
 
-
-def printer(e):
-    print("Yellow!")
+NAMES = [
+    "Adam",
+    "William",
+    "Emma",
+    "Alexander",
+    "Julia",
+    "Elias",
+    "Hugo",
+    "Alice",
+    "Emil",
+    "Anton",
+    "Ebba",
+    "Elin",
+    "Oliver",
+    "Axel",
+    "Maja",
+    "Ella",
+    "Alva",
+    "Liam",
+    "Albin",
+    "Elsa",
+    "Erik",
+    "Ida",
+    "Oscar",
+    "Wilma",
+]
 
 
 def main(page: ft.Page):
@@ -23,7 +44,6 @@ def main(page: ft.Page):
         name: ft.ListTile(
             title=ft.Text(name),
             leading=ft.Icon(ft.Icons.ACCESSIBILITY),
-            on_click=printer,
         )
         for name in NAMES
     }
@@ -34,4 +54,4 @@ def main(page: ft.Page):
     page.add(text_field, list_view)
 
 
-ft.run(port=8080, target=main, view=ft.WEB_BROWSER)
+ft.run(main)

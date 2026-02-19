@@ -5,6 +5,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
+import '../utils/locale.dart';
 import '../utils/numbers.dart';
 import '../utils/time.dart';
 
@@ -26,6 +27,7 @@ class DatePickerControl extends StatelessWidget {
         control.getIconData("switch_to_calendar_icon");
     var switchToInputEntryModeIcon =
         control.getIconData("switch_to_input_icon");
+    var locale = control.getLocale("locale");
 
     void onClosed(DateTime? dateValue) {
       control.updateProperties({"_open": false}, python: false);
@@ -39,8 +41,8 @@ class DatePickerControl extends StatelessWidget {
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? currentDate ?? DateTime.now(),
-        firstDate: control.getDateTime("first_date", DateTime(1900))!,
-        lastDate: control.getDateTime("last_date", DateTime(2050))!,
+        firstDate: control.getDateTime("first_date", DateTime(1900, 1, 1))!,
+        lastDate: control.getDateTime("last_date", DateTime(2050, 1, 1))!,
         currentDate: currentDate ?? DateTime.now(),
         helpText: control.getString("help_text"),
         cancelText: control.getString("cancel_text"),
@@ -69,7 +71,10 @@ class DatePickerControl extends StatelessWidget {
             : null,
       );
 
-      return dialog;
+      return locale == null || !locale.isSupportedByDelegates()
+          ? dialog
+          : Localizations.override(
+              context: context, locale: locale, child: dialog);
     }
 
     if (open && (open != lastOpen)) {

@@ -28,7 +28,7 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
 
     index: int
     """
-    The index of the selected suggestion from the corresponding
+    The index of the selected suggestion from the corresponding \
     [`AutoComplete.suggestions`][flet.] list.
     """
 
@@ -39,7 +39,7 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
 @control("AutoComplete")
 class AutoComplete(LayoutControl):
     """
-    Helps the user make a selection by entering some text and choosing from among a
+    Helps the user make a selection by entering some text and choosing from among a \
     list of displayed options.
     """
 

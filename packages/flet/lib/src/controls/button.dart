@@ -98,20 +98,22 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     var theme = Theme.of(context);
 
     var style = parseButtonStyle(
-        widget.control.internals?["style"], Theme.of(context),
-        defaultForegroundColor: widget.control
-            .getColor("color", context, theme.colorScheme.primary)!,
-        defaultBackgroundColor: widget.control
-            .getColor("bgcolor", context, theme.colorScheme.surface)!,
-        defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
-        defaultShadowColor: theme.colorScheme.shadow,
-        defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
-        defaultElevation: widget.control.getDouble("elevation", 1)!,
-        defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
-        defaultBorderSide: BorderSide.none,
-        defaultShape: theme.useMaterial3
-            ? const StadiumBorder()
-            : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
+      widget.control.internals?["style"] ?? widget.control.get("style"),
+      theme,
+      defaultForegroundColor:
+          widget.control.getColor("color", context, theme.colorScheme.primary)!,
+      defaultBackgroundColor: widget.control
+          .getColor("bgcolor", context, theme.colorScheme.surface)!,
+      defaultOverlayColor: theme.colorScheme.primary.withValues(alpha: 0.08),
+      defaultShadowColor: theme.colorScheme.shadow,
+      defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
+      defaultElevation: widget.control.getDouble("elevation", 1)!,
+      defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
+      defaultBorderSide: BorderSide.none,
+      defaultShape: theme.useMaterial3
+          ? const StadiumBorder()
+          : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    );
 
     Widget error = const ErrorControl("Error displaying Button",
         description: "\"icon\" must be specified together with \"content\"");
@@ -203,8 +205,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child:
-                widget.control.buildTextOrWidget("content") ?? const Text(""));
+            child: content ?? const Text(""));
       } else if (isOutlinedButton) {
         button = OutlinedButton(
             autofocus: autofocus,

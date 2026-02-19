@@ -17,6 +17,8 @@ import '../models/control.dart';
 import '../models/keyboard_event.dart';
 import '../models/multi_view.dart';
 import '../models/page_design.dart';
+import '../routing/deep_linking_bootstrap.dart';
+import '../routing/route_information_provider.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
@@ -55,19 +57,20 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
   late final RouteParser _routeParser;
+  late final RouteInformationProvider _routeInformationProvider;
   late final AppLifecycleListener _appLifecycleListener;
-  ServiceRegistry? _pageServices;
-  ServiceRegistry? _userServices;
-  String? _userServicesUid;
+  ServiceRegistry? _services;
+  String? _servicesUid;
   ServiceBinding? _windowService;
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
   String? _prevViewRoutes;
+  final Set<String> _pendingPoppedViewRoutes = <String>{};
+  final Set<String> _sentViewPopEventsForRoutes = <String>{};
 
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
-  List<DeviceOrientation>? _appliedDeviceOrientations;
 
   @override
   void initState() {
@@ -78,6 +81,27 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     _updateMultiViews();
 
     _routeParser = RouteParser();
+    final backend = FletBackend.of(context);
+    final isEmbedded = backend.controlId != null;
+    final defaultRouteName =
+        WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+    final pendingInitial = isEmbedded
+        ? null
+        : FletDeepLinkingBootstrap.takePendingInitialRouteInformation();
+    final initial = isEmbedded
+        ? RouteInformation(uri: Uri(path: '/'))
+        : FletRouteInformationProvider.normalize(
+            pendingInitial ??
+                RouteInformation(
+                  uri: Uri.tryParse(defaultRouteName) ?? Uri(path: '/'),
+                ),
+          );
+    _routeInformationProvider = isEmbedded
+        ? FletLocalRouteInformationProvider(initialRouteInformation: initial)
+        : FletRouteInformationProvider(initialRouteInformation: initial);
+    if (!isEmbedded) {
+      FletDeepLinkingBootstrap.markRouterReady();
+    }
 
     _routeState = RouteState(_routeParser);
     _routeState.addListener(_routeChanged);
@@ -86,6 +110,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       routeState: _routeState,
       navigatorKey: _navigatorKey,
       builder: (context) => _buildNavigator(context, _navigatorKey),
+      popRouteHandler: _handleSystemPopRoute,
     );
 
     _appLifecycleListener = AppLifecycleListener(
@@ -137,8 +162,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     widget.control.removeInvokeMethodListener(_invokeMethod);
     widget.control.removeListener(_onPageControlChanged);
-    _pageServices?.dispose();
-    _userServices?.dispose();
+    _services?.dispose();
     _windowService?.dispose();
     super.dispose();
   }
@@ -153,26 +177,21 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
     var backend = FletBackend.of(context);
 
-    _pageServices ??= ServiceRegistry(
-        control: widget.control,
-        propertyName: "_services",
-        backend: backend);
-
-    var userServicesControl = widget.control.child("_user_services");
-    if (userServicesControl != null) {
-      var uid = userServicesControl.internals?["uid"];
-      if (_userServices == null || _userServicesUid != uid) {
-        _userServices?.dispose();
-        _userServices = ServiceRegistry(
-            control: userServicesControl,
+    var servicesControl = widget.control.child("_services");
+    if (servicesControl != null) {
+      var uid = servicesControl.internals?["uid"];
+      if (_services == null || _servicesUid != uid) {
+        _services?.dispose();
+        _services = ServiceRegistry(
+            control: servicesControl,
             propertyName: "_services",
             backend: backend);
-        _userServicesUid = uid;
+        _servicesUid = uid;
       }
-    } else if (_userServices != null) {
-      _userServices?.dispose();
-      _userServices = null;
-      _userServicesUid = null;
+    } else if (_services != null) {
+      _services?.dispose();
+      _services = null;
+      _servicesUid = null;
     }
 
     var windowControl = widget.control.child("window", visibleOnly: false);
@@ -293,6 +312,36 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   void _routeChanged() {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
+  }
+
+  void _markViewAsPopped(String routeStr) {
+    if (_pendingPoppedViewRoutes.add(routeStr) && mounted) {
+      setState(() {});
+    }
+    if (_sentViewPopEventsForRoutes.add(routeStr)) {
+      widget.control
+          .triggerEventWithoutSubscribers("view_pop", {"route": routeStr});
+    }
+  }
+
+  Future<bool?> _handleSystemPopRoute() async {
+    debugPrint("Page._handleSystemPopRoute");
+    final views = widget.control.children("views");
+    if (views.length <= 1) {
+      return null;
+    }
+
+    final topView = views.last;
+    final canPop = topView.getBool("can_pop", true) ?? true;
+    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    if (!canPop || requiresConfirm) {
+      return null;
+    }
+
+    final routeStr = topView.getString("route", topView.id.toString()) ??
+        topView.id.toString();
+    _markViewAsPopped(routeStr);
+    return true;
   }
 
   void _handleAppLifecycleTransition(String state) {
@@ -503,6 +552,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
+                routeInformationProvider: _routeInformationProvider,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -528,6 +578,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 showSemanticsDebugger: showSemanticsDebugger,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
+                routeInformationProvider: _routeInformationProvider,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,
@@ -563,8 +614,24 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
+    final viewRouteValues = views
+        .map((v) => v.getString("route", v.id.toString()))
+        .whereType<String>()
+        .toSet();
+    _pendingPoppedViewRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+    _sentViewPopEventsForRoutes
+        .removeWhere((route) => !viewRouteValues.contains(route));
+
+    final effectiveViews = _pendingPoppedViewRoutes.isEmpty
+        ? views
+        : views
+            .where((v) => !_pendingPoppedViewRoutes
+                .contains(v.getString("route", v.id.toString())))
+            .toList();
+
     List<Page<dynamic>> pages = [];
-    if (views.isEmpty) {
+    if (effectiveViews.isEmpty) {
       pages.add(AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
@@ -582,10 +649,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                   body: PageMedia(),
                 )));
     } else {
-      String viewRoutes =
-          views.map((v) => v.getString("route", v.id.toString())).join();
+      String viewRoutes = effectiveViews
+          .map((v) => v.getString("route", v.id.toString()))
+          .join();
 
-      pages = views.map((view) {
+      pages = effectiveViews.map((view) {
         var key = ValueKey(view.getString("route", view.id.toString()));
         var child = ControlWidget(control: view);
 
@@ -608,13 +676,22 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     }
 
     return Navigator(
-        key: navigatorKey,
-        pages: pages,
-        onDidRemovePage: (page) {
-          if (page.key != null) {
-            widget.control.triggerEventWithoutSubscribers(
-                "view_pop", {"route": (page.key as ValueKey).value});
-          }
-        });
+      key: navigatorKey,
+      pages: pages,
+      onDidRemovePage: (page) {
+        if (pages.length <= 1) {
+          return;
+        }
+
+        final pageKey = page.key;
+        final routeValue = pageKey is ValueKey ? pageKey.value : null;
+        if (routeValue == null) {
+          return;
+        }
+
+        final routeStr = routeValue.toString();
+        _markViewAsPopped(routeStr);
+      },
+    );
   }
 }

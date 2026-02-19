@@ -221,7 +221,7 @@ class _LineChartControlState extends State<LineChartControl> {
       curve: animation.curve,
     );
 
-    return ConstrainedControl(
+    return LayoutControl(
         control: widget.control,
         child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {

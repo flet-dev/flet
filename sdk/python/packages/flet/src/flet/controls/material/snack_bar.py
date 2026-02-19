@@ -21,18 +21,80 @@ __all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 
 
 class SnackBarBehavior(Enum):
+    """
+    Defines where a [`SnackBar`][flet.] appears within a page and how it is positioned \
+    relative to bottom UI elements.
+    """
+
     FIXED = "fixed"
+    """
+    Anchors the snack bar to the bottom of the page.
+
+    If a [`NavigationBar`][flet.] is present, the snack bar is shown above it.
+    Other non-fixed content can be pushed upward while the snack bar is visible.
+    """
+
     FLOATING = "floating"
+    """
+    Displays the snack bar as a floating surface above page content.
+
+    This mode can overlay bottom widgets, such as a [`NavigationBar`][flet.] and a
+    bottom-positioned [`FloatingActionButton`][flet.].
+    """
 
 
 class DismissDirection(Enum):
+    """
+    Defines swipe directions allowed for dismissing a [`SnackBar`][flet.].
+
+    The direction controls which drag gestures can close the snack bar when
+    dismissal is enabled.
+    """
+
     NONE = "none"
+    """
+    Disables swipe-to-dismiss gestures.
+    """
+
     VERTICAL = "vertical"
+    """
+    Allows dismissing by swiping vertically.
+
+    Users can drag either up or down to dismiss.
+    """
+
     HORIZONTAL = "horizontal"
+    """
+    Allows dismissing by swiping horizontally.
+
+    Users can drag either left or right to dismiss.
+    """
+
     END_TO_START = "endToStart"
+    """
+    Allows dismissing toward the end-to-start reading direction.
+
+    For left-to-right locales this is right-to-left; for right-to-left locales
+    this is left-to-right.
+    """
+
     START_TO_END = "startToEnd"
+    """
+    Allows dismissing toward the start-to-end reading direction.
+
+    For left-to-right locales this is left-to-right; for right-to-left locales
+    this is right-to-left.
+    """
+
     UP = "up"
+    """
+    Allows dismissing only by swiping upward.
+    """
+
     DOWN = "down"
+    """
+    Allows dismissing only by swiping downward.
+    """
 
 
 @control("SnackBar")
@@ -91,8 +153,8 @@ class SnackBarAction(Control):
 @control("SnackBar")
 class SnackBar(DialogControl):
     """
-    A lightweight message with an optional action which briefly displays at the
-    bottom of the screen.
+    A lightweight message with an optional action which briefly displays at the bottom \
+    of the screen.
 
     ```python
     page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
@@ -196,7 +258,7 @@ class SnackBar(DialogControl):
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate at which to place the snack bar. This controls the size of the
+    The z-coordinate at which to place the snack bar. This controls the size of the \
     shadow below the snack bar.
 
     Raises:
@@ -215,8 +277,8 @@ class SnackBar(DialogControl):
 
     action_overflow_threshold: Number = 0.25
     """
-    The percentage threshold for [`action`][(c).]'s width before
-    it overflows to a new line.
+    The percentage threshold for [`action`][(c).]'s width before it overflows to a new \
+    line.
 
     If the width of the snackbar's [`content`][(c).] is greater than this percentage
     of the width of the snackbar minus the width of its `action`, then the `action`
@@ -237,7 +299,7 @@ class SnackBar(DialogControl):
 
     If `False`, the snack bar will be dismissed after the timeout.
 
-    If not provided, but the snackbar ['action'][c.] is not null,
+    If not provided, but the snackbar [`action`][(c).] is not null,
     the snackbar will persist as well.
     """
 

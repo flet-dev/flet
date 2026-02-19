@@ -280,9 +280,9 @@ def test_button_basic_diff():
         patch,
         [
             {
-                "op": "add",
-                "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+                "op": "replace",
+                "path": ["_internals"],
+                "value": {"style": ft.ButtonStyle(color=ft.Colors.RED, elevation=1)},
             },
             {"op": "replace", "path": ["scale"], "value": ft.Scale(0.2)},
             {"op": "replace", "path": ["content"], "value": "Click me"},
@@ -297,9 +297,9 @@ def test_button_basic_diff():
         patch,
         [
             {
-                "op": "remove",
-                "path": ["_internals", "style"],
-                "value": ft.ButtonStyle(color=ft.Colors.RED, elevation=1),
+                "op": "replace",
+                "path": ["_internals"],
+                "value": {},
             },
             {"op": "replace", "path": ["scale", "scale"], "value": 0.1},
             {"op": "replace", "path": ["content"], "value": ft.Text("Text_1")},
@@ -647,6 +647,31 @@ def test_component_list_diff():
     assert c1.parent == comp
     assert btn1.parent == c1
     assert txt1.parent == comp
+
+
+def test_component_list_replaces_when_component_fn_changes():
+    def c1_fn():
+        return ft.Text("one")
+
+    def c2_fn():
+        return ft.Text("two")
+
+    host = Component(fn=lambda: None, args=(), kwargs={})
+    old = [Component(fn=c1_fn, args=(), kwargs={})]
+    new = [Component(fn=c2_fn, args=(), kwargs={})]
+
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, control_cls=ft.BaseControl, parent=host, path=["_b"], frozen=True
+    )
+
+    assert cmp_ops(
+        patch.patch,
+        [
+            {"op": "replace", "path": ["_b", 0], "value_type": Component},
+        ],
+    )
+    assert any(isinstance(c, Component) for c in added_controls)
+    assert any(isinstance(c, Component) for c in removed_controls)
 
 
 def test_list_insertions_with_keys():

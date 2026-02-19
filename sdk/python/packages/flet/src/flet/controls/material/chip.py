@@ -27,6 +27,7 @@ class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
 
+    Example:
     ```python
     ft.Chip(
         label="Explore topics",
@@ -51,7 +52,7 @@ class Chip(LayoutControl):
 
     selected: bool = False
     """
-    If [`on_select`][(c).] event is specified, `selected` property is used to
+    If [`on_select`][(c).] event is specified, `selected` property is used to \
     determine whether this chip is selected or not.
     """
 
@@ -77,7 +78,7 @@ class Chip(LayoutControl):
 
     show_checkmark: bool = True
     """
-    If [`on_select`][(c).] event is specified and chip is selected, `show_checkmark`
+    If [`on_select`][(c).] event is specified and chip is selected, `show_checkmark` \
     is used to determine whether or not to show a checkmark.
     """
 
@@ -88,8 +89,8 @@ class Chip(LayoutControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used for this chip's background
-    when the elevation is greater than `0` and this chip is not selected.
+    The color used for this chip's background when the elevation is greater than `0` \
+    and this chip is not selected.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -115,8 +116,9 @@ class Chip(LayoutControl):
 
     delete_icon_tooltip: Optional[str] = None
     """
-    The text to be used for this chip's `delete_icon` tooltip. If not provided or
-    provided with an empty string, the tooltip of the delete icon will not be displayed.
+    The text to be used for this chip's `delete_icon` tooltip. If not provided or \
+    provided with an empty string, the tooltip of the delete icon will not be \
+    displayed.
     """
 
     delete_icon_color: Optional[ColorValue] = None
@@ -144,8 +146,8 @@ class Chip(LayoutControl):
 
     selected_shadow_color: Optional[ColorValue] = None
     """
-    The color used for this chip's background
-    when the elevation is greater than `0` and this chip is selected.
+    The color used for this chip's background when the elevation is greater than `0` \
+    and this chip is selected.
     """
 
     autofocus: bool = False
@@ -163,7 +165,7 @@ class Chip(LayoutControl):
 
     elevation_on_click: Optional[Number] = None
     """
-    The elevation to be applied on this chip relative to its parent during the press
+    The elevation to be applied on this chip relative to its parent during the press \
     motion. This controls the size of the shadow below this chip.
 
     Defaults to `8.0`.

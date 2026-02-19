@@ -9,12 +9,15 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
+    "flet-desktop-light",
     "flet-web",
     "flet-ads",
     "flet-audio",
     "flet-audio-recorder",
     "flet-camera",
     "flet-charts",
+    "flet-code-editor",
+    "flet-color-pickers",
     "flet-datatable2",
     "flet-flashlight",
     "flet-geolocator",
@@ -22,14 +25,16 @@ dependencies = [
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
+    "flet-secure-storage",
     "flet-video",
-    "flet-webview"
+    "flet-webview",
 ]
 
 [tool.uv.sources]
 flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
+flet-desktop-light = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
@@ -43,9 +48,12 @@ flet-lottie = { workspace = true }
 flet-map = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
+flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
+flet-code-editor = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
+flet-color-pickers = { workspace = true }
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -85,14 +93,14 @@ docs = [
     "mkdocs-glightbox >=0.5.1",
     "mkdocs-open-in-new-tab >=1.0.8",
     "mkdocs-section-index >=0.3.10",
-    "griffe-modernized-annotations >=1.0.8",
     "griffe-warnings-deprecated >=1.1.0",
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",
     "pydocstyle >=6.3.0",
     "linkcheckmd >=1.4.0",
     "mkdocs-external-images",
-    "mkdocs-macros-plugin>=1.5.0",
+    "mkdocs-macros-plugin >=1.5.0",
+    "packaging >=23.0",
     { include-group = 'docs-coverage' },
 ]
 all = [
@@ -106,17 +114,23 @@ line-length = 88
 target-version = "py39"
 fix = true
 show-fixes = true
+exclude = [
+    ".github"
+]
 
 [tool.ruff.lint]
 pydocstyle = { convention = 'google' }
 isort = { known-first-party = [
     "flet",
     "flet_cli",
+    "flet_desktop",
+    "flet_web",
     "flet_ads",
     "flet_audio",
     "flet_audio_recorder",
     "flet_camera",
     "flet_charts",
+    "flet_color_pickers",
     "flet_datatable2",
     "flet_flashlight",
     "flet_geolocator",
@@ -124,6 +138,7 @@ isort = { known-first-party = [
     "flet_map",
     "flet_permission_handler",
     "flet_rive",
+    "flet_secure_storage",
     "flet_video",
     "flet_webview"
 ] }
@@ -153,3 +168,6 @@ docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["packages*"]

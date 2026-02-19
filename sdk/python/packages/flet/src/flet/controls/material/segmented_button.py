@@ -30,14 +30,12 @@ class Segment(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The icon (typically an [`Icon`][flet.]) to be
-    displayed in the segment.
+    The icon (typically an [`Icon`][flet.]) to be displayed in the segment.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`][flet.]) to be
-    displayed in the segment.
+    The label (usually a [`Text`][flet.]) to be displayed in the segment.
 
     Raises:
         ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
@@ -108,7 +106,7 @@ class SegmentedButton(LayoutControl):
 
     selected: list[str] = field(default_factory=list)
     """
-    A set of `Segment.value`s that indicate which segments are selected. It is updated
+    A set of `Segment.value`s that indicate which segments are selected. It is updated \
     when the user (un)selects a segment.
 
     Raises:
@@ -129,7 +127,7 @@ class SegmentedButton(LayoutControl):
 
     show_selected_icon: bool = True
     """
-    A boolean value that indicates if the `selected_icon` is displayed on the
+    A boolean value that indicates if the `selected_icon` is displayed on the \
     `selected` segments.
 
     If `True`, the `selected_icon` will be displayed at the start of the `selected`
@@ -149,8 +147,8 @@ class SegmentedButton(LayoutControl):
 
     padding: Optional[PaddingValue] = None
     """
-    Defines the button's size and padding. If specified, the button expands to fill its
-    parent's space with this padding.
+    Defines the button's size and padding. If specified, the button expands to fill \
+    its parent's space with this padding.
 
     When `None`, the button adopts its intrinsic content size.
     """

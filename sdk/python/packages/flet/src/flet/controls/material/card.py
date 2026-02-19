@@ -12,15 +12,32 @@ __all__ = ["Card", "CardVariant"]
 
 
 class CardVariant(Enum):
+    """
+    Material card visual style preset.
+
+    Used to define the [`Card.variant`][flet.].
+    """
+
     ELEVATED = "elevated"
+    """
+    Standard elevated card style.
+    """
+
     FILLED = "filled"
+    """
+    Filled card style emphasizing container color.
+    """
+
     OUTLINED = "outlined"
+    """
+    Outlined card style with a visible border.
+    """
 
 
 @control("Card")
 class Card(LayoutControl, AdaptiveControl):
     """
-    A material design card: a panel with slightly rounded corners and an elevation
+    A material design card: a panel with slightly rounded corners and an elevation \
     shadow.
 
     ```python
@@ -88,14 +105,13 @@ class Card(LayoutControl, AdaptiveControl):
 
     semantic_container: bool = True
     """
-    Whether this card represents a single semantic container, or
-    if it instead represents a collection of individual semantic nodes
-    (different types of content).
+    Whether this card represents a single semantic container, or if it instead \
+    represents a collection of individual semantic nodes (different types of content).
     """
 
     show_border_on_foreground: bool = True
     """
-    Whether the shape of the border should be painted in front of the
+    Whether the shape of the border should be painted in front of the \
     [`content`][(c).] or behind.
     """
 

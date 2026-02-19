@@ -51,6 +51,7 @@ class _CupertinoNavigationBarControlState
         border: widget.control.getBorder("border", Theme.of(context)),
         onTap: widget.control.disabled ? null : _onTap,
         items: widget.control.children("destinations").map((dest) {
+          dest.notifyParent = true;
           return BottomNavigationBarItem(
               tooltip: !dest.disabled ? dest.getString("tooltip") : null,
               backgroundColor: dest.getColor("bgcolor", context),

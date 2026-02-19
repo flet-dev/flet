@@ -16,7 +16,6 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import '../utils/theme.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_context.dart';
@@ -172,7 +171,6 @@ class _ViewControlState extends State<ViewControl> {
             .addAll(dialogControls.map((c) => ControlWidget(control: c)));
         overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
-
     }
 
     Widget body = Stack(children: [

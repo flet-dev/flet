@@ -14,6 +14,11 @@ class ProgressBar(LayoutControl):
     A material design linear progress indicator, also known as a progress bar.
 
     A control that shows progress along a line.
+
+    ```python
+    ft.ProgressBar(width=400, value=0.8)
+    ```
+
     """
 
     value: Optional[Number] = None
@@ -110,7 +115,7 @@ class ProgressBar(LayoutControl):
 
     year_2023: Optional[bool] = None
     """
-    If this is set to `False`, the ProgressBar will use the latest Material Design 3
+    If this is set to `False`, the ProgressBar will use the latest Material Design 3 \
     appearance, which was introduced in December 2023.
 
     When `True`, the ProgressBar will use the 2023 Material Design 3 appearance.

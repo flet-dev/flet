@@ -18,8 +18,7 @@ __all__ = [
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the
-    [`FilePicker`][flet.].
+    Defines the file types that can be selected using the [`FilePicker`][flet.].
     """
 
     ANY = "any"
@@ -55,22 +54,66 @@ class FilePickerFileType(Enum):
 
 @dataclass
 class FilePickerUploadFile:
+    """
+    Upload descriptor for one file selected by [`FilePicker`][flet.].
+
+    Instances are passed to [`FilePicker.upload()`][flet.FilePicker.upload].
+    During upload, Flet resolves the selected file by [`id`][(c).] first and,
+    when `id` is absent or not found, falls back to [`name`][(c).].
+
+    At least one of [`id`][(c).] or [`name`][(c).] should be provided.
+    """
+
     upload_url: str
+    """
+    Upload destination URL.
+
+    Can be an absolute URL or a page-relative URL returned by
+    [`Page.get_upload_url()`][flet.Page.get_upload_url].
+    """
+
     method: str = "PUT"
+    """
+    HTTP method used for the upload request, usually `PUT` or `POST`.
+    """
+
     id: Optional[int] = None
+    """
+    Selected file identifier returned by
+    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+
+    This is the preferred lookup key when both `id` and `name` are specified.
+    """
+
     name: Optional[str] = None
+    """
+    Selected file name used as fallback lookup when [`id`][(c).] is missing
+    or does not match any currently selected file.
+    """
 
 
 @dataclass
 class FilePickerFile:
+    """
+    Metadata for a file selected via
+    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+
+    Returned by [`FilePicker.pick_files()`][flet.FilePicker.pick_files] and
+    used as input context for [`FilePickerUploadFile`][flet.FilePickerUploadFile]
+    when uploading selected files.
+    """
+
     id: int
     """
-    TBD
+    Selection-scoped file identifier assigned by Flet.
+
+    This value is stable for the current picker selection and is preferred for
+    upload matching in [`FilePickerUploadFile`][flet.FilePickerUploadFile].
     """
 
     name: str
     """
-    File name without a path.
+    File name (basename), without directory path.
     """
 
     size: int
@@ -80,15 +123,22 @@ class FilePickerFile:
 
     path: Optional[str] = None
     """
-    Full path to a file.
+    Absolute path to the selected file, when available.
 
     Note:
-        Works for desktop and mobile only. Will be `None` in web mode.
+        - Web mode always returns `None`.
+        - On native platforms, this can still be `None` if the platform picker
+            does not expose a filesystem path.
     """
 
 
 @dataclass
 class FilePickerUploadEvent(Event["FilePicker"]):
+    """
+    Event emitted when a file is uploaded via \
+    [`FilePicker.upload()`][flet.FilePicker.upload] method.
+    """
+
     file_name: str
     """
     The name of the uploaded file.
@@ -108,13 +158,13 @@ class FilePickerUploadEvent(Event["FilePicker"]):
 @control("FilePicker")
 class FilePicker(Service):
     """
-    A control that allows you to use the native file explorer to pick single
-    or multiple files, with extensions filtering support and upload.
+    A control that allows you to use the native file explorer to pick single or \
+    multiple files, with extensions filtering support and upload.
 
     Danger: Important
-        In Linux, the FilePicker control depends on
+        On Linux, this control requires
         [Zenity](https://help.gnome.org/users/zenity/stable/) when running Flet
-        as an app. This is not a requirement when running Flet in a browser.
+        as a desktop app. It is not required when running Flet in a browser.
 
         To install Zenity on Ubuntu/Debian run the following commands:
         ```bash
@@ -124,21 +174,30 @@ class FilePicker(Service):
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
-    Called when a file upload progress is updated.
+    Called when a file is uploaded via [`upload()`][(c).upload] method.
+
+    This callback is invoked at least twice for each uploaded file: once with `0.0`
+    [`progress`][flet.FilePickerUploadEvent.] before the upload starts, and once with
+    `1.0` [`progress`][flet.FilePickerUploadEvent.] when the upload completes.
+
+    For files larger than 1 MB, additional progress events are emitted
+    at every 10% increment (for example, `0.1`, `0.2`, ...).
     """
 
     async def upload(self, files: list[FilePickerUploadFile]):
         """
-        Uploads selected files to specified upload URLs.
+        Uploads picked files to specified upload URLs.
 
-        Before calling this method,
-        [`pick_files()`][(c).pick_files]
-        must be called, so that the internal file picker selection is not empty.
+        Before calling this method, [`pick_files()`][(c).pick_files] first has to be
+        called to ensure the internal file picker selection is not empty.
+
+        Once called, Flet asynchronously starts uploading selected files
+        one-by-one and reports the progress via [`on_upload`][(c).] event.
 
         Args:
             files: A list of [`FilePickerUploadFile`][flet.], where
                 each item specifies which file to upload, and where
-                (with PUT or POST).
+                (with `PUT` or `POST`).
         """
         await self._invoke_method(
             "upload",
@@ -187,8 +246,8 @@ class FilePicker(Service):
         src_bytes: Optional[bytes] = None,
     ) -> Optional[str]:
         """
-        Opens a save file dialog which lets the user select a file path and a file name
-        to save a file.
+        Opens a save file dialog which lets the user select a file path and a file \
+        name to save a file.
 
         Note:
             - On desktop this method only opens a dialog for the user to select
@@ -242,7 +301,11 @@ class FilePicker(Service):
         allow_multiple: bool = False,
     ) -> list[FilePickerFile]:
         """
-        Retrieves the file(s) from the underlying platform.
+        Opens a pick file dialog.
+
+        Tip:
+            To upload the picked files, pass them to [`upload()`][(c).upload] method,
+            along with their upload URLs.
 
         Args:
             dialog_title: The title of the dialog window.

@@ -21,6 +21,16 @@ __all__ = ["Radio"]
 class Radio(LayoutControl, AdaptiveControl):
     """
     Radio buttons let people select a single option from two or more choices.
+
+    ```python
+    ft.RadioGroup(
+        content=ft.Row(
+            controls=[ft.Radio(label=f"{i}") for i in range(1, 4)],
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+    )
+    ```
+
     """
 
     label: str = ""
@@ -83,7 +93,7 @@ class Radio(LayoutControl, AdaptiveControl):
 
     toggleable: bool = False
     """
-    Set to `True` if this radio button is allowed to be returned to an indeterminate
+    Set to `True` if this radio button is allowed to be returned to an indeterminate \
     state by selecting it again when selected.
     """
 

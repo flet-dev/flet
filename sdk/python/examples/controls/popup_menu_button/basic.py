@@ -8,6 +8,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.PopupMenuButton(
+            key="popup",
             items=[
                 ft.PopupMenuItem(content="Item 1"),
                 ft.PopupMenuItem(icon=ft.Icons.POWER_INPUT, content="Check power"),
@@ -26,9 +27,10 @@ def main(page: ft.Page):
                     checked=False,
                     on_click=handle_check_item_click,
                 ),
-            ]
+            ],
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

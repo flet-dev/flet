@@ -9,7 +9,6 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.form_field_control import InputBorder
-from flet.controls.material.icons import Icons
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
@@ -53,7 +52,7 @@ class DropdownOption(Control):
 
     content: Optional[Control] = None
     """
-    A `Control` to display in this option. If not specified, `text` will be used as
+    A `Control` to display in this option. If not specified, `text` will be used as \
     fallback, else `text` will be ignored.
     """
 
@@ -84,8 +83,8 @@ Option = DropdownOption
 @control("Dropdown")
 class Dropdown(LayoutControl):
     """
-    A dropdown control that allows users to select a single option
-    from a list of [`options`][(c).].
+    A dropdown control that allows users to select a single option from a list of \
+    [`options`][(c).].
 
     Example:
     ```python
@@ -118,9 +117,9 @@ class Dropdown(LayoutControl):
 
     autofocus: bool = False
     """
-    Whether the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    Whether the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     text_align: TextAlign = TextAlign.START
@@ -196,7 +195,7 @@ class Dropdown(LayoutControl):
     Configures how the text input should be capitalized.
     """
 
-    trailing_icon: IconDataOrControl = Icons.ARROW_DROP_DOWN
+    trailing_icon: Optional[IconDataOrControl] = None
     """
     An icon to display at the end of the text field.
     """
@@ -209,16 +208,15 @@ class Dropdown(LayoutControl):
     be aligned with the text in the text field.
     """
 
-    selected_trailing_icon: IconDataOrControl = Icons.ARROW_DROP_UP
+    selected_trailing_icon: Optional[IconDataOrControl] = None
     """
-    An optional icon at the end of the text field to indicate that the text field is
+    An optional icon at the end of the text field to indicate that the text field is \
     pressed.
     """
 
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background color of the dropdown menu
-    in various [`ControlState`][flet.]
+    The background color of the dropdown menu in various [`ControlState`][flet.]
     states.
     """
 
@@ -246,8 +244,7 @@ class Dropdown(LayoutControl):
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for
-    [`error_text`][(c).].
+    The [`TextStyle`][flet.] to use for [`error_text`][(c).].
     """
 
     error_text: Optional[str] = None
@@ -265,8 +262,7 @@ class Dropdown(LayoutControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for text
-    in input text field.
+    The [`TextStyle`][flet.] to use for text in input text field.
     """
 
     label: Optional[StrOrControl] = None
@@ -342,14 +338,12 @@ class Dropdown(LayoutControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme
-    [`fill_color`][(c).].
+    Whether the decoration's container is filled with theme [`fill_color`][(c).].
     """
 
     fill_color: Optional[ColorValue] = None
     """
-    Background color of the dropdown input
-    text field.
+    Background color of the dropdown input text field.
 
     Note:
         Will not be visible if `filled=False`.
@@ -357,8 +351,7 @@ class Dropdown(LayoutControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The color of the dropdown input text
-    field when hovered.
+    The color of the dropdown input text field when hovered.
     """
 
     hint_text: Optional[str] = None
@@ -371,13 +364,12 @@ class Dropdown(LayoutControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for
-    [`hint_text`][(c).].
+    The [`TextStyle`][flet.] to use for [`hint_text`][(c).].
     """
 
     helper_text: Optional[str] = None
     """
-    Text that provides context about the input's value, such as how the value will be
+    Text that provides context about the input's value, such as how the value will be \
     used.
 
     If non-null, the text is displayed below the input decorator, in the same location
@@ -387,8 +379,7 @@ class Dropdown(LayoutControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for
-    [`helper_text`][(c).].
+    The [`TextStyle`][flet.] to use for [`helper_text`][(c).].
     """
 
     def __contains__(self, item):

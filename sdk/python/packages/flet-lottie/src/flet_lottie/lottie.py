@@ -9,14 +9,19 @@ __all__ = ["Lottie"]
 class Lottie(ft.LayoutControl):
     """
     Displays lottie animations.
-    """
+
+    Note:
+        - Layer effects are currently not supported.
+            See [airbnb/lottie-android#1964](https://github.com/airbnb/lottie-android/issues/1964)
+            and [xvrh/lottie-flutter#189](https://github.com/xvrh/lottie-flutter/issues/189) for details.
+    """  # noqa: E501
 
     src: Union[str, bytes]
     """
     The lottie animation source.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
     """

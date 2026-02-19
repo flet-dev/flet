@@ -19,7 +19,7 @@ __all__ = ["DropdownM2", "Option"]
 @control("Option")
 class Option(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else a
+    Represents an item in a dropdown. Either `key` or `text` must be specified, else a \
     `ValueError` will be raised.
     """
 
@@ -35,7 +35,7 @@ class Option(Control):
 
     content: Optional[Control] = None
     """
-    A `Control` to display in this option. If not specified, `text` will be used as
+    A `Control` to display in this option. If not specified, `text` will be used as \
     fallback, else `text` will be ignored.
     """
 
@@ -65,9 +65,9 @@ class Option(Control):
 @control("DropdownM2")
 class DropdownM2(FormFieldControl):
     """
-    A dropdown lets the user select from a number of items. The dropdown shows the
-    currently selected item as well as an arrow that opens a menu for selecting another
-    item.
+    A dropdown lets the user select from a number of items. The dropdown shows the \
+    currently selected item as well as an arrow that opens a menu for selecting \
+    another item.
 
     ```python
     ft.DropdownM2(
@@ -98,20 +98,20 @@ class DropdownM2(FormFieldControl):
 
     autofocus: bool = False
     """
-    True if the control will be selected as the initial focus. If there is more than
-    one control on a page with autofocus set, then the first one added to the page will
-    get focus.
+    True if the control will be selected as the initial focus. If there is more than \
+    one control on a page with autofocus set, then the first one added to the page \
+    will get focus.
     """
 
     hint_content: Optional[Control] = None
     """
-    A placeholder `Control` for the dropdown's value that is displayed when `value` is
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is \
     `None`.
     """
 
     select_icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use
+    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` to use \
     for the drop-down select button's icon.
 
     Defaults to `Icon(ft.Icons.ARROW_DROP_DOWN)`.
@@ -139,9 +139,9 @@ class DropdownM2(FormFieldControl):
 
     enable_feedback: Optional[bool] = None
     """
-    Whether detected gestures should provide acoustic and/or haptic feedback. On
-    Android, for example, setting this to `True` produce a click sound and a long-press
-    will produce a short vibration.
+    Whether detected gestures should provide acoustic and/or haptic feedback. On \
+    Android, for example, setting this to `True` produce a click sound and a \
+    long-press will produce a short vibration.
     """
 
     padding: Optional[PaddingValue] = None
@@ -169,7 +169,7 @@ class DropdownM2(FormFieldControl):
 
     disabled_hint_content: Optional[Control] = None
     """
-    A placeholder `Control` for the dropdown's value that is displayed when `value` is
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is \
     `None` and the dropdown is disabled.
     """
 

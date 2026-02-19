@@ -46,7 +46,8 @@ class RadarChartTitle(ft.BaseControl):
 
     Note:
         If set, it takes precedence over the parent
-        [`RadarChart.title_position_percentage_offset`][(p).] value.
+        [`RadarChart.title_position_percentage_offset`][flet_charts.radar_chart.RadarChart.title_position_percentage_offset]
+        value.
     """
 
     text_spans: Optional[list[ft.TextSpan]] = None
@@ -86,6 +87,21 @@ class RadarChartEvent(ft.Event["RadarChart"]):
 class RadarChart(ft.LayoutControl):
     """
     A radar chart made of multiple datasets.
+
+    ```python
+    fch.RadarChart(
+        titles=[fch.RadarChartTitle(text="winter"), ...],
+        radar_shape=fch.RadarShape.CIRCLE,
+        data_sets=[
+            fch.RadarDataSet(
+                fill_color=ft.Colors.with_opacity(0.2, ft.Colors.BLUE_GREY_700),
+                entries=[fch.RadarDataSetEntry(130), ...],
+            ),
+            ...,
+        ],
+    )
+    ```
+
     """
 
     data_sets: list[RadarDataSet] = field(default_factory=list)

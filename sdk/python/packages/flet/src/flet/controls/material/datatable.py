@@ -26,8 +26,24 @@ from flet.controls.types import (
 
 @dataclass
 class DataColumnSortEvent(Event["DataColumn"]):
+    """
+    Event emitted when a [`DataColumn`][flet.] requests sorting.
+
+    This event is delivered to [`DataColumn.on_sort`][flet.] when the user triggers
+    sorting from a column header. Use [`column_index`][(c).] and
+    [`ascending`][(c).] to update table state (for example, `sort_column_index` and
+    `sort_ascending` on [`DataTable`][flet.]).
+    """
+
     column_index: int = field(metadata={"data_field": "ci"})
+    """
+    Index of the column that requested sorting.
+    """
+
     ascending: bool = field(metadata={"data_field": "asc"})
+    """
+    Requested sort direction: `True` for ascending, `False` for descending.
+    """
 
 
 @control("DataColumn")
@@ -325,8 +341,8 @@ class DataTable(LayoutControl):
 
     sort_ascending: bool = False
     """
-    Whether the column mentioned in [`sort_column_index`][(c).],
-    if any, is sorted in ascending order.
+    Whether the column mentioned in [`sort_column_index`][(c).], if any, is sorted in \
+    ascending order.
 
     If `True`, the order is ascending (meaning the rows with the smallest values for
     the current sort column are first in the table).
@@ -384,14 +400,12 @@ class DataTable(LayoutControl):
 
     horizontal_lines: Optional[BorderSide] = None
     """
-    Set the color and width of horizontal
-    lines between rows.
+    Set the color and width of horizontal lines between rows.
     """
 
     vertical_lines: Optional[BorderSide] = None
     """
-    Set the color and width of vertical lines
-    between columns.
+    Set the color and width of vertical lines between columns.
     """
 
     checkbox_horizontal_margin: Optional[Number] = None
@@ -494,7 +508,7 @@ class DataTable(LayoutControl):
 
     horizontal_margin: Optional[Number] = None
     """
-    The horizontal margin between the edges of this table and the content in the first
+    The horizontal margin between the edges of this table and the content in the first \
     and last cells of each row.
 
     When a checkbox is displayed, it is also the margin between the checkbox the
@@ -508,7 +522,7 @@ class DataTable(LayoutControl):
 
     on_select_all: Optional[ControlEventHandler["DataTable"]] = None
     """
-    Invoked when the user selects or unselects every row, using the checkbox in the
+    Invoked when the user selects or unselects every row, using the checkbox in the \
     heading row.
 
     If this is `None`, then the [`DataRow.on_select_change`][flet.]

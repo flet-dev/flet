@@ -10,6 +10,7 @@ import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/layout.dart';
 import '../utils/menu.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
@@ -209,6 +210,7 @@ class _DropdownControlState extends State<DropdownControl> {
     var options = widget.control
         .children("options")
         .map<DropdownMenuEntry<String>?>((Control itemCtrl) {
+          itemCtrl.notifyParent = true;
           bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
           ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
 
@@ -276,6 +278,9 @@ class _DropdownControlState extends State<DropdownControl> {
 
     _focusNode.canRequestFocus = editable;
 
+    int expand = widget.control.getExpand("expand", 0)!;
+    EdgeInsets? expandedInsets = expand > 0 ? EdgeInsets.zero : null;
+
     Widget dropDown = DropdownMenu<String>(
       key: dropdownMenuKey,
       enabled: !widget.control.disabled,
@@ -298,6 +303,7 @@ class _DropdownControlState extends State<DropdownControl> {
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
       menuStyle: menuStyle,
+      expandedInsets: expandedInsets,
       inputDecorationTheme: inputDecorationTheme,
       inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
       onSelected: widget.control.disabled

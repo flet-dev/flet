@@ -30,6 +30,10 @@ __all__ = [
 
 @dataclass(kw_only=True)
 class TapEvent(Event[EventControlType]):
+    """
+    Payload for tap press/release events.
+    """
+
     kind: Optional[PointerDeviceType] = field(
         default=None, metadata={"data_field": "k"}
     )
@@ -52,6 +56,10 @@ class TapEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class TapMoveEvent(Event[EventControlType]):
+    """
+    Payload for pointer movement during a tap gesture sequence.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
@@ -75,11 +83,27 @@ class TapMoveEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class MultiTapEvent(ControlEvent):
+    """
+    Result payload for multi-touch tap detection.
+    """
+
     correct_touches: bool = field(metadata={"data_field": "ct"})
+    """
+    `True` when the active touch count reaches \
+    [`GestureDetector.multi_tap_touches`][flet.]; \
+    otherwise `False` is emitted when the sequence is interrupted.
+    """
 
 
 @dataclass(kw_only=True)
 class LongPressDownEvent(Event[EventControlType]):
+    """
+    Initial long-press candidate event.
+
+    Fired when a pointer goes down and may become a long press, before the
+    gesture is accepted.
+    """
+
     kind: Optional[PointerDeviceType] = field(
         default=None, metadata={"data_field": "k"}
     )
@@ -100,6 +124,10 @@ class LongPressDownEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressStartEvent(Event[EventControlType]):
+    """
+    Start payload for an accepted long-press gesture.
+    """
+
     local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer initially contacted the screen.
@@ -115,6 +143,10 @@ class LongPressStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressMoveUpdateEvent(Event[EventControlType]):
+    """
+    Move update payload after long-press recognition.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The current local position of the pointer.
@@ -125,7 +157,7 @@ class LongPressMoveUpdateEvent(Event[EventControlType]):
     The current global position of the pointer.
     """
 
-    offset_from_origin: Offset = field(metadata={"data_field": "ofo"})
+    offset_from_origin: Offset = field(metadata={"data_field": "of"})
     """
     Delta from the point where the long press started, in global coordinates.
     """
@@ -138,6 +170,10 @@ class LongPressMoveUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressEndEvent(Event[EventControlType]):
+    """
+    End payload for a completed long-press gesture.
+    """
+
     local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
@@ -152,8 +188,8 @@ class LongPressEndEvent(Event[EventControlType]):
 
     velocity: Offset = field(metadata={"data_field": "v"})
     """
-    The pointer's velocity when it stopped contacting the screen,
-    in pixels per second.
+    The pointer's velocity when it stopped contacting the screen, in pixels per \
+    second.
 
     Defaults to zero if not specified in the constructor.
     """
@@ -161,6 +197,10 @@ class LongPressEndEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragDownEvent(Event[EventControlType]):
+    """
+    Initial contact payload for drag-capable gestures.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
@@ -174,6 +214,10 @@ class DragDownEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragStartEvent(Event[EventControlType]):
+    """
+    Start payload for recognized drag gestures.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
@@ -181,8 +225,8 @@ class DragStartEvent(Event[EventControlType]):
 
     local_position: Offset = field(metadata={"data_field": "l"})
     """
-    The local position in the coordinate system of the event receiver at which
-    the pointer contacted the screen.
+    The local position in the coordinate system of the event receiver at which the \
+    pointer contacted the screen.
     """
 
     global_position: Offset = field(metadata={"data_field": "g"})
@@ -202,10 +246,14 @@ class DragStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragUpdateEvent(Event[EventControlType]):
+    """
+    Incremental payload for drag progress updates.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
-    The local position in the coordinate system of the event receiver
-    at which the pointer contacted the screen.
+    The local position in the coordinate system of the event receiver at which the \
+    pointer contacted the screen.
     """
 
     global_position: Offset = field(metadata={"data_field": "g"})
@@ -215,20 +263,20 @@ class DragUpdateEvent(Event[EventControlType]):
 
     local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
-    The amount the pointer has moved in the local coordinate space of the event receiver
-    since the start of the drag.
+    The amount the pointer has moved in the local coordinate space of the event \
+    receiver since the start of the drag.
     """
 
     global_delta: Optional[Offset] = field(default=None, metadata={"data_field": "gd"})
     """
-    The amount the pointer has moved in the global coordinate space
-    since the start of the drag.
+    The amount the pointer has moved in the global coordinate space since the start of \
+    the drag.
     """
 
     primary_delta: Optional[float] = field(default=None, metadata={"data_field": "pd"})
     """
-    The amount the pointer has moved along the primary axis in the coordinate space
-    of the event receiver since the previous update.
+    The amount the pointer has moved along the primary axis in the coordinate space of \
+    the event receiver since the previous update.
     """
 
     timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
@@ -241,21 +289,25 @@ class DragUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragEndEvent(Event[EventControlType]):
+    """
+    Completion payload for drag gestures.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
-    The local position in the coordinate system of the event receiver
-    when the drag gesture has been completed.
+    The local position in the coordinate system of the event receiver when the drag \
+    gesture has been completed.
     """
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
-    The global position the pointer is located at when the drag gesture
-    has been completed.
+    The global position the pointer is located at when the drag gesture has been \
+    completed.
     """
 
     velocity: Offset = field(metadata={"data_field": "v"})
     """
-    The velocity vector the pointer was moving when it stopped contacting the screen,
+    The velocity vector the pointer was moving when it stopped contacting the screen, \
     in logical pixels per second.
     """
 
@@ -263,13 +315,17 @@ class DragEndEvent(Event[EventControlType]):
         default=None, metadata={"data_field": "pv"}
     )
     """
-    The velocity the pointer was moving along the primary axis when it stopped
+    The velocity the pointer was moving along the primary axis when it stopped \
     contacting the screen, in logical pixels per second.
     """
 
 
 @dataclass(kw_only=True)
 class ForcePressEvent(Event[EventControlType]):
+    """
+    Payload for pressure-based gesture callbacks.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position at which the pointer applied pressure.
@@ -288,16 +344,20 @@ class ForcePressEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ScaleStartEvent(Event[EventControlType]):
+    """
+    Start payload for scale/transform interaction sequences.
+    """
+
     local_focal_point: Offset = field(metadata={"data_field": "lfp"})
     """
-    The initial focal point of the pointers in contact with the screen,
-    in local coordinates.
+    The initial focal point of the pointers in contact with the screen, in local \
+    coordinates.
     """
 
     global_focal_point: Offset = field(metadata={"data_field": "gfp"})
     """
-    The initial focal point of the pointers in contact with the screen,
-    in global coordinates.
+    The initial focal point of the pointers in contact with the screen, in global \
+    coordinates.
     """
 
     pointer_count: int = field(metadata={"data_field": "pc"})
@@ -318,6 +378,10 @@ class ScaleStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ScaleEndEvent(Event[EventControlType]):
+    """
+    End payload for scale/transform interaction sequences.
+    """
+
     pointer_count: int = field(metadata={"data_field": "pc"})
     """
     The number of pointers being tracked by the gesture recognizer.
@@ -328,28 +392,30 @@ class ScaleEndEvent(Event[EventControlType]):
 
     velocity: Offset = field(metadata={"data_field": "v"})
     """
-    The velocity of the last pointer to be lifted off of the screen,
-    in pixels per second.
+    The velocity of the last pointer to be lifted off of the screen, in pixels per \
+    second.
     """
 
 
 @dataclass(kw_only=True)
 class ScaleUpdateEvent(Event[EventControlType]):
+    """
+    Continuous payload for scale, pan, and rotation updates.
+    """
+
     local_focal_point: Offset = field(metadata={"data_field": "lfp"})
     """
-    The focal point of the pointers in contact with the screen,
-    in local coordinates.
+    The focal point of the pointers in contact with the screen, in local coordinates.
     """
 
     global_focal_point: Offset = field(metadata={"data_field": "gfp"})
     """
-    The focal point of the pointers in contact with the screen,
-    in global coordinates.
+    The focal point of the pointers in contact with the screen, in global coordinates.
     """
 
     focal_point_delta: Offset = field(metadata={"data_field": "fpd"})
     """
-    The amount the gesture's focal point has moved in the coordinate space of the
+    The amount the gesture's focal point has moved in the coordinate space of the \
     event receiver since the previous update.
     """
 
@@ -364,32 +430,32 @@ class ScaleUpdateEvent(Event[EventControlType]):
 
     horizontal_scale: float = field(metadata={"data_field": "hs"})
     """
-    The scale implied by the average distance along the horizontal axis
-    between the pointers in contact with the screen.
+    The scale implied by the average distance along the horizontal axis between the \
+    pointers in contact with the screen.
 
     This value must be greater than or equal to zero.
     """
 
     vertical_scale: float = field(metadata={"data_field": "vs"})
     """
-    The scale implied by the average distance along the vertical axis
-    between the pointers in contact with the screen.
+    The scale implied by the average distance along the vertical axis between the \
+    pointers in contact with the screen.
 
     This value must be greater than or equal to zero.
     """
 
     scale: float = field(metadata={"data_field": "s"})
     """
-    The scale implied by the average distance between the pointers in contact
-    with the screen.
+    The scale implied by the average distance between the pointers in contact with the \
+    screen.
 
     This value must be greater than or equal to zero.
     """
 
     rotation: float = field(metadata={"data_field": "rot"})
     """
-    The angle (in radians) implied by the first two pointers to enter
-    in contact with the screen.
+    The angle (in radians) implied by the first two pointers to enter in contact with \
+    the screen.
     """
 
     timestamp: Optional[Duration] = field(default=None, metadata={"data_field": "ts"})
@@ -402,6 +468,10 @@ class ScaleUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class PointerEvent(Event[EventControlType]):
+    """
+    Low-level pointer payload with detailed device metrics.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of input device for which the event was generated.
@@ -409,14 +479,14 @@ class PointerEvent(Event[EventControlType]):
 
     local_position: Offset = field(metadata={"data_field": "l"})
     """
-    The position transformed into the event receiver's local coordinate
-    system according to transform.
+    The position transformed into the event receiver's local coordinate system \
+    according to transform.
     """
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
-    Coordinate of the position of the pointer, in logical pixels in
-    the global coordinate space.
+    Coordinate of the position of the pointer, in logical pixels in the global \
+    coordinate space.
     """
 
     timestamp: Duration = field(metadata={"data_field": "ts"})
@@ -494,14 +564,14 @@ class PointerEvent(Event[EventControlType]):
 
     radius_min: float = field(metadata={"data_field": "rMin"})
     """
-    The minimum value that could be reported for `radius_major` and `radius_minor`
-    for this pointer, in logical pixels.
+    The minimum value that could be reported for `radius_major` and `radius_minor` for \
+    this pointer, in logical pixels.
     """
 
     radius_max: float = field(metadata={"data_field": "rMax"})
     """
-    The maximum value that could be reported for `radius_major` and `radius_minor`
-    for this pointer, in logical pixels.
+    The maximum value that could be reported for `radius_major` and `radius_minor` for \
+    this pointer, in logical pixels.
     """
 
     orientation: float = field(metadata={"data_field": "or"})
@@ -516,13 +586,13 @@ class PointerEvent(Event[EventControlType]):
 
     local_delta: Optional[Offset] = field(default=None, metadata={"data_field": "ld"})
     """
-    The delta of the pointer's position since the event start, in logical pixels,
+    The delta of the pointer's position since the event start, in logical pixels, \
     within the local coordinate space.
     """
 
     global_delta: Optional[Offset] = field(default=None, metadata={"data_field": "gd"})
     """
-    The delta of the pointer's position since the event start, in logical pixels,
+    The delta of the pointer's position since the event start, in logical pixels, \
     within the global coordinate space.
     """
 
@@ -533,14 +603,14 @@ class ScrollEvent(Event[EventControlType]):
 
     local_position: Offset = field(metadata={"data_field": "l"})
     """
-    The coordinate of the position of the pointer, in logical pixels
-    in the local coordinate space.
+    The coordinate of the position of the pointer, in logical pixels in the local \
+    coordinate space.
     """
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
-    The coordinate of the position of the pointer, in logical pixels
-    in the global coordinate space.
+    The coordinate of the position of the pointer, in logical pixels in the global \
+    coordinate space.
     """
 
     scroll_delta: Offset = field(metadata={"data_field": "sd"})

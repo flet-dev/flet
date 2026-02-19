@@ -1,15 +1,12 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
 DismissDirection? parseDismissDirection(String? value,
     [DismissDirection? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DismissDirection.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(DismissDirection.values, value, defaultValue);
 }
 
 Map<DismissDirection, double>? parseDismissThresholds(dynamic value,

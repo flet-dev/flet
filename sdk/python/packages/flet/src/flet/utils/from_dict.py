@@ -6,16 +6,30 @@ from typing import (
     ForwardRef,
     TypeVar,
     Union,
-    _eval_type,
     get_args,
     get_origin,
     get_type_hints,
 )
 
+from flet.utils.typing_utils import eval_type
+
 T = TypeVar("T")
 
 
 def from_dict(cls: type[T], data: Any) -> T:
+    """
+    Converts `data` into an instance of `cls`.
+
+    The function supports dataclasses, nested dataclasses, generic aliases,
+    `ForwardRef` annotations, enum values, lists, dictionaries, and optionals.
+
+    Args:
+        cls: Target type to construct.
+        data: Input value to convert.
+
+    Returns:
+        Converted value as an instance of `cls` (or compatible type).
+    """
     # Handle generic types and ForwardRefs
     origin = get_origin(cls) or cls
     args = get_args(cls)
@@ -27,7 +41,7 @@ def from_dict(cls: type[T], data: Any) -> T:
     # If cls is a ForwardRef, resolve it
     if isinstance(cls, ForwardRef):
         globalns = sys.modules[cls.__module__].__dict__
-        cls = _eval_type(cls, globalns, None)
+        cls = eval_type(cls, globalns, None)
 
     if dataclasses.is_dataclass(cls):
         try:

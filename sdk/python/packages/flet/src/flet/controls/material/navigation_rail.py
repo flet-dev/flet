@@ -20,9 +20,33 @@ __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelTy
 
 
 class NavigationRailLabelType(Enum):
+    """
+    Defines how destination labels are shown in a [`NavigationRail`][flet.].
+
+    This setting affects the non-extended rail layout
+    ([`extended`][flet.NavigationRail.]). When the rail is
+    extended, labels are shown next to icons regardless of this value.
+    """
+
     NONE = "none"
+    """
+    Hides labels for all destinations.
+
+    Only destination icons are shown.
+    """
+
     ALL = "all"
+    """
+    Shows labels for all destinations.
+    """
+
     SELECTED = "selected"
+    """
+    Shows the label only for the selected destination.
+
+    As selection changes, the visible label transitions to the newly selected
+    destination.
+    """
 
 
 @control("NavigationRailDestination")
@@ -33,7 +57,7 @@ class NavigationRailDestination(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the
+    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
     destination.
 
     If `selected_icon` is provided, this will only be displayed when the destination is
@@ -46,7 +70,7 @@ class NavigationRailDestination(Control):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control`
+    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     If this icon is not provided, the NavigationRail will display `icon` in either
@@ -65,9 +89,7 @@ class NavigationRailDestination(Control):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the
-    [`indicator_shape`][(c).] when
-    this destination is selected.
+    The color of the [`indicator_shape`][(c).] when this destination is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -79,13 +101,27 @@ class NavigationRailDestination(Control):
 @control("NavigationRail")
 class NavigationRail(LayoutControl):
     """
-    A material widget that is meant to be displayed at the left or right of an app to
+    A material widget that is meant to be displayed at the left or right of an app to \
     navigate between a small number of views, typically between three and five.
+
+    ```python
+    ft.NavigationRail(
+        selected_index=0,
+        destinations=[
+            ft.NavigationRailDestination(icon=ft.Icons.STAR, label="Star"),
+            ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.ADD),label="Add"),
+            ft.NavigationRailDestination(icon=ft.Icons.DELETE, label=ft.Text("Delete")
+        ],
+        height=200,
+        width=100,
+    )
+    ```
+
     """
 
     destinations: list[NavigationRailDestination] = field(default_factory=list)
     """
-    Defines the appearance of the button items that are arrayed within the navigation
+    Defines the appearance of the button items that are arrayed within the navigation \
     rail.
 
     The value must be a list of two or more `NavigationRailDestination` instances.
@@ -103,7 +139,7 @@ class NavigationRail(LayoutControl):
 
     selected_index: Optional[int] = None
     """
-    The index into `destinations` for the current selected `NavigationRailDestination`
+    The index into `destinations` for the current selected `NavigationRailDestination` \
     or `None` if no destination is selected.
     """
 
@@ -123,8 +159,8 @@ class NavigationRail(LayoutControl):
 
     label_type: Optional[NavigationRailLabelType] = None
     """
-    Defines the layout and behavior of the labels for the default, unextended navigation
-    rail.
+    Defines the layout and behavior of the labels for the default, unextended \
+    navigation rail.
 
     When a navigation rail is extended, the labels are always shown.
 
@@ -170,7 +206,7 @@ class NavigationRail(LayoutControl):
 
     min_width: Optional[Number] = None
     """
-    The smallest possible width for the rail regardless of the destination's icon or
+    The smallest possible width for the rail regardless of the destination's icon or \
     label size.
 
     Defaults to `72`.
@@ -211,8 +247,7 @@ class NavigationRail(LayoutControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a
-    destination's label when it is selected.
+    The [`TextStyle`][flet.] of a destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
     used.
@@ -220,15 +255,15 @@ class NavigationRail(LayoutControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a
-    destination's label when it is not selected.
+    The [`TextStyle`][flet.] of a destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
     """
 
     use_indicator: Optional[bool] = None
     """
-    Whether to add a rounded navigation indicator behind the selected destination's icon.
+    Whether to add a rounded navigation indicator behind the selected destination's \
+    icon.
 
     The indicator's shape will be circular if [`label_type`][(c).]
     is [`NavigationRailLabelType.NONE`][flet.], or a

@@ -16,6 +16,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconData,
+    Locale,
 )
 
 __all__ = [
@@ -122,6 +123,19 @@ class DatePicker(DialogControl):
     The date representing today. It will be highlighted in the day grid.
     """
 
+    locale: Optional[Locale] = None
+    """
+    The locale for this date picker dialog. It is intended for (rare) cases where this \
+    dialog should be localized differently from the rest of the page.
+
+    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    but does not participate in page-level locale resolution.
+
+    If set to `None` (the default) or an inexistent/unsupported locale,
+    the [`current_locale`][flet.LocaleConfiguration.] of the
+    [`Page.locale_configuration`][flet.] is used as fallback.
+    """
+
     keyboard_type: KeyboardType = KeyboardType.DATETIME
     """
     The type of keyboard to use for editing the text.
@@ -129,7 +143,7 @@ class DatePicker(DialogControl):
 
     date_picker_mode: DatePickerMode = DatePickerMode.DAY
     """
-    Initial display of a calendar date picker.
+    Initial display mode of this picker.
     """
 
     entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
@@ -162,7 +176,7 @@ class DatePicker(DialogControl):
 
     error_format_text: Optional[str] = None
     """
-    The error message displayed below the text field if the entered date is not in the
+    The error message displayed below the text field if the entered date is not in the \
     correct format.
 
     Defaults to `"Invalid format"`.
@@ -170,7 +184,7 @@ class DatePicker(DialogControl):
 
     error_invalid_text: Optional[str] = None
     """
-    The error message displayed below the text field if the date is earlier than
+    The error message displayed below the text field if the date is earlier than \
     [`first_date`][(c).] or later than [`last_date`][(c).].
 
     Defaults to `"Out of range"`.
@@ -196,24 +210,24 @@ class DatePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when
-    [`entry_mode`][(c).] is [`DatePickerEntryMode.INPUT`][flet.].
+    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
+    is [`DatePickerEntryMode.INPUT`][flet.].
 
     Clicking on this icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.CALENDAR`][flet.].
 
-    If `None`, defaults to [`Icons.CALENDAR_TODAY`][flet.].
+    If `None`, defaults to `Icons.CALENDAR_TODAY`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when
-    [`entry_mode`][(c).] is [`DatePickerEntryMode.CALENDAR`][flet.].
+    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
+    is [`DatePickerEntryMode.CALENDAR`][flet.].
 
     Clicking on icon changes the [`entry_mode`][(c).] to
     [`DatePickerEntryMode.INPUT`][flet.].
 
-    If `None`, defaults to [`Icons.EDIT_OUTLINED`][flet.].
+    If `None`, defaults to `Icons.EDIT_OUTLINED`.
     """
 
     barrier_color: Optional[ColorValue] = None
@@ -228,7 +242,7 @@ class DatePicker(DialogControl):
         default_factory=lambda: Padding.symmetric(horizontal=16.0, vertical=24.0)
     )
     """
-    The amount of padding added to [`view_insets`][flet.PageMediaData.] of the
+    The amount of padding added to [`view_insets`][flet.PageMediaData.] of the \
     [`Page.media`][flet.] on the outside of this picker's dialog.
 
     This defines the minimum space between the screen's edges and the dialog.

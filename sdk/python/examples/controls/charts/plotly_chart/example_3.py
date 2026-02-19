@@ -13,4 +13,5 @@ def main(page: ft.Page):
     page.add(fch.PlotlyChart(figure=fig, expand=True))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

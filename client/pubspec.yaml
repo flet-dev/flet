@@ -44,10 +44,22 @@ dependencies:
 
   flet_video:
     path: ../sdk/python/packages/flet-video/src/flutter/flet_video
+
+  # --RIVE_CLIENT_START--
+  flet_rive:
+    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
+  # --RIVE_CLIENT_END--
+
 # --FAT_CLIENT_END--
 
   flet_audio_recorder:
     path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
+
+  flet_charts:
+    path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
+
+  flet_color_pickers:
+    path: ../sdk/python/packages/flet-color-pickers/src/flutter/flet_color_pickers
 
   flet_datatable2:
     path: ../sdk/python/packages/flet-datatable2/src/flutter/flet_datatable2
@@ -67,16 +79,18 @@ dependencies:
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
 
-  flet_rive:
-    path: ../sdk/python/packages/flet-rive/src/flutter/flet_rive
+  flet_secure_storage:
+    path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
 
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
-  flet_charts:
-    path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
+  flet_code_editor:
+    path: ../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor
 
   cupertino_icons: ^1.0.6
+  wakelock_plus: ^1.4.0
+  package_info_plus: ^9.0.0
 
   integration_test:
     sdk: flutter
@@ -84,7 +98,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
-  # webview_flutter_android: ^4.0.0
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

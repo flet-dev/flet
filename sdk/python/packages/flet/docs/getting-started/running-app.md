@@ -15,11 +15,6 @@ uv run flet run
 flet run
 ```
 ///
-/// tab | poetry
-```bash
-poetry run flet run
-```
-///
 
 When you run the command without any arguments, `main.py` script in the current directory will be executed, by default.
 
@@ -35,11 +30,6 @@ uv run flet run [script]
 flet run [script]
 ```
 ///
-/// tab | poetry
-```bash
-poetry run flet run [script]
-```
-///
 
 Where `[script]` is a relative (ex: `counter.py`) or absolute (ex: `/Users/john/projects/flet-app/main.py`) path to the Python script you want to run.
 
@@ -50,12 +40,12 @@ The app will be started in a native OS window:
 -   **macOS**
 
     ---
-    ![macOS](../assets/getting-started/counter-app/macos.png)
+    {{ image("../assets/getting-started/counter-app/macos.png", alt="macOS", width="100%") }}
 
 -   **Windows**
 
     ---
-    ![Windows](../assets/getting-started/counter-app/windows.png)
+    {{ image("../assets/getting-started/counter-app/windows.png", alt="windows", width="95%") }}
 
 </div>
 
@@ -76,17 +66,10 @@ flet run --web [script]  # (1)!
 
 1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
 ///
-/// tab | poetry
-```bash
-poetry run flet run --web [script]  # (1)!
-```
-
-1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
-///
 
 A new browser window/tab will be opened and the app will be using a random TCP port:
 
-{{ image("../assets/getting-started/counter-app/safari.png", alt="Web", width="80%", caption="Web app") }}
+{{ image("../assets/getting-started/counter-app/safari.png", alt="Web", width="70%", caption="Running Flet app as a web app") }}
 
 
 ## Watching for changes
@@ -110,11 +93,6 @@ uv run flet run --recursive [script]
 /// tab | pip
 ```bash
 flet run --recursive [script]
-```
-///
-/// tab | poetry
-```bash
-poetry run flet run --recursive [script]
 ```
 ///
 
