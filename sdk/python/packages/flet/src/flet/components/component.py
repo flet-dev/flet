@@ -87,6 +87,10 @@ class Component(BaseControl):
         logger.debug("%s._migrate_state(%s)", self, other)
         if not isinstance(other, Component):
             return
+        # Hooks are positional. Migrating state between different component
+        # functions can mix incompatible hook types (e.g. ContextHook -> StateHook).
+        if self.fn is not other.fn:
+            return
         self._state = other._state
         self._state.change_owner(self)
         other._stale = True
@@ -299,13 +303,14 @@ class Component(BaseControl):
             logger.debug("%s._run_render_effects()", self)
         for hook in self._state.hooks:
             if isinstance(hook, EffectHook) and hook.deps != []:
-                if callable(hook.cleanup):
-                    self._schedule_effect(hook, is_cleanup=False)
-                if (
+                deps_changed = (
                     hook.deps is None
                     or hook.prev_deps is None
                     or hook.deps != hook.prev_deps
-                ):
+                )
+                if deps_changed:
+                    if callable(hook.cleanup):
+                        self._schedule_effect(hook, is_cleanup=True)
                     self._schedule_effect(hook, is_cleanup=False)
 
     def _run_unmount_effects(self):
@@ -339,6 +344,11 @@ class Component(BaseControl):
         self._state.mounted = False
         self._detach_observable_subscriptions()
         self._run_unmount_effects()
+        self._b = None
+        self._state.last_b = None
+        self._state.last_args = ()
+        self._state.last_kwargs = {}
+        self._contexts.clear()
 
     def __str__(self):
         return f"{self._c}:{self.fn.__name__}({self._i} - {id(self)})"
@@ -412,25 +422,7 @@ class Renderer:
 
     def with_context(self):
         """Context manager to make this renderer the 'current' one."""
-
-        class _C:
-            """
-            Bind/unbind renderer in context variable for nested render calls.
-            """
-
-            def __init__(_s, r: Renderer):
-                _s._tok = None
-                _s._r = r
-
-            def __enter__(_s):
-                _s._tok = _CURRENT_RENDERER.set(_s._r)
-                return _s._r
-
-            def __exit__(_s, exc_type, exc, tb):
-                if _s._tok is not None:
-                    _CURRENT_RENDERER.reset(_s._tok)
-
-        return _C(self)
+        return self._Context(self)
 
     def render(self, root_fn: Callable[..., Any], *args, **kwargs):
         """
@@ -512,3 +504,18 @@ class Renderer:
         def __exit__(self, exc_type, exc, tb):
             if self.c:
                 self.r._render_stack.pop()
+
+    class _Context:
+        """Context around temporarily binding the current renderer."""
+
+        def __init__(self, renderer: Renderer):
+            self._renderer = renderer
+            self._token = None
+
+        def __enter__(self):
+            self._token = _CURRENT_RENDERER.set(self._renderer)
+            return self._renderer
+
+        def __exit__(self, exc_type, exc, tb):
+            if self._token is not None:
+                _CURRENT_RENDERER.reset(self._token)
