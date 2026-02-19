@@ -7,6 +7,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
+from flet.controls.gradients import Gradient
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
@@ -18,6 +19,7 @@ from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.services.service import Service
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
+    BlendMode,
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -127,6 +129,16 @@ class View(ScrollableControl, LayoutControl):
     foreground_decoration: Optional[BoxDecoration] = None
     """
     The foreground decoration.
+    """
+
+    shader: Optional[Gradient] = None
+    """
+    Use gradient as a shader.
+    """
+
+    blend_mode: BlendMode = BlendMode.MODULATE
+    """
+    The blend mode to use when applying the shader
     """
 
     fullscreen_dialog: bool = False
