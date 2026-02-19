@@ -58,7 +58,7 @@ jobs:
 
           - name: macos
             runner: macos-latest
-            build_cmd: "flet build macos "
+            build_cmd: "flet build macos"
             artifact_name: macos-build-artifact
             artifact_path: build/macos
             needs_linux_deps: false
