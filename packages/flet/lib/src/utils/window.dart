@@ -1,13 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:window_manager/window_manager.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 
 ResizeEdge? parseWindowResizeEdge(String? value, [ResizeEdge? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ResizeEdge.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ResizeEdge.values, value, defaultValue);
 }
 
 extension WindowParsers on Control {

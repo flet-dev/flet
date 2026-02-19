@@ -21,6 +21,13 @@ class Command(BaseFlutterCommand):
         self.device_connection = "default"
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line options for connected-device listing.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "platform",
             type=str.lower,
@@ -47,6 +54,13 @@ class Command(BaseFlutterCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Initialize environment and render the filtered device list.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         super().handle(options)
         if self.options and "platform" in self.options and self.options.platform:
             self.devices_platform = self.options.platform
@@ -66,11 +80,19 @@ class Command(BaseFlutterCommand):
             self.cleanup(0)
 
     def initialize_command(self):
+        """
+        Enable Android SDK requirement and run shared Flutter initialization.
+        """
+
         self.require_android_sdk = True
 
         super().initialize_command()
 
     def run_flutter_devices(self):
+        """
+        Run `flutter devices`, parse results, and display matching mobile devices.
+        """
+
         self.update_status(
             f"[bold blue]Checking connected {self.platform_label} devices..."
         )
@@ -144,6 +166,16 @@ class Command(BaseFlutterCommand):
         self.cleanup(0, message=Group(devices_table, footer), no_border=True)
 
     def _parse_devices_output(self, output: str) -> list[dict]:
+        """
+        Parse bullet-delimited `flutter devices` output into structured records.
+
+        Args:
+            output: Text output from `flutter devices`.
+
+        Returns:
+            A list of dictionaries containing name/id/platform/connection/details.
+        """
+
         devices = []
         for raw_line in output.splitlines():
             line = raw_line.strip()
@@ -174,6 +206,16 @@ class Command(BaseFlutterCommand):
         return devices
 
     def _normalize_platform(self, platform_raw: str) -> str | None:
+        """
+        Normalize a platform label to a canonical identifier.
+
+        Args:
+            platform_raw: Raw platform text from `flutter devices`.
+
+        Returns:
+            `"android"`, `"ios"`, or `None` if not recognized.
+        """
+
         platform_lower = platform_raw.lower()
         if "android" in platform_lower:
             return "android"
@@ -182,6 +224,16 @@ class Command(BaseFlutterCommand):
         return None
 
     def _detect_connection_type(self, parts: list[str]) -> str:
+        """
+        Infer connection type from parsed output segments.
+
+        Args:
+            parts: Bullet-separated columns from one device row.
+
+        Returns:
+            `"wireless"` when Wi‑Fi markers are present, otherwise `"attached"`.
+        """
+
         # Heuristic: Flutter prints "wireless" or "wifi" in one of the bullet segments
         # for wireless devices. Default to "attached" otherwise.
         parts_lower = " ".join(parts).lower()

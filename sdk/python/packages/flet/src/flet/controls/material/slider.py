@@ -17,10 +17,45 @@ __all__ = ["Slider", "SliderInteraction"]
 
 
 class SliderInteraction(Enum):
+    """
+    Defines how users can interact with a [`Slider`][flet.] to change its value.
+
+    Each mode controls whether taps and drag gestures on the slider track are
+    accepted, and whether interaction is restricted to dragging the thumb.
+    """
+
     TAP_AND_SLIDE = "tapAndSlide"
+    """
+    Allows the user to interact with a slider by tapping or \
+    sliding anywhere on the track.
+
+    Essentially all possible interactions are allowed.
+
+    It is different from [`SLIDE_ONLY`][(c).], in that when you try
+    to slide anywhere other than the thumb, the thumb will move to the first
+    point of contact.
+    """
+
     TAP_ONLY = "tapOnly"
+    """
+    Allows only tap interaction on the slider track.
+
+    Drag/sliding gestures are ignored.
+    """
+
     SLIDE_ONLY = "slideOnly"
+    """
+    Allows only sliding interaction to change the value.
+
+    Track taps are ignored.
+    """
+
     SLIDE_THUMB = "slideThumb"
+    """
+    Allows interaction only by dragging the slider thumb.
+
+    Taps and drag/slide gestures that begin on the track are ignored.
+    """
 
 
 @control("Slider")
@@ -33,10 +68,10 @@ class Slider(LayoutControl, AdaptiveControl):
     brightness), or when people would benefit from instant feedback on the effect
     of setting changes.
 
+    Example:
     ```python
     ft.Slider(label="Slider", value=0.3)
     ```
-
     """
 
     value: Optional[Number] = None
@@ -48,8 +83,7 @@ class Slider(LayoutControl, AdaptiveControl):
     Defaults to value of [`min`][(c).].
 
     Raises:
-        ValueError: If [`value`][(c).] is less than [`min`][(c).] or greater than
-            [`max`][(c).].
+        ValueError: If it is less than [`min`][(c).] or greater than [`max`][(c).].
     """
 
     label: Optional[str] = None
@@ -74,7 +108,7 @@ class Slider(LayoutControl, AdaptiveControl):
             is disabled.
 
     Raises:
-        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
+        ValueError: If it is greater than [`max`][(c).].
     """
 
     max: Number = 1.0
@@ -87,7 +121,7 @@ class Slider(LayoutControl, AdaptiveControl):
             is disabled.
 
     Raises:
-        ValueError: If [`max`][(c).] is less than [`min`][(c).].
+        ValueError: If it is less than [`min`][(c).].
     """
 
     divisions: Optional[int] = None
@@ -140,8 +174,7 @@ class Slider(LayoutControl, AdaptiveControl):
     The allowed way for the user to interact with this slider.
 
     If `None`, [`SliderTheme.interaction`][flet.] is used.
-    If that's is also `None`, defaults to
-    [`SliderInteraction.TAP_AND_SLIDE`][flet.].
+    If that's is also `None`, defaults to [`SliderInteraction.TAP_AND_SLIDE`][flet.].
     """
 
     secondary_active_color: Optional[ColorValue] = None
@@ -186,12 +219,10 @@ class Slider(LayoutControl, AdaptiveControl):
 
     When `True`, the Slider will use the 2023 Material Design 3 appearance.
 
-    If not set, then the
-    [`SliderTheme.year_2023`][flet.] will be
-    used, which is `False` by default.
+    If not set, then the [`SliderTheme.year_2023`][flet.] will be used, which is
+    `False` by default.
 
-    If [`Theme.use_material3`][flet.] is `False`,
-    then this property is ignored.
+    If [`Theme.use_material3`][flet.] is `False`, then this property is ignored.
     """
 
     on_change: Optional[ControlEventHandler["Slider"]] = None

@@ -17,6 +17,19 @@ T = TypeVar("T")
 
 
 def from_dict(cls: type[T], data: Any) -> T:
+    """
+    Converts `data` into an instance of `cls`.
+
+    The function supports dataclasses, nested dataclasses, generic aliases,
+    `ForwardRef` annotations, enum values, lists, dictionaries, and optionals.
+
+    Args:
+        cls: Target type to construct.
+        data: Input value to convert.
+
+    Returns:
+        Converted value as an instance of `cls` (or compatible type).
+    """
     # Handle generic types and ForwardRefs
     origin = get_origin(cls) or cls
     args = get_args(cls)

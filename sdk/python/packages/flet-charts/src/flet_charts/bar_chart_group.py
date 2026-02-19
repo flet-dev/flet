@@ -9,6 +9,10 @@ __all__ = ["BarChartGroup"]
 
 @ft.control("BarChartGroup")
 class BarChartGroup(ft.BaseControl):
+    """
+    Groups one or more bar rods rendered at the same X-axis position.
+    """
+
     x: int = 0
     """
     Group position on X axis.

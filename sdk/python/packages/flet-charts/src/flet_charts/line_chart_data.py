@@ -10,6 +10,10 @@ __all__ = ["LineChartData"]
 
 @ft.control("LineChartData")
 class LineChartData(ft.BaseControl):
+    """
+    Styling and geometry configuration for a single line series.
+    """
+
     points: list[LineChartDataPoint] = field(default_factory=list)
     """
     A list of points (dots) of [`LineChartDataPoint`][(p).]
@@ -110,7 +114,7 @@ class LineChartData(ft.BaseControl):
 
     selected_below_line: Union[None, bool, ChartPointLine] = None
     """
-    A vertical line drawn between selected line point and the bottom adge of the
+    A vertical line drawn between selected line point and the bottom edge of the
     chart.
 
     Setting this property to `True` will draw a line with default style.

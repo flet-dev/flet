@@ -1,6 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 import 'numbers.dart';
@@ -48,50 +48,32 @@ Duration? parseDuration(dynamic value,
 
 TimePickerEntryMode? parseTimePickerEntryMode(String? value,
     [TimePickerEntryMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TimePickerEntryMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TimePickerEntryMode.values, value, defaultValue);
 }
 
 CupertinoDatePickerMode? parseCupertinoDatePickerMode(String? value,
     [CupertinoDatePickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoDatePickerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CupertinoDatePickerMode.values, value, defaultValue);
 }
 
 CupertinoTimerPickerMode? parseCupertinoTimerPickerMode(String? value,
     [CupertinoTimerPickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoTimerPickerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CupertinoTimerPickerMode.values, value, defaultValue);
 }
 
 DatePickerDateOrder? parseDatePickerDateOrder(String? value,
     [DatePickerDateOrder? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerDateOrder.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(DatePickerDateOrder.values, value, defaultValue);
 }
 
 DatePickerEntryMode? parseDatePickerEntryMode(String? value,
     [DatePickerEntryMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerEntryMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(DatePickerEntryMode.values, value, defaultValue);
 }
 
 DatePickerMode? parseDatePickerMode(String? value,
     [DatePickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(DatePickerMode.values, value, defaultValue);
 }
 
 extension TimeParsers on Control {

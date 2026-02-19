@@ -1,4 +1,11 @@
 class NopeLock:
+    """
+    No-op synchronous context manager used in place of a real lock.
+
+    This class provides the same `with` interface as a lock but performs no
+    synchronization.
+    """
+
     def __enter__(self):
         pass
 
@@ -7,6 +14,13 @@ class NopeLock:
 
 
 class AsyncNopeLock:
+    """
+    No-op asynchronous context manager used in place of a real async lock.
+
+    This class provides the same `async with` interface as an async lock but
+    performs no synchronization.
+    """
+
     async def __aenter__(self):
         pass
 

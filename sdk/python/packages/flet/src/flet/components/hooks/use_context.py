@@ -14,6 +14,13 @@ from flet.components.utils import current_component, current_renderer
 
 @dataclass
 class ContextHook(Hook):
+    """
+    Marker hook for `use_context` subscription ordering.
+
+    The hook stores no additional data; it reserves a stable hook slot so
+    context access follows normal hook ordering rules within a component.
+    """
+
     pass
 
 
@@ -26,6 +33,14 @@ ProviderResultT = TypeVar(
 
 
 class ContextProvider(Protocol[T]):
+    """
+    Protocol describing objects returned by [`create_context()`][flet.create_context].
+
+    A context provider is both:
+    - a callable wrapper that executes a callback under a provided context value;
+    - a holder of context metadata used by [`use_context()`][flet.use_context] lookup.
+    """
+
     default_value: T
     _key: object
 
@@ -50,6 +65,13 @@ def create_context(default_value: T) -> ContextProvider[T]:
     key = object()
 
     def provider(value: T, callback: Callable[[], ProviderResultT]) -> ProviderResultT:  # type: ignore[type-var]
+        """
+        Runs `callback` with `value` bound for this context key.
+
+        The value is pushed onto the current renderer's context stack before
+        invocation and always popped in a `finally` block, ensuring proper
+        nesting and cleanup even when `callback` raises.
+        """
         r = current_renderer()
         r.push_context(key, value)
         try:

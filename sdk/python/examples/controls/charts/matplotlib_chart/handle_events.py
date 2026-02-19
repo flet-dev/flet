@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import flet as ft
-import flet_charts
+import flet_charts as fch
 
 state = {}
 
@@ -97,7 +97,7 @@ def main(page: ft.Page):
 
     # plt.show()
 
-    page.add(flet_charts.MatplotlibChartWithToolbar(figure=fig, expand=True))
+    page.add(fch.MatplotlibChartWithToolbar(figure=fig, expand=True))
 
 
 if __name__ == "__main__":

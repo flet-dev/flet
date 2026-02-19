@@ -24,10 +24,25 @@ logger = logging.getLogger(flet_desktop.__name__)
 
 
 def get_package_bin_dir():
+    """
+    Return the directory that contains bundled desktop runtime artifacts.
+
+    The directory may contain platform-specific executables or compressed
+    archives used to provision the desktop client at runtime.
+    """
+
     return str(Path(__file__).parent.joinpath("app"))
 
 
 def __get_desktop_distribution_name():
+    """
+    Return the installed distribution name that provides `flet_desktop`.
+
+    This allows storage paths to stay unique when package variants are used
+    (for example, architecture-specific distributions). Falls back to
+    `"flet-desktop"` when a matching distribution cannot be discovered.
+    """
+
     # Prefer the actual distribution providing the flet_desktop module.
     dist_names = metadata.packages_distributions().get("flet_desktop", [])
     for name in dist_names:
@@ -37,6 +52,13 @@ def __get_desktop_distribution_name():
 
 
 def __get_client_storage_dir():
+    """
+    Return a versioned local directory used to store unpacked desktop client files.
+
+    The path format is:
+    `~/.flet/client/<distribution-name>-<flet-desktop-version>`.
+    """
+
     dist_name = __get_desktop_distribution_name()
     return Path.home().joinpath(
         ".flet", "client", f"{dist_name}-{flet_desktop.version.version}"
@@ -44,6 +66,20 @@ def __get_client_storage_dir():
 
 
 def open_flet_view(page_url, assets_dir, hidden):
+    """
+    Start a desktop view process and return the process object and PID file path.
+
+    Args:
+        page_url: Page endpoint the desktop client should open.
+        assets_dir: Optional assets directory passed to the client process.
+        hidden: Whether the window should start hidden.
+
+    Returns:
+        A tuple containing:
+            - `subprocess.Popen`: started desktop process.
+            - `str`: path to a temporary PID file used by [`close_flet_view()`][(m).].
+    """
+
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
@@ -51,6 +87,20 @@ def open_flet_view(page_url, assets_dir, hidden):
 
 
 async def open_flet_view_async(page_url, assets_dir, hidden):
+    """
+    Asynchronously start a desktop view process.
+
+    Args:
+        page_url: Page endpoint the desktop client should open.
+        assets_dir: Optional assets directory passed to the client process.
+        hidden: Whether the window should start hidden.
+
+    Returns:
+        A tuple containing:
+            - `asyncio.subprocess.Process`: started desktop process.
+            - `str`: path to a temporary PID file used by [`close_flet_view()`][(m).].
+    """
+
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
@@ -61,6 +111,18 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
 
 
 def close_flet_view(pid_file):
+    """
+    Terminate a running desktop view process using its PID file.
+
+    The function attempts to read the process ID from `pid_file`, send a
+    termination signal, and remove the PID file. Failures while terminating are
+    intentionally ignored, but the PID file is removed when possible.
+
+    Args:
+        pid_file: Path to the PID file returned by [`open_flet_view()`][(m).]
+            or [`open_flet_view_async()`][(m).].
+    """
+
     if pid_file is not None and os.path.exists(pid_file):
         try:
             with open(pid_file, encoding="utf-8") as f:
@@ -74,6 +136,33 @@ def close_flet_view(pid_file):
 
 
 def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
+    """
+    Resolve desktop client executable, prepare launch arguments, and environment.
+
+    Resolution strategy:
+    - Prefer app binaries produced by `flet build` in the current workspace.
+    - Otherwise use `FLET_VIEW_PATH` when provided.
+    - Otherwise use packaged runtime artifacts and unpack archives into a
+        versioned per-user cache directory.
+
+    Platform-specific launch commands are prepared for Windows, macOS, and Linux.
+
+    Args:
+        page_url: Page endpoint the desktop client should open.
+        assets_dir: Optional assets directory passed to the client process.
+        hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
+
+    Returns:
+        A tuple containing:
+            - `list[str]`: command arguments for the desktop client.
+            - `dict[str, str]`: environment variables for the launched process.
+            - `str`: path to the temporary PID file.
+
+    Raises:
+        FileNotFoundError: If a required desktop executable or archive
+            cannot be located.
+    """
+
     logger.info("Starting Flet View app...")
 
     args = []

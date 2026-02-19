@@ -17,8 +17,19 @@ __all__ = [
 
 @dataclass
 class DragEventBase(Event["DragTarget"]):
+    """
+    Base payload for drag-target events that carry draggable source information.
+    """
+
     src_id: Optional[int]
+    """
+    ID of the draggable source control, if available.
+    """
+
     src: Draggable = field(init=False)
+    """
+    Source draggable control resolved from [`src_id`][(c).].
+    """
 
     def __post_init__(self):
         if self.src_id is not None:
@@ -27,21 +38,47 @@ class DragEventBase(Event["DragTarget"]):
 
 @dataclass
 class DragWillAcceptEvent(DragEventBase):
+    """
+    Event payload for [`DragTarget.on_will_accept`][flet.].
+    """
+
     accept: bool
+    """
+    Whether this target will accept the dragged source.
+    """
 
 
 @dataclass
 class DragTargetEvent(DragEventBase):
+    """
+    Event payload for drag move and accepted-drop callbacks.
+    """
+
     x: float
+    """
+    Horizontal pointer position relative to target bounds.
+    """
+
     y: float
+    """
+    Vertical pointer position relative to target bounds.
+    """
 
     @property
     def offset(self) -> Offset:
+        """
+        Pointer position as an [`Offset`][flet.].
+        """
+
         return Offset(self.x, self.y)
 
 
 @dataclass
 class DragTargetLeaveEvent(DragEventBase):
+    """
+    Event payload for [`DragTarget.on_leave`][flet.].
+    """
+
     pass
 
 

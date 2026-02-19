@@ -2,6 +2,8 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-audio.svg)](https://pypi.python.org/pypi/flet-audio)
 [![downloads](https://static.pepy.tech/badge/flet-audio/month)](https://pepy.tech/project/flet-audio)
+[![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-audio)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-audio.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio/LICENSE)
 
 A [Flet](https://flet.dev) extension package for playing audio.

@@ -186,18 +186,68 @@ class InteractiveViewer(LayoutControl):
             )
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
+        """
+        Resets the current transform matrix to identity.
+
+        Args:
+            animation_duration: Optional animation duration for the reset
+                transition. If `None`, the reset is applied immediately.
+
+        Notes:
+            When `animation_duration` is provided, Flutter interpolates from
+            the current transform to identity using a matrix tween.
+        """
         await self._invoke_method(
             "reset", arguments={"animation_duration": animation_duration}
         )
 
     async def save_state(self):
+        """
+        Saves a snapshot of the current transform matrix.
+
+        The saved state can later be restored using
+        [`restore_state()`][(c).restore_state]. Calling this method again
+        overwrites the previously saved snapshot.
+        """
         await self._invoke_method("save_state")
 
     async def restore_state(self):
+        """
+        Restores the transform matrix previously captured by
+        [`save_state()`][(c).save_state].
+
+        If no state has been saved yet, this method has no effect.
+        """
         await self._invoke_method("restore_state")
 
     async def zoom(self, factor: Number):
+        """
+        Applies multiplicative zoom to the current transform.
+
+        Args:
+            factor: Scale multiplier relative to the current scale.
+                Values greater than `1` zoom in, values between `0` and `1`
+                zoom out.
+
+        Note:
+            The resulting scale is clamped to [`min_scale`][(c).] and
+            [`max_scale`][(c).]. Additional boundary clamping is applied so the
+            visible viewport remains within [`boundary_margin`][(c).] limits.
+        """
         await self._invoke_method("zoom", arguments={"factor": factor})
 
     async def pan(self, dx: Number, dy: Number = 0, dz: Number = 0):
+        """
+        Translates the current transform matrix.
+
+        Args:
+            dx: Horizontal translation delta in logical pixels.
+            dy: Vertical translation delta in logical pixels.
+            dz: Z-axis translation delta applied to the transform matrix.
+
+        Note:
+            XY translation is clamped to the same interaction boundaries used
+            for gesture-driven panning. `dz` is applied directly to the matrix
+            and defaults to `0`.
+        """
         await self._invoke_method("pan", arguments={"dx": dx, "dy": dy, "dz": dz})

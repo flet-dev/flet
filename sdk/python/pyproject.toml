@@ -91,7 +91,6 @@ docs = [
     "mkdocs-glightbox >=0.5.1",
     "mkdocs-open-in-new-tab >=1.0.8",
     "mkdocs-section-index >=0.3.10",
-    "griffe-modernized-annotations >=1.0.8",
     "griffe-warnings-deprecated >=1.1.0",
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",

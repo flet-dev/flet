@@ -1,0 +1,13 @@
+skip_magic: true   # Ignore __*__ methods except __init__
+skip_init: true    # Also ignore __init__
+skip_file_doc: true
+skip_private: false
+ignore_patterns:
+  .*:
+    - init
+    - before_update
+    - before_event
+    - build
+    - main
+    - _migrate_state
+fail_under: 50

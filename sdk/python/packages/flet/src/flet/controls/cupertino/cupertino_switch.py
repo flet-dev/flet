@@ -75,7 +75,7 @@ class CupertinoSwitch(LayoutControl):
     An image to use on the thumb of this switch when the switch is on.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
     """
@@ -85,7 +85,7 @@ class CupertinoSwitch(LayoutControl):
     An image to use on the thumb of this switch when the switch is off.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
     """

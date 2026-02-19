@@ -12,9 +12,23 @@ class Option:
         self.kwargs = kwargs
 
     def add_to_parser(self, parser: argparse._ActionsContainer) -> None:
+        """
+        Add this option definition to an argument parser or compatible container.
+
+        Args:
+            parser: Parser-like object exposing `add_argument()`.
+        """
+
         parser.add_argument(*self.args, **self.kwargs)
 
     def add_to_group(self, group: argparse._ArgumentGroup) -> None:
+        """
+        Add this option definition to an argument group.
+
+        Args:
+            group: Argument group that receives the option.
+        """
+
         group.add_argument(*self.args, **self.kwargs)
 
 

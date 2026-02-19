@@ -33,37 +33,14 @@ class View(ScrollableControl, LayoutControl):
     """
     View is the top most container for all other controls.
 
-    A root view is automatically created when a new user session started. From layout
-    perspective the View represents a [`Column`][flet.]
+    A root view is automatically created when a new user session started.
+    From layout perspective the View represents a [`Column`][flet.]
     control, so it has a similar behavior and shares same properties.
     """
 
     controls: list[BaseControl] = field(default_factory=list)
     """
     A list of controls to display.
-
-    /// details | Example
-        type: example
-    For example, to add a new control to a page:
-
-    ```python
-    page.controls.append(ft.Text("Hello!"))
-    page.update()
-    ```
-
-    or to get the same result as above using `page.add()` shortcut method:
-
-    ```python
-    page.add(ft.Text("Hello!"))
-    ```
-
-    To remove the top most control on the page:
-
-    ```python
-    page.controls.pop()
-    page.update()
-    ```
-    ///
     """
 
     route: str = field(default_factory=lambda: "/")
@@ -183,6 +160,21 @@ class View(ScrollableControl, LayoutControl):
         return item in self.controls
 
     async def confirm_pop(self, should_pop: bool) -> None:
+        """
+        Resolves a pending pop-confirmation request for this view.
+
+        Call this from [`on_confirm_pop`][(c).] to allow or cancel the current
+        back-navigation attempt.
+
+        Args:
+            should_pop: `True` to proceed with popping this view, `False` to
+                keep the view on the navigation stack.
+
+        Notes:
+            - This method only has effect while a pop confirmation is pending.
+            - If not called, the frontend confirmation wait times out and the
+                pop is canceled.
+        """
         await self._invoke_method("confirm_pop", {"should_pop": should_pop})
 
     async def show_drawer(self):

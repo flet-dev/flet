@@ -348,7 +348,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         clipBehavior:
             widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
         cursorColor: cursorColor,
-        autofillHints: parseAutofillHints(widget.control.get("autofill_hints")),
+        autofillHints: widget.control.getAutofillHints("autofill_hints"),
         keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
         enableInteractiveSelection:
             widget.control.getBool("enable_interactive_selection"),

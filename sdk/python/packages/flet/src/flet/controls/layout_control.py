@@ -38,6 +38,25 @@ class LayoutSizeChangeEvent(Event[EventControlType]):
 
 @control(kw_only=True)
 class LayoutControl(Control):
+    """
+    Base class for visual controls that participate in page layout.
+
+    `LayoutControl` extends [`Control`][flet.] with common visual layout
+    capabilities, including:
+
+    - explicit sizing ([`width`][(c).], [`height`][(c).], [`aspect_ratio`][(c).]);
+    - absolute positioning ([`left`][(c).], [`top`], [`right`][(c).], [`bottom`][(c).]);
+    - parent-space placement ([`align`][(c).], [`margin`][(c).]);
+    - 2D transforms ([`rotate`][(c).], [`scale`][(c).], [`offset`][(c).]);
+    - implicit animations for those properties (`animate_*`);
+    - layout/animation lifecycle events ([`on_size_change`][(c).],
+      [`on_animation_end`][(c).]).
+
+    Use `LayoutControl` as the base for custom visual controls rendered on
+    the page surface. For popup controls, use [`DialogControl`][flet.];
+    for non-visual integrations, use [`Service`][flet.].
+    """
+
     width: Optional[Number] = None
     """
     Imposed Control width in virtual pixels.

@@ -8,6 +8,18 @@ from flet.utils.from_dict import from_dict
 
 
 def patch_dataclass(obj: Any, patch: dict):
+    """
+    Applies a partial update to a dataclass instance in place.
+
+    The function resolves field type hints and updates matching fields from `patch`,
+    including support for nested dataclasses, lists, enum values, and plain values.
+    Fields starting with `_` are set directly even when they are not declared in type
+    hints.
+
+    Args:
+        obj: Dataclass instance to patch.
+        patch: Mapping of field names to new values.
+    """
     cls = obj.__class__
 
     try:
@@ -59,6 +71,18 @@ def patch_dataclass(obj: Any, patch: dict):
 
 
 def resolve_actual_type(tp: Any) -> Any:
+    """
+    Resolves effective runtime type for common optional annotations.
+
+    For `Optional[T]` (represented as `Union[T, None]`), this function returns `T`.
+    Other annotations are returned unchanged.
+
+    Args:
+        tp: Type annotation to resolve.
+
+    Returns:
+        Resolved type annotation.
+    """
     origin = get_origin(tp)
     args = get_args(tp)
 
@@ -70,10 +94,28 @@ def resolve_actual_type(tp: Any) -> Any:
 
 
 def is_enum(tp: Any) -> bool:
+    """
+    Indicates whether a value is an enum class.
+
+    Args:
+        tp: Value to check.
+
+    Returns:
+        `True` if `tp` is a subclass of [`Enum`][enum.Enum], otherwise `False`.
+    """
     return isinstance(tp, type) and issubclass(tp, Enum)
 
 
 def get_param_count(fn):
+    """
+    Returns the number of declared parameters for a callable.
+
+    Args:
+        fn: Callable object to inspect.
+
+    Returns:
+        Parameter count, or `None` when a signature cannot be determined.
+    """
     try:
         return len(inspect.signature(fn).parameters)
     except (ValueError, TypeError):

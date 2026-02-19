@@ -17,7 +17,7 @@ tasks:
     aliases:
       - sync
     cmds:
-      - task: uv sync --group all
+      - uv sync --group all
       - task: pre-commit
 
   venv:
@@ -79,9 +79,24 @@ tasks:
       - FLET_DOCS_SKIP_PYPI_INDEX=1 uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
 
   docs-coverage:
-    desc: "Run docstring coverage report in the 'packages/flet' directory."
+    desc: "Run docstring coverage report for all SDK Python packages."
     cmds:
-      - uv run --group docs-coverage --directory packages/flet docstr-coverage
+      - |
+        status=0
+        for pkg in packages/*; do
+          if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
+            pkg_name=$(basename "$pkg")
+            echo "====== $pkg ======"
+            uv run --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
+            echo
+          fi
+        done
+        exit $status
+
+  docs-coverage-flet:
+    desc: "Run docstring coverage report for 'flet' package only."
+    cmds:
+      - uv run --group docs-coverage docstr-coverage -C .docstr.yaml packages/flet/src --badge="packages/flet/docs/assets/badges/docs-coverage/flet.svg"
 
   free-port-8550:
     desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."

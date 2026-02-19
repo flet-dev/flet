@@ -1,6 +1,6 @@
 import 'dart:typed_data';
+import 'enums.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -59,10 +59,7 @@ List<double>? parseGradientStops(dynamic value, [List<double>? defaultValue]) {
 }
 
 TileMode? parseTileMode(String? value, [TileMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TileMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TileMode.values, value, defaultValue);
 }
 
 GradientRotation? parseRotation(dynamic value,

@@ -34,6 +34,14 @@ class DeviceInfo:
 
 @dataclass
 class MacOsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for macOS hosts.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] when the
+    current platform is macOS. Includes CPU, memory, model, and OS version
+    fields collected from native system APIs.
+    """
+
     active_cpus: int
     """Number of active CPUs."""
 
@@ -251,6 +259,12 @@ class WebDeviceInfo(DeviceInfo):
 
 @dataclass
 class AndroidBuildVersion:
+    """
+    Android OS version details derived from `android.os.Build.VERSION`.
+
+    This object is exposed as [`AndroidDeviceInfo.version`][flet.].
+    """
+
     code_name: str
     """
     The current development codename, or the string "REL" if this is a release build.
@@ -294,6 +308,12 @@ class AndroidBuildVersion:
 
 @dataclass
 class AndroidDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Android devices and emulators.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Android.
+    """
+
     available_ram_size: int
     """Total available RAM size in bytes."""
 
@@ -583,6 +603,12 @@ class LinuxDeviceInfo(DeviceInfo):
 
 @dataclass
 class WindowsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Windows systems.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Windows.
+    """
+
     computer_name: str
     """The computer's fully-qualified DNS name, where available."""
 
@@ -752,6 +778,12 @@ class IosUtsname:
 
 @dataclass
 class IosDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for iOS/iPadOS runtimes.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on iOS.
+    """
+
     available_ram_size: int
     """Current unallocated RAM size of the device in megabytes."""
 

@@ -22,8 +22,19 @@ from flet.controls.types import (
 
 
 class PopupMenuPosition(Enum):
+    """
+    Used to configure how the [`PopupMenuButton`][flet.] positions its popup menu.
+    """
+
     OVER = "over"
+    """
+    Menu is positioned over the anchor.
+    """
+
     UNDER = "under"
+    """
+    Menu is positioned under the anchor.
+    """
 
 
 @control("PopupMenuItem")
