@@ -91,6 +91,18 @@ class MacOsDeviceInfo(DeviceInfo):
     system_guid: Optional[str] = None
     """Device GUID."""
 
+    language: Optional[str] = None
+    """A string representing the user's preferred language on the device.
+
+    For example: `"en-US"`.
+    """
+
+    languages: Optional[list[str]] = None
+    """A list of preferred locale/language tags in priority order.
+
+    For example: `["en-US", "de-DE"]`.
+    """
+
 
 class WebBrowserName(Enum):
     """
@@ -445,6 +457,18 @@ class AndroidDeviceInfo(DeviceInfo):
     Android operating system version values derived from `android.os.Build.VERSION`.
     """
 
+    language: Optional[str] = None
+    """A string representing the user's preferred language on the device.
+
+    For example: `"en-US"`.
+    """
+
+    languages: Optional[list[str]] = None
+    """A list of preferred locale/language tags in priority order.
+
+    For example: `["en-US", "de-DE"]`.
+    """
+
 
 @dataclass
 class LinuxDeviceInfo(DeviceInfo):
@@ -578,6 +602,18 @@ class LinuxDeviceInfo(DeviceInfo):
     boot.
     The machine ID is hexadecimal, 32-character, lowercase ID. When decoded from
     hexadecimal, this corresponds to a 16-byte/128-bit value.
+    """
+
+    language: Optional[str] = None
+    """A string representing the user's preferred language on the device.
+
+    For example: `"en-US"`.
+    """
+
+    languages: Optional[list[str]] = None
+    """A list of preferred locale/language tags in priority order.
+
+    For example: `["en-US", "de-DE"]`.
     """
 
 
@@ -725,6 +761,18 @@ class WindowsDeviceInfo(DeviceInfo):
     registry key.
     """
 
+    language: Optional[str] = None
+    """A string representing the user's preferred language on the device.
+
+    For example: `"en-US"`.
+    """
+
+    languages: Optional[list[str]] = None
+    """A list of preferred locale/language tags in priority order.
+
+    For example: `["en-US", "de-DE"]`.
+    """
+
 
 @dataclass
 class IosUtsname:
@@ -828,4 +876,16 @@ class IosDeviceInfo(DeviceInfo):
 
     More info:
     https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor
+    """
+
+    language: Optional[str] = None
+    """A string representing the user's preferred language on the device.
+
+    For example: `"en-US"`.
+    """
+
+    languages: Optional[list[str]] = None
+    """A list of preferred locale/language tags in priority order.
+
+    For example: `["en-US", "de-DE"]`.
     """
