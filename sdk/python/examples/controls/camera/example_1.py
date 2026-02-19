@@ -5,14 +5,17 @@ from datetime import datetime
 import flet as ft
 import flet_camera as fc
 
-logging.basicConfig(level=logging.INFO)
-
 
 @dataclass
 class State:
     cameras: list[fc.CameraDescription] = field(default_factory=list)
     selected_camera: fc.CameraDescription | None = None
     camera_labels: dict[str, str] = field(default_factory=dict)
+    is_streaming: bool = False
+    is_streaming_supported: bool = False
+    is_preview_paused: bool = False
+    is_recording: bool = False
+    is_recording_paused: bool = False
 
 
 async def main(page: ft.Page):
@@ -42,8 +45,41 @@ async def main(page: ft.Page):
         height=200,
         fit=ft.BoxFit.CONTAIN,
     )
-    selector = ft.Dropdown(label="Select camera", options=[])
+    selector = ft.Dropdown(label="Camera", options=[])
     recorded_video_path = ft.Text(value="Recorded video: not saved yet", size=12)
+    take_photo_btn = ft.FilledIconButton(
+        icon=ft.Icons.PHOTO_CAMERA, on_click=lambda _: None, tooltip="Take photo"
+    )
+    record_btn = ft.FilledTonalIconButton(
+        icon=ft.Icons.VIDEOCAM,
+        selected_icon=ft.Icons.STOP,
+        selected=False,
+        on_click=lambda _: None,
+        tooltip="Start / stop recording",
+    )
+    pause_recording_btn = ft.OutlinedIconButton(
+        icon=ft.Icons.PAUSE,
+        selected_icon=ft.Icons.PLAY_ARROW,
+        selected=False,
+        on_click=lambda _: None,
+        tooltip="Pause / resume recording",
+        disabled=True,
+    )
+    stream_btn = ft.OutlinedIconButton(
+        icon=ft.Icons.PLAY_ARROW,
+        selected_icon=ft.Icons.STOP,
+        selected=False,
+        on_click=lambda _: None,
+        tooltip="Start / stop image stream",
+        visible=False,
+    )
+    preview_btn = ft.OutlinedIconButton(
+        icon=ft.Icons.VISIBILITY_OFF,
+        selected_icon=ft.Icons.VISIBILITY,
+        selected=True,
+        on_click=lambda _: None,
+        tooltip="Pause / resume preview",
+    )
 
     def has_human_readable_name(camera: fc.CameraDescription) -> bool:
         name = camera.name.strip()
@@ -101,6 +137,14 @@ async def main(page: ft.Page):
         status.value = "Select a camera"
         page.update()
 
+    def sync_action_buttons():
+        record_btn.selected = state.is_recording
+        pause_recording_btn.selected = state.is_recording_paused
+        pause_recording_btn.disabled = not state.is_recording
+        stream_btn.selected = state.is_streaming
+        stream_btn.visible = state.is_streaming_supported
+        preview_btn.selected = not state.is_preview_paused
+
     async def init_camera(e=None):
         state.selected_camera = next(
             (c for c in state.cameras if c.name == selector.value),
@@ -120,33 +164,47 @@ async def main(page: ft.Page):
             resolution_preset=fc.ResolutionPreset.MEDIUM,
             enable_audio=True,
         )
+        state.is_streaming = False
+        state.is_streaming_supported = await preview.supports_image_streaming()
+        sync_action_buttons()
+        page.update()
 
-    async def take_photo(_):
+    async def take_photo():
         data = await preview.take_picture()
         last_image.src = data
         last_image.update()
 
-    async def start_recording(_):
+    async def start_recording():
         await preview.prepare_for_video_recording()
         await preview.start_video_recording()
+        state.is_recording = True
+        state.is_recording_paused = False
+        sync_action_buttons()
         status.value = "Recording video..."
-        status.update()
+        page.update()
 
-    async def pause_recording(_):
+    async def pause_recording():
         await preview.pause_video_recording()
+        state.is_recording_paused = True
+        sync_action_buttons()
         status.value = "Recording paused"
-        status.update()
+        page.update()
 
-    async def resume_recording(_):
+    async def resume_recording():
         await preview.resume_video_recording()
+        state.is_recording_paused = False
+        sync_action_buttons()
         status.value = "Recording resumed"
-        status.update()
+        page.update()
 
-    async def stop_recording(_):
+    async def stop_recording():
         data = await preview.stop_video_recording()
+        state.is_recording = False
+        state.is_recording_paused = False
+        sync_action_buttons()
         if not data:
             status.value = "No video data returned"
-            status.update()
+            page.update()
             return
 
         ext = detect_video_extension(data)
@@ -166,7 +224,11 @@ async def main(page: ft.Page):
 
     async def on_state_change(e: ft.Event[fc.CameraState]):
         if e.description == state.selected_camera:
-            print("Camera state changed:", e)
+            state.is_recording = e.is_recording_video
+            state.is_recording_paused = e.is_recording_paused
+            state.is_streaming = e.is_streaming_images
+            state.is_preview_paused = e.is_preview_paused
+            sync_action_buttons()
             if e.has_error:
                 status.value = f"Camera error: {e.error_description}"
             elif e.is_taking_picture:
@@ -181,15 +243,26 @@ async def main(page: ft.Page):
                 status.value = "Preview paused"
             else:
                 status.value = "Camera ready"
+            page.update()
 
     preview.on_state_change = on_state_change
     selector.on_select = init_camera
 
     async def start_streaming():
+        if not state.is_streaming_supported:
+            status.value = "Image streaming is not supported by this camera"
+            page.update()
+            return
         await preview.start_image_stream()
+        state.is_streaming = True
+        sync_action_buttons()
+        page.update()
 
     async def stop_streaming():
         await preview.stop_image_stream()
+        state.is_streaming = False
+        sync_action_buttons()
+        page.update()
 
     def on_stream_image(e: ft.Event[fc.CameraImage]):
         try:
@@ -202,9 +275,45 @@ async def main(page: ft.Page):
 
     async def pause_preview():
         await preview.pause_preview()
+        state.is_preview_paused = True
+        sync_action_buttons()
+        page.update()
 
     async def resume_preview():
         await preview.resume_preview()
+        state.is_preview_paused = False
+        sync_action_buttons()
+        page.update()
+
+    async def toggle_recording():
+        if state.is_recording:
+            await stop_recording()
+        else:
+            await start_recording()
+
+    async def toggle_recording_pause():
+        if state.is_recording_paused:
+            await resume_recording()
+        else:
+            await pause_recording()
+
+    async def toggle_streaming():
+        if state.is_streaming:
+            await stop_streaming()
+        else:
+            await start_streaming()
+
+    async def toggle_preview():
+        if state.is_preview_paused:
+            await resume_preview()
+        else:
+            await pause_preview()
+
+    take_photo_btn.on_click = take_photo
+    record_btn.on_click = toggle_recording
+    pause_recording_btn.on_click = toggle_recording_pause
+    stream_btn.on_click = toggle_streaming
+    preview_btn.on_click = toggle_preview
 
     page.on_connect = get_cameras
 
@@ -228,25 +337,11 @@ async def main(page: ft.Page):
                     status,
                     ft.Row(
                         [
-                            ft.Button("Take photo", on_click=take_photo),
-                            ft.Button("Start rec", on_click=start_recording),
-                            ft.Button("Pause rec", on_click=pause_recording),
-                            ft.Button("Resume rec", on_click=resume_recording),
-                            ft.Button("Stop rec", on_click=stop_recording),
-                        ],
-                        wrap=True,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Button("Start streaming", on_click=start_streaming),
-                            ft.Button("Stop streaming", on_click=stop_streaming),
-                        ],
-                        wrap=True,
-                    ),
-                    ft.Row(
-                        [
-                            ft.Button("Pause preview", on_click=pause_preview),
-                            ft.Button("Resume preview", on_click=resume_preview),
+                            take_photo_btn,
+                            record_btn,
+                            pause_recording_btn,
+                            stream_btn,
+                            preview_btn,
                         ],
                         wrap=True,
                     ),
