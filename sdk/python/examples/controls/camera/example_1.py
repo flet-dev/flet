@@ -11,11 +11,13 @@ logging.basicConfig(level=logging.INFO)
 class State:
     cameras: list[fc.CameraDescription] = field(default_factory=list)
     selected_camera: fc.CameraDescription | None = None
+    camera_labels: dict[str, str] = field(default_factory=dict)
 
 
 async def main(page: ft.Page):
     page.title = "Camera control"
     page.padding = 16
+    page.scroll = ft.ScrollMode.AUTO
     page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
     state = State()
@@ -41,13 +43,47 @@ async def main(page: ft.Page):
     )
     selector = ft.Dropdown(label="Camera", options=[])
 
+    def has_human_readable_name(camera: fc.CameraDescription) -> bool:
+        name = camera.name.strip()
+        if not name:
+            return False
+        if name.startswith("com.apple.avfoundation."):
+            return False
+        return not (":" in name and "." in name)
+
+    def camera_label(camera: fc.CameraDescription) -> str:
+        if has_human_readable_name(camera):
+            return camera.name
+
+        direction = camera.lens_direction.value.capitalize()
+        lens_map = {
+            "wide": "Wide",
+            "telephoto": "Telephoto",
+            "ultraWide": "Ultra Wide",
+            "unknown": "Unknown",
+        }
+        lens_type = lens_map.get(camera.lens_type.value, camera.lens_type.value)
+        return f"{direction} ({lens_type})"
+
     async def get_cameras():
         state.cameras = await preview.get_available_cameras()
-        selector.options = [ft.DropdownOption(c.name) for c in state.cameras]
-        if state.cameras and selector.value is None:
-            selector.value = state.cameras[0].name
-        if selector.value:
-            await init_camera()
+        state.camera_labels.clear()
+        seen_labels: dict[str, int] = {}
+        for camera in state.cameras:
+            label = camera_label(camera)
+            seen_labels[label] = seen_labels.get(label, 0) + 1
+            if seen_labels[label] > 1:
+                label = f"{label} {seen_labels[label]}"
+            state.camera_labels[camera.name] = label
+
+        selector.options = [
+            ft.DropdownOption(key=c.name, text=state.camera_labels[c.name])
+            for c in state.cameras
+        ]
+        if selector.value and selector.value not in state.camera_labels:
+            selector.value = None
+        status.value = "Select a camera"
+        page.update()
 
     async def init_camera(e=None):
         state.selected_camera = next(
@@ -58,7 +94,10 @@ async def main(page: ft.Page):
             status.value = "No camera selected"
             return
 
-        status.value = f"Initializing {state.selected_camera.name}"
+        selected_label = state.camera_labels.get(
+            state.selected_camera.name, state.selected_camera.name
+        )
+        status.value = f"Initializing {selected_label}"
         status.update()
         await preview.initialize(
             description=state.selected_camera,
@@ -112,34 +151,43 @@ async def main(page: ft.Page):
     page.on_connect = get_cameras
 
     page.add(
-        ft.Row(
-            [
-                selector,
-                ft.IconButton(ft.Icons.REFRESH, on_click=get_cameras),
-            ],
-        ),
-        ft.Container(
-            height=320,
-            bgcolor=ft.Colors.BLACK,
-            border_radius=3,
-            content=preview,
-        ),
-        status,
-        ft.Row(
-            [
-                ft.Button("Take photo", on_click=take_photo),
-                ft.Button("Start streaming", on_click=start_streaming),
-                ft.Button("Stop streaming", on_click=stop_streaming),
-            ],
-        ),
-        ft.Row(
-            [
-                ft.Button("Pause preview", on_click=pause_preview),
-                ft.Button("Resume preview", on_click=resume_preview),
-            ]
-        ),
-        ft.Text("Last photo"),
-        last_image,
+        ft.SafeArea(
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            selector,
+                            ft.IconButton(ft.Icons.REFRESH, on_click=get_cameras),
+                        ],
+                        wrap=True,
+                    ),
+                    ft.Container(
+                        height=320,
+                        bgcolor=ft.Colors.BLACK,
+                        border_radius=3,
+                        content=preview,
+                    ),
+                    status,
+                    ft.Row(
+                        [
+                            ft.Button("Take photo", on_click=take_photo),
+                            ft.Button("Start streaming", on_click=start_streaming),
+                            ft.Button("Stop streaming", on_click=stop_streaming),
+                        ],
+                        wrap=True,
+                    ),
+                    ft.Row(
+                        [
+                            ft.Button("Pause preview", on_click=pause_preview),
+                            ft.Button("Resume preview", on_click=resume_preview),
+                        ],
+                        wrap=True,
+                    ),
+                    ft.Text("Last photo"),
+                    last_image,
+                ]
+            )
+        )
     )
 
     await get_cameras()

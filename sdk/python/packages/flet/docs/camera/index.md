@@ -11,9 +11,9 @@ Powered by the [camera](https://pub.dev/packages/camera) Flutter package.
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform | iOS | Android | Web | Windows | macOS | Linux |
+|----------|-----|---------|-----|---------|-------|-------|
+| Supported|  ✅  |    ✅    |  ✅  |    ❌    |   ❌   |   ❌   |
 
 ## Usage
 

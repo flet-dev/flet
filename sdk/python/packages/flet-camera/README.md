@@ -2,6 +2,8 @@
 
 [![pypi](https://img.shields.io/pypi/v/flet-camera.svg)](https://pypi.python.org/pypi/flet-camera)
 [![downloads](https://static.pepy.tech/badge/flet-camera/month)](https://pepy.tech/project/flet-camera)
+[![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-camera)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-camera.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-camera/LICENSE)
 
 A cross-platform camera control for [Flet](https://flet.dev) apps.
@@ -14,9 +16,9 @@ Detailed documentation for this package can be found [here](https://docs.flet.de
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform | iOS | Android | Web | Windows | macOS | Linux |
+|----------|-----|---------|-----|---------|-------|-------|
+| Supported|  ✅  |    ✅    |  ✅  |    ❌    |   ❌   |   ❌   |
 
 ## Usage
 
