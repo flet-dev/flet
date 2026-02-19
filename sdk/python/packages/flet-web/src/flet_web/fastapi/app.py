@@ -1,12 +1,11 @@
 import asyncio
 import os
-from collections.abc import Awaitable
-from typing import Callable, Optional, Union
+from typing import Optional
 
 from fastapi import Request, WebSocket
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from flet.controls.page import Page
+from flet.app import AppCallable
 from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
@@ -21,8 +20,8 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 
 def app(
-    main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
-    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,
@@ -90,6 +89,12 @@ def app(
 
     @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
+        """
+        Handles Flet WebSocket session lifecycle for one client connection.
+
+        The handler creates a new [`FletApp`][flet_web.fastapi.flet_app.]
+        instance and delegates message send/receive processing to it.
+        """
         await FletApp(
             loop=asyncio.get_running_loop(),
             executor=app_manager.executor,
@@ -107,6 +112,9 @@ def app(
             f"/{upload_endpoint_path if upload_endpoint_path else upload_endpoint}"
         )
         async def upload_handler(request: Request):
+            """
+            Handles signed file uploads routed through the Flet upload endpoint.
+            """
             await FletUpload(
                 upload_dir=upload_dir,
                 max_upload_size=max_upload_size,
@@ -115,6 +123,9 @@ def app(
 
     @fastapi_app.get(f"/{oauth_callback_endpoint}")
     async def oauth_redirect_handler(request: Request):
+        """
+        Handles OAuth provider callback redirect and returns auth response.
+        """
         return await FletOAuth().handle(request)
 
     fastapi_app.mount(
@@ -134,7 +145,17 @@ def app(
 
     # Add middleware for custom headers
     class CustomHeadersMiddleware(BaseHTTPMiddleware):
+        """
+        Injects security/CORS headers required by browser-side Flet runtime.
+        """
+
         async def dispatch(self, request: Request, call_next):
+            """
+            Adds fixed response headers for isolation and cross-origin access.
+
+            Returns:
+                The downstream response with added headers.
+            """
             response = await call_next(request)
             response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
             response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"

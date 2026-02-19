@@ -17,6 +17,14 @@ import flet_web.fastapi
 
 
 class FastAPI(fastapi.FastAPI):
+    """
+    FastAPI wrapper that integrates Flet app-manager startup/shutdown lifecycle.
+
+    It mirrors `fastapi.FastAPI` constructor options while
+    wiring a custom lifespan context that starts and stops
+    `flet_web.fastapi.app_manager`.
+    """
+
     def __init__(
         self,
         *,
@@ -62,8 +70,32 @@ class FastAPI(fastapi.FastAPI):
         ] = Default(generate_unique_id),
         **extra: Any,
     ) -> None:
+        """
+        Initialize a FastAPI app with Flet-aware lifespan handling.
+
+        All standard FastAPI constructor parameters are supported and passed
+        through unchanged.
+
+        Args:
+            debug: Enables debug mode.
+            on_startup: Optional startup callbacks executed after Flet app-manager
+                startup.
+            on_shutdown: Optional shutdown callbacks executed before Flet
+                app-manager shutdown.
+            generate_unique_id_function: Function used to generate OpenAPI
+                operation IDs.
+            **extra: Additional keyword arguments forwarded to `fastapi.FastAPI`.
+        """
+
         @asynccontextmanager
         async def lifespan(app: fastapi.FastAPI):
+            """
+            Manage Flet and user-provided startup/shutdown hooks for app lifespan.
+
+            Args:
+                app: FastAPI application instance whose lifespan is being managed.
+            """
+
             await flet_web.fastapi.app_manager.start()
             if on_startup:
                 for h in on_startup:

@@ -251,7 +251,7 @@ class Text(LayoutControl):
     font_family: Optional[str] = None
     """
     System or custom font family to render text with. See \
-    [`Fonts`](https://flet.dev/docs/controls/page#fonts) cookbook guide for \
+    [`Fonts`](https://docs.flet.dev/cookbook/fonts) cookbook guide for \
     instructions on how to import and use custom fonts in your application.
     """
 

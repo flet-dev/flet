@@ -8,6 +8,13 @@ if TYPE_CHECKING:
 
 @dataclass()
 class ComponentOwned:
+    """
+    Base mixin for objects owned by a component via weak reference.
+
+    Used by hook/subscription state objects that must reference their owning
+    component without creating strong-reference cycles.
+    """
+
     owner: InitVar["Component"]
 
     def __post_init__(self, owner: "Component") -> None:
@@ -15,6 +22,12 @@ class ComponentOwned:
 
     @property
     def component(self) -> Optional["Component"]:
+        """
+        The current owning component, if still alive.
+
+        Returns:
+            The owner component, or `None` if the weak reference is no longer valid.
+        """
         return self._component()
 
     @component.setter

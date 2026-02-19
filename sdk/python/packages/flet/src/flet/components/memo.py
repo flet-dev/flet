@@ -26,6 +26,7 @@ def memo(fn):
     """
 
     def memo_wrapper(*args, **kwargs):
+        """Render `fn` with memoization enabled for this invocation."""
         r = current_renderer()
         r.set_memo()
         return fn(*args, **kwargs)

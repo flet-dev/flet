@@ -22,16 +22,57 @@ __all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 
 class ListTileTitleAlignment(Enum):
+    """
+    Defines how [`ListTile`][flet.] aligns [`leading`][flet.ListTile.]
+    and [`trailing`][flet.ListTile.] relative to the tile's title area.
+
+    The alignment is computed against the text block formed by
+    [`title`][flet.ListTile.] and [`subtitle`][flet.ListTile.].
+    Use this to tune the visual balance between icon/avatar controls and text,
+    especially when tiles switch between one-line, two-line, and three-line layouts.
+    """
+
     TOP = "top"
+    """
+    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    toward the top of the title area.
+
+    Top placement respects [`ListTile.min_vertical_padding`][flet.].
+    """
+
     CENTER = "center"
+    """
+    Centers [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    relative to the title/subtitle block.
+    """
+
     BOTTOM = "bottom"
+    """
+    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    toward the bottom of the title area.
+
+    Bottom placement respects [`ListTile.min_vertical_padding`][flet.].
+    """
+
     THREE_LINE = "threeLine"
+    """
+    Uses alignment behavior optimized for three-line list tile layouts.
+
+    This is the default alignment style in Material 3.
+    """
+
     TITLE_HEIGHT = "titleHeight"
+    """
+    Uses alignment behavior based on title-height rules from legacy list tile layouts.
+
+    This is the default alignment style in Material 2.
+    """
 
 
 class ListTileStyle(Enum):
     """
-    Defines the title font used for ListTile descendants of a ListTileTheme.
+    Defines the title font used for [`ListTile`][flet.]
+    descendants of a [`ListTileTheme`][flet.].
 
     List tiles that appear in a Drawer use the theme's TextTheme.body_large text style,
     which is a little smaller than the theme's TextTheme.title_medium text style, which
@@ -48,6 +89,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     A single fixed-height row that typically contains some text as well as a leading \
     or trailing icon.
 
+    Example:
     ```python
     ft.ListTile(
         width=400,

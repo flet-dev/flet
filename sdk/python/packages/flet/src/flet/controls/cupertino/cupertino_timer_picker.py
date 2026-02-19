@@ -13,9 +13,30 @@ __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
 
 class CupertinoTimerPickerMode(Enum):
+    """
+    Different modes of [`CupertinoTimerPicker`][flet.].
+    """
+
     HOUR_MINUTE = "hm"
+    """
+    Mode that shows the timer duration in hour and minute.
+
+    Examples: `16 hours | 14 min`
+    """
+
     HOUR_MINUTE_SECONDS = "hms"
+    """
+    Mode that shows the timer duration in hour, minute, and second.
+
+    Examples: `16 hours | 14 min | 43 sec`
+    """
+
     MINUTE_SECONDS = "ms"
+    """
+    Mode that shows the timer duration in minute and second.
+
+    Examples: `14 min | 43 sec`
+    """
 
 
 @control("CupertinoTimerPicker")

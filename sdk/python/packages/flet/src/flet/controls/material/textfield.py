@@ -379,6 +379,14 @@ class TextField(FormFieldControl, AdaptiveControl):
     `on_submit` event.
     """
 
+    ignore_up_down_keys: bool = False
+    """
+    Whether to intercept Arrow-Up and Arrow-Down when this field has focus.
+
+    When set to `True`, pressing those keys does not move the caret to the beginning
+    or end of the text respectively.
+    """
+
     text_align: Optional[TextAlign] = None
     """
     How the text should be aligned horizontally.

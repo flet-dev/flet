@@ -20,7 +20,7 @@ class Audio(ft.Service):
     The audio source.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
 

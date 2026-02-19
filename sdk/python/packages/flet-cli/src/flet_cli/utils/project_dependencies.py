@@ -8,10 +8,37 @@ from typing import Any, Optional
 def get_poetry_dependencies(
     poetry_dependencies: Optional[dict[str, Any]] = None,
 ) -> Optional[list[str]]:
+    """
+    Convert Poetry dependency declarations into pip-style requirement strings.
+
+    Args:
+        poetry_dependencies: Value from `tool.poetry.dependencies`.
+
+    Returns:
+        Sorted requirement strings or `None` when `poetry_dependencies` is `None`.
+    """
+
     if poetry_dependencies is None:
         return None
 
     def format_dependency_version(dependency_name: str, dependency_value: Any):
+        """
+        Format a single Poetry dependency entry as a requirement specifier.
+
+        Supports version constraints, git dependencies (including branch/rev/tag
+        and subdirectory), path/url dependencies, and optional environment markers.
+
+        Args:
+            dependency_name: Dependency key in Poetry configuration.
+            dependency_value: String or mapping that describes the dependency.
+
+        Returns:
+            A requirement string consumable by pip-style tooling.
+
+        Raises:
+            ValueError: If the dependency mapping uses an unsupported shape.
+        """
+
         sep = "@"
         value = ""
         suffix = ""
@@ -88,6 +115,16 @@ def get_poetry_dependencies(
 def get_project_dependencies(
     project_dependencies: Optional[dict[str, Any]] = None,
 ) -> Optional[list[str]]:
+    """
+    Normalize PEP 621 `project.dependencies` into a sorted unique list.
+
+    Args:
+        project_dependencies: Value from `project.dependencies`.
+
+    Returns:
+        Sorted dependency strings, or `None` when input is `None`.
+    """
+
     if project_dependencies is None:
         return None
 

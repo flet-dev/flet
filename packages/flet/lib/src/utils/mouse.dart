@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'material_state.dart';
+import 'widget_state.dart';
 
 MouseCursor? parseMouseCursor(String? cursor, [MouseCursor? defaultValue]) {
   const cursorMap = {

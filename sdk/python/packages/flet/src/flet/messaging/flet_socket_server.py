@@ -5,9 +5,10 @@ import logging
 import os
 import tempfile
 import traceback
+from collections.abc import Awaitable
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 import msgpack
 
@@ -28,19 +29,30 @@ from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
+if TYPE_CHECKING:
+    from flet.app import AppCallable
+
 logger = logging.getLogger("flet")
 transport_log = logging.getLogger("flet_transport")
 
 
 class FletSocketServer(Connection):
+    """
+    Socket-based transport for Flet backend messaging.
+
+    This connection accepts a single active client at a time over TCP or Unix domain
+    socket (UDS), decodes protocol frames, manages session lifecycle, and forwards
+    outbound messages through an internal send queue.
+    """
+
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
-        on_session_created=None,
-        before_main=None,
-        blocking=False,
+        on_session_created: Optional[Callable[[Session], Awaitable[Any]]] = None,
+        before_main: Optional["AppCallable"] = None,
+        blocking: bool = False,
         executor: Optional[ThreadPoolExecutor] = None,
     ):
         super().__init__()
@@ -64,6 +76,16 @@ class FletSocketServer(Connection):
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)
 
     async def start(self):
+        """
+        Starts listening for client connections.
+
+        Transport selection:
+        - TCP on Windows or when `port > 0`;
+        - UDS on non-Windows when `port == 0`.
+
+        When `blocking=True`, this method waits on `serve_forever()`. Otherwise it
+        schedules serving in a background task and returns.
+        """
         self.__connected = False
         self.__receive_loop_task = None
         self.__send_loop_task = None
@@ -101,6 +123,17 @@ class FletSocketServer(Connection):
     async def handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ):
+        """
+        Handles an incoming socket connection.
+
+        Only one active connection is allowed. A new connection replaces any existing
+        one, starts paired receive/send loops, and remains active until one loop
+        completes or the connection is superseded.
+
+        Args:
+            reader: Socket stream reader.
+            writer: Socket stream writer.
+        """
         async with self.__connection_lock:
             await self.__terminate_active_connection_locked(reason="replaced")
 
@@ -151,6 +184,20 @@ class FletSocketServer(Connection):
             logger.debug("Connection writer closed.")
 
     async def __terminate_active_connection_locked(self, reason: str) -> None:
+        """
+        Terminates the currently active connection and related tasks.
+
+        Locking contract:
+            Caller must hold `self.__connection_lock`.
+
+        Actions performed:
+        - closes current session (if present);
+        - cancels receive/send and running handler tasks;
+        - closes active writer and clears connection state.
+
+        Args:
+            reason: Diagnostic reason used in debug logs.
+        """
         if not self.__connected and self.__writer is None:
             logger.debug("No active connection to terminate.")
             return
@@ -196,6 +243,18 @@ class FletSocketServer(Connection):
                 await old_writer.wait_closed()
 
     async def __receive_loop(self, reader: asyncio.StreamReader, connection_token: int):
+        """
+        Reads and dispatches inbound MsgPack frames from the socket.
+
+        The loop exits when:
+        - socket EOF is reached;
+        - the connection token no longer matches (connection replaced);
+        - the task is cancelled.
+
+        Args:
+            reader: Socket stream reader to consume bytes from.
+            connection_token: Token identifying the connection generation.
+        """
         unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         try:
             while True:
@@ -220,6 +279,17 @@ class FletSocketServer(Connection):
         send_queue: asyncio.Queue[bytes],
         connection_token: int,
     ):
+        """
+        Sends outbound frames from the queue to the active socket writer.
+
+        The loop exits when the connection token changes (connection replaced) or
+        when cancelled.
+
+        Args:
+            writer: Socket writer used to send bytes.
+            send_queue: Queue of pre-encoded MsgPack frames.
+            connection_token: Token identifying the connection generation.
+        """
         try:
             while True:
                 if self.__connection_token != connection_token:
@@ -235,6 +305,22 @@ class FletSocketServer(Connection):
             logger.debug("Send loop exiting.")
 
     async def __on_message(self, data: Any):
+        """
+        Processes one decoded protocol frame from the client.
+
+        Supported actions:
+        - `REGISTER_CLIENT`: create session, apply initial page patch (for new
+          sessions), run `before_main`, and send register response;
+        - `CONTROL_EVENT`: dispatch control event to session;
+        - `UPDATE_CONTROL_PROPS`: apply property patch to a control;
+        - `INVOKE_METHOD`: deliver invoke-method response back to session waiter.
+
+        Args:
+            data: Decoded frame in the form `[action_code, body]`.
+
+        Raises:
+            RuntimeError: If the action code is unknown.
+        """
         action = ClientAction(data[0])
         body = data[1]
         transport_log.debug(f"_on_message: {action} {body}")
@@ -301,6 +387,14 @@ class FletSocketServer(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
+        """
+        Encodes and queues an outbound message for the active connection.
+
+        If no active send queue exists (no connected client), the message is dropped.
+
+        Args:
+            message: Protocol message to send.
+        """
         transport_log.debug(f"send_message: {message}")
         m = msgpack.packb(
             [message.action, message.body],
@@ -310,6 +404,13 @@ class FletSocketServer(Connection):
             self.__send_queue.put_nowait(m)
 
     async def close(self):
+        """
+        Gracefully shuts down the socket server and transport resources.
+
+        This method terminates the active connection, stops the listening server,
+        shuts down the optional executor, cancels serving tasks, and removes a UDS
+        socket file when used.
+        """
         logger.debug("Closing connection...")
 
         async with self.__connection_lock:

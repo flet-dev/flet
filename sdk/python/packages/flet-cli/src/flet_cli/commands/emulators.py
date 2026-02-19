@@ -25,6 +25,13 @@ class Command(BaseFlutterCommand):
         self.emulator_name = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line arguments for emulator management.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "action",
             type=str.lower,
@@ -49,6 +56,16 @@ class Command(BaseFlutterCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Execute emulator action flow based on parsed options.
+
+        Initializes required tooling and then dispatches to list, create, start,
+        or delete logic.
+
+        Args:
+            options: Parsed CLI options.
+        """
+
         super().handle(options)
         if self.options:
             self.action = self.options.action
@@ -83,11 +100,22 @@ class Command(BaseFlutterCommand):
             self._list_emulators()
 
     def initialize_command(self):
+        """
+        Enable Android SDK requirement and run base initialization steps.
+        """
+
         self.require_android_sdk = True
 
         super().initialize_command()
 
     def _list_emulators(self):
+        """
+        Retrieve available emulators and render them in a table.
+
+        Exits through `cleanup()` with a summary message when no emulators are
+        found or when discovery fails.
+        """
+
         self.update_status("[bold blue]Listing available emulators...")
         emulators_process = self.run(
             [
@@ -158,6 +186,13 @@ class Command(BaseFlutterCommand):
         self.cleanup(0, message=Group(table, footer), no_border=True)
 
     def _launch_emulator(self):
+        """
+        Start the selected emulator, optionally in cold-boot mode.
+
+        Exits through `cleanup()` with command output on failure or a success
+        confirmation message.
+        """
+
         assert self.emulator_target
         self.update_status(
             f"[bold blue]Starting emulator [cyan]{self.emulator_target}[/cyan]..."
@@ -199,6 +234,13 @@ class Command(BaseFlutterCommand):
         self.cleanup(0, f"Emulator [cyan]{self.emulator_target}[/cyan] started{mode}.")
 
     def _delete_emulator(self):
+        """
+        Delete the selected Android virtual device.
+
+        Resolves SDK location, then delegates deletion to
+        [`AndroidSDK`][flet_cli.utils.android_sdk.].
+        """
+
         assert self.emulator_target
         self.update_status(
             f"[bold blue]Deleting emulator [cyan]{self.emulator_target}[/cyan]..."
@@ -225,6 +267,12 @@ class Command(BaseFlutterCommand):
         self.cleanup(0, f"Deleted emulator [cyan]{self.emulator_target}[/cyan].")
 
     def _create_emulator(self):
+        """
+        Create a new emulator using the provided name.
+
+        Validates name format before invoking the create command.
+        """
+
         self.update_status("[bold blue]Creating emulator...")
         if not self._is_valid_emulator_name(self.emulator_name):
             self.skip_flutter_doctor = True
@@ -274,9 +322,30 @@ class Command(BaseFlutterCommand):
         )
 
     def _is_valid_emulator_name(self, name: str) -> bool:
+        """
+        Validate emulator name against supported characters.
+
+        Args:
+            name: Emulator name candidate.
+
+        Returns:
+            `True` when the name contains only letters, digits, `.`, `_`, and `-`.
+        """
+
         return bool(re.match(r"^[A-Za-z0-9._-]+$", name or ""))
 
     def _parse_emulators_output(self, output: str) -> list[dict]:
+        """
+        Parse emulator rows from command output.
+
+        Args:
+            output: Text output produced by `flutter emulators`.
+
+        Returns:
+            A list of dictionaries with emulator metadata fields:
+            `id`, `name`, `platform`, `platform_label`, and `manufacturer`.
+        """
+
         emulators = []
         for raw_line in output.splitlines():
             line = raw_line.strip()
@@ -313,6 +382,16 @@ class Command(BaseFlutterCommand):
         return emulators
 
     def _normalize_platform(self, platform_raw: str) -> str | None:
+        """
+        Normalize a platform label to a canonical value.
+
+        Args:
+            platform_raw: Raw platform label extracted from command output.
+
+        Returns:
+            `"android"`, `"ios"`, or `None` when no known platform is detected.
+        """
+
         platform_lower = platform_raw.lower()
         if "android" in platform_lower:
             return "android"

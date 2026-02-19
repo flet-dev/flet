@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'material_state.dart';
 import 'numbers.dart';
+import 'widget_state.dart';
 
 Size? parseSize(dynamic value, [Size? defaultValue]) {
   if (value == null) return defaultValue;

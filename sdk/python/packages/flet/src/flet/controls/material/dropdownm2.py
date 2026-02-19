@@ -111,7 +111,7 @@ class DropdownM2(FormFieldControl):
 
     select_icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use \
+    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` to use \
     for the drop-down select button's icon.
 
     Defaults to `Icon(ft.Icons.ARROW_DROP_DOWN)`.

@@ -15,37 +15,103 @@ __all__ = ["Window", "WindowEvent", "WindowEventType", "WindowResizeEdge"]
 
 
 class WindowEventType(Enum):
+    """
+    Type of native desktop window event.
+
+    Values are reported in [`WindowEvent.type`][flet.] and
+    delivered by [`Window.on_event`][flet.]. Event availability
+    depends on the operating system and underlying window manager.
+    """
+
     CLOSE = "close"
+    """The OS requested the window to close."""
+
     FOCUS = "focus"
+    """The window became focused."""
+
     BLUR = "blur"
+    """The window lost focus."""
+
     HIDE = "hide"
+    """The window became hidden."""
+
     SHOW = "show"
+    """The window became visible."""
+
     MAXIMIZE = "maximize"
+    """The window was maximized."""
+
     UNMAXIMIZE = "unmaximize"
+    """The window exited maximized state."""
+
     MINIMIZE = "minimize"
+    """The window was minimized."""
+
     RESTORE = "restore"
+    """The window was restored from a minimized state."""
+
     RESIZE = "resize"
+    """The window size is changing."""
+
     RESIZED = "resized"
+    """The window size changed."""
+
     MOVE = "move"
+    """The window position is changing."""
+
     MOVED = "moved"
+    """The window position changed."""
+
     LEAVE_FULL_SCREEN = "leave-full-screen"
+    """The window exited full-screen mode."""
+
     ENTER_FULL_SCREEN = "enter-full-screen"
+    """The window entered full-screen mode."""
 
 
 class WindowResizeEdge(Enum):
+    """
+    Edge or corner used by [`Window.start_resizing()`][flet.Window.start_resizing].
+
+    The selected value defines which resize handle is used when initiating
+    native window resizing programmatically.
+    """
+
     TOP = "top"
+    """Top edge."""
+
     LEFT = "left"
+    """Left edge."""
+
     RIGHT = "right"
+    """Right edge."""
+
     BOTTOM = "bottom"
+    """Bottom edge."""
+
     TOP_LEFT = "topLeft"
+    """Top-left corner."""
+
     BOTTOM_LEFT = "bottomLeft"
+    """Bottom-left corner."""
+
     TOP_RIGHT = "topRight"
+    """Top-right corner."""
+
     BOTTOM_RIGHT = "bottomRight"
+    """Bottom-right corner."""
 
 
 @dataclass
 class WindowEvent(Event[EventControlType]):
+    """
+    Payload for [`Window.on_event`][flet.] callbacks.
+    """
+
     type: WindowEventType
+    """
+    Native event kind emitted by the desktop window backend.
+    """
 
 
 # TODO: raise FletExceptions when a method cant be called on the running platform
@@ -299,6 +365,14 @@ class Window(BaseControl):
         await self._invoke_method("center")
 
     async def close(self):
+        """
+        Requests graceful closing of the app window.
+
+        This sends a native close request equivalent to pressing the window
+        close button. If [`prevent_close`][(c).] is enabled, the close may be
+        intercepted and reported via [`on_event`][(c).] with
+        [`WindowEventType.CLOSE`][flet.].
+        """
         await self._invoke_method("close")
 
     async def to_front(self):

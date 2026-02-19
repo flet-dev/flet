@@ -26,8 +26,24 @@ from flet.controls.types import (
 
 @dataclass
 class DataColumnSortEvent(Event["DataColumn"]):
+    """
+    Event emitted when a [`DataColumn`][flet.] requests sorting.
+
+    This event is delivered to [`DataColumn.on_sort`][flet.] when the user triggers
+    sorting from a column header. Use [`column_index`][(c).] and
+    [`ascending`][(c).] to update table state (for example, `sort_column_index` and
+    `sort_ascending` on [`DataTable`][flet.]).
+    """
+
     column_index: int = field(metadata={"data_field": "ci"})
+    """
+    Index of the column that requested sorting.
+    """
+
     ascending: bool = field(metadata={"data_field": "asc"})
+    """
+    Requested sort direction: `True` for ascending, `False` for descending.
+    """
 
 
 @control("DataColumn")

@@ -64,6 +64,10 @@ __all__ = ["Colors"]
 
 
 class Colors(str, Enum, metaclass=DeprecatedEnumMeta):
+    """
+    Named Material colors.
+    """
+
     def __eq__(self, other):
         if isinstance(other, str):
             return self.value.lower() == other.lower()

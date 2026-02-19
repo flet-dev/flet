@@ -47,22 +47,96 @@ from flet.controls.types import (
 
 
 class PageTransitionTheme(Enum):
+    """
+    Page transition preset for route changes.
+
+    These could, for example, be used together with [`PageTransitionsTheme`][flet.] to
+    define per-platform navigation animations.
+    """
+
     NONE = "none"
+    """
+    Disables route transition animation.
+    """
+
     FADE_UPWARDS = "fadeUpwards"
+    """
+    Fade-and-slide transition where the incoming page moves upward,
+    similar to the one provided by Android O.
+    """
+
     OPEN_UPWARDS = "openUpwards"
+    """
+    Upward reveal transition with clipping/scrim,
+    matching the transition used on Android P.
+    """
+
     ZOOM = "zoom"
+    """
+    Zoom/fade transition used by modern Material route animations,
+    similar to the one provided in Android Q.
+    """
+
     CUPERTINO = "cupertino"
+    """
+    Cupertino-style horizontal page transition,
+    which matches native iOS page transitions.
+    """
+
     PREDICTIVE = "predictive"
+    """
+    Predictive-back transition that allows peeking behind the current route on Android.
+    """
+
     FADE_FORWARDS = "fadeForwards"
+    """
+    Fade-forward Material route transition, similar to the one provided by Android U.
+    """
 
 
 @dataclass
 class PageTransitionsTheme:
+    """
+    Per-platform mapping of route transition presets.
+
+    Assigned to [`Theme.page_transitions`][flet.] to
+    override how Material routes animate on each target platform.
+    """
+
     android: Optional[PageTransitionTheme] = None
+    """
+    Transition preset for Android routes.
+
+    If `None`, defaults to [`PageTransitionTheme.FADE_UPWARDS`][flet.].
+    """
+
     ios: Optional[PageTransitionTheme] = None
+    """
+    Transition preset for iOS routes.
+
+    If `None`, defaults to [`PageTransitionTheme.CUPERTINO`][flet.].
+    """
+
     linux: Optional[PageTransitionTheme] = None
+    """
+    Transition preset for Linux desktop routes.
+
+    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    """
+
     macos: Optional[PageTransitionTheme] = None
+    """
+    Transition preset for macOS desktop routes.
+
+    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    """
+
     windows: Optional[PageTransitionTheme] = None
+    """
+    Transition preset for Windows desktop routes.
+
+    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    """
 
 
 @dataclass

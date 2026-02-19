@@ -13,10 +13,16 @@ class Ref(Generic[T]):
 
     @property
     def current(self) -> Optional[T]:
+        """
+        Referenced object, or `None` if no object is set or it was garbage-collected.
+        """
         return self._ref() if self._ref else None
 
     @current.setter
     def current(self, value: Optional[T]):
+        """
+        Set referenced object using a weak reference to avoid retaining ownership.
+        """
         self._ref = weakref.ref(value) if value is not None else None
 
     def __call__(self) -> Optional[T]:

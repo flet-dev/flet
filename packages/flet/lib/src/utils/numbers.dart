@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import 'material_state.dart';
+import 'widget_state.dart';
 
 double? parseDouble(dynamic value, [double? defaultValue]) {
   if (value is double) {

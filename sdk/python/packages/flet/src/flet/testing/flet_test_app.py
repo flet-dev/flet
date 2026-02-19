@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 from PIL import Image
@@ -19,6 +19,9 @@ from flet.controls.control import Control
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
+
+if TYPE_CHECKING:
+    from flet.app import AppCallable
 
 __all__ = ["FletTestApp"]
 
@@ -125,7 +128,7 @@ class FletTestApp:
     def __init__(
         self,
         flutter_app_dir: os.PathLike,
-        flet_app_main: Any = None,
+        flet_app_main: Optional["AppCallable"] = None,
         assets_dir: Optional[os.PathLike] = None,
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,
@@ -191,6 +194,12 @@ class FletTestApp:
         ready = asyncio.Event()
 
         async def main(page: ft.Page):
+            """
+            Initializes the test page and runs the user-provided Flet app entry point.
+
+            Args:
+                page: Connected app [`Page`][flet.] instance.
+            """
             self.__page = page
             self.__tester = Tester()
             page.theme_mode = ft.ThemeMode.LIGHT
@@ -433,12 +442,43 @@ class FletTestApp:
             )
 
     def _load_image_from_file(self, file_name):
+        """
+        Loads an image from disk.
+
+        Args:
+            file_name: Path to an image file.
+
+        Returns:
+            Loaded Pillow image object.
+        """
         return Image.open(file_name)
 
     def _load_image_from_bytes(self, data: bytes) -> Image.Image:
+        """
+        Loads an image from PNG bytes.
+
+        Args:
+            data: Image data bytes.
+
+        Returns:
+            Loaded Pillow image object.
+        """
         return Image.open(BytesIO(data))
 
     def _compare_images_rgb(self, img1, img2) -> float:
+        """
+        Calculates structural similarity between two RGB images.
+
+        If image sizes differ, the second image is resized to match the first image
+        before comparison.
+
+        Args:
+            img1: Reference image.
+            img2: Image to compare.
+
+        Returns:
+            Similarity percentage in the `0..100` range.
+        """
         if img1.size != img2.size:
             img2 = img2.resize(img1.size)
         arr1 = np.array(img1)

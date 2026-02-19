@@ -5,6 +5,14 @@ from flet.auth.user import User
 
 
 class OAuthProvider:
+    """
+    Base configuration and extension point for OAuth providers in Flet.
+
+    Instances describe OAuth endpoints, client credentials, optional PKCE
+    parameters, and optional user/group retrieval behavior used by
+    `AuthorizationService`.
+    """
+
     def __init__(
         self,
         client_id: str,
@@ -36,10 +44,35 @@ class OAuthProvider:
         self.code_verifier = code_verifier
 
     def _name(self):
+        """
+        Returns provider name/identifier.
+
+        Intended as an optional subclass extension point.
+        """
         raise NotImplementedError("Subclasses must implement _name()")
 
     async def _fetch_groups(self, access_token: str) -> list[Group]:
+        """
+        Fetches user groups from the provider API.
+
+        Args:
+            access_token: OAuth access token.
+
+        Returns:
+            A list of [`Group`][(p).]. The base implementation returns
+                an empty list.
+        """
         return []
 
     async def _fetch_user(self, access_token: str) -> Optional[User]:
+        """
+        Fetches user profile from the provider API.
+
+        Args:
+            access_token: OAuth access token.
+
+        Returns:
+            A [`User`][(p).] instance, or `None` to let authorization
+                fallback logic use `user_endpoint` / `user_id_fn`.
+        """
         return None

@@ -25,35 +25,65 @@ __all__ = [
 
 
 class PaintingStyle(Enum):
+    """
+    Strategy used by [`Paint.style`][flet.] when drawing geometry.
+
+    Determines whether a shape is rendered as a filled interior or as an
+    outlined contour.
+    """
+
     FILL = "fill"
+    """
+    Paint the interior of the shape.
+
+    For example, circles and polygons are rendered as solid filled regions.
+    """
+
     STROKE = "stroke"
+    """
+    Paint only the shape outline.
+
+    Stroke thickness and joins/caps are controlled by properties such as
+    [`Paint.stroke_width`][flet.], [`Paint.stroke_join`][flet.], and
+    [`Paint.stroke_cap`][flet.].
+    """
 
 
 @dataclass(kw_only=True)
 class PaintGradient:
+    """
+    Base class for gradients applied via [`Paint.gradient`][flet.].
+
+    Use one of its concrete variants:
+    - [`PaintLinearGradient`][flet.]
+    - [`PaintRadialGradient`][flet.]
+    - [`PaintSweepGradient`][flet.]
+    """
+
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
+    """Internal gradient kind discriminator serialized to Flutter."""
 
 
 @dataclass
 class PaintLinearGradient(PaintGradient):
     """
-    More information on Linear gradient \
-    https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html
+    More information on Linear gradient
+    [here](https://api.flutter.dev/flutter/dart-ui/Gradient/Gradient.linear.html).
     """
 
     begin: Optional[OffsetValue]
     """
-    The offset at which stop 0.0 of the gradient is placed.
+    The offset at which stop `0.0` of the gradient is placed.
     """
 
     end: Optional[OffsetValue]
     """
-    The offset at which stop 1.0 of the gradient is placed.
+    The offset at which stop `1.0` of the gradient is placed.
     """
 
-    colors: list[str]
+    colors: list[ColorValue]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     Note:
@@ -76,8 +106,8 @@ class PaintLinearGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the region before `begin` and \
-    after `end`.
+    How this gradient should tile the plane beyond in the \
+    region before [`begin`][(c).] and after [`end`][(c).].
     """
 
     def __post_init__(self):
@@ -125,7 +155,7 @@ class PaintRadialGradient(PaintGradient):
 
     colors: list[ColorValue]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
     If `stops` is provided, this list must have the same length as `stops`.
@@ -209,10 +239,11 @@ class PaintSweepGradient(PaintGradient):
 
     colors: list[str]
     """
-    The https://flet.dev/docs/reference/colors the gradient should obtain at each of \
+    The colors the gradient should obtain at each of \
     the stops. This list must contain at least two colors.
 
-    If `stops` is provided, this list must have the same length as `stops`.
+    If [`color_stops`][(c).color_stops] is provided, this list must have the same
+    length as `color_stops`.
     """
 
     color_stops: Optional[list[Number]] = None
@@ -287,8 +318,8 @@ class Paint:
 
     color: Optional[ColorValue] = None
     """
-    The https://flet.dev/docs/reference/colors to use when stroking or filling a \
-    shape.
+    The color to use when stroking or filling a shape.
+
     Defaults to opaque black.
     """
 
@@ -296,7 +327,7 @@ class Paint:
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
 
-    Defaults to `BlendMode.SRC_OVER`.
+    Defaults to [`BlendMode.SRC_OVER`][flet.BlendMode.SRC_OVER].
     """
 
     blur_image: Optional[BlurValue] = None

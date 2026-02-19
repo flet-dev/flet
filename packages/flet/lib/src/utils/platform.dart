@@ -1,5 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 
@@ -57,10 +57,7 @@ bool isWebPlatform() {
 
 TargetPlatform? parseTargetPlatform(String? value,
     [TargetPlatform? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TargetPlatform.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TargetPlatform.values, value, defaultValue);
 }
 
 extension PlatformParsers on Control {

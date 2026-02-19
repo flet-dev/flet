@@ -22,9 +22,20 @@ class Path(Shape):
 
     @dataclass(kw_only=True)
     class PathElement:
+        """
+        Base type for elements stored in `Path.elements`.
+
+        Use concrete subclasses such as [`MoveTo`][..],
+        [`LineTo`][..], [`Arc`][..], and [`Close`][..]
+        to build drawing commands in order.
+        """
+
         _type: Optional[str] = field(
             init=False, repr=False, compare=False, default=None
         )
+        """
+        Internal element discriminator used during serialization.
+        """
 
     elements: list[PathElement] = field(default_factory=list)
     """

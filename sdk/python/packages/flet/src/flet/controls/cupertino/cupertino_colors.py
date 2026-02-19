@@ -34,6 +34,10 @@ __all__ = ["CupertinoColors"]
 
 
 class CupertinoColors(str, Enum):
+    """
+    Named cupertino colors.
+    """
+
     def __eq__(self, other):
         if isinstance(other, str):
             return self.value.lower() == other.lower()

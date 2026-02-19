@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../flet_service.dart';
+import '../utils/enums.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 
@@ -60,9 +60,7 @@ class UrlLauncherService extends FletService {
 }
 
 LaunchMode _parseLaunchMode(dynamic value) {
-  return LaunchMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      LaunchMode.platformDefault;
+  return parseEnum(LaunchMode.values, value, LaunchMode.platformDefault)!;
 }
 
 WebViewConfiguration? _parseWebViewConfiguration(dynamic value) {

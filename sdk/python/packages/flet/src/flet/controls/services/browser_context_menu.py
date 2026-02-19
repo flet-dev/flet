@@ -43,4 +43,16 @@ class BrowserContextMenu(Service):
 
     @property
     def disabled(self):
+        """
+        Whether browser context menu disabling is currently requested.
+
+        This flag is managed by this service instance:
+        - initialized to `False`;
+        - set to `True` after [`disable()`][(c).disable];
+        - set to `False` after [`enable()`][(c).enable].
+
+        Note:
+            On non-web platforms, browser context menu control is not applicable,
+            but this property still reflects the last requested state.
+        """
         return self.__disabled

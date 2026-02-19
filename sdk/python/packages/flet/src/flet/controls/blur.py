@@ -12,27 +12,54 @@ __all__ = [
 
 
 class BlurTileMode(Enum):
+    """
+    Edge sampling mode used when applying blur beyond source bounds.
+    """
+
     CLAMP = "clamp"
+    """
+    Extends edge pixels outward.
+    """
+
     DECAL = "decal"
+    """
+    Treats samples outside bounds as transparent.
+    """
+
     MIRROR = "mirror"
+    """
+    Repeats the image by mirroring at each edge.
+    """
+
     REPEATED = "repeated"
+    """
+    Repeats the image pattern without mirroring.
+    """
 
 
 @dataclass
 class Blur:
+    """
+    Gaussian blur configuration.
+    """
+
     sigma_x: Number
     """
-    Horizontal sigma.
+    Horizontal Gaussian sigma.
+
+    Larger values produce stronger blur along the X axis.
     """
 
     sigma_y: Number
     """
-    Vertical sigma.
+    Vertical Gaussian sigma.
+
+    Larger values produce stronger blur along the Y axis.
     """
 
     tile_mode: Optional[BlurTileMode] = None
     """
-    The tile mode for the blur.
+    How sampling outside source bounds is handled during blur.
     """
 
 

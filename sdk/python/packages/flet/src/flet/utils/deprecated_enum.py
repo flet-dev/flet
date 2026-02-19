@@ -15,6 +15,21 @@ class DeprecatedEnumMeta(EnumMeta):
     """
 
     def _resolve_deprecated(cls, name: str):
+        """
+        Resolve deprecated enum alias to its canonical member.
+
+        Looks up `name` in `_deprecated_members_`, emits a
+        [`DeprecationWarning`][warnings.DeprecationWarning] when matched, and
+        returns the canonical enum member.
+
+        Args:
+            name: Enum member name requested by caller.
+
+        Returns:
+            Canonical enum member when `name` is a deprecated alias; otherwise
+            `None`.
+        """
+
         deprecated = getattr(cls, "_deprecated_members_", {})
         info = deprecated.get(name)
         if not info:

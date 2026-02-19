@@ -11,9 +11,26 @@ __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 
 
 class AnimatedSwitcherTransition(Enum):
+    """
+    Visual transition strategy used by [`AnimatedSwitcher.transition`][flet.].
+
+    Controls how old and new content are animated while the switch occurs.
+    """
+
     FADE = "fade"
+    """
+    Cross-fades between outgoing and incoming content.
+    """
+
     ROTATION = "rotation"
+    """
+    Rotates content during the switch.
+    """
+
     SCALE = "scale"
+    """
+    Scales content during the switch.
+    """
 
 
 @control("AnimatedSwitcher")

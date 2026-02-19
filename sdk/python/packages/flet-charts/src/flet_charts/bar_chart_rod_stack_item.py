@@ -8,6 +8,10 @@ __all__ = ["BarChartRodStackItem"]
 
 @ft.control("BarChartRodStackItem")
 class BarChartRodStackItem(ft.BaseControl):
+    """
+    Colored segment used to build a stacked bar rod.
+    """
+
     from_y: Optional[ft.Number] = None
     """
     The starting position of this item inside a bar rod.

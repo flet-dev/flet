@@ -17,6 +17,13 @@ __all__ = ["PlotlyChart"]
 
 
 def _require_plotly() -> None:
+    """
+    Ensure plotly dependency is available.
+
+    Raises:
+        ModuleNotFoundError: If `plotly` is not installed.
+    """
+
     if _PLOTLY_IMPORT_ERROR is not None:
         raise ModuleNotFoundError(
             'Install "plotly" Python package to use PlotlyChart control.'

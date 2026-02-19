@@ -111,4 +111,5 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
             raise ValueError("at minimum, icon or a visible content must be provided")
 
     async def focus(self):
+        """Requests focus for this control."""
         await self._invoke_method("focus")

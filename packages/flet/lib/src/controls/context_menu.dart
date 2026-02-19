@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../utils/enums.dart';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
@@ -303,8 +304,5 @@ enum ContextMenuTrigger { disabled, down, longPress }
 
 ContextMenuTrigger? parseContextMenuTrigger(String? value,
     [ContextMenuTrigger? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ContextMenuTrigger.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ContextMenuTrigger.values, value, defaultValue);
 }

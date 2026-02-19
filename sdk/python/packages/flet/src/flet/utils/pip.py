@@ -8,6 +8,16 @@ from flet.utils import is_linux
 
 
 def _install_with_pip(package_spec: str) -> int:
+    """
+    Installs a package using `pip`.
+
+    Args:
+        package_spec: Package requirement specifier to install (for example,
+            `flet-web==0.27.0`).
+
+    Returns:
+        The `pip` process return code. Returns `1` when `pip` cannot be imported.
+    """
     if find_spec("pip") is None:
         return 1
     return subprocess.call(
@@ -24,6 +34,16 @@ def _install_with_pip(package_spec: str) -> int:
 
 
 def _install_with_uv(package_spec: str) -> int:
+    """
+    Installs a package using `uv pip install`.
+
+    Args:
+        package_spec: Package requirement specifier to install (for example,
+            `flet-web==0.27.0`).
+
+    Returns:
+        The `uv` process return code. Returns `1` when `uv` is not installed.
+    """
     try:
         return subprocess.call(["uv", "pip", "install", package_spec])
     except FileNotFoundError:
@@ -31,6 +51,19 @@ def _install_with_uv(package_spec: str) -> int:
 
 
 def install_flet_package(name: str):
+    """
+    Installs a Flet package pinned to the current Flet SDK version.
+
+    Installation strategy:
+    - If `UV` environment variable is set, try `uv` first and then fall back to `pip`.
+    - Otherwise, try `pip` first and then fall back to `uv`.
+
+    Args:
+        name: Package name to install.
+
+    Raises:
+        SystemExit: If package installation fails with both installers.
+    """
     package_spec = f"{name}=={flet.version.flet_version}"
     print(f"Installing {name} {flet.version.flet_version} package...", end="")
     if os.environ.get("UV"):
@@ -54,6 +87,13 @@ def install_flet_package(name: str):
 
 
 def ensure_flet_desktop_package_installed():
+    """
+    Ensures a compatible desktop runtime package is installed.
+
+    If `flet-desktop` (or `flet-desktop-light` on Linux) is missing or its version
+    differs from the current Flet SDK version, this function installs the expected
+    package via [`install_flet_package()`][(m).install_flet_package].
+    """
     try:
         import flet_desktop.version
 
@@ -68,6 +108,13 @@ def ensure_flet_desktop_package_installed():
 
 
 def ensure_flet_web_package_installed():
+    """
+    Ensures a compatible `flet-web` package is installed.
+
+    If `flet-web` is missing or its version differs from the current Flet SDK
+    version, this function installs it via
+    [`install_flet_package()`][(m).install_flet_package].
+    """
     try:
         import flet_web.version
 
@@ -81,6 +128,13 @@ def ensure_flet_web_package_installed():
 
 
 def ensure_flet_cli_package_installed():
+    """
+    Ensures a compatible `flet-cli` package is installed.
+
+    If `flet-cli` is missing or its version differs from the current Flet SDK
+    version, this function installs it via
+    [`install_flet_package()`][(m).install_flet_package].
+    """
     try:
         import flet_cli.version
 

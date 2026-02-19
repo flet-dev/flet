@@ -149,6 +149,10 @@ class BarChartTooltip:
 
 @dataclass
 class BarChartEvent(ft.Event["BarChart"]):
+    """
+    Event payload emitted when the user hovers or clicks a bar chart.
+    """
+
     type: ChartEventType
     """
     The type of event that occurred on the chart.
@@ -189,7 +193,7 @@ class BarChart(ft.LayoutControl):
                     ),
                 ],
             ),
-            ...
+            ...,
         ],
     )
     ```

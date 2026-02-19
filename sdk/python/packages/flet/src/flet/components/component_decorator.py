@@ -15,6 +15,13 @@ def component(fn: Callable[P, R]) -> Callable[P, R]:
 
     @wraps(fn)
     def component_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        """
+        Creates a component node for this call within the current renderer.
+
+        Extracts optional `key` from keyword arguments, then delegates to
+        `Renderer.render_component(...)` so the wrapped function is tracked as a
+        component in the render tree.
+        """
         key = kwargs.pop("key", None)
         r = current_renderer()
         return r.render_component(fn, args, kwargs, key=key)

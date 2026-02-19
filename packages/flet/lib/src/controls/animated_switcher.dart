@@ -11,10 +11,7 @@ import 'base_controls.dart';
 class AnimatedSwitcherControl extends StatelessWidget {
   final Control control;
 
-  const AnimatedSwitcherControl({
-    super.key,
-    required this.control,
-  });
+  const AnimatedSwitcherControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
@@ -22,31 +19,31 @@ class AnimatedSwitcherControl extends StatelessWidget {
 
     var content =
         control.buildWidget("content", notifyParent: true, key: UniqueKey());
-
     if (content == null) {
       return const ErrorControl(
           "AnimatedSwitcher.content must be provided and visible");
     }
-    final animatedSwitcher = AnimatedSwitcher(
-      duration: control.getDuration("duration", const Duration(seconds: 1))!,
-      reverseDuration: parseDuration(
-          control.get("reverse_duration"), const Duration(seconds: 1))!,
-      switchInCurve:
-          parseCurve(control.getString("switch_in_curve"), Curves.linear)!,
-      switchOutCurve:
-          parseCurve(control.getString("switch_out_curve"), Curves.linear)!,
-      transitionBuilder: (child, animation) {
-        switch (control.getString("transition")?.toLowerCase()) {
-          case "rotation":
-            return RotationTransition(turns: animation, child: child);
-          case "scale":
-            return ScaleTransition(scale: animation, child: child);
-          default:
-            return FadeTransition(opacity: animation, child: child);
-        }
-      },
-      child: content,
+
+    return LayoutControl(
+      control: control,
+      child: AnimatedSwitcher(
+        duration: control.getDuration("duration", const Duration(seconds: 1))!,
+        reverseDuration: control.getDuration(
+            "reverse_duration", const Duration(seconds: 1))!,
+        switchInCurve: control.getCurve("switch_in_curve", Curves.linear)!,
+        switchOutCurve: control.getCurve("switch_out_curve", Curves.linear)!,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          switch (control.getString("transition")?.toLowerCase()) {
+            case "rotation":
+              return RotationTransition(turns: animation, child: child);
+            case "scale":
+              return ScaleTransition(scale: animation, child: child);
+            default:
+              return FadeTransition(opacity: animation, child: child);
+          }
+        },
+        child: content,
+      ),
     );
-    return LayoutControl(control: control, child: animatedSwitcher);
   }
 }

@@ -10,6 +10,13 @@ from flet.version import flet_version
 
 
 class GitHubOAuthProvider(OAuthProvider):
+    """
+    OAuth provider preset for GitHub.
+
+    Uses GitHub OAuth endpoints and fetches user profile/groups via GitHub REST
+    APIs (`/user`, `/user/emails`, `/user/teams`).
+    """
+
     def __init__(self, client_id: str, client_secret: str, redirect_url: str) -> None:
         super().__init__(
             client_id=client_id,
@@ -22,6 +29,15 @@ class GitHubOAuthProvider(OAuthProvider):
         )
 
     async def _fetch_groups(self, access_token: str) -> list[Group]:
+        """
+        Retrieves GitHub teams for the authenticated user.
+
+        Args:
+            access_token: OAuth access token.
+
+        Returns:
+            A list of [`Group`][flet.auth.] mapped from `/user/teams`.
+        """
         async with httpx.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
                 httpx.Request(
@@ -43,6 +59,16 @@ class GitHubOAuthProvider(OAuthProvider):
             return groups
 
     async def _fetch_user(self, access_token: str) -> Optional[User]:
+        """
+        Retrieves the GitHub user profile and primary email.
+
+        Args:
+            access_token: OAuth access token.
+
+        Returns:
+            A [`User`][flet.auth.] built from `/user`; its `email` is populated
+                from the primary address in `/user/emails` when available.
+        """
         async with httpx.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(
                 httpx.Request(
@@ -70,6 +96,15 @@ class GitHubOAuthProvider(OAuthProvider):
             return User(uj, id=str(uj["id"]))
 
     def __get_client_headers(self, access_token):
+        """
+        Builds common GitHub API request headers.
+
+        Args:
+            access_token: OAuth access token.
+
+        Returns:
+            Headers with `Authorization` bearer token and Flet `User-Agent`.
+        """
         return {
             "Authorization": f"Bearer {access_token}",
             "User-Agent": f"Flet/{flet_version}",

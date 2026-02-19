@@ -1,5 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 
@@ -60,10 +60,7 @@ class FilePickerUploadProgressEvent {
 }
 
 FileType? parseFileType(String? value, [FileType? defaultValue]) {
-  if (value == null) return defaultValue;
-  return FileType.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(FileType.values, value, defaultValue);
 }
 
 extension FilePickerParsers on Control {
