@@ -4,15 +4,15 @@ import logging
 import os
 import traceback
 import weakref
-from collections.abc import Awaitable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
 
 import flet_web.fastapi as flet_fastapi
+from flet.app import AppCallable
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
@@ -65,8 +65,8 @@ class FletApp(Connection):
         self,
         loop: asyncio.AbstractEventLoop,
         executor: ThreadPoolExecutor,
-        main: Callable[..., Any],
-        before_main: Optional[Callable[[Any], Awaitable[None]]],
+        main: AppCallable,
+        before_main: Optional[AppCallable],
         session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,

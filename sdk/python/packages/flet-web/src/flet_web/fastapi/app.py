@@ -1,12 +1,11 @@
 import asyncio
 import os
-from collections.abc import Awaitable
-from typing import Callable, Optional, Union
+from typing import Optional
 
 from fastapi import Request, WebSocket
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from flet.controls.page import Page
+from flet.app import AppCallable
 from flet.controls.types import RouteUrlStrategy, WebRenderer
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
@@ -21,8 +20,8 @@ from flet_web.fastapi.flet_upload import FletUpload
 
 
 def app(
-    main: Union[Callable[[Page], Awaitable], Callable[[Page], None]],
-    before_main: Union[Callable[[Page], Awaitable], Callable[[Page], None]] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     proxy_path: Optional[str] = None,
     assets_dir: Optional[str] = None,
     app_name: Optional[str] = None,

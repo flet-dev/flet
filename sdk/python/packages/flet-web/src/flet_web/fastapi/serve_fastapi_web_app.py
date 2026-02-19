@@ -6,6 +6,7 @@ import uvicorn
 
 import flet_web.fastapi
 import flet_web.fastapi as flet_fastapi
+from flet.app import AppCallable
 from flet.controls.types import RouteUrlStrategy, WebRenderer
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -33,8 +34,8 @@ class WebServerHandle:
 
 
 def get_fastapi_web_app(
-    main,
-    before_main,
+    main: AppCallable,
+    before_main: Optional[AppCallable],
     page_name: str,
     assets_dir: str,
     upload_dir: str,
@@ -78,8 +79,8 @@ def get_fastapi_web_app(
 
 
 async def serve_fastapi_web_app(
-    main,
-    before_main,
+    main: AppCallable,
+    before_main: Optional[AppCallable],
     host: str,
     url_host: str,
     port: int,

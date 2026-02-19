@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 from PIL import Image
@@ -19,6 +19,9 @@ from flet.controls.control import Control
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
+
+if TYPE_CHECKING:
+    from flet.app import AppCallable
 
 __all__ = ["FletTestApp"]
 
@@ -125,7 +128,7 @@ class FletTestApp:
     def __init__(
         self,
         flutter_app_dir: os.PathLike,
-        flet_app_main: Any = None,
+        flet_app_main: Optional["AppCallable"] = None,
         assets_dir: Optional[os.PathLike] = None,
         test_path: Optional[str] = None,
         tcp_port: Optional[int] = None,

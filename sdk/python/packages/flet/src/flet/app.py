@@ -8,7 +8,7 @@ import signal
 import traceback
 from collections.abc import Awaitable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 from flet.controls.context import _context_page, context
 from flet.controls.page import Page
@@ -31,8 +31,14 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
-if TYPE_CHECKING:
-    from flet.controls.page import Page
+AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
+"""Type alias for Flet app lifecycle callbacks.
+
+Represents a callable (synchronous or asynchronous) that accepts a single argument of
+type [`Page`][flet.]. The return value is ignored.
+
+Used for both `main` and `before_main` handlers.
+"""
 
 
 @deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
@@ -52,10 +58,8 @@ def app_async(*args, **kwargs):
 
 
 def run(
-    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
-    before_main: Optional[
-        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
-    ] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     name: str = "",
     host: Optional[str] = None,
     port: int = 0,
@@ -136,10 +140,8 @@ def run(
 
 
 async def run_async(
-    main: Union[Callable[["Page"], Any], Callable[["Page"], Awaitable[Any]]],
-    before_main: Optional[
-        Union[Callable[["Page"], None], Callable[["Page"], Awaitable[None]]]
-    ] = None,
+    main: AppCallable,
+    before_main: Optional[AppCallable] = None,
     name: str = "",
     host: Optional[str] = None,
     port: int = 0,
@@ -308,7 +310,9 @@ async def run_async(
         await conn.close()
 
 
-def __get_on_session_created(main):
+def __get_on_session_created(
+    main: Optional[AppCallable],
+) -> Callable[[Session], Awaitable[None]]:
     """
     Build session-start callback that executes the user `main` handler.
 
@@ -355,7 +359,12 @@ def __get_on_session_created(main):
     return on_session_created
 
 
-async def __run_socket_server(port=0, main=None, before_main=None, blocking=False):
+async def __run_socket_server(
+    port: int = 0,
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+    blocking: bool = False,
+):
     """
     Start Flet socket server transport and return active connection object.
 
@@ -389,17 +398,17 @@ async def __run_socket_server(port=0, main=None, before_main=None, blocking=Fals
 
 
 async def __run_web_server(
-    main,
-    before_main,
-    host,
-    port,
-    page_name,
-    assets_dir,
-    upload_dir,
+    main: Optional[AppCallable],
+    before_main: Optional[AppCallable],
+    host: Optional[str],
+    port: int,
+    page_name: str,
+    assets_dir: str,
+    upload_dir: Optional[str],
     web_renderer: Optional[WebRenderer],
-    route_url_strategy,
-    no_cdn,
-    on_startup,
+    route_url_strategy: RouteUrlStrategy,
+    no_cdn: Optional[bool],
+    on_startup: Callable[[str], None],
 ):
     """
     Start FastAPI/uvicorn web transport for Flet and return server handle.
@@ -452,7 +461,10 @@ async def __run_web_server(
     )
 
 
-def __run_pyodide(main=None, before_main=None):
+def __run_pyodide(
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+):
     """
     Initialize Pyodide connection for browser-embedded execution.
 
@@ -460,7 +472,6 @@ def __run_pyodide(main=None, before_main=None):
         main: User app entry handler.
         before_main: Optional hook called before `main`.
     """
-
     from flet.messaging.pyodide_connection import PyodideConnection
 
     PyodideConnection(
