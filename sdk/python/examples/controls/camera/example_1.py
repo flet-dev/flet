@@ -163,6 +163,7 @@ async def main(page: ft.Page):
             description=state.selected_camera,
             resolution_preset=fc.ResolutionPreset.MEDIUM,
             enable_audio=True,
+            image_format_group=fc.ImageFormatGroup.JPEG,
         )
         state.is_streaming = False
         state.is_streaming_supported = await preview.supports_image_streaming()
