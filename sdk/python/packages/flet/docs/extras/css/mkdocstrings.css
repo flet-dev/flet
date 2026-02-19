@@ -1,15 +1,5 @@
 /* Material Symbols font with selected icons */
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=account_tree,bolt,build,category,deployed_code");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Round");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons+Sharp");
-
-@font-face {
-  font-family: "CupertinoIcons";
-  src: url("../fonts/CupertinoIcons.ttf") format("truetype");
-  font-display: swap;
-}
 
 /* Hide the original label text */
 code.doc-symbol { font-size: 0; }
