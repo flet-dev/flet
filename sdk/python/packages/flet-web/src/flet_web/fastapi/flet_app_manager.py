@@ -125,13 +125,14 @@ class FletAppManager:
         logger.info(f"Session reconnected: {session_id}")
         if session_id in self.__sessions:
             session = self.__sessions[session_id]
+            session.attach_connection(conn)
 
-            # Run connect asynchronously so websocket receive loop isn't blocked by
-            # user handlers (e.g., on_connect invoking _invoke_method).
+            # Run connect event handlers asynchronously so websocket receive loop
+            # isn't blocked by user handlers (e.g., on_connect invoking _invoke_method).
 
             async def _connect():
                 try:
-                    await session.connect(conn)
+                    await session.dispatch_connect_event()
                 except Exception as e:
                     logger.error(
                         f"Unhandled error reconnecting session {session_id}: {e}",

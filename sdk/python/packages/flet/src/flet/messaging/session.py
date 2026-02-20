@@ -132,12 +132,11 @@ class Session:
         """
         return self.__store
 
-    async def connect(self, conn: Connection) -> None:
+    def attach_connection(self, conn: Connection) -> None:
         """
         Attaches or re-attaches this session to an active connection.
 
-        This method resets expiration state, flushes buffered outbound messages, and
-        dispatches the page-level `connect` event.
+        This method resets expiration state and flushes buffered outbound messages.
 
         Args:
             conn: Active connection to bind to this session.
@@ -149,7 +148,23 @@ class Session:
         for message in self.__send_buffer:
             self.__send_message(message)
         self.__send_buffer.clear()
+
+    async def dispatch_connect_event(self) -> None:
+        """
+        Dispatches the page-level `connect` event for this session.
+        """
         await self.dispatch_event(self.__page._i, "connect", None)
+
+    async def connect(self, conn: Connection) -> None:
+        """
+        Attaches or re-attaches this session to an active connection and then
+        dispatches the page-level `connect` event.
+
+        Args:
+            conn: Active connection to bind to this session.
+        """
+        self.attach_connection(conn)
+        await self.dispatch_connect_event()
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
         """
