@@ -118,7 +118,7 @@ class Camera(ft.LayoutControl):
 
         Args:
             orientation: Specific orientation to lock, or current
-            device orientation if None.
+                device orientation if None.
         """
         await self._invoke_method(
             "lock_capture_orientation",

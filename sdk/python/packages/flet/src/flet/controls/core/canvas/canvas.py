@@ -16,7 +16,7 @@ class CanvasResizeEvent(Event["Canvas"]):
     """
     Event emitted when a [`Canvas`][(p).] reports a new rendered size.
 
-    This event is delivered through [`on_resize`][(p).Canvas.]
+    This event is delivered through [`on_resize`][flet.canvas.Canvas.on_resize]
     and carries the latest measured dimensions in logical pixels.
     """
 

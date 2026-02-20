@@ -35,7 +35,7 @@ pip install flet-camera  # (1)!
 
 /// admonition | Permissions
     type: tip
-Request camera (and microphone if recording video with audio) permissions on mobile platforms before initializing the control. You can use [`flet-permission-handler`](https://pypi.org/project/flet-permission-handler/) to prompt the user.
+Request camera (and microphone if recording video with audio) permissions on mobile platforms before initializing the control. You can use [`PermissionHandler`][flet_permission_handler.PermissionHandler] to prompt the user.
 ///
 
 ### iOS required `Info.plist` keys

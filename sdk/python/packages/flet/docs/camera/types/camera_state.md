@@ -1,8 +1,1 @@
----
-class_name: flet_camera.CameraState
-separate_signature: false
----
-
-# CameraState
-
-{{ class_all_options(class_name) }}
+{{ class_all_options("flet_camera.CameraState") }}
