@@ -846,6 +846,7 @@ Its value is determined in the following order of precedence:
 
 - `[tool.flet.<PLATFORM>.app].hide_window_on_start`, where `<PLATFORM>` can be `windows`, `macos` or `linux`
 - `[tool.flet.app].hide_window_on_start`
+- [`FLET_HIDE_WINDOW_ON_START`](../reference/environment-variables.md#flet_hide_window_on_start)
 
 #### Example
 
