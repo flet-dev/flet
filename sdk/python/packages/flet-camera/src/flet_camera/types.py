@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 __all__ = [
     "CameraDescription",
-    "CameraImage",
+    "CameraImageEvent",
     "CameraLensDirection",
     "CameraLensType",
     "CameraPreviewSize",
-    "CameraState",
+    "CameraStateEvent",
     "DeviceOrientation",
     "ExposureMode",
     "FlashMode",
@@ -110,17 +110,8 @@ class CameraLensType(Enum):
     """Unknown lens type."""
 
 
-class DeviceOrientation(Enum):
-    """Device orientation values."""
-
-    PORTRAIT_UP = "portraitUp"
-    """Portrait upright orientation."""
-    PORTRAIT_DOWN = "portraitDown"
-    """Portrait upside-down orientation."""
-    LANDSCAPE_LEFT = "landscapeLeft"
-    """Landscape with device left side down."""
-    LANDSCAPE_RIGHT = "landscapeRight"
-    """Landscape with device right side down."""
+# Reuse the core enum to keep orientation types consistent across Flet packages.
+DeviceOrientation = ft.DeviceOrientation
 
 
 @dataclass
@@ -152,7 +143,7 @@ class CameraDescription:
 
 
 @dataclass
-class CameraState(ft.Event["Camera"]):
+class CameraStateEvent(ft.Event["Camera"]):
     """Snapshot of the camera controller state."""
 
     is_initialized: bool
@@ -220,7 +211,7 @@ class CameraState(ft.Event["Camera"]):
 
 
 @dataclass
-class CameraImage(ft.Event["Camera"]):
+class CameraImageEvent(ft.Event["Camera"]):
     """Image data produced by the camera stream."""
 
     width: int

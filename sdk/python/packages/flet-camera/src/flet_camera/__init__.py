@@ -5,11 +5,11 @@ Public exports for the flet-camera package.
 from flet_camera.camera import Camera
 from flet_camera.types import (
     CameraDescription,
-    CameraImage,
+    CameraImageEvent,
     CameraLensDirection,
     CameraLensType,
     CameraPreviewSize,
-    CameraState,
+    CameraStateEvent,
     DeviceOrientation,
     ExposureMode,
     FlashMode,
@@ -21,11 +21,11 @@ from flet_camera.types import (
 __all__ = [
     "Camera",
     "CameraDescription",
-    "CameraImage",
+    "CameraImageEvent",
     "CameraLensDirection",
     "CameraLensType",
     "CameraPreviewSize",
-    "CameraState",
+    "CameraStateEvent",
     "DeviceOrientation",
     "ExposureMode",
     "FlashMode",

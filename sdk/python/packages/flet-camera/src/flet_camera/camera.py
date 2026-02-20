@@ -8,8 +8,8 @@ import flet as ft
 from flet.utils import from_dict
 from flet_camera.types import (
     CameraDescription,
-    CameraImage,
-    CameraState,
+    CameraImageEvent,
+    CameraStateEvent,
     DeviceOrientation,
     ExposureMode,
     FlashMode,
@@ -37,10 +37,10 @@ class Camera(ft.LayoutControl):
     Optional child to overlay on top of the camera preview.
     """
 
-    on_state_change: Optional[ft.EventHandler[CameraState]] = None
+    on_state_change: Optional[ft.EventHandler[CameraStateEvent]] = None
     """Fires when the camera controller state changes."""
 
-    on_stream_image: Optional[ft.EventHandler[CameraImage]] = None
+    on_stream_image: Optional[ft.EventHandler[CameraImageEvent]] = None
     """
     Fires when an image frame is available while streaming.
     """

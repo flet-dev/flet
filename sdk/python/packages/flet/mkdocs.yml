@@ -566,8 +566,8 @@ nav:
               - ButtonStyle: types/buttonstyle.md
               - Camera:
                   - CameraDescription: camera/types/cameradescription.md
-                  - CameraImage: camera/types/cameraimage.md
-                  - CameraState: camera/types/camerastate.md
+                  - CameraImageEvent: camera/types/cameraimageevent.md
+                  - CameraStateEvent: camera/types/camerastateevent.md
               - Charts:
                   - BarChartEvent: charts/types/barchartevent.md
                   - BarChartGroup: charts/types/barchartgroup.md

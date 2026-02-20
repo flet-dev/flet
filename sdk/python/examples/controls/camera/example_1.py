@@ -49,20 +49,19 @@ async def main(page: ft.Page):
     selector = ft.Dropdown(label="Camera", options=[])
     recorded_video_path = ft.Text(value="Recorded video: not saved yet", size=12)
     take_photo_btn = ft.FilledIconButton(
-        icon=ft.Icons.PHOTO_CAMERA, on_click=lambda _: None, tooltip="Take photo"
+        icon=ft.Icons.PHOTO_CAMERA,
+        tooltip="Take photo",
     )
     record_btn = ft.FilledTonalIconButton(
         icon=ft.Icons.VIDEOCAM,
         selected_icon=ft.Icons.STOP,
         selected=False,
-        on_click=lambda _: None,
         tooltip="Start / stop recording",
     )
     pause_recording_btn = ft.OutlinedIconButton(
         icon=ft.Icons.PAUSE,
         selected_icon=ft.Icons.PLAY_ARROW,
         selected=False,
-        on_click=lambda _: None,
         tooltip="Pause / resume recording",
         disabled=True,
     )
@@ -70,7 +69,6 @@ async def main(page: ft.Page):
         icon=ft.Icons.PLAY_ARROW,
         selected_icon=ft.Icons.STOP,
         selected=False,
-        on_click=lambda _: None,
         tooltip="Start / stop image stream",
         visible=False,
     )
@@ -78,7 +76,6 @@ async def main(page: ft.Page):
         icon=ft.Icons.VISIBILITY_OFF,
         selected_icon=ft.Icons.VISIBILITY,
         selected=True,
-        on_click=lambda _: None,
         tooltip="Pause / resume preview",
     )
 
@@ -224,7 +221,7 @@ async def main(page: ft.Page):
             recorded_video_path.value = "Recorded video save canceled"
         page.update()
 
-    async def on_state_change(e: ft.Event[fc.CameraState]):
+    async def on_state_change(e: fc.CameraStateEvent):
         if e.description == state.selected_camera:
             state.is_recording = e.is_recording_video
             state.is_recording_paused = e.is_recording_paused
@@ -266,7 +263,7 @@ async def main(page: ft.Page):
         sync_action_buttons()
         page.update()
 
-    def on_stream_image(e: ft.Event[fc.CameraImage]):
+    def on_stream_image(e: fc.CameraImageEvent):
         try:
             last_image.src = e.bytes
             last_image.update()
