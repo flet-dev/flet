@@ -1140,6 +1140,42 @@ class Locale:
         if self.language_code == "":
             raise ValueError("language_code cannot be empty")
 
+    @property
+    def language_tag(self) -> str:
+        """
+        Returns a syntactically valid Unicode BCP47 Locale Identifier.
+
+        See [this](https://www.unicode.org/reports/tr35) for technical details.
+
+        Examples: `en`, `es-419`, `hi-Deva-IN`, `zh-Hans-CN`
+        """
+        return self._raw_to_string("-")
+
+    def __str__(self) -> str:
+        return self._raw_to_string("_")
+
+    def _raw_to_string(self, separator: str) -> str:
+        """Returns the locale identifier joined by the given separator.
+
+        Components are ordered as language, script (if any), and country
+        (if any). Empty or `None` values are omitted.
+
+        Args:
+            separator: String used to join the subtags.
+
+        Returns:
+            The formatted locale identifier.
+        """
+        out_parts: list[str] = [self.language_code]
+
+        if self.script_code is not None and self.script_code != "":
+            out_parts.append(self.script_code)
+
+        if self.country_code is not None and self.country_code != "":
+            out_parts.append(self.country_code)
+
+        return separator.join(out_parts)
+
 
 @dataclass
 class LocaleConfiguration:
