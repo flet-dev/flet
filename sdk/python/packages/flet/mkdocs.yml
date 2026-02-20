@@ -267,14 +267,7 @@ nav:
               - BannerAd: ads/bannerad.md
               - BaseAd: ads/basead.md
               - InterstitialAd: ads/interstitialad.md
-          - Audio: audio/index.md
-          - AudioRecorder: audio_recorder/index.md
-          - Camera:
-              - camera/index.md
-              - Types:
-                  - CameraDescription: camera/types/camera_description.md
-                  - CameraImage: camera/types/camera_image.md
-                  - CameraState: camera/types/camera_state.md
+          - Camera: camera/index.md
           - AlertDialog: controls/alertdialog.md
           - AnimatedSwitcher: controls/animatedswitcher.md
           - AppBar: controls/appbar.md
@@ -570,6 +563,10 @@ nav:
               - BoxDecoration: types/boxdecoration.md
               - BoxShadow: types/boxshadow.md
               - ButtonStyle: types/buttonstyle.md
+              - Camera:
+                  - CameraDescription: camera/types/camera_description.md
+                  - CameraImage: camera/types/camera_image.md
+                  - CameraState: camera/types/camera_state.md
               - Charts:
                   - BarChartEvent: charts/types/barchartevent.md
                   - BarChartGroup: charts/types/barchartgroup.md
