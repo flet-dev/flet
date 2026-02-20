@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-datatable2.svg)](https://pypi.python.org/pypi/flet-datatable2)
 [![downloads](https://static.pepy.tech/badge/flet-datatable2/month)](https://pepy.tech/project/flet-datatable2)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-datatable2)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-datatable2.svg)](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage)
+[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-datatable2.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-datatable2.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-datatable2/LICENSE)
 
 An enhanced data table for [Flet](https://flet.dev) apps that builds on the built-in component by adding sticky headers,

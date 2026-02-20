@@ -17,7 +17,7 @@
         <img src="https://img.shields.io/badge/python-%3E%3D3.10-%2334D058" alt="Python >= 3.10" /></a>
     <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
         <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
-    <a href="https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage" target="_blank">
+    <a href="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" target="_blank">
         <img src="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
