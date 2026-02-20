@@ -4,8 +4,6 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flet/flet.dart';
-// ignore: implementation_imports
-import 'package:flet/src/controls/control_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'utils/camera.dart';
@@ -103,9 +101,10 @@ class _CameraControlState extends State<CameraControl> {
     final audioBitrate = args["audio_bitrate"] is num
         ? (args["audio_bitrate"] as num).round()
         : null;
-    final imageFormatGroup =
-        parseImageFormatGroup(args["image_format_group"]) ??
-            ImageFormatGroup.unknown;
+    final imageFormatGroup = parseImageFormatGroup(
+      args["image_format_group"],
+      ImageFormatGroup.unknown,
+    )!;
 
     final controller = CameraController(
       description,

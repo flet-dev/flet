@@ -32,24 +32,21 @@ ResolutionPreset parseResolutionPreset(dynamic value,
   return parseEnum(ResolutionPreset.values, value, defaultValue)!;
 }
 
-ImageFormatGroup? parseImageFormatGroup(dynamic value) {
-  return parseEnum(ImageFormatGroup.values, value);
+ImageFormatGroup? parseImageFormatGroup(dynamic value,
+    [ImageFormatGroup? defaultValue]) {
+  return parseEnum(ImageFormatGroup.values, value, defaultValue);
 }
 
-FlashMode? parseFlashMode(dynamic value) {
-  return parseEnum(FlashMode.values, value);
+FlashMode? parseFlashMode(dynamic value, [FlashMode? defaultValue]) {
+  return parseEnum(FlashMode.values, value, defaultValue);
 }
 
-ExposureMode? parseExposureMode(dynamic value) {
-  return parseEnum(ExposureMode.values, value);
+ExposureMode? parseExposureMode(dynamic value, [ExposureMode? defaultValue]) {
+  return parseEnum(ExposureMode.values, value, defaultValue);
 }
 
-FocusMode? parseFocusMode(dynamic value) {
-  return parseEnum(FocusMode.values, value);
-}
-
-DeviceOrientation? parseDeviceOrientation(dynamic value) {
-  return parseEnum(DeviceOrientation.values, value);
+FocusMode? parseFocusMode(dynamic value, [FocusMode? defaultValue]) {
+  return parseEnum(FocusMode.values, value, defaultValue);
 }
 
 Map<String, dynamic> cameraDescriptionToMap(CameraDescription description) {
@@ -264,9 +261,8 @@ Uint8List _encodeNv21Payload(Map<String, dynamic> payload) {
   if (yBytesPerRow is! int || uvRowStride is! int) {
     return Uint8List(0);
   }
-  final uvPixelStride = uvPlane["bytes_per_pixel"] is int
-      ? uvPlane["bytes_per_pixel"] as int
-      : 2;
+  final uvPixelStride =
+      uvPlane["bytes_per_pixel"] is int ? uvPlane["bytes_per_pixel"] as int : 2;
   final img.Image converted = img.Image(width: width, height: height);
   for (int y = 0; y < height; y++) {
     final int yRow = y * yBytesPerRow;
