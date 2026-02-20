@@ -161,6 +161,7 @@ class _CameraControlState extends State<CameraControl> {
         return cameras.map((c) => cameraDescriptionToMap(c)).toList();
       case "initialize":
         await _initializeController(args is Map ? args : {});
+        break;
       case "get_exposure_offset_step_size":
         return await _requireController().getExposureOffsetStepSize();
       case "get_max_exposure_offset":
