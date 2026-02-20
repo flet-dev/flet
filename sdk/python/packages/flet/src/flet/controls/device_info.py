@@ -16,8 +16,10 @@ __all__ = [
     "WindowsDeviceInfo",
 ]
 
+from flet.controls.types import Locale
 
-@dataclass
+
+@dataclass(kw_only=True)
 class DeviceInfo:
     """
     Base class for device information.
@@ -31,8 +33,21 @@ class DeviceInfo:
     - [`WindowsDeviceInfo`][flet.]
     """
 
+    locales: list[Locale]
+    """
+    The full system-reported supported locales of the device.
 
-@dataclass
+    This establishes the language and formatting conventions that application
+    should, if possible, use to render their user interface.
+
+    The list is ordered in order of priority, with lower-indexed locales being
+    preferred over higher-indexed ones. The first element is the primary locale.
+
+    The [on_locale_change] callback is called whenever this value changes.
+    """
+
+
+@dataclass(kw_only=True)
 class MacOsDeviceInfo(DeviceInfo):
     active_cpus: int
     """Number of active CPUs."""
@@ -91,18 +106,6 @@ class MacOsDeviceInfo(DeviceInfo):
     system_guid: Optional[str] = None
     """Device GUID."""
 
-    language: Optional[str] = None
-    """A string representing the user's preferred language on the device.
-
-    For example: `"en-US"`.
-    """
-
-    languages: Optional[list[str]] = None
-    """A list of preferred locale/language tags in priority order.
-
-    For example: `["en-US", "de-DE"]`.
-    """
-
 
 class WebBrowserName(Enum):
     """
@@ -134,7 +137,7 @@ class WebBrowserName(Enum):
     """Unknown web browser"""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WebDeviceInfo(DeviceInfo):
     """
     Information derived from `navigator`.
@@ -261,7 +264,7 @@ class WebDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AndroidBuildVersion:
     code_name: str
     """
@@ -304,7 +307,7 @@ class AndroidBuildVersion:
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AndroidDeviceInfo(DeviceInfo):
     available_ram_size: int
     """Total available RAM size in bytes."""
@@ -457,20 +460,8 @@ class AndroidDeviceInfo(DeviceInfo):
     Android operating system version values derived from `android.os.Build.VERSION`.
     """
 
-    language: Optional[str] = None
-    """A string representing the user's preferred language on the device.
 
-    For example: `"en-US"`.
-    """
-
-    languages: Optional[list[str]] = None
-    """A list of preferred locale/language tags in priority order.
-
-    For example: `["en-US", "de-DE"]`.
-    """
-
-
-@dataclass
+@dataclass(kw_only=True)
 class LinuxDeviceInfo(DeviceInfo):
     """
     Device information for a Linux system.
@@ -604,20 +595,8 @@ class LinuxDeviceInfo(DeviceInfo):
     hexadecimal, this corresponds to a 16-byte/128-bit value.
     """
 
-    language: Optional[str] = None
-    """A string representing the user's preferred language on the device.
 
-    For example: `"en-US"`.
-    """
-
-    languages: Optional[list[str]] = None
-    """A list of preferred locale/language tags in priority order.
-
-    For example: `["en-US", "de-DE"]`.
-    """
-
-
-@dataclass
+@dataclass(kw_only=True)
 class WindowsDeviceInfo(DeviceInfo):
     computer_name: str
     """The computer's fully-qualified DNS name, where available."""
@@ -761,18 +740,6 @@ class WindowsDeviceInfo(DeviceInfo):
     registry key.
     """
 
-    language: Optional[str] = None
-    """A string representing the user's preferred language on the device.
-
-    For example: `"en-US"`.
-    """
-
-    languages: Optional[list[str]] = None
-    """A list of preferred locale/language tags in priority order.
-
-    For example: `["en-US", "de-DE"]`.
-    """
-
 
 @dataclass
 class IosUtsname:
@@ -798,7 +765,7 @@ class IosUtsname:
     """Version level."""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IosDeviceInfo(DeviceInfo):
     available_ram_size: int
     """Current unallocated RAM size of the device in megabytes."""
@@ -876,16 +843,4 @@ class IosDeviceInfo(DeviceInfo):
 
     More info:
     https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor
-    """
-
-    language: Optional[str] = None
-    """A string representing the user's preferred language on the device.
-
-    For example: `"en-US"`.
-    """
-
-    languages: Optional[list[str]] = None
-    """A list of preferred locale/language tags in priority order.
-
-    For example: `["en-US", "de-DE"]`.
     """
