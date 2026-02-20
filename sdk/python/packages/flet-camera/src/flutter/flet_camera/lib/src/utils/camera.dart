@@ -119,7 +119,9 @@ Uint8List encodeCameraImage(CameraImage image) {
   }
 }
 
-Map<String, dynamic> cameraImageToPayload(CameraImage image) {
+Map<String, dynamic> cameraImageToPayload(
+  CameraImage image,
+) {
   return {
     "width": image.width,
     "height": image.height,

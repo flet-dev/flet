@@ -135,7 +135,11 @@ class _CameraControlState extends State<CameraControl> {
       final Uint8List encoded = image.format.group == ImageFormatGroup.jpeg
           ? encodeCameraImage(image)
           : await Isolate.run(
-              () => encodeCameraImagePayload(cameraImageToPayload(image)),
+              () => encodeCameraImagePayload(
+                cameraImageToPayload(
+                  image,
+                ),
+              ),
             );
       if (encoded.isEmpty) {
         return;

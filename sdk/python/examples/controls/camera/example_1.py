@@ -1,6 +1,8 @@
+import base64
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime
+from math import cos, pi, sin
 
 import flet as ft
 import flet_camera as fc
@@ -13,12 +15,18 @@ class State:
     camera_labels: dict[str, str] = field(default_factory=dict)
     is_streaming: bool = False
     is_streaming_supported: bool = False
+    is_initialized: bool = False
     is_preview_paused: bool = False
     is_recording: bool = False
     is_recording_paused: bool = False
+    device_orientation: fc.DeviceOrientation | None = None
+    last_frame_width: int | None = None
+    last_frame_height: int | None = None
 
 
 async def main(page: ft.Page):
+    image_frame_width = 280
+    image_frame_height = 200
     page.title = "Camera control"
     page.padding = 16
     page.scroll = ft.ScrollMode.AUTO
@@ -40,23 +48,36 @@ async def main(page: ft.Page):
     )
 
     status = ft.Text(value="Select a camera", size=12)
+    last_photo_label = ft.Text("Last photo", visible=False)
     last_image = ft.Image(
-        src="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgMBAp0YVwAAAABJRU5ErkJggg==",
-        height=200,
+        src=base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgMBAp0YVwAAAABJRU5ErkJggg=="
+        ),
+        width=image_frame_width,
+        height=image_frame_height,
         fit=ft.BoxFit.CONTAIN,
         gapless_playback=True,
+    )
+    last_image_frame = ft.Container(
+        width=image_frame_width,
+        height=image_frame_height,
+        alignment=ft.Alignment.CENTER,
+        content=last_image,
+        visible=False,
     )
     selector = ft.Dropdown(label="Camera", options=[])
     recorded_video_path = ft.Text(value="Recorded video: not saved yet", size=12)
     take_photo_btn = ft.FilledIconButton(
         icon=ft.Icons.PHOTO_CAMERA,
         tooltip="Take photo",
+        disabled=True,
     )
     record_btn = ft.FilledTonalIconButton(
         icon=ft.Icons.VIDEOCAM,
         selected_icon=ft.Icons.STOP,
         selected=False,
         tooltip="Start / stop recording",
+        disabled=True,
     )
     pause_recording_btn = ft.OutlinedIconButton(
         icon=ft.Icons.PAUSE,
@@ -70,13 +91,14 @@ async def main(page: ft.Page):
         selected_icon=ft.Icons.STOP,
         selected=False,
         tooltip="Start / stop image stream",
-        visible=False,
+        disabled=True,
     )
     preview_btn = ft.OutlinedIconButton(
         icon=ft.Icons.VISIBILITY_OFF,
         selected_icon=ft.Icons.VISIBILITY,
         selected=True,
         tooltip="Pause / resume preview",
+        disabled=True,
     )
 
     def has_human_readable_name(camera: fc.CameraDescription) -> bool:
@@ -101,6 +123,61 @@ async def main(page: ft.Page):
         lens_type = lens_map.get(camera.lens_type.value, camera.lens_type.value)
         return f"{direction} ({lens_type})"
 
+    def device_orientation_degrees(orientation: fc.DeviceOrientation | None) -> int:
+        if orientation == ft.DeviceOrientation.PORTRAIT_UP:
+            return 0
+        if orientation == ft.DeviceOrientation.LANDSCAPE_RIGHT:
+            return 90
+        if orientation == ft.DeviceOrientation.PORTRAIT_DOWN:
+            return 180
+        if orientation == ft.DeviceOrientation.LANDSCAPE_LEFT:
+            return 270
+        return 0
+
+    def image_rotation_radians() -> float:
+        camera = state.selected_camera
+        if camera is None:
+            return 0.0
+        sensor_orientation = camera.sensor_orientation
+        device_degrees = device_orientation_degrees(state.device_orientation)
+        if camera.lens_direction == fc.CameraLensDirection.FRONT:
+            rotation_degrees = (sensor_orientation + device_degrees) % 360
+        else:
+            rotation_degrees = (sensor_orientation - device_degrees + 360) % 360
+        return rotation_degrees * pi / 180
+
+    def apply_last_image_transform(src_width: int | None, src_height: int | None):
+        _ = (src_width, src_height)
+        last_image.width = image_frame_width
+        last_image.height = image_frame_height
+        angle = image_rotation_radians()
+        width = float(image_frame_width)
+        height = float(image_frame_height)
+        calc_angle = -angle
+
+        # Flet uses clockwise radians for Rotate.angle.
+        def rotate_point(x: float, y: float) -> tuple[float, float]:
+            return (
+                x * cos(calc_angle) + y * sin(calc_angle),
+                -x * sin(calc_angle) + y * cos(calc_angle),
+            )
+
+        corners = [
+            rotate_point(0.0, 0.0),
+            rotate_point(width, 0.0),
+            rotate_point(0.0, height),
+            rotate_point(width, height),
+        ]
+        min_x = min(p[0] for p in corners)
+        min_y = min(p[1] for p in corners)
+
+        # Control.offset is normalized by control width/height.
+        last_image.offset = ft.Offset(
+            x=(-min_x / width) if width else 0.0,
+            y=(-min_y / height) if height else 0.0,
+        )
+        last_image.rotate = ft.Rotate(angle=angle, alignment=ft.Alignment.TOP_LEFT)
+
     async def get_cameras():
         state.cameras = await preview.get_available_cameras()
         state.camera_labels.clear()
@@ -118,16 +195,30 @@ async def main(page: ft.Page):
         ]
         if selector.value and selector.value not in state.camera_labels:
             selector.value = None
+        state.selected_camera = None
+        state.is_initialized = False
+        state.is_streaming = False
+        state.is_recording = False
+        state.is_recording_paused = False
+        state.is_preview_paused = False
+        state.is_streaming_supported = False
+        state.device_orientation = None
+        sync_action_buttons()
         status.value = "Select a camera"
         page.update()
 
     def sync_action_buttons():
+        take_photo_btn.disabled = not state.is_initialized
+        record_btn.disabled = not state.is_initialized
         record_btn.selected = state.is_recording
         pause_recording_btn.selected = state.is_recording_paused
         pause_recording_btn.disabled = not state.is_recording
         stream_btn.selected = state.is_streaming
-        stream_btn.visible = state.is_streaming_supported
+        stream_btn.disabled = not (
+            state.is_initialized and state.is_streaming_supported
+        )
         preview_btn.selected = not state.is_preview_paused
+        preview_btn.disabled = not state.is_initialized
 
     async def init_camera(e=None):
         state.selected_camera = next(
@@ -149,17 +240,34 @@ async def main(page: ft.Page):
             enable_audio=True,
             image_format_group=fc.ImageFormatGroup.JPEG,
         )
+        if not page.web:
+            try:
+                await preview.lock_capture_orientation()
+            except RuntimeError as ex:
+                logging.warning("Could not lock capture orientation: %s", ex)
+        state.is_initialized = True
         state.is_streaming = False
         state.is_streaming_supported = await preview.supports_image_streaming()
         sync_action_buttons()
         page.update()
 
     async def take_photo():
+        if not state.is_initialized:
+            status.value = "Initialize camera first"
+            page.update()
+            return
         data = await preview.take_picture()
         last_image.src = data
-        last_image.update()
+        apply_last_image_transform(state.last_frame_width, state.last_frame_height)
+        last_photo_label.visible = True
+        last_image_frame.visible = True
+        page.update()
 
     async def start_recording():
+        if not state.is_initialized:
+            status.value = "Initialize camera first"
+            page.update()
+            return
         await preview.prepare_for_video_recording()
         await preview.start_video_recording()
         state.is_recording = True
@@ -169,6 +277,8 @@ async def main(page: ft.Page):
         page.update()
 
     async def pause_recording():
+        if not state.is_initialized or not state.is_recording:
+            return
         await preview.pause_video_recording()
         state.is_recording_paused = True
         sync_action_buttons()
@@ -176,6 +286,8 @@ async def main(page: ft.Page):
         page.update()
 
     async def resume_recording():
+        if not state.is_initialized or not state.is_recording:
+            return
         await preview.resume_video_recording()
         state.is_recording_paused = False
         sync_action_buttons()
@@ -183,6 +295,8 @@ async def main(page: ft.Page):
         page.update()
 
     async def stop_recording():
+        if not state.is_initialized or not state.is_recording:
+            return
         data = await preview.stop_video_recording()
         state.is_recording = False
         state.is_recording_paused = False
@@ -209,6 +323,7 @@ async def main(page: ft.Page):
 
     async def on_state_change(e: fc.CameraStateEvent):
         if e.description == state.selected_camera:
+            state.device_orientation = e.device_orientation
             state.is_recording = e.is_recording_video
             state.is_recording_paused = e.is_recording_paused
             state.is_streaming = e.is_streaming_images
@@ -234,6 +349,10 @@ async def main(page: ft.Page):
     selector.on_select = init_camera
 
     async def start_streaming():
+        if not state.is_initialized:
+            status.value = "Initialize camera first"
+            page.update()
+            return
         if not state.is_streaming_supported:
             status.value = "Image streaming is not supported by this camera"
             page.update()
@@ -244,6 +363,8 @@ async def main(page: ft.Page):
         page.update()
 
     async def stop_streaming():
+        if not state.is_initialized:
+            return
         await preview.stop_image_stream()
         state.is_streaming = False
         sync_action_buttons()
@@ -251,20 +372,29 @@ async def main(page: ft.Page):
 
     def on_stream_image(e: fc.CameraImageEvent):
         try:
+            state.last_frame_width = e.width
+            state.last_frame_height = e.height
             last_image.src = e.bytes
-            last_image.update()
+            apply_last_image_transform(e.width, e.height)
+            last_photo_label.visible = True
+            last_image_frame.visible = True
+            page.update()
         except Exception as ex:
             logging.exception("Failed to render stream frame: %s", ex)
 
     preview.on_stream_image = on_stream_image
 
     async def pause_preview():
+        if not state.is_initialized:
+            return
         await preview.pause_preview()
         state.is_preview_paused = True
         sync_action_buttons()
         page.update()
 
     async def resume_preview():
+        if not state.is_initialized:
+            return
         await preview.resume_preview()
         state.is_preview_paused = False
         sync_action_buttons()
@@ -331,8 +461,8 @@ async def main(page: ft.Page):
                         wrap=True,
                     ),
                     recorded_video_path,
-                    ft.Text("Last photo"),
-                    last_image,
+                    last_photo_label,
+                    last_image_frame,
                 ]
             )
         )
