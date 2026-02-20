@@ -396,6 +396,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
+    LocaleChangeEvent,
     LoginEvent,
     MultiViewAddEvent,
     MultiViewRemoveEvent,
@@ -838,6 +839,7 @@ __all__ = [
     "ListTileTitleAlignment",
     "ListView",
     "Locale",
+    "LocaleChangeEvent",
     "LocaleConfiguration",
     "LoginEvent",
     "LongPressDownEvent",

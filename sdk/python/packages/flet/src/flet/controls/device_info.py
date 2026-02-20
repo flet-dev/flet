@@ -43,7 +43,8 @@ class DeviceInfo:
     The list is ordered in order of priority, with lower-indexed locales being
     preferred over higher-indexed ones. The first element is the primary locale.
 
-    The [on_locale_change] callback is called whenever this value changes.
+    The [`Page.on_locale_change`][flet.] event is called
+    whenever this value changes.
     """
 
 

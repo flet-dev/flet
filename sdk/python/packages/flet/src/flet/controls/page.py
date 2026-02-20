@@ -57,6 +57,7 @@ from flet.controls.types import (
     AppLifecycleState,
     Brightness,
     DeviceOrientation,
+    Locale,
     PagePlatform,
     Url,
     UrlTarget,
@@ -132,6 +133,24 @@ class RouteChangeEvent(Event["Page"]):
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
     brightness: Brightness
+
+
+@dataclass
+class LocaleChangeEvent(Event["Page"]):
+    """
+    Event payload describing a change in the host platform's locale preferences.
+
+    See also:
+    - [`Page.on_locale_change`][flet.]: event called when locale preferences/settings
+        of the host platform have changed.
+    """
+
+    locales: list[Locale]
+    """
+    The full, ordered list of locales reported by the host platform.
+
+    The first item represents the highest-priority locale.
+    """
 
 
 @dataclass
@@ -316,11 +335,19 @@ class Page(BasePage):
     Called when brightness of app host platform has changed.
     """
 
+    on_locale_change: Optional[EventHandler[LocaleChangeEvent]] = None
+    """
+    Called when the locale preferences/settings of the host platform have changed.
+
+    For example, when the user updates device language
+    settings or browser preferred languages.
+    """
+
     on_app_lifecycle_state_change: Optional[
         EventHandler[AppLifecycleStateChangeEvent]
     ] = None
     """
-    Triggers when app lifecycle state changes.
+    Called when app lifecycle state changes.
     """
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
