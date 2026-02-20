@@ -14,7 +14,6 @@ __all__ = [
     "CameraLensType",
     "CameraPreviewSize",
     "CameraStateEvent",
-    "DeviceOrientation",
     "ExposureMode",
     "FlashMode",
     "FocusMode",
@@ -110,10 +109,6 @@ class CameraLensType(Enum):
     """Unknown lens type."""
 
 
-# Reuse the core enum to keep orientation types consistent across Flet packages.
-DeviceOrientation = ft.DeviceOrientation
-
-
 @dataclass
 class CameraPreviewSize:
     """Dimensions of a camera preview."""
@@ -167,16 +162,16 @@ class CameraStateEvent(ft.Event["Camera"]):
     is_capture_orientation_locked: bool
     """True if capture orientation is locked."""
 
-    device_orientation: Optional[DeviceOrientation] = None
+    device_orientation: Optional[ft.DeviceOrientation] = None
     """Current device UI orientation."""
 
-    locked_capture_orientation: Optional[DeviceOrientation] = None
+    locked_capture_orientation: Optional[ft.DeviceOrientation] = None
     """Orientation used when capture orientation is locked."""
 
-    recording_orientation: Optional[DeviceOrientation] = None
+    recording_orientation: Optional[ft.DeviceOrientation] = None
     """Orientation used for the current recording."""
 
-    preview_pause_orientation: Optional[DeviceOrientation] = None
+    preview_pause_orientation: Optional[ft.DeviceOrientation] = None
     """Orientation used when the preview was paused."""
 
     flash_mode: Optional[FlashMode] = None

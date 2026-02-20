@@ -10,7 +10,6 @@ from flet_camera.types import (
     CameraDescription,
     CameraImageEvent,
     CameraStateEvent,
-    DeviceOrientation,
     ExposureMode,
     FlashMode,
     FocusMode,
@@ -111,7 +110,7 @@ class Camera(ft.LayoutControl):
         return await self._invoke_method("get_min_zoom_level")
 
     async def lock_capture_orientation(
-        self, orientation: Optional[DeviceOrientation] = None
+        self, orientation: Optional[ft.DeviceOrientation] = None
     ):
         """
         Locks capture orientation to the specified device orientation.

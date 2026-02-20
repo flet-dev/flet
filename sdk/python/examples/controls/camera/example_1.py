@@ -19,7 +19,7 @@ class State:
     is_preview_paused: bool = False
     is_recording: bool = False
     is_recording_paused: bool = False
-    device_orientation: fc.DeviceOrientation | None = None
+    device_orientation: ft.DeviceOrientation | None = None
     last_frame_width: int | None = None
     last_frame_height: int | None = None
 
@@ -123,7 +123,7 @@ async def main(page: ft.Page):
         lens_type = lens_map.get(camera.lens_type.value, camera.lens_type.value)
         return f"{direction} ({lens_type})"
 
-    def device_orientation_degrees(orientation: fc.DeviceOrientation | None) -> int:
+    def device_orientation_degrees(orientation: ft.DeviceOrientation | None) -> int:
         if orientation == ft.DeviceOrientation.PORTRAIT_UP:
             return 0
         if orientation == ft.DeviceOrientation.LANDSCAPE_RIGHT:
