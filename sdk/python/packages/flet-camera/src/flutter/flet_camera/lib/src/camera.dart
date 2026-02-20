@@ -92,15 +92,10 @@ class _CameraControlState extends State<CameraControl> {
 
     final resolutionPreset =
         parseResolutionPreset(args["resolution_preset"], ResolutionPreset.max);
-    final enableAudio =
-        args["enable_audio"] is bool ? args["enable_audio"] as bool : true;
-    final fps = args["fps"] is num ? (args["fps"] as num).round() : null;
-    final videoBitrate = args["video_bitrate"] is num
-        ? (args["video_bitrate"] as num).round()
-        : null;
-    final audioBitrate = args["audio_bitrate"] is num
-        ? (args["audio_bitrate"] as num).round()
-        : null;
+    final enableAudio = parseBool(args["enable_audio"], true)!;
+    final fps = parseInt(args["fps"]);
+    final videoBitrate = parseInt(args["video_bitrate"]);
+    final audioBitrate = parseInt(args["audio_bitrate"]);
     final imageFormatGroup = parseImageFormatGroup(
       args["image_format_group"],
       ImageFormatGroup.unknown,
@@ -124,7 +119,7 @@ class _CameraControlState extends State<CameraControl> {
   Future<void> _startImageStream() async {
     final controller = _requireController();
     await controller.startImageStream((CameraImage image) {
-      if (!widget.control.getBool("on_stream_image", false)!) {
+      if (!widget.control.hasEventHandler("stream_image")) {
         return;
       }
       if (_processingImage) {
@@ -224,10 +219,9 @@ class _CameraControlState extends State<CameraControl> {
         }
         break;
       case "set_exposure_offset":
-        final offset = args["offset"];
-        if (offset is num) {
-          return await _requireController()
-              .setExposureOffset(offset.toDouble());
+        final offset = parseDouble(args["offset"]);
+        if (offset != null) {
+          return await _requireController().setExposureOffset(offset);
         }
         break;
       case "set_exposure_point":
@@ -251,9 +245,9 @@ class _CameraControlState extends State<CameraControl> {
         await _requireController().setFocusPoint(point);
         break;
       case "set_zoom_level":
-        final zoom = args["zoom"];
-        if (zoom is num) {
-          await _requireController().setZoomLevel(zoom.toDouble());
+        final zoom = parseDouble(args["zoom"]);
+        if (zoom != null) {
+          await _requireController().setZoomLevel(zoom);
         }
         break;
       default:
@@ -272,9 +266,7 @@ class _CameraControlState extends State<CameraControl> {
     if (_previewEnabled &&
         controller != null &&
         controller.value.isInitialized) {
-      final contentCtrl = widget.control.child("content");
-      final contentWidget =
-          contentCtrl != null ? ControlWidget(control: contentCtrl) : null;
+      final contentWidget = widget.control.buildWidget("content");
       preview = CameraPreview(controller, child: contentWidget);
     }
 
