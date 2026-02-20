@@ -258,6 +258,14 @@ class GeolocatorPosition:
 
 @dataclass
 class GeolocatorConfiguration:
+    """
+    Base configuration for position requests and position-stream updates.
+
+    Use this type when you want the same settings to apply across all
+    platforms. Platform-specific configuration classes extend it with
+    additional options.
+    """
+
     accuracy: GeolocatorPositionAccuracy = GeolocatorPositionAccuracy.BEST
     """
     Defines the desired accuracy that should be used to determine the location data.
@@ -333,6 +341,14 @@ class GeolocatorIosConfiguration(GeolocatorConfiguration):
 
 @dataclass
 class ForegroundNotificationConfiguration:
+    """
+    Android foreground-service notification settings for background tracking.
+
+    Supply this configuration through
+    `GeolocatorAndroidConfiguration.foreground_notification_config` to control
+    the persistent notification shown while background location updates are active.
+    """
+
     notification_title: str
     """
     The title used for the foreground service notification.
@@ -414,6 +430,10 @@ class GeolocatorAndroidConfiguration(GeolocatorConfiguration):
 
 @dataclass
 class GeolocatorPositionChangeEvent(ft.Event["Geolocator"]):
+    """
+    Event data provided to `Geolocator.on_position_change` handlers.
+    """
+
     position: GeolocatorPosition
     """
     The current/new position of the device.

@@ -27,6 +27,7 @@ class Button(LayoutControl, AdaptiveControl):
     It supports various styles, colors, event handlers for user interaction,
     and can be used to display text, icons, etc.
 
+    Example:
     ```python
     ft.Button(content="Enabled button")
     ft.Button(content="Disabled button", disabled=True)

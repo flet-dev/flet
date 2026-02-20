@@ -15,6 +15,14 @@ from flet.version import flet_version
 
 
 class AuthorizationService(Authorization):
+    """
+    OAuth authorization implementation used by [`Page.login()`][flet.Page.login].
+
+    The service coordinates authorization URL generation, token exchange,
+    token refresh, and optional user/group resolution using the configured
+    [`OAuthProvider`][flet.auth.oauth_provider.].
+    """
+
     def __init__(
         self,
         provider: OAuthProvider,
@@ -41,15 +49,41 @@ class AuthorizationService(Authorization):
                     self.scope.append(s)
 
     async def dehydrate_token(self, saved_token: str):
+        """
+        Restore and validate previously persisted token state.
+
+        The token is deserialized, refreshed when expired, and optionally used
+        to load user and group metadata.
+
+        Args:
+            saved_token: JSON-serialized token data produced by
+                [`OAuthToken.to_json()`][flet.auth.oauth_token.OAuthToken.to_json].
+        """
+
         self.__token = OAuthToken.from_json(saved_token)
         await self.__refresh_token()
         await self.__fetch_user_and_groups()
 
     async def get_token(self):
+        """
+        Return current token after applying refresh logic when required.
+
+        Returns:
+            Current [`OAuthToken`][flet.auth.oauth_token.], or `None`
+                if no token is available yet.
+        """
+
         await self.__refresh_token()
         return self.__token
 
     def get_authorization_data(self) -> tuple[str, str]:
+        """
+        Generate authorization URL and CSRF state for OAuth redirect flow.
+
+        Returns:
+            A tuple of `(authorization_url, state)`.
+        """
+
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
         authorization_url = client.prepare_request_uri(
@@ -63,6 +97,16 @@ class AuthorizationService(Authorization):
         return authorization_url, self.state
 
     async def request_token(self, code: str):
+        """
+        Exchange authorization code for access token and optional profile data.
+
+        Args:
+            code: Provider-issued authorization code returned to redirect URL.
+
+        Raises:
+            httpx.HTTPStatusError: If token endpoint returns a non-success status.
+        """
+
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
@@ -85,6 +129,16 @@ class AuthorizationService(Authorization):
             await self.__fetch_user_and_groups()
 
     async def __fetch_user_and_groups(self):
+        """
+        Populate user and groups according to service/provider configuration.
+
+        Uses provider override hooks first, then optionally falls back to
+        generic `user_endpoint` + `user_id_fn` retrieval.
+
+        Raises:
+            ValueError: If `user_endpoint` is configured without `user_id_fn`.
+        """
+
         assert self.__token is not None
         if self.fetch_user:
             self.user = await self.provider._fetch_user(self.__token.access_token)
@@ -100,6 +154,16 @@ class AuthorizationService(Authorization):
                 )
 
     def __convert_token(self, t: OAuth2Token):
+        """
+        Convert oauthlib token mapping to [`OAuthToken`][flet.auth.oauth_token.].
+
+        Args:
+            t: Token dictionary returned by oauthlib client parsing.
+
+        Returns:
+            Normalized token object used by Flet auth APIs.
+        """
+
         return OAuthToken(
             access_token=t["access_token"],
             scope=t.get("scope"),
@@ -110,6 +174,16 @@ class AuthorizationService(Authorization):
         )
 
     async def __refresh_token(self):
+        """
+        Refresh access token when it is expired and refresh token is available.
+
+        The method is a no-op when token is missing, non-expiring, not expired,
+        or does not include a refresh token.
+
+        Raises:
+            httpx.HTTPStatusError: If refresh request fails.
+        """
+
         if (
             self.__token is None
             or self.__token.expires_at is None
@@ -143,6 +217,17 @@ class AuthorizationService(Authorization):
                 self.__token = self.__convert_token(t)
 
     async def __get_user(self):
+        """
+        Fetch user profile from provider `user_endpoint`.
+
+        Returns:
+            A [`User`][flet.auth.user.User] built from response payload and
+                `provider.user_id_fn`.
+
+        Raises:
+            httpx.HTTPStatusError: If user endpoint request fails.
+        """
+
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
         headers = self.__get_default_headers()
@@ -156,6 +241,13 @@ class AuthorizationService(Authorization):
             return User(uj, str(self.provider.user_id_fn(uj)))
 
     def __get_default_headers(self):
+        """
+        Build default HTTP headers for OAuth-related requests.
+
+        Returns:
+            Base headers dictionary containing Flet user agent.
+        """
+
         return {
             "User-Agent": f"Flet/{flet_version}",
         }

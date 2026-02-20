@@ -22,18 +22,102 @@ __all__ = ["MenuBar", "MenuStyle"]
 
 @dataclass
 class MenuStyle:
+    """
+    Defines the visual style/appearance of a menu.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Determines the desired alignment of the submenu when opened relative to
+    the button that opens it.
+
+    If there isn't sufficient space to open the menu with the given alignment,
+    and there's space on the other side of the button, then the alignment is
+    swapped to it's opposite (`1` becomes `-1`, etc.), and the menu will try to
+    appear on the other side of the button. If there isn't enough space there
+    either, then the menu will be pushed as far over as necessary to display
+    as much of itself as possible, possibly overlapping the parent button.
+    """
+
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
+    """
+    The menu's background fill color.
+    """
+
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
+    """
+    The shadow color of the menu
+
+    The material's elevation shadow can be difficult to see for dark themes,
+    so by default the menu classes add a semi-transparent overlay to indicate
+    elevation.
+    """
+
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
+    """
+    The menu's elevation, i.e. the size of the shadow below the menu.
+    """
+
     padding: Optional[ControlStateValue[PaddingValue]] = None
+    """
+    The padding between the menu's boundary and its child.
+    """
+
     side: Optional[ControlStateValue[BorderSide]] = None
+    """
+    The color and weight of the menu's outline.
+
+    This value is combined with [`shape`][(c).] to create a
+    shape decorated with an outline.
+    """
+
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
+    """
+    The menu's shape.
+
+    This shape is combined with [`side`][(c).] to create a
+    shape decorated with an outline.
+    """
+
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
+    """
+    The cursor for a mouse pointer when it enters or is hovering over the menu.
+    """
+
     fixed_size: Optional[ControlStateValue[Size]] = None
+    """
+    The menu's size.
+
+    This size is still constrained by the style's [`min_size`][(c).] and
+    [`max_size`][(c).]. Fixed size dimensions whose value is `float('inf')` are
+    ignored.
+
+    To specify menus with a fixed width and the default height use
+    `Size.from_width(320)`. Similarly, to specify a fixed height and the default
+    width use `Size.from_height(100)`.
+    """
+
     max_size: Optional[ControlStateValue[Size]] = None
+    """
+    The maximum size of the menu itself.
+
+    A [`Size.infinite`][flet.] or `None` value for this property
+    means that the menu's maximum size is not constrained.
+
+    This value must be greater than or equal to [`min_size`][(c).].
+    """
+
     min_size: Optional[ControlStateValue[Size]] = None
+    """
+    The minimum size of the menu itself.
+
+    This value must be less than or equal to [`max_size`][(c).].
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Defines how compact the menu's layout will be.
+    """
 
 
 @control("MenuBar")

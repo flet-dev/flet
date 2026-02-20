@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +6,15 @@ import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
+import 'enums.dart';
 import 'geometry.dart';
-import 'material_state.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'theme.dart';
 import 'time.dart';
 import 'transforms.dart';
+import 'widget_state.dart';
 
 ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     {Color? defaultForegroundColor,
@@ -144,10 +144,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
 CupertinoButtonSize? parseCupertinoButtonSize(String? value,
     [CupertinoButtonSize? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoButtonSize.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(CupertinoButtonSize.values, value, defaultValue);
 }
 
 extension ButtonParsers on Control {

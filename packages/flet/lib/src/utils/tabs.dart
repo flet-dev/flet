@@ -1,5 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../models/control.dart';
 import 'borders.dart';
@@ -7,18 +7,12 @@ import 'edge_insets.dart';
 
 TabBarIndicatorSize? parseTabBarIndicatorSize(String? value,
     [TabBarIndicatorSize? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TabBarIndicatorSize.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TabBarIndicatorSize.values, value, defaultValue);
 }
 
 TabIndicatorAnimation? parseTabIndicatorAnimation(String? value,
     [TabIndicatorAnimation? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TabIndicatorAnimation.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(TabIndicatorAnimation.values, value, defaultValue);
 }
 
 UnderlineTabIndicator? parseUnderlineTabIndicator(

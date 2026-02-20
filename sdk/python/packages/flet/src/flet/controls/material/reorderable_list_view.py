@@ -165,7 +165,7 @@ class ReorderableListView(ListView):
     center of each item's trailing edge; on mobile platforms, a long
     press anywhere on the item starts a drag.
 
-    The default desktop drag handle is just an [`Icons.DRAG_HANDLE`][flet.]
+    The default desktop drag handle is just an `Icons.DRAG_HANDLE`
     wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
     item is wrapped with a [`ReorderableDelayedDragStartListener`].
 

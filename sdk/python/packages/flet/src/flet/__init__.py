@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from flet.app import app, app_async, run, run_async
+from flet.app import AppCallable, app, app_async, run, run_async
 from flet.components.component import Component
 from flet.components.component_decorator import component
 from flet.components.hooks.use_callback import use_callback
@@ -607,6 +607,7 @@ __all__ = [
     "AnimationValue",
     "AppBar",
     "AppBarTheme",
+    "AppCallable",
     "AppLifecycleState",
     "AppLifecycleStateChangeEvent",
     "AppView",

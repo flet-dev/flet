@@ -16,6 +16,8 @@ __all__ = [
 
 
 class PrecisionType(Enum):
+    """Describes how accurately a paid ad value is reported."""
+
     UNKNOWN = "unknown"
     """An ad value with unknown precision."""
 

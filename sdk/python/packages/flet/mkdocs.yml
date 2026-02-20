@@ -96,7 +96,6 @@ watch:
   - ../../../../LICENSE
   - ../../../../README.md
 
-
 # Plugins
 plugins:
   # - footnotes
@@ -138,15 +137,14 @@ plugins:
             docstring_section_style: list
             separate_signature: true
             inherited_members: false
+            modernize_annotations: true
             summary:
                 attributes: false
                 functions: false
-            preload_modules: [ flet ]
             filters:
               - "!^_" # Exclude private members starting with only one underscore
               - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
-              - griffe_modernized_annotations
               - griffe_warnings_deprecated
             extra:
               show_children: false
@@ -238,7 +236,7 @@ nav:
           - Solitaire: tutorials/solitaire.md
           - ToDo: tutorials/todo.md
       - Publishing Flet app:
-          - Overview: publish/index.md
+          - publish/index.md
           - Android: publish/android.md
           - iOS: publish/ios.md
           - Linux: publish/linux.md
@@ -257,6 +255,7 @@ nav:
                   - Publish web app as static website: publish/web/static-website/index.md
                   - Hosting:
                       - Cloudflare: publish/web/static-website/hosting/cloudflare.md
+                      - GitHub Pages: publish/web/static-website/hosting/github-pages.md
       - Extending Flet:
           - Creating an Extension: extend/user-extensions.md
           - Built-in Extensions: extend/built-in-extensions.md
@@ -301,6 +300,7 @@ nav:
               - CandlestickChart: charts/candlestickchart.md
               - LineChart: charts/linechart.md
               - MatplotlibChart: charts/matplotlibchart.md
+              - MatplotlibChartWithToolbar: charts/matplotlibchartwithtoolbar.md
               - PieChart: charts/piechart.md
               - PlotlyChart: charts/plotlychart.md
               - RadarChart: charts/radarchart.md
@@ -523,6 +523,17 @@ nav:
           - Classes:
               - Ads:
                   - AdRequest: ads/types/adrequest.md
+              - Authentication:
+                  - Authorization: types/authorization.md
+                  - OAuthProvider: types/oauthprovider.md
+                  - OAuthToken: types/oauthtoken.md
+                  - User: types/user.md
+                  - Group: types/group.md
+                  - Providers:
+                      - Auth0OAuthProvider: types/auth0oauthprovider.md
+                      - AzureOAuthProvider: types/azureoauthprovider.md
+                      - GitHubOAuthProvider: types/githuboauthprovider.md
+                      - GoogleOAuthProvider: types/googleoauthprovider.md
               - Alignment: types/alignment.md
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md

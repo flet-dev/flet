@@ -1,6 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -16,10 +16,7 @@ enum FormFieldInputBorder { outline, underline, none }
 
 FormFieldInputBorder? parseFormFieldInputBorder(String? value,
     [FormFieldInputBorder? defaultValue]) {
-  if (value == null) return defaultValue;
-  return FormFieldInputBorder.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(FormFieldInputBorder.values, value, defaultValue);
 }
 
 TextInputType? parseTextInputType(String? value,
@@ -221,10 +218,7 @@ InputDecoration buildInputDecoration(
 
 OverlayVisibilityMode? parseOverlayVisibilityMode(String? value,
     [OverlayVisibilityMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return OverlayVisibilityMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(OverlayVisibilityMode.values, value, defaultValue);
 }
 
 StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {

@@ -12,6 +12,14 @@ from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 
 
 def update_flet_view_icon(exe_path, icon_path):
+    """
+    Replace icon resources in a Windows executable.
+
+    Args:
+        exe_path: Path to target executable file.
+        icon_path: Path to source icon file or executable resource.
+    """
+
     print("Updating Flet View icon", exe_path, icon_path)
 
     RT_ICON = 3
@@ -26,8 +34,8 @@ def update_flet_view_icon(exe_path, icon_path):
     hdst = win32api.BeginUpdateResource(exe_path, 0)
 
     iconid = 1
-    # Each step in the following enumerate() will instantiate an IconFile object, as a result of deferred execution
-    # of the map() above.
+    # Each step in the following enumerate() will instantiate an IconFile object,
+    # as a result of deferred execution of the map() above.
     i = 101
     data = icon.grp_icon_dir()
     data = data + icon.grp_icondir_entries(iconid)
@@ -49,7 +57,23 @@ def update_flet_view_version_info(
     file_version,
     company_name,
     copyright,
-):
+) -> str:
+    """
+    Update VERSIONINFO resources in a Windows executable.
+
+    Args:
+        exe_path: Path to target executable file.
+        product_name: Optional product name value.
+        file_description: Optional file description value.
+        product_version: Optional product version string.
+        file_version: Optional file version string (`n.n.n.n` expected).
+        company_name: Optional company name value.
+        copyright: Optional legal copyright value.
+
+    Returns:
+        Path to a temporary text file containing serialized version info.
+    """
+
     print("Updating Flet View version info", exe_path)
 
     # load versioninfo from exe

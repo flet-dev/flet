@@ -20,9 +20,33 @@ __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelTy
 
 
 class NavigationRailLabelType(Enum):
+    """
+    Defines how destination labels are shown in a [`NavigationRail`][flet.].
+
+    This setting affects the non-extended rail layout
+    ([`extended`][flet.NavigationRail.]). When the rail is
+    extended, labels are shown next to icons regardless of this value.
+    """
+
     NONE = "none"
+    """
+    Hides labels for all destinations.
+
+    Only destination icons are shown.
+    """
+
     ALL = "all"
+    """
+    Shows labels for all destinations.
+    """
+
     SELECTED = "selected"
+    """
+    Shows the label only for the selected destination.
+
+    As selection changes, the visible label transitions to the newly selected
+    destination.
+    """
 
 
 @control("NavigationRailDestination")
@@ -33,7 +57,7 @@ class NavigationRailDestination(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` of the \
+    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
     destination.
 
     If `selected_icon` is provided, this will only be displayed when the destination is
@@ -46,7 +70,7 @@ class NavigationRailDestination(Control):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/reference/icons) of alternative icon or `Control` \
+    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     If this icon is not provided, the NavigationRail will display `icon` in either

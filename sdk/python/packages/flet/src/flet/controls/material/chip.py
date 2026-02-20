@@ -27,6 +27,7 @@ class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.
 
+    Example:
     ```python
     ft.Chip(
         label="Explore topics",

@@ -28,6 +28,13 @@ class Command(BaseBuildCommand):
         self.device_id = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line arguments for debug builds and run sessions.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "platform",
             type=str.lower,
@@ -65,6 +72,13 @@ class Command(BaseBuildCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Prepare project artifacts and run the app in debug/release mode.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         super().handle(options)
         self.options.output_dir = None  # disable output dir for debug builds
         if self.options:
@@ -107,6 +121,10 @@ class Command(BaseBuildCommand):
             self.cleanup(0, message="Debug session ended.")
 
     def check_device_id(self):
+        """
+        Validate that a device ID is available for mobile debug targets.
+        """
+
         if self.device_id is None and self.debug_platform in [
             "ios",
             "android",
@@ -120,6 +138,13 @@ class Command(BaseBuildCommand):
             )
 
     def add_flutter_command_args(self, args: list[str]):
+        """
+        Append `flutter run` arguments for selected device and mode.
+
+        Args:
+            args: Mutable argument list to extend.
+        """
+
         assert self.device_id
         args.extend(["run", "-d", self.device_id])
 
@@ -134,6 +159,10 @@ class Command(BaseBuildCommand):
                 args.extend(["--route", self.options.route])
 
     def run_flutter(self):
+        """
+        Run the prepared Flutter project on the selected target device.
+        """
+
         assert self.platforms
         assert self.target_platform
         mode = "release" if self.options.release else "debug"
@@ -146,6 +175,10 @@ class Command(BaseBuildCommand):
             self._run_flutter_command()
 
     def run_flutter_devices(self):
+        """
+        Run `flutter devices` and print discovered devices to verbose output.
+        """
+
         self.update_status("[bold blue]Checking connected devices...")
         flutter_devices = self.run(
             [self.flutter_exe, "devices", "--no-version-check", "--suppress-analytics"],

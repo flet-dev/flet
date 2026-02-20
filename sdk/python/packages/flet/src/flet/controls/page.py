@@ -95,7 +95,18 @@ RetT = TypeVar("RetT")
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
+    """
+    Internal container that hosts page-level service controls.
+
+    Services register themselves through this registry so they can be mounted
+    under [`Page`][flet.Page] and synchronized with the frontend service
+    bindings.
+    """
+
     _services: list[Service] = field(default_factory=list)
+    """
+    Tracked service instances currently attached to this page.
+    """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
@@ -103,6 +114,12 @@ class ServiceRegistry(Service):
         self._lock: threading.Lock = threading.Lock()
 
     def register_service(self, service: Service):
+        """
+        Registers a service in this registry and pushes an update.
+
+        Args:
+            service: Service instance to register.
+        """
         with self._lock:
             logger.debug(
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
@@ -111,6 +128,13 @@ class ServiceRegistry(Service):
             self.update()
 
     def unregister_services(self):
+        """
+        Unregisters services that are no longer strongly referenced.
+
+        This keeps the registry aligned with live Python references by removing
+        service instances whose reference count indicates they are no longer in
+        active use, then updating the control tree if removals happened.
+        """
         with self._lock:
             original_len = len(self._services)
             min_refs = 3 if sys.version_info >= (3, 14) else 4
@@ -127,12 +151,29 @@ class ServiceRegistry(Service):
 
 @dataclass
 class RouteChangeEvent(Event["Page"]):
+    """
+    Event payload for [`Page.on_route_change`][flet.Page.on_route_change].
+    """
+
     route: str
+    """
+    New route value after navigation state changed.
+    """
 
 
 @dataclass
 class PlatformBrightnessChangeEvent(Event["Page"]):
+    """
+    Event payload for platform brightness changes.
+
+    Delivered to
+    [`Page.on_platform_brightness_change`][flet.Page.on_platform_brightness_change].
+    """
+
     brightness: Brightness
+    """
+    Current platform brightness mode.
+    """
 
 
 @dataclass
@@ -155,46 +196,149 @@ class LocaleChangeEvent(Event["Page"]):
 
 @dataclass
 class ViewPopEvent(Event["Page"]):
+    """
+    Event payload for view-pop navigation actions.
+
+    Delivered to [`Page.on_view_pop`][flet.Page.on_view_pop] when the top view
+    is being popped by system or app-bar back behavior.
+    """
+
     route: str
+    """
+    Route of the view being popped.
+    """
+
     view: Optional[View] = None
+    """
+    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    """
 
 
 @dataclass
 class KeyboardEvent(Event["Page"]):
+    """
+    Event payload for keyboard key-down notifications.
+
+    Delivered to [`Page.on_keyboard_event`][flet.Page.on_keyboard_event].
+    """
+
     key: str
+    """
+    Human-readable key label for the pressed key.
+    """
+
     shift: bool
+    """
+    Whether Shift was pressed when the key event was emitted.
+    """
+
     ctrl: bool
+    """
+    Whether Control was pressed when the key event was emitted.
+    """
+
     alt: bool
+    """
+    Whether Alt was pressed when the key event was emitted.
+    """
+
     meta: bool
+    """
+    Whether Meta (Command/Windows) was pressed when the key event was emitted.
+    """
 
 
 @dataclass
 class LoginEvent(Event["Page"]):
+    """
+    Event payload for OAuth login completion.
+
+    Emitted to [`Page.on_login`][flet.Page.on_login] for both successful and
+    failed authorization attempts.
+    """
+
     error: Optional[str]
+    """
+    Error code or message when login failed; empty/`None` on success.
+    """
+
     error_description: Optional[str]
+    """
+    Provider-specific error details when login failed.
+    """
 
 
 @dataclass
 class InvokeMethodResults:
+    """
+    Result envelope for a control invoke-method response.
+
+    Stores the correlation identifier and either a serialized result payload or
+    an error string.
+    """
+
     method_id: str
+    """
+    Identifier of the invoke-method call this response belongs to.
+    """
+
     result: Optional[str]
+    """
+    Serialized method result payload when the call succeeded.
+    """
+
     error: Optional[str]
+    """
+    Error message when the invoke-method call failed.
+    """
 
 
 @dataclass
 class AppLifecycleStateChangeEvent(Event["Page"]):
+    """
+    Event payload for app lifecycle transitions.
+
+    Delivered to
+    [`Page.on_app_lifecycle_state_change`][flet.Page.on_app_lifecycle_state_change].
+    """
+
     state: AppLifecycleState
+    """
+    New application lifecycle state.
+    """
 
 
 @dataclass
 class MultiViewAddEvent(Event["Page"]):
+    """
+    Event payload emitted when a new multi-view is created.
+
+    Delivered to [`Page.on_multi_view_add`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the newly created view.
+    """
+
     initial_data: Any
+    """
+    Optional initial payload provided when the view was opened.
+    """
 
 
 @dataclass
 class MultiViewRemoveEvent(Event["Page"]):
+    """
+    Event payload emitted when a multi-view is removed.
+
+    Delivered to [`Page.on_multi_view_remove`][flet.].
+    """
+
     view_id: int
+    """
+    Unique identifier of the removed view.
+    """
 
 
 @control("Page", isolated=True, post_init_args=2)
@@ -325,7 +469,7 @@ class Page(BasePage):
         local asset. The following font file formats are supported `.ttc`, `.ttf`
         and `.otf`.
 
-    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
+    Usage example [here](https://docs.flet.dev/cookbook/fonts#importing-fonts).
     """
 
     on_platform_brightness_change: Optional[
@@ -446,9 +590,21 @@ class Page(BasePage):
     def render(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
+        """
+        Render a component tree into controls of the root view.
+
+        The rendered result replaces `page.views[0].controls`, then triggers
+        initial page update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -457,36 +613,89 @@ class Page(BasePage):
     def render_views(
         self,
         component: Callable[..., Union[list[View], View, list[Control], Control]],
-        *args,
-        **kwargs,
+        *args: Any,
+        **kwargs: Any,
     ):
+        """
+        Render a component tree as the full list of page views.
+
+        The rendered result replaces `page.views`, then triggers initial page
+        update and component update scheduler startup.
+
+        Args:
+            component: Component function to render.
+            *args: Positional arguments passed to `component`.
+            **kwargs: Keyword arguments passed to `component`.
+        """
+
         logger.debug("Page.render_views()")
         self._notify = self.__notify
         self.views = Renderer().render(component, *args, **kwargs)
         self.__render()
 
     def __render(self):
+        """
+        Finalize component rendering setup.
+
+        Performs initial page update, enables components mode, and starts
+        batched updates scheduler for component-driven state changes.
+        """
+
         self.update()
         context.enable_components_mode()
         self.session.start_updates_scheduler()
 
     def schedule_update(self):
+        """
+        Queue this page for a deferred batched update.
+        """
+
         self.session.schedule_update(self)
 
-    def update(self, *controls) -> None:
+    def update(self, *controls: Control) -> None:
+        """
+        Push pending state changes to the client.
+
+        Args:
+            *controls: Specific controls to patch. When omitted, patches the
+                whole page state.
+        """
+
         if len(controls) == 0:
             self.__update(self)
         else:
             self.__update(*controls)
 
     def __notify(self, name: str, value: Any):
+        """
+        Schedule page update when reactive component state changes.
+
+        Args:
+            name: Changed value identifier.
+            value: New value.
+        """
+
         self.schedule_update()
 
     def __update(self, *controls: Control):
+        """
+        Send control patches for the provided controls.
+
+        Args:
+            *controls: Controls whose updates should be sent to the client.
+        """
+
         for c in controls:
             self.session.patch_control(c)
 
     def error(self, message: str) -> None:
+        """
+        Report an application error to the current session/client.
+
+        Args:
+            message: Error message to send.
+        """
+
         self.session.error(message)
 
     def before_event(self, e: ControlEvent):
@@ -524,6 +733,13 @@ class Page(BasePage):
         )
 
         def _on_completion(f):
+            """
+            Surface background task exceptions to default error handling.
+
+            Args:
+                f: Completed future returned by `run_coroutine_threadsafe()`.
+            """
+
             try:
                 exception = f.exception()
                 if exception:
@@ -536,7 +752,25 @@ class Page(BasePage):
         return future
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
+        """
+        Wrap a callable to execute with this page bound to context vars.
+
+        Args:
+            handler: Handler function to wrap.
+
+        Returns:
+            Wrapped callable that restores page context before invocation.
+        """
+
         def wrapper(*args, **kwargs):
+            """
+            Execute wrapped handler with page context initialized.
+
+            Args:
+                *args: Positional arguments forwarded to wrapped handler.
+                **kwargs: Keyword arguments forwarded to wrapped handler.
+            """
+
             _context_page.set(self)
             handler(*args, **kwargs)
 
@@ -738,6 +972,18 @@ class Page(BasePage):
         return self.__authorization
 
     async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
+        """
+        Complete OAuth flow using callback payload returned by provider.
+
+        Validates state token, optionally closes/foregrounds app UI, exchanges
+        authorization code for access token, and raises `login` event with
+        success or failure details.
+
+        Args:
+            data: OAuth callback query payload (e.g. `state`, `code`,
+                `error`, `error_description`).
+        """
+
         assert self.__authorization
         state = data.get("state")
         assert state == self.__authorization.state

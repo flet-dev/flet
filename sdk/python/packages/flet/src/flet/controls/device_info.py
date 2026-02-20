@@ -50,6 +50,14 @@ class DeviceInfo:
 
 @dataclass(kw_only=True)
 class MacOsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for macOS hosts.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] when the
+    current platform is macOS. Includes CPU, memory, model, and OS version
+    fields collected from native system APIs.
+    """
+
     active_cpus: int
     """Number of active CPUs."""
 
@@ -267,6 +275,12 @@ class WebDeviceInfo(DeviceInfo):
 
 @dataclass(kw_only=True)
 class AndroidBuildVersion:
+    """
+    Android OS version details derived from `android.os.Build.VERSION`.
+
+    This object is exposed as [`AndroidDeviceInfo.version`][flet.].
+    """
+
     code_name: str
     """
     The current development codename, or the string "REL" if this is a release build.
@@ -310,6 +324,12 @@ class AndroidBuildVersion:
 
 @dataclass(kw_only=True)
 class AndroidDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Android devices and emulators.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Android.
+    """
+
     available_ram_size: int
     """Total available RAM size in bytes."""
 
@@ -599,6 +619,12 @@ class LinuxDeviceInfo(DeviceInfo):
 
 @dataclass(kw_only=True)
 class WindowsDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for Windows systems.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Windows.
+    """
+
     computer_name: str
     """The computer's fully-qualified DNS name, where available."""
 
@@ -687,7 +713,7 @@ class WindowsDeviceInfo(DeviceInfo):
     build_lab_ex: str
     """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx` registry key.
 
-    For example: `"22000.1.amd64fre.co_release.210604-1628"`.
+    For example: `"22000.1.amd64free.co_release.210604-1628"`.
     """  # noqa: E501
 
     # digital_product_id: str
@@ -768,6 +794,12 @@ class IosUtsname:
 
 @dataclass(kw_only=True)
 class IosDeviceInfo(DeviceInfo):
+    """
+    Device information snapshot for iOS/iPadOS runtimes.
+
+    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on iOS.
+    """
+
     available_ram_size: int
     """Current unallocated RAM size of the device in megabytes."""
 

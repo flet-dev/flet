@@ -73,7 +73,7 @@ There is a web server (Fletd) running in the background on a fixed port `8550`. 
 
 `FletApp` widget in your Flutter application will be communicating with Fletd web server via WebSockets to receive UI updates and send user-generated UI events.
 
-For production use Python app along with Fletd could be [deployed to a public web host](https://flet.dev/docs/guides/python/deploying-web-app) and be accessible via HTTPS with domain name.
+For production use Python app along with Fletd could be [deployed to a public web host](https://docs.flet.dev/publish/web/dynamic-website/) and be accessible via HTTPS with domain name.
 
 ### Add Flet widget to a Flutter app
 
@@ -129,9 +129,9 @@ When adding `FletApp` widget to the existing desktop Flutter app make sure `setu
 
 ## Flet learning resources
 
-* [Getting started for Python](https://flet.dev/docs/guides/python/getting-started/)
-* [Controls reference](https://flet.dev/docs/controls)
-* [Tutorials](https://flet.dev/docs/tutorials)
+* [Getting started for Python](https://docs.flet.dev/getting-started/installation/)
+* [Controls reference](https://docs.flet.dev/controls)
+* [Tutorials](https://docs.flet.dev/tutorials)
 * [Examples](https://github.com/flet-dev/examples/tree/main/python)
 
 ## Flet community

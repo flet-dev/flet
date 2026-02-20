@@ -2,6 +2,13 @@ from flet.auth.oauth_provider import OAuthProvider
 
 
 class Auth0OAuthProvider(OAuthProvider):
+    """
+    OAuth provider preset for Auth0.
+
+    Configures Auth0 authorization/token endpoints and user-info retrieval via
+    `/userinfo`, using the `sub` claim as the user id.
+    """
+
     def __init__(
         self, domain: str, client_id: str, client_secret: str, redirect_url: str
     ) -> None:

@@ -10,18 +10,34 @@ class Command(BaseBuildCommand):
     """
     Build a Flet Python app into a platform-specific executable or
     installable bundle. It supports building for desktop (macOS, Linux, Windows), web,
-    Android (APK/AAB), and iOS (IPA), with a wide range of customization options for
-    metadata, assets, splash screens, and signing.
+    Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
+    customization options for metadata, assets, splash screens, and signing.
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register build-specific CLI arguments.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "target_platform",
             type=str.lower,
-            choices=["macos", "linux", "windows", "web", "apk", "aab", "ipa"],
+            choices=[
+                "macos",
+                "linux",
+                "windows",
+                "web",
+                "apk",
+                "aab",
+                "ipa",
+                "ios-simulator",
+            ],
             help="The target platform or type of package to build",
         )
         parser.add_argument(
@@ -35,6 +51,13 @@ class Command(BaseBuildCommand):
         super().add_arguments(parser)
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Execute the full build pipeline for the selected target platform.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         super().handle(options)
         assert self.target_platform
         self.status = console.status(
@@ -74,6 +97,13 @@ class Command(BaseBuildCommand):
             )
 
     def add_flutter_command_args(self, args: list[str]):
+        """
+        Append `flutter build` arguments derived from CLI options and project config.
+
+        Args:
+            args: Mutable command argument list to extend.
+        """
+
         assert self.options
         assert self.build_dir
         assert self.get_pyproject
@@ -97,6 +127,8 @@ class Command(BaseBuildCommand):
                 )
             else:
                 args.append("--no-codesign")
+        elif self.target_platform == "ios-simulator":
+            args.append("--simulator")
 
         build_number = self.options.build_number or self.get_pyproject(
             "tool.flet.build_number"
@@ -120,6 +152,10 @@ class Command(BaseBuildCommand):
             args.append(arg)
 
     def run_flutter(self):
+        """
+        Run Flutter build command and log completion status.
+        """
+
         assert self.platforms
         assert self.target_platform
 

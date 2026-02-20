@@ -10,6 +10,10 @@ __all__ = ["PieChart", "PieChartEvent"]
 
 @dataclass
 class PieChartEvent(ft.Event["PieChart"]):
+    """
+    Event payload emitted when the user interacts with a pie chart section.
+    """
+
     type: ChartEventType
     """
     Type of the event.

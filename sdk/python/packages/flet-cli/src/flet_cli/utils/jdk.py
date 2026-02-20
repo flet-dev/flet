@@ -6,9 +6,10 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
-from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
 from rich.progress import Progress
+
+from flet_cli.utils.distros import download_with_progress, extract_with_progress
 
 # Constants
 JDK_MAJOR_VER = 17
@@ -18,10 +19,28 @@ JDK_DIR_NAME = f"{JDK_RELEASE}+{JDK_BUILD}"
 
 
 def get_java_home():
+    """
+    Return the `JAVA_HOME` environment variable value, if set.
+
+    Returns:
+        The configured Java home directory or `None`.
+    """
+
     return os.getenv("JAVA_HOME")
 
 
 def check_jdk_version(jdk_path):
+    """
+    Verify that a Java installation at `jdk_path` matches the required major version.
+
+    Args:
+        jdk_path: Java home directory containing `bin/javac`.
+
+    Returns:
+        `True` when the detected major version equals `JDK_MAJOR_VER`,
+        otherwise `False`.
+    """
+
     try:
         result = subprocess.run(
             [os.path.join(jdk_path, "bin", "javac"), "-version"],
@@ -66,6 +85,23 @@ def platform_info():
 
 
 def install_jdk(log, progress: Optional[Progress] = None):
+    """
+    Ensure a compatible JDK is available and return its home directory.
+
+    Resolution order:
+    - Use `JAVA_HOME` when it points to a matching JDK.
+    - On macOS, try `/usr/libexec/java_home`.
+    - Otherwise download and install the configured Temurin JDK release into
+        `~/java/<release+build>`.
+
+    Args:
+        log: Callback used for status messages.
+        progress: Optional rich progress instance used for download/extract UI.
+
+    Returns:
+        Java home directory for the installed or discovered JDK.
+    """
+
     java_home = get_java_home()
 
     # Step 1: Check if JAVA_HOME is set and valid

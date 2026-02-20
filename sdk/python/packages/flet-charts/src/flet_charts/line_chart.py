@@ -16,6 +16,10 @@ __all__ = [
 
 @dataclass
 class LineChartEventSpot:
+    """
+    Identifies a concrete line/point pair involved in a chart interaction event.
+    """
+
     bar_index: int
     """
     The line's index or `-1` if no line was hovered.
@@ -43,9 +47,13 @@ class LineChartEventSpot:
 
 @dataclass
 class LineChartEvent(ft.Event["LineChart"]):
+    """
+    Event payload emitted when the user interacts with a line chart.
+    """
+
     type: ChartEventType
     """
-    The type of event that occured.
+    The type of event that occurred.
     """
 
     spots: list[LineChartEventSpot]
@@ -176,8 +184,13 @@ class LineChart(ft.LayoutControl):
     """
     Draws a line chart.
 
+    Example:
     ```python
     fch.LineChart(
+        min_y=0,
+        max_y=3,
+        min_x=0,
+        max_x=5,
         data_series=[
             fch.LineChartData(
                 color=ft.Colors.BLUE_GREY_500,
@@ -188,12 +201,8 @@ class LineChart(ft.LayoutControl):
                     fch.LineChartDataPoint(3, 1),
                 ],
             ),
-            ...
+            ...,
         ],
-        min_y=0,
-        max_y=3,
-        min_x=0,
-        max_x=5,
     )
     ```
 

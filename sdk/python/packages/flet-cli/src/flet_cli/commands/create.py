@@ -23,6 +23,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
+        """
+        Register command-line options for creating a project from templates.
+
+        Args:
+            parser: Argument parser configured by the command runner.
+        """
+
         parser.add_argument(
             "output_directory",
             type=str,
@@ -65,6 +72,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        """
+        Render and generate a new project using the selected cookiecutter template.
+
+        Args:
+            options: Parsed command-line options.
+        """
+
         from cookiecutter.main import cookiecutter
 
         self.verbose = options.verbose

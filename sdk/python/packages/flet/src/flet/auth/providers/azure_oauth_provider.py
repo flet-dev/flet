@@ -4,6 +4,13 @@ from flet.auth.oauth_provider import OAuthProvider
 
 
 class AzureOAuthProvider(OAuthProvider):
+    """
+    OAuth provider preset for Microsoft Entra ID (Azure AD).
+
+    Uses v2 endpoints for the selected tenant and Microsoft Graph `/me` for
+    user profile retrieval, with Graph `id` used as the user id.
+    """
+
     def __init__(
         self,
         client_id: str,

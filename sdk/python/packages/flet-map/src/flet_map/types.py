@@ -120,6 +120,10 @@ class PatternFit(Enum):
 
 @dataclass
 class Camera:
+    """
+    Snapshot of the map camera state.
+    """
+
     center: "MapLatitudeLongitude"
     """
     The center of this camera.
@@ -451,6 +455,10 @@ class MultiFingerGesture(IntFlag):
 
 @dataclass
 class InteractionConfiguration:
+    """
+    Configures user interaction behavior.
+    """
+
     enable_multi_finger_gesture_race: bool = False
     """
     If `True`, then [`rotation_threshold`][(c).] and [`pinch_zoom_threshold`][(c).]
@@ -694,30 +702,56 @@ class CameraFit:
 
 @dataclass
 class MapTapEvent(ft.TapEvent["Map"]):
+    """
+    Map tap event that includes information on the tap.
+    """
+
     coordinates: MapLatitudeLongitude
-    """Coordinates of the point at which the tap occured."""
+    """Coordinates of the point at which the tap occurred."""
 
 
 @dataclass
 class MapHoverEvent(ft.HoverEvent["Map"]):
+    """
+    Map hover event that includes geographic coordinates of the pointer.
+    """
+
     coordinates: MapLatitudeLongitude
+    """Coordinates of the point currently hovered by the pointer."""
 
 
 @dataclass
 class MapPositionChangeEvent(ft.Event["Map"]):
+    """
+    Event emitted when the map camera position changes.
+    """
+
     coordinates: MapLatitudeLongitude
+    """Current center coordinates after the position change."""
+
     camera: Camera
+    """Current camera snapshot after the change."""
+
     has_gesture: bool
+    """Whether this change was caused by a user gesture."""
 
 
 @dataclass
 class MapPointerEvent(ft.PointerEvent["Map"]):
+    """
+    Map pointer event with translated geographic coordinates.
+    """
+
     coordinates: MapLatitudeLongitude
-    """Coordinates of the point at which the tap occured."""
+    """Coordinates of the point targeted by this pointer event."""
 
 
 @dataclass
 class MapEvent(ft.Event["Map"]):
+    """
+    Map event emitted for camera/interaction updates from various sources.
+    """
+
     source: MapEventSource
     """Who/what issued the event."""
 
@@ -831,7 +865,7 @@ class KeyboardConfiguration:
     )
     """
     Duration of the curved ([`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
-    portion of the animation occuring
+    portion of the animation occurring
     after a key down event (and after a key up event if
     [`animation_curve_reverse_duration`][(c).] is `None`)
     """
@@ -842,14 +876,14 @@ class KeyboardConfiguration:
     """
     Duration of the curved (reverse
     [`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
-    portion of the animation occuring after a key up event.
+    portion of the animation occurring after a key up event.
 
     Set to `None` to use [`animation_curve_duration`][(c).].
     """
 
     animation_curve_curve: AnimationCurve = AnimationCurve.EASE_IN_OUT
     """
-    Curve of the curved portion of the animation occuring after
+    Curve of the curved portion of the animation occurring after
     key down and key up events.
     """
 
@@ -991,7 +1025,7 @@ class CursorRotationBehaviour(Enum):
     that the map is rotated to.
 
     Does not disable cursor/keyboard rotation, or adjust its triggers: see
-    `CursorKeyboardRotationConfiguration.is_key_trriger`.
+    `CursorKeyboardRotationConfiguration.is_key_trigger`.
     """
 
     OFFSET = "offset"
@@ -1013,7 +1047,7 @@ class CursorKeyboardRotationConfiguration:
 
     Cursor/keyboard rotation is designed for desktop platforms,
     and allows the cursor to be used to set the rotation of the map
-    whilst a keyboard key is held down (as triggered by `is_key_trriger`).
+    whilst a keyboard key is held down (as triggered by `is_key_trigger`).
     """
 
     set_north_on_click: bool = True
@@ -1030,7 +1064,7 @@ class CursorKeyboardRotationConfiguration:
     angle that the map is rotated to.
 
     Does not disable cursor/keyboard rotation, or
-    adjust its triggers: see `is_key_trriger`.
+    adjust its triggers: see `is_key_trigger`.
     """
 
     # TODO

@@ -30,6 +30,10 @@ __all__ = [
 
 @dataclass(kw_only=True)
 class TapEvent(Event[EventControlType]):
+    """
+    Payload for tap press/release events.
+    """
+
     kind: Optional[PointerDeviceType] = field(
         default=None, metadata={"data_field": "k"}
     )
@@ -52,6 +56,10 @@ class TapEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class TapMoveEvent(Event[EventControlType]):
+    """
+    Payload for pointer movement during a tap gesture sequence.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
@@ -75,11 +83,27 @@ class TapMoveEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class MultiTapEvent(ControlEvent):
+    """
+    Result payload for multi-touch tap detection.
+    """
+
     correct_touches: bool = field(metadata={"data_field": "ct"})
+    """
+    `True` when the active touch count reaches \
+    [`GestureDetector.multi_tap_touches`][flet.]; \
+    otherwise `False` is emitted when the sequence is interrupted.
+    """
 
 
 @dataclass(kw_only=True)
 class LongPressDownEvent(Event[EventControlType]):
+    """
+    Initial long-press candidate event.
+
+    Fired when a pointer goes down and may become a long press, before the
+    gesture is accepted.
+    """
+
     kind: Optional[PointerDeviceType] = field(
         default=None, metadata={"data_field": "k"}
     )
@@ -100,6 +124,10 @@ class LongPressDownEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressStartEvent(Event[EventControlType]):
+    """
+    Start payload for an accepted long-press gesture.
+    """
+
     local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer initially contacted the screen.
@@ -115,6 +143,10 @@ class LongPressStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressMoveUpdateEvent(Event[EventControlType]):
+    """
+    Move update payload after long-press recognition.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The current local position of the pointer.
@@ -125,7 +157,7 @@ class LongPressMoveUpdateEvent(Event[EventControlType]):
     The current global position of the pointer.
     """
 
-    offset_from_origin: Offset = field(metadata={"data_field": "ofo"})
+    offset_from_origin: Offset = field(metadata={"data_field": "of"})
     """
     Delta from the point where the long press started, in global coordinates.
     """
@@ -138,6 +170,10 @@ class LongPressMoveUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class LongPressEndEvent(Event[EventControlType]):
+    """
+    End payload for a completed long-press gesture.
+    """
+
     local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
@@ -161,6 +197,10 @@ class LongPressEndEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragDownEvent(Event[EventControlType]):
+    """
+    Initial contact payload for drag-capable gestures.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position at which the pointer contacted the screen.
@@ -174,6 +214,10 @@ class DragDownEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragStartEvent(Event[EventControlType]):
+    """
+    Start payload for recognized drag gestures.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of the device that initiated the event.
@@ -202,6 +246,10 @@ class DragStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragUpdateEvent(Event[EventControlType]):
+    """
+    Incremental payload for drag progress updates.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position in the coordinate system of the event receiver at which the \
@@ -241,6 +289,10 @@ class DragUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class DragEndEvent(Event[EventControlType]):
+    """
+    Completion payload for drag gestures.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position in the coordinate system of the event receiver when the drag \
@@ -270,6 +322,10 @@ class DragEndEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ForcePressEvent(Event[EventControlType]):
+    """
+    Payload for pressure-based gesture callbacks.
+    """
+
     local_position: Offset = field(metadata={"data_field": "l"})
     """
     The local position at which the pointer applied pressure.
@@ -288,6 +344,10 @@ class ForcePressEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ScaleStartEvent(Event[EventControlType]):
+    """
+    Start payload for scale/transform interaction sequences.
+    """
+
     local_focal_point: Offset = field(metadata={"data_field": "lfp"})
     """
     The initial focal point of the pointers in contact with the screen, in local \
@@ -318,6 +378,10 @@ class ScaleStartEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ScaleEndEvent(Event[EventControlType]):
+    """
+    End payload for scale/transform interaction sequences.
+    """
+
     pointer_count: int = field(metadata={"data_field": "pc"})
     """
     The number of pointers being tracked by the gesture recognizer.
@@ -335,6 +399,10 @@ class ScaleEndEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class ScaleUpdateEvent(Event[EventControlType]):
+    """
+    Continuous payload for scale, pan, and rotation updates.
+    """
+
     local_focal_point: Offset = field(metadata={"data_field": "lfp"})
     """
     The focal point of the pointers in contact with the screen, in local coordinates.
@@ -400,6 +468,10 @@ class ScaleUpdateEvent(Event[EventControlType]):
 
 @dataclass(kw_only=True)
 class PointerEvent(Event[EventControlType]):
+    """
+    Low-level pointer payload with detailed device metrics.
+    """
+
     kind: PointerDeviceType = field(metadata={"data_field": "k"})
     """
     The kind of input device for which the event was generated.

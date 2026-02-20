@@ -91,14 +91,43 @@ class FilterQuality(Enum):
 
 
 class BlurStyle(Enum):
+    """
+    Styles to use for blurs
+    """
+
     NORMAL = "normal"
+    """
+    Fuzzy inside and outside. This is useful for painting shadows that are
+    offset from the shape that ostensibly is casting the shadow.
+    """
+
     SOLID = "solid"
+    """
+    Solid inside, fuzzy outside. This corresponds to drawing the shape, and
+    additionally drawing the blur. This can make objects appear brighter,
+    maybe even as if they were fluorescent.
+    """
+
     OUTER = "outer"
+    """
+    Nothing inside, fuzzy outside. This is useful for painting shadows for
+    partially transparent shapes, when they are painted separately but without
+    an offset, so that the shadow doesn't paint below the shape.
+    """
+
     INNER = "inner"
+    """
+    Fuzzy inside, nothing outside. This can make shapes appear to be lit from
+    within.
+    """
 
 
 @dataclass
 class BoxShadow:
+    """
+    Configuration for a box's shadow.
+    """
+
     spread_radius: Number = 0.0
     """
     The amount the box should be inflated prior to applying the blur.
@@ -123,6 +152,9 @@ class BoxShadow:
     """
 
     blur_style: BlurStyle = BlurStyle.NORMAL
+    """
+    The blur style to apply to this shadow.
+    """
 
     def copy(
         self,
@@ -146,10 +178,6 @@ class BoxShadow:
             blur_style=blur_style if blur_style is not None else self.blur_style,
         )
 
-    """
-    TBD
-    """
-
 
 BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
 """Type alias for box shadow values.
@@ -161,18 +189,91 @@ Represents shadows as either:
 
 
 class BoxShape(Enum):
+    """
+    The shape to use when rendering a [`Border`][flet.] or [`BoxDecoration`][flet.].
+    """
+
     RECTANGLE = "rectangle"
+    """
+    An axis-aligned rectangle, optionally with rounded corners.
+
+    The amount of corner rounding, if any, is determined by the border radius
+    specified by classes such as [`BoxDecoration`][flet.] or [`Border`][flet.].
+    The rectangle's edges match those of the box in which it is painted.
+    """
+
     CIRCLE = "circle"
+    """
+    A circle centered in the middle of the box into which the [`Border`][flet.] or
+    [`BoxDecoration`][flet.] is painted. The diameter of the circle is the shortest
+    dimension of the box, either the width or the height, such that the circle
+    touches the edges of the box.
+    """
 
 
 class BoxFit(Enum):
+    """
+    How a box should be inscribed into another box.
+    """
+
     NONE = "none"
+    """
+    Align the source within the target box (by default, centering) and discard
+    any portions of the source that lie outside the box.
+
+    The source image is not resized.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_none.png)
+    """  # noqa: E501
+
     CONTAIN = "contain"
+    """
+    As large as possible while still containing the source entirely within the
+    target box.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_contain.png)
+    """  # noqa: E501
+
     COVER = "cover"
+    """
+    As small as possible while still covering the entire target box.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_cover.png)
+    """  # noqa: E501
+
     FILL = "fill"
+    """
+    Fill the target box by distorting the source's aspect ratio.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fill.png)
+    """  # noqa: E501
+
     FIT_HEIGHT = "fitHeight"
+    """
+    Make sure the full height of the source is shown, regardless of
+    whether this means the source overflows the target box horizontally.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fitHeight.png)
+    """  # noqa: E501
+
     FIT_WIDTH = "fitWidth"
+    """
+    Make sure the full width of the source is shown, regardless of
+    whether this means the source overflows the target box vertically.
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_fitWidth.png)
+    """  # noqa: E501
+
     SCALE_DOWN = "scaleDown"
+    """
+    Align the source within the target box (by default, centering) and, if
+    necessary, scale the source down to ensure that the source fits within the box.
+
+    This is the same as [`CONTAIN`][(c).] if that would shrink the image, otherwise it
+    is the same as [`NONE`][(c).].
+
+    ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_scaleDown.png)
+    """  # noqa: E501
 
 
 @dataclass
@@ -354,6 +455,7 @@ class BoxDecoration:
         shape: Optional[BoxShape] = None,
         blend_mode: Optional[BlendMode] = None,
     ):
+        """Returns a new `BoxDecoration` with selected fields overridden."""
         return BoxDecoration(
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
             image=image if image is not None else self.image,
@@ -373,8 +475,8 @@ class BoxConstraints:
     """
     Constraints that must be respected by a size of a box.
 
-    A Size respects a BoxConstraints if, and only if, all of the following relations
-    hold:
+    A [`Size`][flet.] respects a BoxConstraints if, and only if,
+    all of the following relations hold:
 
         min_width <= Size.width <= max_width
         min_height <= Size.height <= max_height
@@ -385,26 +487,26 @@ class BoxConstraints:
 
     min_width: Number = 0
     """
-    The minimum width that satisfies the constraints, such that `0.0 <= min_width <= \
-    max_width`.
+    The minimum width that satisfies the constraints, \
+    such that `0.0 <= min_width <= max_width`.
     """
 
     min_height: Number = 0
     """
-    The minimum height that satisfies the constraints, such that `0.0 <= min_height <= \
-    max_height`.
+    The minimum height that satisfies the constraints, \
+    such that `0.0 <= min_height <= max_height`.
     """
 
     max_width: Number = float("inf")
     """
-    The maximum width that satisfies the constraints, such that `min_width <= \
-    max_width <= float("inf")`.
+    The maximum width that satisfies the constraints, \
+    such that `min_width <= max_width <= float("inf")`.
     """
 
     max_height: Number = float("inf")
     """
-    The maximum height that satisfies the constraints, such that `min_height <= \
-    max_height <= float("inf")`.
+    The maximum height that satisfies the constraints, \
+    such that `min_height <= max_height <= float("inf")`.
     """
 
     def __post_init__(self):

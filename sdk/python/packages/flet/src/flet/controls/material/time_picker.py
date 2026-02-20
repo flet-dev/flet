@@ -207,7 +207,7 @@ class TimePicker(DialogControl):
     Clicking on this icon changes the [`entry_mode`][(c).] to
     [`TimePickerEntryMode.DIAL`][flet.].
 
-    If `None`, defaults to [`Icons.ACCESS_TIME`][flet.].
+    If `None`, defaults to `Icons.ACCESS_TIME`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
@@ -218,7 +218,7 @@ class TimePicker(DialogControl):
     Clicking on icon changes the [`entry_mode`][(c).] to
     [`TimePickerEntryMode.INPUT`][flet.].
 
-    If `None`, defaults to [`Icons.KEYBOARD_OUTLINED`][flet.].
+    If `None`, defaults to `Icons.KEYBOARD_OUTLINED`.
     """
 
     on_change: Optional[ControlEventHandler["TimePicker"]] = None

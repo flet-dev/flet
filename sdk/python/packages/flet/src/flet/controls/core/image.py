@@ -38,7 +38,7 @@ class Image(LayoutControl):
     The image source.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
     """
@@ -108,7 +108,7 @@ class Image(LayoutControl):
     A placeholder displayed while the image is loading.
 
     It can be one of the following:
-    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
+    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
 
