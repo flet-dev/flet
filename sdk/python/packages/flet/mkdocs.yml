@@ -567,7 +567,15 @@ nav:
               - Camera:
                   - CameraDescription: camera/types/cameradescription.md
                   - CameraImageEvent: camera/types/cameraimageevent.md
+                  - CameraLensDirection: camera/types/cameralensdirection.md
+                  - CameraLensType: camera/types/cameralenstype.md
+                  - CameraPreviewSize: camera/types/camerapreviewsize.md
                   - CameraStateEvent: camera/types/camerastateevent.md
+                  - ExposureMode: camera/types/exposuremode.md
+                  - FlashMode: camera/types/flashmode.md
+                  - FocusMode: camera/types/focusmode.md
+                  - ImageFormatGroup: camera/types/imageformatgroup.md
+                  - ResolutionPreset: camera/types/resolutionpreset.md
               - Charts:
                   - BarChartEvent: charts/types/barchartevent.md
                   - BarChartGroup: charts/types/barchartgroup.md
