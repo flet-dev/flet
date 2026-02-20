@@ -1,11 +1,10 @@
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flet/src/utils/locale.dart';
 import 'package:flutter/services.dart';
-import 'enums.dart';
 
+import 'enums.dart';
 import 'platform.dart';
 
 /// Returns device information as a Map.
