@@ -713,7 +713,7 @@ class WindowsDeviceInfo(DeviceInfo):
     build_lab_ex: str
     """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx` registry key.
 
-    For example: `"22000.1.amd64free.co_release.210604-1628"`.
+    For example: `"22000.1.amd64fre.co_release.210604-1628"`.
     """  # noqa: E501
 
     # digital_product_id: str
