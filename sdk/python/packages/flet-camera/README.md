@@ -6,7 +6,7 @@
 [![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-camera.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-camera.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-camera/LICENSE)
 
-A cross-platform camera control for [Flet](https://flet.dev) apps.
+A camera control for [Flet](https://flet.dev) apps.
 
 It is powered by the [camera](https://pub.dev/packages/camera) Flutter package.
 
