@@ -61,9 +61,19 @@ for distribution, you will need the following:
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
 
-Build outputs are copied into the [output directory](index.md#output-directory):
+## `flet build ios-simulator`
 
-## Application Identifier (App ID)
+/// admonition | Supported host platforms
+    type: caution
+This command can be run on **macOS only**.
+///
+
+Builds an (unsigned) iOS Simulator `.app` bundle, intended for testing on iOS Simulator
+and does **not** require a signing certificate, provisioning profile, or Apple Developer Program setup.
+
+## Configuration options
+
+### Application Identifier (App ID)
 
 A unique string that identifies your app within the Apple ecosystem.
 It is required to sign and distribute an iOS app and is used for various services like
@@ -83,7 +93,7 @@ graph TD
 The [Bundle ID](index.md#bundle-id) in your Flet configuration must match the Bundle ID registered
 in the App ID.
 
-### Creating a new App ID
+#### Creating a new App ID
 
 1. Visit [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list).
 2. Sign in with your **Apple Developer Account**.
@@ -101,11 +111,11 @@ in the App ID.
 
 Now you have **Bundle ID** and **Team ID** that will be used to identify your app.
 
-### Team ID
+#### Team ID
 
 The developer team ID to include in export options.
 
-#### Resolution order
+##### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -113,7 +123,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].team_id`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].team_id`
 
-#### Example
+##### Example
 
 /// tab | `flet build`
 ```bash
@@ -127,7 +137,7 @@ team_id = "ABCDEFE234"
 ```
 ///
 
-## Signing Certificate
+### Signing Certificate
 
 The certificate name, SHA-1 hash, or automatic selector to use for signing the iOS app bundle.
 Automatic selectors allow Xcode to pick the newest installed certificate of a particular type.
@@ -142,7 +152,7 @@ The available automatic selectors are:
 - `"Mac App Distribution"`
 - `"Mac Developer"`
 
-### Generating a Certificate Signing Request (CSR)
+#### Generating a Certificate Signing Request (CSR)
 
 Before creating a development or distribution certificate, you need a **CSR (Certificate Signing Request)**.
 
@@ -155,7 +165,7 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
    - **Request is for:** Select "**Saved to disk**".
 4. Click **Continue**, choose a location to save the `.certSigningRequest` file, and click **Save**.
 
-### Creating a Certificate in Apple Developer Portal
+#### Creating a Certificate in Apple Developer Portal
 
 1. Go to the [Apple Developer Certificates Page](https://developer.apple.com/account/resources/certificates/list).
 2. Click the **"+"** button to create a new certificate.
@@ -168,7 +178,7 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
    The name of the development certificate usually starts with **"Apple development:"** and the name of
     the distribution certificate starts with **"Apple distribution:"**.
 
-### Resolution order
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -190,7 +200,7 @@ signing_certificate = "Apple Distribution"
 ```
 ///
 
-## Provisioning Profile
+### Provisioning Profile
 
 A **Provisioning Profile** is a file that allows an iOS app to run on physical devices and be
 distributed through the App Store or internally. It links your **App ID**,
@@ -203,16 +213,16 @@ There are different types of provisioning profiles:
 3. **App Store Profile** – Used for submitting an app to the App Store.
 4. **Enterprise Profile** – Used for internal distribution within an organization.
 
-### Creating a New Provisioning Profile
+#### Creating a New Provisioning Profile
 
 Follow these steps to create a provisioning profile via the Apple Developer Portal:
 
-#### Step 1: Go to Apple Developer Portal
+##### Step 1: Go to Apple Developer Portal
 
 - Visit the [Apple Developer Portal](https://developer.apple.com/account/resources/profiles/list);
 - Sign in with your **Apple Developer Account**
 
-#### Step 2: Create a New Provisioning Profile
+##### Step 2: Create a New Provisioning Profile
 
 - Click the **"+"** button to add a new provisioning profile;
 - Choose the **type of profile**:
@@ -222,30 +232,30 @@ Follow these steps to create a provisioning profile via the Apple Developer Port
     - **In-House** – for internal distribution (Enterprise accounts only)
 - Click **Continue**
 
-#### Step 3: Select an App ID
+##### Step 3: Select an App ID
 
 - Choose the **App ID** that matches your app;
 - Click **Continue**.
 
-#### Step 4: Select a Distribution Certificate
+##### Step 4: Select a Distribution Certificate
 
 - Choose the appropriate certificate:
     - **iOS Development Certificate** - for **iOS App Development** profile
     - **iOS Distribution Certificate** - for **Ad Hoc** or **App Store** profiles
 - Click **Continue**.
 
-#### Step 5: Select Registered Devices (for Development & Ad Hoc)
+##### Step 5: Select Registered Devices (for Development & Ad Hoc)
 
 - If you selected an **iOS App Development** or **Ad Hoc** profile, select the devices to include;
 - Click **Continue**.
 
-#### Step 6: Name and Generate the Profile
+##### Step 6: Name and Generate the Profile
 
 - Enter a **Profile Name** (e.g., `MyApp Development Profile`);
 - Click **Generate**;
 - Click **Download** to get the `.mobileprovision` file.
 
-### Installing Provisioning Profile
+#### Installing Provisioning Profile
 
 Provisioning profiles are stored in `~/Library/MobileDevice/Provisioning Profiles` directory.
 
@@ -276,7 +286,7 @@ Finally, you can use the command below to list all installed provisioning profil
 for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do security cms -D -i "$profile" | grep -E -A1 '<key>(Name|UUID)</key>' | sed -n 's/.*<string>\(.*\)<\/string>/\1/p' | paste -d ' | ' - -; done
 ```
 
-### Resolution order
+#### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -300,9 +310,9 @@ provisioning_profile = "release-testing com.mycompany.example-app"
 ```
 ///
 
-## Export configuration
+### Export configuration
 
-### Export options
+#### Export options
 
 Additional keys to include in the generated `exportOptions.plist`
 of the [build template](index.md#build-template).
@@ -315,7 +325,7 @@ xcodebuild -help
 
 and find the section titled **"Available keys for -exportOptionsPlist"**.
 
-#### Resolution order
+##### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -323,7 +333,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
 3. `{}` (no extra keys)
 
-#### Example
+##### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -332,7 +342,7 @@ export_options = { uploadSymbols = false }
 ```
 ///
 
-### Export method
+#### Export method
 
 Defines how the app should be packaged when exporting the `.ipa` file.
 
@@ -345,7 +355,7 @@ Can be one of the following:
 
 To configure individual settings for one or more export methods, see [export methods](#export-methods).
 
-#### Resolution order
+##### Resolution order
 
 Its value is determined in the following order of precedence:
 
@@ -353,7 +363,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios].export_method`
 3. `"debugging"`
 
-#### Example
+##### Example
 
 /// tab | `flet build`
 ```bash
@@ -367,7 +377,7 @@ export_method = "debugging"
 ```
 ///
 
-### Export methods
+#### Export methods
 
 Signing settings can be configured individually per [export method](#export-method).
 
@@ -381,7 +391,7 @@ Supported keys (same as the top-level settings):
 - [`export_options`](#export-options)
 - [`team_id`](#team-id)
 
-#### Example
+##### Example
 
 /// tab | `pyproject.toml`
 ```toml
@@ -403,25 +413,25 @@ export_options = { uploadSymbols = true }
 ```
 ///
 
-## Permissions
+### Permissions
 
 iOS permissions are declared through [`Info.plist`](#infoplist) privacy usage strings.
 You can also use the [cross-platform permission bundles](index.md#predefined-cross-platform-permission-bundles)
 to inject common entries, then override or extend them with platform-specific values.
 
-### Info.plist
+#### Info.plist
 
-Add or override `Info.plist` entries for macOS builds.
+Add or override `Info.plist` entries for iOS builds.
 These values are written to `ios/Runner/Info.plist` of the [build project](index.md#build-template).
 
-#### Resolution order
+##### Resolution order
 
 Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
 2. `[tool.flet.ios.info]`
 
-#### Example
+##### Example
 
 /// tab | `flet build`
 ```bash
