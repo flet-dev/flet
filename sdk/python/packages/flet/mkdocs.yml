@@ -565,9 +565,9 @@ nav:
               - BoxShadow: types/boxshadow.md
               - ButtonStyle: types/buttonstyle.md
               - Camera:
-                  - CameraDescription: camera/types/camera_description.md
-                  - CameraImage: camera/types/camera_image.md
-                  - CameraState: camera/types/camera_state.md
+                  - CameraDescription: camera/types/cameradescription.md
+                  - CameraImage: camera/types/cameraimage.md
+                  - CameraState: camera/types/camerastate.md
               - Charts:
                   - BarChartEvent: charts/types/barchartevent.md
                   - BarChartGroup: charts/types/barchartgroup.md
