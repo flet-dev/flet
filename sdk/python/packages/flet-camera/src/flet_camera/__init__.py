@@ -17,6 +17,7 @@ from flet_camera.types import (
     ImageFormatGroup,
     ResolutionPreset,
 )
+from flet_camera.utils import detect_video_extension
 
 __all__ = [
     "Camera",
@@ -32,4 +33,5 @@ __all__ = [
     "FocusMode",
     "ImageFormatGroup",
     "ResolutionPreset",
+    "detect_video_extension",
 ]

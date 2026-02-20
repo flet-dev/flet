@@ -101,20 +101,6 @@ async def main(page: ft.Page):
         lens_type = lens_map.get(camera.lens_type.value, camera.lens_type.value)
         return f"{direction} ({lens_type})"
 
-    def detect_video_extension(data: bytes) -> str:
-        # Matroska/WebM EBML header.
-        if data.startswith(b"\x1a\x45\xdf\xa3"):
-            return "webm"
-
-        # ISO BMFF (mp4/mov) starts with a box size + "ftyp".
-        if len(data) >= 12 and data[4:8] == b"ftyp":
-            brand = data[8:12]
-            if brand == b"qt  ":
-                return "mov"
-            return "mp4"
-
-        return "bin"
-
     async def get_cameras():
         state.cameras = await preview.get_available_cameras()
         state.camera_labels.clear()
@@ -206,7 +192,7 @@ async def main(page: ft.Page):
             page.update()
             return
 
-        ext = detect_video_extension(data)
+        ext = fc.detect_video_extension(data)
         filename = f"recording_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{ext}"
         saved_path = await ft.FilePicker().save_file(
             file_name=filename,
