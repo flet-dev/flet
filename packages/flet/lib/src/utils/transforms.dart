@@ -11,10 +11,6 @@ RotationDetails? parseRotationDetails(dynamic value,
   if (value is int || value is double) {
     return RotationDetails(
       angle: parseDouble(value, 0)!,
-      alignment: Alignment.center,
-      origin: null,
-      transformHitTests: true,
-      filterQuality: null,
     );
   }
 
@@ -26,12 +22,6 @@ ScaleDetails? parseScale(dynamic value, [ScaleDetails? defaultValue]) {
   if (value is int || value is double) {
     return ScaleDetails(
       scale: parseDouble(value),
-      scaleX: null,
-      scaleY: null,
-      alignment: Alignment.center,
-      origin: null,
-      transformHitTests: true,
-      filterQuality: null,
     );
   }
 
@@ -75,10 +65,10 @@ class RotationDetails {
 
   RotationDetails({
     required this.angle,
-    required this.alignment,
-    required this.origin,
-    required this.transformHitTests,
-    required this.filterQuality,
+    this.alignment = Alignment.center,
+    this.origin,
+    this.transformHitTests = true,
+    this.filterQuality,
   });
 
   factory RotationDetails.fromJson(Map<dynamic, dynamic> value) {
@@ -102,13 +92,13 @@ class ScaleDetails {
   final FilterQuality? filterQuality;
 
   ScaleDetails({
-    required this.scale,
-    required this.scaleX,
-    required this.scaleY,
-    required this.alignment,
-    required this.origin,
-    required this.transformHitTests,
-    required this.filterQuality,
+    this.scale,
+    this.scaleX,
+    this.scaleY,
+    this.alignment = Alignment.center,
+    this.origin,
+    this.transformHitTests = true,
+    this.filterQuality,
   });
 
   factory ScaleDetails.fromJson(Map<dynamic, dynamic> value) {
@@ -133,8 +123,8 @@ class OffsetDetails {
   OffsetDetails({
     required this.x,
     required this.y,
-    required this.transformHitTests,
-    required this.filterQuality,
+    this.transformHitTests = true,
+    this.filterQuality,
   });
 
   factory OffsetDetails.fromValue(dynamic value) {
@@ -142,8 +132,6 @@ class OffsetDetails {
       return OffsetDetails(
         x: parseDouble(value[0], 0)!,
         y: parseDouble(value[1], 0)!,
-        transformHitTests: true,
-        filterQuality: null,
       );
     }
 
