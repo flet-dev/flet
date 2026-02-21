@@ -73,5 +73,9 @@
 		<!-- Needed by `flet-geolocator` -->
 		<key>NSLocationWhenInUseUsageDescription</key>
         <string>This app needs access to location.</string>
+
+        <!-- Permission options for the `camera` -->
+        <key>NSCameraUsageDescription</key>
+        <string>This app uses the camera to capture photos and video.</string>
 	</dict>
 </plist>

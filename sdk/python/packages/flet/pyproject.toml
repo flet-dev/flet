@@ -43,6 +43,7 @@ extensions = [
     "flet-ads",
     "flet-audio",
     "flet-audio-recorder",
+    "flet-camera",
     "flet-charts",
     "flet-code-editor",
     "flet-color-pickers",

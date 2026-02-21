@@ -723,6 +723,7 @@ jobs:
             flet-ads
             flet-audio
             flet-audio-recorder
+            flet-camera
             flet-charts
             flet-code-editor
             flet-color-pickers
@@ -843,6 +844,7 @@ jobs:
             flet_ads \
             flet_audio \
             flet_audio_recorder \
+            flet_camera \
             flet_charts \
             flet_code_editor \
             flet_color_pickers \
