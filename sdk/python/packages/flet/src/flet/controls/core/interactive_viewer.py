@@ -1,7 +1,7 @@
 from dataclasses import field
-from typing import Annotated, Optional
+from typing import Annotated, ClassVar, Optional
 
-from flet.controls._validation import V
+from flet.controls._validation import ControlRule, V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -69,16 +69,22 @@ class InteractiveViewer(LayoutControl):
     is sized properly.
     """
 
-    max_scale: Number = 2.5
+    max_scale: Annotated[
+        Number,
+        V.gt(0),
+    ] = 2.5
     """
     The maximum allowed scale.
 
     Raises:
-        ValueError: If it is not greater than `0` or is less than
-            [`min_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`
+            or not greater than or equal to [`min_scale`][(c).].
     """
 
-    min_scale: Number = 0.8
+    min_scale: Annotated[
+        Number,
+        V.gt(0),
+    ] = 0.8
     """
     The minimum allowed scale.
 
@@ -89,15 +95,19 @@ class InteractiveViewer(LayoutControl):
     `boundary_margin` value.
 
     Raises:
-        ValueError: If it is not greater than `0` or less than [`max_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`
+            or not less than or equal to [`max_scale`][(c).].
     """
 
-    interaction_end_friction_coefficient: Number = 0.0000135
+    interaction_end_friction_coefficient: Annotated[
+        Number,
+        V.gt(0),
+    ] = 0.0000135
     """
     Changes the deceleration behavior after a gesture.
 
     Raises:
-        ValueError: If it is less than or equal to `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     scale_factor: Number = 200
@@ -168,22 +178,9 @@ class InteractiveViewer(LayoutControl):
     Called when the user ends a pan or scale gesture.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.min_scale <= 0:
-            raise ValueError(f"min_scale must be greater than 0, got {self.min_scale}")
-        if self.max_scale <= 0:
-            raise ValueError(f"max_scale must be greater than 0, got {self.max_scale}")
-        if self.max_scale < self.min_scale:
-            raise ValueError(
-                "max_scale must be greater than or equal to min_scale, "
-                f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
-            )
-        if self.interaction_end_friction_coefficient <= 0:
-            raise ValueError(
-                "interaction_end_friction_coefficient must be greater than 0, "
-                f"got {self.interaction_end_friction_coefficient}"
-            )
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.fields_ge("max_scale", "min_scale"),
+    )
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """

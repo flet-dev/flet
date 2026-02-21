@@ -1,5 +1,6 @@
-from typing import Optional, Union
+from typing import ClassVar, Optional, Union
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -95,7 +96,9 @@ class TextSpan(Control):
     Called when a mouse pointer has exited this span.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.text is None and self.semantics_label is not None:
-            raise ValueError("semantics_label can be set only when text is not None")
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.text is not None or ctrl.semantics_label is None,
+            message="semantics_label can be set only when text is not None",
+        ),
+    )

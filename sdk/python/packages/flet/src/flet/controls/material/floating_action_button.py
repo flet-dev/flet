@@ -1,5 +1,6 @@
-from typing import Optional, Union
+from typing import Annotated, ClassVar, Optional, Union
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -86,54 +87,69 @@ class FloatingActionButton(LayoutControl):
     Defines how the [`content`][(c).] is clipped.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button.
 
     Defaults to `6`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    disabled_elevation: Optional[Number] = None
+    disabled_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when disabled.
 
-    Defaults to the same value as `elevation`.
+    Defaults to [`elevation`][(c).].
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    focus_elevation: Optional[Number] = None
+    focus_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when it has input focus.
 
     Defaults to `8`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    highlight_elevation: Optional[Number] = None
+    highlight_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when it is highlighted.
 
     Defaults to `12`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    hover_elevation: Optional[Number] = None
+    hover_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button it is enabled and being hovered over.
 
     Defaults to `8`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     hover_color: Optional[ColorValue] = None
@@ -172,38 +188,14 @@ class FloatingActionButton(LayoutControl):
     Called when a user clicks this button.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError(
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.icon
+            or isinstance(ctrl.content, str)
+            or (isinstance(ctrl.content, Control) and ctrl.content.visible),
+            message=(
                 "at minimum, icon or a content (string or visible Control) "
                 "must be provided"
-            )
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if self.disabled_elevation is not None and self.disabled_elevation < 0:
-            raise ValueError(
-                "disabled_elevation must be greater than or equal to 0, "
-                f"got {self.disabled_elevation}"
-            )
-        if self.focus_elevation is not None and self.focus_elevation < 0:
-            raise ValueError(
-                "focus_elevation must be greater than or equal to 0, "
-                f"got {self.focus_elevation}"
-            )
-        if self.highlight_elevation is not None and self.highlight_elevation < 0:
-            raise ValueError(
-                "highlight_elevation must be greater than or equal to 0, "
-                f"got {self.highlight_elevation}"
-            )
-        if self.hover_elevation is not None and self.hover_elevation < 0:
-            raise ValueError(
-                "hover_elevation must be greater than or equal to 0, "
-                f"got {self.hover_elevation}"
-            )
+            ),
+        ),
+    )

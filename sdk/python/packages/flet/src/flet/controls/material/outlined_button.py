@@ -1,5 +1,6 @@
-from typing import Optional, Union
+from typing import ClassVar, Optional, Union
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -101,14 +102,15 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     Called when this button has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError("at minimum, icon or a visible content must be provided")
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.icon
+            or isinstance(ctrl.content, str)
+            or (isinstance(ctrl.content, Control) and ctrl.content.visible),
+            message="at minimum, icon or content (string or visible Control) "
+            "must be provided",
+        ),
+    )
 
     async def focus(self):
         """Requests focus for this control."""

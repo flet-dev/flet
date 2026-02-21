@@ -1,6 +1,7 @@
 from dataclasses import field
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.animation import Animation, AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -67,14 +68,15 @@ class CupertinoAlertDialog(DialogControl):
     If that is also `None`, the default is `Colors.BLACK_54`.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            (isinstance(self.title, str) or self.title.visible)
-            or (self.content and self.content.visible)
-            or any(a.visible for a in self.actions)
-        ):
-            raise ValueError(
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: (isinstance(ctrl.title, str))
+            or (isinstance(ctrl.title, Control) and ctrl.title.visible)
+            or (ctrl.content is not None and ctrl.content.visible)
+            or any(action.visible for action in ctrl.actions),
+            message=(
                 "AlertDialog has nothing to display. Provide at minimum one of the "
                 "following: title, content, actions"
-            )
+            ),
+        ),
+    )

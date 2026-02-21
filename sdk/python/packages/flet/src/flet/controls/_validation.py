@@ -150,10 +150,6 @@ class V:
         Args:
             expected_type: Allowed runtime type(s).
             message: Optional custom error message/template.
-
-        Note:
-            `None` values are allowed only when the target field annotation
-            includes `None` (for example `Optional[T]`).
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:

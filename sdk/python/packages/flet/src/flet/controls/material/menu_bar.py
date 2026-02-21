@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
@@ -164,7 +165,9 @@ class MenuBar(Control):
     The menu bar style.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not any(c.visible for c in self.controls):
-            raise ValueError("MenuBar must have at minimum one visible control")
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: any(menu_control.visible for menu_control in ctrl.controls),
+            message="controls must contain at minimum one visible Control",
+        ),
+    )

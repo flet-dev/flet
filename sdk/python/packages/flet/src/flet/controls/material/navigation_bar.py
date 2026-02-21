@@ -1,7 +1,8 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import Border
@@ -189,15 +190,26 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     Called when selected destination changed.
     """
 
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: sum(
+                1 for destination in ctrl.destinations if destination.visible
+            )
+            >= 2,
+            message=(
+                lambda ctrl: "destinations must contain at minimum two visible "
+                f"Controls, got "
+                f"{sum(1 for destination in ctrl.destinations if destination.visible)}"
+            ),
+        ),
+    )
+
     def before_update(self):
         super().before_update()
         visible_destinations_count = len([d for d in self.destinations if d.visible])
-        if visible_destinations_count < 2:
-            raise ValueError(
-                "destinations must contain at minimum two visible controls, "
-                f"got {visible_destinations_count}"
-            )
-        if not (0 <= self.selected_index < visible_destinations_count):
+        if visible_destinations_count >= 2 and not (
+            0 <= self.selected_index < visible_destinations_count
+        ):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
                 f"Expected a value between 0 and {visible_destinations_count - 1} "

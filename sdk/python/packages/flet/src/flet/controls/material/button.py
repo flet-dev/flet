@@ -1,6 +1,7 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import ClassVar, Optional, Union
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -124,17 +125,19 @@ class Button(LayoutControl, AdaptiveControl):
     Called when the button loses focus.
     """
 
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.icon
+            or isinstance(ctrl.content, str)
+            or (isinstance(ctrl.content, Control) and ctrl.content.visible),
+            message=(
+                "at least icon or content (string or visible Control) must be provided"
+            ),
+        ),
+    )
+
     def before_update(self):
         super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError(
-                "At least icon or content (string or visible Control) must be provided"
-            )
-
         if (
             self.style is not None
             or self.color is not None

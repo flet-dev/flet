@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationStyle
@@ -54,6 +55,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     A single-line ListTile with an expansion arrow icon that expands or collapses the \
     tile to reveal or hide its controls.
 
+    Example:
     ```python
     ft.ExpansionTile(
         width=400,
@@ -68,14 +70,17 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     ```
     """
 
-    title: StrOrControl
+    title: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     A Control to display as primary content of this tile.
 
     Typically a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If it is neither a string nor a visible Control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     controls: Optional[list[Control]] = None
@@ -338,13 +343,14 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     representing the [`expanded`][(c).] state of the tile after the change.
     """
 
-    def before_update(self):
-        super().before_update()
-        if isinstance(self.title, Control) and not self.title.visible:
-            raise ValueError("title must be visible")
-        if self.expanded_cross_axis_alignment == CrossAxisAlignment.BASELINE:
-            raise ValueError(
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.expanded_cross_axis_alignment
+            != CrossAxisAlignment.BASELINE,
+            message=(
                 "expanded_cross_axis_alignment cannot be CrossAxisAlignment.BASELINE "
                 "since the expanded controls are aligned in a column, not a row. "
                 "Try aligning the controls differently."
-            )
+            ),
+        ),
+    )

@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -19,18 +20,27 @@ __all__ = ["DropdownM2", "Option"]
 @control("Option")
 class Option(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else a \
-    `ValueError` will be raised.
+    Represents an item in a dropdown.
     """
 
     key: Optional[str] = None
     """
-    Option's key. If not specified `text` will be used as fallback.
+    Option's key.
+
+    If not specified [`text`][(c).] will be used as fallback.
+
+    Raises:
+        ValueError: If neither `key` nor [`text`][(c).] is provided.
     """
 
     text: Optional[str] = None
     """
-    Option's display text. If not specified `key` will be used as fallback.
+    Option's display text.
+
+    If not specified [`key`][(c).] will be used as fallback.
+
+    Raises:
+        ValueError: If neither [`key`][(c).] nor `text` is provided.
     """
 
     content: Optional[Control] = None
@@ -56,10 +66,12 @@ class Option(Control):
     Called when this option is clicked.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.key is None and self.text is None:
-            raise ValueError("key or text must be specified")
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: ctrl.key is not None or ctrl.text is not None,
+            message="key or text must be specified",
+        ),
+    )
 
 
 @control("DropdownM2")
@@ -69,6 +81,7 @@ class DropdownM2(FormFieldControl):
     currently selected item as well as an arrow that opens a menu for selecting \
     another item.
 
+    Example:
     ```python
     ft.DropdownM2(
         width=220,

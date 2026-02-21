@@ -1,7 +1,8 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
+from flet.controls._validation import V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadius, BorderRadiusValue
@@ -85,15 +86,17 @@ class CupertinoButton(LayoutControl):
     The background color of this button when disabled.
     """
 
-    opacity_on_click: Number = 0.4
+    opacity_on_click: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 0.4
     """
     Defines the opacity of the button when it is clicked.
 
     When not pressed, the button has an opacity of `1.0`.
 
     Raises:
-        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
-            and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     min_size: Optional[Size] = None
@@ -177,14 +180,6 @@ class CupertinoButton(LayoutControl):
     """
     Called when this button loses focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0 <= self.opacity_on_click <= 1):
-            raise ValueError(
-                "opacity_on_click must be between 0 and 1 inclusive, "
-                f"got {self.opacity_on_click}"
-            )
 
     async def focus(self):
         """Requests focus for this control."""

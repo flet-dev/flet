@@ -1,6 +1,7 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -31,7 +32,10 @@ class PageView(LayoutControl):
     A list of controls to display, one per page, in the order they should appear.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[
+        int,
+        V.ge(0),
+    ] = 0
     """
     The zero-based index of the currently visible page.
 
@@ -39,7 +43,7 @@ class PageView(LayoutControl):
     jumps to the specified page without animation.
 
     Raises:
-        ValueError: If it is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     keep_page: bool = True
@@ -68,7 +72,10 @@ class PageView(LayoutControl):
     when `reverse` is `True`.
     """
 
-    viewport_fraction: Number = 1.0
+    viewport_fraction: Annotated[
+        Number,
+        V.gt(0),
+    ] = 1.0
     """
     The fraction of the viewport that each page should occupy in the
     scrolling direction (see [`horizontal`][(c).]).
@@ -76,7 +83,7 @@ class PageView(LayoutControl):
     For example, `1.0` (default), means each page fills the viewport.
 
     Raises:
-        ValueError: If it is less than or equal to `0.0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     snap: bool = True
@@ -127,19 +134,6 @@ class PageView(LayoutControl):
     The [`data`][flet.Event.] property of the event argument contains
     the index of the new page.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.selected_index < 0:
-            raise ValueError(
-                f"selected_index must be greater than or equal to 0, "
-                f"got {self.selected_index}"
-            )
-        if self.viewport_fraction <= 0:
-            raise ValueError(
-                f"viewport_fraction must be greater than 0, "
-                f"got {self.viewport_fraction}"
-            )
 
     async def go_to_page(
         self,

@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -28,6 +29,7 @@ class Banner(DialogControl):
     persistent and non-modal, allowing the user to either ignore them or interact with
     them at any time.
 
+    Example:
     ```python
     banner = ft.Banner(
         leading=ft.Icon(ft.Icons.INFO_OUTLINED, color=ft.Colors.PRIMARY),
@@ -40,7 +42,10 @@ class Banner(DialogControl):
     ```
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The content of this banner.
 
@@ -115,12 +120,15 @@ class Banner(DialogControl):
     The color of the divider.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this banner.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     margin: Optional[MarginValue] = None
@@ -143,15 +151,9 @@ class Banner(DialogControl):
     Called when this banner is shown or made visible for the first time.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if isinstance(self.content, Control) and not self.content.visible:
-            raise ValueError("content must be visible")
-        if not any(a.visible for a in self.actions):
-            raise ValueError(
-                "actions must contain at minimum one visible action Control"
-            )
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: any(action.visible for action in ctrl.actions),
+            message="actions must contain at minimum one visible Control",
+        ),
+    )

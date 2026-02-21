@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Annotated, Optional
+from typing import Annotated, ClassVar, Optional
 
-from flet.controls._validation import V
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -106,7 +106,10 @@ class DataCell(Control):
     The data for a cell of a [`DataTable`][flet.].
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The content of this cell.
 
@@ -122,8 +125,7 @@ class DataCell(Control):
         [`Stack`][flet.], which have a `controls` property.
 
     Raises:
-        ValueError: If the [`content`][(c).] is neither a string nor a visible
-            control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     placeholder: bool = False
@@ -196,11 +198,6 @@ class DataCell(Control):
         attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
     """
 
-    def before_update(self):
-        super().before_update()
-        if isinstance(self.content, Control) and not self.content.visible:
-            raise ValueError("content must be visible")
-
 
 @control("DataRow")
 class DataRow(Control):
@@ -220,8 +217,7 @@ class DataRow(Control):
         There must be exactly as many cells as there are columns in the table.
 
     Raises:
-        ValueError: If [`cells`][(c).] does not contain at least one visible
-            [`DataCell`][flet.].
+        ValueError: If it does not contain at least one visible [`DataCell`][flet.].
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
@@ -282,10 +278,12 @@ class DataRow(Control):
     def __contains__(self, item):
         return item in self.cells
 
-    def before_update(self):
-        super().before_update()
-        if not any(cell.visible for cell in self.cells):
-            raise ValueError("cells must contain at minimum one visible DataCell")
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: any(cell.visible for cell in ctrl.cells),
+            message="cells must contain at minimum one visible DataCell",
+        ),
+    )
 
 
 @control("DataTable")
@@ -293,6 +291,7 @@ class DataTable(LayoutControl):
     """
     A Material Design data table.
 
+    Example:
     ```python
     ft.DataTable(
         columns=[
@@ -430,12 +429,8 @@ class DataTable(LayoutControl):
 
     Defaults to `48.0`.
 
-    Note:
-        Must be less than or equal to [`data_row_max_height`][(c).].
-
     Raises:
-        ValueError: If [`data_row_min_height`][(c).] is greater than
-            [`data_row_max_height`][(c).].
+        ValueError: If it is not less than or equal to [`data_row_max_height`][(c).].
     """
 
     data_row_max_height: Optional[Number] = None
@@ -446,12 +441,8 @@ class DataTable(LayoutControl):
 
     Defaults to `48.0`.
 
-    Note:
-        Must be greater than or equal to [`data_row_min_height`][(c).].
-
     Raises:
-        ValueError: If [`data_row_max_height`][(c).] is less than
-            [`data_row_min_height`][(c).].
+        ValueError: If it is not greater than or equal to [`data_row_min_height`][(c).].
     """
 
     data_text_style: Optional[TextStyle] = None
@@ -469,15 +460,15 @@ class DataTable(LayoutControl):
     The background gradient of this table.
     """
 
-    divider_thickness: Number = 1.0
+    divider_thickness: Annotated[
+        Number,
+        V.ge(0),
+    ] = 1.0
     """
     The width of the divider that appears between [`rows`][(c).].
 
-    Note:
-        Must be greater than or equal to zero.
-
     Raises:
-        ValueError: If [`divider_thickness`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
@@ -532,6 +523,10 @@ class DataTable(LayoutControl):
     def __contains__(self, item):
         return item in self.columns + self.rows
 
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.fields_le("data_row_min_height", "data_row_max_height"),
+    )
+
     def before_update(self):
         super().before_update()
         visible_columns_count = len(
@@ -549,20 +544,6 @@ class DataTable(LayoutControl):
             raise ValueError(
                 f"each visible DataRow must contain exactly as many visible DataCells "
                 f"as there are visible DataColumns ({visible_columns_count})"
-            )
-        if (
-            self.data_row_min_height is not None
-            and self.data_row_max_height is not None
-            and self.data_row_min_height > self.data_row_max_height
-        ):
-            raise ValueError(
-                f"data_row_min_height ({self.data_row_min_height}) must be less than "
-                f"or equal to data_row_max_height ({self.data_row_max_height})"
-            )
-        if self.divider_thickness is not None and self.divider_thickness < 0:
-            raise ValueError(
-                f"divider_thickness must be greater than or equal to 0, "
-                f"got {self.divider_thickness}"
             )
         if self.sort_column_index is not None and not (
             0 <= self.sort_column_index < visible_columns_count

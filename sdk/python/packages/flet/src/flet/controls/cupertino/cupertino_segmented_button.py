@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -15,14 +16,15 @@ class CupertinoSegmentedButton(LayoutControl):
     """
     An iOS-style segmented button.
 
+    Example:
     ```python
     ft.CupertinoSegmentedButton(
+        selected_index=1,
         controls=[
             ft.Text("One"),
             ft.Text("Two"),
             ft.Text("Three"),
         ],
-        selected_index=1,
     )
     ```
     """
@@ -31,12 +33,8 @@ class CupertinoSegmentedButton(LayoutControl):
     """
     The list of segments to be displayed.
 
-    Note:
-        Must contain at least two visible Controls.
-
     Raises:
-        ValueError: If [`controls`][(c).] does not contain at least two visible
-            controls.
+        ValueError: If it does not contain at least two visible `Control`s.
     """
 
     selected_index: int = 0
@@ -99,15 +97,22 @@ class CupertinoSegmentedButton(LayoutControl):
     clicked.
     """
 
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.ensure(
+            lambda ctrl: sum(1 for segment in ctrl.controls if segment.visible) >= 2,
+            message=(
+                lambda ctrl: "controls must contain at minimum two visible Controls, "
+                f"got {sum(1 for segment in ctrl.controls if segment.visible)}"
+            ),
+        ),
+    )
+
     def before_update(self):
         super().before_update()
         visible_controls_count = len([c for c in self.controls if c.visible])
-        if visible_controls_count < 2:
-            raise ValueError(
-                f"controls must contain at minimum two visible Controls, "
-                f"got {visible_controls_count}"
-            )
-        if not (0 <= self.selected_index < visible_controls_count):
+        if visible_controls_count >= 2 and not (
+            0 <= self.selected_index < visible_controls_count
+        ):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
                 f"Expected a value between 0 and {visible_controls_count - 1}, "
