@@ -435,6 +435,7 @@ nav:
           - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
+          - RotatedBox: controls/rotatedbox.md
           - Row: controls/row.md
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md

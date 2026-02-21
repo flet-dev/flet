@@ -129,6 +129,7 @@ from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
 from flet.controls.core.responsive_row import ResponsiveRow
+from flet.controls.core.rotated_box import RotatedBox
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
@@ -939,6 +940,7 @@ __all__ = [
     "ResponsiveRowBreakpoint",
     "Rotate",
     "RotateValue",
+    "RotatedBox",
     "RoundedRectangleBorder",
     "RouteChangeEvent",
     "RouteUrlStrategy",
