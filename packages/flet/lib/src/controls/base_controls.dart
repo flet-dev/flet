@@ -278,21 +278,13 @@ Widget _fractionalTranslate({
   required bool transformHitTests,
   required FilterQuality? filterQuality,
 }) {
-  final translated = FractionalTranslation(
+  // FractionalTranslation preserves existing offset semantics:
+  // translation values are scaled by the child's laid out size.
+  // `filterQuality` does not apply here because no bitmap transform is used.
+  return FractionalTranslation(
     translation: offset,
     transformHitTests: transformHitTests,
     child: child,
-  );
-
-  if (filterQuality == null) {
-    return translated;
-  }
-
-  return Transform.translate(
-    offset: Offset.zero,
-    transformHitTests: transformHitTests,
-    filterQuality: filterQuality,
-    child: translated,
   );
 }
 
