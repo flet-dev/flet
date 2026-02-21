@@ -50,4 +50,10 @@ If you need this feature when packaging a desktop app using
 --8<-- "{{ examples }}/semantics_debugger.py"
 ```
 
+### Get device locales
+
+```python
+--8<-- "{{ examples }}/device_locale.py"
+```
+
 {{ class_members(class_name) }}

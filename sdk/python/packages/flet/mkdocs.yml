@@ -922,6 +922,7 @@ nav:
               - KeyDownEvent: types/keydownevent.md
               - KeyRepeatEvent: types/keyrepeatevent.md
               - KeyUpEvent: types/keyupevent.md
+              - LocaleChangeEvent: types/localechangeevent.md
               - LoginEvent: types/loginevent.md
               - LongPressEndEvent: types/longpressendevent.md
               - LongPressStartEvent: types/longpressstartevent.md

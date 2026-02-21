@@ -65,6 +65,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
   bool _keyboardHandlerSubscribed = false;
+  List<Locale>? _locales;
   String? _prevViewRoutes;
   final Set<String> _pendingPoppedViewRoutes = <String>{};
   final Set<String> _sentViewPopEventsForRoutes = <String>{};
@@ -149,6 +150,25 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   @override
   void didChangeMetrics() {
     _updateMultiViews();
+  }
+
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    super.didChangeLocales(locales);
+
+    final effectiveLocales =
+        locales ?? WidgetsBinding.instance.platformDispatcher.locales;
+    final nextLocales = List<Locale>.unmodifiable(effectiveLocales);
+    if (_locales != null &&
+        const ListEquality<Locale>().equals(_locales!, nextLocales)) {
+      return;
+    }
+
+    _locales = nextLocales;
+    widget.control.triggerEvent(
+      'locale_change',
+      {'locales': nextLocales.map((l) => l.toMap()).toList(growable: false)},
+    );
   }
 
   @override

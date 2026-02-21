@@ -1,7 +1,10 @@
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/services.dart';
-import 'enums.dart';
+import 'dart:ui';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flet/src/utils/locale.dart';
+import 'package:flutter/services.dart';
+
+import 'enums.dart';
 import 'platform.dart';
 
 /// Returns device information as a Map.
@@ -10,10 +13,15 @@ Future<Map<String, dynamic>> getDeviceInfo() async {
   return deviceInfo.asMap();
 }
 
+List<Map<String, String?>> getDeviceLocales() =>
+    PlatformDispatcher.instance.locales
+        .map((locale) => locale.toMap())
+        .toList();
+
 extension DeviceInfoExtension on BaseDeviceInfo {
   Map<String, dynamic> asMap() {
     var deviceInfo = this;
-
+    final deviceLocales = getDeviceLocales();
     if (isWebPlatform()) {
       deviceInfo = (deviceInfo as WebBrowserInfo);
       return {
@@ -32,6 +40,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
         "vendor_sub": deviceInfo.vendorSub,
         "max_touch_points": deviceInfo.maxTouchPoints,
         "hardware_concurrency": deviceInfo.hardwareConcurrency,
+        "locales": deviceLocales,
       };
     } else {
       if (isAndroidMobile()) {
@@ -71,6 +80,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
             'preview_sdk': deviceInfo.version.previewSdkInt,
             'security_patch': deviceInfo.version.securityPatch,
           },
+          "locales": deviceLocales,
         };
       } else if (isIOSMobile()) {
         deviceInfo = (deviceInfo as IosDeviceInfo);
@@ -95,6 +105,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
             "version": deviceInfo.utsname.version,
           },
           "identifier_for_vendor": deviceInfo.identifierForVendor,
+          "locales": deviceLocales,
         };
       } else if (isLinuxDesktop()) {
         deviceInfo = (deviceInfo as LinuxDeviceInfo);
@@ -110,6 +121,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
           "variant": deviceInfo.variant,
           "variant_id": deviceInfo.variantId,
           "machine_id": deviceInfo.machineId,
+          "locales": deviceLocales,
         };
       } else if (isMacOSDesktop()) {
         deviceInfo = (deviceInfo as MacOsDeviceInfo);
@@ -128,6 +140,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
           "os_release": deviceInfo.osRelease,
           "patch_version": deviceInfo.patchVersion,
           "system_guid": deviceInfo.systemGUID,
+          "locales": deviceLocales,
         };
       } else if (isWindowsDesktop()) {
         deviceInfo = (deviceInfo as WindowsDeviceInfo);
@@ -157,6 +170,7 @@ extension DeviceInfoExtension on BaseDeviceInfo {
           "registered_owner": deviceInfo.registeredOwner,
           "release_id": deviceInfo.releaseId,
           "device_id": deviceInfo.deviceId,
+          "locales": deviceLocales,
         };
       }
       return {};
