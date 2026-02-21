@@ -486,12 +486,15 @@ from flet.controls.text_style import (
     TextThemeStyle,
 )
 from flet.controls.transform import (
+    Flip,
+    Matrix4,
     Offset,
     OffsetValue,
     Rotate,
     RotateValue,
     Scale,
     ScaleValue,
+    Transform,
 )
 from flet.controls.types import (
     AppLifecycleState,
@@ -788,6 +791,7 @@ __all__ = [
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
     "FletUnsupportedPlatformException",
+    "Flip",
     "FloatingActionButton",
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
@@ -856,6 +860,7 @@ __all__ = [
     "MarkdownCustomCodeTheme",
     "MarkdownExtensionSet",
     "MarkdownStyleSheet",
+    "Matrix4",
     "MenuBar",
     "MenuItemButton",
     "MenuStyle",
@@ -1041,6 +1046,7 @@ __all__ = [
     "TooltipTheme",
     "TooltipTriggerMode",
     "TooltipValue",
+    "Transform",
     "TransparentPointer",
     "UnderlineTabIndicator",
     "Url",
