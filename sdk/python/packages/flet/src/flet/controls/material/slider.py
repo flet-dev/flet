@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -250,18 +251,8 @@ class Slider(LayoutControl, AdaptiveControl):
     Called when this slider has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.max is not None and self.min > self.max:
-            raise ValueError(
-                f"min ({self.min}) must be less than or equal to max ({self.max})"
-            )
-        if self.value is not None and self.value < self.min:
-            raise ValueError(
-                f"value ({self.value}) must be greater than or "
-                f"equal to min ({self.min})"
-            )
-        if self.value is not None and self.value > self.max:
-            raise ValueError(
-                f"value ({self.value}) must be less than or equal to max ({self.max})"
-            )
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.fields_le("min", "max", allow_right_none=True),
+        V.fields_ge("value", "min", allow_left_none=True),
+        V.fields_le("value", "max", allow_left_none=True),
+    )

@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import ClassVar, Optional
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
@@ -145,13 +146,8 @@ class RangeSlider(LayoutControl):
     Called when the user is done selecting a new value for the slider.
     """
 
-    def before_update(self):
-        if self.max is not None and self.end_value > self.max:
-            raise ValueError("end_value must be less than or equal to max")
-
-        if self.min is not None and self.start_value < self.min:
-            raise ValueError("start_value must be greater than or equal to min")
-
-        if self.start_value > self.end_value:
-            raise ValueError("start_value must be less than or equal to end_value")
-        pass
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.fields_le("end_value", "max", allow_right_none=True),
+        V.fields_ge("start_value", "min", allow_right_none=True),
+        V.fields_le("start_value", "end_value"),
+    )

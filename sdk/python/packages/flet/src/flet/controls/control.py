@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
+from flet.controls._validation import V
 from flet.controls.base_control import BaseControl
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
@@ -17,7 +18,10 @@ class Control(BaseControl):
     Not meant to be used directly.
     """
 
-    expand: Optional[Union[bool, int]] = None
+    expand: Annotated[
+        Optional[Union[bool, int]],
+        V.instance_of((bool, int), allow_none=True),
+    ] = None
     """
     Specifies whether/how this control should expand to fill available space in its \
     parent layout.
@@ -75,7 +79,10 @@ class Control(BaseControl):
     ///
     """
 
-    opacity: Number = 1.0
+    opacity: Annotated[
+        Number,
+        V.between(0.0, 1.0, allow_none=False),
+    ] = 1.0
     """
     Defines the transparency of the control.
 
@@ -135,14 +142,3 @@ class Control(BaseControl):
     """
     Whether the text direction of the control should be right-to-left (RTL).
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0.0 <= self.opacity <= 1.0):
-            raise ValueError(
-                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-            )
-        if self.expand is not None and not isinstance(self.expand, (bool, int)):
-            raise ValueError(
-                f"expand must be of type bool or int, got {type(self.expand)}"
-            )

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, ClassVar, Optional, Union
 
+from flet.controls._validation import ControlRule, V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -268,6 +269,11 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
+def _validate_max_length(_control, _field_name: str, value: Optional[int]) -> None:
+    if value is not None and value != -1 and value <= 0:
+        raise ValueError("max_length must be either equal to -1 or greater than 0")
+
+
 @control("TextField")
 class TextField(FormFieldControl, AdaptiveControl):
     """
@@ -308,7 +314,10 @@ class TextField(FormFieldControl, AdaptiveControl):
     Whether this field can contain multiple lines of text.
     """
 
-    min_lines: Optional[int] = None
+    min_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+    ] = None
     """
     The minimum number of lines to occupy when the content spans fewer lines.
 
@@ -322,7 +331,10 @@ class TextField(FormFieldControl, AdaptiveControl):
             [`max_lines`][(c).] when both are set.
     """
 
-    max_lines: Optional[int] = None
+    max_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+    ] = None
     """
     The maximum number of lines to show at one time, wrapping if necessary.
 
@@ -333,16 +345,18 @@ class TextField(FormFieldControl, AdaptiveControl):
     instead.
 
     Raises:
-        ValueError: If [`max_lines`][(c).] is not positive or is less than
-            [`min_lines`][(c).].
+        ValueError: If it is not positive or is less than [`min_lines`][(c).].
     """
 
-    max_length: Optional[int] = None
+    max_length: Annotated[
+        Optional[int],
+        V.field(_validate_max_length),
+    ] = None
     """
     Limits a maximum number of characters that can be entered into TextField.
 
     Raises:
-        ValueError: If [`max_length`][(c).] is neither `-1` nor a positive integer.
+        ValueError: If it is neither `-1` nor a positive integer.
     """
 
     password: bool = False
@@ -606,6 +620,15 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
+    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+        V.fields_le(
+            "min_lines",
+            "max_lines",
+            allow_left_none=True,
+            allow_right_none=True,
+        ),
+    )
+
     def _migrate_state(self, other: BaseControl):
         super()._migrate_state(other)
         if (
@@ -617,22 +640,6 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.min_lines is not None and self.min_lines <= 0:
-            raise ValueError("min_lines must be greater than 0")
-        if self.max_lines is not None and self.max_lines <= 0:
-            raise ValueError("max_lines must be greater than 0")
-        if (
-            self.max_lines is not None
-            and self.min_lines is not None
-            and self.min_lines > self.max_lines
-        ):
-            raise ValueError("min_lines can't be greater than max_lines")
-        if (
-            self.max_length is not None
-            and self.max_length != -1
-            and self.max_length <= 0
-        ):
-            raise ValueError("max_length must be either equal to -1 or greater than 0")
         if (
             self.bgcolor is not None
             or self.fill_color is not None

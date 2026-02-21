@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue
 from flet.controls.layout_control import LayoutControl
@@ -58,7 +59,10 @@ class Icon(LayoutControl):
     The order of shadows matters for how transparency is blended.
     """
 
-    fill: Optional[Number] = None
+    fill: Annotated[
+        Optional[Number],
+        V.between(0.0, 1.0),
+    ] = None
     """
     The fill amount of the icon, between `0.0` (outline) and `1.0` (solid).
 
@@ -86,7 +90,10 @@ class Icon(LayoutControl):
     It allows precise visual adjustments without changing icon size.
     """
 
-    weight: Optional[Number] = None
+    weight: Annotated[
+        Optional[Number],
+        V.gt(0.0),
+    ] = None
     """
     The stroke weight (thickness) of the icon's lines.
 
@@ -97,7 +104,10 @@ class Icon(LayoutControl):
         ValueError: If [`weight`][(c).] is less than or equal to `0.0`.
     """
 
-    optical_size: Optional[Number] = None
+    optical_size: Annotated[
+        Optional[Number],
+        V.gt(0.0),
+    ] = None
     """
     Adjusts the icon's visual style for different sizes to maintain clarity and \
     balance.
@@ -116,19 +126,3 @@ class Icon(LayoutControl):
     Blend modes control how the icon's color interacts with the background.
     The default is normal blending (`SRC_OVER`).
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.fill is not None and not (0.0 <= self.fill <= 1.0):
-            raise ValueError(
-                f"fill must be between 0.0 and 1.0 inclusive, got {self.fill}"
-            )
-        if self.weight is not None and self.weight <= 0.0:
-            raise ValueError(
-                f"weight must be strictly greater than 0.0, got {self.weight}"
-            )
-        if self.optical_size is not None and self.optical_size <= 0.0:
-            raise ValueError(
-                f"optical_size must be strictly greater than 0.0, "
-                f"got {self.optical_size}"
-            )

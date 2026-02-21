@@ -4,6 +4,7 @@ import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overload
 
+from flet.controls._validation import validate_outbound
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.id_counter import ControlId
@@ -291,6 +292,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
+        validate_outbound(self)
 
         if frozen is not None:
             self._frozen = frozen
