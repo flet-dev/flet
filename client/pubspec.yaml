@@ -39,9 +39,6 @@ dependencies:
   flet_audio:
     path: ../sdk/python/packages/flet-audio/src/flutter/flet_audio
 
-  flet_camera:
-    path: ../sdk/python/packages/flet-camera/src/flutter/flet_camera
-
   flet_video:
     path: ../sdk/python/packages/flet-video/src/flutter/flet_video
 
@@ -54,6 +51,9 @@ dependencies:
 
   flet_audio_recorder:
     path: ../sdk/python/packages/flet-audio-recorder/src/flutter/flet_audio_recorder
+
+  flet_camera:
+    path: ../sdk/python/packages/flet-camera/src/flutter/flet_camera
 
   flet_charts:
     path: ../sdk/python/packages/flet-charts/src/flutter/flet_charts
