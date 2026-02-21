@@ -1,5 +1,5 @@
 import re
-from typing import Annotated
+from typing import Annotated, Optional
 
 import pytest
 
@@ -104,4 +104,28 @@ def test_default_control_message_is_used_when_message_is_omitted():
     _assert_value_error(
         control_instance,
         "Control validation failed.",
+    )
+
+
+def test_control_rule_auto_allows_none_for_optional_fields():
+    @control("AutoOptionalNoneControl")
+    class AutoOptionalNoneControl(BaseControl):
+        left: Optional[int] = None
+        right: int = 10
+        __outbound_rules__ = (V.fields_le("left", "right"),)
+
+    # `left` is Optional, so None is auto-allowed by `fields_le`.
+    AutoOptionalNoneControl()._before_update_safe()
+
+
+def test_control_rule_explicit_override_can_disallow_optional_none():
+    @control("OverrideOptionalNoneControl")
+    class OverrideOptionalNoneControl(BaseControl):
+        left: Optional[int] = None
+        right: int = 10
+        __outbound_rules__ = (V.fields_le("left", "right", allow_left_none=False),)
+
+    _assert_value_error(
+        OverrideOptionalNoneControl(),
+        "left (None) must be less than or equal to right (10)",
     )

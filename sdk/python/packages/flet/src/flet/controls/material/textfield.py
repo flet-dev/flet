@@ -621,12 +621,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
 
     __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.fields_le(
-            "min_lines",
-            "max_lines",
-            allow_left_none=True,
-            allow_right_none=True,
-        ),
+        V.fields_le("min_lines", "max_lines"),
     )
 
     def _migrate_state(self, other: BaseControl):

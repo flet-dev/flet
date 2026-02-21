@@ -252,7 +252,7 @@ class Slider(LayoutControl, AdaptiveControl):
     """
 
     __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.fields_le("min", "max", allow_right_none=True),
-        V.fields_ge("value", "min", allow_left_none=True),
-        V.fields_le("value", "max", allow_left_none=True),
+        V.fields_le("min", "max"),
+        V.fields_ge("value", "min"),
+        V.fields_le("value", "max"),
     )

@@ -147,7 +147,7 @@ class RangeSlider(LayoutControl):
     """
 
     __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.fields_le("end_value", "max", allow_right_none=True),
-        V.fields_ge("start_value", "min", allow_right_none=True),
+        V.fields_le("end_value", "max"),
+        V.fields_ge("start_value", "min"),
         V.fields_le("start_value", "end_value"),
     )

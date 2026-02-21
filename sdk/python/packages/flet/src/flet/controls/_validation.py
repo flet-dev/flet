@@ -7,12 +7,19 @@ The runtime calls `validate_outbound()` before patch serialization so invalid
 state is rejected on the Python side before reaching Dart.
 """
 
-from __future__ import annotations
-
 import sys
 from dataclasses import dataclass
 from functools import cache
-from typing import Annotated, Any, Callable, get_args, get_origin, get_type_hints
+from typing import (
+    Annotated,
+    Any,
+    Callable,
+    Optional,
+    Union,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 __all__ = [
     "ControlRule",
@@ -22,9 +29,9 @@ __all__ = [
 ]
 
 FieldCheck = Callable[[Any, str, Any], None]
-FieldMessage = str | Callable[[Any, str, Any], str]
+FieldMessage = Union[str, Callable[[Any, str, Any], str]]
 ControlCheck = Callable[[Any], None]
-ControlMessage = str | Callable[[Any], str]
+ControlMessage = Union[str, Callable[[Any], str]]
 ControlPredicate = Callable[[Any], bool]
 
 
@@ -75,7 +82,7 @@ def _resolve_control_message(message: ControlMessage, control: Any) -> str:
 
 
 def _format_expected_type(
-    expected_type: type[Any] | tuple[type[Any], ...],
+    expected_type: Union[type[Any], tuple[type[Any], ...]],
 ) -> str:
     """Format expected type(s) into a readable sentence fragment."""
     if not isinstance(expected_type, tuple):
@@ -112,7 +119,7 @@ class V:
     def ensure(
         predicate: ControlPredicate,
         *,
-        message: ControlMessage | None = None,
+        message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
         Build a generic control-level predicate rule.
@@ -133,10 +140,10 @@ class V:
 
     @staticmethod
     def instance_of(
-        expected_type: type[Any] | tuple[type[Any], ...],
+        expected_type: Union[type[Any], tuple[type[Any], ...]],
         *,
         allow_none: bool = False,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
         Validate a field value type with an optional custom error message.
@@ -167,7 +174,7 @@ class V:
         bound: Any,
         *,
         allow_none: bool = True,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
         Validate `value > bound`.
@@ -194,7 +201,7 @@ class V:
         bound: Any,
         *,
         allow_none: bool = True,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """Validate `value >= bound`."""
 
@@ -218,7 +225,7 @@ class V:
         bound: Any,
         *,
         allow_none: bool = True,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """Validate `value < bound`."""
 
@@ -239,7 +246,7 @@ class V:
         bound: Any,
         *,
         allow_none: bool = True,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """Validate `value <= bound`."""
 
@@ -263,7 +270,7 @@ class V:
         maximum: Any,
         *,
         allow_none: bool = True,
-        message: FieldMessage | None = None,
+        message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """Validate `minimum <= value <= maximum`."""
 
@@ -287,9 +294,9 @@ class V:
         left_field: str,
         right_field: str,
         *,
-        allow_left_none: bool = False,
-        allow_right_none: bool = False,
-        message: ControlMessage | None = None,
+        allow_left_none: Optional[bool] = None,
+        allow_right_none: Optional[bool] = None,
+        message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
         Validate `left_field > right_field` on a control instance.
@@ -297,17 +304,29 @@ class V:
         Args:
             left_field: Name of the field on the left side of the comparison.
             right_field: Name of the field on the right side of the comparison.
-            allow_left_none: If `True`, skip validation when left value is `None`.
-            allow_right_none: If `True`, skip validation when right value is `None`.
+            allow_left_none:
+                Controls left-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
+            allow_right_none:
+                Controls right-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
             message: Optional custom error text or formatter.
         """
 
         def _check(control: Any) -> None:
-            left_value = getattr(control, left_field)
-            right_value = getattr(control, right_field)
-            if left_value is None and allow_left_none:
-                return
-            if right_value is None and allow_right_none:
+            left_value, right_value, skip = _prepare_comparison_values(
+                control=control,
+                left_field=left_field,
+                right_field=right_field,
+                allow_left_none=allow_left_none,
+                allow_right_none=allow_right_none,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{left_field} ({left}) must be strictly greater than "
+                    f"{right_field} ({right})"
+                ),
+            )
+            if skip:
                 return
             if left_value <= right_value:
                 if message is not None:
@@ -324,9 +343,9 @@ class V:
         left_field: str,
         right_field: str,
         *,
-        allow_left_none: bool = False,
-        allow_right_none: bool = False,
-        message: ControlMessage | None = None,
+        allow_left_none: Optional[bool] = None,
+        allow_right_none: Optional[bool] = None,
+        message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
         Validate `left_field >= right_field` on a control instance.
@@ -334,17 +353,29 @@ class V:
         Args:
             left_field: Name of the field on the left side of the comparison.
             right_field: Name of the field on the right side of the comparison.
-            allow_left_none: If `True`, skip validation when left value is `None`.
-            allow_right_none: If `True`, skip validation when right value is `None`.
+            allow_left_none:
+                Controls left-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
+            allow_right_none:
+                Controls right-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
             message: Optional custom error text or formatter.
         """
 
         def _check(control: Any) -> None:
-            left_value = getattr(control, left_field)
-            right_value = getattr(control, right_field)
-            if left_value is None and allow_left_none:
-                return
-            if right_value is None and allow_right_none:
+            left_value, right_value, skip = _prepare_comparison_values(
+                control=control,
+                left_field=left_field,
+                right_field=right_field,
+                allow_left_none=allow_left_none,
+                allow_right_none=allow_right_none,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{left_field} ({left}) must be greater than or equal to "
+                    f"{right_field} ({right})"
+                ),
+            )
+            if skip:
                 return
             if left_value < right_value:
                 if message is not None:
@@ -361,9 +392,9 @@ class V:
         left_field: str,
         right_field: str,
         *,
-        allow_left_none: bool = False,
-        allow_right_none: bool = False,
-        message: ControlMessage | None = None,
+        allow_left_none: Optional[bool] = None,
+        allow_right_none: Optional[bool] = None,
+        message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
         Validate `left_field < right_field` on a control instance.
@@ -371,17 +402,29 @@ class V:
         Args:
             left_field: Name of the field on the left side of the comparison.
             right_field: Name of the field on the right side of the comparison.
-            allow_left_none: If `True`, skip validation when left value is `None`.
-            allow_right_none: If `True`, skip validation when right value is `None`.
+            allow_left_none:
+                Controls left-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
+            allow_right_none:
+                Controls right-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
             message: Optional custom error text or formatter.
         """
 
         def _check(control: Any) -> None:
-            left_value = getattr(control, left_field)
-            right_value = getattr(control, right_field)
-            if left_value is None and allow_left_none:
-                return
-            if right_value is None and allow_right_none:
+            left_value, right_value, skip = _prepare_comparison_values(
+                control=control,
+                left_field=left_field,
+                right_field=right_field,
+                allow_left_none=allow_left_none,
+                allow_right_none=allow_right_none,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{left_field} ({left}) must be strictly less than "
+                    f"{right_field} ({right})"
+                ),
+            )
+            if skip:
                 return
             if left_value >= right_value:
                 if message is not None:
@@ -398,9 +441,9 @@ class V:
         left_field: str,
         right_field: str,
         *,
-        allow_left_none: bool = False,
-        allow_right_none: bool = False,
-        message: ControlMessage | None = None,
+        allow_left_none: Optional[bool] = None,
+        allow_right_none: Optional[bool] = None,
+        message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
         Validate `left_field <= right_field` on a control instance.
@@ -408,17 +451,29 @@ class V:
         Args:
             left_field: Name of the field on the left side of the comparison.
             right_field: Name of the field on the right side of the comparison.
-            allow_left_none: If `True`, skip validation when left value is `None`.
-            allow_right_none: If `True`, skip validation when right value is `None`.
+            allow_left_none:
+                Controls left-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
+            allow_right_none:
+                Controls right-side `None` handling.
+                If `None`, infer from annotation (`Optional[...]` allows `None`).
             message: Optional custom error text or formatter.
         """
 
         def _check(control: Any) -> None:
-            left_value = getattr(control, left_field)
-            right_value = getattr(control, right_field)
-            if left_value is None and allow_left_none:
-                return
-            if right_value is None and allow_right_none:
+            left_value, right_value, skip = _prepare_comparison_values(
+                control=control,
+                left_field=left_field,
+                right_field=right_field,
+                allow_left_none=allow_left_none,
+                allow_right_none=allow_right_none,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{left_field} ({left}) must be less than or equal to "
+                    f"{right_field} ({right})"
+                ),
+            )
+            if skip:
                 return
             if left_value > right_value:
                 if message is not None:
@@ -453,6 +508,105 @@ def _get_declared_type_hints(cls: type[Any]) -> dict[str, Any]:
         type_hints = annotations
 
     return {name: type_hints.get(name, hint) for name, hint in annotations.items()}
+
+
+@cache
+def _get_effective_type_hints(cls: type[Any]) -> dict[str, Any]:
+    """
+    Resolve effective annotations for `cls`, including inherited fields.
+
+    The result is used for Optional/None inference in cross-field control rules.
+    """
+
+    module = sys.modules.get(cls.__module__)
+    globalns = module.__dict__ if module else None
+    try:
+        return get_type_hints(cls, globalns=globalns, include_extras=True)
+    except TypeError:
+        return get_type_hints(cls, globalns=globalns)
+    except Exception:
+        hints: dict[str, Any] = {}
+        for base in reversed(cls.__mro__):
+            hints.update(getattr(base, "__annotations__", {}))
+        return hints
+
+
+def _strip_annotated(annotation: Any) -> Any:
+    """
+    Remove `Annotated[...]` wrapper(s), returning the core annotation type.
+    """
+
+    while get_origin(annotation) is Annotated:
+        annotation = get_args(annotation)[0]
+    return annotation
+
+
+def _annotation_allows_none(annotation: Any) -> bool:
+    """
+    Return `True` if annotation contains `None` (for example `Optional[T]`).
+    """
+
+    annotation = _strip_annotated(annotation)
+    origin = get_origin(annotation)
+    if origin is Union:
+        return any(arg is type(None) for arg in get_args(annotation))
+    return False
+
+
+def _resolve_allow_none_for_field(
+    control_cls: type[Any], field_name: str, override: Optional[bool]
+) -> bool:
+    """
+    Resolve `None` allowance for a field.
+
+    - `override=True/False` forces behavior.
+    - `override=None` auto-detects from field type annotation (`Optional[...]`).
+    """
+
+    if override is not None:
+        return override
+    annotation = _get_effective_type_hints(control_cls).get(field_name)
+    if annotation is None:
+        return False
+    return _annotation_allows_none(annotation)
+
+
+def _prepare_comparison_values(
+    control: Any,
+    left_field: str,
+    right_field: str,
+    allow_left_none: Optional[bool],
+    allow_right_none: Optional[bool],
+    message: Optional[ControlMessage],
+    default_error: Callable[[Any, Any], str],
+) -> tuple[Any, Any, bool]:
+    """
+    Load and normalize values for a cross-field comparison.
+
+    Returns:
+        `(left_value, right_value, skip_validation)`.
+    """
+
+    left_value = getattr(control, left_field)
+    right_value = getattr(control, right_field)
+    left_none_allowed = _resolve_allow_none_for_field(
+        control.__class__, left_field, allow_left_none
+    )
+    right_none_allowed = _resolve_allow_none_for_field(
+        control.__class__, right_field, allow_right_none
+    )
+
+    if left_value is None and left_none_allowed:
+        return left_value, right_value, True
+    if right_value is None and right_none_allowed:
+        return left_value, right_value, True
+
+    if left_value is None or right_value is None:
+        if message is not None:
+            raise ValueError(_resolve_control_message(message, control))
+        raise ValueError(default_error(left_value, right_value))
+
+    return left_value, right_value, False
 
 
 @cache
