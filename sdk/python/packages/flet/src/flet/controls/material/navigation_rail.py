@@ -1,7 +1,8 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -64,7 +65,7 @@ class NavigationRailDestination(Control):
     not selected.
 
     To make the NavigationRail more accessible, consider choosing an icon with a stroked
-    and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon
+    and filled version, such as `Icons.CLOUD` and `Icons.CLOUD_QUEUE`. The icon
     should be set to the stroked version and `selected_icon` to the filled version.
     """
 
@@ -107,13 +108,13 @@ class NavigationRail(LayoutControl):
     ```python
     ft.NavigationRail(
         selected_index=0,
+        height=200,
+        width=100,
         destinations=[
             ft.NavigationRailDestination(icon=ft.Icons.STAR, label="Star"),
             ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.ADD),label="Add"),
             ft.NavigationRailDestination(icon=ft.Icons.DELETE, label=ft.Text("Delete")
         ],
-        height=200,
-        width=100,
     )
     ```
 
@@ -127,14 +128,17 @@ class NavigationRail(LayoutControl):
     The value must be a list of two or more `NavigationRailDestination` instances.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     Controls the size of the shadow below the NavigationRail.
 
     Defaults to `0.0`.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     selected_index: Optional[int] = None
@@ -153,8 +157,8 @@ class NavigationRail(LayoutControl):
 
     The rail will implicitly animate between the extended and normal state.
 
-    If the rail is going to be in the extended state, then the `label_type` must be set
-    to `none`.
+    If the rail is going to be in the extended state, then
+    [`label_type`][(c).] should be set to [`NavigationRailLabelType.NONE`][flet.]
     """
 
     label_type: Optional[NavigationRailLabelType] = None
@@ -169,7 +173,7 @@ class NavigationRail(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets the color of the Container that holds all of the NavigationRail's contents.
+    Sets the color of the Container that holds all of this NavigationRail's contents.
     """
 
     indicator_color: Optional[ColorValue] = None
@@ -181,7 +185,7 @@ class NavigationRail(LayoutControl):
     """
     The shape of the navigation rail's indicator.
 
-    Defaults to `StadiumBorder()`.
+    Defaults to [`StadiumBorder()`][flet.StadiumBorder].
     """
 
     leading: Optional[Control] = None
@@ -204,7 +208,10 @@ class NavigationRail(LayoutControl):
     rendered when `extended=True`.
     """
 
-    min_width: Optional[Number] = None
+    min_width: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The smallest possible width for the rail regardless of the destination's icon or \
     label size.
@@ -213,20 +220,24 @@ class NavigationRail(LayoutControl):
 
     This value also defines the min width and min height of the destinations.
 
-    To make a compact rail, set this to `56` and use `label_type='none'`.
+    To make a compact rail, set this to `56` and set
+    [`label_type`][(c).] to [`NavigationRailLabelType.NONE`][flet.]
 
     Raises:
-        ValueError: If [`min_width`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    min_extended_width: Optional[Number] = None
+    min_extended_width: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The final width when the animation is complete for setting `extended` to `True`.
 
     Defaults to `256`.
 
     Raises:
-        ValueError: If [`min_extended_width`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     group_alignment: Optional[Number] = None
@@ -280,12 +291,3 @@ class NavigationRail(LayoutControl):
     """
     Called when selected destination changed.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError("elevation cannot be negative")
-        if self.min_width is not None and self.min_width < 0:
-            raise ValueError("min_width cannot be negative")
-        if self.min_extended_width is not None and self.min_extended_width < 0:
-            raise ValueError("min_extended_width cannot be negative")
