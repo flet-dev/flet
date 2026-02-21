@@ -205,6 +205,39 @@ class V:
         return FieldRule(_check)
 
     @staticmethod
+    def str_or_visible_control(
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a field value is either a string or a visible control.
+
+        Args:
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (
+                    f"{field_name} must be a string or a visible Control"
+                ),
+            ):
+                return
+            if isinstance(value, str) or getattr(value, "visible", False):
+                return
+            if message is not None:
+                raise ValueError(
+                    _resolve_field_message(message, control, field_name, value)
+                )
+            raise ValueError(f"{field_name} must be a string or a visible Control")
+
+        return FieldRule(_check)
+
+    @staticmethod
     def gt(
         bound: Any,
         *,

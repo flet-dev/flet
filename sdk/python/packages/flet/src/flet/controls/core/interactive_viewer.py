@@ -1,6 +1,7 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -24,14 +25,15 @@ class InteractiveViewer(LayoutControl):
     Allows you to pan, zoom, and rotate its [`content`][(c).].
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The `Control` to be transformed.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     pan_enabled: bool = True
@@ -168,8 +170,6 @@ class InteractiveViewer(LayoutControl):
 
     def before_update(self):
         super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
         if self.min_scale <= 0:
             raise ValueError(f"min_scale must be greater than 0, got {self.min_scale}")
         if self.max_scale <= 0:

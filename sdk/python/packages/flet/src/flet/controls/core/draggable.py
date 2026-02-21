@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -19,7 +20,10 @@ class Draggable(Control):
     given the opportunity to complete drag-and-drop flow.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display when the draggable is not being dragged.
 
@@ -27,7 +31,7 @@ class Draggable(Control):
     [`content_when_dragging`][(c).] is displayed instead.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     group: str = "default"
@@ -103,8 +107,6 @@ class Draggable(Control):
 
     def before_update(self):
         super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
         if self.max_simultaneous_drags is not None and self.max_simultaneous_drags < 0:
             raise ValueError(
                 f"max_simultaneous_drags must be greater than or equal to 0, "

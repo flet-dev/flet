@@ -98,23 +98,6 @@ def test_field_rule_auto_allows_none_for_optional_fields():
     OptionalFieldRuleControl()._before_update_safe()
 
 
-def test_visible_control_rule_uses_default_field_name_message():
-    @control("VisibleControlMessageControl")
-    class VisibleControlMessageControl(BaseControl):
-        child: Annotated[FletControl, V.visible_control()]
-
-    control_instance = VisibleControlMessageControl(child=ft.Text(visible=False))
-    _assert_value_error(control_instance, "child must be visible")
-
-
-def test_visible_control_rule_auto_allows_none_for_optional_field():
-    @control("OptionalVisibleControlRuleControl")
-    class OptionalVisibleControlRuleControl(BaseControl):
-        child: Annotated[Optional[FletControl], V.visible_control()] = None
-
-    OptionalVisibleControlRuleControl()._before_update_safe()
-
-
 def test_default_control_message_is_used_when_message_is_omitted():
     @control("DefaultControlMessageControl")
     class DefaultControlMessageControl(BaseControl):
@@ -153,3 +136,37 @@ def test_control_rule_none_is_rejected_for_non_optional_fields():
         control_instance,
         "left (None) must be less than or equal to right (10)",
     )
+
+
+def test_visible_control_rule_uses_default_field_name_message():
+    @control("VisibleControlMessageControl")
+    class VisibleControlMessageControl(BaseControl):
+        child: Annotated[FletControl, V.visible_control()]
+
+    control_instance = VisibleControlMessageControl(child=ft.Text(visible=False))
+    _assert_value_error(control_instance, "child must be visible")
+
+
+def test_visible_control_rule_auto_allows_none_for_optional_field():
+    @control("OptionalVisibleControlRuleControl")
+    class OptionalVisibleControlRuleControl(BaseControl):
+        child: Annotated[Optional[FletControl], V.visible_control()] = None
+
+    OptionalVisibleControlRuleControl()._before_update_safe()
+
+
+def test_str_or_visible_control_rule_defaults_and_optional_none():
+    @control("StringOrVisibleControlRuleControl")
+    class StringOrVisibleControlRuleControl(BaseControl):
+        value: Annotated[FletControl, V.str_or_visible_control()]
+
+    _assert_value_error(
+        StringOrVisibleControlRuleControl(value=ft.Text(visible=False)),
+        "value must be a string or a visible Control",
+    )
+
+    @control("OptionalStringOrVisibleControlRuleControl")
+    class OptionalStringOrVisibleControlRuleControl(BaseControl):
+        value: Annotated[Optional[FletControl], V.str_or_visible_control()] = None
+
+    OptionalStringOrVisibleControlRuleControl()._before_update_safe()

@@ -1,5 +1,6 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -26,7 +27,10 @@ class Pagelet(LayoutControl, AdaptiveControl):
     such as demos and galleries.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     A child Control contained by the Pagelet.
 
@@ -34,7 +38,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
     available space between the app bar and the bottom of the Pagelet.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
@@ -98,11 +102,6 @@ class Pagelet(LayoutControl, AdaptiveControl):
     """
     Background color of the Pagelet.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
 
     async def show_drawer(self):
         """

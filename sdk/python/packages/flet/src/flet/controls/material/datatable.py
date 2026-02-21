@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -52,7 +53,10 @@ class DataColumn(Control):
     Column configuration for a [`DataTable`][flet.].
     """
 
-    label: StrOrControl
+    label: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The column heading.
 
@@ -61,8 +65,7 @@ class DataColumn(Control):
     or a combination of both in a [`Row`][flet.].
 
     Raises:
-        ValueError: If the [`label`][(c).] is neither a string nor
-            a visible control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     numeric: bool = False
@@ -95,14 +98,6 @@ class DataColumn(Control):
     def init(self):
         super().init()
         self._internals["skip_properties"] = ["tooltip"]
-
-    def before_update(self):
-        super().before_update()
-        if not (
-            isinstance(self.label, str)
-            or (isinstance(self.label, Control) and self.label.visible)
-        ):
-            raise ValueError("label must a string or a visible control")
 
 
 @control("DataCell")

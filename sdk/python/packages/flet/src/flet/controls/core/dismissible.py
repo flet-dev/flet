@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -75,14 +76,15 @@ class Dismissible(LayoutControl, AdaptiveControl):
     over the specified [`resize_duration`][(c).].
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control that is being dismissed.
 
-    Must be visible.
-
     Raises:
-        ValueError: If the [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     background: Optional[Control] = None
@@ -184,8 +186,6 @@ class Dismissible(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
         if (self.secondary_background and self.secondary_background.visible) and not (
             self.background and self.background.visible
         ):

@@ -1,7 +1,8 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -162,14 +163,17 @@ class SnackBar(DialogControl):
 
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The primary content of the snack bar.
 
     Typically a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If [`content`][(c).] is not a string or visible control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     behavior: Optional[SnackBarBehavior] = None
@@ -315,11 +319,6 @@ class SnackBar(DialogControl):
 
     def before_update(self):
         super().before_update()
-        if not (
-            isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError("content must be a string or a visible control")
         if self.action_overflow_threshold is not None and not (
             0 <= self.action_overflow_threshold <= 1
         ):

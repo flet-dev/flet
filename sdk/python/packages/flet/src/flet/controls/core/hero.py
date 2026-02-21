@@ -1,5 +1,6 @@
-from typing import Union
+from typing import Annotated, Union
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
@@ -31,7 +32,10 @@ class Hero(LayoutControl):
         ValueError: If not provided or not of type `str`, `int`, `float`, or `bool`.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display and animate.
 
@@ -53,5 +57,3 @@ class Hero(LayoutControl):
             raise ValueError(
                 f"tag must be str, int, float, or bool, got {type(self.tag)}"
             )
-        if not self.content.visible:
-            raise ValueError("content must be visible")
