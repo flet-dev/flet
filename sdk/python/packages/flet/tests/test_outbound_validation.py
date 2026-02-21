@@ -93,6 +93,14 @@ def test_default_field_message_is_used_when_message_is_omitted():
     )
 
 
+def test_field_rule_auto_allows_none_for_optional_fields():
+    @control("OptionalFieldRuleControl")
+    class OptionalFieldRuleControl(BaseControl):
+        value: Annotated[Optional[int], V.gt(0)] = None
+
+    OptionalFieldRuleControl()._before_update_safe()
+
+
 def test_default_control_message_is_used_when_message_is_omitted():
     @control("DefaultControlMessageControl")
     class DefaultControlMessageControl(BaseControl):

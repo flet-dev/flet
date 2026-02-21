@@ -142,7 +142,6 @@ class V:
     def instance_of(
         expected_type: Union[type[Any], tuple[type[Any], ...]],
         *,
-        allow_none: bool = False,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
@@ -150,12 +149,17 @@ class V:
 
         Args:
             expected_type: Allowed runtime type(s).
-            allow_none: Skip validation when the value is `None`.
             message: Optional custom error message/template.
+
+        Note:
+            `None` values are allowed only when the target field annotation
+            includes `None` (for example `Optional[T]`).
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if value is None and _resolve_allow_none_for_field(
+                control.__class__, field_name, None
+            ):
                 return
             if not isinstance(value, expected_type):
                 if message is None:
@@ -173,17 +177,23 @@ class V:
     def gt(
         bound: Any,
         *,
-        allow_none: bool = True,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
         Validate `value > bound`.
-
-        Default message uses "strictly greater than".
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be strictly greater than {bound}, "
+                    f"got {current_value}"
+                ),
+            ):
                 return
             if value <= bound:
                 if message is not None:
@@ -200,13 +210,23 @@ class V:
     def ge(
         bound: Any,
         *,
-        allow_none: bool = True,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
-        """Validate `value >= bound`."""
+        """
+        Validate `value >= bound`.
+        """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be greater than or equal to {bound}, "
+                    f"got {current_value}"
+                ),
+            ):
                 return
             if value < bound:
                 if message is not None:
@@ -224,13 +244,22 @@ class V:
     def lt(
         bound: Any,
         *,
-        allow_none: bool = True,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
-        """Validate `value < bound`."""
+        """
+        Validate `value < bound`.
+        """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be less than {bound}, got {current_value}"
+                ),
+            ):
                 return
             if value >= bound:
                 if message is not None:
@@ -245,13 +274,23 @@ class V:
     def le(
         bound: Any,
         *,
-        allow_none: bool = True,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
-        """Validate `value <= bound`."""
+        """
+        Validate `value <= bound`.
+        """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be less than or equal to {bound}, "
+                    f"got {current_value}"
+                ),
+            ):
                 return
             if value > bound:
                 if message is not None:
@@ -269,13 +308,23 @@ class V:
         minimum: Any,
         maximum: Any,
         *,
-        allow_none: bool = True,
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
-        """Validate `minimum <= value <= maximum`."""
+        """
+        Validate `minimum <= value <= maximum`.
+        """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
-            if value is None and allow_none:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be between {minimum} and {maximum} inclusive, "
+                    f"got {current_value}"
+                ),
+            ):
                 return
             if not (minimum <= value <= maximum):
                 if message is not None:
@@ -569,6 +618,34 @@ def _resolve_allow_none_for_field(
     if annotation is None:
         return False
     return _annotation_allows_none(annotation)
+
+
+def _prepare_field_value(
+    control: Any,
+    field_name: str,
+    value: Any,
+    message: Optional[FieldMessage],
+    default_error: Callable[[Any], str],
+) -> bool:
+    """
+    Normalize `None` handling for field-level validators.
+
+    Returns:
+        `True` when validation should be skipped because `None` is allowed.
+    """
+
+    none_allowed = _resolve_allow_none_for_field(control.__class__, field_name, None)
+    if value is None and none_allowed:
+        return True
+
+    if value is None:
+        if message is not None:
+            raise ValueError(
+                _resolve_field_message(message, control, field_name, value)
+            )
+        raise ValueError(default_error(value))
+
+    return False
 
 
 def _prepare_comparison_values(

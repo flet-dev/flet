@@ -20,7 +20,7 @@ class Control(BaseControl):
 
     expand: Annotated[
         Optional[Union[bool, int]],
-        V.instance_of((bool, int), allow_none=True),
+        V.instance_of((bool, int)),
     ] = None
     """
     Specifies whether/how this control should expand to fill available space in its \
@@ -81,7 +81,7 @@ class Control(BaseControl):
 
     opacity: Annotated[
         Number,
-        V.between(0.0, 1.0, allow_none=False),
+        V.between(0.0, 1.0),
     ] = 1.0
     """
     Defines the transparency of the control.
