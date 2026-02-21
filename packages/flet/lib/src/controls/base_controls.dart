@@ -278,20 +278,21 @@ Widget _fractionalTranslate({
   required bool transformHitTests,
   required FilterQuality? filterQuality,
 }) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      final width = constraints.hasBoundedWidth ? constraints.maxWidth : 0.0;
-      final height = constraints.hasBoundedHeight ? constraints.maxHeight : 0.0;
-      return Transform.translate(
-        offset: Offset(
-          offset.dx * width,
-          offset.dy * height,
-        ),
-        transformHitTests: transformHitTests,
-        filterQuality: filterQuality,
-        child: child,
-      );
-    },
+  final translated = FractionalTranslation(
+    translation: offset,
+    transformHitTests: transformHitTests,
+    child: child,
+  );
+
+  if (filterQuality == null) {
+    return translated;
+  }
+
+  return Transform.translate(
+    offset: Offset.zero,
+    transformHitTests: transformHitTests,
+    filterQuality: filterQuality,
+    child: translated,
   );
 }
 
