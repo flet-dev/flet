@@ -15,24 +15,20 @@ def _assert_value_error(control: BaseControl, message: str) -> None:
 
 
 def test_inherited_field_rule_validates_control_opacity():
-    text = ft.Text("Hello", opacity=1.2)
-
     _assert_value_error(
-        text,
+        ft.Text("Hello", opacity=1.2),
         "opacity must be between 0.0 and 1.0 inclusive, got 1.2",
     )
 
 
 def test_slider_class_rules_use_default_comparison_messages():
-    slider_min_gt_max = ft.Slider(min=2, max=1)
     _assert_value_error(
-        slider_min_gt_max,
-        "min (2) must be less than or equal to max (1)",
+        ft.Slider(min=5, max=1),
+        "min (5) must be less than or equal to max (1)",
     )
 
-    slider_value_lt_min = ft.Slider(min=2, max=5, value=1)
     _assert_value_error(
-        slider_value_lt_min,
+        ft.Slider(min=2, max=5, value=1),
         "value (1) must be greater than or equal to min (2)",
     )
 
@@ -126,14 +122,16 @@ def test_control_rule_auto_allows_none_for_optional_fields():
     AutoOptionalNoneControl()._before_update_safe()
 
 
-def test_control_rule_explicit_override_can_disallow_optional_none():
-    @control("OverrideOptionalNoneControl")
-    class OverrideOptionalNoneControl(BaseControl):
-        left: Optional[int] = None
+def test_control_rule_none_is_rejected_for_non_optional_fields():
+    @control("NonOptionalNoneControl")
+    class NonOptionalNoneControl(BaseControl):
+        left: int = 1
         right: int = 10
-        __outbound_rules__ = (V.fields_le("left", "right", allow_left_none=False),)
+        __outbound_rules__ = (V.fields_le("left", "right"),)
 
+    control_instance = NonOptionalNoneControl()
+    control_instance.left = None
     _assert_value_error(
-        OverrideOptionalNoneControl(),
+        control_instance,
         "left (None) must be less than or equal to right (10)",
     )
