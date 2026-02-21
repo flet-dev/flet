@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -33,7 +34,10 @@ class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     ```
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control for which the application would like to respond to a tap and drag \
     gesture by starting a reordering drag on a reorderable list.
@@ -48,8 +52,3 @@ class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     """
     The mouse cursor for mouse pointers that are hovering over the control.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

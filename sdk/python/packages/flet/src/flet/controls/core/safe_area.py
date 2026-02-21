@@ -10,11 +10,6 @@ from flet.controls.padding import PaddingValue
 __all__ = ["SafeArea"]
 
 
-def _validate_visible_content(_control, _field_name: str, value: Control) -> None:
-    if not value.visible:
-        raise ValueError("content must be visible")
-
-
 @control("SafeArea")
 class SafeArea(LayoutControl, AdaptiveControl):
     """
@@ -33,7 +28,7 @@ class SafeArea(LayoutControl, AdaptiveControl):
 
     content: Annotated[
         Control,
-        V.field(_validate_visible_content),
+        V.visible_control(),
     ]
     """
     The control to display.

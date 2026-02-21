@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import EventHandler
@@ -15,7 +16,10 @@ class WindowDragArea(LayoutControl):
     bar on the [`content`][(c).] control.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this drag area.
 
@@ -51,8 +55,3 @@ class WindowDragArea(LayoutControl):
     Called when a pointer that was previously in contact with the screen and \
     moving/dragging is no longer in contact with the screen.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

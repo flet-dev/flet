@@ -1,5 +1,7 @@
 from enum import Enum
+from typing import Annotated
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 
@@ -775,7 +777,10 @@ class AutofillGroup(Control):
     Used to group autofill controls together.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this group.
 
@@ -790,8 +795,3 @@ class AutofillGroup(Control):
     The action to be run when this group is the topmost and it's being disposed, in \
     order to clean up the current autofill context.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

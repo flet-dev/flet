@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -13,7 +14,10 @@ class RadioGroup(Control):
     Radio buttons let people select a single option from two or more choices.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of the RadioGroup.
 
@@ -33,8 +37,3 @@ class RadioGroup(Control):
     """
     Called when the state of the RadioGroup is changed.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

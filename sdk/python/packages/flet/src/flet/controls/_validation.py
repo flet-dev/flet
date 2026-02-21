@@ -174,6 +174,37 @@ class V:
         return FieldRule(_check)
 
     @staticmethod
+    def visible_control(
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a field value is visible, i.e. `Control.visible` is `True`.
+
+        Args:
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (f"{field_name} must be visible"),
+            ):
+                return
+            if getattr(value, "visible", False):
+                return
+            if message is not None:
+                raise ValueError(
+                    _resolve_field_message(message, control, field_name, value)
+                )
+            raise ValueError(f"{field_name} must be visible")
+
+        return FieldRule(_check)
+
+    @staticmethod
     def gt(
         bound: Any,
         *,

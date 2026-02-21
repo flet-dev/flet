@@ -6,6 +6,7 @@ import pytest
 import flet as ft
 from flet.controls._validation import V
 from flet.controls.base_control import BaseControl, control
+from flet.controls.control import Control as FletControl
 from flet.controls.object_patch import ObjectPatch
 
 
@@ -95,6 +96,23 @@ def test_field_rule_auto_allows_none_for_optional_fields():
         value: Annotated[Optional[int], V.gt(0)] = None
 
     OptionalFieldRuleControl()._before_update_safe()
+
+
+def test_visible_control_rule_uses_default_field_name_message():
+    @control("VisibleControlMessageControl")
+    class VisibleControlMessageControl(BaseControl):
+        child: Annotated[FletControl, V.visible_control()]
+
+    control_instance = VisibleControlMessageControl(child=ft.Text(visible=False))
+    _assert_value_error(control_instance, "child must be visible")
+
+
+def test_visible_control_rule_auto_allows_none_for_optional_field():
+    @control("OptionalVisibleControlRuleControl")
+    class OptionalVisibleControlRuleControl(BaseControl):
+        child: Annotated[Optional[FletControl], V.visible_control()] = None
+
+    OptionalVisibleControlRuleControl()._before_update_safe()
 
 
 def test_default_control_message_is_used_when_message_is_omitted():

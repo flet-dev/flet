@@ -1,6 +1,8 @@
 from dataclasses import field
 from enum import Enum
+from typing import Annotated
 
+from flet.controls._validation import V
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -39,7 +41,10 @@ class AnimatedSwitcher(LayoutControl):
     Used to switch between controls with an animation.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content to display.
 
@@ -74,8 +79,3 @@ class AnimatedSwitcher(LayoutControl):
     """
     An animation type to transition between new and old [`content`][(c).].
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
