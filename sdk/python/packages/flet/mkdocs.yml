@@ -138,6 +138,7 @@ plugins:
             separate_signature: true
             inherited_members: false
             modernize_annotations: true
+            unwrap_annotated: true
             summary:
                 attributes: false
                 functions: false
