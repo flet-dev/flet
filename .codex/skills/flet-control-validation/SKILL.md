@@ -25,13 +25,30 @@ Do not use this skill for unrelated doc-only edits outside control validation.
 ## Validation Authoring Rules
 
 1. Prefer field-level validation with `Annotated[...]` metadata.
-   - Example:
-     ```py
+   - Example (close to current slider controls):
+     ```
+     opacity: Annotated[
+            Optional[Number],
+            V.between(0.0, 1.0),
+        ] = None
+
      value: Annotated[
-               Optional[Number],
-               V.ge_field("min"),
-               V.le_field("max"),
-           ] = None
+         Optional[Number],
+         V.ge_field("min"),
+         V.le_field("max"),
+     ] = None
+
+     min: Annotated[
+         Number,
+         V.le_field("max"),
+         V.le_field("value"),
+     ] = 0.0
+
+     max: Annotated[
+         Number,
+         V.ge_field("min"),
+         V.ge_field("value"),
+     ] = 1.0
      ```
 
 2. Use class-level `__validation_rules__` only for invariants that cannot be expressed cleanly on one field.
@@ -47,10 +64,34 @@ Do not use this skill for unrelated doc-only edits outside control validation.
 4. Cross-field comparisons use field rules only.
    - Use: `V.gt_field`, `V.ge_field`, `V.lt_field`, `V.le_field`
 
-5. Match Dart effective behavior.
-   - Check corresponding Flutter control.
+5. `None` handling is inferred from type hints.
+   - If a field is annotated as optional (for example `Optional[T]`), `None` is allowed.
+   - If a field is not optional, `None` fails validation.
+   - For `*_field` comparisons, if either side is optional and currently `None`, the
+     comparison is skipped; if a non-optional side is `None`, validation fails.
+
+6. Match Dart effective behavior.
+   - Always do both checks:
+     1. Flet Dart wrapper (`packages/flet/lib/src/controls/<control>.dart` or extension wrapper).
+     2. Source of the wrapped widget itself (Flutter SDK widget or third-party package widget).
+   - Example workflow:
+     - For Python `Slider`, inspect Flet wrapper `slider.dart`.
+     - Identify the wrapped Flutter widget (`Slider`).
+     - Inspect Flutter `Slider` source assertions and constructor invariants.
+     - Mirror those constraints in Python validation.
+   - For extensions, inspect the extension Dart wrapper and the package widget source it instantiates.
+   - Review constructor/runtime assertions and invariant checks in wrapped-widget source, not only wrapper code.
+   - Mirror those constraints in Python validation so invalid payloads fail before they
+     cross the wire to Dart.
    - If Dart applies defaults (for example `min`/`max`), Python should validate against the same effective defaults.
    - Add rules for wrapper-imposed constraints when relevant (for example, bounds/rounding/division constraints used in Dart formatting logic).
+
+7. For new properties, validate against base widget assertions before wiring.
+   - When adding a Python property to a Flet control, confirm whether the mapped
+     Dart wrapper and underlying widget both enforce constraints for that property.
+   - Add equivalent Python-side validation (`Annotated[...]`, `__validation_rules__`,
+     or readable `before_update()`) to prevent Dart assertions from being the first
+     failure point.
 
 ## Typing Style
 
@@ -84,8 +125,17 @@ When a property has validation, document it in that property’s docstring (goog
    - `V.instance_of((A, B))` -> `If it is not of type \`A\` or \`B\`.`
 
 5. Mention conditional applicability when needed.
-   - Example:
-     `..., when [\`value\`][(c).] is set.`
+   - Example (for `min`/`max` checks against optional `value`):
+     ```
+     Raises:
+         ValueError: If it is not less than or equal to [`value`][(c).],
+             when [`value`][(c).] is set.
+     ```
+
+7. Keep examples and wording aligned with real control files.
+   - Prefer concrete property names such as `min`, `max`, `value`,
+     `start_value`, `end_value`, `min_lines`, `max_lines`.
+   - For cross-field rules, use same-class links: [`min`][(c).], [`max`][(c).].
 
 ## Cross-Referencing Conventions
 

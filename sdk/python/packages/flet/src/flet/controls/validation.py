@@ -1,5 +1,5 @@
 """
-Internal outbound validation helpers for Flet controls.
+Outbound validation helpers for Flet controls.
 
 This module provides small composable rule objects that can be attached to control
 fields via `typing.Annotated` and to controls via `__validation_rules__`.
