@@ -435,6 +435,7 @@ nav:
           - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
+          - RotatedBox: controls/rotatedbox.md
           - Row: controls/row.md
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
@@ -619,6 +620,7 @@ nav:
               - FilePickerFile: types/filepickerfile.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Finder: types/finder.md
+              - Flip: types/flip.md
               - FletTestApp: types/flettestapp.md
               - Geolocator:
                   - ForegroundNotificationConfiguration: geolocator/types/foregroundnotificationconfiguration.md
@@ -673,6 +675,7 @@ nav:
                   - TileDisplay: map/types/tiledisplay.md
                   - TileLayerEvictErrorTileStrategy: map/types/tilelayerevicterrortilestrategy.md
               - Margin: types/margin.md
+              - Matrix4: types/matrix4.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
               - MarkdownStyleSheet: types/markdownstylesheet.md
               - MenuStyle: types/menustyle.md
@@ -723,6 +726,7 @@ nav:
               - TextSpan: types/textspan.md
               - TextStyle: types/textstyle.md
               - TextThemeStyle: types/textthemestyle.md
+              - Transform: types/transform.md
               - Theme:
                   - Theme: types/theme/index.md
                   - AppBarTheme: types/appbartheme.md
