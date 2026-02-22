@@ -42,8 +42,9 @@ class CupertinoNavigationBar(LayoutControl):
     [`NavigationBarDestination`][flet.].
 
     Raises:
-        ValueError: If it is not greater than or equal to `0` and less than
-            the length of visible [`destinations`][(c).], inclusive.
+        IndexError: If it is not greater than or equal to `0`.
+        IndexError: If it is not less than the length of visible
+            [`destinations`][(c).].
     """
 
     bgcolor: Optional[ColorValue] = None

@@ -223,7 +223,7 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `min_count` is less than `1`.
+            ValueError: If `min_count` is not greater than or equal to `1`.
         """
         if min_count < 1:
             raise ValueError(

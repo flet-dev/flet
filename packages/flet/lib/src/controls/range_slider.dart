@@ -40,21 +40,15 @@ class _SliderControlState extends State<RangeSliderControl> {
     double startValue = widget.control.getDouble("start_value", 0)!;
     double endValue = widget.control.getDouble("end_value", 0)!;
     String label = widget.control.getString("label", "")!;
-
-    double min = widget.control.getDouble("min", 0)!;
-    double max = widget.control.getDouble("max", 1)!;
-
     int round = widget.control.getInt("round", 0)!;
-
-    debugPrint("SliderControl build: ${widget.control.id}");
 
     var rangeSlider = RangeSlider(
         values: RangeValues(startValue, endValue),
         labels: RangeLabels(
             (label).replaceAll("{value}", startValue.toStringAsFixed(round)),
             (label).replaceAll("{value}", endValue.toStringAsFixed(round))),
-        min: min,
-        max: max,
+        min: widget.control.getDouble("min", 0)!,
+        max: widget.control.getDouble("max", 1)!,
         divisions: widget.control.getInt("divisions"),
         activeColor: widget.control.getColor("active_color", context),
         inactiveColor: widget.control.getColor("inactive_color", context),

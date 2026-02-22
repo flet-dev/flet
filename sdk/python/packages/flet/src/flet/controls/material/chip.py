@@ -178,7 +178,7 @@ class Chip(LayoutControl):
     Defaults to `8.0`.
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0.0`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE

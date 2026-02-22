@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V, ValidationRules
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -318,6 +318,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     min_lines: Annotated[
         Optional[int],
         V.gt(0),
+        V.le_field("max_lines"),
     ] = None
     """
     The minimum number of lines to occupy when the content spans fewer lines.
@@ -328,13 +329,15 @@ class TextField(FormFieldControl, AdaptiveControl):
     Defaults to `1`.
 
     Raises:
-        ValueError: If it is not strictly greater than `0`
-            or not less than or equal to [`max_lines`][(c).] when both are set.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to [`max_lines`][(c).] when both
+            are set.
     """
 
     max_lines: Annotated[
         Optional[int],
         V.gt(0),
+        V.ge_field("min_lines"),
     ] = None
     """
     The maximum number of lines to show at one time, wrapping if necessary.
@@ -346,8 +349,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     instead.
 
     Raises:
-        ValueError: If it is not strictly greater than `0`
-            or not greater than or equal to [`min_lines`][(c).] when both are set.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to [`min_lines`][(c).] when
+            both are set.
     """
 
     max_length: Annotated[
@@ -621,8 +625,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     TBD
     """
-
-    __validation_rules__: ValidationRules = (V.fields_le("min_lines", "max_lines"),)
 
     def _migrate_state(self, other: BaseControl):
         super()._migrate_state(other)

@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import V, ValidationRules
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -30,37 +30,51 @@ class CupertinoSlider(LayoutControl):
     ```
     """
 
-    value: Optional[Number] = None
+    value: Annotated[
+        Optional[Number],
+        V.ge_field("min"),
+        V.le_field("max"),
+    ] = None
     """
     The currently selected value for this slider.
 
     The slider's thumb is drawn at a position that corresponds to this value.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`min`][(c).]
-            or not less than or equal to [`max`][(c).].
+        ValueError: If it is not greater than or equal to [`min`][(c).].
+        ValueError: If it is not less than or equal to [`max`][(c).].
     """
 
-    min: Number = 0.0
+    min: Annotated[
+        Number,
+        V.le_field("max"),
+        V.le_field("value"),
+    ] = 0.0
     """
     The minimum value the user can select.
 
     If [`max`][(c).] is equal to the `min`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is not less than or equal to
-            [`max`][(c).] and [`value`][(c).].
+        ValueError: If it is not less than or equal to [`max`][(c).].
+        ValueError: If it is not less than or equal to [`value`][(c).], when
+            [`value`][(c).] is set.
     """
 
-    max: Number = 1.0
+    max: Annotated[
+        Number,
+        V.ge_field("min"),
+        V.ge_field("value"),
+    ] = 1.0
     """
     The maximum value the user can select.
 
     If [`min`][(c).] is equal to the `max`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is not greater than or equal to
-            [`min`][(c).] and [`value`][(c).].
+        ValueError: If it is not greater than or equal to [`min`][(c).].
+        ValueError: If it is not greater than or equal to [`value`][(c).], when
+            [`value`][(c).] is set.
     """
 
     divisions: Optional[int] = None
@@ -107,12 +121,6 @@ class CupertinoSlider(LayoutControl):
     """
     Called when this slider has lost focus.
     """
-
-    __validation_rules__: ValidationRules = (
-        V.fields_le("min", "max"),
-        V.fields_ge("value", "min"),
-        V.fields_le("value", "max"),
-    )
 
     def before_update(self):
         super().before_update()

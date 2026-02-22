@@ -126,7 +126,7 @@ class ExpansionPanelList(LayoutControl):
     Defines the elevation of the [`controls`][(c).], when expanded.
 
     Raises:
-        ValueError: If it is less than zero.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     expanded_header_padding: PaddingValue = field(

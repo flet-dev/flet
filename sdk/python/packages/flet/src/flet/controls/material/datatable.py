@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
-from flet.controls._validation import V, ValidationRules
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -419,7 +419,10 @@ class DataTable(LayoutControl):
     it is recommended to use a translucent background color.
     """
 
-    data_row_min_height: Optional[Number] = None
+    data_row_min_height: Annotated[
+        Optional[Number],
+        V.le_field("data_row_max_height"),
+    ] = None
     """
     The minimum height of each row (excluding the row that contains column headings).
 
@@ -429,7 +432,10 @@ class DataTable(LayoutControl):
         ValueError: If it is not less than or equal to [`data_row_max_height`][(c).].
     """
 
-    data_row_max_height: Optional[Number] = None
+    data_row_max_height: Annotated[
+        Optional[Number],
+        V.ge_field("data_row_min_height"),
+    ] = None
     """
     The maximum height of each row (excluding the row that contains column headings).
     Set to `float("inf")` for the height of each row to adjust automatically with its
@@ -518,10 +524,6 @@ class DataTable(LayoutControl):
 
     def __contains__(self, item):
         return item in self.columns + self.rows
-
-    __validation_rules__: ValidationRules = (
-        V.fields_le("data_row_min_height", "data_row_max_height"),
-    )
 
     def before_update(self):
         super().before_update()

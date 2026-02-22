@@ -61,9 +61,10 @@ class CupertinoTimerPicker(LayoutControl):
     If specified as an integer, it will be assumed to be in seconds.
 
     Raises:
-        ValueError: If [`value`][(c).] is negative or 24 hours or more.
-        ValueError: If [`value`][(c).] is not a multiple
-            of [`minute_interval`][(c).] or [`second_interval`][(c).].
+        ValueError: If it is not greater than or equal to `0`.
+        ValueError: If it is not strictly less than `24` hours.
+        ValueError: If it is not a multiple of [`minute_interval`][(c).].
+        ValueError: If it is not a multiple of [`second_interval`][(c).].
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -75,24 +76,16 @@ class CupertinoTimerPicker(LayoutControl):
     """
     The granularity of the second spinner.
 
-    Note:
-        Must be a positive integer factor of `60`.
-
     Raises:
-        ValueError: If [`second_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not a positive integer factor of `60`.
     """
 
     minute_interval: int = 1
     """
     The granularity of the minute spinner.
 
-    Note:
-        Must be a positive integer factor of `60`.
-
     Raises:
-        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not a positive integer factor of `60`.
     """
 
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
@@ -110,7 +103,7 @@ class CupertinoTimerPicker(LayoutControl):
     The uniform height of all children.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None

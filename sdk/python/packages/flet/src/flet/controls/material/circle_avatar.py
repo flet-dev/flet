@@ -85,8 +85,9 @@ class CircleAvatar(LayoutControl):
     [`max_radius`][(c).] may be specified.
 
     Raises:
-        ValueError: If it is not greater than or equal to `0`, or if it is
-            provided while [`min_radius`][(c).] or [`max_radius`][(c).] is set.
+        ValueError: If it is not greater than or equal to `0`.
+        ValueError: If it is set while [`min_radius`][(c).]
+            or [`max_radius`][(c).] is set.
     """
 
     min_radius: Annotated[
@@ -100,8 +101,8 @@ class CircleAvatar(LayoutControl):
     Defaults to `0.0`.
 
     Raises:
-        ValueError: If it is not greater than or equal to `0.0` or if it is
-            provided while [`radius`][(c).] is set.
+        ValueError: If it is not greater than or equal to `0.0`.
+        ValueError: If it is set while [`radius`][(c).] is set.
     """
 
     max_radius: Annotated[
@@ -115,8 +116,8 @@ class CircleAvatar(LayoutControl):
     Defaults to `float('inf')` i.e. infinity.
 
     Raises:
-        ValueError: If it is not greater than or equal to `0.0` or if it is
-            provided while [`radius`][(c).] is set.
+        ValueError: If it is not greater than or equal to `0.0`.
+        ValueError: If it is set while [`radius`][(c).] is set.
     """
 
     on_image_error: Optional[ControlEventHandler["CircleAvatar"]] = None

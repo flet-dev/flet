@@ -70,7 +70,7 @@ class Icon(LayoutControl):
     It can be used to indicate state transitions or selection visually.
 
     Raises:
-        ValueError: If [`fill`][(c).] is less than `0.0` or greater than `1.0`.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     apply_text_scaling: Optional[bool] = None
@@ -101,7 +101,7 @@ class Icon(LayoutControl):
     Must be greater than `0`.
 
     Raises:
-        ValueError: If [`weight`][(c).] is less than or equal to `0.0`.
+        ValueError: If [`weight`][(c).] is not strictly greater than `0.0`.
     """
 
     optical_size: Annotated[
@@ -116,7 +116,7 @@ class Icon(LayoutControl):
     Must be greater than `0`.
 
     Raises:
-        ValueError: If [`optical_size`][(c).] is less than or equal to `0.0`.
+        ValueError: If [`optical_size`][(c).] is not strictly greater than `0.0`.
     """
 
     blend_mode: Optional[BlendMode] = BlendMode.SRC_OVER

@@ -106,19 +106,15 @@ class CupertinoDatePicker(LayoutControl):
     """
     The initial date and/or time of the picker.
 
-    It must conform to the intervals set in [`first_date`][(c).], [`last_date`][(c).],
-    [`minimum_year`][(c).], and [`maximum_year`][(c).],
-    else a `ValueError` will be raised.
-
     Defaults to the present date and time.
 
     Raises:
-        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
-            after [`last_date`][(c).].
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
-            greater than [`maximum_year`][(c).].
-        ValueError: If [`value`][(c).] minute is not divisible by
-            [`minute_interval`][(c).].
+        ValueError: If it is not greater than or equal to [`first_date`][(c).].
+        ValueError: If it is not less than or equal to [`last_date`][(c).].
+        ValueError: If its year that is not greater than or equal to
+            [`minimum_year`][(c).].
+        ValueError: If its is not less than or equal to [`maximum_year`][(c).].
+        ValueError: If its minute that is not divisible by [`minute_interval`][(c).].
     """
 
     locale: Optional[Locale] = None
@@ -128,8 +124,8 @@ class CupertinoDatePicker(LayoutControl):
 
     Notes:
         - The locale must be supported by Flutter's global localization delegates;
-          otherwise the override is ignored and the control uses the page or system
-          locale.
+            otherwise the override is ignored and the control uses the page or system
+            locale.
         - If `None` (the default), the page or system locale is used.
     """
 
@@ -175,12 +171,8 @@ class CupertinoDatePicker(LayoutControl):
     The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
-    Note:
-        Must be an integer factor of `60`.
-
     Raises:
-        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not a positive integer factor of `60`.
     """
 
     minimum_year: int = 1
@@ -189,7 +181,7 @@ class CupertinoDatePicker(LayoutControl):
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Raises:
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).].
+        ValueError: If it is greater than [`value`][(c).] year.
     """
 
     maximum_year: Optional[int] = None
@@ -200,7 +192,7 @@ class CupertinoDatePicker(LayoutControl):
     Defaults to `None` - no limit.
 
     Raises:
-        ValueError: If [`value`][(c).] year is greater than [`maximum_year`][(c).].
+        ValueError: If it is less than [`value`][(c).] year.
     """
 
     item_extent: Number = 32.0
@@ -208,7 +200,7 @@ class CupertinoDatePicker(LayoutControl):
     The uniform height of all children.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     use_24h_format: bool = False
@@ -223,8 +215,7 @@ class CupertinoDatePicker(LayoutControl):
     Whether to show day of week alongside day.
 
     Raises:
-        ValueError: If [`show_day_of_week`][(c).] is set when
-            [`date_picker_mode`][(c).] is not
+        ValueError: If it is set when [`date_picker_mode`][(c).] is not
             [`CupertinoDatePickerMode.DATE`][flet.].
     """
 

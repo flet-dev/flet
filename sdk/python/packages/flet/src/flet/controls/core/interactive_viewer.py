@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls._validation import V, ValidationRules
+from flet.controls._validation import V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -72,18 +72,20 @@ class InteractiveViewer(LayoutControl):
     max_scale: Annotated[
         Number,
         V.gt(0),
+        V.ge_field("min_scale"),
     ] = 2.5
     """
     The maximum allowed scale.
 
     Raises:
-        ValueError: If it is not strictly greater than `0`
-            or not greater than or equal to [`min_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to [`min_scale`][(c).].
     """
 
     min_scale: Annotated[
         Number,
         V.gt(0),
+        V.le_field("max_scale"),
     ] = 0.8
     """
     The minimum allowed scale.
@@ -95,8 +97,8 @@ class InteractiveViewer(LayoutControl):
     `boundary_margin` value.
 
     Raises:
-        ValueError: If it is not strictly greater than `0`
-            or not less than or equal to [`max_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to [`max_scale`][(c).].
     """
 
     interaction_end_friction_coefficient: Annotated[
@@ -177,8 +179,6 @@ class InteractiveViewer(LayoutControl):
     """
     Called when the user ends a pan or scale gesture.
     """
-
-    __validation_rules__: ValidationRules = (V.fields_ge("max_scale", "min_scale"),)
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """
