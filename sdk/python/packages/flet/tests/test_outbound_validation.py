@@ -112,23 +112,21 @@ def test_default_control_message_is_used_when_message_is_omitted():
     )
 
 
-def test_control_rule_auto_allows_none_for_optional_fields():
+def test_field_comparison_rule_auto_allows_none_for_optional_fields():
     @control("AutoOptionalNoneControl")
     class AutoOptionalNoneControl(BaseControl):
-        left: Optional[int] = None
+        left: Annotated[Optional[int], V.le_field("right")] = None
         right: int = 10
-        __validation_rules__ = (V.fields_le("left", "right"),)
 
-    # `left` is Optional, so None is auto-allowed by `fields_le`.
+    # `left` is Optional, so None is auto-allowed by `le_field`.
     AutoOptionalNoneControl()._before_update_safe()
 
 
-def test_control_rule_none_is_rejected_for_non_optional_fields():
+def test_field_comparison_rule_none_is_rejected_for_non_optional_fields():
     @control("NonOptionalNoneControl")
     class NonOptionalNoneControl(BaseControl):
-        left: int = 1
+        left: Annotated[int, V.le_field("right")] = 1
         right: int = 10
-        __validation_rules__ = (V.fields_le("left", "right"),)
 
     control_instance = NonOptionalNoneControl()
     control_instance.left = None

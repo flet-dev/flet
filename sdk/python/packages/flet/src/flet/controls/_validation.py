@@ -641,162 +641,6 @@ class V:
 
         return FieldRule(_check)
 
-    @staticmethod
-    def fields_gt(
-        left_field: str,
-        right_field: str,
-        *,
-        message: Optional[ControlMessage] = None,
-    ) -> ControlRule:
-        """
-        Validate `left_field > right_field` on a control instance.
-
-        Args:
-            left_field: Name of the field on the left side of the comparison.
-            right_field: Name of the field on the right side of the comparison.
-            message: Optional custom error text or formatter.
-        """
-
-        def _check(control: Any) -> None:
-            left_value, right_value, skip = _prepare_comparison_values(
-                control=control,
-                left_field=left_field,
-                right_field=right_field,
-                message=message,
-                default_error=lambda left, right: (
-                    f"{left_field} ({left}) must be strictly greater than "
-                    f"{right_field} ({right})"
-                ),
-            )
-            if skip:
-                return
-            if left_value <= right_value:
-                if message is not None:
-                    raise ValueError(_resolve_control_message(message, control))
-                raise ValueError(
-                    f"{left_field} ({left_value}) must be strictly greater than "
-                    f"{right_field} ({right_value})"
-                )
-
-        return ControlRule(_check)
-
-    @staticmethod
-    def fields_ge(
-        left_field: str,
-        right_field: str,
-        *,
-        message: Optional[ControlMessage] = None,
-    ) -> ControlRule:
-        """
-        Validate `left_field >= right_field` on a control instance.
-
-        Args:
-            left_field: Name of the field on the left side of the comparison.
-            right_field: Name of the field on the right side of the comparison.
-            message: Optional custom error text or formatter.
-        """
-
-        def _check(control: Any) -> None:
-            left_value, right_value, skip = _prepare_comparison_values(
-                control=control,
-                left_field=left_field,
-                right_field=right_field,
-                message=message,
-                default_error=lambda left, right: (
-                    f"{left_field} ({left}) must be greater than or equal to "
-                    f"{right_field} ({right})"
-                ),
-            )
-            if skip:
-                return
-            if left_value < right_value:
-                if message is not None:
-                    raise ValueError(_resolve_control_message(message, control))
-                raise ValueError(
-                    f"{left_field} ({left_value}) must be greater than or equal to "
-                    f"{right_field} ({right_value})"
-                )
-
-        return ControlRule(_check)
-
-    @staticmethod
-    def fields_lt(
-        left_field: str,
-        right_field: str,
-        *,
-        message: Optional[ControlMessage] = None,
-    ) -> ControlRule:
-        """
-        Validate `left_field < right_field` on a control instance.
-
-        Args:
-            left_field: Name of the field on the left side of the comparison.
-            right_field: Name of the field on the right side of the comparison.
-            message: Optional custom error text or formatter.
-        """
-
-        def _check(control: Any) -> None:
-            left_value, right_value, skip = _prepare_comparison_values(
-                control=control,
-                left_field=left_field,
-                right_field=right_field,
-                message=message,
-                default_error=lambda left, right: (
-                    f"{left_field} ({left}) must be strictly less than "
-                    f"{right_field} ({right})"
-                ),
-            )
-            if skip:
-                return
-            if left_value >= right_value:
-                if message is not None:
-                    raise ValueError(_resolve_control_message(message, control))
-                raise ValueError(
-                    f"{left_field} ({left_value}) must be strictly less than "
-                    f"{right_field} ({right_value})"
-                )
-
-        return ControlRule(_check)
-
-    @staticmethod
-    def fields_le(
-        left_field: str,
-        right_field: str,
-        *,
-        message: Optional[ControlMessage] = None,
-    ) -> ControlRule:
-        """
-        Validate `left_field <= right_field` on a control instance.
-
-        Args:
-            left_field: Name of the field on the left side of the comparison.
-            right_field: Name of the field on the right side of the comparison.
-            message: Optional custom error text or formatter.
-        """
-
-        def _check(control: Any) -> None:
-            left_value, right_value, skip = _prepare_comparison_values(
-                control=control,
-                left_field=left_field,
-                right_field=right_field,
-                message=message,
-                default_error=lambda left, right: (
-                    f"{left_field} ({left}) must be less than or equal to "
-                    f"{right_field} ({right})"
-                ),
-            )
-            if skip:
-                return
-            if left_value > right_value:
-                if message is not None:
-                    raise ValueError(_resolve_control_message(message, control))
-                raise ValueError(
-                    f"{left_field} ({left_value}) must be less than or equal to "
-                    f"{right_field} ({right_value})"
-                )
-
-        return ControlRule(_check)
-
 
 def _get_declared_type_hints(cls: type[Any]) -> dict[str, Any]:
     """
@@ -827,7 +671,7 @@ def _get_effective_type_hints(cls: type[Any]) -> dict[str, Any]:
     """
     Resolve effective annotations for `cls`, including inherited fields.
 
-    The result is used for Optional/None inference in cross-field control rules.
+    The result is used for Optional/None inference in field-level rules.
     """
 
     module = sys.modules.get(cls.__module__)
@@ -901,38 +745,6 @@ def _prepare_field_value(
         raise ValueError(default_error(value))
 
     return False
-
-
-def _prepare_comparison_values(
-    control: Any,
-    left_field: str,
-    right_field: str,
-    message: Optional[ControlMessage],
-    default_error: Callable[[Any, Any], str],
-) -> tuple[Any, Any, bool]:
-    """
-    Load and normalize values for a cross-field comparison.
-
-    Returns:
-        `(left_value, right_value, skip_validation)`.
-    """
-
-    left_value = getattr(control, left_field)
-    right_value = getattr(control, right_field)
-    left_none_allowed = _resolve_allow_none_for_field(control.__class__, left_field)
-    right_none_allowed = _resolve_allow_none_for_field(control.__class__, right_field)
-
-    if left_value is None and left_none_allowed:
-        return left_value, right_value, True
-    if right_value is None and right_none_allowed:
-        return left_value, right_value, True
-
-    if left_value is None or right_value is None:
-        if message is not None:
-            raise ValueError(_resolve_control_message(message, control))
-        raise ValueError(default_error(left_value, right_value))
-
-    return left_value, right_value, False
 
 
 def _prepare_field_comparison_values(
