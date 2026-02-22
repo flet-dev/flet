@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import Event, EventHandler
@@ -129,6 +129,14 @@ class FilePickerFile:
         - Web mode always returns `None`.
         - On native platforms, this can still be `None` if the platform picker
             does not expose a filesystem path.
+    """
+
+    bytes: Optional[bytes] = None
+    """
+    File contents.
+
+    Returned only when [`pick_files()`][(c).pick_files] is called with
+    `with_data=True`. Otherwise this value is `None`.
     """
 
 
@@ -299,6 +307,7 @@ class FilePicker(Service):
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
+        with_data: bool = False,
     ) -> list[FilePickerFile]:
         """
         Opens a pick file dialog.
@@ -312,6 +321,8 @@ class FilePicker(Service):
             initial_directory: The initial directory where the dialog should open.
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
+            with_data: Read selected file contents into
+                [`FilePickerFile.bytes`][flet.FilePickerFile.].
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is [`FilePickerFileType.CUSTOM`][flet.].
 
@@ -326,7 +337,14 @@ class FilePicker(Service):
                 "file_type": file_type,
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
+                "with_data": with_data,
             },
             timeout=3600,
         )
-        return [FilePickerFile(**file) for file in files]
+        return [FilePickerFile(**self._normalize_file(file)) for file in files]
+
+    def _normalize_file(self, file: dict[str, Any]) -> dict[str, Any]:
+        value = file.get("bytes")
+        if isinstance(value, list):
+            file["bytes"] = bytes(value)
+        return file
