@@ -1,7 +1,6 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -15,6 +14,7 @@ from flet.controls.events import (
 from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
+from flet.controls.validation import V
 
 __all__ = ["InteractiveViewer"]
 

@@ -1,11 +1,11 @@
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor
+from flet.controls.validation import V
 
 
 @control("ReorderableDragHandle")

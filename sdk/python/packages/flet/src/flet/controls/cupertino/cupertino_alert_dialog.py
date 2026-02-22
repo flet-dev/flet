@@ -1,13 +1,13 @@
 from dataclasses import field
 from typing import Optional
 
-from flet.controls._validation import V, ValidationRules
 from flet.controls.animation import Animation, AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
 from flet.controls.types import ColorValue, StrOrControl
+from flet.controls.validation import V, ValidationRules
 
 __all__ = ["CupertinoAlertDialog"]
 

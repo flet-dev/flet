@@ -1,7 +1,6 @@
 from dataclasses import field
 from typing import Optional
 
-from flet.controls._validation import V, ValidationRules
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -16,6 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.controls.validation import V, ValidationRules
 
 __all__ = ["AlertDialog"]
 

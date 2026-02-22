@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -23,6 +22,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.controls.validation import V
 
 
 @dataclass

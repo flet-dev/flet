@@ -1,12 +1,12 @@
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ColorValue
+from flet.controls.validation import V
 
 __all__ = ["CupertinoSegmentedButton"]
 

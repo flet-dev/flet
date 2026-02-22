@@ -2,7 +2,6 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -17,6 +16,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.controls.validation import V
 
 __all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 

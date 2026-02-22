@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.base_control import BaseControl
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.types import Number, ResponsiveNumber
+from flet.controls.validation import V
 
 __all__ = ["Control"]
 

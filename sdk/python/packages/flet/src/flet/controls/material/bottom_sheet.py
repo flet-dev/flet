@@ -1,6 +1,5 @@
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
@@ -8,6 +7,7 @@ from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import ClipBehavior, ColorValue, Number
+from flet.controls.validation import V
 
 __all__ = ["BottomSheet"]
 

@@ -1,6 +1,5 @@
 from typing import Optional, Union
 
-from flet.controls._validation import V, ValidationRules
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -14,6 +13,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.controls.validation import V, ValidationRules
 
 __all__ = ["OutlinedButton"]
 

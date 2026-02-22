@@ -1,6 +1,5 @@
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -13,6 +12,7 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.transform import OffsetValue
 from flet.controls.types import ColorValue, FloatingActionButtonLocation
+from flet.controls.validation import V
 
 __all__ = ["Pagelet"]
 

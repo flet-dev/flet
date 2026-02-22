@@ -1,7 +1,6 @@
 from dataclasses import field
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -18,6 +17,7 @@ from flet.controls.types import (
     Url,
     VisualDensity,
 )
+from flet.controls.validation import V
 
 __all__ = [
     "FilledIconButton",

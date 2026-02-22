@@ -2,7 +2,6 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import Border
@@ -17,6 +16,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
+from flet.controls.validation import V
 
 __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
 

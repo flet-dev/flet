@@ -4,10 +4,10 @@ from typing import Annotated, Optional
 import pytest
 
 import flet as ft
-from flet.controls._validation import V
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control import Control as FletControl
 from flet.controls.object_patch import ObjectPatch
+from flet.controls.validation import V
 
 
 def _assert_value_error(control: BaseControl, message: str) -> None:

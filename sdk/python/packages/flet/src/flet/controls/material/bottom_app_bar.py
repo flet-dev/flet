@@ -1,6 +1,5 @@
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
@@ -12,6 +11,7 @@ from flet.controls.types import (
     NotchShape,
     Number,
 )
+from flet.controls.validation import V
 
 __all__ = ["BottomAppBar"]
 

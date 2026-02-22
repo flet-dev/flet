@@ -2,7 +2,6 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadius, BorderRadiusValue
@@ -18,6 +17,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.controls.validation import V
 
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 

@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -19,6 +18,7 @@ from flet.controls.types import (
     Number,
     TextAlign,
 )
+from flet.controls.validation import V
 
 __all__ = [
     "InputFilter",

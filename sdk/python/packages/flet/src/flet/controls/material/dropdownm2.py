@@ -1,6 +1,5 @@
 from typing import Optional
 
-from flet.controls._validation import V, ValidationRules
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -13,6 +12,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
+from flet.controls.validation import V, ValidationRules
 
 __all__ = ["DropdownM2", "Option"]
 

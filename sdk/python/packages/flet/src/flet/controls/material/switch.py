@@ -1,6 +1,5 @@
 from typing import Annotated, Optional
 
-from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -16,6 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.controls.validation import V
 
 __all__ = ["Switch"]
 
