@@ -1,4 +1,4 @@
-from typing import Annotated, Union
+from typing import Annotated
 
 from flet.controls._validation import V
 from flet.controls.base_control import control
@@ -17,12 +17,15 @@ class Hero(LayoutControl):
     animate that control between routes.
     """
 
-    tag: HeroTag
+    tag: Annotated[
+        str,
+        V.instance_of(str),
+    ]
     """
     A unique identifier used to match source and destination Hero controls.
 
     Raises:
-        ValueError: If not provided or not of type `str`, `int`, `float`, or `bool`.
+        ValueError: If it is not of type `str`.
     """
 
     content: Annotated[
@@ -41,12 +44,3 @@ class Hero(LayoutControl):
     Whether to animate when the route is transitioned by a \
     user gesture (for example, iOS back swipe).
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.tag is None:
-            raise ValueError("tag must be provided")
-        if not isinstance(self.tag, (str, int, float, bool)):
-            raise ValueError(
-                f"tag must be str, int, float, or bool, got {type(self.tag)}"
-            )

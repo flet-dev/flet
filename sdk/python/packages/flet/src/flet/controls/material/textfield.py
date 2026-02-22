@@ -280,6 +280,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     A text field lets the user enter text, either with hardware keyboard or with an \
     onscreen keyboard.
 
+    Example:
     ```python
     ft.TextField(label="Name", hint_text="Jane Doe")
     ```
@@ -287,7 +288,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     value: str = ""
     """
-    Current value of the TextField.
+    Current value of this text field.
     """
 
     selection: Optional[TextSelection] = None
@@ -327,8 +328,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     Defaults to `1`.
 
     Raises:
-        ValueError: If [`min_lines`][(c).] is not positive or exceeds
-            [`max_lines`][(c).] when both are set.
+        ValueError: If it is not strictly greater than `0`
+            or not less than or equal to [`max_lines`][(c).] when both are set.
     """
 
     max_lines: Annotated[
@@ -345,7 +346,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     instead.
 
     Raises:
-        ValueError: If it is not positive or is less than [`min_lines`][(c).].
+        ValueError: If it is not strictly greater than `0`
+            or not greater than or equal to [`min_lines`][(c).] when both are set.
     """
 
     max_length: Annotated[
@@ -369,11 +371,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     can_reveal_password: bool = False
     """
     Displays a toggle icon button that allows revealing the entered password. Is shown \
-    if both `password` and `can_reveal_password` are `True`.
+    if both [`password`][(c).] and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as `suffix` and in case both
-    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is
-    not shown.
+    The icon is displayed in the same location as [`suffix`][(c).] and in case both
+    `can_reveal_password`/[`password`][(c).] and `suffix` are provided, then the
+    [`suffix`][(c).] won't not shown.
     """
 
     read_only: bool = False
@@ -388,9 +390,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, \
-    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires \
-    `on_submit` event.
+    Changes the behavior of `Enter` button in [`multiline`][(c).] textfield to be \
+    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just \
+    `Enter` fires [`on_submit`][(c).] event.
     """
 
     ignore_up_down_keys: bool = False
@@ -405,7 +407,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Defaults to `TextAlign.LEFT`.
+    Defaults to [`TextAlign.LEFT`][flet.].
     """
 
     autofocus: bool = False
@@ -419,7 +421,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Defaults to `TextCapitalization.NONE`.
+    Defaults to [`TextCapitalization.NONE`][flet.].
     """
 
     autocorrect: bool = True
@@ -503,8 +505,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Provides as-you-type filtering/validation.
 
-    Similar to the `on_change` callback, the input filters are not applied when the
-    content of the field is changed programmatically.
+    Similar to the [`on_change`][(c).] callback, the input filters are not applied
+    when the content of the field is changed programmatically.
     """
 
     obscuring_character: str = "•"
