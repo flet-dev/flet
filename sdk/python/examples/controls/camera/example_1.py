@@ -150,6 +150,12 @@ async def main(page: ft.Page):
         _ = (src_width, src_height)
         last_image.width = image_frame_width
         last_image.height = image_frame_height
+
+        if page.platform != ft.PagePlatform.ANDROID:
+            last_image.offset = None
+            last_image.rotate = None
+            return
+
         angle = image_rotation_radians()
         width = float(image_frame_width)
         height = float(image_frame_height)
