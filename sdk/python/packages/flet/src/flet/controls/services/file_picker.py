@@ -135,7 +135,7 @@ class FilePickerFile:
     """
     File contents.
 
-    Returned only when [`pick_files()`][(c).pick_files] is called with
+    Returned only when [`pick_files()`][flet.FilePicker.pick_files] is called with
     `with_data=True`. Otherwise this value is `None`.
     """
 
@@ -322,7 +322,7 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
-                [`FilePickerFile.bytes`][flet.FilePickerFile.].
+                [`bytes`][flet.FilePickerFile.].
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is [`FilePickerFileType.CUSTOM`][flet.].
 

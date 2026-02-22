@@ -2,7 +2,7 @@
 # Example of picking and saving text content with FilePicker.
 #
 # Run this example with:
-#    uv run flet run --web examples/services/file_picker/pick_and_save_text_content.py
+#    uv run flet run --web pick_and_save_text_content.py
 #
 import flet as ft
 

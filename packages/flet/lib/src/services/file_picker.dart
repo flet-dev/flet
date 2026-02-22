@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../flet_service.dart';
 import '../utils/file_picker.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 
 class FilePickerService extends FletService {
@@ -34,7 +35,7 @@ class FilePickerService extends FletService {
     var allowedExtensions = (args["allowed_extensions"] as List?)
         ?.map((e) => e.toString())
         .toList();
-    var withData = args["with_data"] == true;
+    var withData = parseBool(args["with_data"], false)!;
     var srcBytes = args["src_bytes"];
 
     if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
