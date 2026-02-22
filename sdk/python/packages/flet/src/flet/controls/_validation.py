@@ -470,6 +470,178 @@ class V:
         return FieldRule(_check)
 
     @staticmethod
+    def gt_field(
+        other_field: str,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `field_name > other_field` on a control instance.
+
+        This rule is attached to one field via `Annotated[...]` and compares that
+        field value against another field on the same control.
+
+        Args:
+            other_field: Name of the field on the right side of the comparison.
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            other_value, skip = _prepare_field_comparison_values(
+                control=control,
+                field_name=field_name,
+                value=value,
+                other_field=other_field,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{field_name} ({left}) must be strictly greater than "
+                    f"{other_field} ({right})"
+                ),
+            )
+            if skip:
+                return
+            if value <= other_value:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} ({value}) must be strictly greater than "
+                    f"{other_field} ({other_value})"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def ge_field(
+        other_field: str,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `field_name >= other_field` on a control instance.
+
+        This rule is attached to one field via `Annotated[...]` and compares that
+        field value against another field on the same control.
+
+        Args:
+            other_field: Name of the field on the right side of the comparison.
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            other_value, skip = _prepare_field_comparison_values(
+                control=control,
+                field_name=field_name,
+                value=value,
+                other_field=other_field,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{field_name} ({left}) must be greater than or equal to "
+                    f"{other_field} ({right})"
+                ),
+            )
+            if skip:
+                return
+            if value < other_value:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} ({value}) must be greater than or equal to "
+                    f"{other_field} ({other_value})"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def lt_field(
+        other_field: str,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `field_name < other_field` on a control instance.
+
+        This rule is attached to one field via `Annotated[...]` and compares that
+        field value against another field on the same control.
+
+        Args:
+            other_field: Name of the field on the right side of the comparison.
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            other_value, skip = _prepare_field_comparison_values(
+                control=control,
+                field_name=field_name,
+                value=value,
+                other_field=other_field,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{field_name} ({left}) must be strictly less than "
+                    f"{other_field} ({right})"
+                ),
+            )
+            if skip:
+                return
+            if value >= other_value:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} ({value}) must be strictly less than "
+                    f"{other_field} ({other_value})"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def le_field(
+        other_field: str,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `field_name <= other_field` on a control instance.
+
+        This rule is attached to one field via `Annotated[...]` and compares that
+        field value against another field on the same control.
+
+        Args:
+            other_field: Name of the field on the right side of the comparison.
+            message: Optional custom error text or formatter.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            other_value, skip = _prepare_field_comparison_values(
+                control=control,
+                field_name=field_name,
+                value=value,
+                other_field=other_field,
+                message=message,
+                default_error=lambda left, right: (
+                    f"{field_name} ({left}) must be less than or equal to "
+                    f"{other_field} ({right})"
+                ),
+            )
+            if skip:
+                return
+            if value > other_value:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} ({value}) must be less than or equal to "
+                    f"{other_field} ({other_value})"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
     def fields_gt(
         left_field: str,
         right_field: str,
@@ -761,6 +933,40 @@ def _prepare_comparison_values(
         raise ValueError(default_error(left_value, right_value))
 
     return left_value, right_value, False
+
+
+def _prepare_field_comparison_values(
+    control: Any,
+    field_name: str,
+    value: Any,
+    other_field: str,
+    message: Optional[FieldMessage],
+    default_error: Callable[[Any, Any], str],
+) -> tuple[Any, bool]:
+    """
+    Load and normalize values for a field-vs-field comparison rule.
+
+    Returns:
+        `(other_value, skip_validation)`.
+    """
+
+    other_value = getattr(control, other_field)
+    current_none_allowed = _resolve_allow_none_for_field(control.__class__, field_name)
+    other_none_allowed = _resolve_allow_none_for_field(control.__class__, other_field)
+
+    if value is None and current_none_allowed:
+        return other_value, True
+    if other_value is None and other_none_allowed:
+        return other_value, True
+
+    if value is None or other_value is None:
+        if message is not None:
+            raise ValueError(
+                _resolve_field_message(message, control, field_name, value)
+            )
+        raise ValueError(default_error(value, other_value))
+
+    return other_value, False
 
 
 @cache

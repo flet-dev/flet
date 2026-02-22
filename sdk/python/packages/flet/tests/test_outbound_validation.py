@@ -190,3 +190,70 @@ def test_visible_controls_field_rule_default_messages():
         VisibleControlsMinOneControl(items=[ft.Text("A", visible=False)]),
         "items must contain at least one visible Control, got 0",
     )
+
+
+def test_field_comparison_rules_validate_against_other_fields():
+    @control("FieldComparisonControl")
+    class FieldComparisonControl(BaseControl):
+        min_value: int = 5
+        max_value: Annotated[int, V.ge_field("min_value")] = 3
+
+    _assert_value_error(
+        FieldComparisonControl(),
+        "max_value (3) must be greater than or equal to min_value (5)",
+    )
+
+    valid_control = FieldComparisonControl(max_value=7)
+    valid_control._before_update_safe()
+
+
+def test_field_comparison_rules_auto_allow_none_from_optional_annotations():
+    @control("OptionalFieldComparisonControl")
+    class OptionalFieldComparisonControl(BaseControl):
+        min_value: Optional[int] = None
+        max_value: Annotated[int, V.ge_field("min_value")] = 10
+
+    # The compared field is Optional, so None short-circuits comparison.
+    OptionalFieldComparisonControl()._before_update_safe()
+
+    @control("OptionalCurrentFieldComparisonControl")
+    class OptionalCurrentFieldComparisonControl(BaseControl):
+        min_value: int = 1
+        max_value: Annotated[Optional[int], V.ge_field("min_value")] = None
+
+    # The annotated field itself is Optional, so None is also allowed.
+    OptionalCurrentFieldComparisonControl()._before_update_safe()
+
+
+def test_single_direction_field_rule_keeps_one_clear_failure_source():
+    @control("SingleDirectionInvariantControl")
+    class SingleDirectionInvariantControl(BaseControl):
+        start: int = 10
+        end: Annotated[int, V.ge_field("start")] = 1
+
+    _assert_value_error(
+        SingleDirectionInvariantControl(),
+        "end (1) must be greater than or equal to start (10)",
+    )
+
+
+def test_bidirectional_field_rules_make_failure_depend_on_field_order():
+    @control("BidirectionalInvariantControl")
+    class BidirectionalInvariantControl(BaseControl):
+        start: Annotated[int, V.le_field("end")] = 10
+        end: Annotated[int, V.ge_field("start")] = 1
+
+    _assert_value_error(
+        BidirectionalInvariantControl(),
+        "start (10) must be less than or equal to end (1)",
+    )
+
+    @control("BidirectionalInvariantControlReordered")
+    class BidirectionalInvariantControlReordered(BaseControl):
+        end: Annotated[int, V.ge_field("start")] = 1
+        start: Annotated[int, V.le_field("end")] = 10
+
+    _assert_value_error(
+        BidirectionalInvariantControlReordered(),
+        "end (1) must be greater than or equal to start (10)",
+    )
