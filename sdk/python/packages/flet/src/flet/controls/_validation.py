@@ -201,6 +201,71 @@ class V:
         return FieldRule(_check)
 
     @staticmethod
+    def visible_controls(
+        *,
+        min_count: int,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a field contains at least `min_count` visible controls.
+
+        The field value is expected to be an iterable of controls exposing a
+        `visible` boolean attribute.
+
+        Args:
+            min_count: Minimum number of visible controls required.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If `min_count` is less than `1`.
+        """
+        if min_count < 1:
+            raise ValueError(
+                f"min_count must be greater than or equal to 1, got {min_count}"
+            )
+
+        def _default_error(field_name: str, visible_count: int) -> str:
+            if min_count == 1:
+                return (
+                    f"{field_name} must contain at least one visible Control, "
+                    f"got {visible_count}"
+                )
+            return (
+                f"{field_name} must contain at least {min_count} visible Controls, "
+                f"got {visible_count}"
+            )
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: _default_error(field_name, 0),
+            ):
+                return
+
+            try:
+                visible_count = sum(
+                    1 for item in value if getattr(item, "visible", False)
+                )
+            except TypeError as err:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    ) from err
+                raise ValueError(_default_error(field_name, 0)) from err
+
+            if visible_count < min_count:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(_default_error(field_name, visible_count))
+
+        return FieldRule(_check)
+
+    @staticmethod
     def str_or_visible_control(
         *,
         message: Optional[FieldMessage] = None,

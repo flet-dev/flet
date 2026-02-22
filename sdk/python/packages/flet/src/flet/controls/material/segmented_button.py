@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import ClassVar, Optional
+from typing import Annotated, ClassVar, Optional
 
 from flet.controls._validation import ControlRule, V
 from flet.controls.alignment import Axis
@@ -64,13 +64,15 @@ class SegmentedButton(LayoutControl):
     A segmented button control.
     """
 
-    segments: list[Segment]
+    segments: Annotated[
+        list[Segment],
+        V.visible_controls(min_count=1),
+    ]
     """
     The segments of this button.
 
     Raises:
-        ValueError: If [`segments`][(c).] is empty or does not have at least one
-            visible `Segment`.
+        ValueError: If it does not contain at least one visible `Segment`.
     """
 
     style: Optional[ButtonStyle] = None
@@ -168,10 +170,6 @@ class SegmentedButton(LayoutControl):
     """
 
     __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: any(segment.visible for segment in ctrl.segments),
-            message="segments must have at minimum one visible Segment",
-        ),
         V.ensure(
             lambda ctrl: len(ctrl.selected) > 0 or ctrl.allow_empty_selection,
             message="allow_empty_selection must be True for selected to be empty",

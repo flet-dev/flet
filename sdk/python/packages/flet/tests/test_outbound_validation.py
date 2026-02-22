@@ -170,3 +170,23 @@ def test_str_or_visible_control_rule_defaults_and_optional_none():
         value: Annotated[Optional[FletControl], V.str_or_visible_control()] = None
 
     OptionalStringOrVisibleControlRuleControl()._before_update_safe()
+
+
+def test_visible_controls_field_rule_default_messages():
+    @control("VisibleControlsRuleControl")
+    class VisibleControlsRuleControl(BaseControl):
+        items: Annotated[list[FletControl], V.visible_controls(min_count=2)]
+
+    _assert_value_error(
+        VisibleControlsRuleControl(items=[ft.Text("A"), ft.Text("B", visible=False)]),
+        "items must contain at least 2 visible Controls, got 1",
+    )
+
+    @control("VisibleControlsMinOneControl")
+    class VisibleControlsMinOneControl(BaseControl):
+        items: Annotated[list[FletControl], V.visible_controls(min_count=1)]
+
+    _assert_value_error(
+        VisibleControlsMinOneControl(items=[ft.Text("A", visible=False)]),
+        "items must contain at least one visible Control, got 0",
+    )

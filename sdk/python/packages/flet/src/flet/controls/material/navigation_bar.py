@@ -1,8 +1,8 @@
 from dataclasses import field
 from enum import Enum
-from typing import ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.border import Border
@@ -111,12 +111,17 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     """
 
-    destinations: list[NavigationBarDestination] = field(default_factory=list)
+    destinations: Annotated[
+        list[NavigationBarDestination],
+        V.visible_controls(min_count=2),
+    ] = field(default_factory=list)
     """
     Defines the appearance of the button items that are arrayed within the navigation \
     bar.
 
-    The value must be a list of two or more `NavigationBarDestination` instances.
+    Raises:
+        ValueError: If it does not contain at least
+            two visible `NavigationBarDestination`.
     """
 
     selected_index: int = 0
@@ -189,20 +194,6 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     """
     Called when selected destination changed.
     """
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: sum(
-                1 for destination in ctrl.destinations if destination.visible
-            )
-            >= 2,
-            message=(
-                lambda ctrl: "destinations must contain at minimum two visible "
-                f"Controls, got "
-                f"{sum(1 for destination in ctrl.destinations if destination.visible)}"
-            ),
-        ),
-    )
 
     def before_update(self):
         super().before_update()

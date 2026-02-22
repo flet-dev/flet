@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.control_event import ControlEventHandler
@@ -24,13 +24,16 @@ class CupertinoNavigationBar(LayoutControl):
     destinations in an app.
     """
 
-    destinations: list[NavigationBarDestination]
+    destinations: Annotated[
+        list[NavigationBarDestination],
+        V.visible_controls(min_count=2),
+    ]
     """
     The destinations of this navigation bar.
 
     Raises:
-        ValueError: If it does not contain at least two visible
-            [`NavigationBarDestination`][flet.]s.
+        ValueError: If it does not contain at least
+            two visible `NavigationBarDestination`s.
     """
 
     selected_index: int = 0
@@ -38,13 +41,9 @@ class CupertinoNavigationBar(LayoutControl):
     The index into [`destinations`][(c).] for the currently selected \
     [`NavigationBarDestination`][flet.].
 
-    Note:
-        Must be a value between `0` and the length of visible
-        [`destinations`][(c).], inclusive.
-
     Raises:
-        IndexError: If [`selected_index`][(c).] is out of range relative to the
-            visible destinations.
+        ValueError: If it is not greater than or equal to `0` and less than
+            the length of visible [`destinations`][(c).], inclusive.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -78,20 +77,6 @@ class CupertinoNavigationBar(LayoutControl):
     """
     Called when selected destination changed.
     """
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: sum(
-                1 for destination in ctrl.destinations if destination.visible
-            )
-            >= 2,
-            message=(
-                lambda ctrl: "destinations must contain at minimum two visible "
-                f"controls, got "
-                f"{sum(1 for destination in ctrl.destinations if destination.visible)}"
-            ),
-        ),
-    )
 
     def before_update(self):
         super().before_update()

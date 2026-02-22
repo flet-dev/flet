@@ -1,6 +1,6 @@
-from typing import Annotated, ClassVar
+from typing import Annotated
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -31,7 +31,10 @@ class CupertinoContextMenu(AdaptiveControl):
         ValueError: If it is not visible.
     """
 
-    actions: list[Control]
+    actions: Annotated[
+        list[Control],
+        V.visible_controls(min_count=1),
+    ]
     """
     A list of action buttons to be shown in the menu.
 
@@ -45,10 +48,3 @@ class CupertinoContextMenu(AdaptiveControl):
     """
     Whether a click on the [`actions`][(c).] should produce haptic feedback.
     """
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: any(action.visible for action in ctrl.actions),
-            message="at least one action must be visible",
-        ),
-    )

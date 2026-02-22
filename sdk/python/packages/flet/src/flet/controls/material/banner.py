@@ -1,6 +1,6 @@
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -55,7 +55,10 @@ class Banner(DialogControl):
         ValueError: If [`content`][(c).] is not visible.
     """
 
-    actions: list[Control]
+    actions: Annotated[
+        list[Control],
+        V.visible_controls(min_count=1),
+    ]
     """
     The set of actions that are displayed at the bottom or trailing side of this \
     banner.
@@ -64,8 +67,7 @@ class Banner(DialogControl):
     controls.
 
     Raises:
-        ValueError: If [`actions`][(c).] does not contain at least one visible
-            action Control.
+        ValueError: If it does not contain at least one visible `Control`.
     """
 
     leading: Optional[IconDataOrControl] = None
@@ -150,10 +152,3 @@ class Banner(DialogControl):
     """
     Called when this banner is shown or made visible for the first time.
     """
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: any(action.visible for action in ctrl.actions),
-            message="actions must contain at minimum one visible Control",
-        ),
-    )

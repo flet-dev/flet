@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -29,7 +29,10 @@ class CupertinoSegmentedButton(LayoutControl):
     ```
     """
 
-    controls: list[Control]
+    controls: Annotated[
+        list[Control],
+        V.visible_controls(min_count=2),
+    ]
     """
     The list of segments to be displayed.
 
@@ -96,16 +99,6 @@ class CupertinoSegmentedButton(LayoutControl):
     Called when the state of the button is changed - when one of the `controls` is \
     clicked.
     """
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: sum(1 for segment in ctrl.controls if segment.visible) >= 2,
-            message=(
-                lambda ctrl: "controls must contain at minimum two visible Controls, "
-                f"got {sum(1 for segment in ctrl.controls if segment.visible)}"
-            ),
-        ),
-    )
 
     def before_update(self):
         super().before_update()

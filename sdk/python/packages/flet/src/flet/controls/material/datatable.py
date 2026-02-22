@@ -209,7 +209,10 @@ class DataRow(Control):
     The data for this row of the table is provided in the [`cells`][(c).] property.
     """
 
-    cells: list[DataCell] = field(default_factory=list)
+    cells: Annotated[
+        list[DataCell],
+        V.visible_controls(min_count=1),
+    ] = field(default_factory=list)
     """
     The data for this row: a list of [`DataCell`][flet.] controls.
 
@@ -277,13 +280,6 @@ class DataRow(Control):
 
     def __contains__(self, item):
         return item in self.cells
-
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.ensure(
-            lambda ctrl: any(cell.visible for cell in ctrl.cells),
-            message="cells must contain at minimum one visible DataCell",
-        ),
-    )
 
 
 @control("DataTable")
