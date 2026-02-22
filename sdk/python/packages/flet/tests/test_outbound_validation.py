@@ -103,7 +103,7 @@ def test_default_control_message_is_used_when_message_is_omitted():
     class DefaultControlMessageControl(BaseControl):
         start: int = 2
         end: int = 1
-        __outbound_rules__ = (V.ensure(lambda control: control.start <= control.end),)
+        __validation_rules__ = (V.ensure(lambda control: control.start <= control.end),)
 
     control_instance = DefaultControlMessageControl()
     _assert_value_error(
@@ -117,7 +117,7 @@ def test_control_rule_auto_allows_none_for_optional_fields():
     class AutoOptionalNoneControl(BaseControl):
         left: Optional[int] = None
         right: int = 10
-        __outbound_rules__ = (V.fields_le("left", "right"),)
+        __validation_rules__ = (V.fields_le("left", "right"),)
 
     # `left` is Optional, so None is auto-allowed by `fields_le`.
     AutoOptionalNoneControl()._before_update_safe()
@@ -128,7 +128,7 @@ def test_control_rule_none_is_rejected_for_non_optional_fields():
     class NonOptionalNoneControl(BaseControl):
         left: int = 1
         right: int = 10
-        __outbound_rules__ = (V.fields_le("left", "right"),)
+        __validation_rules__ = (V.fields_le("left", "right"),)
 
     control_instance = NonOptionalNoneControl()
     control_instance.left = None

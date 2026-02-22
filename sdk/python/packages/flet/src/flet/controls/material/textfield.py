@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Annotated, ClassVar, Optional, Union
+from typing import Annotated, Optional, Union
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -622,9 +622,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     TBD
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.fields_le("min_lines", "max_lines"),
-    )
+    __validation_rules__: ValidationRules = (V.fields_le("min_lines", "max_lines"),)
 
     def _migrate_state(self, other: BaseControl):
         super()._migrate_state(other)

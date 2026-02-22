@@ -1,6 +1,6 @@
-from typing import Annotated, ClassVar, Optional, Union
+from typing import Annotated, Optional, Union
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -188,7 +188,7 @@ class FloatingActionButton(LayoutControl):
     Called when a user clicks this button.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.icon
             or isinstance(ctrl.content, str)

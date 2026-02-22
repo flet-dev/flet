@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional, Union
+from typing import Optional, Union
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -102,7 +102,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     Called when this button has lost focus.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.icon
             or isinstance(ctrl.content, str)

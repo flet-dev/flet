@@ -1,6 +1,6 @@
-from typing import Annotated, ClassVar, Optional, Union
+from typing import Annotated, Optional, Union
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -129,7 +129,7 @@ class CircleAvatar(LayoutControl):
     indicating the error's origin.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.radius is None
             or (ctrl.min_radius is None and ctrl.max_radius is None),

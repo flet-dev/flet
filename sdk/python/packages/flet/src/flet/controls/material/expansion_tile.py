@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationStyle
@@ -343,7 +343,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     representing the [`expanded`][(c).] state of the tile after the change.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.expanded_cross_axis_alignment
             != CrossAxisAlignment.BASELINE,

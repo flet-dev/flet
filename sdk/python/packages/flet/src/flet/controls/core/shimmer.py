@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.duration import DurationValue
@@ -110,7 +110,7 @@ class Shimmer(LayoutControl):
         ValueError: If it is not greater than or equal to `0`.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.gradient is not None
             or (ctrl.base_color is not None and ctrl.highlight_color is not None),

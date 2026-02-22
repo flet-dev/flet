@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional
+from typing import Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -66,7 +66,7 @@ class Option(Control):
     Called when this option is clicked.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.key is not None or ctrl.text is not None,
             message="key or text must be specified",

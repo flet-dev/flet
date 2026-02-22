@@ -1,6 +1,6 @@
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
 from flet.controls.border import BorderSide
@@ -265,7 +265,7 @@ class Chip(LayoutControl):
     Called when this chip has lost focus.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: ctrl.on_select is None or ctrl.on_click is None,
             message="on_select and on_click cannot be used together",

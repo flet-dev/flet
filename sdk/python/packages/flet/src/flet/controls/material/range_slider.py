@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional
+from typing import Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
@@ -146,7 +146,7 @@ class RangeSlider(LayoutControl):
     Called when the user is done selecting a new value for the slider.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.fields_le("end_value", "max"),
         V.fields_ge("start_value", "min"),
         V.fields_le("start_value", "end_value"),

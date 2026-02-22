@@ -1,6 +1,6 @@
-from typing import ClassVar, Optional
+from typing import Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
@@ -68,7 +68,7 @@ class CupertinoActionSheet(LayoutControl):
     Typically a [`CupertinoActionSheetAction`][flet.] button.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
                 ctrl.actions is not None

@@ -1,7 +1,7 @@
 from dataclasses import field
-from typing import ClassVar, Optional
+from typing import Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.animation import Animation, AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -68,7 +68,7 @@ class CupertinoAlertDialog(DialogControl):
     If that is also `None`, the default is `Colors.BLACK_54`.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (isinstance(ctrl.title, str))
             or (isinstance(ctrl.title, Control) and ctrl.title.visible)

@@ -1,7 +1,7 @@
 from dataclasses import field
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -178,9 +178,7 @@ class InteractiveViewer(LayoutControl):
     Called when the user ends a pan or scale gesture.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
-        V.fields_ge("max_scale", "min_scale"),
-    )
+    __validation_rules__: ValidationRules = (V.fields_ge("max_scale", "min_scale"),)
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """

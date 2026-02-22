@@ -1,7 +1,7 @@
 from dataclasses import field
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -47,7 +47,7 @@ class Segment(Control):
         ValueError: If neither it nor [`icon`][(c).] is set and visible.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: isinstance(ctrl.icon, IconData)
             or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
@@ -169,7 +169,7 @@ class SegmentedButton(LayoutControl):
     contains a list of strings identifying the selected segments.
     """
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: len(ctrl.selected) > 0 or ctrl.allow_empty_selection,
             message="allow_empty_selection must be True for selected to be empty",

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Annotated, ClassVar, Optional
+from typing import Annotated, Optional
 
-from flet.controls._validation import ControlRule, V
+from flet.controls._validation import V, ValidationRules
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import BorderRadiusValue
@@ -519,7 +519,7 @@ class DataTable(LayoutControl):
     def __contains__(self, item):
         return item in self.columns + self.rows
 
-    __outbound_rules__: ClassVar[tuple[ControlRule, ...]] = (
+    __validation_rules__: ValidationRules = (
         V.fields_le("data_row_min_height", "data_row_max_height"),
     )
 

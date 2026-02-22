@@ -2,7 +2,7 @@
 Internal outbound validation helpers for Flet controls.
 
 This module provides small composable rule objects that can be attached to control
-fields via `typing.Annotated` and to controls via `__outbound_rules__`.
+fields via `typing.Annotated` and to controls via `__validation_rules__`.
 The runtime calls `validate_outbound()` before patch serialization so invalid
 state is rejected on the Python side before reaching Dart.
 """
@@ -14,6 +14,7 @@ from typing import (
     Annotated,
     Any,
     Callable,
+    ClassVar,
     Optional,
     Union,
     get_args,
@@ -25,6 +26,7 @@ __all__ = [
     "ControlRule",
     "FieldRule",
     "V",
+    "ValidationRules",
     "validate_outbound",
 ]
 
@@ -55,6 +57,10 @@ class ControlRule:
     def validate(self, control: Any) -> None:
         """Validate a control instance."""
         self._check(control)
+
+
+ValidationRules = ClassVar[tuple[ControlRule, ...]]
+"""Alias for class-level outbound control-rule declarations."""
 
 
 @dataclass(frozen=True)
@@ -102,7 +108,7 @@ class V:
     Validation rule builder namespace.
 
     Methods return `FieldRule` or `ControlRule` instances which are attached to
-    control fields (`Annotated[...]`) or class-level `__outbound_rules__`.
+    control fields (`Annotated[...]`) or class-level `__validation_rules__`.
     """
 
     @staticmethod
@@ -781,7 +787,7 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
                         field_rules.append((field_name, metadata))
 
         # Collect class-level cross-field rules.
-        rules = cls.__dict__.get("__outbound_rules__", ())
+        rules = cls.__dict__.get("__validation_rules__", ())
         if rules:
             for rule in rules:
                 if isinstance(rule, ControlRule):
