@@ -21,6 +21,15 @@ class AuthorizationService(Authorization):
     The service coordinates authorization URL generation, token exchange,
     token refresh, and optional user/group resolution using the configured
     [`OAuthProvider`][flet.auth.oauth_provider.].
+
+    Args:
+        provider: Configured [`OAuthProvider`][flet.auth.oauth_provider.]
+            describing OAuth endpoints, credentials, and optional user/group APIs.
+        fetch_user: Whether to request provider user profile information.
+        fetch_groups: Whether to request user groups/roles.
+        scope: Initial OAuth scopes. The service augments this list
+            with provider defaults (`provider.scopes`) and, when enabled,
+            provider user/group scopes.
     """
 
     def __init__(
@@ -93,6 +102,7 @@ class AuthorizationService(Authorization):
             state=self.state,
             code_challenge=self.provider.code_challenge,
             code_challenge_method=self.provider.code_challenge_method,
+            **self.provider.authorization_params,
         )
         return authorization_url, self.state
 
@@ -175,13 +185,13 @@ class AuthorizationService(Authorization):
 
     async def __refresh_token(self):
         """
-        Refresh access token when it is expired and refresh token is available.
+        Refresh the access token when it is expired and a refresh token is available.
 
         The method is a no-op when token is missing, non-expiring, not expired,
         or does not include a refresh token.
 
         Raises:
-            httpx.HTTPStatusError: If refresh request fails.
+            httpx.HTTPStatusError: If the refresh request fails.
         """
 
         if (
@@ -221,7 +231,7 @@ class AuthorizationService(Authorization):
         Fetch user profile from provider `user_endpoint`.
 
         Returns:
-            A [`User`][flet.auth.user.User] built from response payload and
+            A [`User`][flet.auth.user.] built from response payload and
                 `provider.user_id_fn`.
 
         Raises:
