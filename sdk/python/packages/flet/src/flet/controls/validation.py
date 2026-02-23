@@ -8,6 +8,7 @@ state is rejected on the Python side before reaching Dart.
 """
 
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cache
 from typing import (
@@ -101,6 +102,16 @@ def _format_expected_type(
     if len(names) == 2:
         return f"{names[0]} or {names[1]}"
     return f"{', '.join(names[:-1])}, or {names[-1]}"
+
+
+def _format_allowed_values(values: tuple[Any, ...]) -> str:
+    """Format allowed values into a readable sentence fragment."""
+    value_names = [repr(value) for value in values]
+    if len(value_names) == 1:
+        return value_names[0]
+    if len(value_names) == 2:
+        return f"{value_names[0]} or {value_names[1]}"
+    return f"{', '.join(value_names[:-1])}, or {value_names[-1]}"
 
 
 class V:
@@ -465,6 +476,384 @@ class V:
                 raise ValueError(
                     f"{field_name} must be between {minimum} and {maximum} inclusive, "
                     f"got {value}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def eq(
+        expected: Any,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `value == expected`.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be equal to {expected}, got {current_value}"
+                ),
+            ):
+                return
+            if value != expected:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must be equal to {expected}, got {value}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def ne(
+        unexpected: Any,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate `value != unexpected`.
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must not be equal to {unexpected}, "
+                    f"got {current_value}"
+                ),
+            ):
+                return
+            if value == unexpected:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must not be equal to {unexpected}, got {value}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def one_of(
+        allowed_values: Iterable[Any],
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that `value` belongs to a fixed set of allowed values.
+
+        Args:
+            allowed_values: Allowed values collection.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If `allowed_values` is empty.
+        """
+        allowed_values_tuple = tuple(allowed_values)
+        if len(allowed_values_tuple) == 0:
+            raise ValueError("allowed_values must contain at least one value")
+
+        allowed_values_text = _format_allowed_values(allowed_values_tuple)
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be one of {allowed_values_text}, "
+                    f"got {current_value!r}"
+                ),
+            ):
+                return
+            if value not in allowed_values_tuple:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must be one of {allowed_values_text}, got {value!r}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def or_(
+        *rules: FieldRule,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that at least one field rule passes.
+
+        Args:
+            rules: Field rules evaluated in declaration order.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If no rules are provided.
+            TypeError: If any provided object is not a `FieldRule`.
+        """
+        if len(rules) == 0:
+            raise ValueError("or_ requires at least one field rule")
+        for rule in rules:
+            if not isinstance(rule, FieldRule):
+                raise TypeError("or_ expects only FieldRule instances")
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            errors: list[str] = []
+            for rule in rules:
+                try:
+                    rule.validate(control, field_name, value)
+                    return
+                except ValueError as err:
+                    errors.append(str(err))
+
+            if message is not None:
+                raise ValueError(
+                    _resolve_field_message(message, control, field_name, value)
+                )
+
+            if len(errors) == 1:
+                raise ValueError(errors[0])
+
+            joined_errors = "; or ".join(errors)
+            raise ValueError(
+                f"{field_name} must satisfy at least one of the allowed "
+                f"conditions: {joined_errors}"
+            )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def non_empty(
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a sized field value is non-empty (`len(value) > 0`).
+        """
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (
+                    f"{field_name} must be a non-empty sized value, got None"
+                ),
+            ):
+                return
+
+            try:
+                length = len(value)
+            except TypeError as err:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    ) from err
+                raise ValueError(
+                    f"{field_name} must be a non-empty sized value, got {type(value)}"
+                ) from err
+
+            if length == 0:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(f"{field_name} must be non-empty")
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def length_ge(
+        minimum: int,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a sized field has length greater than or equal to `minimum`.
+
+        Args:
+            minimum: Inclusive minimum allowed length.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If `minimum` is negative.
+        """
+        if minimum < 0:
+            raise ValueError(
+                f"minimum must be greater than or equal to 0, got {minimum}"
+            )
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (
+                    f"{field_name} must have length greater than or equal to "
+                    f"{minimum}, got None"
+                ),
+            ):
+                return
+
+            try:
+                length = len(value)
+            except TypeError as err:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    ) from err
+                raise ValueError(
+                    f"{field_name} must be a sized value with length greater than "
+                    f"or equal to {minimum}, got {type(value)}"
+                ) from err
+
+            if length < minimum:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must have length greater than or equal to "
+                    f"{minimum}, got {length}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def length_eq(
+        expected: int,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a sized field has length equal to `expected`.
+
+        Args:
+            expected: Required length.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If `expected` is negative.
+        """
+        if expected < 0:
+            raise ValueError(
+                f"expected must be greater than or equal to 0, got {expected}"
+            )
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (
+                    f"{field_name} must have length equal to {expected}, got None"
+                ),
+            ):
+                return
+
+            try:
+                length = len(value)
+            except TypeError as err:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    ) from err
+                raise ValueError(
+                    f"{field_name} must be a sized value with length equal to "
+                    f"{expected}, got {type(value)}"
+                ) from err
+
+            if length != expected:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must have length equal to {expected}, got {length}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def length_between(
+        minimum: int,
+        maximum: int,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a sized field length is between bounds, inclusive.
+
+        Args:
+            minimum: Inclusive minimum allowed length.
+            maximum: Inclusive maximum allowed length.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValueError: If `minimum` is negative.
+            ValueError: If `maximum` is less than `minimum`.
+        """
+        if minimum < 0:
+            raise ValueError(
+                f"minimum must be greater than or equal to 0, got {minimum}"
+            )
+        if maximum < minimum:
+            raise ValueError(
+                f"maximum must be greater than or equal to minimum ({minimum}), "
+                f"got {maximum}"
+            )
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda _current_value: (
+                    f"{field_name} must have length between {minimum} and {maximum} "
+                    f"inclusive, got None"
+                ),
+            ):
+                return
+
+            try:
+                length = len(value)
+            except TypeError as err:
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    ) from err
+                raise ValueError(
+                    f"{field_name} must be a sized value with length between "
+                    f"{minimum} and {maximum} inclusive, got {type(value)}"
+                ) from err
+
+            if not (minimum <= length <= maximum):
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must have length between {minimum} and {maximum} "
+                    f"inclusive, got {length}"
                 )
 
         return FieldRule(_check)

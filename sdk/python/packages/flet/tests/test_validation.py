@@ -262,6 +262,157 @@ def test_numeric_rules_handle_optional_none_and_custom_message_for_required_none
 
 
 @pytest.mark.parametrize(
+    ("rule", "valid_value", "invalid_value", "error_message"),
+    [
+        (V.eq(5), 5, 4, "value must be equal to 5, got 4"),
+        (V.ne(5), 4, 5, "value must not be equal to 5, got 5"),
+        (
+            V.one_of(("small", "medium", "large")),
+            "medium",
+            "x-large",
+            "value must be one of 'small', 'medium', or 'large', got 'x-large'",
+        ),
+    ],
+)
+def test_equality_and_membership_rules(rule, valid_value, invalid_value, error_message):
+    """Validate equality/membership rules and their default error messages."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[object, rule]
+
+    validate(Sample(value=valid_value))
+    with pytest.raises(ValueError, match=re.escape(error_message)):
+        validate(Sample(value=invalid_value))
+
+
+def test_one_of_requires_non_empty_allowed_values():
+    """Ensure `V.one_of()` rejects empty allowed-value collections."""
+    with pytest.raises(
+        ValueError, match="allowed_values must contain at least one value"
+    ):
+        V.one_of(())
+
+
+def test_or_rule_accepts_when_any_rule_passes_and_composes_default_error():
+    """
+    Verify `V.or_()` accepts if any nested rule passes and combines failures by default.
+    """
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, V.or_(V.eq(-1), V.gt(0))]
+
+    validate(Sample(value=-1))
+    validate(Sample(value=2))
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "value must satisfy at least one of the allowed conditions: "
+            "value must be equal to -1, got 0; or "
+            "value must be strictly greater than 0, got 0"
+        ),
+    ):
+        validate(Sample(value=0))
+
+
+def test_or_rule_uses_custom_message_and_validates_arguments():
+    """Ensure `V.or_()` supports custom messages and validates builder input."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, V.or_(V.eq(1), V.eq(2), message="invalid choice")]
+
+    with pytest.raises(ValueError, match="invalid choice"):
+        validate(Sample(value=3))
+
+    with pytest.raises(ValueError, match="or_ requires at least one field rule"):
+        V.or_()
+
+    with pytest.raises(TypeError, match="or_ expects only FieldRule instances"):
+        V.or_(V.eq(1), "bad")  # type: ignore[arg-type]
+
+
+def test_non_empty_rule_default_messages_and_optional_none_inference():
+    """
+    Validate `V.non_empty()` behavior for empty values, type errors,
+    and optional `None`.
+    """
+
+    @dataclass
+    class RequiredSample:
+        value: Annotated[list[int], V.non_empty()] = field(default_factory=list)
+
+    @dataclass
+    class OptionalSample:
+        value: Annotated[Optional[list[int]], V.non_empty()] = None
+
+    with pytest.raises(ValueError, match="value must be non-empty"):
+        validate(RequiredSample(value=[]))
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape("value must be a non-empty sized value, got <class 'int'>"),
+    ):
+        validate(RequiredSample(value=123))  # type: ignore[arg-type]
+
+    validate(OptionalSample(value=None))
+
+
+def test_length_rules_default_messages_builder_checks_and_custom_message():
+    """Cover length-rule defaults and builder constraints."""
+
+    with pytest.raises(
+        ValueError, match="minimum must be greater than or equal to 0, got -1"
+    ):
+        V.length_ge(-1)
+
+    with pytest.raises(
+        ValueError, match="expected must be greater than or equal to 0, got -1"
+    ):
+        V.length_eq(-1)
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape("maximum must be greater than or equal to minimum (2), got 1"),
+    ):
+        V.length_between(2, 1)
+
+    @dataclass
+    class MinLength:
+        value: Annotated[str, V.length_ge(2)]
+
+    @dataclass
+    class BetweenLength:
+        value: Annotated[list[int], V.length_between(1, 2, message="length invalid")]
+
+    @dataclass
+    class EqLength:
+        value: Annotated[str, V.length_eq(3)]
+
+    validate(MinLength(value="ok"))
+    with pytest.raises(
+        ValueError,
+        match="value must have length greater than or equal to 2, got 1",
+    ):
+        validate(MinLength(value="x"))
+
+    validate(EqLength(value="abc"))
+    with pytest.raises(
+        ValueError,
+        match="value must have length equal to 3, got 2",
+    ):
+        validate(EqLength(value="ab"))
+
+    with pytest.raises(ValueError, match="length invalid"):
+        validate(BetweenLength(value=[]))
+
+    with pytest.raises(ValueError, match="length invalid"):
+        validate(BetweenLength(value=123))  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize(
     ("rule", "valid_pair", "invalid_pair", "error_message"),
     [
         (

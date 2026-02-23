@@ -269,11 +269,6 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
-def _validate_max_length(_control, _field_name: str, value: Optional[int]) -> None:
-    if value is not None and value != -1 and value <= 0:
-        raise ValueError("max_length must be either equal to -1 or greater than 0")
-
-
 @control("TextField")
 class TextField(FormFieldControl, AdaptiveControl):
     """
@@ -356,20 +351,22 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     max_length: Annotated[
         Optional[int],
-        V.field(_validate_max_length),
+        V.or_(
+            V.gt(0),
+            V.eq(-1),
+            message="max_length must be either strictly greater than 0 or equal to -1",
+        ),
     ] = None
     """
     Limits a maximum number of characters that can be entered into TextField.
 
     Raises:
-        ValueError: If it is neither `-1` nor a positive integer.
+        ValueError: If it is not strictly greater than `0` or equal to `-1`.
     """
 
     password: bool = False
     """
     Whether to hide the text being edited.
-
-    Defaults to `False`.
     """
 
     can_reveal_password: bool = False
@@ -388,8 +385,6 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     When this is set to `True`, the text cannot be modified by any shortcut or keyboard
     operation. The text is still selectable.
-
-    Defaults to `False`.
     """
 
     shift_enter: bool = False
@@ -431,8 +426,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     autocorrect: bool = True
     """
     Whether to enable autocorrection.
-
-    Defaults to `True`.
     """
 
     enable_suggestions: bool = True
@@ -442,8 +435,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects Android. On iOS, suggestions are tied directly to
     `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`.
     On Android autocorrection and suggestion are controlled separately.
-
-    Defaults to `True`.
     """
 
     smart_dashes_type: bool = True
@@ -453,8 +444,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS versions 11 and above. As an example of what this does,
     two consecutive hyphen characters will be automatically replaced with one en dash,
     and three consecutive hyphens will become one em dash.
-
-    Defaults to `True`.
     """
 
     smart_quotes_type: bool = True
@@ -464,15 +453,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS. As an example of what this does, a standard vertical
     double quote character will be automatically replaced by a left or right double
     quote depending on its position in a word.
-
-    Defaults to `True`.
     """
 
     show_cursor: bool = True
     """
     Whether the field's cursor is to be shown.
-
-    Defaults to `True`.
     """
 
     cursor_color: Optional[ColorValue] = None
