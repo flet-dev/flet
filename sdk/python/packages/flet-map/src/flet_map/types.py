@@ -615,7 +615,7 @@ class MapEventSource(Enum):
     while performing the double tap zoom in animation.
     """
 
-    INTERACTIVE_FLAGS_CHANGED = "InteractionFlagsChanged"
+    INTERACTIVE_FLAGS_CHANGED = "interactiveFlagsChanged"
     """The `MapEvent` is caused by a change of the interactive flags."""
 
     FIT_CAMERA = "fitCamera"

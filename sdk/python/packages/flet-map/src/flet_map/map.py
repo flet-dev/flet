@@ -2,8 +2,10 @@ from dataclasses import field
 from typing import Optional
 
 import flet as ft
+from flet.utils import from_dict
 from flet_map.map_layer import MapLayer
 from flet_map.types import (
+    Camera,
     CameraFit,
     InteractionConfiguration,
     MapEvent,
@@ -364,3 +366,13 @@ class Map(ft.LayoutControl):
                 "cancel_ongoing_animations": cancel_ongoing_animations,
             },
         )
+
+    async def get_camera(self) -> Camera:
+        """
+        Gets the current camera snapshot of the map.
+
+        Returns:
+            Current [`Camera`][flet_map.] state.
+        """
+        camera = await self._invoke_method("get_camera")
+        return from_dict(Camera, camera)
