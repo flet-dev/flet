@@ -27,6 +27,7 @@ __all__ = [
     "ControlRule",
     "FieldRule",
     "V",
+    "ValidationDeclarationError",
     "ValidationRules",
     "validate",
 ]
@@ -36,6 +37,15 @@ FieldMessage = Union[str, Callable[[Any, str, Any], str]]
 ControlCheck = Callable[[Any], None]
 ControlMessage = Union[str, Callable[[Any], str]]
 ControlPredicate = Callable[[Any], bool]
+
+
+class ValidationDeclarationError(RuntimeError):
+    """
+    Raised when a validation rule declaration is invalid.
+
+    This is intended for those declaring validation rules,
+    not for end-user value input validation failures.
+    """
 
 
 @dataclass(frozen=True)
@@ -234,10 +244,11 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `min_count` is not greater than or equal to `1`.
+            ValidationDeclarationError: If `min_count` is not greater than or
+                equal to `1`.
         """
         if min_count < 1:
-            raise ValueError(
+            raise ValidationDeclarationError(
                 f"min_count must be greater than or equal to 1, got {min_count}"
             )
 
@@ -559,11 +570,13 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `allowed_values` is empty.
+            ValidationDeclarationError: If `allowed_values` is empty.
         """
         allowed_values_tuple = tuple(allowed_values)
         if len(allowed_values_tuple) == 0:
-            raise ValueError("allowed_values must contain at least one value")
+            raise ValidationDeclarationError(
+                "allowed_values must contain at least one value"
+            )
 
         allowed_values_text = _format_allowed_values(allowed_values_tuple)
 
@@ -603,14 +616,15 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If no rules are provided.
-            TypeError: If any provided object is not a `FieldRule`.
+            ValidationDeclarationError: If no rules are provided.
+            ValidationDeclarationError: If any provided object is not a
+                `FieldRule`.
         """
         if len(rules) == 0:
-            raise ValueError("or_ requires at least one field rule")
+            raise ValidationDeclarationError("or_ requires at least one field rule")
         for rule in rules:
             if not isinstance(rule, FieldRule):
-                raise TypeError("or_ expects only FieldRule instances")
+                raise ValidationDeclarationError("or_ expects only FieldRule instances")
 
         def _check(control: Any, field_name: str, value: Any) -> None:
             errors: list[str] = []
@@ -692,10 +706,10 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `minimum` is negative.
+            ValidationDeclarationError: If `minimum` is negative.
         """
         if minimum < 0:
-            raise ValueError(
+            raise ValidationDeclarationError(
                 f"minimum must be greater than or equal to 0, got {minimum}"
             )
 
@@ -750,10 +764,10 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `expected` is negative.
+            ValidationDeclarationError: If `expected` is negative.
         """
         if expected < 0:
-            raise ValueError(
+            raise ValidationDeclarationError(
                 f"expected must be greater than or equal to 0, got {expected}"
             )
 
@@ -808,15 +822,15 @@ class V:
             message: Optional custom error text or formatter.
 
         Raises:
-            ValueError: If `minimum` is negative.
-            ValueError: If `maximum` is less than `minimum`.
+            ValidationDeclarationError: If `minimum` is negative.
+            ValidationDeclarationError: If `maximum` is less than `minimum`.
         """
         if minimum < 0:
-            raise ValueError(
+            raise ValidationDeclarationError(
                 f"minimum must be greater than or equal to 0, got {minimum}"
             )
         if maximum < minimum:
-            raise ValueError(
+            raise ValidationDeclarationError(
                 f"maximum must be greater than or equal to minimum ({minimum}), "
                 f"got {maximum}"
             )

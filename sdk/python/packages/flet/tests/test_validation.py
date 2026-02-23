@@ -4,7 +4,12 @@ from typing import Annotated, Optional
 
 import pytest
 
-from flet.controls.validation import V, ValidationRules, validate
+from flet.controls.validation import (
+    V,
+    ValidationDeclarationError,
+    ValidationRules,
+    validate,
+)
 
 
 @dataclass
@@ -146,7 +151,8 @@ def test_visible_controls_validates_min_count_and_default_messages():
     Cover `V.visible_controls()` min-count validation and default failure messages.
     """
     with pytest.raises(
-        ValueError, match="min_count must be greater than or equal to 1, got 0"
+        ValidationDeclarationError,
+        match="min_count must be greater than or equal to 1, got 0",
     ):
         V.visible_controls(min_count=0)
 
@@ -289,7 +295,8 @@ def test_equality_and_membership_rules(rule, valid_value, invalid_value, error_m
 def test_one_of_requires_non_empty_allowed_values():
     """Ensure `V.one_of()` rejects empty allowed-value collections."""
     with pytest.raises(
-        ValueError, match="allowed_values must contain at least one value"
+        ValidationDeclarationError,
+        match="allowed_values must contain at least one value",
     ):
         V.one_of(())
 
@@ -327,10 +334,14 @@ def test_or_rule_uses_custom_message_and_validates_arguments():
     with pytest.raises(ValueError, match="invalid choice"):
         validate(Sample(value=3))
 
-    with pytest.raises(ValueError, match="or_ requires at least one field rule"):
+    with pytest.raises(
+        ValidationDeclarationError, match="or_ requires at least one field rule"
+    ):
         V.or_()
 
-    with pytest.raises(TypeError, match="or_ expects only FieldRule instances"):
+    with pytest.raises(
+        ValidationDeclarationError, match="or_ expects only FieldRule instances"
+    ):
         V.or_(V.eq(1), "bad")  # type: ignore[arg-type]
 
 
@@ -364,17 +375,19 @@ def test_length_rules_default_messages_builder_checks_and_custom_message():
     """Cover length-rule defaults and builder constraints."""
 
     with pytest.raises(
-        ValueError, match="minimum must be greater than or equal to 0, got -1"
+        ValidationDeclarationError,
+        match="minimum must be greater than or equal to 0, got -1",
     ):
         V.length_ge(-1)
 
     with pytest.raises(
-        ValueError, match="expected must be greater than or equal to 0, got -1"
+        ValidationDeclarationError,
+        match="expected must be greater than or equal to 0, got -1",
     ):
         V.length_eq(-1)
 
     with pytest.raises(
-        ValueError,
+        ValidationDeclarationError,
         match=re.escape("maximum must be greater than or equal to minimum (2), got 1"),
     ):
         V.length_between(2, 1)
