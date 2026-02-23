@@ -270,6 +270,66 @@ def test_numeric_rules_handle_optional_none_and_custom_message_for_required_none
 @pytest.mark.parametrize(
     ("rule", "valid_value", "invalid_value", "error_message"),
     [
+        (
+            V.factor_of(60),
+            -15,
+            7,
+            "value must be a factor of 60, got 7",
+        ),
+        (
+            V.multiple_of(-5),
+            -15,
+            14,
+            "value must be a multiple of 5, got 14",
+        ),
+    ],
+)
+def test_divisibility_rules(rule, valid_value, invalid_value, error_message):
+    """Validate factor/multiple helpers and their default error messages."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, rule]
+
+    validate(Sample(value=valid_value))
+    with pytest.raises(ValueError, match=re.escape(error_message)):
+        validate(Sample(value=invalid_value))
+
+
+def test_divisibility_rules_support_optional_none_and_custom_message():
+    """Ensure divisibility rules honor optional-None inference and custom text."""
+
+    @dataclass
+    class OptionalSample:
+        value: Annotated[Optional[int], V.factor_of(60)] = None
+
+    @dataclass
+    class RequiredSample:
+        value: Annotated[int, V.multiple_of(5, message="bad multiple")]
+
+    validate(OptionalSample(value=None))
+
+    with pytest.raises(ValueError, match="bad multiple"):
+        validate(RequiredSample(value=6))
+
+
+def test_divisibility_rules_validate_builder_arguments():
+    """Verify declaration-time validation for divisor/base arguments."""
+
+    with pytest.raises(
+        ValidationDeclarationError, match="base must be a non-zero integer"
+    ):
+        V.factor_of(0)
+
+    with pytest.raises(
+        ValidationDeclarationError, match="divisor must be a non-zero integer"
+    ):
+        V.multiple_of(0)
+
+
+@pytest.mark.parametrize(
+    ("rule", "valid_value", "invalid_value", "error_message"),
+    [
         (V.eq(5), 5, 4, "value must be equal to 5, got 4"),
         (V.ne(5), 4, 5, "value must not be equal to 5, got 5"),
         (

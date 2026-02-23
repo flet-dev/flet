@@ -1,13 +1,14 @@
 from dataclasses import field
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Locale, Number
+from flet.controls.validation import V
 
 __all__ = [
     "CupertinoDatePicker",
@@ -109,12 +110,17 @@ class CupertinoDatePicker(LayoutControl):
     Defaults to the present date and time.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`first_date`][(c).].
-        ValueError: If it is not less than or equal to [`last_date`][(c).].
-        ValueError: If its year that is not greater than or equal to
-            [`minimum_year`][(c).].
-        ValueError: If its is not less than or equal to [`maximum_year`][(c).].
-        ValueError: If its minute that is not divisible by [`minute_interval`][(c).].
+        ValueError: If it is not greater than or equal to [`first_date`][(c).], when
+            [`first_date`][(c).] is set.
+        ValueError: If it is not less than or equal to [`last_date`][(c).], when
+            [`last_date`][(c).] is set.
+        ValueError: If its year is not greater than or equal to
+            [`minimum_year`][(c).], when [`date_picker_mode`][(c).] is
+            [`CupertinoDatePickerMode.DATE`][flet.] or
+            [`CupertinoDatePickerMode.MONTH_YEAR`][flet.].
+        ValueError: If its year is not less than or equal to [`maximum_year`][(c).],
+            when [`maximum_year`][(c).] is set.
+        ValueError: If its minute is not a multiple of [`minute_interval`][(c).].
     """
 
     locale: Optional[Locale] = None
@@ -166,13 +172,18 @@ class CupertinoDatePicker(LayoutControl):
     The background color of this date picker.
     """
 
-    minute_interval: int = 1
+    minute_interval: Annotated[
+        int,
+        V.gt(0),
+        V.factor_of(60),
+    ] = 1
     """
     The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
     Raises:
-        ValueError: If it is not a positive integer factor of `60`.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not a factor of `60`.
     """
 
     minimum_year: int = 1
@@ -258,12 +269,6 @@ class CupertinoDatePicker(LayoutControl):
             raise ValueError(
                 f"item_extent must be strictly greater than 0, got {self.item_extent}"
             )
-        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
-            raise ValueError(
-                f"minute_interval must be a positive integer factor of 60, "
-                f"got {self.minute_interval}"
-            )
-
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date and value < self.first_date:
                 raise ValueError(
@@ -309,8 +314,8 @@ class CupertinoDatePicker(LayoutControl):
                 "CupertinoDatePickerMode.DATE"
             )
 
-        if value.minute % self.minute_interval != 0:
+        if self.minute_interval > 0 and value.minute % self.minute_interval != 0:
             raise ValueError(
-                f"value.minute ({value.minute}) must be divisible by minute_interval "
+                f"value.minute ({value.minute}) must be a multiple of minute_interval "
                 f"({self.minute_interval})"
             )

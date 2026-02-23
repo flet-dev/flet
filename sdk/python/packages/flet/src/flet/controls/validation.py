@@ -492,6 +492,112 @@ class V:
         return FieldRule(_check)
 
     @staticmethod
+    def factor_of(
+        base: int,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a field value is an integer factor of `base`.
+
+        This rule is sign-neutral. To enforce direction, compose with:
+        - `V.gt(0)` for positive factors, or
+        - `V.lt(0)` for negative factors.
+
+        Args:
+            base: The integer that validated values must evenly divide.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValidationDeclarationError: If `base` is zero or not an integer.
+        """
+        if not isinstance(base, int) or isinstance(base, bool) or base == 0:
+            raise ValidationDeclarationError(
+                f"base must be a non-zero integer, got {base!r}"
+            )
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be a factor of {base}, got {current_value}"
+                ),
+            ):
+                return
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value == 0
+                or base % value != 0
+            ):
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must be a factor of {base}, got {value}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
+    def multiple_of(
+        divisor: int,
+        *,
+        message: Optional[FieldMessage] = None,
+    ) -> FieldRule:
+        """
+        Validate that a field value is an integer multiple of `divisor`.
+
+        This rule is sign-neutral. To enforce direction, compose with:
+        - `V.gt(0)` for positive multiples, or
+        - `V.lt(0)` for negative multiples.
+
+        Args:
+            divisor: Divisor used for the divisibility check.
+            message: Optional custom error text or formatter.
+
+        Raises:
+            ValidationDeclarationError: If `divisor` is zero or not an integer.
+        """
+        if not isinstance(divisor, int) or isinstance(divisor, bool) or divisor == 0:
+            raise ValidationDeclarationError(
+                f"divisor must be a non-zero integer, got {divisor!r}"
+            )
+        normalized_divisor = abs(divisor)
+
+        def _check(control: Any, field_name: str, value: Any) -> None:
+            if _prepare_field_value(
+                control=control,
+                field_name=field_name,
+                value=value,
+                message=message,
+                default_error=lambda current_value: (
+                    f"{field_name} must be a multiple of {normalized_divisor}, "
+                    f"got {current_value}"
+                ),
+            ):
+                return
+            if (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or value % normalized_divisor != 0
+            ):
+                if message is not None:
+                    raise ValueError(
+                        _resolve_field_message(message, control, field_name, value)
+                    )
+                raise ValueError(
+                    f"{field_name} must be a multiple of {normalized_divisor}, "
+                    f"got {value}"
+                )
+
+        return FieldRule(_check)
+
+    @staticmethod
     def eq(
         expected: Any,
         *,

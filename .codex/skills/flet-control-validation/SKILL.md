@@ -27,28 +27,30 @@ Do not use this skill for unrelated doc-only edits outside control validation.
 1. Prefer field-level validation with `Annotated[...]` metadata.
    - Example (close to current slider controls):
      ```
-     opacity: Annotated[
-            Optional[Number],
-            V.between(0.0, 1.0),
-        ] = None
+     @dataclass
+     class Sample:
+         opacity: Annotated[
+                Optional[Number],
+                V.between(0.0, 1.0),
+            ] = None
 
-     value: Annotated[
-         Optional[Number],
-         V.ge_field("min"),
-         V.le_field("max"),
-     ] = None
+         value: Annotated[
+             Optional[Number],
+             V.ge_field("min"),
+             V.le_field("max"),
+         ] = None
 
-     min: Annotated[
-         Number,
-         V.le_field("max"),
-         V.le_field("value"),
-     ] = 0.0
+         min: Annotated[
+             Number,
+             V.le_field("max"),
+             V.le_field("value"),
+         ] = 0.0
 
-     max: Annotated[
-         Number,
-         V.ge_field("min"),
-         V.ge_field("value"),
-     ] = 1.0
+         max: Annotated[
+             Number,
+             V.ge_field("min"),
+             V.ge_field("value"),
+         ] = 1.0
      ```
 
 2. Use class-level `__validation_rules__` only for invariants that cannot be expressed cleanly on one field.
@@ -93,6 +95,11 @@ Do not use this skill for unrelated doc-only edits outside control validation.
      or readable `before_update()`) to prevent Dart assertions from being the first
      failure point.
 
+8. Keep error ownership clear.
+   - Runtime outbound value failures should raise `ValueError`.
+   - Validation declaration/build errors (invalid `V.*` arguments) should raise
+     `ValidationDeclarationError`.
+
 ## Typing Style
 
 - Follow the codebase typing style:
@@ -116,13 +123,24 @@ When a property has validation, document it in that property’s docstring (goog
    - `V.ge(x)` -> `If it is not greater than or equal to \`x\`.`
    - `V.lt(x)` -> `If it is not strictly less than \`x\`.`
    - `V.le(x)` -> `If it is not less than or equal to \`x\`.`
+   - `V.eq(x)` -> `If it is not equal to \`x\`.`
+   - `V.ne(x)` -> `If it is equal to \`x\`.`
+   - `V.one_of((a, b))` -> `If it is not one of \`a\` or \`b\`.`
    - `V.ge_field("min")` -> `If it is not greater than or equal to [\`min\`][(c).].`
    - `V.le_field("max")` -> `If it is not less than or equal to [\`max\`][(c).].`
+   - `V.factor_of(60)` -> `If it is not a factor of \`60\`.`
+   - `V.multiple_of(n)` -> `If it is not a multiple of \`n\`.`
+   - `V.length_ge(n)` -> `If its length is less than \`n\`.`
+   - `V.length_eq(n)` -> `If its length is not equal to \`n\`.`
+   - `V.length_between(a, b)` -> `If its length is not between \`a\` and \`b\`, inclusive.`
    - `V.visible_control()` -> `If it is not visible.`
    - `V.visible_controls(min_count=1)` -> `If it does not contain at least one visible Control.`
    - `V.visible_controls(min_count=n)` -> `If it does not contain at least \`n\` visible Controls.`
    - `V.str_or_visible_control()` -> `If it is neither a string nor a visible Control.`
    - `V.instance_of((A, B))` -> `If it is not of type \`A\` or \`B\`.`
+   - If sign direction is required with `factor_of` or `multiple_of`, compose with:
+     `V.gt(0)` for positive values or `V.lt(0)` for negative values, and add
+     a separate `Raises` entry for the sign rule.
 
 5. Mention conditional applicability when needed.
    - Example (for `min`/`max` checks against optional `value`):
@@ -132,7 +150,7 @@ When a property has validation, document it in that property’s docstring (goog
              when [`value`][(c).] is set.
      ```
 
-7. Keep examples and wording aligned with real control files.
+6. Keep examples and wording aligned with real control files.
    - Prefer concrete property names such as `min`, `max`, `value`,
      `start_value`, `end_value`, `min_lines`, `max_lines`.
    - For cross-field rules, use same-class links: [`min`][(c).], [`max`][(c).].
