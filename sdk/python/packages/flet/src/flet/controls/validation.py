@@ -28,7 +28,7 @@ from typing import (
 )
 
 __all__ = [
-    "ControlRule",
+    "ClassRule",
     "FieldRule",
     "V",
     "ValidationDeclarationError",
@@ -38,9 +38,9 @@ __all__ = [
 
 FieldCheck = Callable[[Any, str, Any], None]
 FieldMessage = Union[str, Callable[[Any, str, Any], str]]
-ControlCheck = Callable[[Any], None]
-ControlMessage = Union[str, Callable[[Any], str]]
-ControlPredicate = Callable[[Any], bool]
+ClassCheck = Callable[[Any], None]
+ClassMessage = Union[str, Callable[[Any], str]]
+ClassPredicate = Callable[[Any], bool]
 
 
 class ValidationDeclarationError(RuntimeError):
@@ -64,17 +64,17 @@ class FieldRule:
 
 
 @dataclass(frozen=True)
-class ControlRule:
+class ClassRule:
     """A cross-field validation rule evaluated against one class instance."""
 
-    _check: ControlCheck
+    _check: ClassCheck
 
     def validate(self, control: Any) -> None:
         """Validate one class instance."""
         self._check(control)
 
 
-ValidationRules = ClassVar[tuple[ControlRule, ...]]
+ValidationRules = ClassVar[tuple[ClassRule, ...]]
 """Alias for class-level `__validation_rules__` declarations."""
 
 
@@ -83,7 +83,7 @@ class _ClassValidationSpec:
     """Compiled validation specification for one class."""
 
     field_rules: tuple[tuple[str, FieldRule], ...]
-    control_rules: tuple[ControlRule, ...]
+    control_rules: tuple[ClassRule, ...]
 
 
 def _resolve_field_message(
@@ -95,8 +95,8 @@ def _resolve_field_message(
     return message
 
 
-def _resolve_control_message(message: ControlMessage, control: Any) -> str:
-    """Render a control-level message that may be static text or a callable."""
+def _resolve_class_message(message: ClassMessage, control: Any) -> str:
+    """Render a class-level message that may be static text or a callable."""
     if callable(message):
         return message(control)
     return message
@@ -132,7 +132,7 @@ class V:
     """
     Validation rule builder namespace.
 
-    Methods return `FieldRule` or `ControlRule` instances which are attached to
+    Methods return `FieldRule` or `ClassRule` instances which are attached to
     class fields (`Annotated[...]`) or class-level `__validation_rules__`.
     """
 
@@ -142,16 +142,16 @@ class V:
         return FieldRule(check)
 
     @staticmethod
-    def control(check: ControlCheck) -> ControlRule:
-        """Wrap a custom cross-field validator callback into a `ControlRule`."""
-        return ControlRule(check)
+    def control(check: ClassCheck) -> ClassRule:
+        """Wrap a custom cross-field validator callback into a `ClassRule`."""
+        return ClassRule(check)
 
     @staticmethod
     def ensure(
-        predicate: ControlPredicate,
+        predicate: ClassPredicate,
         *,
-        message: Optional[ControlMessage] = None,
-    ) -> ControlRule:
+        message: Optional[ClassMessage] = None,
+    ) -> ClassRule:
         """
         Build a generic cross-field predicate rule.
 
@@ -161,13 +161,13 @@ class V:
         def _check(control: Any) -> None:
             if not predicate(control):
                 if message is not None:
-                    raise ValueError(_resolve_control_message(message, control))
+                    raise ValueError(_resolve_class_message(message, control))
                 predicate_name = getattr(predicate, "__name__", None)
                 if predicate_name and predicate_name != "<lambda>":
                     raise ValueError(f"Control validation failed: {predicate_name}")
                 raise ValueError("Control validation failed.")
 
-        return ControlRule(_check)
+        return ClassRule(_check)
 
     @staticmethod
     def instance_of(
@@ -1369,7 +1369,7 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
     """
 
     field_rules: list[tuple[str, FieldRule]] = []
-    control_rules: list[ControlRule] = []
+    control_rules: list[ClassRule] = []
 
     for cls in reversed(control_cls.__mro__):
         if cls is object:
@@ -1386,7 +1386,7 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
         rules = cls.__dict__.get("__validation_rules__", ())
         if rules:
             for rule in rules:
-                if isinstance(rule, ControlRule):
+                if isinstance(rule, ClassRule):
                     control_rules.append(rule)
 
     return _ClassValidationSpec(tuple(field_rules), tuple(control_rules))
@@ -1396,7 +1396,7 @@ def validate(control: Any) -> None:
     """
     Run all compiled validators for one instance.
 
-    Field rules are evaluated first, then class-level control rules.
+    Field rules are evaluated first, then class-level rules.
     Validation stops at the first raised exception.
     """
 
