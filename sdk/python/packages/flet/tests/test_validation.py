@@ -5,6 +5,7 @@ from typing import Annotated, Optional
 import pytest
 
 from flet.controls.validation import (
+    ClassRule,
     V,
     ValidationDeclarationError,
     ValidationRules,
@@ -17,8 +18,8 @@ class _Visible:
     visible: bool = True
 
 
-def test_field_and_control_wrappers_delegate_callbacks():
-    """Verify `V.field()`/`V.control()` wrappers execute the provided callbacks."""
+def test_field_wrapper_and_class_rule_delegate_callbacks():
+    """Verify `V.field()` and `ClassRule(...)` execute provided callbacks."""
     called: dict[str, object] = {}
 
     def check_field(ctrl, field_name, value):
@@ -31,7 +32,7 @@ def test_field_and_control_wrappers_delegate_callbacks():
     class Sample:
         marker: str = "ok"
         value: Annotated[int, V.field(check_field)] = 7
-        __validation_rules__: ValidationRules = (V.control(check_control),)
+        __validation_rules__: ValidationRules = (ClassRule(check_control),)
 
     validate(Sample())
 
@@ -574,7 +575,7 @@ def test_validate_runs_field_rules_before_control_rules():
     @dataclass
     class Sample:
         value: Annotated[int, V.field(fail_field)] = 1
-        __validation_rules__: ValidationRules = (V.control(run_control),)
+        __validation_rules__: ValidationRules = (ClassRule(run_control),)
 
     with pytest.raises(ValueError, match="field failed"):
         validate(Sample())
@@ -589,7 +590,7 @@ def test_validate_merges_mro_rules_in_base_to_child_order():
         return V.field(lambda ctrl, _field_name, _value: ctrl.events.append(tag))
 
     def control_rule(tag: str):
-        return V.control(lambda ctrl: ctrl.events.append(tag))
+        return ClassRule(lambda ctrl: ctrl.events.append(tag))
 
     @dataclass
     class Base:

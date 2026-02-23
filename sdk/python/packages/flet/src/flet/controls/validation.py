@@ -142,11 +142,6 @@ class V:
         return FieldRule(check)
 
     @staticmethod
-    def control(check: ClassCheck) -> ClassRule:
-        """Wrap a custom cross-field validator callback into a `ClassRule`."""
-        return ClassRule(check)
-
-    @staticmethod
     def ensure(
         predicate: ClassPredicate,
         *,
@@ -222,7 +217,7 @@ class V:
                 field_name=field_name,
                 value=value,
                 message=message,
-                default_error=lambda _current_value: (f"{field_name} must be visible"),
+                default_error=lambda _current_value: f"{field_name} must be visible",
             ):
                 return
             if getattr(value, "visible", False):
