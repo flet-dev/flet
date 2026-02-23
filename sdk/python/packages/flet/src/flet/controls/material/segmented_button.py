@@ -49,10 +49,14 @@ class Segment(Control):
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: isinstance(ctrl.icon, IconData)
-            or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
-            or isinstance(ctrl.label, str)
-            or (isinstance(ctrl.label, Control) and ctrl.label.visible),
+            lambda ctrl: (
+                isinstance(ctrl.icon, IconData)
+                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+            )
+            or (
+                isinstance(ctrl.label, str)
+                or (isinstance(ctrl.label, Control) and ctrl.label.visible)
+            ),
             message="at least icon or label must be set and visible",
         ),
     )

@@ -239,9 +239,12 @@ class AlertDialog(DialogControl):
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: ctrl.title is not None
-            or ctrl.content is not None
-            or len(ctrl.actions) > 0,
+            lambda ctrl: (
+                isinstance(ctrl.title, str)
+                or (isinstance(ctrl.title, Control) and ctrl.title.visible)
+            )
+            or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+            or any(action.visible for action in ctrl.actions),
             message=(
                 "AlertDialog has nothing to display. Provide at minimum one of the "
                 "following: title, content, actions"

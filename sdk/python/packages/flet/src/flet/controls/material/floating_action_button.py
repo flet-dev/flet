@@ -4,6 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.icon_data import IconData
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
@@ -27,6 +28,7 @@ class FloatingActionButton(LayoutControl):
     to `page.floating_action_button`, but can also be added as a regular control at \
     any place on a page.
 
+    Example:
     ```python
     ft.FloatingActionButton(icon=ft.Icons.ADD)
     ```
@@ -190,9 +192,14 @@ class FloatingActionButton(LayoutControl):
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: ctrl.icon
-            or isinstance(ctrl.content, str)
-            or (isinstance(ctrl.content, Control) and ctrl.content.visible),
+            lambda ctrl: (
+                isinstance(ctrl.icon, IconData)
+                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+            )
+            or (
+                isinstance(ctrl.content, str)
+                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+            ),
             message=(
                 "at minimum, icon or a content (string or visible Control) "
                 "must be provided"

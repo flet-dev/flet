@@ -5,6 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.icon_data import IconData
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
@@ -104,9 +105,14 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: ctrl.icon
-            or isinstance(ctrl.content, str)
-            or (isinstance(ctrl.content, Control) and ctrl.content.visible),
+            lambda ctrl: (
+                isinstance(ctrl.icon, IconData)
+                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+            )
+            or (
+                isinstance(ctrl.content, str)
+                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+            ),
             message="at minimum, icon or content (string or visible Control) "
             "must be provided",
         ),
