@@ -31,7 +31,7 @@ async def test_flip(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_matrix4_transform(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(980, 360)
+    flet_app_function.resize_page(780, 360)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(

@@ -21,6 +21,11 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="function")
 @pytest.mark.timeout(40)
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"skip_pump_and_settle": True}],
+    indirect=True,
+)
 async def test_image_broken_source_fails_fast(
     flet_app_function: ftt.FletTestApp, request
 ):
@@ -34,6 +39,4 @@ async def test_image_broken_source_fails_fast(
                 width=100,
                 height=100,
             ),
-            pump_times=3,
-            pump_duration=1000,
         )
