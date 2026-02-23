@@ -9,9 +9,9 @@ from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.id_counter import ControlId
 from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
-from flet.controls.validation import validate
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count
+from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")

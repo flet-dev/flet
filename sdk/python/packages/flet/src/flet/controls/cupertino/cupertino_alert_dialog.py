@@ -7,7 +7,7 @@ from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
 from flet.controls.types import ColorValue, StrOrControl
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["CupertinoAlertDialog"]
 

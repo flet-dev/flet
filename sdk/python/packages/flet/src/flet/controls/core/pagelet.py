@@ -12,7 +12,7 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.transform import OffsetValue
 from flet.controls.types import ColorValue, FloatingActionButtonLocation
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["Pagelet"]
 

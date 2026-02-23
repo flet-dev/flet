@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 
 import pytest
 
-from flet.controls.validation import (
+from flet.utils.validation import (
     ClassRule,
     V,
     ValidationDeclarationError,

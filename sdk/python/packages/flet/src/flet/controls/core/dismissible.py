@@ -15,7 +15,7 @@ from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     Number,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["Dismissible", "DismissibleDismissEvent", "DismissibleUpdateEvent"]
 

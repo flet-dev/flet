@@ -15,7 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["AlertDialog"]
 

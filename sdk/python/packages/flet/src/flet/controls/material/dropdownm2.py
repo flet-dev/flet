@@ -12,7 +12,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["DropdownM2", "Option"]
 

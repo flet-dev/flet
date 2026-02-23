@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 import flet as ft
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["RadarDataSet", "RadarDataSetEntry"]
 

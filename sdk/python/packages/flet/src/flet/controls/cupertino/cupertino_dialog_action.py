@@ -5,7 +5,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import StrOrControl
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["CupertinoDialogAction"]
 

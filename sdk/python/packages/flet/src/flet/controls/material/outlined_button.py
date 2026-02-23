@@ -14,7 +14,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["OutlinedButton"]
 
@@ -26,10 +26,10 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     important, but aren't the primary action in an app. Outlined buttons pair well \
     with filled buttons to indicate an alternative, secondary action.
 
+    Example:
     ```python
     ft.OutlinedButton(content="Outlined button")
     ```
-
     """
 
     content: Optional[StrOrControl] = None

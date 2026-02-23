@@ -8,7 +8,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Locale, Number
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = [
     "CupertinoDatePicker",

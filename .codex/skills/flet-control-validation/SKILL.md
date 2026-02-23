@@ -16,13 +16,13 @@ Do not use this skill for unrelated doc-only edits outside control validation.
 ## Source Of Truth
 
 - Validation runtime API lives in:
-  `sdk/python/packages/flet/src/flet/controls/validation.py`
+  `sdk/python/packages/flet/src/flet/utils/validation.py`
 - The same runtime can validate regular dataclass models via `validate(instance)`;
   this skill focuses on the control-specific authoring conventions.
 - Import from public path only:
-  `from flet.controls.validation import V`
+  `from flet.utils.validation import V`
   and when needed
-  `from flet.controls.validation import ValidationRules`
+  `from flet.utils.validation import ValidationRules`
 
 ## Validation Authoring Rules
 
@@ -122,7 +122,7 @@ When a property has validation, document it in that property’s docstring (goog
 
 4. Use canonical wording from validation helper docstrings.
    - The source of truth is
-     `sdk/python/packages/flet/src/flet/controls/validation.py`.
+     `sdk/python/packages/flet/src/flet/utils/validation.py`.
    - Each `V.*` helper includes `Property docstring Raises wording`.
    - Keep property `Raises` entries as negations of the annotation rule.
    - For sign-neutral divisibility helpers (`factor_of`, `multiple_of`), add

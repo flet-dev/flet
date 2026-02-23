@@ -6,7 +6,7 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ColorValue
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["CupertinoSegmentedButton"]
 

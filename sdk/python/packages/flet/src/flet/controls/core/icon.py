@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import BlendMode, ColorValue, IconData, Number
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["Icon"]
 

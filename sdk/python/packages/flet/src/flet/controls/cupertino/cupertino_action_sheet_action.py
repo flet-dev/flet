@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, StrOrControl
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["CupertinoActionSheetAction"]
 

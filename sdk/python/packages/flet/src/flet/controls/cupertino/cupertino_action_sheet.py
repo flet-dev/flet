@@ -4,7 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import StrOrControl
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["CupertinoActionSheet"]
 

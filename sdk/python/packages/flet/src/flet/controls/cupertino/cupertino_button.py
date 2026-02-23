@@ -17,7 +17,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 

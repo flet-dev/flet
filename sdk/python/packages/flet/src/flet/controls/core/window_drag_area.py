@@ -6,7 +6,7 @@ from flet.controls.control_event import EventHandler
 from flet.controls.core.window import WindowEvent
 from flet.controls.events import DragEndEvent, DragStartEvent
 from flet.controls.layout_control import LayoutControl
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 
 @control("WindowDragArea")

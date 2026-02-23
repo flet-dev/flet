@@ -15,7 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["Switch"]
 

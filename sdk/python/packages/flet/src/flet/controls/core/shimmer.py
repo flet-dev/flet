@@ -9,7 +9,7 @@ from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Shimmer", "ShimmerDirection"]
 

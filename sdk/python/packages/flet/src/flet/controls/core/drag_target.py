@@ -6,7 +6,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = [
     "DragTarget",

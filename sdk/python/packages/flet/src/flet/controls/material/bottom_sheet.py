@@ -7,7 +7,7 @@ from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import ClipBehavior, ColorValue, Number
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["BottomSheet"]
 

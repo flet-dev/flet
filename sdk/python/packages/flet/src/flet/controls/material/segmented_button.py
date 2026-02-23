@@ -13,7 +13,7 @@ from flet.controls.types import (
     IconDataOrControl,
     StrOrControl,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Segment", "SegmentedButton"]
 

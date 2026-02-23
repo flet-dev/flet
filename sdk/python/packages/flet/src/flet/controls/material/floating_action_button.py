@@ -15,7 +15,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
-from flet.controls.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["FloatingActionButton"]
 

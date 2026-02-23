@@ -16,7 +16,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
 

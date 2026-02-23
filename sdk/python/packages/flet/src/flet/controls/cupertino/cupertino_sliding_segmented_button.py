@@ -10,7 +10,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["CupertinoSlidingSegmentedButton"]
 

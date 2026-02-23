@@ -14,7 +14,7 @@ from flet.controls.events import (
 from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["InteractiveViewer"]
 

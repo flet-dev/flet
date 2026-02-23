@@ -12,7 +12,7 @@ from flet.controls.types import (
     MouseCursor,
     Number,
 )
-from flet.controls.validation import V
+from flet.utils.validation import V
 
 __all__ = ["Slider", "SliderInteraction"]
 
