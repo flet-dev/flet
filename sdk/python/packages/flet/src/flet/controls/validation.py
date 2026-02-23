@@ -7,8 +7,8 @@ fields (`typing.Annotated`) and to class-level cross-field declarations
 
 Primary use cases:
 1. Generic dataclass/domain model validation via direct `validate(instance)` calls.
-2. Flet outbound control validation, where `BaseControl` invokes `validate(self)`
-   before patch serialization so invalid state fails on Python side first.
+2. Flet outbound validation, where `BaseControl` invokes `validate(self)`
+   before patch serialization so the invalid state fails on Python side first.
 """
 
 import sys
@@ -58,9 +58,9 @@ class FieldRule:
 
     _check: FieldCheck
 
-    def validate(self, control: Any, field_name: str, value: Any) -> None:
+    def validate(self, instance: Any, field_name: str, value: Any) -> None:
         """Validate one field value for a specific class instance."""
-        self._check(control, field_name, value)
+        self._check(instance, field_name, value)
 
 
 @dataclass(frozen=True)
@@ -69,9 +69,9 @@ class ClassRule:
 
     _check: ClassCheck
 
-    def validate(self, control: Any) -> None:
+    def validate(self, instance: Any) -> None:
         """Validate one class instance."""
-        self._check(control)
+        self._check(instance)
 
 
 ValidationRules = ClassVar[tuple[ClassRule, ...]]
@@ -83,22 +83,22 @@ class _ClassValidationSpec:
     """Compiled validation specification for one class."""
 
     field_rules: tuple[tuple[str, FieldRule], ...]
-    control_rules: tuple[ClassRule, ...]
+    class_rules: tuple[ClassRule, ...]
 
 
 def _resolve_field_message(
-    message: FieldMessage, control: Any, field_name: str, value: Any
+    message: FieldMessage, instance: Any, field_name: str, value: Any
 ) -> str:
     """Render a field-level message that may be static text or a callable."""
     if callable(message):
-        return message(control, field_name, value)
+        return message(instance, field_name, value)
     return message
 
 
-def _resolve_class_message(message: ClassMessage, control: Any) -> str:
+def _resolve_class_message(message: ClassMessage, instance: Any) -> str:
     """Render a class-level message that may be static text or a callable."""
     if callable(message):
-        return message(control)
+        return message(instance)
     return message
 
 
@@ -153,14 +153,14 @@ class V:
         When `message` is omitted, a generic fallback is used.
         """
 
-        def _check(control: Any) -> None:
-            if not predicate(control):
+        def _check(instance: Any) -> None:
+            if not predicate(instance):
                 if message is not None:
-                    raise ValueError(_resolve_class_message(message, control))
+                    raise ValueError(_resolve_class_message(message, instance))
                 predicate_name = getattr(predicate, "__name__", None)
                 if predicate_name and predicate_name != "<lambda>":
-                    raise ValueError(f"Control validation failed: {predicate_name}")
-                raise ValueError("Control validation failed.")
+                    raise ValueError(f"Validation failed: {predicate_name}")
+                raise ValueError("Validation failed.")
 
         return ClassRule(_check)
 
@@ -180,9 +180,9 @@ class V:
             message: Optional custom error message/template.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if value is None and _resolve_allow_none_for_field(
-                control.__class__, field_name
+                instance.__class__, field_name
             ):
                 return
             if not isinstance(value, expected_type):
@@ -192,7 +192,7 @@ class V:
                         f"{_format_expected_type(expected_type)}, got {type(value)}"
                     )
                 raise ValueError(
-                    _resolve_field_message(message, control, field_name, value)
+                    _resolve_field_message(message, instance, field_name, value)
                 )
 
         return FieldRule(_check)
@@ -211,9 +211,9 @@ class V:
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -224,7 +224,7 @@ class V:
                 return
             if message is not None:
                 raise ValueError(
-                    _resolve_field_message(message, control, field_name, value)
+                    _resolve_field_message(message, instance, field_name, value)
                 )
             raise ValueError(f"{field_name} must be visible")
 
@@ -270,9 +270,9 @@ class V:
                 f"got {visible_count}"
             )
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -287,14 +287,14 @@ class V:
             except TypeError as err:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     ) from err
                 raise ValueError(_default_error(field_name, 0)) from err
 
             if visible_count < min_count:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(_default_error(field_name, visible_count))
 
@@ -306,7 +306,7 @@ class V:
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
-        Validate that a field value is either a string or a visible control.
+        Validate that a field value is either a string or a visible instance.
 
         Property docstring Raises wording:
         `If it is neither a string nor a visible Control.`
@@ -315,9 +315,9 @@ class V:
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -330,7 +330,7 @@ class V:
                 return
             if message is not None:
                 raise ValueError(
-                    _resolve_field_message(message, control, field_name, value)
+                    _resolve_field_message(message, instance, field_name, value)
                 )
             raise ValueError(f"{field_name} must be a string or a visible Control")
 
@@ -349,9 +349,9 @@ class V:
         `If it is not strictly greater than ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -364,7 +364,7 @@ class V:
             if value <= bound:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be strictly greater than {bound}, got {value}"
@@ -385,9 +385,9 @@ class V:
         `If it is not greater than or equal to ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -400,7 +400,7 @@ class V:
             if value < bound:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be greater than or equal to {bound}, "
@@ -422,9 +422,9 @@ class V:
         `If it is not strictly less than ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -436,7 +436,7 @@ class V:
             if value >= bound:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(f"{field_name} must be less than {bound}, got {value}")
 
@@ -455,9 +455,9 @@ class V:
         `If it is not less than or equal to ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -470,7 +470,7 @@ class V:
             if value > bound:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be less than or equal to {bound}, got {value}"
@@ -492,9 +492,9 @@ class V:
         `If it is not between ... and ..., inclusive.`
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -507,7 +507,7 @@ class V:
             if not (minimum <= value <= maximum):
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be between {minimum} and {maximum} inclusive, "
@@ -544,9 +544,9 @@ class V:
                 f"base must be a non-zero integer, got {base!r}"
             )
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -563,7 +563,7 @@ class V:
             ):
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be a factor of {base}, got {value}"
@@ -600,9 +600,9 @@ class V:
             )
         normalized_divisor = abs(divisor)
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -619,7 +619,7 @@ class V:
             ):
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be a multiple of {normalized_divisor}, "
@@ -641,9 +641,9 @@ class V:
         `If it is not equal to ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -655,7 +655,7 @@ class V:
             if value != expected:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be equal to {expected}, got {value}"
@@ -676,9 +676,9 @@ class V:
         `If it is equal to ...`.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -691,7 +691,7 @@ class V:
             if value == unexpected:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must not be equal to {unexpected}, got {value}"
@@ -726,9 +726,9 @@ class V:
 
         allowed_values_text = _format_allowed_values(allowed_values_tuple)
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -741,7 +741,7 @@ class V:
             if value not in allowed_values_tuple:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must be one of {allowed_values_text}, got {value!r}"
@@ -772,18 +772,18 @@ class V:
             if not isinstance(rule, FieldRule):
                 raise ValidationDeclarationError("or_ expects only FieldRule instances")
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             errors: list[str] = []
             for rule in rules:
                 try:
-                    rule.validate(control, field_name, value)
+                    rule.validate(instance, field_name, value)
                     return
                 except ValueError as err:
                     errors.append(str(err))
 
             if message is not None:
                 raise ValueError(
-                    _resolve_field_message(message, control, field_name, value)
+                    _resolve_field_message(message, instance, field_name, value)
                 )
 
             if len(errors) == 1:
@@ -809,9 +809,9 @@ class V:
         `If it is empty.`
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -826,7 +826,7 @@ class V:
             except TypeError as err:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     ) from err
                 raise ValueError(
                     f"{field_name} must be a non-empty sized value, got {type(value)}"
@@ -835,7 +835,7 @@ class V:
             if length == 0:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(f"{field_name} must be non-empty")
 
@@ -865,9 +865,9 @@ class V:
                 f"minimum must be greater than or equal to 0, got {minimum}"
             )
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -883,7 +883,7 @@ class V:
             except TypeError as err:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     ) from err
                 raise ValueError(
                     f"{field_name} must be a sized value with length greater than "
@@ -893,7 +893,7 @@ class V:
             if length < minimum:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must have length greater than or equal to "
@@ -926,9 +926,9 @@ class V:
                 f"expected must be greater than or equal to 0, got {expected}"
             )
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -943,7 +943,7 @@ class V:
             except TypeError as err:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     ) from err
                 raise ValueError(
                     f"{field_name} must be a sized value with length equal to "
@@ -953,7 +953,7 @@ class V:
             if length != expected:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must have length equal to {expected}, got {length}"
@@ -993,9 +993,9 @@ class V:
                 f"got {maximum}"
             )
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             if _prepare_field_value(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 message=message,
@@ -1011,7 +1011,7 @@ class V:
             except TypeError as err:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     ) from err
                 raise ValueError(
                     f"{field_name} must be a sized value with length between "
@@ -1021,7 +1021,7 @@ class V:
             if not (minimum <= length <= maximum):
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} must have length between {minimum} and {maximum} "
@@ -1037,22 +1037,22 @@ class V:
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
-        Validate `field_name > other_field` on a control instance.
+        Validate `field_name > other_field` on an instance.
 
         Property docstring Raises wording:
         `If it is not strictly greater than [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
-        field value against another field on the same control.
+        field value against another field on the same instance.
 
         Args:
             other_field: Name of the field on the right side of the comparison.
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             other_value, skip = _prepare_field_comparison_values(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 other_field=other_field,
@@ -1067,7 +1067,7 @@ class V:
             if value <= other_value:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} ({value}) must be strictly greater than "
@@ -1083,22 +1083,22 @@ class V:
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
-        Validate `field_name >= other_field` on a control instance.
+        Validate `field_name >= other_field` on an instance.
 
         Property docstring Raises wording:
         `If it is not greater than or equal to [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
-        field value against another field on the same control.
+        field value against another field on the same instance.
 
         Args:
             other_field: Name of the field on the right side of the comparison.
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             other_value, skip = _prepare_field_comparison_values(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 other_field=other_field,
@@ -1113,7 +1113,7 @@ class V:
             if value < other_value:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} ({value}) must be greater than or equal to "
@@ -1129,22 +1129,22 @@ class V:
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
-        Validate `field_name < other_field` on a control instance.
+        Validate `field_name < other_field` on an instance.
 
         Property docstring Raises wording:
         `If it is not strictly less than [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
-        field value against another field on the same control.
+        field value against another field on the same instance.
 
         Args:
             other_field: Name of the field on the right side of the comparison.
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             other_value, skip = _prepare_field_comparison_values(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 other_field=other_field,
@@ -1159,7 +1159,7 @@ class V:
             if value >= other_value:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} ({value}) must be strictly less than "
@@ -1175,22 +1175,22 @@ class V:
         message: Optional[FieldMessage] = None,
     ) -> FieldRule:
         """
-        Validate `field_name <= other_field` on a control instance.
+        Validate `field_name <= other_field` on an instance.
 
         Property docstring Raises wording:
         `If it is not less than or equal to [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
-        field value against another field on the same control.
+        field value against another field on the same instance.
 
         Args:
             other_field: Name of the field on the right side of the comparison.
             message: Optional custom error text or formatter.
         """
 
-        def _check(control: Any, field_name: str, value: Any) -> None:
+        def _check(instance: Any, field_name: str, value: Any) -> None:
             other_value, skip = _prepare_field_comparison_values(
-                control=control,
+                instance=instance,
                 field_name=field_name,
                 value=value,
                 other_field=other_field,
@@ -1205,7 +1205,7 @@ class V:
             if value > other_value:
                 if message is not None:
                     raise ValueError(
-                        _resolve_field_message(message, control, field_name, value)
+                        _resolve_field_message(message, instance, field_name, value)
                     )
                 raise ValueError(
                     f"{field_name} ({value}) must be less than or equal to "
@@ -1282,18 +1282,18 @@ def _annotation_allows_none(annotation: Any) -> bool:
     return False
 
 
-def _resolve_allow_none_for_field(control_cls: type[Any], field_name: str) -> bool:
+def _resolve_allow_none_for_field(model_cls: type[Any], field_name: str) -> bool:
     """
     Resolve `None` allowance for an annotated field on a class.
     """
-    annotation = _get_effective_type_hints(control_cls).get(field_name)
+    annotation = _get_effective_type_hints(model_cls).get(field_name)
     if annotation is None:
         return False
     return _annotation_allows_none(annotation)
 
 
 def _prepare_field_value(
-    control: Any,
+    instance: Any,
     field_name: str,
     value: Any,
     message: Optional[FieldMessage],
@@ -1306,14 +1306,14 @@ def _prepare_field_value(
         `True` when validation should be skipped because `None` is allowed.
     """
 
-    none_allowed = _resolve_allow_none_for_field(control.__class__, field_name)
+    none_allowed = _resolve_allow_none_for_field(instance.__class__, field_name)
     if value is None and none_allowed:
         return True
 
     if value is None:
         if message is not None:
             raise ValueError(
-                _resolve_field_message(message, control, field_name, value)
+                _resolve_field_message(message, instance, field_name, value)
             )
         raise ValueError(default_error(value))
 
@@ -1321,7 +1321,7 @@ def _prepare_field_value(
 
 
 def _prepare_field_comparison_values(
-    control: Any,
+    instance: Any,
     field_name: str,
     value: Any,
     other_field: str,
@@ -1335,9 +1335,9 @@ def _prepare_field_comparison_values(
         `(other_value, skip_validation)`.
     """
 
-    other_value = getattr(control, other_field)
-    current_none_allowed = _resolve_allow_none_for_field(control.__class__, field_name)
-    other_none_allowed = _resolve_allow_none_for_field(control.__class__, other_field)
+    other_value = getattr(instance, other_field)
+    current_none_allowed = _resolve_allow_none_for_field(instance.__class__, field_name)
+    other_none_allowed = _resolve_allow_none_for_field(instance.__class__, other_field)
 
     if value is None and current_none_allowed:
         return other_value, True
@@ -1347,7 +1347,7 @@ def _prepare_field_comparison_values(
     if value is None or other_value is None:
         if message is not None:
             raise ValueError(
-                _resolve_field_message(message, control, field_name, value)
+                _resolve_field_message(message, instance, field_name, value)
             )
         raise ValueError(default_error(value, other_value))
 
@@ -1355,7 +1355,7 @@ def _prepare_field_comparison_values(
 
 
 @cache
-def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
+def _compile_class_spec(model_cls: type[Any]) -> _ClassValidationSpec:
     """
     Compile and cache effective validation rules for one class.
 
@@ -1364,9 +1364,9 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
     """
 
     field_rules: list[tuple[str, FieldRule]] = []
-    control_rules: list[ClassRule] = []
+    class_rules: list[ClassRule] = []
 
-    for cls in reversed(control_cls.__mro__):
+    for cls in reversed(model_cls.__mro__):
         if cls is object:
             continue
 
@@ -1382,12 +1382,12 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
         if rules:
             for rule in rules:
                 if isinstance(rule, ClassRule):
-                    control_rules.append(rule)
+                    class_rules.append(rule)
 
-    return _ClassValidationSpec(tuple(field_rules), tuple(control_rules))
+    return _ClassValidationSpec(tuple(field_rules), tuple(class_rules))
 
 
-def validate(control: Any) -> None:
+def validate(instance: Any) -> None:
     """
     Run all compiled validators for one instance.
 
@@ -1395,8 +1395,8 @@ def validate(control: Any) -> None:
     Validation stops at the first raised exception.
     """
 
-    spec = _compile_class_spec(control.__class__)
+    spec = _compile_class_spec(instance.__class__)
     for field_name, rule in spec.field_rules:
-        rule.validate(control, field_name, getattr(control, field_name))
-    for rule in spec.control_rules:
-        rule.validate(control)
+        rule.validate(instance, field_name, getattr(instance, field_name))
+    for rule in spec.class_rules:
+        rule.validate(instance)

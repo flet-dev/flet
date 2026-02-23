@@ -50,14 +50,14 @@ def test_ensure_default_messages_for_named_and_lambda_predicates():
     class NamedPredicateControl:
         __validation_rules__: ValidationRules = (V.ensure(always_false),)
 
-    with pytest.raises(ValueError, match="Control validation failed: always_false"):
+    with pytest.raises(ValueError, match="Validation failed: always_false"):
         validate(NamedPredicateControl())
 
     @dataclass
     class LambdaPredicateControl:
         __validation_rules__: ValidationRules = (V.ensure(lambda _ctrl: False),)
 
-    with pytest.raises(ValueError, match="Control validation failed."):
+    with pytest.raises(ValueError, match="Validation failed."):
         validate(LambdaPredicateControl())
 
 
@@ -561,8 +561,8 @@ def test_field_comparison_rules_use_custom_message_for_required_none():
         validate(Sample(current=None, other=1))  # type: ignore[arg-type]
 
 
-def test_validate_runs_field_rules_before_control_rules():
-    """Verify field-level validation runs before class-level control validation."""
+def test_validate_runs_field_rules_before_class_rules():
+    """Verify field-level validation runs before class-level validation."""
     events: list[str] = []
 
     def fail_field(_ctrl, _field_name, _value):
