@@ -210,7 +210,7 @@ class FletTestApp:
             elif callable(self.__flet_app_main):
                 self.__flet_app_main(page)
             if not self.__skip_pump_and_settle:
-                await self.__tester.pump_and_settle()
+                await self.__pump_and_settle_with_timeout("start")
             ready.set()
 
         if not self.__tcp_port:
@@ -286,8 +286,10 @@ class FletTestApp:
         """
         Teardown Flutter integration test process.
         """
-
-        await self.tester.teardown()
+        try:
+            await self.tester.teardown(timeout=10)
+        except (RuntimeError, TimeoutError) as e:
+            print(f"Tester teardown failed: {e}")
 
         if self.__flutter_process:
             print("\nWaiting for Flutter test process to exit...")
@@ -332,7 +334,7 @@ class FletTestApp:
             )
         ]  # type: ignore
         self.page.update()
-        await self.tester.pump_and_settle()
+        await self.__pump_and_settle_with_timeout("wrap_page_controls_in_screenshot")
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
         return scr
@@ -373,12 +375,12 @@ class FletTestApp:
         """
         # clean page
         self.page.clean()
-        await self.tester.pump_and_settle()
+        await self.__pump_and_settle_with_timeout("assert_control_screenshot-clean")
 
         # add control and take screenshot
         screenshot = ft.Screenshot(control, expand=expand_screenshot)
         self.page.add(screenshot)
-        await self.tester.pump_and_settle()
+        await self.__pump_and_settle_with_timeout("assert_control_screenshot-add")
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
@@ -386,6 +388,16 @@ class FletTestApp:
             await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
             similarity_threshold=similarity_threshold,
         )
+
+    async def __pump_and_settle_with_timeout(self, stage: str):
+        try:
+            await self.tester.pump_and_settle(timeout=self.__pump_and_settle_timeout)
+        except TimeoutError as e:
+            raise TimeoutError(
+                f"Timed out during {stage}: "
+                f"tester.pump_and_settle() did not complete in "
+                f"{self.__pump_and_settle_timeout} seconds"
+            ) from e
 
     def assert_screenshot(
         self, name: str, screenshot: bytes, similarity_threshold: float = 0
@@ -565,3 +577,4 @@ class FletTestApp:
                 frame.close()
 
         return output
+    __pump_and_settle_timeout = 10.0
