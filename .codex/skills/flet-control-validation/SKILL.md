@@ -1,6 +1,6 @@
 ---
 name: flet-control-validation
-description: Use when adding or changing validation for Python controls in sdk/python/packages/, including Annotated/V rules, __validation_rules__, and property Raises docstrings.
+description: Use when adding or changing validation for Python controls (dataclasses) in sdk/python/packages/, including Annotated/V rules, __validation_rules__, and property Raises docstrings.
 ---
 
 ## When To Use
@@ -17,6 +17,8 @@ Do not use this skill for unrelated doc-only edits outside control validation.
 
 - Validation runtime API lives in:
   `sdk/python/packages/flet/src/flet/controls/validation.py`
+- The same runtime can validate regular dataclass models via `validate(instance)`;
+  this skill focuses on the control-specific authoring conventions.
 - Import from public path only:
   `from flet.controls.validation import V`
   and when needed

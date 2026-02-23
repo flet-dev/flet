@@ -1,13 +1,14 @@
 """
-Outbound validation helpers for Flet controls.
+Validation helpers for dataclass-style models, including Flet controls.
 
-This module provides small composable rule objects that can be attached to control
-fields via `typing.Annotated` and to controls via `__validation_rules__`.
-The runtime calls `validate_outbound()` before patch serialization so invalid
-state is rejected on the Python side before reaching Dart.
+This module provides composable rule objects that are attached to annotated
+fields (`typing.Annotated`) and to class-level cross-field declarations
+(`__validation_rules__`).
 
-For docstring consistency in control properties, each `V.*` helper docstring
-includes canonical `Raises` wording guidance.
+Primary use cases:
+1. Generic dataclass/domain model validation via direct `validate(instance)` calls.
+2. Flet outbound control validation, where `BaseControl` invokes `validate(self)`
+   before patch serialization so invalid state fails on Python side first.
 """
 
 import sys
@@ -53,33 +54,33 @@ class ValidationDeclarationError(RuntimeError):
 
 @dataclass(frozen=True)
 class FieldRule:
-    """A single validation rule applied to one field value."""
+    """A single validation rule applied to one annotated field value."""
 
     _check: FieldCheck
 
     def validate(self, control: Any, field_name: str, value: Any) -> None:
-        """Validate one field value for a specific control instance."""
+        """Validate one field value for a specific class instance."""
         self._check(control, field_name, value)
 
 
 @dataclass(frozen=True)
 class ControlRule:
-    """A validation rule that can inspect multiple fields on a control."""
+    """A cross-field validation rule evaluated against one class instance."""
 
     _check: ControlCheck
 
     def validate(self, control: Any) -> None:
-        """Validate a control instance."""
+        """Validate one class instance."""
         self._check(control)
 
 
 ValidationRules = ClassVar[tuple[ControlRule, ...]]
-"""Alias for class-level outbound control-rule declarations."""
+"""Alias for class-level `__validation_rules__` declarations."""
 
 
 @dataclass(frozen=True)
 class _ClassValidationSpec:
-    """Compiled validation specification for a control class."""
+    """Compiled validation specification for one class."""
 
     field_rules: tuple[tuple[str, FieldRule], ...]
     control_rules: tuple[ControlRule, ...]
@@ -132,7 +133,7 @@ class V:
     Validation rule builder namespace.
 
     Methods return `FieldRule` or `ControlRule` instances which are attached to
-    control fields (`Annotated[...]`) or class-level `__validation_rules__`.
+    class fields (`Annotated[...]`) or class-level `__validation_rules__`.
     """
 
     @staticmethod
@@ -142,7 +143,7 @@ class V:
 
     @staticmethod
     def control(check: ControlCheck) -> ControlRule:
-        """Wrap a custom control validator callback into a `ControlRule`."""
+        """Wrap a custom cross-field validator callback into a `ControlRule`."""
         return ControlRule(check)
 
     @staticmethod
@@ -152,7 +153,7 @@ class V:
         message: Optional[ControlMessage] = None,
     ) -> ControlRule:
         """
-        Build a generic control-level predicate rule.
+        Build a generic cross-field predicate rule.
 
         When `message` is omitted, a generic fallback is used.
         """
@@ -1288,7 +1289,7 @@ def _annotation_allows_none(annotation: Any) -> bool:
 
 def _resolve_allow_none_for_field(control_cls: type[Any], field_name: str) -> bool:
     """
-    Resolve `None` allowance for a field from its annotation.
+    Resolve `None` allowance for an annotated field on a class.
     """
     annotation = _get_effective_type_hints(control_cls).get(field_name)
     if annotation is None:
@@ -1361,7 +1362,7 @@ def _prepare_field_comparison_values(
 @cache
 def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
     """
-    Compile and cache effective validation rules for a control class.
+    Compile and cache effective validation rules for one class.
 
     Rules are merged in MRO order (base to derived) so subclasses can extend
     validation behavior deterministically.
@@ -1393,7 +1394,7 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
 
 def validate(control: Any) -> None:
     """
-    Run all compiled validators for a class instance.
+    Run all compiled validators for one instance.
 
     Field rules are evaluated first, then class-level control rules.
     Validation stops at the first raised exception.
