@@ -71,10 +71,19 @@ class CupertinoActionSheet(LayoutControl):
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
-                ctrl.actions is not None
-                or ctrl.title is not None
-                or ctrl.message is not None
-                or ctrl.cancel is not None
+                (
+                    isinstance(ctrl.actions, list)
+                    and any(action.visible for action in ctrl.actions)
+                )
+                or (
+                    isinstance(ctrl.title, str)
+                    or (isinstance(ctrl.title, Control) and ctrl.title.visible)
+                )
+                or (
+                    isinstance(ctrl.message, str)
+                    or (isinstance(ctrl.message, Control) and ctrl.message.visible)
+                )
+                or (ctrl.cancel is not None and ctrl.cancel.visible)
             ),
             message=(
                 "This action sheet must have a non-None value for at least one of the "

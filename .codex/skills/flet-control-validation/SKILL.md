@@ -118,29 +118,14 @@ When a property has validation, document it in that property’s docstring (goog
 
 3. Start each entry with `If it ...`, where 'it' refers to the property name.
 
-4. Phrase entries as negations of the annotation rule:
-   - `V.gt(x)` -> `If it is not strictly greater than \`x\`.`
-   - `V.ge(x)` -> `If it is not greater than or equal to \`x\`.`
-   - `V.lt(x)` -> `If it is not strictly less than \`x\`.`
-   - `V.le(x)` -> `If it is not less than or equal to \`x\`.`
-   - `V.eq(x)` -> `If it is not equal to \`x\`.`
-   - `V.ne(x)` -> `If it is equal to \`x\`.`
-   - `V.one_of((a, b))` -> `If it is not one of \`a\` or \`b\`.`
-   - `V.ge_field("min")` -> `If it is not greater than or equal to [\`min\`][(c).].`
-   - `V.le_field("max")` -> `If it is not less than or equal to [\`max\`][(c).].`
-   - `V.factor_of(60)` -> `If it is not a factor of \`60\`.`
-   - `V.multiple_of(n)` -> `If it is not a multiple of \`n\`.`
-   - `V.length_ge(n)` -> `If its length is less than \`n\`.`
-   - `V.length_eq(n)` -> `If its length is not equal to \`n\`.`
-   - `V.length_between(a, b)` -> `If its length is not between \`a\` and \`b\`, inclusive.`
-   - `V.visible_control()` -> `If it is not visible.`
-   - `V.visible_controls(min_count=1)` -> `If it does not contain at least one visible Control.`
-   - `V.visible_controls(min_count=n)` -> `If it does not contain at least \`n\` visible Controls.`
-   - `V.str_or_visible_control()` -> `If it is neither a string nor a visible Control.`
-   - `V.instance_of((A, B))` -> `If it is not of type \`A\` or \`B\`.`
-   - If sign direction is required with `factor_of` or `multiple_of`, compose with:
-     `V.gt(0)` for positive values or `V.lt(0)` for negative values, and add
-     a separate `Raises` entry for the sign rule.
+4. Use canonical wording from validation helper docstrings.
+   - The source of truth is
+     `sdk/python/packages/flet/src/flet/controls/validation.py`.
+   - Each `V.*` helper includes `Property docstring Raises wording`.
+   - Keep property `Raises` entries as negations of the annotation rule.
+   - For sign-neutral divisibility helpers (`factor_of`, `multiple_of`), add
+     explicit sign rules (`V.gt(0)` or `V.lt(0)`) when direction matters, and
+     include separate `Raises` entries for those sign rules.
 
 5. Mention conditional applicability when needed.
    - Example (for `min`/`max` checks against optional `value`):

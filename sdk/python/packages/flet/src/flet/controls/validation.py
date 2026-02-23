@@ -5,6 +5,9 @@ This module provides small composable rule objects that can be attached to contr
 fields via `typing.Annotated` and to controls via `__validation_rules__`.
 The runtime calls `validate_outbound()` before patch serialization so invalid
 state is rejected on the Python side before reaching Dart.
+
+For docstring consistency in control properties, each `V.*` helper docstring
+includes canonical `Raises` wording guidance.
 """
 
 import sys
@@ -174,6 +177,8 @@ class V:
         """
         Validate a field value type with an optional custom error message.
 
+        Property docstring Raises wording: `If it is not of type ...`.
+
         Args:
             expected_type: Allowed runtime type(s).
             message: Optional custom error message/template.
@@ -203,6 +208,8 @@ class V:
     ) -> FieldRule:
         """
         Validate that a field value is visible, i.e. `Control.visible` is `True`.
+
+        Property docstring Raises wording: `If it is not visible.`
 
         Args:
             message: Optional custom error text or formatter.
@@ -235,6 +242,10 @@ class V:
     ) -> FieldRule:
         """
         Validate that a field contains at least `min_count` visible controls.
+
+        Property docstring Raises wording:
+        - `If it does not contain at least one visible Control.`
+        - `If it does not contain at least n visible Controls.`
 
         The field value is expected to be an iterable of controls exposing a
         `visible` boolean attribute.
@@ -301,6 +312,9 @@ class V:
         """
         Validate that a field value is either a string or a visible control.
 
+        Property docstring Raises wording:
+        `If it is neither a string nor a visible Control.`
+
         Args:
             message: Optional custom error text or formatter.
         """
@@ -334,6 +348,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value > bound`.
+
+        Property docstring Raises wording:
+        `If it is not strictly greater than ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -367,6 +384,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value >= bound`.
+
+        Property docstring Raises wording:
+        `If it is not greater than or equal to ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -401,6 +421,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value < bound`.
+
+        Property docstring Raises wording:
+        `If it is not strictly less than ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -431,6 +454,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value <= bound`.
+
+        Property docstring Raises wording:
+        `If it is not less than or equal to ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -465,6 +491,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `minimum <= value <= maximum`.
+
+        Property docstring Raises wording:
+        `If it is not between ... and ..., inclusive.`
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -499,6 +528,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that a field value is an integer factor of `base`.
+
+        Property docstring Raises wording:
+        `If it is not a factor of ...`.
 
         This rule is sign-neutral. To enforce direction, compose with:
         - `V.gt(0)` for positive factors, or
@@ -551,6 +583,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that a field value is an integer multiple of `divisor`.
+
+        Property docstring Raises wording:
+        `If it is not a multiple of ...`.
 
         This rule is sign-neutral. To enforce direction, compose with:
         - `V.gt(0)` for positive multiples, or
@@ -605,6 +640,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value == expected`.
+
+        Property docstring Raises wording:
+        `If it is not equal to ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -637,6 +675,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `value != unexpected`.
+
+        Property docstring Raises wording:
+        `If it is equal to ...`.
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -670,6 +711,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that `value` belongs to a fixed set of allowed values.
+
+        Property docstring Raises wording:
+        `If it is not one of ...`.
 
         Args:
             allowed_values: Allowed values collection.
@@ -764,6 +808,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that a sized field value is non-empty (`len(value) > 0`).
+
+        Property docstring Raises wording:
+        `If it is empty.`
         """
 
         def _check(control: Any, field_name: str, value: Any) -> None:
@@ -806,6 +853,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that a sized field has length greater than or equal to `minimum`.
+
+        Property docstring Raises wording:
+        `If its length is less than ...`.
 
         Args:
             minimum: Inclusive minimum allowed length.
@@ -865,6 +915,9 @@ class V:
         """
         Validate that a sized field has length equal to `expected`.
 
+        Property docstring Raises wording:
+        `If its length is not equal to ...`.
+
         Args:
             expected: Required length.
             message: Optional custom error text or formatter.
@@ -921,6 +974,9 @@ class V:
     ) -> FieldRule:
         """
         Validate that a sized field length is between bounds, inclusive.
+
+        Property docstring Raises wording:
+        `If its length is not between ... and ..., inclusive.`
 
         Args:
             minimum: Inclusive minimum allowed length.
@@ -987,6 +1043,9 @@ class V:
         """
         Validate `field_name > other_field` on a control instance.
 
+        Property docstring Raises wording:
+        `If it is not strictly greater than [\`other_field\`][(c).].`
+
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same control.
 
@@ -1029,6 +1088,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `field_name >= other_field` on a control instance.
+
+        Property docstring Raises wording:
+        `If it is not greater than or equal to [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same control.
@@ -1073,6 +1135,9 @@ class V:
         """
         Validate `field_name < other_field` on a control instance.
 
+        Property docstring Raises wording:
+        `If it is not strictly less than [\`other_field\`][(c).].`
+
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same control.
 
@@ -1115,6 +1180,9 @@ class V:
     ) -> FieldRule:
         """
         Validate `field_name <= other_field` on a control instance.
+
+        Property docstring Raises wording:
+        `If it is not less than or equal to [\`other_field\`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same control.
