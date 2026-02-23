@@ -27,7 +27,7 @@ __all__ = [
     "FieldRule",
     "V",
     "ValidationRules",
-    "validate_outbound",
+    "validate",
 ]
 
 FieldCheck = Callable[[Any, str, Any], None]
@@ -814,9 +814,9 @@ def _compile_class_spec(control_cls: type[Any]) -> _ClassValidationSpec:
     return _ClassValidationSpec(tuple(field_rules), tuple(control_rules))
 
 
-def validate_outbound(control: Any) -> None:
+def validate(control: Any) -> None:
     """
-    Run all compiled outbound validators for a control instance.
+    Run all compiled validators for a class instance.
 
     Field rules are evaluated first, then class-level control rules.
     Validation stops at the first raised exception.

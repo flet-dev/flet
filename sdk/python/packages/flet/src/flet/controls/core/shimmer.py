@@ -115,8 +115,7 @@ class Shimmer(LayoutControl):
             lambda ctrl: ctrl.gradient is not None
             or (ctrl.base_color is not None and ctrl.highlight_color is not None),
             message=(
-                "either gradient or both base_color and highlight_color "
-                "must be provided"
+                "either gradient or both base_color and highlight_color must be set"
             ),
         ),
     )
