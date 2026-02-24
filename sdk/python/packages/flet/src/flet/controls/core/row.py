@@ -20,7 +20,6 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     Example:
     ```python
-    (
         ft.Row(
             controls=[
                 ft.Card(
@@ -34,8 +33,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
                 )
                 for i in range(1, 6)
             ],
-        ),
-    )
+        )
     ```
 
     """
