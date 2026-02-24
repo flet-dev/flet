@@ -89,7 +89,7 @@ class TileLayer(MapLayer):
         As well as the standard XYZ placeholders in the template, the following
         placeholders may also be used:
 
-        - `{s}`: subdomain number (0-3) - see [`subdomains`][(c).] property
+        - `{s}`: see [`subdomains`][(c).] property
         - `{r}`: retina scaling factor (2 or 1)
         - `{d}`: reflects the [`tile_size`][(c).] property
 
