@@ -278,6 +278,7 @@ nav:
           - BottomAppBar: controls/bottomappbar.md
           - BottomSheet: controls/bottomsheet.md
           - Button: controls/button.md
+          - Camera: camera/index.md
           - Canvas:
               - controls/canvas/index.md
               - Arc: controls/canvas/arc.md
@@ -435,6 +436,7 @@ nav:
           - ReorderableDragHandle: controls/reorderabledraghandle.md
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
+          - RotatedBox: controls/rotatedbox.md
           - Row: controls/row.md
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
@@ -563,6 +565,18 @@ nav:
               - BoxDecoration: types/boxdecoration.md
               - BoxShadow: types/boxshadow.md
               - ButtonStyle: types/buttonstyle.md
+              - Camera:
+                  - CameraDescription: camera/types/cameradescription.md
+                  - CameraImageEvent: camera/types/cameraimageevent.md
+                  - CameraLensDirection: camera/types/cameralensdirection.md
+                  - CameraLensType: camera/types/cameralenstype.md
+                  - CameraPreviewSize: camera/types/camerapreviewsize.md
+                  - CameraStateEvent: camera/types/camerastateevent.md
+                  - ExposureMode: camera/types/exposuremode.md
+                  - FlashMode: camera/types/flashmode.md
+                  - FocusMode: camera/types/focusmode.md
+                  - ImageFormatGroup: camera/types/imageformatgroup.md
+                  - ResolutionPreset: camera/types/resolutionpreset.md
               - Charts:
                   - BarChartEvent: charts/types/barchartevent.md
                   - BarChartGroup: charts/types/barchartgroup.md
@@ -619,6 +633,7 @@ nav:
               - FilePickerFile: types/filepickerfile.md
               - FilePickerUploadFile: types/filepickeruploadfile.md
               - Finder: types/finder.md
+              - Flip: types/flip.md
               - FletTestApp: types/flettestapp.md
               - Geolocator:
                   - ForegroundNotificationConfiguration: geolocator/types/foregroundnotificationconfiguration.md
@@ -673,6 +688,7 @@ nav:
                   - TileDisplay: map/types/tiledisplay.md
                   - TileLayerEvictErrorTileStrategy: map/types/tilelayerevicterrortilestrategy.md
               - Margin: types/margin.md
+              - Matrix4: types/matrix4.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md
               - MarkdownStyleSheet: types/markdownstylesheet.md
               - MenuStyle: types/menustyle.md
@@ -723,6 +739,7 @@ nav:
               - TextSpan: types/textspan.md
               - TextStyle: types/textstyle.md
               - TextThemeStyle: types/textthemestyle.md
+              - Transform: types/transform.md
               - Theme:
                   - Theme: types/theme/index.md
                   - AppBarTheme: types/appbartheme.md
@@ -922,6 +939,7 @@ nav:
               - KeyDownEvent: types/keydownevent.md
               - KeyRepeatEvent: types/keyrepeatevent.md
               - KeyUpEvent: types/keyupevent.md
+              - LocaleChangeEvent: types/localechangeevent.md
               - LoginEvent: types/loginevent.md
               - LongPressEndEvent: types/longpressendevent.md
               - LongPressStartEvent: types/longpressstartevent.md

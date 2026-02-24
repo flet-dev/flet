@@ -44,6 +44,12 @@ Whether to skip running `flutter doctor` when a build fails.
 
 Defaults to `False`.
 
+### `FLET_HIDE_WINDOW_ON_START`
+
+Set to `true` to start app with the main window hidden.
+
+Defaults to `False`.
+
 ### `FLET_FORCE_WEB_SERVER`
 
 Set to `true` to force running app as a web app. Automatically set on headless Linux hosts.

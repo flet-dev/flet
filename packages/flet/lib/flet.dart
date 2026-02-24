@@ -6,6 +6,7 @@ export 'package:flutter/cupertino.dart' show CupertinoIcons;
 export 'package:flutter/material.dart' show Icons;
 
 export 'src/controls/base_controls.dart';
+export 'src/controls/control_widget.dart';
 export 'src/extensions/control.dart';
 export 'src/flet_app.dart';
 export 'src/flet_app_errors_handler.dart';
@@ -32,6 +33,7 @@ export 'src/utils/colors.dart';
 export 'src/utils/dash_path.dart';
 export 'src/utils/debouncer.dart';
 export 'src/utils/desktop.dart';
+export 'src/utils/device_info.dart';
 export 'src/utils/dismissible.dart';
 export 'src/utils/drawing.dart';
 export 'src/utils/edge_insets.dart';

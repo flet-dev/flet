@@ -15,7 +15,7 @@ def main(page: ft.Page):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             controls=[
                 image := ft.Image(
-                    src="icons/icon-192.png",
+                    src="icon-192.png",
                     width=100,
                     height=100,
                     scale=1.0,

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -50,6 +49,8 @@ class LayoutControl extends StatelessWidget {
     w = _rotatedControl(context, w, control);
     w = _scaledControl(context, w, control);
     w = _offsetControl(context, w, control);
+    w = _flippedControl(w, control);
+    w = _transformedControl(w, control);
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
     w = _marginControl(context, w, control);
@@ -137,9 +138,8 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
   var rotationDetails = control.getRotationDetails("rotate");
   var animation = control.getAnimation("animate_rotation");
   if (animation != null) {
-    return AnimatedRotation(
-      turns: rotationDetails != null ? rotationDetails.angle / (2 * pi) : 0,
-      alignment: rotationDetails?.alignment ?? Alignment.center,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(end: rotationDetails?.angle ?? 0),
       duration: animation.duration,
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
@@ -147,12 +147,23 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
               control.triggerEvent("animation_end", "rotation");
             }
           : null,
+      builder: (context, value, child) => Transform.rotate(
+        angle: value,
+        alignment: rotationDetails?.alignment ?? Alignment.center,
+        origin: rotationDetails?.origin,
+        transformHitTests: rotationDetails?.transformHitTests ?? true,
+        filterQuality: rotationDetails?.filterQuality,
+        child: child,
+      ),
       child: widget,
     );
   } else if (rotationDetails != null) {
     return Transform.rotate(
       angle: rotationDetails.angle,
       alignment: rotationDetails.alignment,
+      origin: rotationDetails.origin,
+      transformHitTests: rotationDetails.transformHitTests,
+      filterQuality: rotationDetails.filterQuality,
       child: widget,
     );
   }
@@ -163,9 +174,8 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
   var scaleDetails = control.getScale("scale");
   var animation = control.getAnimation("animate_scale");
   if (animation != null) {
-    return AnimatedScale(
-      scale: scaleDetails?.scale ?? 1.0,
-      alignment: scaleDetails?.alignment ?? Alignment.center,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(end: scaleDetails?.scale ?? 1.0),
       duration: animation.duration,
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
@@ -173,6 +183,16 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
               control.triggerEvent("animation_end", "scale");
             }
           : null,
+      builder: (context, value, child) => Transform.scale(
+        scale: value,
+        scaleX: scaleDetails?.scaleX,
+        scaleY: scaleDetails?.scaleY,
+        alignment: scaleDetails?.alignment ?? Alignment.center,
+        origin: scaleDetails?.origin,
+        transformHitTests: scaleDetails?.transformHitTests ?? true,
+        filterQuality: scaleDetails?.filterQuality,
+        child: child,
+      ),
       child: widget,
     );
   } else if (scaleDetails != null) {
@@ -181,6 +201,9 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
       scaleX: scaleDetails.scaleX,
       scaleY: scaleDetails.scaleY,
       alignment: scaleDetails.alignment,
+      origin: scaleDetails.origin,
+      transformHitTests: scaleDetails.transformHitTests,
+      filterQuality: scaleDetails.filterQuality,
       child: widget,
     );
   }
@@ -188,11 +211,11 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _offsetControl(BuildContext context, Widget widget, Control control) {
-  var offset = control.getOffset("offset");
+  var offsetDetails = control.getOffsetDetails("offset");
   var animation = control.getAnimation("animate_offset");
-  if (offset != null && animation != null) {
-    return AnimatedSlide(
-      offset: offset,
+  if (offsetDetails != null && animation != null) {
+    return TweenAnimationBuilder<Offset>(
+      tween: Tween<Offset>(end: Offset(offsetDetails.x, offsetDetails.y)),
       duration: animation.duration,
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
@@ -200,12 +223,69 @@ Widget _offsetControl(BuildContext context, Widget widget, Control control) {
               control.triggerEvent("animation_end", "offset");
             }
           : null,
+      builder: (context, value, child) => _fractionalTranslate(
+        child: child!,
+        offset: value,
+        transformHitTests: offsetDetails.transformHitTests,
+        filterQuality: offsetDetails.filterQuality,
+      ),
       child: widget,
     );
-  } else if (offset != null) {
-    return FractionalTranslation(translation: offset, child: widget);
+  } else if (offsetDetails != null) {
+    return _fractionalTranslate(
+      child: widget,
+      offset: Offset(offsetDetails.x, offsetDetails.y),
+      transformHitTests: offsetDetails.transformHitTests,
+      filterQuality: offsetDetails.filterQuality,
+    );
   }
   return widget;
+}
+
+Widget _flippedControl(Widget widget, Control control) {
+  var flipDetails = control.getFlipDetails("flip");
+  if (flipDetails != null) {
+    return Transform.flip(
+      flipX: flipDetails.flipX,
+      flipY: flipDetails.flipY,
+      origin: flipDetails.origin,
+      transformHitTests: flipDetails.transformHitTests,
+      filterQuality: flipDetails.filterQuality,
+      child: widget,
+    );
+  }
+  return widget;
+}
+
+Widget _transformedControl(Widget widget, Control control) {
+  var transformDetails = control.getTransformDetails("transform");
+  if (transformDetails != null) {
+    return Transform(
+      transform: transformDetails.matrix,
+      origin: transformDetails.origin,
+      alignment: transformDetails.alignment,
+      transformHitTests: transformDetails.transformHitTests,
+      filterQuality: transformDetails.filterQuality,
+      child: widget,
+    );
+  }
+  return widget;
+}
+
+Widget _fractionalTranslate({
+  required Widget child,
+  required Offset offset,
+  required bool transformHitTests,
+  required FilterQuality? filterQuality,
+}) {
+  // FractionalTranslation preserves existing offset semantics:
+  // translation values are scaled by the child's laid out size.
+  // `filterQuality` does not apply here because no bitmap transform is used.
+  return FractionalTranslation(
+    translation: offset,
+    transformHitTests: transformHitTests,
+    child: child,
+  );
 }
 
 Widget _alignedControl(BuildContext context, Widget widget, Control control) {

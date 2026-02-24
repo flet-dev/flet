@@ -21,6 +21,9 @@
 # Pycharm Files
 .idea/
 
+# FVM
+.fvm/
+
 # mac specific
 .DS_Store
 *.bkp

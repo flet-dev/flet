@@ -12,8 +12,11 @@ def main(page: ft.Page):
             height=150,
             bgcolor=ft.Colors.BLUE,
             border_radius=ft.BorderRadius.all(10),
-            offset=ft.Offset(x=-2, y=0),
-            animate_offset=ft.Animation(duration=1000),
+            offset=ft.Offset(x=-1.1, y=0),
+            animate_offset=ft.Animation(
+                duration=600,
+                curve=ft.AnimationCurve.BOUNCE_OUT,
+            ),
         ),
         ft.Button("Reveal!", on_click=animate),
     )

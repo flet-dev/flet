@@ -107,5 +107,15 @@ and [upload][flet.FilePicker.upload] app.
 
 {{ image(example_images + "/pick_and_upload.png", width="80%") }}
 
+### Pick text content and save/download it
+
+Use [`pick_files()`][flet.FilePicker.pick_files] with `with_data=True` when
+you need file contents directly, such as in web apps where
+[`FilePickerFile.path`][flet.FilePickerFile.] is not available.
+
+```python
+--8<-- "{{ examples }}/pick_and_save_text_content.py"
+```
+
 
 {{ class_members(class_name) }}

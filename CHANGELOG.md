@@ -1,3 +1,39 @@
+## 0.81.0
+
+### New features
+
+* Add `Camera` control ([#6190](https://github.com/flet-dev/flet/issues/6190)).
+* Add `CodeEditor` control ([#6162](https://github.com/flet-dev/flet/issues/6162)).
+* Add `PageView` control ([#6158](https://github.com/flet-dev/flet/issues/6158)).
+* Add color picker controls based on `flutter_colorpicker` ([#6109](https://github.com/flet-dev/flet/issues/6109)).
+* Add Matrix4-based `LayoutControl.transform` and `RotatedBox` control ([#6198](https://github.com/flet-dev/flet/issues/6198)).
+* Add `LayoutControl.on_size_change` event for size-aware layouts ([#6099](https://github.com/flet-dev/flet/issues/6099)).
+* Add `Hero` animations ([#6157](https://github.com/flet-dev/flet/issues/6157)).
+* Add clipboard image/file set and get APIs ([#6141](https://github.com/flet-dev/flet/issues/6141)).
+* Add web `FilePicker` `with_data` support for file content ([#6199](https://github.com/flet-dev/flet/issues/6199)).
+* Add platform locale info and locale change events ([#6191](https://github.com/flet-dev/flet/issues/6191)).
+* Add `ignore_up_down_keys` to `TextField` and `CupertinoTextField` ([#6183](https://github.com/flet-dev/flet/issues/6183)).
+* Add `flet build --artifact` and iOS simulator build targets ([#6074](https://github.com/flet-dev/flet/issues/6074), [#6188](https://github.com/flet-dev/flet/issues/6188)).
+
+### Improvements
+
+* Optimize `object_patch` memory churn ([#6204](https://github.com/flet-dev/flet/issues/6204)).
+* Skip component migrate/diff when function signatures differ ([#6181](https://github.com/flet-dev/flet/issues/6181)).
+
+### Bug fixes
+
+* Fix memory leaks in Flet web app ([#6186](https://github.com/flet-dev/flet/issues/6186)).
+* Fix desktop window frameless/titlebar update sync and progress bar clearing ([#6114](https://github.com/flet-dev/flet/issues/6114)).
+* Fix first-time button `style` patching and clear stale style state ([#6119](https://github.com/flet-dev/flet/issues/6119)).
+* Fix map layer rebuilds on marker updates ([#6113](https://github.com/flet-dev/flet/issues/6113)).
+* Fix `AlertDialog` and `CupertinoAlertDialog` barrier color updates ([#6097](https://github.com/flet-dev/flet/issues/6097)).
+* Fix `ControlEvent` runtime type hints ([#6102](https://github.com/flet-dev/flet/issues/6102)).
+
+### Other changes
+
+* Bump Flutter to 3.41.2.
+* Register MIME types for `.mjs` and `.wasm` ([#6140](https://github.com/flet-dev/flet/issues/6140)).
+
 ## 0.80.5
 
 * Fix memory leak in Flet web apps ([#6089](https://github.com/flet-dev/flet/issues/6089)).
@@ -93,7 +129,7 @@
 * Fix `flet build`: allow dependencies with commas ([#5033](https://github.com/flet-dev/flet/issues/5033))
 * Show app startup screen by default ([#5036](https://github.com/flet-dev/flet/issues/5036))
 * fix: `Textfield` cursor position changes when modifying field content in `on_change` ([#5019](https://github.com/flet-dev/flet/issues/5019))
-* Remove deperecated `Control.update_async()` method ([#5005](https://github.com/flet-dev/flet/issues/5005))
+* Remove deprecated `Control.update_async()` method ([#5005](https://github.com/flet-dev/flet/issues/5005))
 * fix: incorrect positioning of non-FAB controls assigned to page.floating_action_button ([#5049](https://github.com/flet-dev/flet/issues/5049))
 
 ## 0.27.5
@@ -139,7 +175,7 @@
 * disable markup for flet-cli stdout logs ([#4796](https://github.com/flet-dev/flet/pull/4796))
 * Fixed: Disable rich's Markup for stdout logs ([#4795](https://github.com/flet-dev/flet/issues/4795))
 * Fixed: Setting `SearchBar.bar_border_side` isn't visually honoured ([#4767](https://github.com/flet-dev/flet/issues/4767))
-* Fixed: Dropdown: Long options cause the down-arrow to oveflow ([#4838](https://github.com/flet-dev/flet/issues/4838))
+* Fixed: Dropdown: Long options cause the down-arrow to overflow ([#4838](https://github.com/flet-dev/flet/issues/4838))
 * Fixed: CupertinoSlider initialisation does not allow values less then zero/greater then 1 ([#4853](https://github.com/flet-dev/flet/issues/4853))
 * Fixed: Same code shows different appearance in Flet APP/Web/PC local. ([#4855](https://github.com/flet-dev/flet/issues/4855))
 * Fixed: Transforming scale renders a grey screen ([#4759](https://github.com/flet-dev/flet/issues/4759))
@@ -153,7 +189,7 @@
 * Migrated to Flutter 3.27.0 ([#4593](https://github.com/flet-dev/flet/pull/4593))
 * New control properties, Flutter 3.27 fixes ([#4703](https://github.com/flet-dev/flet/pull/4703))
 * Optional on-demand creation of `ListView.controls` ([#3931](https://github.com/flet-dev/flet/issues/3931))
-* Reset `InteractiveViewer` tranformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
+* Reset `InteractiveViewer` transformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
 * Passthrough of mouse events from main window to other applications ([#1438](https://github.com/flet-dev/flet/issues/1438))
 * Remove v0.26.0-related deprecations ([#4456](https://github.com/flet-dev/flet/issues/4456))
 * Implemented `Window.ignore_mouse_events` ([#4465](https://github.com/flet-dev/flet/pull/4465))
@@ -389,7 +425,7 @@
 
 ## 0.21.1
 
-* Python dependencies bumped and losen.
+* Python dependencies bumped and loosen.
 * Fixed: "No supported WebSocket library detected." when running web app with Flet 0.21.0 ([#2818](https://github.com/flet-dev/flet/issues/2818)).
 * Fix `EventHandler`: do not call it when converter returned `None`.
 
@@ -497,7 +533,7 @@
 
 * `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
 * `CupertinoRadio` control and `Radio.adaptive` ([#2225](https://github.com/flet-dev/flet/issues/2225)).
-* Fix `NavigationBar.label_bahavior` ([#2229](https://github.com/flet-dev/flet/issues/2229)).
+* Fix `NavigationBar.label_behavior` ([#2229](https://github.com/flet-dev/flet/issues/2229)).
 * `CupertinoSwitch` control ([docs](https://flet.dev/docs/controls/cupertinoswitch)).
 * Disable fade-in effect on Flet app start.
 * Tab alignment bug fix ([#2208](https://github.com/flet-dev/flet/issues/2208)).
@@ -543,7 +579,7 @@
 
 ## 0.12.1
 
-* Ability to expand `ButtomSheet` to the top of the screen with `BottomSheet.is_scroll_controlled` property ([#2087](https://github.com/flet-dev/flet/issues/2087)).
+* Ability to expand `BottomSheet` to the top of the screen with `BottomSheet.is_scroll_controlled` property ([#2087](https://github.com/flet-dev/flet/issues/2087)).
 * `BottomSheet.maintain_bottom_view_insets_padding` to avoid obstructing controls with on-screen keyboard ([#2010](https://github.com/flet-dev/flet/issues/2010)).
 * Fixed: `NavigationDrawer` disappears when you move the window and is not opening again ([#2062](https://github.com/flet-dev/flet/issues/2062)).
 * Fixed: alert dialog doesn't close ([#2011](https://github.com/flet-dev/flet/issues/2011)).
@@ -772,7 +808,7 @@ from flet.auth.providers import GitHubOAuthProvider
 * Fix relative assets path in desktop app
 * PDM changed to Poetry
 * Add `--hidden-import` option to `flet pack` command
-* Add transparancy to matplotlib ([#889](https://github.com/flet-dev/flet/issues/889))
+* Add transparency to matplotlib ([#889](https://github.com/flet-dev/flet/issues/889))
 * Replace Fletd server for desktop apps with a light-weight Python shim ([#838](https://github.com/flet-dev/flet/issues/838))
 * add default values in Border dataclass ([#883](https://github.com/flet-dev/flet/issues/883))
 * Fix for issue in control.py when checking add command ([#835](https://github.com/flet-dev/flet/issues/835))
@@ -845,7 +881,7 @@ from flet.auth.providers import GitHubOAuthProvider
 * Add an ability to change font family of `TextField` ([#511](https://github.com/flet-dev/flet/issues/511))
 * Feature: Theming Switch and Checkbox component ([#523](https://github.com/flet-dev/flet/issues/523))
 * Change shape of AlertDialog ([#537](https://github.com/flet-dev/flet/issues/537))
-* Fixed: Saving and retreiving a string value from client storage adds quotation marks ([#545](https://github.com/flet-dev/flet/issues/545))
+* Fixed: Saving and retrieving a string value from client storage adds quotation marks ([#545](https://github.com/flet-dev/flet/issues/545))
 
 ## 0.1.63
 

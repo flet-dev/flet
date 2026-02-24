@@ -12,6 +12,7 @@ dependencies = [
     "flet-ads",
     "flet-audio",
     "flet-audio-recorder",
+    "flet-camera",
     "flet-charts",
     "flet-datatable2",
     "flet-flashlight",
@@ -42,6 +43,7 @@ flet-web = { path = "../../../packages/flet-web", editable = true }
 flet-ads = { path = "../../../packages/flet-ads", editable = true }
 flet-audio = { path = "../../../packages/flet-audio", editable = true }
 flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable = true }
+flet-camera = { path = "../../../packages/flet-camera", editable = true }
 flet-charts = { path = "../../../packages/flet-charts", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
@@ -59,6 +61,7 @@ flet = "../../../packages/flet"
 flet-ads = "../../../packages/flet-ads"
 flet-audio = "../../../packages/flet-audio"
 flet-audio-recorder = "../../../packages/flet-audio-recorder"
+flet-camera = "../../../packages/flet-camera"
 flet-charts = "../../../packages/flet-charts"
 flet-datatable2 = "../../../packages/flet-datatable2"
 flet-flashlight = "../../../packages/flet-flashlight"

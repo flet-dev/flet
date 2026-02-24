@@ -12,7 +12,13 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.margin import MarginValue
-from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
+from flet.controls.transform import (
+    Flip,
+    OffsetValue,
+    RotateValue,
+    ScaleValue,
+    Transform,
+)
 from flet.controls.types import Number
 from flet.utils import deprecated_class
 
@@ -47,7 +53,8 @@ class LayoutControl(Control):
     - explicit sizing ([`width`][(c).], [`height`][(c).], [`aspect_ratio`][(c).]);
     - absolute positioning ([`left`][(c).], [`top`], [`right`][(c).], [`bottom`][(c).]);
     - parent-space placement ([`align`][(c).], [`margin`][(c).]);
-    - 2D transforms ([`rotate`][(c).], [`scale`][(c).], [`offset`][(c).]);
+    - 2D transforms ([`rotate`][(c).], [`scale`][(c).], [`offset`][(c).],
+      [`flip`][(c).], [`transform`][(c).]);
     - implicit animations for those properties (`animate_*`);
     - layout/animation lifecycle events ([`on_size_change`][(c).],
       [`on_animation_end`][(c).]).
@@ -196,6 +203,21 @@ class LayoutControl(Control):
 
         ft.run(main)
         ```
+    """
+
+    flip: Optional[Flip] = None
+    """
+    Flips this control horizontally and/or vertically.
+
+    Set to an instance of [`Flip`][flet.] to mirror across x-axis, y-axis, or both.
+    """
+
+    transform: Optional[Transform] = None
+    """
+    Applies a generic matrix transform to this control.
+
+    Set to an instance of [`Transform`][flet.] with a recorded
+    [`Matrix4`][flet.] to describe arbitrary transform sequences.
     """
     aspect_ratio: Optional[Number] = None
     """

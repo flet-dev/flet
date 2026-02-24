@@ -16,8 +16,10 @@ __all__ = [
     "WindowsDeviceInfo",
 ]
 
+from flet.controls.types import Locale
 
-@dataclass
+
+@dataclass(kw_only=True)
 class DeviceInfo:
     """
     Base class for device information.
@@ -31,8 +33,22 @@ class DeviceInfo:
     - [`WindowsDeviceInfo`][flet.]
     """
 
+    locales: list[Locale]
+    """
+    The full system-reported supported locales of the device.
 
-@dataclass
+    This establishes the language and formatting conventions that application
+    should, if possible, use to render their user interface.
+
+    The list is ordered in order of priority, with lower-indexed locales being
+    preferred over higher-indexed ones. The first element is the primary locale.
+
+    The [`Page.on_locale_change`][flet.] event is called
+    whenever this value changes.
+    """
+
+
+@dataclass(kw_only=True)
 class MacOsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for macOS hosts.
@@ -130,7 +146,7 @@ class WebBrowserName(Enum):
     """Unknown web browser"""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WebDeviceInfo(DeviceInfo):
     """
     Information derived from `navigator`.
@@ -257,7 +273,7 @@ class WebDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AndroidBuildVersion:
     """
     Android OS version details derived from `android.os.Build.VERSION`.
@@ -306,7 +322,7 @@ class AndroidBuildVersion:
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AndroidDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Android devices and emulators.
@@ -466,7 +482,7 @@ class AndroidDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LinuxDeviceInfo(DeviceInfo):
     """
     Device information for a Linux system.
@@ -601,7 +617,7 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WindowsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Windows systems.
@@ -776,7 +792,7 @@ class IosUtsname:
     """Version level."""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IosDeviceInfo(DeviceInfo):
     """
     Device information snapshot for iOS/iPadOS runtimes.

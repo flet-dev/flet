@@ -58,7 +58,9 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Add extension package to `sdk/python/pyproject.toml`.
 - Add extension to `sdk/python/packages/flet/pyproject.toml`.
 - Add extension to `sdk/python/examples/apps/flet_build_test/pyproject.toml`.
-- Add package entry to `.github/workflows/ci.yml`.
+- Add extension to `.github/workflows/ci.yml` in both places:
+  - `build_flet_extensions` -> `PACKAGES` list.
+  - `py_publish` -> `for pkg in ...` publish loop.
 - Add `.gitignore` to Flutter extension project if missing.
 
 ## Docs, Examples, Tests
