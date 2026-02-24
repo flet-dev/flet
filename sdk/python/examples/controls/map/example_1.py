@@ -1,8 +1,7 @@
 import random
 
-import flet_map as ftm
-
 import flet as ft
+import flet_map as ftm
 
 
 def main(page: ft.Page):
