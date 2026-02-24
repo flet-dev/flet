@@ -235,11 +235,34 @@ extension MapCameraExtension on MapCamera {
 }
 
 extension MapEventExtension on MapEvent {
-  Map<String, dynamic> toMap() => {
-        "source": source.name,
-        "event_type": getMapEventType(this),
-        "camera": camera.toMap(),
-      };
+  Map<String, dynamic> toMap() {
+    MapCamera? getMapEventOldCamera(MapEvent event) => switch (event) {
+          MapEventWithMove(:final oldCamera) => oldCamera,
+          _ => null,
+        };
+
+    LatLng? getMapEventCoordinates(MapEvent event) => switch (event) {
+          MapEventTap(:final tapPosition) ||
+          MapEventSecondaryTap(:final tapPosition) ||
+          MapEventLongPress(:final tapPosition) =>
+            tapPosition,
+          _ => null,
+        };
+
+    String? getMapEventId(MapEvent event) => switch (event) {
+          MapEventMove(:final id) || MapEventRotate(:final id) => id,
+          _ => null,
+        };
+
+    return {
+      "source": source.name,
+      "event_type": getMapEventType(this),
+      "camera": camera.toMap(),
+      "old_camera": getMapEventOldCamera(this)?.toMap(),
+      "coordinates": getMapEventCoordinates(this)?.toMap(),
+      "id": getMapEventId(this),
+    };
+  }
 }
 
 String getMapEventType(MapEvent event) {

@@ -817,12 +817,36 @@ class MapEvent(ft.Event["Map"]):
     source: MapEventSource
     """Who/what issued the event."""
 
-    camera: Camera
-    """The map camera after the event."""
-
-    event_type: Optional[MapEventType] = None
+    event_type: MapEventType
     """
     Concrete subtype of this map event.
+    """
+
+    camera: Camera
+    """The camera state after the event."""
+
+    old_camera: Optional[Camera] = None
+    """
+    Camera state before the event.
+
+    Set only for [`MapEventType.MOVE`][(p).], [`MapEventType.FLING_ANIMATION`][(p).],
+    [`MapEventType.DOUBLE_TAP_ZOOM`][(p).], [`MapEventType.SCROLL_WHEEL_ZOOM`][(p).],
+    [`MapEventType.ROTATE`][(p).], and [`MapEventType.NON_ROTATED_SIZE_CHANGE`][(p).].
+    """
+
+    coordinates: Optional[MapLatitudeLongitude] = None
+    """
+    Tap/press coordinates associated with this event.
+
+    Set only for [`MapEventType.TAP`][(p).], [`MapEventType.SECONDARY_TAP`][(p).], and
+    [`MapEventType.LONG_PRESS`][(p).].
+    """
+
+    id: Optional[str] = None
+    """
+    Optional custom identifier associated with this event.
+
+    Set only for [`MapEventType.MOVE`][(p).] and [`MapEventType.ROTATE`][(p).].
     """
 
 
