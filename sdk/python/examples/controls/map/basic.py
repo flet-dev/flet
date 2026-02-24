@@ -9,7 +9,7 @@ def main(page: ft.Page):
             layers=[
                 ftm.TileLayer(
                     url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png",
-                    on_image_error=lambda e: print("TileLayer Error:", e.data),
+                    on_image_error=lambda e: print(f"TileLayer Error: {e.data}"),
                 ),
             ],
         ),

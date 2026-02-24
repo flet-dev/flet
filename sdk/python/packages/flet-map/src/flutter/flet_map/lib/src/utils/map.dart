@@ -234,61 +234,6 @@ extension MapCameraExtension on MapCamera {
       };
 }
 
-extension MapEventExtension on MapEvent {
-  Map<String, dynamic> toMap() {
-    MapCamera? getMapEventOldCamera(MapEvent event) => switch (event) {
-          MapEventWithMove(:final oldCamera) => oldCamera,
-          _ => null,
-        };
-
-    LatLng? getMapEventCoordinates(MapEvent event) => switch (event) {
-          MapEventTap(:final tapPosition) ||
-          MapEventSecondaryTap(:final tapPosition) ||
-          MapEventLongPress(:final tapPosition) =>
-            tapPosition,
-          _ => null,
-        };
-
-    String? getMapEventId(MapEvent event) => switch (event) {
-          MapEventMove(:final id) || MapEventRotate(:final id) => id,
-          _ => null,
-        };
-
-    return {
-      "source": source.name,
-      "event_type": getMapEventType(this),
-      "camera": camera.toMap(),
-      "old_camera": getMapEventOldCamera(this)?.toMap(),
-      "coordinates": getMapEventCoordinates(this)?.toMap(),
-      "id": getMapEventId(this),
-    };
-  }
-}
-
-String getMapEventType(MapEvent event) {
-  const eventTypeMap = <Type, String>{
-    MapEventTap: "tap",
-    MapEventSecondaryTap: "secondaryTap",
-    MapEventLongPress: "longPress",
-    MapEventMove: "move",
-    MapEventMoveStart: "moveStart",
-    MapEventMoveEnd: "moveEnd",
-    MapEventFlingAnimation: "flingAnimation",
-    MapEventFlingAnimationNotStarted: "flingAnimationNotStarted",
-    MapEventFlingAnimationStart: "flingAnimationStart",
-    MapEventFlingAnimationEnd: "flingAnimationEnd",
-    MapEventDoubleTapZoom: "doubleTapZoom",
-    MapEventScrollWheelZoom: "scrollWheelZoom",
-    MapEventDoubleTapZoomStart: "doubleTapZoomStart",
-    MapEventDoubleTapZoomEnd: "doubleTapZoomEnd",
-    MapEventRotate: "rotate",
-    MapEventRotateStart: "rotateStart",
-    MapEventRotateEnd: "rotateEnd",
-    MapEventNonRotatedSizeChange: "nonRotatedSizeChange",
-  };
-  return eventTypeMap[event.runtimeType] ?? "unknown";
-}
-
 MapOptions? parseConfiguration(Control control, BuildContext context,
     [MapOptions? defaultValue]) {
   return MapOptions(
@@ -373,4 +318,59 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
         ? () => control.triggerEvent("init")
         : null,
   );
+}
+
+String getMapEventType(MapEvent event) {
+  const eventTypeMap = <Type, String>{
+    MapEventTap: "tap",
+    MapEventSecondaryTap: "secondaryTap",
+    MapEventLongPress: "longPress",
+    MapEventMove: "move",
+    MapEventMoveStart: "moveStart",
+    MapEventMoveEnd: "moveEnd",
+    MapEventFlingAnimation: "flingAnimation",
+    MapEventFlingAnimationNotStarted: "flingAnimationNotStarted",
+    MapEventFlingAnimationStart: "flingAnimationStart",
+    MapEventFlingAnimationEnd: "flingAnimationEnd",
+    MapEventDoubleTapZoom: "doubleTapZoom",
+    MapEventScrollWheelZoom: "scrollWheelZoom",
+    MapEventDoubleTapZoomStart: "doubleTapZoomStart",
+    MapEventDoubleTapZoomEnd: "doubleTapZoomEnd",
+    MapEventRotate: "rotate",
+    MapEventRotateStart: "rotateStart",
+    MapEventRotateEnd: "rotateEnd",
+    MapEventNonRotatedSizeChange: "nonRotatedSizeChange",
+  };
+  return eventTypeMap[event.runtimeType] ?? "unknown";
+}
+
+MapCamera? getMapEventOldCamera(MapEvent event) => switch (event) {
+      MapEventWithMove(:final oldCamera) => oldCamera,
+      _ => null,
+    };
+
+LatLng? getMapEventCoordinates(MapEvent event) => switch (event) {
+      MapEventTap(:final tapPosition) ||
+      MapEventSecondaryTap(:final tapPosition) ||
+      MapEventLongPress(:final tapPosition) =>
+        tapPosition,
+      _ => null,
+    };
+
+String? getMapEventId(MapEvent event) => switch (event) {
+      MapEventMove(:final id) || MapEventRotate(:final id) => id,
+      _ => null,
+    };
+
+extension MapEventExtension on MapEvent {
+  Map<String, dynamic> toMap() {
+    return {
+      "source": source.name,
+      "event_type": getMapEventType(this),
+      "camera": camera.toMap(),
+      "old_camera": getMapEventOldCamera(this)?.toMap(),
+      "coordinates": getMapEventCoordinates(this)?.toMap(),
+      "id": getMapEventId(this),
+    };
+  }
 }
