@@ -5,12 +5,9 @@ import flet_map as ftm
 
 
 def main(page: ft.Page):
-    marker_layer_ref = ft.Ref[ftm.MarkerLayer]()
-    circle_layer_ref = ft.Ref[ftm.CircleLayer]()
-
     def handle_tap(e: ftm.MapTapEvent):
         if e.name == "tap":
-            marker_layer_ref.current.markers.append(
+            marker_layer.markers.append(
                 ftm.Marker(
                     content=ft.Icon(
                         ft.Icons.LOCATION_ON, color=ft.CupertinoColors.DESTRUCTIVE_RED
@@ -19,7 +16,7 @@ def main(page: ft.Page):
                 )
             )
         elif e.name == "secondary_tap":
-            circle_layer_ref.current.circles.append(
+            circle_layer.circles.append(
                 ftm.CircleMarker(
                     radius=random.randint(5, 10),
                     coordinates=e.coordinates,
@@ -30,6 +27,7 @@ def main(page: ft.Page):
             )
         page.update()
 
+    page.appbar = ft.AppBar(title="Multiple Layers")
     page.add(
         ft.Text("Click anywhere to add a Marker, right-click to add a CircleMarker."),
         ftm.Map(
@@ -67,8 +65,7 @@ def main(page: ft.Page):
                     alignment=ft.Alignment.TOP_RIGHT,
                     on_click=lambda e: print("Clicked SimpleAttribution"),
                 ),
-                ftm.MarkerLayer(
-                    ref=marker_layer_ref,
+                marker_layer := ftm.MarkerLayer(
                     markers=[
                         ftm.Marker(
                             content=ft.Icon(ft.Icons.LOCATION_ON),
@@ -84,8 +81,7 @@ def main(page: ft.Page):
                         ),
                     ],
                 ),
-                ftm.CircleLayer(
-                    ref=circle_layer_ref,
+                circle_layer := ftm.CircleLayer(
                     circles=[
                         ftm.CircleMarker(
                             radius=10,

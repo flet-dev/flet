@@ -11,7 +11,6 @@ IDLE_EVENT_TYPES = {
 
 
 def main(page: ft.Page):
-    page.title = "Map camera idle pattern"
     page.padding = 16
 
     async def handle_map_event(e: ftm.MapEvent):

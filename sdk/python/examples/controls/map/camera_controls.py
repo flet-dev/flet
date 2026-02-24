@@ -3,7 +3,6 @@ import flet_map as ftm
 
 
 def main(page: ft.Page):
-    page.title = "Map camera controls"
     page.padding = 16
 
     async def update_camera_status(trigger: str):
@@ -45,11 +44,11 @@ def main(page: ft.Page):
         await my_map.zoom_to(3)
         await update_camera_status("zoom_to(3)")
 
+    page.appbar = ft.AppBar(title="Camera controls")
     page.add(
         ft.Column(
             expand=True,
             controls=[
-                ft.Text("Camera controls", size=20, weight=ft.FontWeight.BOLD),
                 ft.Text(
                     "Use buttons to control map camera programmatically.",
                     size=12,

@@ -8,9 +8,9 @@ Display interactive maps in your [Flet](https://flet.dev) apps with markers, ove
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -32,10 +32,36 @@ pip install flet-map  # (1)!
 
 > Different tile providers have their own usage policies. Make sure you comply with their attribution and rate limits.
 
-## Example
+## Examples
+
+### Basic
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/basic.py"
+```
+
+### Camera Controls
+
+```python
+--8<-- "{{ examples }}/camera_controls.py"
+```
+
+### Idle Camera
+
+```python
+--8<-- "{{ examples }}/idle_camera.py"
+```
+
+### Interaction Flags
+
+```python
+--8<-- "{{ examples }}/interaction_flags.py"
+```
+
+### Multiple Layers
+
+```python
+--8<-- "{{ examples }}/multi_layers.py"
 ```
 
 ## Reference

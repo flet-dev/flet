@@ -14,7 +14,6 @@ FLAG_OPTIONS: list[tuple[str, ftm.InteractionFlag]] = [
 
 
 def main(page: ft.Page):
-    page.title = "Interaction Flags"
     page.padding = 16
 
     def get_selected_flags() -> ftm.InteractionFlag:
@@ -73,11 +72,11 @@ def main(page: ft.Page):
         ],
     )
 
+    page.appbar = ft.AppBar(title="Interaction flags")
     page.add(
         ft.Column(
             expand=True,
             controls=[
-                ft.Text("Interaction flags", size=18, weight=ft.FontWeight.BOLD),
                 ft.Text(
                     "Toggle flags and try dragging, zooming, rotating, and scrolling.",
                     size=12,
