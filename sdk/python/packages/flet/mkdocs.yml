@@ -674,6 +674,7 @@ nav:
                   - InteractionFlag: map/types/interactionflag.md
                   - KeyboardConfiguration: map/types/keyboardconfiguration.md
                   - MapEvent: map/types/mapevent.md
+                  - MapEventType: map/types/mapeventtype.md
                   - MapEventSource: map/types/mapeventsource.md
                   - MapHoverEvent: map/types/maphoverevent.md
                   - MapLatitudeLongitude: map/types/maplatitudelongitude.md

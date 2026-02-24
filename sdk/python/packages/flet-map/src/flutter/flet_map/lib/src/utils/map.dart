@@ -237,8 +237,33 @@ extension MapCameraExtension on MapCamera {
 extension MapEventExtension on MapEvent {
   Map<String, dynamic> toMap() => {
         "source": source.name,
+        "event_type": getMapEventType(this),
         "camera": camera.toMap(),
       };
+}
+
+String getMapEventType(MapEvent event) {
+  const eventTypeMap = <Type, String>{
+    MapEventTap: "tap",
+    MapEventSecondaryTap: "secondaryTap",
+    MapEventLongPress: "longPress",
+    MapEventMove: "move",
+    MapEventMoveStart: "moveStart",
+    MapEventMoveEnd: "moveEnd",
+    MapEventFlingAnimation: "flingAnimation",
+    MapEventFlingAnimationNotStarted: "flingAnimationNotStarted",
+    MapEventFlingAnimationStart: "flingAnimationStart",
+    MapEventFlingAnimationEnd: "flingAnimationEnd",
+    MapEventDoubleTapZoom: "doubleTapZoom",
+    MapEventScrollWheelZoom: "scrollWheelZoom",
+    MapEventDoubleTapZoomStart: "doubleTapZoomStart",
+    MapEventDoubleTapZoomEnd: "doubleTapZoomEnd",
+    MapEventRotate: "rotate",
+    MapEventRotateStart: "rotateStart",
+    MapEventRotateEnd: "rotateEnd",
+    MapEventNonRotatedSizeChange: "nonRotatedSizeChange",
+  };
+  return eventTypeMap[event.runtimeType] ?? "unknown";
 }
 
 MapOptions? parseConfiguration(Control control, BuildContext context,

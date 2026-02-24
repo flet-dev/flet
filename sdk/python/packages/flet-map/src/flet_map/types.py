@@ -23,6 +23,7 @@ __all__ = [
     "KeyboardConfiguration",
     "MapEvent",
     "MapEventSource",
+    "MapEventType",
     "MapHoverEvent",
     "MapLatitudeLongitude",
     "MapLatitudeLongitudeBounds",
@@ -640,6 +641,67 @@ class MapEventSource(Enum):
     """
 
 
+class MapEventType(Enum):
+    """Concrete subtype of a [`MapEvent`][(p).]."""
+
+    TAP = "tap"
+    """A map tap event."""
+
+    SECONDARY_TAP = "secondaryTap"
+    """A secondary tap event."""
+
+    LONG_PRESS = "longPress"
+    """A long press event."""
+
+    MOVE = "move"
+    """A camera move update event."""
+
+    MOVE_START = "moveStart"
+    """The start of a move gesture/interaction."""
+
+    MOVE_END = "moveEnd"
+    """The end of a move gesture/interaction."""
+
+    FLING_ANIMATION = "flingAnimation"
+    """A fling animation update event."""
+
+    FLING_ANIMATION_NOT_STARTED = "flingAnimationNotStarted"
+    """A fling was evaluated but not started."""
+
+    FLING_ANIMATION_START = "flingAnimationStart"
+    """The start of a fling animation."""
+
+    FLING_ANIMATION_END = "flingAnimationEnd"
+    """The end of a fling animation."""
+
+    DOUBLE_TAP_ZOOM = "doubleTapZoom"
+    """A double tap zoom update event."""
+
+    SCROLL_WHEEL_ZOOM = "scrollWheelZoom"
+    """A scroll wheel zoom update event."""
+
+    DOUBLE_TAP_ZOOM_START = "doubleTapZoomStart"
+    """The start of a double tap zoom animation."""
+
+    DOUBLE_TAP_ZOOM_END = "doubleTapZoomEnd"
+    """The end of a double tap zoom animation."""
+
+    ROTATE = "rotate"
+    """A map rotation update event."""
+
+    ROTATE_START = "rotateStart"
+    """The start of a rotation interaction."""
+
+    ROTATE_END = "rotateEnd"
+    """The end of a rotation interaction."""
+
+    NON_ROTATED_SIZE_CHANGE = "nonRotatedSizeChange"
+    """A map constraint/size-change event."""
+
+    UNKNOWN = "unknown"
+    """Fallback value for unrecognized map event types."""
+
+
 @dataclass
 class CameraFit:
     """
@@ -757,6 +819,11 @@ class MapEvent(ft.Event["Map"]):
 
     camera: Camera
     """The map camera after the event."""
+
+    event_type: Optional[MapEventType] = None
+    """
+    Concrete subtype of this map event.
+    """
 
 
 @dataclass
