@@ -234,6 +234,25 @@ extension MapCameraExtension on MapCamera {
       };
 }
 
+WMSTileLayerOptions? parseWMSTileLayerOptions(dynamic value,
+    [WMSTileLayerOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return WMSTileLayerOptions(
+    baseUrl: value["base_url"],
+    format: value["format"],
+    version: value["version"],
+    uppercaseBoolValue: parseBool(value["uppercase_bool_value"], false)!,
+    transparent: parseBool(value["transparent"], true)!,
+    layers: (value["layers"] as List?)?.map((e) => e.toString()).toList() ??
+        const [],
+    styles: (value["styles"] as List?)?.map((e) => e.toString()).toList() ??
+        const [],
+    otherParameters: value["additional_parameters"] != null
+        ? Map<String, String>.from(value["additional_parameters"])
+        : const {},
+  );
+}
+
 MapOptions? parseConfiguration(Control control, BuildContext context,
     [MapOptions? defaultValue]) {
   return MapOptions(

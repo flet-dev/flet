@@ -40,6 +40,7 @@ from flet_map.types import (
     StrokePattern,
     TileDisplay,
     TileLayerEvictErrorTileStrategy,
+    WMSTileLayerConfiguration,
 )
 
 __all__ = [
@@ -86,4 +87,5 @@ __all__ = [
     "TileDisplay",
     "TileLayer",
     "TileLayerEvictErrorTileStrategy",
+    "WMSTileLayerConfiguration",
 ]

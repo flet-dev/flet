@@ -30,7 +30,13 @@ pip install flet-map  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-> Different tile providers have their own usage policies. Make sure you comply with their attribution and rate limits.
+/// admonition | Important
+    type: danger
+Different tile providers have their own usage policies.
+Make sure you fully comply with their requirements (ex: attribution, rate limits)
+when using them in your app, to avoid being blocked or facing legal issues.
+More details [here](tilelayer.md).
+///
 
 ## Examples
 

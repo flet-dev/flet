@@ -11,7 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Added `Map.get_camera()` to retrieve current map camera state.
 - Added `MapEventType` enum and `MapEvent.event_type`.
 - Added `MapEvent.old_camera`, `MapEvent.coordinates`, and `MapEvent.id` payload fields.
-- Added more examples.
+- Added support for [WMS](https://www.mngeo.state.mn.us/chouse/wms/index.html) tiles via `TileLayer.wms_configuration` of type `WMSTileLayerConfiguration`.
+- Added more examples and `TileLayer` improved documentation.
 
 ### Fixed
 

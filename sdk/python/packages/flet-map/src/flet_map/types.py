@@ -36,6 +36,7 @@ __all__ = [
     "StrokePattern",
     "TileDisplay",
     "TileLayerEvictErrorTileStrategy",
+    "WMSTileLayerConfiguration",
 ]
 
 
@@ -1174,3 +1175,32 @@ class CursorKeyboardRotationConfiguration:
     def disabled(cls) -> "CursorKeyboardRotationConfiguration":
         """A disabled `CursorKeyboardRotationConfiguration`."""
         return CursorKeyboardRotationConfiguration(trigger_keys=[])
+
+
+@dataclass
+class WMSTileLayerConfiguration:
+    """Configuration for a WMS [`TileLayer`][(p).]."""
+
+    base_url: str
+    """WMS service's URL, for example `http://ows.mundialis.de/services/service?`"""
+
+    format: str = "image/png"
+    """WMS image format (use 'image/png' for layers with transparency)."""
+
+    version: str = "1.1.1"
+    """Version of the WMS service to use."""
+
+    uppercase_bool_value: bool = False
+    """Encode boolean values as uppercase in request."""
+
+    transparent: bool = True
+    """Whether to make tiles transparent."""
+
+    layers: list[str] = field(default_factory=list)
+    """List of WMS layers to show."""
+
+    styles: list[str] = field(default_factory=list)
+    """List of WMS styles."""
+
+    additional_parameters: dict[str, str] = field(default_factory=dict)
+    """Additional request parameters."""
