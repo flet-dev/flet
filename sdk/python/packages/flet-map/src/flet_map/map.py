@@ -65,7 +65,7 @@ class Map(ft.LayoutControl):
     Whether to enable the built in keep-alive functionality.
 
     If the map is within a complex layout, such as a [`ListView`][flet.ListView],
-    the map will reset to it's initial position after it appears back into view.
+    the map will reset to its initial position after it appears back into view.
     To ensure this doesn't happen, enable this flag to prevent it from rebuilding.
     """
 

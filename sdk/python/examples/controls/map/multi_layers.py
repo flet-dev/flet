@@ -39,7 +39,6 @@ def main(page: ft.Page):
             ),
             on_tap=handle_tap,
             on_secondary_tap=handle_tap,
-            on_long_press=handle_tap,
             on_event=print,
             layers=[
                 ftm.TileLayer(
