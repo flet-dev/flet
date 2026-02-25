@@ -61,6 +61,121 @@ async def test_margin_bottom_right(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_position_right_bottom(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Stack(
+            width=420,
+            height=240,
+            controls=[
+                ft.Container(
+                    border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                    border_radius=12,
+                ),
+                ft.Container(
+                    width=120,
+                    height=70,
+                    right=24,
+                    bottom=20,
+                    border_radius=12,
+                    bgcolor=ft.Colors.CYAN_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("right+bottom", size=14, weight=ft.FontWeight.BOLD),
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_position_constraint_combinations(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Stack(
+            width=440,
+            height=280,
+            controls=[
+                ft.Container(
+                    border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                    border_radius=12,
+                ),
+                ft.Container(
+                    left=40,
+                    right=40,
+                    top=42,
+                    height=62,
+                    border_radius=10,
+                    bgcolor=ft.Colors.AMBER_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("left + right", weight=ft.FontWeight.BOLD),
+                ),
+                ft.Container(
+                    top=118,
+                    bottom=38,
+                    left=164,
+                    width=110,
+                    border_radius=10,
+                    bgcolor=ft.Colors.GREEN_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("top + bottom", weight=ft.FontWeight.BOLD),
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_aspect_ratio_precedence_over_explicit_size(
+    flet_app: ftt.FletTestApp, request
+):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=100,
+            height=280,
+            border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+            border_radius=12,
+            alignment=ft.Alignment.TOP_LEFT,
+            padding=12,
+            content=ft.Column(
+                spacing=12,
+                controls=[
+                    ft.Container(
+                        aspect_ratio=2,
+                        border_radius=12,
+                        bgcolor=ft.Colors.CYAN_300,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio 2.0", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                    ft.Container(
+                        aspect_ratio=0.5,
+                        border_radius=12,
+                        bgcolor=ft.Colors.ORANGE_300,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio 0.5", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                    ft.Container(
+                        width=50,
+                        height=50,
+                        aspect_ratio=3,
+                        border_radius=12,
+                        bgcolor=ft.Colors.PINK_200,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio wins", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                ],
+            ),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_flip(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
