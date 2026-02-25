@@ -216,6 +216,22 @@ async def test_rotate(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_rotate_numeric_value(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=220,
+            height=120,
+            bgcolor=ft.Colors.BLUE_300,
+            border_radius=16,
+            alignment=ft.Alignment.CENTER,
+            content=ft.Text("Rotate", size=28, weight=ft.FontWeight.BOLD),
+            rotate=pi / 10,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_scale(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
@@ -232,6 +248,22 @@ async def test_scale(flet_app: ftt.FletTestApp, request):
                 alignment=ft.Alignment.CENTER,
                 filter_quality=ft.FilterQuality.MEDIUM,
             ),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_scale_numeric_value(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=220,
+            height=120,
+            bgcolor=ft.Colors.GREEN_300,
+            border_radius=16,
+            alignment=ft.Alignment.CENTER,
+            content=ft.Text("Scale", size=28, weight=ft.FontWeight.BOLD),
+            scale=1.18,
         ),
     )
 
