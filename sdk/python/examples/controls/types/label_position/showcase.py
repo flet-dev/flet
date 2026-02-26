@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def label_position_card(label_position: ft.LabelPosition) -> ft.Container:
+def showcase_card(label_position: ft.LabelPosition) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -53,8 +53,7 @@ def main(page: ft.Page):
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
             controls=[
-                label_position_card(label_position)
-                for label_position in ft.LabelPosition
+                showcase_card(label_position) for label_position in ft.LabelPosition
             ],
         ),
     )

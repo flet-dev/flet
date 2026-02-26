@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def cursor_card(cursor: ft.MouseCursor) -> ft.GestureDetector:
+def showcase_card(cursor: ft.MouseCursor) -> ft.GestureDetector:
     return ft.GestureDetector(
         mouse_cursor=cursor,
         content=ft.Container(
@@ -39,7 +39,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[cursor_card(cursor) for cursor in ft.MouseCursor],
+            controls=[showcase_card(cursor) for cursor in ft.MouseCursor],
         ),
     )
 

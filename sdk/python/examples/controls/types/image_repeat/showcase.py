@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def repeat_card(repeat: ft.ImageRepeat) -> ft.Container:
+def showcase_card(repeat: ft.ImageRepeat) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -43,7 +43,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[repeat_card(repeat) for repeat in ft.ImageRepeat],
+            controls=[showcase_card(repeat) for repeat in ft.ImageRepeat],
         ),
     )
 

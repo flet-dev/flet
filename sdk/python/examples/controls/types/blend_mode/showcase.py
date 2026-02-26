@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def blend_mode_card(blend_mode: ft.BlendMode) -> ft.Container:
+def showcase_card(blend_mode: ft.BlendMode) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -39,7 +39,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[blend_mode_card(blend_mode) for blend_mode in ft.BlendMode],
+            controls=[showcase_card(blend_mode) for blend_mode in ft.BlendMode],
         ),
     )
 

@@ -42,7 +42,7 @@ def clip_preview(clip_behavior: ft.ClipBehavior) -> ft.Container:
     )
 
 
-def clip_card(clip_behavior: ft.ClipBehavior) -> ft.Container:
+def showcase_card(clip_behavior: ft.ClipBehavior) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -72,7 +72,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[clip_card(cb) for cb in ft.ClipBehavior],
+            controls=[showcase_card(cb) for cb in ft.ClipBehavior],
         ),
     )
 

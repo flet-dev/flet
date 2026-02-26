@@ -3,7 +3,7 @@ import flet as ft
 SAMPLE_TEXT = "Sphinx of black quartz"
 
 
-def weight_card(weight: ft.FontWeight) -> ft.Container:
+def showcase_card(weight: ft.FontWeight) -> ft.Container:
     return ft.Container(
         width=300,
         padding=12,
@@ -33,7 +33,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[weight_card(weight) for weight in ft.FontWeight],
+            controls=[showcase_card(weight) for weight in ft.FontWeight],
         ),
     )
 

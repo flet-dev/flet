@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def scroll_mode_card(scroll_mode: ft.ScrollMode) -> ft.Container:
+def showcase_card(scroll_mode: ft.ScrollMode) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -43,7 +43,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[scroll_mode_card(scroll_mode) for scroll_mode in ft.ScrollMode],
+            controls=[showcase_card(scroll_mode) for scroll_mode in ft.ScrollMode],
         ),
     )
 

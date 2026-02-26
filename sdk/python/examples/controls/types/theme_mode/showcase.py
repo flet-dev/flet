@@ -10,7 +10,7 @@ def main(page: ft.Page):
         status.value = f"Active mode: {theme_mode.name}"
         page.update()
 
-    def mode_card(theme_mode: ft.ThemeMode) -> ft.Container:
+    def showcase_card(theme_mode: ft.ThemeMode) -> ft.Container:
         return ft.Container(
             width=250,
             padding=12,
@@ -53,7 +53,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[mode_card(theme_mode) for theme_mode in ft.ThemeMode],
+            controls=[showcase_card(theme_mode) for theme_mode in ft.ThemeMode],
         ),
     )
 

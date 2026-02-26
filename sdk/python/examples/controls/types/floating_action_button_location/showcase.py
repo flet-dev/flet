@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def location_card(location: ft.FloatingActionButtonLocation) -> ft.Container:
+def showcase_card(location: ft.FloatingActionButtonLocation) -> ft.Container:
     mini = location.name.startswith("MINI_")
     return ft.Container(
         width=300,
@@ -57,7 +57,7 @@ def main(page: ft.Page):
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
             controls=[
-                location_card(location) for location in ft.FloatingActionButtonLocation
+                showcase_card(location) for location in ft.FloatingActionButtonLocation
             ],
         ),
     )

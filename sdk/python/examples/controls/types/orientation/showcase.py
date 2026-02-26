@@ -7,7 +7,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    def orientation_card(orientation: ft.Orientation) -> ft.Container:
+    def showcase_card(orientation: ft.Orientation) -> ft.Container:
         picker = ft.TimePicker(
             value=time(hour=10, minute=30),
             help_text=f"{orientation.name} time picker",
@@ -42,7 +42,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[orientation_card(orientation) for orientation in ft.Orientation],
+            controls=[showcase_card(orientation) for orientation in ft.Orientation],
         ),
     )
 
