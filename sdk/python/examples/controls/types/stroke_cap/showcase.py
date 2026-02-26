@@ -6,7 +6,7 @@ def cap_card(stroke_cap: ft.StrokeCap) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
-        border=ft.Border.all(1, ft.Colors.ERROR),
+        border=ft.Border.all(1, ft.Colors.RED),
         border_radius=10,
         bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
         content=ft.Column(
@@ -33,14 +33,14 @@ def cap_card(stroke_cap: ft.StrokeCap) -> ft.Container:
                             y1=16,
                             x2=40,
                             y2=74,
-                            paint=ft.Paint(stroke_width=2, color=ft.Colors.ERROR),
+                            paint=ft.Paint(stroke_width=2, color=ft.Colors.RED),
                         ),
                         cv.Line(
                             x1=200,
                             y1=16,
                             x2=200,
                             y2=74,
-                            paint=ft.Paint(stroke_width=2, color=ft.Colors.ERROR),
+                            paint=ft.Paint(stroke_width=2, color=ft.Colors.RED),
                         ),
                     ],
                 ),

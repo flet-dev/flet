@@ -8,7 +8,7 @@ def cursor_card(cursor: ft.MouseCursor) -> ft.GestureDetector:
             width=250,
             height=100,
             padding=12,
-            border=ft.Border.all(1, ft.Colors.ERROR),
+            border=ft.Border.all(1, ft.Colors.RED),
             border_radius=10,
             bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
             content=ft.Column(
