@@ -133,3 +133,77 @@ code.doc-symbol-command::after {
   margin: 0.1rem 0 0.9rem;
 }
 /* Icon previews */
+
+/* Hide redundant site title row in primary sidebar on desktop. */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary .md-nav__title {
+    display: none;
+  }
+}
+
+/* Tweak the formatting of the primary nav on a large screen */
+/* Source: https://github.com/astral-sh/uv/blob/main/docs/stylesheets/extra.css */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary .md-nav {
+    font-size: 0.75rem;
+  }
+  /* Remove the bold from the section headings, use a larger font instead */
+  .md-nav__item--section > .md-nav__link {
+    font-weight: normal;
+    font-size: 0.85rem;
+  }
+  /* Reducing spacing between nav items to fit more content
+  First, disable `nav__link` spacing then use `nav__item` to enforce margins this reduces inconsistencies in the spacing. */
+  .md-nav--primary .md-nav__link {
+    margin: 0;
+  }
+  .md-nav--primary .md-nav__item {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  /* Use larger spacing for the sections headings */
+  .md-nav--primary .md-nav__item--section {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+  }
+  /* Decrease the font size of items in a collapsible section */
+  .md-nav__item--section
+    > .md-nav
+    > .md-nav__list
+    > .md-nav__item
+    > .md-nav
+    > .md-nav__list {
+    font-size: 0.725rem;
+  }
+  /* Increase top margin on the first item of a collapsible section */
+  .md-nav__item--section
+    > .md-nav
+    > .md-nav__list
+    > .md-nav__item
+    > .md-nav
+    > .md-nav__list
+    > .md-nav__item:first-of-type {
+    margin-top: 0.5em;
+  }
+  /* Increase bottom margin on the last item of a collapsible section */
+  .md-nav__item--section
+    > .md-nav
+    > .md-nav__list
+    > .md-nav__item
+    > .md-nav
+    > .md-nav__list
+    > .md-nav__item:last-of-type {
+    margin-bottom: 0.575em;
+  }
+  /* Increase the size of the first nav item to match the sections
+  It has no children, so it is not considered a section */
+  .md-nav--primary > .md-nav__list > .md-nav__item:first-of-type {
+    font-size: 0.85rem;
+    margin-bottom: 0.75em;
+  }
+}
+
+/* Bold the active nav link for accessibility */
+.md-nav__link--active {
+  font-weight: bold;
+}

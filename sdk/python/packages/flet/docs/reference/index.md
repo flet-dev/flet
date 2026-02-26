@@ -1,4 +1,4 @@
-# API Reference
+# Reference
 
 - [Controls](../controls/index.md) - UI building blocks with properties, events, and usage examples.
 - [Services](../services/index.md) - Device and platform capabilities such as sensors, storage, and permissions.

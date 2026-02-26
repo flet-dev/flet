@@ -23,21 +23,21 @@ theme:
   palette:
     - media: "(prefers-color-scheme)"
       primary: pink
-      accent: pink
+      accent: blue
       toggle:
         icon: material/brightness-auto
         name: "Switch to light mode"
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: pink
-      accent: pink
+      accent: blue
       toggle:
         icon: material/brightness-7
         name: "Switch to dark mode"
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: pink
-      accent: pink
+      accent: blue
       toggle:
         icon: material/brightness-4
         name: "Switch to system preference"
@@ -50,14 +50,14 @@ theme:
     - content.code.copy
     - content.code.select
     - content.tabs.link
-    - navigation.tabs
+    # - navigation.tabs
     - navigation.instant
     - navigation.tracking
     - navigation.sections
     - navigation.footer
     - navigation.top
     - navigation.indexes
-    - navigation.prune
+    # - navigation.prune
     - search.highlight
     - search.share
     - search.suggest
@@ -223,19 +223,52 @@ markdown_extensions:
 
 # Navigation
 nav:
-  - Learn:
-      - Getting started:
-          - Introduction: index.md
-          - Installation: getting-started/installation.md
-          - Creating a new Flet app: getting-started/create-flet-app.md
-          - Running a Flet app (Hot Reload): getting-started/running-app.md
-          - Testing on Mobile: getting-started/testing-on-mobile.md
-      - Tutorials:
-          - Calculator: tutorials/calculator.md
-          - Chat: tutorials/chat.md
-          - Solitaire: tutorials/solitaire.md
-          - ToDo: tutorials/todo.md
-      - Publishing Flet app:
+  - Introduction: index.md
+          # - What is Flet: index.md
+          # - Try FletPad: getting-started/create-flet-app.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Create a new Flet app: getting-started/create-flet-app.md
+      - Run a Flet app (Hot Reload): getting-started/running-app.md
+      - Test on Mobile: getting-started/testing-on-mobile.md
+      - Logging: cookbook/logging.md
+
+  - Guides:
+      - Creating Apps:
+          - Project anatomy and assets: cookbook/assets.md
+          - Async apps and background work: cookbook/async-apps.md
+          - Control refs: cookbook/control-refs.md
+      - UI and Controls:
+          - Introduction: cookbook/ui-and-controls.md
+          - Layout:
+              - Expanding controls: cookbook/expanding-controls.md
+              - Large lists: cookbook/large-lists.md
+          - Interactivity:
+              - Drag and drop: cookbook/drag-and-drop.md
+              - Keyboard shortcuts: cookbook/keyboard-shortcuts.md
+          - Adaptive apps: cookbook/adaptive-apps.md
+          - Accessibility: cookbook/accessibility.md
+          - Animations: cookbook/animations.md
+      - Styling and Theming:
+          - Theming: cookbook/theming.md
+          - Typography and fonts: cookbook/fonts.md
+          - Colors: cookbook/colors.md
+      - Data and State:
+          - Client storage: cookbook/client-storage.md
+          - Session storage: cookbook/session-storage.md
+          - Read and write files: cookbook/read-and-write-files.md
+          - PubSub: cookbook/pub-sub.md
+      - Navigation and routing: cookbook/navigation-and-routing.md
+      - Security and Authentication:
+          - Authentication: cookbook/authentication.md
+          - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+      - Custom Controls and Extensions:
+          - Custom controls: cookbook/custom-controls.md
+          - Creating an extension: extend/user-extensions.md
+          - Built-in extensions: extend/built-in-extensions.md
+      - Declarative Apps:
+          - Declarative vs imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
+      - Packaging and Publishing:
           - publish/index.md
           - Android: publish/android.md
           - iOS: publish/ios.md
@@ -256,11 +289,14 @@ nav:
                   - Hosting:
                       - Cloudflare: publish/web/static-website/hosting/cloudflare.md
                       - GitHub Pages: publish/web/static-website/hosting/github-pages.md
-      - Extending Flet:
-          - Creating an Extension: extend/user-extensions.md
-          - Built-in Extensions: extend/built-in-extensions.md
-  - API Reference:
-      - Overview: api-reference/index.md
+  - Tutorials:
+      - Calculator: tutorials/calculator.md
+      - Chat: tutorials/chat.md
+      - Solitaire: tutorials/solitaire.md
+      - ToDo: tutorials/todo.md
+  
+  - Reference:
+      - Overview: reference/index.md
       - Controls:
           - Overview: controls/index.md
           - Ads:
@@ -998,28 +1034,3 @@ nav:
               - use_state: types/usestate.md
       - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
       - Environment Variables: reference/environment-variables.md
-  - Cookbook:
-      - cookbook/index.md
-      - Accessibility: cookbook/accessibility.md
-      - Adaptive apps: cookbook/adaptive-apps.md
-      - Animations: cookbook/animations.md
-      - Assets: cookbook/assets.md
-      - Async apps: cookbook/async-apps.md
-      - Authentication: cookbook/authentication.md
-      - Client Storage: cookbook/client-storage.md
-      - Colors: cookbook/colors.md
-      - Control Refs: cookbook/control-refs.md
-      - Custom Controls: cookbook/custom-controls.md
-      - Drag and Drop: cookbook/drag-and-drop.md
-      - Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
-      - Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
-      - Expanding Controls: cookbook/expanding-controls.md
-      - Fonts: cookbook/fonts.md
-      - Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
-      - Large Lists: cookbook/large-lists.md
-      - Logging: cookbook/logging.md
-      - Navigation and Routing: cookbook/navigation-and-routing.md
-      - PubSub: cookbook/pub-sub.md
-      - Read and Write Files: cookbook/read-and-write-files.md
-      - Session Storage: cookbook/session-storage.md
-      - Theming: cookbook/theming.md
