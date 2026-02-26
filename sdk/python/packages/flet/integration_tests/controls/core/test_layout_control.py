@@ -263,7 +263,7 @@ async def test_scale_numeric_value(flet_app: ftt.FletTestApp, request):
             border_radius=16,
             alignment=ft.Alignment.CENTER,
             content=ft.Text("Scale", size=28, weight=ft.FontWeight.BOLD),
-            scale=1.18,
+            scale=2.5,
         ),
     )
 
