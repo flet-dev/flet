@@ -162,3 +162,55 @@ async def test_expand_row_equal_split(flet_app: ftt.FletTestApp, request):
             ),
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_expand_loose_row(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            spacing=12,
+            width=200,
+            controls=[
+                ft.Row(
+                    controls=[
+                        ft.Container(
+                            expand=True,
+                            bgcolor=ft.Colors.AMBER_300,
+                            border_radius=8,
+                            padding=10,
+                            content=ft.Text("Strict expand"),
+                        )
+                    ],
+                ),
+                ft.Row(
+                    controls=[
+                        ft.Container(
+                            expand=True,
+                            expand_loose=True,
+                            bgcolor=ft.Colors.CYAN_300,
+                            border_radius=8,
+                            padding=10,
+                            content=ft.Text("Loose expand"),
+                        ),
+                    ],
+                ),
+                ft.Row(
+                    controls=[
+                        ft.Container(
+                            expand=True,
+                            expand_loose=True,
+                            bgcolor=ft.Colors.LIGHT_GREEN_300,
+                            border_radius=8,
+                            padding=10,
+                            content=ft.Text(
+                                "Loose expand with longer text to show content-driven "
+                                "width"
+                            ),
+                        ),
+                    ],
+                ),
+            ],
+        ),
+    )
