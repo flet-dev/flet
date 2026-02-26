@@ -35,7 +35,6 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
             ],
         )
     ```
-
     """
 
     controls: list[Control] = field(default_factory=list)

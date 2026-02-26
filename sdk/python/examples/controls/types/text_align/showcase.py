@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def align_card(text_align: ft.TextAlign) -> ft.Container:
+def showcase_card(text_align: ft.TextAlign) -> ft.Container:
     return ft.Container(
         width=280,
         padding=12,
@@ -42,7 +42,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[align_card(text_align) for text_align in ft.TextAlign],
+            controls=[showcase_card(text_align) for text_align in ft.TextAlign],
         ),
     )
 

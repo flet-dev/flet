@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def overflow_card(overflow: ft.TextOverflow) -> ft.Container:
+def showcase_card(overflow: ft.TextOverflow) -> ft.Container:
     return ft.Container(
         width=320,
         padding=12,
@@ -43,7 +43,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[overflow_card(overflow) for overflow in ft.TextOverflow],
+            controls=[showcase_card(overflow) for overflow in ft.TextOverflow],
         ),
     )
 

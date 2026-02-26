@@ -11,7 +11,7 @@ def main(page: ft.Page):
         status.value = f"Opened {url} with target {target.name}"
         status.update()
 
-    def target_card(target: ft.UrlTarget) -> ft.Container:
+    def showcase_card(target: ft.UrlTarget) -> ft.Container:
         return ft.Container(
             width=280,
             padding=12,
@@ -42,7 +42,7 @@ def main(page: ft.Page):
             expand=True,
             scroll=ft.ScrollMode.AUTO,
             alignment=ft.MainAxisAlignment.CENTER,
-            controls=[target_card(target) for target in ft.UrlTarget],
+            controls=[showcase_card(target) for target in ft.UrlTarget],
         ),
     )
 
