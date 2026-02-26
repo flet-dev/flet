@@ -125,9 +125,50 @@ async def test_position_constraint_combinations(flet_app: ftt.FletTestApp, reque
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_aspect_ratio_precedence_over_explicit_size(
-    flet_app: ftt.FletTestApp, request
-):
+async def test_animate_position(flet_app: ftt.FletTestApp, request):
+    # TODO(Feodor): Test framework needs improvement to correctly capture
+    # multiple animation screenshots.
+    animated = ft.Container(
+        width=90,
+        height=64,
+        left=18,
+        top=24,
+        border_radius=10,
+        bgcolor=ft.Colors.CYAN_300,
+        alignment=ft.Alignment.CENTER,
+        content=ft.Text("move", weight=ft.FontWeight.BOLD),
+        animate_position=ft.Animation(600, ft.AnimationCurve.EASE_IN_OUT),
+    )
+    root = ft.Stack(
+        width=320,
+        height=180,
+        controls=[
+            ft.Container(
+                border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                border_radius=12,
+            ),
+            animated,
+        ],
+    )
+    screenshot = ft.Screenshot(root)
+
+    flet_app.page.clean()
+    flet_app.page.add(screenshot)
+    await flet_app.tester.pump_and_settle()
+
+    animated.left = 196
+    animated.top = 98
+    animated.update()
+    await flet_app.tester.pump_and_settle()
+
+    flet_app.assert_screenshot(
+        request.node.name,
+        await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_aspect_ratio(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.Container(
