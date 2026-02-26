@@ -10,7 +10,7 @@ class OAuthProvider:
 
     Instances describe OAuth endpoints, client credentials, optional PKCE
     parameters, and optional user/group retrieval behavior used by
-    [`AuthorizationService`][flet.auth.authorization_service.].
+    [`AuthorizationService`][(p).].
 
     Args:
         client_id: OAuth client/application ID issued by the provider.
@@ -32,7 +32,7 @@ class OAuthProvider:
         code_challenge_method: PKCE challenge method. For example, `S256`.
         code_verifier: PKCE code verifier used during token exchange.
         authorization_params: Extra query parameters appended to authorization
-            URL generation in `AuthorizationService.get_authorization_data()`.
+            URL generation by the OAuth authorization service.
     """
 
     def __init__(
