@@ -17,16 +17,16 @@ def main(page: ft.Page):
             log.controls.pop()
         log.update()
 
-    def on_lifecycle(e: ft.AppLifecycleStateChangeEvent):
-        add_log(f"Received: {e.state.name}")
+    def on_window_event(e: ft.WindowEvent):
+        add_log(f"Received: {e.type.name}")
 
-    page.on_app_lifecycle_state_change = on_lifecycle
+    page.window.on_event = on_window_event
 
-    page.appbar = ft.AppBar(title="AppLifecycleState Showcase")
+    page.appbar = ft.AppBar(title="WindowEventType Showcase")
     page.add(
-        ft.Text("Switch app focus/visibility to see lifecycle state changes."),
+        ft.Text("Interact with the app window and watch incoming event types."),
         ft.Text(
-            "Ex: minimize/restore app, switch tabs, or background/foreground app.",
+            "Desktop only. Try focus, blur, resize, move, minimize, maximize.",
             size=11,
         ),
         ft.Row(
@@ -37,9 +37,9 @@ def main(page: ft.Page):
                     padding=ft.Padding.symmetric(horizontal=8, vertical=4),
                     border=ft.Border.all(1, ft.Colors.OUTLINE),
                     border_radius=12,
-                    content=ft.Text(state.name, size=11),
+                    content=ft.Text(event_type.name, size=11),
                 )
-                for state in ft.AppLifecycleState
+                for event_type in ft.WindowEventType
             ],
         ),
         ft.Container(
