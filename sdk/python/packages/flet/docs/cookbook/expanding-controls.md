@@ -1,3 +1,8 @@
+---
+title: Expanding Controls
+example_images: ../test-images/controls/core/golden/macos/control
+---
+
 ## `expand`
 
 When a child control is placed into a [`Row`][flet.Row], [`Column`][flet.Column], [`View`][flet.View]
@@ -24,10 +29,12 @@ while the [`Button`][flet.Button] stays sized to its content:
 ft.Row(
     controls=[
       ft.TextField(hint_text="Enter your name", expand=True),
-      ft.Button(text="Join chat")
+      ft.Button("Join chat")
     ]
 )
 ```
+
+{{ image(example_images + "/expand_row_remaining_space.png", alt="expand example 1", width="70%") }}
 
 ### Example 2
 
@@ -46,52 +53,45 @@ ft.Row(
 Here, the available space is split into 5 total parts (1+3+1).
 The first and third containers get 1 part each (20%), and the middle one gets 3 parts (60%).
 
+{{ image(example_images + "/expand_row_proportions_1_3_1.png", alt="expand example 2", width="70%") }}
+
 ### Example 3
 
-This example demonstrates how two [`Card`][flet.Card] controls inside a [`Row`][flet.Row] can
+This example demonstrates how two controls inside a [`Row`][flet.Row] can
 each expand to fill half of the available horizontal space using expand=True.
 
-The layout uses a full-screen [`Column`][flet.Column] and a nested Row, where both cards are
-expanded equally — resulting in a 50/50 split.
+The layout uses a parent [`Container`][flet.Container] and a nested row, where both controls are
+expanded equally, resulting in a 50/50 split.
 
 ```python
 import flet as ft
 
 def main(page: ft.Page):
-    page.spacing = 0
-    page.padding = 0
-
     page.add(
-        ft.Column(
-            expand=True,
-            spacing=0,
-            controls=[
-                ft.Row(
-                    expand=True,
-                    spacing=0,
-                    controls=[
-                        ft.Card(
-                            content=ft.Text("Card_1"),
-                            color=ft.Colors.ORANGE_300,
-                            expand=True,
-                            height=page.height,
-                            margin=0,
-                        ),
-                        ft.Card(
-                            content=ft.Text("Card_2"),
-                            color=ft.Colors.GREEN_100,
-                            expand=True,
-                            height=page.height,
-                            margin=0,
-                        ),
-                    ],
-                ),
-            ],
+        ft.Container(
+            width=500,
+            height=180,
+            content=ft.Row(
+                controls=[
+                    ft.Container(
+                        expand=True,
+                        bgcolor=ft.Colors.ORANGE_300,
+                        content=ft.Text("Card 1"),
+                    ),
+                    ft.Container(
+                        expand=True,
+                        bgcolor=ft.Colors.GREEN_100,
+                        content=ft.Text("Card 2"),
+                    ),
+                ],
+            ),
         ),
     )
 
 ft.run(main)
 ```
+
+{{ image(example_images + "/expand_row_equal_split.png", alt="expand example 3", width="70%") }}
 
 ## `expand_loose`
 
