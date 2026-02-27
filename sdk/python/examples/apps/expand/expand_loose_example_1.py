@@ -10,8 +10,8 @@ class Message(ft.Container):
                 ft.Text(body),
             ],
         )
-        self.border = ft.border.all(1, ft.Colors.BLACK)
-        self.border_radius = ft.border_radius.all(10)
+        self.border = ft.Border.all(1, ft.Colors.BLACK)
+        self.border_radius = ft.BorderRadius.all(10)
         self.bgcolor = ft.Colors.GREEN_200
         self.padding = 10
         self.expand = True
