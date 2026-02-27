@@ -641,7 +641,13 @@ dependencies = [
 By default, packaging for mobile and web only installs binary wheels. Use source packages
 to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
 
-On desktop targets, source installs are already allowed, so this setting is mainly for
+This can be useful for installing - pure Python - dependencies that do not have pre-built wheels for the
+target mobile platform or an all-platform wheel (`*-py3-none-any.whl`), but instead provide a source distribution (`*.tar.gz`).
+
+For more information on pure vs non-pure Python packages, see our
+[blog post](https://flet.dev/blog/flet-packaging-update#pure-python-packages) on the topic.
+
+On desktop targets, source installs are already allowed, so this setting is mainly/only for
 [Android](android.md) and [iOS](ios.md) builds.
 
 #### Resolution order
