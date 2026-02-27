@@ -1,5 +1,6 @@
 ---
 title: Expanding Controls
+examples: ../../examples/apps/expand
 example_images: ../test-images/controls/core/golden/macos/control
 ---
 
@@ -26,12 +27,7 @@ In this example, a [`TextField`][flet.TextField] stretches to fill all remaining
 while the [`Button`][flet.Button] stays sized to its content:
 
 ```python
-ft.Row(
-    controls=[
-      ft.TextField(hint_text="Enter your name", expand=True),
-      ft.Button("Join chat")
-    ]
-)
+--8<-- "{{ examples }}/expand_example_1.py"
 ```
 
 {{ image(example_images + "/expand_row_remaining_space.png", alt="expand example 1", width="70%") }}
@@ -41,13 +37,7 @@ ft.Row(
 In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Container]s, distributed like 20% / 60% / 20%:
 
 ```python
-ft.Row(
-    controls=[
-      ft.Container(content=ft.Text("A"), expand=1),
-      ft.Container(content=ft.Text("B"), expand=3),
-      ft.Container(content=ft.Text("C"), expand=1)
-    ]
-)
+--8<-- "{{ examples }}/expand_example_2.py"
 ```
 
 Here, the available space is split into 5 total parts (1+3+1).
@@ -64,31 +54,7 @@ The layout uses a parent [`Container`][flet.Container] and a nested row, where b
 expanded equally, resulting in a 50/50 split.
 
 ```python
-import flet as ft
-
-def main(page: ft.Page):
-    page.add(
-        ft.Container(
-            width=500,
-            height=180,
-            content=ft.Row(
-                controls=[
-                    ft.Container(
-                        expand=True,
-                        bgcolor=ft.Colors.ORANGE_300,
-                        content=ft.Text("Card 1"),
-                    ),
-                    ft.Container(
-                        expand=True,
-                        bgcolor=ft.Colors.GREEN_100,
-                        content=ft.Text("Card 2"),
-                    ),
-                ],
-            ),
-        ),
-    )
-
-ft.run(main)
+--8<-- "{{ examples }}/expand_example_3.py"
 ```
 
 {{ image(example_images + "/expand_row_equal_split.png", alt="expand example 3", width="70%") }}
@@ -115,82 +81,7 @@ or any of their subclasses: [`Row`][flet.Row], [`Column`][flet.Column], [`View`]
 In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row]s with `expand_loose = True`:
 
 ```python
-import flet as ft
-
-
-class Message(ft.Container):
-    def __init__(self, author, body):
-        super().__init__()
-        self.content = ft.Column(
-            controls=[
-                ft.Text(author, weight=ft.FontWeight.BOLD),
-                ft.Text(body),
-            ],
-        )
-        self.border = ft.border.all(1, ft.Colors.BLACK)
-        self.border_radius = ft.border_radius.all(10)
-        self.bgcolor = ft.Colors.GREEN_200
-        self.padding = 10
-        self.expand = True
-        self.expand_loose = True
-
-
-def main(page: ft.Page):
-    page.window.width = 393
-    page.window.height = 600
-    page.window.always_on_top = False
-
-    chat = ft.ListView(
-        padding=10,
-        spacing=10,
-        controls=[
-            ft.Row(
-                alignment=ft.MainAxisAlignment.START,
-                controls=[
-                    Message(
-                        author="John",
-                        body="Hi, how are you?",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.END,
-                controls=[
-                    Message(
-                        author="Jake",
-                        body="Hi I am good thanks, how about you?",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.START,
-                controls=[
-                    Message(
-                        author="John",
-                        body="Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the industry's
-                        standard dummy text ever since the 1500s, when an unknown
-                        printer took a galley of type and scrambled it to make a
-                        type specimen book.",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.END,
-                controls=[
-                    Message(
-                        author="Jake",
-                        body="Thank you!",
-                    ),
-                ],
-            ),
-        ],
-    )
-
-    page.add(chat)
-
-
-ft.run(main)
+--8<-- "{{ examples }}/expand_loose_example_1.py"
 ```
 
 {{ image("../assets/controls/control/expand-loose.png", alt="expand_loose", width="65%") }}
