@@ -295,7 +295,8 @@ class _TabBarControlState extends State<TabBarControl> {
           .getTextStyle("unselected_label_text_style", Theme.of(context));
       var splashBorderRadius =
           widget.control.getBorderRadius("splash_border_radius");
-      final tabs = widget.control.children("tabs").map((tab) {
+      final tabControls = widget.control.children("tabs");
+      final tabs = tabControls.map((tab) {
         // Ensure parent gets rebuilt when a tab becomes visible/invisible.
         tab.notifyParent = true;
 
@@ -310,6 +311,20 @@ class _TabBarControlState extends State<TabBarControl> {
       }).toList();
 
       void onTap(int index) {
+        if (index >= 0 &&
+            index < tabControls.length &&
+            tabControls[index].disabled) {
+          final fallbackIndex = tabController.previousIndex
+              .clamp(0, tabController.length - 1)
+              .toInt();
+          if (fallbackIndex != tabController.index) {
+            // TabBar already requested the tap target via controller.animateTo().
+            // Restore the previous index so disabled tabs cannot be selected.
+            tabController.index = fallbackIndex;
+          }
+          return;
+        }
+
         widget.control.triggerEvent("click", index);
       }
 
