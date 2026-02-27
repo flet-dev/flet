@@ -2,6 +2,16 @@
 
 Flet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.
 
+## Features
+
+* Build the same code base to desktop, mobile and web. (links)
+* Flet app for testing mobile experience (links)
+* Extensibility - you are not locked up.
+
+
+## Try in browser
+
+
 ## Flet app example
 
 Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
