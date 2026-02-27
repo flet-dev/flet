@@ -104,6 +104,11 @@ plugins:
         - archive/*
   - search:
       lang: en
+  - llmstxt:
+      full_output: llms-full.txt
+      sections:
+        Documentation:
+          - "**/*.md"
   - macros:
       module_name: docs/extras/macros
       verbose: true
