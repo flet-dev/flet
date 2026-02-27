@@ -1,0 +1,192 @@
+import asyncio
+import logging
+from pathlib import Path
+from typing import Optional
+import os
+import flet as ft
+
+from models import TrolliState
+
+from components import (
+    BoardView,
+    BoardsView,
+    Sidebar,
+    TrolliAppBar,
+)
+
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("flet_components").setLevel(logging.INFO)
+
+
+def _init_demo_data(app: TrolliState) -> None:
+    if app.boards:
+        return
+    board = app.create_board("My First Board")
+    board.add_list("To Do", ft.Colors.AMBER_200)
+    board.add_list("Doing", ft.Colors.LIGHT_BLUE_200)
+    board.add_list("Done", ft.Colors.LIGHT_GREEN_200)
+    board.lists[0].add_card("Drag cards between lists")
+    board.lists[0].add_card("Drag lists to reorder")
+    board.lists[1].add_card("Add a list from the button")
+
+
+def show_new_board_dialog(app: TrolliState) -> None:
+    name_field = ft.TextField(label="New board name")
+    error_text = ft.Text(value="", color=ft.Colors.RED)
+
+    def on_submit(_: ft.Event):
+        name = name_field.value.strip()
+        if not name:
+            error_text.value = "Please enter a name"
+            ft.context.page.update()
+            return
+        board = app.create_board(name)
+        ft.context.page.pop_dialog()
+        ft.context.page.go(f"/board/{board.board_id}")
+
+    dlg = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Create board"),
+        content=ft.Column(tight=True, controls=[name_field, error_text]),
+        actions=[
+            ft.TextButton("Cancel", on_click=lambda _: ft.context.page.pop_dialog()),
+            ft.FilledButton("Create", on_click=on_submit),
+        ],
+        actions_alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+    )
+    ft.context.page.show_dialog(dlg)
+    ft.context.page.update()
+
+
+@ft.component
+def App():
+    app, _ = ft.use_state(lambda: TrolliState(route=ft.context.page.route))
+    ft.context.page.padding = 0
+    ft.context.page.theme_mode = ft.ThemeMode.LIGHT
+    ft.context.page.fonts = {"Pacifico": "Pacifico-Regular.ttf"}
+    ft.context.page.bgcolor = ft.Colors.BLUE_GREY_200
+    if ft.context.page.route == "/":
+        ft.context.page.go("/boards")
+
+    def parse_board_id_from_route(route: str) -> Optional[int]:
+        troute = ft.TemplateRoute(route)
+        if not troute.match("/board/:id"):
+            return None
+
+        string_id = str(getattr(troute, "id", None))
+        int_id = int(string_id)
+
+        if not type(int_id) == int:
+            return None
+
+        return int_id
+
+    def route_change(e: ft.RouteChangeEvent):
+
+        # deal with bad or incomplete routes first
+        if e.route.startswith("/board/"):
+            board_id = parse_board_id_from_route(e.route)
+            if board_id is None or app.get_board_by_id(board_id) is None:
+                ft.context.page.go("/boards")
+
+        match e.route:
+            # trigger re-render by changing active_screen
+            case "/" | "/boards":
+                app.active_screen = "boards"
+            case "/members":
+                app.active_screen = "members"
+            case "/settings":
+                app.active_screen = "settings"
+            case name if name.startswith("/board/"):
+                app.active_screen = "board"
+                app.current_board_id = board_id
+            case _:
+                ft.context.page.go("/boards")
+
+    ft.context.page.on_route_change = route_change
+
+    def redirect_unknown_board():
+        if not app.route.startswith("/board/"):
+            return
+        board_id = parse_board_id_from_route(app.route)
+        if board_id is None or app.get_board_by_id(board_id) is None:
+            asyncio.create_task(ft.context.page.push_route("/boards"))
+
+    ft.on_updated(redirect_unknown_board, [app.route])
+
+    # async def load_user():
+    #     try:
+    #         user = await ft.context.page.shared_preferences.get("current_user")
+    #         if user and not app.user:
+    #             app.user = user
+    #     except Exception:
+    #         return
+
+    # ft.use_effect(lambda: asyncio.create_task(load_user()), [])
+
+    ft.on_mounted(lambda: _init_demo_data(app))
+
+    def toggle_sidebar(_: ft.Event[ft.IconButton]):
+        app.nav_visible = not app.nav_visible
+
+    board_id = parse_board_id_from_route(app.route)
+    board = app.get_board_by_id(board_id) if board_id is not None else None
+
+    # if app.route.startswith("/members"):
+    #     content: ft.Control = ft.Text("Members view (placeholder)")
+    # elif app.route.startswith("/board/") and board is not None:
+    #     content = BoardView(board)
+    # else:
+    #     content = BoardsView(app)
+    content: ft.Control
+    match app.active_screen:
+        case "boards":
+            content = BoardsView(app)
+        case "members":
+            content = ft.Text("Members view placeholder")
+        case "settings":
+            content = ft.Text("Settings view placeholder")
+        case "board":
+            board = (
+                app.get_board_by_id(app.current_board_id)
+                if app.current_board_id
+                else None
+            )
+            content = BoardView(board) if board else BoardsView(app)
+
+    return ft.Column(
+        expand=True,
+        spacing=0,
+        controls=[
+            TrolliAppBar(app),
+            ft.SafeArea(
+                expand=True,
+                content=ft.Row(
+                    expand=True,
+                    vertical_alignment=ft.CrossAxisAlignment.START,
+                    controls=[
+                        Sidebar(app),
+                        ft.IconButton(
+                            icon=ft.Icons.ARROW_CIRCLE_LEFT,
+                            selected=not app.nav_visible,
+                            selected_icon=ft.Icons.ARROW_CIRCLE_RIGHT,
+                            icon_color=ft.Colors.BLUE_GREY_400,
+                            on_click=toggle_sidebar,
+                        ),
+                        ft.Container(
+                            expand=True,
+                            padding=ft.Padding.only(left=10, right=10, top=10),
+                            content=content,
+                        ),
+                    ],
+                ),
+            ),
+        ],
+    )
+
+
+ft.run(
+    lambda page: page.render(App),
+    assets_dir=str(Path(__file__).resolve().parent.parent / "assets"),
+)
