@@ -8,7 +8,7 @@ from flet_ads.types import AdRequest
 @ft.control
 class BaseAd(ft.Control):
     """
-    Base class for all ad controls in Flet Ads package.
+    Base class for all Ad controls.
 
     Raises:
         FletUnsupportedPlatformException: When using this control on a web
