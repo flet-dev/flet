@@ -1,6 +1,5 @@
-import flet_ads as fta
-
 import flet as ft
+import flet_ads as fta
 
 
 def main(page: ft.Page):
@@ -26,8 +25,8 @@ def main(page: ft.Page):
     def handle_interstitial_ad_close(e: ft.Event[fta.InterstitialAd]):
         nonlocal iad
         print("Closing InterstitialAd")
-        page.overlay.remove(e.control)
-        page.overlay.append(iad := get_new_interstitial_ad())
+        page.services.remove(e.control)
+        page.services.append(iad := get_new_interstitial_ad())
         page.update()
 
     async def handle_interstitial_ad_display(e: ft.Event[ft.OutlinedButton]):
@@ -63,7 +62,7 @@ def main(page: ft.Page):
             ),
         )
 
-    page.overlay.append(iad := get_new_interstitial_ad())
+    page.services.append(iad := get_new_interstitial_ad())
 
     page.add(
         ft.OutlinedButton(
