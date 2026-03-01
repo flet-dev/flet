@@ -2,7 +2,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     counts = {event_type: 0 for event_type in ft.ScrollType}

@@ -22,7 +22,6 @@ def showcase_card(mode: ft.CupertinoTimerPickerMode) -> ft.Container:
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     page.appbar = ft.AppBar(title="CupertinoTimerPickerMode Showcase")

@@ -4,7 +4,6 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     def showcase_card(orientation: ft.Orientation) -> ft.Container:
@@ -17,7 +16,7 @@ def main(page: ft.Page):
         return ft.Container(
             width=300,
             padding=12,
-            border=ft.Border.all(1, ft.Colors.ERROR),
+            border=ft.Border.all(1, ft.Colors.RED),
             border_radius=10,
             bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
             content=ft.Column(

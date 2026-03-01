@@ -41,7 +41,6 @@ def showcase_card(interaction: ft.SliderInteraction) -> ft.Container:
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     page.appbar = ft.AppBar(title="SliderInteraction Showcase")

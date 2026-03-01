@@ -57,7 +57,6 @@ def showcase_card(trigger: ft.ContextMenuTrigger) -> ft.Container:
 
 
 async def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     if page.web:

@@ -40,7 +40,6 @@ def showcase_card(label_position: ft.LabelPosition) -> ft.Container:
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     page.appbar = ft.AppBar(title="LabelPosition Showcase")

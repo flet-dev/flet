@@ -55,7 +55,6 @@ def showcase_card(indicator_size: ft.TabBarIndicatorSize) -> ft.Container:
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     page.appbar = ft.AppBar(title="TabBarIndicatorSize Showcase")

@@ -70,7 +70,6 @@ def showcase_card(direction: ft.DismissDirection) -> ft.Container:
 
 
 def main(page: ft.Page):
-    page.theme_mode = ft.ThemeMode.DARK
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     page.appbar = ft.AppBar(title="DismissDirection Showcase")
