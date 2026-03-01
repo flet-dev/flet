@@ -6,7 +6,7 @@ from flet_ads.types import PaidAdEvent
 
 
 @ft.control("BannerAd")
-class BannerAd(BaseAd):
+class BannerAd(ft.LayoutControl, BaseAd):
     """
     Displays a banner ad.
 

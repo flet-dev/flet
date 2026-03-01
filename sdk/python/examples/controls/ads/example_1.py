@@ -37,21 +37,18 @@ def main(page: ft.Page):
             on_click=lambda e: print("InterstitialAd clicked"),
         )
 
-    def get_new_banner_ad() -> ft.Container:
-        return ft.Container(
+    def get_new_banner_ad() -> fta.BannerAd:
+        return fta.BannerAd(
+            unit_id=ids[page.platform]["banner"],
             width=320,
             height=50,
-            bgcolor=ft.Colors.TRANSPARENT,
-            content=fta.BannerAd(
-                unit_id=ids[page.platform]["banner"],
-                on_click=lambda e: print("BannerAd clicked"),
-                on_load=lambda e: print("BannerAd loaded"),
-                on_error=lambda e: print("BannerAd error", e.data),
-                on_open=lambda e: print("BannerAd opened"),
-                on_close=lambda e: print("BannerAd closed"),
-                on_impression=lambda e: print("BannerAd impression"),
-                on_will_dismiss=lambda e: print("BannerAd will dismiss"),
-            ),
+            on_click=lambda e: print("BannerAd clicked"),
+            on_load=lambda e: print("BannerAd loaded"),
+            on_error=lambda e: print("BannerAd error", e.data),
+            on_open=lambda e: print("BannerAd opened"),
+            on_close=lambda e: print("BannerAd closed"),
+            on_impression=lambda e: print("BannerAd impression"),
+            on_will_dismiss=lambda e: print("BannerAd will dismiss"),
         )
 
     page.add(
