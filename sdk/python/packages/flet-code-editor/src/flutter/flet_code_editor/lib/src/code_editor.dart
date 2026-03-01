@@ -22,6 +22,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   TextSelection? _selection;
   String _value = "";
   String? _languageName;
+  String? _lastControlValue;
+  TextSelection? _lastControlSelection;
 
   @override
   void initState() {
@@ -31,6 +33,12 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     _controller = _createController();
     _value = _readValue();
     _selection = _controller.selection;
+    _lastControlValue = widget.control.getString("value");
+    _lastControlSelection = widget.control.getTextSelection(
+      "selection",
+      minOffset: 0,
+      maxOffset: _controller.text.length,
+    );
     _controller.addListener(_handleControllerChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
   }
@@ -97,6 +105,20 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     _controller.fullText = value;
   }
 
+  bool get _isComposing {
+    final composing = _controller.value.composing;
+    return composing.isValid && !composing.isCollapsed;
+  }
+
+  bool _shouldApplyExternalState({
+    required bool incomingChanged,
+  }) {
+    if (!_focusNode.hasFocus) {
+      return true;
+    }
+    return incomingChanged && !_isComposing;
+  }
+
   void _handleControllerChange() {
     final value = _readValue();
     final selection = _controller.selection;
@@ -160,7 +182,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     final value = widget.control.getString("value");
     final controllerValue = _readValue();
-    if (value != null && value != controllerValue) {
+    final valueChangedInControl = value != _lastControlValue;
+    _lastControlValue = value;
+    if (value != null &&
+        value != controllerValue &&
+        _shouldApplyExternalState(incomingChanged: valueChangedInControl)) {
       _setValue(value);
       _value = value;
     }
@@ -170,7 +196,11 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       minOffset: 0,
       maxOffset: _controller.text.length,
     );
-    if (explicitSelection != null && explicitSelection != _controller.selection) {
+    final selectionChangedInControl = explicitSelection != _lastControlSelection;
+    _lastControlSelection = explicitSelection;
+    if (explicitSelection != null &&
+        explicitSelection != _controller.selection &&
+        _shouldApplyExternalState(incomingChanged: selectionChangedInControl)) {
       _controller.selection = explicitSelection;
     }
 
