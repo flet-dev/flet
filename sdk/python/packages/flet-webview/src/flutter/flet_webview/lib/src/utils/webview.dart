@@ -8,5 +8,5 @@ LoadRequestMethod? parseLoadRequestMethod(String? value,
 
 JavaScriptMode? parseJavaScriptMode(String? value,
     [JavaScriptMode? defaultValue]) {
-  return parseEnum(JavaScriptMode.values, value);
+  return parseEnum(JavaScriptMode.values, value, defaultValue);
 }
