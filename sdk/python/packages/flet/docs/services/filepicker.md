@@ -111,7 +111,7 @@ and [upload][flet.FilePicker.upload] app.
 
 Use [`pick_files()`][flet.FilePicker.pick_files] with `with_data=True` when
 you need file contents directly, such as in web apps where
-[`FilePickerFile.path`][flet.FilePickerFile.] is not available.
+[`FilePickerFile.path`][flet.FilePickerFile.path] is not available.
 
 ```python
 --8<-- "{{ examples }}/pick_and_save_text_content.py"

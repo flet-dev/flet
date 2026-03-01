@@ -50,8 +50,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       title: control.getString("title", "flet-video")!,
       muted: control.getBool("muted", false)!,
       pitch: control.getDouble("pitch") != null,
-      ready: control.getBool("on_loaded", false)!
-          ? () => control.triggerEvent("loaded")
+      ready: control.hasEventHandler("load")
+          ? () => control.triggerEvent("load")
           : null,
     );
 
@@ -232,7 +232,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     final prevShufflePlaylist = widget.control.getBool("_shuffle_playlist");
     final PlaylistMode? prevPlaylistMode = widget.control.get("_playlist_mode");
     final SubtitleTrack? prevSubtitleTrack =
-        widget.control.get("_subtitleTrack");
+        widget.control.get("_subtitle_track");
     final prevFullscreen = widget.control.getBool("_fullscreen", false)!;
 
     Video video = Video(
@@ -273,13 +273,13 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       // playbackRate
       if (playbackRate != null && playbackRate != prevPlaybackRate) {
         widget.control
-            .updateProperties({"_playbackRate": playbackRate}, python: false);
+            .updateProperties({"_playback_rate": playbackRate}, python: false);
         await _player.setRate(playbackRate);
       }
 
       // shufflePlaylist
       if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
-        widget.control.updateProperties({"_shufflePlaylist": shufflePlaylist},
+        widget.control.updateProperties({"_shuffle_playlist": shufflePlaylist},
             python: false);
         await _player.setShuffle(shufflePlaylist);
       }
@@ -287,14 +287,14 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       // playlistMode
       if (playlistMode != null && playlistMode != prevPlaylistMode) {
         widget.control
-            .updateProperties({"_playlistMode": playlistMode}, python: false);
+            .updateProperties({"_playlist_mode": playlistMode}, python: false);
         await _player.setPlaylistMode(playlistMode);
       }
 
       // subtitleTrack
       if (subtitleTrack != null && subtitleTrack != prevSubtitleTrack) {
-        widget.control
-            .updateProperties({"_subtitleTrack": subtitleTrack}, python: false);
+        widget.control.updateProperties({"_subtitle_track": subtitleTrack},
+            python: false);
         await _player.setSubtitleTrack(subtitleTrack);
       }
 
