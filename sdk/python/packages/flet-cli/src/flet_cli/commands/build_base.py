@@ -859,7 +859,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = (v.lower() == "true") if v.lower() in {"true", "false"} else v
+                info_plist[k] = (
+                    (v.lower() == "true") if v.lower() in {"true", "false"} else v
+                )
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
 
@@ -1812,8 +1814,18 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject(f"tool.flet.{self.config_platform}.cleanup.app_files")
             or self.get_pyproject("tool.flet.cleanup.app_files")
         ):
-            package_args.extend(["--cleanup-app-files", ",".join(cleanup_app_files)])
-            cleanup_app = True
+            if isinstance(cleanup_app_files, str):
+                cleanup_app_files = [
+                    value.strip() for value in cleanup_app_files.split(",")
+                ]
+            if isinstance(cleanup_app_files, list):
+                package_args.extend(
+                    [
+                        "--cleanup-app-files",
+                        ",".join([v.strip() for v in cleanup_app_files if v.strip()]),
+                    ]
+                )
+                cleanup_app = True
 
         if cleanup_package_files := (
             self.options.cleanup_package_files
@@ -1822,10 +1834,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             or self.get_pyproject("tool.flet.cleanup.package_files")
         ):
-            package_args.extend(
-                ["--cleanup-package-files", ",".join(cleanup_package_files)]
-            )
-            cleanup_packages = True
+            if isinstance(cleanup_package_files, str):
+                cleanup_package_files = [
+                    value for value in cleanup_package_files.split(",")
+                ]
+            if isinstance(cleanup_package_files, list):
+                package_args.extend(
+                    [
+                        "--cleanup-package-files",
+                        ",".join(
+                            [v.strip() for v in cleanup_package_files if v.strip()]
+                        ),
+                    ]
+                )
+                cleanup_packages = True
 
         if cleanup_app:
             package_args.append("--cleanup-app")
