@@ -11,17 +11,15 @@ A [Flet](https://flet.dev) extension for displaying web content in a WebView.
 It is based on the [webview_flutter](https://pub.dev/packages/webview_flutter)
 and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
 
-> **Important:** WebView requires platform-specific configuration (e.g., enabling webview on iOS). Consult Flutter's platform setup guides.
-
 ## Documentation
 
 Detailed documentation to this package can be found [here](https://docs.flet.dev/webview/).
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ❌    |   ✅   |   ❌   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ❌       | ✅     | ❌     | ✅   | ✅       | ✅   |
 
 ## Usage
 

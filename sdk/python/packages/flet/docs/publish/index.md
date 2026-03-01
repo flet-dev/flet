@@ -889,7 +889,9 @@ Both scheme and host are required; if either is missing, the deep-linking entrie
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+flet build <target_platform> \
+  --deep-linking-scheme "https" \
+  --deep-linking-host "mydomain.com"
 ```
 ///
 /// tab | `pyproject.toml`
@@ -1026,7 +1028,9 @@ The values of `cleanup-app-files` and `cleanup-package-files` are respectively d
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --compile-app --compile-packages --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
+flet build <target_platform> \
+  --compile-app --compile-packages \
+  --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
 ```
 ///
 /// tab | `pyproject.toml`

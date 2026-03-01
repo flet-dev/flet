@@ -5,7 +5,9 @@ examples: ../../examples/services/permission_handler
 
 # Permission Handler
 
-Manage runtime permissions in your [Flet](https://flet.dev) apps using the `flet-permission-handler` extension, powered by Flutter's [`permission_handler`](https://pub.dev/packages/permission_handler).
+Helps manage runtime permissions in your [Flet](https://flet.dev) apps.
+
+It is powered by the Flutter [`permission_handler`](https://pub.dev/packages/permission_handler) package.
 
 ## Platform Support
 
@@ -33,8 +35,26 @@ pip install flet-permission-handler  # (1)!
 
 /// admonition | Note
     type: note
-On mobile platforms you must also declare permissions in the native project files. See [Flet publish docs](https://flet.dev/docs/publish#permissions).
+On mobile platforms you must also declare permissions in the native project files. See [Flet publish docs](../publish/index.md#permissions).
 ///
+
+## Requirements
+
+While the permissions are being requested during runtime,
+you'll still need to tell the OS which permissions your app might potentially use.
+
+### Android
+
+See:
+- [full list of Android permissions](https://developer.android.com/reference/android/Manifest.permission)
+- [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions
+- [setting Android permissions](../publish/android.md#permissions)
+
+### iOS
+
+See:
+- [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions and their `Info.plist` keys
+- [setting iOS permissions](../publish/ios.md#permissions)
 
 ## Example
 

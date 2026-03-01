@@ -11,9 +11,9 @@ Based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flu
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ❌    |   ❌   |   ❌   |  ✅  |    ✅    |  ❌  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ❌       | ❌     | ❌     | ✅   | ✅       | ❌   |
 
 ## Usage
 
@@ -33,58 +33,60 @@ pip install flet-ads  # (1)!
 1. After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 ///
 
-## Example
+## Requirements
 
-```python
---8<-- "{{ examples }}/example_1.py"
-```
-
-{{ image(example_images + "/example_1.gif", alt="example_1", width="80%") }}
-
-
-## Packaging
-
-The following are to be done when packaging an app that uses the `flet-ads` package.
+The following are required for ads to work properly:
 
 ### Specify AdMob app ID
 
 Specify your [AdMob app ID](https://support.google.com/admob/answer/7356431), without which your application might crash
 on launch.
 
-You can specify the app ID in two ways:
+/// tab | `flet build`
+```bash
+# Android
+flet build apk --android-meta-data com.google.android.gms.ads.APPLICATION_ID="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
 
-- In your `pyproject.toml` file:
-
+# iOS
+flet build ipa --info-plist GADApplicationIdentifier="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+```
+///
+/// tab | `pyproject.toml`
 ```toml
-# for Android
+# Android
 [tool.flet.android.meta_data]
 "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
 
-# for iOS
+# iOS
 [tool.flet.ios.info]
 GADApplicationIdentifier = "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
 ```
+///
 
-- In your build command from the terminal:
+For more information on the above configuration options, see:
+[Android](../publish/android.md#meta-data) and [iOS](../publish/ios.md#infoplist) `flet build` docs.
 
-```bash
-# for Android
-flet build apk ... --android-meta-data com.google.android.gms.ads.APPLICATION_ID=ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy
+### Test Values
 
-# for iOS
-flet build ipa ... --info-plist GADApplicationIdentifier=ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy
-```
-
-/// admonition | Test Values
-    type: tip
 AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads) app and ad unit IDs for
 testing purposes:
 
 * AdMob app ID: `"ca-app-pub-3940256099942544~3347511713"`
-* `BannerAd.unit_id` on **Android**: `"ca-app-pub-3940256099942544/9214589741"`
-* `BannerAd.unit_id` on **iOS**: `"ca-app-pub-3940256099942544/2435281174"`
-* `InterstitialAd.unit_id` on **Android**: `"ca-app-pub-3940256099942544/1033173712"`
-* `InterstitialAd.unit_id` on **iOS**: `"ca-app-pub-3940256099942544/4411468910"`
+* [`BannerAd` ][flet_ads.BannerAd]
+    - **Android**: `"ca-app-pub-3940256099942544/9214589741"`
+    - **iOS**: `"ca-app-pub-3940256099942544/2435281174"`
+* [`InterstitialAd`][flet_ads.InterstitialAd]
+    - **Android**: `"ca-app-pub-3940256099942544/1033173712"`
+    - **iOS**: `"ca-app-pub-3940256099942544/4411468910"`
 
+/// admonition | Note
 Remember to replace these values with your own when you're ready to package your app.
 ///
+
+## Example
+
+```python
+--8<-- "{{ examples }}/example_1.py"
+```
+
+{{ image(example_images + "/example_1.gif", width="80%") }}

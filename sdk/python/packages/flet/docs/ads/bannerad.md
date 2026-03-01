@@ -10,11 +10,11 @@ example_images: ../examples/controls/ads/media
 
 ### Example 1
 
-```python title="example_1.py"
+```python
 --8<-- "{{ examples }}/example_1.py"
 ```
 
-{{ image(example_images + "/example_1.gif", alt="example_1", width="80%") }}
+{{ image(example_images + "/example_1.gif", width="80%") }}
 
 
 {{ class_members(class_name) }}
