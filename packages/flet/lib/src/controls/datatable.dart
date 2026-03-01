@@ -29,7 +29,6 @@ class DataTableControl extends StatelessWidget {
     var gradient = control.getGradient("gradient", theme);
     var horizontalLines = control.getBorderSide("horizontal_lLines", theme);
     var verticalLines = control.getBorderSide("vertical_lines", theme);
-    var clipBehavior = control.getClipBehavior("clip_behavior", Clip.none)!;
     var defaultDecoration = theme.dataTableTheme.decoration as BoxDecoration? ??
         const BoxDecoration();
 
@@ -40,11 +39,10 @@ class DataTableControl extends StatelessWidget {
         borderRadius != null ||
         gradient != null) {
       decoration = defaultDecoration.copyWith(
-        color: parseColor(bgcolor, theme),
-        border: border,
-        borderRadius: borderRadius,
-        gradient: gradient,
-      );
+          color: parseColor(bgcolor, theme),
+          border: border,
+          borderRadius: borderRadius,
+          gradient: gradient);
     }
 
     var datatable = DataTable(
@@ -52,10 +50,9 @@ class DataTableControl extends StatelessWidget {
       border: (horizontalLines != null || verticalLines != null)
           ? TableBorder(
               horizontalInside: horizontalLines ?? BorderSide.none,
-              verticalInside: verticalLines ?? BorderSide.none,
-            )
+              verticalInside: verticalLines ?? BorderSide.none)
           : null,
-      clipBehavior: clipBehavior,
+      clipBehavior: parseClip(control.getString("clip_behavior"), Clip.none)!,
       checkboxHorizontalMargin: control.getDouble("checkbox_horizontal_margin"),
       columnSpacing: control.getDouble("column_spacing"),
       dataRowColor: control.getWidgetStateColor("data_row_color", theme),
@@ -131,19 +128,6 @@ class DataTableControl extends StatelessWidget {
       }).toList(),
     );
 
-    Widget result = datatable;
-
-    // Clip externally when a border radius is set.
-    // Flutter DataTable.clipBehavior applies to an internal Material
-    // that does not use decoration.borderRadius.
-    if (borderRadius != null && clipBehavior != Clip.none) {
-      result = ClipRRect(
-        borderRadius: borderRadius,
-        clipBehavior: clipBehavior,
-        child: datatable,
-      );
-    }
-
-    return LayoutControl(control: control, child: result);
+    return LayoutControl(control: control, child: datatable);
   }
 }
