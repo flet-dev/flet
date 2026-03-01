@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Refactored `BaseAd` class to be based on `flet.BaseControl`.
 - Refactored `InterstitialAd` to a service-based control (`flet.Service`).
 - Refactored `BannerAd` to a layout control (`flet.LayoutControl`).
-- Update Example app.
+- Updated Example app.
 
 ## 0.80.0
 

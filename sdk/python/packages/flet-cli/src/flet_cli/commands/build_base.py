@@ -859,7 +859,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = bool(v.lower()) if v.lower() in {"true", "false"} else v
+                info_plist[k] = (v.lower() == "true") if v.lower() in {"true", "false"} else v
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
 
