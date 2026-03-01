@@ -18,6 +18,7 @@ description: Use when asked to prepare new Flet release by bumping versions and 
 * Add a new entry into packages/flet/CHANGELOG.md from a git log since the last release. Do not add chore/trivial/duplicate items, add "worth while" items with related issue or PR.
   As it's a Flutter package prefer items having changes on Flutter side.
 * Add a new entry into /CHANGELOG.md. Do not add chore/trivial/duplicate items, add "worth while" items with related issue or PR.
+* If any changelog has an `Unreleased` section, convert that section into the new release section (`## {new_version}`), preserving and re-sorting its items. Do not leave duplicate release content in both `Unreleased` and `{new_version}`.
 * Sort items in changelogs as following:
   * New features
   * Improvements
