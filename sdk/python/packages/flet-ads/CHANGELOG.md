@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Refactored ads hierarchy to use a shared `BaseAd` abstraction based on `flet.BaseControl`.
-- Consolidated common ad properties and mobile-platform validation in `BaseAd`.
-- Updated `BannerAd` and `InterstitialAd` to inherit shared ad behavior from `BaseAd`.
+- Refactored `BaseAd` class to be based on `flet.BaseControl`.
+- Refactored `InterstitialAd` to a service-based control (`flet.Service`).
+- Refactored `BannerAd` to a layout control (`flet.LayoutControl`).
+- Update Example app.
 
 ## 0.80.0
 
