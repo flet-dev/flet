@@ -242,7 +242,7 @@ packages:
     source: hosted
     version: "3.0.7"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
@@ -1059,7 +1059,7 @@ packages:
     source: hosted
     version: "9.3.0"
   package_info_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: package_info_plus
       sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
@@ -1800,7 +1800,7 @@ packages:
     source: hosted
     version: "15.0.2"
   wakelock_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: wakelock_plus
       sha256: "9296d40c9adbedaba95d1e704f4e0b434be446e2792948d0e4aa977048104228"
