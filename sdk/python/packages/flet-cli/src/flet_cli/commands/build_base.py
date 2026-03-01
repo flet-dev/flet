@@ -138,11 +138,12 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.cross_platform_permissions = {
             "location": {
-                "info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location "
-                    "service when in use.",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses "
-                    "location service.",
+                "ios_info_plist": {
+                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
+                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.location": True
@@ -158,9 +159,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
             },
             "camera": {
-                "info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture "
-                    "photos and videos."
+                "ios_info_plist": {
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.camera": True},
                 "android_permissions": {"android.permission.CAMERA": True},
@@ -173,9 +176,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
             },
             "microphone": {
-                "info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to "
-                    "record sounds.",
+                "ios_info_plist": {
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
                 "android_permissions": {
@@ -186,9 +191,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_features": {},
             },
             "photo_library": {
-                "info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and "
-                    "videos to the photo library."
+                "ios_info_plist": {
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.photos-library": True
@@ -815,7 +822,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             or []
         ):
             if p in self.cross_platform_permissions:
-                info_plist.update(self.cross_platform_permissions[p]["info_plist"])
+                permission_config = self.cross_platform_permissions[p]
+                if self.config_platform == "macos":
+                    info_plist.update(
+                        permission_config.get("macos_info_plist")
+                        or permission_config.get("info_plist", {})
+                    )
+                elif self.config_platform == "ios":
+                    info_plist.update(
+                        permission_config.get("ios_info_plist")
+                        or permission_config.get("info_plist", {})
+                    )
                 macos_entitlements.update(
                     self.cross_platform_permissions[p]["macos_entitlements"]
                 )
@@ -842,7 +859,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = True if v == "True" else False if v == "False" else v
+                info_plist[k] = bool(v.lower()) if v.lower() in {"true", "false"} else v
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
 
