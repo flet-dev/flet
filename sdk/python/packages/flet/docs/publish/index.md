@@ -1000,9 +1000,6 @@ removes known junk files and any additional globs you specify.
       (implies `cleanup-packages`)
     * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
 
-`[tool.flet.compile].cleanup` (deprecated) enables both `cleanup-app` and
-`cleanup-packages` when set to `true`.
-
 By default, Flet does **not** compile your app files during packaging.
 This allows the build process to complete even if there are syntax errors,
 which can be useful for debugging or rapid iteration.

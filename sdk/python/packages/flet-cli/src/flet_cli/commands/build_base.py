@@ -464,8 +464,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--cleanup-app-files",
             dest="cleanup_app_files",
-            action="append",
-            nargs="*",
+            action="extend",
+            nargs="+",
             help="The list of globs to delete extra app files and directories",
         )
         parser.add_argument(
@@ -478,8 +478,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--cleanup-package-files",
             dest="cleanup_package_files",
-            action="append",
-            nargs="*",
+            action="extend",
+            nargs="+",
             help="The list of globs to delete extra package files and directories",
         )
         parser.add_argument(
@@ -1806,10 +1806,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         cleanup_packages = self.get_bool_setting(
             self.options.cleanup_packages, "cleanup.packages", True
         )
-
-        # TODO: should be deprecated
-        if self.get_bool_setting(None, "compile.cleanup", False):
-            cleanup_app = cleanup_packages = True
 
         if cleanup_app_files := (
             self.options.cleanup_app_files
