@@ -75,6 +75,7 @@ flet build apk \
 ///
 
 See also:
+
 - [setting Android permissions](../publish/android.md#permissions)
 
 ### iOS
@@ -95,6 +96,7 @@ NSLocationWhenInUseUsageDescription = "Some message to describe why you need thi
 ///
 
 See also:
+
 - [setting iOS permissions](../publish/ios.md#permissions)
 
 ### macOS
@@ -119,6 +121,7 @@ NSLocationUsageDescription = "Some message to describe why you need this permiss
 ///
 
 See also:
+
 - [macOS permissions](../publish/macos.md#permissions)
 - [macOS entitlements](../publish/macos.md#entitlements)
 

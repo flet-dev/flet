@@ -11,9 +11,9 @@ It is powered by the Flutter [`permission_handler`](https://pub.dev/packages/per
 
 ## Platform Support
 
-| Platform | Windows | macOS | Linux | iOS | Android | Web |
-|----------|---------|-------|-------|-----|---------|-----|
-| Supported|    ✅    |   ❌   |   ❌   |  ✅  |    ✅    |  ✅  |
+| Platform  | Windows | macOS | Linux | iOS | Android | Web |
+|-----------|---------|-------|-------|-----|---------|-----|
+| Supported | ✅       | ❌     | ❌     | ✅   | ✅       | ✅   |
 
 ## Usage
 
@@ -46,6 +46,7 @@ you'll still need to tell the OS which permissions your app might potentially us
 ### Android
 
 See:
+
 - [full list of Android permissions](https://developer.android.com/reference/android/Manifest.permission)
 - [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions
 - [setting Android permissions](../publish/android.md#permissions)
@@ -53,6 +54,7 @@ See:
 ### iOS
 
 See:
+
 - [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions and their `Info.plist` keys
 - [setting iOS permissions](../publish/ios.md#permissions)
 

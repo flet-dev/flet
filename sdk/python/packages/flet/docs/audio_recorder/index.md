@@ -63,6 +63,7 @@ flet build apk \
 ///
 
 See also:
+
 - [setting Android permissions](../publish/android.md#permissions)
 - [Audio formats sample rate hints](https://developer.android.com/guide/topics/media/media-formats#audio-formats)
 
@@ -85,14 +86,16 @@ NSMicrophoneUsageDescription = "Some message to describe why you need this permi
 ```
 ///
 
-See also: [setting iOS permissions](../publish/ios.md#permissions).
+See also:
+
+- [setting iOS permissions](../publish/ios.md#permissions).
 
 ### macOS
 
 Configuration to be made to access the microphone:
 
-- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription): Required for recording audio.
-- [`com.apple.security.device.audio-input`](https://developer.apple.com/documentation/BundleResources/Entitlements/com.apple.security.device.audio-input) (optional): Required for recording audio.
+- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription): Allows recording audio.
+- [`com.apple.security.device.audio-input`](https://developer.apple.com/documentation/BundleResources/Entitlements/com.apple.security.device.audio-input): Allows recording audio using the built-in microphone and accessing audio input using Core Audio.
 
 /// tab | `flet build`
 ```bash
@@ -112,6 +115,7 @@ NSMicrophoneUsageDescription = "Some message to describe why you need this permi
 ///
 
 See also:
+
 - [setting macOS permissions](../publish/macos.md#permissions)
 - [setting macOS entitlements](../publish/macos.md#entitlements)
 

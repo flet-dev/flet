@@ -66,6 +66,7 @@ flet build apk \
 ///
 
 See also:
+
 - [setting Android permissions](../publish/android.md#permissions)
 
 ### iOS
@@ -91,6 +92,7 @@ NSMicrophoneUsageDescription = "Some message to describe why you need this permi
 ///
 
 See also:
+
 - [setting iOS permissions](../publish/ios.md#permissions)
 
 ### Cross-platform

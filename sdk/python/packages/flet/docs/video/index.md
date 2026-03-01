@@ -51,7 +51,7 @@ You may need to declare & request file-system/storage permissions, depending on 
 flet build apk \
   --android-permissions android.permission.READ_MEDIA_AUDIO=True \
       android.permission.READ_MEDIA_VIDEO=True \
-      android.permission.READ_EXTERNAL_STORAGE=True
+      android.permission.READ_EXTERNAL_STORAGE=True \
       android.permission.WRITE_EXTERNAL_STORAGE=True
 ```
 ///
@@ -68,6 +68,7 @@ flet build apk \
 Use [`PermissionHandler`][flet_permission_handler.PermissionHandler] to **request** permissions at runtime.
 
 See also:
+
 - [setting Android permissions](../publish/android.md#permissions)
 
 ### Linux

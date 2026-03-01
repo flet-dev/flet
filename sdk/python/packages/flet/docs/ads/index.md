@@ -7,7 +7,7 @@ example_images: ../examples/controls/ads/media
 
 Displaying Google Ads in [Flet](https://flet.dev) apps.
 
-Based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flutter package.
+It is powered by the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flutter package.
 
 ## Platform Support
 
@@ -35,53 +35,68 @@ pip install flet-ads  # (1)!
 
 ## Requirements
 
-The following are required for ads to work properly:
+The below sections show the required configurations for each platform.
 
-### Specify AdMob app ID
+### Android
 
-Specify your [AdMob app ID](https://support.google.com/admob/answer/7356431), without which your application might crash
-on launch.
+A valid [AdMob app ID](https://support.google.com/admob/answer/7356431)
+is required to be specified, otherwise the app might crash on launch or behave unexpectedly.
 
 /// tab | `flet build`
 ```bash
-# Android
-flet build apk --android-meta-data com.google.android.gms.ads.APPLICATION_ID="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
-
-# iOS
-flet build ipa --info-plist GADApplicationIdentifier="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+flet build apk \
+  --android-meta-data com.google.android.gms.ads.APPLICATION_ID="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
-# Android
 [tool.flet.android.meta_data]
 "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+```
+///
 
-# iOS
+See also:
+
+- [setting Android permissions](../publish/android.md#permissions)
+- [AdMob app ID for testing purposes](#test-values)
+
+### iOS
+
+A valid [AdMob app ID](https://support.google.com/admob/answer/7356431)
+is required to be specified, otherwise the app might crash on launch or behave unexpectedly.
+
+/// tab | `flet build`
+```bash
+flet build ipa \
+  --info-plist GADApplicationIdentifier="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
+```
+///
+/// tab | `pyproject.toml`
+```toml
 [tool.flet.ios.info]
 GADApplicationIdentifier = "ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"
 ```
 ///
 
-For more information on the above configuration options, see:
-[Android](../publish/android.md#meta-data) and [iOS](../publish/ios.md#infoplist) `flet build` docs.
+See also:
+
+- [setting iOS permissions](../publish/ios.md#permissions)
+- [AdMob app ID for testing purposes](#test-values)
 
 ### Test Values
 
 AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads) app and ad unit IDs for
-testing purposes:
+testing purposes.
 
-* AdMob app ID: `"ca-app-pub-3940256099942544~3347511713"`
-* [`BannerAd` ][flet_ads.BannerAd]
+* **AdMob app ID**: `"ca-app-pub-3940256099942544~3347511713"`
+* [`BannerAd.unit_id`][flet_ads.BannerAd]
     - **Android**: `"ca-app-pub-3940256099942544/9214589741"`
     - **iOS**: `"ca-app-pub-3940256099942544/2435281174"`
-* [`InterstitialAd`][flet_ads.InterstitialAd]
+* [`InterstitialAd.unit_id`][flet_ads.InterstitialAd]
     - **Android**: `"ca-app-pub-3940256099942544/1033173712"`
     - **iOS**: `"ca-app-pub-3940256099942544/4411468910"`
 
-/// admonition | Note
-Remember to replace these values with your own when you're ready to package your app.
-///
+**They are not meant to be used in production.**
 
 ## Example
 
