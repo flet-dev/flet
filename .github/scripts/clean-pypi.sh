@@ -12,7 +12,9 @@ uvx pypi-cleanup -u flet -p flet-web -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-ads -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-audio -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-audio-recorder -y -r $VER --do-it
+uvx pypi-cleanup -u flet -p flet-camera -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-charts -y -r $VER --do-it
+uvx pypi-cleanup -u flet -p flet-code-editor -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-color-pickers -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-datatable2 -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-flashlight -y -r $VER --do-it
