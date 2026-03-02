@@ -100,20 +100,16 @@ def show_new_board_dialog(app: TrolliState) -> None:
 def show_new_list_dialog(board: Board) -> None:
     title_field = ft.TextField(label="New list name")
     error_text = ft.Text(value="", color=ft.Colors.RED)
-    grid_options: Sequence[ft.Container] = []
     color_grid = ft.GridView(
         runs_count=3,
         max_extent=40,
         height=150,
         spacing=8,
         run_spacing=8,
-        data=LIST_COLORS[0].value,
-        # controls=grid_options,
     )
 
     def set_selected_color(e: ft.Event[ft.Container]):
         color_grid.data = e.control.data
-        # option: ft.Container
         for option in color_grid.controls:
             option.border = (
                 ft.Border.all(3, ft.Colors.BLACK_26)
@@ -139,11 +135,6 @@ def show_new_list_dialog(board: Board) -> None:
                 height=36,
                 border_radius=ft.BorderRadius.all(999),
                 data=option.value,
-                border=(
-                    ft.Border.all(3, ft.Colors.BLACK_26)
-                    if option.value == color_grid.data
-                    else None
-                ),
                 on_click=set_selected_color,
             )
         )

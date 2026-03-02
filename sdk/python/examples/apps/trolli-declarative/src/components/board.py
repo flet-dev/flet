@@ -14,6 +14,8 @@ def BoardView(board: Board):
         spacing=10,
         controls=[
             ft.Row(
+                # height=30,
+                expand_loose=True,
                 alignment=ft.MainAxisAlignment.END,
                 controls=[
                     ft.FilledButton(

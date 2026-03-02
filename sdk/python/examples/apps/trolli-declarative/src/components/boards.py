@@ -8,8 +8,12 @@ from .dialogs import show_new_board_dialog
 def BoardsView(app: TrolliState):
     return ft.Column(
         expand=True,
+        expand_loose=True,
         controls=[
             ft.Row(
+                expand_loose=True,
+                # width=600,
+                height=30,
                 alignment=ft.MainAxisAlignment.END,
                 controls=[
                     ft.FilledButton(

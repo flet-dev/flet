@@ -7,7 +7,6 @@ from models import TrolliState
 
 @ft.component
 def Sidebar(app: TrolliState):
-    route = app.route
     board_id = app.current_board_id
     active_board_index = (
         next((i for i, b in enumerate(app.boards) if b.board_id == board_id), None)
@@ -16,8 +15,8 @@ def Sidebar(app: TrolliState):
     )
     top_index = (
         0
-        if route.startswith("/boards")
-        else 1 if route.startswith("/members") else None
+        if app.active_screen == "boards"
+        else 1 if app.active_screen == "members" else None
     )
 
     def top_nav_change(e: ft.Event[ft.NavigationRail]):

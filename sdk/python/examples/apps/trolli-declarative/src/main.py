@@ -74,35 +74,48 @@ def App():
         if not troute.match("/board/:id"):
             return None
 
-        string_id = str(getattr(troute, "id", None))
-        int_id = int(string_id)
-
-        if not type(int_id) == int:
+        raw = getattr(troute, "id", None)
+        if not isinstance(raw, str):
+            return None
+        try:
+            return int(raw)
+        except ValueError:
             return None
 
-        return int_id
-
     def route_change(e: ft.RouteChangeEvent):
+        # Keep route as a single source of truth for navigation-related UI (e.g. sidebar selection).
+        app.route = e.route
 
         # deal with bad or incomplete routes first
         if e.route.startswith("/board/"):
             board_id = parse_board_id_from_route(e.route)
             if board_id is None or app.get_board_by_id(board_id) is None:
                 ft.context.page.go("/boards")
+                app.active_screen = "boards"
+                app.current_board_id = None
+                app.route = "/boards"
+                return
 
         match e.route:
             # trigger re-render by changing active_screen
             case "/" | "/boards":
                 app.active_screen = "boards"
+                app.current_board_id = None
             case "/members":
                 app.active_screen = "members"
+                app.current_board_id = None
             case "/settings":
                 app.active_screen = "settings"
+                app.current_board_id = None
             case name if name.startswith("/board/"):
                 app.active_screen = "board"
                 app.current_board_id = board_id
             case _:
                 ft.context.page.go("/boards")
+                app.active_screen = "boards"
+                app.current_board_id = None
+                app.route = "/boards"
+                return
 
     ft.context.page.on_route_change = route_change
 
@@ -144,9 +157,9 @@ def App():
         case "boards":
             content = BoardsView(app)
         case "members":
-            content = ft.Text("Members view placeholder")
+            content = ft.Text("Members view placeholder", align=ft.Alignment.CENTER)
         case "settings":
-            content = ft.Text("Settings view placeholder")
+            content = ft.Text("Settings view placeholder", align=ft.Alignment.CENTER)
         case "board":
             board = (
                 app.get_board_by_id(app.current_board_id)
@@ -167,17 +180,25 @@ def App():
                     vertical_alignment=ft.CrossAxisAlignment.START,
                     controls=[
                         Sidebar(app),
-                        ft.IconButton(
-                            icon=ft.Icons.ARROW_CIRCLE_LEFT,
-                            selected=not app.nav_visible,
-                            selected_icon=ft.Icons.ARROW_CIRCLE_RIGHT,
-                            icon_color=ft.Colors.BLUE_GREY_400,
-                            on_click=toggle_sidebar,
-                        ),
-                        ft.Container(
+                        ft.Stack(
+                            fit=ft.StackFit.LOOSE,
                             expand=True,
-                            padding=ft.Padding.only(left=10, right=10, top=10),
-                            content=content,
+                            controls=[
+                                ft.Container(
+                                    expand=True,
+                                    padding=ft.Padding.only(left=10, right=10, top=10),
+                                    content=content,
+                                ),
+                                ft.IconButton(
+                                    icon=ft.Icons.ARROW_CIRCLE_LEFT,
+                                    selected=not app.nav_visible,
+                                    selected_icon=ft.Icons.ARROW_CIRCLE_RIGHT,
+                                    icon_color=ft.Colors.BLUE_GREY_400,
+                                    icon_size=20,
+                                    padding=0,
+                                    on_click=toggle_sidebar,
+                                ),
+                            ],
                         ),
                     ],
                 ),
