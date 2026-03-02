@@ -983,6 +983,7 @@ nav:
               - app_manager: fastapi/app_manager.md
               - FastAPI: fastapi/fastapi.md
               - FletApp: fastapi/fletapp.md
+              - FletOAuth: fastapi/fletoauth.md
               - FletStaticFiles: fastapi/fletstaticfiles.md
               - FletUpload: fastapi/fletupload.md
           - Methods:
