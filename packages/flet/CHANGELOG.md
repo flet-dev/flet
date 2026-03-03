@@ -8,6 +8,7 @@
 ### Bug fixes
 
 * Fix disabled-state handling across `Tabs`, `TabBar`, `Tab`, and `TabBarView` ([#6220](https://github.com/flet-dev/flet/issues/6220), [#6224](https://github.com/flet-dev/flet/pull/6224)).
+* Enable Javascript support in Webview for Mobile devices which was not working earlier. Enabled JavaScript by setting the Javascript Mode to `unrestricted`.
 
 ## 0.81.0
 
