@@ -68,6 +68,36 @@ async def test_parent_not_visible_child_visible(flet_app: ftt.FletTestApp, reque
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_disabled_propagates_to_children(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            spacing=12,
+            controls=[
+                ft.Column(
+                    spacing=8,
+                    controls=[
+                        ft.Text("Enabled parent"),
+                        ft.TextField(label="Name", value="John"),
+                        ft.Button("Save"),
+                    ],
+                ),
+                ft.Column(
+                    disabled=True,
+                    spacing=8,
+                    controls=[
+                        ft.Text("Disabled parent"),
+                        ft.TextField(label="Name", value="John"),
+                        ft.Button("Save"),
+                    ],
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_expand_row_remaining_space(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
