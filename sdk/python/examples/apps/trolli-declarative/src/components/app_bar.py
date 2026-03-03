@@ -3,7 +3,7 @@ from __future__ import annotations
 import flet as ft
 
 from models import TrolliState
-from .dialogs import show_login_dialog
+from .dialogs import show_login_dialog, show_settings_dialog
 
 
 @ft.component
@@ -12,12 +12,12 @@ def TrolliAppBar(app: TrolliState):
 
     return ft.AppBar(
         leading=ft.Icon(ft.Icons.GRID_GOLDENRATIO_ROUNDED),
-        leading_width=100,
+        leading_width=65,
         title=ft.Text(
             "Trolli",
             font_family="Pacifico",
             size=32,
-            text_align=ft.TextAlign.START,
+            text_align=ft.TextAlign.LEFT,
         ),
         center_title=False,
         toolbar_height=60,
@@ -36,7 +36,10 @@ def TrolliAppBar(app: TrolliState):
                             ),
                         ),
                         ft.PopupMenuItem(),
-                        ft.PopupMenuItem(content="Settings"),
+                        ft.PopupMenuItem(
+                            content="Settings",
+                            on_click=lambda _: show_settings_dialog(app),
+                        ),
                     ]
                 ),
             )

@@ -69,6 +69,30 @@ def show_login_dialog(app: TrolliState) -> None:
     ft.context.page.update()
 
 
+def show_settings_dialog(app: TrolliState) -> None:
+    placeholder = ft.Text("Settings Placeholder")
+
+    async def save_settings(_: ft.Event):
+        ft.context.page.pop_dialog()
+
+    dlg = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Save"),
+        content=ft.Column(
+            tight=True,
+            controls=[
+                placeholder,
+                ft.FilledButton("Save Settings", on_click=save_settings),
+            ],
+        ),
+        actions=[
+            ft.TextButton("Cancel", on_click=lambda _: ft.context.page.pop_dialog())
+        ],
+    )
+    ft.context.page.show_dialog(dlg)
+    ft.context.page.update()
+
+
 def show_new_board_dialog(app: TrolliState) -> None:
     name_field = ft.TextField(label="New board name")
     error_text = ft.Text(value="", color=ft.Colors.RED)
@@ -101,11 +125,8 @@ def show_new_list_dialog(board: Board) -> None:
     title_field = ft.TextField(label="New list name")
     error_text = ft.Text(value="", color=ft.Colors.RED)
     color_grid = ft.GridView(
-        runs_count=3,
         max_extent=40,
         height=150,
-        spacing=8,
-        run_spacing=8,
     )
 
     def set_selected_color(e: ft.Event[ft.Container]):

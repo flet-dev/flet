@@ -39,10 +39,17 @@ def CardView(card: Card):
                             padding=7,
                             width=200,
                             content=ft.Row(
-                                wrap=True,
+                                spacing=8,
+                                vertical_alignment=ft.CrossAxisAlignment.START,
                                 controls=[
                                     ft.Icon(ft.Icons.CIRCLE_OUTLINED),
-                                    ft.Text(value=card.text),
+                                    ft.Container(
+                                        expand=True,
+                                        content=ft.Text(
+                                            value=card.text,
+                                            no_wrap=False,
+                                        ),
+                                    ),
                                 ],
                             ),
                         ),

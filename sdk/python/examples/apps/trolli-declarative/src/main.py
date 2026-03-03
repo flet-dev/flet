@@ -7,12 +7,7 @@ import flet as ft
 
 from models import TrolliState
 
-from components import (
-    BoardView,
-    BoardsView,
-    Sidebar,
-    TrolliAppBar,
-)
+from components import BoardView, BoardsView, Sidebar, TrolliAppBar, dialogs
 
 
 logging.basicConfig(level=logging.INFO)
@@ -29,34 +24,6 @@ def _init_demo_data(app: TrolliState) -> None:
     board.lists[0].add_card("Drag cards between lists")
     board.lists[0].add_card("Drag lists to reorder")
     board.lists[1].add_card("Add a list from the button")
-
-
-def show_new_board_dialog(app: TrolliState) -> None:
-    name_field = ft.TextField(label="New board name")
-    error_text = ft.Text(value="", color=ft.Colors.RED)
-
-    def on_submit(_: ft.Event):
-        name = name_field.value.strip()
-        if not name:
-            error_text.value = "Please enter a name"
-            ft.context.page.update()
-            return
-        board = app.create_board(name)
-        ft.context.page.pop_dialog()
-        ft.context.page.go(f"/board/{board.board_id}")
-
-    dlg = ft.AlertDialog(
-        modal=True,
-        title=ft.Text("Create board"),
-        content=ft.Column(tight=True, controls=[name_field, error_text]),
-        actions=[
-            ft.TextButton("Cancel", on_click=lambda _: ft.context.page.pop_dialog()),
-            ft.FilledButton("Create", on_click=on_submit),
-        ],
-        actions_alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-    )
-    ft.context.page.show_dialog(dlg)
-    ft.context.page.update()
 
 
 @ft.component
@@ -146,12 +113,6 @@ def App():
     board_id = parse_board_id_from_route(app.route)
     board = app.get_board_by_id(board_id) if board_id is not None else None
 
-    # if app.route.startswith("/members"):
-    #     content: ft.Control = ft.Text("Members view (placeholder)")
-    # elif app.route.startswith("/board/") and board is not None:
-    #     content = BoardView(board)
-    # else:
-    #     content = BoardsView(app)
     content: ft.Control
     match app.active_screen:
         case "boards":
@@ -176,7 +137,6 @@ def App():
             ft.SafeArea(
                 expand=True,
                 content=ft.Row(
-                    expand=True,
                     vertical_alignment=ft.CrossAxisAlignment.START,
                     controls=[
                         Sidebar(app),
@@ -185,7 +145,6 @@ def App():
                             expand=True,
                             controls=[
                                 ft.Container(
-                                    expand=True,
                                     padding=ft.Padding.only(left=10, right=10, top=10),
                                     content=content,
                                 ),
