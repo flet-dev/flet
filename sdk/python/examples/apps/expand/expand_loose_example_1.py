@@ -1,28 +1,31 @@
+from dataclasses import field
+
 import flet as ft
 
 
+@ft.control
 class Message(ft.Container):
-    def __init__(self, author, body):
-        super().__init__()
+    author: str = ""
+    body: str = ""
+    border: ft.Border = field(default_factory=lambda: ft.Border.all(1, ft.Colors.BLACK))
+    border_radius: ft.BorderRadius = field(
+        default_factory=lambda: ft.BorderRadius.all(10)
+    )
+    bgcolor: ft.Colors = ft.Colors.GREEN_200
+    padding: ft.PaddingValue = 10
+    expand: bool = True
+    expand_loose: bool = True
+
+    def init(self):
         self.content = ft.Column(
             controls=[
-                ft.Text(author, weight=ft.FontWeight.BOLD),
-                ft.Text(body),
+                ft.Text(self.author, weight=ft.FontWeight.BOLD),
+                ft.Text(self.body),
             ],
         )
-        self.border = ft.Border.all(1, ft.Colors.BLACK)
-        self.border_radius = ft.BorderRadius.all(10)
-        self.bgcolor = ft.Colors.GREEN_200
-        self.padding = 10
-        self.expand = True
-        self.expand_loose = True
 
 
 def main(page: ft.Page):
-    page.window.width = 393
-    page.window.height = 600
-    page.window.always_on_top = False
-
     chat = ft.ListView(
         padding=10,
         spacing=10,
@@ -72,7 +75,13 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(chat)
+    page.add(
+        ft.Container(
+            content=chat,
+            width=300,
+            height=500,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -84,4 +84,4 @@ In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row
 --8<-- "{{ examples }}/expand_loose_example_1.py"
 ```
 
-{{ image("../assets/controls/control/expand-loose.png", alt="expand_loose", width="65%") }}
+{{ image(example_images + "/expand_loose_example_1.png", alt="expand loose example 1", width="70%") }}
