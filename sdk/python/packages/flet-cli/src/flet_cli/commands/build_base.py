@@ -823,16 +823,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         ):
             if p in self.cross_platform_permissions:
                 permission_config = self.cross_platform_permissions[p]
-                if self.config_platform == "macos":
-                    info_plist.update(
-                        permission_config.get("macos_info_plist")
-                        or permission_config.get("info_plist", {})
-                    )
-                elif self.config_platform == "ios":
-                    info_plist.update(
-                        permission_config.get("ios_info_plist")
-                        or permission_config.get("info_plist", {})
-                    )
+                info_plist.update(
+                    permission_config.get(f"{self.config_platform}_info_plist", {})
+                    or permission_config.get("info_plist", {})
+                )
                 macos_entitlements.update(
                     self.cross_platform_permissions[p]["macos_entitlements"]
                 )
