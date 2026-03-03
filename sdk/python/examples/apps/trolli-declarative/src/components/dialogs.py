@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import asyncio
-from typing import Sequence
+from typing import cast
 from dataclasses import dataclass
 
 import flet as ft
@@ -131,7 +130,8 @@ def show_new_list_dialog(board: Board) -> None:
 
     def set_selected_color(e: ft.Event[ft.Container]):
         color_grid.data = e.control.data
-        for option in color_grid.controls:
+        for option_control in color_grid.controls:
+            option = cast(ft.Container, option_control)
             option.border = (
                 ft.Border.all(3, ft.Colors.BLACK_26)
                 if option.data == color_grid.data
