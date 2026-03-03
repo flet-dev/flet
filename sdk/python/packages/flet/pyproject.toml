@@ -7,8 +7,8 @@ license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "flet-cli ==0.1.0; extra == 'cli'",
-    "flet-web ==0.1.0; extra == 'web'",
+    "flet-cli; extra == 'cli'",
+    "flet-web; extra == 'web'",
     "oauthlib >=3.2.2; platform_system != 'Pyodide'",
     "httpx >=0.28.1; platform_system != 'Pyodide'",
     "repath >=0.9.0",
@@ -23,17 +23,17 @@ Documentation = "https://docs.flet.dev/"
 
 [project.optional-dependencies]
 all = [
-    "flet-cli ==0.1.0",
-    "flet-web ==0.1.0",
-    "flet-desktop ==0.1.0; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light ==0.1.0; platform_system == 'Linux'",
+    "flet-cli",
+    "flet-web",
+    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
+    "flet-desktop-light; platform_system == 'Linux'",
 ]
-cli = ["flet-cli ==0.1.0"]
+cli = ["flet-cli"]
 desktop = [
-    "flet-desktop ==0.1.0; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light ==0.1.0; platform_system == 'Linux'",
+    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
+    "flet-desktop-light; platform_system == 'Linux'",
 ]
-web = ["flet-web ==0.1.0"]
+web = ["flet-web"]
 
 [project.scripts]
 flet = "flet.cli:main"

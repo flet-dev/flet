@@ -7,7 +7,7 @@ authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
-    "flet ==0.2.0",
+    "flet",
 ]
 
 [project.urls]
