@@ -511,6 +511,18 @@ nav:
       - Types:
           - Overview: types/index.md
           - Aliases: types/aliases.md
+          - Authentication:
+              - Authorization: types/auth/authorization.md
+              - AuthorizationService: types/auth/authorizationservice.md
+              - Group: types/auth/group.md
+              - OAuthToken: types/auth/oauthtoken.md
+              - OAuthProvider:
+                  - OAuthProvider: types/auth/oauthprovider/index.md
+                  - Auth0OAuthProvider: types/auth/auth0oauthprovider.md
+                  - AzureOAuthProvider: types/auth/azureoauthprovider.md
+                  - GitHubOAuthProvider: types/auth/githuboauthprovider.md
+                  - GoogleOAuthProvider: types/auth/googleoauthprovider.md
+              - User: types/auth/user.md
           - Base Controls:
               - AdaptiveControl: controls/adaptivecontrol.md
               - BaseControl: controls/basecontrol.md
@@ -525,17 +537,6 @@ nav:
           - Classes:
               - Ads:
                   - AdRequest: ads/types/adrequest.md
-              - Authentication:
-                  - Authorization: types/authorization.md
-                  - OAuthProvider: types/oauthprovider.md
-                  - OAuthToken: types/oauthtoken.md
-                  - User: types/user.md
-                  - Group: types/group.md
-                  - Providers:
-                      - Auth0OAuthProvider: types/auth0oauthprovider.md
-                      - AzureOAuthProvider: types/azureoauthprovider.md
-                      - GitHubOAuthProvider: types/githuboauthprovider.md
-                      - GoogleOAuthProvider: types/googleoauthprovider.md
               - Alignment: types/alignment.md
               - AndroidBuildVersion: types/androidbuildversion.md
               - Animation: types/animation.md
@@ -674,6 +675,7 @@ nav:
                   - InteractionFlag: map/types/interactionflag.md
                   - KeyboardConfiguration: map/types/keyboardconfiguration.md
                   - MapEvent: map/types/mapevent.md
+                  - MapEventType: map/types/mapeventtype.md
                   - MapEventSource: map/types/mapeventsource.md
                   - MapHoverEvent: map/types/maphoverevent.md
                   - MapLatitudeLongitude: map/types/maplatitudelongitude.md
@@ -687,6 +689,7 @@ nav:
                   - StrokePattern: map/types/strokepattern.md
                   - TileDisplay: map/types/tiledisplay.md
                   - TileLayerEvictErrorTileStrategy: map/types/tilelayerevicterrortilestrategy.md
+                  - WMSTileLayerConfiguration: map/types/wmstilelayerconfiguration.md
               - Margin: types/margin.md
               - Matrix4: types/matrix4.md
               - MarkdownCustomCodeTheme: types/markdowncustomcodetheme.md

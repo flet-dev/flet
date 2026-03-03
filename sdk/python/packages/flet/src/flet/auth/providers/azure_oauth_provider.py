@@ -2,6 +2,8 @@ from typing import Optional
 
 from flet.auth.oauth_provider import OAuthProvider
 
+__all__ = ["AzureOAuthProvider"]
+
 
 class AzureOAuthProvider(OAuthProvider):
     """

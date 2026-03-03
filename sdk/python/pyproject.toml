@@ -82,7 +82,7 @@ docs-coverage = [
     "docstr-coverage >=2.3.2",
 ]
 docs = [
-    "mkdocs >=1.6.1",
+    "mkdocs >=1.6.1,<2.0.0",
     "mkdocs-material >=9.6.20",
     "mkdocstrings-python >=1.18.2",
     "mkdocstrings-python-xref >=1.16.4",

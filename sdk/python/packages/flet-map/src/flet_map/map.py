@@ -2,8 +2,10 @@ from dataclasses import field
 from typing import Optional
 
 import flet as ft
+from flet.utils import from_dict
 from flet_map.map_layer import MapLayer
 from flet_map.types import (
+    Camera,
     CameraFit,
     InteractionConfiguration,
     MapEvent,
@@ -62,8 +64,8 @@ class Map(ft.LayoutControl):
     """
     Whether to enable the built in keep-alive functionality.
 
-    If the map is within a complex layout, such as a [`ListView`][flet.ListView],
-    the map will reset to it's inital position after it appears back into view.
+    If the map is within a complex layout, such as a [`ListView`][flet.],
+    the map will reset to its initial position after it appears back into view.
     To ensure this doesn't happen, enable this flag to prevent it from rebuilding.
     """
 
@@ -135,7 +137,7 @@ class Map(ft.LayoutControl):
 
     on_position_change: Optional[ft.EventHandler[MapPositionChangeEvent]] = None
     """
-    Fires when the map position changes.
+    Fires when the map position changes, e.g. when the user pans or zooms the map.
     """
 
     on_pointer_down: Optional[ft.EventHandler[MapPointerEvent]] = None
@@ -364,3 +366,13 @@ class Map(ft.LayoutControl):
                 "cancel_ongoing_animations": cancel_ongoing_animations,
             },
         )
+
+    async def get_camera(self) -> Camera:
+        """
+        Gets the current camera snapshot of the map.
+
+        Returns:
+            Current [`Camera`][flet_map.] state.
+        """
+        camera = await self._invoke_method("get_camera")
+        return from_dict(Camera, camera)

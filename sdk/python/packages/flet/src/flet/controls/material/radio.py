@@ -22,6 +22,7 @@ class Radio(LayoutControl, AdaptiveControl):
     """
     Radio buttons let people select a single option from two or more choices.
 
+    Example:
     ```python
     ft.RadioGroup(
         content=ft.Row(
@@ -30,7 +31,6 @@ class Radio(LayoutControl, AdaptiveControl):
         )
     )
     ```
-
     """
 
     label: str = ""

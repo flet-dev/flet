@@ -641,7 +641,13 @@ dependencies = [
 By default, packaging for mobile and web only installs binary wheels. Use source packages
 to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
 
-On desktop targets, source installs are already allowed, so this setting is mainly for
+This can be useful for installing - pure Python - dependencies that do not have pre-built wheels for the
+target mobile platform or an all-platform wheel (`*-py3-none-any.whl`), but instead provide a source distribution (`*.tar.gz`).
+
+For more information on pure vs non-pure Python packages, see our
+[blog post](https://flet.dev/blog/flet-packaging-update#pure-python-packages) on the topic.
+
+On desktop targets, source installs are already allowed, so this setting is mainly/only for
 [Android](android.md) and [iOS](ios.md) builds.
 
 #### Resolution order
@@ -1481,3 +1487,42 @@ You can further customize the workflow for your specific needs, for example,
 restricting the build targets or adding additional steps.
 
 See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).
+
+## Troubleshooting
+
+### Prerelease compatibility
+
+If you are using a prerelease version of the [Flet Python package](https://pypi.org/project/flet) (for example, `0.80.6.devNNNN`) to build an app,
+the [build template](#build-template) may still resolve the latest **stable** [`flet` Flutter package](https://pub.dev/packages/flet), which can lead to version incompatibility issues.
+
+**Why?**: Under normal circumstances, each prerelease of the Flet Python package would require
+a matching prerelease of the Flutter Flet package to guarantee compatibility.
+However, we don't publish prerelease versions of the Flutter package to [pub.dev](https://pub.dev/).
+Because of this, the build template resolves the latest **stable** Flutter `flet` release instead.
+
+This creates a version mismatch/incompatibility for apps packaged with `flet build`:
+
+* Your Python code may depend on newly introduced controls or features.
+* The packaged Flutter shell may still be using an older stable `flet` version.
+* At runtime, the app fails because the Flutter layer does not recognize the new controls/features in your prerelease `flet` package, leading to errors like `Unknown control: <ControlName>`.
+
+**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started#running-app)),
+as the `flet` Flutter dependency is only resolved during the `flet build` process.
+
+### Solution
+
+The rule-of-thumb is, if you are using a prerelease Flet Python package, always ensure the Flutter `flet`
+dependency is aligned with the same development version before building your app:
+
+1. Override the Flutter `flet` dependency to point to the corresponding development Git reference.
+
+    /// tab | `pyproject.toml`
+    ```toml
+    [tool.flet.flutter.pubspec.dependency_overrides]
+    flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
+    ```
+    ///
+
+2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#-clear-cache); or manually delete `build/flutter`)
+
+To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.

@@ -116,7 +116,7 @@ class PolygonLayer(MapLayer):
     rendering performance at the cost of reduced geometric accuracy. Lower values
     preserve more detail but may decrease performance, especially with complex polygons.
 
-    Set to 0 to disable simplification.
+    Set to `0` to disable simplification.
     """
 
     use_alternative_rendering: bool = False

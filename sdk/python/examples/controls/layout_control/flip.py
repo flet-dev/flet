@@ -24,7 +24,6 @@ def main(page: ft.Page):
             flip=ft.Flip(
                 flip_x=False,
                 flip_y=False,
-                origin=ft.Offset(110, 60),
                 filter_quality=ft.FilterQuality.MEDIUM,
             ),
         ),
