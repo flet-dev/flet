@@ -1,7 +1,7 @@
 ---
 title: Expanding Controls
 examples: ../../examples/apps/expand
-example_images: ../test-images/controls/core/golden/macos/control
+example_images: ../test-images/examples/apps/golden/macos/expand
 ---
 
 ## `expand`
@@ -30,7 +30,7 @@ while the [`Button`][flet.Button] stays sized to its content:
 --8<-- "{{ examples }}/expand_example_1.py"
 ```
 
-{{ image(example_images + "/expand_row_remaining_space.png", alt="expand example 1", width="70%") }}
+{{ image(example_images + "/expand_example_1.png", alt="expand example 1", width="70%") }}
 
 ### Example 2
 
@@ -43,7 +43,7 @@ In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Con
 Here, the available space is split into 5 total parts (1+3+1).
 The first and third containers get 1 part each (20%), and the middle one gets 3 parts (60%).
 
-{{ image(example_images + "/expand_row_proportions_1_3_1.png", alt="expand example 2", width="70%") }}
+{{ image(example_images + "/expand_example_2.png", alt="expand example 2", width="70%") }}
 
 ### Example 3
 
@@ -57,7 +57,7 @@ expanded equally, resulting in a 50/50 split.
 --8<-- "{{ examples }}/expand_example_3.py"
 ```
 
-{{ image(example_images + "/expand_row_equal_split.png", alt="expand example 3", width="70%") }}
+{{ image(example_images + "/expand_example_3.png", alt="expand example 3", width="70%") }}
 
 ## `expand_loose`
 

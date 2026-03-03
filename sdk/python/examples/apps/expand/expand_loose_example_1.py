@@ -75,4 +75,5 @@ def main(page: ft.Page):
     page.add(chat)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
