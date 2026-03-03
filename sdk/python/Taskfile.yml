@@ -56,6 +56,13 @@ tasks:
     cmds:
       - uv run --group test pytest packages/flet/tests
 
+  validate-flet-internal-deps:
+    desc: "Validate all internal flet dependencies are pinned to exact package version."
+    aliases:
+      - check-flet-deps
+    cmds:
+      - uv run python scripts/check_flet_internal_pins.py
+
   integration-tests:
     desc: "Run all integration tests. (can take a long while)"
     aliases:

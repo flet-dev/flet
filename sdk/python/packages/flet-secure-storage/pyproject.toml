@@ -6,7 +6,7 @@ authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "flet",
+    "flet ==0.1.0",
 ]
 
 [project.urls]
