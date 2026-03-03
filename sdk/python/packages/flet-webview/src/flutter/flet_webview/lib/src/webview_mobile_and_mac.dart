@@ -82,6 +82,7 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
     var params = const PlatformWebViewControllerCreationParams();
     controller = WebViewController.fromPlatformCreationParams(params);
 
+    controller.setJavaScriptMode(JavaScriptMode.unrestricted);
     controller.setNavigationDelegate(
       NavigationDelegate(
         onProgress: (int progress) {
