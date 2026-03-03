@@ -175,6 +175,8 @@ class TabBarViewControl extends StatelessWidget {
             clipBehavior:
                 control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
             viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
+            physics:
+                control.disabled ? const NeverScrollableScrollPhysics() : null,
             children: control.buildWidgets("controls"),
           ));
     }
@@ -295,7 +297,10 @@ class _TabBarControlState extends State<TabBarControl> {
           .getTextStyle("unselected_label_text_style", Theme.of(context));
       var splashBorderRadius =
           widget.control.getBorderRadius("splash_border_radius");
-      final tabs = widget.control.children("tabs").map((tab) {
+
+      final tabBarDisabled = widget.control.disabled;
+      final tabControls = widget.control.children("tabs");
+      final tabs = tabControls.map((tab) {
         // Ensure parent gets rebuilt when a tab becomes visible/invisible.
         tab.notifyParent = true;
 
@@ -310,10 +315,32 @@ class _TabBarControlState extends State<TabBarControl> {
       }).toList();
 
       void onTap(int index) {
+        if (tabBarDisabled ||
+            (index >= 0 &&
+                index < tabControls.length &&
+                tabControls[index].disabled)) {
+          final fallbackIndex = tabController.previousIndex
+              .clamp(0, tabController.length - 1)
+              .toInt();
+          if (fallbackIndex != tabController.index) {
+            // TabBar already requested the tap target via controller.animateTo().
+            // Restore the previous index so disabled tabs cannot be selected.
+            tabController.index = fallbackIndex;
+          }
+          return;
+        }
+
         widget.control.triggerEvent("click", index);
       }
 
       void onHover(bool hovering, int? index) {
+        if (tabBarDisabled ||
+            (index != null &&
+                index >= 0 &&
+                index < tabControls.length &&
+                tabControls[index].disabled)) {
+          return;
+        }
         widget.control
             .triggerEvent("hover", {"hovering": hovering, "index": index});
       }
@@ -383,7 +410,10 @@ class _TabBarControlState extends State<TabBarControl> {
             onHover: onHover);
       }
 
-      return BaseControl(control: widget.control, child: tabBar);
+      return BaseControl(
+        control: widget.control,
+        child: IgnorePointer(ignoring: tabBarDisabled, child: tabBar),
+      );
     } else {
       return const ErrorControl("TabBar must be used within a Tabs control");
     }
