@@ -97,6 +97,52 @@ async def test_disabled_propagates_to_children(flet_app: ftt.FletTestApp, reques
     )
 
 
+@pytest.mark.asyncio(loop_scope="function")
+async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.add(
+        ft.IconButton(
+            icon=ft.Icons.INFO_OUTLINED,
+            tooltip="Info tooltip",
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    finder = await flet_app_function.tester.find_by_tooltip("Info tooltip")
+    assert finder.count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_tooltip_hover_screenshot(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(420, 300)
+    flet_app_function.page.update()
+
+    flet_app_function.page.add(
+        ft.Container(
+            padding=100,
+            content=ft.IconButton(
+                key="info_btn",
+                icon=ft.Icons.INFO_OUTLINED,
+                tooltip=ft.Tooltip(message="Tooltip message"),
+            ),
+        )
+    )
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    button = await flet_app_function.tester.find_by_key("info_btn")
+    await flet_app_function.tester.mouse_hover(button)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        request.node.name,
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+
 @pytest.mark.asyncio(loop_scope="module")
 async def test_expand_row_remaining_space(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
