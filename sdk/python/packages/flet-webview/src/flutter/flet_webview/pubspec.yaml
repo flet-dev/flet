@@ -1,6 +1,6 @@
 name: flet_webview
 description: Flet WebView control
-version: 0.1.0
+version: 0.2.0
 publish_to: none
 
 environment:
