@@ -1,3 +1,9 @@
+## 0.82.0
+
+### Bug fixes
+
+* Enable Javascript support for Mobile devices
+
 ## 0.81.0
 
 ### New features
