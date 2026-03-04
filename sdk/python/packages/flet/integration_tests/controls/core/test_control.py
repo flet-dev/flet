@@ -97,6 +97,42 @@ async def test_disabled_propagates_to_children(flet_app: ftt.FletTestApp, reques
     )
 
 
+@pytest.mark.asyncio(loop_scope="module")
+async def test_badge(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            padding=10,
+            content=ft.Row(
+                spacing=20,
+                controls=[
+                    ft.Container(
+                        padding=10,
+                        content=ft.FilledIconButton(
+                            icon=ft.Icons.NOTIFICATIONS_OUTLINED,
+                            badge="3",
+                        ),
+                    ),
+                    ft.Container(
+                        padding=10,
+                        content=ft.FilledIconButton(
+                            icon=ft.Icons.MAIL_OUTLINED,
+                            badge=ft.Badge(
+                                label="99+",
+                                bgcolor=ft.Colors.RED_400,
+                                text_color=ft.Colors.WHITE,
+                                alignment=ft.Alignment(1, -1),
+                                offset=ft.Offset(-2, 2),
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+        ),
+    )
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(
