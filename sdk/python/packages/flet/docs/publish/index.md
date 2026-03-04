@@ -895,7 +895,9 @@ Both scheme and host are required; if either is missing, the deep-linking entrie
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+flet build <target_platform> \
+  --deep-linking-scheme "https" \
+  --deep-linking-host "mydomain.com"
 ```
 ///
 /// tab | `pyproject.toml`
@@ -998,9 +1000,6 @@ removes known junk files and any additional globs you specify.
       (implies `cleanup-packages`)
     * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
 
-`[tool.flet.compile].cleanup` (deprecated) enables both `cleanup-app` and
-`cleanup-packages` when set to `true`.
-
 By default, Flet does **not** compile your app files during packaging.
 This allows the build process to complete even if there are syntax errors,
 which can be useful for debugging or rapid iteration.
@@ -1032,7 +1031,9 @@ The values of `cleanup-app-files` and `cleanup-package-files` are respectively d
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --compile-app --compile-packages --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
+flet build <target_platform> \
+  --compile-app --compile-packages \
+  --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
 ```
 ///
 /// tab | `pyproject.toml`

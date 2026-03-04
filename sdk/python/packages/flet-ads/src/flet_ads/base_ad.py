@@ -1,14 +1,17 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 import flet as ft
 from flet_ads.types import AdRequest
 
 
-@ft.control
-class BaseAd(ft.Control):
+@dataclass(kw_only=True)
+class BaseAd(ft.BaseControl):
     """
-    Base class for all ad controls in Flet Ads package.
+    Base class for all Ad controls.
+
+    This class defines shared ad request and lifecycle event properties for
+    concrete ad controls/services.
 
     Raises:
         FletUnsupportedPlatformException: When using this control on a web

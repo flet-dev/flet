@@ -32,7 +32,7 @@ class Geolocator(ft.Service):
     """
     Fires when an error occurs.
 
-    The [`data`][flet.Event.data] property of the event
+    The [`data`][flet.Event.] property of the event
     handler argument contains information on the error.
     """
 
@@ -79,9 +79,6 @@ class Geolocator(ft.Service):
         The accuracy can be defined using the
         [`Geolocator.configuration`][(p).] property.
 
-        Note:
-            This method is not supported on web platform.
-
         Returns:
             The last known position of the device as a [`GeolocatorPosition`][(p).].
 
@@ -92,9 +89,7 @@ class Geolocator(ft.Service):
             raise ft.FletUnsupportedPlatformException(
                 "get_last_known_position is not supported on web"
             )
-        r = await self._invoke_method(
-            "get_last_known_position",
-        )
+        r = await self._invoke_method("get_last_known_position")
         return GeolocatorPosition(**r)
 
     async def get_permission_status(self) -> GeolocatorPermissionStatus:
@@ -116,9 +111,7 @@ class Geolocator(ft.Service):
         Returns:
             The status of the permission request.
         """
-        r = await self._invoke_method(
-            "request_permission",
-        )
+        r = await self._invoke_method("request_permission")
         return GeolocatorPermissionStatus(r)
 
     async def is_location_service_enabled(self) -> bool:
@@ -133,9 +126,6 @@ class Geolocator(ft.Service):
     async def open_app_settings(self) -> bool:
         """
         Attempts to open the app's settings.
-
-        Note:
-            This method is not supported on web platform.
 
         Returns:
             `True` if the app's settings were opened successfully, `False` otherwise.
@@ -155,9 +145,6 @@ class Geolocator(ft.Service):
         """
         Attempts to open the device's location settings.
 
-        Note:
-            This method is not supported on web platform.
-
         Returns:
             `True` if the device's settings were opened successfully, `False` otherwise.
 
@@ -168,9 +155,7 @@ class Geolocator(ft.Service):
             raise ft.FletUnsupportedPlatformException(
                 "open_location_settings is not supported on web"
             )
-        return await self._invoke_method(
-            "open_location_settings",
-        )
+        return await self._invoke_method("open_location_settings")
 
     async def distance_between(
         self,
