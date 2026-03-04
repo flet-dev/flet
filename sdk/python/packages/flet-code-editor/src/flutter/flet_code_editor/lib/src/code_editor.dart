@@ -170,7 +170,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       minOffset: 0,
       maxOffset: _controller.text.length,
     );
-    if (explicitSelection != null && explicitSelection != _controller.selection) {
+    if (explicitSelection != null &&
+        explicitSelection != _controller.selection) {
       _controller.selection = explicitSelection;
     }
 
@@ -186,8 +187,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
     final themeData = parseCodeThemeData(widget.control, context);
     final gutterStyle = parseGutterStyle(widget.control, context);
-    final autocompleteEnabled =
-        widget.control.getBool("autocomplete", false)!;
+    final autocompleteEnabled = widget.control.getBool("autocomplete", false)!;
     final autocompleteWords =
         _stringList(widget.control.get("autocomplete_words")) ?? const [];
     _controller.autocompletionEnabled = autocompleteEnabled;

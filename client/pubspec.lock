@@ -487,10 +487,11 @@ packages:
   flutter_code_editor:
     dependency: transitive
     description:
-      name: flutter_code_editor
-      sha256: "9af48ba8e3558b6ea4bb98b84c5eb1649702acf53e61a84d88383eeb79b239b0"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: pinyin-fix
+      resolved-ref: "9a6e13f012b34b8a0c219f165b87c6eeadf4c9a5"
+      url: "https://github.com/flet-dev/flutter-code-editor"
+    source: git
     version: "0.3.5"
   flutter_colorpicker:
     dependency: transitive
