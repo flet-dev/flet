@@ -34,7 +34,8 @@ def App():
     ft.context.page.fonts = {"Pacifico": "Pacifico-Regular.ttf"}
     ft.context.page.bgcolor = ft.Colors.BLUE_GREY_200
     if ft.context.page.route == "/":
-        ft.context.page.go("/boards")
+        asyncio.create_task(ft.context.page.push_route("/boards"))
+        # ft.context.page.go("/boards")
 
     def parse_board_id_from_route(route: str) -> Optional[int]:
         troute = ft.TemplateRoute(route)
@@ -57,7 +58,8 @@ def App():
         if e.route.startswith("/board/"):
             board_id = parse_board_id_from_route(e.route)
             if board_id is None or app.get_board_by_id(board_id) is None:
-                ft.context.page.go("/boards")
+                asyncio.create_task(ft.context.page.push_route("/boards"))
+                # ft.context.page.go("/boards")
                 app.active_screen = "boards"
                 app.current_board_id = None
                 app.route = "/boards"
@@ -78,7 +80,8 @@ def App():
                 app.active_screen = "board"
                 app.current_board_id = board_id
             case _:
-                ft.context.page.go("/boards")
+                asyncio.create_task(ft.context.page.push_route("/boards"))
+                # ft.context.page.go("/boards")
                 app.active_screen = "boards"
                 app.current_board_id = None
                 app.route = "/boards"
@@ -93,17 +96,7 @@ def App():
         if board_id is None or app.get_board_by_id(board_id) is None:
             asyncio.create_task(ft.context.page.push_route("/boards"))
 
-    ft.on_updated(redirect_unknown_board, [app.route])
-
-    # async def load_user():
-    #     try:
-    #         user = await ft.context.page.shared_preferences.get("current_user")
-    #         if user and not app.user:
-    #             app.user = user
-    #     except Exception:
-    #         return
-
-    # ft.use_effect(lambda: asyncio.create_task(load_user()), [])
+    # ft.on_updated(redirect_unknown_board, [app.route])
 
     ft.on_mounted(lambda: _init_demo_data(app))
 

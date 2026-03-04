@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 
 import flet as ft
 
@@ -21,15 +22,20 @@ def Sidebar(app: TrolliState):
 
     def top_nav_change(e: ft.Event[ft.NavigationRail]):
         if e.control.selected_index == 0:
-            ft.context.page.go("/boards")
+            asyncio.create_task(ft.context.page.push_route("/boards"))
+            # ft.context.page.go("/boards")
         elif e.control.selected_index == 1:
-            ft.context.page.go("/members")
+            asyncio.create_task(ft.context.page.push_route("/members"))
+            # ft.context.page.go("/members")
 
     def bottom_nav_change(e: ft.Event[ft.NavigationRail]):
         idx = e.control.selected_index
         if idx is None:
             return
-        ft.context.page.go(f"/board/{app.boards[idx].board_id}")
+        asyncio.create_task(
+            ft.context.page.push_route(f"/board/{app.boards[idx].board_id}")
+        )
+        # ft.context.page.go(f"/board/{app.boards[idx].board_id}")
 
     return ft.Container(
         width=200,

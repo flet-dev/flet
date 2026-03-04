@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 from models import TrolliState
@@ -40,8 +42,13 @@ def BoardsView(app: TrolliState):
                             controls=[
                                 ft.TextButton(
                                     b.name,
-                                    on_click=lambda _, b=b: ft.context.page.go(
-                                        f"/board/{b.board_id}"
+                                    # on_click=lambda _, b=b: ft.context.page.go(
+                                    #     f"/board/{b.board_id}"
+                                    # ),
+                                    on_click=lambda _, b=b: asyncio.create_task(
+                                        ft.context.page.push_route(
+                                            f"/board/{b.board_id}"
+                                        )
                                     ),
                                 ),
                                 ft.PopupMenuButton(

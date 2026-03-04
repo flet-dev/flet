@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 
 from typing import cast
 from dataclasses import dataclass
@@ -65,7 +66,7 @@ def show_login_dialog(app: TrolliState) -> None:
         ],
     )
     ft.context.page.show_dialog(dlg)
-    ft.context.page.update()
+    # ft.context.page.update()
 
 
 def show_settings_dialog(app: TrolliState) -> None:
@@ -89,7 +90,7 @@ def show_settings_dialog(app: TrolliState) -> None:
         ],
     )
     ft.context.page.show_dialog(dlg)
-    ft.context.page.update()
+    # ft.context.page.update()
 
 
 def show_new_board_dialog(app: TrolliState) -> None:
@@ -104,7 +105,8 @@ def show_new_board_dialog(app: TrolliState) -> None:
             return
         board = app.create_board(name)
         ft.context.page.pop_dialog()
-        ft.context.page.go(f"/board/{board.board_id}")
+        asyncio.create_task(ft.context.page.push_route(f"/board/{board.board_id}"))
+        # ft.context.page.go(f"/board/{board.board_id}")
 
     dlg = ft.AlertDialog(
         modal=True,
@@ -178,4 +180,3 @@ def show_new_list_dialog(board: Board) -> None:
         actions_alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
     )
     ft.context.page.show_dialog(dlg)
-    ft.context.page.update()

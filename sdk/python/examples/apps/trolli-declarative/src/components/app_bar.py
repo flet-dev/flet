@@ -24,7 +24,7 @@ def TrolliAppBar(app: TrolliState):
         bgcolor=ft.Colors.LIGHT_BLUE_ACCENT_700,
         actions=[
             ft.Container(
-                margin=ft.margin.only(left=50, right=25),
+                margin=ft.Margin.only(left=50, right=25),
                 content=ft.PopupMenuButton(
                     items=[
                         ft.PopupMenuItem(
