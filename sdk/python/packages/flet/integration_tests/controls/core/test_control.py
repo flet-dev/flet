@@ -133,6 +133,46 @@ async def test_badge(flet_app: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.asyncio(loop_scope="module")
+async def test_opacity(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            spacing=10,
+            controls=[
+                ft.Container(
+                    width=260,
+                    height=46,
+                    bgcolor=ft.Colors.BLUE_300,
+                    alignment=ft.Alignment.CENTER,
+                    border_radius=8,
+                    content=ft.Text("opacity=1.0"),
+                    opacity=1.0,
+                ),
+                ft.Container(
+                    width=260,
+                    height=46,
+                    bgcolor=ft.Colors.BLUE_300,
+                    alignment=ft.Alignment.CENTER,
+                    border_radius=8,
+                    content=ft.Text("opacity=0.6"),
+                    opacity=0.6,
+                ),
+                ft.Container(
+                    width=260,
+                    height=46,
+                    bgcolor=ft.Colors.BLUE_300,
+                    alignment=ft.Alignment.CENTER,
+                    border_radius=8,
+                    content=ft.Text("opacity=0.25"),
+                    opacity=0.25,
+                ),
+            ],
+        ),
+    )
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(
