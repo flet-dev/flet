@@ -1,3 +1,25 @@
+## 0.82.0
+
+### New features
+
+* Add Auth0 `audience` support through OAuth `authorization_params` ([#3775](https://github.com/flet-dev/flet/issues/3775), [#6205](https://github.com/flet-dev/flet/pull/6205)).
+* Add `Map.get_camera()`, `MapEventType`, and richer `MapEvent` payloads in `flet-map` ([#6196](https://github.com/flet-dev/flet/issues/6196), [#6208](https://github.com/flet-dev/flet/pull/6208)).
+
+### Improvements
+
+* Refactor ads controls: `InterstitialAd` is now a `Service`, and `BannerAd` is now a `LayoutControl` ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
+* Improve `CodeEditor` with Chinese pinyin input support and aligned gutter rendering ([#6211](https://github.com/flet-dev/flet/issues/6211), [#6243](https://github.com/flet-dev/flet/issues/6243), [#6244](https://github.com/flet-dev/flet/pull/6244)).
+
+### Bug fixes
+
+* Fix disabled-state handling across `Tabs`, `TabBar`, `Tab`, and `TabBarView` ([#6220](https://github.com/flet-dev/flet/issues/6220), [#6224](https://github.com/flet-dev/flet/pull/6224)).
+* Fix a `WebView` null-check crash (`Null check operator used on a null value`) ([#6238](https://github.com/flet-dev/flet/pull/6238)).
+
+### Other changes
+
+* Pin internal Flet package dependencies across all Flet packages ([#6222](https://github.com/flet-dev/flet/issues/6222), [#6247](https://github.com/flet-dev/flet/pull/6247)).
+* Update Flutter to 3.41.4 and refresh dependencies.
+
 ## 0.81.0
 
 ### New features
