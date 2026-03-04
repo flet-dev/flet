@@ -1,9 +1,23 @@
 import asyncio
-from typing import Optional, cast
+from typing import Callable, Optional, cast
 
 import httpx
 
 import flet as ft
+
+
+# ---------- REUSABLE DIALOG HOOK ----------
+def use_dialog(dialog_factory: Callable[[], ft.AlertDialog]) -> Callable[[], None]:
+    dlg_ref = ft.use_ref(cast(Optional[ft.AlertDialog], None))
+
+    if dlg_ref.current is None:
+        dlg_ref.current = dialog_factory()
+
+    def open_dialog():
+        if dlg_ref.current:
+            ft.context.page.show_dialog(dlg_ref.current)
+
+    return open_dialog
 
 
 # ---------- DIALOG COMPONENT ----------
@@ -49,20 +63,15 @@ def UserDialogContent():
 # ---------- PARENT COMPONENT ----------
 @ft.component
 def App():
-    dlg_ref = ft.use_ref(cast(Optional[ft.AlertDialog], None))
-
-    if dlg_ref.current is None:
-        dlg_ref.current = ft.AlertDialog(
+    open_user_dialog = use_dialog(
+        lambda: ft.AlertDialog(
             modal=True,
             title=ft.Text("User Information"),
             content=UserDialogContent(),
             actions=[ft.TextButton("Close", on_click=lambda e: e.page.pop_dialog())],
             actions_alignment=ft.MainAxisAlignment.END,
         )
-
-    def open_user_dialog():
-        if dlg_ref.current:
-            ft.context.page.show_dialog(dlg_ref.current)
+    )
 
     return ft.Container(
         padding=20,
