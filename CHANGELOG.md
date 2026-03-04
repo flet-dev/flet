@@ -19,7 +19,7 @@
 ### Other changes
 
 * Pin internal Flet package dependencies across all Flet packages ([#6222](https://github.com/flet-dev/flet/issues/6222), [#6247](https://github.com/flet-dev/flet/pull/6247)).
-* Update Flutter to 3.41.4 and refresh dependencies.
+* Update Flutter to 3.41.4 and refresh dependencies ([#6245](https://github.com/flet-dev/flet/issues/6245)).
 
 ## 0.81.0
 
