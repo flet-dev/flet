@@ -225,6 +225,58 @@ async def test_rtl(flet_app: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.asyncio(loop_scope="module")
+async def test_col(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=520,
+            padding=10,
+            border=ft.Border.all(1, ft.Colors.BLUE_GREY_200),
+            border_radius=8,
+            content=ft.ResponsiveRow(
+                run_spacing=8,
+                spacing=8,
+                controls=[
+                    ft.Container(
+                        col=6,
+                        height=52,
+                        bgcolor=ft.Colors.CYAN_300,
+                        border_radius=8,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text("col=6"),
+                    ),
+                    ft.Container(
+                        col=6,
+                        height=52,
+                        bgcolor=ft.Colors.AMBER_300,
+                        border_radius=8,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text("col=6"),
+                    ),
+                    ft.Container(
+                        col={"sm": 4, "md": 3},
+                        height=52,
+                        bgcolor=ft.Colors.PINK_200,
+                        border_radius=8,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text('col={"sm":4,"md":3}'),
+                    ),
+                    ft.Container(
+                        col={"sm": 8, "md": 9},
+                        height=52,
+                        bgcolor=ft.Colors.GREEN_200,
+                        border_radius=8,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text('col={"sm":8,"md":9}'),
+                    ),
+                ],
+            ),
+        ),
+    )
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(
