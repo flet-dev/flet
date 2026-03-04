@@ -173,6 +173,58 @@ async def test_opacity(flet_app: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.asyncio(loop_scope="module")
+async def test_rtl(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            spacing=12,
+            controls=[
+                ft.Container(
+                    width=320,
+                    border=ft.Border.all(1, ft.Colors.BLUE_GREY_200),
+                    padding=10,
+                    content=ft.Row(
+                        alignment=ft.MainAxisAlignment.START,
+                        controls=[
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.RED_300
+                            ),
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.GREEN_300
+                            ),
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.BLUE_300
+                            ),
+                        ],
+                    ),
+                ),
+                ft.Container(
+                    width=320,
+                    border=ft.Border.all(1, ft.Colors.BLUE_GREY_200),
+                    padding=10,
+                    content=ft.Row(
+                        rtl=True,
+                        alignment=ft.MainAxisAlignment.START,
+                        controls=[
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.RED_300
+                            ),
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.GREEN_300
+                            ),
+                            ft.Container(
+                                width=44, height=30, bgcolor=ft.Colors.BLUE_300
+                            ),
+                        ],
+                    ),
+                ),
+            ],
+        ),
+    )
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(
