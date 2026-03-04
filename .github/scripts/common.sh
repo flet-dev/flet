@@ -15,6 +15,7 @@ function patch_python_package_versions() (
         echo "Skipping version patch: $version_py not found"
       fi
       uv version --package "$pkg" "$PYPI_VER"
+      uv run "$SCRIPTS/patch_toml_versions.py" "packages/$pkg/pyproject.toml" "$PYPI_VER"
       echo "Patched version for $pkg to $PYPI_VER"
     done
 
