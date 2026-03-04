@@ -9,6 +9,7 @@
 
 * Refactor ads controls: `InterstitialAd` is now a `Service`, and `BannerAd` is now a `LayoutControl` ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
 * Improve `CodeEditor` with Chinese pinyin input support and aligned gutter rendering ([#6211](https://github.com/flet-dev/flet/issues/6211), [#6243](https://github.com/flet-dev/flet/issues/6243), [#6244](https://github.com/flet-dev/flet/pull/6244)).
+* Add the `Trolli` app declarative example rewrite ([#6242](https://github.com/flet-dev/flet/pull/6242)).
 
 ### Bug fixes
 
