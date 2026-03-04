@@ -5,7 +5,7 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-  "flet==0.80.5"
+  "flet==0.81.0"
 ]
 
 

@@ -1,14 +1,11 @@
 import asyncio
 import logging
-from pathlib import Path
 from typing import Optional
-import os
-import flet as ft
 
+from components import BoardsView, BoardView, Sidebar, TrolliAppBar
 from models import TrolliState
 
-from components import BoardView, BoardsView, Sidebar, TrolliAppBar, dialogs
-
+import flet as ft
 
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("flet_components").setLevel(logging.INFO)
@@ -159,7 +156,4 @@ def App():
     )
 
 
-ft.run(
-    lambda page: page.render(App),
-    assets_dir=str(Path(__file__).resolve().parent.parent / "assets"),
-)
+ft.run(lambda page: page.render(App))
