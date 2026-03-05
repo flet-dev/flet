@@ -15,9 +15,8 @@ self.initPyodide = async function () {
         self.pyodide.globals.set("python_module_name", self.pythonModuleName);
         self.pyodide.globals.set("micropip_include_pre", self.micropipIncludePre);
         flet_js.documentUrl = documentUrl;
-        await self.pyodide.loadPackage("micropip");
         await self.pyodide.runPythonAsync(`
-        import flet_js, micropip, os, runpy, sys, traceback
+        import flet_js, os, runpy, sys, traceback
         from pyodide.http import pyfetch
 
         py_args = flet_js.args.to_py() if flet_js.args else None
@@ -57,13 +56,25 @@ self.initPyodide = async function () {
             print(f"Adding {pkgs_path} to sys.path")
             sys.path.insert(0, pkgs_path)
 
+        async def ensure_micropip():
+            try:
+                import micropip
+            except Exception:
+                import pyodide_js
+                await pyodide_js.loadPackage('micropip')
+
         if os.path.exists("requirements.txt"):
+            await ensure_micropip()
+            import micropip
             with open("requirements.txt", "r") as f:
                 deps = [line.rstrip() for line in f]
-                print("Loading requirements.txt:", deps)
-                await micropip.install(deps, pre=micropip_include_pre)
+                if deps:
+                    print("Loading requirements.txt:", deps)
+                    await micropip.install(deps, pre=micropip_include_pre)
 
         if "dependencies" in py_args:
+            await ensure_micropip()
+            import micropip
             await micropip.install(py_args["dependencies"], pre=micropip_include_pre)
 
         # Execute app
