@@ -404,7 +404,7 @@ More information [here](https://developer.android.com/guide/topics/manifest/uses
 - `name`: Specifies a single hardware or software feature used by the application as a descriptor string.
     Valid attribute values are listed in the Hardware features and Software features sections.
     These attribute values are case-sensitive.
-- `required`: A boolean value (`True` or `False`) that indicates whether the application requires the feature specified by the `name`.
+- `required`: A boolean value (`true` or `false`) that indicates whether the application requires the feature specified by the `name`.
 
 #### Resolution order
 
@@ -415,11 +415,17 @@ Its value is determined in the following order of precedence:
 3. [`Permissions`](index.md#permissions)
 4. defaults: `android.software.leanback=false`, `android.hardware.touchscreen=false`
 
+/// admonition | Boolean values
+    type: note
+CLI accepts values `true` or `false` (case-insensitive). However, boolean
+values in `pyproject.toml` must always be in lowercase, as required by TOML syntax.
+///
+
 #### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk --android-features android.hardware.camera=True android.hardware.location.gps=False
+flet build apk --android-features android.hardware.camera=true android.hardware.location.gps=false
 ```
 ///
 /// tab | `pyproject.toml`
@@ -453,7 +459,11 @@ Its value is determined in the following order of precedence:
 3. [`--permissions`](index.md#permissions) / `[tool.flet].permissions`
 4. defaults: `android.permission.INTERNET=true`
 
-CLI values are `True` or `False` (case-sensitive). In `pyproject.toml`, use `true`/`false`.
+/// admonition | Boolean values
+    type: note
+CLI accepts values `true` or `false` (case-insensitive). However, boolean
+values in `pyproject.toml` must always be in lowercase, as required by TOML syntax.
+///
 
 #### Example
 

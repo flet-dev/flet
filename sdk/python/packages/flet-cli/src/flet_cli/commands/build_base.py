@@ -509,7 +509,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="macos_entitlements",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` entitlements for "
+            help="The list of `<key>=<value>|true|false` entitlements for "
             "macOS builds (macos only)",
         )
         parser.add_argument(
@@ -517,7 +517,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="android_features",
             nargs="+",
             default=[],
-            help="The list of `<feature_name>=True|False` features to add to "
+            help="The list of `<feature_name>=true|false` features to add to "
             "AndroidManifest.xml for Android builds (android only)",
         )
         parser.add_argument(
@@ -525,7 +525,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="android_permissions",
             nargs="+",
             default=[],
-            help="The list of `<permission_name>=True|False` permissions to add to "
+            help="The list of `<permission_name>=true|false` permissions to add to "
             "AndroidManifest.xml for Android builds (android only)",
         )
         parser.add_argument(
@@ -868,7 +868,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.macos_entitlements:
             i = p.find("=")
             if i > -1:
-                macos_entitlements[p[:i]] = p[i + 1 :] == "True"
+                macos_entitlements[p[:i]] = p[i + 1 :].strip().lower() == "true"
             else:
                 self.cleanup(1, f"Invalid macOS entitlement option: {p}")
 
@@ -881,7 +881,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_permissions:
             i = p.find("=")
             if i > -1:
-                android_permissions[p[:i]] = p[i + 1 :] == "True"
+                android_permissions[p[:i]] = p[i + 1 :].strip().lower() == "true"
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
@@ -894,7 +894,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_features:
             i = p.find("=")
             if i > -1:
-                android_features[p[:i]] = p[i + 1 :] == "True"
+                android_features[p[:i]] = p[i + 1 :].strip().lower() == "true"
             else:
                 self.cleanup(1, f"Invalid Android feature option: {p}")
 
