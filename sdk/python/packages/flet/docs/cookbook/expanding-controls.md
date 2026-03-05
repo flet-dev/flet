@@ -27,23 +27,23 @@ In this example, a [`TextField`][flet.TextField] stretches to fill all remaining
 while the [`Button`][flet.Button] stays sized to its content:
 
 ```python
---8<-- "{{ examples }}/expand_example_1.py"
+--8<-- "{{ examples }}/expand_textfield_in_row.py"
 ```
 
-{{ image(example_images + "/expand_example_1.png", alt="expand example 1", width="70%") }}
+{{ image(example_images + "/expand_textfield_in_row.png", alt="expand textfield in row", width="70%") }}
 
 ### Example 2
 
 In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Container]s, distributed like 20% / 60% / 20%:
 
 ```python
---8<-- "{{ examples }}/expand_example_2.py"
+--8<-- "{{ examples }}/expand_row_proportional_1_3_1.py"
 ```
 
 Here, the available space is split into 5 total parts (1+3+1).
 The first and third containers get 1 part each (20%), and the middle one gets 3 parts (60%).
 
-{{ image(example_images + "/expand_example_2.png", alt="expand example 2", width="70%") }}
+{{ image(example_images + "/expand_row_proportional_1_3_1.png", alt="expand row proportional 1 3 1", width="70%") }}
 
 ### Example 3
 
@@ -54,10 +54,10 @@ The layout uses a parent [`Container`][flet.Container] and a nested row, where b
 expanded equally, resulting in a 50/50 split.
 
 ```python
---8<-- "{{ examples }}/expand_example_3.py"
+--8<-- "{{ examples }}/expand_row_equal_split.py"
 ```
 
-{{ image(example_images + "/expand_example_3.png", alt="expand example 3", width="70%") }}
+{{ image(example_images + "/expand_row_equal_split.png", alt="expand row equal split", width="70%") }}
 
 ## `expand_loose`
 
@@ -81,7 +81,7 @@ or any of their subclasses: [`Row`][flet.Row], [`Column`][flet.Column], [`View`]
 In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row]s with `expand_loose = True`:
 
 ```python
---8<-- "{{ examples }}/expand_loose_example_1.py"
+--8<-- "{{ examples }}/expand_loose_chat_messages.py"
 ```
 
-{{ image(example_images + "/expand_loose_example_1.png", alt="expand loose example 1", width="70%") }}
+{{ image(example_images + "/expand_loose_chat_messages.png", alt="expand loose chat messages", width="70%") }}
