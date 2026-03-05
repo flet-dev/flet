@@ -49,4 +49,15 @@ example_media: ../examples/controls/image/media
 --8<-- "{{ examples }}/lucide_icons.py"
 ```
 
+### Gapless playback when changing image sources
+
+This example updates both images to a new network URL on each click. With
+[`gapless_playback`][flet.Image.gapless_playback] set to `True`, the previous frame remains visible while the next
+image loads. With [`gapless_playback`][flet.Image.gapless_playback] set to `False`, the image area can
+briefly be empty, causing a flicker/blink effect.
+
+```python
+--8<-- "{{ examples }}/gapless_playback.py"
+```
+
 {{ class_members(class_name) }}

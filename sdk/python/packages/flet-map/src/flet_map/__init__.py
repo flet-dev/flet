@@ -27,6 +27,7 @@ from flet_map.types import (
     KeyboardConfiguration,
     MapEvent,
     MapEventSource,
+    MapEventType,
     MapHoverEvent,
     MapLatitudeLongitude,
     MapLatitudeLongitudeBounds,
@@ -39,6 +40,7 @@ from flet_map.types import (
     StrokePattern,
     TileDisplay,
     TileLayerEvictErrorTileStrategy,
+    WMSTileLayerConfiguration,
 )
 
 __all__ = [
@@ -60,6 +62,7 @@ __all__ = [
     "Map",
     "MapEvent",
     "MapEventSource",
+    "MapEventType",
     "MapHoverEvent",
     "MapLatitudeLongitude",
     "MapLatitudeLongitudeBounds",
@@ -84,4 +87,5 @@ __all__ = [
     "TileDisplay",
     "TileLayer",
     "TileLayerEvictErrorTileStrategy",
+    "WMSTileLayerConfiguration",
 ]

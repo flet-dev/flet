@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from flet.auth.group import Group
 
+__all__ = ["User"]
+
 
 class User(dict):
     """

@@ -17,7 +17,10 @@ Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/fle
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_camera" = ["**/*"]
+"flutter.flet_camera" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

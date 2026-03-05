@@ -3,6 +3,8 @@ from typing import Optional
 
 from flet.controls.embed_json_encoder import EmbedJsonEncoder
 
+__all__ = ["OAuthToken"]
+
 
 class OAuthToken:
     """

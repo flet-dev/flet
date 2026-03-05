@@ -300,6 +300,12 @@ class TextStyle:
     See https://docs.flet.dev/controls/text#font_family.
     """
 
+    font_family_fallback: Optional[list[str]] = None
+    """
+    Ordered fallback font families to use when glyphs are not available in
+    [`font_family`][(c).].
+    """
+
     color: Optional[ColorValue] = None
     """
     Text foreground https://docs.flet.dev/types/colors.
@@ -355,6 +361,7 @@ class TextStyle:
         decoration_thickness: Optional[Number] = None,
         decoration_style: Optional[TextDecorationStyle] = None,
         font_family: Optional[str] = None,
+        font_family_fallback: Optional[list[str]] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
         shadow: Optional[BoxShadowValue] = None,
@@ -383,6 +390,9 @@ class TextStyle:
             if decoration_style is not None
             else self.decoration_style,
             font_family=font_family if font_family is not None else self.font_family,
+            font_family_fallback=font_family_fallback
+            if font_family_fallback is not None
+            else self.font_family_fallback,
             color=color if color is not None else self.color,
             bgcolor=bgcolor if bgcolor is not None else self.bgcolor,
             shadow=shadow if shadow is not None else self.shadow,

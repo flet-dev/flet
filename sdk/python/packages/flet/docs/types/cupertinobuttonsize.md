@@ -1,1 +1,16 @@
-{{ class_all_options("flet.CupertinoButtonSize", separate_signature=False) }}
+---
+class_name: flet.CupertinoButtonSize
+examples: ../../examples/controls/types/cupertino_button_size
+---
+
+{{ class_summary(class_name) }}
+
+## Examples
+
+### Showcase
+
+```python
+--8<-- "{{ examples }}/showcase.py"
+```
+
+{{ class_members(class_name, separate_signature=False) }}

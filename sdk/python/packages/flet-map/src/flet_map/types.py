@@ -23,6 +23,7 @@ __all__ = [
     "KeyboardConfiguration",
     "MapEvent",
     "MapEventSource",
+    "MapEventType",
     "MapHoverEvent",
     "MapLatitudeLongitude",
     "MapLatitudeLongitudeBounds",
@@ -35,6 +36,7 @@ __all__ = [
     "StrokePattern",
     "TileDisplay",
     "TileLayerEvictErrorTileStrategy",
+    "WMSTileLayerConfiguration",
 ]
 
 
@@ -615,7 +617,7 @@ class MapEventSource(Enum):
     while performing the double tap zoom in animation.
     """
 
-    INTERACTIVE_FLAGS_CHANGED = "InteractionFlagsChanged"
+    INTERACTIVE_FLAGS_CHANGED = "interactiveFlagsChanged"
     """The `MapEvent` is caused by a change of the interactive flags."""
 
     FIT_CAMERA = "fitCamera"
@@ -638,6 +640,67 @@ class MapEventSource(Enum):
     The `MapEvent` is caused by a keyboard key.
     See [`KeyboardConfiguration`][(p).] for details.
     """
+
+
+class MapEventType(Enum):
+    """Concrete subtype of a [`MapEvent`][(p).]."""
+
+    TAP = "tap"
+    """A map tap event."""
+
+    SECONDARY_TAP = "secondaryTap"
+    """A secondary tap event."""
+
+    LONG_PRESS = "longPress"
+    """A long press event."""
+
+    MOVE = "move"
+    """A camera move update event."""
+
+    MOVE_START = "moveStart"
+    """The start of a move gesture/interaction."""
+
+    MOVE_END = "moveEnd"
+    """The end of a move gesture/interaction."""
+
+    FLING_ANIMATION = "flingAnimation"
+    """A fling animation update event."""
+
+    FLING_ANIMATION_NOT_STARTED = "flingAnimationNotStarted"
+    """A fling was evaluated but not started."""
+
+    FLING_ANIMATION_START = "flingAnimationStart"
+    """The start of a fling animation."""
+
+    FLING_ANIMATION_END = "flingAnimationEnd"
+    """The end of a fling animation."""
+
+    DOUBLE_TAP_ZOOM = "doubleTapZoom"
+    """A double tap zoom update event."""
+
+    SCROLL_WHEEL_ZOOM = "scrollWheelZoom"
+    """A scroll wheel zoom update event."""
+
+    DOUBLE_TAP_ZOOM_START = "doubleTapZoomStart"
+    """The start of a double tap zoom animation."""
+
+    DOUBLE_TAP_ZOOM_END = "doubleTapZoomEnd"
+    """The end of a double tap zoom animation."""
+
+    ROTATE = "rotate"
+    """A map rotation update event."""
+
+    ROTATE_START = "rotateStart"
+    """The start of a rotation interaction."""
+
+    ROTATE_END = "rotateEnd"
+    """The end of a rotation interaction."""
+
+    NON_ROTATED_SIZE_CHANGE = "nonRotatedSizeChange"
+    """A map constraint/size-change event."""
+
+    UNKNOWN = "unknown"
+    """Fallback value for unrecognized map event types."""
 
 
 @dataclass
@@ -755,8 +818,37 @@ class MapEvent(ft.Event["Map"]):
     source: MapEventSource
     """Who/what issued the event."""
 
+    event_type: MapEventType
+    """
+    Concrete subtype of this map event.
+    """
+
     camera: Camera
-    """The map camera after the event."""
+    """The camera state after the event."""
+
+    old_camera: Optional[Camera] = None
+    """
+    Camera state before the event.
+
+    Set only for [`MapEventType.MOVE`][(p).], [`MapEventType.FLING_ANIMATION`][(p).],
+    [`MapEventType.DOUBLE_TAP_ZOOM`][(p).], [`MapEventType.SCROLL_WHEEL_ZOOM`][(p).],
+    [`MapEventType.ROTATE`][(p).], and [`MapEventType.NON_ROTATED_SIZE_CHANGE`][(p).].
+    """
+
+    coordinates: Optional[MapLatitudeLongitude] = None
+    """
+    Tap/press coordinates associated with this event.
+
+    Set only for [`MapEventType.TAP`][(p).], [`MapEventType.SECONDARY_TAP`][(p).], and
+    [`MapEventType.LONG_PRESS`][(p).].
+    """
+
+    id: Optional[str] = None
+    """
+    Optional custom identifier associated with this event.
+
+    Set only for [`MapEventType.MOVE`][(p).] and [`MapEventType.ROTATE`][(p).].
+    """
 
 
 @dataclass
@@ -1083,3 +1175,32 @@ class CursorKeyboardRotationConfiguration:
     def disabled(cls) -> "CursorKeyboardRotationConfiguration":
         """A disabled `CursorKeyboardRotationConfiguration`."""
         return CursorKeyboardRotationConfiguration(trigger_keys=[])
+
+
+@dataclass
+class WMSTileLayerConfiguration:
+    """Configuration for a WMS [`TileLayer`][(p).]."""
+
+    base_url: str
+    """WMS service's URL, for example `http://ows.mundialis.de/services/service?`"""
+
+    format: str = "image/png"
+    """WMS image format (use 'image/png' for layers with transparency)."""
+
+    version: str = "1.1.1"
+    """Version of the WMS service to use."""
+
+    uppercase_bool_value: bool = False
+    """Encode boolean values as uppercase in request."""
+
+    transparent: bool = True
+    """Whether to make tiles transparent."""
+
+    layers: list[str] = field(default_factory=list)
+    """List of WMS layers to show."""
+
+    styles: list[str] = field(default_factory=list)
+    """List of WMS styles."""
+
+    additional_parameters: dict[str, str] = field(default_factory=dict)
+    """Additional request parameters."""

@@ -11,7 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_code_editor: ^0.3.1
+  flutter_code_editor:
+    git:
+      url: https://github.com/flet-dev/flutter-code-editor
+      ref: pinyin-fix
+
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
 

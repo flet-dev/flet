@@ -61,6 +61,7 @@ class TileLayerControl extends StatelessWidget {
               .get<Map>("additional_options")
               ?.map((k, v) => MapEntry(k.toString(), v.toString())) ??
           const {},
+      wmsOptions: parseWMSTileLayerOptions(control.get("wms_configuration")),
     );
 
     return LayoutControl(control: control, child: tileLayer);

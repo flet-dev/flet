@@ -4,20 +4,22 @@
 
 """
 Patches a Dart/Flutter `pubspec.yaml` file to:
-    - Set the `version:` field to a given value.
+    - Optionally set the `version:` field to a given value.
     - Pin selected dependencies in the `dependencies:` section to the same version.
 
 Dependencies patched:
     - flet
 
 Usage:
-    uv run patch_pubspec_version.py <pubspec> <version>
+    uv run patch_pubspec_version.py <pubspec> <version> [--dependencies-only]
 
 Arguments:
-    pubspec         Path to the pubspec.yaml file to patch.
-    version         Version string to set.
+    pubspec                 Path to the pubspec.yaml file to patch.
+    version                 Version string to set.
+    --dependencies-only     Patch only dependencies without changing package `version:`.
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -25,12 +27,20 @@ import yaml
 
 
 def main() -> None:
-    if not (len(sys.argv) >= 3):
-        print("Usage: uv run patch_pubspec_version.py <pubspec.yaml> <version>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Patch pubspec version and/or selected dependencies."
+    )
+    parser.add_argument("pubspec", help="Path to pubspec.yaml")
+    parser.add_argument("version", help="Version string to apply")
+    parser.add_argument(
+        "--dependencies-only",
+        action="store_true",
+        help="Patch only dependencies without changing package version.",
+    )
+    args = parser.parse_args()
 
-    pubspec_path = Path(sys.argv[1]).resolve()
-    version = sys.argv[2]
+    pubspec_path = Path(args.pubspec).resolve()
+    version = args.version
 
     if not pubspec_path.exists():
         print(f"Error: File not found: {pubspec_path}")
@@ -42,7 +52,8 @@ def main() -> None:
         data = yaml.safe_load(f)
 
     # patch version
-    data["version"] = version
+    if not args.dependencies_only:
+        data["version"] = version
 
     # patch dependencies
     for dep in ["flet"]:
