@@ -3,10 +3,6 @@ import secrets
 import time
 from typing import Optional
 
-import httpx
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
-
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
@@ -95,6 +91,8 @@ class AuthorizationService(Authorization):
             A tuple of `(authorization_url, state)`.
         """
 
+        from oauthlib.oauth2 import WebApplicationClient
+
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
         authorization_url = client.prepare_request_uri(
@@ -118,6 +116,9 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
         """
+
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
 
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
@@ -165,7 +166,7 @@ class AuthorizationService(Authorization):
                     self.__token.access_token
                 )
 
-    def __convert_token(self, t: OAuth2Token):
+    def __convert_token(self, t):
         """
         Convert oauthlib token mapping to [`OAuthToken`][(p).oauth_token.].
 
@@ -204,6 +205,9 @@ class AuthorizationService(Authorization):
         ):
             return None
 
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
+
         assert self.__token is not None
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_refresh_body(
@@ -239,6 +243,8 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If user endpoint request fails.
         """
+
+        import httpx
 
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
