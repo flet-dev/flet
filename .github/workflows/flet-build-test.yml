@@ -205,6 +205,15 @@ jobs:
           echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
           uv run ${{ matrix.build_cmd }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
 
+      - name: Smoke test flet serve for web builds
+        if: startsWith(matrix.name, 'web-')
+        shell: bash
+        run: |
+          uv run --directory sdk/python/examples/apps/flet_build_test \
+            python "${{ github.workspace }}/.github/scripts/smoke_test_flet_serve.py" \
+            --web-root "${{ github.workspace }}/sdk/python/examples/apps/flet_build_test/build/web" \
+            --log-file "${{ github.workspace }}/sdk/python/examples/apps/flet_build_test/flet-serve-smoke.log"
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
         with:
