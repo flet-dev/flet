@@ -75,7 +75,7 @@ class AuthorizationService(Authorization):
         await self.__refresh_token()
         await self.__fetch_user_and_groups()
 
-    async def get_token(self):
+    async def get_token(self) -> Optional[OAuthToken]:
         """
         Return current token after applying refresh logic when required.
 
