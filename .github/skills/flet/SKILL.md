@@ -1,4 +1,10 @@
-# SKILLS.md — Building Apps with Flet
+---
+name: flet
+description: Build multi-platform apps (iOS, Android, Windows, Linux, macOS, Web) in Python using Flet. Use when creating, debugging, or extending Flet apps — covers installation, controls, layout, navigation, theming, async, state, packaging, and custom extensions.
+license: Apache-2.0
+---
+
+# Building Apps with Flet
 
 > **Framework:** [Flet](https://flet.dev) — Build multi-platform apps in Python
 > **Docs:** [docs.flet.dev](https://docs.flet.dev/)
