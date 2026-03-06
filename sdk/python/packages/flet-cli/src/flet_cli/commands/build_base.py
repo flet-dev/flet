@@ -502,15 +502,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
-            "for macOS and iOS builds (macos, ipa and ios-simulator only)",
+            "(macos, ipa and ios-simulator only)",
         )
         parser.add_argument(
             "--macos-entitlements",
             dest="macos_entitlements",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|true|false` entitlements for "
-            "macOS builds (macos only)",
+            help="The list of `<key>=<value>|true|false` entitlements (macos only)",
         )
         parser.add_argument(
             "--android-features",
@@ -518,7 +517,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<feature_name>=true|false` features to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            "AndroidManifest.xml (android only)",
         )
         parser.add_argument(
             "--android-permissions",
@@ -526,7 +525,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<permission_name>=true|false` permissions to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            "AndroidManifest.xml (android only)",
         )
         parser.add_argument(
             "--android-meta-data",
@@ -534,7 +533,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<name>=<value>` app meta-data entries to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            "AndroidManifest.xml (android only)",
         )
         parser.add_argument(
             "--permissions",

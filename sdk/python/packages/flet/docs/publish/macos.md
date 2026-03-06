@@ -65,25 +65,113 @@ These values are written to `macos/Runner/Info.plist` of the [build project](ind
 Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
-2. `[tool.flet.macos].info`
+2. `[tool.flet.macos.info]`
 3. Values injected by [`permissions`](index.md#permissions)
 
-CLI booleans must be `True` or `False` (case-sensitive). For lists or nested
-structures, use TOML in `[tool.flet.macos].info`.
+#### Supported value forms
+
+CLI (`--info-plist`) accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- any other value is treated as a string
+
+However, the TOML configuration (via `[tool.flet.macos.info]`), supports both simple
+and complex structures:
+
+- string
+- boolean
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of dictionaries (including dictionaries that contain arrays)
+
+Numbers and null values are not supported in `Info.plist` rendering for this setting.
 
 #### Example
 
 /// tab | `flet build`
-```
-flet build macos --info-plist LSApplicationCategoryType="public.app-category.utilities"
+```bash
+flet build macos \
+  --info-plist LSApplicationCategoryType="public.app-category.utilities" \
+  --info-plist NSHighResolutionCapable=true
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.macos.info]
 LSApplicationCategoryType = "public.app-category.utilities"
+NSSupportsSuddenTermination = true
+SupportedModes = ["basic", "advanced"]
+FeatureFlags = [true, false]
+NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
+
+[[tool.flet.macos.info.CFBundleDocumentTypes]]
+CFBundleTypeName = "Data File"
+CFBundleTypeExtensions = ["dat"]
+
+[[tool.flet.macos.info.CFBundleDocumentTypes]]
+CFBundleTypeName = "JSON File"
+CFBundleTypeExtensions = ["json"]
 ```
 ///
+
+In the [`macos/Runner/Info.plist`](index.md#build-template), the `pyproject.toml`
+example above will be translated accordingly into this:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.utilities</string>
+
+        <key>NSSupportsSuddenTermination</key>
+        <true/>
+
+        <key>SupportedModes</key>
+        <array>
+            <string>basic</string>
+            <string>advanced</string>
+        </array>
+
+        <key>FeatureFlags</key>
+        <array>
+            <true/>
+            <false/>
+        </array>
+
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <false/>
+        </dict>
+
+        <key>CFBundleDocumentTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeName</key>
+                <string>Data File</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>dat</string>
+                </array>
+            </dict>
+            <dict>
+                <key>CFBundleTypeName</key>
+                <string>JSON File</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>json</string>
+                </array>
+            </dict>
+        </array>
+
+	</dict>
+</plist>
+```
 
 ### Entitlements
 
@@ -111,8 +199,8 @@ Its value is determined in the following order of precedence:
     "com.apple.security.files.user-selected.read-write" = true
     ```
 
-CLI values are `True` or `False` (case-sensitive). In `pyproject.toml`, use
-`true`/`false`.
+CLI values are `true` or `false` (case-insensitive). In `pyproject.toml`, use
+`true`/`false` as required by TOML.
 
 #### Example
 
