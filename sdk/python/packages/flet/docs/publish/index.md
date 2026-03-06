@@ -1549,7 +1549,7 @@ This creates a version mismatch/incompatibility for apps packaged with `flet bui
 * The packaged Flutter shell may still be using an older stable `flet` version.
 * At runtime, the app fails because the Flutter layer does not recognize the new controls/features in your prerelease `flet` package, leading to errors like `Unknown control: <ControlName>`.
 
-**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started#running-app)),
+**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started/running-app.md)),
 as the `flet` Flutter dependency is only resolved during the `flet build` process.
 
 ### Solution
