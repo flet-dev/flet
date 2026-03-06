@@ -206,7 +206,8 @@ CLI values are `true` or `false` (case-insensitive). In `pyproject.toml`, use
 
 /// tab | `flet build`
 ```bash
-flet build macos --macos-entitlements com.apple.security.network.client=True com.apple.security.app-sandbox=False
+flet build macos \
+  --macos-entitlements com.apple.security.network.client=True com.apple.security.app-sandbox=False
 ```
 ///
 /// tab | `pyproject.toml`
@@ -220,7 +221,7 @@ flet build macos --macos-entitlements com.apple.security.network.client=True com
 /// details | Template translation
     type: example
 In both [`macos/Runner/DebugProfile.entitlements`](index.md#build-template) and
-[`macos/Runner/Release.entitlements`](index.md#build-template), the example above
+[`macos/Runner/Release.entitlements`](index.md#build-template), the `pyproject.toml` example above
 will be translated accordingly into this:
 
 ```xml

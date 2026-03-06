@@ -878,7 +878,12 @@ feature, or content within the app, enhancing user experience and engagement.
 - **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
 - **Host**: deep linking URL host.
 
-See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
+See also:
+
+- [Flutter deep linking](https://docs.flutter.dev/ui/navigation/deep-linking)
+- [Android intents and intent filters](https://developer.android.com/guide/components/intents-filters)
+- [Defining a custom URL scheme for your app](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app)
+- [Universal Links](https://developer.apple.com/ios/universal-links/)
 
 #### Resolution order
 
@@ -910,7 +915,8 @@ host = "mydomain.com"
 
 /// details | Template translation
     type: example
-In the Android [`AndroidManifest.xml`](android.md#android-manifest), it will be translated accordingly into this:
+In the Android [`AndroidManifest.xml`](android.md#android-manifest),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
@@ -922,7 +928,8 @@ In the Android [`AndroidManifest.xml`](android.md#android-manifest), it will be 
 </intent-filter>
 ```
 
-In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist), it will be translated accordingly into this:
+In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <key>FlutterDeepLinkingEnabled</key>

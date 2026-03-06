@@ -328,6 +328,10 @@ is `AndroidManifest.xml`, which gets populated with the information you provide.
 You can add or override attributes on the `<application>` element of the
 `AndroidManifest.xml` file in the [build template](index.md#build-template).
 
+See also:
+
+- [`<application>` element](https://developer.android.com/guide/topics/manifest/application-element)
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:
@@ -346,7 +350,8 @@ allowBackup = "false"
 
 /// details | Template translation
     type: example
-In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <application
@@ -367,6 +372,10 @@ A meta-data item is composed of:
 - `value`: The value of the item. Android supports strings, integers, booleans, and floats.
   Flet writes values as strings, so pass the literal value you want Android to read
   (for example `"true"`, `"123"`, `"1.23"`).
+
+See also:
+
+- [`<meta-data>` element](https://developer.android.com/guide/topics/manifest/meta-data-element)
 
 #### Resolution order
 
@@ -392,7 +401,8 @@ flet build apk --android-meta-data name_1=value_1 name_2=value_2
 
 /// details | Template translation
     type: example
-In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <application>
@@ -411,6 +421,11 @@ More information [here](https://developer.android.com/guide/topics/manifest/uses
     Valid attribute values are listed in the Hardware features and Software features sections.
     These attribute values are case-sensitive.
 - `required`: A boolean value (`true` or `false`) that indicates whether the application requires the feature specified by the `name`.
+
+See also:
+
+- [`<uses-feature>` element](https://developer.android.com/guide/topics/manifest/uses-feature-element)
+- [Features reference](https://developer.android.com/guide/topics/manifest/uses-feature-element#features-reference)
 
 #### Resolution order
 
@@ -431,7 +446,8 @@ values in `pyproject.toml` must always be in lowercase, as required by TOML synt
 
 /// tab | `flet build`
 ```bash
-flet build apk --android-features android.hardware.camera=true android.hardware.location.gps=false
+flet build apk \
+  --android-features android.hardware.camera=true android.hardware.location.gps=false
 ```
 ///
 /// tab | `pyproject.toml`
@@ -459,6 +475,11 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
 Use cross-platform permissions from [Permissions](index.md#permissions) when possible,
 and add Android-specific permissions or features here.
 
+See also:
+
+- [`Manifest.permission` constants](https://developer.android.com/reference/android/Manifest.permission)
+- [Request app permissions](https://developer.android.com/training/permissions/requesting)
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:
@@ -478,7 +499,8 @@ values in `pyproject.toml` must always be in lowercase, as required by TOML synt
 
 /// tab | `flet build`
 ```bash
-flet build apk --android-permissions android.permission.READ_EXTERNAL_STORAGE=True android.permission.WRITE_EXTERNAL_STORAGE=True
+flet build apk \
+  --android-permissions android.permission.READ_EXTERNAL_STORAGE=True android.permission.WRITE_EXTERNAL_STORAGE=True
 ```
 ///
 /// tab | `pyproject.toml`
@@ -491,7 +513,8 @@ flet build apk --android-permissions android.permission.READ_EXTERNAL_STORAGE=Tr
 
 /// details | Template translation
     type: example
-In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
@@ -504,6 +527,11 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
 ### Minimum SDK version
 
 The minimum Android API level your app can be installed on.
+
+See also:
+
+- [`<uses-sdk>` element (`minSdkVersion`)](https://developer.android.com/guide/topics/manifest/uses-sdk-element)
+- [Android API level reference](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels)
 
 #### Resolution order
 
@@ -521,9 +549,27 @@ min_sdk_version = 24
 ```
 ///
 
+/// details | Template translation
+    type: example
+In the [`android/app/build.gradle.kts`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```kotlin
+defaultConfig {
+    val resolvedMinSdk = 24
+    minSdk = resolvedMinSdk
+}
+```
+///
+
 ### Target SDK version
 
 The Android API level your app targets for runtime behavior and compatibility.
+
+See also:
+
+- [`<uses-sdk>` element (`targetSdkVersion`)](https://developer.android.com/guide/topics/manifest/uses-sdk-element)
+- [Target API level requirements and behavior changes](https://developer.android.com/google/play/requirements/target-sdk)
 
 #### Resolution order
 
@@ -538,6 +584,19 @@ Its value is determined in the following order of precedence:
 ```toml
 [tool.flet.android]
 target_sdk_version = 35
+```
+///
+
+/// details | Template translation
+    type: example
+In the [`android/app/build.gradle.kts`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```kotlin
+defaultConfig {
+    val resolvedTargetSdk = 35
+    targetSdk = resolvedTargetSdk
+}
 ```
 ///
 

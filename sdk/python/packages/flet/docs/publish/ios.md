@@ -364,9 +364,8 @@ fullSizeImageURL = "https://example.com/icon512.png"
 
 /// details | Template translation
     type: example
-In the [`ios/exportOptions.plist`](index.md#build-template), the custom keys
-from the `pyproject.toml` example above will be translated accordingly into this
-(the file also includes base keys such as `method` and `provisioningProfiles`):
+In the [`ios/exportOptions.plist`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <key>uploadSymbols</key>
