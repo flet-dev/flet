@@ -66,18 +66,17 @@ Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
 2. `[tool.flet.macos.info]`
-3. Values injected by [`permissions`](index.md#permissions)
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 
 #### Supported value forms
 
-CLI (`--info-plist`) accepts repeated `<key>=<value>` entries.
+CLI configuration accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
 - any other value is treated as a string
 
-However, the TOML configuration (via `[tool.flet.macos.info]`), supports both simple
-and complex structures:
+In the TOML configuration, both simple and complex structures are supported:
 
 - string
 - boolean
@@ -116,12 +115,12 @@ CFBundleTypeExtensions = ["json"]
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`macos/Runner/Info.plist`](index.md#build-template), the `pyproject.toml`
 example above will be translated accordingly into this:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
 
@@ -172,6 +171,7 @@ example above will be translated accordingly into this:
 	</dict>
 </plist>
 ```
+///
 
 ### Entitlements
 
@@ -188,7 +188,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--macos-entitlements`](../cli/flet-build.md#-macos-entitlements)
 2. `[tool.flet.macos.entitlement]`
-3. Values injected by [`permissions`](index.md#permissions)
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. Defaults:
    ```toml
     [tool.flet.macos.entitlement]
@@ -214,5 +214,19 @@ flet build macos --macos-entitlements com.apple.security.network.client=True com
 [tool.flet.macos.entitlement]
 "com.apple.security.network.client" = true
 "com.apple.security.app-sandbox" = false
+```
+///
+
+/// details | Template translation
+    type: example
+In both [`macos/Runner/DebugProfile.entitlements`](index.md#build-template) and
+[`macos/Runner/Release.entitlements`](index.md#build-template), the example above
+will be translated accordingly into this:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true />
+<key>com.apple.security.app-sandbox</key>
+<false />
 ```
 ///

@@ -908,6 +908,41 @@ host = "mydomain.com"
 ```
 ///
 
+/// details | Template translation
+    type: example
+In the Android [`AndroidManifest.xml`](android.md#android-manifest), it will be translated accordingly into this:
+
+```xml
+<meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+<intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="https" android:host="mydomain.com" />
+</intent-filter>
+```
+
+In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist), it will be translated accordingly into this:
+
+```xml
+<key>FlutterDeepLinkingEnabled</key>
+<true />
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>mydomain.com</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>https</string>
+        </array>
+    </dict>
+</array>
+```
+///
+
 ### Target Architecture
 
 /// admonition | Note

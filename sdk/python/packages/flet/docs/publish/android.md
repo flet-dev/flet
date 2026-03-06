@@ -344,6 +344,8 @@ allowBackup = "false"
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
@@ -352,6 +354,7 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
     android:allowBackup="false">
 </application>
 ```
+///
 
 ### Meta-data
 
@@ -387,6 +390,8 @@ flet build apk --android-meta-data name_1=value_1 name_2=value_2
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
@@ -395,6 +400,7 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
     <meta-data android:name="name_2" android:value="value_2" />
 </application>
 ```
+///
 
 ### Features
 
@@ -412,7 +418,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--android-features`](../cli/flet-build.md#-android-features)
 2. `[tool.flet.android.feature]`
-3. [`Permissions`](index.md#permissions)
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.software.leanback=false`, `android.hardware.touchscreen=false`
 
 /// admonition | Boolean values
@@ -436,6 +442,8 @@ flet build apk --android-features android.hardware.camera=true android.hardware.
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
@@ -444,6 +452,7 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>
 ```
+///
 
 ### Permissions
 
@@ -456,7 +465,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--android-permissions`](../cli/flet-build.md#-android-permissions)
 2. `[tool.flet.android.permission]`
-3. [`--permissions`](index.md#permissions) / `[tool.flet].permissions`
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.permission.INTERNET=true`
 
 /// admonition | Boolean values
@@ -480,6 +489,8 @@ flet build apk --android-permissions android.permission.READ_EXTERNAL_STORAGE=Tr
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
 
 ```xml
@@ -488,6 +499,7 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
 ```
+///
 
 ### Minimum SDK version
 

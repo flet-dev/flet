@@ -333,12 +333,57 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
 3. `{}` (no extra keys)
 
+##### Supported value forms
+
+In the TOML configuration, the following value forms are supported:
+
+- string
+- boolean
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of dictionaries (including dictionaries that contain arrays)
+
+Numbers and null values are not supported in `exportOptions.plist` rendering for this setting.
+
 ##### Example
 
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.ios]
-export_options = { uploadSymbols = false }
+[tool.flet.ios.export_options]
+uploadSymbols = false
+compileBitcode = false
+thinning = "<none>"
+
+[tool.flet.ios.export_options.manifest]
+appURL = "https://example.com/app.ipa"
+displayImageURL = "https://example.com/icon57.png"
+fullSizeImageURL = "https://example.com/icon512.png"
+```
+///
+
+/// details | Template translation
+    type: example
+In the [`ios/exportOptions.plist`](index.md#build-template), the custom keys
+from the `pyproject.toml` example above will be translated accordingly into this
+(the file also includes base keys such as `method` and `provisioningProfiles`):
+
+```xml
+<key>uploadSymbols</key>
+<false/>
+<key>compileBitcode</key>
+<false/>
+<key>thinning</key>
+<string>&lt;none&gt;</string>
+<key>manifest</key>
+<dict>
+    <key>appURL</key>
+    <string>https://example.com/app.ipa</string>
+    <key>displayImageURL</key>
+    <string>https://example.com/icon57.png</string>
+    <key>fullSizeImageURL</key>
+    <string>https://example.com/icon512.png</string>
+</dict>
 ```
 ///
 
@@ -430,18 +475,17 @@ Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
 2. `[tool.flet.ios.info]`
-3. Values injected by [cross-platform permission bundles](index.md#permissions)
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 
 #### Supported value forms
 
-CLI (`--info-plist`) accepts repeated `<key>=<value>` entries.
+CLI configuration accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
 - any other value is treated as a string
 
-However, the TOML configuration (via `[tool.flet.ios.info]`), supports both simple
-and complex structures:
+In the TOML configuration, both simple and complex structures are supported:
 
 - string
 - boolean
@@ -482,12 +526,12 @@ CFBundleURLSchemes = ["myapp-beta"]
 ```
 ///
 
+/// details | Template translation
+    type: example
 In the [`ios/Runner/Info.plist`](index.md#build-template), the `pyproject.toml`
 example above will be translated accordingly into this:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
 
@@ -542,6 +586,7 @@ example above will be translated accordingly into this:
 	</dict>
 </plist>
 ```
+///
 
 ## Deploying an App to an Apple Device for Testing
 
