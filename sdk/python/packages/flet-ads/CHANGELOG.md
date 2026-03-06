@@ -5,14 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.82.0
 
 ### Changed
 
-- Refactored `BaseAd` class to be based on `flet.BaseControl`.
-- Refactored `InterstitialAd` to a service-based control (`flet.Service`).
-- Refactored `BannerAd` to a layout control (`flet.LayoutControl`).
-- Updated Example app.
+- Refactored ads controls: `BaseAd` is now based on `flet.BaseControl`, `InterstitialAd` is now a `flet.Service`, `BannerAd` is now a `flet.LayoutControl`, and examples were updated ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
 
 ## 0.80.0
 
