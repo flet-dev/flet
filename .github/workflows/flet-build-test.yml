@@ -49,84 +49,84 @@ jobs:
       matrix:
         include:
           # -------- Desktop --------
-          - name: linux
-            runner: ubuntu-latest
-            build_cmd: "flet build linux"
-            artifact_name: linux-build-artifact
-            artifact_path: build/linux
-            needs_linux_deps: true
-
-          - name: macos
-            runner: macos-latest
-            build_cmd: "flet build macos"
-            artifact_name: macos-build-artifact
-            artifact_path: build/macos
-            needs_linux_deps: false
-
-          - name: windows
-            runner: windows-latest
-            build_cmd: "flet build windows"
-            artifact_name: windows-build-artifact
-            artifact_path: build/windows
-            needs_linux_deps: false
+          #          - name: linux
+          #            runner: ubuntu-latest
+          #            build_cmd: "flet build linux"
+          #            artifact_name: linux-build-artifact
+          #            artifact_path: build/linux
+          #            needs_linux_deps: true
+          #
+          #          - name: macos
+          #            runner: macos-latest
+          #            build_cmd: "flet build macos"
+          #            artifact_name: macos-build-artifact
+          #            artifact_path: build/macos
+          #            needs_linux_deps: false
+          #
+          #          - name: windows
+          #            runner: windows-latest
+          #            build_cmd: "flet build windows"
+          #            artifact_name: windows-build-artifact
+          #            artifact_path: build/windows
+          #            needs_linux_deps: false
 
           # -------- Android --------
-          - name: aab-ubuntu
-            runner: ubuntu-latest
-            build_cmd: "flet build aab"
-            artifact_name: aab-build-ubuntu-artifact
-            artifact_path: build/aab
-            needs_linux_deps: false
-
-          - name: aab-macos
-            runner: macos-latest
-            build_cmd: "flet build aab"
-            artifact_name: aab-build-macos-artifact
-            artifact_path: build/aab
-            needs_linux_deps: false
-
-          - name: aab-windows
-            runner: windows-latest
-            build_cmd: "flet build aab"
-            artifact_name: aab-build-windows-artifact
-            artifact_path: build/aab
-            needs_linux_deps: false
-
-          - name: apk-ubuntu
-            runner: ubuntu-latest
-            build_cmd: "flet build apk"
-            artifact_name: apk-build-ubuntu-artifact
-            artifact_path: build/apk
-            needs_linux_deps: false
-
-          - name: apk-macos
-            runner: macos-latest
-            build_cmd: "flet build apk"
-            artifact_name: apk-build-macos-artifact
-            artifact_path: build/apk
-            needs_linux_deps: false
-
-          - name: apk-windows
-            runner: windows-latest
-            build_cmd: "flet build apk"
-            artifact_name: apk-build-windows-artifact
-            artifact_path: build/apk
-            needs_linux_deps: false
+          #          - name: aab-ubuntu
+          #            runner: ubuntu-latest
+          #            build_cmd: "flet build aab"
+          #            artifact_name: aab-build-ubuntu-artifact
+          #            artifact_path: build/aab
+          #            needs_linux_deps: false
+          #
+          #          - name: aab-macos
+          #            runner: macos-latest
+          #            build_cmd: "flet build aab"
+          #            artifact_name: aab-build-macos-artifact
+          #            artifact_path: build/aab
+          #            needs_linux_deps: false
+          #
+          #          - name: aab-windows
+          #            runner: windows-latest
+          #            build_cmd: "flet build aab"
+          #            artifact_name: aab-build-windows-artifact
+          #            artifact_path: build/aab
+          #            needs_linux_deps: false
+          #
+          #          - name: apk-ubuntu
+          #            runner: ubuntu-latest
+          #            build_cmd: "flet build apk"
+          #            artifact_name: apk-build-ubuntu-artifact
+          #            artifact_path: build/apk
+          #            needs_linux_deps: false
+          #
+          #          - name: apk-macos
+          #            runner: macos-latest
+          #            build_cmd: "flet build apk"
+          #            artifact_name: apk-build-macos-artifact
+          #            artifact_path: build/apk
+          #            needs_linux_deps: false
+          #
+          #          - name: apk-windows
+          #            runner: windows-latest
+          #            build_cmd: "flet build apk"
+          #            artifact_name: apk-build-windows-artifact
+          #            artifact_path: build/apk
+          #            needs_linux_deps: false
 
           # -------- iOS --------
-          - name: ipa
-            runner: macos-latest
-            build_cmd: "flet build ipa"
-            artifact_name: ipa-build-artifact
-            artifact_path: build/ipa
-            needs_linux_deps: false
-
-          - name: ios-simulator
-            runner: macos-latest
-            build_cmd: "flet build ios-simulator"
-            artifact_name: ios-simulator-build-artifact
-            artifact_path: build/ios-simulator
-            needs_linux_deps: false
+          #          - name: ipa
+          #            runner: macos-latest
+          #            build_cmd: "flet build ipa"
+          #            artifact_name: ipa-build-artifact
+          #            artifact_path: build/ipa
+          #            needs_linux_deps: false
+          #
+          #          - name: ios-simulator
+          #            runner: macos-latest
+          #            build_cmd: "flet build ios-simulator"
+          #            artifact_name: ios-simulator-build-artifact
+          #            artifact_path: build/ios-simulator
+          #            needs_linux_deps: false
 
           # -------- Web --------
           - name: web-ubuntu
