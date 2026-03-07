@@ -146,7 +146,7 @@ plugins:
               - "!^_" # Exclude private members starting with only one underscore
               - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
-              - griffe_warnings_deprecated
+              - flet.utils.griffe_deprecations
             extra:
               show_children: false
               show_class_docstring: false
