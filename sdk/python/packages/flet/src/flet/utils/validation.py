@@ -1114,7 +1114,7 @@ class V:
         Validate `field_name > other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly greater than [\`other_field\`][(c).].`
+        `If it is not strictly greater than [`other_field`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same instance.
@@ -1160,7 +1160,7 @@ class V:
         Validate `field_name >= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not greater than or equal to [\`other_field\`][(c).].`
+        `If it is not greater than or equal to [`other_field`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same instance.
@@ -1206,7 +1206,7 @@ class V:
         Validate `field_name < other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly less than [\`other_field\`][(c).].`
+        `If it is not strictly less than [`other_field`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same instance.
@@ -1252,7 +1252,7 @@ class V:
         Validate `field_name <= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not less than or equal to [\`other_field\`][(c).].`
+        `If it is not less than or equal to [`other_field`][(c).].`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field on the same instance.

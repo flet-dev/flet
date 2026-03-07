@@ -15,7 +15,7 @@ Detected deprecations are inserted as a docstring admonition and labeled with
 """
 
 import ast
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from griffe import (
     Attribute,
@@ -100,7 +100,7 @@ def _compose_message(
     return prefix
 
 
-def _extract_deprecation_from_decorators(obj: Class | Function) -> Optional[str]:
+def _extract_deprecation_from_decorators(obj: Union[Class, Function]) -> Optional[str]:
     """Extract deprecation details from supported class/function decorators."""
     for decorator in obj.decorators or []:
         call = decorator.value

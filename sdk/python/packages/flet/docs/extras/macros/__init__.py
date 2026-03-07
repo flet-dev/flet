@@ -6,9 +6,12 @@ from .cli_to_md import render_flet_cli_as_markdown
 from .controls_overview import render_nav_overview, render_sub_nav_overview
 from .cross_platform_permissions import cross_platform_permissions_list
 from .pypi_index import render_pypi_index
+from .python_xref_patch import patch_python_xref_check_ref
 
 
 def define_env(env):
+    patch_python_xref_check_ref()
+
     def format_value(value):
         if isinstance(value, bool):
             return str(value).lower()
