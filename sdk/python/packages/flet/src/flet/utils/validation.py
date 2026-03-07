@@ -27,6 +27,8 @@ from typing import (
     get_type_hints,
 )
 
+from flet.utils.deprecated import deprecated_warning
+
 __all__ = [
     "ClassRule",
     "FieldRule",
@@ -86,6 +88,29 @@ class _ClassValidationSpec:
     class_rules: tuple[ClassRule, ...]
 
 
+_DEPRECATED_WARNINGS_KEY = "__deprecated_validation_warnings"
+
+
+def _get_warned_deprecated_fields(instance: Any) -> Optional[set[str]]:
+    """
+    Return a mutable set of already-emitted deprecation warning keys.
+
+    Warnings are tracked on a private runtime attribute so they do not leak into
+    serialized control data.
+    """
+
+    warned = getattr(instance, _DEPRECATED_WARNINGS_KEY, None)
+    if warned is not None:
+        return warned
+
+    warned = set()
+    try:
+        setattr(instance, _DEPRECATED_WARNINGS_KEY, warned)
+    except Exception:
+        return None
+    return warned
+
+
 def _resolve_field_message(
     message: FieldMessage, instance: Any, field_name: str, value: Any
 ) -> str:
@@ -140,6 +165,55 @@ class V:
     def field(check: FieldCheck) -> FieldRule:
         """Wrap a custom field validator callback into a `FieldRule`."""
         return FieldRule(check)
+
+    @staticmethod
+    def deprecated(
+        replacement: Optional[str] = None,
+        *,
+        reason: Optional[str] = None,
+        version: str,
+        delete_version: Optional[str] = None,
+    ) -> FieldRule:
+        """
+        Emit a one-time deprecation warning when a field value is set.
+
+        This rule is intended for soft-deprecating dataclass/control properties
+        without changing value flow. It does not mutate field values.
+
+        Args:
+            replacement: Optional preferred property name used in default message.
+            reason: Optional full deprecation reason. When omitted, a replacement-
+                based message is generated.
+            version: Version where deprecation starts.
+            delete_version: Optional version where removal is planned.
+        """
+
+        default_reason = (
+            f"Use `{replacement}` instead."
+            if replacement is not None
+            else "This property is deprecated."
+        )
+
+        def _check(instance: Any, field_name: str, value: Any) -> None:
+            if value is None:
+                return
+
+            warning_key = f"{instance.__class__.__name__}.{field_name}"
+            warned = _get_warned_deprecated_fields(instance)
+            if warned is not None and warning_key in warned:
+                return
+
+            deprecated_warning(
+                name=warning_key,
+                reason=reason or default_reason,
+                version=version,
+                delete_version=delete_version,
+                type="property",
+            )
+            if warned is not None:
+                warned.add(warning_key)
+
+        return FieldRule(_check)
 
     @staticmethod
     def ensure(

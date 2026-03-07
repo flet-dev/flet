@@ -1,4 +1,5 @@
 import re
+import warnings
 from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
@@ -78,6 +79,71 @@ def test_ensure_uses_custom_message_and_allows_pass():
 
     with pytest.raises(ValueError, match="alpha failed"):
         validate(Sample(ok=False))
+
+
+def test_deprecated_warns_when_field_is_set():
+    """Ensure deprecated field rules emit a warning only for non-None values."""
+
+    @dataclass
+    class Sample:
+        old_value: Annotated[
+            Optional[int],
+            V.deprecated("new_value", version="0.80.0", delete_version="0.90.0"),
+        ] = None
+
+    validate(Sample(old_value=None))
+
+    with pytest.warns(
+        DeprecationWarning,
+        match=(
+            r"Sample\.old_value property is deprecated since version 0\.80\.0 "
+            r"and will be removed in version 0\.90\.0\. "
+            r"Use `new_value` instead\."
+        ),
+    ):
+        validate(Sample(old_value=3))
+
+
+def test_deprecated_warns_once_per_instance():
+    """Verify repeated validation of one instance does not re-emit warnings."""
+
+    @dataclass
+    class Sample:
+        old_value: Annotated[
+            Optional[int], V.deprecated("new_value", version="0.80.0")
+        ] = None
+
+    sample = Sample(old_value=1)
+    with warnings.catch_warnings(record=True) as captured:
+        warnings.simplefilter("always", DeprecationWarning)
+        validate(sample)
+        validate(sample)
+
+    deprecations = [w for w in captured if issubclass(w.category, DeprecationWarning)]
+    assert len(deprecations) == 1
+
+
+def test_deprecated_allows_custom_reason():
+    """Confirm custom deprecation text overrides replacement-based default text."""
+
+    @dataclass
+    class Sample:
+        old_value: Annotated[
+            Optional[int],
+            V.deprecated(
+                version="0.80.0",
+                reason="Use `new_value` for a wider range of values.",
+            ),
+        ] = None
+
+    with pytest.warns(
+        DeprecationWarning,
+        match=re.escape(
+            "Sample.old_value property is deprecated since version 0.80.0. "
+            "Use `new_value` for a wider range of values."
+        ),
+    ):
+        validate(Sample(old_value=5))
 
 
 def test_instance_of_supports_optional_none_and_expected_types():
