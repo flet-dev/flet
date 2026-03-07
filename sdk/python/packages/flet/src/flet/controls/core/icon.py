@@ -17,6 +17,7 @@ class Icon(LayoutControl):
     Icons can be customized in color, size, and visual style using various
     parameters such as stroke weight, fill level, and shadows.
 
+    Example:
     ```python
     ft.Icon(ft.Icons.FAVORITE, color=ft.Colors.PRIMARY, size=40)
     ```
@@ -101,7 +102,7 @@ class Icon(LayoutControl):
     Must be greater than `0`.
 
     Raises:
-        ValueError: If [`weight`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     optical_size: Annotated[
@@ -113,10 +114,9 @@ class Icon(LayoutControl):
     balance.
 
     This requires the icon font to support optical sizing.
-    Must be greater than `0`.
 
     Raises:
-        ValueError: If [`optical_size`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     blend_mode: Optional[BlendMode] = BlendMode.SRC_OVER
@@ -124,5 +124,4 @@ class Icon(LayoutControl):
     The blend mode used when rendering the icon.
 
     Blend modes control how the icon's color interacts with the background.
-    The default is normal blending (`SRC_OVER`).
     """

@@ -52,6 +52,7 @@ theme:
     - content.tabs.link
     - navigation.tabs
     - navigation.instant
+    - navigation.instant.preview
     - navigation.tracking
     - navigation.sections
     - navigation.footer
