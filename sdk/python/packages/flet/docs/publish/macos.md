@@ -65,23 +65,111 @@ These values are written to `macos/Runner/Info.plist` of the [build project](ind
 Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
-2. `[tool.flet.macos].info`
-3. Values injected by [`permissions`](index.md#permissions)
+2. `[tool.flet.macos.info]`
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 
-CLI booleans must be `True` or `False` (case-sensitive). For lists or nested
-structures, use TOML in `[tool.flet.macos].info`.
+#### Supported value forms
+
+CLI configuration accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- any other value is treated as a string
+
+In the TOML configuration, both simple and complex structures are supported:
+
+- string
+- boolean
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of dictionaries (including dictionaries that contain arrays)
+
+Numbers and null values are not supported in `Info.plist` rendering for this setting.
 
 #### Example
 
 /// tab | `flet build`
-```
-flet build macos --info-plist LSApplicationCategoryType="public.app-category.utilities"
+```bash
+flet build macos \
+  --info-plist LSApplicationCategoryType="public.app-category.utilities" \
+  --info-plist NSHighResolutionCapable=true
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.macos.info]
 LSApplicationCategoryType = "public.app-category.utilities"
+NSSupportsSuddenTermination = true
+SupportedModes = ["basic", "advanced"]
+FeatureFlags = [true, false]
+NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
+
+[[tool.flet.macos.info.CFBundleDocumentTypes]]
+CFBundleTypeName = "Data File"
+CFBundleTypeExtensions = ["dat"]
+
+[[tool.flet.macos.info.CFBundleDocumentTypes]]
+CFBundleTypeName = "JSON File"
+CFBundleTypeExtensions = ["json"]
+```
+///
+
+/// details | Template translation
+    type: example
+In the [`macos/Runner/Info.plist`](index.md#build-template), the `pyproject.toml`
+example above will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+	<dict>
+
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.utilities</string>
+
+        <key>NSSupportsSuddenTermination</key>
+        <true/>
+
+        <key>SupportedModes</key>
+        <array>
+            <string>basic</string>
+            <string>advanced</string>
+        </array>
+
+        <key>FeatureFlags</key>
+        <array>
+            <true/>
+            <false/>
+        </array>
+
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <false/>
+        </dict>
+
+        <key>CFBundleDocumentTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeName</key>
+                <string>Data File</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>dat</string>
+                </array>
+            </dict>
+            <dict>
+                <key>CFBundleTypeName</key>
+                <string>JSON File</string>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>json</string>
+                </array>
+            </dict>
+        </array>
+
+	</dict>
+</plist>
 ```
 ///
 
@@ -100,7 +188,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--macos-entitlements`](../cli/flet-build.md#-macos-entitlements)
 2. `[tool.flet.macos.entitlement]`
-3. Values injected by [`permissions`](index.md#permissions)
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. Defaults:
    ```toml
     [tool.flet.macos.entitlement]
@@ -111,14 +199,15 @@ Its value is determined in the following order of precedence:
     "com.apple.security.files.user-selected.read-write" = true
     ```
 
-CLI values are `True` or `False` (case-sensitive). In `pyproject.toml`, use
-`true`/`false`.
+CLI values are `true` or `false` (case-insensitive). In `pyproject.toml`, use
+`true`/`false` as required by TOML.
 
 #### Example
 
 /// tab | `flet build`
 ```bash
-flet build macos --macos-entitlements com.apple.security.network.client=True com.apple.security.app-sandbox=False
+flet build macos \
+  --macos-entitlements com.apple.security.network.client=True com.apple.security.app-sandbox=False
 ```
 ///
 /// tab | `pyproject.toml`
@@ -126,5 +215,19 @@ flet build macos --macos-entitlements com.apple.security.network.client=True com
 [tool.flet.macos.entitlement]
 "com.apple.security.network.client" = true
 "com.apple.security.app-sandbox" = false
+```
+///
+
+/// details | Template translation
+    type: example
+In both [`macos/Runner/DebugProfile.entitlements`](index.md#build-template) and
+[`macos/Runner/Release.entitlements`](index.md#build-template), the `pyproject.toml` example above
+will be translated accordingly into this:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true />
+<key>com.apple.security.app-sandbox</key>
+<false />
 ```
 ///

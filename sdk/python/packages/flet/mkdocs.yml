@@ -1026,4 +1026,5 @@ nav:
       - PubSub: cookbook/pub-sub.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
+      - Subprocess: cookbook/subprocess.md
       - Theming: cookbook/theming.md
