@@ -1,6 +1,6 @@
 ---
 class_name: flet.ScrollbarOrientation
-examples: ../../examples/controls/types/scroll_bar
+examples: ../../examples/controls/types/scroll_bar_orientation
 ---
 
 {{ class_summary(class_name) }}
