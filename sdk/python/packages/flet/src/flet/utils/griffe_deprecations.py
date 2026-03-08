@@ -236,6 +236,11 @@ class FletDeprecationsExtension(Extension):
         self.label = label
 
     def _insert_message(self, obj: Any, message: str) -> None:
+        """
+        Insert deprecation admonition/label on a Griffe object once.
+
+        The method is idempotent for identical admonition payloads.
+        """
         if not obj.docstring:
             obj.docstring = Docstring("", parent=obj)
 

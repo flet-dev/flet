@@ -1,3 +1,5 @@
+"""Tests for docs-facing deprecation extraction via Griffe extension."""
+
 from textwrap import dedent
 
 import pytest
@@ -11,6 +13,7 @@ from griffe import (  # noqa: E402
 
 
 def _first_deprecation_admonition(obj):
+    """Return first `Deprecated` admonition section from an object docstring."""
     if not obj.docstring:
         return None
     for section in obj.docstring.parsed:
@@ -23,6 +26,7 @@ def _first_deprecation_admonition(obj):
 
 
 def _admonition_text(admonition):
+    """Extract admonition body text from a Griffe admonition section."""
     return admonition.value.contents
 
 

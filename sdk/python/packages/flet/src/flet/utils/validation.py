@@ -119,7 +119,7 @@ def _get_reported_validation_errors(
     Return a mutable set of already-reported validation error signatures.
 
     Signatures are stored on the instance to suppress repeated identical
-    validation failures during control auto-update cycles.
+    `ValueError` failures during control auto-update cycles.
     """
 
     reported = getattr(instance, _REPORTED_VALIDATION_ERRORS_KEY, None)
@@ -1513,6 +1513,9 @@ def validate(instance: Any, *, suppress_repeated_errors: bool = False) -> None:
     except ValueError as ex:
         if reported is None:
             raise
+
+        # Dedup key is `(exception type, message)` so distinct failures for the
+        # same control instance are still surfaced once.
         signature = (ex.__class__.__name__, str(ex))
         if signature in reported:
             return
@@ -1520,4 +1523,5 @@ def validate(instance: Any, *, suppress_repeated_errors: bool = False) -> None:
         raise
     else:
         if reported is not None:
+            # Reset once the control validates successfully again.
             reported.clear()

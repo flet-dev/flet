@@ -1,5 +1,15 @@
+"""
+Runtime patches for `mkdocstrings-python-xref` integration in Flet docs.
+
+These patches are intentionally narrow and docs-only:
+- keep handler extensions active during reference checks;
+- ensure relative crossrefs inside extension-inserted admonitions are rewritten.
+"""
+
 import re
 from typing import Any, Optional, Union
+
+__all__ = ["patch_python_xref_check_ref"]
 
 
 def _patch_substitute_relative_crossrefs() -> None:
