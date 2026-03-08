@@ -9,29 +9,26 @@ These patches are intentionally narrow and docs-only:
 import re
 from typing import Any, Optional, Union
 
-__all__ = ["patch_python_xref_check_ref"]
+__all__ = ["patch_python_xref"]
 
 
-def _patch_substitute_relative_crossrefs() -> None:
+def patch_python_xref() -> None:
     """
-    Patch python_xref substitution to also process parsed admonition sections.
+    Patch python_xref internals for compatibility with
+    `flet.utils.griffe_deprecations.py`.
 
-    `python_xref` only rewrites relative references in `doc.value`. Our Griffe
-    deprecation extension inserts admonitions directly into `doc.parsed`, so
-    links inside those admonitions (for example, `[(c).]`) are otherwise left
-    unresolved and can crash mkdocs-autorefs.
+    Applies two idempotent monkey patches:
+    - `_check_ref` uses handler options so Griffe extensions are preserved.
+    - `substitute_relative_crossrefs` rewrites parsed admonition contents.
     """
 
     try:
         import mkdocstrings_handlers.python_xref.crossref as crossref
         import mkdocstrings_handlers.python_xref.handler as handler
         from griffe import Alias, DocstringSectionAdmonition, GriffeError, Object
+        from mkdocstrings_handlers.python_xref.handler import PythonRelXRefHandler
     except Exception:
         # Docs dependencies are optional outside docs builds.
-        return
-
-    # Avoid stacking wrappers when mkdocs/macros reloads modules.
-    if getattr(handler, "_flet_substitute_relative_crossrefs_patched", False):
         return
 
     original_substitute = handler.substitute_relative_crossrefs
@@ -99,6 +96,34 @@ def _patch_substitute_relative_crossrefs() -> None:
                 )
                 setattr(value, text_attr, rewritten)
 
+    def _check_ref(
+        self,
+        ref: str,
+        exclude: Optional[list[Union[str, re.Pattern]]] = None,
+    ) -> bool:
+        """
+        Check whether a cross-reference target can be collected.
+
+        Unlike upstream implementation, this uses handler-configured options
+        so Griffe extensions remain active during reference checks.
+        """
+        exclude_patterns = exclude or []
+        for ex in exclude_patterns:
+            if re.match(ex, ref):
+                return True
+        try:
+            self.collect(ref, self.get_options({}))
+            return True
+        except Exception:
+            return False
+
+    if not getattr(PythonRelXRefHandler, "_flet_check_ref_patched", False):
+        PythonRelXRefHandler._check_ref = _check_ref
+        PythonRelXRefHandler._flet_check_ref_patched = True
+
+    if getattr(handler, "_flet_substitute_relative_crossrefs_patched", False):
+        return
+
     def substitute_relative_crossrefs(
         obj: Any,
         checkref=None,
@@ -126,52 +151,3 @@ def _patch_substitute_relative_crossrefs() -> None:
     handler.substitute_relative_crossrefs = substitute_relative_crossrefs
 
     handler._flet_substitute_relative_crossrefs_patched = True
-
-
-def patch_python_xref_check_ref():
-    """
-    Patch python_xref cross-reference checks to preserve handler extensions.
-
-    `python_xref` calls `collect(..., PythonOptions())` when checking refs.
-    That fallback path may bypass configured Griffe extensions and cause
-    extension-produced metadata (for example, our deprecation admonitions) to be
-    missing in rendered docs.
-
-    This patch keeps the same behavior but resolves options via
-    `self.get_options({})` so configured extensions are always applied.
-    """
-
-    try:
-        from mkdocstrings_handlers.python_xref.handler import PythonRelXRefHandler
-    except Exception:
-        # Docs dependencies are optional outside docs builds.
-        return
-
-    if getattr(PythonRelXRefHandler, "_flet_check_ref_patched", False):
-        _patch_substitute_relative_crossrefs()
-        return
-
-    def _check_ref(
-        self,
-        ref: str,
-        exclude: Optional[list[Union[str, re.Pattern]]] = None,
-    ) -> bool:
-        """
-        Check whether a cross-reference target can be collected.
-
-        Unlike upstream implementation, this uses handler-configured options
-        so Griffe extensions remain active during reference checks.
-        """
-        exclude_patterns = exclude or []
-        for ex in exclude_patterns:
-            if re.match(ex, ref):
-                return True
-        try:
-            self.collect(ref, self.get_options({}))
-            return True
-        except Exception:
-            return False
-
-    PythonRelXRefHandler._check_ref = _check_ref
-    PythonRelXRefHandler._flet_check_ref_patched = True
-    _patch_substitute_relative_crossrefs()
