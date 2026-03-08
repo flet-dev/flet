@@ -95,21 +95,11 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("ScrollableControl build: ${widget.control.id}");
-    final scrollConfiguration = widget.control.getScrollbarConfiguration(
-        "scroll", const ScrollbarConfiguration(mode: ScrollMode.none))!;
-    final scrollMode = scrollConfiguration.mode;
-    final thumbVisibility = scrollConfiguration.thumbVisibility ??
-        ((scrollMode == ScrollMode.always ||
-                (scrollMode == ScrollMode.adaptive && !isMobilePlatform())) &&
-            scrollMode != ScrollMode.hidden);
-    final thickness = scrollConfiguration.thickness ??
-        (scrollMode == ScrollMode.hidden
-            ? 0
-            : isMobilePlatform()
-                ? 4.0
-                : null);
+    final scrollConfiguration =
+        widget.control.getScrollbarConfiguration("scroll");
 
-    if (widget.control.getBool("auto_scroll", false)!) {
+    if (widget.control.getBool("auto_scroll", false)! &&
+        scrollConfiguration != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.animateTo(
           _controller.position.maxScrollExtent,
@@ -118,26 +108,37 @@ class _ScrollableControlState extends State<ScrollableControl>
         );
       });
     }
-    return scrollConfiguration.enabled
-        ? Scrollbar(
-            thumbVisibility: thumbVisibility,
-            trackVisibility: scrollConfiguration.trackVisibility,
-            thickness: thickness,
-            radius: scrollConfiguration.radius,
-            interactive: scrollConfiguration.interactive,
-            scrollbarOrientation: scrollConfiguration.orientation,
-            controller: _controller,
-            child: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: widget.wrapIntoScrollableView
-                  ? SingleChildScrollView(
-                      controller: _controller,
-                      scrollDirection: widget.scrollDirection,
-                      child: widget.child,
-                    )
-                  : widget.child,
-            ))
-        : widget.child;
+
+    if (scrollConfiguration == null) return widget.child;
+
+    final scrollMode = scrollConfiguration.mode;
+    final thumbVisibility = scrollConfiguration.thumbVisibility ??
+        ((scrollMode == ScrollMode.always ||
+            (scrollMode == ScrollMode.adaptive && !isMobilePlatform())));
+    final thickness = scrollConfiguration.thickness ??
+        (scrollMode == ScrollMode.hidden
+            ? 0
+            : isMobilePlatform()
+                ? 4.0
+                : null);
+
+    return Scrollbar(
+        thumbVisibility: thumbVisibility,
+        trackVisibility: scrollConfiguration.trackVisibility,
+        thickness: thickness,
+        radius: scrollConfiguration.radius,
+        interactive: scrollConfiguration.interactive,
+        scrollbarOrientation: scrollConfiguration.orientation,
+        controller: _controller,
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: widget.wrapIntoScrollableView
+              ? SingleChildScrollView(
+                  controller: _controller,
+                  scrollDirection: widget.scrollDirection,
+                  child: widget.child,
+                )
+              : widget.child,
+        ));
   }
 }
