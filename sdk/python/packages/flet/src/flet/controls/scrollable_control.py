@@ -87,7 +87,7 @@ class ScrollDirection(Enum):
 
 class ScrollbarOrientation(Enum):
     """
-    Defines the edge/side of the viewport where the scrollbar is shown.
+    Defines the edge/side of the viewport where the [`Scrollbar`][flet.] is shown.
     """
 
     LEFT = "left"
@@ -115,14 +115,6 @@ class ScrollbarOrientation(Enum):
 class Scrollbar:
     """
     Configures the scrollbar that scrollable controls render for their content.
-    """
-
-    mode: ScrollMode = ScrollMode.AUTO
-    """
-    Scroll behavior mode baseline.
-
-    This keeps parity with legacy [`ScrollMode`][flet.] values when `scroll`
-    was enum-only.
     """
 
     thumb_visibility: Optional[bool] = None

@@ -4,6 +4,7 @@ import '../models/control.dart';
 import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
+import 'platform.dart';
 
 enum ScrollMode { auto, adaptive, always, hidden }
 
@@ -12,7 +13,6 @@ ScrollMode? parseScrollMode(String? value, [ScrollMode? defaultValue]) {
 }
 
 class ScrollbarConfiguration {
-  final ScrollMode mode;
   final bool? thumbVisibility;
   final bool? trackVisibility;
   final double? thickness;
@@ -21,7 +21,6 @@ class ScrollbarConfiguration {
   final ScrollbarOrientation? orientation;
 
   const ScrollbarConfiguration({
-    required this.mode,
     this.thumbVisibility,
     this.trackVisibility,
     this.thickness,
@@ -29,6 +28,23 @@ class ScrollbarConfiguration {
     this.interactive,
     this.orientation,
   });
+
+  factory ScrollbarConfiguration.fromScrollMode(ScrollMode mode) {
+    final defaultThickness = isMobilePlatform() ? 4.0 : null;
+
+    switch (mode) {
+      case ScrollMode.auto:
+        return ScrollbarConfiguration(thickness: defaultThickness);
+      case ScrollMode.adaptive:
+        return ScrollbarConfiguration(
+            thumbVisibility: !isMobilePlatform(), thickness: defaultThickness);
+      case ScrollMode.always:
+        return ScrollbarConfiguration(
+            thumbVisibility: true, thickness: defaultThickness);
+      case ScrollMode.hidden:
+        return const ScrollbarConfiguration(thickness: 0);
+    }
+  }
 }
 
 ScrollbarOrientation? parseScrollbarOrientation(String? value,
@@ -41,18 +57,24 @@ ScrollbarConfiguration? parseScrollbarConfiguration(dynamic value,
   if (value == null) return defaultValue;
   if (value is! Map) {
     final mode = parseScrollMode(value);
-    return mode == null ? defaultValue : ScrollbarConfiguration(mode: mode);
+    return mode == null
+        ? defaultValue
+        : ScrollbarConfiguration.fromScrollMode(mode);
   }
 
+  final baseConfiguration = ScrollbarConfiguration.fromScrollMode(
+      parseScrollMode(value["mode"], ScrollMode.auto)!);
+
   return ScrollbarConfiguration(
-    mode: parseScrollMode(
-        value["mode"] ?? value["scroll_mode"], ScrollMode.auto)!,
-    thumbVisibility: parseBool(value["thumb_visibility"]),
-    trackVisibility: parseBool(value["track_visibility"]),
-    thickness: parseDouble(value["thickness"]),
-    radius: parseRadius(value["radius"]),
-    interactive: parseBool(value["interactive"]),
-    orientation: parseScrollbarOrientation(value["orientation"]),
+    thumbVisibility:
+        parseBool(value["thumb_visibility"], baseConfiguration.thumbVisibility),
+    trackVisibility:
+        parseBool(value["track_visibility"], baseConfiguration.trackVisibility),
+    thickness: parseDouble(value["thickness"], baseConfiguration.thickness),
+    radius: parseRadius(value["radius"], baseConfiguration.radius),
+    interactive: parseBool(value["interactive"], baseConfiguration.interactive),
+    orientation: parseScrollbarOrientation(
+        value["orientation"], baseConfiguration.orientation),
   );
 }
 

@@ -4,7 +4,6 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/keys.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
 import '../utils/scrollbar.dart';
 import '../utils/time.dart';
 import '../widgets/flet_store_mixin.dart';
@@ -111,21 +110,10 @@ class _ScrollableControlState extends State<ScrollableControl>
 
     if (scrollConfiguration == null) return widget.child;
 
-    final scrollMode = scrollConfiguration.mode;
-    final thumbVisibility = scrollConfiguration.thumbVisibility ??
-        ((scrollMode == ScrollMode.always ||
-            (scrollMode == ScrollMode.adaptive && !isMobilePlatform())));
-    final thickness = scrollConfiguration.thickness ??
-        (scrollMode == ScrollMode.hidden
-            ? 0
-            : isMobilePlatform()
-                ? 4.0
-                : null);
-
     return Scrollbar(
-        thumbVisibility: thumbVisibility,
+        thumbVisibility: scrollConfiguration.thumbVisibility,
         trackVisibility: scrollConfiguration.trackVisibility,
-        thickness: thickness,
+        thickness: scrollConfiguration.thickness,
         radius: scrollConfiguration.radius,
         interactive: scrollConfiguration.interactive,
         scrollbarOrientation: scrollConfiguration.orientation,
