@@ -13,6 +13,7 @@ dependencies = [
     "qrcode >=7.4.2",
     "tomli >= 1.1.0 ; python_version < '3.11'",
     "cookiecutter >=2.6.0",
+    "binaryornot <0.5",
     "chardet <6"
 ]
 
