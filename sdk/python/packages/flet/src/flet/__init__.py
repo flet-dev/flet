@@ -129,6 +129,7 @@ from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
 from flet.controls.core.responsive_row import ResponsiveRow
+from flet.controls.core.rotated_box import RotatedBox
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
@@ -396,6 +397,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     KeyboardEvent,
+    LocaleChangeEvent,
     LoginEvent,
     MultiViewAddEvent,
     MultiViewRemoveEvent,
@@ -486,12 +488,15 @@ from flet.controls.text_style import (
     TextThemeStyle,
 )
 from flet.controls.transform import (
+    Flip,
+    Matrix4,
     Offset,
     OffsetValue,
     Rotate,
     RotateValue,
     Scale,
     ScaleValue,
+    Transform,
 )
 from flet.controls.types import (
     AppLifecycleState,
@@ -788,6 +793,7 @@ __all__ = [
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
     "FletUnsupportedPlatformException",
+    "Flip",
     "FloatingActionButton",
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
@@ -838,6 +844,7 @@ __all__ = [
     "ListTileTitleAlignment",
     "ListView",
     "Locale",
+    "LocaleChangeEvent",
     "LocaleConfiguration",
     "LoginEvent",
     "LongPressDownEvent",
@@ -855,6 +862,7 @@ __all__ = [
     "MarkdownCustomCodeTheme",
     "MarkdownExtensionSet",
     "MarkdownStyleSheet",
+    "Matrix4",
     "MenuBar",
     "MenuItemButton",
     "MenuStyle",
@@ -933,6 +941,7 @@ __all__ = [
     "ResponsiveRowBreakpoint",
     "Rotate",
     "RotateValue",
+    "RotatedBox",
     "RoundedRectangleBorder",
     "RouteChangeEvent",
     "RouteUrlStrategy",
@@ -1040,6 +1049,7 @@ __all__ = [
     "TooltipTheme",
     "TooltipTriggerMode",
     "TooltipValue",
+    "Transform",
     "TransparentPointer",
     "UnderlineTabIndicator",
     "Url",

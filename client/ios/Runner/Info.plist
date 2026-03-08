@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true />
+		<true/>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -25,7 +25,7 @@
 		<key>CFBundleVersion</key>
 		<string>$(CURRENT_PROJECT_VERSION)</string>
 		<key>LSRequiresIPhoneOS</key>
-		<true />
+		<true/>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -44,16 +44,16 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false />
+		<false/>
 		<key>ITSAppUsesNonExemptEncryption</key>
-		<false />
+		<false/>
 
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
-			<true />
+			<true/>
 		</dict>
 
 		<!-- Permission options for the `photos` -->
@@ -73,5 +73,9 @@
 		<!-- Needed by `flet-geolocator` -->
 		<key>NSLocationWhenInUseUsageDescription</key>
         <string>This app needs access to location.</string>
+
+        <!-- Permission options for the `camera` -->
+        <key>NSCameraUsageDescription</key>
+        <string>This app uses the camera to capture photos and video.</string>
 	</dict>
 </plist>

@@ -6,9 +6,19 @@ from flet_ads.types import PaidAdEvent
 
 
 @ft.control("BannerAd")
-class BannerAd(BaseAd):
+class BannerAd(ft.LayoutControl, BaseAd):
     """
     Displays a banner ad.
+
+    Example: Test IDs
+        AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads)
+        unit IDs for testing purposes. Set [`unit_id`][(c).] to the appropriate value
+        based on the platform you're testing on:
+
+        - Android: `"ca-app-pub-3940256099942544/9214589741"`
+        - iOS: `"ca-app-pub-3940256099942544/2435281174"`
+
+        Remember to replace them in production.
 
     Raises:
         FletUnsupportedPlatformException: When this control is used on a web

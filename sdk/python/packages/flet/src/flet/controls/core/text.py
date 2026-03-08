@@ -255,6 +255,12 @@ class Text(LayoutControl):
     instructions on how to import and use custom fonts in your application.
     """
 
+    font_family_fallback: Optional[list[str]] = None
+    """
+    Ordered fallback font families used when a glyph is unavailable in
+    [`font_family`][(c).].
+    """
+
     size: Optional[Number] = None
     """
     Text size in virtual pixels.

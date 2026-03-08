@@ -59,6 +59,8 @@ class TextControl extends StatelessWidget {
       fontWeight: parseFontWeight(fontWeight),
       fontStyle: control.getBool("italic", false)! ? FontStyle.italic : null,
       fontFamily: control.getString("font_family"),
+      fontFamilyFallback:
+          control.getList("font_family_fallback", (e) => e.toString()),
       fontVariations: variations,
       color: control.getColor("color", context) ??
           (spans.isNotEmpty ? DefaultTextStyle.of(context).style.color : null),

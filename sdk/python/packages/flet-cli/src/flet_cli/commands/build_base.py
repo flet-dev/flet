@@ -138,11 +138,12 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.cross_platform_permissions = {
             "location": {
-                "info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location "
-                    "service when in use.",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses "
-                    "location service.",
+                "ios_info_plist": {
+                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
+                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.location": True
@@ -158,9 +159,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
             },
             "camera": {
-                "info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture "
-                    "photos and videos."
+                "ios_info_plist": {
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.camera": True},
                 "android_permissions": {"android.permission.CAMERA": True},
@@ -173,9 +176,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
             },
             "microphone": {
-                "info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to "
-                    "record sounds.",
+                "ios_info_plist": {
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
                 "android_permissions": {
@@ -186,9 +191,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_features": {},
             },
             "photo_library": {
-                "info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and "
-                    "videos to the photo library."
+                "ios_info_plist": {
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
                 },
                 "macos_entitlements": {
                     "com.apple.security.personal-information.photos-library": True
@@ -457,8 +464,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--cleanup-app-files",
             dest="cleanup_app_files",
-            action="append",
-            nargs="*",
+            action="extend",
+            nargs="+",
             help="The list of globs to delete extra app files and directories",
         )
         parser.add_argument(
@@ -471,8 +478,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--cleanup-package-files",
             dest="cleanup_package_files",
-            action="append",
-            nargs="*",
+            action="extend",
+            nargs="+",
             help="The list of globs to delete extra package files and directories",
         )
         parser.add_argument(
@@ -815,7 +822,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             or []
         ):
             if p in self.cross_platform_permissions:
-                info_plist.update(self.cross_platform_permissions[p]["info_plist"])
+                permission_config = self.cross_platform_permissions[p]
+                info_plist.update(
+                    permission_config.get(f"{self.config_platform}_info_plist", {})
+                    or permission_config.get("info_plist", {})
+                )
                 macos_entitlements.update(
                     self.cross_platform_permissions[p]["macos_entitlements"]
                 )
@@ -842,7 +853,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = True if v == "True" else False if v == "False" else v
+                info_plist[k] = (
+                    (v.lower() == "true") if v.lower() in {"true", "false"} else v
+                )
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
 
@@ -1790,17 +1803,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.cleanup_packages, "cleanup.packages", True
         )
 
-        # TODO: should be deprecated
-        if self.get_bool_setting(None, "compile.cleanup", False):
-            cleanup_app = cleanup_packages = True
-
         if cleanup_app_files := (
             self.options.cleanup_app_files
             or self.get_pyproject(f"tool.flet.{self.config_platform}.cleanup.app_files")
             or self.get_pyproject("tool.flet.cleanup.app_files")
         ):
-            package_args.extend(["--cleanup-app-files", ",".join(cleanup_app_files)])
-            cleanup_app = True
+            if isinstance(cleanup_app_files, str):
+                cleanup_app_files = [
+                    value.strip() for value in cleanup_app_files.split(",")
+                ]
+            if isinstance(cleanup_app_files, list):
+                package_args.extend(
+                    [
+                        "--cleanup-app-files",
+                        ",".join([v.strip() for v in cleanup_app_files if v.strip()]),
+                    ]
+                )
+                cleanup_app = True
 
         if cleanup_package_files := (
             self.options.cleanup_package_files
@@ -1809,10 +1828,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             or self.get_pyproject("tool.flet.cleanup.package_files")
         ):
-            package_args.extend(
-                ["--cleanup-package-files", ",".join(cleanup_package_files)]
-            )
-            cleanup_packages = True
+            if isinstance(cleanup_package_files, str):
+                cleanup_package_files = [
+                    value for value in cleanup_package_files.split(",")
+                ]
+            if isinstance(cleanup_package_files, list):
+                package_args.extend(
+                    [
+                        "--cleanup-package-files",
+                        ",".join(
+                            [v.strip() for v in cleanup_package_files if v.strip()]
+                        ),
+                    ]
+                )
+                cleanup_packages = True
 
         if cleanup_app:
             package_args.append("--cleanup-app")

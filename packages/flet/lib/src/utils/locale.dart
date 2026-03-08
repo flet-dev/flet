@@ -72,4 +72,12 @@ extension LocaleExtention on Locale {
       ]]) {
     return delegates.every((d) => d.isSupported(this));
   }
+
+  Map<String, String?> toMap() {
+    return {
+      "language_code": languageCode,
+      "country_code": countryCode,
+      "script_code": scriptCode,
+    };
+  }
 }

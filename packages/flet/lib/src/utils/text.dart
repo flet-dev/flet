@@ -160,6 +160,8 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
     fontWeight: parseFontWeight(fontWeight),
     fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
     fontFamily: value["font_family"],
+    fontFamilyFallback:
+        parseList(value["font_family_fallback"], (e) => e.toString()),
     fontVariations: variations,
     height: parseDouble(value["height"]),
     decoration:

@@ -8,6 +8,8 @@ from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
 from flet.version import flet_version
 
+__all__ = ["GitHubOAuthProvider"]
+
 
 class GitHubOAuthProvider(OAuthProvider):
     """

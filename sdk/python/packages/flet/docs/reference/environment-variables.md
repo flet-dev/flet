@@ -23,9 +23,29 @@ It is already pre-created and its location depends on the platform the app is ru
 
 ### `FLET_ASSETS_DIR`
 
-Absolute path to the app's "assets" directory.
+Absolute path to the app's assets directory.
 
-Defaults to `"assets"`.
+In production apps built with [`flet build`](../publish/index.md), this environment-variable points to the bundled assets absolute location at runtime.
+Use it when your code needs a filesystem path to bundled files (for example, JSON configs, databases, or model files).
+
+For local runs, it may be unset depending on how the app is started, so use a fallback:
+
+```python
+import os
+from pathlib import Path
+import flet as ft
+
+default_assets_dir = Path(__file__).parent / "assets"
+assets_dir = Path(os.environ.get("FLET_ASSETS_DIR", str(default_assets_dir))).resolve()
+
+def main(page: ft.Page):
+	...
+
+ft.run(main, assets_dir="assets")
+```
+
+For control properties like [`Image.src`][flet.Image.src], continue using paths relative
+to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
@@ -41,6 +61,12 @@ Its value is one of the following: `"android"`, `"ios"`, `"linux"`, `"macos"`, `
 ### `FLET_CLI_SKIP_FLUTTER_DOCTOR`
 
 Whether to skip running `flutter doctor` when a build fails.
+
+Defaults to `False`.
+
+### `FLET_HIDE_WINDOW_ON_START`
+
+Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 

@@ -252,9 +252,11 @@ def CardView(card: Card, on_card_click, key=None) -> ft.Control:
         height=CARD_H,
         margin=5,
         border_radius=5,
-        content=ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg")
-        if card.face_up
-        else ft.Image(src="/images/card_back.png"),
+        content=(
+            ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg")
+            if card.face_up
+            else ft.Image(src="/images/card_back.png")
+        ),
         on_click=lambda _e: on_card_click(card),
     )
 

@@ -479,6 +479,74 @@ In the [`AndroidManifest.xml`](index.md#build-template), it will be translated a
 </manifest>
 ```
 
+### Minimum SDK version
+
+The minimum Android API level your app can be installed on.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android].min_sdk_version`
+2. Flutter default: `flutter.minSdkVersion`
+
+#### Example
+
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android]
+min_sdk_version = 24
+```
+///
+
+### Target SDK version
+
+The Android API level your app targets for runtime behavior and compatibility.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android].target_sdk_version`
+2. Flutter default: `flutter.targetSdkVersion`
+
+#### Example
+
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android]
+target_sdk_version = 35
+```
+///
+
+### Adaptive icon background
+
+The background color used for the Android adaptive launcher icon.
+
+This value is applied when app icons are generated for Android.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-adaptive-icon-background`](../cli/flet-build.md#-android-adaptive-icon-background)
+2. `[tool.flet.android].adaptive_icon_background`
+3. [Build template](index.md#build-template) default: `#ffffff`
+
+#### Example
+
+/// tab | `flet build`
+```bash
+flet build apk --android-adaptive-icon-background "#0B6BFF"
+```
+///
+/// tab | `pyproject.toml`
+```toml
+[tool.flet.android]
+adaptive_icon_background = "#0B6BFF"
+```
+///
+
 ## ADB Tips
 
 [Android Debug Bridge (adb)](https://developer.android.com/tools/adb) is a

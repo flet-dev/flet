@@ -20,7 +20,7 @@ class CupertinoBottomSheetControl extends StatelessWidget {
     Control? content = control.child("content");
 
     if (content == null) {
-      return const ErrorControl("CupertinoButtomSheet.content is empty.");
+      return const ErrorControl("CupertinoBottomSheet.content is empty.");
     }
 
     Widget child = ControlWidget(control: content);

@@ -31,24 +31,37 @@ def _load_cross_platform_permissions() -> dict:
 
 
 def _render_toml_block(config: dict) -> str:
-    info_plist = config.get("info_plist") or {}
+    ios_info_plist = config.get("ios_info_plist") or {}
+    macos_info_plist = config.get("macos_info_plist") or {}
+    legacy_info_plist = config.get("info_plist") or {}
     macos_entitlements = config.get("macos_entitlements") or {}
     android_permissions = config.get("android_permissions") or {}
     android_features = config.get("android_features") or {}
 
     sections = []
 
-    if info_plist:
+    if legacy_info_plist:
+        if not ios_info_plist:
+            ios_info_plist = legacy_info_plist
+        if not macos_info_plist:
+            macos_info_plist = legacy_info_plist
+
+    if ios_info_plist:
         lines = ["# iOS", "[tool.flet.ios.info]"]
-        for key, value in info_plist.items():
+        for key, value in ios_info_plist.items():
             lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
         sections.append("\n".join(lines))
 
-        lines = ["# macOS", "[tool.flet.macos.info]"]
-        for key, value in info_plist.items():
-            lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+    if macos_info_plist or macos_entitlements:
+        lines = ["# macOS"]
+        if macos_info_plist:
+            lines.append("[tool.flet.macos.info]")
+            for key, value in macos_info_plist.items():
+                lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
         if macos_entitlements:
-            lines.extend(["", "[tool.flet.macos.entitlement]"])
+            if macos_info_plist:
+                lines.append("")
+            lines.append("[tool.flet.macos.entitlement]")
             for key, value in macos_entitlements.items():
                 lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
         sections.append("\n".join(lines))

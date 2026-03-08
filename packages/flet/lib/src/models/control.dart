@@ -488,7 +488,11 @@ class Control extends ChangeNotifier {
     // If no listeners, wait until one is added or timeout occurs
     if (_invokeMethodListeners.isEmpty) {
       _listenerAddedCompleter ??= Completer<void>();
-      await _listenerAddedCompleter!.future;
+      await _listenerAddedCompleter!.future.timeout(timeout, onTimeout: () {
+        throw TimeoutException(
+            "Timeout waiting for invoke method listener for $type($id).$name",
+            timeout);
+      });
     }
 
     if (_invokeMethodListeners.isEmpty) {

@@ -26,6 +26,7 @@ class _MapControlState extends State<MapControl>
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Map.$name($args)");
+    args ??= {};
     var defaultAnimationCurve =
         widget.control.getCurve("animation_curve", Curves.fastOutSlowIn);
     var defaultAnimationDuration = widget.control
@@ -101,6 +102,8 @@ class _MapControlState extends State<MapControl>
           );
         }
         break;
+      case "get_camera":
+        return _animatedMapController.mapController.camera.toMap();
       default:
         throw Exception("Unknown Map method: $name");
     }
