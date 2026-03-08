@@ -6,15 +6,18 @@ import pytest
 
 
 def _clear_flet_modules():
+    """Remove loaded `flet` modules to force fresh import behavior in each test."""
     for module_name in list(sys.modules):
         if module_name == "flet" or module_name.startswith("flet."):
             del sys.modules[module_name]
 
 
 def _blocked_import_factory(blocked_modules: set[str]):
+    """Create an import hook that raises for selected top-level module names."""
     original_import = builtins.__import__
 
     def blocked_import(name, globals=None, locals=None, fromlist=(), level=0):
+        """Raise `ModuleNotFoundError` for blocked modules and delegate otherwise."""
         top_name = name.split(".")[0]
         if top_name in blocked_modules:
             raise ModuleNotFoundError(f"No module named '{top_name}'")
