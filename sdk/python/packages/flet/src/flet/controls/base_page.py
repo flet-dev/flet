@@ -27,6 +27,7 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
+from flet.controls.scrollable_control import Scrollbar
 from flet.controls.services.service import Service
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -702,7 +703,7 @@ class BasePage(AdaptiveControl):
 
     # scroll
     @property
-    def scroll(self) -> Optional[ScrollMode]:
+    def scroll(self) -> Optional[Union[ScrollMode, Scrollbar]]:
         """
         Scroll behavior mode for root view content.
         """
@@ -710,7 +711,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().scroll
 
     @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
+    def scroll(self, value: Optional[Union[ScrollMode, Scrollbar]]):
         self.__root_view().scroll = value
 
     # auto_scroll

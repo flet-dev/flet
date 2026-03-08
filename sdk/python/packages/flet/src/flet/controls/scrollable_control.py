@@ -13,7 +13,14 @@ from flet.controls.types import (
     ScrollMode,
 )
 
-__all__ = ["OnScrollEvent", "ScrollDirection", "ScrollType", "ScrollableControl"]
+__all__ = [
+    "OnScrollEvent",
+    "ScrollDirection",
+    "ScrollType",
+    "ScrollableControl",
+    "Scrollbar",
+    "ScrollbarOrientation",
+]
 
 
 class ScrollType(Enum):
@@ -75,6 +82,77 @@ class ScrollDirection(Enum):
     REVERSE = "reverse"
     """
     Scrolling in the reverse axis direction.
+    """
+
+
+class ScrollbarOrientation(Enum):
+    """
+    Side of the viewport where the scrollbar is shown.
+    """
+
+    LEFT = "left"
+    """
+    Place the scrollbar at the left edge.
+    """
+
+    RIGHT = "right"
+    """
+    Place the scrollbar at the right edge.
+    """
+
+    TOP = "top"
+    """
+    Place the scrollbar at the top edge.
+    """
+
+    BOTTOM = "bottom"
+    """
+    Place the scrollbar at the bottom edge.
+    """
+
+
+@dataclass
+class Scrollbar:
+    """
+    Per-control scrollbar configuration for [`ScrollableControl.scroll`][flet.].
+    """
+
+    mode: ScrollMode = ScrollMode.AUTO
+    """
+    Scroll behavior mode baseline.
+
+    This keeps parity with legacy [`ScrollMode`][flet.] values when `scroll`
+    was enum-only.
+    """
+
+    thumb_visibility: Optional[bool] = None
+    """
+    Overrides thumb visibility when provided.
+    """
+
+    track_visibility: Optional[bool] = None
+    """
+    Overrides track visibility when provided.
+    """
+
+    thickness: Optional[Number] = None
+    """
+    Overrides scrollbar thickness in logical pixels when provided.
+    """
+
+    radius: Optional[Number] = None
+    """
+    Overrides scrollbar thumb corner radius when provided.
+    """
+
+    interactive: Optional[bool] = None
+    """
+    Overrides whether the scrollbar is interactive when provided.
+    """
+
+    orientation: Optional[ScrollbarOrientation] = None
+    """
+    Overrides the side where scrollbar is displayed.
     """
 
 
@@ -222,9 +300,13 @@ class ScrollableControl(Control):
     - imperatively changing position with [`scroll_to()`][(c).scroll_to].
     """
 
-    scroll: Optional[ScrollMode] = None
+    scroll: Optional[Union[ScrollMode, Scrollbar]] = None
     """
-    Enables a vertical scrolling for the Column to prevent its content overflow.
+    Configures scrolling for this control.
+
+    Accepts either:
+    - [`ScrollMode`][flet.] for legacy behavior,
+    - [`Scrollbar`][flet.] for per-control scrollbar customization.
     """
 
     auto_scroll: bool = False

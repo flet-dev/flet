@@ -9,6 +9,88 @@ import '../utils/platform.dart';
 import '../utils/time.dart';
 import '../widgets/flet_store_mixin.dart';
 
+class _ScrollbarConfiguration {
+  final ScrollMode mode;
+  final bool? thumbVisibility;
+  final bool? trackVisibility;
+  final double? thickness;
+  final Radius? radius;
+  final bool? interactive;
+  final ScrollbarOrientation? orientation;
+
+  const _ScrollbarConfiguration({
+    required this.mode,
+    this.thumbVisibility,
+    this.trackVisibility,
+    this.thickness,
+    this.radius,
+    this.interactive,
+    this.orientation,
+  });
+
+  factory _ScrollbarConfiguration.fromValue(dynamic value) {
+    if (value is Map) {
+      final modeValue = value["mode"] ?? value["scroll_mode"];
+      final parsedRadius = parseDouble(value["radius"]);
+      return _ScrollbarConfiguration(
+        mode: parseScrollMode(
+                modeValue is String ? modeValue : null, ScrollMode.auto) ??
+            ScrollMode.auto,
+        thumbVisibility: parseBool(value["thumb_visibility"]),
+        trackVisibility: parseBool(value["track_visibility"]),
+        thickness: parseDouble(value["thickness"]),
+        radius: parsedRadius != null ? Radius.circular(parsedRadius) : null,
+        interactive: parseBool(value["interactive"]),
+        orientation: _parseScrollbarOrientation(value["orientation"]),
+      );
+    }
+
+    return _ScrollbarConfiguration(
+      mode: parseScrollMode(value is String ? value : null, ScrollMode.none) ??
+          ScrollMode.none,
+    );
+  }
+
+  bool get enabled => mode != ScrollMode.none;
+
+  bool get effectiveThumbVisibility {
+    final defaultValue = (mode == ScrollMode.always ||
+            (mode == ScrollMode.adaptive && !isMobilePlatform())) &&
+        mode != ScrollMode.hidden;
+    return thumbVisibility ?? defaultValue;
+  }
+
+  double? get effectiveThickness {
+    if (thickness != null) {
+      return thickness;
+    }
+    return mode == ScrollMode.hidden
+        ? 0
+        : isMobilePlatform()
+            ? 4.0
+            : null;
+  }
+}
+
+ScrollbarOrientation? _parseScrollbarOrientation(dynamic value,
+    [ScrollbarOrientation? defaultValue]) {
+  if (value is! String) {
+    return defaultValue;
+  }
+  switch (value.toLowerCase()) {
+    case "left":
+      return ScrollbarOrientation.left;
+    case "right":
+      return ScrollbarOrientation.right;
+    case "top":
+      return ScrollbarOrientation.top;
+    case "bottom":
+      return ScrollbarOrientation.bottom;
+    default:
+      return defaultValue;
+  }
+}
+
 class ScrollableControl extends StatefulWidget {
   final Control control;
   final Widget child;
@@ -95,8 +177,8 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("ScrollableControl build: ${widget.control.id}");
-    ScrollMode scrollMode =
-        widget.control.getScrollMode("scroll", ScrollMode.none)!;
+    final scrollConfiguration =
+        _ScrollbarConfiguration.fromValue(widget.control.get("scroll"));
 
     if (widget.control.getBool("auto_scroll", false)!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -107,18 +189,14 @@ class _ScrollableControlState extends State<ScrollableControl>
         );
       });
     }
-    return scrollMode != ScrollMode.none
+    return scrollConfiguration.enabled
         ? Scrollbar(
-            // todo: create class ScrollBarConfiguration on Py end, for more customizability
-            thumbVisibility: (scrollMode == ScrollMode.always ||
-                    (scrollMode == ScrollMode.adaptive &&
-                        !isMobilePlatform())) &&
-                scrollMode != ScrollMode.hidden,
-            thickness: scrollMode == ScrollMode.hidden
-                ? 0
-                : isMobilePlatform()
-                    ? 4.0
-                    : null,
+            thumbVisibility: scrollConfiguration.effectiveThumbVisibility,
+            trackVisibility: scrollConfiguration.trackVisibility,
+            thickness: scrollConfiguration.effectiveThickness,
+            radius: scrollConfiguration.radius,
+            interactive: scrollConfiguration.interactive,
+            scrollbarOrientation: scrollConfiguration.orientation,
             controller: _controller,
             child: ScrollConfiguration(
               behavior:
