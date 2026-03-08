@@ -7,7 +7,6 @@ import '../models/control.dart';
 import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
-import 'scrollbar.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   return parseEnum(Clip.values, value, defaultValue);
@@ -173,11 +172,6 @@ extension MiscParsers on Control {
   CardVariant? getCardVariant(String propertyName,
       [CardVariant? defaultValue]) {
     return parseCardVariant(get(propertyName), defaultValue);
-  }
-
-  ScrollMode? getScrollMode(String propertyName,
-      [ScrollMode? defaultValue = ScrollMode.none]) {
-    return parseScrollMode(get(propertyName), defaultValue);
   }
 
   LabelPosition? getLabelPosition(String propertyName,

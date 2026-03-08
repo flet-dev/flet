@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
 
-enum ScrollMode { none, auto, adaptive, always, hidden }
+enum ScrollMode { auto, adaptive, always, hidden }
 
-ScrollMode? parseScrollMode(String? value,
-    [ScrollMode? defaultValue = ScrollMode.none]) {
+ScrollMode? parseScrollMode(String? value, [ScrollMode? defaultValue]) {
   return parseEnum(ScrollMode.values, value, defaultValue);
 }
 
@@ -29,8 +29,6 @@ class ScrollbarConfiguration {
     this.interactive,
     this.orientation,
   });
-
-  bool get enabled => mode != ScrollMode.none;
 }
 
 ScrollbarOrientation? parseScrollbarOrientation(String? value,
@@ -42,25 +40,27 @@ ScrollbarConfiguration? parseScrollbarConfiguration(dynamic value,
     [ScrollbarConfiguration? defaultValue]) {
   if (value == null) return defaultValue;
   if (value is! Map) {
-    return ScrollbarConfiguration(
-      mode: parseScrollMode(value, ScrollMode.none)!,
-    );
+    final mode = parseScrollMode(value);
+    return mode == null ? defaultValue : ScrollbarConfiguration(mode: mode);
   }
 
-  final parsedRadius = parseDouble(value["radius"]);
   return ScrollbarConfiguration(
     mode: parseScrollMode(
         value["mode"] ?? value["scroll_mode"], ScrollMode.auto)!,
     thumbVisibility: parseBool(value["thumb_visibility"]),
     trackVisibility: parseBool(value["track_visibility"]),
     thickness: parseDouble(value["thickness"]),
-    radius: parsedRadius != null ? Radius.circular(parsedRadius) : null,
+    radius: parseRadius(value["radius"]),
     interactive: parseBool(value["interactive"]),
     orientation: parseScrollbarOrientation(value["orientation"]),
   );
 }
 
 extension ScrollbarParsers on Control {
+  ScrollMode? getScrollMode(String propertyName, [ScrollMode? defaultValue]) {
+    return parseScrollMode(get(propertyName), defaultValue);
+  }
+
   ScrollbarConfiguration? getScrollbarConfiguration(String propertyName,
       [ScrollbarConfiguration? defaultValue]) {
     return parseScrollbarConfiguration(get(propertyName), defaultValue);
