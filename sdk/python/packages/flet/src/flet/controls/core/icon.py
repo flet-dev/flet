@@ -4,11 +4,18 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import BlendMode, ColorValue, IconData, Number
+from flet.utils import deprecated, deprecated_class
 from flet.utils.validation import V
 
 __all__ = ["Icon"]
 
 
+@deprecated_class(
+    reason="Use IconNew for interactive icons.",
+    docs_reason="Use [`IconButton`][flet.] for interactive icons.",
+    version="1.0.0",
+    delete_version="2.0.0",
+)
 @control("Icon")
 class Icon(LayoutControl):
     """
@@ -44,7 +51,10 @@ class Icon(LayoutControl):
     inside other controls (such as buttons), those controls may also affect sizing.
     """
 
-    semantics_label: Optional[str] = None
+    semantics_label: Annotated[
+        Optional[str],
+        V.deprecated(replacement="fill", version="1.0.0", delete_version="2.0.0"),
+    ] = None
     """
     An accessibility label for the icon.
 
@@ -99,7 +109,6 @@ class Icon(LayoutControl):
     The stroke weight (thickness) of the icon's lines.
 
     This requires the icon font to support weight variation.
-    Must be greater than `0`.
 
     Raises:
         ValueError: If it is not strictly greater than `0.0`.
@@ -107,6 +116,12 @@ class Icon(LayoutControl):
 
     optical_size: Annotated[
         Optional[Number],
+        V.deprecated(
+            replacement="size",
+            version="1.0.0",
+            delete_version="2.0.0",
+            docs_reason="Use [`size`][(c).] instead.",
+        ),
         V.gt(0.0),
     ] = None
     """
@@ -125,3 +140,12 @@ class Icon(LayoutControl):
 
     Blend modes control how the icon's color interacts with the background.
     """
+
+    @deprecated("Use [`new_method`][(c).] instead.", "1.0.0", "2.0.0")
+    def old_method(self):
+        """Some documentation..."""
+        return "old"
+
+    def new_method(self):
+        """Some documentation..."""
+        return "new"
