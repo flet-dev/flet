@@ -24,6 +24,7 @@ def _blocked_import_factory(blocked_modules: set[str]):
 
 
 def test_import_flet_without_httpx_oauthlib(monkeypatch):
+    """Ensure `import flet` succeeds when optional auth dependencies are absent."""
     _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
@@ -38,6 +39,7 @@ def test_import_flet_without_httpx_oauthlib(monkeypatch):
 
 
 def test_auth_exports_stay_importable_without_httpx_oauthlib(monkeypatch):
+    """Ensure lazy `flet.auth` exports resolve without importing optional deps."""
     _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
@@ -52,6 +54,7 @@ def test_auth_exports_stay_importable_without_httpx_oauthlib(monkeypatch):
 
 
 def test_authorization_service_loads_oauthlib_on_use(monkeypatch):
+    """Ensure oauthlib is required only when auth service logic is actually used."""
     _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
