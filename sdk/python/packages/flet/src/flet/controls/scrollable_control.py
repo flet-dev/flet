@@ -167,6 +167,7 @@ class OnScrollEvent(Event["ScrollableControl"]):
     Logical type of the scroll notification.
 
     Determines which optional fields are populated:
+
     - [`ScrollType.UPDATE`][flet.]: [`scroll_delta`][(c).]
     - [`ScrollType.USER`][flet.]: [`direction`][(c).direction]
     - [`ScrollType.OVERSCROLL`][flet.]: [`overscroll`][(c).] and [`velocity`][(c).]
@@ -305,6 +306,7 @@ class ScrollableControl(Control):
     Configures scrolling for this control.
 
     Accepts either:
+
     - [`ScrollMode`][flet.] for legacy behavior,
     - [`Scrollbar`][flet.] for per-control scrollbar customization.
     """

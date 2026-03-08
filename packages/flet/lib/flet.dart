@@ -60,6 +60,7 @@ export 'src/utils/platform.dart';
 export 'src/utils/platform_utils_web.dart'
     if (dart.library.io) "src/utils/platform_utils_non_web.dart";
 export 'src/utils/responsive.dart';
+export 'src/utils/scrollbar.dart';
 export 'src/utils/strings.dart';
 export 'src/utils/text.dart';
 export 'src/utils/textfield.dart';
