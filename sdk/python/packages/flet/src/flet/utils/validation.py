@@ -89,6 +89,7 @@ class _ClassValidationSpec:
 
 
 _DEPRECATED_WARNINGS_KEY = "__deprecated_validation_warnings"
+_REPORTED_VALIDATION_ERRORS_KEY = "__reported_validation_errors"
 
 
 def _get_warned_deprecated_fields(instance: Any) -> Optional[set[str]]:
@@ -109,6 +110,28 @@ def _get_warned_deprecated_fields(instance: Any) -> Optional[set[str]]:
     except Exception:
         return None
     return warned
+
+
+def _get_reported_validation_errors(
+    instance: Any,
+) -> Optional[set[tuple[str, str]]]:
+    """
+    Return a mutable set of already-reported validation error signatures.
+
+    Signatures are stored on the instance to suppress repeated identical
+    validation failures during control auto-update cycles.
+    """
+
+    reported = getattr(instance, _REPORTED_VALIDATION_ERRORS_KEY, None)
+    if reported is not None:
+        return reported
+
+    reported = set()
+    try:
+        setattr(instance, _REPORTED_VALIDATION_ERRORS_KEY, reported)
+    except Exception:
+        return None
+    return reported
 
 
 def _resolve_field_message(
@@ -1464,16 +1487,38 @@ def _compile_class_spec(model_cls: type[Any]) -> _ClassValidationSpec:
     return _ClassValidationSpec(tuple(field_rules), tuple(class_rules))
 
 
-def validate(instance: Any) -> None:
+def validate(instance: Any, *, suppress_repeated_errors: bool = False) -> None:
     """
     Run all compiled validators for one instance.
 
     Field rules are evaluated first, then class-level rules.
     Validation stops at the first raised exception.
+
+    Args:
+        instance: Instance to validate.
+        suppress_repeated_errors: When `True`, repeated identical `ValueError`
+            messages for the same instance are suppressed after the first report.
     """
 
     spec = _compile_class_spec(instance.__class__)
-    for field_name, rule in spec.field_rules:
-        rule.validate(instance, field_name, getattr(instance, field_name))
-    for rule in spec.class_rules:
-        rule.validate(instance)
+    reported = (
+        _get_reported_validation_errors(instance) if suppress_repeated_errors else None
+    )
+
+    try:
+        for field_name, rule in spec.field_rules:
+            rule.validate(instance, field_name, getattr(instance, field_name))
+        for rule in spec.class_rules:
+            rule.validate(instance)
+    except ValueError as ex:
+        if reported is None:
+            raise
+        signature = (ex.__class__.__name__, str(ex))
+        print((ex.__class__.__name__, type(ex)))
+        if signature in reported:
+            return
+        reported.add(signature)
+        raise
+    else:
+        if reported is not None:
+            reported.clear()

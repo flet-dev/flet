@@ -171,6 +171,57 @@ def test_deprecated_ignores_docs_reason_for_runtime_warning():
         validate(Sample(old_value=5))
 
 
+def test_validate_suppress_repeated_errors_is_opt_in():
+    """Ensure repeated validation errors are raised unless suppression is enabled."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, V.gt(0.0)] = -1
+
+    with pytest.raises(ValueError, match="value must be strictly greater than 0.0"):
+        validate(Sample(value=-1))
+
+    with pytest.raises(ValueError, match="value must be strictly greater than 0.0"):
+        validate(Sample(value=-1))
+
+
+def test_validate_suppresses_repeated_identical_errors_per_instance():
+    """Suppress the same ValueError on subsequent validations of one instance."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, V.gt(0.0)] = -1
+
+    sample = Sample(value=-1)
+
+    with pytest.raises(ValueError, match="value must be strictly greater than 0.0"):
+        validate(sample, suppress_repeated_errors=True)
+
+    # Same validation error is suppressed on repeated calls for one instance.
+    validate(sample, suppress_repeated_errors=True)
+
+
+def test_validate_suppression_resets_after_success():
+    """A successful validation clears suppression so future repeats raise again."""
+
+    @dataclass
+    class Sample:
+        value: Annotated[int, V.gt(0.0)] = -1
+
+    sample = Sample(value=-1)
+
+    with pytest.raises(ValueError, match="value must be strictly greater than 0.0"):
+        validate(sample, suppress_repeated_errors=True)
+    validate(sample, suppress_repeated_errors=True)
+
+    sample.value = 1
+    validate(sample, suppress_repeated_errors=True)
+
+    sample.value = -1
+    with pytest.raises(ValueError, match="value must be strictly greater than 0.0"):
+        validate(sample, suppress_repeated_errors=True)
+
+
 def test_instance_of_supports_optional_none_and_expected_types():
     """
     Ensure `V.instance_of()` allows `None` when the field annotation is `Optional`.
