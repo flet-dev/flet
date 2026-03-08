@@ -1,5 +1,5 @@
 ---
-name: flet-control-validation
+name: flet-validation
 description: Use when adding or changing validation for Python controls (dataclasses) in sdk/python/packages/, including Annotated/V rules, __validation_rules__, and property Raises docstrings.
 ---
 
@@ -12,6 +12,8 @@ Use this skill when you:
 - align Python validation with Dart-side control behavior.
 
 Do not use this skill for unrelated doc-only edits outside control validation.
+Do not use this skill for deprecation authoring conventions; use
+[`flet-deprecation`](../flet-deprecation/SKILL.md).
 
 ## Source Of Truth
 
@@ -23,6 +25,17 @@ Do not use this skill for unrelated doc-only edits outside control validation.
   `from flet.utils.validation import V`
   and when needed
   `from flet.utils.validation import ValidationRules`
+
+## Validation Decision Order
+
+Use this order and stop at the first option that keeps logic clear:
+1. `Annotated[..., V.*]` field rules (default).
+2. `__validation_rules__: ValidationRules` for cross-field invariants that do
+   not map cleanly to one field.
+3. `before_update()` only for normalization/mutation, or for truly non-ruleable
+   invariants.
+
+Never duplicate the same invariant in more than one layer.
 
 ## Validation Authoring Rules
 
@@ -55,15 +68,22 @@ Do not use this skill for unrelated doc-only edits outside control validation.
          ] = 1.0
      ```
 
-2. Use class-level `__validation_rules__` only for invariants that cannot be expressed cleanly on one field.
+2. Use class-level `__validation_rules__` only for invariants that cannot be
+   expressed cleanly with field rules.
    - Type:
      `__validation_rules__: ValidationRules = (...)`
-   - Use `V.ensure(...)` with an explicit message for control-level invariants only when the lambda stays clear and readable.
-   - If the lambda becomes hard to read, avoid `__validation_rules__` and implement that check in the `before_update()` override instead.
+   - Use `V.ensure(...)` with an explicit message only when the predicate is
+     short and readable.
+   - If `V.ensure(lambda ...)` becomes hard to read, prefer either:
+     1. a named predicate function passed to `V.ensure(...)`, or
+     2. a clear `before_update()` check when it cannot be represented well with
+        existing `V.*` rules.
 
-3. Keep the `before_update()` override for normalization/mutation and readability-first control checks.
+3. Keep the `before_update()` override for normalization/mutation first.
    - Remove validation checks duplicated by `V` rules.
-   - Prefer `before_update()` over `__validation_rules__` when it makes complex cross-field logic significantly clearer.
+   - Prefer raising validation errors from rule evaluation (`validate()`), not
+     from ad-hoc `before_update()` checks, unless the invariant is genuinely
+     non-ruleable with current validation primitives.
 
 4. Cross-field comparisons use field rules only.
    - Use: `V.gt_field`, `V.ge_field`, `V.lt_field`, `V.le_field`
@@ -75,20 +95,16 @@ Do not use this skill for unrelated doc-only edits outside control validation.
      comparison is skipped; if a non-optional side is `None`, validation fails.
 
 6. Match Dart effective behavior.
-   - Always do both checks:
-     1. Flet Dart wrapper (`packages/flet/lib/src/controls/<control>.dart` or extension wrapper).
-     2. Source of the wrapped widget itself (Flutter SDK widget or third-party package widget).
-   - Example workflow:
-     - For Python `Slider`, inspect Flet wrapper `slider.dart`.
-     - Identify the wrapped Flutter widget (`Slider`).
-     - Inspect Flutter `Slider` source assertions and constructor invariants.
-     - Mirror those constraints in Python validation.
-   - For extensions, inspect the extension Dart wrapper and the package widget source it instantiates.
-   - Review constructor/runtime assertions and invariant checks in wrapped-widget source, not only wrapper code.
-   - Mirror those constraints in Python validation so invalid payloads fail before they
-     cross the wire to Dart.
-   - If Dart applies defaults (for example `min`/`max`), Python should validate against the same effective defaults.
-   - Add rules for wrapper-imposed constraints when relevant (for example, bounds/rounding/division constraints used in Dart formatting logic).
+   - Review both:
+     1. Flet Dart wrapper (`packages/flet/lib/src/controls/<control>.dart` or
+        extension wrapper),
+     2. wrapped Flutter widget source assertions/invariants.
+   - Mirror those constraints in Python so invalid payloads fail before crossing
+     to Dart.
+   - Validate against effective defaults applied on Dart side (for example
+     `min`/`max`).
+   - Include wrapper-imposed constraints when relevant (for example
+     bounds/rounding/division logic in wrapper formatting code).
 
 7. For new properties, validate against base widget assertions before wiring.
    - When adding a Python property to a Flet control, confirm whether the mapped
@@ -151,6 +167,19 @@ Most common pattern to use in control property docstrings:
 - same-class properties: `[\`prop\`][(c).]`
 
 Keep symbol labels wrapped in backticks.
+
+## Required Test Matrix
+
+When adding/changing validation, include tests that cover:
+- one valid case and one invalid case per new logical rule;
+- boundary values (`==`, min/max edges) where applicable;
+- cross-field set/unset combinations when optional values are involved;
+- effective-default behavior when Dart applies defaults but Python value is
+  omitted.
+
+Prefer placing tests in:
+- `sdk/python/packages/flet/tests/test_validation.py` for validation runtime;
+- control-specific tests when behavior is tied to one control.
 
 ## Common Pitfalls
 
