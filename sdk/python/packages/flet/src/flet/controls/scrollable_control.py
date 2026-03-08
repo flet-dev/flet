@@ -87,34 +87,34 @@ class ScrollDirection(Enum):
 
 class ScrollbarOrientation(Enum):
     """
-    Side of the viewport where the scrollbar is shown.
+    Defines the edge/side of the viewport where the scrollbar is shown.
     """
 
     LEFT = "left"
     """
-    Place the scrollbar at the left edge.
+    Places the scrollbar on the left/leading edge of a vertical scrollable.
     """
 
     RIGHT = "right"
     """
-    Place the scrollbar at the right edge.
+    Places the scrollbar on the right/trailing edge of a vertical scrollable.
     """
 
     TOP = "top"
     """
-    Place the scrollbar at the top edge.
+    Places the scrollbar above a horizontal scrollable.
     """
 
     BOTTOM = "bottom"
     """
-    Place the scrollbar at the bottom edge.
+    Places the scrollbar below a horizontal scrollable.
     """
 
 
 @dataclass
 class Scrollbar:
     """
-    Per-control scrollbar configuration for [`ScrollableControl.scroll`][flet.].
+    Configures the scrollbar that scrollable controls render for their content.
     """
 
     mode: ScrollMode = ScrollMode.AUTO
@@ -127,32 +127,74 @@ class Scrollbar:
 
     thumb_visibility: Optional[bool] = None
     """
-    Overrides thumb visibility when provided.
+    Whether this scrollbar's thumb should be always be visible, even when not being
+    scrolled. When `False`, the scrollbar will be shown during scrolling and
+    will fade out otherwise.
+
+    If `None`, then [`ScrollbarTheme.thumb_visibility`][flet.] is used.
+    If that is also `None`, defaults to `False`.
     """
 
     track_visibility: Optional[bool] = None
     """
-    Overrides track visibility when provided.
+    Indicates whether the scrollbar track should be visible,
+    so long as the [thumb][(c).thumb_visibility] is visible.
+
+    If `None`, then [`ScrollbarTheme.track_visibility`][flet.] is used.
+    If that is also `None`, defaults to `False`.
     """
 
     thickness: Optional[Number] = None
     """
-    Overrides scrollbar thickness in logical pixels when provided.
+    Controls the cross-axis size of the scrollbar in logical pixels.
+    The thickness of the scrollbar in the cross axis of the scrollable.
+
+    If `None`, the default value is platform dependent:
+    `4.0` pixels on Android
+    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]);
+    `3.0` pixels on iOS ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
+    `8.0` pixels on the remaining platforms.
     """
 
     radius: Optional[Number] = None
     """
-    Overrides scrollbar thumb corner radius when provided.
+    Circular radius of the scrollbar thumb's rounded rectangle corners in logical
+    pixels. If `None`, platform defaults are used.
+
+    The radius of the scrollbar thumb's rounded rectangle corners.
+
+    If `None`, the default value is platform dependent:
+    no radius is applied on Android
+    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]);
+    `1.5` pixels on iOS ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
+    `8.0` pixels on the remaining platforms.
     """
 
     interactive: Optional[bool] = None
     """
-    Overrides whether the scrollbar is interactive when provided.
+    Whether this scroll bar should be interactive and respond to dragging on the
+    thumb, or tapping in the track area.
+
+    When `False`, the scrollbar will not respond to gesture or hover events, and will
+    allow to click through it.
+
+    If `None`, defaults to `True`, unless on Android, where it defaults to `False`.
     """
 
     orientation: Optional[ScrollbarOrientation] = None
     """
-    Overrides the side where scrollbar is displayed.
+    Specifies where the scrollbar should appear relative to the scrollable.
+
+    If `None`, for a vertical scroll, defaults to [`ScrollbarOrientation.RIGHT`][flet.]
+    for left-to-right text direction and [`ScrollbarOrientation.LEFT`][flet.]
+    for right-to-left text direction, while for a horizontal scroll, it defaults to
+    [`ScrollbarOrientation.BOTTOM`][flet.].
+
+    Note:
+        [`ScrollbarOrientation.TOP`][flet.] and [`ScrollbarOrientation.BOTTOM`][flet.]
+        can only be used with a vertical scroll; [`ScrollbarOrientation.LEFT`][flet.]
+        and [`ScrollbarOrientation.RIGHT`][flet.] can only be used with a horizontal
+        scroll.
     """
 
 
@@ -303,12 +345,10 @@ class ScrollableControl(Control):
 
     scroll: Optional[Union[ScrollMode, Scrollbar]] = None
     """
-    Configures scrolling for this control.
+    Defines the scroll bar configuration of this control.
 
-    Accepts either:
-
-    - [`ScrollMode`][flet.] for legacy behavior,
-    - [`Scrollbar`][flet.] for per-control scrollbar customization.
+    Can be a [`Scrollbar`][flet.] instance for full control over the appearance of the
+    scrollbar, or a [`ScrollMode`][flet.] value, for ready-made scrollbar behaviors.
     """
 
     auto_scroll: bool = False
