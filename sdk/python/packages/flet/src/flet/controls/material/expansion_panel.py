@@ -1,18 +1,39 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
+from flet.controls.control_event import (
+    Event,
+    EventHandler,
+)
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import Padding, PaddingValue
+from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import (
     ColorValue,
     Number,
 )
 
-__all__ = ["ExpansionPanel", "ExpansionPanelList"]
+__all__ = ["ExpansionPanel", "ExpansionPanelList", "ExpansionPanelListChangeEvent"]
+
+
+@dataclass
+class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
+    """
+    Represents a toggle event for an item in an [`ExpansionPanelList`][flet.].
+    """
+
+    index: int
+    """
+    The index of the panel that was toggled.
+    """
+
+    expanded: bool
+    """
+    Whether the panel is expanded after the toggle.
+    """
 
 
 @control("ExpansionPanel")
@@ -84,7 +105,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 
 
 @control("ExpansionPanelList")
-class ExpansionPanelList(LayoutControl):
+class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
     A material expansion panel list that lays out its children and animates \
     expansions.
@@ -145,12 +166,9 @@ class ExpansionPanelList(LayoutControl):
     The size of the gap between the [`controls`][(c).]s when expanded.
     """
 
-    on_change: Optional[ControlEventHandler["ExpansionPanelList"]] = None
+    on_change: Optional[EventHandler[ExpansionPanelListChangeEvent]] = None
     """
     Called when an item of [`controls`][(c).] is expanded or collapsed.
-
-    The [`data`][flet.Event.] property of the event handler argument contains the
-    index of the child panel (in [`controls`][(c).]) which triggered this event.
     """
 
     def before_update(self):
