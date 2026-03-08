@@ -104,10 +104,8 @@ class DragTarget(Control):
     """
     The content of this control.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     group: str = "default"

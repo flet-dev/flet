@@ -43,7 +43,7 @@ class Button(LayoutControl, AdaptiveControl):
     If a string is provided, it will be wrapped in a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+        ValueError: If neither `content` nor [`icon`][(c).]
             (string or visible control) is provided.
     """
 
@@ -54,7 +54,7 @@ class Button(LayoutControl, AdaptiveControl):
     If an `IconData` is provided, it will be wrapped in an [`Icon`][flet.] control.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+        ValueError: If neither `icon` nor [`content`][(c).]
             (string or visible control) is provided.
     """
     icon_color: Optional[ColorValue] = None
@@ -129,12 +129,14 @@ class Button(LayoutControl, AdaptiveControl):
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
-                isinstance(ctrl.icon, IconData)
-                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
-            )
-            or (
-                isinstance(ctrl.content, str)
-                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
             ),
             message=(
                 "at least icon or content (string or visible Control) must be provided"

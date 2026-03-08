@@ -23,10 +23,8 @@ class WindowDragArea(LayoutControl):
     """
     The content of this drag area.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     maximizable: bool = True

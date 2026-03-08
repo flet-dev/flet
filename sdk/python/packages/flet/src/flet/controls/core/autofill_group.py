@@ -784,10 +784,8 @@ class AutofillGroup(Control):
     """
     The content of this group.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT

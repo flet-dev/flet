@@ -35,7 +35,7 @@ class Control(BaseControl):
         [`View`][flet.], [`Page`][flet.].
 
     Raises:
-        ValueError: If [`expand`][(c).] is not `None` and not of type `bool` or `int`.
+        ValueError: If it is not of type `bool` or `int`.
     """
 
     expand_loose: bool = False
@@ -90,7 +90,7 @@ class Control(BaseControl):
     without any transparency).
 
     Raises:
-        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     tooltip: Optional[TooltipValue] = None
@@ -121,21 +121,19 @@ class Control(BaseControl):
         The value of this property will be propagated down to all children controls
         recursively.
 
-    /// details | Example
-        type: example
-    For example, if you have a form with multiple entry controls you can disable them
-    all together by disabling container:
+    Example:
+        For example, if you have a form with multiple entry controls you can
+        disable them all together by disabling container:
 
-    ```python
-    ft.Column(
-        disabled = True,
-        controls=[
-            ft.TextField(),
-            ft.TextField()
-        ]
-    )
-    ```
-    ///
+        ```python
+        ft.Column(
+            disabled = True,
+            controls=[
+                ft.TextField(),
+                ft.TextField()
+            ]
+        )
+        ```
     """
 
     rtl: bool = False

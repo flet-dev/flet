@@ -60,7 +60,7 @@ class TextSpan(Control):
     actual text.
 
     Raises:
-        ValueError: If [`semantics_label`][(c).] is set when [`text`][(c).] is `None`.
+        ValueError: If it is set when [`text`][(c).] is `None`.
     """
 
     spell_out: Optional[bool] = None

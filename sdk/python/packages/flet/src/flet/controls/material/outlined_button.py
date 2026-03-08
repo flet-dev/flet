@@ -37,7 +37,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     A Control representing custom button content.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).] is provided.
+        ValueError: If neither [`icon`][(c).] nor `content` is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -106,12 +106,14 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
-                isinstance(ctrl.icon, IconData)
-                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
-            )
-            or (
-                isinstance(ctrl.content, str)
-                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
             ),
             message="at minimum, icon or content (string or visible Control) "
             "must be provided",

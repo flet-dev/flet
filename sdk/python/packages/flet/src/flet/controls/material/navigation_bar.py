@@ -120,8 +120,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     bar.
 
     Raises:
-        ValueError: If it does not contain at least
-            two visible `NavigationBarDestination`.
+        ValueError: If it does not contain at least two visible destinations.
     """
 
     selected_index: int = 0

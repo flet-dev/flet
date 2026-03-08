@@ -52,7 +52,7 @@ class AnimatedSwitcher(LayoutControl):
     `content` to the new one.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))

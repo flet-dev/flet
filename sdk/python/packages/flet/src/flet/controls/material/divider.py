@@ -60,7 +60,7 @@ class Divider(Control):
     If that's is also `None`, defaults to `0.0`.
 
     Raises:
-        ValueError: If [`leading_indent`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     thickness: Annotated[
@@ -91,7 +91,7 @@ class Divider(Control):
     If that is also `None`, defaults to `0.0`.
 
     Raises:
-        ValueError: If [`trailing_indent`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     radius: Optional[BorderRadiusValue] = None

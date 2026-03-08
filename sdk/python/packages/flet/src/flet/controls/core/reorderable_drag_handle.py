@@ -42,10 +42,8 @@ class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     The control for which the application would like to respond to a tap and drag \
     gesture by starting a reordering drag on a reorderable list.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     mouse_cursor: Optional[MouseCursor] = None

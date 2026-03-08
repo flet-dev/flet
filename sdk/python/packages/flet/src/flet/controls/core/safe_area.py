@@ -33,10 +33,8 @@ class SafeArea(LayoutControl, AdaptiveControl):
     """
     The control to display.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     avoid_intrusions_left: bool = True

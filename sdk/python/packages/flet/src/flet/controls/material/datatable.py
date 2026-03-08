@@ -202,7 +202,7 @@ class DataCell(Control):
 @control("DataRow")
 class DataRow(Control):
     """
-    Row configuration and cell data for a [DataTable][flet.DataTable].
+    Row configuration and cell data for a [`DataTable`][flet.].
 
     One row configuration must be provided for each row to display in the table.
 
@@ -217,7 +217,8 @@ class DataRow(Control):
     The data for this row: a list of [`DataCell`][flet.] controls.
 
     Note:
-        There must be exactly as many cells as there are columns in the table.
+        There must be exactly as many cells as there are visible
+        [`columns`][flet.DataTable.] in the table.
 
     Raises:
         ValueError: If it does not contain at least one visible [`DataCell`][flet.].
@@ -366,8 +367,7 @@ class DataTable(LayoutControl):
     any of the columns.
 
     Raises:
-        ValueError: If [`sort_column_index`][(c).] is out of range relative to the
-            visible [`columns`][(c).].
+        ValueError: If it is out of range relative to the visible [`columns`][(c).].
     """
 
     show_bottom_border: bool = False
