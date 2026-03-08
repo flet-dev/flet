@@ -97,7 +97,7 @@ class GitHubOAuthProvider(OAuthProvider):
                     break
             return User(uj, id=str(uj["id"]))
 
-    def __get_client_headers(self, access_token):
+    def __get_client_headers(self, access_token: str) -> dict[str, str]:
         """
         Builds common GitHub API request headers.
 

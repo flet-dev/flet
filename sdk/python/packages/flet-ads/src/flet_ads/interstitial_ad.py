@@ -14,8 +14,8 @@ class InterstitialAd(ft.Service, BaseAd):
 
     Example: Test IDs
         AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads)
-        unit IDs for testing purposes. Set [`unit_id`][(c).] to the appropriate value
-        based on the platform you're testing on:
+        unit IDs for testing purposes. Set [`unit_id`][flet_ads.BaseAd.]
+        to the appropriate value based on the platform you're testing on:
 
         - Android: `"ca-app-pub-3940256099942544/1033173712"`
         - iOS: `"ca-app-pub-3940256099942544/4411468910"`

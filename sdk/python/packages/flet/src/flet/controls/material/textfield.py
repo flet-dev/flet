@@ -374,9 +374,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     Displays a toggle icon button that allows revealing the entered password. Is shown \
     if both [`password`][(c).] and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as [`suffix`][(c).] and in case both
-    `can_reveal_password`/[`password`][(c).] and `suffix` are provided, then the
-    [`suffix`][(c).] won't not shown.
+    The icon is displayed in the same location as [`suffix`][flet.FormFieldControl.]
+    and in case both `can_reveal_password`/[`password`][(c).] and `suffix` are
+    provided, then the [`suffix`][flet.FormFieldControl.] won't not shown.
     """
 
     read_only: bool = False
