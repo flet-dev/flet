@@ -146,6 +146,31 @@ def test_deprecated_allows_custom_reason():
         validate(Sample(old_value=5))
 
 
+def test_deprecated_ignores_docs_reason_for_runtime_warning():
+    """Ensure docs-specific reason text does not affect runtime warnings."""
+
+    @dataclass
+    class Sample:
+        old_value: Annotated[
+            Optional[int],
+            V.deprecated(
+                "new_value",
+                version="0.80.0",
+                reason="Use plain runtime guidance.",
+                docs_reason="Use [`new_value`][(c).] instead.",
+            ),
+        ] = None
+
+    with pytest.warns(
+        DeprecationWarning,
+        match=re.escape(
+            "Sample.old_value property is deprecated since version 0.80.0. "
+            "Use plain runtime guidance."
+        ),
+    ):
+        validate(Sample(old_value=5))
+
+
 def test_instance_of_supports_optional_none_and_expected_types():
     """
     Ensure `V.instance_of()` allows `None` when the field annotation is `Optional`.

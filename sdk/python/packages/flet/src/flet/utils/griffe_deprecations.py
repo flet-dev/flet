@@ -126,6 +126,7 @@ def _extract_deprecation_from_decorators(obj: Union[Class, Function]) -> Optiona
             reason = _text(keywords.get("reason"))
             if reason is None and positional:
                 reason = _text(positional[0])
+            docs_reason = _text(keywords.get("docs_reason"))
 
             version = _text(keywords.get("version"))
             if version is None and len(positional) > 1:
@@ -136,13 +137,16 @@ def _extract_deprecation_from_decorators(obj: Union[Class, Function]) -> Optiona
                 delete_version = _text(positional[2])
 
             return _compose_message(
-                reason=reason, version=version, delete_version=delete_version
+                reason=docs_reason or reason,
+                version=version,
+                delete_version=delete_version,
             )
 
         if path in _FLET_CLASS_DECORATORS:
             reason = _text(keywords.get("reason"))
             if reason is None and positional:
                 reason = _text(positional[0])
+            docs_reason = _text(keywords.get("docs_reason"))
 
             version = _text(keywords.get("version"))
             if version is None and len(positional) > 1:
@@ -153,7 +157,9 @@ def _extract_deprecation_from_decorators(obj: Union[Class, Function]) -> Optiona
                 delete_version = _text(positional[2])
 
             return _compose_message(
-                reason=reason, version=version, delete_version=delete_version
+                reason=docs_reason or reason,
+                version=version,
+                delete_version=delete_version,
             )
 
     return None
@@ -194,8 +200,10 @@ def _extract_deprecation_from_attribute(attribute: Attribute) -> Optional[str]:
         replacement = _text(positional[0])
 
     reason = _text(keywords.get("reason"))
-    if reason is None:
-        reason = (
+    docs_reason = _text(keywords.get("docs_reason"))
+    selected_reason = docs_reason or reason
+    if selected_reason is None:
+        selected_reason = (
             f"Use `{replacement}` instead."
             if replacement is not None
             else "This property is deprecated."
@@ -205,7 +213,7 @@ def _extract_deprecation_from_attribute(attribute: Attribute) -> Optional[str]:
     delete_version = _text(keywords.get("delete_version"))
 
     return _compose_message(
-        reason=reason,
+        reason=selected_reason,
         version=version,
         delete_version=delete_version,
     )

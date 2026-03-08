@@ -10,6 +10,7 @@ def deprecated(
     version: Optional[str] = None,
     delete_version: Optional[str] = None,
     show_parentheses: bool = False,
+    docs_reason: Optional[str] = None,
 ):
     """
     Marks a function, method, or class as deprecated.
@@ -20,6 +21,8 @@ def deprecated(
         delete_version: The version in which the function will be removed.
         show_parentheses: Whether to show parentheses after the function/class name
             in the warning.
+        docs_reason: Optional docs-only reason. This value is ignored at runtime
+            and is consumed by docs tooling when available.
     """
 
     def decorator(func):
@@ -44,7 +47,23 @@ def deprecated(
     return decorator
 
 
-def deprecated_class(reason: str, version: str, delete_version: str):
+def deprecated_class(
+    reason: str,
+    version: str,
+    delete_version: str,
+    docs_reason: Optional[str] = None,
+):
+    """
+    Marks a class as deprecated.
+
+    Args:
+        reason: The reason for deprecation used in runtime warnings.
+        version: The version from which the class is deprecated.
+        delete_version: The version in which the class will be removed.
+        docs_reason: Optional docs-only reason. This value is ignored at runtime
+            and is consumed by docs tooling when available.
+    """
+
     def decorator(cls):
         msg = (
             f"{cls.__name__} is deprecated since version {version} and will be removed "

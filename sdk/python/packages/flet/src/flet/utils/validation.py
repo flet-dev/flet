@@ -171,6 +171,7 @@ class V:
         replacement: Optional[str] = None,
         *,
         reason: Optional[str] = None,
+        docs_reason: Optional[str] = None,
         version: str,
         delete_version: Optional[str] = None,
     ) -> FieldRule:
@@ -184,6 +185,8 @@ class V:
             replacement: Optional preferred property name used in default message.
             reason: Optional full deprecation reason. When omitted, a replacement-
                 based message is generated.
+            docs_reason: Optional docs-only reason. This value is ignored at
+                runtime and is consumed by docs tooling when available.
             version: Version where deprecation starts.
             delete_version: Optional version where removal is planned.
         """
