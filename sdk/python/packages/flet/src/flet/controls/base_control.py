@@ -292,7 +292,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
-        validate(self)
+        validate(self, suppress_repeated_errors=True)
 
         if frozen is not None:
             self._frozen = frozen

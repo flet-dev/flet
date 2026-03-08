@@ -1,8 +1,33 @@
 import functools
+import sys
 import warnings
 from typing import Optional
 
 __all__ = ["deprecated", "deprecated_class", "deprecated_warning"]
+
+
+def _resolve_user_stacklevel(default: int = 2) -> int:
+    """
+    Return a `warnings.warn` stacklevel that points outside `flet.*` internals.
+
+    This keeps deprecation warnings attributed to user code by default, so they
+    are visible without requiring explicit warning filter configuration.
+    """
+
+    try:
+        frame = sys._getframe(1)
+    except Exception:
+        return default
+
+    stacklevel = 1
+    while frame is not None:
+        module_name = frame.f_globals.get("__name__", "")
+        if module_name != "flet" and not module_name.startswith("flet."):
+            return stacklevel
+        frame = frame.f_back
+        stacklevel += 1
+
+    return default
 
 
 def deprecated(
@@ -38,7 +63,7 @@ def deprecated(
             warnings.warn(
                 msg,
                 category=DeprecationWarning,
-                stacklevel=2,
+                stacklevel=_resolve_user_stacklevel(),
             )
             return func(*args, **kwargs)
 
@@ -75,7 +100,11 @@ def deprecated_class(
 
         @functools.wraps(orig_init)
         def new_init(self, *args, **kwargs):
-            warnings.warn(msg, category=DeprecationWarning, stacklevel=2)
+            warnings.warn(
+                msg,
+                category=DeprecationWarning,
+                stacklevel=_resolve_user_stacklevel(),
+            )
             orig_init(self, *args, **kwargs)
 
         cls.__init__ = new_init
@@ -85,7 +114,11 @@ def deprecated_class(
 
         @functools.wraps(orig_post_init)
         def new_post_init(self, *args, **kwargs):
-            warnings.warn(msg, category=DeprecationWarning, stacklevel=2)
+            warnings.warn(
+                msg,
+                category=DeprecationWarning,
+                stacklevel=_resolve_user_stacklevel(),
+            )
             orig_post_init(self, *args, **kwargs)
 
         cls.__post_init__ = new_post_init
@@ -122,5 +155,5 @@ def deprecated_warning(
         f"{name} {type} is deprecated since version {version}{delete_version_text}. "
         f"{reason}",
         category=DeprecationWarning,
-        stacklevel=2,
+        stacklevel=_resolve_user_stacklevel(),
     )

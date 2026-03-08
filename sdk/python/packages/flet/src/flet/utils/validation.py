@@ -1514,7 +1514,6 @@ def validate(instance: Any, *, suppress_repeated_errors: bool = False) -> None:
         if reported is None:
             raise
         signature = (ex.__class__.__name__, str(ex))
-        print((ex.__class__.__name__, type(ex)))
         if signature in reported:
             return
         reported.add(signature)
