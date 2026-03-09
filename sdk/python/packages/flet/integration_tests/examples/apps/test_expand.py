@@ -1,7 +1,7 @@
 import pytest
 
 import flet.testing as ftt
-from examples.apps.expand import (
+from examples.controls.control import (
     expand_loose_chat_messages,
     expand_row_equal_split,
     expand_row_proportional_1_3_1,
