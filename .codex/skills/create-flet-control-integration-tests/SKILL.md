@@ -24,7 +24,7 @@ Pick the closest existing suite first:
 - Theme tests: `sdk/python/packages/flet/integration_tests/controls/theme`
 - Type helpers: `sdk/python/packages/flet/integration_tests/controls/types`
 - Services: `sdk/python/packages/flet/integration_tests/controls/services`
-- Example apps: `sdk/python/packages/flet/integration_tests/examples/apps`
+- Examples: `sdk/python/packages/flet/integration_tests/examples`
 
 Prefer adding tests to an existing file for the same control. Create a new test file only when no suitable file exists.
 
@@ -161,6 +161,7 @@ FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packag
 - `sdk/python/packages/flet/integration_tests/README.md`
 - `sdk/python/packages/flet/integration_tests/conftest.py`
 - `sdk/python/packages/flet/integration_tests/controls/core/test_control.py`
+- `sdk/python/packages/flet/integration_tests/controls/core/test_control_isolated.py`
 - `sdk/python/packages/flet/integration_tests/controls/core/test_layout_control.py`
-- `sdk/python/packages/flet/integration_tests/controls/core/test_tooltip.py`
-- `sdk/python/packages/flet/integration_tests/examples/apps/test_expand.py`
+- `sdk/python/packages/flet/integration_tests/examples/core/test_control.py`
+- `sdk/python/examples/controls/control`
