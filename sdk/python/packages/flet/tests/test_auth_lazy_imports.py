@@ -12,6 +12,22 @@ def _clear_flet_modules():
             del sys.modules[module_name]
 
 
+@pytest.fixture
+def fresh_flet_modules():
+    """Run a test with a clean flet import state, then restore previous modules."""
+    original_flet_modules = {
+        name: module
+        for name, module in sys.modules.items()
+        if name == "flet" or name.startswith("flet.")
+    }
+    _clear_flet_modules()
+    try:
+        yield
+    finally:
+        _clear_flet_modules()
+        sys.modules.update(original_flet_modules)
+
+
 def _blocked_import_factory(blocked_modules: set[str]):
     """Create an import hook that raises for selected top-level module names."""
     original_import = builtins.__import__
@@ -26,9 +42,8 @@ def _blocked_import_factory(blocked_modules: set[str]):
     return blocked_import
 
 
-def test_import_flet_without_httpx_oauthlib(monkeypatch):
+def test_import_flet_without_httpx_oauthlib(monkeypatch, fresh_flet_modules):
     """Ensure `import flet` succeeds when optional auth dependencies are absent."""
-    _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
         "__import__",
@@ -41,9 +56,10 @@ def test_import_flet_without_httpx_oauthlib(monkeypatch):
     assert hasattr(flet, "Page")
 
 
-def test_auth_exports_stay_importable_without_httpx_oauthlib(monkeypatch):
+def test_auth_exports_stay_importable_without_httpx_oauthlib(
+    monkeypatch, fresh_flet_modules
+):
     """Ensure lazy `flet.auth` exports resolve without importing optional deps."""
-    _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
         "__import__",
@@ -56,9 +72,8 @@ def test_auth_exports_stay_importable_without_httpx_oauthlib(monkeypatch):
     assert auth.GitHubOAuthProvider.__name__ == "GitHubOAuthProvider"
 
 
-def test_authorization_service_loads_oauthlib_on_use(monkeypatch):
+def test_authorization_service_loads_oauthlib_on_use(monkeypatch, fresh_flet_modules):
     """Ensure oauthlib is required only when auth service logic is actually used."""
-    _clear_flet_modules()
     monkeypatch.setattr(
         builtins,
         "__import__",
