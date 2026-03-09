@@ -1,7 +1,7 @@
 ---
 title: Expanding Controls
 examples: ../../examples/controls/control
-example_images: ../test-images/examples/apps/golden/macos/expand
+example_images: ../test-images/examples/core/golden/macos/control
 ---
 
 ## `expand`
