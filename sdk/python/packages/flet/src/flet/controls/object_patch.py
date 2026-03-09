@@ -1081,7 +1081,7 @@ class DiffBuilder:
                 parent,
             )
             for field in dataclasses.fields(dst):
-                if "skip" not in field.metadata:
+                if not field.metadata.get("skip", False):
                     old = getattr(src, field.name)
                     new = getattr(dst, field.name)
                     if field.name.startswith("on_") and field.metadata.get(
@@ -1257,7 +1257,7 @@ class DiffBuilder:
             # recurse through fields
             if not configure_setattr_only:
                 for field in dataclasses.fields(item):
-                    if "skip" not in field.metadata:
+                    if not field.metadata.get("skip", False):
                         yield from self._configure_dataclass(
                             getattr(item, field.name), item, frozen
                         )
@@ -1290,7 +1290,7 @@ class DiffBuilder:
             elif recurse:
                 # recurse through fields
                 for field in dataclasses.fields(item):
-                    if "skip" not in field.metadata:
+                    if not field.metadata.get("skip", False):
                         yield from self._removed_controls(
                             getattr(item, field.name),
                             recurse,
