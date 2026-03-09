@@ -36,7 +36,7 @@ def _blocked_import_factory(blocked_modules: set[str]):
         """Raise `ModuleNotFoundError` for blocked modules and delegate otherwise."""
         top_name = name.split(".")[0]
         if top_name in blocked_modules:
-            raise ModuleNotFoundError(f"No module named '{top_name}'")
+            raise ModuleNotFoundError(f"No module named '{top_name}'", name=top_name)
         return original_import(name, globals, locals, fromlist, level)
 
     return blocked_import
