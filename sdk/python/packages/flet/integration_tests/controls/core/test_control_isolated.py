@@ -5,7 +5,7 @@ import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
+async def test_tooltip_string_is_findable(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(
         ft.IconButton(
             icon=ft.Icons.INFO_OUTLINED,
@@ -19,7 +19,7 @@ async def test_tooltip_property(flet_app_function: ftt.FletTestApp):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_tooltip_hover_screenshot(flet_app_function: ftt.FletTestApp, request):
+async def test_tooltip_shows_on_hover(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(420, 300)
@@ -51,7 +51,7 @@ async def test_tooltip_hover_screenshot(flet_app_function: ftt.FletTestApp, requ
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_tooltip_custom_properties_screenshot(
+async def test_tooltip_custom_properties_on_hover(
     flet_app_function: ftt.FletTestApp, request
 ):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
