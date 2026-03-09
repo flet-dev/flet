@@ -26,14 +26,23 @@ Pick the closest existing suite first:
 - Services: `sdk/python/packages/flet/integration_tests/controls/services`
 - Example apps: `sdk/python/packages/flet/integration_tests/examples/apps`
 
-Prefer adding tests to an existing file for the same control. Create a new `test_<control>.py` only when no suitable file exists.
+Prefer adding tests to an existing file for the same control. Create a new test file only when no suitable file exists.
+
+### Scope split rule (required)
+
+Do not mix `loop_scope="module"` and `loop_scope="function"` tests in the same file.
+
+Naming convention:
+
+- `test_<control>.py` for module-scoped visual/stable tests (uses `flet_app`)
+- `test_<control>_isolated.py` for function-scoped tests that require a fresh app per test (uses `flet_app_function`)
 
 ## Fixture choice
 
 Use fixtures from `integration_tests/conftest.py`:
 
 - `flet_app` (`loop_scope="module"`): best for stable visual tests and bulk screenshot tests.
-- `flet_app_function` (`loop_scope="function"`): best for isolated interactive tests and context-bound behavior.
+- `flet_app_function` (`loop_scope="function"`): best for tests that mutate state and must run in a separate app each.
 
 ## Authoring workflow
 
@@ -42,11 +51,12 @@ Use fixtures from `integration_tests/conftest.py`:
 - set `theme_mode` explicitly when visuals matter
 - set fixed sizes/padding/spacing
 - avoid random or time-varying content
-3. Write test using async pytest.
-4. Use screenshot assertion for UI behavior, functional assertion for non-visual behavior.
-5. Name test so `request.node.name` can be used as screenshot key.
-6. Run target test file.
-7. If expected visuals changed, regenerate goldens with `FLET_TEST_GOLDEN=1` and re-run without golden mode.
+3. Choose file by scope rule before writing tests.
+4. Write test using async pytest.
+5. Use screenshot assertion for UI behavior, functional assertion for non-visual behavior.
+6. Name test so `request.node.name` can be used as screenshot key.
+7. Run target test file.
+8. If expected visuals changed, regenerate goldens with `FLET_TEST_GOLDEN=1` and re-run without golden mode.
 
 ## Assertion patterns
 
@@ -79,7 +89,7 @@ assert finder.count == 1
 
 ## Minimal templates
 
-### Template: golden visual test
+### Template: module-scope file (`test_<control>.py`)
 
 ```python
 import pytest
@@ -97,7 +107,7 @@ async def test_<behavior>(flet_app: ftt.FletTestApp, request):
     )
 ```
 
-### Template: interaction test
+### Template: function-scope file (`test_<control>_isolated.py`)
 
 ```python
 import pytest
@@ -138,6 +148,8 @@ FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packag
 ## Quality checklist
 
 - Test file location matches control area.
+- `module` and `function` scope tests are in separate files.
+- Function-scoped files use the `test_<control>_isolated.py` naming convention.
 - Fixture scope matches test intent.
 - Screenshot keys are stable (`request.node.name` preferred).
 - Visual tests are deterministic (theme/size/content).
