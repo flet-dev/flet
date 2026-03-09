@@ -21,7 +21,7 @@ They represent smart or automated actions that appear dynamically and contextual
 An alternative to assist chips are buttons, which should appear persistently and consistently.
 
 ```python
---8<-- "{{ examples }}/assist_chips.py"
+--8<-- "{{ examples }}/assist_chips/main.py"
 ```
 
 {{ image(example_media + "/assist_chips.png", alt="assist-chips", width="80%") }}
@@ -35,7 +35,7 @@ They use tags or descriptive words provided in the [`label`][flet.Chip.label] to
 They can be a good alternative to switches or checkboxes.
 
 ```python
---8<-- "{{ examples }}/filter_chips.py"
+--8<-- "{{ examples }}/filter_chips/main.py"
 ```
 
 {{ image(example_media + "/filter_chips.png", alt="filter-chips", width="80%") }}

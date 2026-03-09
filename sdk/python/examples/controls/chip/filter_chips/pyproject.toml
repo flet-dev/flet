@@ -1,0 +1,26 @@
+[project]
+name = "chip-filter-chips"
+version = "1.0.0"
+description = "Filter chips for amenity selection with on_select events."
+requires-python = ">=3.10"
+keywords = ["chip", "filter chip", "material", "input", "selection", "filters"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Chip", "Apps/Basic controls"]
+
+[tool.flet.metadata]
+title = "Filter chips"
+controls = ["SafeArea", "Column", "Row", "Chip", "Icon", "Text"]
+layout_pattern = "filter-bar"
+complexity = "basic"
+features = ["selection handling", "chip toggles", "event-driven filtering UI"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

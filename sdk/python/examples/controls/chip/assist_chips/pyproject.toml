@@ -1,0 +1,26 @@
+[project]
+name = "chip-assist-chips"
+version = "1.0.0"
+description = "Assist chips with click actions and dynamic state updates."
+requires-python = ">=3.10"
+keywords = ["chip", "assist chip", "material", "input", "actions", "async", "url launch"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Chip", "Apps/Basic controls"]
+
+[tool.flet.metadata]
+title = "Assist chips"
+controls = ["SafeArea", "Row", "Chip", "Icon", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click handling", "async url launch", "dynamic chip state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
