@@ -20,10 +20,10 @@ example_media: ../examples/controls/app_bar/media
 {{ image(example_media + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
 
 
-### Theme and Material Mode Toggles
+### Theme Mode Toggle
 
 ```python
---8<-- "{{ examples }}/theme_and_material_mode_toggles/main.py"
+--8<-- "{{ examples }}/theme_mode_toggle/main.py"
 ```
 
 {{ class_members(class_name) }}

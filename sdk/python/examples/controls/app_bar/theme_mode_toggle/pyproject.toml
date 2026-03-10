@@ -1,9 +1,9 @@
 [project]
-name = "app-bar-theme-and-material-mode-toggles"
+name = "app-bar-theme-mode-toggle"
 version = "1.0.0"
-description = "AppBar example with theme mode and Material version toggles."
+description = "AppBar example with theme mode toggle and popup menu actions."
 requires-python = ">=3.10"
-keywords = ["appbar", "navigation", "theme mode", "material 3", "popup menu"]
+keywords = ["appbar", "navigation", "theme mode", "popup menu"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet"]
 
@@ -14,11 +14,11 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/AppBar"]
 
 [tool.flet.metadata]
-title = "Theme and Material mode toggles"
+title = "Theme mode toggle"
 controls = ["AppBar", "Icon", "IconButton", "PopupMenuButton", "PopupMenuItem", "SafeArea", "Column", "Text", "Button", "Theme"]
 layout_pattern = "toolbar-actions"
 complexity = "basic"
-features = ["theme mode toggle", "material mode toggle", "popup menu interactions"]
+features = ["theme mode toggle", "popup menu interactions"]
 
 [tool.flet]
 org = "dev.flet"

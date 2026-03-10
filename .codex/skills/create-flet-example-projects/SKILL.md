@@ -74,24 +74,30 @@ Ensure each runnable example is a standalone project containing:
 - Move constructor-style setup to declarative fields + `init()` where practical.
 - Keep behavior unchanged and avoid refactors that alter public usage unless needed for compatibility.
 
-8. Ensure runnable entrypoint.
+8. Remove deprecated Material 3 toggle usage.
+- If `use_material3` appears in example code, remove it and simplify the example to current API usage.
+- Remove related Material 3 toggle logic/UI that exists only to switch `use_material3`.
+- Update example metadata (`pyproject.toml`) to remove stale Material 3 references when code is changed.
+
+9. Ensure runnable entrypoint.
 - Every example `main.py` should end with:
   - `if __name__ == "__main__":`
   - `    ft.run(main)`
 - Apply this to all examples in the touched folder (new, migrated, and already converted).
 
-9. Update references.
+10. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
 - Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
 - For already-converted examples, only update references that are stale; avoid unnecessary churn.
 
-10. Validate.
+11. Validate.
 - Run `python -m compileall` on changed `main.py` files.
 - Search for stale paths to old flat files.
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
 - Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
+- Confirm no in-scope examples use `use_material3`.
 
 ## Code style
 
