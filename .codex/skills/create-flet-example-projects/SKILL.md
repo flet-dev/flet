@@ -5,11 +5,14 @@ description: Use when asked to create Flet example projects from flat .py files 
 
 ## When to use
 
-Use this skill when a user asks to create one control/example folder (for example `examples/controls/chip`) in the project-per-example format.
+Use this skill when a user asks to:
+- create one control/example folder (for example `examples/controls/chip`) in the project-per-example format
+- migrate existing flat examples to the project-per-example format
+- normalize a partially converted folder so all examples follow the same structure
 
 ## Goal
 
-Turn each runnable example file into a standalone project containing:
+Ensure each runnable example is a standalone project containing:
 
 - `main.py`
 - `pyproject.toml` with Gallery/MCP metadata
@@ -18,15 +21,23 @@ Turn each runnable example file into a standalone project containing:
 ## Workflow
 
 1. Inspect source folder.
-- Find example modules: `*.py` in the target folder, excluding `__init__.py`.
+- Detect current state per example:
+  - flat file: `foo.py`
+  - project folder: `foo/main.py`
+  - mixed/partial conversion: both styles present or missing metadata files
+- Find candidate flat modules: `*.py` in the target folder (exclude helper files such as `__init__.py`).
 - Keep existing `media/` unless an example needs local assets copied into its own `assets/`.
 
-2. Create one folder per example.
+2. Convert or normalize examples.
 - For `foo.py`, create `foo/` and move file to `foo/main.py`.
+- If `foo/main.py` already exists, keep it and do not recreate/move files.
+- If folder exists but `main.py` is missing, repair structure only when there is a clear source file.
 - Do not create `foo/__init__.py`; import example modules directly in tests/docs (for example `import examples.controls.foo.bar.main as bar` or `import examples.controls.foo.bar as bar` when using namespace-package imports).
 
 3. Add `pyproject.toml` for each example project.
 - Infer from path and code.
+- Create missing `pyproject.toml` files for existing project folders.
+- Update obviously stale metadata when migrating existing examples (for example wrong title/description/categories).
 - Required fields:
   - `[project]`: `name`, `version`, `description`, `requires-python`, `keywords`, `authors`, `dependencies`
   - `[dependency-groups].dev`: include `flet-cli`, `flet-desktop`, `flet-web`
@@ -58,11 +69,13 @@ Turn each runnable example file into a standalone project containing:
 7. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
 - Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
+- For already-converted examples, only update references that are stale; avoid unnecessary churn.
 
 8. Validate.
 - Run `python -m compileall` on changed `main.py` files.
 - Search for stale paths to old flat files.
 - Check `git status` to confirm expected moves and edits.
+- When integration tests exist for the touched control, run the targeted test file(s).
 
 ## Command checklist
 
