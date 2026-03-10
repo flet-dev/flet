@@ -14,7 +14,6 @@ Turn each runnable example file into a standalone project containing:
 - `main.py`
 - `pyproject.toml` with Gallery/MCP metadata
 - `assets/` (if the example uses local assets)
-- `__init__.py` when needed for imports/tests
 
 ## Workflow
 
@@ -24,7 +23,7 @@ Turn each runnable example file into a standalone project containing:
 
 2. Create one folder per example.
 - For `foo.py`, create `foo/` and move file to `foo/main.py`.
-- Add `foo/__init__.py` with `from .main import main` if examples are imported from tests/docs.
+- Do not create `foo/__init__.py`; import example modules directly in tests/docs (for example `import examples.controls.foo.bar.main as bar` or `import examples.controls.foo.bar as bar` when using namespace-package imports).
 
 3. Add `pyproject.toml` for each example project.
 - Infer from path and code.
@@ -58,7 +57,7 @@ Turn each runnable example file into a standalone project containing:
 
 7. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
-- Tests/imports: update module imports to new package paths if needed.
+- Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
 
 8. Validate.
 - Run `python -m compileall` on changed `main.py` files.
