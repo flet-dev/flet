@@ -14,7 +14,7 @@ example_media: ../examples/controls/column/media
 ### Column `spacing`
 
 ```python
---8<-- "{{ examples }}/spacing.py"
+--8<-- "{{ examples }}/spacing/main.py"
 ```
 
 {{ image(example_media + "/spacing.gif", alt="spacing", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/column/media
 ### Column wrapping
 
 ```python
---8<-- "{{ examples }}/wrap.py"
+--8<-- "{{ examples }}/wrap/main.py"
 ```
 
 {{ image(example_media + "/wrap.gif", alt="wrap", width="80%") }}
@@ -32,7 +32,7 @@ example_media: ../examples/controls/column/media
 ### Column vertical alignments
 
 ```python
---8<-- "{{ examples }}/alignment.py"
+--8<-- "{{ examples }}/alignment/main.py"
 ```
 
 {{ image(example_media + "/alignment.png", alt="alignment", width="80%") }}
@@ -41,7 +41,7 @@ example_media: ../examples/controls/column/media
 ### Column horizontal alignments
 
 ```python
---8<-- "{{ examples }}/horizontal_alignment.py"
+--8<-- "{{ examples }}/horizontal_alignment/main.py"
 ```
 
 {{ image(example_media + "/horizontal_alignment.png", alt="horizontal-alignment", width="80%") }}
@@ -53,7 +53,7 @@ This example demonstrates adding of list items on-the-fly, as user scroll to the
 creating the illusion of infinite list:
 
 ```python
---8<-- "{{ examples }}/infinite_scrolling.py"
+--8<-- "{{ examples }}/infinite_scrolling/main.py"
 ```
 
 ### Scrolling programmatically
@@ -61,7 +61,7 @@ creating the illusion of infinite list:
 This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
 
 ```python
---8<-- "{{ examples }}/programmatic_scroll.py"
+--8<-- "{{ examples }}/programmatic_scroll/main.py"
 ```
 
 {{ image(example_media + "/programmatic_scroll.png", alt="programmatic-scroll", width="80%") }}

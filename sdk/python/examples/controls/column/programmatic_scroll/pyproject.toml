@@ -1,0 +1,26 @@
+[project]
+name = "column-programmatic-scroll"
+version = "1.0.0"
+description = "Programmatic scrolling of a column using offsets, keys, and deltas."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "scroll_to", "scroll key", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column programmatic scroll"
+controls = ["Container", "Column", "Row", "Button", "Text"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["async scroll_to", "offset and delta scrolling", "scroll key targeting"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

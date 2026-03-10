@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Input/Checkbox", "Apps/Basic controls"]
+categories = ["Input/Checkbox"]
 
 [tool.flet.metadata]
 title = "Styled checkboxes"

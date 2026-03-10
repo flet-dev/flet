@@ -25,7 +25,8 @@ def main(page: ft.Page):
         ft.Column(
             controls=[
                 ft.Text(
-                    "Change the column height to see how child items wrap onto multiple columns:"
+                    "Change the column height to see how child items wrap onto "
+                    "multiple columns:"
                 ),
                 ft.Slider(
                     min=0,

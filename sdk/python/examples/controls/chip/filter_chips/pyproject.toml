@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Input controls"]
+categories = ["Input/Chip"]
 
 [tool.flet.metadata]
 title = "Filter chips"
