@@ -10,7 +10,6 @@ def main(page: ft.Page):
             width=200,
             height=300,
         )
-        page.update()
 
     page.add(
         ft.SafeArea(
