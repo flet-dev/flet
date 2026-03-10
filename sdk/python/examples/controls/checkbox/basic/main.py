@@ -7,7 +7,6 @@ def main(page: ft.Page):
             f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, "
             f"{c4.value}, {c5.value}."
         )
-        page.update()
 
     page.add(
         ft.SafeArea(
