@@ -4,6 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.ExpansionPanelList(
                 expand=True,
                 scroll=ft.ScrollMode.ALWAYS,
@@ -21,7 +22,7 @@ def main(page: ft.Page):
                     )
                     for i in range(1, 41)
                 ],
-            )
+            ),
         ),
     )
 

@@ -19,19 +19,12 @@ example_media: ../examples/controls/expansion_panel_list/media
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
 
-### Scrollable list with many panels
+### Scrolling
 
-`ExpansionPanelList` supports scrolling. For long lists, enable [`scroll`][flet.].
-If you want it to fill available space, also set [`expand`][flet.Control.expand].
+`ExpansionPanelList` supports scrolling through its [`scroll`][flet.ExpansionPanelList] property.
 
 ```python
 --8<-- "{{ examples }}/scrollable.py"
 ```
-
-### Change event with expanded state
-
-[`on_change`][flet.ExpansionPanelList.on_change] includes both panel index and
-resulting expanded/collapsed state.
-
 
 {{ class_members(class_name) }}
