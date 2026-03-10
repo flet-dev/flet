@@ -93,6 +93,12 @@ Ensure each runnable example is a standalone project containing:
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
 - Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
 
+## Code style
+
+- When writing wrapped controls (`SafeArea`, `Column`, `Row`, `Container`, etc.), keep `content=` or `controls=` as the last named argument in that control call.
+- Apply this ordering consistently when creating or refactoring examples.
+- Follow code style and linting rules defined in the repository `pyproject.toml` under `[tool.ruff]` for all edits.
+
 ## Command checklist
 
 - Discover files: `rg --files <target_dir>`
