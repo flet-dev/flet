@@ -21,7 +21,8 @@ class ExpansionPanelListControl extends StatelessWidget {
     void onChange(int index, bool expanded) {
       final panel = control.children("controls")[index];
       panel.updateProperties({"expanded": expanded}, notify: true);
-      control.triggerEvent("change", {"index": index, "expanded": expanded});
+      control.triggerEvent(
+          "change", {"index": index, "expanded": expanded, "data": index});
     }
 
     final panelList = ExpansionPanelList(
