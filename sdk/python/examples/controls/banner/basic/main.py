@@ -39,7 +39,18 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(ft.Button("Show Banner", on_click=lambda e: page.show_dialog(banner)))
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Button(
+                        "Show Banner", on_click=lambda e: page.show_dialog(banner)
+                    )
+                ]
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
