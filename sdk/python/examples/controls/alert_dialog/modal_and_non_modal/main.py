@@ -25,14 +25,20 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Button(
-            content="Open dialog",
-            on_click=lambda e: page.show_dialog(dialog),
-        ),
-        ft.Button(
-            content="Open modal dialog",
-            on_click=lambda e: page.show_dialog(modal_dialog),
-        ),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Button(
+                        content="Open dialog",
+                        on_click=lambda e: page.show_dialog(dialog),
+                    ),
+                    ft.Button(
+                        content="Open modal dialog",
+                        on_click=lambda e: page.show_dialog(modal_dialog),
+                    ),
+                ]
+            )
+        )
     )
 
 

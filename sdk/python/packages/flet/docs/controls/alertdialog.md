@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/alert_dialog
 ### Modal and non-modal dialogs
 
 ```python
---8<-- "{{ examples }}/modal_and_non_modal.py"
+--8<-- "{{ examples }}/modal_and_non_modal/main.py"
 ```
 
 {{ image(example_images + "/alert_dialog_flow.gif", alt="Modal and non-modal dialogs", caption="Modal and non-modal dialogs",width="50%") }}
