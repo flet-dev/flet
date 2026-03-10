@@ -14,7 +14,7 @@ example_media: ../examples/controls/app_bar/media
 ### Actions and Popup Menu
 
 ```python
---8<-- "{{ examples }}/actions_and_popup_menu.py"
+--8<-- "{{ examples }}/actions_and_popup_menu/main.py"
 ```
 
 {{ image(example_media + "/actions_and_popup_menu.gif", alt="actions-and-popup-menu", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/app_bar/media
 ### Theme and Material Mode Toggles
 
 ```python
---8<-- "{{ examples }}/theme_and_material_mode_toggles.py"
+--8<-- "{{ examples }}/theme_and_material_mode_toggles/main.py"
 ```
 
 {{ class_members(class_name) }}

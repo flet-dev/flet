@@ -1,0 +1,26 @@
+[project]
+name = "app-bar-theme-and-material-mode-toggles"
+version = "1.0.0"
+description = "AppBar example with theme mode and Material version toggles."
+requires-python = ">=3.10"
+keywords = ["appbar", "navigation", "theme mode", "material 3", "popup menu"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/AppBar"]
+
+[tool.flet.metadata]
+title = "Theme and Material mode toggles"
+controls = ["AppBar", "Icon", "IconButton", "PopupMenuButton", "PopupMenuItem", "SafeArea", "Column", "Text", "Button", "Theme"]
+layout_pattern = "toolbar-actions"
+complexity = "basic"
+features = ["theme mode toggle", "material mode toggle", "popup menu interactions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

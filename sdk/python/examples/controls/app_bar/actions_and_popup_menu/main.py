@@ -1,11 +1,11 @@
 import flet as ft
 
+
 def main(page: ft.Page):
     page.title = "AppBar Example"
 
     def handle_checked_item_click(e: ft.Event[ft.PopupMenuItem]):
         e.control.checked = not e.control.checked
-        page.update()
 
     page.appbar = ft.AppBar(
         leading=ft.Icon(ft.Icons.PALETTE),
@@ -29,7 +29,7 @@ def main(page: ft.Page):
             ),
         ],
     )
-    page.add(ft.Text("Body!"))
+    page.add(ft.SafeArea(content=ft.Column(controls=[ft.Text("Body!")])))
 
 
 if __name__ == "__main__":

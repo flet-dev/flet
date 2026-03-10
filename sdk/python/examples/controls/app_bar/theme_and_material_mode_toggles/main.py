@@ -9,12 +9,10 @@ def main(page: ft.Page):
 
     def handle_checked_item_click(e: ft.Event[ft.PopupMenuItem]):
         e.control.checked = not e.control.checked
-        page.update()
 
     page.theme_mode = ft.ThemeMode.LIGHT
     page.theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR, use_material3=False)
     page.dark_theme = ft.Theme(color_scheme_seed=DARK_SEED_COLOR, use_material3=False)
-    page.update()
 
     def toggle_theme_mode(e: ft.Event[ft.IconButton]):
         page.theme_mode = (
@@ -27,7 +25,6 @@ def main(page: ft.Page):
             if page.theme_mode == ft.ThemeMode.LIGHT
             else ft.Icons.WB_SUNNY
         )
-        page.update()
 
     theme_mode_toggle = ft.IconButton(
         icon=(
@@ -49,7 +46,6 @@ def main(page: ft.Page):
         material_mode_toggle.icon = (
             ft.Icons.FILTER_3 if page.theme.use_material3 else ft.Icons.FILTER_2
         )
-        page.update()
 
     material_mode_toggle = ft.IconButton(
         icon=ft.Icons.FILTER_3 if page.theme.use_material3 else ft.Icons.FILTER_2,
@@ -93,19 +89,28 @@ def main(page: ft.Page):
         ],
     )
     page.add(
-        ft.Text(
-            value="Flet is a framework that allows building web, desktop and mobile "
-            "applications in Python without prior experience in frontend development."
-            "You can build a UI for your program with Flet controls which are based "
-            "on Flutter by Google. Flet goes beyond merely wrapping Flutter widgets. "
-            "It adds its own touch by combining smaller widgets, simplifying "
-            "complexities, implementing UI best practices, and applying sensible "
-            "defaults. This ensures that your applications look stylish and polished "
-            "without requiring additional design efforts on your part.",
-            text_align=ft.TextAlign.END,
-        ),
-        ft.Button("Click me!"),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(
+                        value="Flet is a framework that allows building web, desktop "
+                        "and mobile applications in Python without prior experience "
+                        "in frontend development.You can build a UI for your program "
+                        "with Flet controls which are based on Flutter by Google. "
+                        "Flet goes beyond merely wrapping Flutter widgets. It adds "
+                        "its own touch by combining smaller widgets, simplifying "
+                        "complexities, implementing UI best practices, and applying "
+                        "sensible defaults. This ensures that your applications look "
+                        "stylish and polished without requiring additional design "
+                        "efforts on your part.",
+                        text_align=ft.TextAlign.END,
+                    ),
+                    ft.Button("Click me!"),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

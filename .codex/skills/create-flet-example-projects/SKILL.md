@@ -64,6 +64,7 @@ Ensure each runnable example is a standalone project containing:
 
 6. Make examples mobile-safe.
 - If `ft.context.disable_auto_update()` is not used, do not add explicit `page.update()` unless strictly necessary.
+- Apply this `page.update()` rule to all examples in the touched folder (new, migrated, and already converted).
 - Wrap app content in `ft.SafeArea` so example renders correctly on mobile.
 - Apply this to all examples in the touched folder (new, migrated, and already converted), not only files changed by moves.
 - During validation, confirm every `<example>/main.py` in scope includes a top-level `ft.SafeArea` around rendered content.
@@ -90,6 +91,7 @@ Ensure each runnable example is a standalone project containing:
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
+- Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
 
 ## Command checklist
 
