@@ -34,7 +34,7 @@ def main(page: ft.Page):
         cl.controls.append(ft.Text(f"Text line {s.i}", key=str(s.i)))
         s.i += 1
 
-    page.add(ft.Container(cl, border=ft.Border.all(1)))
+    page.add(ft.SafeArea(content=ft.Container(cl, border=ft.Border.all(1))))
 
 
 ft.run(main)

@@ -22,21 +22,27 @@ def main(page: ft.Page):
         column.update()
 
     page.add(
-        ft.Column(
-            controls=[
-                ft.Text("Spacing between items"),
-                ft.Slider(
-                    min=0,
-                    max=100,
-                    divisions=10,
-                    value=0,
-                    label="{value}",
-                    width=500,
-                    on_change=handle_slider_change,
-                ),
-            ]
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Column(
+                        controls=[
+                            ft.Text("Spacing between items"),
+                            ft.Slider(
+                                min=0,
+                                max=100,
+                                divisions=10,
+                                value=0,
+                                label="{value}",
+                                width=500,
+                                on_change=handle_slider_change,
+                            ),
+                        ]
+                    ),
+                    column := ft.Column(spacing=0, controls=generate_items(5)),
+                ]
+            )
         ),
-        column := ft.Column(spacing=0, controls=generate_items(5)),
     )
 
 

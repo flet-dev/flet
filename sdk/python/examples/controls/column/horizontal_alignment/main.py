@@ -36,14 +36,20 @@ class ColumnFromHorizontalAlignment(ft.Column):
 
 def main(page: ft.Page):
     page.add(
-        ft.Row(
-            spacing=30,
-            alignment=ft.MainAxisAlignment.START,
-            controls=[
-                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.START),
-                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.CENTER),
-                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.END),
-            ],
+        ft.SafeArea(
+            content=ft.Row(
+                spacing=30,
+                alignment=ft.MainAxisAlignment.START,
+                controls=[
+                    ColumnFromHorizontalAlignment(
+                        alignment=ft.CrossAxisAlignment.START
+                    ),
+                    ColumnFromHorizontalAlignment(
+                        alignment=ft.CrossAxisAlignment.CENTER
+                    ),
+                    ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.END),
+                ],
+            )
         )
     )
 

@@ -53,35 +53,37 @@ def main(page: ft.Page):
     scroll_mode_text = ft.Text(str(left_column.scroll))
 
     page.add(
-        ft.Row(
-            expand=True,
-            controls=[
-                ft.Container(
-                    content=left_column,
-                    expand=True,
-                    margin=10,
-                    padding=10,
-                    bgcolor=ft.Colors.AMBER_100,
-                    border_radius=10,
-                    alignment=ft.Alignment.TOP_CENTER,
-                ),
-                ft.Container(
-                    margin=10,
-                    padding=10,
-                    bgcolor=ft.Colors.CYAN_500,
-                    border_radius=10,
-                    expand=True,
-                    alignment=ft.Alignment.TOP_LEFT,
-                    content=ft.Column(
-                        controls=[
-                            add_text_box_button,
-                            remove_text_box_button,
-                            scroll_change_button,
-                            scroll_mode_text,
-                        ],
+        ft.SafeArea(
+            content=ft.Row(
+                expand=True,
+                controls=[
+                    ft.Container(
+                        content=left_column,
+                        expand=True,
+                        margin=10,
+                        padding=10,
+                        bgcolor=ft.Colors.AMBER_100,
+                        border_radius=10,
+                        alignment=ft.Alignment.TOP_CENTER,
                     ),
-                ),
-            ],
+                    ft.Container(
+                        margin=10,
+                        padding=10,
+                        bgcolor=ft.Colors.CYAN_500,
+                        border_radius=10,
+                        expand=True,
+                        alignment=ft.Alignment.TOP_LEFT,
+                        content=ft.Column(
+                            controls=[
+                                add_text_box_button,
+                                remove_text_box_button,
+                                scroll_change_button,
+                                scroll_mode_text,
+                            ],
+                        ),
+                    ),
+                ],
+            )
         )
     )
 

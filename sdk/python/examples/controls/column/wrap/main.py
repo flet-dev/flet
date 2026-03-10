@@ -22,34 +22,40 @@ def main(page: ft.Page):
         col.update()
 
     page.add(
-        ft.Column(
-            controls=[
-                ft.Text(
-                    "Change the column height to see how child items wrap onto "
-                    "multiple columns:"
-                ),
-                ft.Slider(
-                    min=0,
-                    max=HEIGHT,
-                    divisions=20,
-                    value=HEIGHT,
-                    label="{value}",
-                    width=500,
-                    on_change=handle_slider_change,
-                ),
-            ]
-        ),
-        ft.Container(
-            bgcolor=ft.Colors.TRANSPARENT,
-            content=(
-                col := ft.Column(
-                    wrap=True,
-                    spacing=10,
-                    run_spacing=10,
-                    controls=items(10),
-                    height=HEIGHT,
-                )
-            ),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Column(
+                        controls=[
+                            ft.Text(
+                                "Change the column height to see how child items "
+                                "wrap onto multiple columns:"
+                            ),
+                            ft.Slider(
+                                min=0,
+                                max=HEIGHT,
+                                divisions=20,
+                                value=HEIGHT,
+                                label="{value}",
+                                width=500,
+                                on_change=handle_slider_change,
+                            ),
+                        ]
+                    ),
+                    ft.Container(
+                        bgcolor=ft.Colors.TRANSPARENT,
+                        content=(
+                            col := ft.Column(
+                                wrap=True,
+                                spacing=10,
+                                run_spacing=10,
+                                controls=items(10),
+                                height=HEIGHT,
+                            )
+                        ),
+                    ),
+                ]
+            )
         ),
     )
 

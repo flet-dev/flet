@@ -32,24 +32,26 @@ class ColumnFromVerticalAlignment(ft.Column):
 
 def main(page: ft.Page):
     page.add(
-        ft.Row(
-            spacing=30,
-            alignment=ft.MainAxisAlignment.START,
-            scroll=ft.ScrollMode.AUTO,
-            controls=[
-                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.START),
-                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.CENTER),
-                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.END),
-                ColumnFromVerticalAlignment(
-                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                ),
-                ColumnFromVerticalAlignment(
-                    alignment=ft.MainAxisAlignment.SPACE_AROUND
-                ),
-                ColumnFromVerticalAlignment(
-                    alignment=ft.MainAxisAlignment.SPACE_EVENLY
-                ),
-            ],
+        ft.SafeArea(
+            content=ft.Row(
+                spacing=30,
+                alignment=ft.MainAxisAlignment.START,
+                scroll=ft.ScrollMode.AUTO,
+                controls=[
+                    ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.START),
+                    ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.CENTER),
+                    ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.END),
+                    ColumnFromVerticalAlignment(
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                    ),
+                    ColumnFromVerticalAlignment(
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND
+                    ),
+                    ColumnFromVerticalAlignment(
+                        alignment=ft.MainAxisAlignment.SPACE_EVENLY
+                    ),
+                ],
+            )
         )
     )
 

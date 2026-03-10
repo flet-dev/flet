@@ -33,24 +33,26 @@ def main(page: ft.Page):
     ]
 
     page.add(
-        ft.Row(
-            [
-                ft.Container(
-                    content=ft.Column(
-                        controls=fake_messages,
-                        spacing=10,
-                        scroll=ft.ScrollMode.ALWAYS,
-                        expand=True,
-                    ),
-                    width=320,
-                    height=420,
-                    bgcolor=ft.Colors.with_opacity(0.15, ft.Colors.AMBER_200),
-                    padding=15,
-                    border_radius=12,
-                )
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            expand=True,
+        ft.SafeArea(
+            content=ft.Row(
+                [
+                    ft.Container(
+                        content=ft.Column(
+                            controls=fake_messages,
+                            spacing=10,
+                            scroll=ft.ScrollMode.ALWAYS,
+                            expand=True,
+                        ),
+                        width=320,
+                        height=420,
+                        bgcolor=ft.Colors.with_opacity(0.15, ft.Colors.AMBER_200),
+                        padding=15,
+                        border_radius=12,
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                expand=True,
+            )
         )
     )
 
