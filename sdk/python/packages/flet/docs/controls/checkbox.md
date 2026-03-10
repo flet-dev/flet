@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="50%", caption="After clicking Submit") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ image(example_images + "/handling_events.png", alt="handling-events", width="50%", caption="After three clicks") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/material/golden/macos/checkbox
 ### Styled checkboxes
 
 ```python
---8<-- "{{ examples }}/styled.py"
+--8<-- "{{ examples }}/styled/main.py"
 ```
 
 {{ image(example_images + "/styled_checkboxes.png", alt="Styled checkboxes", width="50%") }}

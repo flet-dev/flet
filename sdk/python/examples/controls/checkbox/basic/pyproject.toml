@@ -1,0 +1,26 @@
+[project]
+name = "checkbox-basic"
+version = "1.0.0"
+description = "Basic checkbox states with a submit action."
+requires-python = ">=3.10"
+keywords = ["checkbox", "material", "input", "form", "state", "tristate"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Checkbox", "Apps/Basic controls"]
+
+[tool.flet.metadata]
+title = "Basic checkbox"
+controls = ["SafeArea", "Column", "Checkbox", "Button", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["checkbox state examples", "button click handling", "value summary output"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

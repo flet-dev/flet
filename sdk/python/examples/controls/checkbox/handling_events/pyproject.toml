@@ -1,0 +1,26 @@
+[project]
+name = "checkbox-handling-events"
+version = "1.0.0"
+description = "Checkbox change event handling with dynamic text updates."
+requires-python = ">=3.10"
+keywords = ["checkbox", "material", "input", "events", "on_change", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Checkbox", "Apps/Basic controls"]
+
+[tool.flet.metadata]
+title = "Checkbox events"
+controls = ["SafeArea", "Column", "Checkbox", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["on_change handling", "event-driven UI updates", "state change log"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

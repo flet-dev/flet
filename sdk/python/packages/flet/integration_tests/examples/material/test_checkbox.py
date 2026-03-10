@@ -1,8 +1,8 @@
 import pytest
 
-import examples.controls.checkbox.basic as basic
-import examples.controls.checkbox.handling_events as handling_events
-import examples.controls.checkbox.styled as styled
+import examples.controls.checkbox.basic.main as basic
+import examples.controls.checkbox.handling_events.main as handling_events
+import examples.controls.checkbox.styled.main as styled
 import flet as ft
 import flet.testing as ftt
 

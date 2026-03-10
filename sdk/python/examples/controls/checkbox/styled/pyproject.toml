@@ -1,0 +1,26 @@
+[project]
+name = "checkbox-styled"
+version = "1.0.0"
+description = "Styled checkboxes with fixed and state-based colors."
+requires-python = ">=3.10"
+keywords = ["checkbox", "material", "input", "styling", "colors", "controlstate"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Checkbox", "Apps/Basic controls"]
+
+[tool.flet.metadata]
+title = "Styled checkboxes"
+controls = ["SafeArea", "Column", "Checkbox"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["static styling", "state-based fill colors", "custom check color"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
