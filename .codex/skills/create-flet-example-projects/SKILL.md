@@ -73,16 +73,23 @@ Ensure each runnable example is a standalone project containing:
 - Move constructor-style setup to declarative fields + `init()` where practical.
 - Keep behavior unchanged and avoid refactors that alter public usage unless needed for compatibility.
 
-8. Update references.
+8. Ensure runnable entrypoint.
+- Every example `main.py` should end with:
+  - `if __name__ == "__main__":`
+  - `    ft.run(main)`
+- Apply this to all examples in the touched folder (new, migrated, and already converted).
+
+9. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
 - Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
 - For already-converted examples, only update references that are stale; avoid unnecessary churn.
 
-9. Validate.
+10. Validate.
 - Run `python -m compileall` on changed `main.py` files.
 - Search for stale paths to old flat files.
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
+- Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
 
 ## Command checklist
 
