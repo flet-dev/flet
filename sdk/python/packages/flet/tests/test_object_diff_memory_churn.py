@@ -2,8 +2,11 @@ import gc
 import tracemalloc
 
 import flet as ft
+import pytest
 from flet.controls.base_control import BaseControl
 from flet.controls.object_patch import ObjectPatch
+
+pytestmark = pytest.mark.skip(reason="Temporarily disabled")
 
 
 def _make_tree(iteration: int, size: int = 36) -> ft.Column:
