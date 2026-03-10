@@ -1,13 +1,15 @@
 import flet as ft
 
 
+@ft.control
 class ColumnFromVerticalAlignment(ft.Column):
-    def __init__(self, alignment: ft.MainAxisAlignment):
-        super().__init__()
+    alignment: ft.MainAxisAlignment = ft.MainAxisAlignment.START
+
+    def init(self):
         self.controls = [
-            ft.Text(str(alignment), size=10),
+            ft.Text(str(self.alignment), size=10),
             ft.Container(
-                content=ft.Column(self.generate_items(3), alignment=alignment),
+                content=ft.Column(self.generate_items(3), alignment=self.alignment),
                 bgcolor=ft.Colors.AMBER_100,
                 height=400,
             ),
@@ -35,12 +37,18 @@ def main(page: ft.Page):
             alignment=ft.MainAxisAlignment.START,
             scroll=ft.ScrollMode.AUTO,
             controls=[
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.START),
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.CENTER),
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.END),
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.SPACE_BETWEEN),
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.SPACE_AROUND),
-                ColumnFromVerticalAlignment(ft.MainAxisAlignment.SPACE_EVENLY),
+                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.START),
+                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.CENTER),
+                ColumnFromVerticalAlignment(alignment=ft.MainAxisAlignment.END),
+                ColumnFromVerticalAlignment(
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                ),
+                ColumnFromVerticalAlignment(
+                    alignment=ft.MainAxisAlignment.SPACE_AROUND
+                ),
+                ColumnFromVerticalAlignment(
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY
+                ),
             ],
         )
     )

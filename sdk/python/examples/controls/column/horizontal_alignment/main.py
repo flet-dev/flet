@@ -1,18 +1,20 @@
 import flet as ft
 
 
+@ft.control
 class ColumnFromHorizontalAlignment(ft.Column):
-    def __init__(self, alignment: ft.CrossAxisAlignment):
-        super().__init__()
+    alignment: ft.CrossAxisAlignment = ft.CrossAxisAlignment.START
+
+    def init(self):
         self.controls = [
-            ft.Text(str(alignment), size=16),
+            ft.Text(str(self.alignment), size=16),
             ft.Container(
                 bgcolor=ft.Colors.AMBER_100,
                 width=100,
                 content=ft.Column(
                     controls=self.generate_items(3),
                     alignment=ft.MainAxisAlignment.START,
-                    horizontal_alignment=alignment,
+                    horizontal_alignment=self.alignment,
                 ),
             ),
         ]
@@ -38,9 +40,9 @@ def main(page: ft.Page):
             spacing=30,
             alignment=ft.MainAxisAlignment.START,
             controls=[
-                ColumnFromHorizontalAlignment(ft.CrossAxisAlignment.START),
-                ColumnFromHorizontalAlignment(ft.CrossAxisAlignment.CENTER),
-                ColumnFromHorizontalAlignment(ft.CrossAxisAlignment.END),
+                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.START),
+                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.CENTER),
+                ColumnFromHorizontalAlignment(alignment=ft.CrossAxisAlignment.END),
             ],
         )
     )

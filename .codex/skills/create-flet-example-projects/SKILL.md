@@ -66,12 +66,17 @@ Ensure each runnable example is a standalone project containing:
 - If `ft.context.disable_auto_update()` is not used, do not add explicit `page.update()` unless strictly necessary.
 - Wrap app content in `ft.SafeArea` so example renders correctly on mobile.
 
-7. Update references.
+7. Prefer `@ft.control` for custom controls in examples.
+- If an example defines a custom control class inheriting from a Flet control (for example `class MyThing(ft.Column)`), prefer `@ft.control` style.
+- Move constructor-style setup to declarative fields + `init()` where practical.
+- Keep behavior unchanged and avoid refactors that alter public usage unless needed for compatibility.
+
+8. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
 - Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
 - For already-converted examples, only update references that are stale; avoid unnecessary churn.
 
-8. Validate.
+9. Validate.
 - Run `python -m compileall` on changed `main.py` files.
 - Search for stale paths to old flat files.
 - Check `git status` to confirm expected moves and edits.
