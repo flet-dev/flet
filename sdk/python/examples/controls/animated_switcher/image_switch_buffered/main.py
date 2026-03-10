@@ -9,18 +9,17 @@ import flet as ft
 
 @ft.control
 class BufferingSwitcher(ft.AnimatedSwitcher):
-    image: ft.Image | None = None
+    content: ft.Image | None = None
     image_queue: list[str] = field(default_factory=list)
 
     def init(self):
-        self.content = self.image
         self.transition = ft.AnimatedSwitcherTransition.SCALE
         self.duration = 500
         self.reverse_duration = 100
         self.switch_in_curve = ft.AnimationCurve.EASE_IN
         self.switch_out_curve = ft.AnimationCurve.EASE_OUT
-        if self.image and self.image.src:
-            self.image_queue.append(self.image.src)
+        if self.content and self.content.src:
+            self.image_queue.append(self.content.src)
 
     def animate(self, e):
         self.content = ft.Image(
@@ -56,7 +55,7 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
 
 def main(page: ft.Page):
     switcher = BufferingSwitcher(
-        image=ft.Image(
+        content=ft.Image(
             src=f"https://picsum.photos/200/300?{time.time()}",
             width=200,
             height=300,
