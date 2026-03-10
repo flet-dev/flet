@@ -29,18 +29,27 @@ def main(page: ft.Page):
         )
 
     page.add(
-        ft.AutoComplete(
-            value="One",
-            width=200,
-            on_change=handle_change,
-            on_select=handle_select,
-            suggestions=[
-                ft.AutoCompleteSuggestion(key=key, value=value)
-                for key, value in numbers
-            ],
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.AutoComplete(
+                        value="One",
+                        width=200,
+                        on_change=handle_change,
+                        on_select=handle_select,
+                        suggestions=[
+                            ft.AutoCompleteSuggestion(key=key, value=value)
+                            for key, value in numbers
+                        ],
+                    ),
+                    info := ft.Text(
+                        "Enter a number (in words or digits) to get suggestions."
+                    ),
+                ]
+            )
         ),
-        info := ft.Text("Enter a number (in words or digits) to get suggestions."),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

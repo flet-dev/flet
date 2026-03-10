@@ -13,7 +13,7 @@ example_images: ../examples/controls/auto_complete/media
 ### Basic example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 
