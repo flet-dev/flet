@@ -65,6 +65,8 @@ Ensure each runnable example is a standalone project containing:
 6. Make examples mobile-safe.
 - If `ft.context.disable_auto_update()` is not used, do not add explicit `page.update()` unless strictly necessary.
 - Wrap app content in `ft.SafeArea` so example renders correctly on mobile.
+- Apply this to all examples in the touched folder (new, migrated, and already converted), not only files changed by moves.
+- During validation, confirm every `<example>/main.py` in scope includes a top-level `ft.SafeArea` around rendered content.
 
 7. Prefer `@ft.control` for custom controls in examples.
 - If an example defines a custom control class inheriting from a Flet control (for example `class MyThing(ft.Column)`), prefer `@ft.control` style.
