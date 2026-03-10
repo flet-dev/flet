@@ -1,22 +1,26 @@
 import base64
 import time
+from dataclasses import field
 
 import httpx
 
 import flet as ft
 
 
+@ft.control
 class BufferingSwitcher(ft.AnimatedSwitcher):
-    image_queue = []
+    image: ft.Image | None = None
+    image_queue: list[str] = field(default_factory=list)
 
-    def __init__(self, image: ft.Image):
-        super().__init__(image)
+    def init(self):
+        self.content = self.image
         self.transition = ft.AnimatedSwitcherTransition.SCALE
         self.duration = 500
         self.reverse_duration = 100
         self.switch_in_curve = ft.AnimationCurve.EASE_IN
         self.switch_out_curve = ft.AnimationCurve.EASE_OUT
-        self.image_queue.append(image)
+        if self.image and self.image.src:
+            self.image_queue.append(self.image.src)
 
     def animate(self, e):
         self.content = ft.Image(
@@ -29,11 +33,11 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
 
     async def fill_queue(self):
         while len(self.image_queue) < 10:
-            self.image_queue.append(
-                await self.image_to_base64(
-                    f"https://picsum.photos/200/300?{time.time()}"
-                )
+            image_base64 = await self.image_to_base64(
+                f"https://picsum.photos/200/300?{time.time()}"
             )
+            if image_base64:
+                self.image_queue.append(image_base64)
 
     async def image_to_base64(self, url):
         response = await httpx.AsyncClient(follow_redirects=True).get(url)
@@ -52,15 +56,24 @@ class BufferingSwitcher(ft.AnimatedSwitcher):
 
 def main(page: ft.Page):
     switcher = BufferingSwitcher(
-        ft.Image(
-            src=f"https://picsum.photos/200/300?{time.time()}", width=200, height=300
+        image=ft.Image(
+            src=f"https://picsum.photos/200/300?{time.time()}",
+            width=200,
+            height=300,
         )
     )
 
     page.add(
-        switcher,
-        ft.Button("Animate!", on_click=switcher.animate),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    switcher,
+                    ft.Button("Animate!", on_click=switcher.animate),
+                ]
+            )
+        ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

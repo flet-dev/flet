@@ -13,7 +13,7 @@ example_images: ../examples/controls/animated_switcher/media
 ### Animated switching between two containers with scale effect
 
 ```python
---8<-- "{{ examples }}/scale_effect.py"
+--8<-- "{{ examples }}/scale_effect/main.py"
 ```
 
 {{ image(example_images + "/scale_effect.gif", alt="scale-effect", width="80%") }}
@@ -22,13 +22,13 @@ example_images: ../examples/controls/animated_switcher/media
 ### Animate Image switch
 
 ```python
---8<-- "{{ examples }}/image_switch.py"
+--8<-- "{{ examples }}/image_switch/main.py"
 ```
 
 ### Animate Image switch buffered
 
 ```python
---8<-- "{{ examples }}/image_switch_buffered.py"
+--8<-- "{{ examples }}/image_switch_buffered/main.py"
 ```
 
 {{ class_members(class_name) }}

@@ -41,11 +41,18 @@ def main(page: ft.Page):
         switcher.update()
 
     page.add(
-        switcher,
-        ft.Button("Scale", on_click=scale),
-        ft.Button("Fade", on_click=fade),
-        ft.Button("Rotate", on_click=rotate),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    switcher,
+                    ft.Button("Scale", on_click=scale),
+                    ft.Button("Fade", on_click=fade),
+                    ft.Button("Rotate", on_click=rotate),
+                ]
+            )
+        ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

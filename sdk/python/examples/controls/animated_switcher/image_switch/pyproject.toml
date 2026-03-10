@@ -1,0 +1,26 @@
+[project]
+name = "animated-switcher-image-switch"
+version = "1.0.0"
+description = "Animated image switching with scale transition."
+requires-python = ">=3.10"
+keywords = ["animated switcher", "animation", "image", "transition", "scale"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Animations/AnimatedSwitcher"]
+
+[tool.flet.metadata]
+title = "Animate image switch"
+controls = ["SafeArea", "Column", "AnimatedSwitcher", "Image", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["dynamic image source", "scale transition", "button-triggered animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
