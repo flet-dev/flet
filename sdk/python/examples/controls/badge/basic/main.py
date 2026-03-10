@@ -24,7 +24,7 @@ def main(page: ft.Page):
             ),
         ]
     )
-    page.add(ft.Text("Body!"))
+    page.add(ft.SafeArea(content=ft.Column(controls=[ft.Text("Body!")])))
 
 
 if __name__ == "__main__":

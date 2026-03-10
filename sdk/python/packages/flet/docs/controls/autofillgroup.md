@@ -13,7 +13,7 @@ example_images: ../examples/controls/autofill_group/media
 ### Basic example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
