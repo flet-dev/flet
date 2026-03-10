@@ -3,7 +3,7 @@ import flet as ft
 
 def main(page: ft.Page):
     def handle_amenity_selection(e: ft.Event[ft.Chip]):
-        pass
+        print("Amenity selected:", e.control.label.value)
 
     amenities = ["Washer / Dryer", "Ramp access", "Dogs OK", "Cats OK", "Smoke-free"]
 
