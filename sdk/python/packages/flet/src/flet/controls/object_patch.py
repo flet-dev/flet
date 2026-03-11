@@ -143,10 +143,16 @@ def _control_setattr(obj, name, value):
         else:
             if hasattr(obj, "_frozen"):
                 raise RuntimeError("Frozen controls cannot be updated.") from None
-            # Track first-write old value for plain-dataclass scalar fields.
+            # Track changes for plain-dataclass scalar fields.
             changes = getattr(obj, "__changes", None)
-            if changes is not None and name not in changes:
-                changes[name] = getattr(obj, name, None)
+            if changes is not None:
+                current = getattr(obj, name, None)
+                if value == current:
+                    return  # no change — skip tracking and notification
+                if name not in changes:
+                    changes[name] = current  # record original on first write
+                elif value == changes[name]:
+                    del changes[name]  # reverted to original — net-zero change
             if hasattr(obj, "_notify"):
                 obj._notify(name, value)
     object.__setattr__(obj, name, value)

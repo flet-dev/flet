@@ -6,7 +6,7 @@ from typing import Any
 import msgpack
 
 from flet.controls.duration import Duration
-from flet.controls.value_types import _UNSET
+from flet.controls.value_types import _UNSET, Value
 
 
 def _get_root_dataclass_field(cls, field_name):
@@ -59,7 +59,11 @@ def configure_encode_object_for_msgpack(control_cls):
             _structural_fields = getattr(type(obj), "_structural_fields", None)
             is_control = isinstance(obj, control_cls)
 
-            if _values is not None and _structural_fields is not None and is_control:
+            if (
+                _values is not None
+                and _structural_fields is not None
+                and (is_control or isinstance(obj, Value))
+            ):
                 # ── Fast path for @control / @value types ────────────────────
                 # Only non-default values are in _values; structural fields
                 # (lists, dicts, nested dataclasses, and internal scalars like

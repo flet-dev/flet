@@ -61,7 +61,10 @@ class Prop:
         # Frozen controls must not be mutated after construction.
         if hasattr(obj, "_frozen"):
             raise RuntimeError("Frozen controls cannot be updated.") from None
-        vals[self.name] = value
+        if value == self.default:
+            vals.pop(self.name, None)  # restore sparseness when back to default
+        else:
+            vals[self.name] = value
         obj._dirty[self.name] = None
         if hasattr(obj, "_notify"):
             obj._notify(self.name, value)
