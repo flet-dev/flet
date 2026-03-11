@@ -11,6 +11,7 @@ from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count
+from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -291,6 +292,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
+        validate(self, suppress_repeated_errors=True)
 
         if frozen is not None:
             self._frozen = frozen

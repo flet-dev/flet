@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -14,6 +14,7 @@ from flet.controls.events import (
 from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
+from flet.utils.validation import V
 
 __all__ = ["InteractiveViewer"]
 
@@ -24,14 +25,15 @@ class InteractiveViewer(LayoutControl):
     Allows you to pan, zoom, and rotate its [`content`][(c).].
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The `Control` to be transformed.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     pan_enabled: bool = True
@@ -67,16 +69,24 @@ class InteractiveViewer(LayoutControl):
     is sized properly.
     """
 
-    max_scale: Number = 2.5
+    max_scale: Annotated[
+        Number,
+        V.gt(0),
+        V.ge_field("min_scale"),
+    ] = 2.5
     """
     The maximum allowed scale.
 
     Raises:
-        ValueError: If it is not greater than `0` or is less than
-            [`min_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to [`min_scale`][(c).].
     """
 
-    min_scale: Number = 0.8
+    min_scale: Annotated[
+        Number,
+        V.gt(0),
+        V.le_field("max_scale"),
+    ] = 0.8
     """
     The minimum allowed scale.
 
@@ -87,15 +97,19 @@ class InteractiveViewer(LayoutControl):
     `boundary_margin` value.
 
     Raises:
-        ValueError: If it is not greater than `0` or less than [`max_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to [`max_scale`][(c).].
     """
 
-    interaction_end_friction_coefficient: Number = 0.0000135
+    interaction_end_friction_coefficient: Annotated[
+        Number,
+        V.gt(0),
+    ] = 0.0000135
     """
     Changes the deceleration behavior after a gesture.
 
     Raises:
-        ValueError: If it is less than or equal to `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     scale_factor: Number = 200
@@ -165,25 +179,6 @@ class InteractiveViewer(LayoutControl):
     """
     Called when the user ends a pan or scale gesture.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
-        if self.min_scale <= 0:
-            raise ValueError(f"min_scale must be greater than 0, got {self.min_scale}")
-        if self.max_scale <= 0:
-            raise ValueError(f"max_scale must be greater than 0, got {self.max_scale}")
-        if self.max_scale < self.min_scale:
-            raise ValueError(
-                "max_scale must be greater than or equal to min_scale, "
-                f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
-            )
-        if self.interaction_end_friction_coefficient <= 0:
-            raise ValueError(
-                "interaction_end_friction_coefficient must be greater than 0, "
-                f"got {self.interaction_end_friction_coefficient}"
-            )
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """

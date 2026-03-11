@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
@@ -11,6 +11,7 @@ from flet.controls.types import (
     NotchShape,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["BottomAppBar"]
 
@@ -91,7 +92,10 @@ class BottomAppBar(LayoutControl):
         Has effect only if [`shape`][(c).] is not `None`.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The z-coordinate at which to place this bottom app bar relative to its parent. It \
     controls the size of the shadow below this app bar.
@@ -100,17 +104,10 @@ class BottomAppBar(LayoutControl):
     if that is also `None`, then defaults to `3`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
     The border radius to apply when clipping and painting this app bar.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )

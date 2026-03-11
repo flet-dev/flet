@@ -1,17 +1,11 @@
-from typing import Union
+from typing import Annotated
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
+from flet.utils.validation import V
 
-__all__ = ["Hero", "HeroTag"]
-
-HeroTag = Union[str, int, float, bool]
-"""Type alias for Hero tag values.
-
-Represents an identifier used to match source and destination [`Hero`][flet.]
-controls during route transitions.
-"""
+__all__ = ["Hero"]
 
 
 @control("Hero")
@@ -23,15 +17,21 @@ class Hero(LayoutControl):
     animate that control between routes.
     """
 
-    tag: HeroTag
+    tag: Annotated[
+        str,
+        V.instance_of(str),
+    ]
     """
     A unique identifier used to match source and destination Hero controls.
 
     Raises:
-        ValueError: If not provided or not of type `str`, `int`, `float`, or `bool`.
+        ValueError: If it is not of type `str`.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display and animate.
 
@@ -44,14 +44,3 @@ class Hero(LayoutControl):
     Whether to animate when the route is transitioned by a \
     user gesture (for example, iOS back swipe).
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.tag is None:
-            raise ValueError("tag must be provided")
-        if not isinstance(self.tag, (str, int, float, bool)):
-            raise ValueError(
-                f"tag must be str, int, float, or bool, got {type(self.tag)}"
-            )
-        if not self.content.visible:
-            raise ValueError("content must be visible")

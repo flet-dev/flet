@@ -152,7 +152,7 @@ class MatplotlibChart(ft.GestureDetector):
         self._height = 0
         self._waiting = False
 
-    def _on_key_down(self, e):
+    def _on_key_down(self, e: ft.KeyboardEvent) -> None:
         """
         Handle key-down notifications from keyboard listener.
 
@@ -162,7 +162,7 @@ class MatplotlibChart(ft.GestureDetector):
 
         logger.debug(f"ON KEY DOWN: {e}")
 
-    def _on_key_up(self, e):
+    def _on_key_up(self, e: ft.KeyboardEvent) -> None:
         """
         Handle key-up notifications from keyboard listener.
 

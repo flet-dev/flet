@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -16,6 +16,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 
@@ -162,14 +163,17 @@ class SnackBar(DialogControl):
 
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The primary content of the snack bar.
 
     Typically a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If [`content`][(c).] is not a string or visible control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     behavior: Optional[SnackBarBehavior] = None
@@ -256,13 +260,16 @@ class SnackBar(DialogControl):
         It can not be used if `margin` is specified.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The z-coordinate at which to place the snack bar. This controls the size of the \
     shadow below the snack bar.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -275,7 +282,10 @@ class SnackBar(DialogControl):
     The [`content`][(c).] will be clipped (or not) according to this option.
     """
 
-    action_overflow_threshold: Number = 0.25
+    action_overflow_threshold: Annotated[
+        Optional[Number],
+        V.between(0.0, 1.0),
+    ] = 0.25
     """
     The percentage threshold for [`action`][(c).]'s width before it overflows to a new \
     line.
@@ -287,7 +297,7 @@ class SnackBar(DialogControl):
     At a value of `0.0`, the `action` will not overflow to a new line.
 
     Raises:
-        ValueError: If it is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     persist: Optional[bool] = None
@@ -312,19 +322,3 @@ class SnackBar(DialogControl):
     """
     Called the first time that the snackbar is visible within the page.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (
-            isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError("content must be a string or a visible control")
-        if self.action_overflow_threshold is not None and not (
-            0 <= self.action_overflow_threshold <= 1
-        ):
-            raise ValueError(
-                "action_overflow_threshold must be between 0 and 1 inclusive"
-            )
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError("elevation cannot be negative")

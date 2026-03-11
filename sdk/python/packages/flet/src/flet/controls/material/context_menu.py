@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -8,6 +8,7 @@ from flet.controls.control_event import Event, EventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.popup_menu_button import PopupMenuItem
 from flet.controls.transform import Offset, OffsetValue
+from flet.utils.validation import V
 
 __all__ = [
     "ContextMenu",
@@ -102,7 +103,10 @@ class ContextMenu(LayoutControl):
         context menu before relying on custom menus.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The child control that listens for mouse interaction.
 
@@ -198,8 +202,3 @@ class ContextMenu(LayoutControl):
                 "local_position": local_position,
             },
         )
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
@@ -24,6 +24,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "Tab",
@@ -167,7 +168,10 @@ class Tabs(LayoutControl, AdaptiveControl):
     The content to display.
     """
 
-    length: int
+    length: Annotated[
+        int,
+        V.ge(0),
+    ]
     """
     The total number of tabs.
 
@@ -179,7 +183,7 @@ class Tabs(LayoutControl, AdaptiveControl):
         it when adding/removing tabs.
 
     Raises:
-        ValueError: If it is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     selected_index: int = 0
@@ -219,11 +223,7 @@ class Tabs(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.length < 0:
-            raise ValueError(
-                f"length must be greater than or equal to 0, got {self.length}"
-            )
-        if not (-self.length <= self.selected_index < self.length):
+        if self.length >= 0 and not (-self.length <= self.selected_index < self.length):
             raise IndexError(
                 f"selected_index out of range: got {self.selected_index}, "
                 f"expected in range [-{self.length}, {self.length - 1}]"

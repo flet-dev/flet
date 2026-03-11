@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
@@ -7,6 +7,7 @@ from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import ClipBehavior, ColorValue, Number
+from flet.utils.validation import V
 
 __all__ = ["BottomSheet"]
 
@@ -41,19 +42,22 @@ class BottomSheet(DialogControl):
     """
     The content of this bottom sheet.
 
-	Tip:
-		Set [`scrollable`][(c).] `True` if this content is or contains scrollable
-		controls (e.g., [`ListView`][flet.], [`GridView`][flet.]) or you plan to
-		`expand` the [`content`][(c).] or give it a custom height, else the bottom
-		sheet might ignore the custom height and stop around mid-screen.
+    Tip:
+        Set [`scrollable`][(c).] `True` if this content is or contains scrollable
+        controls (e.g., [`ListView`][flet.], [`GridView`][flet.]) or you plan to
+        `expand` the [`content`][(c).] or give it a custom height, else the bottom
+        sheet might ignore the custom height and stop around mid-screen.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     Defines the size of the shadow below this bottom sheet.
 
     Raises:
-        ValueError: If it is strictly less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -131,10 +135,3 @@ class BottomSheet(DialogControl):
     """
     The color of the scrim that obscures content behind this bottom sheet.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to zero, got {self.elevation}"
-            )

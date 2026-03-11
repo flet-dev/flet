@@ -1044,10 +1044,9 @@ class Page(BasePage):
         Args:
             url: The URL to open.
             web_popup_window_name: Window tab/name to open URL in. Use
-                [`UrlTarget.SELF`][flet.]
-                for the same browser tab, [`UrlTarget.BLANK`][flet.]
-                for a new browser tab (or in external application on mobile device),
-                or a custom name for a named tab.
+                [`UrlTarget.SELF`][flet.] for the same browser tab,
+                [`UrlTarget.BLANK`][flet.] for a new browser tab (or in external
+                application on a mobile device), or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
             web_popup_window_width: Popup window width.
             web_popup_window_height: Popup window height.

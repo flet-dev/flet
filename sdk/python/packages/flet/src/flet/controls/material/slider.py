@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,6 +12,7 @@ from flet.controls.types import (
     MouseCursor,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["Slider", "SliderInteraction"]
 
@@ -74,7 +75,11 @@ class Slider(LayoutControl, AdaptiveControl):
     ```
     """
 
-    value: Optional[Number] = None
+    value: Annotated[
+        Optional[Number],
+        V.ge_field("min"),
+        V.le_field("max"),
+    ] = None
     """
     The currently selected value for this slider.
 
@@ -83,7 +88,8 @@ class Slider(LayoutControl, AdaptiveControl):
     Defaults to value of [`min`][(c).].
 
     Raises:
-        ValueError: If it is less than [`min`][(c).] or greater than [`max`][(c).].
+        ValueError: If it is not greater than or equal to [`min`][(c).].
+        ValueError: If it is not less than or equal to [`max`][(c).].
     """
 
     label: Optional[str] = None
@@ -98,30 +104,36 @@ class Slider(LayoutControl, AdaptiveControl):
     If not set, then the value indicator will not be displayed.
     """
 
-    min: Number = 0.0
+    min: Annotated[
+        Number,
+        V.le_field("max"),
+        V.le_field("value"),
+    ] = 0.0
     """
     The minimum value the user can select.
 
-    Note:
-        - Must be less than or equal to [`max`][(c).].
-        - If the [`max`][(c).] is equal to the `min`, then this slider
-            is disabled.
+    If the [`max`][(c).] is equal to the `min`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is greater than [`max`][(c).].
+        ValueError: If it is not less than or equal to [`max`][(c).].
+        ValueError: If it is not less than or equal to [`value`][(c).],
+            when [`value`][(c).] is set.
     """
 
-    max: Number = 1.0
+    max: Annotated[
+        Number,
+        V.ge_field("min"),
+        V.ge_field("value"),
+    ] = 1.0
     """
     The maximum value the user can select.
 
-    Note:
-        - Must be greater than or equal to [`min`][(c).].
-        - If the [`min`][(c).] is equal to the `max`, then this slider
-            is disabled.
+    If the [`min`][(c).] is equal to the `max`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is less than [`min`][(c).].
+        ValueError: If it is not greater than or equal to [`min`][(c).].
+        ValueError: If it is not greater than or equal to [`value`][(c).],
+            when [`value`][(c).] is set.
     """
 
     divisions: Optional[int] = None
@@ -249,19 +261,3 @@ class Slider(LayoutControl, AdaptiveControl):
     """
     Called when this slider has lost focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.max is not None and self.min > self.max:
-            raise ValueError(
-                f"min ({self.min}) must be less than or equal to max ({self.max})"
-            )
-        if self.value is not None and self.value < self.min:
-            raise ValueError(
-                f"value ({self.value}) must be greater than or "
-                f"equal to min ({self.min})"
-            )
-        if self.value is not None and self.value > self.max:
-            raise ValueError(
-                f"value ({self.value}) must be less than or equal to max ({self.max})"
-            )

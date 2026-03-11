@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.utils.validation import V
 
 __all__ = ["SelectionArea"]
 
@@ -14,7 +15,10 @@ class SelectionArea(Control):
     selection for its child control.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The child control this selection area applies to.
 
@@ -30,8 +34,3 @@ class SelectionArea(Control):
     """
     Called when the selected content changes.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
