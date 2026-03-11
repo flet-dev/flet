@@ -31,3 +31,4 @@
 vendor/
 /client/android/app/.cxx
 client/devtools_options.yaml
+/.claude/worktrees
