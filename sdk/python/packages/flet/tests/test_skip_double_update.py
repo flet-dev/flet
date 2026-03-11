@@ -15,7 +15,7 @@ def _fresh_update_behavior():
     """Ensure each test starts with a clean UpdateBehavior."""
     token = _update_behavior_context_var.set(UpdateBehavior())
     yield
-    _update_behavior_context_var.set(token.old_value)
+    _update_behavior_context_var.reset(token)
 
 
 def _make_session():
