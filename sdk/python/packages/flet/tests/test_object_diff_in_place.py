@@ -208,7 +208,7 @@ def test_simple_page():
 
     # add 2 new buttons to a list
     _, patch, _, added_controls, removed_controls = make_msg(page, show_details=True)
-    assert hasattr(page.views[0], "__changes")
+    assert hasattr(page.views[0], "_dirty")
     assert len(added_controls) == 2
     assert len(removed_controls) == 0
     assert len(patch) == 7

@@ -1,3 +1,4 @@
+import dataclasses
 import inspect
 import logging
 import sys
@@ -27,9 +28,202 @@ if TYPE_CHECKING:
 
 __all__ = [
     "BaseControl",
+    "Prop",
+    "TrackedValue",
     "control",
     "skip_field",
+    "tracked",
 ]
+
+# ---------------------------------------------------------------------------
+# Sparse property tracking
+# ---------------------------------------------------------------------------
+
+_UNSET = object()
+"""Sentinel for "field not yet in _values" (distinct from None)."""
+
+
+class Prop:
+    """
+    Descriptor for sparse property tracking on ``BaseControl``.
+
+    Each public, non-skip field gets replaced by a ``Prop`` instance by
+    ``_install_props()``.  The descriptor stores only *non-default* values in
+    ``obj._values``, so the frozen diff fast-path only needs to examine the
+    union of keys from two controls' ``_values`` dicts rather than scanning
+    every declared field.
+    """
+
+    __slots__ = ("name", "default")
+
+    def __init__(self, name: str, default: Any = _UNSET) -> None:
+        self.name = name
+        self.default = default
+
+    def __get__(self, obj: Any, objtype: Any = None) -> Any:
+        if obj is None:
+            return self
+        return obj._values.get(self.name, self.default)
+
+    def __set__(self, obj: Any, value: Any) -> None:
+        vals = obj._values
+        old = vals.get(self.name, _UNSET)
+        # Suppress storing the declared default during construction so
+        # that _values only holds genuinely non-default values.
+        if old is _UNSET and value == self.default:
+            return
+        if old is not _UNSET and old == value:
+            return  # no change — skip everything
+        # Frozen controls must not be mutated after construction.
+        if hasattr(obj, "_frozen"):
+            raise RuntimeError("Frozen controls cannot be updated.") from None
+        vals[self.name] = value
+        obj._dirty[self.name] = None
+        if hasattr(obj, "_notify"):
+            obj._notify(self.name, value)
+
+
+def _install_props(cls: type) -> None:
+    """
+    Replace public dataclass fields with ``Prop`` descriptors and record
+    non-Prop fields in ``cls._structural_fields``.
+
+    A field uses ``Prop`` when it is public (no leading ``_``), ``init=True``,
+    and has a scalar default (not a ``default_factory``).  All other non-skip
+    fields go into ``_structural_fields`` so the frozen fast-path still scans
+    them (e.g. ``controls``, ``_internals``).
+
+    Also precomputes per-class dicts used by the fast-path encoder in
+    ``protocol.py``:
+
+    * ``_event_fields``  – ``frozenset`` of Prop field names whose name starts
+      with ``on_`` and whose metadata marks them as an event.
+    * ``_root_defaults`` – ``{fname: root_default}`` where *root_default* is the
+      default declared by the *earliest* ancestor that introduces the field.
+      Used so the encoder can skip values equal to the Dart-side default.
+    * ``_override_props`` – ``{fname: subclass_default}`` for Prop fields whose
+      declared default in *this* class differs from the root default.  These
+      must be emitted even when the field is absent from ``_values``.
+
+    Called by ``_apply_control`` after ``@dataclass`` is applied so that
+    ``dataclasses.fields(cls)`` is available.
+    """
+    structural: set[str] = set()
+    prop_defaults: dict = {}  # field_name -> declared default for Prop fields
+    event_fields: set[str] = set()
+    root_defaults: dict = {}  # field_name -> root (ancestor) default
+    override_props: dict = {}  # field_name -> subclass default when != root
+
+    for f in dataclasses.fields(cls):
+        if f.metadata.get("skip", False):
+            continue  # skip_field() — excluded from diffing entirely
+        can_use_prop = (
+            not f.name.startswith("_")
+            and f.init is not False
+            and f.default_factory is dataclasses.MISSING  # type: ignore[misc]
+        )
+        if can_use_prop:
+            if not isinstance(getattr(cls, f.name, None), Prop):
+                default = f.default if f.default is not dataclasses.MISSING else _UNSET
+                setattr(cls, f.name, Prop(name=f.name, default=default))
+            prop = getattr(cls, f.name)
+            prop_defaults[f.name] = prop.default
+
+            # Event field detection for fast-path encoder.
+            if f.name.startswith("on_") and f.metadata.get("event", True):
+                event_fields.add(f.name)
+
+            # Root-default: earliest ancestor that declares this field with a
+            # scalar default.  Walk MRO from most-base to most-derived.
+            root_default = _UNSET
+            for base in reversed(cls.__mro__):
+                base_dc_fields = getattr(base, "__dataclass_fields__", None)
+                if base_dc_fields and f.name in base_dc_fields:
+                    bf = base_dc_fields[f.name]
+                    if bf.default is not dataclasses.MISSING:
+                        root_default = bf.default
+                    break  # first ancestor that declares the field wins
+            root_defaults[f.name] = root_default
+
+            # Override detection: subclass declared a different default.
+            if (
+                prop.default is not _UNSET
+                and root_default is not _UNSET
+                and prop.default != root_default
+            ):
+                override_props[f.name] = prop.default
+        else:
+            # Not Prop-managed: must still be scanned by the fast path.
+            structural.add(f.name)
+
+    cls._structural_fields = frozenset(structural)  # type: ignore[attr-defined]
+    cls._prop_defaults = prop_defaults  # type: ignore[attr-defined]
+    cls._event_fields = frozenset(event_fields)  # type: ignore[attr-defined]
+    cls._root_defaults = root_defaults  # type: ignore[attr-defined]
+    cls._override_props = override_props  # type: ignore[attr-defined]
+
+
+class TrackedValue:
+    """
+    Marker class for non-control value types that have sparse ``_values``
+    tracking enabled via ``@tracked``.
+
+    ``@tracked`` handles all setup — you never need to inherit from this
+    class explicitly.  It is exposed so that ``isinstance(obj, TrackedValue)``
+    checks work in the diff machinery.
+    """
+
+
+@dataclass_transform()
+def tracked(
+    cls: Optional[type] = None,
+    **dataclass_kwargs: Any,
+) -> Any:
+    """
+    Decorator for non-control value types to enable sparse ``_values``
+    tracking.
+
+    Applies ``@dataclass`` (passing *dataclass_kwargs*) and installs ``Prop``
+    descriptors via ``_install_props``.  No base class is required — the
+    decorator wraps ``__init__`` to inject ``_values`` and ``_dirty`` before
+    the first ``Prop.__set__`` call, and registers the class as a
+    ``TrackedValue`` subclass for isinstance checks.
+
+    Usage::
+
+        @tracked
+        class TextStyle:
+            color: Optional[str] = None
+            size: Optional[float] = None
+
+
+        # or with explicit dataclass kwargs:
+        @tracked(eq=False)
+        class TextStyle: ...
+    """
+
+    def _apply(cls: type) -> type:
+        cls = dataclass(**dataclass_kwargs)(cls)
+        _install_props(cls)
+
+        # Wrap __init__ to create _values/_dirty before any Prop.__set__ call.
+        # Prop descriptors access obj._values; this guarantees it exists first.
+        orig_init = cls.__init__
+
+        def _tracked_init(self: Any, *args: Any, **kwargs: Any) -> None:
+            object.__setattr__(self, "_values", {})
+            object.__setattr__(self, "_dirty", {})
+            orig_init(self, *args, **kwargs)
+
+        cls.__init__ = _tracked_init
+
+        return cls
+
+    if cls is not None:
+        # Used as @tracked (no parentheses)
+        return _apply(cls)
+    # Used as @tracked(...) — return a decorator
+    return _apply
 
 
 def skip_field():
@@ -123,6 +317,7 @@ def _apply_control(
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
+    _install_props(cls)  # Install Prop descriptors for sparse tracking
 
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
@@ -146,6 +341,26 @@ class BaseControl:
     """
     Base class for all Flet controls and services.
     """
+
+    # ------------------------------------------------------------------
+    # Sparse property tracking — MUST be the first two init=False fields
+    # so the dataclass-generated __init__ initialises them before any
+    # Prop.__set__ call for init=True fields.
+    # ------------------------------------------------------------------
+    _values: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
+    _dirty: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
 
     _i: int = field(init=False, compare=False)
     """
@@ -195,6 +410,9 @@ class BaseControl:
             ref.current = self
 
         self.init()
+        # Construction is not a mutation: clear dirty tracking so only
+        # post-construction mutations are visible to the non-frozen diff.
+        self._dirty.clear()
 
         # control_id = self._i
         # object_id = id(self)
@@ -460,3 +678,8 @@ class BaseControl:
         Return a debug-friendly control identifier string.
         """
         return f"{self._c}({self._i} - {id(self)})"
+
+
+# Install Prop descriptors for BaseControl's own public fields (key).
+# Subclasses decorated with @control get this called via _apply_control.
+_install_props(BaseControl)

@@ -527,7 +527,7 @@ def test_both_frozen_hosted_by_in_place():
     _, patch, _, added_controls, removed_controls = make_msg(c, {})
     assert len(added_controls) == 9
     assert len(removed_controls) == 0
-    assert hasattr(c, "__changes")
+    assert hasattr(c, "_dirty")
     assert not hasattr(c, "_frozen")
 
     c.alignment = ft.Alignment.BOTTOM_CENTER

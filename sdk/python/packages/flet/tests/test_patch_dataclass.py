@@ -157,7 +157,7 @@ def test_page_patch_dataclass():
     print("Message 2:", msg)
 
 
-def test_changes_track_original_value_without_tuple_growth():
+def test_dirty_tracks_changed_fields_and_clears_after_diff():
     @control("DirtyTrackControl")
     class DirtyTrackControl(BaseControl):
         value: int = 0
@@ -170,12 +170,11 @@ def test_changes_track_original_value_without_tuple_growth():
     c.value = 1
     c.value = 2
 
-    changes = getattr(c, "__changes")
-    assert changes["value"] == 0
+    assert "value" in c._dirty
 
     patch, _, _ = ObjectPatch.from_diff(c, c, control_cls=BaseControl)
 
-    assert changes == {}
+    assert len(c._dirty) == 0
     assert any(
         op["op"] == "replace" and op["path"] == ["value"] and op["value"] == 2
         for op in patch.patch
