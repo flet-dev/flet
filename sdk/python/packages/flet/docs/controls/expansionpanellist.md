@@ -17,7 +17,14 @@ example_media: ../examples/controls/expansion_panel_list/media
 --8<-- "{{ examples }}/basic.py"
 ```
 
-{{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
+{{ image(example_media + "/basic.gif", width="80%") }}
 
+### Scrolling
+
+`ExpansionPanelList` supports scrolling through its [`scroll`][flet.ExpansionPanelList.scroll] property.
+
+```python
+--8<-- "{{ examples }}/scrollable.py"
+```
 
 {{ class_members(class_name) }}
