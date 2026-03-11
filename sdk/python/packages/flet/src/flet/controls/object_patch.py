@@ -130,7 +130,7 @@ class PatchOperation:
 def _control_setattr(obj, name, value):
     # For plain dataclasses (no Prop tracking), this hook records the old
     # value in __changes so _compare_dataclasses can detect the change.
-    # Prop-managed fields (on @control/@tracked types) are fully handled by
+    # Prop-managed fields (on @control/@value types) are fully handled by
     # Prop.__set__ and do not go through this path.
     control_cls = getattr(type(obj), "__flet_control_cls__", None)
     if not name.startswith("_") and (

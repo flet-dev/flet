@@ -60,7 +60,7 @@ def configure_encode_object_for_msgpack(control_cls):
             is_control = isinstance(obj, control_cls)
 
             if _values is not None and _structural_fields is not None and is_control:
-                # ── Fast path for @control / @tracked types ──────────────────
+                # ── Fast path for @control / @value types ────────────────────
                 # Only non-default values are in _values; structural fields
                 # (lists, dicts, nested dataclasses, and internal scalars like
                 # _i / _c) are iterated separately — there are typically very

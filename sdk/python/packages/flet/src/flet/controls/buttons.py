@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import tracked
+from flet.controls.base_control import value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control_state import ControlStateValue
@@ -188,7 +188,7 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
         )
 
 
-@tracked
+@value
 class ButtonStyle:
     """
     Allows controlling all visual aspects of a button, such as shape, foreground, \

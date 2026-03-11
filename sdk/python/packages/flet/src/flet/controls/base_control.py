@@ -29,10 +29,10 @@ if TYPE_CHECKING:
 __all__ = [
     "BaseControl",
     "Prop",
-    "TrackedValue",
+    "Value",
     "control",
     "skip_field",
-    "tracked",
+    "value",
 ]
 
 # ---------------------------------------------------------------------------
@@ -163,19 +163,19 @@ def _install_props(cls: type) -> None:
     cls._override_props = override_props  # type: ignore[attr-defined]
 
 
-class TrackedValue:
+class Value:
     """
     Marker class for non-control value types that have sparse ``_values``
-    tracking enabled via ``@tracked``.
+    tracking enabled via ``@value``.
 
-    ``@tracked`` handles all setup — you never need to inherit from this
-    class explicitly.  It is exposed so that ``isinstance(obj, TrackedValue)``
+    ``@value`` handles all setup — you never need to inherit from this
+    class explicitly.  It is exposed so that ``isinstance(obj, Value)``
     checks work in the diff machinery.
     """
 
 
 @dataclass_transform()
-def tracked(
+def value(
     cls: Optional[type] = None,
     **dataclass_kwargs: Any,
 ) -> Any:
@@ -187,18 +187,18 @@ def tracked(
     descriptors via ``_install_props``.  No base class is required — the
     decorator wraps ``__init__`` to inject ``_values`` and ``_dirty`` before
     the first ``Prop.__set__`` call, and registers the class as a
-    ``TrackedValue`` subclass for isinstance checks.
+    ``Value`` subclass for isinstance checks.
 
     Usage::
 
-        @tracked
+        @value
         class TextStyle:
             color: Optional[str] = None
             size: Optional[float] = None
 
 
         # or with explicit dataclass kwargs:
-        @tracked(eq=False)
+        @value(eq=False)
         class TextStyle: ...
     """
 
@@ -210,19 +210,19 @@ def tracked(
         # Prop descriptors access obj._values; this guarantees it exists first.
         orig_init = cls.__init__
 
-        def _tracked_init(self: Any, *args: Any, **kwargs: Any) -> None:
+        def _value_init(self: Any, *args: Any, **kwargs: Any) -> None:
             object.__setattr__(self, "_values", {})
             object.__setattr__(self, "_dirty", {})
             orig_init(self, *args, **kwargs)
 
-        cls.__init__ = _tracked_init
+        cls.__init__ = _value_init
 
         return cls
 
     if cls is not None:
-        # Used as @tracked (no parentheses)
+        # Used as @value (no parentheses)
         return _apply(cls)
-    # Used as @tracked(...) — return a decorator
+    # Used as @value(...) — return a decorator
     return _apply
 
 

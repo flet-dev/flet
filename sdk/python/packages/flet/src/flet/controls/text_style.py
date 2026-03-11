@@ -1,7 +1,7 @@
 from enum import Enum, IntFlag
 from typing import Optional
 
-from flet.controls.base_control import tracked
+from flet.controls.base_control import value
 from flet.controls.box import BoxShadowValue
 from flet.controls.painting import Paint
 from flet.controls.types import ColorValue, FontWeight, Number
@@ -239,7 +239,7 @@ class TextDecorationStyle(Enum):
     """
 
 
-@tracked
+@value
 class TextStyle:
     """
     A style describing how to format and paint text.
@@ -408,7 +408,7 @@ class TextStyle:
         )
 
 
-@tracked
+@value
 class StrutStyle:
     """
     TBD

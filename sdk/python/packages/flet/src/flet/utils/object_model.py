@@ -16,7 +16,7 @@ def patch_dataclass(obj: Any, patch: dict):
     Fields starting with `_` are set directly even when they are not declared in type
     hints.
 
-    For ``@control`` / ``@tracked`` objects (those with ``_values`` and
+    For ``@control`` / ``@value`` objects (those with ``_values`` and
     ``_prop_defaults``), Prop fields are written directly into ``_values`` rather
     than going through ``Prop.__set__``.  This avoids unnecessary dirty-tracking,
     frozen-checks, and ``_notify`` calls — none of which are needed when applying
@@ -38,7 +38,7 @@ def patch_dataclass(obj: Any, patch: dict):
         hints = {f.name: f.type for f in dataclasses.fields(cls)}  # fallback
         # print("ERROR: ", cls.__name__, e)
 
-    # For @control / @tracked objects write Prop fields directly into _values,
+    # For @control / @value objects write Prop fields directly into _values,
     # bypassing dirty-tracking and other Prop.__set__ side-effects.
     _values = getattr(obj, "_values", None)
     _prop_defaults = getattr(type(obj), "_prop_defaults", None)
