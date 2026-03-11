@@ -1,13 +1,13 @@
-from dataclasses import dataclass
 from typing import Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 from flet.utils import deprecated
 
 __all__ = ["Margin", "MarginValue", "all", "only", "symmetric"]
 
 
-@dataclass
+@value
 class Margin:
     """
     `Margin` class has the properties to set margins for all sides of the rectangle.

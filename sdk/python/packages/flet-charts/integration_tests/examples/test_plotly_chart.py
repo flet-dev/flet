@@ -1,9 +1,9 @@
-import pytest
 import plotly.express as px
+import pytest
 
 import flet as ft
-import flet_charts as fch
 import flet.testing as ftt
+import flet_charts as fch
 from examples.controls.charts.plotly_chart import (
     example_1,
     example_2,

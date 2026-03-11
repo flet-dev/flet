@@ -31,7 +31,6 @@ With `strict=False` (default), network/parsing failures render warnings (or popu
 import concurrent.futures
 import json
 import re
-import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Iterable

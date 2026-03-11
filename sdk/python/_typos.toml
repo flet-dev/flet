@@ -1,0 +1,3 @@
+[default.extend-words]
+# AAC High Efficiency audio codec enum member name
+AACHE = "AACHE"

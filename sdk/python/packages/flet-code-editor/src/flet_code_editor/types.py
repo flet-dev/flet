@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -622,7 +621,7 @@ class CodeLanguage(Enum):
     """
     Roboconf
     """
-    ROUTEROS = "routeros"
+    ROUTERS = "routers"
     """
     RouterOS
     """
@@ -823,7 +822,7 @@ CustomCodeTheme = MarkdownCustomCodeTheme
 """Alias for `flet.MarkdownCustomCodeTheme`."""
 
 
-@dataclass
+@ft.value
 class GutterStyle:
     """Defines gutter appearance (line numbers) for the code editor."""
 

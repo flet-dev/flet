@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.reorderable_list_view import horizontal_and_vertical
 
 

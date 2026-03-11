@@ -1,6 +1,6 @@
-import dataclasses
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 from flet.utils import deprecated
 
@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-@dataclasses.dataclass
+@value
 class BorderRadius:
     """
     Corner radii for a rectangle, defined for all four corners.

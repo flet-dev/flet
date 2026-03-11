@@ -5,8 +5,8 @@ from typing import Any
 
 import msgpack
 
-from flet.controls.base_control import _UNSET
 from flet.controls.duration import Duration
+from flet.controls.value_types import _UNSET
 
 
 def _get_root_dataclass_field(cls, field_name):

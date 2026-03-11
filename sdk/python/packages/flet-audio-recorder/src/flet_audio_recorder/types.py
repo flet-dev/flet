@@ -149,7 +149,7 @@ class AndroidAudioSource(Enum):
     """
 
 
-@dataclass
+@ft.value
 class AndroidRecorderConfiguration:
     """Android specific configuration for recording."""
 
@@ -250,7 +250,7 @@ class IosAudioCategoryOption(Enum):
     """
 
 
-@dataclass
+@ft.value
 class IosRecorderConfiguration:
     """iOS specific configuration for recording."""
 
@@ -274,7 +274,7 @@ class IosRecorderConfiguration:
     """
 
 
-@dataclass
+@ft.value
 class InputDevice:
     """An audio input device."""
 
@@ -285,7 +285,7 @@ class InputDevice:
     """The label text representation."""
 
 
-@dataclass
+@ft.value
 class AudioRecorderConfiguration:
     """Recording configuration."""
 

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
 import flet as ft
@@ -7,7 +7,7 @@ from flet_charts.types import ChartDataPointTooltip
 __all__ = ["CandlestickChartSpot", "CandlestickChartSpotTooltip"]
 
 
-@dataclass
+@ft.value
 class CandlestickChartSpotTooltip(ChartDataPointTooltip):
     """Tooltip configuration for the [`CandlestickChartSpot`][(p).]."""
 
