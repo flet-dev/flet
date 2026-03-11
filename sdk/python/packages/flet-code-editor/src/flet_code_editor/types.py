@@ -621,7 +621,7 @@ class CodeLanguage(Enum):
     """
     Roboconf
     """
-    ROUTERS = "routers"
+    ROUTEROS = "routeros"
     """
     RouterOS
     """
