@@ -437,28 +437,65 @@ class TextAlign(Enum):
 
 class ScrollMode(Enum):
     """
-    Weather scrolling is enabled and visibility of scroll bar options.
+    Defines scrolling behavior and scroll bar visibility for scrollable controls.
+
+    When assigned to [`ScrollableControl.scroll`][flet.], for example, each value
+    internally maps to a specific [`Scrollbar`][flet.] configuration.
     """
 
     AUTO = "auto"
     """
     Scrolling is enabled and scroll bar is only shown when scrolling occurs.
+
+    [`Scrollbar`][flet.] equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     ADAPTIVE = "adaptive"
     """
     Scrolling is enabled and scroll bar is always shown when running app as web or \
     desktop.
+
+    [`Scrollbar`][flet.] equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thumb_visibility=page.web or not page.platform.is_mobile(),
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     ALWAYS = "always"
     """
     Scrolling is enabled and scroll bar is always shown.
+
+    [`Scrollbar`][flet.] equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thumb_visibility=True,
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     HIDDEN = "hidden"
     """
     Scrolling is enabled, but scroll bar is always hidden.
+
+    [`Scrollbar`][flet.] equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thickness=0,
+    )
+    ```
     """
 
 
