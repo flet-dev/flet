@@ -110,6 +110,27 @@ class Context:
         """
         return self.__components_mode
 
+    def mark_update_called(self):
+        """
+        Marks that `.update()` was explicitly called during the current handler.
+        """
+        _update_behavior_context_var.get()._update_called = True
+
+    def was_update_called(self) -> bool:
+        """
+        Returns whether `.update()` was explicitly called during the current handler.
+
+        Returns:
+            `True` if `.update()` was called, `False` otherwise.
+        """
+        return _update_behavior_context_var.get()._update_called
+
+    def reset_update_called(self):
+        """
+        Resets the update-called flag for the current context.
+        """
+        _update_behavior_context_var.get()._update_called = False
+
     def auto_update_enabled(self) -> bool:
         """
         Returns whether auto-update is enabled in the current context.
@@ -143,6 +164,7 @@ class UpdateBehavior:
     """
 
     _auto_update_enabled: bool = True
+    _update_called: bool = False
 
 
 _context_page = ContextVar("flet_session_page", default=None)
