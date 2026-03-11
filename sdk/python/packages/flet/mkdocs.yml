@@ -814,6 +814,7 @@ nav:
               - component: types/component.md
               - control: types/control.md
               - observable: types/observabledecorator.md
+              - value: types/value.md
           - Enums:
               - Ads:
                   - PrecisionType: ads/types/precisiontype.md
