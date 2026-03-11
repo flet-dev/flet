@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import msgpack
 
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import PageMediaData
 from flet.controls.object_patch import ObjectPatch
@@ -50,6 +51,28 @@ def test_encode_emits_overridden_defaults():
     encoded = encoder(ChildTestControl())
 
     assert encoded["foo"] == 5
+
+
+def test_value_decorator_registers_value_marker():
+    value = ft.Alignment(1, 2)
+
+    assert isinstance(value, ft.Value)
+    assert issubclass(type(value), ft.Value)
+
+
+def test_encode_uses_value_fast_path():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    value = ft.Alignment(1, 2)
+
+    encoded = encoder(value)
+
+    assert encoded == {"x": 1, "y": 2}
+    assert hasattr(value, "__prev_classes")
+    assert getattr(value, "__prev_classes") == {}
+    assert hasattr(value, "__prev_lists")
+    assert getattr(value, "__prev_lists") == {}
+    assert hasattr(value, "__prev_dicts")
+    assert getattr(value, "__prev_dicts") == {}
 
 
 def test_page_patch_dataclass():

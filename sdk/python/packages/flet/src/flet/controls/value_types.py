@@ -125,7 +125,15 @@ def _install_props(cls: type) -> None:
     cls._override_props = override_props  # type: ignore[attr-defined]
 
 
-class Value:
+class _ValueMeta(type):
+    def __instancecheck__(cls, instance: Any) -> bool:
+        return cls.__subclasscheck__(type(instance))
+
+    def __subclasscheck__(cls, subclass: type) -> bool:
+        return bool(getattr(subclass, "_is_flet_value", False))
+
+
+class Value(metaclass=_ValueMeta):
     """
     Marker class for non-control value types that have sparse ``_values``
     tracking enabled via ``@value``.
@@ -167,6 +175,7 @@ def value(
     def _apply(cls: type) -> type:
         cls = dataclass(**dataclass_kwargs)(cls)
         _install_props(cls)
+        cls._is_flet_value = True
 
         orig_init = cls.__init__
 
