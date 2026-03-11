@@ -529,7 +529,7 @@ class BaseControl:
         Override to start resources that require an attached page, for example
         subscriptions, timers, or service listeners.
         """
-        controls_log.debug(f"{self}.did_mount()")
+        controls_log.debug("%s.did_mount()", self)
         pass
 
     def will_unmount(self):
@@ -539,7 +539,7 @@ class BaseControl:
         Override to dispose resources created in `did_mount()`, such as
         subscriptions, timers, or external handles.
         """
-        controls_log.debug(f"{self}.will_unmount()")
+        controls_log.debug("%s.will_unmount()", self)
         pass
 
     # public methods
@@ -616,7 +616,7 @@ class BaseControl:
             _context_page.set(self.page)
             context.reset_auto_update()
 
-            controls_log.debug(f"Trigger event {self}.{field_name} {e}")
+            controls_log.debug("Trigger event %s.%s %s", self, field_name, e)
 
             if not self.page:
                 raise RuntimeError(

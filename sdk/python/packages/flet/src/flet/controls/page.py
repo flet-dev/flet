@@ -145,7 +145,7 @@ class ServiceRegistry(Service):
             ]
             removed_count = original_len - len(self._services)
             if removed_count > 0:
-                logger.debug(f"Removed {removed_count} services from the registry")
+                logger.debug("Removed %s services from the registry", removed_count)
                 self.update()
 
 
