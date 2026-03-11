@@ -9,7 +9,7 @@ WidgetStateProperty<T?>? getWidgetStateProperty<T>(
     [T? defaultValue]) {
   if (value == null) return null;
   var j = value;
-  if (j is! Map<dynamic, dynamic>) {
+  if (j is! Map<dynamic, dynamic> || j.isEmpty) {
     j = {"default": j};
   }
   if (j.containsKey("")) {
