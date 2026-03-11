@@ -1125,38 +1125,29 @@ class DiffBuilder:
             src_vals = getattr(src, "_values", None)
             dst_vals = getattr(dst, "_values", None)
             if src_vals is not None and dst_vals is not None:
-                # Fast path: iterate fields in definition order (preserving
-                # patch ordering) and skip Prop-managed fields that are at
-                # their declared defaults on both sides.
+                # Fast path: two focused loops, each proportional to the
+                # number of fields that actually need comparing.
                 #
-                # For active Prop fields, read directly from the _values dicts
-                # instead of going through Prop.__get__ to avoid Python function
-                # call overhead per field comparison.
+                # 1. Structural fields (_i, _c, controls, …) — always compare;
+                #    typically just a handful per control type.
+                # 2. Active Prop fields — only those non-default on at least
+                #    one side; read directly from _values to skip Prop.__get__.
                 structural = getattr(type(dst), "_structural_fields", frozenset())
-                prop_defaults = getattr(type(dst), "_prop_defaults", None)
-                active_prop = src_vals.keys() | dst_vals.keys()
-                for f in dataclasses.fields(dst):
-                    fname = f.name
-                    if f.metadata.get("skip", False):
+                prop_defaults = getattr(type(dst), "_prop_defaults", {})
+                event_fields = getattr(type(dst), "_event_fields", frozenset())
+
+                for fname in structural:
+                    old = getattr(src, fname)
+                    new = getattr(dst, fname)
+                    self._compare_values(dst, path, fname, old, new, frozen)
+
+                for fname in {**src_vals, **dst_vals}:
+                    default = prop_defaults.get(fname)
+                    old = src_vals.get(fname, default)
+                    new = dst_vals.get(fname, default)
+                    if old is new or old == new:
                         continue
-                    if fname in structural:
-                        # Structural field (list/dict/_-prefixed): always compare.
-                        old = getattr(src, fname)
-                        new = getattr(dst, fname)
-                    elif fname in active_prop:
-                        # Prop field with a non-default value on at least one side.
-                        if prop_defaults is not None:
-                            default = prop_defaults.get(fname)
-                            old = src_vals.get(fname, default)
-                            new = dst_vals.get(fname, default)
-                            if old is new or old == new:
-                                continue  # identical on both sides: skip
-                        else:
-                            old = getattr(src, fname)
-                            new = getattr(dst, fname)
-                    else:
-                        continue  # Prop field at default on both sides: skip
-                    if fname.startswith("on_") and f.metadata.get("event", True):
+                    if fname in event_fields:
                         old = old is not None
                         new = new is not None
                     self._compare_values(dst, path, fname, old, new, frozen)

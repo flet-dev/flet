@@ -14,6 +14,7 @@ from .common import (
     MyText,
     b_unpack,
     cmp_ops,
+    cmp_ops_unordered,
     make_diff,
     make_msg,
 )
@@ -276,7 +277,7 @@ def test_button_basic_diff():
     # 2nd iteration
     patch, _, _, _ = make_diff(b2, b1)
     assert len(patch) == 3
-    assert cmp_ops(
+    assert cmp_ops_unordered(
         patch,
         [
             {
@@ -293,7 +294,7 @@ def test_button_basic_diff():
     b3 = ft.Button(content=ft.Text("Text_1"), style=None, scale=ft.Scale(0.1))
     b3._frozen = True
     patch, _, _, _ = make_diff(b3, b2)
-    assert cmp_ops(
+    assert cmp_ops_unordered(
         patch,
         [
             {
@@ -584,7 +585,7 @@ def test_larger_control_updates():
     )
     c2._frozen = True
     patch, msg, added_controls, removed_controls = make_diff(c2, c1)
-    assert cmp_ops(
+    assert cmp_ops_unordered(
         patch,
         [
             {"op": "replace", "path": ["height"], "value": None},
