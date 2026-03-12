@@ -61,7 +61,8 @@ class Session:
 
         session_id = self.__id
         weakref.finalize(
-            self, lambda: logger.info(f"Session was garbage collected: {session_id}")
+            self,
+            lambda: logger.info("Session was garbage collected: %s", session_id),
         )
 
     @property
@@ -141,7 +142,7 @@ class Session:
         Args:
             conn: Active connection to bind to this session.
         """
-        logger.debug(f"Connect session: {self.id}")
+        logger.debug("Connect session: %s", self.id)
         _context_page.set(self.__page)
         self.__conn = conn
         self.__expires_at = None
@@ -177,7 +178,7 @@ class Session:
             session_timeout_seconds: Grace period before the disconnected session is
                 considered expired.
         """
-        logger.debug(f"Disconnect session: {self.id}")
+        logger.debug("Disconnect session: %s", self.id)
         self.__expires_at = datetime.now(timezone.utc) + timedelta(
             seconds=session_timeout_seconds
         )
@@ -198,7 +199,7 @@ class Session:
         unsubscribes pub/sub handlers, resolves pending invoke-method calls with
         a closure error, and dispatches the page-level `close` event.
         """
-        logger.debug(f"Closing expired session: {self.id}")
+        logger.debug("Closing expired session: %s", self.id)
         self.__closed = True
         self.__updates_ready.set()
         if self.__updates_task and not self.__updates_task.done():
@@ -237,7 +238,7 @@ class Session:
             frozen=frozen,
         )
 
-        patch_logger.debug(f"\npatch removed_controls ({len(removed_controls)}):")
+        patch_logger.debug("\npatch removed_controls (%s):", len(removed_controls))
         for c in removed_controls:
             patch_logger.debug("   %s", c)
 
@@ -254,7 +255,7 @@ class Session:
                 )
             )
 
-        patch_logger.debug(f"\npatch added_controls: ({len(added_controls)})")
+        patch_logger.debug("\npatch added_controls: (%s)", len(added_controls))
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
@@ -327,13 +328,15 @@ class Session:
         """
         control = self.__index.get(control_id)
         if not control:
-            logger.debug(f"Control with ID {control_id} not found.")
+            logger.debug("Control with ID %s not found.", control_id)
             return
 
         try:
             await control._trigger_event(event_name, event_data)
         except Exception as e:
-            logger.error(f"Unhandled error in 'on_{event_name}' handler", exc_info=True)
+            logger.error(
+                "Unhandled error in 'on_%s' handler", event_name, exc_info=True
+            )
             self.error(f"{e}\n{traceback.format_exc()}")
 
     async def invoke_method(
@@ -563,7 +566,7 @@ class Session:
         """
         Starts the deferred updates/effects scheduler task if not already running.
         """
-        logger.debug(f"Starting updates scheduler: {self.id}")
+        logger.debug("Starting updates scheduler: %s", self.id)
         if self.__updates_task and not self.__updates_task.done():
             return
         self.__updates_task = asyncio.create_task(self.__updates_scheduler())

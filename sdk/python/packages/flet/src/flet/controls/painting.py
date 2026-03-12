@@ -1,8 +1,9 @@
 import math
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_control import value
 from flet.controls.blur import BlurValue
 from flet.controls.gradients import GradientTileMode
 from flet.controls.transform import OffsetValue
@@ -49,7 +50,7 @@ class PaintingStyle(Enum):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class PaintGradient:
     """
     Base class for gradients applied via [`Paint.gradient`][flet.].
@@ -64,7 +65,7 @@ class PaintGradient:
     """Internal gradient kind discriminator serialized to Flutter."""
 
 
-@dataclass
+@value
 class PaintLinearGradient(PaintGradient):
     """
     More information on Linear gradient
@@ -136,7 +137,7 @@ class PaintLinearGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class PaintRadialGradient(PaintGradient):
     """
     More information on Radial gradient \
@@ -225,7 +226,7 @@ class PaintRadialGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class PaintSweepGradient(PaintGradient):
     """
     More information on Sweep gradient \
@@ -310,7 +311,7 @@ class PaintSweepGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class Paint:
     """
     A description of the style to use when drawing a shape on the canvas.

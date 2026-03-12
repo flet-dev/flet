@@ -9,7 +9,7 @@ from flet_charts.types import ChartEventType, ChartGridLines, HorizontalAlignmen
 __all__ = ["ScatterChart", "ScatterChartEvent", "ScatterChartTooltip"]
 
 
-@dataclass
+@ft.value
 class ScatterChartTooltip:
     """Configuration of the tooltip for [`ScatterChart`][(p).]s."""
 

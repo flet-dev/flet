@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class Scale:
     """
     Scaling configuration for an object.
@@ -93,7 +94,7 @@ class Scale:
         )
 
 
-@dataclass
+@value
 class Rotate:
     """
     Rotation configuration of an object.
@@ -152,7 +153,7 @@ class Rotate:
         )
 
 
-@dataclass
+@value
 class Offset:
     """
     A 2D floating-point offset.
@@ -208,7 +209,7 @@ class Offset:
         )
 
 
-@dataclass
+@value
 class Flip:
     """
     Configuration for [`LayoutControl.flip`][flet.LayoutControl.flip].
@@ -242,7 +243,7 @@ class Flip:
     """
 
 
-@dataclass
+@value
 class _Matrix4Call:
     """
     Internal serialized operation descriptor for [`Matrix4`][flet.].
@@ -252,7 +253,7 @@ class _Matrix4Call:
     args: list[Any] = field(default_factory=list)
 
 
-@dataclass
+@value
 class Matrix4:
     """
     A recorded, replayable Matrix4 transform intent.
@@ -405,7 +406,7 @@ class Matrix4:
         return cloned
 
 
-@dataclass
+@value
 class Transform:
     """
     Configuration for [`LayoutControl.transform`][flet.LayoutControl.transform].

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -9,6 +9,7 @@ from typing import (
     Union,
 )
 
+from flet.controls.base_control import value
 from flet.controls.colors import Colors
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.icon_data import IconData
@@ -74,7 +75,7 @@ class UrlTarget(Enum):
     """
 
 
-@dataclass
+@value
 class Url:
     """
     URL descriptor used by APIs that open links in a browser context.
@@ -152,7 +153,7 @@ class FontWeight(Enum):
     """
 
 
-@dataclass
+@value
 class NotchShape:
     """
     A shape with a notch in its outline.
@@ -171,7 +172,7 @@ class NotchShape:
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@value
 class CircularRectangleNotchShape(NotchShape):
     """
     A rectangle with a smooth circular notch.
@@ -186,7 +187,7 @@ class CircularRectangleNotchShape(NotchShape):
         self._type = "circular"
 
 
-@dataclass
+@value
 class AutomaticNotchShape(NotchShape):
     """
     A notch sahpe created from [`ShapeBorder`][flet.]s.
@@ -1093,7 +1094,7 @@ class VisualDensity(Enum):
     """
 
 
-@dataclass
+@value
 class Locale:
     """
     An identifier used to select a user's language and formatting preferences.
@@ -1181,7 +1182,7 @@ class Locale:
         return separator.join(out_parts)
 
 
-@dataclass
+@value
 class LocaleConfiguration:
     """
     Represents the configuration for supported locales and the current locale.

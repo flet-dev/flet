@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
 import flet as ft
@@ -8,7 +8,7 @@ from flet_charts.types import ChartDataPointTooltip
 __all__ = ["BarChartRod", "BarChartRodTooltip"]
 
 
-@dataclass
+@ft.value
 class BarChartRodTooltip(ChartDataPointTooltip):
     """
     Tooltip configuration for the  [`BarChartRod`][(p).].

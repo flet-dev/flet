@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -68,7 +67,7 @@ class PaletteType(Enum):
     """Circular hue wheel palette."""
 
 
-@dataclass
+@ft.value
 class HsvColor:
     """Represents a color in the HSV color space with alpha channel."""
 

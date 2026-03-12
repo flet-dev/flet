@@ -2,7 +2,7 @@
 Type definitions and configuration objects for flet-video.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
@@ -30,7 +30,7 @@ class PlaylistMode(Enum):
     """Loop over the playlist & restart it from beginning once end is reached."""
 
 
-@dataclass
+@ft.value
 class VideoMedia:
     """Represents a media resource for video playback."""
 
@@ -44,7 +44,7 @@ class VideoMedia:
     """Additional metadata for the media resource."""
 
 
-@dataclass
+@ft.value
 class VideoConfiguration:
     """Additional configuration for video playback."""
 
@@ -114,7 +114,7 @@ class VideoConfiguration:
     """
 
 
-@dataclass
+@ft.value
 class VideoSubtitleTrack:
     """Represents a subtitle track for a video."""
 
@@ -200,7 +200,7 @@ class VideoSubtitleTrack:
         return VideoSubtitleTrack(src="auto")
 
 
-@dataclass
+@ft.value
 class VideoSubtitleConfiguration:
     """Represents the configuration for video subtitles."""
 

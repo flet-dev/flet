@@ -1,6 +1,6 @@
-from dataclasses import dataclass
 from typing import Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 from flet.utils import deprecated
 
@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class Padding:
     """
     Defines padding for all sides of a rectangle.

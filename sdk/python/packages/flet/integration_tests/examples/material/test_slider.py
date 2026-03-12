@@ -3,10 +3,9 @@ import pytest
 import flet as ft
 import flet.testing as ftt
 from examples.controls.slider import (
-    custom_label,
     basic,
+    custom_label,
     handling_events,
-    random_values,
 )
 
 

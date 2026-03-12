@@ -26,7 +26,7 @@ from flet.controls.animation import (
     AnimationStyle,
     AnimationValue,
 )
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, Value, control, value
 from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
 from flet.controls.blur import (
     Blur,
@@ -1058,6 +1058,7 @@ __all__ = [
     "UrlTarget",
     "UserAccelerometer",
     "UserAccelerometerReadingEvent",
+    "Value",
     "ValueKey",
     "VerticalAlignment",
     "VerticalDivider",
@@ -1106,6 +1107,7 @@ __all__ = [
     "use_memo",
     "use_ref",
     "use_state",
+    "value",
 ]
 
 _THEME_EXPORTS = {
