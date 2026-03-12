@@ -11,7 +11,7 @@ example_images: ../examples/controls/ads/media
 ### Example 1
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 {{ image(example_images + "/example_1.gif", width="80%") }}

@@ -52,17 +52,26 @@ def main(page: ft.Page):
         )
 
     page.add(
-        ft.OutlinedButton(
-            content="Show InterstitialAd",
-            on_click=show_new_interstitial_ad,
-            disabled=page.web or not page.platform.is_mobile(),  # mobile only
-        ),
-        ft.OutlinedButton(
-            content="Show BannerAd",
-            on_click=lambda e: page.add(get_new_banner_ad()),
-            disabled=page.web or not page.platform.is_mobile(),  # mobile only
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.OutlinedButton(
+                        content="Show InterstitialAd",
+                        on_click=show_new_interstitial_ad,
+                        disabled=page.web
+                        or not page.platform.is_mobile(),  # mobile only
+                    ),
+                    ft.OutlinedButton(
+                        content="Show BannerAd",
+                        on_click=lambda e: page.add(get_new_banner_ad()),
+                        disabled=page.web
+                        or not page.platform.is_mobile(),  # mobile only
+                    ),
+                ]
+            )
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
