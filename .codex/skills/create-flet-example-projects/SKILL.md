@@ -92,6 +92,7 @@ Ensure each runnable example is a standalone project containing:
 
 11. Validate.
 - Run `python -m compileall` on changed `main.py` files.
+- Run `uv run ruff check` on changed example files and fix violations until it passes (respecting repository `pyproject.toml` under `[tool.ruff]`).
 - Search for stale paths to old flat files.
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
@@ -110,6 +111,7 @@ Ensure each runnable example is a standalone project containing:
 - Discover files: `rg --files <target_dir>`
 - Find docs links/imports: `rg -n "<old_path_or_module>" packages examples`
 - Syntax check: `python -m compileall <changed_main_files>`
+- Ruff check: `uv run ruff check <changed_example_files>`
 
 ## Output expectations
 
