@@ -11,7 +11,7 @@ example_images: ../test-images/examples/material/golden/macos/card
 [Live example](https://flet-controls-gallery.fly.dev/layout/card)
 
 ```python
---8<-- "{{ examples }}/music_info.py"
+--8<-- "{{ examples }}/music_info/main.py"
 ```
 
 {{ image(example_images + "/music_info.png", alt="music-info", width="50%") }}
