@@ -1,7 +1,7 @@
 [project]
 name = "charts-pie-chart-example-2"
 version = "1.0.0"
-description = "Example 2 example for pie chart."
+description = "Pie chart with interactive section radius and title styling on hover."
 requires-python = ">=3.10"
 keywords = ["charts", "pie-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

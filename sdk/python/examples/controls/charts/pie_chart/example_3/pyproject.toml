@@ -1,7 +1,7 @@
 [project]
 name = "charts-pie-chart-example-3"
 version = "1.0.0"
-description = "Example 3 example for pie chart."
+description = "Pie chart with icon badges and animated section highlighting based on pointer events."
 requires-python = ">=3.10"
 keywords = ["charts", "pie-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

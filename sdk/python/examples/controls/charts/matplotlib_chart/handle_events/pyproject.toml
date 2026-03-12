@@ -1,7 +1,7 @@
 [project]
 name = "charts-matplotlib-chart-handle-events"
 version = "1.0.0"
-description = "Handle Events example for matplotlib chart."
+description = "Matplotlib chart demonstrating pick and keyboard events to inspect selected data points."
 requires-python = ">=3.10"
 keywords = ["charts", "matplotlib-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

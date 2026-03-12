@@ -1,7 +1,7 @@
 [project]
 name = "charts-bar-chart-example-1"
 version = "1.0.0"
-description = "Example 1 example for bar chart."
+description = "Interactive bar chart showing fruit supply with custom axes, tooltips, and grid lines."
 requires-python = ">=3.10"
 keywords = ["charts", "bar-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

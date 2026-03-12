@@ -1,7 +1,7 @@
 [project]
 name = "charts-bar-chart-example-2"
 version = "1.0.0"
-description = "Example 2 example for bar chart."
+description = "Bar chart with pointer-hover interaction that highlights individual rods dynamically."
 requires-python = ">=3.10"
 keywords = ["charts", "bar-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

@@ -1,7 +1,7 @@
 [project]
 name = "charts-matplotlib-chart-toolbar"
 version = "1.0.0"
-description = "Toolbar example for matplotlib chart."
+description = "Matplotlib chart with built-in toolbar for panning, zooming, and data exploration."
 requires-python = ">=3.10"
 keywords = ["charts", "matplotlib-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

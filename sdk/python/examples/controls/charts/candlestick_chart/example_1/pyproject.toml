@@ -1,7 +1,7 @@
 [project]
 name = "charts-candlestick-chart-example-1"
 version = "1.0.0"
-description = "Example 1 example for candlestick chart."
+description = "Candlestick chart visualizing weekly OHLC data with labeled axes and event-driven tooltips."
 requires-python = ">=3.10"
 keywords = ["charts", "candlestick-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

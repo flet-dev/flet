@@ -1,7 +1,7 @@
 [project]
 name = "charts-plotly-chart-example-4"
 version = "1.0.0"
-description = "Example 4 example for plotly chart."
+description = "Plotly grouped box plot comparing moisture distributions across categories."
 requires-python = ">=3.10"
 keywords = ["charts", "plotly-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

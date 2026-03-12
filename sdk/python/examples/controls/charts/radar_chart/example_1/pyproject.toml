@@ -1,7 +1,7 @@
 [project]
 name = "charts-radar-chart-example-1"
 version = "1.0.0"
-description = "Example 1 example for radar chart."
+description = "Radar chart comparing platform values across multiple datasets with styled titles and ticks."
 requires-python = ">=3.10"
 keywords = ["charts", "radar-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

@@ -1,7 +1,7 @@
 [project]
 name = "charts-line-chart-dashboard-declarative"
 version = "1.0.0"
-description = "Dashboard Declarative example for line chart."
+description = "Declarative dashboard with live-updating line chart gauges for CPU, memory, and disk usage."
 requires-python = ">=3.10"
 keywords = ["charts", "line-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

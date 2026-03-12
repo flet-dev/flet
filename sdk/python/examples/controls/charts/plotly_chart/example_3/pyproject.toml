@@ -1,7 +1,7 @@
 [project]
 name = "charts-plotly-chart-example-3"
 version = "1.0.0"
-description = "Example 3 example for plotly chart."
+description = "Plotly pie chart example for categorical distribution visualization."
 requires-python = ">=3.10"
 keywords = ["charts", "plotly-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

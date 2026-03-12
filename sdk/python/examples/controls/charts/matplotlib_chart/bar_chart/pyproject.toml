@@ -1,7 +1,7 @@
 [project]
 name = "charts-matplotlib-chart-bar-chart"
 version = "1.0.0"
-description = "Bar Chart example for matplotlib chart."
+description = "Matplotlib bar chart example with categorical data, labels, and legend integration."
 requires-python = ">=3.10"
 keywords = ["charts", "matplotlib-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

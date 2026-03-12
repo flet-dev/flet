@@ -1,7 +1,7 @@
 [project]
 name = "charts-plotly-chart-example-1"
 version = "1.0.0"
-description = "Example 1 example for plotly chart."
+description = "Plotly line chart showing life expectancy trends by country in Oceania."
 requires-python = ">=3.10"
 keywords = ["charts", "plotly-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

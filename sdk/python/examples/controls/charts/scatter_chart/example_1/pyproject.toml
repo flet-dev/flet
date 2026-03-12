@@ -1,7 +1,7 @@
 [project]
 name = "charts-scatter-chart-example-1"
 version = "1.0.0"
-description = "Example 1 example for scatter chart."
+description = "Scatter chart that toggles between random spots and a Flutter-logo point pattern on tap."
 requires-python = ">=3.10"
 keywords = ["charts", "scatter-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

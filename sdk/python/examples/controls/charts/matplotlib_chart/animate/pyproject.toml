@@ -1,7 +1,7 @@
 [project]
 name = "charts-matplotlib-chart-animate"
 version = "1.0.0"
-description = "Animate example for matplotlib chart."
+description = "Animated 3D random-walk Matplotlib chart embedded in a Flet application."
 requires-python = ">=3.10"
 keywords = ["charts", "matplotlib-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

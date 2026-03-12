@@ -1,7 +1,7 @@
 [project]
 name = "charts-matplotlib-chart-three-d"
 version = "1.0.0"
-description = "Three D example for matplotlib chart."
+description = "Matplotlib 3D chart rendering a double-helix-style surface and line composition."
 requires-python = ">=3.10"
 keywords = ["charts", "matplotlib-chart", "flet"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
