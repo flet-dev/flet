@@ -56,16 +56,18 @@ self.initPyodide = async function () {
             print(f"Adding {pkgs_path} to sys.path")
             sys.path.insert(0, pkgs_path)
 
-        async def ensure_micropip():
+        async def micropip_imported():
             try:
                 import micropip
+                return True
             except Exception:
                 import pyodide_js
                 await pyodide_js.loadPackage('micropip')
+                return False
 
         if os.path.exists("requirements.txt"):
-            await ensure_micropip()
-            import micropip
+            if not await micropip_imported():
+                import micropip
             with open("requirements.txt", "r") as f:
                 deps = [line.rstrip() for line in f]
                 if deps:
@@ -73,8 +75,8 @@ self.initPyodide = async function () {
                     await micropip.install(deps, pre=micropip_include_pre)
 
         if "dependencies" in py_args:
-            await ensure_micropip()
-            import micropip
+            if not await micropip_imported():
+                import micropip
             await micropip.install(py_args["dependencies"], pre=micropip_include_pre)
 
         # Execute app
