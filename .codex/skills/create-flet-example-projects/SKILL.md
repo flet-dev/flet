@@ -50,6 +50,8 @@ Ensure each runnable example is a standalone project containing:
 4. Infer metadata.
 - Title: readable version of file/folder intent.
 - Short description: one line of what the example demonstrates.
+- `[project].description` must be meaningful and example-specific; avoid generic placeholders like "Example N" or "<name> example for <control>".
+- Description should mention the concrete behavior or interaction shown (for example: hover highlight, live updates, custom axes, event handling).
 - Categories: typically control-based, e.g. `Input/Chip`, plus optional `Apps/Basic controls`.
 - Tags: from control/topic/behavior words.
 - Controls used: list key controls from code.
@@ -99,6 +101,7 @@ Ensure each runnable example is a standalone project containing:
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
 - Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
 - Confirm no in-scope examples use `use_material3`.
+- Confirm each in-scope `pyproject.toml` has a meaningful, example-specific `[project].description` (not generic or templated text).
 
 ## Code style
 
