@@ -46,7 +46,10 @@ class Prop:
 
     def __get__(self, obj: Any, objtype: Any = None) -> Any:
         if obj is None:
-            return self
+            # Class-level access: return the declared default, matching
+            # plain @dataclass field behaviour (e.g. TextTheme.display_small
+            # returns None, not the Prop descriptor).
+            return self.default if self.default is not _UNSET else self
         return obj._values.get(self.name, self.default)
 
     def __set__(self, obj: Any, value: Any) -> None:
@@ -70,6 +73,15 @@ class Prop:
             obj._notify(self.name, value)
 
 
+def _get_raw_descriptor(cls: type, name: str) -> Any:
+    """Return the raw descriptor for *name* from cls or its MRO without
+    triggering ``__get__``, so we always get the ``Prop`` object itself."""
+    for klass in cls.__mro__:
+        if name in vars(klass):
+            return vars(klass)[name]
+    return None
+
+
 def _install_props(cls: type) -> None:
     """
     Replace public dataclass fields with ``Prop`` descriptors and record
@@ -90,10 +102,10 @@ def _install_props(cls: type) -> None:
             and f.default_factory is dataclasses.MISSING  # type: ignore[misc]
         )
         if can_use_prop:
-            if not isinstance(getattr(cls, f.name, None), Prop):
+            if not isinstance(_get_raw_descriptor(cls, f.name), Prop):
                 default = f.default if f.default is not dataclasses.MISSING else _UNSET
                 setattr(cls, f.name, Prop(name=f.name, default=default))
-            prop = getattr(cls, f.name)
+            prop = _get_raw_descriptor(cls, f.name)
             prop_defaults[f.name] = prop.default
 
             if f.name.startswith("on_") and f.metadata.get("event", True):
