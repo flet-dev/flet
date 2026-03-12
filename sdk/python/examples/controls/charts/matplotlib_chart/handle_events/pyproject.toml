@@ -18,7 +18,7 @@ title = "Handle Events"
 controls = ["SafeArea", "MatplotlibChart"]
 layout_pattern = "single-chart"
 complexity = "basic"
-features = ["chart visualization"]
+features = ["event handling", "save to file"]
 
 [tool.flet]
 org = "dev.flet"

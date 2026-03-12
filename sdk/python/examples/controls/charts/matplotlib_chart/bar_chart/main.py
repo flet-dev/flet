@@ -18,7 +18,12 @@ def main(page: ft.Page):
     ax.set_title("Fruit supply by kind and color")
     ax.legend(title="Fruit color")
 
-    page.add(ft.SafeArea(content=fch.MatplotlibChart(figure=fig, expand=True)))
+    page.add(
+        ft.SafeArea(
+            expand=True,
+            content=fch.MatplotlibChart(figure=fig, expand=True),
+        )
+    )
 
 
 if __name__ == "__main__":

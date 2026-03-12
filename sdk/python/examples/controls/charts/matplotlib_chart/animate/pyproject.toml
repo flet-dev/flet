@@ -18,7 +18,7 @@ title = "Animate"
 controls = ["SafeArea", "MatplotlibChart"]
 layout_pattern = "single-chart"
 complexity = "basic"
-features = ["chart visualization"]
+features = ["animated chart", "save to file"]
 
 [tool.flet]
 org = "dev.flet"

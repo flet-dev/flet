@@ -52,6 +52,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=flet_charts.MatplotlibChartWithToolbar(figure=fig, expand=True),
         )
     )

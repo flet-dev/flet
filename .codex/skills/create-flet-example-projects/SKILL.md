@@ -58,6 +58,8 @@ Ensure each runnable example is a standalone project containing:
 - Layout pattern: choose closest practical value (e.g. `filter-bar`, `inline-actions`, `dashboard`, `list-detail`).
 - Complexity: `basic` unless logic/state/architecture is non-trivial.
 - Features: notable behaviors only (click handling, selection, async loading, drag-and-drop, etc.).
+- If an example supports exporting or downloading output, include `"save to file"` in `[tool.flet.metadata].features`.
+
 
 5. Infer dependencies from imports.
 - Always include `flet` for standard examples.
@@ -68,6 +70,8 @@ Ensure each runnable example is a standalone project containing:
 - If `ft.context.disable_auto_update()` is not used, do not add explicit `page.update()` unless strictly necessary.
 - Apply this `page.update()` rule to all examples in the touched folder (new, migrated, and already converted).
 - Wrap app content in `ft.SafeArea` so example renders correctly on mobile.
+- Add `expand=True` to `ft.SafeArea` only when needed for correct layout/sizing (for example to avoid Infinity/NaN sizing issues), and avoid adding it when not necessary.
+
 - Apply this to all examples in the touched folder (new, migrated, and already converted), not only files changed by moves.
 - During validation, confirm every `<example>/main.py` in scope includes a top-level `ft.SafeArea` around rendered content.
 
@@ -99,9 +103,13 @@ Ensure each runnable example is a standalone project containing:
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
+- Confirm in-scope `ft.SafeArea` wrappers use `expand=True` only where needed for correct behavior and sizing; avoid forcing it by default.
+
 - Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
 - Confirm no in-scope examples use `use_material3`.
 - Confirm each in-scope `pyproject.toml` has a meaningful, example-specific `[project].description` (not generic or templated text).
+- Confirm metadata features include `"save to file"` when the example code supports file export/save behavior.
+
 
 ## Code style
 

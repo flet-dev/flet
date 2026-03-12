@@ -99,6 +99,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=fch.MatplotlibChartWithToolbar(figure=fig, expand=True),
         )
     )
