@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Button
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="Basic button", width="50%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Icons
 
 ```python
---8<-- "{{ examples }}/icons.py"
+--8<-- "{{ examples }}/icons/main.py"
 ```
 
 {{ image(example_images + "/icons.png", alt="Basic button", width="50%") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Handling clicks
 
 ```python
---8<-- "{{ examples }}/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks/main.py"
 ```
 
 {{ image(example_images + "/handling_clicks.png", alt="Handling clicks", width="50%") }}
@@ -40,7 +40,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Custom content
 
 ```python
---8<-- "{{ examples }}/custom_content.py"
+--8<-- "{{ examples }}/custom_content/main.py"
 ```
 
 {{ image(example_images + "/custom_content.png", alt="Buttons with custom content", width="50%") }}
@@ -49,7 +49,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Shapes
 
 ```python
---8<-- "{{ examples }}/button_shapes.py"
+--8<-- "{{ examples }}/button_shapes/main.py"
 ```
 
 {{ image(example_images + "/button_shapes.png", alt="Buttons with different shapes", width="50%") }}
@@ -58,7 +58,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Styling
 
 ```python
---8<-- "{{ examples }}/styling.py"
+--8<-- "{{ examples }}/styling/main.py"
 ```
 
 {{ image(example_images + "/styled_initial.png", alt="Styled button - default state", width="50%", caption="Default state") }}
@@ -70,7 +70,7 @@ example_images: ../test-images/examples/material/golden/macos/button
 ### Animate on hover
 
 ```python
---8<-- "{{ examples }}/animate_on_hover.py"
+--8<-- "{{ examples }}/animate_on_hover/main.py"
 ```
 
 {{ image(example_images + "/animate_on_hover_initial.png", alt="Unhovered button", width="50%", caption="Normal button") }}
