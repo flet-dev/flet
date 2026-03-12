@@ -18,7 +18,7 @@ title = "Toolbar"
 controls = ["SafeArea", "MatplotlibChart"]
 layout_pattern = "single-chart"
 complexity = "basic"
-features = ["chart visualization"]
+features = ["chart visualization", "interactive toolbar", "save to file"]
 
 [tool.flet]
 org = "dev.flet"
