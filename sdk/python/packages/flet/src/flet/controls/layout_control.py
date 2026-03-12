@@ -222,7 +222,11 @@ class LayoutControl(Control):
     aspect_ratio: Optional[Number] = None
     """
     The aspect ratio of the control.
-    It is defined as the ratio of the width to the height.
+    It is defined as the ratio of [`width`][(c).] to [`height`][(c).].
+
+    Note:
+        In current implementation, if [`aspect_ratio`][(c).] is set, [`width`][(c).]
+        and [`height`][(c).] on the same control are ignored for final rendered size.
     """
 
     animate_opacity: Optional[AnimationValue] = None
