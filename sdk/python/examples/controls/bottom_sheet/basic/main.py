@@ -24,9 +24,19 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Button(
-            content="Display bottom sheet",
-            on_click=lambda e: page.show_dialog(sheet),
+        ft.SafeArea(
+            # avoid_intrusions_left=False,
+            # avoid_intrusions_top=False,
+            # avoid_intrusions_right=False,
+            # avoid_intrusions_bottom=False,
+            content=ft.Column(
+                controls=[
+                    ft.Button(
+                        content="Display bottom sheet",
+                        on_click=lambda e: page.show_dialog(sheet),
+                    )
+                ]
+            ),
         )
     )
 

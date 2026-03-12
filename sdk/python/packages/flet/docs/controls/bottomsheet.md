@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 ### Basic example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", width="60%") }}
@@ -21,7 +21,7 @@ example_images: ../test-images/examples/material/golden/macos/bottom_sheet
 ### Fullscreen
 
 ```python
---8<-- "{{ examples }}/fullscreen.py"
+--8<-- "{{ examples }}/fullscreen/main.py"
 ```
 
 {{ image(example_images + "/fullscreen.gif", width="60%") }}
