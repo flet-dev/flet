@@ -59,7 +59,8 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(cp)
+    page.add(ft.SafeArea(content=cp))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

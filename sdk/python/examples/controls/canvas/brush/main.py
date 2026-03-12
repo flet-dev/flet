@@ -26,7 +26,7 @@ def main(page: ft.Page):
         state.y = e.local_position.y
 
     async def handle_pan_update(e: ft.DragUpdateEvent):
-        ft.context.disable_auto_update()
+        # ft.context.disable_auto_update()
         canvas.shapes.append(
             cv.Line(
                 x1=state.x,
@@ -76,16 +76,24 @@ def main(page: ft.Page):
                     f.write(capture)
 
     page.add(
-        ft.Button("Save image", on_click=save_image),
-        ft.Container(
-            content=canvas,
-            border_radius=5,
-            border=ft.Border.all(2),
-            bgcolor=ft.Colors.WHITE,
-            width=float("inf"),
+        ft.SafeArea(
             expand=True,
+            content=ft.Column(
+                controls=[
+                    ft.Button("Save image", on_click=save_image),
+                    ft.Container(
+                        border_radius=5,
+                        border=ft.Border.all(2),
+                        bgcolor=ft.Colors.WHITE,
+                        width=float("inf"),
+                        expand=True,
+                        content=canvas,
+                    ),
+                ]
+            ),
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

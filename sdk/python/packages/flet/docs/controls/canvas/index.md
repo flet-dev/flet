@@ -16,7 +16,7 @@ example_media: ../../examples/controls/canvas/media
 ### Smiling face
 
 ```python
---8<-- "{{ examples }}/smiling_face.py"
+--8<-- "{{ examples }}/smiling_face/main.py"
 ```
 
 {{ image(example_media + "/smiling_face.png", alt="smiling-face", width="80%") }}
@@ -25,7 +25,7 @@ example_media: ../../examples/controls/canvas/media
 ### Flet logo
 
 ```python
---8<-- "{{ examples }}/flet_logo.py"
+--8<-- "{{ examples }}/flet_logo/main.py"
 ```
 
 {{ image(example_media + "/flet_logo.png", alt="flet-logo", width="80%") }}
@@ -34,7 +34,7 @@ example_media: ../../examples/controls/canvas/media
 ### Triangles
 
 ```python
---8<-- "{{ examples }}/triangles.py"
+--8<-- "{{ examples }}/triangles/main.py"
 ```
 
 {{ image(example_media + "/triangles.png", alt="triangles", width="80%") }}
@@ -43,7 +43,7 @@ example_media: ../../examples/controls/canvas/media
 ### Bezier curves
 
 ```python
---8<-- "{{ examples }}/bezier_curves.py"
+--8<-- "{{ examples }}/bezier_curves/main.py"
 ```
 
 {{ image(example_media + "/bezier_curves.png", alt="bezier-curves", width="80%") }}
@@ -52,7 +52,7 @@ example_media: ../../examples/controls/canvas/media
 ### Text
 
 ```python
---8<-- "{{ examples }}/text.py"
+--8<-- "{{ examples }}/text/main.py"
 ```
 
 {{ image(example_media + "/text.png", alt="text", width="80%") }}
@@ -61,13 +61,13 @@ example_media: ../../examples/controls/canvas/media
 ### Free-hand drawing with image capture
 
 ```python
---8<-- "{{ examples }}/brush.py"
+--8<-- "{{ examples }}/brush/main.py"
 ```
 
 ### Gradients
 
 ```python
---8<-- "{{ examples }}/gradients.py"
+--8<-- "{{ examples }}/gradients/main.py"
 ```
 
 {{ class_members(class_name) }}
