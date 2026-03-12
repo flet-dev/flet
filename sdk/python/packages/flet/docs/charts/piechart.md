@@ -12,7 +12,7 @@ diagram: assets/pie-chart-diagram.svg
 ### Example 1
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 {{ image(example_images + "/example_1.png", width="80%") }}
@@ -20,7 +20,7 @@ diagram: assets/pie-chart-diagram.svg
 ### Example 2
 
 ```python
---8<-- "{{ examples }}/example_2.py"
+--8<-- "{{ examples }}/example_2/main.py"
 ```
 
 {{ image(example_images + "/example_2.png", width="80%") }}
@@ -28,7 +28,7 @@ diagram: assets/pie-chart-diagram.svg
 ### Example 3
 
 ```python
---8<-- "{{ examples }}/example_3.py"
+--8<-- "{{ examples }}/example_3/main.py"
 ```
 
 {{ image(example_images + "/example_3.png", width="80%") }}

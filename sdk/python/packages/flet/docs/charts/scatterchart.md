@@ -11,7 +11,7 @@ example_images: ../test-images-charts/examples/golden/macos/scatter_chart
 ### Basic Scatter Chart
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 {{ image(example_images + "/example_1.png", width="80%") }}

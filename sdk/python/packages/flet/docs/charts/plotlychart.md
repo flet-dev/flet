@@ -13,7 +13,7 @@ example_images: ../test-images-charts/examples/golden/macos/plotly_chart
 Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 {{ image(example_images + "/example_1.png", width="80%") }}
@@ -23,7 +23,7 @@ Based on an official [Plotly example](https://plotly.com/python/line-charts).
 Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
 ```python
---8<-- "{{ examples }}/example_2.py"
+--8<-- "{{ examples }}/example_2/main.py"
 ```
 
 {{ image(example_images + "/example_2.png", width="80%") }}
@@ -33,7 +33,7 @@ Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 
 ```python
---8<-- "{{ examples }}/example_3.py"
+--8<-- "{{ examples }}/example_3/main.py"
 ```
 
 {{ image(example_images + "/example_3.png", width="80%") }}
@@ -43,7 +43,7 @@ Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 Based on an official [Plotly example](https://plotly.com/python/box-plots).
 
 ```python
---8<-- "{{ examples }}/example_4.py"
+--8<-- "{{ examples }}/example_4/main.py"
 ```
 
 {{ image(example_images + "/example_4.png", width="80%") }}

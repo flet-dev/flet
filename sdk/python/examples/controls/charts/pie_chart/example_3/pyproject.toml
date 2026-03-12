@@ -1,0 +1,26 @@
+[project]
+name = "charts-pie-chart-example-3"
+version = "1.0.0"
+description = "Example 3 example for pie chart."
+requires-python = ">=3.10"
+keywords = ["charts", "pie-chart", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/PieChart"]
+
+[tool.flet.metadata]
+title = "Example 3"
+controls = ["SafeArea", "PieChart"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
