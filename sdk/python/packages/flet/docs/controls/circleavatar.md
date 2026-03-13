@@ -14,7 +14,7 @@ example_media: ../examples/controls/circle_avatar/media
 ### User avatars
 
 ```python
---8<-- "{{ examples }}/user_avatars.py"
+--8<-- "{{ examples }}/user_avatars/main.py"
 ```
 
 {{ image(example_media + "/user_avatars.png", alt="user-avatars", width="80%") }}
