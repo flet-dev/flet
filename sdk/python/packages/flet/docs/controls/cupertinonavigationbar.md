@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_navigation_bar/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../examples/controls/cupertino_navigation_bar/media
 ### Wired navigation bar
 
 ```python
---8<-- "{{ examples }}/wired.py"
+--8<-- "{{ examples }}/wired/main.py"
 ```
 
 {{ class_members(class_name) }}

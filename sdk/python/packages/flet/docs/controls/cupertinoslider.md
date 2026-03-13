@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_slider/media
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}

@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_segmented_button/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/cupertino_segmented_button/media
 ### Adjusting segments padding
 
 ```python
---8<-- "{{ examples }}/segments_padding.py"
+--8<-- "{{ examples }}/segments_padding/main.py"
 ```
 
 {{ class_members(class_name) }}

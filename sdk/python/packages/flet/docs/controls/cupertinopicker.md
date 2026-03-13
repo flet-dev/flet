@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_picker/media
 ### Fruit selection
 
 ```python
---8<-- "{{ examples }}/fruit_selection.py"
+--8<-- "{{ examples }}/fruit_selection/main.py"
 ```
 
 {{ image(example_images + "/fruit_selection.gif", alt="fruit-selection", width="80%") }}

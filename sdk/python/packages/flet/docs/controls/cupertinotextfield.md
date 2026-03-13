@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_text_field/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
+--8<-- "{{ examples }}/cupertino_material_and_adaptive/main.py"
 ```
 
 {{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
@@ -22,13 +22,13 @@ example_media: ../examples/controls/cupertino_text_field/media
 ### Handling selection changes
 
 ```python
---8<-- "{{ examples }}/selection_change.py"
+--8<-- "{{ examples }}/selection_change/main.py"
 ```
 
 ### Background image
 
 ```python
---8<-- "{{ examples }}/background_image.py"
+--8<-- "{{ examples }}/background_image/main.py"
 ```
 
 {{ class_members(class_name) }}

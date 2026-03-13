@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_list_tile/media
 ### Notched and non-notched list tiles
 
 ```python
---8<-- "{{ examples }}/notched.py"
+--8<-- "{{ examples }}/notched/main.py"
 ```
 
 {{ image(example_media + "/notched.png", alt="notched", width="80%") }}

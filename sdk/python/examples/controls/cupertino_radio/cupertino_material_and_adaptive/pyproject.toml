@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-radio-cupertino-material-and-adaptive"
+version = "1.0.0"
+description = "Compares Cupertino, Material, and adaptive radio controls inside one RadioGroup workflow."
+requires-python = ">=3.10"
+keywords = ["cupertino", "radio", "adaptive", "material", "comparison"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoRadio"]
+
+[tool.flet.metadata]
+title = "Cupertino, material and adaptive"
+controls = ["SafeArea", "Column", "RadioGroup", "CupertinoRadio", "Radio", "Text", "Button"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["adaptive radio", "cupertino and material comparison", "submit callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

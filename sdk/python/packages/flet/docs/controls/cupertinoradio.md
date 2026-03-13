@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_radio/media
 ### Cupertino, Material and Adaptive Radios
 
 ```python
---8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
+--8<-- "{{ examples }}/cupertino_material_and_adaptive/main.py"
 ```
 
 {{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
