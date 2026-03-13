@@ -25,13 +25,11 @@ Documentation = "https://docs.flet.dev/"
 all = [
     "flet-cli",
     "flet-web",
-    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light; platform_system == 'Linux'",
+    "flet-desktop",
 ]
 cli = ["flet-cli"]
 desktop = [
-    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light; platform_system == 'Linux'",
+    "flet-desktop",
 ]
 web = ["flet-web"]
 
