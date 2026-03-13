@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-2"
+version = "1.0.0"
+description = "HueRingPicker example with custom ring stroke width and color change callback."
+requires-python = ">=3.10"
+keywords = ["color picker", "hue ring", "color selection", "callback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "HueRingPicker"
+controls = ["SafeArea", "HueRingPicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["color change callback", "hue ring customization"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

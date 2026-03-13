@@ -92,39 +92,45 @@ def main(page: ft.Page):
         editor.selection = ft.TextSelection(base_offset=0, extent_offset=0)
 
     page.add(
-        ft.Column(
+        ft.SafeArea(
             expand=True,
-            spacing=10,
-            controls=[
-                editor := fce.CodeEditor(
-                    language=fce.CodeLanguage.PYTHON,
-                    code_theme=theme,
-                    autocomplete=True,
-                    autocomplete_words=[
-                        "Container",
-                        "Button",
-                        "Text",
-                        "Row",
-                        "Column",
-                    ],
-                    value=CODE,
-                    text_style=text_style,
-                    gutter_style=gutter_style,
-                    padding=10,
-                    on_selection_change=handle_selection_change,
-                    expand=True,
-                ),
-                selection := ft.Text("Select some text from the editor."),
-                selection_details := ft.Text(),
-                caret := ft.Text("Caret position: -"),
-                ft.Row(
-                    spacing=10,
-                    controls=[
-                        ft.Button("Select all text", on_click=select_all),
-                        ft.Button("Move caret to start", on_click=move_caret_to_start),
-                    ],
-                ),
-            ],
+            content=ft.Column(
+                expand=True,
+                spacing=10,
+                controls=[
+                    editor := fce.CodeEditor(
+                        language=fce.CodeLanguage.PYTHON,
+                        code_theme=theme,
+                        autocomplete=True,
+                        autocomplete_words=[
+                            "Container",
+                            "Button",
+                            "Text",
+                            "Row",
+                            "Column",
+                        ],
+                        value=CODE,
+                        text_style=text_style,
+                        gutter_style=gutter_style,
+                        padding=10,
+                        on_selection_change=handle_selection_change,
+                        expand=True,
+                    ),
+                    selection := ft.Text("Select some text from the editor."),
+                    selection_details := ft.Text(),
+                    caret := ft.Text("Caret position: -"),
+                    ft.Row(
+                        spacing=10,
+                        controls=[
+                            ft.Button("Select all text", on_click=select_all),
+                            ft.Button(
+                                "Move caret to start",
+                                on_click=move_caret_to_start,
+                            ),
+                        ],
+                    ),
+                ],
+            ),
         )
     )
 

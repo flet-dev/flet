@@ -34,8 +34,14 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.IconButton(icon=ft.Icons.BRUSH, on_click=lambda e: page.show_dialog(dialog)),
+        ft.SafeArea(
+            content=ft.IconButton(
+                icon=ft.Icons.BRUSH,
+                on_click=lambda e: page.show_dialog(dialog),
+            )
+        ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

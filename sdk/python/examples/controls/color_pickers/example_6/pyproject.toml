@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-6"
+version = "1.0.0"
+description = "MultipleChoiceBlockPicker dialog with multi-select colors and icon-triggered modal launch."
+requires-python = ">=3.10"
+keywords = ["color picker", "multi-select", "block picker", "dialog", "palette"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "MultipleChoiceBlockPicker"
+controls = ["SafeArea", "IconButton", "AlertDialog", "TextButton", "MultipleChoiceBlockPicker"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["dialog picker", "multiple color selection", "colors change callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -11,7 +11,7 @@ example_images: ../test-images/examples/extensions/color_pickers/golden/macos/co
 ## Example
 
 ```python
---8<-- "{{ examples }}/example_2.py"
+--8<-- "{{ examples }}/example_2/main.py"
 ```
 
 {{ class_members(class_name) }}

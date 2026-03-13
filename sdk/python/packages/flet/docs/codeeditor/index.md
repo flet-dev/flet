@@ -28,7 +28,7 @@ pip install flet-code-editor  # (1)!
 
 ### Basic example
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 {{ image(example_images + "/example_1.png", alt="code-editor-example-1", width="80%") }}
@@ -36,7 +36,7 @@ pip install flet-code-editor  # (1)!
 ### Selection handling
 
 ```python
---8<-- "{{ examples }}/example_2.py"
+--8<-- "{{ examples }}/example_2/main.py"
 ```
 
 {{ image(example_images + "/example_2.png", alt="code-editor-example-2", width="80%") }}
@@ -44,7 +44,7 @@ pip install flet-code-editor  # (1)!
 ### Folding and initial selection
 
 ```python
---8<-- "{{ examples }}/example_3.py"
+--8<-- "{{ examples }}/example_3/main.py"
 ```
 
 {{ image(example_images + "/example_3.png", alt="code-editor-example-3", width="80%") }}

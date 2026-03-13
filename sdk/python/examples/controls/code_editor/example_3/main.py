@@ -29,13 +29,20 @@ def main(page: ft.Page):
         await editor.fold_comment_at_line_zero()
 
     page.add(
-        ft.Row(
-            [
-                ft.Button("Fold imports", on_click=fold_imports),
-                ft.Button("Fold comment", on_click=fold_comment),
-            ]
-        ),
-        editor,
+        ft.SafeArea(
+            expand=True,
+            content=ft.Column(
+                controls=[
+                    ft.Row(
+                        controls=[
+                            ft.Button("Fold imports", on_click=fold_imports),
+                            ft.Button("Fold comment", on_click=fold_comment),
+                        ]
+                    ),
+                    editor,
+                ]
+            ),
+        )
     )
 
 

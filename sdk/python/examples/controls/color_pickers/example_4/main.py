@@ -18,7 +18,8 @@ def main(page: ft.Page):
         on_primary_change=on_primary_change,
     )
 
-    page.add(picker)
+    page.add(ft.SafeArea(content=picker))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

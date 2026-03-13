@@ -38,7 +38,8 @@ def main(page: ft.Page):
         picker_area_border_radius=ft.BorderRadius.all(20),
     )
 
-    page.add(picker)
+    page.add(ft.SafeArea(content=picker))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

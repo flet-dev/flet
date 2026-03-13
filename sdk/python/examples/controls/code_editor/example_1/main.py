@@ -32,12 +32,15 @@ ft.run(main)
 
 def main(page: ft.Page):
     page.add(
-        fce.CodeEditor(
-            language=fce.CodeLanguage.PYTHON,
-            code_theme=fce.CodeTheme.ATOM_ONE_LIGHT,
-            value=CODE,
+        ft.SafeArea(
             expand=True,
-            on_change=lambda e: print("Changed:", e.data),
+            content=fce.CodeEditor(
+                language=fce.CodeLanguage.PYTHON,
+                code_theme=fce.CodeTheme.ATOM_ONE_LIGHT,
+                value=CODE,
+                expand=True,
+                on_change=lambda e: print("Changed:", e.data),
+            ),
         )
     )
 
