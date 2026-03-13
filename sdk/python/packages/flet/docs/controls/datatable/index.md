@@ -15,7 +15,7 @@ example_images: ../../test-images/examples/material/golden/macos/datatable
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", width="80%") }}
@@ -28,7 +28,7 @@ edge spacing of the first and last columns.
 Use [`column_spacing`][flet.DataTable.column_spacing] to control spacing between columns.
 
 ```python
---8<-- "{{ examples }}/spacing.py"
+--8<-- "{{ examples }}/spacing/main.py"
 ```
 
 ### Adaptive row heights
@@ -38,7 +38,7 @@ Setting [`data_row_max_height`][flet.DataTable.data_row_max_height] to `float('i
 respective content, instead of all rows having the same height.
 
 ```python
---8<-- "{{ examples }}/adaptive_row_heights.py"
+--8<-- "{{ examples }}/adaptive_row_heights/main.py"
 ```
 
 ### Sortable columns and selectable rows
@@ -47,7 +47,7 @@ This example demonstrates row selection (including select-all),
 sortable string and numeric columns, and stable selection across sorts and refreshes.
 
 ```python
---8<-- "{{ examples }}/sortable_and_selectable.py"
+--8<-- "{{ examples }}/sortable_and_selectable/main.py"
 ```
 
 {{ image(example_images + "/sortable_and_selectable.png", width="80%") }}
@@ -56,7 +56,7 @@ sortable string and numeric columns, and stable selection across sorts and refre
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ class_members(class_name) }}

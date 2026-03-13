@@ -1,0 +1,26 @@
+[project]
+name = "data-table-basic"
+version = "1.0.0"
+description = "Shows a basic DataTable with text columns and numeric age values."
+requires-python = ">=3.10"
+keywords = ["data table", "rows", "columns", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell", "Text"]
+layout_pattern = "table-view"
+complexity = "basic"
+features = ["tabular data", "numeric column"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
