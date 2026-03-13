@@ -14,7 +14,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Clickable container
 
 ```python
---8<-- "{{ examples }}/clickable.py"
+--8<-- "{{ examples }}/clickable/main.py"
 ```
 
 {{ image(example_media + "/clickable.gif", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Handling clicks
 
 ```python
---8<-- "{{ examples }}/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks/main.py"
 ```
 
 {{ image(example_media + "/handling_clicks.gif", width="80%") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Handling hovers
 
 ```python
---8<-- "{{ examples }}/handling_hovers.py"
+--8<-- "{{ examples }}/handling_hovers/main.py"
 ```
 
 {{ image(example_media + "/handling_hovers.gif", width="80%") }}
@@ -40,7 +40,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Animate 1
 
 ```python
---8<-- "{{ examples }}/animate_1.py"
+--8<-- "{{ examples }}/animate_1/main.py"
 ```
 
 {{ image(example_media + "/animate_1.gif", width="80%") }}
@@ -49,25 +49,19 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Animate 2
 
 ```python
---8<-- "{{ examples }}/animate_2.py"
+--8<-- "{{ examples }}/animate_2/main.py"
 ```
 
 ### Animate 3
 
 ```python
---8<-- "{{ examples }}/animate_3.py"
-```
-
-### Animate 4
-
-```python
---8<-- "{{ examples }}/animate_4.py"
+--8<-- "{{ examples }}/animate_3/main.py"
 ```
 
 ### Nested themes 1
 
 ```python
---8<-- "{{ examples }}/nested_themes_1.py"
+--8<-- "{{ examples }}/nested_themes_1/main.py"
 ```
 
 {{ image(example_images + "/nested_themes_1.png", width="80%") }}
@@ -75,7 +69,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Nested themes 2
 
 ```python
---8<-- "{{ examples }}/nested_themes_2.py"
+--8<-- "{{ examples }}/nested_themes_2/main.py"
 ```
 
 {{ image(example_images + "/nested_themes_2.png", width="80%") }}
@@ -83,7 +77,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Nested themes 3
 
 ```python
---8<-- "{{ examples }}/nested_themes_3.py"
+--8<-- "{{ examples }}/nested_themes_3/main.py"
 ```
 
 {{ image(example_media + "/nested_themes_3.gif", width="80%") }}
@@ -92,7 +86,7 @@ example_images: ../test-images/examples/material/golden/macos/container
 ### Size aware
 
 ```python
---8<-- "{{ examples }}/size_aware.py"
+--8<-- "{{ examples }}/size_aware/main.py"
 ```
 
 {{ image(example_images + "/size_aware.png", width="80%") }}

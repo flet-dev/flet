@@ -37,19 +37,28 @@ def main(page: ft.Page):
         container.update()
 
     page.add(
-        container := ft.Container(
-            content=message,
-            width=250,
-            height=250,
-            gradient=gradient2,
-            alignment=ft.Alignment.TOP_LEFT,
-            animate=ft.Animation(duration=1000, curve=ft.AnimationCurve.BOUNCE_OUT),
-            border=ft.Border.all(width=2, color=ft.Colors.BLUE),
-            border_radius=10,
-            padding=10,
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    container := ft.Container(
+                        width=250,
+                        height=250,
+                        gradient=gradient2,
+                        alignment=ft.Alignment.TOP_LEFT,
+                        animate=ft.Animation(
+                            duration=1000, curve=ft.AnimationCurve.BOUNCE_OUT
+                        ),
+                        border=ft.Border.all(width=2, color=ft.Colors.BLUE),
+                        border_radius=10,
+                        padding=10,
+                        content=message,
+                    ),
+                    ft.Button("Animate container", on_click=animate_container),
+                ]
+            )
         ),
-        ft.Button("Animate container", on_click=animate_container),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

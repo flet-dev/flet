@@ -1,0 +1,26 @@
+[project]
+name = "container-nested-themes-2"
+version = "1.0.0"
+description = "Multiple nested containers comparing page, dark, and light theme behaviors."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Nested themes 2"
+controls = ["SafeArea", "Column", "Row", "Container", "Button", "TextButton", "Text"]
+layout_pattern = "stacked-sections"
+complexity = "basic"
+features = ["nested themes", "theme mode override"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

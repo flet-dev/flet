@@ -1,11 +1,9 @@
 import pytest
 
+import examples.controls.container.nested_themes_1.main as nested_themes_1
+import examples.controls.container.nested_themes_2.main as nested_themes_2
+import examples.controls.container.size_aware.main as size_aware
 import flet.testing as ftt
-from examples.controls.container import (
-    nested_themes_1,
-    nested_themes_2,
-    size_aware,
-)
 
 
 @pytest.mark.parametrize(

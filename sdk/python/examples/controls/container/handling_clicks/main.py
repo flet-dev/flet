@@ -16,7 +16,7 @@ def main(page: ft.Page):
             text=f"  {cl_counter}  ",
             style=ft.TextStyle(size=16, bgcolor=ft.Colors.TEAL_300),
         )
-        page.update()
+        t1.update()
 
     def on_long_press(e):
         nonlocal lp_counter
@@ -25,7 +25,7 @@ def main(page: ft.Page):
             text=f"  {lp_counter}  ",
             style=ft.TextStyle(size=16, bgcolor=ft.Colors.TEAL_300),
         )
-        page.update()
+        t3.update()
 
     def on_tap_down(e):
         nonlocal td_counter
@@ -34,7 +34,7 @@ def main(page: ft.Page):
             text=f"  {td_counter}  ",
             style=ft.TextStyle(size=16, bgcolor=ft.Colors.TEAL_300),
         )
-        page.update()
+        t2.update()
 
     c = ft.Container(
         bgcolor=ft.Colors.PINK_900,
@@ -100,7 +100,8 @@ def main(page: ft.Page):
         ]
     )
 
-    page.add(c, t1, t3, t2)
+    page.add(ft.SafeArea(content=ft.Column(controls=[c, t1, t3, t2])))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
