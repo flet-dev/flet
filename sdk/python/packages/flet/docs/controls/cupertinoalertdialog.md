@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_alert_dialog/media
 ### File deletion confirmation
 
 ```python
---8<-- "{{ examples }}/file_deletion_confirmation.py"
+--8<-- "{{ examples }}/file_deletion_confirmation/main.py"
 ```
 
 {{ image(example_images + "/file_deletion_confirmation.png", alt="file-deletion-confirmation", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../examples/controls/cupertino_alert_dialog/media
 ### Cupertino, material and adaptive alert dialogs
 
 ```python
---8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
+--8<-- "{{ examples }}/cupertino_material_and_adaptive/main.py"
 ```
 
 {{ class_members(class_name) }}

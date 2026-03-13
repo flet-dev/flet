@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_checkbox/media
 ### Cupertino, Material and Adaptive Checkboxes
 
 ```python
---8<-- "{{ examples }}/cupertino_material_and_adaptive.py"
+--8<-- "{{ examples }}/cupertino_material_and_adaptive/main.py"
 ```
 
 {{ image(example_media + "/cupertino_material_and_adaptive.png", alt="cupertino-material-and-adaptive", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/cupertino_checkbox/media
 ### Styled checkboxes
 
 ```python
---8<-- "{{ examples }}/styled.py"
+--8<-- "{{ examples }}/styled/main.py"
 ```
 
 {{ class_members(class_name) }}

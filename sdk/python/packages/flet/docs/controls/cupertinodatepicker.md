@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_date_picker/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}

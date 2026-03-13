@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_app_bar/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../examples/controls/cupertino_app_bar/media
 ### App bar with theme mode toggle
 
 ```python
---8<-- "{{ examples }}/theme_mode_toggle.py"
+--8<-- "{{ examples }}/theme_mode_toggle/main.py"
 ```
 
 {{ class_members(class_name) }}

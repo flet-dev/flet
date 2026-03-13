@@ -13,7 +13,12 @@ def main(page: ft.Page):
         brightness=ft.Brightness.LIGHT,
     )
 
-    page.add(ft.Text("Body!"))
+    page.add(
+        ft.SafeArea(
+            content=ft.Text("Body!"),
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

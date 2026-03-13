@@ -14,7 +14,7 @@ example_media: ../examples/controls/cupertino_activity_indicator/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.png", alt="basic", width="80%") }}

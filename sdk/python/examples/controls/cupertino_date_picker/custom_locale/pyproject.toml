@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-date-picker-custom-locale"
+version = "1.0.0"
+description = "Opens CupertinoDatePicker with zh_Hans locale to demonstrate localized date formatting."
+requires-python = ">=3.10"
+keywords = ["cupertino", "date picker", "locale", "internationalization", "zh_Hans"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoDatePicker"]
+
+[tool.flet.metadata]
+title = "Custom locale"
+controls = ["SafeArea", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoDatePicker", "Locale"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom locale", "date and time picker", "bottom sheet presentation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

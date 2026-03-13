@@ -4,7 +4,7 @@ import flet as ft
 def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
-    def handle_theme_mode_toggle(e: ft.Event[ft.IconButton]):
+    def handle_theme_mode_toggle(_: ft.Event[ft.IconButton]):
         page.theme_mode = (
             ft.ThemeMode.DARK
             if page.theme_mode == ft.ThemeMode.LIGHT
@@ -15,7 +15,6 @@ def main(page: ft.Page):
             if page.theme_mode == ft.ThemeMode.LIGHT
             else ft.Icons.WB_SUNNY
         )
-        page.update()
 
     theme_mode_button = ft.IconButton(
         icon=(
@@ -35,7 +34,12 @@ def main(page: ft.Page):
         title=ft.Text("CupertinoAppBar Example", color=ft.Colors.ON_INVERSE_SURFACE),
     )
 
-    page.add(ft.Text("Body!"))
+    page.add(
+        ft.SafeArea(
+            content=ft.Text("Body!"),
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
