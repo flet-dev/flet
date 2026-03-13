@@ -38,13 +38,13 @@ pip install flet-datatable2  # (1)!
 ### Example 1
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 ### Example 2
 
 ```python
---8<-- "{{ examples }}/example_2.py"
+--8<-- "{{ examples }}/example_2/main.py"
 ```
 
 {{ image(example_media + "/example_2.gif", width="80%") }}
