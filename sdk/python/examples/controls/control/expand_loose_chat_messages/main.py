@@ -76,11 +76,13 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Container(
-            content=chat,
-            width=300,
-            height=500,
-        )
+        ft.SafeArea(
+            content=ft.Container(
+                width=300,
+                height=500,
+                content=chat,
+            )
+        ),
     )
 
 

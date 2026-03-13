@@ -27,7 +27,7 @@ In this example, a [`TextField`][flet.TextField] stretches to fill all remaining
 while the [`Button`][flet.Button] stays sized to its content:
 
 ```python
---8<-- "{{ examples }}/expand_textfield_in_row.py"
+--8<-- "{{ examples }}/expand_textfield_in_row/main.py"
 ```
 
 {{ image(example_images + "/expand_textfield_in_row.png", alt="expand textfield in row", width="70%") }}
@@ -37,7 +37,7 @@ while the [`Button`][flet.Button] stays sized to its content:
 In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Container]s, distributed like 20% / 60% / 20%:
 
 ```python
---8<-- "{{ examples }}/expand_row_proportional_1_3_1.py"
+--8<-- "{{ examples }}/expand_row_proportional_1_3_1/main.py"
 ```
 
 Here, the available space is split into 5 total parts (1+3+1).
@@ -54,7 +54,7 @@ The layout uses a parent [`Container`][flet.Container] and a nested row, where b
 expanded equally, resulting in a 50/50 split.
 
 ```python
---8<-- "{{ examples }}/expand_row_equal_split.py"
+--8<-- "{{ examples }}/expand_row_equal_split/main.py"
 ```
 
 {{ image(example_images + "/expand_row_equal_split.png", alt="expand row equal split", width="70%") }}
@@ -81,7 +81,7 @@ or any of their subclasses: [`Row`][flet.Row], [`Column`][flet.Column], [`View`]
 In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row]s with `expand_loose = True`:
 
 ```python
---8<-- "{{ examples }}/expand_loose_chat_messages.py"
+--8<-- "{{ examples }}/expand_loose_chat_messages/main.py"
 ```
 
 {{ image(example_images + "/expand_loose_chat_messages.png", alt="expand loose chat messages", width="70%") }}
