@@ -141,19 +141,22 @@ def main(page: ft.Page):
             route="/",
             appbar=ft.AppBar(title=ft.Text("Hero gallery")),
             controls=[
-                ft.Column(
+                ft.SafeArea(
                     expand=True,
-                    spacing=10,
-                    scroll=ft.ScrollMode.AUTO,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    controls=[
-                        ft.Text(
-                            "Each card has a unique Hero tag. "
-                            "Open any item to see a matched transition.",
-                            color=ft.Colors.ON_SURFACE_VARIANT,
-                        ),
-                        *rows,
-                    ],
+                    content=ft.Column(
+                        expand=True,
+                        spacing=10,
+                        scroll=ft.ScrollMode.AUTO,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text(
+                                "Each card has a unique Hero tag. "
+                                "Open any item to see a matched transition.",
+                                color=ft.Colors.ON_SURFACE_VARIANT,
+                            ),
+                            *rows,
+                        ],
+                    ),
                 )
             ],
         )
@@ -163,30 +166,33 @@ def main(page: ft.Page):
             route=f"/product/{product['id']}",
             appbar=ft.AppBar(title=ft.Text(product["name"])),
             controls=[
-                ft.Column(
+                ft.SafeArea(
                     expand=True,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=16,
-                    scroll=ft.ScrollMode.AUTO,
-                    controls=[
-                        ft.Container(height=8),
-                        build_hero_tile(product, 220),
-                        ft.Text(
-                            product["subtitle"],
-                            size=20,
-                            weight=ft.FontWeight.W_600,
-                            text_align=ft.TextAlign.CENTER,
-                        ),
-                        ft.Container(
-                            width=520,
-                            content=ft.Text(
-                                product["description"],
+                    content=ft.Column(
+                        expand=True,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=16,
+                        scroll=ft.ScrollMode.AUTO,
+                        controls=[
+                            ft.Container(height=8),
+                            build_hero_tile(product, 220),
+                            ft.Text(
+                                product["subtitle"],
+                                size=20,
+                                weight=ft.FontWeight.W_600,
                                 text_align=ft.TextAlign.CENTER,
-                                color=ft.Colors.ON_SURFACE_VARIANT,
                             ),
-                        ),
-                        ft.Button("Back to gallery", on_click=back_to_gallery),
-                    ],
+                            ft.Container(
+                                width=520,
+                                content=ft.Text(
+                                    product["description"],
+                                    text_align=ft.TextAlign.CENTER,
+                                    color=ft.Colors.ON_SURFACE_VARIANT,
+                                ),
+                            ),
+                            ft.Button("Back to gallery", on_click=back_to_gallery),
+                        ],
+                    ),
                 )
             ],
         )

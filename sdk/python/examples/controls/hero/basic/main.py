@@ -56,24 +56,27 @@ def main(page: ft.Page):
             route="/",
             appbar=ft.AppBar(title=ft.Text("Hero animation")),
             controls=[
-                ft.Container(
+                ft.SafeArea(
                     expand=True,
-                    alignment=ft.Alignment.CENTER,
-                    content=ft.Column(
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=20,
-                        controls=[
-                            ft.Text("Tap the card to navigate"),
-                            ft.GestureDetector(
-                                mouse_cursor=ft.MouseCursor.CLICK,
-                                on_tap=go_to_details,
-                                content=ft.Hero(
-                                    tag=hero_tag,
-                                    content=build_card(130, "Open details"),
+                    content=ft.Container(
+                        expand=True,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Column(
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            spacing=20,
+                            controls=[
+                                ft.Text("Tap the card to navigate"),
+                                ft.GestureDetector(
+                                    mouse_cursor=ft.MouseCursor.CLICK,
+                                    on_tap=go_to_details,
+                                    content=ft.Hero(
+                                        tag=hero_tag,
+                                        content=build_card(130, "Open details"),
+                                    ),
                                 ),
-                            ),
-                        ],
+                            ],
+                        ),
                     ),
                 )
             ],
@@ -84,21 +87,24 @@ def main(page: ft.Page):
             route="/details",
             appbar=ft.AppBar(title=ft.Text("Details")),
             controls=[
-                ft.Container(
+                ft.SafeArea(
                     expand=True,
-                    alignment=ft.Alignment.CENTER,
-                    content=ft.Column(
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=20,
-                        controls=[
-                            ft.Hero(
-                                tag=hero_tag,
-                                transition_on_user_gestures=True,
-                                content=build_card(280, "Details"),
-                            ),
-                            ft.Button("Back", on_click=go_home),
-                        ],
+                    content=ft.Container(
+                        expand=True,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Column(
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            spacing=20,
+                            controls=[
+                                ft.Hero(
+                                    tag=hero_tag,
+                                    transition_on_user_gestures=True,
+                                    content=build_card(280, "Details"),
+                                ),
+                                ft.Button("Back", on_click=go_home),
+                            ],
+                        ),
                     ),
                 )
             ],

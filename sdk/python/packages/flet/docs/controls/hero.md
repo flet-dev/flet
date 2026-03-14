@@ -11,7 +11,7 @@ example_images: ../test-images/examples/core/golden/macos/hero
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", width="80%") }}
@@ -19,7 +19,7 @@ example_images: ../test-images/examples/core/golden/macos/hero
 ### Gallery
 
 ```python
---8<-- "{{ examples }}/gallery.py"
+--8<-- "{{ examples }}/gallery/main.py"
 ```
 
 

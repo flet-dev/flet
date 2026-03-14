@@ -2,7 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.hero import basic
+from examples.controls.hero.basic import main as basic
 
 
 @pytest.mark.parametrize(
