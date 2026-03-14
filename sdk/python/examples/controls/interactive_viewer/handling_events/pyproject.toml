@@ -1,0 +1,26 @@
+[project]
+name = "interactive-viewer-handling-events"
+version = "1.0.0"
+description = "Logs start, update, and end callbacks while panning and zooming an InteractiveViewer image."
+requires-python = ">=3.10"
+keywords = ["interactive viewer", "events", "zoom", "pan", "image"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/InteractiveViewer"]
+
+[tool.flet.metadata]
+title = "Handling events"
+controls = ["SafeArea", "InteractiveViewer", "Image"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["interaction event callbacks", "pinch zoom", "panning"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

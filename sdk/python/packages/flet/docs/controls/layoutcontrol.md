@@ -12,7 +12,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### Flip
 
 ```python
---8<-- "{{ examples }}/flip.py"
+--8<-- "{{ examples }}/flip/main.py"
 ```
 
 {{ image(example_images + "/flip.png", width="80%") }}
@@ -20,7 +20,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### Rotate
 
 ```python
---8<-- "{{ examples }}/rotate.py"
+--8<-- "{{ examples }}/rotate/main.py"
 ```
 
 {{ image(example_images + "/rotate.png", width="80%") }}
@@ -36,7 +36,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### Scale
 
 ```python
---8<-- "{{ examples }}/scale.py"
+--8<-- "{{ examples }}/scale/main.py"
 ```
 
 {{ image(example_images + "/scale.png", width="80%") }}
@@ -44,7 +44,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### Offset
 
 ```python
---8<-- "{{ examples }}/offset.py"
+--8<-- "{{ examples }}/offset/main.py"
 ```
 
 {{ image(example_images + "/offset.png", width="80%") }}
@@ -52,7 +52,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### Matrix4 Transform
 
 ```python
---8<-- "{{ examples }}/matrix4_transform.py"
+--8<-- "{{ examples }}/matrix4_transform/main.py"
 ```
 
 {{ image(example_images_examples + "/matrix4_transform.png", width="80%") }}

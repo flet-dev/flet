@@ -12,13 +12,13 @@ examples: ../../examples/controls/interactive_viewer
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 ### Programmatic transformations
 
 ```python
---8<-- "{{ examples }}/transformations.py"
+--8<-- "{{ examples }}/transformations/main.py"
 ```
 
 {{ class_members(class_name) }}

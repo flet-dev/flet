@@ -10,7 +10,7 @@ examples: ../../examples/controls/keyboard_listener
 ### Press any keys
 
 ```python
---8<-- "{{ examples }}/detect_keys.py"
+--8<-- "{{ examples }}/detect_keys/main.py"
 ```
 
 {{ class_members(class_name) }}

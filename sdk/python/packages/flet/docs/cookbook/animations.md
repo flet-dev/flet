@@ -40,7 +40,7 @@ Setting control's `animate_opacity` to either `True`, number or an instance of `
 enables implicit animation of [`Control.opacity`][flet.Control.opacity] property.
 
 ```python
---8<-- "../../examples/controls/layout_control/animate_opacity.py"
+--8<-- "../../examples/controls/layout_control/animate_opacity/main.py"
 ```
 
 {{ image("../examples/controls/layout_control/media/animate_opacity.gif", alt="animate-opacity", width="80%") }}
@@ -52,7 +52,7 @@ Setting control's `animate_rotation` to either `True`, number or an instance of 
 enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate] property.
 
 ```python
---8<-- "../../examples/controls/constrained-control/animate_rotation.py"
+--8<-- "../../examples/controls/layout_control/animate_rotation/main.py"
 ```
 
 {{ image("../examples/controls/layout_control/media/animate_rotation.gif", alt="animate-rotation", width="80%") }}
@@ -64,7 +64,7 @@ Setting control's `animate_scale` to either `True`, number or an instance of `An
 enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] property.
 
 ```python
---8<-- "../../examples/controls/layout_control/animate_scale.py"
+--8<-- "../../examples/controls/layout_control/animate_scale/main.py"
 ```
 
 {{ image("../examples/controls/layout_control/media/animate_scale.gif", alt="animate-scale", width="80%") }}
@@ -82,7 +82,7 @@ a horizontal translation of one quarter the width of the control.
 Offset animation is used for various sliding effects:
 
 ```python
---8<-- "../../examples/controls/layout_control/animate_offset.py"
+--8<-- "../../examples/controls/layout_control/animate_offset/main.py"
 ```
 
 {{ image("../examples/controls/layout_control/media/animate_offset.gif", alt="animate-offset", width="80%") }}
@@ -103,7 +103,7 @@ Note:
     - [`Page.overlay`][flet.Page.overlay] list
 
 ```python
---8<-- "../../examples/controls/layout_control/animate_position.py"
+--8<-- "../../examples/controls/layout_control/animate_position/main.py"
 ```
 
 {{ image("../examples/controls/layout_control/media/animate_position.gif", alt="animate-position", width="80%") }}
