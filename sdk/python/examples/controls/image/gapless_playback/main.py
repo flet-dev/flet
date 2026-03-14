@@ -47,28 +47,40 @@ def main(page: ft.Page):
         new_src = get_new_image_src()
         image_with_gapless.src = new_src
         image_without_gapless.src = new_src
-        page.update()
+        image_with_gapless.update()
+        image_without_gapless.update()
 
     page.appbar = ft.AppBar(title="Gapless Playback Showcase")
     page.add(
-        ft.Text(
-            "Click 'Load next photo' to switch both images to a new URL.\n"
-            "The left/top image keeps showing the previous frame while loading the "
-            "next one. This is referred to as gapless playback.",
-            text_align=ft.TextAlign.CENTER,
-        ),
-        ft.Row(
-            wrap=True,
-            spacing=20,
-            run_spacing=20,
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                image_panel("gapless_playback=True", image_with_gapless),
-                image_panel("gapless_playback=False", image_without_gapless),
-            ],
-        ),
-        ft.FilledButton("Load next photo", on_click=next_photo),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(
+                        "Click 'Load next photo' to switch both images to a new URL.\n"
+                        "The left/top image keeps showing the previous frame while "
+                        "loading "
+                        "the next one. This is referred to as gapless playback.",
+                        text_align=ft.TextAlign.CENTER,
+                    ),
+                    ft.Row(
+                        wrap=True,
+                        spacing=20,
+                        run_spacing=20,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        controls=[
+                            image_panel("gapless_playback=True", image_with_gapless),
+                            image_panel(
+                                "gapless_playback=False",
+                                image_without_gapless,
+                            ),
+                        ],
+                    ),
+                    ft.FilledButton("Load next photo", on_click=next_photo),
+                ],
+            ),
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

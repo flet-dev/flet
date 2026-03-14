@@ -13,13 +13,14 @@ async def main(page: ft.Page):
 """
 
     img = ft.Image(src=svg_image.format(0, 0))
-    page.add(img)
+    page.add(ft.SafeArea(content=img))
 
-    for c in range(0, 10):
+    for _ in range(0, 10):
         for i in range(0, 10):
             img.src = svg_image.format(i * 10, i * 10)
             img.update()
             await asyncio.sleep(0.1)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

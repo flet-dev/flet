@@ -1,0 +1,26 @@
+[project]
+name = "image-gapless-playback"
+version = "1.0.0"
+description = "Compares Image gapless playback enabled vs disabled while switching sources."
+requires-python = ">=3.10"
+keywords = ["image", "gapless playback", "comparison", "network images"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Gapless playback when changing image sources"
+controls = ["SafeArea", "Column", "Row", "Container", "Text", "Image", "FilledButton", "AppBar"]
+layout_pattern = "comparison"
+complexity = "basic"
+features = ["gapless playback comparison", "dynamic image source switching"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

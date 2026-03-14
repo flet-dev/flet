@@ -35,24 +35,41 @@ def main(page: ft.Page):
 </svg>"""
 
     page.add(
-        ft.Image(
-            src="https://raw.githubusercontent.com/dnfield/flutter_svg/master/packages/flutter_svg/example/assets/wikimedia/Firefox_Logo_2017.svg",
-            width=200,
-            height=200,
-        ),
-        ft.Image(src=svg_image, width=100, height=100, color=ft.Colors.RED),
-        ft.Image(src=svg_image, width=100, height=100, color=ft.Colors.BLUE),
-        ft.Container(
-            bgcolor=ft.Colors.BLACK_87,
-            border_radius=5,
-            content=ft.Image(
-                src=svg_image,
-                width=100,
-                height=100,
-                color=ft.Colors.WHITE,
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Image(
+                        src="https://raw.githubusercontent.com/dnfield/flutter_svg/master/packages/flutter_svg/example/assets/wikimedia/Firefox_Logo_2017.svg",
+                        width=200,
+                        height=200,
+                    ),
+                    ft.Image(
+                        src=svg_image,
+                        width=100,
+                        height=100,
+                        color=ft.Colors.RED,
+                    ),
+                    ft.Image(
+                        src=svg_image,
+                        width=100,
+                        height=100,
+                        color=ft.Colors.BLUE,
+                    ),
+                    ft.Container(
+                        bgcolor=ft.Colors.BLACK_87,
+                        border_radius=5,
+                        content=ft.Image(
+                            src=svg_image,
+                            width=100,
+                            height=100,
+                            color=ft.Colors.WHITE,
+                        ),
+                    ),
+                ],
             ),
-        ),
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

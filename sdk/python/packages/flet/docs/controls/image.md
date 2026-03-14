@@ -14,7 +14,7 @@ example_media: ../examples/controls/image/media
 ### Image gallery
 
 ```python
---8<-- "{{ examples }}/gallery.py"
+--8<-- "{{ examples }}/gallery/main.py"
 ```
 
 {{ image(example_media + "/gallery.gif", width="80%") }}
@@ -22,31 +22,31 @@ example_media: ../examples/controls/image/media
 ### Fade-in images with a placeholder
 
 ```python
---8<-- "{{ examples }}/fade_in.py"
+--8<-- "{{ examples }}/fade_in/main.py"
 ```
 
 ### Displaying images from base64 strings and byte data
 
 ```python
---8<-- "{{ examples }}/src_base64_and_bytes.py"
+--8<-- "{{ examples }}/src_base64_and_bytes/main.py"
 ```
 
 ### Displaying a static SVG image
 
 ```python
---8<-- "{{ examples }}/static_svg.py"
+--8<-- "{{ examples }}/static_svg/main.py"
 ```
 
 ### Displaying a dynamic SVG image
 
 ```python
---8<-- "{{ examples }}/dynamic_svg.py"
+--8<-- "{{ examples }}/dynamic_svg/main.py"
 ```
 
 ### Displaying a Lucide icon
 
 ```python
---8<-- "{{ examples }}/lucide_icons.py"
+--8<-- "{{ examples }}/lucide_icons/main.py"
 ```
 
 ### Gapless playback when changing image sources
@@ -57,7 +57,7 @@ image loads. With [`gapless_playback`][flet.Image.gapless_playback] set to `Fals
 briefly be empty, causing a flicker/blink effect.
 
 ```python
---8<-- "{{ examples }}/gapless_playback.py"
+--8<-- "{{ examples }}/gapless_playback/main.py"
 ```
 
 {{ class_members(class_name) }}
