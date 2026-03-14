@@ -15,13 +15,13 @@ example_images: ../examples/controls/drag_target_and_draggable/media
 #### Imperative
 
 ```python
---8<-- "{{ examples }}/drag_and_drop_containers.py"
+--8<-- "{{ examples }}/drag_and_drop_containers/main.py"
 ```
 
 #### Declarative
 
 ```python
---8<-- "{{ examples }}/drag_and_drop_containers_declarative.py"
+--8<-- "{{ examples }}/drag_and_drop_containers_declarative/main.py"
 ```
 
 {{ image(example_images + "/drag_and_drop_containers.gif", alt="drag-and-drop-containers", width="80%") }}

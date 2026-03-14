@@ -13,7 +13,7 @@ example_images: ../test-images/controls/material/golden/macos/date_range_picker
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="60%") }}

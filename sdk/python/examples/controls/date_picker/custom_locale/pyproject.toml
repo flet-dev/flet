@@ -1,7 +1,7 @@
 [project]
-name = "cupertino-date-picker-custom-locale"
+name = "date-picker-custom-locale"
 version = "1.0.0"
-description = "Opens CupertinoDatePicker with zh_Hans locale to demonstrate localized date formatting."
+description = "Opens DatePicker with zh_Hans locale to demonstrate localized calendar UI."
 requires-python = ">=3.10"
 keywords = ["date picker", "custom locale", "locale", "internationalization", "zh_Hans"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
@@ -11,14 +11,14 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Input/CupertinoDatePicker"]
+categories = ["Dialogs/DatePicker"]
 
 [tool.flet.metadata]
 title = "Custom locale"
-controls = ["SafeArea", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoDatePicker", "Locale"]
+controls = ["SafeArea", "Button", "DatePicker", "Locale"]
 layout_pattern = "single-panel"
 complexity = "basic"
-features = ["custom locale", "date and time picker", "bottom sheet presentation"]
+features = ["localized date picker", "dialog open action"]
 
 [tool.flet]
 org = "dev.flet"

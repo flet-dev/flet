@@ -74,6 +74,8 @@ Ensure each runnable example is a standalone project containing:
 
 - Apply this to all examples in the touched folder (new, migrated, and already converted), not only files changed by moves.
 - During validation, confirm every `<example>/main.py` in scope includes a top-level `ft.SafeArea` around rendered content.
+- For declarative examples using `@ft.component`, do not pass component instances as regular control children (for example `SafeArea(content=App())`) because this can raise runtime attribute errors.
+- In declarative examples, ensure the component itself returns regular controls (including `SafeArea` when needed) and render it at page level with `page.render(App)` in `main()`.
 
 7. Prefer `@ft.control` for custom controls in examples.
 - If an example defines a custom control class inheriting from a Flet control (for example `class MyThing(ft.Column)`), prefer `@ft.control` style.

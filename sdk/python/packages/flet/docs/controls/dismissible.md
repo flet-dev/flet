@@ -13,7 +13,7 @@ example_images: ../examples/controls/dismissible/media
 ### Dismissible `ListTile`s
 
 ```python
---8<-- "{{ examples }}/dismissible_list_tiles.py"
+--8<-- "{{ examples }}/dismissible_list_tiles/main.py"
 ```
 
 {{ image(example_images + "/dismissible_list_tiles.gif", alt="dismissible-list-tiles", width="80%") }}
@@ -42,7 +42,7 @@ On Flutter’s side, though, the already-dismissed `Dismissible` widget in the m
 Example:
 
 ```python
---8<-- "{{ examples }}/remove_on_dismiss_declarative.py"
+--8<-- "{{ examples }}/remove_on_dismiss_declarative/main.py"
 ```
 
 {{ class_members(class_name) }}

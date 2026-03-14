@@ -1,30 +1,37 @@
+from dataclasses import dataclass
+
 import flet as ft
 
 
-def main(page: ft.Page):
-    def handle_drag_will_accept(e: ft.DragWillAcceptEvent):
-        e.control.content.border = ft.Border.all(
-            2, ft.Colors.BLACK_45 if e.accept else ft.Colors.RED
-        )
-        e.control.update()
+@dataclass
+@ft.observable
+class TargetState:
+    bgcolor: ft.Colors = ft.Colors.BLUE_GREY_100
+    is_drag_over: bool = False
 
-    def handle_drag_accept(e: ft.DragTargetEvent):
-        src = page.get_control(e.src_id)
-        e.control.content.bgcolor = src.content.bgcolor
-        e.control.content.border = None
-        e.control.update()
 
-    def handle_drag_leave(e: ft.DragTargetLeaveEvent):
-        e.control.content.border = None
-        e.control.update()
+@ft.component
+def App():
+    target, _ = ft.use_state(lambda: TargetState())
 
-    page.add(
-        ft.Row(
+    def on_will_accept(_: ft.DragWillAcceptEvent):
+        target.is_drag_over = True
+
+    def on_accept(e: ft.DragTargetEvent):
+        target.bgcolor = e.src.data
+        target.is_drag_over = False
+
+    def on_leave(_: ft.DragTargetLeaveEvent):
+        target.is_drag_over = False
+
+    return ft.SafeArea(
+        content=ft.Row(
             controls=[
                 ft.Column(
                     controls=[
                         ft.Draggable(
                             group="color",
+                            data=ft.Colors.CYAN,
                             content=ft.Container(
                                 width=50,
                                 height=50,
@@ -40,6 +47,7 @@ def main(page: ft.Page):
                         ),
                         ft.Draggable(
                             group="color",
+                            data=ft.Colors.YELLOW,
                             content=ft.Container(
                                 width=50,
                                 height=50,
@@ -49,6 +57,7 @@ def main(page: ft.Page):
                         ),
                         ft.Draggable(
                             group="color",
+                            data=ft.Colors.GREEN,
                             content=ft.Container(
                                 width=50,
                                 height=50,
@@ -56,24 +65,34 @@ def main(page: ft.Page):
                                 border_radius=5,
                             ),
                         ),
-                    ]
+                    ],
                 ),
                 ft.Container(width=100),
                 ft.DragTarget(
                     group="color",
-                    on_will_accept=handle_drag_will_accept,
-                    on_accept=handle_drag_accept,
-                    on_leave=handle_drag_leave,
+                    on_will_accept=on_will_accept,
+                    on_accept=on_accept,
+                    on_leave=on_leave,
                     content=ft.Container(
                         width=50,
                         height=50,
-                        bgcolor=ft.Colors.BLUE_GREY_100,
+                        bgcolor=target.bgcolor,
+                        border=(
+                            ft.Border.all(2, ft.Colors.BLACK_45)
+                            if target.is_drag_over
+                            else None
+                        ),
                         border_radius=5,
                     ),
                 ),
-            ]
-        )
+            ],
+        ),
     )
 
 
-ft.run(main)
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

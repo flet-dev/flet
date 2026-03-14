@@ -84,7 +84,7 @@ def ItemView(item: Item, **kwargs):
                         e.accept and e.src.data != item
                     ),
                     on_accept=on_accept,
-                    on_leave=lambda: set_is_item_over(False),
+                    on_leave=lambda _: set_is_item_over(False),
                     content=ft.Card(
                         content=ft.Container(
                             padding=7,
@@ -118,7 +118,7 @@ def GroupView(group: Group, move_group, **kwargs):
         move_group(e.src.data, group)
         set_is_group_over(False)
 
-    def on_add_item(self):
+    def on_add_item(_: ft.Event[ft.TextButton] | None = None):
         if stripped_text := new_item_text.strip():
             group.add_item(stripped_text)
             set_new_item_text("")
@@ -144,7 +144,7 @@ def GroupView(group: Group, move_group, **kwargs):
                     data=group,
                     on_will_accept=lambda e: set_is_item_over(e.accept),
                     on_accept=on_item_accept,
-                    on_leave=lambda: set_is_item_over(False),
+                    on_leave=lambda _: set_is_item_over(False),
                     content=ft.DragTarget(
                         group="groups",
                         data=group,
@@ -152,11 +152,13 @@ def GroupView(group: Group, move_group, **kwargs):
                             e.accept and e.src.data != group
                         ),
                         on_accept=on_group_accept,
-                        on_leave=lambda: set_is_group_over(False),
+                        on_leave=lambda _: set_is_group_over(False),
                         content=ft.Container(
-                            border=ft.Border.all(2, ft.Colors.BLACK12)
-                            if not is_group_over
-                            else ft.Border.all(2, ft.Colors.BLACK38),
+                            border=(
+                                ft.Border.all(2, ft.Colors.BLACK12)
+                                if not is_group_over
+                                else ft.Border.all(2, ft.Colors.BLACK38)
+                            ),
                             border_radius=ft.BorderRadius.all(15),
                             bgcolor=group.color,
                             padding=ft.Padding.all(20),
@@ -178,9 +180,9 @@ def GroupView(group: Group, move_group, **kwargs):
                                         on_submit=on_add_item,
                                     ),
                                     ft.TextButton(
-                                        content="Add",
                                         icon=ft.Icons.ADD,
                                         on_click=on_add_item,
+                                        content="Add",
                                     ),
                                     ft.Column(
                                         spacing=2,
@@ -221,16 +223,12 @@ def App():
     group_3 = Group(title="Group 3", color=ft.Colors.CYAN_400)
     group_3.add_item("Item 4")
 
-    # group_4 = Group(title="Group 4", color=ft.Colors.GREEN_400)
-    # group_4.add_item("Item 5")
-
     app, _ = ft.use_state(
         lambda: AppState(
             groups=[
                 group_1,
                 group_2,
                 group_3,
-                # group_4,
             ]
         )
     )
@@ -240,14 +238,21 @@ def App():
 
     ft.on_mounted(on_mounted)
 
-    return ft.Row(
-        spacing=4,
-        vertical_alignment=ft.CrossAxisAlignment.START,
-        controls=[
-            GroupView(group, move_group=app.move_group, key=group.title)
-            for group in app.groups
-        ],
+    return ft.SafeArea(
+        content=ft.Row(
+            spacing=4,
+            vertical_alignment=ft.CrossAxisAlignment.START,
+            controls=[
+                GroupView(group, move_group=app.move_group, key=group.title)
+                for group in app.groups
+            ],
+        ),
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)
