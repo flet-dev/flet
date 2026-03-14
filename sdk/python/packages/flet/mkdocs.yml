@@ -325,7 +325,9 @@ nav:
               - controls/cupertinoactionsheet/index.md
               - CupertinoActionSheetAction: controls/cupertinoactionsheetaction.md
           - CupertinoActivityIndicator: controls/cupertinoactivityindicator.md
-          - CupertinoAlertDialog: controls/cupertinoalertdialog.md
+          - CupertinoAlertDialog:
+              - controls/cupertinoalertdialog/index.md
+              - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoAppBar: controls/cupertinoappbar.md
           - CupertinoBottomSheet: controls/cupertinobottomsheet.md
           - CupertinoButton: controls/cupertinobutton.md
@@ -334,7 +336,6 @@ nav:
               - controls/cupertinocontextmenu/index.md
               - CupertinoContextMenuAction: controls/cupertinocontextmenuaction.md
           - CupertinoDatePicker: controls/cupertinodatepicker.md
-          - CupertinoDialogAction: controls/cupertinodialogaction.md
           - CupertinoFilledButton: controls/cupertinofilledbutton.md
           - CupertinoListTile: controls/cupertinolisttile.md
           - CupertinoNavigationBar: controls/cupertinonavigationbar.md
