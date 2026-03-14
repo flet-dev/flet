@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", width="80%") }}
@@ -21,25 +21,25 @@ example_images: ../test-images/examples/material/golden/macos/expansion_tile
 ## Programmatic expansion/collapse
 
 ```python
---8<-- "{{ examples }}/programmatic_expansion.py"
+--8<-- "{{ examples }}/programmatic_expansion/main.py"
 ```
 
 ## Custom animations
 
 ```python
---8<-- "{{ examples }}/custom_animations.py"
+--8<-- "{{ examples }}/custom_animations/main.py"
 ```
 
 ### Theme mode toggle
 
 ```python
---8<-- "{{ examples }}/theme_mode_toggle.py"
+--8<-- "{{ examples }}/theme_mode_toggle/main.py"
 ```
 
 ### Borders
 
 ```python
---8<-- "{{ examples }}/borders.py"
+--8<-- "{{ examples }}/borders/main.py"
 ```
 
 {{ class_members(class_name) }}

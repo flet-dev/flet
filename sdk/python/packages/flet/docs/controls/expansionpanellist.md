@@ -14,7 +14,7 @@ example_media: ../examples/controls/expansion_panel_list/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}

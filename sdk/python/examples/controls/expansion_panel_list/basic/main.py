@@ -13,7 +13,7 @@ def main(page: ft.Page):
         panel = tile.parent
 
         panel_list.controls.remove(panel)
-        page.update()
+        panel_list.update()
 
     panel_list = ft.ExpansionPanelList(
         expand_icon_color=ft.Colors.AMBER,
@@ -22,7 +22,6 @@ def main(page: ft.Page):
         on_change=handle_change,
         controls=[
             ft.ExpansionPanel(
-                # has no header and content - placeholders will be used
                 bgcolor=ft.Colors.BLUE_400,
                 expanded=True,
             ),
@@ -35,8 +34,7 @@ def main(page: ft.Page):
         ft.Colors.RED_800,
     ]
 
-    for i in range(len(colors)):
-        bgcolor = colors[i % len(colors)]
+    for i, bgcolor in enumerate(colors):
         panel_list.controls.append(
             ft.ExpansionPanel(
                 bgcolor=bgcolor,
@@ -53,7 +51,12 @@ def main(page: ft.Page):
             )
         )
 
-    page.add(panel_list)
+    page.add(
+        ft.SafeArea(
+            content=panel_list,
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
