@@ -14,7 +14,7 @@ example_media: ../examples/controls/floating_action_button/media
 ### Handling clicks
 
 ```python
---8<-- "{{ examples }}/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks/main.py"
 ```
 
 {{ image(example_media + "/handling_clicks.gif", alt="handling-clicks", width="80%") }}

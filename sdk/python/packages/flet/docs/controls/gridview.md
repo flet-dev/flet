@@ -14,7 +14,7 @@ example_media: ../examples/controls/grid_view/media
 ### Photo gallery
 
 ```python
---8<-- "{{ examples }}/photo_gallery.py"
+--8<-- "{{ examples }}/photo_gallery/main.py"
 ```
 
 {{ image(example_media + "/photo_gallery.png", alt="photo-gallery", width="80%") }}

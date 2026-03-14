@@ -15,7 +15,7 @@ example_images: ../examples/controls/gesture_detector/media
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 ### Draggable containers
@@ -26,7 +26,7 @@ The sample also shows that GestureDetector can have a child control (blue contai
 inside another control (yellow container) giving the same results.
 
 ```python
---8<-- "{{ examples }}/draggable_containers.py"
+--8<-- "{{ examples }}/draggable_containers/main.py"
 ```
 
 {{ image(example_images + "/draggable_containers.gif", alt="draggable-containers", width="80%") }}
@@ -35,13 +35,13 @@ inside another control (yellow container) giving the same results.
 ### Window drag area
 
 ```python
---8<-- "{{ examples }}/window_drag_area.py"
+--8<-- "{{ examples }}/window_drag_area/main.py"
 ```
 
 ### Mouse Cursors
 
 ```python
---8<-- "{{ examples }}/mouse_cursors.py"
+--8<-- "{{ examples }}/mouse_cursors/main.py"
 ```
 
 {{ class_members(class_name) }}
