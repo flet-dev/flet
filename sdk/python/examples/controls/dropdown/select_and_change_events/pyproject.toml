@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-select-and-change-events"
+version = "1.0.0"
+description = "Handles dropdown select and text-change events while showing selected value and typed text."
+requires-python = ">=3.10"
+keywords = ["dropdown", "events", "on_select", "on_text_change", "editable"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Dropdown"]
+
+[tool.flet.metadata]
+title = "Select and change events"
+controls = ["SafeArea", "Column", "Dropdown", "DropdownOption", "Icon", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["select callback", "text change callback", "live value labels"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

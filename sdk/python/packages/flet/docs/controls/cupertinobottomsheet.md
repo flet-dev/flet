@@ -13,7 +13,7 @@ example_images: ../examples/controls/cupertino_action_sheet/media
 ### Displaying a `CupertinoActionSheet`
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="cupertinoactionsheet", width="80%") }}

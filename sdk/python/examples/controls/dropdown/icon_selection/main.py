@@ -2,7 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    def get_options():
+    def get_options() -> list[ft.DropdownOption]:
         icons = [
             {"name": "Smile", "icon": ft.Icons.SENTIMENT_SATISFIED_OUTLINED},
             {"name": "Cloud", "icon": ft.Icons.CLOUD_OUTLINED},
@@ -15,15 +15,18 @@ def main(page: ft.Page):
         ]
 
     page.add(
-        ft.Dropdown(
-            border=ft.InputBorder.UNDERLINE,
-            enable_filter=True,
-            editable=True,
-            leading_icon=ft.Icons.SEARCH,
-            label="Icon",
-            options=get_options(),
+        ft.SafeArea(
+            content=ft.Dropdown(
+                border=ft.InputBorder.UNDERLINE,
+                enable_filter=True,
+                editable=True,
+                leading_icon=ft.Icons.SEARCH,
+                label="Icon",
+                options=get_options(),
+            ),
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

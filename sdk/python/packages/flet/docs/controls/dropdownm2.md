@@ -14,7 +14,7 @@ example_media: ../examples/controls/dropdown_m2/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/dropdown_m2/media
 ### Dropdown with label and hint
 
 ```python
---8<-- "{{ examples }}/label_and_hint.py"
+--8<-- "{{ examples }}/label_and_hint/main.py"
 ```
 
 {{ image(example_media + "/label_and_hint.gif", alt="label-and-hint", width="80%") }}
@@ -32,7 +32,7 @@ example_media: ../examples/controls/dropdown_m2/media
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}
@@ -42,7 +42,7 @@ example_media: ../examples/controls/dropdown_m2/media
 ### Add and delete options
 
 ```python
---8<-- "{{ examples }}/add_and_delete_options.py"
+--8<-- "{{ examples }}/add_and_delete_options/main.py"
 ```
 
 {{ image(example_media + "/add_and_delete_options.gif", alt="add-and-delete-options", width="80%") }}

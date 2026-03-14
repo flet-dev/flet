@@ -19,13 +19,13 @@ def App():
     form, _ = ft.use_state(lambda: Form())
 
     return ft.SafeArea(
-        ft.Column(
-            cast(
+        content=ft.Column(
+            controls=cast(
                 list[ft.Control],
                 [
                     ft.Text(f"Selected color: {form.color}"),
                     ft.Column(
-                        [
+                        controls=[
                             ft.Dropdown(
                                 editable=True,
                                 label="Color",
@@ -39,12 +39,17 @@ def App():
                                     ft.DropdownOption(key="blue", text="Blue"),
                                 ],
                             ),
-                        ]
+                        ],
                     ),
                 ],
-            )
+            ),
         ),
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

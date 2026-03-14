@@ -16,7 +16,7 @@ example_media: ../../examples/controls/dropdown/media
 ### Color selection with filtering
 
 ```python
---8<-- "{{ examples }}/color_selection_with_filtering.py"
+--8<-- "{{ examples }}/color_selection_with_filtering/main.py"
 ```
 
 {{ image(example_media + "/color_selection_with_filtering.gif", alt="color-selection-with-filtering", width="80%") }}
@@ -26,7 +26,7 @@ example_media: ../../examples/controls/dropdown/media
 ### Icon selection
 
 ```python
---8<-- "{{ examples }}/icon_selection.py"
+--8<-- "{{ examples }}/icon_selection/main.py"
 ```
 
 {{ image(example_media + "/icon_selection.png", alt="icon-selection", width="80%") }}
@@ -35,7 +35,7 @@ example_media: ../../examples/controls/dropdown/media
 ### Styled dropdowns
 
 ```python
---8<-- "{{ examples }}/styled.py"
+--8<-- "{{ examples }}/styled/main.py"
 ```
 
 {{ class_members(class_name) }}
