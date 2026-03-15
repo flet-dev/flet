@@ -1,0 +1,26 @@
+[project]
+name = "map-multi-layers"
+version = "1.0.0"
+description = "Combines tile, marker, circle, polygon, and polyline layers with tap-to-add overlays."
+requires-python = ">=3.10"
+keywords = ["map", "layers", "markers", "polygons", "polylines"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Multiple Layers"
+controls = ["SafeArea", "Column", "Text", "Map", "TileLayer", "RichAttribution", "SimpleAttribution", "TextSourceAttribution", "MarkerLayer", "Marker", "CircleLayer", "CircleMarker", "PolygonLayer", "PolygonMarker", "PolylineLayer", "PolylineMarker", "Icon", "AppBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["multi-layer map composition", "tap and secondary-tap overlay creation", "interactive attributions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

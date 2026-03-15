@@ -83,13 +83,16 @@ def main(page: ft.Page):
         await page.launch_url(e.data)
 
     page.add(
-        ft.Markdown(
-            value=sample,
-            selectable=True,
-            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-            on_tap_link=handle_link_tap,
+        ft.SafeArea(
+            content=ft.Markdown(
+                value=sample,
+                selectable=True,
+                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+                on_tap_link=handle_link_tap,
+            ),
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

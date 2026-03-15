@@ -1,0 +1,26 @@
+[project]
+name = "markdown-listviews"
+version = "1.0.0"
+description = "Compares Markdown rendering in two ListViews, including selectable GitHub-style mode."
+requires-python = ">=3.10"
+keywords = ["markdown", "listview", "selectable", "comparison"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Markdown"]
+
+[tool.flet.metadata]
+title = "ListViews"
+controls = ["SafeArea", "Column", "ListView", "Divider", "Markdown"]
+layout_pattern = "comparison"
+complexity = "basic"
+features = ["dual markdown views", "selectable markdown", "github extension set"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

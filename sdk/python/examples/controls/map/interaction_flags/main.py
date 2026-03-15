@@ -74,28 +74,35 @@ def main(page: ft.Page):
 
     page.appbar = ft.AppBar(title="Interaction flags")
     page.add(
-        ft.Column(
+        ft.SafeArea(
             expand=True,
-            controls=[
-                ft.Text(
-                    "Toggle flags and try dragging, zooming, rotating, and scrolling.",
-                    size=12,
-                ),
-                ft.ResponsiveRow(
-                    controls=[
-                        ft.Container(col={"sm": 6, "md": 4}, content=c)
-                        for c in checkboxes
-                    ]
-                ),
-                last_event := ft.Text(
-                    "Last event: -", selectable=True, font_family="monospace"
-                ),
-                ft.Container(expand=True, content=my_map),
-            ],
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.Text(
+                        (
+                            "Toggle flags and try dragging, zooming, rotating, "
+                            "and scrolling."
+                        ),
+                        size=12,
+                    ),
+                    ft.ResponsiveRow(
+                        controls=[
+                            ft.Container(col={"sm": 6, "md": 4}, content=c)
+                            for c in checkboxes
+                        ]
+                    ),
+                    last_event := ft.Text(
+                        "Last event: -", selectable=True, font_family="monospace"
+                    ),
+                    ft.Container(expand=True, content=my_map),
+                ],
+            ),
         )
     )
 
     update_interaction_flags()
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/menu_bar
 ### `MenuBar` with Nested Submenus
 
 ```python
---8<-- "{{ examples }}/nested_submenus.py"
+--8<-- "{{ examples }}/nested_submenus/main.py"
 ```
 
 {{ image(example_images + "/nested_submenus.gif", width="80%") }}

@@ -43,31 +43,31 @@ More details [here](tilelayer.md).
 ### Basic
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 ### Camera Controls
 
 ```python
---8<-- "{{ examples }}/camera_controls.py"
+--8<-- "{{ examples }}/camera_controls/main.py"
 ```
 
 ### Idle Camera
 
 ```python
---8<-- "{{ examples }}/idle_camera.py"
+--8<-- "{{ examples }}/idle_camera/main.py"
 ```
 
 ### Interaction Flags
 
 ```python
---8<-- "{{ examples }}/interaction_flags.py"
+--8<-- "{{ examples }}/interaction_flags/main.py"
 ```
 
 ### Multiple Layers
 
 ```python
---8<-- "{{ examples }}/multi_layers.py"
+--8<-- "{{ examples }}/multi_layers/main.py"
 ```
 
 ## Reference

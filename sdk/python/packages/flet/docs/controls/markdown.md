@@ -14,7 +14,7 @@ example_media: ../examples/controls/markdown/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/markdown/media
 ### Code syntax highlight
 
 ```python
---8<-- "{{ examples }}/code_syntax_highlight.py"
+--8<-- "{{ examples }}/code_syntax_highlight/main.py"
 ```
 
 {{ image(example_media + "/code_syntax_highlight.png", alt="code-syntax-highlight", width="80%") }}
@@ -32,7 +32,7 @@ example_media: ../examples/controls/markdown/media
 ### Custom text theme
 
 ```python
---8<-- "{{ examples }}/custom_text_theme.py"
+--8<-- "{{ examples }}/custom_text_theme/main.py"
 ```
 
 {{ class_members(class_name) }}

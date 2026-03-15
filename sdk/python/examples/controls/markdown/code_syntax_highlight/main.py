@@ -162,17 +162,20 @@ def main(page: ft.Page):
         await page.launch_url(e.data)
 
     page.add(
-        ft.Markdown(
-            value=sample,
-            selectable=True,
-            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-            code_theme=ft.MarkdownCodeTheme.ATOM_ONE_DARK,
-            code_style_sheet=ft.MarkdownStyleSheet(
-                code_text_style=ft.TextStyle(font_family="Roboto Mono")
+        ft.SafeArea(
+            content=ft.Markdown(
+                value=sample,
+                selectable=True,
+                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+                code_theme=ft.MarkdownCodeTheme.ATOM_ONE_DARK,
+                code_style_sheet=ft.MarkdownStyleSheet(
+                    code_text_style=ft.TextStyle(font_family="Roboto Mono")
+                ),
+                on_tap_link=navigate_md_link,
             ),
-            on_tap_link=navigate_md_link,
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

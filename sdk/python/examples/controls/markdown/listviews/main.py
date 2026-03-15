@@ -124,28 +124,37 @@ def main(page: ft.Page):
         await page.launch_url(e.data)
 
     page.add(
-        ft.ListView(
+        ft.SafeArea(
             expand=True,
-            controls=[
-                ft.Markdown(
-                    value=sample,
-                    on_tap_link=navigate_md_link,
-                )
-            ],
-        ),
-        ft.Divider(),
-        ft.ListView(
-            expand=True,
-            controls=[
-                ft.Markdown(
-                    value=sample,
-                    selectable=True,
-                    extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-                    on_tap_link=navigate_md_link,
-                )
-            ],
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.ListView(
+                        expand=True,
+                        controls=[
+                            ft.Markdown(
+                                value=sample,
+                                on_tap_link=navigate_md_link,
+                            )
+                        ],
+                    ),
+                    ft.Divider(),
+                    ft.ListView(
+                        expand=True,
+                        controls=[
+                            ft.Markdown(
+                                value=sample,
+                                selectable=True,
+                                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+                                on_tap_link=navigate_md_link,
+                            )
+                        ],
+                    ),
+                ],
+            ),
         ),
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
