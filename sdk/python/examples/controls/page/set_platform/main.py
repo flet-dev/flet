@@ -13,12 +13,19 @@ def main(page: ft.Page):
         print("New platform:", page.platform)
 
     page.add(
-        ft.Switch(label="Switch A", adaptive=True),
-        ft.Button("Set Android", on_click=set_android),
-        ft.Button("Set iOS", on_click=set_ios),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Switch(label="Switch A", adaptive=True),
+                    ft.Button("Set Android", on_click=set_android),
+                    ft.Button("Set iOS", on_click=set_ios),
+                ]
+            )
+        )
     )
 
     print("Default platform:", page.platform)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

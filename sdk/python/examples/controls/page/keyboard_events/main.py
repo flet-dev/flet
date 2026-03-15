@@ -29,20 +29,28 @@ def main(page: ft.Page):
     page.on_keyboard_event = on_keyboard
 
     page.add(
-        ft.Text(
-            "Press any key with a combination of CTRL, ALT, SHIFT and META keys..."
-        ),
-        ft.Row(
-            controls=[
-                key := ButtonControl(""),
-                shift := ButtonControl("Shift"),
-                ctrl := ButtonControl("Control"),
-                alt := ButtonControl("Alt"),
-                meta := ButtonControl("Meta"),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-        ),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(
+                        "Press any key with a combination of CTRL, ALT, SHIFT "
+                        "and META keys..."
+                    ),
+                    ft.Row(
+                        controls=[
+                            key := ButtonControl(""),
+                            shift := ButtonControl("Shift"),
+                            ctrl := ButtonControl("Control"),
+                            alt := ButtonControl("Alt"),
+                            meta := ButtonControl("Meta"),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

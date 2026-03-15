@@ -3,7 +3,15 @@ import flet as ft
 
 def main(page: ft.Page):
     if page.window.width is None or page.window.height is None:
-        page.add(ft.Text("Window size can be changed only in desktop apps."))
+        page.add(
+            ft.SafeArea(
+                content=ft.Column(
+                    controls=[
+                        ft.Text("Window size can be changed only in desktop apps."),
+                    ]
+                )
+            )
+        )
         return
 
     width = 400
@@ -16,4 +24,5 @@ def main(page: ft.Page):
     page.window.update()
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

@@ -37,5 +37,5 @@ ft.run(main)
 Below is a more advanced example:
 
 ```python
---8<-- "../../examples/controls/page/keyboard_events.py"
+--8<-- "../../examples/controls/page/keyboard_events/main.py"
 ```

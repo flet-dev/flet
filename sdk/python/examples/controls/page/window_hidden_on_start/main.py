@@ -11,7 +11,15 @@ import flet as ft
 
 async def main(page: ft.Page):
     print("Window is hidden on start. Will show after 3 seconds...")
-    page.add(ft.Text("Hello!"))
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text("Hello!"),
+                ]
+            )
+        )
+    )
 
     # some configuration that we want to do before showing the window
     page.window.width = 300
@@ -27,4 +35,5 @@ async def main(page: ft.Page):
     page.update()
 
 
-ft.run(main, view=ft.AppView.FLET_APP_HIDDEN)
+if __name__ == "__main__":
+    ft.run(main, view=ft.AppView.FLET_APP_HIDDEN)

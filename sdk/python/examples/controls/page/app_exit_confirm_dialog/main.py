@@ -28,7 +28,18 @@ def main(page: ft.Page):
         actions_alignment=ft.MainAxisAlignment.END,
     )
 
-    page.add(ft.Text('Try exiting this app by clicking window\'s "Close" button!'))
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(
+                        'Try exiting this app by clicking window\'s "Close" button!'
+                    )
+                ]
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

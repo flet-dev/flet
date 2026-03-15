@@ -1,0 +1,27 @@
+[project]
+name = "page-app-exit-confirm-dialog"
+version = "1.0.0"
+description = "Demonstrates handling window close events with a custom confirm dialog."
+requires-python = ">=3.10"
+keywords = ["page", "window", "close", "confirm dialog", "window event", "desktop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "App exit confirm dialog"
+controls = ["SafeArea", "Text", "AlertDialog", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["window close interception", "confirm dialog"]
+
+[tool.flet]
+platforms = ["macos", "windows", "linux"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

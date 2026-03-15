@@ -37,23 +37,31 @@ def main(page: ft.Page) -> None:
     }
 
     page.add(
-        ft.Text(
-            spans=[
-                # shown only on mobile platforms
-                ft.TextSpan(
-                    "Select the orientations that should remain enabled for the app. "
-                    "If no orientation is selected, the system defaults will be used.",
-                    visible=page.platform.is_mobile(),
-                ),
-                # shown only on non-mobile platforms
-                ft.TextSpan(
-                    "Please open this example on a mobile device instead.",
-                    visible=not page.platform.is_mobile(),
-                    style=ft.TextStyle(weight=ft.FontWeight.BOLD),
-                ),
-            ],
-        ),
-        ft.Column(controls=list(checkboxes.values())),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(
+                        spans=[
+                            # shown only on mobile platforms
+                            ft.TextSpan(
+                                "Select the orientations that should remain enabled "
+                                "for the app. "
+                                "If no orientation is selected, "
+                                "the system defaults will be used.",
+                                visible=page.platform.is_mobile(),
+                            ),
+                            # shown only on non-mobile platforms
+                            ft.TextSpan(
+                                "Please open this example on a mobile device instead.",
+                                visible=not page.platform.is_mobile(),
+                                style=ft.TextStyle(weight=ft.FontWeight.BOLD),
+                            ),
+                        ],
+                    ),
+                    ft.Column(controls=list(checkboxes.values())),
+                ]
+            )
+        )
     )
 
 

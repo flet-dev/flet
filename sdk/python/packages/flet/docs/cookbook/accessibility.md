@@ -55,5 +55,5 @@ semantics debugger during app development:
 {{ image("../assets/cookbook/accessibility/debug-accessibility-toggle.gif", width="80%") }}
 
 ```python
---8<-- "../../examples/controls/page/semantics_debugger.py"
+--8<-- "../../examples/controls/page/semantics_debugger/main.py"
 ```

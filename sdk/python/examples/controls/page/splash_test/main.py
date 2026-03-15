@@ -17,7 +17,16 @@ async def main(page: ft.Page):
         page.update()
 
     btn = ft.Button("Do some lengthy task!", on_click=handle_button_click)
-    page.add(btn)
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    btn,
+                ]
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

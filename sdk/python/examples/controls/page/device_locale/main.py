@@ -15,12 +15,20 @@ async def main(page: ft.Page):
 
     initial_locales = (await page.get_device_info()).locales
     page.add(
-        ft.Text(f"Initial locales: {format_locales(initial_locales)}"),
-        ft.Text(
-            "Change your system or browser language to trigger on_locale_change.",
-            color=ft.Colors.BLUE,
-        ),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text(f"Initial locales: {format_locales(initial_locales)}"),
+                    ft.Text(
+                        "Change your system or browser language to trigger "
+                        "on_locale_change.",
+                        color=ft.Colors.BLUE,
+                    ),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

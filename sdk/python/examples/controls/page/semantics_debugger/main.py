@@ -17,14 +17,21 @@ def main(page: ft.Page):
         page.update()
 
     page.add(
-        counter := ft.Text("0", size=40),
-        ft.Text("Press Shift+S to toggle semantics debugger"),
-        ft.Button(
-            content="Increment number",
-            icon=ft.Icons.ADD,
-            on_click=button_click,
-        ),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    counter := ft.Text("0", size=40),
+                    ft.Text("Press Shift+S to toggle semantics debugger"),
+                    ft.Button(
+                        content="Increment number",
+                        icon=ft.Icons.ADD,
+                        on_click=button_click,
+                    ),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
