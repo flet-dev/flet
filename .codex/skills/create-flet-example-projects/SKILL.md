@@ -71,6 +71,7 @@ Ensure each runnable example is a standalone project containing:
 - Apply this `page.update()` rule to all examples in the touched folder (new, migrated, and already converted).
 - Wrap app content in `ft.SafeArea` so example renders correctly on mobile.
 - Add `expand=True` to `ft.SafeArea` only when needed for correct layout/sizing (for example to avoid Infinity/NaN sizing issues), and avoid adding it when not necessary.
+- When converting legacy `page.add(a, b, ...)` style examples, wrap the controls in `ft.Column(controls=[...])` inside `ft.SafeArea(content=...)` rather than `ft.Row`, unless the original code explicitly used a row layout.
 
 - Apply this to all examples in the touched folder (new, migrated, and already converted), not only files changed by moves.
 - During validation, confirm every `<example>/main.py` in scope includes a top-level `ft.SafeArea` around rendered content.
