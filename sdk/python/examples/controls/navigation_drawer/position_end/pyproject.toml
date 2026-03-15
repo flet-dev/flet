@@ -3,7 +3,7 @@ name = "navigation-drawer-position-end"
 version = "1.0.0"
 description = "Demonstrates an end-position NavigationDrawer with destination selection handling."
 requires-python = ">=3.10"
-keywords = ["navigation drawer", "drawer", "navigation", "end position"]
+keywords = ["navigation drawer", "drawer", "navigation", "end position", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet"]
 

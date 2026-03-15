@@ -34,17 +34,20 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Row(
+        ft.SafeArea(
             expand=True,
-            controls=[
-                ft.SelectionArea(content=rail),
-                ft.VerticalDivider(width=1),
-                ft.Column(
-                    alignment=ft.MainAxisAlignment.START,
-                    expand=True,
-                    controls=[ft.Text("Body!")],
-                ),
-            ],
+            content=ft.Row(
+                expand=True,
+                controls=[
+                    ft.SelectionArea(content=rail),
+                    ft.VerticalDivider(width=1),
+                    ft.Column(
+                        alignment=ft.MainAxisAlignment.START,
+                        expand=True,
+                        controls=[ft.Text("Body!")],
+                    ),
+                ],
+            ),
         )
     )
 

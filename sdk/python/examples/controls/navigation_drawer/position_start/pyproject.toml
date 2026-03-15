@@ -3,7 +3,7 @@ name = "navigation-drawer-position-start"
 version = "1.0.0"
 description = "Demonstrates a start-position NavigationDrawer with labeled destinations and callbacks."
 requires-python = ">=3.10"
-keywords = ["navigation drawer", "drawer", "navigation", "start position"]
+keywords = ["navigation drawer", "drawer", "navigation", "start position", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet"]
 
