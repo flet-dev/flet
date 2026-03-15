@@ -1,0 +1,2096 @@
+action:
+  3d rotation:
+    - arrows
+    - vr
+  accessibility:
+    - user
+    - person
+  accessible:
+    - wheelchair
+    - user
+  account balance:
+    - building
+    - temple
+  account balance wallet: []
+  account box:
+    - user
+  account circle:
+    - user
+  add shopping cart: []
+  alarm:
+    - time
+    - clock
+  alarm add:
+    - time
+    - clock
+  alarm off:
+    - time
+    - clock
+  alarm on:
+    - time
+    - clock
+    - checkmark
+  all out:
+    - arrows
+    - circle
+    - directional
+    - expand
+  android:
+    - operating system
+  announcement:
+    - comment
+    - chat
+    - message
+    - balloon
+    - exclamation
+  aspect ratio:
+    - screen
+    - resolution
+    - monitor
+  assessment:
+    - graph
+    - chart
+  assignment:
+    - clipboard
+  assignment ind:
+    - user
+    - clipboard
+  assignment late:
+    - exclamation
+    - clipboard
+  assignment return:
+    - clipboard
+    - arrow
+  assignment returned:
+    - clipboard
+    - arrow
+  assignment turned in:
+    - clipboard
+    - checkmark
+  autorenew:
+    - arrows
+    - loader
+    - loading
+    - refresh
+  backup:
+    - cloud
+    - arrow
+    - upload
+  book:
+    - bookmark
+  bookmark:
+    - favorite
+  bookmark border:
+    - favorite
+  bug report:
+    - ticket
+    - issue
+  build:
+    - wrench
+    - spanner
+  cached:
+    - arrows
+    - refresh
+    - loading
+    - loader
+  camera enhance:
+    - photo
+  card giftcard:
+    - creditcard
+  card membership:
+    - creditcard
+  card travel:
+    - creditcard
+  change history:
+    - triangle
+  check circle: []
+  chrome reader mode: []
+  class: []
+  code:
+    - parenthesis
+    - brackets
+  compare arrows:
+    - directional
+  copyright: []
+  credit card:
+    - creditcard
+  dashboard: []
+  date range:
+    - calendar
+    - agenda
+  delete:
+    - trashcan
+    - bin
+    - recycle
+    - junk
+  delete forever:
+    - trashcan
+    - bin
+    - recycle
+    - junk
+  description:
+    - file
+    - document
+  dns:
+    - server
+    - network
+  done:
+    - checkmark
+  done all:
+    - checkmark
+  donut large:
+    - circle
+  donut small:
+    - circle
+  eject: []
+  euro symbol:
+    - financial
+    - money
+  event:
+    - calendar
+    - agenda
+  event seat:
+    - chair
+    - bench
+    - sit
+  exit to app:
+    - quit
+  explore:
+    - compass
+    - map
+  extension:
+    - puzzle
+  face:
+    - person
+    - user
+  favorite:
+    - heart
+    - love
+  favorite border:
+    - heart
+    - love
+  feedback:
+    - comment
+    - message
+    - chat
+  find in page:
+    - search
+  find replace:
+    - search
+  fingerprint:
+    - biometrics
+    - touchid
+  flight land:
+    - airplane
+    - flying
+  flight takeoff:
+    - airplane
+    - flying
+  flip to back: []
+  flip to front: []
+  g translate:
+    - google
+  gavel:
+    - hammer
+  get app:
+    - download
+  gif:
+    - animated
+  grade:
+    - star
+    - rating
+    - rate
+  group work:
+    - circle
+    - film
+    - reel
+  help:
+    - question mark
+  help outline:
+    - question mark
+  highlight off:
+    - delete
+    - disable
+    - clear
+    - remove
+    - circle
+    - times
+  history:
+    - time
+    - revert
+    - undo
+    - clock
+  home:
+    - building
+    - house
+  hourglass empty:
+    - time
+  hourglass full:
+    - time
+  http:
+    - network
+    - internet
+    - web
+  https:
+    - network
+    - internet
+    - web
+    - security
+    - lock
+    - ssl
+    - encrypt
+  important devices:
+    - computer
+    - phone
+    - monitor
+  info:
+    - circle
+    - information
+  info outline:
+    - circle
+    - information
+  input:
+    - arrow
+  invert colors:
+    - drop
+    - water
+    - liquid
+  label:
+    - tag
+    - badge
+  label outline:
+    - tag
+    - badge
+  language:
+    - earth
+    - world
+    - web
+  launch:
+    - arrow
+  lightbulb outline: []
+  line style:
+    - editor
+  line weight:
+    - editor
+  list:
+    - editor
+  lock:
+    - security
+  lock open:
+    - security
+  lock outline:
+    - security
+  loyalty:
+    - tag
+    - badge
+    - heart
+    - love
+  markunread mailbox: []
+  motorcycle:
+    - motorbike
+  note add:
+    - document
+    - create
+  offline pin:
+    - checkmark
+    - circle
+  opacity:
+    - drop
+    - water
+    - liquid
+  open in browser: []
+  open in new: []
+  open with:
+    - arrows
+    - directional
+    - expand
+  pageview:
+    - search
+    - find
+    - looking glass
+  pan tool:
+    - hand
+    - touch
+    - drag
+  payment:
+    - creditcard
+    - financial
+    - money
+  perm camera mic: []
+  perm contact calendar:
+    - user
+    - agenda
+  perm data setting:
+    - wifi
+    - wireless
+    - network
+    - cellular
+    - configure
+  perm device information:
+    - phone
+    - mobile
+  perm identity:
+    - user
+  perm media:
+    - folders
+    - directories
+  perm phone msg:
+    - mobile
+    - message
+  perm scan wifi:
+    - network
+    - wireless
+  pets:
+    - animal
+    - claw
+    - paw
+    - dog
+    - cat
+  picture in picture: []
+  picture in picture alt: []
+  play for work:
+    - arrow
+  polymer: []
+  power settings new:
+    - 'off'
+  pregnant woman:
+    - user
+    - person
+  print:
+    - printer
+    - paper
+  query builder:
+    - clock
+    - time
+  question answer:
+    - comment
+    - message
+    - chat
+  receipt:
+    - transaction
+  record voice over:
+    - user
+    - sound
+  redeem:
+    - present
+    - giftcard
+  remove shopping cart: []
+  reorder:
+    - lines
+  report problem:
+    - triangle
+    - warning
+    - danger
+    - exclamation
+  restore:
+    - clock
+    - undo
+    - time
+    - history
+  restore page:
+    - history
+    - web
+    - undo
+  room:
+    - location
+    - gps
+  rounded corner: []
+  rowing:
+    - sports
+  schedule:
+    - time
+    - clock
+  search:
+    - find
+    - looking glass
+  settings:
+    - gear
+  settings applications:
+    - gear
+  settings backup restore:
+    - time
+    - history
+    - undo
+  settings bluetooth:
+    - network
+  settings brightness:
+    - sun
+  settings cell:
+    - mobile
+    - phone
+  settings ethernet:
+    - brackets
+    - parenthesis
+    - network
+  settings input antenna:
+    - wifi
+    - network
+  settings input component:
+    - plugs
+    - cable
+  settings input composite:
+    - plugs
+    - cable
+  settings input hdmi:
+    - cable
+  settings input svideo:
+    - plugs
+  settings overscan:
+    - expand
+  settings phone: []
+  settings power: []
+  settings remote:
+    - control
+  settings voice:
+    - microphone
+  shop:
+    - briefcase
+  shop two:
+    - briefcase
+  shopping basket: []
+  shopping cart: []
+  speaker notes:
+    - message
+    - chat
+    - comment
+  speaker notes off:
+    - message
+    - chat
+    - comment
+  spellcheck:
+    - letter
+    - alphabet
+    - checkmark
+  stars:
+    - rating
+  store:
+    - building
+  subject:
+    - lines
+    - text
+  supervisor account:
+    - user
+    - administrator
+    - person
+  swap horiz:
+    - arrows
+  swap vert:
+    - arrows
+  swap vertical circle:
+    - arrows
+  system update alt:
+    - arrow
+  tab: []
+  tab unselected: []
+  theaters:
+    - video
+    - media
+    - photography
+  thumb down:
+    - hand
+  thumb up:
+    - hand
+  thumbs up down:
+    - hand
+  timeline:
+    - chart
+    - graph
+    - line
+  toc:
+    - lines
+    - text
+  today:
+    - agenda
+    - calendar
+  toll:
+    - circles
+  touch app:
+    - hand
+  track changes:
+    - radar
+    - circle
+  translate:
+    - alphabet
+    - text
+    - letter
+  trending down:
+    - chart
+    - graph
+    - arrow
+  trending flat:
+    - arrow
+    - chart
+    - graph
+  trending up:
+    - arrow
+    - chart
+    - graph
+  turned in: []
+  turned in not: []
+  update:
+    - clock
+    - time
+    - arrow
+    - future
+  verified user:
+    - shield
+    - checkmark
+  view agenda:
+    - blocks
+  view array:
+    - blocks
+  view carousel:
+    - blocks
+  view column:
+    - blocks
+  view day:
+    - blocks
+  view headline:
+    - blocks
+  view list:
+    - blocks
+  view module:
+    - blocks
+  view quilt:
+    - blocks
+  view stream:
+    - blocks
+  view week:
+    - blocks
+  visibility:
+    - eye
+  visibility off:
+    - eye
+    - invisible
+  watch later:
+    - clock
+    - time
+  work:
+    - briefcase
+    - suitcase
+  youtube searched for:
+    - arrow
+    - looking glass
+  zoom in:
+    - looking glass
+  zoom out:
+    - looking glass
+alert:
+  add alert:
+    - bell
+    - notification
+    - reminder
+  error:
+    - warning
+    - danger
+    - exclamation
+    - circle
+  error outline:
+    - warning
+    - danger
+    - exclamation
+    - circle
+  warning:
+    - danger
+    - exclamation
+    - triangle
+av:
+  add to queue:
+    - television
+    - monitor
+    - plus
+  airplay:
+    - apple
+    - television
+    - monitor
+  album:
+    - vinyl
+    - cd
+    - record
+  art track: []
+  av timer:
+    - stopwatch
+  branding watermark: []
+  call to action: []
+  closed caption:
+    - subtitles
+  equalizer:
+    - graph
+    - chart
+  explicit: []
+  fast forward: []
+  fast rewind: []
+  featured play list: []
+  featured video: []
+  fiber dvr: []
+  fiber manual record:
+    - dot
+    - circle
+  fiber new: []
+  fiber pin: []
+  fiber smart record: []
+  forward 10:
+    - arrow
+    - circle
+  forward 30:
+    - arrow
+    - circle
+  forward 5:
+    - arrow
+    - circle
+  games:
+    - playstation
+    - nintendo
+    - xbox
+    - dpad
+    - controller
+  hd: []
+  hearing: []
+  high quality:
+    - hq
+  library add:
+    - collection
+  library books:
+    - collection
+  library music:
+    - collection
+  loop:
+    - refresh
+    - loader
+    - loading
+  mic:
+    - microphone
+  mic none:
+    - microphone
+  mic off:
+    - microphone
+  movie:
+    - video
+    - film
+  music video: []
+  new releases:
+    - exclamation
+  not interested:
+    - disabled
+    - not allowed
+    - banned
+    - prohibited
+  note: []
+  pause: []
+  pause circle filled: []
+  pause circle outline: []
+  play arrow: []
+  play circle filled: []
+  play circle outline: []
+  playlist add: []
+  playlist add check:
+    - checkmark
+  playlist play: []
+  queue: []
+  queue music: []
+  queue play next: []
+  radio: []
+  recent actors:
+    - contacts
+  remove from queue:
+    - television
+    - monitor
+  repeat:
+    - arrows
+  repeat one:
+    - arrows
+  replay:
+    - undo
+    - rewind
+    - arrow
+  replay 10:
+    - rewind
+    - arrow
+  replay 30:
+    - rewind
+    - arrow
+  replay 5:
+    - rewind
+    - arrow
+  shuffle:
+    - arrows
+  skip next: []
+  skip previous: []
+  slow motion video:
+    - circle
+    - time
+  snooze:
+    - alarm
+  sort by alpha:
+    - alphabet
+    - letters
+  stop:
+    - square
+  subscriptions:
+    - youtube
+    - playlist
+    - queue
+  subtitles:
+    - captions
+  surround sound:
+    - audio
+  video call:
+    - camera
+  video label: []
+  video library:
+    - collection
+  videocam:
+    - camera
+  videocam off:
+    - camera
+  volume down:
+    - sound
+  volume mute:
+    - sound
+  volume off:
+    - sound
+  volume up:
+    - sound
+  web:
+    - blocks
+  web asset: []
+communication:
+  business:
+    - building
+    - flat
+    - apartment
+  call:
+    - phone
+  call end:
+    - phone
+  call made:
+    - arrow
+  call merge:
+    - arrow
+  call missed:
+    - arrow
+  call missed outgoing:
+    - arrow
+  call received:
+    - arrow
+  call split:
+    - arrow
+  chat:
+    - message
+    - comment
+  chat bubble:
+    - message
+    - comment
+  chat bubble outline:
+    - message
+    - comment
+  clear all:
+    - lines
+    - notifications
+  comment:
+    - chat
+    - message
+  contact mail:
+    - user
+    - person
+  contact phone:
+    - user
+    - person
+  contacts:
+    - user
+    - person
+  dialer sip:
+    - phone
+  dialpad:
+    - dots
+    - phone
+  email:
+    - letter
+    - envelope
+  forum:
+    - chat
+    - messages
+    - conversation
+  import contacts:
+    - book
+    - magazine
+  import export:
+    - arrows
+  invert colors off:
+    - drop
+    - liquid
+    - water
+  live help:
+    - comment
+    - question
+    - faq
+  location off:
+    - gps
+  location on:
+    - gps
+  mail outline:
+    - letter
+    - envelope
+  message:
+    - chat
+    - comment
+  no sim: []
+  phone:
+    - mobile
+  phonelink erase:
+    - mobile
+  phonelink lock:
+    - mobile
+    - security
+  phonelink ring:
+    - mobile
+  phonelink setup:
+    - mobile
+    - settings
+  portable wifi off:
+    - network
+  present to all:
+    - arrow
+  ring volume:
+    - phone
+    - mobile
+  rss feed:
+    - wifi
+    - network
+  screen share:
+    - monitor
+    - laptop
+  speaker phone:
+    - mobile
+  stay current landscape:
+    - mobile
+    - phone
+  stay current portrait:
+    - mobile
+    - phone
+  stay primary landscape:
+    - mobile
+    - phone
+  stay primary portrait:
+    - mobile
+    - phone
+  stop screen share:
+    - monitor
+    - laptop
+  swap calls:
+    - arrow
+  textsms:
+    - message
+    - chat
+    - comment
+  voicemail: []
+  vpn key:
+    - security
+content:
+  add:
+    - plus
+    - new
+    - create
+  add box:
+    - plus
+    - new
+    - create
+    - square
+  add circle:
+    - plus
+    - new
+    - create
+  add circle outline:
+    - plus
+    - new
+    - create
+  archive: []
+  backspace:
+    - delete
+    - clear
+    - remove
+  block:
+    - disable
+    - not allowed
+    - cancel
+    - banned
+  clear:
+    - disable
+    - cancel
+    - cross
+    - times
+    - x
+  content copy:
+    - files
+  content cut:
+    - scissor
+  content paste:
+    - clipboard
+  create:
+    - pencil
+    - new
+  delete sweep:
+    - trashcan
+    - bin
+  drafts:
+    - email
+    - letter
+    - envelope
+  filter list:
+    - lines
+  flag: []
+  font download:
+    - letter
+    - square
+  forward:
+    - arrow
+  gesture:
+    - line
+    - drawing
+  inbox: []
+  link: []
+  low priority:
+    - arrow
+    - list
+  mail:
+    - letter
+    - envelope
+  markunread:
+    - letter
+    - envelope
+  move to inbox: []
+  next week:
+    - suitcase
+    - briefcase
+  redo:
+    - arrow
+  remove:
+    - minus
+    - line
+  remove circle:
+    - not allowed
+    - disable
+    - banned
+  remove circle outline:
+    - not allowed
+    - disable
+    - banned
+  reply:
+    - arrow
+  reply all:
+    - arrows
+  report:
+    - exclamation
+  save:
+    - floppy
+    - diskette
+  select all: []
+  send:
+    - chat
+    - message
+    - telegram
+  sort:
+    - lines
+  text format:
+    - letter
+  unarchive:
+    - arrow
+  undo:
+    - arrow
+  weekend:
+    - couch
+    - seat
+    - chair
+device:
+  access alarm:
+    - time
+    - clock
+  access alarms:
+    - time
+    - clock
+  access time:
+    - time
+    - clock
+  add alarm:
+    - time
+    - clock
+    - plus
+  airplanemode active:
+    - flying
+  airplanemode inactive:
+    - flying
+  battery 20: []
+  battery 30: []
+  battery 50: []
+  battery 60: []
+  battery 80: []
+  battery 90: []
+  battery alert:
+    - exclamation
+  battery charging 20: []
+  battery charging 30: []
+  battery charging 50: []
+  battery charging 60: []
+  battery charging 80: []
+  battery charging 90: []
+  battery charging full:
+    - lightning
+  battery full: []
+  battery std: []
+  battery unknown:
+    - question
+  bluetooth:
+    - wireless
+    - network
+  bluetooth connected:
+    - wireless
+    - network
+  bluetooth disabled:
+    - wireless
+    - network
+  bluetooth searching:
+    - wireless
+    - network
+  brightness auto: []
+  brightness high: []
+  brightness low: []
+  brightness medium: []
+  data usage:
+    - circle
+  developer mode:
+    - code
+  devices:
+    - laptop
+    - phone
+    - mobile
+  dvr:
+    - monitor
+    - laptop
+  gps fixed:
+    - location
+  gps not fixed: []
+  gps off: []
+  graphic eq:
+    - equalizer
+    - audio
+  location disabled: []
+  location searching: []
+  network cell: []
+  network wifi: []
+  nfc: []
+  screen lock landscape:
+    - mobile
+    - phone
+    - security
+  screen lock portrait:
+    - mobile
+    - phone
+    - security
+  screen lock rotation:
+    - mobile
+    - phone
+  screen rotation:
+    - mobile
+    - phone
+  sd storage:
+    - microsd
+  settings system daydream:
+    - cloud
+  signal cellular 0 bar: []
+  signal cellular 1 bar: []
+  signal cellular 2 bar: []
+  signal cellular 3 bar: []
+  signal cellular 4 bar:
+    - network
+  signal cellular connected no internet 0 bar: []
+  signal cellular connected no internet 1 bar: []
+  signal cellular connected no internet 2 bar: []
+  signal cellular connected no internet 3 bar: []
+  signal cellular connected no internet 4 bar:
+    - network
+  signal cellular no sim: []
+  signal cellular null:
+    - wifi
+  signal cellular off:
+    - network
+  signal wifi 0 bar: []
+  signal wifi 1 bar: []
+  signal wifi 1 bar lock: []
+  signal wifi 2 bar: []
+  signal wifi 2 bar lock: []
+  signal wifi 3 bar: []
+  signal wifi 3 bar lock: []
+  signal wifi 4 bar: []
+  signal wifi 4 bar lock:
+    - network
+  signal wifi off:
+    - network
+  signal wifi statusbar 1 bar 26x: []
+  signal wifi statusbar 2 bar 26x: []
+  signal wifi statusbar 3 bar 26x: []
+  signal wifi statusbar 4 bar 26x: []
+  signal wifi statusbar connected no internet 1 26x: []
+  signal wifi statusbar connected no internet 2 26x: []
+  signal wifi statusbar connected no internet 26x: []
+  signal wifi statusbar connected no internet 3 26x: []
+  signal wifi statusbar connected no internet 4 26x: []
+  signal wifi statusbar not connected 26x: []
+  signal wifi statusbar null 26x: []
+  storage:
+    - network
+    - server
+    - database
+  usb: []
+  wallpaper:
+    - image
+    - picture
+  widgets:
+    - blocks
+  wifi lock:
+    - network
+  wifi tethering:
+    - network
+editor:
+  attach file:
+    - paperclip
+  attach money:
+    - financial
+    - dollar
+  border all: []
+  border bottom: []
+  border clear: []
+  border color:
+    - pencil
+    - marker
+    - create
+  border horizontal: []
+  border inner: []
+  border left: []
+  border outer: []
+  border right: []
+  border style: []
+  border top: []
+  border vertical: []
+  bubble chart:
+    - graph
+  drag handle:
+    - lines
+  format align center:
+    - lines
+  format align justify:
+    - lines
+  format align left:
+    - lines
+  format align right:
+    - lines
+  format bold: []
+  format clear: []
+  format color fill:
+    - bucket
+  format color reset:
+    - drop
+    - water
+    - liquid
+  format color text: []
+  format indent decrease: []
+  format indent increase: []
+  format italic: []
+  format line spacing: []
+  format list bulleted: []
+  format list numbered: []
+  format paint:
+    - paintroller
+  format quote:
+    - quotation
+  format shapes: []
+  format size: []
+  format strikethrough: []
+  format textdirection l to r:
+    - paragraph
+  format textdirection r to l:
+    - paragraph
+  format underlined: []
+  functions:
+    - sigma
+  highlight:
+    - marker
+    - flashlight
+  insert chart:
+    - graph
+  insert comment:
+    - chat
+    - message
+  insert drive file: []
+  insert emoticon: []
+  insert invitation:
+    - agenda
+    - calendar
+  insert link: []
+  insert photo:
+    - image
+    - wallpaper
+  linear scale: []
+  merge type:
+    - arrow
+  mode comment:
+    - message
+    - chat
+  mode edit:
+    - pencil
+    - create
+    - new
+  monetization on:
+    - money
+    - financial
+    - dollar
+  money off:
+    - money
+    - financial
+    - dollar
+  multiline chart:
+    - graph
+  pie chart:
+    - graph
+  pie chart outlined:
+    - graph
+  publish:
+    - upload
+    - arrow
+  short text:
+    - lines
+  show chart:
+    - graph
+  space bar: []
+  strikethrough s: []
+  text fields: []
+  title: []
+  vertical align bottom:
+    - arrow
+  vertical align center:
+    - arrow
+  vertical align top:
+    - arrow
+  wrap text:
+    - arrow
+file:
+  attachment:
+    - paperclip
+  cloud: []
+  cloud circle: []
+  cloud done:
+    - checkmark
+  cloud download: []
+  cloud off: []
+  cloud queue: []
+  cloud upload: []
+  create new folder:
+    - directory
+  file download: []
+  file upload: []
+  folder:
+    - directory
+  folder open:
+    - directory
+  folder shared:
+    - directory
+hardware:
+  cast:
+    - chromecast
+  cast connected:
+    - chromecast
+  computer:
+    - laptop
+    - pc
+    - monitor
+  desktop mac:
+    - pc
+    - apple
+    - monitor
+  desktop windows:
+    - pc
+    - monitor
+  developer board:
+    - devkit
+  device hub: []
+  devices other:
+    - smartwatch
+  dock:
+    - charger
+  gamepad: []
+  headset:
+    - earmuffs
+    - headphones
+  headset mic:
+    - headphones
+  keyboard: []
+  keyboard arrow down:
+    - chevron
+  keyboard arrow left:
+    - chevron
+  keyboard arrow right:
+    - chevron
+  keyboard arrow up:
+    - chevron
+  keyboard backspace: []
+  keyboard capslock:
+    - arrow
+  keyboard hide: []
+  keyboard return:
+    - arrow
+  keyboard tab:
+    - arrow
+  keyboard voice: []
+  laptop: []
+  laptop chromebook: []
+  laptop mac:
+    - apple
+  laptop windows: []
+  memory:
+    - chip
+  mouse: []
+  phone android:
+    - mobile
+  phone iphone:
+    - mobile
+    - apple
+  phonelink: []
+  phonelink off: []
+  power input:
+    - dc
+  router:
+    - device
+    - network
+  scanner:
+    - device
+  security:
+    - shield
+  sim card: []
+  smartphone:
+    - mobile
+  speaker:
+    - audio
+  speaker group:
+    - audio
+  tablet: []
+  tablet android: []
+  tablet mac:
+    - apple
+  toys:
+    - fan
+  tv:
+    - television
+  videogame asset:
+    - gamepad
+    - controller
+    - playstation
+    - xbox
+    - nintendo
+  watch:
+    - smartwatch
+image:
+  add a photo:
+    - camera
+  add to photos:
+    - plus
+  adjust:
+    - circle
+  assistant:
+    - star
+    - comment
+    - chat
+  assistant photo: []
+  audiotrack:
+    - note
+  blur circular:
+    - circle
+  blur linear: []
+  blur off: []
+  blur on: []
+  brightness 1: []
+  brightness 2:
+    - moon
+  brightness 3:
+    - moon
+  brightness 4:
+    - moon
+    - sun
+  brightness 5:
+    - sun
+  brightness 6:
+    - sun
+  brightness 7:
+    - sun
+  broken image:
+    - picture
+  brush:
+    - paint
+  burst mode:
+    - image
+    - picture
+  camera: []
+  camera alt: []
+  camera front: []
+  camera rear: []
+  camera roll: []
+  center focus strong: []
+  center focus weak: []
+  collections: []
+  collections bookmark: []
+  color lens: []
+  colorize:
+    - color picker
+    - pipette
+  compare: []
+  control point:
+    - circle
+    - plus
+  control point duplicate:
+    - circle
+    - plus
+  crop: []
+  crop 16 9:
+    - square
+  crop 3 2:
+    - square
+  crop 5 4:
+    - square
+  crop 7 5:
+    - square
+  crop din:
+    - square
+  crop free:
+    - square
+  crop landscape:
+    - square
+  crop original:
+    - square
+  crop portrait:
+    - square
+  crop rotate: []
+  crop square: []
+  dehaze: []
+  details:
+    - triangle
+  edit: []
+  exposure:
+    - plus
+    - minus
+  exposure neg 1:
+    - minus
+  exposure neg 2:
+    - minus
+  exposure plus 1:
+    - plus
+  exposure plus 2:
+    - plus
+  exposure zero: []
+  filter: []
+  filter 1: []
+  filter 2: []
+  filter 3: []
+  filter 4: []
+  filter 5: []
+  filter 6: []
+  filter 7: []
+  filter 8: []
+  filter 9: []
+  filter 9 plus: []
+  filter b and w: []
+  filter center focus: []
+  filter drama:
+    - cloud
+  filter frames: []
+  filter hdr:
+    - mountains
+  filter none: []
+  filter tilt shift: []
+  filter vintage:
+    - flower
+  flare:
+    - lensflare
+    - sun
+    - star
+    - light
+    - bright
+    - shine
+    - sparkle
+  flash auto:
+    - lightning
+  flash off:
+    - lightning
+  flash on:
+    - lightning
+  flip: []
+  gradient: []
+  grain: []
+  grid off: []
+  grid on: []
+  hdr off: []
+  hdr on: []
+  hdr strong: []
+  hdr weak: []
+  healing:
+    - bandaid
+  image:
+    - picture
+  image aspect ratio: []
+  iso: []
+  landscape: []
+  leak add: []
+  leak remove: []
+  lens: []
+  linked camera: []
+  looks:
+    - rainbow
+  looks 3: []
+  looks 4: []
+  looks 5: []
+  looks 6: []
+  looks one: []
+  looks two: []
+  loupe: []
+  monochrome photos: []
+  movie creation:
+    - video
+    - film
+  movie filter:
+    - video
+    - film
+  music note: []
+  nature:
+    - tree
+    - forest
+  nature people:
+    - tree
+    - forest
+    - person
+  navigate before:
+    - arrow
+  navigate next:
+    - arrow
+  palette: []
+  panorama:
+    - picture
+    - image
+  panorama fish eye: []
+  panorama horizontal: []
+  panorama vertical: []
+  panorama wide angle: []
+  photo: []
+  photo album:
+    - picture
+    - image
+  photo camera:
+    - picture
+    - image
+  photo filter: []
+  photo library:
+    - picture
+    - image
+  photo size select actual: []
+  photo size select large: []
+  photo size select small: []
+  picture as pdf: []
+  portrait: []
+  remove red eye: []
+  rotate 90 degrees ccw:
+    - arrow
+  rotate left:
+    - arrow
+    - circle
+  rotate right:
+    - arrow
+    - circle
+  slideshow: []
+  straighten:
+    - piano
+  style: []
+  switch camera: []
+  switch video: []
+  tag faces: []
+  texture: []
+  timelapse: []
+  timer:
+    - stopwatch
+  timer 10: []
+  timer 3: []
+  timer off:
+    - stopwatch
+  tonality: []
+  transform: []
+  tune:
+    - settings
+    - sliders
+  view comfy:
+    - grid
+  view compact:
+    - grid
+  vignette: []
+  wb auto: []
+  wb cloudy: []
+  wb incandescent:
+    - lightbulb
+  wb iridescent: []
+  wb sunny: []
+maps:
+  add location:
+    - gps
+  beenhere:
+    - checkmark
+  directions:
+    - naviate
+    - arrow
+  directions bike:
+    - bicycle
+  directions boat: []
+  directions bus: []
+  directions car: []
+  directions railway: []
+  directions run:
+    - person
+  directions subway: []
+  directions transit:
+    - subway
+    - metro
+  directions walk:
+    - person
+  edit location:
+    - gps
+  ev station:
+    - gas station
+    - gasoline
+    - fuel
+    - filling station
+  flight:
+    - flying
+    - airplane
+  hotel:
+    - bed
+    - sleep
+  layers: []
+  layers clear: []
+  local activity:
+    - star
+  local airport:
+    - flying
+    - airplane
+  local atm:
+    - financial
+    - dollar
+    - money
+  local bar:
+    - alcohol
+    - drink
+    - martini
+  local cafe:
+    - drink
+    - coffee
+  local car wash: []
+  local convenience store:
+    - building
+  local dining:
+    - cutlery
+    - knife
+    - spoon
+  local drink:
+    - glass
+    - water
+  local florist:
+    - flower
+  local gas station:
+    - gasoline
+    - fuel
+    - filling station
+  local grocery store: []
+  local hospital:
+    - plus
+  local hotel: []
+  local laundry service: []
+  local library:
+    - book
+    - person
+  local mall:
+    - shopping bag
+  local movies: []
+  local offer: []
+  local parking: []
+  local pharmacy:
+    - food
+  local phone: []
+  local pizza: []
+  local play: []
+  local post office: []
+  local printshop: []
+  local see: []
+  local shipping:
+    - car
+    - truck
+    - semi
+  local taxi:
+    - car
+  map: []
+  my location: []
+  navigation:
+    - arrow
+  near me:
+    - arrow
+  person pin:
+    - location
+    - gps
+  person pin circle:
+    - location
+    - gps
+  pin drop:
+    - location
+    - gps
+  place: []
+  rate review:
+    - comment
+    - message
+    - chat
+  restaurant:
+    - cutlery
+    - knife
+    - fork
+  restaurant menu: []
+  satellite: []
+  store mall directory:
+    - building
+  streetview:
+    - map
+    - gps
+    - location
+  subway:
+    - metro
+  terrain: []
+  traffic:
+    - light
+  train: []
+  tram: []
+  transfer within a station:
+    - person
+  zoom out map:
+    - arrows
+navigation:
+  apps:
+    - grid
+  arrow back: []
+  arrow downward: []
+  arrow drop down: []
+  arrow drop down circle: []
+  arrow drop up: []
+  arrow forward: []
+  arrow upward: []
+  cancel:
+    - disable
+    - cross
+  check:
+    - checkmark
+  chevron left:
+    - arrow
+  chevron right:
+    - arrow
+  close:
+    - cancel
+    - disable
+    - not allowed
+  expand less:
+    - arrow
+  expand more:
+    - arrow
+  first page:
+    - arrow
+  fullscreen: []
+  fullscreen exit: []
+  last page:
+    - arrow
+  menu: []
+  more horiz:
+    - dots
+  more vert:
+    - dots
+  refresh: []
+  subdirectory arrow left:
+    - arrow
+  subdirectory arrow right:
+    - arrow
+  unfold less:
+    - arrow
+  unfold more:
+    - arrow
+notification:
+  adb:
+    - android
+  airline seat flat:
+    - bed
+    - sleep
+  airline seat flat angled:
+    - bed
+    - sleep
+  airline seat individual suite:
+    - bed
+    - sleep
+  airline seat legroom extra: []
+  airline seat legroom normal: []
+  airline seat legroom reduced: []
+  airline seat recline extra: []
+  airline seat recline normal: []
+  bluetooth audio: []
+  confirmation number:
+    - ticket
+  disc full:
+    - cd
+    - vinyl
+    - exclamation
+  do not disturb:
+    - banned
+  do not disturb alt:
+    - banned
+  do not disturb off:
+    - banned
+  do not disturb on:
+    - banned
+  drive eta: []
+  enhanced encryption:
+    - security
+    - lock
+  event available:
+    - agenda
+    - calendar
+  event busy:
+    - agenda
+    - calendar
+  event note:
+    - agenda
+    - calendar
+  folder special:
+    - directory
+  live tv:
+    - monitor
+    - television
+  mms:
+    - chat
+    - message
+    - comment
+  more:
+    - tag
+    - badge
+  network check:
+    - wifi
+  network locked:
+    - wifi
+  no encryption:
+    - lock
+    - security
+  ondemand video:
+    - monitor
+    - television
+  personal video:
+    - monitor
+    - television
+  phone bluetooth speaker: []
+  phone forwarded: []
+  phone in talk: []
+  phone locked:
+    - security
+  phone missed: []
+  phone paused: []
+  power:
+    - socket
+    - plug
+  priority high:
+    - exclamation
+  rv hookup: []
+  sd card: []
+  sim card alert:
+    - exclamation
+  sms:
+    - chat
+    - comment
+    - message
+  sms failed:
+    - chat
+    - comment
+    - message
+  sync: []
+  sync disabled:
+    - refresh
+    - arrows
+  sync problem:
+    - refresh
+    - arrows
+  system update:
+    - download
+  tap and play:
+    - nfc
+    - wifi
+  time to leave: []
+  vibration:
+    - mobile
+    - phone
+  voice chat:
+    - camera
+  vpn lock:
+    - world
+    - security
+  wc:
+    - person
+    - toilet
+    - unisex
+  wifi:
+    - network
+places:
+  ac unit:
+    - snowflake
+    - freeze
+  airport shuttle:
+    - bus
+    - car
+  all inclusive:
+    - infinite
+  beach access:
+    - umbrella
+    - parasol
+  business center:
+    - suitcase
+    - briefcase
+  casino:
+    - dice
+  child care:
+    - baby
+  child friendly:
+    - baby
+  fitness center:
+    - weights
+    - workout
+  free breakfast:
+    - tea
+    - coffee
+    - drink
+  golf course:
+    - flag
+  hot tub:
+    - jacuzzi
+  kitchen:
+    - refrigerator
+    - cabinet
+  pool:
+    - water
+    - swimming
+  room service:
+    - bell
+    - concierge
+  rv hookup: []
+  smoke free:
+    - cigarette
+  smoking rooms:
+    - cigarette
+  spa:
+    - flower
+social:
+  cake:
+    - pie
+  domain: []
+  group:
+    - person
+    - user
+  group add:
+    - person
+    - user
+    - people
+  location city:
+    - building
+  mood:
+    - smiley
+    - emoji
+    - emoticon
+  mood bad:
+    - smiley
+    - emoji
+    - emoticon
+  notifications:
+    - bell
+    - ring
+  notifications active:
+    - bell
+    - ring
+  notifications none:
+    - bell
+    - ring
+  notifications off:
+    - bell
+    - ring
+  notifications paused:
+    - bell
+    - ring
+  pages: []
+  party mode: []
+  people:
+    - person
+    - user
+  people outline:
+    - person
+    - user
+  person:
+    - user
+  person add:
+    - user
+  person outline:
+    - user
+  plus one:
+    - add
+  poll:
+    - graph
+    - chart
+  public:
+    - world
+    - earth
+  school:
+    - university
+    - college
+  sentiment very dissatisfied:
+    - smiley
+    - emoji
+    - emoticon
+    - sad
+  sentiment dissatisfied:
+    - smiley
+    - emoji
+    - emoticon
+    - sad
+  sentiment neutral:
+    - smiley
+    - emoji
+    - emoticon
+  sentiment satisfied:
+    - smiley
+    - emoji
+    - emoticon
+    - happy
+  sentiment very satisfied:
+    - smiley
+    - emoji
+    - emoticon
+    - happy
+  share: []
+  whatshot:
+    - fire
+toggle:
+  check box:
+    - checkmark
+    - square
+  check box outline blank:
+    - square
+  indeterminate check box:
+    - square
+    - minus
+  radio button checked:
+    - circle
+  radio button unchecked:
+    - circle
+  star:
+    - rating
+  star border:
+    - rating
+  star half:
+    - rating

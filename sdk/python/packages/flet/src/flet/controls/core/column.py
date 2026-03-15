@@ -10,7 +10,7 @@ from flet.controls.types import CrossAxisAlignment, MainAxisAlignment, Number
 __all__ = ["Column"]
 
 
-@control("Column")
+@control("Column", categories=("layout",), tags=("vertical", "flex", "scrollable"))
 class Column(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Arranges child controls vertically, optionally aligning and spacing them within \

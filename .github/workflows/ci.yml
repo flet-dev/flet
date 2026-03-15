@@ -740,6 +740,48 @@ jobs:
             sdk/python/dist/*.tar.gz
 
   # ==============
+  # ==============
+  # Build flet-mcp
+  # ==============
+  build_flet_mcp:
+    name: Build flet-mcp Python package
+    runs-on: ubuntu-latest
+    env:
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+    needs:
+      - python_tests
+      - build_flet_package
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build MCP data
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          uv run --group mcp-build flet mcp build \
+            --examples examples \
+            --output packages/flet-mcp/src/flet_mcp/data/
+
+      - name: Build Python package
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          source "$SCRIPTS/common.sh"
+          patch_python_package_versions
+          uv build --package flet-mcp
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flet-mcp-python-distribution
+          if-no-files-found: error
+          path: |
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
+
+  # ==============
   # GitHub Release
   # ==============
   release:
@@ -756,6 +798,7 @@ jobs:
       - build_templates
       - build_flet_extensions
       - build_flet_cli_desktop
+      - build_flet_mcp
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     steps:
       - name: Detect pre-release
@@ -839,6 +882,7 @@ jobs:
             flet_secure_storage \
             flet_spinkit \
             flet_video \
-            flet_webview; do
+            flet_webview \
+            flet_mcp; do
             uv publish dist/**/${pkg}-*
           done
