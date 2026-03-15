@@ -10,7 +10,6 @@ def main(page: ft.Page):
         color = e.control.content.value
         background_container.content.value = f"{color} background color"
         background_container.bgcolor = color.lower()
-        page.update()
 
     def handle_on_hover(e: ft.Event[ft.MenuItemButton]):
         print(e)
@@ -54,16 +53,29 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Row(controls=[menubar]),
-        background_container := ft.Container(
+        ft.SafeArea(
             expand=True,
-            bgcolor=ft.Colors.WHITE,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Text(
-                value="Choose a bgcolor from the menu",
-                style=ft.TextStyle(weight=ft.FontWeight.W_500),
+            avoid_intrusions_left=False,
+            avoid_intrusions_top=False,
+            avoid_intrusions_right=False,
+            avoid_intrusions_bottom=False,
+            content=ft.Column(
+                expand=True,
+                spacing=0,
+                controls=[
+                    ft.Row(controls=[menubar]),
+                    background_container := ft.Container(
+                        expand=True,
+                        bgcolor=ft.Colors.WHITE,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            value="Choose a bgcolor from the menu",
+                            style=ft.TextStyle(weight=ft.FontWeight.W_500),
+                        ),
+                    ),
+                ],
             ),
-        ),
+        )
     )
 
 
