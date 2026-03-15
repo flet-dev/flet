@@ -268,7 +268,9 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
-@control("TextField")
+@control(
+    "TextField", categories=("input", "form"), tags=("text", "editable", "validation")
+)
 class TextField(FormFieldControl, AdaptiveControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an \

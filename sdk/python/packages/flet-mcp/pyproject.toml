@@ -1,33 +1,32 @@
 [project]
-name = "flet-cli"
+name = "flet-mcp"
 version = "0.1.0"
-description = "Flet CLI"
+description = "Flet MCP server for LLM agents"
 authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
 license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "flet",
-    "watchdog >=4.0.0",
-    "packaging >=25.0",
-    "qrcode >=7.4.2",
-    "tomli >= 1.1.0 ; python_version < '3.11'",
-    "cookiecutter >=2.6.0",
-    "binaryornot <0.5",
-    "chardet <6",
+    "fastmcp >=2.0.0",
+    "pyyaml >=6.0",
 ]
 
 [project.optional-dependencies]
-mcp = ["flet-mcp"]
+build = [
+    "markdownify >=0.14.1",
+    "griffe >=1.6.2",
+    "flet",
+    "flet-cli",
+]
 
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
-[project.entry-points."pyinstaller40"]
-hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
-
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+flet_mcp = ["data/*"]

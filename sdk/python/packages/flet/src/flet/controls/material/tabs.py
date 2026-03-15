@@ -154,7 +154,7 @@ class UnderlineTabIndicator:
     """
 
 
-@control("Tabs")
+@control("Tabs", categories=("navigation", "layout"), tags=("tabbed", "switcher"))
 class Tabs(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content categories. Tabs allow \

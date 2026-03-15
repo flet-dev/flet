@@ -94,6 +94,16 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.devices.Command.register_to(sp, "devices")
     flet_cli.commands.doctor.Command.register_to(sp, "doctor")
 
+    # Register MCP command only if flet-mcp is installed
+    try:
+        from importlib import import_module
+
+        import_module("flet_mcp")
+        mcp_cmd = import_module("flet_cli.commands.mcp")
+        mcp_cmd.Command.register_to(sp, "mcp")
+    except ImportError:
+        pass
+
     # set "run" as the default subparser
     set_default_subparser(parser, name="run", index=1)
 

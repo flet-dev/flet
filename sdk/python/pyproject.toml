@@ -23,6 +23,7 @@ dependencies = [
     "flet-geolocator",
     "flet-lottie",
     "flet-map",
+    "flet-mcp",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
@@ -41,19 +42,21 @@ flet-audio = { workspace = true }
 flet-audio-recorder = { workspace = true }
 flet-camera = { workspace = true }
 flet-charts = { workspace = true }
+flet-code-editor = { workspace = true }
+flet-color-pickers = { workspace = true }
 flet-datatable2 = { workspace = true }
 flet-flashlight = { workspace = true }
 flet-geolocator = { workspace = true }
 flet-lottie = { workspace = true }
 flet-map = { workspace = true }
+flet-mcp = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
-flet-code-editor = { workspace = true }
 mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }
-flet-color-pickers = { workspace = true }
+
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -103,6 +106,10 @@ docs = [
     "packaging >=23.0",
     { include-group = 'docs-coverage' },
 ]
+mcp-build = [
+    "markdownify >=0.14.1",
+    "griffe >=1.6.2",
+]
 all = [
     { include-group = 'dev' },
     { include-group = 'docs' },
@@ -136,11 +143,12 @@ isort = { known-first-party = [
     "flet_geolocator",
     "flet_lottie",
     "flet_map",
+    "flet_mcp",
     "flet_permission_handler",
     "flet_rive",
     "flet_secure_storage",
     "flet_video",
-    "flet_webview"
+    "flet_webview",
 ] }
 preview = true
 select = [

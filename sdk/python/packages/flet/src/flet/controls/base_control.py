@@ -62,6 +62,8 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Callable[[type[T]], type[T]]:
     """
@@ -79,6 +81,8 @@ def control(
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
@@ -90,6 +94,8 @@ def control(
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
+        categories: MCP metadata — control categories (e.g. ``("input", "form")``).
+        tags: MCP metadata — descriptive tags (e.g. ``("text", "editable")``).
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:
@@ -97,18 +103,32 @@ def control(
         - Supports `@control("WidgetName")` (with optional arguments)
         - Supports `@control("WidgetName", post_init_args=1, isolated=True)` to
             specify the number of `InitVar` arguments and isolation
+        - Supports `@control("WidgetName", categories=("input",), tags=("text",))`
+            to add MCP metadata for discovery
     """
 
     # Case 1: If used as `@control` (without parentheses)
     if isinstance(dart_widget_name, type):
         return _apply_control(
-            dart_widget_name, None, isolated, post_init_args, **dataclass_kwargs
+            dart_widget_name,
+            None,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     # Case 2: If used as `@control("custom_type", post_init_args=N, isolated=True)`
     def wrapper(cls: type[T]) -> type[T]:
         return _apply_control(
-            cls, dart_widget_name, isolated, post_init_args, **dataclass_kwargs
+            cls,
+            dart_widget_name,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     return wrapper
@@ -119,10 +139,18 @@ def _apply_control(
     type_name: Optional[str],
     isolated: Optional[bool],
     post_init_args: int,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs,
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
+
+    # Store MCP metadata for discovery by Flet MCP server
+    cls.__control_meta__ = {
+        "categories": tuple(categories) if categories else (),
+        "tags": tuple(tags) if tags else (),
+    }
 
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 

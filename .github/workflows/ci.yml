@@ -822,6 +822,52 @@ jobs:
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
 
+  # ==============
+  # Build flet-mcp
+  # ==============
+  build_flet_mcp:
+    name: Build flet-mcp Python package
+    runs-on: ubuntu-latest
+    env:
+      PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+    needs:
+      - python_tests
+      - build_flet_package
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build docs search index
+        working-directory: ${{ env.SDK_PYTHON }}/packages/flet
+        run: uv run --group docs mkdocs build
+
+      - name: Build MCP data
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          uv run --group mcp-build flet mcp build \
+            --examples examples \
+            --docs packages/flet/site/search/search_index.json \
+            --output packages/flet-mcp/src/flet_mcp/data/
+
+      - name: Build Python package
+        working-directory: ${{ env.SDK_PYTHON }}
+        run: |
+          source "$SCRIPTS/common.sh"
+          patch_python_package_versions
+          uv build --package flet-mcp
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flet-mcp-python-distribution
+          if-no-files-found: error
+          path: |
+            sdk/python/dist/*.whl
+            sdk/python/dist/*.tar.gz
+
   # ===============================
   # Publish Python packages to PyPI
   # ===============================
@@ -838,6 +884,7 @@ jobs:
       - build_linux
       - build_web
       - build_flet_extensions
+      - build_flet_mcp
     steps:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
@@ -878,7 +925,8 @@ jobs:
             flet_rive \
             flet_secure_storage \
             flet_video \
-            flet_webview; do
+            flet_webview \
+            flet_mcp; do
             uv publish dist/**/${pkg}-*
           done
 
