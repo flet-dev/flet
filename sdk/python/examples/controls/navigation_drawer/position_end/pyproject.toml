@@ -1,0 +1,26 @@
+[project]
+name = "navigation-drawer-position-end"
+version = "1.0.0"
+description = "Demonstrates an end-position NavigationDrawer with destination selection handling."
+requires-python = ">=3.10"
+keywords = ["navigation drawer", "drawer", "navigation", "end position"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/NavigationDrawer"]
+
+[tool.flet.metadata]
+title = "End Position"
+controls = ["NavigationDrawer", "NavigationDrawerDestination", "Button", "SafeArea", "Page"]
+layout_pattern = "drawer-navigation"
+complexity = "basic"
+features = ["end drawer", "destination callbacks", "open/close actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

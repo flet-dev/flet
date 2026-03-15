@@ -35,10 +35,13 @@ def main(page: ft.Page):
             ),
         ],
     )
+
     page.add(
-        ft.Button(
-            content="Show drawer",
-            on_click=handle_show_drawer,
+        ft.SafeArea(
+            content=ft.Button(
+                content="Show drawer",
+                on_click=handle_show_drawer,
+            )
         )
     )
 

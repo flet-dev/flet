@@ -2,8 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
-from examples.controls.navigation_drawer import position_end, position_start
+from examples.controls.navigation_drawer.position_end.main import main as position_end
+from examples.controls.navigation_drawer.position_start.main import (
+    main as position_start,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -39,7 +41,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": position_end.main}],
+    [{"flet_app_main": position_end}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -87,7 +89,7 @@ async def test_position_end(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": position_start.main}],
+    [{"flet_app_main": position_start}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

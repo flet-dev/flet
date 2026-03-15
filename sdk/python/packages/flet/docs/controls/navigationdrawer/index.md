@@ -15,7 +15,7 @@ example_images: ../../test-images/examples/material/golden/macos/navigation_draw
 ### Start-aligned drawer
 
 ```python
---8<-- "{{ examples }}/position_start.py"
+--8<-- "{{ examples }}/position_start/main.py"
 ```
 
 {{ image(example_images + "/position_start.gif", alt="position-start", width="80%") }}
@@ -24,7 +24,7 @@ example_images: ../../test-images/examples/material/golden/macos/navigation_draw
 ### End-aligned drawer
 
 ```python
---8<-- "{{ examples }}/position_end.py"
+--8<-- "{{ examples }}/position_end/main.py"
 ```
 
 {{ image(example_images + "/position_end.gif", alt="position-end", width="80%") }}
