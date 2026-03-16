@@ -59,6 +59,7 @@ Ensure each runnable example is a standalone project containing:
 - Complexity: `basic` unless logic/state/architecture is non-trivial.
 - Features: notable behaviors only (click handling, selection, async loading, drag-and-drop, etc.).
 - If an example supports exporting or downloading output, include `"save to file"` in `[tool.flet.metadata].features`.
+- If an example module contains `async def` handlers or async control flow, append `"async"` to `keywords`.
 
 
 5. Infer dependencies from imports.

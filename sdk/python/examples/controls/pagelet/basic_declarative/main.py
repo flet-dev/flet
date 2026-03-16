@@ -69,7 +69,13 @@ def App():
         ),
         floating_action_button_location=ft.FloatingActionButtonLocation.CENTER_DOCKED,
     )
-    return p
+    return ft.SafeArea(content=p)
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.title = "Pagelet example"
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

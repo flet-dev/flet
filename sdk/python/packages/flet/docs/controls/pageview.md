@@ -10,13 +10,13 @@ examples: ../../examples/controls/page_view
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 ### Programmatic Swipes
 
 ```python
---8<-- "{{ examples }}/programmatic_swipe.py"
+--8<-- "{{ examples }}/programmatic_swipe/main.py"
 ```
 
 
