@@ -70,13 +70,15 @@ Its value is determined in the following order of precedence:
 
 #### Supported value forms
 
-CLI configuration accepts repeated `<key>=<value>` entries.
+/// tab | `flet build`
+Accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
 - any other value is treated as a string
-
-In the TOML configuration, both simple and complex structures are supported:
+///
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
 
 - string
 - boolean
@@ -84,8 +86,9 @@ In the TOML configuration, both simple and complex structures are supported:
 - array of strings
 - array of booleans
 - array of dictionaries (including dictionaries that contain arrays)
+///
 
-Numbers and null values are not supported in `Info.plist` rendering for this setting.
+Numbers are not yet supported.
 
 #### Example
 
@@ -175,8 +178,9 @@ example above will be translated accordingly into this:
 
 ### Entitlements
 
-Entitlements are boolean key-value pairs that grant an executable permission
-to use a service or technology. Supported entitlements are defined in the
+Entitlements are property-list key-value pairs that grant an executable permission
+to use a service or technology. The supported value type depends on the entitlement
+key defined in the
 [Apple Developer Entitlements Reference](https://developer.apple.com/documentation/bundleresources/entitlements).
 
 Entitlements are written to `macos/Runner/DebugProfile.entitlements` and
@@ -190,6 +194,7 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.macos.entitlement]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. Defaults:
+
    ```toml
     [tool.flet.macos.entitlement]
     "com.apple.security.app-sandbox" = false
@@ -199,22 +204,58 @@ Its value is determined in the following order of precedence:
     "com.apple.security.files.user-selected.read-write" = true
     ```
 
-CLI values are `true` or `false` (case-insensitive). In `pyproject.toml`, use
-`true`/`false` as required by TOML.
+#### Supported value forms
+
+/// tab | `flet build`
+Accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- TOML array literals, for example `["group.example.one", "group.example.two"]`
+- TOML inline tables, for example `{ "com.apple.mail" = ["compose"] }`
+- any other value is treated as a string
+///
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of dictionaries (including dictionaries that contain arrays)
+///
+
+Numbers are not yet supported.
 
 #### Example
 
 /// tab | `flet build`
 ```bash
 flet build macos \
-  --macos-entitlements com.apple.security.network.client=True com.apple.security.app-sandbox=False
+  --macos-entitlements com.apple.security.network.client=true \
+  --macos-entitlements com.apple.developer.ubiquity-kvstore-identifier=ABCDE12345.dev.example.myapp \
+  --macos-entitlements 'com.apple.security.application-groups=["group.dev.example.myapp", "group.dev.example.shared"]' \
+  --macos-entitlements 'ExampleBooleanArray=[true, false]' \
+  --macos-entitlements 'com.apple.security.scripting-targets={ "com.apple.mail" = ["compose", "send"] }' \
+  --macos-entitlements 'ExampleArrayOfDictionaries=[{ Name = "alpha", Enabled = true }, { Name = "beta", Enabled = false }]'
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.macos.entitlement]
 "com.apple.security.network.client" = true
-"com.apple.security.app-sandbox" = false
+"com.apple.developer.ubiquity-kvstore-identifier" = "ABCDE12345.dev.example.myapp"
+"com.apple.security.application-groups" = [
+  "group.dev.example.myapp",
+  "group.dev.example.shared",
+]
+ExampleBooleanArray = [true, false]
+"com.apple.security.scripting-targets" = { "com.apple.mail" = ["compose", "send"] }
+ExampleArrayOfDictionaries = [
+  { Name = "alpha", Enabled = true },
+  { Name = "beta", Enabled = false },
+]
 ```
 ///
 
@@ -227,7 +268,40 @@ will be translated accordingly into this:
 ```xml
 <key>com.apple.security.network.client</key>
 <true />
-<key>com.apple.security.app-sandbox</key>
-<false />
+<key>com.apple.developer.ubiquity-kvstore-identifier</key>
+<string>ABCDE12345.dev.example.myapp</string>
+<key>com.apple.security.application-groups</key>
+<array>
+    <string>group.dev.example.myapp</string>
+    <string>group.dev.example.shared</string>
+</array>
+<key>ExampleBooleanArray</key>
+<array>
+    <true />
+    <false />
+</array>
+<key>com.apple.security.scripting-targets</key>
+<dict>
+    <key>com.apple.mail</key>
+    <array>
+        <string>compose</string>
+        <string>send</string>
+    </array>
+</dict>
+<key>ExampleArrayOfDictionaries</key>
+<array>
+    <dict>
+        <key>Name</key>
+        <string>alpha</string>
+        <key>Enabled</key>
+        <true />
+    </dict>
+    <dict>
+        <key>Name</key>
+        <string>beta</string>
+        <key>Enabled</key>
+        <false />
+    </dict>
+</array>
 ```
 ///

@@ -335,7 +335,8 @@ Its value is determined in the following order of precedence:
 
 ##### Supported value forms
 
-In the TOML configuration, the following value forms are supported:
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
 
 - string
 - boolean
@@ -344,7 +345,8 @@ In the TOML configuration, the following value forms are supported:
 - array of booleans
 - array of dictionaries (including dictionaries that contain arrays)
 
-Numbers and null values are not supported in `exportOptions.plist` rendering for this setting.
+Numbers are not yet supported.
+///
 
 ##### Example
 
@@ -478,13 +480,15 @@ Its value is determined in the following order of precedence:
 
 #### Supported value forms
 
-CLI configuration accepts repeated `<key>=<value>` entries.
+/// tab | `flet build`
+Accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
 - any other value is treated as a string
-
-In the TOML configuration, both simple and complex structures are supported:
+///
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
 
 - string
 - boolean
@@ -492,22 +496,23 @@ In the TOML configuration, both simple and complex structures are supported:
 - array of strings
 - array of booleans
 - array of dictionaries (including dictionaries that contain arrays)
+///
 
-Numbers and null values are not supported in `Info.plist` rendering for this setting.
+Numbers are not yet supported.
 
 ##### Example
 
 /// tab | `flet build`
 ```bash
 flet build ipa \
-  --info-plist NSCameraUsageDescription="This app uses needs camera access." \
+  --info-plist NSCameraUsageDescription="This app needs camera access." \
   --info-plist UIFileSharingEnabled=true
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.ios.info]
-NSCameraUsageDescription = "This app uses needs camera access."
+NSCameraUsageDescription = "This app needs camera access."
 UIFileSharingEnabled = true
 LSApplicationQueriesSchemes = ["myapp", "myapp-beta"]
 FeatureFlags = [true, false]
