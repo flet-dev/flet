@@ -34,7 +34,7 @@ class SharedPreferences(Service):
 
         Raises:
             ValueError: If `value` is of an unsupported type
-                `(`str`, `int`, `float`, `bool`, and `list[str]`)`
+                (`str`, `int`, `float`, `bool`, and `list[str]`).
         """
         if not (
             isinstance(value, (str, int, float, bool))

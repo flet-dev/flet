@@ -53,7 +53,7 @@ def main(page: ft.Page):
     def open_settings(e):
         result = subprocess.run(
             ["am", "start", "-n", "com.android.settings/.Settings", "--user", "0"],
-	        shell=False, # default
+            shell=False, # default
             capture_output=True,
             text=True,
         )

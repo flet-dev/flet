@@ -23,6 +23,7 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
@@ -907,7 +908,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_permissions:
             i = p.find("=")
             if i > -1:
-                android_permissions[p[:i]] = p[i + 1 :].strip().lower() == "true"
+                try:
+                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android permission option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
@@ -920,7 +928,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_features:
             i = p.find("=")
             if i > -1:
-                android_features[p[:i]] = p[i + 1 :].strip().lower() == "true"
+                try:
+                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android feature option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android feature option: {p}")
 
