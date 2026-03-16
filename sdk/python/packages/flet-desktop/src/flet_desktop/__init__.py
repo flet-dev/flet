@@ -234,7 +234,9 @@ def ensure_client_cached():
 
     logger.info(f"Extracting Flet client from {archive_path} to {temp_extract}")
     try:
-        if archive_path.endswith(".zip"):
+        # Use the artifact name (not archive_path which may have a random suffix
+        # from __download_flet_client) to determine the archive format.
+        if artifact.endswith(".zip"):
             with zipfile.ZipFile(archive_path, "r") as zf:
                 safe_zip_extractall(zf, str(temp_extract))
         else:
