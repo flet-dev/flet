@@ -14,7 +14,8 @@ dependencies = [
     "tomli >= 1.1.0 ; python_version < '3.11'",
     "cookiecutter >=2.6.0",
     "binaryornot <0.5",
-    "chardet <6"
+    "chardet <6",
+    "requests"
 ]
 
 [project.urls]

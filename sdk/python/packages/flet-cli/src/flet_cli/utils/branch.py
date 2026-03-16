@@ -111,13 +111,19 @@ def get_github_branches(
     return branches
 
 
-def get_latest_version_branch(branch_list: list[str]) -> Optional[str]:
+def get_latest_version_branch(
+    branch_list: list[str], 
+    target_version: Optional[str] = None
+) -> Optional[str]:
     """
     Filters the branch list to strictly match 'x.x.x' format (e.g., 0.83.0),
     and returns the branch with the highest version number.
+    If target_version is provided, it returns the highest version branch that
+    is less than or equal to the target_version.
 
     Args:
         branch_list (list): A list of branch name strings.
+        target_version (str, optional): The maximum version allowed (e.g., "0.83.0").
     Returns:
         str: The branch name with the highest version number, or None if no
         valid branches are found.
@@ -125,14 +131,26 @@ def get_latest_version_branch(branch_list: list[str]) -> Optional[str]:
     # Define a strict Regex pattern for 'x.x.x' where x is one or more digits
     pattern = re.compile(r"^\d+\.\d+\.\d+$")
 
+    def version_key(version_str: str) -> tuple[int, ...]:
+        # Extracts digits from the version string and converts to a tuple of ints
+        # Using isdigit() prevents ValueError if target_version contains text (e.g., '0.83.dev0')
+        return tuple(int(x) for x in version_str.split(".") if x.isdigit())
+
     valid_branches = [branch for branch in branch_list if pattern.match(branch)]
 
-    # Return None if the filtered list is empty
     if not valid_branches:
         return None
 
-    def version_key(branch_name):
-        return tuple(map(int, branch_name.split(".")))
+    if target_version:
+        target_key = version_key(target_version)
+        valid_branches = [
+            branch for branch in valid_branches 
+            if version_key(branch) <= target_key
+        ]
+
+    # Return None if the list becomes empty after applying the target_version limit
+    if not valid_branches:
+        return None
 
     latest_branch = max(valid_branches, key=version_key)
 

@@ -1138,7 +1138,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 results = get_github_branches(owner=owner, repo=repo)
 
                 if results and base_version not in results:
-                    latest_branch = get_latest_version_branch(results)
+                    latest_branch = get_latest_version_branch(results, base_version)
 
                     if latest_branch:
                         console.log(
