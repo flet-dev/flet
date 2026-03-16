@@ -3,6 +3,7 @@ import ctypes
 import ctypes.util
 import logging
 import os
+import shutil
 import signal
 import stat
 import subprocess
@@ -22,6 +23,7 @@ from flet.utils import (
     is_windows,
     random_string,
     safe_tar_extractall,
+    safe_zip_extractall,
 )
 
 logger = logging.getLogger(flet_desktop.__name__)
@@ -130,6 +132,10 @@ def __get_linux_distro_id():
             best = distro_id
     if best is None:
         best = _GLIBC_DISTRO_TABLE[0][1]  # oldest as last resort
+        logger.warning(
+            f"Could not detect glibc version (got {sys_glibc}), "
+            f"falling back to {best}. Set FLET_LINUX_DISTRO to override."
+        )
     return best
 
 
@@ -189,12 +195,9 @@ def __download_flet_client(file_name):
     flet_url = os.environ.get("FLET_CLIENT_URL", flet_url)
     logger.info(f"Downloading Flet v{ver} from {flet_url}")
     print(f"Preparing Flet v{ver} for the first use. This is a one-time operation...")
-    # Download to a temp name first, then rename for atomicity.
-    temp_arch = Path(tempfile.gettempdir()).joinpath(f"{file_name}.{random_string(8)}")
+    temp_arch = Path(tempfile.gettempdir()).joinpath(f"{file_name}.{random_string(10)}")
     urllib.request.urlretrieve(flet_url, str(temp_arch))
-    final_path = Path(tempfile.gettempdir()).joinpath(file_name)
-    temp_arch.rename(final_path)
-    return str(final_path)
+    return str(temp_arch)
 
 
 def ensure_client_cached():
@@ -223,15 +226,25 @@ def ensure_client_cached():
     else:
         archive_path = __download_flet_client(artifact)
 
-    logger.info(f"Extracting Flet client from {archive_path} to {cache_dir}")
-    cache_dir.mkdir(parents=True, exist_ok=True)
+    # Extract to a temp directory first, then atomically rename to the cache
+    # directory.  This prevents a partially extracted cache from being treated
+    # as valid on a subsequent run.
+    temp_extract = cache_dir.parent / f"{cache_dir.name}.{random_string(8)}"
+    temp_extract.mkdir(parents=True, exist_ok=True)
 
-    if archive_path.endswith(".zip"):
-        with zipfile.ZipFile(archive_path, "r") as zf:
-            zf.extractall(str(cache_dir))
-    else:
-        with tarfile.open(archive_path, "r:gz") as tar_arch:
-            safe_tar_extractall(tar_arch, str(cache_dir))
+    logger.info(f"Extracting Flet client from {archive_path} to {temp_extract}")
+    try:
+        if archive_path.endswith(".zip"):
+            with zipfile.ZipFile(archive_path, "r") as zf:
+                safe_zip_extractall(zf, str(temp_extract))
+        else:
+            with tarfile.open(archive_path, "r:gz") as tar_arch:
+                safe_tar_extractall(tar_arch, str(temp_extract))
+
+        temp_extract.rename(cache_dir)
+    except Exception:
+        shutil.rmtree(temp_extract, ignore_errors=True)
+        raise
 
     return cache_dir
 
@@ -354,8 +367,15 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         if not flet_path:
             flet_view_path = os.environ.get("FLET_VIEW_PATH")
             if flet_view_path and os.path.exists(flet_view_path):
-                logger.info(f"Flet View found via FLET_VIEW_PATH: {flet_view_path}")
-                flet_path = os.path.join(flet_view_path, "flet.exe")
+                exe_path = os.path.join(flet_view_path, "flet.exe")
+                if os.path.isfile(exe_path):
+                    logger.info(f"Flet View found via FLET_VIEW_PATH: {flet_view_path}")
+                    flet_path = exe_path
+                else:
+                    logger.warning(
+                        f"FLET_VIEW_PATH set to {flet_view_path} "
+                        f"but flet.exe not found there"
+                    )
 
         # 3. Use cached or downloaded client
         if not flet_path:
@@ -411,9 +431,18 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         if not app_path:
             flet_view_path = os.environ.get("FLET_VIEW_PATH")
             if flet_view_path:
-                logger.info(f"Flet View is set via FLET_VIEW_PATH: {flet_view_path}")
-                app_path = str(Path(flet_view_path).joinpath("flet"))
-            else:
+                exe_path = str(Path(flet_view_path).joinpath("flet"))
+                if os.path.isfile(exe_path):
+                    logger.info(
+                        f"Flet View is set via FLET_VIEW_PATH: {flet_view_path}"
+                    )
+                    app_path = exe_path
+                else:
+                    logger.warning(
+                        f"FLET_VIEW_PATH set to {flet_view_path} "
+                        f"but flet executable not found there"
+                    )
+            if not app_path:
                 # 3. Use cached or downloaded client
                 cache_dir = ensure_client_cached()
                 app_path = str(cache_dir.joinpath("flet", "flet"))
