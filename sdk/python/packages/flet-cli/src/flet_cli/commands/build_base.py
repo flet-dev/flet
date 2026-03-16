@@ -1019,7 +1019,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
             "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+                self.options.no_cdn
+                or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
             ),
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
@@ -1054,9 +1055,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
-                    else [target_arch]
-                    if isinstance(target_arch, str)
-                    else []
+                    else [target_arch] if isinstance(target_arch, str) else []
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
@@ -1111,7 +1110,44 @@ class BaseBuildCommand(BaseFlutterCommand):
             "tool.flet.template.ref"
         )
         if not template_ref:
-            template_ref = version.Version(flet.version.flet_version).base_version
+            from flet_cli.utils.branch import (
+                get_github_branches,
+                get_latest_version_branch,
+                is_github_url,
+                get_owner_and_repo_from_url,
+            )
+
+            base_version = version.Version(flet.version.flet_version).base_version
+            template_ref = base_version
+
+            if is_github_url(template_url):
+                self.update_status(
+                    "[bold blue]Obtaining the appropriate build template branch from "
+                    f"{template_url}..."
+                )
+
+                parsed_repo = get_owner_and_repo_from_url(template_url)
+                if not parsed_repo:
+                    self.cleanup(
+                        1,
+                        "Unable to parse GitHub repository owner and name from "
+                        f"template URL: {template_url}",
+                    )
+                owner, repo = parsed_repo
+
+                results = get_github_branches(owner=owner, repo=repo)
+
+                if results and base_version not in results:
+                    latest_branch = get_latest_version_branch(results)
+
+                    if latest_branch:
+                        console.log(
+                            f"NOTICE: No exact match for Flet version {base_version} found in "
+                            "existing branches. Falling back to the latest compatible "
+                            f'template branch "{latest_branch}".'
+                        )
+                        template_ref = latest_branch
+
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1330,9 +1366,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("tool.flet.android.adaptive_icon_background")
         )
         if adaptive_icon_background:
-            pubspec["flutter_launcher_icons"]["adaptive_icon_background"] = (
-                adaptive_icon_background
-            )
+            pubspec["flutter_launcher_icons"][
+                "adaptive_icon_background"
+            ] = adaptive_icon_background
 
         # check if pubspec changed
         hash.update(Path(pubspec_origin_path).stat().st_mtime)
@@ -1540,18 +1576,18 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         if splash_dark_color:
             pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-            pubspec["flutter_native_splash"]["android_12"]["color_dark"] = (
-                splash_dark_color
-            )
+            pubspec["flutter_native_splash"]["android_12"][
+                "color_dark"
+            ] = splash_dark_color
 
         splash_icon_bgcolor = self.get_pyproject(
             f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
         ) or self.get_pyproject("tool.flet.splash.icon_bgcolor")
 
         if splash_icon_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"]["icon_background_color"] = (
-                splash_icon_bgcolor
-            )
+            pubspec["flutter_native_splash"]["android_12"][
+                "icon_background_color"
+            ] = splash_icon_bgcolor
 
         splash_icon_dark_bgcolor = self.get_pyproject(
             f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
