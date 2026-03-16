@@ -46,6 +46,28 @@ def safe_tar_extractall(tar, path=".", members=None, *, numeric_owner=False):
     tar.extractall(path, members, numeric_owner=numeric_owner)
 
 
+def safe_zip_extractall(zf, path="."):
+    """
+    Extracts a zip archive after validating member paths.
+
+    The function prevents path traversal by ensuring each archive member resolves
+    within the destination directory.
+
+    Args:
+        zf: Open `zipfile.ZipFile` object.
+        path: Destination directory.
+
+    Raises:
+        RuntimeError: If a member attempts to escape the destination directory.
+    """
+    for member in zf.namelist():
+        member_path = os.path.join(path, member)
+        if not is_within_directory(path, member_path):
+            raise RuntimeError("Attempted Path Traversal in Zip File")
+
+    zf.extractall(path)
+
+
 def copy_tree(src, dst, ignore=None):
     """
     Copies a directory tree into `dst`.
