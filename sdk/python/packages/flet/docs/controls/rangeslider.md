@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/range_slider
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", alt="basic", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/range_slider
 ### RangeSlider with events
 
 ```python
---8<-- "{{ examples }}/handling_change_events.py"
+--8<-- "{{ examples }}/handling_change_events/main.py"
 ```
 
 {{ image(example_images + "/handling_events.gif", alt="handling_events", width="80%") }}

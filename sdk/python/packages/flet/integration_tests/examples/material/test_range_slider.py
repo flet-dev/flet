@@ -2,8 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
-from examples.controls.range_slider import basic, handling_change_events
+from examples.controls.range_slider.basic.main import main as basic
+from examples.controls.range_slider.handling_change_events.main import (
+    main as handling_change_events,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -23,7 +25,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": basic.main}],
+    [{"flet_app_main": basic}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -64,7 +66,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": handling_change_events.main}],
+    [{"flet_app_main": handling_change_events}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

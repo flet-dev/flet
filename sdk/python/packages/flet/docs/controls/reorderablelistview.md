@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/reorderable_list_v
 ### Horizontal and Vertical
 
 ```python
---8<-- "{{ examples }}/horizontal_and_vertical.py"
+--8<-- "{{ examples }}/horizontal_and_vertical/main.py"
 ```
 
 {{ image(example_images + "/horizontal_and_vertical.png", alt="horizontal-and-vertical", width="80%") }}
