@@ -367,7 +367,7 @@ fullSizeImageURL = "https://example.com/icon512.png"
 /// details | Template translation
     type: example
 In the [`ios/exportOptions.plist`](index.md#build-template),
-the `pyproject.toml` example above will be translated accordingly into this:
+the example above will be translated accordingly into this:
 
 ```xml
 <key>uploadSymbols</key>
@@ -513,7 +513,13 @@ flet build ipa \
   --info-plist NSCameraUsageDescription="This app needs camera access." \
   --info-plist UIFileSharingEnabled=true \
   --info-plist ExampleInteger=32 \
-  --info-plist ExampleReal=0.5
+  --info-plist ExampleReal=0.5 \
+  --info-plist 'LSApplicationQueriesSchemes=["myapp", "myapp-beta"]' \
+  --info-plist 'FeatureFlags=[true, false]' \
+  --info-plist 'RetryDelays=[1, 2, 3]' \
+  --info-plist 'OpacitySteps=[0.25, 0.5, 0.75]' \
+  --info-plist 'NSAppTransportSecurity={ NSAllowsArbitraryLoads = false }' \
+  --info-plist 'CFBundleURLTypes=[{ CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] }, { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] }]'
 ```
 ///
 /// tab | `pyproject.toml`
@@ -525,23 +531,19 @@ ExampleInteger = 32
 ExampleReal = 0.5
 LSApplicationQueriesSchemes = ["myapp", "myapp-beta"]
 FeatureFlags = [true, false]
+RetryDelays = [1, 2, 3]
+OpacitySteps = [0.25, 0.5, 0.75]
 NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
-
-[[tool.flet.ios.info.CFBundleURLTypes]]
-CFBundleTypeRole = "Editor"
-CFBundleURLName = "example.com"
-CFBundleURLSchemes = ["myapp"]
-
-[[tool.flet.ios.info.CFBundleURLTypes]]
-CFBundleTypeRole = "Viewer"
-CFBundleURLName = "example.org"
-CFBundleURLSchemes = ["myapp-beta"]
+CFBundleURLTypes = [
+  { CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] },
+  { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] },
+]
 ```
 ///
 
 /// details | Template translation
     type: example
-In the [`ios/Runner/Info.plist`](index.md#build-template), the `pyproject.toml`
+In the [`ios/Runner/Info.plist`](index.md#build-template), the
 example above will be translated accordingly into this:
 
 ```xml
@@ -549,7 +551,7 @@ example above will be translated accordingly into this:
 	<dict>
 
         <key>NSCameraUsageDescription</key>
-        <string>This app uses needs camera access.</string>
+        <string>This app needs camera access.</string>
 
         <key>UIFileSharingEnabled</key>
         <true/>
@@ -570,6 +572,20 @@ example above will be translated accordingly into this:
         <array>
             <true/>
             <false/>
+        </array>
+
+        <key>RetryDelays</key>
+        <array>
+            <integer>1</integer>
+            <integer>2</integer>
+            <integer>3</integer>
+        </array>
+
+        <key>OpacitySteps</key>
+        <array>
+            <real>0.25</real>
+            <real>0.5</real>
+            <real>0.75</real>
         </array>
 
         <key>NSAppTransportSecurity</key>
