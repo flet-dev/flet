@@ -435,8 +435,9 @@ class Session:
             control: Control that handled the event, or `None`.
         """
         # call auto-update
-        if context.auto_update_enabled():
+        if context.auto_update_enabled() and not context.was_update_called():
             await self.__auto_update(control)
+        context.reset_update_called()
 
         # unregister unreferenced services
         self.page._services.unregister_services()
