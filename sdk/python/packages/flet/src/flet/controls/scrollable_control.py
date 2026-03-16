@@ -143,9 +143,9 @@ class Scrollbar:
 
     If `None`, the default value is platform dependent:
     `4.0` pixels on Android
-    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]);
-    `3.0` pixels on iOS ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
-    `8.0` pixels on the remaining platforms.
+    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]) and iOS
+    ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
+    [`ScrollbarTheme.thickness`][flet.] on the remaining platforms.
     """
 
     radius: Optional[Number] = None
@@ -184,8 +184,8 @@ class Scrollbar:
 
     Note:
         [`ScrollbarOrientation.TOP`][flet.] and [`ScrollbarOrientation.BOTTOM`][flet.]
-        can only be used with a vertical scroll; [`ScrollbarOrientation.LEFT`][flet.]
-        and [`ScrollbarOrientation.RIGHT`][flet.] can only be used with a horizontal
+        can only be used with a horizontal scroll; [`ScrollbarOrientation.LEFT`][flet.]
+        and [`ScrollbarOrientation.RIGHT`][flet.] can only be used with a vertical
         scroll.
     """
 

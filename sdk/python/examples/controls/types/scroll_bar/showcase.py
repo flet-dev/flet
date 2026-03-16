@@ -124,6 +124,7 @@ def main(page: ft.Page):
                             orientation := ft.Dropdown(
                                 label="orientation",
                                 value="none",
+                                on_select=update_preview,
                                 options=[ft.DropdownOption("none", "None (auto side)")]
                                 + [
                                     ft.DropdownOption(o.value, o.name)
