@@ -5,7 +5,6 @@ uv tool install pypi-cleanup
 uvx pypi-cleanup -u flet -p flet -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-cli -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-desktop -y -r $VER --do-it
-uvx pypi-cleanup -u flet -p flet-desktop-light -y -r $VER --do-it
 uvx pypi-cleanup -u flet -p flet-web -y -r $VER --do-it
 
 # modules

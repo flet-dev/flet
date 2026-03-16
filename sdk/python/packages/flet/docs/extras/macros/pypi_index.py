@@ -57,7 +57,6 @@ _ALL_VERSIONS_PROJECTS = {
     "flet",
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
 }
 

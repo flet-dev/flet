@@ -1,12 +1,17 @@
 import asyncio
+import ctypes
+import ctypes.util
 import logging
 import os
+import shutil
 import signal
 import stat
 import subprocess
+import sys
 import tarfile
 import tempfile
-from importlib import metadata
+import urllib.request
+import zipfile
 from pathlib import Path
 
 import flet_desktop
@@ -18,9 +23,21 @@ from flet.utils import (
     is_windows,
     random_string,
     safe_tar_extractall,
+    safe_zip_extractall,
 )
 
 logger = logging.getLogger(flet_desktop.__name__)
+
+# Supported Linux build targets ordered by glibc version.
+# Each entry maps a minimum glibc (major, minor) to a distro_id used in
+# release artifact filenames.
+_GLIBC_DISTRO_TABLE = [
+    ((2, 28), "debian10"),
+    ((2, 31), "ubuntu20.04"),
+    ((2, 35), "ubuntu22.04"),
+    ((2, 36), "debian12"),
+    ((2, 39), "ubuntu24.04"),
+]
 
 
 def get_package_bin_dir():
@@ -28,27 +45,120 @@ def get_package_bin_dir():
     Return the directory that contains bundled desktop runtime artifacts.
 
     The directory may contain platform-specific executables or compressed
-    archives used to provision the desktop client at runtime.
+    archives used to provision the desktop client at runtime.  When the
+    package is installed without bundled binaries the directory will be
+    empty and the download path is used instead.
     """
 
     return str(Path(__file__).parent.joinpath("app"))
 
 
-def __get_desktop_distribution_name():
+def __get_desktop_flavor():
     """
-    Return the installed distribution name that provides `flet_desktop`.
+    Return the desktop client flavor to use: ``"full"`` or ``"light"``.
 
-    This allows storage paths to stay unique when package variants are used
-    (for example, architecture-specific distributions). Falls back to
-    `"flet-desktop"` when a matching distribution cannot be discovered.
+    Resolution order:
+
+    1. ``FLET_DESKTOP_FLAVOR`` environment variable.
+    2. ``[tool.flet].desktop_flavor`` in the project's ``pyproject.toml``.
+    3. Default: ``"light"`` on Linux, ``"full"`` elsewhere.
     """
 
-    # Prefer the actual distribution providing the flet_desktop module.
-    dist_names = metadata.packages_distributions().get("flet_desktop", [])
-    for name in dist_names:
-        if name.startswith("flet-desktop"):
-            return name
-    return "flet-desktop"
+    env_flavor = os.environ.get("FLET_DESKTOP_FLAVOR", "").strip().lower()
+    if env_flavor in ("full", "light"):
+        return env_flavor
+
+    # Try reading from pyproject.toml in the current working directory.
+    try:
+        if sys.version_info >= (3, 11):
+            import tomllib
+        else:
+            import tomli as tomllib  # type: ignore[no-redef]
+
+        pyproject_path = Path(os.getcwd()) / "pyproject.toml"
+        if pyproject_path.is_file():
+            with pyproject_path.open("rb") as f:
+                data = tomllib.load(f)
+            flavor = data.get("tool", {}).get("flet", {}).get("desktop_flavor", "")
+            if isinstance(flavor, str) and flavor.strip().lower() in (
+                "full",
+                "light",
+            ):
+                return flavor.strip().lower()
+    except Exception:
+        pass
+
+    return "light" if is_linux() else "full"
+
+
+def __get_system_glibc_version():
+    """
+    Return the system glibc version as a ``(major, minor)`` tuple.
+
+    Falls back to ``(0, 0)`` when detection fails.
+    """
+
+    try:
+        libc_name = ctypes.util.find_library("c")
+        if not libc_name:
+            return (0, 0)
+        libc = ctypes.CDLL(libc_name)
+        gnu_get_libc_version = libc.gnu_get_libc_version
+        gnu_get_libc_version.restype = ctypes.c_char_p
+        ver_str = gnu_get_libc_version().decode("ascii")
+        parts = ver_str.split(".")
+        return (int(parts[0]), int(parts[1]))
+    except Exception:
+        return (0, 0)
+
+
+def __get_linux_distro_id():
+    """
+    Return the distro id to use for downloading the Linux binary archive.
+
+    Uses glibc version detection to pick the best matching build target
+    (highest glibc requirement that is <= system glibc).  Can be
+    overridden via the ``FLET_LINUX_DISTRO`` environment variable.
+    """
+
+    override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
+    if override:
+        return override
+
+    sys_glibc = __get_system_glibc_version()
+    best = None
+    for required_glibc, distro_id in _GLIBC_DISTRO_TABLE:
+        if sys_glibc >= required_glibc:
+            best = distro_id
+    if best is None:
+        best = _GLIBC_DISTRO_TABLE[0][1]  # oldest as last resort
+        logger.warning(
+            f"Could not detect glibc version (got {sys_glibc}), "
+            f"falling back to {best}. Set FLET_LINUX_DISTRO to override."
+        )
+    return best
+
+
+def __get_artifact_filename():
+    """
+    Return the release artifact filename for the current platform.
+
+    Windows: ``flet-windows.zip``
+    macOS:   ``flet-macos.tar.gz``
+    Linux:   ``flet-linux-{distro}[-light]-{arch}.tar.gz``
+    """
+
+    if is_windows():
+        return "flet-windows.zip"
+    if is_macos():
+        return "flet-macos.tar.gz"
+    # Linux
+    distro = __get_linux_distro_id()
+    arch = get_arch()
+    flavor = __get_desktop_flavor()
+    if flavor == "light":
+        return f"flet-linux-{distro}-light-{arch}.tar.gz"
+    return f"flet-linux-{distro}-{arch}.tar.gz"
 
 
 def __get_client_storage_dir():
@@ -56,13 +166,89 @@ def __get_client_storage_dir():
     Return a versioned local directory used to store unpacked desktop client files.
 
     The path format is:
-    `~/.flet/client/<distribution-name>-<flet-desktop-version>`.
+    ``~/.flet/client/flet-desktop-{flavor}-{version}``.
     """
 
-    dist_name = __get_desktop_distribution_name()
+    flavor = __get_desktop_flavor()
     return Path.home().joinpath(
-        ".flet", "client", f"{dist_name}-{flet_desktop.version.version}"
+        ".flet", "client", f"flet-desktop-{flavor}-{flet_desktop.version.version}"
     )
+
+
+def __download_flet_client(file_name):
+    """
+    Download a Flet client archive from GitHub Releases.
+
+    The download URL is constructed from the version embedded in
+    ``flet_desktop.version.version``.  It can be overridden entirely
+    via the ``FLET_CLIENT_URL`` environment variable.
+
+    Args:
+        file_name: Archive filename to download (e.g. ``flet-macos.tar.gz``).
+
+    Returns:
+        Local path to the downloaded archive.
+    """
+
+    ver = flet_desktop.version.version
+    flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
+    flet_url = os.environ.get("FLET_CLIENT_URL", flet_url)
+    logger.info(f"Downloading Flet v{ver} from {flet_url}")
+    print(f"Preparing Flet v{ver} for the first use. This is a one-time operation...")
+    temp_arch = Path(tempfile.gettempdir()).joinpath(f"{file_name}.{random_string(10)}")
+    urllib.request.urlretrieve(flet_url, str(temp_arch))
+    return str(temp_arch)
+
+
+def ensure_client_cached():
+    """
+    Ensure the desktop client is extracted in the local cache directory.
+
+    If the cache directory does not exist, looks for a bundled archive in
+    the package (for PyInstaller bundles) and falls back to downloading
+    from GitHub Releases.
+
+    Returns:
+        :class:`Path` to the cache directory containing the unpacked client.
+    """
+
+    cache_dir = __get_client_storage_dir()
+    if cache_dir.exists():
+        logger.info(f"Flet client found in cache: {cache_dir}")
+        return cache_dir
+
+    artifact = __get_artifact_filename()
+
+    # Check for a bundled archive (PyInstaller or legacy wheel).
+    bundled = os.path.join(get_package_bin_dir(), artifact)
+    if os.path.exists(bundled):
+        archive_path = bundled
+    else:
+        archive_path = __download_flet_client(artifact)
+
+    # Extract to a temp directory first, then atomically rename to the cache
+    # directory.  This prevents a partially extracted cache from being treated
+    # as valid on a subsequent run.
+    temp_extract = cache_dir.parent / f"{cache_dir.name}.{random_string(8)}"
+    temp_extract.mkdir(parents=True, exist_ok=True)
+
+    logger.info(f"Extracting Flet client from {archive_path} to {temp_extract}")
+    try:
+        # Use the artifact name (not archive_path which may have a random suffix
+        # from __download_flet_client) to determine the archive format.
+        if artifact.endswith(".zip"):
+            with zipfile.ZipFile(archive_path, "r") as zf:
+                safe_zip_extractall(zf, str(temp_extract))
+        else:
+            with tarfile.open(archive_path, "r:gz") as tar_arch:
+                safe_tar_extractall(tar_arch, str(temp_extract))
+
+        temp_extract.rename(cache_dir)
+    except Exception:
+        shutil.rmtree(temp_extract, ignore_errors=True)
+        raise
+
+    return cache_dir
 
 
 def open_flet_view(page_url, assets_dir, hidden):
@@ -139,28 +325,28 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
-    Resolution strategy:
-    - Prefer app binaries produced by `flet build` in the current workspace.
-    - Otherwise use `FLET_VIEW_PATH` when provided.
-    - Otherwise use packaged runtime artifacts and unpack archives into a
-        versioned per-user cache directory.
+    Resolution strategy (per platform):
+
+    1. Prefer app binaries produced by ``flet build`` in the current workspace.
+    2. Use ``FLET_VIEW_PATH`` when provided.
+    3. Use cached / downloaded client from ``~/.flet/client/``.
 
     Platform-specific launch commands are prepared for Windows, macOS, and Linux.
 
     Args:
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
-        hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
+        hidden: Whether to set ``FLET_HIDE_WINDOW_ON_START=true`` in process env.
 
     Returns:
         A tuple containing:
-            - `list[str]`: command arguments for the desktop client.
-            - `dict[str, str]`: environment variables for the launched process.
-            - `str`: path to the temporary PID file.
+            - ``list[str]``: command arguments for the desktop client.
+            - ``dict[str, str]``: environment variables for the launched process.
+            - ``str``: path to the temporary PID file.
 
     Raises:
         FileNotFoundError: If a required desktop executable or archive
-            cannot be located.
+            cannot be located or downloaded.
     """
 
     logger.info("Starting Flet View app...")
@@ -172,68 +358,52 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
     if is_windows():
         flet_path = None
-        # try loading Flet client built with the latest run of `flet build`
+        # 1. Try loading Flet client built with the latest run of `flet build`
         build_windows = os.path.join(os.getcwd(), "build", "windows")
         if os.path.exists(build_windows):
             for f in os.listdir(build_windows):
                 if f.endswith(".exe"):
                     flet_path = os.path.join(build_windows, f)
 
+        # 2. Check FLET_VIEW_PATH (developer mode)
         if not flet_path:
-            flet_exe = "flet.exe"
-
-            # check if flet_view.exe exists in "bin" directory (user mode)
-            flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
-            logger.info(f"Looking for Flet executable at: {flet_path}")
-            if os.path.exists(flet_path):
-                logger.info(f"Flet View found in: {flet_path}")
-            else:
-                # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
-                flet_path = os.environ.get("FLET_VIEW_PATH")
-                if flet_path and os.path.exists(flet_path):
-                    logger.info(f"Flet View found in PATH: {flet_path}")
-                    flet_path = os.path.join(flet_path, flet_exe)
+            flet_view_path = os.environ.get("FLET_VIEW_PATH")
+            if flet_view_path and os.path.exists(flet_view_path):
+                exe_path = os.path.join(flet_view_path, "flet.exe")
+                if os.path.isfile(exe_path):
+                    logger.info(f"Flet View found via FLET_VIEW_PATH: {flet_view_path}")
+                    flet_path = exe_path
                 else:
-                    raise FileNotFoundError(
-                        f"Flet executable not found at {get_package_bin_dir()}"
+                    logger.warning(
+                        f"FLET_VIEW_PATH set to {flet_view_path} "
+                        f"but flet.exe not found there"
                     )
+
+        # 3. Use cached or downloaded client
+        if not flet_path:
+            cache_dir = ensure_client_cached()
+            flet_path = str(cache_dir.joinpath("flet", "flet.exe"))
+
         args = [flet_path, page_url, pid_file]
+
     elif is_macos():
         app_path = None
-        # try loading Flet client built with the latest run of `flet build`
+        # 1. Try loading Flet client built with the latest run of `flet build`
         build_macos = os.path.join(os.getcwd(), "build", "macos")
         if os.path.exists(build_macos):
             for f in os.listdir(build_macos):
                 if f.endswith(".app"):
                     app_path = os.path.join(build_macos, f)
 
+        # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:
-            # build version-specific path to Flet.app
-            temp_flet_dir = __get_client_storage_dir()
-
-            # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
-            flet_path = os.environ.get("FLET_VIEW_PATH")
-            if flet_path:
-                logger.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_path}")
-                temp_flet_dir = Path(flet_path)
+            flet_view_path = os.environ.get("FLET_VIEW_PATH")
+            if flet_view_path:
+                logger.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_view_path}")
+                temp_flet_dir = Path(flet_view_path)
             else:
-                # check if flet_view.app exists in a temp directory
-                if not temp_flet_dir.exists():
-                    # check if flet.tar.gz exists
-                    gz_filename = "flet-macos.tar.gz"
-                    tar_file = os.path.join(get_package_bin_dir(), gz_filename)
-                    logger.info(f"Looking for Flet.app archive at: {tar_file}")
-                    if not os.path.exists(tar_file):
-                        raise FileNotFoundError(
-                            f"Flet client archive not found at {get_package_bin_dir()}"
-                        )
-
-                    logger.info(f"Extracting Flet.app from archive to {temp_flet_dir}")
-                    temp_flet_dir.mkdir(parents=True, exist_ok=True)
-                    with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                        safe_tar_extractall(tar_arch, str(temp_flet_dir))
-                else:
-                    logger.info(f"Flet View found in: {temp_flet_dir}")
+                # 3. Use cached or downloaded client
+                temp_flet_dir = ensure_client_cached()
 
             app_name = None
             for f in os.listdir(temp_flet_dir):
@@ -244,12 +414,14 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                     f"Application bundle not found in {temp_flet_dir}"
                 )
             app_path = temp_flet_dir.joinpath(app_name)
+
         logger.info(f"page_url: {page_url}")
         logger.info(f"pid_file: {pid_file}")
         args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
+
     elif is_linux():
         app_path = None
-        # try loading Flet client built with the latest run of `flet build`
+        # 1. Try loading Flet client built with the latest run of `flet build`
         build_linux = os.path.join(os.getcwd(), "build", "linux")
         if os.path.exists(build_linux):
             for f in os.listdir(build_linux):
@@ -257,36 +429,26 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 if os.path.isfile(ef) and stat.S_IXUSR & os.stat(ef)[stat.ST_MODE]:
                     app_path = ef
 
+        # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:
-            # build version-specific path to flet folder
-            temp_flet_dir = __get_client_storage_dir()
-
-            # check if flet.exe is in FLET_VIEW_PATH (flet developer mode)
-            flet_path = os.environ.get("FLET_VIEW_PATH")
-            if flet_path:
-                logger.info(f"Flet View is set via FLET_VIEW_PATH: {flet_path}")
-                temp_flet_dir = Path(flet_path)
-                app_path = temp_flet_dir.joinpath("flet")
-            else:
-                # check if flet_view.app exists in a temp directory
-                if not temp_flet_dir.exists():
-                    # check if flet.tar.gz exists
-                    gz_filename = f"flet-linux-{get_arch()}.tar.gz"
-                    tar_file = os.path.join(get_package_bin_dir(), gz_filename)
-                    logger.info(f"Looking for Flet bundle archive at: {tar_file}")
-                    if not os.path.exists(tar_file):
-                        raise FileNotFoundError(
-                            f"Flet client archive not found at {get_package_bin_dir()}"
-                        )
-
-                    logger.info(f"Extracting Flet from archive to {temp_flet_dir}")
-                    temp_flet_dir.mkdir(parents=True, exist_ok=True)
-                    with tarfile.open(str(tar_file), "r:gz") as tar_arch:
-                        safe_tar_extractall(tar_arch, str(temp_flet_dir))
+            flet_view_path = os.environ.get("FLET_VIEW_PATH")
+            if flet_view_path:
+                exe_path = str(Path(flet_view_path).joinpath("flet"))
+                if os.path.isfile(exe_path):
+                    logger.info(
+                        f"Flet View is set via FLET_VIEW_PATH: {flet_view_path}"
+                    )
+                    app_path = exe_path
                 else:
-                    logger.info(f"Flet View found in: {temp_flet_dir}")
+                    logger.warning(
+                        f"FLET_VIEW_PATH set to {flet_view_path} "
+                        f"but flet executable not found there"
+                    )
+            if not app_path:
+                # 3. Use cached or downloaded client
+                cache_dir = ensure_client_cached()
+                app_path = str(cache_dir.joinpath("flet", "flet"))
 
-                app_path = temp_flet_dir.joinpath("flet", "flet")
         args = [str(app_path), page_url, pid_file]
 
     flet_env = {**os.environ}

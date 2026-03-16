@@ -4,7 +4,6 @@ import sys
 from importlib.util import find_spec
 
 import flet.version
-from flet.utils import is_linux
 
 
 def _install_with_pip(package_spec: str) -> int:
@@ -90,9 +89,9 @@ def ensure_flet_desktop_package_installed():
     """
     Ensures a compatible desktop runtime package is installed.
 
-    If `flet-desktop` (or `flet-desktop-light` on Linux) is missing or its version
-    differs from the current Flet SDK version, this function installs the expected
-    package via [`install_flet_package()`][(m).install_flet_package].
+    If `flet-desktop` is missing or its version differs from the current Flet SDK
+    version, this function installs the expected package via
+    [`install_flet_package()`][(m).install_flet_package].
     """
     try:
         import flet_desktop.version
@@ -103,8 +102,7 @@ def ensure_flet_desktop_package_installed():
         ):
             raise RuntimeError("flet-desktop version mismatch")
     except Exception:
-        package_name = "flet-desktop-light" if is_linux() else "flet-desktop"
-        install_flet_package(package_name)
+        install_flet_package("flet-desktop")
 
 
 def ensure_flet_web_package_installed():

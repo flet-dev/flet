@@ -660,6 +660,7 @@ class Page(BasePage):
             *controls: Specific controls to patch. When omitted, patches the
                 whole page state.
         """
+        context.mark_update_called()
 
         if len(controls) == 0:
             self.__update(self)
