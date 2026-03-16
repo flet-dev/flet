@@ -796,11 +796,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ needs.build_flet_package.outputs.PYPI_VER }}
           name: v${{ needs.build_flet_package.outputs.PYPI_VER }}
+          tag_name: v${{ needs.build_flet_package.outputs.PYPI_VER }}
           prerelease: true
-          generate_release_notes: false
+          generate_release_notes: true
           overwrite_files: true
+          fail_on_unmatched_files: true
           files: |
             dist/**/flet-windows.zip
             dist/**/flet-macos.tar.gz
