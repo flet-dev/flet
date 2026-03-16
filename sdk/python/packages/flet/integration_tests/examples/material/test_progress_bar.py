@@ -2,8 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
-from examples.controls.progress_ring import determinate_and_indeterminate
+from examples.controls.progress_bar.determinate_and_indeterminate.main import (
+    main as determinate_and_indeterminate,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -18,7 +19,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.skip(reason="Test runs asynchronously")
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": determinate_and_indeterminate.main}],
+    [{"flet_app_main": determinate_and_indeterminate}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

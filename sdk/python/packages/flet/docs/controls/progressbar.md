@@ -14,7 +14,7 @@ example_images: ../test-images/examples/material/golden/macos/progress_bar
 ### Determinate and indeterminate progress bars
 
 ```python
---8<-- "{{ examples }}/determinate_and_indeterminate.py"
+--8<-- "{{ examples }}/determinate_and_indeterminate/main.py"
 ```
 
 {{ image(example_media + "/determinate_and_indeterminate.gif", alt="determinate-and-indeterminate", width="80%") }}

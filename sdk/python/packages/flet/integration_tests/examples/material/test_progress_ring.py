@@ -2,10 +2,11 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
-from examples.controls.progress_ring import (
-    gauge_with_progress,
-    determinate_and_indeterminate,
+from examples.controls.progress_ring.determinate_and_indeterminate.main import (
+    main as determinate_and_indeterminate,
+)
+from examples.controls.progress_ring.gauge_with_progress.main import (
+    main as gauge_with_progress,
 )
 
 
@@ -20,7 +21,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": gauge_with_progress.main}],
+    [{"flet_app_main": gauge_with_progress}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -35,7 +36,7 @@ async def test_gauge_with_progress(flet_app_function: ftt.FletTestApp):
 @pytest.mark.skip(reason="Test runs asynchronously")
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": determinate_and_indeterminate.main}],
+    [{"flet_app_main": determinate_and_indeterminate}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

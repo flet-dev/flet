@@ -1,0 +1,26 @@
+[project]
+name = "popup-menu-button-basic"
+version = "1.0.0"
+description = "Shows a PopupMenuButton with text, icon, custom content, and checked menu items."
+requires-python = ">=3.10"
+keywords = ["popup menu", "popup menu button", "menu", "material", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/PopupMenuButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["PopupMenuButton", "PopupMenuItem", "SafeArea", "Row", "Icon", "Text"]
+layout_pattern = "overlay-action"
+complexity = "basic"
+features = ["menu actions", "custom menu content", "checkable menu item"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

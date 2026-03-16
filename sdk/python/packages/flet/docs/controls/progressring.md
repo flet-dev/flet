@@ -14,7 +14,7 @@ example_media: ../examples/controls/progress_ring/media
 ### Determinate and indeterminate progress rings
 
 ```python
---8<-- "{{ examples }}/determinate_and_indeterminate.py"
+--8<-- "{{ examples }}/determinate_and_indeterminate/main.py"
 ```
 
 {{ image(example_media + "/determinate_and_indeterminate.gif", alt="determinate-and-indeterminate", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/progress_ring/media
 ### Gauge with progress
 
 ```python
---8<-- "{{ examples }}/gauge_with_progress.py"
+--8<-- "{{ examples }}/gauge_with_progress/main.py"
 ```
 
 {{ image(example_images + "/gauge_with_progress.png", alt="determinate-and-indeterminate", width="80%") }}
