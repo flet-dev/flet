@@ -24,7 +24,6 @@ INTERNAL_DEPS = {
     "flet",
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
 }
 REQ_RE = re.compile(
