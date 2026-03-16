@@ -14,15 +14,26 @@ from flet.controls.types import MouseCursor, Number
 @dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
     """
-    Represents an event triggered during the reordering of items in a \
-    [`ReorderableListView`][flet.].
+    Payload for [`ReorderableListView`][flet.] events related to item reordering.
     """
 
-    new_index: Optional[int]
-    """The new position of the item after reordering."""
+    new_index: Optional[int] = None
+    """
+    The new position of the item after the reordering, if available.
 
-    old_index: Optional[int]
-    """The original/previous position of the item before reordering."""
+    Will be non-`None` only for the following events:
+    [`ReorderableListView.on_reorder`][flet.],
+    [`ReorderableListView.on_reorder_end`][flet.].
+    """
+
+    old_index: Optional[int] = None
+    """
+    The previous position of the item before the reordering, if available.
+
+    Will be non-`None` only for the following events:
+    [`ReorderableListView.on_reorder`][flet.],
+    [`ReorderableListView.on_reorder_start`][flet.].
+    """
 
 
 @control("ReorderableListView")
@@ -53,7 +64,13 @@ class ReorderableListView(ListView):
 
     controls: list[Control] = field(default_factory=list)
     """
-    The controls to be reordered.
+    The controls displayed by this [`ReorderableListView`][(c)].
+
+    Note:
+        When an item of this list gets reordered, [`on_reorder`][(c).] event gets
+        fired, but it doesn't reorder the `controls` list automatically. So, to keep
+        `controls` list in sync with the UI, reorder this list inside your
+        [`on_reorder`][(c).] event handler. ([example][(c).on_reorder])
     """
 
     anchor: Number = 0.0
@@ -89,13 +106,12 @@ class ReorderableListView(ListView):
 
     The default desktop drag handle is just an `Icons.DRAG_HANDLE`
     wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
-    item is wrapped with a [`ReorderableDelayedDragStartListener`].
+    item is wrapped with a [`ReorderableDragHandle`][flet.].
 
     To customize the appearance or layout of drag handles, wrap each
     [`controls`][(c).] item, or a control within each of them, with a
-    [`ReorderableDragHandle`][flet.], [`ReorderableDelayedDragStartListener`],
-    or your own subclass of [`ReorderableDragHandle`][flet.]. For full control
-    over the drag handles, you might want to set `show_default_drag_handles` to `False`.
+    [`ReorderableDragHandle`][flet.]. For full control over the drag handles,
+    you might want to set `show_default_drag_handles` to `False`.
 
     Example:
         ```python
@@ -122,9 +138,23 @@ class ReorderableListView(ListView):
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a [`controls`][(c).] item has been dragged to a new location/position \
-    and the order of the items gets updated.
-    """
+    Called when a [`controls`][(c).] item has been dragged to a new location/position.
+
+    Note:
+        This event does not reorder [`controls`][(c).] automatically. So, to keep
+        [`controls`][(c).] list in sync with the UI, reorder it accordingly inside
+        your `on_reorder` event handler.
+
+        /// admonition | Example
+        ```python
+            def handle_reorder(e: ft.OnReorderEvent):
+                rlv = e.control
+                moved_item = rlv.controls.pop(e.old_index)  # Remove the reordered item from its old position
+                rlv.controls.insert(e.new_index, moved_item)  # Insert the reordered item into its new position
+                rlv.update()
+        ```
+        ///
+    """  # noqa: E501
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
