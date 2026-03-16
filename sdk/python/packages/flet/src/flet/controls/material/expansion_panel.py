@@ -29,8 +29,11 @@ class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
     """
     The index of the panel in [`ExpansionPanelList.controls`][flet.] that was toggled.
 
-    Invisible panels (i.e. those with [`visible`][flet.Control.] set to `False`)
-    are not counted/indexed.
+    Panels with [`visible`][flet.Control.] set to `False` are not counted/indexed.
+    This means the value may differ from the panel's position in the original
+    [`ExpansionPanelList.controls`][flet.] list when some panels are invisible.
+    To map it back, filter [`ExpansionPanelList.controls`][flet.] to only visible
+    panels and use this index on that filtered list.
     """
 
     expanded: bool
