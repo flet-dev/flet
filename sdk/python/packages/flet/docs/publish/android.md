@@ -7,7 +7,7 @@ Android APK and Android App Bundle (AAB).
 
 /// admonition | Info
     type: tip
-This guide provides detailed on Android-specific information.
+This guide provides detailed Android-specific information.
 Complementary and more general information is available [here](index.md).
 ///
 
@@ -183,7 +183,7 @@ If not, create one using one of the following methods:
     for the names. For example, on macOS and Linux use `Program\ Files`, and on Windows use `"Program Files"`.
 
     - The `-storetype JKS` tag is only required for Java 9 or newer.
-    As of the Java 9 release, the keystore type defaults to PKS12.
+    As of the Java 9 release, the keystore type defaults to PKCS12.
     ///
 
 /// admonition | Important
@@ -278,7 +278,7 @@ flet build aab --android-signing-key-store-password value
 ```
 ///
 /// tab | `pyproject.toml`
-For security reasons, the keystore password is not read from `pyproject.toml` to
+For security reasons, the key password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 ///
 /// tab | `.env`
@@ -388,14 +388,16 @@ Its value is determined in the following order of precedence:
 
 /// tab | `flet build`
 ```bash
-flet build apk --android-meta-data name_1=value_1 name_2=value_2
+flet build apk \
+  --android-meta-data firebase_analytics_collection_enabled=true \
+  --android-meta-data default_timeout_seconds=30
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.android.meta_data]
-"name_1" = "value_1"
-"name_2" = "value_2"
+"firebase_analytics_collection_enabled" = "true"
+"default_timeout_seconds" = "30"
 ```
 ///
 
@@ -406,8 +408,8 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <application>
-    <meta-data android:name="name_1" android:value="value_1" />
-    <meta-data android:name="name_2" android:value="value_2" />
+    <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
+    <meta-data android:name="default_timeout_seconds" android:value="30" />
 </application>
 ```
 ///
@@ -436,10 +438,14 @@ Its value is determined in the following order of precedence:
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.software.leanback=false`, `android.hardware.touchscreen=false`
 
-/// admonition | Boolean values
-    type: note
-CLI accepts values `true` or `false` (case-insensitive). However, boolean
-values in `pyproject.toml` must always be in lowercase, as required by TOML syntax.
+#### Supported value forms
+
+/// tab | `flet build`
+Accepts repeated `<name>=<required>` entries.
+The `<required>` value can be `true` or `false` (case-insensitive).
+///
+/// tab | `pyproject.toml`
+Use boolean values. TOML booleans must be lowercase: `true` or `false`.
 ///
 
 #### Example
@@ -447,7 +453,8 @@ values in `pyproject.toml` must always be in lowercase, as required by TOML synt
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-features android.hardware.camera=true android.hardware.location.gps=false
+  --android-features android.hardware.camera=true \
+  --android-features android.hardware.location.gps=false
 ```
 ///
 /// tab | `pyproject.toml`
@@ -460,7 +467,8 @@ flet build apk \
 
 /// details | Template translation
     type: example
-In the [`AndroidManifest.xml`](index.md#build-template), it will be translated accordingly into this:
+In the [`AndroidManifest.xml`](index.md#build-template),
+the example above will be translated accordingly into this:
 
 ```xml
 <manifest>
@@ -489,10 +497,16 @@ Its value is determined in the following order of precedence:
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.permission.INTERNET=true`
 
-/// admonition | Boolean values
-    type: note
-CLI accepts values `true` or `false` (case-insensitive). However, boolean
-values in `pyproject.toml` must always be in lowercase, as required by TOML syntax.
+#### Supported value forms
+
+/// tab | `flet build`
+Accepts repeated `<name>=<enabled>` entries.
+The `<enabled>` value can be `true` or `false` (case-insensitive).
+Permissions with `false` are omitted from the generated manifest.
+///
+/// tab | `pyproject.toml`
+Use boolean values. TOML booleans must be lowercase: `true` or `false`.
+Permissions set to `false` are omitted from the generated manifest.
 ///
 
 #### Example
@@ -500,7 +514,8 @@ values in `pyproject.toml` must always be in lowercase, as required by TOML synt
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-permissions android.permission.READ_EXTERNAL_STORAGE=True android.permission.WRITE_EXTERNAL_STORAGE=True
+  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
+  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
 ```
 ///
 /// tab | `pyproject.toml`

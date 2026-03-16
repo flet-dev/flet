@@ -252,7 +252,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="Files and/or directories to exclude from the package "
-            "(can be used multiple times)",
+            ";can be used multiple times",
         )
         parser.add_argument(
             "--clear-cache",
@@ -520,26 +520,29 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-features",
             dest="android_features",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of `<feature_name>=true|false` features to add to "
-            "AndroidManifest.xml (android only)",
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-permissions",
             dest="android_permissions",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of `<permission_name>=true|false` permissions to add to "
-            "AndroidManifest.xml (android only)",
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-meta-data",
             dest="android_meta_data",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of `<name>=<value>` app meta-data entries to add to "
-            "AndroidManifest.xml (android only)",
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--permissions",
