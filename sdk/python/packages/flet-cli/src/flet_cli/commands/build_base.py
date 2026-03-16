@@ -25,16 +25,12 @@ from flet_cli.commands.flutter_base import (
 )
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
-
-try:
-    import tomllib
-except ModuleNotFoundError:
-    import tomli as tomllib
 
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
@@ -507,7 +503,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
+            help="The list of `<key>=<value>` pairs to add to Info.plist. Values can "
+            "be booleans, strings, numbers, TOML arrays, or TOML inline tables "
             "(macos, ipa and ios-simulator only); can be used multiple times",
         )
         parser.add_argument(
@@ -517,7 +514,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of `<key>=<value>` entitlements. Values can be booleans, "
-            "strings, TOML arrays, or TOML inline tables "
+            "strings, numbers, TOML arrays, or TOML inline tables "
             "(macos only); can be used multiple times",
         )
         parser.add_argument(
@@ -861,11 +858,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = (
-                    (v.lower() == "true") if v.lower() in {"true", "false"} else v
-                )
+                info_plist[k] = parse_cli_plist_value(v)
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+        for key, value in info_plist.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported Info.plist value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
 
         macos_entitlements = merge_dict(
             macos_entitlements,
@@ -876,20 +881,18 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.macos_entitlements:
             i = p.find("=")
             if i > -1:
-                macos_entitlements[p[:i]] = self.parse_macos_entitlement_value(
-                    p[i + 1 :]
-                )
+                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
             else:
                 self.cleanup(1, f"Invalid macOS entitlement option: {p}")
 
         for key, value in macos_entitlements.items():
-            if not self.is_supported_macos_entitlement_value(value):
+            if not is_supported_plist_value(value):
                 self.cleanup(
                     1,
                     "Unsupported macOS entitlement value type for "
                     f"{key}: {type(value).__name__}. Supported types are "
-                    "string, boolean, dictionary, and arrays containing "
-                    "those values.",
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
                 )
 
         android_permissions = merge_dict(
@@ -2283,38 +2286,3 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         with open(str(path), "w", encoding="utf-8") as f:
             yaml.dump(doc, f)
-
-    def parse_macos_entitlement_value(self, value: str):
-        """Parse a macOS entitlement value from a string."""
-        value = value.strip()
-        lowered_value = value.lower()
-        if lowered_value in {"true", "false"}:
-            return lowered_value == "true"
-
-        try:
-            parsed = tomllib.loads(f"value = {value}")["value"]
-        except Exception:
-            return value
-
-        if self.is_supported_macos_entitlement_value(parsed):
-            return parsed
-
-        return value
-
-    def is_supported_macos_entitlement_value(self, value) -> bool:
-        """Check if a value is a supported type for macOS entitlements."""
-        # strings and booleans
-        if isinstance(value, (str, bool)):
-            return True
-        # arrays
-        if isinstance(value, list):
-            return all(
-                self.is_supported_macos_entitlement_value(item) for item in value
-            )
-        # tables
-        if isinstance(value, dict):
-            return all(
-                isinstance(key, str) and self.is_supported_macos_entitlement_value(item)
-                for key, item in value.items()
-            )
-        return False

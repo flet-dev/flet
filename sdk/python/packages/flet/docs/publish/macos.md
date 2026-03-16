@@ -75,6 +75,9 @@ Accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["basic", "advanced"]`
+- TOML inline tables, for example `{ NSAllowsArbitraryLoads = false }`
 - any other value is treated as a string
 ///
 /// tab | `pyproject.toml`
@@ -82,13 +85,15 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- real
 - dictionary (nested key-value object)
 - array of strings
 - array of booleans
+- array of integers
+- array of reals
 - array of dictionaries (including dictionaries that contain arrays)
 ///
-
-Numbers are not yet supported.
 
 #### Example
 
@@ -96,7 +101,9 @@ Numbers are not yet supported.
 ```bash
 flet build macos \
   --info-plist LSApplicationCategoryType="public.app-category.utilities" \
-  --info-plist NSHighResolutionCapable=true
+  --info-plist NSHighResolutionCapable=true \
+  --info-plist ExampleInteger=32 \
+  --info-plist ExampleReal=0.5
 ```
 ///
 /// tab | `pyproject.toml`
@@ -104,6 +111,8 @@ flet build macos \
 [tool.flet.macos.info]
 LSApplicationCategoryType = "public.app-category.utilities"
 NSSupportsSuddenTermination = true
+ExampleInteger = 32
+ExampleReal = 0.5
 SupportedModes = ["basic", "advanced"]
 FeatureFlags = [true, false]
 NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
@@ -132,6 +141,12 @@ example above will be translated accordingly into this:
 
         <key>NSSupportsSuddenTermination</key>
         <true/>
+
+        <key>ExampleInteger</key>
+        <integer>32</integer>
+
+        <key>ExampleReal</key>
+        <real>0.5</real>
 
         <key>SupportedModes</key>
         <array>
@@ -211,6 +226,7 @@ Accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
 - TOML array literals, for example `["group.example.one", "group.example.two"]`
 - TOML inline tables, for example `{ "com.apple.mail" = ["compose"] }`
 - any other value is treated as a string
@@ -220,13 +236,15 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- real
 - dictionary (nested key-value object)
 - array of strings
 - array of booleans
+- array of integers
+- array of reals
 - array of dictionaries (including dictionaries that contain arrays)
 ///
-
-Numbers are not yet supported.
 
 #### Example
 
@@ -235,6 +253,8 @@ Numbers are not yet supported.
 flet build macos \
   --macos-entitlements com.apple.security.network.client=true \
   --macos-entitlements com.apple.developer.ubiquity-kvstore-identifier=ABCDE12345.dev.example.myapp \
+  --macos-entitlements ExampleInteger=32 \
+  --macos-entitlements ExampleReal=0.5 \
   --macos-entitlements 'com.apple.security.application-groups=["group.dev.example.myapp", "group.dev.example.shared"]' \
   --macos-entitlements 'ExampleBooleanArray=[true, false]' \
   --macos-entitlements 'com.apple.security.scripting-targets={ "com.apple.mail" = ["compose", "send"] }' \
@@ -246,6 +266,8 @@ flet build macos \
 [tool.flet.macos.entitlement]
 "com.apple.security.network.client" = true
 "com.apple.developer.ubiquity-kvstore-identifier" = "ABCDE12345.dev.example.myapp"
+ExampleInteger = 32
+ExampleReal = 0.5
 "com.apple.security.application-groups" = [
   "group.dev.example.myapp",
   "group.dev.example.shared",
@@ -270,6 +292,10 @@ will be translated accordingly into this:
 <true />
 <key>com.apple.developer.ubiquity-kvstore-identifier</key>
 <string>ABCDE12345.dev.example.myapp</string>
+<key>ExampleInteger</key>
+<integer>32</integer>
+<key>ExampleReal</key>
+<real>0.5</real>
 <key>com.apple.security.application-groups</key>
 <array>
     <string>group.dev.example.myapp</string>

@@ -485,6 +485,9 @@ Accepts repeated `<key>=<value>` entries.
 The `<value>` can be in one of the following forms:
 
 - `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["myapp", "myapp-beta"]`
+- TOML inline tables, for example `{ NSAllowsArbitraryLoads = false }`
 - any other value is treated as a string
 ///
 /// tab | `pyproject.toml`
@@ -492,13 +495,15 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- real
 - dictionary (nested key-value object)
 - array of strings
 - array of booleans
+- array of integers
+- array of reals
 - array of dictionaries (including dictionaries that contain arrays)
 ///
-
-Numbers are not yet supported.
 
 ##### Example
 
@@ -506,7 +511,9 @@ Numbers are not yet supported.
 ```bash
 flet build ipa \
   --info-plist NSCameraUsageDescription="This app needs camera access." \
-  --info-plist UIFileSharingEnabled=true
+  --info-plist UIFileSharingEnabled=true \
+  --info-plist ExampleInteger=32 \
+  --info-plist ExampleReal=0.5
 ```
 ///
 /// tab | `pyproject.toml`
@@ -514,6 +521,8 @@ flet build ipa \
 [tool.flet.ios.info]
 NSCameraUsageDescription = "This app needs camera access."
 UIFileSharingEnabled = true
+ExampleInteger = 32
+ExampleReal = 0.5
 LSApplicationQueriesSchemes = ["myapp", "myapp-beta"]
 FeatureFlags = [true, false]
 NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
@@ -544,6 +553,12 @@ example above will be translated accordingly into this:
 
         <key>UIFileSharingEnabled</key>
         <true/>
+
+        <key>ExampleInteger</key>
+        <integer>32</integer>
+
+        <key>ExampleReal</key>
+        <real>0.5</real>
 
         <key>LSApplicationQueriesSchemes</key>
         <array>
