@@ -1143,7 +1143,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     if latest_branch:
                         console.log(
                             f"NOTICE: No exact match for Flet version {base_version} found in "
-                            "existing branches. Falling back to the latest compatible "
+                            "existing branches. Falling back to the previous available "
                             f'template branch "{latest_branch}".'
                         )
                         template_ref = latest_branch
