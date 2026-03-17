@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@ft.value
 class LineChartEventSpot:
     """
     Identifies a concrete line/point pair involved in a chart interaction event.
@@ -62,7 +62,7 @@ class LineChartEvent(ft.Event["LineChart"]):
     """
 
 
-@dataclass
+@ft.value
 class LineChartTooltip:
     """Configuration of the tooltip for [`LineChart`][(p).]s."""
 

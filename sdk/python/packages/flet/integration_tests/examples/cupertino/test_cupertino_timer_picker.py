@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.cupertino_timer_picker import basic
 
 

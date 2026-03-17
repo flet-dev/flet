@@ -1,9 +1,8 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, control, value
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
@@ -187,7 +186,7 @@ class TextCapitalization(Enum):
     """
 
 
-@dataclass
+@value
 class InputFilter:
     """
     An input filter that uses a regular expression to allow or deny/block certain \

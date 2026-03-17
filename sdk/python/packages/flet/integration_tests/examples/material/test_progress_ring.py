@@ -2,10 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.progress_ring import (
-    gauge_with_progress,
     determinate_and_indeterminate,
+    gauge_with_progress,
 )
 
 

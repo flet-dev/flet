@@ -1,8 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -55,7 +54,7 @@ class MarkdownExtensionSet(Enum):
     """
 
 
-@dataclass
+@value
 class MarkdownStyleSheet:
     """
     Style overrides for markdown element rendering.
@@ -676,7 +675,7 @@ class MarkdownCodeTheme(Enum):
     """
 
 
-@dataclass
+@value
 class MarkdownCustomCodeTheme:
     """
     Custom text-style mapping for code token highlighting.

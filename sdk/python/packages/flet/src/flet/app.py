@@ -221,7 +221,7 @@ async def run_async(
         if url_prefix is not None:
             print(url_prefix, page_url)
         else:
-            logger.info(f"App URL: {page_url}")
+            logger.info("App URL: %s", page_url)
 
         if view == AppView.WEB_BROWSER and url_prefix is None and not force_web_server:
             open_in_browser(page_url)
@@ -438,7 +438,7 @@ async def __run_web_server(
     if port == 0:
         port = get_free_tcp_port()
 
-    logger.info(f"Starting Flet web server on port {port}...")
+    logger.info("Starting Flet web server on port %s...", port)
 
     log_level = logging.getLogger("flet").getEffectiveLevel()
     if log_level == logging.CRITICAL or log_level == logging.NOTSET:
@@ -520,7 +520,7 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
                     .joinpath(assets_dir)
                     .resolve()
                 )
-        logger.info(f"Assets path configured: {assets_dir}")
+        logger.info("Assets path configured: %s", assets_dir)
 
     env_assets_dir = os.getenv("FLET_ASSETS_DIR")
     if env_assets_dir:

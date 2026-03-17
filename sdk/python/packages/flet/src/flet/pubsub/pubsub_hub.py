@@ -51,7 +51,7 @@ class PubSubHub:
         Args:
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_all({message})")
+        logger.debug("pubsub.send_all(%s)", message)
         with self.__lock:
             for handlers in self.__subscribers.values():
                 for handler in handlers:
@@ -65,7 +65,7 @@ class PubSubHub:
             topic: Topic name to broadcast on.
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_all_on_topic({topic}, {message})")
+        logger.debug("pubsub.send_all_on_topic(%s, %s)", topic, message)
         with self.__lock:
             if topic in self.__topic_subscribers:
                 for handlers in self.__topic_subscribers[topic].values():
@@ -80,7 +80,7 @@ class PubSubHub:
             except_session_id: Session ID to exclude from delivery.
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_others({except_session_id}, {message})")
+        logger.debug("pubsub.send_others(%s, %s)", except_session_id, message)
         with self.__lock:
             for session_id, handlers in self.__subscribers.items():
                 if except_session_id != session_id:
@@ -97,7 +97,7 @@ class PubSubHub:
             message: Payload to deliver.
         """
         logger.debug(
-            f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
+            "pubsub.send_others_on_topic(%s, %s, %s)", except_session_id, topic, message
         )
         with self.__lock:
             if topic in self.__topic_subscribers:
@@ -118,7 +118,7 @@ class PubSubHub:
             session_id: Session identifier that owns this subscription.
             handler: Sync or async callback invoked for global messages.
         """
-        logger.debug(f"pubsub.subscribe({session_id})")
+        logger.debug("pubsub.subscribe(%s)", session_id)
         with self.__lock:
             handlers = self.__subscribers.get(session_id)
             if handlers is None:
@@ -142,7 +142,7 @@ class PubSubHub:
             topic: Topic name to subscribe to.
             handler: Sync or async callback invoked for topic messages.
         """
-        logger.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
+        logger.debug("pubsub.subscribe_topic(%s, %s)", session_id, topic)
         with self.__lock:
             self.__subscribe_topic(session_id, topic, handler)
 
@@ -193,7 +193,7 @@ class PubSubHub:
         Args:
             session_id: Session identifier to remove.
         """
-        logger.debug(f"pubsub.unsubscribe({session_id})")
+        logger.debug("pubsub.unsubscribe(%s)", session_id)
         with self.__lock:
             self.__unsubscribe(session_id)
 
@@ -205,7 +205,7 @@ class PubSubHub:
             session_id: Session identifier to remove from the topic.
             topic: Topic to unsubscribe from.
         """
-        logger.debug(f"pubsub.unsubscribe({session_id}, {topic})")
+        logger.debug("pubsub.unsubscribe(%s, %s)", session_id, topic)
         with self.__lock:
             self.__unsubscribe_topic(session_id, topic)
 
@@ -216,7 +216,7 @@ class PubSubHub:
         Args:
             session_id: Session identifier to fully unsubscribe.
         """
-        logger.debug(f"pubsub.unsubscribe_all({session_id})")
+        logger.debug("pubsub.unsubscribe_all(%s)", session_id)
         with self.__lock:
             self.__unsubscribe(session_id)
             if session_id in self.__subscriber_topics:
@@ -230,7 +230,7 @@ class PubSubHub:
         Args:
             session_id: Session identifier to remove.
         """
-        logger.debug(f"pubsub.__unsubscribe({session_id})")
+        logger.debug("pubsub.__unsubscribe(%s)", session_id)
         self.__subscribers.pop(session_id, None)
 
     def __unsubscribe_topic(self, session_id: str, topic: str):
@@ -243,7 +243,7 @@ class PubSubHub:
             session_id: Session identifier to remove from the topic.
             topic: Topic to unsubscribe from.
         """
-        logger.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
+        logger.debug("pubsub.__unsubscribe_topic(%s, %s)", session_id, topic)
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is not None:
             topic_subscribers.pop(session_id, None)
