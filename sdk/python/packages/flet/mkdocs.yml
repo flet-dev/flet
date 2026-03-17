@@ -936,6 +936,7 @@ nav:
               - DragUpdateEvent: types/dragupdateevent.md
               - DragWillAcceptEvent: types/dragwillacceptevent.md
               - Event: types/event.md
+              - ExpansionPanelListChangeEvent: types/expansionpanellistchangeevent.md
               - FilePickerUploadEvent: types/filepickeruploadevent.md
               - GyroscopeReadingEvent: types/gyroscopereadingevent.md
               - HoverEvent: types/hoverevent.md
