@@ -1,9 +1,9 @@
 """
-Lightweight module for the ``@value`` decorator and related helpers.
+Lightweight module for the `@value` decorator and related helpers.
 
-Kept separate from ``base_control`` to avoid circular imports: value types
-(Duration, Alignment, etc.) need ``@value`` but are imported transitively by
-``base_control`` itself.
+Kept separate from `base_control` to avoid circular imports: value types
+(Duration, Alignment, etc.) need `@value` but are imported transitively by
+`base_control` itself.
 """
 
 import dataclasses
@@ -28,13 +28,13 @@ _UNSET = object()
 
 class Prop:
     """
-    Descriptor for sparse property tracking on ``BaseControl`` and ``Value``
+    Descriptor for sparse property tracking on `BaseControl` and `Value`
     types.
 
-    Each public, non-skip field gets replaced by a ``Prop`` instance by
-    ``_install_props()``.  The descriptor stores only *non-default* values in
-    ``obj._values``, so the frozen diff fast-path only needs to examine the
-    union of keys from two objects' ``_values`` dicts rather than scanning
+    Each public, non-skip field gets replaced by a `Prop` instance by
+    `_install_props()`.  The descriptor stores only *non-default* values in
+    `obj._values`, so the frozen diff fast-path only needs to examine the
+    union of keys from two objects' `_values` dicts rather than scanning
     every declared field.
     """
 
@@ -75,7 +75,7 @@ class Prop:
 
 def _get_raw_descriptor(cls: type, name: str) -> Any:
     """Return the raw descriptor for *name* from cls or its MRO without
-    triggering ``__get__``, so we always get the ``Prop`` object itself."""
+    triggering `__get__`, so we always get the `Prop` object itself."""
     for klass in cls.__mro__:
         if name in vars(klass):
             return vars(klass)[name]
@@ -84,8 +84,8 @@ def _get_raw_descriptor(cls: type, name: str) -> Any:
 
 def _install_props(cls: type) -> None:
     """
-    Replace public dataclass fields with ``Prop`` descriptors and record
-    non-Prop fields in ``cls._structural_fields``.
+    Replace public dataclass fields with `Prop` descriptors and record
+    non-Prop fields in `cls._structural_fields`.
     """
     structural: set[str] = set()
     prop_defaults: dict = {}
@@ -147,11 +147,11 @@ class _ValueMeta(type):
 
 class Value(metaclass=_ValueMeta):
     """
-    Marker class for non-control value types that have sparse ``_values``
-    tracking enabled via ``@value``.
+    Marker class for non-control value types that have sparse `_values`
+    tracking enabled via `@value`.
 
-    ``@value`` handles all setup — you never need to inherit from this
-    class explicitly.  It is exposed so that ``isinstance(obj, Value)``
+    `@value` handles all setup — you never need to inherit from this
+    class explicitly.  It is exposed so that `isinstance(obj, Value)`
     checks work in the diff machinery.
     """
 
@@ -162,14 +162,14 @@ def value(
     **dataclass_kwargs: Any,
 ) -> Any:
     """
-    Decorator for non-control value types to enable sparse ``_values``
+    Decorator for non-control value types to enable sparse `_values`
     tracking.
 
-    Applies ``@dataclass`` (passing *dataclass_kwargs*) and installs ``Prop``
-    descriptors via ``_install_props``.  No base class is required — the
-    decorator wraps ``__init__`` to inject ``_values`` and ``_dirty`` before
-    the first ``Prop.__set__`` call, and registers the class as a
-    ``Value`` subclass for isinstance checks.
+    Applies `@dataclass` (passing *dataclass_kwargs*) and installs `Prop`
+    descriptors via `_install_props`.  No base class is required — the
+    decorator wraps `__init__` to inject `_values` and `_dirty` before
+    the first `Prop.__set__` call, and registers the class as a
+    `Value` subclass for isinstance checks.
 
     Usage::
 
