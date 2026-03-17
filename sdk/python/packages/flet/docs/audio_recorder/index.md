@@ -48,9 +48,9 @@ Configuration to be made to access the microphone:
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-permissions android.permission.RECORD_AUDIO=True \
-      android.permission.WRITE_EXTERNAL_STORAGE=True \
-      android.permission.MODIFY_AUDIO_SETTINGS=True
+  --android-permissions android.permission.RECORD_AUDIO=true \
+  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true \
+  --android-permissions android.permission.MODIFY_AUDIO_SETTINGS=true
 ```
 ///
 /// tab | `pyproject.toml`
@@ -101,7 +101,7 @@ Configuration to be made to access the microphone:
 ```bash
 flet build macos \
   --info-plist NSMicrophoneUsageDescription="Some message to describe why you need this permission..." \
-  --entitlement com.apple.security.device.audio-input=True
+  --macos-entitlements com.apple.security.device.audio-input=true
 ```
 ///
 /// tab | `pyproject.toml`
@@ -134,7 +134,7 @@ sudo apt install pulseaudio-utils ffmpeg
 
 ### Cross-platform
 
-Additionally/Alternatively, you can make use of our predefined cross-platform `microphone`
+Additionally/alternatively, you can make use of our predefined cross-platform `microphone`
 [permission bundle](../publish/index.md#predefined-cross-platform-permission-bundles):
 
 /// tab | `flet build`

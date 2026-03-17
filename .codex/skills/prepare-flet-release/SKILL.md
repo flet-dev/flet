@@ -25,7 +25,7 @@ description: Use when asked to prepare new Flet release by bumping versions and 
   Use PR author login for PR-based items. For issue-only direct-commit items, use the commit author GitHub login if available.
   If one item groups multiple PRs by different authors, attribute all relevant authors:
   `by [@user1](https://github.com/user1), [@user2](https://github.com/user2)`.
-  Ensure that all infered PRs and issues in the changelog have `{version}` milestone attached on GitHub.
+  Ensure that all inferred PRs and issues in the changelog have `{version}` milestone attached on GitHub.
   As it's a Flutter package prefer items having changes on Flutter side.
 * Add a new entry into /CHANGELOG.md. Do not add chore/trivial/duplicate items, add "worth while" items with related issue or PR.
   Every changelog item must include both related issue link(s) and PR link(s) when available (issue first, PR second). If no issue exists, include PR link(s) only.

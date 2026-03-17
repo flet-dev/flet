@@ -53,8 +53,8 @@ Configuration to be made to access the camera and optionally the microphone:
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-permissions android.permission.CAMERA=True \
-      android.permission.RECORD_AUDIO=True
+  --android-permissions android.permission.CAMERA=true \
+  --android-permissions android.permission.RECORD_AUDIO=true
 ```
 ///
 /// tab | `pyproject.toml`
@@ -97,7 +97,7 @@ See also:
 
 ### Cross-platform
 
-Additionally/Alternatively, you can make use of our predefined cross-platform `camera` (and optionally `microphone`)
+Additionally/alternatively, you can make use of our predefined cross-platform `camera` (and optionally `microphone`)
 [permission bundles](../publish/index.md#predefined-cross-platform-permission-bundles):
 
 /// tab | `flet build`

@@ -12,6 +12,8 @@ class Command(BaseBuildCommand):
     installable bundle. It supports building for desktop (macOS, Linux, Windows), web,
     Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
     customization options for metadata, assets, splash screens, and signing.
+
+    Detailed guide with usage examples: https://docs.flet.dev/publish
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
