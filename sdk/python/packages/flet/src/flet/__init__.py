@@ -304,7 +304,11 @@ from flet.controls.material.divider import Divider
 from flet.controls.material.dropdown import Dropdown, DropdownOption
 from flet.controls.material.dropdownm2 import DropdownM2
 from flet.controls.material.elevated_button import ElevatedButton
-from flet.controls.material.expansion_panel import ExpansionPanel, ExpansionPanelList
+from flet.controls.material.expansion_panel import (
+    ExpansionPanel,
+    ExpansionPanelList,
+    ExpansionPanelListChangeEvent,
+)
 from flet.controls.material.expansion_tile import ExpansionTile, TileAffinity
 from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
@@ -775,6 +779,7 @@ __all__ = [
     "EventHandler",
     "ExpansionPanel",
     "ExpansionPanelList",
+    "ExpansionPanelListChangeEvent",
     "ExpansionTile",
     "ExpansionTileTheme",
     "FilePicker",
