@@ -1,0 +1,26 @@
+[project]
+name = "rive-example-1"
+version = "1.0.0"
+description = "Plays a remote Rive animation and a local Rive asset."
+requires-python = ">=3.10"
+keywords = ["rive", "animation", "extension", "assets", "local file", "remote file"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-rive"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Rive"]
+
+[tool.flet.metadata]
+title = "Example 1"
+controls = ["SafeArea", "Column", "Rive", "ProgressBar"]
+layout_pattern = "media-showcase"
+complexity = "basic"
+features = ["remote animations", "local asset playback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

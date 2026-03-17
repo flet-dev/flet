@@ -9,7 +9,7 @@ example_images: ../test-images/examples/core/golden/macos/rotated_box
 ## Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/rotated_box.png", width="80%") }}

@@ -28,7 +28,7 @@ example_images_examples: ../test-images/examples/core/golden/macos/layout_contro
 ### RotatedBox
 
 ```python
---8<-- "../../examples/controls/rotated_box/basic.py"
+--8<-- "../../examples/controls/rotated_box/basic/main.py"
 ```
 
 {{ image("../test-images/controls/core/golden/macos/rotated_box/rotated_box.png", width="80%") }}

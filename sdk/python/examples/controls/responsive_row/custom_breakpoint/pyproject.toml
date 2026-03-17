@@ -1,0 +1,26 @@
+[project]
+name = "responsive-row-custom-breakpoint"
+version = "1.0.0"
+description = "Shows custom breakpoint values and column layouts for ResponsiveRow."
+requires-python = ">=3.10"
+keywords = ["responsive row", "custom breakpoints", "layout", "adaptive UI"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ResponsiveRow"]
+
+[tool.flet.metadata]
+title = "Custom Breakpoints"
+controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "Text", "TextField"]
+layout_pattern = "responsive-dashboard"
+complexity = "basic"
+features = ["custom breakpoints", "adaptive columns", "resize indicator"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

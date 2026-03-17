@@ -13,7 +13,7 @@ example_images: ../test-images/examples/core/golden/macos/responsive_row
 ### ResponsiveRow
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/core/golden/macos/responsive_row
 ### Custom breakpoints
 
 ```python
---8<-- "{{ examples }}/custom_breakpoint.py"
+--8<-- "{{ examples }}/custom_breakpoint/main.py"
 ```
 
 {{ image(example_images + "/custom_breakpoint.gif", width="80%") }}
