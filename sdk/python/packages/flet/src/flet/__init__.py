@@ -423,6 +423,8 @@ from flet.controls.ref import Ref
 from flet.controls.scrollable_control import (
     OnScrollEvent,
     ScrollableControl,
+    Scrollbar,
+    ScrollbarOrientation,
     ScrollDirection,
     ScrollType,
 )
@@ -967,6 +969,8 @@ __all__ = [
     "ScrollMode",
     "ScrollType",
     "ScrollableControl",
+    "Scrollbar",
+    "ScrollbarOrientation",
     "ScrollbarTheme",
     "SearchBar",
     "SearchBarTheme",
