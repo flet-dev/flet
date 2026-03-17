@@ -252,8 +252,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            help="Files and/or directories to exclude from the package "
-            ";can be used multiple times",
+            help="Files and/or directories to exclude from the package"
+            "; can be used multiple times",
         )
         parser.add_argument(
             "--clear-cache",

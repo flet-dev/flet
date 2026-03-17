@@ -278,7 +278,7 @@ flet build aab --android-signing-key-store-password value
 ```
 ///
 /// tab | `pyproject.toml`
-For security reasons, the key password is not read from `pyproject.toml` to
+For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 ///
 /// tab | `.env`
