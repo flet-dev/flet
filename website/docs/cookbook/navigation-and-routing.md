@@ -56,11 +56,14 @@ The pattern below is the baseline for most apps:
 
 ## Programmatic navigation
 
-Use [`page.push_route()`](../controls/page.md#flet.Page.push_route) to navigate.
-
-You can also pass query parameters as keyword arguments:
+Use [`page.navigate()`](../controls/page.md#flet.Page.navigate) to navigate from synchronous callbacks
+(e.g. `on_click`), or [`page.push_route()`](../controls/page.md#flet.Page.push_route) in async contexts:
 
 ```python
+# Sync (on_click, etc.)
+page.navigate("/search", q="flet", page=2)
+
+# Async
 await page.push_route("/search", q="flet", page=2)
 ```
 
@@ -112,6 +115,15 @@ ft.run(main, route_url_strategy="hash")
 
 For Flet server deployments, you can also set the [`FLET_ROUTE_URL_STRATEGY`](../reference/environment-variables.md#flet_web_route_url_strategy)
 environment variable.
+
+## Declarative Router
+
+For declarative apps using `@component`, Flet provides a
+[**Router**](router.md) system inspired by React Router. It handles
+nested routes, layout routes with outlets, dynamic segments, data loaders,
+and active link detection — all without manual route matching.
+
+See the [Router cookbook](router.md) for a complete guide.
 
 ## Practical recommendations
 
