@@ -897,6 +897,20 @@ class Page(BasePage):
             arguments={"route": new_route},
         )
 
+    def navigate(self, route: str, **kwargs: Any) -> None:
+        """
+        Navigate to a new route (sync convenience wrapper).
+
+        Equivalent to ``asyncio.create_task(page.push_route(route, **kwargs))``.
+        Use this in synchronous callbacks (e.g. ``on_click``) where awaiting
+        is not possible.
+
+        Args:
+            route: New navigation route.
+            **kwargs: Additional query string parameters to be added to the route.
+        """
+        asyncio.create_task(self.push_route(route, **kwargs))
+
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """
         Generates presigned upload URL for built-in upload storage:
