@@ -438,6 +438,7 @@ nav:
           - ReorderableListView: controls/reorderablelistview.md
           - ResponsiveRow: controls/responsiverow.md
           - RotatedBox: controls/rotatedbox.md
+          - Router: controls/router.md
           - Row: controls/row.md
           - Rive: rive/index.md
           - SafeArea: controls/safearea.md
@@ -662,6 +663,7 @@ nav:
                   - ValueKey: types/valuekey.md
               - Locale: types/locale.md
               - LocaleConfiguration: types/localeconfiguration.md
+              - LocationInfo: types/locationinfo.md
               - Map:
                   - AttributionAlignment: map/types/attributionalignment.md
                   - Camera: map/types/camera.md
@@ -724,6 +726,7 @@ nav:
               - Rect: types/rect.md
               - Ref: types/ref.md
               - ResponsiveRowBreakpoint: types/responsiverowbreakpoint.md
+              - Route: types/route.md
               - Rotate: types/rotate.md
               - Scale: types/scale.md
               - SecureStorage:
@@ -995,6 +998,7 @@ nav:
               - FletUpload: fastapi/fletupload.md
           - Methods:
               - create_context: types/createcontext.md
+              - is_route_active: types/is_route_active.md
               - memo: types/memo.md
               - on_mounted: types/onmounted.md
               - on_unmounted: types/onunmounted.md
@@ -1004,6 +1008,10 @@ nav:
               - use_effect: types/useeffect.md
               - use_memo: types/usememo.md
               - use_ref: types/useref.md
+              - use_route_loader_data: types/use_route_loader_data.md
+              - use_route_location: types/use_route_location.md
+              - use_route_outlet: types/use_route_outlet.md
+              - use_route_params: types/use_route_params.md
               - use_state: types/usestate.md
       - Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
       - Environment Variables: reference/environment-variables.md
@@ -1029,6 +1037,7 @@ nav:
       - Logging: cookbook/logging.md
       - Navigation and Routing: cookbook/navigation-and-routing.md
       - PubSub: cookbook/pub-sub.md
+      - Router: cookbook/router.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
       - Subprocess: cookbook/subprocess.md
