@@ -33,7 +33,7 @@ class ImageControl extends StatelessWidget {
     final color = control.getColor("color", context);
     final colorBlendMode = control.getBlendMode("color_blend_mode");
     final semanticsLabel = control.getString("semantics_label");
-    final gaplessPlayback = control.getBool("gapless_playback");
+    final gaplessPlayback = control.getBool("gapless_playback", false)!;
     final excludeFromSemantics =
         control.getBool("exclude_from_semantics", false)!;
     final filterQuality =
