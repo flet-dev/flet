@@ -43,6 +43,8 @@ def LoginPage():
 @ft.component
 def Dashboard():
     auth = ft.use_context(AuthContext)
+    if auth is None:
+        return ft.ProgressRing()
     return ft.Column(
         [
             ft.Text(f"Dashboard — Welcome, {auth.username}!", size=24),
@@ -63,8 +65,8 @@ def ProtectedRoute():
     auth = ft.use_context(AuthContext)
     outlet = ft.use_route_outlet()
 
-    if not auth.is_authenticated:
-        ft.context.page.navigate("/login")
+    if auth is None or not auth.is_authenticated:
+        ft.use_effect(lambda: ft.context.page.navigate("/login"), [])
         return ft.Text("Redirecting to login...")
 
     return outlet
