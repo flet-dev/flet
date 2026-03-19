@@ -134,11 +134,6 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Publish to pub.dev (Dry Run)
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub publish --dry-run
-
       - name: Publish to pub.dev
         if: ${{ github.ref_type == 'tag' || github.ref == 'refs/heads/main' }}
         shell: bash
