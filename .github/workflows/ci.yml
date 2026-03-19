@@ -134,6 +134,7 @@ jobs:
         run: flutter test
 
       - name: Validate package (dry run)
+        if: ${{ github.ref_type == 'tag' }}
         shell: bash
         working-directory: packages/flet
         run: dart pub publish --dry-run
