@@ -101,7 +101,6 @@ jobs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_NUM: ${{ steps.versions.outputs.BUILD_NUM }}
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
-      PUB_VER: ${{ steps.versions.outputs.PUB_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -134,8 +133,13 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
+      - name: Validate package (dry run)
+        shell: bash
+        working-directory: packages/flet
+        run: dart pub publish --dry-run
+
       - name: Publish to pub.dev
-        if: ${{ github.ref_type == 'tag' || github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref_type == 'tag' }}
         shell: bash
         working-directory: packages/flet
         run: dart pub publish -f
@@ -148,7 +152,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_flet_package
     env:
-      PUB_VER: ${{ needs.build_flet_package.outputs.PUB_VER }}
+      PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -159,9 +163,17 @@ jobs:
       - name: Patch build template flet version
         shell: bash
         run: |
-          uv run "$SCRIPTS/patch_pubspec_version.py" \
-            "sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml" \
-            "$PUB_VER" --dependencies-only --exact
+          PUBSPEC="sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml"
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            uv run "$SCRIPTS/patch_pubspec_version.py" \
+              "$PUBSPEC" "$PKG_VER" --dependencies-only --exact
+          else
+            uv run "$SCRIPTS/patch_pubspec_version.py" \
+              "$PUBSPEC" --dependencies-only \
+              --git-ref "$GITHUB_SHA" \
+              --git-url "https://github.com/flet-dev/flet.git" \
+              --git-path "packages/flet"
+          fi
 
       - name: Create template zips
         shell: bash
