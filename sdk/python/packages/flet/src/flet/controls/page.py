@@ -215,6 +215,33 @@ class ViewPopEvent(Event["Page"]):
 
 
 @dataclass
+class ViewPopResultEvent(Event["Page"]):
+    """
+    Event payload delivered when [`Page.pop_until_with_result`]\
+    [flet.Page.pop_until_with_result] completes navigation.
+
+    Carries the result value back to the destination view, analogous to
+    Flutter's `Navigator.popUntilWithResult`.
+    """
+
+    route: str
+    """
+    Route of the destination view that remained on the stack.
+    """
+
+    result: Any = None
+    """
+    The result value passed from the caller of
+    [`pop_until_with_result`][flet.Page.pop_until_with_result].
+    """
+
+    view: Optional[View] = None
+    """
+    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    """
+
+
+@dataclass
 class KeyboardEvent(Event["Page"]):
     """
     Event payload for keyboard key-down notifications.
@@ -506,6 +533,14 @@ class Page(BasePage):
     control.
     """
 
+    on_view_pop_result: Optional[EventHandler[ViewPopResultEvent]] = None
+    """
+    Called when [`pop_until_with_result`][flet.Page.pop_until_with_result] reaches
+    the destination view.
+
+    The event carries the result value passed by the caller.
+    """
+
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
     Called when a keyboard key is pressed.
@@ -707,7 +742,7 @@ class Page(BasePage):
             self.__last_route = e.route
             self.query()
 
-        elif isinstance(e, ViewPopEvent):
+        elif isinstance(e, ViewPopEvent | ViewPopResultEvent):
             for v in unwrap_component(self.views):
                 v = unwrap_component(v)
                 if v.route == e.route:
@@ -896,6 +931,75 @@ class Page(BasePage):
             "push_route",
             arguments={"route": new_route},
         )
+
+    async def pop_until_with_result(self, route: str, result: Any = None) -> None:
+        """
+        Pops views from the navigation stack until a view with the given
+        `route` is found, then delivers `result` via the
+        [`on_view_pop_result`][flet.Page.on_view_pop_result] event.
+
+        This is the Flet equivalent of Flutter's `Navigator.popUntilWithResult`.
+
+        Example:
+            ```python
+            import flet as ft
+
+
+            def main(page: ft.Page):
+                def on_pop_result(e: ft.ViewPopResultEvent):
+                    page.show_dialog(ft.SnackBar(ft.Text(f"Result: {e.result}")))
+
+                page.on_view_pop_result = on_pop_result
+
+                # ... later, from a deeply nested view:
+                async def go_back(ev):
+                    await page.pop_until_with_result("/", result="Done!")
+            ```
+
+        Args:
+            route: Target route to navigate back to. Must match the `route`
+                of an existing [`View`][flet.View] in
+                [`page.views`][flet.Page.views].
+            result: Optional value delivered to
+                [`on_view_pop_result`][flet.Page.on_view_pop_result] on the
+                destination view.
+
+        Raises:
+            ValueError: If no view with the given `route` exists in
+                [`page.views`][flet.Page.views].
+        """
+        views = unwrap_component(self.views)
+
+        # Find the target view (first match from bottom of the stack)
+        target_idx = None
+        for i, v in enumerate(views):
+            v = unwrap_component(v)
+            if v.route == route:
+                target_idx = i
+                break
+
+        if target_idx is None:
+            raise ValueError(f"No view found with route '{route}' in page.views")
+
+        # Remove views above the target
+        del self.views[target_idx + 1 :]
+
+        # Update browser URL
+        await self.push_route(route)
+
+        # Fire on_view_pop_result for the destination view
+        if self.on_view_pop_result:
+            target_view = unwrap_component(views[target_idx])
+            e = ViewPopResultEvent(
+                name="view_pop_result",
+                control=self,
+                route=route,
+                result=result,
+                view=target_view,
+            )
+            await self._trigger_event("view_pop_result", event_data=None, e=e)
+
+        self.update()
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """
