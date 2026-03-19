@@ -79,17 +79,19 @@ def main() -> None:
 
     if args.git_ref:
         # Pin flet to a git commit
-        git_dep = {"git": {"url": args.git_url, "ref": args.git_ref}}
-        if args.git_path:
-            git_dep["git"]["path"] = args.git_path
+        def make_git_dep():
+            d = {"git": {"url": args.git_url, "ref": args.git_ref}}
+            if args.git_path:
+                d["git"]["path"] = args.git_path
+            return d
 
         print(f"Patching {pubspec_path} with git ref {args.git_ref[:12]}")
 
         for dep in ["flet"]:
             if dep in data.get("dependencies", {}):
-                data["dependencies"][dep] = git_dep
+                data["dependencies"][dep] = make_git_dep()
             if dep in data.get("dependency_overrides", {}):
-                data["dependency_overrides"][dep] = git_dep
+                data["dependency_overrides"][dep] = make_git_dep()
     else:
         version = args.version
         print(f"Patching {pubspec_path} with version {version}")
