@@ -77,19 +77,22 @@ def AuthGuard():
 def App():
     auth, _ = ft.use_state(AuthState)
 
-    return AuthContext(
-        auth,
-        lambda: ft.Router(
-            [
-                ft.Route(
-                    component=AuthGuard,
-                    children=[
-                        ft.Route(index=True, component=Home),
-                    ],
-                ),
-            ]
-        ),
+    return ft.SafeArea(
+        content=AuthContext(
+            auth,
+            lambda: ft.Router(
+                [
+                    ft.Route(
+                        component=AuthGuard,
+                        children=[
+                            ft.Route(index=True, component=Home),
+                        ],
+                    ),
+                ]
+            ),
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

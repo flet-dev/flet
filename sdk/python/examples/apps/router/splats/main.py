@@ -43,12 +43,15 @@ def FileBrowser():
 
 @ft.component
 def App():
-    return ft.Router(
-        [
-            ft.Route(index=True, component=Home),
-            ft.Route(path="files/:path*", component=FileBrowser),
-        ]
+    return ft.SafeArea(
+        content=ft.Router(
+            [
+                ft.Route(index=True, component=Home),
+                ft.Route(path="files/:path*", component=FileBrowser),
+            ]
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

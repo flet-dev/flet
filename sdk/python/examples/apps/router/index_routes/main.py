@@ -53,37 +53,40 @@ def SettingsLayout():
 
 @ft.component
 def App():
-    return ft.Column(
-        [
-            ft.Row(
-                [
-                    ft.Button(
-                        "Home",
-                        on_click=lambda: ft.context.page.navigate("/"),
-                    ),
-                    ft.Button(
-                        "Settings",
-                        on_click=lambda: ft.context.page.navigate("/settings"),
-                    ),
-                ]
-            ),
-            ft.Divider(),
-            ft.Router(
-                [
-                    ft.Route(index=True, component=Dashboard),
-                    ft.Route(
-                        path="settings",
-                        component=SettingsLayout,
-                        children=[
-                            ft.Route(index=True, component=SettingsHome),
-                            ft.Route(path="profile", component=ProfileSettings),
-                            ft.Route(path="security", component=SecuritySettings),
-                        ],
-                    ),
-                ]
-            ),
-        ]
+    return ft.SafeArea(
+        content=ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Button(
+                            "Home",
+                            on_click=lambda: ft.context.page.navigate("/"),
+                        ),
+                        ft.Button(
+                            "Settings",
+                            on_click=lambda: ft.context.page.navigate("/settings"),
+                        ),
+                    ]
+                ),
+                ft.Divider(),
+                ft.Router(
+                    [
+                        ft.Route(index=True, component=Dashboard),
+                        ft.Route(
+                            path="settings",
+                            component=SettingsLayout,
+                            children=[
+                                ft.Route(index=True, component=SettingsHome),
+                                ft.Route(path="profile", component=ProfileSettings),
+                                ft.Route(path="security", component=SecuritySettings),
+                            ],
+                        ),
+                    ]
+                ),
+            ]
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

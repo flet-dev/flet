@@ -1,0 +1,26 @@
+[project]
+name = "router-runtime-routes"
+version = "1.0.0"
+description = "Dynamically adding and removing routes at runtime using component state."
+requires-python = ">=3.10"
+keywords = ["router", "dynamic", "runtime", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Runtime routes"
+controls = ["SafeArea", "Column", "Row", "Button", "Text", "Divider", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["dynamic routes", "use_state", "add routes", "remove routes"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

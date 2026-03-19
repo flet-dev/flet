@@ -1,0 +1,26 @@
+[project]
+name = "router-layout-outlet"
+version = "1.0.0"
+description = "Layout routes with use_route_outlet() providing shared AppBar and footer around page content."
+requires-python = ">=3.10"
+keywords = ["router", "layout", "outlet", "appbar", "shared-layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Layout outlet"
+controls = ["SafeArea", "Column", "AppBar", "Button", "Text", "Container", "Router", "Route"]
+layout_pattern = "app-shell"
+complexity = "basic"
+features = ["layout routes", "use_route_outlet", "shared layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -80,43 +80,46 @@ def ProductDetails():
 
 @ft.component
 def App():
-    return ft.Column(
-        [
-            ft.Row(
-                [
-                    ft.Button(
-                        "Home",
-                        on_click=lambda: ft.context.page.navigate("/"),
-                    ),
-                    ft.Button(
-                        "Products",
-                        on_click=lambda: ft.context.page.navigate("/products"),
-                    ),
-                ]
-            ),
-            ft.Divider(),
-            ft.Router(
-                [
-                    ft.Route(index=True, component=Home, loader=home_loader),
-                    ft.Route(
-                        path="products",
-                        children=[
-                            ft.Route(
-                                index=True,
-                                component=ProductsList,
-                                loader=products_loader,
-                            ),
-                            ft.Route(
-                                path=":pid",
-                                component=ProductDetails,
-                                loader=product_detail_loader,
-                            ),
-                        ],
-                    ),
-                ]
-            ),
-        ]
+    return ft.SafeArea(
+        content=ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Button(
+                            "Home",
+                            on_click=lambda: ft.context.page.navigate("/"),
+                        ),
+                        ft.Button(
+                            "Products",
+                            on_click=lambda: ft.context.page.navigate("/products"),
+                        ),
+                    ]
+                ),
+                ft.Divider(),
+                ft.Router(
+                    [
+                        ft.Route(index=True, component=Home, loader=home_loader),
+                        ft.Route(
+                            path="products",
+                            children=[
+                                ft.Route(
+                                    index=True,
+                                    component=ProductsList,
+                                    loader=products_loader,
+                                ),
+                                ft.Route(
+                                    path=":pid",
+                                    component=ProductDetails,
+                                    loader=product_detail_loader,
+                                ),
+                            ],
+                        ),
+                    ]
+                ),
+            ]
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))
