@@ -44,10 +44,7 @@ class Icon(LayoutControl):
     inside other controls (such as buttons), those controls may also affect sizing.
     """
 
-    semantics_label: Annotated[
-        Optional[str],
-        V.deprecated(replacement="fill", version="1.0.0", delete_version="2.0.0"),
-    ] = None
+    semantics_label: Optional[str] = None
     """
     An accessibility label for the icon.
 
@@ -109,12 +106,6 @@ class Icon(LayoutControl):
 
     optical_size: Annotated[
         Optional[Number],
-        V.deprecated(
-            replacement="size",
-            version="1.0.0",
-            delete_version="2.0.0",
-            docs_reason="Use [`size`][(c).] instead.",
-        ),
         V.gt(0.0),
     ] = None
     """
