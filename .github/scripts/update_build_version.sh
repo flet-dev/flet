@@ -4,10 +4,11 @@ set -e
 # ------------------------------------------------------------------------------
 # This script determines the version numbers used in builds and releases.
 #
-# It sets three environment variables:
+# It sets four environment variables:
 #   - PKG_VER   → The package version (semantic version).
 #   - BUILD_NUM → The build number (github run number plus offset).
 #   - PYPI_VER  → A PyPI-compatible version string for publishing.
+#   - PUB_VER   → A pub.dev-compatible version string for Dart publishing.
 #
 # Behavior:
 #   - On a tagged commit (e.g. "v1.2.3"), it uses that tag as the version.
@@ -32,6 +33,7 @@ if [[ "$GITHUB_REF" == refs/tags/* ]]; then
     # Remove leading "v" if present (e.g. "v1.2.3" → "1.2.3")
     export PKG_VER="${tag#v}"
     export PYPI_VER="$PKG_VER"
+    export PUB_VER="$PKG_VER"
 else
     # -------------------------------------------------------------
     # Case 2: This is not a tagged build (e.g. main branch commit)
@@ -51,23 +53,28 @@ else
 
     # Construct the package version: <major>.<minor>.<patch>
     export PKG_VER="${major}.${minor}.${patch}"
-    # PyPI build version: <PKG_VER>+<BUILD_NUM>
+    # PyPI build version: <PKG_VER>.dev<BUILD_NUM>
     export PYPI_VER="${PKG_VER}.dev${BUILD_NUM}"
+    # pub.dev pre-release version: <PKG_VER>+<BUILD_NUM>
+    export PUB_VER="${PKG_VER}+${BUILD_NUM}"
 fi
 
 # Print values for debugging in logs
 echo "PKG_VER=$PKG_VER"
 echo "BUILD_NUM=$BUILD_NUM"
 echo "PYPI_VER=$PYPI_VER"
+echo "PUB_VER=$PUB_VER"
 
 # Export values as environment variables
 echo "PKG_VER=$PKG_VER" >> $GITHUB_ENV
 echo "BUILD_NUM=$BUILD_NUM" >> $GITHUB_ENV
 echo "PYPI_VER=$PYPI_VER" >> $GITHUB_ENV
+echo "PUB_VER=$PUB_VER" >> $GITHUB_ENV
 
 # set GitHub Actions output variables for use in other jobs
 {
   echo "PKG_VER=$PKG_VER"
   echo "BUILD_NUM=$BUILD_NUM"
   echo "PYPI_VER=$PYPI_VER"
+  echo "PUB_VER=$PUB_VER"
 } >> $GITHUB_OUTPUT

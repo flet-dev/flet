@@ -1,0 +1,48 @@
+[project]
+name = "{{cookiecutter.project_name}}-example"
+version = "1.0.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+    "{{cookiecutter.project_name}}",
+    "flet>={{cookiecutter.flet_version}}",
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli>={{cookiecutter.flet_version}}",
+{%- if cookiecutter.platform == "linux" %}
+    "flet-desktop-light>={{cookiecutter.flet_version}}",
+{%- else %}
+    "flet-desktop>={{cookiecutter.flet_version}}",
+{%- endif %}
+    "flet-web>={{cookiecutter.flet_version}}",
+]
+
+[tool.flet]
+# org name in reverse domain name notation, e.g. "com.mycompany".
+# Combined with project.name to build bundle ID for iOS and Android apps
+org = "com.mycompany"
+
+# project display name that is used as an app title on Android and iOS home screens,
+# shown in window titles and about app dialogs on desktop.
+product = "{{cookiecutter.project_name}}-example"
+
+# company name to display in about app dialogs
+company = "Flet"
+
+# copyright text to display in about app dialogs
+copyright = "Copyright (C) 2026 by MyCompany"
+
+[tool.flet.app]
+path = "src"
+
+[tool.flet.dev_packages]
+{{cookiecutter.project_name}} = "..{{cookiecutter.sep}}.." # relative path
+
+[tool.uv.sources]
+{{cookiecutter.project_name}} = { path = "..{{cookiecutter.sep}}..{{cookiecutter.sep}}", editable = true }
