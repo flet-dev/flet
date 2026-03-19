@@ -160,7 +160,7 @@ jobs:
         shell: bash
         run: |
           uv run "$SCRIPTS/patch_pubspec_version.py" \
-            "sdk/python/templates/build/\{\{cookiecutter.out_dir\}\}/pubspec.yaml" \
+            "sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml" \
             "$PUB_VER" --dependencies-only --exact
 
       - name: Create template zips
