@@ -1,11 +1,18 @@
-from typing import Annotated
+from typing import Annotated, Union
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.utils.validation import V
 
-__all__ = ["Hero"]
+__all__ = ["Hero", "HeroTag"]
+
+HeroTag = Union[str, int, float, bool]
+"""Type alias for Hero tag values.
+
+Represents an identifier used to match source and destination [`Hero`][flet.]
+controls during route transitions.
+"""
 
 
 @control("Hero")
@@ -18,14 +25,14 @@ class Hero(LayoutControl):
     """
 
     tag: Annotated[
-        str,
-        V.instance_of(str),
+        HeroTag,
+        V.instance_of((str, int, float, bool)),
     ]
     """
     A unique identifier used to match source and destination Hero controls.
 
     Raises:
-        ValueError: If it is not of type `str`.
+        ValueError: If it is not of type `str`, `int`, `float`, or `bool`.
     """
 
     content: Annotated[

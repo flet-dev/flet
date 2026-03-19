@@ -375,7 +375,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     The icon is displayed in the same location as [`suffix`][flet.FormFieldControl.]
     and in case both `can_reveal_password`/[`password`][(c).] and `suffix` are
-    provided, then the [`suffix`][flet.FormFieldControl.] won't not shown.
+    provided, then the [`suffix`][flet.FormFieldControl.] won't be shown.
     """
 
     read_only: bool = False
