@@ -1195,10 +1195,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                self.update_status(
-                    "[bold blue]Creating app shell from "
-                    f'{template_url} with ref "{template_ref}"...'
-                )
+                status = f"[bold blue]Creating app shell from {template_url}"
+                if checkout:
+                    status += f' with ref "{template_ref}"'
+                status += "..."
+                self.update_status(status)
 
             try:
                 from cookiecutter.main import cookiecutter
