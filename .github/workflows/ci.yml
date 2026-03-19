@@ -115,10 +115,6 @@ jobs:
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
 
-      - name: Patch pubspec version
-        shell: bash
-        run: uv run "$SCRIPTS/patch_pubspec_version.py" packages/flet/pubspec.yaml "$PUB_VER"
-
       - name: Setup Dart (OIDC for pub.dev)
         uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
 
@@ -133,8 +129,7 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Validate package (dry run)
-        if: ${{ github.ref_type == 'tag' }}
+      - name: Publish to pub.dev (Dry Run)
         shell: bash
         working-directory: packages/flet
         run: dart pub publish --dry-run
