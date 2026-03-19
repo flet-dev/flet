@@ -1144,9 +1144,9 @@ permissions = ["location", "microphone"]
 ### Build template
 
 `flet build` creates (and reuses) a Flutter project under `<app_root>/build/flutter` using a
-[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
-repository. The version of the template used is determined by the
-[template reference](#template-reference) option.
+[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template. By default, the template
+is downloaded as a zip artifact from the matching Flet GitHub Release. The version of the template
+used is determined by the installed Flet version.
 
 The cached project is refreshed when template inputs change or when you pass
 [`--clear-cache`](../cli/flet-build.md#-clear-cache).
@@ -1159,6 +1159,7 @@ Supported values include:
 
 - A GitHub repository using the `gh:` prefix (e.g., `gh:org/template`)
 - A full Git URL (e.g., `https://github.com/org/template.git`)
+- A zip URL (e.g., `https://github.com/flet-dev/flet/releases/download/v0.83.0/flet-build-template.zip`)
 - A local directory path
 
 #### Resolution order
@@ -1167,19 +1168,19 @@ Its value is determined in the following order of precedence:
 
 1. [`--template`](../cli/flet-build.md#-template)
 2. `[tool.flet.template].url`
-3. [`"gh:flet-dev/flet-build-template"`](https://github.com/flet-dev/flet-build-template)
+3. The default zip URL from the Flet GitHub Release matching the installed version
 
 #### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk --template gh:flet-dev/flet-build-template
+flet build apk --template gh:my-org/my-custom-template
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.template]
-url = "gh:flet-dev/flet-build-template"
+url = "gh:my-org/my-custom-template"
 ```
 ///
 

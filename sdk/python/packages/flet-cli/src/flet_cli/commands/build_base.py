@@ -1,4 +1,5 @@
 import argparse
+import copy
 import glob
 import os
 import platform
@@ -7,7 +8,6 @@ from pathlib import Path
 from typing import Optional, cast
 
 import yaml
-from packaging import version
 from packaging.requirements import Requirement
 from rich.panel import Panel
 from rich.table import Column, Table
@@ -33,7 +33,10 @@ from flet_cli.utils.project_dependencies import (
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
-DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
+DEFAULT_TEMPLATE_URL = (
+    "https://github.com/flet-dev/flet/releases/download/"
+    "v{version}/flet-build-template.zip"
+)
 
 
 class BaseBuildCommand(BaseFlutterCommand):
@@ -1141,18 +1144,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
         )
 
-        template_url = (
-            self.options.template
-            or self.get_pyproject("tool.flet.template.url")
-            or DEFAULT_TEMPLATE_URL
+        template_url = self.options.template or self.get_pyproject(
+            "tool.flet.template.url"
         )
-        hash.update(template_url)
 
         template_ref = self.options.template_ref or self.get_pyproject(
             "tool.flet.template.ref"
         )
         if not template_ref:
-            template_ref = version.Version(flet.version.flet_version).base_version
+            template_ref = flet.version.flet_version
+
+        is_local_dev = False
+        if template_url:
+            # User-provided template (git repo or local path) — use checkout
+            checkout = template_ref
+        else:
+            # Check for local dev templates first (running from source checkout)
+            local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
+            if local_tpl.is_dir():
+                template_url = str(local_tpl)
+                checkout = None
+                is_local_dev = True
+            else:
+                template_url = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                checkout = None
+
+        hash.update(template_url)
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1178,17 +1195,18 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                self.update_status(
-                    "[bold blue]Creating app shell from "
-                    f'{template_url} with ref "{template_ref}"...'
-                )
+                status = f"[bold blue]Creating app shell from {template_url}"
+                if checkout:
+                    status += f' with ref "{template_ref}"'
+                status += "..."
+                self.update_status(status)
 
             try:
                 from cookiecutter.main import cookiecutter
 
                 cookiecutter(
                     template=template_url,
-                    checkout=template_ref,
+                    checkout=checkout,
                     directory=template_dir,
                     output_dir=str(self.flutter_dir.parent),
                     no_input=True,
@@ -1201,10 +1219,35 @@ class BaseBuildCommand(BaseFlutterCommand):
                 shutil.rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
 
+            # For local development, override flet dependency with path
+            if is_local_dev:
+                repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
+                if repo_root:
+                    flet_pkg_path = str(repo_root / "packages" / "flet")
+                    pubspec = self.load_yaml(self.pubspec_path)
+                    pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
+                    pubspec.setdefault("dependency_overrides", {})["flet"] = {
+                        "path": flet_pkg_path
+                    }
+                    self.save_yaml(self.pubspec_path, pubspec)
+
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 
             if pyproject_pubspec:
+                pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
                 pubspec = self.load_yaml(self.pubspec_path)
+                # Replace individual dependency entries from pyproject rather
+                # than deep-merging them — a Dart dependency can only have one
+                # source, so merging {"path":…} with {"git":…} is invalid.
+                for section in (
+                    "dependencies",
+                    "dependency_overrides",
+                    "dev_dependencies",
+                ):
+                    if section in pyproject_pubspec:
+                        pubspec.setdefault(section, {}).update(
+                            pyproject_pubspec.pop(section)
+                        )
                 pubspec = merge_dict(pubspec, pyproject_pubspec)
                 self.save_yaml(self.pubspec_path, pubspec)
 

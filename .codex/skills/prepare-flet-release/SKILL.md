@@ -45,7 +45,4 @@ description: Use when asked to prepare new Flet release by bumping versions and 
   * Improvements
   * Bug fixes
   * Other changes (chore, refactor, etc.)
-* Check that `{new_version}` branch (without `v`, just version number) exists in `flet/flet-build-template` repository.
-  If not, add/derive that branch from a previous version.
-* Check that `{new_version}` branch (without `v`, just version number) exists in `flet/flet-app-templates` repository.
-  If not, add/derive that branch from a previous version.
+* Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.

@@ -11,6 +11,7 @@ on:
       - '.github/scripts/**'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - 'sdk/python/templates/**'
       - 'packages/flet/**'
       - '.fvmrc'
   pull_request:
@@ -19,6 +20,7 @@ on:
       - '.github/scripts/**'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - 'sdk/python/templates/**'
       - 'packages/flet/**'
       - '.fvmrc'
   workflow_dispatch:
@@ -99,6 +101,7 @@ jobs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_NUM: ${{ steps.versions.outputs.BUILD_NUM }}
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
+      PUB_VER: ${{ steps.versions.outputs.PUB_VER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -112,6 +115,10 @@ jobs:
       - name: Compute versions
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
+
+      - name: Patch pubspec version
+        shell: bash
+        run: uv run "$SCRIPTS/patch_pubspec_version.py" packages/flet/pubspec.yaml "$PUB_VER"
 
       - name: Setup Dart (OIDC for pub.dev)
         uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
@@ -127,16 +134,50 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
-      - name: Publish to pub.dev (Dry Run)
-        shell: bash
-        working-directory: packages/flet
-        run: dart pub publish --dry-run
-
       - name: Publish to pub.dev
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.ref_type == 'tag' || github.ref == 'refs/heads/main' }}
         shell: bash
         working-directory: packages/flet
         run: dart pub publish -f
+
+  # ==================
+  # Package templates
+  # ==================
+  build_templates:
+    name: Package templates
+    runs-on: ubuntu-latest
+    needs: build_flet_package
+    env:
+      PUB_VER: ${{ needs.build_flet_package.outputs.PUB_VER }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Patch build template flet version
+        shell: bash
+        run: |
+          uv run "$SCRIPTS/patch_pubspec_version.py" \
+            "sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml" \
+            "$PUB_VER" --dependencies-only --exact
+
+      - name: Create template zips
+        shell: bash
+        run: |
+          cd sdk/python/templates/build
+          zip -r "$GITHUB_WORKSPACE/flet-build-template.zip" .
+          cd ../app
+          zip -r "$GITHUB_WORKSPACE/flet-app-templates.zip" .
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: template-artifacts
+          path: |
+            flet-build-template.zip
+            flet-app-templates.zip
 
   # =============================
   # Build Flet Client for Windows
@@ -748,6 +789,7 @@ jobs:
       - build_windows
       - build_macos
       - build_linux
+      - build_templates
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
     steps:
       - name: Download artifacts
@@ -771,6 +813,8 @@ jobs:
             dist/**/*.whl
             dist/**/*.tar.gz
             dist/**/*.zip
+            dist/**/flet-build-template.zip
+            dist/**/flet-app-templates.zip
 
   # =====================
   # Dev GitHub Release
@@ -783,6 +827,7 @@ jobs:
       - build_windows
       - build_macos
       - build_linux
+      - build_templates
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Download artifacts
@@ -806,3 +851,5 @@ jobs:
             dist/**/flet-windows.zip
             dist/**/flet-macos.tar.gz
             dist/**/flet-linux*.tar.gz
+            dist/**/flet-build-template.zip
+            dist/**/flet-app-templates.zip
