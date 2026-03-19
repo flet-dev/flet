@@ -873,12 +873,16 @@ class V:
                 raise ValidationDeclarationError("or_ expects only FieldRule instances")
 
         def _check(instance: Any, field_name: str, value: Any) -> None:
-            errors: list[str] = []
+            # Fast path: try each rule without catching exceptions first.
+            # Only fall back to exception collection when all rules fail.
+            errors: list[str] | None = None
             for rule in rules:
                 try:
                     rule.validate(instance, field_name, value)
-                    return
+                    return  # first passing rule is enough
                 except ValueError as err:
+                    if errors is None:
+                        errors = []
                     errors.append(str(err))
 
             if message is not None:
@@ -886,10 +890,10 @@ class V:
                     _resolve_field_message(message, instance, field_name, value)
                 )
 
-            if len(errors) == 1:
+            if errors is not None and len(errors) == 1:
                 raise ValueError(errors[0])
 
-            joined_errors = "; or ".join(errors)
+            joined_errors = "; or ".join(errors or ())
             raise ValueError(
                 f"{field_name} must satisfy at least one of the allowed "
                 f"conditions: {joined_errors}"
@@ -1382,6 +1386,7 @@ def _annotation_allows_none(annotation: Any) -> bool:
     return False
 
 
+@cache
 def _resolve_allow_none_for_field(model_cls: type[Any], field_name: str) -> bool:
     """
     Resolve `None` allowance for an annotated field on a class.
@@ -1406,18 +1411,15 @@ def _prepare_field_value(
         `True` when validation should be skipped because `None` is allowed.
     """
 
-    none_allowed = _resolve_allow_none_for_field(instance.__class__, field_name)
-    if value is None and none_allowed:
+    if value is not None:
+        return False
+
+    if _resolve_allow_none_for_field(instance.__class__, field_name):
         return True
 
-    if value is None:
-        if message is not None:
-            raise ValueError(
-                _resolve_field_message(message, instance, field_name, value)
-            )
-        raise ValueError(default_error(value))
-
-    return False
+    if message is not None:
+        raise ValueError(_resolve_field_message(message, instance, field_name, value))
+    raise ValueError(default_error(value))
 
 
 def _prepare_field_comparison_values(
@@ -1436,22 +1438,19 @@ def _prepare_field_comparison_values(
     """
 
     other_value = getattr(instance, other_field)
-    current_none_allowed = _resolve_allow_none_for_field(instance.__class__, field_name)
-    other_none_allowed = _resolve_allow_none_for_field(instance.__class__, other_field)
 
-    if value is None and current_none_allowed:
+    if value is not None and other_value is not None:
+        return other_value, False
+
+    cls = instance.__class__
+    if value is None and _resolve_allow_none_for_field(cls, field_name):
         return other_value, True
-    if other_value is None and other_none_allowed:
+    if other_value is None and _resolve_allow_none_for_field(cls, other_field):
         return other_value, True
 
-    if value is None or other_value is None:
-        if message is not None:
-            raise ValueError(
-                _resolve_field_message(message, instance, field_name, value)
-            )
-        raise ValueError(default_error(value, other_value))
-
-    return other_value, False
+    if message is not None:
+        raise ValueError(_resolve_field_message(message, instance, field_name, value))
+    raise ValueError(default_error(value, other_value))
 
 
 @cache
@@ -1522,6 +1521,6 @@ def validate(instance: Any, *, suppress_repeated_errors: bool = False) -> None:
         reported.add(signature)
         raise
     else:
-        if reported is not None:
+        if reported:
             # Reset once the control validates successfully again.
             reported.clear()
