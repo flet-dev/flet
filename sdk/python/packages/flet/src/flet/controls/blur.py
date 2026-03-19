@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 __all__ = [
@@ -37,7 +37,7 @@ class BlurTileMode(Enum):
     """
 
 
-@dataclass
+@value
 class Blur:
     """
     Gaussian blur configuration.

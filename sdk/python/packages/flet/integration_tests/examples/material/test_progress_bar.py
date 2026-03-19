@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.progress_ring import determinate_and_indeterminate
 
 

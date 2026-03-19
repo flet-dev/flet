@@ -116,12 +116,14 @@ def define_env(env):
         return "\n\n".join(blocks) + "\n"
 
     @env.macro
-    def class_members(class_name):
+    def class_members(class_name, **extra_options):
         options = {
             "extra": {
                 "show_children": True,
             },
         }
+        if extra_options:
+            options.update(extra_options)
         return render_directive(class_name, options) + "\n"
 
     @env.macro

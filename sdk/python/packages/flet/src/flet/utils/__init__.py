@@ -8,6 +8,7 @@ from flet.utils.files import (
     get_current_script_dir,
     is_within_directory,
     safe_tar_extractall,
+    safe_zip_extractall,
     which,
 )
 from flet.utils.from_dict import from_dict
@@ -69,6 +70,7 @@ __all__ = [
     "patch_dataclass",
     "random_string",
     "safe_tar_extractall",
+    "safe_zip_extractall",
     "sha1",
     "slugify",
     "to_json",

@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.placeholder import basic
 
 

@@ -55,7 +55,7 @@ def from_git() -> Optional[str]:
 
     try:
         result = sp.run(
-            [git_cmd, "describe", "--abbrev=0"],
+            [git_cmd, "describe", "--tags", "--abbrev=0"],
             cwd=repo_root,
             capture_output=True,
             text=True,

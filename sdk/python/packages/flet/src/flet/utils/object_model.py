@@ -16,6 +16,12 @@ def patch_dataclass(obj: Any, patch: dict):
     Fields starting with `_` are set directly even when they are not declared in type
     hints.
 
+    For ``@control`` / ``@value`` objects (those with ``_values`` and
+    ``_prop_defaults``), Prop fields are written directly into ``_values`` rather
+    than going through ``Prop.__set__``.  This avoids unnecessary dirty-tracking,
+    frozen-checks, and ``_notify`` calls — none of which are needed when applying
+    patches that originate *from* Dart rather than from Python code.
+
     Args:
         obj: Dataclass instance to patch.
         patch: Mapping of field names to new values.
@@ -32,6 +38,25 @@ def patch_dataclass(obj: Any, patch: dict):
         hints = {f.name: f.type for f in dataclasses.fields(cls)}  # fallback
         # print("ERROR: ", cls.__name__, e)
 
+    # For @control / @value objects write Prop fields directly into _values,
+    # bypassing dirty-tracking and other Prop.__set__ side-effects.
+    _values = getattr(obj, "_values", None)
+    _prop_defaults = getattr(type(obj), "_prop_defaults", None)
+
+    def _write(field_name: str, value: Any) -> None:
+        if (
+            _values is not None
+            and _prop_defaults is not None
+            and field_name in _prop_defaults
+        ):
+            prop_default = _prop_defaults[field_name]
+            if value == prop_default:
+                _values.pop(field_name, None)  # keep _values sparse
+            else:
+                _values[field_name] = value
+        else:
+            object.__setattr__(obj, field_name, value)
+
     for field_name, value in patch.items():
         if field_name in hints:
             field_type = hints[field_name]
@@ -44,7 +69,7 @@ def patch_dataclass(obj: Any, patch: dict):
             # Nested dataclass patching
             if dataclasses.is_dataclass(actual_type) and isinstance(value, dict):
                 if current_value is None:
-                    object.__setattr__(obj, field_name, from_dict(actual_type, value))
+                    _write(field_name, from_dict(actual_type, value))
                 else:
                     patch_dataclass(current_value, value)
 
@@ -52,20 +77,17 @@ def patch_dataclass(obj: Any, patch: dict):
             elif get_origin(actual_type) is list and isinstance(value, list):
                 item_type = get_args(actual_type)[0]
                 if dataclasses.is_dataclass(item_type):
-                    object.__setattr__(
-                        obj, field_name, [from_dict(item_type, item) for item in value]
-                    )
+                    _write(field_name, [from_dict(item_type, item) for item in value])
                 else:
-                    object.__setattr__(obj, field_name, value)
+                    _write(field_name, value)
 
             # Enum
             elif is_enum(actual_type):
-                enum_value = actual_type(value)
-                object.__setattr__(obj, field_name, enum_value)
+                _write(field_name, actual_type(value))
 
             # Simple literal or other value
             else:
-                object.__setattr__(obj, field_name, value)
+                _write(field_name, value)
         elif field_name.startswith("_"):
             setattr(obj, field_name, value)
 

@@ -1,5 +1,5 @@
 import pytest
-import asyncio
+
 import flet as ft
 import flet.testing as ftt
 

@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 __all__ = [
@@ -22,7 +22,7 @@ MICROSECONDS_PER_HOUR = 60 * MICROSECONDS_PER_MINUTE
 MICROSECONDS_PER_DAY = 24 * MICROSECONDS_PER_HOUR
 
 
-@dataclass
+@value
 class Duration:
     """
     A span of time, such as 27 days, 4 hours, 12 minutes, and 3 seconds.

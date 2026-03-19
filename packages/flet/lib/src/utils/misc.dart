@@ -66,13 +66,6 @@ CardVariant? parseCardVariant(String? value, [CardVariant? defaultValue]) {
   return parseEnum(CardVariant.values, value, defaultValue);
 }
 
-enum ScrollMode { none, auto, adaptive, always, hidden }
-
-ScrollMode? parseScrollMode(String? value,
-    [ScrollMode? defaultValue = ScrollMode.none]) {
-  return parseEnum(ScrollMode.values, value, defaultValue);
-}
-
 enum LabelPosition { right, left }
 
 LabelPosition? parseLabelPosition(String? value,
@@ -179,11 +172,6 @@ extension MiscParsers on Control {
   CardVariant? getCardVariant(String propertyName,
       [CardVariant? defaultValue]) {
     return parseCardVariant(get(propertyName), defaultValue);
-  }
-
-  ScrollMode? getScrollMode(String propertyName,
-      [ScrollMode? defaultValue = ScrollMode.none]) {
-    return parseScrollMode(get(propertyName), defaultValue);
   }
 
   LabelPosition? getLabelPosition(String propertyName,

@@ -1,7 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+
+import flet as ft
 
 
 class KeychainAccessibility(Enum):
@@ -171,7 +173,7 @@ class StorageCipherAlgorithm(Enum):
     """
 
 
-@dataclass
+@ft.value
 class AndroidOptions:
     """
     Specific options for Android platform for secure storage.
@@ -255,7 +257,7 @@ class AndroidOptions:
     """
 
 
-@dataclass
+@ft.value
 class AppleOptions:
     """
     Specific options for Apple platforms (iOS/macOS) for secure storage.
@@ -366,7 +368,7 @@ class AppleOptions:
     """
 
 
-@dataclass
+@ft.value
 class IOSOptions(AppleOptions):
     """
     iOS-specific configuration for secure storage.
@@ -376,7 +378,7 @@ class IOSOptions(AppleOptions):
     """
 
 
-@dataclass
+@ft.value
 class MacOsOptions(AppleOptions):
     """
     Specific options for macOS platform.
@@ -389,7 +391,7 @@ class MacOsOptions(AppleOptions):
     """
 
 
-@dataclass
+@ft.value
 class WebOptions:
     """
     Specific options for the Web platform for secure storage.
@@ -423,7 +425,7 @@ class WebOptions:
     """
 
 
-@dataclass
+@ft.value
 class WindowsOptions:
     """
     Specific options for Windows platform for secure storage.

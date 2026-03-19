@@ -1,3 +1,21 @@
+## 0.82.2
+
+### Bug fixes
+
+* Lazy-load optional auth dependencies to avoid import-time failures in web/Pyodide startup ([#6258](https://github.com/flet-dev/flet/issues/6258), [#6280](https://github.com/flet-dev/flet/pull/6280)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Pin `binaryornot` below `0.5` to fix build-template UTF-8 decode errors ([#6276](https://github.com/flet-dev/flet/issues/6276), [#6279](https://github.com/flet-dev/flet/pull/6279)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+
+## 0.82.0
+
+### Improvements
+
+* Refactor ads controls: `InterstitialAd` is now a `Service`, and `BannerAd` is now a `LayoutControl` ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
+* Improve `CodeEditor` with Chinese pinyin input support and aligned gutter rendering ([#6211](https://github.com/flet-dev/flet/issues/6211), [#6243](https://github.com/flet-dev/flet/issues/6243), [#6244](https://github.com/flet-dev/flet/pull/6244)).
+
+### Bug fixes
+
+* Fix disabled-state handling across `Tabs`, `TabBar`, `Tab`, and `TabBarView` ([#6220](https://github.com/flet-dev/flet/issues/6220), [#6224](https://github.com/flet-dev/flet/pull/6224)).
+
 ## 0.81.0
 
 ### New features

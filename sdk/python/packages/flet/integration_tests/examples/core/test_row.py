@@ -2,8 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
-from examples.controls.row import alignment, vertical_alignment, spacing, wrap
+from examples.controls.row import alignment, spacing, vertical_alignment, wrap
 
 
 @pytest.mark.asyncio(loop_scope="function")

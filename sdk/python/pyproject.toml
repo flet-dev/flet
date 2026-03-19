@@ -9,7 +9,6 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
     "flet-ads",
     "flet-audio",
@@ -34,7 +33,6 @@ dependencies = [
 flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
-flet-desktop-light = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
@@ -82,7 +80,7 @@ docs-coverage = [
     "docstr-coverage >=2.3.2",
 ]
 docs = [
-    "mkdocs >=1.6.1",
+    "mkdocs >=1.6.1,<2.0.0",
     "mkdocs-material >=9.6.20",
     "mkdocstrings-python >=1.18.2",
     "mkdocstrings-python-xref >=1.16.4",

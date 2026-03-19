@@ -8,26 +8,32 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.core.list_view import ListView
-from flet.controls.padding import PaddingValue
-from flet.controls.types import (
-    ClipBehavior,
-    MouseCursor,
-    Number,
-)
+from flet.controls.types import MouseCursor, Number
 
 
 @dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
     """
-    Represents an event triggered during the reordering of items in a \
-    [`ReorderableListView`][flet.].
+    Payload for [`ReorderableListView`][flet.] events related to item reordering.
     """
 
-    new_index: Optional[int]
-    """The new position of the item after reordering."""
+    new_index: Optional[int] = None
+    """
+    The new position of the item after the reordering, if available.
 
-    old_index: Optional[int]
-    """The original/previous position of the item before reordering."""
+    Will be non-`None` only for the following events:
+    [`ReorderableListView.on_reorder`][flet.],
+    [`ReorderableListView.on_reorder_end`][flet.].
+    """
+
+    old_index: Optional[int] = None
+    """
+    The previous position of the item before the reordering, if available.
+
+    Will be non-`None` only for the following events:
+    [`ReorderableListView.on_reorder`][flet.],
+    [`ReorderableListView.on_reorder_start`][flet.].
+    """
 
 
 @control("ReorderableListView")
@@ -58,72 +64,13 @@ class ReorderableListView(ListView):
 
     controls: list[Control] = field(default_factory=list)
     """
-    The controls to be reordered.
-    """
+    The controls displayed by this [`ReorderableListView`][(c)].
 
-    horizontal: bool = False
-    """
-    Whether the [`controls`][(c).] should be laid out horizontally.
-    """
-
-    reverse: bool = False
-    """
-    Whether the scroll view scrolls in the reading direction.
-
-    For example, if the reading direction is left-to-right and [`horizontal`][(c).]
-    is `True`, then the scroll view scrolls from left to right when `reverse` is `False`
-    and from right to left when `reverse` is `True`.
-
-    Similarly, if [`horizontal`][(c).] is `False`, then the scroll view scrolls from top
-    to bottom when `reverse` is `False` and from bottom to top when `reverse` is `True`.
-    """
-
-    item_extent: Optional[Number] = None
-    """
-    Defines the extent that the [`controls`][(c).] should have in the scroll \
-    direction.
-
-    Specifying an `item_extent` is more efficient than letting the [`controls`][(c).]
-    determine their own extent because the scrolling machinery can make use of the
-    foreknowledge of the `controls` extent to save work, for example when the scroll
-    position changes drastically.
-    """
-
-    first_item_prototype: bool = False
-    """
-    Whether the dimensions of the first item should be used as a "prototype" for all \
-    other items.
-
-    If `True`, their height or width will be the same as the first item.
-    """
-
-    padding: Optional[PaddingValue] = None
-    """
-    The amount of space by which to inset the [`controls`][(c).].
-    """
-
-    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
-    """
-    The content will be clipped (or not) according to this option.
-    """
-
-    cache_extent: Optional[Number] = None
-    """
-    The viewport has an area before and after the visible area to cache items that are \
-    about to become visible when the user scrolls.
-
-    Items that fall in this cache area are laid out even though they are not (yet)
-    visible on screen. The `cache_extent` describes how many pixels the cache area
-    extends before the leading edge and after the trailing edge of the viewport.
-
-    The total extent, which the viewport will try to cover with children, is
-    `cache_extent` before the leading edge + extent of the main axis + `cache_extent`
-    after the trailing edge.
-
-    The cache area is also used to implement implicit accessibility scrolling on iOS:
-    When the accessibility focus moves from an item in the visible viewport to an
-    invisible item in the cache area, the framework will bring that item into view
-    with an (implicit) scroll action.
+    Note:
+        When an item of this list gets reordered, [`on_reorder`][(c).] event gets
+        fired, but it doesn't reorder the `controls` list automatically. So, to keep
+        `controls` list in sync with the UI, reorder this list inside your
+        [`on_reorder`][(c).] event handler. ([example][(c).on_reorder])
     """
 
     anchor: Number = 0.0
@@ -149,14 +96,6 @@ class ReorderableListView(ListView):
     A non-reorderable footer item to show after the [`controls`][(c).].
     """
 
-    build_controls_on_demand: bool = True
-    """
-    Whether the [`controls`][(c).] should be built lazily/on-demand, i.e. only when \
-    they are about to become visible.
-
-    This is particularly useful when dealing with a large number of controls.
-    """
-
     show_default_drag_handles: bool = True
     """
     Whether to show default drag handles for each [`controls`][(c).] item.
@@ -167,13 +106,12 @@ class ReorderableListView(ListView):
 
     The default desktop drag handle is just an `Icons.DRAG_HANDLE`
     wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
-    item is wrapped with a [`ReorderableDelayedDragStartListener`].
+    item is wrapped with a [`ReorderableDragHandle`][flet.].
 
     To customize the appearance or layout of drag handles, wrap each
     [`controls`][(c).] item, or a control within each of them, with a
-    [`ReorderableDragHandle`][flet.], [`ReorderableDelayedDragStartListener`],
-    or your own subclass of [`ReorderableDragHandle`][flet.]. For full control
-    over the drag handles, you might want to set `show_default_drag_handles` to `False`.
+    [`ReorderableDragHandle`][flet.]. For full control over the drag handles,
+    you might want to set `show_default_drag_handles` to `False`.
 
     Example:
         ```python
@@ -200,9 +138,23 @@ class ReorderableListView(ListView):
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a [`controls`][(c).] item has been dragged to a new location/position \
-    and the order of the items gets updated.
-    """
+    Called when a [`controls`][(c).] item has been dragged to a new location/position.
+
+    Note:
+        This event does not reorder [`controls`][(c).] automatically. So, to keep
+        [`controls`][(c).] list in sync with the UI, reorder it accordingly inside
+        your `on_reorder` event handler.
+
+        /// admonition | Example
+        ```python
+            def handle_reorder(e: ft.OnReorderEvent):
+                rlv = e.control
+                moved_item = rlv.controls.pop(e.old_index)  # Remove the reordered item from its old position
+                rlv.controls.insert(e.new_index, moved_item)  # Insert the reordered item into its new position
+                rlv.update()
+        ```
+        ///
+    """  # noqa: E501
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """

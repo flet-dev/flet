@@ -1,8 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -20,7 +20,7 @@ from flet.controls.types import (
 __all__ = ["MenuBar", "MenuStyle"]
 
 
-@dataclass
+@value
 class MenuStyle:
     """
     Defines the visual style/appearance of a menu.

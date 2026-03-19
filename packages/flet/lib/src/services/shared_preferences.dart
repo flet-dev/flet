@@ -24,9 +24,21 @@ class SharedPreferencesService extends FletService {
     var prefs = await SharedPreferences.getInstance();
     switch (name) {
       case "set":
-        return prefs.setString(args["key"]!, args["value"]!);
+        var key = args["key"]!;
+        var value = args["value"]!;
+
+        if (value is String) return prefs.setString(key, value);
+        if (value is bool) return prefs.setBool(key, value);
+        if (value is int) return prefs.setInt(key, value);
+        if (value is double) return prefs.setDouble(key, value);
+        if (value is List && value.every((item) => item is String)) {
+          return prefs.setStringList(key, value.cast<String>());
+        }
+        throw UnsupportedError(
+            "Unsupported SharedPreferences value type: ${value.runtimeType}. "
+            "Supported: String, bool, int, double, List<String>.");
       case "get":
-        return prefs.getString(args["key"]!);
+        return prefs.get(args["key"]!);
       case "contains_key":
         return prefs.containsKey(args["key"]!);
       case "get_keys":

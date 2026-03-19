@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
 import flet as ft
@@ -7,7 +7,7 @@ from flet_charts.types import ChartDataPointTooltip, ChartPointLine, ChartPointS
 __all__ = ["LineChartDataPoint", "LineChartDataPointTooltip"]
 
 
-@dataclass
+@ft.value
 class LineChartDataPointTooltip(ChartDataPointTooltip):
     """Tooltip configuration for the [`LineChartDataPoint`][(p).]."""
 
@@ -85,7 +85,7 @@ class LineChartDataPoint(ft.BaseControl):
 
     selected_below_line: Union[None, bool, ChartPointLine] = None
     """
-    A vertical line drawn between selected line point and the bottom adge of the chart.
+    A vertical line drawn between selected line point and the bottom edge of the chart.
 
     The value is either `True` - draw a line with default style, `False` - do not draw a
     line under selected point, or an instance of [`ChartPointLine`][(p).] class to

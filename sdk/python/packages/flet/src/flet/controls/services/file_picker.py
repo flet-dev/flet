@@ -221,7 +221,7 @@ class FilePicker(Service):
         Selects a directory and returns its absolute path.
 
         Args:
-            dialog_title: The title of the dialog window. Defaults to [`FilePicker.
+            dialog_title: The title of the dialog window. Defaults to [`FilePicker`].
             initial_directory: The initial directory where the dialog should open.
 
         Returns:

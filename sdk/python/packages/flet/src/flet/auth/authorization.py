@@ -1,5 +1,7 @@
 from typing import Any
 
+__all__ = ["Authorization"]
+
 
 class Authorization:
     """

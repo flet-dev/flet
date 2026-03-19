@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control_state import ControlStateValue
@@ -27,7 +28,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class ShapeBorder:
     """
     Base class for shape outlines. Not intended to be used directly.
@@ -38,7 +39,7 @@ class ShapeBorder:
     """
 
 
-@dataclass
+@value
 class OutlinedBorder(ShapeBorder):
     """
     An abstract class that can be used to create custom borders.
@@ -60,7 +61,7 @@ class OutlinedBorder(ShapeBorder):
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@value
 class StadiumBorder(OutlinedBorder):
     """
     A border that looks like a stadium.
@@ -82,7 +83,7 @@ class StadiumBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class RoundedRectangleBorder(OutlinedBorder):
     """
     A border with rounded rectangle corners.
@@ -111,7 +112,7 @@ class RoundedRectangleBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class CircleBorder(OutlinedBorder):
     """
     A border with a circle shape.
@@ -139,7 +140,7 @@ class CircleBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class BeveledRectangleBorder(RoundedRectangleBorder):
     """
     A border with beveled rectangle corners.
@@ -163,7 +164,7 @@ class BeveledRectangleBorder(RoundedRectangleBorder):
         )
 
 
-@dataclass
+@value
 class ContinuousRectangleBorder(RoundedRectangleBorder):
     """
     A border with continuous rectangle corners.
@@ -187,7 +188,7 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
         )
 
 
-@dataclass
+@value
 class ButtonStyle:
     """
     Allows controlling all visual aspects of a button, such as shape, foreground, \

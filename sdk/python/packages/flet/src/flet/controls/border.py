@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.colors import Colors
 from flet.controls.types import ColorValue, Number
 from flet.utils import deprecated
@@ -46,18 +47,21 @@ class BorderStyle(Enum):
     """
 
     NONE = "none"
-    """Skip the border."""
+    """Skip (doesn't paint) the border."""
 
     SOLID = "solid"
     """Draw the border as a solid line."""
 
 
-@dataclass
+@value
 class BorderSide:
     """
     Creates the side of a border.
 
     By default, the border is `1.0` logical pixels wide and solid black color.
+
+    To omit (not show) a side, set [`style`][(c).] to [`BorderStyle.NONE`][flet.].
+    It skips painting the border, but the border still has a [`width`][(c).].
     """
 
     width: Number = 1.0
@@ -92,10 +96,6 @@ class BorderSide:
     style: BorderStyle = BorderStyle.SOLID
     """
     The style of this side of the border.
-
-    Tip:
-        To omit a side, set [`style`][(c).] to [`BorderStyle.NONE`][flet.]. This skips
-        painting the border, but the border still has a `width`.
     """
 
     def __post_init__(self):
@@ -163,11 +163,17 @@ class BorderSide:
 
     @staticmethod
     def none() -> "BorderSide":
-        """A hairline black border that is not rendered."""
+        """
+        Creates a border side that is not rendered.
+
+        Returns:
+            A hairline black [`BorderSide`][flet.] with
+                [`style`][(c).] set to [`BorderStyle.NONE`][flet.].
+        """
         return BorderSide(width=0.0, style=BorderStyle.NONE)
 
 
-@dataclass
+@value
 class Border:
     """
     A border comprised of four sides: `top`, `right`, `bottom`, `left`.
@@ -209,6 +215,15 @@ class Border:
         Creates a border whose sides are all the same.
 
         If `side` is not `None`, it gets used and both `width` and `color` are ignored.
+
+        Args:
+            width: The side width. Used only when `side` is `None`.
+            color: The side color. Used only when `side` is `None`.
+            side: The [`BorderSide`][flet.] to apply to all sides. If set,
+                it has precedence over `width` and `color`.
+
+        Returns:
+            A [`Border`][flet.] with identical sides.
         """
         if side is not None:
             return Border(top=side, right=side, bottom=side, left=side)
@@ -225,8 +240,16 @@ class Border:
         """
         Creates a border with symmetrical vertical and horizontal sides.
 
-        The `vertical` argument applies to the `left` and `right` sides,
-        and the `horizontal` argument applies to the `top` and `bottom` sides.
+        The `vertical` argument applies to the [`left`][(c).] and [`right`][(c).] sides,
+        and the `horizontal` argument applies to the [`top`][(c).] and [`bottom`][(c).]
+        sides.
+
+        Args:
+            vertical: The side applied to the left and right.
+            horizontal: The side applied to the top and bottom.
+
+        Returns:
+            A [`Border`][flet.] with mirrored side pairs.
         """
         if vertical is None:
             vertical = BorderSide(width=0.0, style=BorderStyle.NONE)
@@ -243,7 +266,18 @@ class Border:
         right: Optional[BorderSide] = None,
         bottom: Optional[BorderSide] = None,
     ) -> "Border":
-        """Creates a `Border` from the given values."""
+        """
+        Creates a border with explicit sides.
+
+        Args:
+            left: The left side. Defaults to no border.
+            top: The top side. Defaults to no border.
+            right: The right side. Defaults to no border.
+            bottom: The bottom side. Defaults to no border.
+
+        Returns:
+            A [`Border`][flet.] built from the provided sides.
+        """
         return Border(
             left=left or BorderSide(width=0.0, style=BorderStyle.NONE),
             top=top or BorderSide(width=0.0, style=BorderStyle.NONE),

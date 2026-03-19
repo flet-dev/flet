@@ -333,12 +333,58 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
 3. `{}` (no extra keys)
 
+##### Supported value forms
+
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of dictionaries (including dictionaries that contain arrays)
+
+Numbers are not yet supported.
+///
+
 ##### Example
 
 /// tab | `pyproject.toml`
 ```toml
-[tool.flet.ios]
-export_options = { uploadSymbols = false }
+[tool.flet.ios.export_options]
+uploadSymbols = false
+compileBitcode = false
+thinning = "<none>"
+
+[tool.flet.ios.export_options.manifest]
+appURL = "https://example.com/app.ipa"
+displayImageURL = "https://example.com/icon57.png"
+fullSizeImageURL = "https://example.com/icon512.png"
+```
+///
+
+/// details | Template translation
+    type: example
+In the [`ios/exportOptions.plist`](index.md#build-template),
+the example above will be translated accordingly into this:
+
+```xml
+<key>uploadSymbols</key>
+<false/>
+<key>compileBitcode</key>
+<false/>
+<key>thinning</key>
+<string>&lt;none&gt;</string>
+<key>manifest</key>
+<dict>
+    <key>appURL</key>
+    <string>https://example.com/app.ipa</string>
+    <key>displayImageURL</key>
+    <string>https://example.com/icon57.png</string>
+    <key>fullSizeImageURL</key>
+    <string>https://example.com/icon512.png</string>
+</dict>
 ```
 ///
 
@@ -430,18 +476,150 @@ Its value is determined in the following order of precedence:
 
 1. [`--info-plist`](../cli/flet-build.md#-info-plist)
 2. `[tool.flet.ios.info]`
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
+
+#### Supported value forms
+
+/// tab | `flet build`
+Accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["myapp", "myapp-beta"]`
+- TOML inline tables, for example `{ NSAllowsArbitraryLoads = false }`
+- any other value is treated as a string
+///
+/// tab | `pyproject.toml`
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- integer
+- real
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of integers
+- array of reals
+- array of dictionaries (including dictionaries that contain arrays)
+///
 
 ##### Example
 
 /// tab | `flet build`
 ```bash
-flet build ipa --info-plist NSLocationWhenInUseUsageDescription="This app uses location service when in use."
+flet build ipa \
+  --info-plist NSCameraUsageDescription="This app needs camera access." \
+  --info-plist UIFileSharingEnabled=true \
+  --info-plist ExampleInteger=32 \
+  --info-plist ExampleReal=0.5 \
+  --info-plist 'LSApplicationQueriesSchemes=["myapp", "myapp-beta"]' \
+  --info-plist 'FeatureFlags=[true, false]' \
+  --info-plist 'RetryDelays=[1, 2, 3]' \
+  --info-plist 'OpacitySteps=[0.25, 0.5, 0.75]' \
+  --info-plist 'NSAppTransportSecurity={ NSAllowsArbitraryLoads = false }' \
+  --info-plist 'CFBundleURLTypes=[{ CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] }, { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] }]'
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.ios.info]
-NSCameraUsageDescription = "This app uses the camera to ..."
+NSCameraUsageDescription = "This app needs camera access."
+UIFileSharingEnabled = true
+ExampleInteger = 32
+ExampleReal = 0.5
+LSApplicationQueriesSchemes = ["myapp", "myapp-beta"]
+FeatureFlags = [true, false]
+RetryDelays = [1, 2, 3]
+OpacitySteps = [0.25, 0.5, 0.75]
+NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
+CFBundleURLTypes = [
+  { CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] },
+  { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] },
+]
+```
+///
+
+/// details | Template translation
+    type: example
+In the [`ios/Runner/Info.plist`](index.md#build-template), the
+example above will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+	<dict>
+
+        <key>NSCameraUsageDescription</key>
+        <string>This app needs camera access.</string>
+
+        <key>UIFileSharingEnabled</key>
+        <true/>
+
+        <key>ExampleInteger</key>
+        <integer>32</integer>
+
+        <key>ExampleReal</key>
+        <real>0.5</real>
+
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>myapp</string>
+            <string>myapp-beta</string>
+        </array>
+
+        <key>FeatureFlags</key>
+        <array>
+            <true/>
+            <false/>
+        </array>
+
+        <key>RetryDelays</key>
+        <array>
+            <integer>1</integer>
+            <integer>2</integer>
+            <integer>3</integer>
+        </array>
+
+        <key>OpacitySteps</key>
+        <array>
+            <real>0.25</real>
+            <real>0.5</real>
+            <real>0.75</real>
+        </array>
+
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <false/>
+        </dict>
+
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>example.com</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>myapp</string>
+                </array>
+            </dict>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Viewer</string>
+                <key>CFBundleURLName</key>
+                <string>example.org</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>myapp-beta</string>
+                </array>
+            </dict>
+        </array>
+
+	</dict>
+</plist>
 ```
 ///
 

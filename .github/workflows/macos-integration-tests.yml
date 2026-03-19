@@ -50,7 +50,6 @@ jobs:
         - controls/material
         - controls/services
         - controls/theme
-        - controls/types
         - extensions
 
     name: ${{ matrix.suite }} Integration Tests

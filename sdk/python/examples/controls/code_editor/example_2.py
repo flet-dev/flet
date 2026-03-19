@@ -29,6 +29,20 @@ def main(page: ft.Page):
 ft.run(main)
 """
 
+font_families = [
+    # Apple platforms
+    "SF Mono",
+    "Menlo",
+    # Android
+    "Roboto Mono",
+    # Windows
+    "Consolas",
+    # Linux
+    "Ubuntu Mono",
+    # Universal fallbacks
+    "Courier New",
+]
+
 
 def main(page: ft.Page):
     page.title = "CodeEditor selection"
@@ -41,14 +55,12 @@ def main(page: ft.Page):
     )
 
     text_style = ft.TextStyle(
-        font_family="monospace",
-        height=1.2,
+        font_family="monospace", font_family_fallback=font_families, size=12
     )
 
     gutter_style = fce.GutterStyle(
         text_style=ft.TextStyle(
-            font_family="monospace",
-            height=1.2,
+            font_family="monospace", font_family_fallback=font_families, size=12
         ),
         show_line_numbers=True,
         show_folding_handles=True,
@@ -98,6 +110,7 @@ def main(page: ft.Page):
                     value=CODE,
                     text_style=text_style,
                     gutter_style=gutter_style,
+                    padding=10,
                     on_selection_change=handle_selection_change,
                     expand=True,
                 ),

@@ -109,7 +109,7 @@ class CameraLensType(Enum):
     """Unknown lens type."""
 
 
-@dataclass
+@ft.value
 class CameraPreviewSize:
     """Dimensions of a camera preview."""
 
@@ -120,7 +120,7 @@ class CameraPreviewSize:
     """Preview height in logical pixels."""
 
 
-@dataclass
+@ft.value
 class CameraDescription:
     """Properties of a camera device."""
 

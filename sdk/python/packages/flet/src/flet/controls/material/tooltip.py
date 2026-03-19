@@ -1,6 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.border_radius import (
     BorderRadius,
 )
@@ -40,7 +41,7 @@ class TooltipTriggerMode:
     """
 
 
-@dataclass
+@value
 class Tooltip:
     """
     Provide text labels which help explain the function of a button or other user \

@@ -27,7 +27,7 @@ def main(page: ft.Page):
                     content=ft.Button("-0.5, -0.5"),
                     bgcolor=ft.Colors.AMBER,
                     padding=15,
-                    alignment=ft.alignment.Alignment(-0.5, -0.5),
+                    alignment=ft.Alignment(-0.5, -0.5),
                     width=150,
                     height=150,
                 ),

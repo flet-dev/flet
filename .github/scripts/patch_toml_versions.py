@@ -2,16 +2,12 @@
 # dependencies = ["tomlkit"]
 # ///
 
-"""
-Patches a TOML file (e.g. pyproject.toml) to:
-    - Set `[project].version` to a given value.
-    - Update selected dependencies in `[project].dependencies` to the same version.
+"""Patch TOML package versions and pin internal flet dependencies.
 
-Dependencies patched:
-    - flet-cli
-    - flet-desktop
-    - flet-web
-    - flet
+This script updates:
+    - `[project].version`
+    - Internal flet dependencies in `[project].dependencies`
+    - Internal flet dependencies in `[project].optional-dependencies`
 
 Usage:
     uv run patch_toml_versions.py <toml_file> <version>
@@ -19,17 +15,42 @@ Usage:
 
 import sys
 from pathlib import Path
+import re
 
 import tomlkit
 
 
-def patch_dependency(deps: list[str], dep_name: str, version: str) -> None:
-    """Pin a dependency in-place to the given version if it matches dep_name."""
+INTERNAL_DEPS = {
+    "flet",
+    "flet-cli",
+    "flet-desktop",
+    "flet-web",
+}
+REQ_RE = re.compile(
+    r"^(?P<name>[A-Za-z0-9][A-Za-z0-9._-]*)(?P<spec>[^;]*)?(?P<marker>\s*;.*)?$"
+)
+
+
+def patch_dependency(req: str, version: str) -> str:
+    """Pin a single requirement string if it references an internal flet package."""
+    m = REQ_RE.match(req.strip())
+    if not m:
+        return req
+
+    name = m.group("name")
+    if name not in INTERNAL_DEPS:
+        return req
+
+    marker = m.group("marker") or ""
+    if marker:
+        return f"{name}=={version}{marker}"
+    return f"{name}=={version}"
+
+
+def patch_dependency_list(deps: list[str], version: str) -> None:
+    """Patch dependencies list in-place."""
     for i, dep in enumerate(deps):
-        if dep == dep_name:
-            deps[i] = f"{dep_name}=={version}"
-        elif dep.startswith(f"{dep_name};"):
-            deps[i] = dep.replace(f"{dep_name};", f"{dep_name}=={version};")
+        deps[i] = patch_dependency(dep, version)
 
 
 def main() -> None:
@@ -54,9 +75,13 @@ def main() -> None:
     t["project"]["version"] = version
 
     # patch dependencies
-    deps: list[str] = t["project"]["dependencies"]
-    for name in ["flet-cli", "flet-desktop", "flet-desktop-light", "flet-web", "flet"]:
-        patch_dependency(deps, name, version)
+    deps: list[str] = t["project"].get("dependencies", [])
+    patch_dependency_list(deps, version)
+
+    # patch optional dependencies
+    optional = t["project"].get("optional-dependencies", {})
+    for _, opt_deps in optional.items():
+        patch_dependency_list(opt_deps, version)
 
     # save
     with toml_path.open("w", encoding="utf-8") as f:

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +25,7 @@ LatLngBounds? parseLatLngBounds(dynamic value, [LatLngBounds? defaultValue]) {
 }
 
 PatternFit? parsePatternFit(String? value, [PatternFit? defaultValue]) {
-  if (value == null) return defaultValue;
-  return PatternFit.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(PatternFit.values, value, defaultValue);
 }
 
 StrokePattern? parseStrokePattern(dynamic value,
@@ -166,11 +162,8 @@ KeyboardOptions? parseKeyboardOptions(dynamic value,
 }
 
 CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
-    [CursorRotationBehaviour? defValue]) {
-  if (value == null) return defValue;
-  return CursorRotationBehaviour.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+    [CursorRotationBehaviour? defaultValue]) {
+  return parseEnum(CursorRotationBehaviour.values, value, defaultValue);
 }
 
 CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
@@ -205,10 +198,7 @@ CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
 
 EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? value,
     [EvictErrorTileStrategy? defaultValue]) {
-  if (value == null) return defaultValue;
-  return EvictErrorTileStrategy.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(EvictErrorTileStrategy.values, value, defaultValue);
 }
 
 extension TapPositionExtension on TapPosition {
@@ -244,11 +234,23 @@ extension MapCameraExtension on MapCamera {
       };
 }
 
-extension MapEventExtension on MapEvent {
-  Map<String, dynamic> toMap() => {
-        "source": source.name,
-        "camera": camera.toMap(),
-      };
+WMSTileLayerOptions? parseWMSTileLayerOptions(dynamic value,
+    [WMSTileLayerOptions? defaultValue]) {
+  if (value == null) return defaultValue;
+  return WMSTileLayerOptions(
+    baseUrl: value["base_url"],
+    format: value["format"],
+    version: value["version"],
+    uppercaseBoolValue: parseBool(value["uppercase_bool_value"], false)!,
+    transparent: parseBool(value["transparent"], true)!,
+    layers: (value["layers"] as List?)?.map((e) => e.toString()).toList() ??
+        const [],
+    styles: (value["styles"] as List?)?.map((e) => e.toString()).toList() ??
+        const [],
+    otherParameters: value["additional_parameters"] != null
+        ? Map<String, String>.from(value["additional_parameters"])
+        : const {},
+  );
 }
 
 MapOptions? parseConfiguration(Control control, BuildContext context,
@@ -265,7 +267,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
     maxZoom: control.getDouble("max_zoom"),
     minZoom: control.getDouble("min_zoom"),
     initialCameraFit: parseCameraFit(control.get("initial_camera_fit")),
-    onPointerHover: control.getBool("on_hover", false)!
+    onPointerHover: control.hasEventHandler("hover")
         ? (PointerHoverEvent e, LatLng latlng) {
             control.triggerEvent("hover", {
               "coordinates": latlng.toMap(),
@@ -273,7 +275,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onTap: control.getBool("on_tap", false)!
+    onTap: control.hasEventHandler("tap")
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("tap", {
               "coordinates": latlng.toMap(),
@@ -281,7 +283,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onLongPress: control.getBool("on_long_press", false)!
+    onLongPress: control.hasEventHandler("long_press")
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("long_press", {
               "coordinates": latlng.toMap(),
@@ -289,7 +291,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onPositionChanged: control.getBool("on_position_change", false)!
+    onPositionChanged: control.hasEventHandler("position_change")
         ? (MapCamera camera, bool hasGesture) {
             control.triggerEvent("position_change", {
               "coordinates": camera.center.toMap(),
@@ -298,7 +300,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onPointerDown: control.getBool("on_pointer_down", false)!
+    onPointerDown: control.hasEventHandler("pointer_down")
         ? (PointerDownEvent e, LatLng latlng) {
             control.triggerEvent("pointer_down", {
               "coordinates": latlng.toMap(),
@@ -306,7 +308,7 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onPointerCancel: control.getBool("on_pointer_cancel", false)!
+    onPointerCancel: control.hasEventHandler("pointer_cancel")
         ? (PointerCancelEvent e, LatLng latlng) {
             control.triggerEvent("pointer_cancel", {
               "coordinates": latlng.toMap(),
@@ -314,13 +316,13 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onPointerUp: control.getBool("on_pointer_up", false)!
+    onPointerUp: control.hasEventHandler("pointer_up")
         ? (PointerUpEvent e, LatLng latlng) {
             control.triggerEvent(
                 "pointer_up", {"coordinates": latlng.toMap(), ...e.toMap()});
           }
         : null,
-    onSecondaryTap: control.getBool("on_secondary_tap", false)!
+    onSecondaryTap: control.hasEventHandler("secondary_tap")
         ? (TapPosition pos, LatLng latlng) {
             control.triggerEvent("secondary_tap", {
               "coordinates": latlng.toMap(),
@@ -328,11 +330,66 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
             });
           }
         : null,
-    onMapEvent: control.getBool("on_event", false)!
+    onMapEvent: control.hasEventHandler("event")
         ? (MapEvent e) => control.triggerEvent("event", e.toMap())
         : null,
-    onMapReady: control.getBool("on_init", false)!
+    onMapReady: control.hasEventHandler("init")
         ? () => control.triggerEvent("init")
         : null,
   );
+}
+
+String getMapEventType(MapEvent event) {
+  const eventTypeMap = <Type, String>{
+    MapEventTap: "tap",
+    MapEventSecondaryTap: "secondaryTap",
+    MapEventLongPress: "longPress",
+    MapEventMove: "move",
+    MapEventMoveStart: "moveStart",
+    MapEventMoveEnd: "moveEnd",
+    MapEventFlingAnimation: "flingAnimation",
+    MapEventFlingAnimationNotStarted: "flingAnimationNotStarted",
+    MapEventFlingAnimationStart: "flingAnimationStart",
+    MapEventFlingAnimationEnd: "flingAnimationEnd",
+    MapEventDoubleTapZoom: "doubleTapZoom",
+    MapEventScrollWheelZoom: "scrollWheelZoom",
+    MapEventDoubleTapZoomStart: "doubleTapZoomStart",
+    MapEventDoubleTapZoomEnd: "doubleTapZoomEnd",
+    MapEventRotate: "rotate",
+    MapEventRotateStart: "rotateStart",
+    MapEventRotateEnd: "rotateEnd",
+    MapEventNonRotatedSizeChange: "nonRotatedSizeChange",
+  };
+  return eventTypeMap[event.runtimeType] ?? "unknown";
+}
+
+MapCamera? getMapEventOldCamera(MapEvent event) => switch (event) {
+      MapEventWithMove(:final oldCamera) => oldCamera,
+      _ => null,
+    };
+
+LatLng? getMapEventCoordinates(MapEvent event) => switch (event) {
+      MapEventTap(:final tapPosition) ||
+      MapEventSecondaryTap(:final tapPosition) ||
+      MapEventLongPress(:final tapPosition) =>
+        tapPosition,
+      _ => null,
+    };
+
+String? getMapEventId(MapEvent event) => switch (event) {
+      MapEventMove(:final id) || MapEventRotate(:final id) => id,
+      _ => null,
+    };
+
+extension MapEventExtension on MapEvent {
+  Map<String, dynamic> toMap() {
+    return {
+      "source": source.name,
+      "event_type": getMapEventType(this),
+      "camera": camera.toMap(),
+      "old_camera": getMapEventOldCamera(this)?.toMap(),
+      "coordinates": getMapEventCoordinates(this)?.toMap(),
+      "id": getMapEventId(this),
+    };
+  }
 }

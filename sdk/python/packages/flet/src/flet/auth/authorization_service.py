@@ -1,17 +1,16 @@
 import json
 import secrets
 import time
-from typing import Optional
-
-import httpx
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
+from collections.abc import Mapping
+from typing import Any, Optional
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
 from flet.auth.user import User
 from flet.version import flet_version
+
+__all__ = ["AuthorizationService"]
 
 
 class AuthorizationService(Authorization):
@@ -20,7 +19,16 @@ class AuthorizationService(Authorization):
 
     The service coordinates authorization URL generation, token exchange,
     token refresh, and optional user/group resolution using the configured
-    [`OAuthProvider`][flet.auth.oauth_provider.].
+    [`OAuthProvider`][(p).oauth_provider.].
+
+    Args:
+        provider: Configured [`OAuthProvider`][(p).oauth_provider.]
+            describing OAuth endpoints, credentials, and optional user/group APIs.
+        fetch_user: Whether to request provider user profile information.
+        fetch_groups: Whether to request user groups/roles.
+        scope: Initial OAuth scopes. The service augments this list
+            with provider defaults (`provider.scopes`) and, when enabled,
+            provider user/group scopes.
     """
 
     def __init__(
@@ -57,19 +65,19 @@ class AuthorizationService(Authorization):
 
         Args:
             saved_token: JSON-serialized token data produced by
-                [`OAuthToken.to_json()`][flet.auth.oauth_token.OAuthToken.to_json].
+                [`OAuthToken.to_json()`][(p).oauth_token.OAuthToken.to_json].
         """
 
         self.__token = OAuthToken.from_json(saved_token)
         await self.__refresh_token()
         await self.__fetch_user_and_groups()
 
-    async def get_token(self):
+    async def get_token(self) -> Optional[OAuthToken]:
         """
         Return current token after applying refresh logic when required.
 
         Returns:
-            Current [`OAuthToken`][flet.auth.oauth_token.], or `None`
+            Current [`OAuthToken`][(p).oauth_token.], or `None`
                 if no token is available yet.
         """
 
@@ -83,6 +91,7 @@ class AuthorizationService(Authorization):
         Returns:
             A tuple of `(authorization_url, state)`.
         """
+        from oauthlib.oauth2 import WebApplicationClient
 
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
@@ -93,6 +102,7 @@ class AuthorizationService(Authorization):
             state=self.state,
             code_challenge=self.provider.code_challenge,
             code_challenge_method=self.provider.code_challenge_method,
+            **self.provider.authorization_params,
         )
         return authorization_url, self.state
 
@@ -106,6 +116,8 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
         """
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
 
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
@@ -153,9 +165,9 @@ class AuthorizationService(Authorization):
                     self.__token.access_token
                 )
 
-    def __convert_token(self, t: OAuth2Token):
+    def __convert_token(self, t: Mapping[str, Any]):
         """
-        Convert oauthlib token mapping to [`OAuthToken`][flet.auth.oauth_token.].
+        Convert oauthlib token mapping to [`OAuthToken`][(p).oauth_token.].
 
         Args:
             t: Token dictionary returned by oauthlib client parsing.
@@ -175,13 +187,13 @@ class AuthorizationService(Authorization):
 
     async def __refresh_token(self):
         """
-        Refresh access token when it is expired and refresh token is available.
+        Refresh the access token when it is expired and a refresh token is available.
 
         The method is a no-op when token is missing, non-expiring, not expired,
         or does not include a refresh token.
 
         Raises:
-            httpx.HTTPStatusError: If refresh request fails.
+            httpx.HTTPStatusError: If the refresh request fails.
         """
 
         if (
@@ -191,6 +203,9 @@ class AuthorizationService(Authorization):
             or time.time() < self.__token.expires_at
         ):
             return None
+
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
 
         assert self.__token is not None
         client = WebApplicationClient(self.provider.client_id)
@@ -221,12 +236,13 @@ class AuthorizationService(Authorization):
         Fetch user profile from provider `user_endpoint`.
 
         Returns:
-            A [`User`][flet.auth.user.User] built from response payload and
+            A [`User`][(p).user.] built from response payload and
                 `provider.user_id_fn`.
 
         Raises:
             httpx.HTTPStatusError: If user endpoint request fails.
         """
+        import httpx
 
         assert self.__token is not None
         assert self.provider.user_endpoint is not None

@@ -1,7 +1,7 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
@@ -20,7 +20,7 @@ class Path(Shape):
     (see `Path.Close`).
     """
 
-    @dataclass(kw_only=True)
+    @value(kw_only=True)
     class PathElement:
         """
         Base type for elements stored in `Path.elements`.
@@ -47,7 +47,7 @@ class Path(Shape):
     A style to draw a path with.
     """
 
-    @dataclass
+    @value
     class MoveTo(PathElement):
         """
         Starts a new sub-path at the given point (`x`,`y`).
@@ -59,7 +59,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "MoveTo"
 
-    @dataclass
+    @value
     class LineTo(PathElement):
         """
         Adds a straight line segment from the current point to the given point \
@@ -72,7 +72,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "LineTo"
 
-    @dataclass
+    @value
     class QuadraticTo(PathElement):
         """
         Adds a bezier segment that curves from the current point to the given point \
@@ -92,7 +92,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "QuadraticTo"
 
-    @dataclass
+    @value
     class CubicTo(PathElement):
         """
         Adds a cubic bezier segment that curves from the current point to the given \
@@ -109,7 +109,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "CubicTo"
 
-    @dataclass
+    @value
     class SubPath(PathElement):
         """
         Adds the sub-path described by `elements` to the given point (`x`,`y`).
@@ -122,7 +122,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "SubPath"
 
-    @dataclass
+    @value
     class Arc(PathElement):
         """
         Adds a new sub-path with one arc segment that consists of the arc that follows \
@@ -167,7 +167,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "Arc"
 
-    @dataclass
+    @value
     class ArcTo(PathElement):
         """
         Appends up to four conic curves weighted to describe an oval of `radius` and \
@@ -216,7 +216,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "ArcTo"
 
-    @dataclass
+    @value
     class Oval(PathElement):
         """
         Adds a new sub-path that consists of a curve that forms the ellipse that fills \
@@ -246,7 +246,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "Oval"
 
-    @dataclass
+    @value
     class Rect(PathElement):
         """
         Adds a rectangle as a new sub-path.
@@ -280,7 +280,7 @@ class Path(Shape):
         def __post_init__(self):
             self._type = "Rect"
 
-    @dataclass
+    @value
     class Close(PathElement):
         """
         Closes the last sub-path, as if a straight line had been drawn from the \
