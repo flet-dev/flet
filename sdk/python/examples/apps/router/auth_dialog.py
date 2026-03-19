@@ -4,8 +4,6 @@ from dataclasses import dataclass
 
 import flet as ft
 
-AuthContext = ft.create_context(None)
-
 
 @ft.observable
 @dataclass
@@ -20,6 +18,9 @@ class AuthState:
     def logout(self):
         self.username = ""
         self.is_authenticated = False
+
+
+AuthContext: ft.ContextProvider[AuthState | None] = ft.create_context(None)
 
 
 @ft.component
