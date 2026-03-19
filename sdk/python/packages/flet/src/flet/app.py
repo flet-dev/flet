@@ -219,7 +219,10 @@ async def run_async(
         """
 
         if url_prefix is not None:
-            print(url_prefix, page_url)
+            parts = [url_prefix, page_url]
+            if view is not None:
+                parts.append(view.value)
+            print(*parts)
         else:
             logger.info("App URL: %s", page_url)
 
