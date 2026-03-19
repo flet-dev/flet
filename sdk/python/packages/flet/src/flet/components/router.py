@@ -9,12 +9,15 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 from urllib.parse import urlparse
 
 import repath
 
 from flet.components.component_decorator import component
+
+if TYPE_CHECKING:
+    from flet.controls.control import Control
 from flet.components.hooks.use_context import create_context, use_context
 from flet.components.hooks.use_effect import use_effect
 from flet.components.hooks.use_ref import use_ref
@@ -266,7 +269,7 @@ def use_route_location() -> str:
     return loc.pathname
 
 
-def use_route_outlet():
+def use_route_outlet() -> Control:
     """
     Returns the matched child route's rendered component.
 
@@ -375,7 +378,7 @@ def _build_outlet_chain(
 
 
 @component
-def Router(routes: list[Route], not_found: Callable | None = None):
+def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
     """
     Top-level router component that matches the current page route against
     a tree of [`Route`][flet.Route] definitions and renders the matched

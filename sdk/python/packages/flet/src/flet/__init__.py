@@ -4,7 +4,11 @@ from flet.app import AppCallable, app, app_async, run, run_async
 from flet.components.component import Component
 from flet.components.component_decorator import component
 from flet.components.hooks.use_callback import use_callback
-from flet.components.hooks.use_context import create_context, use_context
+from flet.components.hooks.use_context import (
+    ContextProvider,
+    create_context,
+    use_context,
+)
 from flet.components.hooks.use_effect import (
     on_mounted,
     on_unmounted,
@@ -709,6 +713,7 @@ __all__ = [
     "ContextMenuDismissEvent",
     "ContextMenuSelectEvent",
     "ContextMenuTrigger",
+    "ContextProvider",
     "ContinuousRectangleBorder",
     "Control",
     "ControlEvent",

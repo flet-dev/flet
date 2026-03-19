@@ -589,7 +589,7 @@ class Page(BasePage):
 
     def render(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -612,7 +612,7 @@ class Page(BasePage):
 
     def render_views(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):

@@ -8,8 +8,6 @@ import flet as ft
 # Auth context
 # ---------------------------------------------------------------------------
 
-AuthContext = ft.create_context(None)
-
 
 @ft.observable
 @dataclass
@@ -27,6 +25,9 @@ class AuthState:
         self.username = ""
         self.is_authenticated = False
         self.is_admin = False
+
+
+AuthContext: ft.ContextProvider[AuthState | None] = ft.create_context(None)
 
 
 # ---------------------------------------------------------------------------
