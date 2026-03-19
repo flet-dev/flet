@@ -47,6 +47,34 @@ ft.run(main, assets_dir="assets")
 For control properties like [`Image.src`][flet.Image.src], continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
+### `FLET_ANDROID_SIGNING_KEY_ALIAS`
+
+Android signing key alias used by
+[`flet build`](../publish/android.md#key-alias) for Android app signing.
+
+It is used only when a [keystore](../publish/android.md#key-store) is configured.
+
+### `FLET_ANDROID_SIGNING_KEY_PASSWORD`
+
+Android signing key password used by
+[`flet build`](../publish/android.md#key-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`](#flet_android_signing_key_store_password) is set
+but this variable is not, the keystore password is reused as the key password.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE`
+
+Path to the Android upload keystore (`.jks`) used by [`flet build`](../publish/android.md#key-store)
+for Android app signing.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
+
+Android signing keystore password used by
+[`flet build`](../publish/android.md#key-store-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_PASSWORD`](#flet_android_signing_key_password) is set
+but this variable is not, the key password is reused as the keystore password.
+
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
 Whether to disable rich output in the console.
