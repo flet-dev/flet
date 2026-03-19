@@ -166,9 +166,10 @@ jobs:
       - name: Create template zips
         shell: bash
         run: |
-          cd sdk/python/templates
-          zip -r "$GITHUB_WORKSPACE/flet-build-template.zip" build/
-          zip -r "$GITHUB_WORKSPACE/flet-app-templates.zip" app/
+          cd sdk/python/templates/build
+          zip -r "$GITHUB_WORKSPACE/flet-build-template.zip" .
+          cd ../app
+          zip -r "$GITHUB_WORKSPACE/flet-app-templates.zip" .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
