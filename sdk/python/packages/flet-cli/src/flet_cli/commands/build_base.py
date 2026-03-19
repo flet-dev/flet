@@ -1,4 +1,5 @@
 import argparse
+import copy
 import glob
 import os
 import platform
@@ -1232,7 +1233,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 
             if pyproject_pubspec:
+                pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
                 pubspec = self.load_yaml(self.pubspec_path)
+                # Replace individual dependency entries from pyproject rather
+                # than deep-merging them — a Dart dependency can only have one
+                # source, so merging {"path":…} with {"git":…} is invalid.
+                for section in (
+                    "dependencies",
+                    "dependency_overrides",
+                    "dev_dependencies",
+                ):
+                    if section in pyproject_pubspec:
+                        pubspec.setdefault(section, {}).update(
+                            pyproject_pubspec.pop(section)
+                        )
                 pubspec = merge_dict(pubspec, pyproject_pubspec)
                 self.save_yaml(self.pubspec_path, pubspec)
 
