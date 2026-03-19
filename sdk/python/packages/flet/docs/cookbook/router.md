@@ -16,7 +16,7 @@ rendering, and parameter extraction. Router automates all of this:
 ## Quick start
 
 ```python
---8<-- "../../examples/apps/router/basic.py"
+--8<-- "../../examples/apps/router/basic/main.py"
 ```
 
 ## Defining routes
@@ -41,7 +41,7 @@ Child routes are nested under parent routes. The parent's path is
 automatically prepended:
 
 ```python
---8<-- "../../examples/apps/router/nested_routes.py"
+--8<-- "../../examples/apps/router/nested_routes/main.py"
 ```
 
 ### Index routes
@@ -50,7 +50,7 @@ An index route (`index=True`) matches when the parent path matches exactly,
 with no further segments. It's the "default" child for a parent route:
 
 ```python
---8<-- "../../examples/apps/router/index_routes.py"
+--8<-- "../../examples/apps/router/index_routes/main.py"
 ```
 
 ### Prefix routes
@@ -75,7 +75,7 @@ ft.Route(path="api", children=[
 ```
 
 ```python
---8<-- "../../examples/apps/router/prefix_routes.py"
+--8<-- "../../examples/apps/router/prefix_routes/main.py"
 ```
 
 ## Layout routes and `use_route_outlet()`
@@ -85,7 +85,7 @@ shared UI (header, sidebar, footer) and calls [`use_route_outlet()`][flet.use_ro
 to place the matched child:
 
 ```python
---8<-- "../../examples/apps/router/layout_outlet.py"
+--8<-- "../../examples/apps/router/layout_outlet/main.py"
 ```
 
 Layout routes can be nested to any depth. Each level calls `use_route_outlet()` to
@@ -124,7 +124,7 @@ ft.Route(path="files/:path*", component=FileBrowser)
 ```
 
 ```python
---8<-- "../../examples/apps/router/splats.py"
+--8<-- "../../examples/apps/router/splats/main.py"
 ```
 
 ### Custom regex
@@ -138,7 +138,7 @@ ft.Route(path="item/:id(\\d+)", component=ItemDetails)
 ```
 
 ```python
---8<-- "../../examples/apps/router/dynamic_segments.py"
+--8<-- "../../examples/apps/router/dynamic_segments/main.py"
 ```
 
 ## Navigation
@@ -159,7 +159,7 @@ The Router automatically re-renders when the route changes.
 the current location. Use it to highlight navigation elements:
 
 ```python
---8<-- "../../examples/apps/router/active_links.py"
+--8<-- "../../examples/apps/router/active_links/main.py"
 ```
 
 By default, `is_active` uses prefix matching — `is_route_active("/products")` returns
@@ -172,7 +172,7 @@ The loader receives the merged params dict and its return value is available
 via [`use_route_loader_data()`][flet.use_route_loader_data]:
 
 ```python
---8<-- "../../examples/apps/router/loaders.py"
+--8<-- "../../examples/apps/router/loaders/main.py"
 ```
 
 ## Authentication
@@ -182,13 +182,13 @@ Auth is implemented using layout routes as guards — no special Router API need
 ### Page redirect
 
 ```python
---8<-- "../../examples/apps/router/auth_page.py"
+--8<-- "../../examples/apps/router/auth_page/main.py"
 ```
 
 ### Dialog overlay
 
 ```python
---8<-- "../../examples/apps/router/auth_dialog.py"
+--8<-- "../../examples/apps/router/auth_dialog/main.py"
 ```
 
 ### Role-based access
@@ -220,7 +220,7 @@ Routes are mutable — add, remove, or modify them at any time using
 [`use_state`][flet.use_state]:
 
 ```python
---8<-- "../../examples/apps/router/runtime_routes.py"
+--8<-- "../../examples/apps/router/runtime_routes/main.py"
 ```
 
 ## 404 handling
@@ -242,7 +242,7 @@ A complete app demonstrating layout, navigation, nested routes, dynamic
 segments, loaders, and authentication:
 
 ```python
---8<-- "../../examples/apps/router/featured.py"
+--8<-- "../../examples/apps/router/featured/main.py"
 ```
 
 ## Hooks reference

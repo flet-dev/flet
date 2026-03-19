@@ -56,18 +56,21 @@ def AppLayout():
 
 @ft.component
 def App():
-    return ft.Router(
-        [
-            ft.Route(
-                component=AppLayout,
-                children=[
-                    ft.Route(index=True, component=Home),
-                    ft.Route(path="products", component=Products),
-                    ft.Route(path="settings", component=Settings),
-                ],
-            ),
-        ]
+    return ft.SafeArea(
+        content=ft.Router(
+            [
+                ft.Route(
+                    component=AppLayout,
+                    children=[
+                        ft.Route(index=True, component=Home),
+                        ft.Route(path="products", component=Products),
+                        ft.Route(path="settings", component=Settings),
+                    ],
+                ),
+            ]
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

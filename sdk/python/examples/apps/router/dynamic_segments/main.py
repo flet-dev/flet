@@ -58,18 +58,21 @@ def UserList():
 
 @ft.component
 def App():
-    return ft.Router(
-        [
-            ft.Route(index=True, component=UserList),
-            ft.Route(
-                path="users/:userId",
-                children=[
-                    ft.Route(index=True, component=UserProfile),
-                    ft.Route(path="posts/:postId", component=UserPost),
-                ],
-            ),
-        ]
+    return ft.SafeArea(
+        content=ft.Router(
+            [
+                ft.Route(index=True, component=UserList),
+                ft.Route(
+                    path="users/:userId",
+                    children=[
+                        ft.Route(index=True, component=UserProfile),
+                        ft.Route(path="posts/:postId", component=UserPost),
+                    ],
+                ),
+            ]
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

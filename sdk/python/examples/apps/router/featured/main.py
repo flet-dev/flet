@@ -302,59 +302,62 @@ def SettingsSection():
 def App():
     auth, _ = ft.use_state(AuthState)
 
-    return AuthContext(
-        auth,
-        lambda: ft.Router(
-            [
-                ft.Route(path="login", component=LoginPage),
-                ft.Route(
-                    component=ProtectedRoute,
-                    children=[
-                        ft.Route(
-                            component=AppLayout,
-                            children=[
-                                ft.Route(
-                                    index=True,
-                                    component=Home,
-                                    loader=home_loader,
-                                ),
-                                ft.Route(
-                                    path="projects",
-                                    component=ProjectsLayout,
-                                    children=[
-                                        ft.Route(
-                                            index=True,
-                                            component=ProjectsList,
-                                            loader=projects_loader,
-                                        ),
-                                        ft.Route(
-                                            path=":projectId",
-                                            component=ProjectDetails,
-                                            loader=project_detail_loader,
-                                        ),
-                                    ],
-                                ),
-                                ft.Route(
-                                    path="settings",
-                                    children=[
-                                        ft.Route(
-                                            index=True,
-                                            component=SettingsHome,
-                                            loader=settings_loader,
-                                        ),
-                                        ft.Route(
-                                            path=":section",
-                                            component=SettingsSection,
-                                        ),
-                                    ],
-                                ),
-                            ],
-                        ),
-                    ],
-                ),
-            ]
-        ),
+    return ft.SafeArea(
+        content=AuthContext(
+            auth,
+            lambda: ft.Router(
+                [
+                    ft.Route(path="login", component=LoginPage),
+                    ft.Route(
+                        component=ProtectedRoute,
+                        children=[
+                            ft.Route(
+                                component=AppLayout,
+                                children=[
+                                    ft.Route(
+                                        index=True,
+                                        component=Home,
+                                        loader=home_loader,
+                                    ),
+                                    ft.Route(
+                                        path="projects",
+                                        component=ProjectsLayout,
+                                        children=[
+                                            ft.Route(
+                                                index=True,
+                                                component=ProjectsList,
+                                                loader=projects_loader,
+                                            ),
+                                            ft.Route(
+                                                path=":projectId",
+                                                component=ProjectDetails,
+                                                loader=project_detail_loader,
+                                            ),
+                                        ],
+                                    ),
+                                    ft.Route(
+                                        path="settings",
+                                        children=[
+                                            ft.Route(
+                                                index=True,
+                                                component=SettingsHome,
+                                                loader=settings_loader,
+                                            ),
+                                            ft.Route(
+                                                path=":section",
+                                                component=SettingsSection,
+                                            ),
+                                        ],
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                ]
+            ),
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))

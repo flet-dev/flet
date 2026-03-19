@@ -77,21 +77,24 @@ def ProtectedRoute():
 def App():
     auth, _ = ft.use_state(AuthState)
 
-    return AuthContext(
-        auth,
-        lambda: ft.Router(
-            [
-                ft.Route(path="login", component=LoginPage),
-                ft.Route(
-                    component=ProtectedRoute,
-                    children=[
-                        ft.Route(index=True, component=Dashboard),
-                        ft.Route(path="dashboard", component=Dashboard),
-                    ],
-                ),
-            ]
-        ),
+    return ft.SafeArea(
+        content=AuthContext(
+            auth,
+            lambda: ft.Router(
+                [
+                    ft.Route(path="login", component=LoginPage),
+                    ft.Route(
+                        component=ProtectedRoute,
+                        children=[
+                            ft.Route(index=True, component=Dashboard),
+                            ft.Route(path="dashboard", component=Dashboard),
+                        ],
+                    ),
+                ]
+            ),
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))
