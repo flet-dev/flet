@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -127,7 +127,7 @@ class TabBarHoverEvent(Event["TabBar"]):
     """
 
 
-@dataclass
+@value
 class UnderlineTabIndicator:
     border_side: BorderSide = field(
         default_factory=lambda: BorderSide(width=2.0, color=Colors.WHITE)

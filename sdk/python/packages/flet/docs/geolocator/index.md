@@ -58,10 +58,10 @@ Configuration to be made to access the device's location:
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-permissions android.permission.ACCESS_FINE_LOCATION=True \
-      android.permission.ACCESS_COARSE_LOCATION=True \
-      android.permission.ACCESS_BACKGROUND_LOCATION=True \
-      android.permission.FOREGROUND_SERVICE_LOCATION=True
+  --android-permissions android.permission.ACCESS_FINE_LOCATION=true \
+  --android-permissions android.permission.ACCESS_COARSE_LOCATION=true \
+  --android-permissions android.permission.ACCESS_BACKGROUND_LOCATION=true \
+  --android-permissions android.permission.FOREGROUND_SERVICE_LOCATION=true
 ```
 ///
 /// tab | `pyproject.toml`
@@ -97,7 +97,7 @@ NSLocationWhenInUseUsageDescription = "Some message to describe why you need thi
 
 See also:
 
-- [setting iOS permissions](../publish/ios.md#permissions)
+- [setting iOS Info.plist entries](../publish/ios.md#infoplist)
 
 ### macOS
 
@@ -107,7 +107,7 @@ Configuration to be made to access the device's location:
 ```bash
 flet build macos \
   --info-plist NSLocationUsageDescription="Some message to describe why you need this permission..." \
-  --macos-entitlements com.apple.security.personal-information.location=True
+  --macos-entitlements com.apple.security.personal-information.location=true
 ```
 ///
 /// tab | `pyproject.toml`
@@ -127,7 +127,7 @@ See also:
 
 ### Cross-platform
 
-Additionally/Alternatively, you can make used of our predefined cross-platform `location`
+Additionally/alternatively, you can make use of our predefined cross-platform `location`
 [permission bundle](../publish/index.md#predefined-cross-platform-permission-bundles):
 
 /// tab | `flet build`

@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@ft.value
 class CandlestickChartTooltip:
     """Configuration of the tooltip for [`CandlestickChart`][(p).]s."""
 
@@ -166,7 +166,7 @@ class CandlestickChart(ft.LayoutControl):
                 low=21.4,
                 close=24.1,
             ),
-            ...
+            ...,
         ],
     )
     ```

@@ -96,7 +96,7 @@ class FletSocketServer(Connection):
             host = "localhost"
             port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
-            logger.info(f"Starting up TCP server on {host}:{port}")
+            logger.info("Starting up TCP server on %s:%s", host, port)
             self.__server = await asyncio.start_server(
                 self.handle_connection, host, port
             )
@@ -109,7 +109,7 @@ class FletSocketServer(Connection):
             if os.path.exists(self.__uds_path):
                 os.remove(self.__uds_path)
             self.page_url = self.__uds_path
-            logger.info(f"Starting up UDS server on {self.__uds_path}")
+            logger.info("Starting up UDS server on %s", self.__uds_path)
             self.__server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
@@ -202,7 +202,7 @@ class FletSocketServer(Connection):
             logger.debug("No active connection to terminate.")
             return
 
-        logger.debug(f"Terminating existing connection ({reason}).")
+        logger.debug("Terminating existing connection (%s).", reason)
 
         session_to_close = self.session
         self.session = None
@@ -269,7 +269,7 @@ class FletSocketServer(Connection):
         except asyncio.CancelledError:
             logger.debug("Receive loop cancelled.")
         except Exception as e:
-            logger.debug(f"Error receiving socket data from Flet client: {e}")
+            logger.debug("Error receiving socket data from Flet client: %s", e)
         finally:
             logger.debug("Receive loop exiting.")
 
@@ -300,7 +300,7 @@ class FletSocketServer(Connection):
         except asyncio.CancelledError:
             logger.debug("Send loop cancelled.")
         except Exception as e:
-            logger.debug(f"Error in send loop: {e}")
+            logger.debug("Error in send loop: %s", e)
         finally:
             logger.debug("Send loop exiting.")
 
@@ -323,7 +323,7 @@ class FletSocketServer(Connection):
         """
         action = ClientAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -395,7 +395,7 @@ class FletSocketServer(Connection):
         Args:
             message: Protocol message to send.
         """
-        transport_log.debug(f"send_message: {message}")
+        transport_log.debug("send_message: %s", message)
         m = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),

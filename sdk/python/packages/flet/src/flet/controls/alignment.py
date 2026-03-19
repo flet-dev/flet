@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import ClassVar, Optional
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 __all__ = [
@@ -29,7 +29,7 @@ class Axis(Enum):
     """
 
 
-@dataclass
+@value
 class Alignment:
     """
     Defines an alignment relative to the center.

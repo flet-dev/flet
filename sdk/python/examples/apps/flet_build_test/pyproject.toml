@@ -30,7 +30,6 @@ dependencies = [
 dev = [
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
 ]
 
@@ -38,7 +37,6 @@ dev = [
 flet = { path = "../../../packages/flet", editable = true }
 flet-cli = { path = "../../../packages/flet-cli", editable = true }
 flet-desktop = { path = "../../../packages/flet-desktop", editable = true }
-flet-desktop-light = { path = "../../../packages/flet-desktop-light", editable = true }
 flet-web = { path = "../../../packages/flet-web", editable = true }
 flet-ads = { path = "../../../packages/flet-ads", editable = true }
 flet-audio = { path = "../../../packages/flet-audio", editable = true }

@@ -28,7 +28,7 @@ class BarChartTooltipDirection(Enum):
     """Tooltip always shows on bottom."""
 
 
-@dataclass
+@ft.value
 class BarChartTooltip:
     """Configuration of the tooltip for [`BarChart`][(p).]s."""
 

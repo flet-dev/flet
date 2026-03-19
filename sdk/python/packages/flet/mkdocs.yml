@@ -816,6 +816,7 @@ nav:
               - component: types/component.md
               - control: types/control.md
               - observable: types/observabledecorator.md
+              - value: types/value.md
           - Enums:
               - Ads:
                   - PrecisionType: ads/types/precisiontype.md
@@ -877,6 +878,8 @@ nav:
               - PointMode: types/pointmode.md
               - PopupMenuPosition: types/popupmenuposition.md
               - RouteUrlStrategy: types/routeurlstrategy.md
+              - Scrollbar: types/scrollbar.md
+              - ScrollbarOrientation: types/scrollbarorientation.md
               - ScrollDirection: types/scrolldirection.md
               - ScrollMode: types/scrollmode.md
               - ScrollType: types/scrolltype.md
@@ -937,6 +940,7 @@ nav:
               - DragUpdateEvent: types/dragupdateevent.md
               - DragWillAcceptEvent: types/dragwillacceptevent.md
               - Event: types/event.md
+              - ExpansionPanelListChangeEvent: types/expansionpanellistchangeevent.md
               - FilePickerUploadEvent: types/filepickeruploadevent.md
               - GyroscopeReadingEvent: types/gyroscopereadingevent.md
               - HoverEvent: types/hoverevent.md
@@ -1028,4 +1032,5 @@ nav:
       - PubSub: cookbook/pub-sub.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
+      - Subprocess: cookbook/subprocess.md
       - Theming: cookbook/theming.md

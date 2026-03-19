@@ -120,3 +120,17 @@ def cmp_op(op, cop):
 def cmp_ops(ops, cops):
     assert len(ops) == len(cops)
     return all(cmp_op(ops[i], cops[i]) for i in range(0, len(ops)))
+
+
+def cmp_ops_unordered(ops, cops):
+    """Order-insensitive variant of cmp_ops for commutative patch operations."""
+    assert len(ops) == len(cops)
+    remaining = list(cops)
+    for op in ops:
+        for i, cop in enumerate(remaining):
+            if cmp_op(op, cop):
+                remaining.pop(i)
+                break
+        else:
+            return False
+    return True

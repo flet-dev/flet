@@ -23,8 +23,10 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
@@ -250,8 +252,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            help="Files and/or directories to exclude from the package "
-            "(can be used multiple times)",
+            help="Files and/or directories to exclude from the package"
+            "; can be used multiple times",
         )
         parser.add_argument(
             "--clear-cache",
@@ -499,42 +501,49 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--info-plist",
             dest="info_plist",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
-            "for macOS and iOS builds (macos, ipa and ios-simulator only)",
+            help="The list of `<key>=<value>` pairs to add to Info.plist. Values can "
+            "be booleans, strings, numbers, TOML arrays, or TOML inline tables "
+            "(macos, ipa and ios-simulator only); can be used multiple times",
         )
         parser.add_argument(
             "--macos-entitlements",
             dest="macos_entitlements",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` entitlements for "
-            "macOS builds (macos only)",
+            help="The list of `<key>=<value>` entitlements. Values can be booleans, "
+            "strings, numbers, TOML arrays, or TOML inline tables "
+            "(macos only); can be used multiple times",
         )
         parser.add_argument(
             "--android-features",
             dest="android_features",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<feature_name>=True|False` features to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            help="The list of `<feature_name>=true|false` features to add to "
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-permissions",
             dest="android_permissions",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<permission_name>=True|False` permissions to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            help="The list of `<permission_name>=true|false` permissions to add to "
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-meta-data",
             dest="android_meta_data",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of `<name>=<value>` app meta-data entries to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--permissions",
@@ -853,11 +862,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = (
-                    (v.lower() == "true") if v.lower() in {"true", "false"} else v
-                )
+                info_plist[k] = parse_cli_plist_value(v)
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+        for key, value in info_plist.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported Info.plist value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
 
         macos_entitlements = merge_dict(
             macos_entitlements,
@@ -868,9 +885,19 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.macos_entitlements:
             i = p.find("=")
             if i > -1:
-                macos_entitlements[p[:i]] = p[i + 1 :] == "True"
+                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
             else:
                 self.cleanup(1, f"Invalid macOS entitlement option: {p}")
+
+        for key, value in macos_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported macOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
 
         android_permissions = merge_dict(
             android_permissions,
@@ -881,7 +908,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_permissions:
             i = p.find("=")
             if i > -1:
-                android_permissions[p[:i]] = p[i + 1 :] == "True"
+                try:
+                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android permission option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
@@ -894,7 +928,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_features:
             i = p.find("=")
             if i > -1:
-                android_features[p[:i]] = p[i + 1 :] == "True"
+                try:
+                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android feature option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android feature option: {p}")
 

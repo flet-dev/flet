@@ -1,8 +1,9 @@
 import gc
 import tracemalloc
 
-import flet as ft
 import pytest
+
+import flet as ft
 from flet.controls.base_control import BaseControl
 from flet.controls.object_patch import ObjectPatch
 

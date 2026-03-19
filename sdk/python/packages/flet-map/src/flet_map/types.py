@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field  # dataclass kept for event types
 from enum import Enum, IntFlag
 from typing import TYPE_CHECKING, Optional
 
@@ -120,7 +120,7 @@ class PatternFit(Enum):
     """
 
 
-@dataclass
+@ft.value
 class Camera:
     """
     Snapshot of the map camera state.
@@ -152,7 +152,7 @@ class Camera:
     """
 
 
-@dataclass
+@ft.value
 class StrokePattern:
     """
     Determines whether a stroke should be solid, dotted, or dashed,
@@ -169,7 +169,7 @@ class StrokePattern:
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@ft.value
 class SolidStrokePattern(StrokePattern):
     """A solid/unbroken stroke pattern."""
 
@@ -177,7 +177,7 @@ class SolidStrokePattern(StrokePattern):
         self._type = "solid"
 
 
-@dataclass
+@ft.value
 class DashedStrokePattern(StrokePattern):
     """
     A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
@@ -229,7 +229,7 @@ class DashedStrokePattern(StrokePattern):
         self._type = "dashed"
 
 
-@dataclass
+@ft.value
 class DottedStrokePattern(StrokePattern):
     """
     A stroke pattern of circular dots, spaced with [`spacing_factor`][(c).].
@@ -262,7 +262,7 @@ class DottedStrokePattern(StrokePattern):
         self._type = "dotted"
 
 
-@dataclass
+@ft.value
 class MapLatitudeLongitude:
     """Map coordinates in degrees."""
 
@@ -273,7 +273,7 @@ class MapLatitudeLongitude:
     """The longitude point of this coordinate."""
 
 
-@dataclass
+@ft.value
 class MapLatitudeLongitudeBounds:
     """
     Both corners have to be on opposite sites, but it doesn't matter
@@ -455,7 +455,7 @@ class MultiFingerGesture(IntFlag):
     """All multi-finger gestures defined in this enum."""
 
 
-@dataclass
+@ft.value
 class InteractionConfiguration:
     """
     Configures user interaction behavior.
@@ -703,7 +703,7 @@ class MapEventType(Enum):
     """Fallback value for unrecognized map event types."""
 
 
-@dataclass
+@ft.value
 class CameraFit:
     """
     Defines how the camera should fit the bounds or coordinates,
@@ -851,7 +851,7 @@ class MapEvent(ft.Event["Map"]):
     """
 
 
-@dataclass
+@ft.value
 class TileDisplay:
     """
     Defines how the tile should get displayed on the map.
@@ -866,7 +866,7 @@ class TileDisplay:
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@ft.value
 class InstantaneousTileDisplay(TileDisplay):
     """A `TileDisplay` that should get instantaneously displayed."""
 
@@ -886,7 +886,7 @@ class InstantaneousTileDisplay(TileDisplay):
         self._type = "instantaneous"
 
 
-@dataclass
+@ft.value
 class FadeInTileDisplay(TileDisplay):
     """A `TileDisplay` that should get faded in."""
 
@@ -927,7 +927,7 @@ class FadeInTileDisplay(TileDisplay):
         self._type = "fadein"
 
 
-@dataclass
+@ft.value
 class KeyboardConfiguration:
     """
     Options to configure how keyboard keys may be used to control the map.
@@ -1132,7 +1132,7 @@ class CursorRotationBehaviour(Enum):
     """
 
 
-@dataclass
+@ft.value
 class CursorKeyboardRotationConfiguration:
     """
     Options to configure cursor/keyboard rotation.
@@ -1177,7 +1177,7 @@ class CursorKeyboardRotationConfiguration:
         return CursorKeyboardRotationConfiguration(trigger_keys=[])
 
 
-@dataclass
+@ft.value
 class WMSTileLayerConfiguration:
     """Configuration for a WMS [`TileLayer`][(p).]."""
 

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import msgpack
 
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import PageMediaData
 from flet.controls.object_patch import ObjectPatch
@@ -50,6 +51,28 @@ def test_encode_emits_overridden_defaults():
     encoded = encoder(ChildTestControl())
 
     assert encoded["foo"] == 5
+
+
+def test_value_decorator_registers_value_marker():
+    value = ft.Alignment(1, 2)
+
+    assert isinstance(value, ft.Value)
+    assert issubclass(type(value), ft.Value)
+
+
+def test_encode_uses_value_fast_path():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    value = ft.Alignment(1, 2)
+
+    encoded = encoder(value)
+
+    assert encoded == {"x": 1, "y": 2}
+    assert hasattr(value, "__prev_classes")
+    assert getattr(value, "__prev_classes") == {}
+    assert hasattr(value, "__prev_lists")
+    assert getattr(value, "__prev_lists") == {}
+    assert hasattr(value, "__prev_dicts")
+    assert getattr(value, "__prev_dicts") == {}
 
 
 def test_page_patch_dataclass():
@@ -157,7 +180,7 @@ def test_page_patch_dataclass():
     print("Message 2:", msg)
 
 
-def test_changes_track_original_value_without_tuple_growth():
+def test_dirty_tracks_changed_fields_and_clears_after_diff():
     @control("DirtyTrackControl")
     class DirtyTrackControl(BaseControl):
         value: int = 0
@@ -170,12 +193,11 @@ def test_changes_track_original_value_without_tuple_growth():
     c.value = 1
     c.value = 2
 
-    changes = getattr(c, "__changes")
-    assert changes["value"] == 0
+    assert "value" in c._dirty
 
     patch, _, _ = ObjectPatch.from_diff(c, c, control_cls=BaseControl)
 
-    assert changes == {}
+    assert len(c._dirty) == 0
     assert any(
         op["op"] == "replace" and op["path"] == ["value"] and op["value"] == 2
         for op in patch.patch

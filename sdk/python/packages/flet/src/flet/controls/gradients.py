@@ -1,9 +1,10 @@
 import math
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 
 __all__ = [
     "Gradient",
@@ -53,7 +54,7 @@ class GradientTileMode(Enum):
     """
 
 
-@dataclass
+@value
 class Gradient:
     """
     A shader that renders a color gradient.
@@ -99,7 +100,7 @@ class Gradient:
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@value
 class LinearGradient(Gradient):
     """
     Creates a linear gradient from `begin` to `end`.
@@ -122,7 +123,7 @@ class LinearGradient(Gradient):
         self._type = "linear"
 
 
-@dataclass
+@value
 class RadialGradient(Gradient):
     """
     Creates a radial gradient centered at center that ends at radius distance from the \
@@ -166,7 +167,7 @@ class RadialGradient(Gradient):
         self._type = "radial"
 
 
-@dataclass
+@value
 class SweepGradient(Gradient):
     """
     Creates a sweep gradient centered at center that starts at `start_angle` and ends \

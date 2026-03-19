@@ -30,6 +30,7 @@
 #
 
 import dataclasses
+import itertools
 import logging
 import weakref
 from enum import Enum
@@ -127,23 +128,33 @@ class PatchOperation:
 
 
 def _control_setattr(obj, name, value):
+    # For plain dataclasses (no Prop tracking), this hook records the old
+    # value in __changes so _compare_dataclasses can detect the change.
+    # Prop-managed fields (on @control/@value types) are fully handled by
+    # Prop.__set__ and do not go through this path.
     control_cls = getattr(type(obj), "__flet_control_cls__", None)
     if not name.startswith("_") and (
         name != "data" or not control_cls or not isinstance(obj, control_cls)
     ):
-        if hasattr(obj, "_frozen"):
-            raise RuntimeError("Frozen controls cannot be updated.") from None
-
-        if hasattr(obj, "__changes"):
-            current_value = getattr(obj, name, None)
-            if current_value != value:
-                changes = getattr(obj, "__changes")
+        prop_defaults = getattr(type(obj), "_prop_defaults", None)
+        if prop_defaults is not None and name in prop_defaults:
+            # Prop field: delegate entirely to Prop.__set__ via normal setattr.
+            pass
+        else:
+            if hasattr(obj, "_frozen"):
+                raise RuntimeError("Frozen controls cannot be updated.") from None
+            # Track changes for plain-dataclass scalar fields.
+            changes = getattr(obj, "__changes", None)
+            if changes is not None:
+                current = getattr(obj, name, None)
+                if value == current:
+                    return  # no change — skip tracking and notification
                 if name not in changes:
-                    changes[name] = current_value
-                elif changes[name] == value:
-                    del changes[name]
-                if hasattr(obj, "_notify"):
-                    obj._notify(name, value)
+                    changes[name] = current  # record original on first write
+                elif value == changes[name]:
+                    del changes[name]  # reverted to original — net-zero change
+            if hasattr(obj, "_notify"):
+                obj._notify(name, value)
     object.__setattr__(obj, name, value)
 
 
@@ -499,12 +510,22 @@ class DiffBuilder:
         Compare dataclasses only when both are dataclasses and identity/"frozen" rules \
         allow it.
         """
-        if (
-            dataclasses.is_dataclass(src)
-            and dataclasses.is_dataclass(dst)
-            and ((not frozen and src is dst) or (frozen and src is not dst))
-        ):
-            self._compare_dataclasses(parent, path, src, dst, frozen)
+        if not (dataclasses.is_dataclass(src) and dataclasses.is_dataclass(dst)):
+            return
+        if not frozen and src is dst:
+            # Non-frozen in-place: same Python object, use __changes tracking.
+            self._compare_dataclasses(parent, path, src, dst, False)
+        elif src is not dst and type(src) is type(dst):
+            # Different Python objects of the same type.
+            # Frozen diff always applies; non-frozen applies when they share an
+            # explicit key (rebuilt object scenario – treat as frozen comparison).
+            same_explicit_key = (
+                not frozen
+                and get_control_key(src) is not None
+                and get_control_key(src) == get_control_key(dst)
+            )
+            if frozen or same_explicit_key:
+                self._compare_dataclasses(parent, path, src, dst, True)
 
     def _affected_is_list(self, op):
         """
@@ -664,34 +685,19 @@ class DiffBuilder:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
 
     def _compare_lists(self, parent, path, src, dst, frozen):
-        logger.debug(f"\n_compare_lists: {path} {src} {dst}")
+        logger.debug("\n_compare_lists: %s %s %s", path, src, dst)
 
-        # ----- helper: get keys quickly -----
-        def k(obj):
-            # In frozen mode we rely on real control keys. Otherwise we treat every
-            # dataclass instance as keyed by its identity so we can reason about
-            # reorder/move operations without requiring user-provided keys.
-            return (
-                get_control_key(obj)
-                if frozen
-                else id(obj)
-                if dataclasses.is_dataclass(obj)
-                else None
-            )
-
-        src_keys = [k(item) for item in src]
-        dst_keys = [k(item) for item in dst]
-
-        # Use keyed algorithm only when every element provides a key on both sides
-        all_keyed = (
-            src_keys
-            and dst_keys
-            and all(key is not None for key in src_keys)
-            and all(key is not None for key in dst_keys)
+        # Decide algorithm based on whether any dataclasses are present.
+        # Pure-primitive / pure-dict lists use the simpler positional algorithm which
+        # produces minimal diffs for insertion/deletion.  Lists that contain at least
+        # one dataclass use the hybrid keyed algorithm which preserves identity across
+        # reorders and across Python-object rebuilds (when explicit keys are provided).
+        has_any_dataclass = any(
+            dataclasses.is_dataclass(obj) for obj in itertools.chain(src, dst)
         )
-        # print("list info", path, len(src_keys), len(dst_keys), all_keyed)
-        if not all_keyed:
-            # fall back to your existing element-wise logic
+
+        if not has_any_dataclass:
+            # ----- Positional diff for pure-primitive / pure-dict lists -----
             len_src, len_dst = len(src), len(dst)
             max_len = max(len_src, len_dst)
             min_len = min(len_src, len_dst)
@@ -701,91 +707,80 @@ class DiffBuilder:
                     logger.debug(
                         f"\n\nCOMPARE LIST ITEM: {key}\n\nOLD: {old}\n\nNEW: {new}"
                     )
-
                     if isinstance(old, dict) and isinstance(new, dict):
                         self._compare_dicts(
                             parent, _path_join(path, key), old, new, frozen
                         )
-
                     elif isinstance(old, list) and isinstance(new, list):
                         self._compare_lists(
                             parent, _path_join(path, key), old, new, frozen
                         )
-
-                    elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(
-                        new
-                    ):
-                        frozen_local = (
-                            (old is not None and hasattr(old, "_frozen"))
-                            or (new is not None and hasattr(new, "_frozen"))
-                            or frozen
-                        )
-                        old_control_key = k(old)
-                        new_control_key = k(new)
-                        same_component_fn = True
-                        if (
-                            getattr(old, "_c", None) == "C"
-                            and getattr(new, "_c", None) == "C"
-                        ):
-                            same_component_fn = getattr(old, "fn", None) is getattr(
-                                new, "fn", None
-                            )
-                        if (not frozen_local and old is new) or (
-                            frozen_local
-                            and old is not new
-                            and type(old) is type(new)
-                            and same_component_fn
-                            and (
-                                old_control_key is None
-                                or new_control_key is None
-                                or old_control_key == new_control_key
-                            )
-                        ):
-                            self._compare_dataclasses(
-                                parent, _path_join(path, key), old, new, frozen_local
-                            )
-                        else:
-                            self._item_removed(path, key, old, frozen=frozen)
-                            self._item_added(parent, path, key, new, frozen=frozen)
-
                     elif type(old) is not type(new) or old != new:
                         self._item_removed(path, key, old, frozen=frozen)
                         self._item_added(parent, path, key, new, frozen=frozen)
-
                 elif len_src > len_dst:
-                    control_key = k(src[key])
-                    self._item_removed(
-                        path,
-                        len_dst,
-                        src[key],
-                        item_key=(control_key, path)
-                        if control_key is not None
-                        else src[key],
-                        frozen=frozen,
-                    )
+                    self._item_removed(path, len_dst, src[key], frozen=frozen)
                 else:
-                    control_key = k(dst[key])
-                    self._item_added(
-                        parent,
-                        path,
-                        key,
-                        dst[key],
-                        item_key=(control_key, path)
-                        if control_key is not None
-                        else dst[key],
-                        frozen=frozen,
-                    )
+                    self._item_added(parent, path, key, dst[key], frozen=frozen)
             return
 
+        # ----- Hybrid keyed algorithm for lists containing dataclasses -----
+        #
+        # Composite key assignment:
+        #   frozen mode:
+        #     explicit key  → ("k", key)       – user-provided logical identity
+        #     unkeyed dc    → ("pos", n)        – positional among unkeyed items
+        #   non-frozen mode:
+        #     explicit key  → ("k", key)        – allows matching rebuilt objects
+        #     no explicit   → ("id", id(obj))   – Python-object identity
+        #   non-dataclass items (primitives):
+        #     always        → ("prim", n)       – positional among non-dc items
+        #
+        # Using tuple-namespaced keys prevents collisions between the four classes.
+
+        def build_keys(items):
+            keys = []
+            unkeyed_pos = 0
+            prim_pos = 0
+            for obj in items:
+                if dataclasses.is_dataclass(obj):
+                    ek = get_control_key(obj)
+                    if ek is not None:
+                        keys.append(("k", ek))
+                    elif frozen:
+                        keys.append(("pos", unkeyed_pos))
+                        unkeyed_pos += 1
+                    else:
+                        keys.append(("id", id(obj)))
+                else:
+                    keys.append(("prim", prim_pos))
+                    prim_pos += 1
+            return keys
+
+        src_keys = build_keys(src)
+        dst_keys = build_keys(dst)
+
+        # Helper: determine effective frozen flag for a matched (old, new) pair.
+        # A non-frozen pair matched by explicit key (different Python objects) must
+        # be diffed like a frozen pair since the new object has no __changes log.
+        def _effective_frozen(old_item, new_item):
+            if frozen:
+                return True
+            if old_item is not new_item:
+                old_ck = get_control_key(old_item)
+                if old_ck is not None and old_ck == get_control_key(new_item):
+                    return True
+            return False
+
         if src_keys == dst_keys:
-            # print("keyed fast path", path, len(src))
-            # Keys are identical and in the same order: treat as positional diff
+            # Keys identical and in the same order: positional diff (fast path).
             for idx, (old, new) in enumerate(zip(src, dst)):
                 if isinstance(old, dict) and isinstance(new, dict):
                     self._compare_dicts(parent, _path_join(path, idx), old, new, frozen)
                 elif isinstance(old, list) and isinstance(new, list):
                     self._compare_lists(parent, _path_join(path, idx), old, new, frozen)
                 elif dataclasses.is_dataclass(old) and dataclasses.is_dataclass(new):
+                    same_type = type(old) is type(new)
                     same_component_fn = True
                     if (
                         getattr(old, "_c", None) == "C"
@@ -794,23 +789,27 @@ class DiffBuilder:
                         same_component_fn = getattr(old, "fn", None) is getattr(
                             new, "fn", None
                         )
-                    if same_component_fn:
+                    if same_type and same_component_fn:
+                        frozen_eff = _effective_frozen(old, new)
                         self._compare_dataclasses(
-                            parent, _path_join(path, idx), old, new, frozen
+                            parent, _path_join(path, idx), old, new, frozen_eff
                         )
                     else:
-                        self._item_replaced(path, idx, new)
+                        # Different types or different component function: use
+                        # remove+add so controls are registered in added/removed
+                        # sets; execute() collapses same-path pairs to replace.
+                        self._item_removed(path, idx, old, frozen=frozen)
+                        self._item_added(parent, path, idx, new, frozen=frozen)
                 elif type(old) is not type(new) or old != new:
                     self._item_replaced(path, idx, new)
             return
 
         # -------- Keyed, React-style reconciliation --------
-        # We’ll mutate a working copy of the old list so emitted indices are “live”.
+        # We’ll mutate a working copy of the old list so emitted indices are "live".
         work = list(src)
         work_keys = src_keys[:]
         # Map key -> current index in `work`
         pos = {key: i for i, key in enumerate(work_keys)}
-        dst_keys = dst_keys  # renamed for clarity
         new_index_by_key = {key: i for i, key in enumerate(dst_keys)}
         new_keys_set = set(new_index_by_key.keys())
 
@@ -843,7 +842,7 @@ class DiffBuilder:
                 frozen_local = (
                     (old_item is not None and hasattr(old_item, "_frozen"))
                     or (new_item is not None and hasattr(new_item, "_frozen"))
-                    or frozen
+                    or _effective_frozen(old_item, new_item)
                 )
                 old_control_key = get_control_key(old_item)
                 new_control_key = get_control_key(new_item)
@@ -881,7 +880,16 @@ class DiffBuilder:
                     return
 
             if type(old_item) is not type(new_item) or old_item != new_item:
-                self._item_replaced(path, idx, new_item)
+                if dataclasses.is_dataclass(old_item) or dataclasses.is_dataclass(
+                    new_item
+                ):
+                    # Controls must go through remove+add so the added/removed
+                    # registries stay consistent; execute() folds adjacent
+                    # same-path pairs into a replace op.
+                    self._item_removed(path, idx, old_item, frozen=frozen)
+                    self._item_added(parent, path, idx, new_item, frozen=frozen)
+                else:
+                    self._item_replaced(path, idx, new_item)
 
         # Scan forward through desired new order.
         i = 0
@@ -968,7 +976,7 @@ class DiffBuilder:
             j -= 1
 
     def _compare_dataclasses(self, parent, path, src, dst, frozen):
-        logger.debug(f"\n_compare_dataclasses: {path} \n\n{src}\n{dst}\n")
+        logger.debug("\n_compare_dataclasses: %s\n\n%s\n%s\n", path, src, dst)
 
         if (
             self.control_cls
@@ -992,50 +1000,102 @@ class DiffBuilder:
             dst._before_update_safe()
 
         if not frozen:
-            # in-place comparison
-            changes = getattr(dst, "__changes", {})
+            # In-place (non-frozen) comparison.
+            #
+            # Prop-managed scalar/event fields: _dirty (populated by
+            # Prop.__set__) records which fields changed.  Emit a replace with
+            # the current _values entry — no old-value needed for scalars.
+            #
+            # Structural fields (lists, dicts, nested dataclasses): __prev_*
+            # snapshots from the last protocol serialisation cover both
+            # reassignment and in-place mutation, so __changes is not needed.
+            dirty = getattr(dst, "_dirty", None)
             prev_lists = getattr(dst, "__prev_lists", {})
             prev_dicts = getattr(dst, "__prev_dicts", {})
             prev_classes = getattr(dst, "__prev_classes", {})
 
-            # TODO - should optimize performance?
-            fields = {f.name: f for f in dataclasses.fields(dst)}
-            for field_name, old in changes.items():
-                if field_name in fields:
-                    new = getattr(dst, field_name)
+            if dirty:
+                _values = getattr(dst, "_values", None)
+                prop_defaults = getattr(type(dst), "_prop_defaults", None)
+                fields_map = {f.name: f for f in dataclasses.fields(dst)}
+                for field_name in dirty:  # dict → insertion order preserved
+                    f = fields_map.get(field_name)
+                    if f is None or f.metadata.get("skip", False):
+                        continue
+                    raw = getattr(dst, field_name, None)
 
-                    if field_name.startswith("on_") and fields[field_name].metadata.get(
-                        "event", True
-                    ):
-                        old = old is not None
+                    # Structural fields use _compare_values with the old
+                    # snapshot from __prev_*, then update the snapshot.
+                    # They are popped from __prev_* so the loops below do not
+                    # re-process them.
+                    if isinstance(raw, list):
+                        old = prev_lists.pop(field_name, [])
+                        self._compare_values(dst, path, field_name, old, raw, frozen)
+                        self._update_list_snapshot(prev_lists, field_name, raw)
+                        continue
+                    if isinstance(raw, dict):
+                        old = prev_dicts.pop(field_name, {})
+                        self._compare_values(dst, path, field_name, old, raw, frozen)
+                        self._update_dict_snapshot(prev_dicts, field_name, raw)
+                        continue
+                    if dataclasses.is_dataclass(raw):
+                        old = prev_classes.pop(field_name, None)
+                        self._compare_values(dst, path, field_name, old, raw, frozen)
+                        prev_classes[field_name] = raw
+                        continue
+                    if raw is None:
+                        # Structural → None transition.
+                        if field_name in prev_classes:
+                            old = prev_classes.pop(field_name)
+                            self._compare_values(
+                                dst, path, field_name, old, None, frozen
+                            )
+                            continue
+                        if field_name in prev_lists:
+                            old = prev_lists.pop(field_name)
+                            self._compare_values(
+                                dst, path, field_name, old, None, frozen
+                            )
+                            continue
+                        if field_name in prev_dicts:
+                            old = prev_dicts.pop(field_name)
+                            self._compare_values(
+                                dst, path, field_name, old, None, frozen
+                            )
+                            continue
+
+                    # Scalar / event field.
+                    new = (
+                        _values.get(field_name, prop_defaults[field_name])
+                        if (_values is not None and prop_defaults is not None)
+                        else raw
+                    )
+                    if f.name.startswith("on_") and f.metadata.get("event", True):
                         new = new is not None
+                    logger.debug("\n\n_compare_values:dirty %s %s", field_name, new)
+                    self._item_replaced(path, field_name, new)
+                dst._dirty.clear()
 
-                    logger.debug("\n\n_compare_values:changes %s %s", old, new)
-
-                    self._compare_values(dst, path, field_name, old, new, frozen)
-
-                    if field_name in prev_lists:
-                        del prev_lists[field_name]
-                    if field_name in prev_dicts:
-                        del prev_dicts[field_name]
-                    if field_name in prev_classes:
-                        del prev_classes[field_name]
-
-                    # update prev value
-                    if isinstance(new, list):
-                        self._update_list_snapshot(prev_lists, field_name, new)
-                    elif isinstance(new, dict):
-                        self._update_dict_snapshot(prev_dicts, field_name, new)
-                    elif dataclasses.is_dataclass(new):
-                        prev_classes[field_name] = new
+            # Plain-dataclass scalar changes recorded by _control_setattr.
+            changes = getattr(dst, "__changes", None)
+            if changes:
+                fields_map = (
+                    fields_map
+                    if dirty
+                    else {f.name: f for f in dataclasses.fields(dst)}
+                )
+                for field_name in list(changes):
+                    f = fields_map.get(field_name)
+                    if f is None or f.metadata.get("skip", False):
+                        continue
+                    new = getattr(dst, field_name)
+                    if f.name.startswith("on_") and f.metadata.get("event", True):
+                        new = new is not None
+                    self._item_replaced(path, field_name, new)
+                changes.clear()
 
             # compare lists
             for field_name, old in list(prev_lists.items()):
-                if field_name in changes:
-                    changed_value = getattr(dst, field_name, None)
-                    if changed_value is None:
-                        del prev_lists[field_name]
-                    continue
                 new = getattr(dst, field_name)
                 if not isinstance(new, list):
                     del prev_lists[field_name]
@@ -1045,11 +1105,6 @@ class DiffBuilder:
 
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
-                if field_name in changes:
-                    changed_value = getattr(dst, field_name, None)
-                    if changed_value is None:
-                        del prev_dicts[field_name]
-                    continue
                 new = getattr(dst, field_name)
                 if not isinstance(new, dict):
                     del prev_dicts[field_name]
@@ -1059,19 +1114,12 @@ class DiffBuilder:
 
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
-                if field_name in changes:
-                    changed_value = getattr(dst, field_name, None)
-                    if changed_value is None:
-                        del prev_classes[field_name]
-                    continue
                 new = getattr(dst, field_name)
                 if not dataclasses.is_dataclass(new):
                     del prev_classes[field_name]
                 else:
                     prev_classes[field_name] = new
                 self._compare_values(dst, path, field_name, old, new, frozen)
-
-            changes.clear()
         else:
             # frozen comparison
             logger.debug(
@@ -1080,16 +1128,47 @@ class DiffBuilder:
                 dst,
                 parent,
             )
-            for field in dataclasses.fields(dst):
-                if not field.metadata.get("skip", False):
-                    old = getattr(src, field.name)
-                    new = getattr(dst, field.name)
-                    if field.name.startswith("on_") and field.metadata.get(
-                        "event", True
-                    ):
+            src_vals = getattr(src, "_values", None)
+            dst_vals = getattr(dst, "_values", None)
+            if src_vals is not None and dst_vals is not None:
+                # Fast path: two focused loops, each proportional to the
+                # number of fields that actually need comparing.
+                #
+                # 1. Structural fields (_i, _c, controls, …) — always compare;
+                #    typically just a handful per control type.
+                # 2. Active Prop fields — only those non-default on at least
+                #    one side; read directly from _values to skip Prop.__get__.
+                structural = getattr(type(dst), "_structural_fields", frozenset())
+                prop_defaults = getattr(type(dst), "_prop_defaults", {})
+                event_fields = getattr(type(dst), "_event_fields", frozenset())
+
+                for fname in structural:
+                    old = getattr(src, fname)
+                    new = getattr(dst, fname)
+                    self._compare_values(dst, path, fname, old, new, frozen)
+
+                for fname in {**src_vals, **dst_vals}:
+                    default = prop_defaults.get(fname)
+                    old = src_vals.get(fname, default)
+                    new = dst_vals.get(fname, default)
+                    if old is new or old == new:
+                        continue
+                    if fname in event_fields:
                         old = old is not None
                         new = new is not None
-                    self._compare_values(dst, path, field.name, old, new, frozen)
+                    self._compare_values(dst, path, fname, old, new, frozen)
+            else:
+                # Slow path: full field scan (objects without _values).
+                for field in dataclasses.fields(dst):
+                    if not field.metadata.get("skip", False):
+                        old = getattr(src, field.name)
+                        new = getattr(dst, field.name)
+                        if field.name.startswith("on_") and field.metadata.get(
+                            "event", True
+                        ):
+                            old = old is not None
+                            new = new is not None
+                        self._compare_values(dst, path, field.name, old, new, frozen)
             self._dataclass_removed(src)
             self._dataclass_added(dst, parent, frozen)
 
@@ -1242,8 +1321,6 @@ class DiffBuilder:
                 item._frozen = frozen
 
             item_cls = item.__class__
-            if item_cls.__setattr__ is not _control_setattr:
-                item_cls.__setattr__ = _control_setattr  # type: ignore
             if getattr(item_cls, "__flet_control_cls__", None) is None:
                 item_cls.__flet_control_cls__ = self.control_cls
 
@@ -1263,7 +1340,18 @@ class DiffBuilder:
                         )
 
             if not frozen:
-                setattr(item, "__changes", {})
+                # Clear _dirty so post-configuration mutations are tracked
+                # incrementally from a clean baseline.
+                dst_dirty = getattr(item, "_dirty", None)
+                if dst_dirty is not None:
+                    dst_dirty.clear()
+                else:
+                    # Plain dataclass without Prop tracking: install
+                    # _control_setattr to capture scalar changes in __changes.
+                    item_cls = type(item)
+                    if item_cls.__setattr__ is not _control_setattr:
+                        item_cls.__setattr__ = _control_setattr
+                    object.__setattr__(item, "__changes", {})
 
         elif isinstance(item, dict):
             for v in item.values():
@@ -1308,7 +1396,9 @@ class DiffBuilder:
 
 
 def get_control_key(obj):
-    key = getattr(obj, "key", None)
+    # Fast path: read from _values directly to avoid Prop.__get__ overhead.
+    _values = getattr(obj, "_values", None)
+    key = _values.get("key") if _values is not None else getattr(obj, "key", None)
     return key.value if isinstance(key, Key) else key
 
 

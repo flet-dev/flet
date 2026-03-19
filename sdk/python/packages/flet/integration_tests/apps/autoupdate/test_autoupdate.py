@@ -39,6 +39,14 @@ class TestApp:
         assert (await tester.find_by_text("Auto update with update")).count == 1
         assert (await tester.find_by_text("Auto update no update")).count == 1
 
+        # tap 4th button
+        await tester.tap(
+            await tester.find_by_text("skip_autoupdate_after_update_called")
+        )
+        await tester.pump_and_settle()
+        assert (await tester.find_by_text("This text should not appear")).count == 0
+        assert (await tester.find_by_text("Button content updated")).count == 1
+
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_context_throws_exception_outside_flet_app():
