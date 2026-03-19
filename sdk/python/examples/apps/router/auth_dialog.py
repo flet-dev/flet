@@ -1,4 +1,4 @@
-"""Auth with dialog — shows a login dialog overlay when not authenticated."""
+"""Auth with AlertDialog — shows a modal login dialog when not authenticated."""
 
 from dataclasses import dataclass
 
@@ -37,44 +37,37 @@ def Home():
 
 @ft.component
 def AuthGuard():
-    """Layout route that shows a login dialog when not authenticated."""
+    """Layout route that shows a modal AlertDialog when not authenticated."""
     auth = ft.use_context(AuthContext)
     outlet = ft.use_route_outlet()
     username_ref = ft.use_ref(None)
+    page = ft.context.page
 
     def do_login():
         if auth is not None:
             auth.login(username_ref.current.value or "user")
+            page.pop_dialog()
 
-    if auth is None or not auth.is_authenticated:
-        return ft.Stack(
-            [
-                ft.Container(content=outlet, opacity=0.3),
-                ft.Container(
-                    content=ft.Card(
-                        content=ft.Container(
-                            content=ft.Column(
-                                [
-                                    ft.Text("Please log in", size=20),
-                                    ft.TextField(
-                                        label="Username",
-                                        value="admin",
-                                        ref=username_ref,
-                                    ),
-                                    ft.Button("Login", on_click=do_login),
-                                ],
-                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                            ),
-                            padding=30,
-                            width=300,
-                        ),
-                    ),
-                    alignment=ft.Alignment(0, 0),
-                    expand=True,
+    def show_login():
+        page.show_dialog(
+            ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Please log in"),
+                content=ft.TextField(
+                    label="Username",
+                    value="admin",
+                    ref=username_ref,
                 ),
-            ],
-            expand=True,
+                actions=[
+                    ft.TextButton("Login", on_click=do_login),
+                ],
+            )
         )
+
+    ft.use_effect(
+        lambda: show_login() if auth is None or not auth.is_authenticated else None,
+        [auth.is_authenticated if auth else None],
+    )
 
     return outlet
 
