@@ -107,7 +107,7 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
         widget.control.triggerEvent("change", expanded);
       },
       visualDensity: widget.control.getVisualDensity("visual_density"),
-      enableFeedback: widget.control.getBool("enable_feedback"),
+      enableFeedback: widget.control.getBool("enable_feedback", true),
       showTrailingIcon: widget.control.getBool("show_trailing_icon", true)!,
       enabled: !widget.control.disabled,
       minTileHeight: widget.control.getDouble("min_tile_height"),

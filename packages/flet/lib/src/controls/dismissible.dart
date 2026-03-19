@@ -93,9 +93,9 @@ class _DismissibleControlState extends State<DismissibleControl> {
               }
             : null,
         movementDuration: widget.control
-            .getDuration("duration", const Duration(milliseconds: 200))!,
+            .getDuration("movement_duration", const Duration(milliseconds: 200))!,
         resizeDuration: widget.control
-            .getDuration("duration", const Duration(milliseconds: 300))!,
+            .getDuration("resize_duration", const Duration(milliseconds: 300))!,
         crossAxisEndOffset:
             widget.control.getDouble("cross_axis_end_offset", 0.0)!,
         dismissThresholds: widget.control
