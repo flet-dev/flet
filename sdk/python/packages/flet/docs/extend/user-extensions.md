@@ -431,10 +431,38 @@ Rebuild and run:
 
 <img src="/assets/extensions/spinkit3.gif" className="screenshot-20" />
 
-/// admonition | Note
-    type: note
+/// admonition | Important: Default values must match on both sides
+    type: warning
 
-In `flet_spinkit.py`, the default values on the Python control exist only to make the class easier to use and discover in Python—they are not automatically passed through to the Dart side. On the Flutter side in `flet_spinkit.dart`, `size` is a required runtime value, so you must explicitly provide a fallback like `control.getDouble("size") ?? 100.0`. Otherwise, if size is not provided, Dart receives null for a required parameter and will throw a runtime error.
+Properties with default values on the Python side are **not sent to Flutter** when the user hasn't changed them from the default. This means your Dart code **must provide the same default value** for every property that has one in Python.
+
+For example, if your Python control declares:
+
+```python
+size: float = 100.0
+animate: bool = True
+```
+
+Then your Dart code **must** use matching defaults:
+
+```dart
+// Correct - defaults match Python
+final size = control.getDouble("size", 100.0)!;
+final animate = control.getBool("animate", true)!;
+
+// Wrong - no default, will be null when user doesn't set the property
+final size = control.getDouble("size");      // returns null!
+final animate = control.getBool("animate");  // returns null!
+```
+
+This also applies to `@ft.value` types parsed with helper functions. If a value type field has a default, the corresponding `parseDouble()`, `parseBool()`, `parseDuration()`, etc. call on the Dart side must provide the same default.
+
+Common pitfalls:
+
+- **Missing defaults**: `control.getDouble("prop")` instead of `control.getDouble("prop", 0.0)!`
+- **Mismatched defaults**: Python has `True` but Dart defaults to `false`
+- **Unit mismatches**: Python uses `Duration(milliseconds=150)` but Dart uses `Duration(microseconds: 150)`
+- **Empty collections**: `field(default_factory=list)` means an empty list won't be sent; Dart must handle null with `?? const []`
 
 ///
 
