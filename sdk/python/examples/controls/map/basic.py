@@ -5,6 +5,7 @@ import flet_map as ftm
 def main(page: ft.Page):
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ftm.Map(
                 expand=True,
                 layers=[

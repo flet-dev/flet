@@ -64,6 +64,6 @@ class TileLayerControl extends StatelessWidget {
       wmsOptions: parseWMSTileLayerOptions(control.get("wms_configuration")),
     );
 
-    return LayoutControl(control: control, child: tileLayer);
+    return BaseControl(control: control, child: tileLayer);
   }
 }
