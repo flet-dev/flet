@@ -33,12 +33,14 @@ Use [`flet-deprecation`](../flet-deprecation/SKILL.md) when release prep include
   If one item groups multiple PRs by different authors, attribute all relevant authors:
   `by [@user1](https://github.com/user1), [@user2](https://github.com/user2)`.
   Ensure that all inferred PRs and issues in the changelog have `{version}` milestone attached on GitHub.
+  If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog; do not omit issue links just because milestone metadata is missing.
   As it's a Flutter package prefer items having changes on Flutter side.
 * Add a new entry into /CHANGELOG.md. Do not add chore/trivial/duplicate items, add "worth while" items with related issue or PR.
   Every changelog item must include both related issue link(s) and PR link(s) when available (issue first, PR second). If no issue exists, include PR link(s) only.
   Also include issue-only items when a change was done via direct commit without PR (for example, an issue referenced in commit context but no PR exists).
   Every changelog item must include author attribution as a GitHub profile link: `by [@<github_login>](https://github.com/<github_login>)`.
   Use PR author login for PR-based items. For issue-only direct-commit items, use the commit author GitHub login if available.
+  If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog; do not omit issue links just because milestone metadata is missing.
 * Scan all changelogs for `Unreleased` sections, not only the root ones:
   * `/CHANGELOG.md`
   * `packages/flet/CHANGELOG.md`
