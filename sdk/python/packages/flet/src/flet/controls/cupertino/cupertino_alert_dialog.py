@@ -7,6 +7,7 @@ from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
 from flet.controls.types import ColorValue, StrOrControl
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["CupertinoAlertDialog"]
 
@@ -67,14 +68,17 @@ class CupertinoAlertDialog(DialogControl):
     If that is also `None`, the default is `Colors.BLACK_54`.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            (isinstance(self.title, str) or self.title.visible)
-            or (self.content and self.content.visible)
-            or any(a.visible for a in self.actions)
-        ):
-            raise ValueError(
-                "AlertDialog has nothing to display. Provide at minimum one of the "
-                "following: title, content, actions"
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                isinstance(ctrl.title, str)
+                or (isinstance(ctrl.title, Control) and ctrl.title.visible)
             )
+            or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+            or any(action.visible for action in ctrl.actions),
+            message=(
+                "CupertinoAlertDialog has nothing to display. Provide at minimum one "
+                "of the following: title, content, actions"
+            ),
+        ),
+    )

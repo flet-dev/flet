@@ -79,7 +79,7 @@ class BorderSide:
         to [`BorderStyle.NONE`][flet.].
 
     Raises:
-        ValueError: If it is less than zero.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     color: ColorValue = Colors.BLACK

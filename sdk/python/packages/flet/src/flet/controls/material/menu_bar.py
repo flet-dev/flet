@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control, value
@@ -16,6 +16,7 @@ from flet.controls.types import (
     Number,
     VisualDensity,
 )
+from flet.utils.validation import V
 
 __all__ = ["MenuBar", "MenuStyle"]
 
@@ -146,12 +147,15 @@ class MenuBar(Control):
 
     """
 
-    controls: list[Control] = field(default_factory=list)
+    controls: Annotated[
+        list[Control],
+        V.visible_controls(min_count=1),
+    ] = field(default_factory=list)
     """
     A list of top-level menu controls to display in this menu bar.
 
     Raises:
-        ValueError: If none of the controls are visible.
+        ValueError: If it does not contain at least one visible `Control`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -163,8 +167,3 @@ class MenuBar(Control):
     """
     The menu bar style.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not any(c.visible for c in self.controls):
-            raise ValueError("MenuBar must have at minimum one visible control")

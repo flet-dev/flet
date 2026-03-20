@@ -37,7 +37,7 @@ class HeroControl extends StatelessWidget {
       return const ErrorControl("Hero.content must be provided and visible");
     }
 
-    final tag = control.get("tag");
+    final tag = control.getString("tag");
     if (tag == null) {
       return const ErrorControl("Hero.tag must be provided");
     }
@@ -47,10 +47,8 @@ class HeroControl extends StatelessWidget {
       child: Hero(
         tag: tag,
         flightShuttleBuilder: _buildFlightShuttle,
-        transitionOnUserGestures: control.getBool(
-          "transition_on_user_gestures",
-          false,
-        )!,
+        transitionOnUserGestures:
+            control.getBool("transition_on_user_gestures", false)!,
         child: content,
       ),
     );

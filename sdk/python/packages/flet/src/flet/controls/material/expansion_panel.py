@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -15,6 +15,7 @@ from flet.controls.types import (
     ColorValue,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["ExpansionPanel", "ExpansionPanelList", "ExpansionPanelListChangeEvent"]
 
@@ -167,12 +168,15 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     The color of the divider when [`ExpansionPanel.expanded`][flet.] is `False`.
     """
 
-    elevation: Number = 2
+    elevation: Annotated[
+        Number,
+        V.ge(0),
+    ] = 2
     """
     Defines the elevation of the [`controls`][(c).], when expanded.
 
     Raises:
-        ValueError: If it is less than zero.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     expanded_header_padding: PaddingValue = field(
@@ -199,8 +203,3 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
     Called when an item of [`controls`][(c).] is expanded or collapsed.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation < 0:
-            raise ValueError("elevation must be greater than or equal to zero")

@@ -20,6 +20,7 @@ from flet.controls.types import (
     StrOrControl,
     TextAlign,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Dropdown", "DropdownOption"]
 
@@ -37,7 +38,7 @@ class DropdownOption(Control):
     If not specified [`text`][(c).] will be used as fallback.
 
     Raises:
-        ValueError: If neither `key` nor [`text`][(c).] are provided.
+        ValueError: If neither `key` nor [`text`][(c).] is provided.
     """
 
     text: Optional[str] = None
@@ -47,7 +48,7 @@ class DropdownOption(Control):
     If not specified [`key`][(c).] will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor `text` are provided.
+        ValueError: If neither [`key`][(c).] nor `text` is provided.
     """
 
     content: Optional[Control] = None
@@ -71,10 +72,12 @@ class DropdownOption(Control):
     Customizes this menu item's appearance.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.key is None and self.text is None:
-            raise ValueError("key or text must be specified")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.key is not None or ctrl.text is not None,
+            message="key or text must be specified",
+        ),
+    )
 
 
 Option = DropdownOption

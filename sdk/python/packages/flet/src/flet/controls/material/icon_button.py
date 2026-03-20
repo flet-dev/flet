@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -17,6 +17,7 @@ from flet.controls.types import (
     Url,
     VisualDensity,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "FilledIconButton",
@@ -130,7 +131,10 @@ class IconButton(LayoutControl, AdaptiveControl):
     The primary color of this button when it is in the pressed state.
     """
 
-    splash_radius: Optional[Number] = None
+    splash_radius: Annotated[
+        Optional[Number],
+        V.gt(0),
+    ] = None
     """
     The splash radius.
 
@@ -139,7 +143,7 @@ class IconButton(LayoutControl, AdaptiveControl):
         ([`Theme.use_material3`][flet.] is `False`).
 
     Raises:
-        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     alignment: Optional[Alignment] = None
@@ -217,10 +221,6 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.splash_radius is not None and self.splash_radius <= 0:
-            raise ValueError(
-                f"splash_radius must be greater than 0, got {self.splash_radius}"
-            )
         if (
             self.style is not None
             or self.bgcolor is not None

@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, StrOrControl
+from flet.utils.validation import V
 
 __all__ = ["CupertinoActionSheetAction"]
 
@@ -14,12 +15,15 @@ class CupertinoActionSheetAction(LayoutControl):
     An action button typically used in a CupertinoActionSheet.
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The child control to be shown in this action button.
 
     Raises:
-        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     default: bool = False
@@ -41,8 +45,3 @@ class CupertinoActionSheetAction(LayoutControl):
     """
     Called when this action button is clicked.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (isinstance(self.content, str) or self.content.visible):
-            raise ValueError("content must be a string or a visible Control")

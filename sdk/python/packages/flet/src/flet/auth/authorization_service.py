@@ -165,7 +165,7 @@ class AuthorizationService(Authorization):
                     self.__token.access_token
                 )
 
-    def __convert_token(self, t: Mapping[str, Any]):
+    def __convert_token(self, t: Mapping[str, Any]) -> OAuthToken:
         """
         Convert oauthlib token mapping to [`OAuthToken`][(p).oauth_token.].
 
@@ -231,7 +231,7 @@ class AuthorizationService(Authorization):
                     t["refresh_token"] = self.__token.refresh_token
                 self.__token = self.__convert_token(t)
 
-    async def __get_user(self):
+    async def __get_user(self) -> User:
         """
         Fetch user profile from provider `user_endpoint`.
 
@@ -256,7 +256,7 @@ class AuthorizationService(Authorization):
             uj = json.loads(user_resp.text)
             return User(uj, str(self.provider.user_id_fn(uj)))
 
-    def __get_default_headers(self):
+    def __get_default_headers(self) -> dict[str, str]:
         """
         Build default HTTP headers for OAuth-related requests.
 

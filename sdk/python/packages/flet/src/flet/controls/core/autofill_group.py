@@ -1,7 +1,9 @@
 from enum import Enum
+from typing import Annotated
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.utils.validation import V
 
 __all__ = ["AutofillGroup", "AutofillGroupDisposeAction", "AutofillHint"]
 
@@ -775,14 +777,15 @@ class AutofillGroup(Control):
     Used to group autofill controls together.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this group.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     dispose_action: AutofillGroupDisposeAction = AutofillGroupDisposeAction.COMMIT
@@ -790,8 +793,3 @@ class AutofillGroup(Control):
     The action to be run when this group is the topmost and it's being disposed, in \
     order to clean up the current autofill context.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

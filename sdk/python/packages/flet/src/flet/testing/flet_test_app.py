@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 from PIL import Image
@@ -453,7 +453,7 @@ class FletTestApp:
                 f"(similarity: {similarity}% <= {similarity_threshold}%)"
             )
 
-    def _load_image_from_file(self, file_name):
+    def _load_image_from_file(self, file_name: Union[str, Path]) -> Image.Image:
         """
         Loads an image from disk.
 
@@ -477,7 +477,7 @@ class FletTestApp:
         """
         return Image.open(BytesIO(data))
 
-    def _compare_images_rgb(self, img1, img2) -> float:
+    def _compare_images_rgb(self, img1: Image.Image, img2: Image.Image) -> float:
         """
         Calculates structural similarity between two RGB images.
 
@@ -577,4 +577,5 @@ class FletTestApp:
                 frame.close()
 
         return output
+
     __pump_and_settle_timeout = 10.0

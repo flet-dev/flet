@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -15,6 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = ["Switch"]
 
@@ -149,12 +150,15 @@ class Switch(LayoutControl, AdaptiveControl):
     The color to be used when it is being hovered over by the mouse pointer.
     """
 
-    splash_radius: Optional[Number] = None
+    splash_radius: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The radius of the splash effect when the switch is pressed.
 
     Raises:
-        ValueError: If [`splash_radius`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
@@ -215,11 +219,3 @@ class Switch(LayoutControl, AdaptiveControl):
     """
     Called when the control has lost focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.splash_radius is not None and self.splash_radius < 0:
-            raise ValueError(
-                "splash_radius must be greater than or equal to 0, "
-                f"got {self.splash_radius}"
-            )

@@ -8,6 +8,13 @@ description: Use when asked to prepare new Flet release by bumping versions and 
 * Previous Flet version from repo tags.
 * Whether it's minor or major release.
 
+## Related Skills
+
+Use [`flet-deprecation`](../flet-deprecation/SKILL.md) when release prep includes:
+- adding new deprecations in this release,
+- removing APIs whose `delete_version` equals this release version,
+- auditing changelog entries that mention deprecations/removals.
+
 ## Steps
 
 * Take latest Flet release version from the repo and
