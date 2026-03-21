@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import weakref
-
 from flet.components.hooks.use_effect import use_effect
 from flet.components.hooks.use_ref import use_ref
 from flet.controls.context import context
@@ -30,30 +28,18 @@ def use_dialog(dialog: DialogControl | None = None):
 
     prev = ref.current
 
-    # Clean up a previously dismissed dialog still in the overlay.
-    # Deferred to here (next render) so the dialog stays alive in
-    # session.__index (a WeakValueDictionary) long enough for Flutter's
-    # dismiss event to reach the Python handler.
-    # Do NOT sync __prev_lists here — other hooks may have already
-    # appended to _dialogs.controls in this render, and syncing would
-    # tell the diff system those additions already happened.  The
-    # normal diff will handle the removal correctly.
-    if prev is not None and not prev.open and prev in page._dialogs.controls:
-        page._dialogs.controls.remove(prev)
+    if prev is not None and prev not in page._dialogs.controls:
         ref.current = None
         prev = None
 
     if dialog is not None:
         dialog.open = True
+        page._prepare_dialog(dialog)
         if prev is not None and prev in page._dialogs.controls:
             # Frozen diff: compares prev and dialog field-by-field,
             # sends only actual deltas, and transfers _i via _migrate_state
             # so Flutter preserves widget identity (e.g. TextField cursor).
             page.session.patch_control(control=dialog, prev_control=prev, frozen=True)
-            # _dataclass_added (called during frozen diff) skips _parent
-            # for the root control when parent=None.  Set it manually so
-            # the page property chain works for event dispatch.
-            dialog._parent = weakref.ref(page._dialogs)
             # Strip _frozen set by _dataclass_added during frozen diff
             # so we can later set open=False for dismissal.
             if hasattr(dialog, "_frozen"):
@@ -69,20 +55,17 @@ def use_dialog(dialog: DialogControl | None = None):
         # Dismiss: patch open=False so Flutter pops the dialog route.
         # Keep prev in _dialogs.controls and ref.current so the dialog
         # stays alive in session.__index (WeakValueDictionary) — Flutter
-        # needs the control present to dispatch the dismiss event.
-        # Cleanup happens on the next render (above).
+        # needs the control present to dispatch the dismiss event. The
+        # wrapped dismiss handler removes it after Flutter signals close.
         prev.open = False
         page.session.patch_control(prev)
 
     def _cleanup():
         d = ref.current
         if d is not None:
+            ref.current = None
             if d.open:
                 d.open = False
                 page.session.patch_control(d)
-            if d in page._dialogs.controls:
-                page._dialogs.controls.remove(d)
-                page.session.schedule_update(page._dialogs)
-            ref.current = None
 
     use_effect(lambda: None, dependencies=[], cleanup=_cleanup)
