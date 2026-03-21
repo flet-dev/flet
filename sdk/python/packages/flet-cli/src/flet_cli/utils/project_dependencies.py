@@ -97,7 +97,10 @@ def get_poetry_dependencies(
             sep = "~="
             value = value[1:]
             return f"{dependency_name}~={value[1:]}"
-        elif "<" in value or ">" in value:
+        elif "<=" in value or "<" in value:
+            sep = " "
+            value = value.replace(" ", "")
+        elif ">" in value:
             sep = ""
             value = value.replace(" ", "")
 
