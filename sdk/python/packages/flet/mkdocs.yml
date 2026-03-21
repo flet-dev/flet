@@ -1002,6 +1002,7 @@ nav:
               - on_updated: types/onupdated.md
               - use_callback: types/usecallback.md
               - use_context: types/usecontext.md
+              - use_dialog: types/usedialog.md
               - use_effect: types/useeffect.md
               - use_memo: types/usememo.md
               - use_ref: types/useref.md
