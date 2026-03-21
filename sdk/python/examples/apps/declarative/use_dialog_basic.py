@@ -1,3 +1,5 @@
+import asyncio
+
 import flet as ft
 
 
@@ -6,11 +8,9 @@ def App():
     show, set_show = ft.use_state(False)
     deleting, set_deleting = ft.use_state(False)
 
-    async def handle_delete(e):
+    async def handle_delete():
         set_deleting(True)
         # Simulate async operation
-        import asyncio
-
         await asyncio.sleep(2)
         set_deleting(False)
         set_show(False)
@@ -30,11 +30,11 @@ def App():
                 ),
                 ft.TextButton(
                     "Cancel",
-                    on_click=lambda e: set_show(False),
+                    on_click=lambda: set_show(False),
                     disabled=deleting,
                 ),
             ],
-            on_dismiss=lambda e: set_show(False),
+            on_dismiss=lambda: set_show(False),
         )
         if show
         else None
@@ -47,7 +47,7 @@ def App():
             ft.Button(
                 "Delete File",
                 icon=ft.Icons.DELETE,
-                on_click=lambda e: set_show(True),
+                on_click=lambda: set_show(True),
             ),
         ],
     )

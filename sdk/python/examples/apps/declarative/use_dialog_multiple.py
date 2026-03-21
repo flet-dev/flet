@@ -79,20 +79,20 @@ def App():
     show_delete, set_show_delete = ft.use_state(False)
     deleting, set_deleting = ft.use_state(False)
 
-    async def handle_delete(e):
+    async def handle_delete():
         set_deleting(True)
         await asyncio.sleep(1)
         set_files([f for f in files if f != target])
         set_deleting(False)
         set_show_delete(False)
 
-    def handle_rename_save(e):
+    def handle_rename_save():
         if new_name.strip():
             set_files([new_name.strip() if f == target else f for f in files])
         set_show_rename(False)
 
     def open_rename(name):
-        def handler(e):
+        def handler():
             set_target(name)
             set_new_name(name)
             set_show_rename(True)
@@ -100,7 +100,7 @@ def App():
         return handler
 
     def open_delete(name):
-        def handler(e):
+        def handler():
             set_target(name)
             set_show_delete(True)
 
@@ -112,7 +112,7 @@ def App():
             new_name,
             on_name_change=lambda e: set_new_name(e.control.value),
             on_save=handle_rename_save,
-            on_cancel=lambda e: set_show_rename(False),
+            on_cancel=lambda: set_show_rename(False),
         )
         if show_rename
         else None
@@ -123,7 +123,7 @@ def App():
             target,
             deleting,
             on_delete=handle_delete,
-            on_cancel=lambda e: set_show_delete(False),
+            on_cancel=lambda: set_show_delete(False),
         )
         if show_delete
         else None

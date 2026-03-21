@@ -12,7 +12,7 @@ def App():
     # Ref avoids stale closure — always holds the current value
     should_chain = ft.use_ref(False)
 
-    async def handle_delete(e):
+    async def handle_delete():
         set_deleting(True)
         await asyncio.sleep(2)
         set_deleting(False)
@@ -20,7 +20,7 @@ def App():
         should_chain.current = True
         set_show_confirm(False)
 
-    def on_confirm_dismiss(e):
+    def on_confirm_dismiss():
         if should_chain.current:
             should_chain.current = False
             set_show_success(True)
@@ -40,7 +40,7 @@ def App():
                 ),
                 ft.TextButton(
                     "Cancel",
-                    on_click=lambda e: set_show_confirm(False),
+                    on_click=lambda: set_show_confirm(False),
                     disabled=deleting,
                 ),
             ],
@@ -55,7 +55,7 @@ def App():
             title=ft.Text("Done!"),
             content=ft.Text("report.pdf has been deleted."),
             actions=[
-                ft.FilledButton("OK", on_click=lambda e: set_show_success(False)),
+                ft.FilledButton("OK", on_click=lambda: set_show_success(False)),
             ],
         )
         if show_success
@@ -71,7 +71,7 @@ def App():
             ft.Button(
                 "Delete File",
                 icon=ft.Icons.DELETE,
-                on_click=lambda e: set_show_confirm(True),
+                on_click=lambda: set_show_confirm(True),
                 disabled=deleted,
             ),
         ],
