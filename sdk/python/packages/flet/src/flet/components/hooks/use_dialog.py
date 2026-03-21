@@ -29,6 +29,20 @@ def use_dialog(dialog: DialogControl | None = None):
     page = context.page
 
     prev = ref.current
+
+    # Clean up a previously dismissed dialog still in the overlay.
+    # Deferred to here (next render) so the dialog stays alive in
+    # session.__index (a WeakValueDictionary) long enough for Flutter's
+    # dismiss event to reach the Python handler.
+    # Do NOT sync __prev_lists here — other hooks may have already
+    # appended to _dialogs.controls in this render, and syncing would
+    # tell the diff system those additions already happened.  The
+    # normal diff will handle the removal correctly.
+    if prev is not None and not prev.open and prev in page._dialogs.controls:
+        page._dialogs.controls.remove(prev)
+        ref.current = None
+        prev = None
+
     if dialog is not None:
         dialog.open = True
         if prev is not None and prev in page._dialogs.controls:
@@ -52,8 +66,11 @@ def use_dialog(dialog: DialogControl | None = None):
             ref.current = dialog
             page.session.schedule_update(page._dialogs)
     elif prev is not None and prev.open:
-        # Dismiss: patch the dialog directly (like pop_dialog does)
-        # so Flutter properly pops the dialog route.
+        # Dismiss: patch open=False so Flutter pops the dialog route.
+        # Keep prev in _dialogs.controls and ref.current so the dialog
+        # stays alive in session.__index (WeakValueDictionary) — Flutter
+        # needs the control present to dispatch the dismiss event.
+        # Cleanup happens on the next render (above).
         prev.open = False
         page.session.patch_control(prev)
 
