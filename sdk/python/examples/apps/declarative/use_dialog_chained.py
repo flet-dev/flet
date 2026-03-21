@@ -21,7 +21,6 @@ def App():
         set_show_confirm(False)
 
     def on_confirm_dismiss(e):
-        print("Dialog dismissed")
         if should_chain.current:
             should_chain.current = False
             set_show_success(True)
