@@ -128,6 +128,15 @@ def get_project_dependencies(
     if project_dependencies is None:
         return None
 
-    dependencies = set(project_dependencies)
+    dependencies: set[str] = set()
+
+    for dep in project_dependencies:
+        for sep in ("<=", "<"):
+            if sep in dep and "," not in dep:
+                value, _, suffix = dep.partition(sep)
+                dependencies.add(f"{value} {sep}{suffix}")
+                break
+        else:
+            dependencies.add(dep.strip())
 
     return sorted(dependencies)
