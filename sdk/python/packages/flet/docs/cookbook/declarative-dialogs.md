@@ -102,6 +102,8 @@ def App():
     )
 
     return ft.TextButton("Delete file", on_click=lambda: set_show(True))
+
+ft.run(lambda page: page.render(App))
 ```
 
 This pattern works well with `asyncio` and other async APIs in Flet apps. For more
@@ -161,6 +163,8 @@ def App():
     )
 
     return ft.TextButton("Open", on_click=lambda: set_show_confirm(True))
+
+ft.run(lambda page: page.render(App))
 ```
 
 [`ft.use_ref()`][flet.use_ref] is helpful here because the value survives re-renders without
