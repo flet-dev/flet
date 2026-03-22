@@ -323,6 +323,30 @@ function preprocessCrossReferenceMarkdown(text, context) {
     .join("");
 }
 
+function escapeMdxUnsafeAngles(text) {
+  if (!text) {
+    return text;
+  }
+
+  const fenceSplit = text.split(/(```[\s\S]*?```)/g);
+  return fenceSplit
+    .map((fenceSegment) => {
+      if (fenceSegment.startsWith("```")) {
+        return fenceSegment;
+      }
+      const inlineSplit = fenceSegment.split(/(`[^`\n]+`)/g);
+      return inlineSplit
+        .map((inlineSegment) => {
+          if (inlineSegment.startsWith("`") && inlineSegment.endsWith("`")) {
+            return inlineSegment;
+          }
+          return inlineSegment.replace(/<(?![A-Za-z!/])/g, "&lt;");
+        })
+        .join("");
+    })
+    .join("");
+}
+
 export function renderCodeExpression(text, context = {}) {
   return renderAutolinkedText(text, context, true);
 }
@@ -675,7 +699,7 @@ export function renderInlineMarkdown(text, context) {
     return null;
   }
   const tree = MARKDOWN_PARSER.parse(
-    preprocessCrossReferenceMarkdown(text, context)
+    escapeMdxUnsafeAngles(preprocessCrossReferenceMarkdown(text, context))
   );
   const paragraph =
     tree.children.length === 1 && tree.children[0].type === "paragraph"
@@ -691,9 +715,11 @@ export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
     return null;
   }
   const tree = MARKDOWN_PARSER.parse(
-    preprocessCrossReferenceMarkdown(
-      normalizeDocstringMarkdown(docstring),
-      context
+    escapeMdxUnsafeAngles(
+      preprocessCrossReferenceMarkdown(
+        normalizeDocstringMarkdown(docstring),
+        context
+      )
     )
   );
   return renderMarkdownNode(tree, context, keyPrefix);
