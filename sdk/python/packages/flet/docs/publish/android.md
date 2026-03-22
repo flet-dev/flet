@@ -81,7 +81,7 @@ The following target architectures are supported:
 
 Its value is determined in the following order of precedence:
 
-1. [`--split-per-abi`](../cli/flet-build.md#-split-per-abi)
+1. [`--split-per-abi`](../cli/flet-build.md#--split-per-abi)
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
@@ -199,7 +199,7 @@ An alias name for the key within the keystore.
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-signing-key-alias`](../cli/flet-build.md#-android-signing-key-alias)
+1. [`--android-signing-key-alias`](../cli/flet-build.md#--android-signing-key-alias)
 2. `FLET_ANDROID_SIGNING_KEY_ALIAS`
 3. `[tool.flet.android.signing].key_alias`
 4. `"upload"`
@@ -235,7 +235,7 @@ or `C:\Users\<user name>\upload-keystore.jks` on Windows.
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-signing-key-store`](../cli/flet-build.md#-android-signing-key-store)
+1. [`--android-signing-key-store`](../cli/flet-build.md#--android-signing-key-store)
 2. `[tool.flet.android.signing].key_store`
 3. `FLET_ANDROID_SIGNING_KEY_STORE`
 
@@ -266,7 +266,7 @@ A password to unlock the keystore file (can contain multiple key entries).
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-signing-key-store-password`](../cli/flet-build.md#-android-signing-key-store-password)
+1. [`--android-signing-key-store-password`](../cli/flet-build.md#--android-signing-key-store-password)
 2. `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
 3. [key password](#key-password)
 
@@ -295,7 +295,7 @@ A password used to access the private key inside the keystore.
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-signing-key-password`](../cli/flet-build.md#-android-signing-key-password)
+1. [`--android-signing-key-password`](../cli/flet-build.md#--android-signing-key-password)
 2. `FLET_ANDROID_SIGNING_KEY_PASSWORD`
 3. [key store password](#key-store-password)
 
@@ -381,7 +381,7 @@ See also:
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-meta-data`](../cli/flet-build.md#-android-meta-data)
+1. [`--android-meta-data`](../cli/flet-build.md#--android-meta-data)
 2. `[tool.flet.android.meta_data]`
 
 #### Example
@@ -433,7 +433,7 @@ See also:
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-features`](../cli/flet-build.md#-android-features)
+1. [`--android-features`](../cli/flet-build.md#--android-features)
 2. `[tool.flet.android.feature]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.software.leanback=false`, `android.hardware.touchscreen=false`
@@ -492,7 +492,7 @@ See also:
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-permissions`](../cli/flet-build.md#-android-permissions)
+1. [`--android-permissions`](../cli/flet-build.md#--android-permissions)
 2. `[tool.flet.android.permission]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. defaults: `android.permission.INTERNET=true`
@@ -625,7 +625,7 @@ This value is applied when app icons are generated for Android.
 
 Its value is determined in the following order of precedence:
 
-1. [`--android-adaptive-icon-background`](../cli/flet-build.md#-android-adaptive-icon-background)
+1. [`--android-adaptive-icon-background`](../cli/flet-build.md#--android-adaptive-icon-background)
 2. `[tool.flet.android].adaptive_icon_background`
 3. [Build template](index.md#build-template) default: `#ffffff`
 

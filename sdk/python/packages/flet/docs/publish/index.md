@@ -176,7 +176,7 @@ When you run `flet build <target_platform>`, the pipeline is:
    The Flutter app embeds your packaged Python app in its assets and uses `flet` and
    [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
    The project is cached and reused across builds for rapid iterations;
-   use [`--clear-cache`](../cli/flet-build.md#-clear-cache) to force a rebuild.
+   use [`--clear-cache`](../cli/flet-build.md#--clear-cache) to force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
      - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
@@ -265,7 +265,7 @@ This is the Python module that starts your app and contains the call to
 
 Its value is determined in the following order of precedence:
 
-1. [`--module-name`](../cli/flet-build.md#-module-name)
+1. [`--module-name`](../cli/flet-build.md#--module-name)
 2. `[tool.flet.app].module`
 3. `"main"` (entry file `main.py`)
 
@@ -296,7 +296,7 @@ and spaces removed or collapsed, and hyphens converted to underscores (for examp
 
 Its value is determined in the following order of precedence:
 
-1. [`--project`](../cli/flet-build.md#-project)
+1. [`--project`](../cli/flet-build.md#--project)
 2. `[project].name`
 3. project/app directory name
 
@@ -325,9 +325,9 @@ It does **not** control the on-disk executable or bundle name. Use the
 
 Its value is determined in the following order of precedence:
 
-1. [`--product`](../cli/flet-build.md#-product)
+1. [`--product`](../cli/flet-build.md#--product)
 2. `[tool.flet].product`
-3. [`--project`](../cli/flet-build.md#-project)
+3. [`--project`](../cli/flet-build.md#--project)
 4. `[project].name`
 5. project/app directory name
 
@@ -359,9 +359,9 @@ your target platforms.
 
 Its value is determined in the following order of precedence:
 
-1. [`--artifact`](../cli/flet-build.md#-artifact)
+1. [`--artifact`](../cli/flet-build.md#--artifact)
 2. `[tool.flet.<PLATFORM>].artifact`
-3. [`--project`](../cli/flet-build.md#-project)
+3. [`--project`](../cli/flet-build.md#--project)
 4. `[project].name`
 5. project/app directory name
 
@@ -394,7 +394,7 @@ for package identifiers on mobile and desktop targets.
 
 Its value is determined in the following order of precedence:
 
-1. [`--org`](../cli/flet-build.md#-org)
+1. [`--org`](../cli/flet-build.md#--org)
 2. `[tool.flet.<PLATFORM>].org`
 3. `[tool.flet].org`
 4. `"com.flet"`
@@ -429,7 +429,7 @@ and the [project name](#project-name) used by the build template.
 
 Its value is determined in the following order of precedence:
 
-1. [`--bundle-id`](../cli/flet-build.md#-bundle-id)
+1. [`--bundle-id`](../cli/flet-build.md#--bundle-id)
 2. `[tool.flet.<PLATFORM>].bundle_id`
 3. `[tool.flet].bundle_id`
 
@@ -459,7 +459,7 @@ The company name displayed in about app dialogs and metadata (notably on desktop
 
 Its value is determined in the following order of precedence:
 
-1. [`--company`](../cli/flet-build.md#-company)
+1. [`--company`](../cli/flet-build.md#--company)
 2. `[tool.flet].company`
 3. Build template default (see [Template Source](#template-source))
 
@@ -489,7 +489,7 @@ Copyright text displayed in about app dialogs and metadata.
 
 Its value is determined in the following order of precedence:
 
-1. [`--copyright`](../cli/flet-build.md#-copyright)
+1. [`--copyright`](../cli/flet-build.md#--copyright)
 2. `[tool.flet].copyright`
 3. Build template default (see [Template Source](#template-source))
 
@@ -520,7 +520,7 @@ higher numbers indicate more recent builds.
 
 Its value is determined in the following order of precedence:
 
-1. [`--build-number`](../cli/flet-build.md#-build-number)
+1. [`--build-number`](../cli/flet-build.md#--build-number)
 2. `[tool.flet].build_number`
 3. Otherwise, the build number from the generated `pubspec.yaml`
    (see [Template Source](#template-source)) will be used.
@@ -579,7 +579,7 @@ For web builds, the app's `assets` directory is copied into the output directory
 
 Its value is determined in the following order of precedence:
 
-1. [`--output`](../cli/flet-build.md#-output) (or `-o`)
+1. [`--output`](../cli/flet-build.md#--output) (or `-o`)
 2. `<python_app_path>/build/<target_platform>`
 
 #### Example
@@ -654,7 +654,7 @@ On desktop targets, source installs are already allowed, so this setting is main
 
 Its value is determined in the following order of precedence:
 
-1. [`--source-packages`](../cli/flet-build.md#-source-packages)
+1. [`--source-packages`](../cli/flet-build.md#--source-packages)
 2. `[tool.flet.<PLATFORM>].source_packages`
 3. `[tool.flet].source_packages`
 
@@ -730,7 +730,7 @@ You can customize splash background colors using the following options:
 
 Their values are respectively determined in the following order of precedence:
 
-1. [`--splash-color`](../cli/flet-build.md#-splash-color) / [`--splash-dark-color`](../cli/flet-build.md#-splash-dark-color)
+1. [`--splash-color`](../cli/flet-build.md#--splash-color) / [`--splash-dark-color`](../cli/flet-build.md#--splash-dark-color)
 2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
 3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
 4. [Build template](#build-template) defaults
@@ -759,13 +759,13 @@ Splash screens are enabled by default but can be disabled.
 Its value is determined in the following order of precedence:
 
 - on Android:
-    - [`--no-android-splash`](../cli/flet-build.md#-no-android-splash)
+    - [`--no-android-splash`](../cli/flet-build.md#--no-android-splash)
     - `[tool.flet.splash].android`
 - on iOS:
-    - [`--no-ios-splash`](../cli/flet-build.md#-no-ios-splash)
+    - [`--no-ios-splash`](../cli/flet-build.md#--no-ios-splash)
     - `[tool.flet.splash].ios`
 - on Web:
-    - [`--no-web-splash`](../cli/flet-build.md#-no-web-splash)
+    - [`--no-web-splash`](../cli/flet-build.md#--no-web-splash)
     - `[tool.flet.splash].web`
 
 ##### Example
@@ -889,8 +889,8 @@ See also:
 
 Its value is determined in the following order of precedence:
 
-1. [`--deep-linking-scheme`](../cli/flet-build.md#-deep-linking-scheme) and
-   [`--deep-linking-host`](../cli/flet-build.md#-deep-linking-host) (only when both are provided)
+1. [`--deep-linking-scheme`](../cli/flet-build.md#--deep-linking-scheme) and
+   [`--deep-linking-host`](../cli/flet-build.md#--deep-linking-host) (only when both are provided)
 2. `[tool.flet.<PLATFORM>.deep_linking].scheme` / `[tool.flet.<PLATFORM>.deep_linking].host`, where `<PLATFORM>` can be android or ios
 3. `[tool.flet.deep_linking].scheme` / `[tool.flet.deep_linking].host`
 
@@ -970,7 +970,7 @@ For more/complementary information, see the specific platform guides:
 
 Its value is determined in the following order of precedence:
 
-1. [`--arch`](../cli/flet-build.md#-arch)
+1. [`--arch`](../cli/flet-build.md#--arch)
 2. `[tool.flet.<PLATFORM>].target_arch`, where `<PLATFORM>` can be `android` or `macos`
 3. `[tool.flet].target_arch`
 4. Platform defaults for the `<target_platform>`
@@ -998,7 +998,7 @@ This can be useful for reducing the size of the resulting binary or package.
 
 Its value is determined in the following order of precedence:
 
-1. [`--exclude`](../cli/flet-build.md#-exclude) (can be used multiple times)
+1. [`--exclude`](../cli/flet-build.md#--exclude) (can be used multiple times)
 2. `[tool.flet.<PLATFORM>.app].exclude` (type: list of strings)
 3. `[tool.flet.app].exclude` (type: list of strings)
 
@@ -1050,21 +1050,21 @@ which can be useful for debugging or rapid iteration.
 
 The values of `compile-app` and `cleanup-app` are respectively determined in the following order of precedence:
 
-1. [`--compile-app`](../cli/flet-build.md#-compile-app) / [`--cleanup-app`](../cli/flet-build.md#-cleanup-app)
+1. [`--compile-app`](../cli/flet-build.md#--compile-app) / [`--cleanup-app`](../cli/flet-build.md#--cleanup-app)
 2. `[tool.flet.<PLATFORM>.compile].app` / `[tool.flet.<PLATFORM>.cleanup].app`
 3. `[tool.flet.compile].app` / `[tool.flet.cleanup].app`
 4. empty list / empty list
 
 The values of `compile-packages` and `cleanup-packages` are respectively determined in the following order of precedence:
 
-1. [`--compile-packages`](../cli/flet-build.md#-compile-packages) / [`--cleanup-packages`](../cli/flet-build.md#-cleanup-packages)
+1. [`--compile-packages`](../cli/flet-build.md#--compile-packages) / [`--cleanup-packages`](../cli/flet-build.md#--cleanup-packages)
 2. `[tool.flet.<PLATFORM>.compile].packages` / `[tool.flet.<PLATFORM>.cleanup].packages`
 3. `[tool.flet.compile].packages` / `[tool.flet.cleanup].packages`
 4. `False` / `True`
 
 The values of `cleanup-app-files` and `cleanup-package-files` are respectively determined in the following order of precedence:
 
-1. [`--cleanup-app-files`](../cli/flet-build.md#-cleanup-app-files) / [`--cleanup-package-files`](../cli/flet-build.md#-cleanup-package-files)
+1. [`--cleanup-app-files`](../cli/flet-build.md#--cleanup-app-files) / [`--cleanup-package-files`](../cli/flet-build.md#--cleanup-package-files)
 2. `[tool.flet.<PLATFORM>.cleanup].app_files` / `[tool.flet.<PLATFORM>.cleanup].package_files`
 3. `[tool.flet.cleanup].app_files` / `[tool.flet.cleanup].package_files`
 4. `False` / `False`
@@ -1123,7 +1123,7 @@ Below is a list of available bundles:
 
 Its value is determined in the following order of precedence:
 
-1. [`--permissions`](../cli/flet-build.md#-permissions)
+1. [`--permissions`](../cli/flet-build.md#--permissions)
 2. `[tool.flet].permissions` (type: list of strings)
 3. `[]`
 
@@ -1149,7 +1149,7 @@ is downloaded as a zip artifact from the matching Flet GitHub Release. The versi
 used is determined by the installed Flet version.
 
 The cached project is refreshed when template inputs change or when you pass
-[`--clear-cache`](../cli/flet-build.md#-clear-cache).
+[`--clear-cache`](../cli/flet-build.md#--clear-cache).
 
 #### Template Source
 
@@ -1166,7 +1166,7 @@ Supported values include:
 
 Its value is determined in the following order of precedence:
 
-1. [`--template`](../cli/flet-build.md#-template)
+1. [`--template`](../cli/flet-build.md#--template)
 2. `[tool.flet.template].url`
 3. The default zip URL from the Flet GitHub Release matching the installed version
 
@@ -1192,7 +1192,7 @@ Defines the branch, tag, or commit to check out from the [template source](#temp
 
 Its value is determined in the following order of precedence:
 
-1. [`--template-ref`](../cli/flet-build.md#-template-ref)
+1. [`--template-ref`](../cli/flet-build.md#--template-ref)
 2. `[tool.flet.template].ref`
 3. [`<flet_version>`](#configuration-options)
 
@@ -1220,7 +1220,7 @@ subdirectory within its root; otherwise, it is relative to the template root.
 
 Its value is determined in the following order of precedence:
 
-1. [`--template-dir`](../cli/flet-build.md#-template-dir)
+1. [`--template-dir`](../cli/flet-build.md#--template-dir)
 2. `[tool.flet.template].dir`
 3. root of the [template source](#template-source)
 
@@ -1339,7 +1339,7 @@ flutter_test = { sdk = "flutter" }
 
 ### Verbose logging
 
-The [`-v`](../cli/flet-build.md#-verbose) (or `--verbose`) and `-vv` flags
+The [`-v`](../cli/flet-build.md#--verbose) (or `--verbose`) and `-vv` flags
 enable detailed output from all commands during the flet build process.
 
 Use `-v` for standard/basic verbose logging, or `-vv` for even more detailed
@@ -1567,6 +1567,6 @@ dependency is aligned with the same development version before building your app
     ```
     ///
 
-2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#-clear-cache); or manually delete `build/flutter`)
+2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#--clear-cache); or manually delete `build/flutter`)
 
 To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.

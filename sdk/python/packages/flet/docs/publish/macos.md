@@ -64,7 +64,7 @@ These values are written to `macos/Runner/Info.plist` of the [build project](ind
 
 Its value is determined in the following order of precedence:
 
-1. [`--info-plist`](../cli/flet-build.md#-info-plist)
+1. [`--info-plist`](../cli/flet-build.md#--info-plist)
 2. `[tool.flet.macos.info]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 
@@ -223,7 +223,7 @@ Entitlements are written to `macos/Runner/DebugProfile.entitlements` and
 
 Its value is determined in the following order of precedence:
 
-1. [`--macos-entitlements`](../cli/flet-build.md#-macos-entitlements)
+1. [`--macos-entitlements`](../cli/flet-build.md#--macos-entitlements)
 2. `[tool.flet.macos.entitlement]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. Defaults:

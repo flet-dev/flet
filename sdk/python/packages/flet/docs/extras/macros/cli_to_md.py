@@ -105,9 +105,12 @@ def render_flet_cli_as_markdown(
         anchor = env_var.lower()
         return f"[`{env_var}`](../reference/environment-variables.md#{anchor})"
 
-    def _head(level: int, text: str) -> str:
+    def _head(level: int, text: str, anchor_id: Optional[str] = None) -> str:
         """Markdown heading helper."""
-        return f"{'#' * level} {text}"
+        heading = f"{'#' * level} {text}"
+        if anchor_id:
+            heading += f" {{#{anchor_id}}}"
+        return heading
 
     def _ensure_blank(lines: list[str]) -> None:
         """Append a blank line if the last line is not blank."""
@@ -259,8 +262,8 @@ def render_flet_cli_as_markdown(
         out.append(_head(section_level, "Positional arguments"))
         out.append("")
         for _, a in positionals_indexed:
-            title = f"`{a.metavar or a.dest}`"
-            out.append(_head(entry_level, title))
+            title = a.metavar or a.dest
+            out.append(_head(entry_level, title, anchor_id=title))
 
             body_lines: list[str] = []
             help_text_raw, env_vars = _extract_env_vars(_clean(a.help))
@@ -321,7 +324,7 @@ def render_flet_cli_as_markdown(
 
         for a in options:
             title_flag = _canonical_heading_flag(a)
-            out.append(_head(entry_level, f"`{title_flag}`"))
+            out.append(_head(entry_level, title_flag, anchor_id=title_flag))
 
             body_lines: list[str] = []
             help_text_raw, env_vars = _extract_env_vars(_clean(a.help))

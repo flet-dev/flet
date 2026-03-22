@@ -119,7 +119,7 @@ The developer team ID to include in export options.
 
 Its value is determined in the following order of precedence:
 
-1. [`--ios-team-id`](../cli/flet-build.md#-ios-team-id)
+1. [`--ios-team-id`](../cli/flet-build.md#--ios-team-id)
 2. `[tool.flet.ios].team_id`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].team_id`
 
@@ -182,7 +182,7 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
 
 Its value is determined in the following order of precedence:
 
-1. [`--ios-signing-certificate`](../cli/flet-build.md#-ios-signing-certificate)
+1. [`--ios-signing-certificate`](../cli/flet-build.md#--ios-signing-certificate)
 2. `[tool.flet.ios].signing_certificate`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].signing_certificate`
 
@@ -290,7 +290,7 @@ for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; 
 
 Its value is determined in the following order of precedence:
 
-1. [`--ios-provisioning-profile`](../cli/flet-build.md#-ios-provisioning-profile)
+1. [`--ios-provisioning-profile`](../cli/flet-build.md#--ios-provisioning-profile)
 2. `[tool.flet.ios].provisioning_profile`
 3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].provisioning_profile`
 
@@ -405,7 +405,7 @@ To configure individual settings for one or more export methods, see [export met
 
 Its value is determined in the following order of precedence:
 
-1. [`--ios-export-method`](../cli/flet-build.md#-ios-export-method)
+1. [`--ios-export-method`](../cli/flet-build.md#--ios-export-method)
 2. `[tool.flet.ios].export_method`
 3. `"debugging"`
 
@@ -474,7 +474,7 @@ These values are written to `ios/Runner/Info.plist` of the [build project](index
 
 Its value is determined in the following order of precedence:
 
-1. [`--info-plist`](../cli/flet-build.md#-info-plist)
+1. [`--info-plist`](../cli/flet-build.md#--info-plist)
 2. `[tool.flet.ios.info]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 

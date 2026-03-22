@@ -54,7 +54,7 @@ To publish an app, run:
 flet publish <path-to-app.py>
 ```
 
-The website is published to [`--distpath`](../../../cli/flet-publish.md#-distpath) (default: `./dist`).
+The website is published to [`--distpath`](../../../cli/flet-publish.md#--distpath) (default: `./dist`).
 
 ### Testing the site
 
@@ -69,7 +69,7 @@ Then, open `http://localhost:8000` in your browser to check the published app.
 ### Assets
 
 If the [assets](../../../cookbook/assets.md) directory exists (default: `./assets`), its contents are copied
-to the published site root. Use [`--assets`](../../../cli/flet-publish.md#-assets) to point to a different
+to the published site root. Use [`--assets`](../../../cli/flet-publish.md#--assets) to point to a different
 folder. Assets are not packaged inside the `app.tar.gz`.
 
 ## `flet build web`
@@ -103,7 +103,7 @@ Use a base URL when hosting your app in a subdirectory. Flet normalizes it to
 
 Its value is determined in the following order of precedence:
 
-1. [`--base-url`](../../../cli/flet-build.md#-base-url)
+1. [`--base-url`](../../../cli/flet-build.md#--base-url)
 2. `[tool.flet.web].base_url`
 3. `"/"`
 
@@ -132,7 +132,7 @@ Controls how routes are represented in the URL:
 
 Its value is determined in the following order of precedence:
 
-1. [`--route-url-strategy`](../../../cli/flet-build.md#-route-url-strategy)
+1. [`--route-url-strategy`](../../../cli/flet-build.md#--route-url-strategy)
 2. `[tool.flet.web].route_url_strategy`
 3. `"path"`
 
@@ -162,7 +162,7 @@ Selects the Flutter web renderer:
 
 Its value is determined in the following order of precedence:
 
-1. [`--web-renderer`](../../../cli/flet-build.md#-web-renderer)
+1. [`--web-renderer`](../../../cli/flet-build.md#--web-renderer)
 2. `[tool.flet.web].renderer`
 3. `"auto"`
 
@@ -189,7 +189,7 @@ small. Disable CDN loading for offline or air-gapped deployments.
 
 CDN loading is disabled in the following order of precedence:
 
-1. [`--no-cdn`](../../../cli/flet-build.md#-no-cdn)
+1. [`--no-cdn`](../../../cli/flet-build.md#--no-cdn)
 2. `[tool.flet.web].cdn = false`
 3. default: CDN enabled
 
@@ -215,7 +215,7 @@ Configure PWA colors used in `manifest.json` and browser UI.
 
 For each setting:
 
-1. [`--pwa-background-color`](../../../cli/flet-build.md#-pwa-background-color) / [`--pwa-theme-color`](../../../cli/flet-build.md#-pwa-theme-color)
+1. [`--pwa-background-color`](../../../cli/flet-build.md#--pwa-background-color) / [`--pwa-theme-color`](../../../cli/flet-build.md#--pwa-theme-color)
 2. `[tool.flet.web].pwa_background_color` / `[tool.flet.web].pwa_theme_color`
 3. `#FFFFFF` / `#0175C2`
 
@@ -246,7 +246,7 @@ By default, [`flet build web`](#flet-build-web) enables Flutter's WASM output.
 
 The WASM output is disabled in the following order of precedence:
 
-1. [`--no-wasm`](../../../cli/flet-build.md#-no-wasm)
+1. [`--no-wasm`](../../../cli/flet-build.md#--no-wasm)
 2. `[tool.flet.web].wasm = false`
 3. default: WASM enabled
 

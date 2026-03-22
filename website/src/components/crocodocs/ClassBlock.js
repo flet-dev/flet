@@ -243,7 +243,7 @@ function SummarySection({title, items, classSymbol}) {
         {items.map((item) => (
           <li key={item.name}>
             <a href={`#${memberAnchor(classSymbol, item.name)}`}>
-              <span className="crocodocs-summary-name">{item.name}</span>
+              <code>{item.name}</code>
             </a>
             {item.summary ? (
               <>
