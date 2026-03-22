@@ -15,6 +15,9 @@ LOCAL_MARKDOWN_LINK_RE = re.compile(
     r"(?P<prefix>\]\()(?P<target>(?![a-z][a-z0-9+.-]*:|/|#)[^)]+?\.md)(?P<anchor>#[^)]+)?(?P<suffix>\))",
     re.IGNORECASE,
 )
+CLI_H3_TICK_RE = re.compile(r"^(### )`([^`]+)`$", re.MULTILINE)
+ANGLE_TAG_RE = re.compile(r"<([a-z][a-z0-9_-]*)>", re.IGNORECASE)
+ESCAPED_PLACEHOLDER_RE = re.compile(r"&lt;([^>\n]+?)&gt;")
 
 
 def _load_module(module_name: str, path: Path):
@@ -80,6 +83,36 @@ def _normalize_local_markdown_links(content: str) -> str:
     return LOCAL_MARKDOWN_LINK_RE.sub(replace, content)
 
 
+def _escape_mdx_text_outside_code(content: str) -> str:
+    lines = content.splitlines()
+    normalized: list[str] = []
+    in_fence = False
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            normalized.append(line)
+            continue
+
+        if in_fence:
+            normalized.append(line)
+            continue
+
+        parts = line.split("`")
+        for index in range(0, len(parts), 2):
+            parts[index] = ANGLE_TAG_RE.sub(r"&lt;\1&gt;", parts[index])
+        normalized.append("`".join(parts))
+
+    return "\n".join(normalized) + ("\n" if content.endswith("\n") else "")
+
+
+def _normalize_cli_partial_markdown(content: str) -> str:
+    content = CLI_H3_TICK_RE.sub(r"\1\2", content)
+    content = _escape_mdx_text_outside_code(content)
+    return ESCAPED_PLACEHOLDER_RE.sub(r"`<\1>`", content)
+
+
 def _render_cli_partial(config: CrocoDocsConfig, command: str) -> str:
     module_path = _macro_module_path(config, "cli_to_md.py")
     script = f"""
@@ -90,7 +123,7 @@ spec.loader.exec_module(module)
 print(module.render_flet_cli_as_markdown(command={command!r}, subcommands_only=True), end="")
 """
     rendered = _run_python_renderer(config, script=script)
-    return re.sub(r"<([a-z][a-z0-9_-]*)>", r"&lt;\1&gt;", rendered, flags=re.IGNORECASE)
+    return _normalize_cli_partial_markdown(rendered)
 
 
 def _render_pypi_partial(config: CrocoDocsConfig) -> str:
