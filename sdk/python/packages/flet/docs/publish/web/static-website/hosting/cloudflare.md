@@ -42,7 +42,7 @@ Choose the repository to be used, and press on the “Begin setup” button.
 
 Before moving on, add a `runtime.txt` file in your repo. It should contain the python version to be used. In the file enter 3.7 which is the latest python version Cloudflare uses at time of writing.
 
-[Here](https://github.com/ndonkoHenri/Flutter-Counter-Clone/blob/master/runtime.txt) is an example from the repo above. 
+[Here](https://github.com/ndonkoHenri/Flutter-Counter-Clone/blob/master/runtime.txt) is an example from the repo above.
 
 Having this done, we can now move to the next step which will be to configure some build and deployment settings for your site.
 
@@ -65,7 +65,7 @@ Now, click on the “Save and Deploy” button and let Cloudflare do the remaini
 
 <img src="/img/docs/cloudflare-pages-deploy/successful-deployment.png"/>
 
-Click on the URL that will be shown to move to your deployed site. 
+Click on the URL that will be shown to move to your deployed site.
 
 <img src="/img/docs/cloudflare-pages-deploy/app-link-1.png"/>
 
@@ -83,7 +83,7 @@ Click on “Upload assets”. In step one, give your project a name. Remember th
 
 The second step requires you to upload your project’s assets, either as folder or a zip file (with all the assets inside). If you already have one of them, then use the drag-and-drop or select them using the folder picker.
 
-If you don’t yet have these assets but already have an app you've built, use the `flet publish` command in the directory containing your app files, and a `dist` folder will be created which you will then upload to Cloudflare pages as mentioned above. 
+If you don’t yet have these assets but already have an app you've built, use the `flet publish` command in the directory containing your app files, and a `dist` folder will be created which you will then upload to Cloudflare pages as mentioned above.
 
 After the upload press on “Deploy site” button at the bottom.
 

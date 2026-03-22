@@ -13,6 +13,12 @@ import {
   resolveDocAssetUrl,
 } from "./utils";
 
+const MEMBER_KIND_META = {
+  property: {icon: "build", className: "crocodocs-member-icon--property"},
+  event: {icon: "bolt", className: "crocodocs-member-icon--event"},
+  method: {icon: "deployed_code", className: "crocodocs-member-icon--method"},
+};
+
 function HeadingLink({level: Tag, id, children}) {
   return (
     <Heading as={Tag} id={id}>
@@ -43,6 +49,18 @@ function Section({title, items, renderItem}) {
       {items.map(renderItem)}
     </section>
   );
+}
+
+function createMemberIconNode(kind) {
+  const meta = MEMBER_KIND_META[kind];
+  if (!meta) {
+    return null;
+  }
+  const icon = document.createElement("span");
+  icon.className = `material-symbols-outlined crocodocs-member-icon crocodocs-member-icon--toc ${meta.className}`;
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = meta.icon;
+  return icon;
 }
 
 function useInjectedToc(sectionGroups) {
@@ -80,9 +98,16 @@ function useInjectedToc(sectionGroups) {
         nestedItem.dataset.crocodocsToc = "true";
 
         const nestedLink = document.createElement("a");
-        nestedLink.className = "table-of-contents__link toc-highlight";
+        nestedLink.className =
+          "table-of-contents__link toc-highlight crocodocs-member-toc-link";
         nestedLink.href = `#${item.id}`;
-        nestedLink.textContent = item.label;
+        const icon = createMemberIconNode(item.kind);
+        if (icon) {
+          nestedLink.appendChild(icon);
+        }
+        const label = document.createElement("span");
+        label.textContent = item.label;
+        nestedLink.appendChild(label);
         nestedItem.appendChild(nestedLink);
         nested.appendChild(nestedItem);
         created.push(nestedItem);
@@ -99,11 +124,20 @@ function useInjectedToc(sectionGroups) {
   }, [sectionGroups]);
 }
 
-function renderMemberHeading(item) {
+function renderMemberHeading(item, kind) {
   const id = normalizeAnchor(item.name);
+  const meta = MEMBER_KIND_META[kind];
   return (
     <HeadingLink level="h3" id={id}>
       <span className="crocodocs-member-heading">
+        {meta ? (
+          <span
+            aria-hidden="true"
+            className={`material-symbols-outlined crocodocs-member-icon crocodocs-member-icon--heading ${meta.className}`}
+          >
+            {meta.icon}
+          </span>
+        ) : null}
         <span>{item.name}</span>
         {(item.labels || []).length ? (
           <span className="crocodocs-member-badges">
@@ -120,7 +154,7 @@ function renderMemberHeading(item) {
 function renderAttribute(item, classSymbol, docId) {
   return (
     <div key={item.name}>
-      {renderMemberHeading(item)}
+      {renderMemberHeading(item, item.name.startsWith("on_") ? "event" : "property")}
       {item.type ? (
         <SignatureBox>
           {item.name}: {item.type}
@@ -135,7 +169,7 @@ function renderAttribute(item, classSymbol, docId) {
 function renderMethod(item, classSymbol, docId) {
   return (
     <div key={item.name}>
-      {renderMemberHeading(item)}
+      {renderMemberHeading(item, "method")}
       <SignatureBox>{item.signature ?? item.name}</SignatureBox>
       {renderDocstringSections(item.docstring_sections, {classSymbol, docId}) ??
         renderDocstring(item.docstring, {classSymbol, docId})}
@@ -226,6 +260,7 @@ export default function ClassBlock({
             id: normalizeAnchor("properties"),
             items: properties.map((item) => ({
               id: normalizeAnchor(item.name),
+              kind: "property",
               label: item.name,
             })),
           },
@@ -234,6 +269,7 @@ export default function ClassBlock({
             id: normalizeAnchor("events"),
             items: events.map((item) => ({
               id: normalizeAnchor(item.name),
+              kind: "event",
               label: item.name,
             })),
           },
@@ -242,6 +278,7 @@ export default function ClassBlock({
             id: normalizeAnchor("methods"),
             items: methods.map((item) => ({
               id: normalizeAnchor(item.name),
+              kind: "method",
               label: item.name,
             })),
           },

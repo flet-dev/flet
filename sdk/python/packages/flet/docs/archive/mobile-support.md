@@ -47,5 +47,5 @@ We are going to provide a guide and CI pipeline for automatic publishing of whit
 We are going to investigate the way and develop a prototype for bundling together Flet framework, user program, language runtime and all dependencies into a standalone mobile package (`.apk` or `.ipa` package), so Flet program does not require a web server.
 
 ### Embedding Flet into native apps
- 
+
 We are going to provide a guide, sample apps and CI pipeline to integrate Flet widget into existing native Android and iOS apps (not developed with Flutter) using [Flutter Add-to-App](https://docs.flutter.dev/development/add-to-app) feature. [Put Flutter to work](https://medium.com/flutter/put-flutter-to-work-95f5fdcc592e) article gives a real-world example on how to integrate Flutter into existing mobile app.

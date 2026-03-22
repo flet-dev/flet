@@ -1,14 +1,14 @@
-Sensitive data such as tokens, keys, credit card numbers and other "secrets" must be stored at rest 
+Sensitive data such as tokens, keys, credit card numbers and other "secrets" must be stored at rest
 (database, files, [client storage](client-storage.md)) in encrypted form to avoid data breaches.
 
-Flet includes utility methods to encrypt and decrypt sensitive text data using symmetric algorithm 
-(where the same key is used for encryption and decryption). They use [Fernet](https://github.com/fernet/spec/blob/master/Spec.md) implementation from 
-[cryptography](https://pypi.org/project/cryptography/) package, which is AES 128 with some additional hardening, 
+Flet includes utility methods to encrypt and decrypt sensitive text data using symmetric algorithm
+(where the same key is used for encryption and decryption). They use [Fernet](https://github.com/fernet/spec/blob/master/Spec.md) implementation from
+[cryptography](https://pypi.org/project/cryptography/) package, which is AES 128 with some additional hardening,
 plus PBKDF2 to derive encryption key from a user passphrase.
 
 ## Secret key
 
-Encryption secret key (aka password, or passphrase) is an arbitrary password-like string configured 
+Encryption secret key (aka password, or passphrase) is an arbitrary password-like string configured
 by a user and used for encrypting and decrypting data. Crypto algorithm uses secret key to "derive" encryption key (32 bytes).
 
 /// admonition
@@ -31,7 +31,7 @@ $ export MY_APP_SECRET_KEY="<secret>"
 
 /// admonition
     type: note
-While passing secrets via environment variables is a common practice amongst developers and service 
+While passing secrets via environment variables is a common practice amongst developers and service
 providers it does not fully prevent secrets leaking in some environments. Other mechanisms can be used
 to inject secrets to your application such as mounting secret files or vault services.
 ///
@@ -51,7 +51,7 @@ encrypted_data = encrypt(plain_text, secret_key)
 
 `encrypted_data` is a URL-safe base64-encoded string.
 
-`encrypt` accepts strings only, so any objects must be serialized to 
+`encrypt` accepts strings only, so any objects must be serialized to
 JSON, XML or other text-based format before encryption.
 
 ## Decrypting data

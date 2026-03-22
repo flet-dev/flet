@@ -5,6 +5,8 @@
  * work well for content-centric websites.
  */
 
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=bolt,build,deployed_code");
+
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #0098da;
@@ -158,6 +160,59 @@ h6 {
   column-gap: 0.5rem;
   display: inline-flex;
   flex-wrap: wrap;
+}
+
+.material-symbols-outlined {
+  direction: ltr;
+  display: inline-block;
+  font-family: "Material Symbols Outlined";
+  font-size: 1em;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  font-variation-settings: "FILL" 1, "GRAD" 200, "opsz" 24, "wght" 200;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+.crocodocs-member-icon {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.crocodocs-member-icon--heading {
+  font-size: 1rem;
+  position: relative;
+  top: 0.12em;
+}
+
+.crocodocs-member-icon--toc {
+  font-size: 0.82rem;
+  position: relative;
+  top: 0.07em;
+}
+
+.crocodocs-member-toc-link {
+  align-items: center;
+  column-gap: 0.35rem;
+  display: inline-flex;
+  line-height: 1.2;
+}
+
+.crocodocs-member-icon--property {
+  color: #0b8dd9;
+}
+
+.crocodocs-member-icon--event {
+  color: #f8aa01;
+}
+
+.crocodocs-member-icon--method {
+  color: #7c4dff;
 }
 
 .crocodocs-member-badges {

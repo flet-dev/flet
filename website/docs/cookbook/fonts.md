@@ -74,7 +74,7 @@ However, to use variable fonts, you can create static instances at specific weig
 using [fonttools](https://pypi.org/project/fonttools/), e.g.:
 
 ```bash
-fonttools varLib.mutator ./YourVariableFont-VF.ttf wght=140 width=85
+fonttools varLib.mutator ./YourVariableFont-VF.ttf wght=140 wdth=85
 ```
 
 To explore available font features (e.g. possible options for `wght`)
