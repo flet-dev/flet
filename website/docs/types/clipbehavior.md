@@ -1,0 +1,17 @@
+---
+class_name: "flet.ClipBehavior"
+examples: "../../examples/controls/types/clip_behavior"
+title: "ClipBehavior"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+### Showcase
+
+<CodeExample path={frontMatter.examples + '/showcase.py'} />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

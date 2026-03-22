@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "docusaurus start",
-    "build": "docusaurus build",
+    "crocodocs:inventory": "cd .. && uv --directory ./tools/crocodocs run crocodocs inventory",
+    "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
+    "crocodocs:migrate:bootstrap": "cd .. && uv --directory ./tools/crocodocs run crocodocs migrate --mode bootstrap",
+    "start": "yarn crocodocs:generate && docusaurus start",
+    "build": "yarn crocodocs:generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy"
   },

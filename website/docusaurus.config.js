@@ -166,6 +166,7 @@ module.exports = {
         docs: {
           // It is recommended to set document id as docs home page (`docs/` path).
           sidebarPath: require.resolve('./sidebars.js'),
+          remarkPlugins: [require('./plugins/remark-api-links')],
           editUrl:
             'https://github.com/flet-dev/website/edit/main/',
         },

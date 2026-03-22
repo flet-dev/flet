@@ -1,0 +1,17 @@
+---
+class_name: "flet.TileAffinity"
+examples: "../../examples/controls/types/tile_affinity"
+title: "TileAffinity"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+### Showcase
+
+<CodeExample path={frontMatter.examples + '/showcase.py'} />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

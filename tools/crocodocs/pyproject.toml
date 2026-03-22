@@ -1,0 +1,78 @@
+[project]
+name = "crocodocs"
+version = "0.1.0"
+description = "CrocoDocs tooling for Flet docs migration and API data generation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+    "tomli >=2.0.1; python_version < '3.11'",
+]
+
+[project.scripts]
+crocodocs = "crocodocs.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.crocodocs]
+source_docs_path = "../../sdk/python/packages/flet/docs"
+mkdocs_yml = "../../sdk/python/packages/flet/mkdocs.yml"
+docs_path = "../../website/docs"
+inventory_output = "../../website/.crocodocs/inventory-report.json"
+manifest_output = "../../website/.crocodocs/docs-manifest.json"
+api_output = "../../website/.crocodocs/api-data.json"
+partials_output_dir = "../../website/.crocodocs"
+sidebars_output = "../../website/sidebars.js"
+base_url = "/docs"
+extensions = ["flet.utils.griffe_deprecations"]
+
+[tool.crocodocs.asset_mappings.examples]
+source_path = "../../sdk/python/examples"
+static_subpath = "docs/examples"
+copy_during = ["migrate", "generate"]
+
+[tool.crocodocs.asset_mappings."test-images"]
+source_path = "../../sdk/python/packages/flet/site/test-images"
+static_subpath = "docs/test-images"
+copy_during = ["migrate", "generate"]
+
+[tool.crocodocs.asset_mappings.assets]
+source_path = "../../sdk/python/packages/flet/docs/assets"
+static_subpath = "docs/assets"
+copy_during = ["migrate"]
+
+[tool.crocodocs.asset_mappings."test-images-charts"]
+source_path = "../../sdk/python/packages/flet-charts/integration_tests"
+static_subpath = "docs/test-images-charts"
+copy_during = ["migrate", "generate"]
+
+[tool.crocodocs.packages]
+flet = "../../sdk/python/packages/flet/src"
+flet_ads = "../../sdk/python/packages/flet-ads/src"
+flet_audio = "../../sdk/python/packages/flet-audio/src"
+flet_audio_recorder = "../../sdk/python/packages/flet-audio-recorder/src"
+flet_camera = "../../sdk/python/packages/flet-camera/src"
+flet_charts = "../../sdk/python/packages/flet-charts/src"
+flet_cli = "../../sdk/python/packages/flet-cli/src"
+flet_code_editor = "../../sdk/python/packages/flet-code-editor/src"
+flet_color_pickers = "../../sdk/python/packages/flet-color-pickers/src"
+flet_datatable2 = "../../sdk/python/packages/flet-datatable2/src"
+flet_desktop = "../../sdk/python/packages/flet-desktop/src"
+flet_flashlight = "../../sdk/python/packages/flet-flashlight/src"
+flet_geolocator = "../../sdk/python/packages/flet-geolocator/src"
+flet_lottie = "../../sdk/python/packages/flet-lottie/src"
+flet_map = "../../sdk/python/packages/flet-map/src"
+flet_permission_handler = "../../sdk/python/packages/flet-permission-handler/src"
+flet_rive = "../../sdk/python/packages/flet-rive/src"
+flet_secure_storage = "../../sdk/python/packages/flet-secure-storage/src"
+flet_video = "../../sdk/python/packages/flet-video/src"
+flet_web = "../../sdk/python/packages/flet-web/src"
+flet_webview = "../../sdk/python/packages/flet-webview/src"
