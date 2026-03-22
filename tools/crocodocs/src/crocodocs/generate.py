@@ -181,7 +181,7 @@ def _extract_api_data(
 def _extract_api_data_with_griffe(
     config: CrocoDocsConfig,
     symbols: list[str],
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, str]]:
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, str]]:
     repo_root = config.project_root.parent.parent
     script_path = config.project_root / "src" / "crocodocs" / "griffe_extract_script.py"
     payload = {
@@ -209,7 +209,12 @@ def _extract_api_data_with_griffe(
         check=True,
     )
     data = json.loads(result.stdout)
-    return data["classes"], data["functions"], data.get("public_aliases", {})
+    return (
+        data["classes"],
+        data["functions"],
+        data.get("aliases", {}),
+        data.get("public_aliases", {}),
+    )
 
 
 def _should_skip_example_path(root: Path, path: Path) -> bool:
@@ -318,7 +323,7 @@ def run_generate(
             if isinstance(block.get("symbol"), str) and block["symbol"]
         }
     )
-    classes, functions, public_aliases = _extract_api_data_with_griffe(
+    classes, functions, aliases, public_aliases = _extract_api_data_with_griffe(
         config, requested_symbols
     )
 
@@ -364,6 +369,7 @@ def run_generate(
                 "version": "1.0",
                 "classes": classes,
                 "functions": functions,
+                "aliases": aliases,
                 "enums": {},
                 "xref_map": xref_map,
             },
@@ -405,7 +411,7 @@ def run_generate(
 
     summary.add("docs scanned", len(docs))
     summary.add("packages loaded", len(config.packages))
-    summary.add("symbols serialized", len(classes) + len(functions))
+    summary.add("symbols serialized", len(classes) + len(functions) + len(aliases))
     summary.add("partials generated", generated_partials)
     summary.add("code example entries", code_example_entries)
     summary.add("asset refs synced", len(synced_asset_refs))

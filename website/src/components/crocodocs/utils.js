@@ -23,8 +23,15 @@ function classPackageCandidates(classSymbol) {
   if (!classSymbol || !classSymbol.includes(".")) {
     return [];
   }
-  const packageName = classSymbol.split(".", 1)[0];
-  return packageName ? [packageName] : [];
+  const parts = classSymbol.split(".").slice(0, -1);
+  const candidates = [];
+  for (let i = parts.length; i > 0; i -= 1) {
+    const candidate = parts.slice(0, i).join(".");
+    if (!candidates.includes(candidate)) {
+      candidates.push(candidate);
+    }
+  }
+  return candidates;
 }
 
 function cleanApiSymbol(symbol) {
@@ -33,7 +40,11 @@ function cleanApiSymbol(symbol) {
 
 function formatApiSymbolLabel(symbol) {
   const cleanSymbol = cleanApiSymbol(symbol);
-  if (/^(?:ft|flet(?:_[a-z0-9_]+)?)\./.test(cleanSymbol)) {
+  if (
+    cleanSymbol.startsWith("ft.") ||
+    cleanSymbol.startsWith("flet.") ||
+    cleanSymbol.startsWith("flet_")
+  ) {
     return cleanSymbol.split(".").pop();
   }
   return cleanSymbol;

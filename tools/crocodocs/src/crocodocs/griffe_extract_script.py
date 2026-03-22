@@ -340,6 +340,23 @@ def _class_entry(obj: Any) -> dict[str, Any]:
     }
 
 
+def _alias_entry(obj: Any) -> dict[str, Any]:
+    target = _unwrap(obj)
+    target_kind = target.__class__.__name__ if target is not None else None
+    return {
+        "name": obj.name,
+        "qualname": getattr(obj, "path", None),
+        "canonical_path": getattr(target, "path", None) if target else None,
+        "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
+        "value": _value_text(obj),
+        "target_kind": target_kind,
+        "deprecation": _deprecation_value(obj),
+        "labels": _labels(obj),
+        "lineno": getattr(target, "lineno", None) if target else None,
+    }
+
+
 def main() -> int:
     payload = json.loads(sys.stdin.read())
     _load_member_filters(payload)
@@ -355,6 +372,7 @@ def main() -> int:
 
     classes: dict[str, Any] = {}
     functions: dict[str, Any] = {}
+    aliases: dict[str, Any] = {}
     public_aliases: dict[str, str] = {}
 
     for package_name in payload["packages"]:
@@ -375,11 +393,18 @@ def main() -> int:
             obj = modules_collection.get_member(symbol)
         except Exception:
             continue
+        obj_kind = obj.__class__.__name__
         resolved = _unwrap(obj)
         if resolved is None:
             continue
         kind = resolved.__class__.__name__
-        if kind == "Class":
+        if obj_kind == "Alias":
+            aliases[symbol] = _alias_entry(obj)
+            if kind == "Class":
+                classes[symbol] = _class_entry(obj)
+            elif kind == "Function":
+                functions[symbol] = _function_entry(obj)
+        elif kind == "Class":
             classes[symbol] = _class_entry(obj)
         elif kind == "Function":
             functions[symbol] = _function_entry(obj)
@@ -387,6 +412,7 @@ def main() -> int:
     sys.stdout.write(
         json.dumps(
             {
+                "aliases": aliases,
                 "classes": classes,
                 "functions": functions,
                 "public_aliases": public_aliases,

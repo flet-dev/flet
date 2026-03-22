@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Heading from "@theme/Heading";
 import {useDoc} from "@docusaurus/plugin-content-docs/client";
 
@@ -92,7 +92,15 @@ function createMemberIconNode(kind) {
   return icon;
 }
 
+let tocOwnerCounter = 0;
+
 function useInjectedToc(sectionGroups) {
+  const ownerRef = useRef(null);
+  if (ownerRef.current == null) {
+    tocOwnerCounter += 1;
+    ownerRef.current = `crocodocs-${tocOwnerCounter}`;
+  }
+
   useEffect(() => {
     const tocRoot = document.querySelector("ul.table-of-contents");
     if (!tocRoot) {
@@ -100,18 +108,27 @@ function useInjectedToc(sectionGroups) {
     }
 
     tocRoot
-      .querySelectorAll("[data-crocodocs-toc='true']")
+      .querySelectorAll(
+        `[data-crocodocs-toc='true'][data-crocodocs-toc-owner='${ownerRef.current}']`
+      )
       .forEach((node) => node.remove());
 
     const created = [];
     for (const group of sectionGroups) {
-      if (!group.items.length) {
+      if (!group.items.length && !group.id) {
         continue;
       }
 
       const top = document.createElement("li");
-      top.className = "table-of-contents__list-item table-of-contents__list-item--nested generated-crocodocs-toc";
+      top.className = [
+        "table-of-contents__list-item",
+        group.items.length ? "table-of-contents__list-item--nested" : "",
+        "generated-crocodocs-toc",
+      ]
+        .filter(Boolean)
+        .join(" ");
       top.dataset.crocodocsToc = "true";
+      top.dataset.crocodocsTocOwner = ownerRef.current;
 
       const link = document.createElement("a");
       link.className = "table-of-contents__link toc-highlight";
@@ -119,30 +136,33 @@ function useInjectedToc(sectionGroups) {
       link.textContent = group.title;
       top.appendChild(link);
 
-      const nested = document.createElement("ul");
-      nested.className = "table-of-contents__sublist";
-      for (const item of group.items) {
-        const nestedItem = document.createElement("li");
-        nestedItem.className = "table-of-contents__list-item generated-crocodocs-toc";
-        nestedItem.dataset.crocodocsToc = "true";
+      if (group.items.length) {
+        const nested = document.createElement("ul");
+        nested.className = "table-of-contents__sublist";
+        for (const item of group.items) {
+          const nestedItem = document.createElement("li");
+          nestedItem.className =
+            "table-of-contents__list-item generated-crocodocs-toc";
+          nestedItem.dataset.crocodocsToc = "true";
+          nestedItem.dataset.crocodocsTocOwner = ownerRef.current;
 
-        const nestedLink = document.createElement("a");
-        nestedLink.className =
-          "table-of-contents__link toc-highlight crocodocs-member-toc-link";
-        nestedLink.href = `#${item.id}`;
-        const icon = createMemberIconNode(item.kind);
-        if (icon) {
-          nestedLink.appendChild(icon);
+          const nestedLink = document.createElement("a");
+          nestedLink.className =
+            "table-of-contents__link toc-highlight crocodocs-member-toc-link";
+          nestedLink.href = `#${item.id}`;
+          const icon = createMemberIconNode(item.kind);
+          if (icon) {
+            nestedLink.appendChild(icon);
+          }
+          const label = document.createElement("span");
+          label.textContent = item.label;
+          nestedLink.appendChild(label);
+          nestedItem.appendChild(nestedLink);
+          nested.appendChild(nestedItem);
+          created.push(nestedItem);
         }
-        const label = document.createElement("span");
-        label.textContent = item.label;
-        nestedLink.appendChild(label);
-        nestedItem.appendChild(nestedLink);
-        nested.appendChild(nestedItem);
-        created.push(nestedItem);
+        top.appendChild(nested);
       }
-
-      top.appendChild(nested);
       tocRoot.appendChild(top);
       created.push(top);
     }
@@ -238,6 +258,7 @@ function SummarySection({title, items, classSymbol}) {
 
 export default function ClassBlock({
   name,
+  showRootHeading = false,
   showDocstring = true,
   showBases = true,
   showSummary = true,
@@ -248,10 +269,42 @@ export default function ClassBlock({
 }) {
   const {metadata} = useDoc();
   const api = getApiData();
-  const entry = api.classes?.[name] ?? api.functions?.[name];
+  const classEntry = api.classes?.[name];
+  const functionEntry = api.functions?.[name];
+  const aliasEntry = api.aliases?.[name];
+  const entry = classEntry ?? functionEntry ?? aliasEntry;
 
   if (!entry) {
     return <div>Missing API entry for <code>{name}</code>.</div>;
+  }
+
+  if (!classEntry && !functionEntry && aliasEntry) {
+    useInjectedToc(
+      showRootHeading
+        ? [{title: entry.name, id: normalizeAnchor(entry.name), items: []}]
+        : []
+    );
+    return (
+      <div>
+        {showRootHeading ? (
+          <HeadingLink level="h2" id={normalizeAnchor(entry.name)}>
+            {entry.name}
+          </HeadingLink>
+        ) : null}
+        {showDocstring
+          ? renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id})
+          : null}
+        {entry.value ? (
+          <SignatureBox text={entry.value}>
+            {renderCodeExpression(entry.value, {
+              api,
+              classSymbol: name,
+              docId: metadata?.id,
+            })}
+          </SignatureBox>
+        ) : null}
+      </div>
+    );
   }
 
   const properties = entry.properties ?? [];
@@ -271,41 +324,51 @@ export default function ClassBlock({
   }));
 
   useInjectedToc(
-    showMembers
-      ? [
-          {
-            title: "Properties",
-            id: normalizeAnchor("properties"),
-            items: properties.map((item) => ({
-              id: normalizeAnchor(item.name),
-              kind: "property",
-              label: item.name,
-            })),
-          },
-          {
-            title: "Events",
-            id: normalizeAnchor("events"),
-            items: events.map((item) => ({
-              id: normalizeAnchor(item.name),
-              kind: "event",
-              label: item.name,
-            })),
-          },
-          {
-            title: "Methods",
-            id: normalizeAnchor("methods"),
-            items: methods.map((item) => ({
-              id: normalizeAnchor(item.name),
-              kind: "method",
-              label: item.name,
-            })),
-          },
-        ]
-      : []
+    [
+      ...(showRootHeading
+        ? [{title: entry.name, id: normalizeAnchor(entry.name), items: []}]
+        : []),
+      ...(showMembers
+        ? [
+            {
+              title: "Properties",
+              id: normalizeAnchor("properties"),
+              items: properties.map((item) => ({
+                id: normalizeAnchor(item.name),
+                kind: "property",
+                label: item.name,
+              })),
+            },
+            {
+              title: "Events",
+              id: normalizeAnchor("events"),
+              items: events.map((item) => ({
+                id: normalizeAnchor(item.name),
+                kind: "event",
+                label: item.name,
+              })),
+            },
+            {
+              title: "Methods",
+              id: normalizeAnchor("methods"),
+              items: methods.map((item) => ({
+                id: normalizeAnchor(item.name),
+                kind: "method",
+                label: item.name,
+              })),
+            },
+          ]
+        : []),
+    ]
   );
 
   return (
     <div>
+      {showRootHeading ? (
+        <HeadingLink level="h2" id={normalizeAnchor(entry.name)}>
+          {entry.name}
+        </HeadingLink>
+      ) : null}
       {showDocstring
         ? renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id})
         : null}
