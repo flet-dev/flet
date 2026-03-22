@@ -34,6 +34,9 @@ sidebars_output = "../../website/sidebars.js"
 base_url = "/docs"
 extensions = ["flet.utils.griffe_deprecations"]
 
+[tool.crocodocs.member_filters]
+methods = ["init", "before_update"]
+
 [tool.crocodocs.asset_mappings.examples]
 source_path = "../../sdk/python/examples"
 static_subpath = "docs/examples"

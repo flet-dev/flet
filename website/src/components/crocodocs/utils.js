@@ -18,6 +18,31 @@ export function normalizeAnchor(name) {
   return name;
 }
 
+function firstTextSectionValue(sections) {
+  if (!sections || sections.length === 0) {
+    return null;
+  }
+  const textSection = sections.find(
+    (section) => section.kind === "text" && typeof section.value === "string" && section.value.trim(),
+  );
+  return textSection?.value ?? null;
+}
+
+export function firstSentenceFromDocstring(docstring, docstringSections) {
+  const source = (typeof docstring === "string" && docstring.trim()) ? docstring : firstTextSectionValue(docstringSections);
+  if (!source) {
+    return null;
+  }
+
+  const firstParagraph = source
+    .replace(/\n\s*\n[\s\S]*$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const sentenceMatch = firstParagraph.match(/^(.+?[.!?])(?:\s|$)/);
+  return sentenceMatch ? sentenceMatch[1].trim() : firstParagraph;
+}
+
 function normalizeDocPath(parts) {
   const out = [];
   for (const part of parts) {
@@ -71,7 +96,7 @@ function resolveCrossReference(target, label, context) {
   return api.xref_map?.[target] ?? null;
 }
 
-function renderInlineMarkdown(text, context) {
+export function renderInlineMarkdown(text, context) {
   const nodes = [];
   let lastIndex = 0;
   let key = 0;

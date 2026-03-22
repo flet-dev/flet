@@ -13,6 +13,25 @@ def _normalize_path(value: str | None) -> str | None:
     return str(value).replace("\\", "/")
 
 
+MEMBER_FILTERS: dict[str, set[str]] = {
+    "all": set(),
+    "properties": set(),
+    "events": set(),
+    "methods": set(),
+}
+
+
+def _load_member_filters(payload: dict[str, Any]) -> None:
+    raw = payload.get("member_filters", {})
+    for key in MEMBER_FILTERS:
+        values = raw.get(key, [])
+        MEMBER_FILTERS[key] = {str(value) for value in values}
+
+
+def _is_filtered_member(kind: str, name: str) -> bool:
+    return name in MEMBER_FILTERS["all"] or name in MEMBER_FILTERS.get(kind, set())
+
+
 def _unwrap(obj: Any) -> Any:
     target = obj
     seen: set[int] = set()
@@ -290,10 +309,16 @@ def _class_entry(obj: Any) -> dict[str, Any]:
         if member_type == "Attribute":
             item = _attribute_entry(member)
             if item["name"].startswith("on_"):
+                if _is_filtered_member("events", item["name"]):
+                    continue
                 events.append(item)
             elif not item["name"].startswith("_"):
+                if _is_filtered_member("properties", item["name"]):
+                    continue
                 properties.append(item)
         elif member_type == "Function" and not member.name.startswith("_"):
+            if _is_filtered_member("methods", member.name):
+                continue
             methods.append(_function_entry(member))
 
     properties.sort(key=lambda item: item["name"].casefold())
@@ -317,6 +342,7 @@ def _class_entry(obj: Any) -> dict[str, Any]:
 
 def main() -> int:
     payload = json.loads(sys.stdin.read())
+    _load_member_filters(payload)
 
     from griffe import GriffeLoader, load_extensions
 

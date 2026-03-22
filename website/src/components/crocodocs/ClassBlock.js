@@ -4,10 +4,12 @@ import CodeBlock from "@theme/CodeBlock";
 import {useDoc} from "@docusaurus/plugin-content-docs/client";
 
 import {
+  firstSentenceFromDocstring,
   getApiData,
   normalizeAnchor,
   renderDocstring,
   renderDocstringSections,
+  renderInlineMarkdown,
   resolveDocAssetUrl,
 } from "./utils";
 
@@ -156,6 +158,47 @@ function renderMethod(item, classSymbol, docId) {
   );
 }
 
+function resolveBaseHref(api, classSymbol, baseName) {
+  if (!baseName) {
+    return null;
+  }
+  if (baseName.includes(".")) {
+    return api.xref_map?.[baseName] ?? null;
+  }
+
+  const packagePrefix = classSymbol.includes(".")
+    ? `${classSymbol.split(".").slice(0, -1).join(".")}.`
+    : "";
+  return api.xref_map?.[`${packagePrefix}${baseName}`] ?? null;
+}
+
+function SummarySection({title, items, classSymbol}) {
+  if (!items.length) {
+    return null;
+  }
+
+  return (
+    <section>
+      <Heading as="h4">{title}</Heading>
+      <ul>
+        {items.map((item) => (
+          <li key={item.name}>
+            <a href={`#${normalizeAnchor(item.name)}`}>
+              <code>{item.name}</code>
+            </a>
+            {item.summary ? (
+              <>
+                {" "}{"-"}{" "}
+                {renderInlineMarkdown(item.summary, {classSymbol})}
+              </>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default function ClassBlock({
   name,
   showDocstring = true,
@@ -177,6 +220,18 @@ export default function ClassBlock({
   const properties = entry.properties ?? [];
   const events = entry.events ?? [];
   const methods = entry.methods ?? [];
+  const propertySummaries = properties.map((item) => ({
+    name: item.name,
+    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  }));
+  const eventSummaries = events.map((item) => ({
+    name: item.name,
+    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  }));
+  const methodSummaries = methods.map((item) => ({
+    name: item.name,
+    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  }));
 
   useInjectedToc(
     showMembers
@@ -216,7 +271,22 @@ export default function ClassBlock({
         : null}
       {showBases && entry.bases?.length ? (
         <p>
-          <strong>Bases:</strong> {entry.bases.join(", ")}
+          <strong>Inherits:</strong>{" "}
+          {entry.bases.map((baseName, index) => {
+            const href = resolveBaseHref(api, name, baseName);
+            return (
+              <React.Fragment key={baseName}>
+                {index > 0 ? ", " : ""}
+                {href ? (
+                  <a href={href}>
+                    <code>{baseName}</code>
+                  </a>
+                ) : (
+                  <code>{baseName}</code>
+                )}
+              </React.Fragment>
+            );
+          })}
         </p>
       ) : null}
       {image ? (
@@ -232,39 +302,9 @@ export default function ClassBlock({
       ) : null}
       {showSummary ? (
         <div>
-          {properties.length ? (
-            <p>
-              <strong>Properties:</strong>{" "}
-              {properties.map((item, index) => (
-                <React.Fragment key={item.name}>
-                  {index > 0 ? ", " : ""}
-                  <a href={`#${normalizeAnchor(item.name)}`}>{item.name}</a>
-                </React.Fragment>
-              ))}
-            </p>
-          ) : null}
-          {events.length ? (
-            <p>
-              <strong>Events:</strong>{" "}
-              {events.map((item, index) => (
-                <React.Fragment key={item.name}>
-                  {index > 0 ? ", " : ""}
-                  <a href={`#${normalizeAnchor(item.name)}`}>{item.name}</a>
-                </React.Fragment>
-              ))}
-            </p>
-          ) : null}
-          {methods.length ? (
-            <p>
-              <strong>Methods:</strong>{" "}
-              {methods.map((item, index) => (
-                <React.Fragment key={item.name}>
-                  {index > 0 ? ", " : ""}
-                  <a href={`#${normalizeAnchor(item.name)}`}>{item.name}</a>
-                </React.Fragment>
-              ))}
-            </p>
-          ) : null}
+          <SummarySection title="Properties" items={propertySummaries} classSymbol={name} />
+          <SummarySection title="Events" items={eventSummaries} classSymbol={name} />
+          <SummarySection title="Methods" items={methodSummaries} classSymbol={name} />
         </div>
       ) : null}
       {showMembers ? (

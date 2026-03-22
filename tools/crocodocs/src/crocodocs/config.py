@@ -37,6 +37,7 @@ class CrocoDocsConfig:
     base_url: str
     extensions: list[str]
     packages: dict[str, Path]
+    member_filters: dict[str, set[str]]
 
 
 def _resolve_path(project_root: Path, value: str) -> Path:
@@ -52,6 +53,7 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
     tool = data.get("tool", {})
     raw = tool.get("crocodocs", {})
     raw_packages = raw.get("packages", {})
+    raw_member_filters = raw.get("member_filters", {})
     raw_asset_mappings = raw.get("asset_mappings", {})
     asset_mappings = {
         ref_root: AssetMapping(
@@ -90,6 +92,11 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
         packages={
             name: _resolve_path(project_root, path)
             for name, path in raw_packages.items()
+        },
+        member_filters={
+            key: {str(item) for item in values}
+            for key, values in raw_member_filters.items()
+            if isinstance(values, list)
         },
     )
 

@@ -189,6 +189,9 @@ def _extract_api_data_with_griffe(
         "search_paths": [str(path) for path in config.packages.values()],
         "extensions": config.extensions,
         "symbols": symbols,
+        "member_filters": {
+            key: sorted(values) for key, values in config.member_filters.items()
+        },
     }
     result = subprocess.run(
         [
