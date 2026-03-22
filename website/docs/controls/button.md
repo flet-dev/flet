@@ -15,37 +15,37 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Button
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="Basic button" width="50%" />
 
 ### Icons
 
-<CodeExample path={frontMatter.examples + '/icons.py'} />
+<CodeExample path={frontMatter.examples + '/icons.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/icons.png'} alt="Basic button" width="50%" />
 
 ### Handling clicks
 
-<CodeExample path={frontMatter.examples + '/handling_clicks.py'} />
+<CodeExample path={frontMatter.examples + '/handling_clicks.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_clicks.png'} alt="Handling clicks" width="50%" />
 
 ### Custom content
 
-<CodeExample path={frontMatter.examples + '/custom_content.py'} />
+<CodeExample path={frontMatter.examples + '/custom_content.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/custom_content.png'} alt="Buttons with custom content" width="50%" />
 
 ### Shapes
 
-<CodeExample path={frontMatter.examples + '/button_shapes.py'} />
+<CodeExample path={frontMatter.examples + '/button_shapes.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/button_shapes.png'} alt="Buttons with different shapes" width="50%" />
 
 ### Styling
 
-<CodeExample path={frontMatter.examples + '/styling.py'} />
+<CodeExample path={frontMatter.examples + '/styling.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/styled_initial.png'} alt="Styled button - default state" width="50%" caption="Default state" />
 
@@ -53,7 +53,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Animate on hover
 
-<CodeExample path={frontMatter.examples + '/animate_on_hover.py'} />
+<CodeExample path={frontMatter.examples + '/animate_on_hover.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/animate_on_hover_initial.png'} alt="Unhovered button" width="50%" caption="Normal button" />
 

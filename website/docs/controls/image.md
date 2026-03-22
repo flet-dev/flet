@@ -16,29 +16,29 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Image gallery
 
-<CodeExample path={frontMatter.examples + '/gallery.py'} />
+<CodeExample path={frontMatter.examples + '/gallery.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/gallery.gif'} width="55%" />
 
 ### Fade-in images with a placeholder
 
-<CodeExample path={frontMatter.examples + '/fade_in.py'} />
+<CodeExample path={frontMatter.examples + '/fade_in.py'} language="python" />
 
 ### Displaying images from base64 strings and byte data
 
-<CodeExample path={frontMatter.examples + '/src_base64_and_bytes.py'} />
+<CodeExample path={frontMatter.examples + '/src_base64_and_bytes.py'} language="python" />
 
 ### Displaying a static SVG image
 
-<CodeExample path={frontMatter.examples + '/static_svg.py'} />
+<CodeExample path={frontMatter.examples + '/static_svg.py'} language="python" />
 
 ### Displaying a dynamic SVG image
 
-<CodeExample path={frontMatter.examples + '/dynamic_svg.py'} />
+<CodeExample path={frontMatter.examples + '/dynamic_svg.py'} language="python" />
 
 ### Displaying a Lucide icon
 
-<CodeExample path={frontMatter.examples + '/lucide_icons.py'} />
+<CodeExample path={frontMatter.examples + '/lucide_icons.py'} language="python" />
 
 ### Gapless playback when changing image sources
 
@@ -47,6 +47,6 @@ This example updates both images to a new network URL on each click. With
 image loads. With [`gapless_playback`][flet.Image.gapless_playback] set to `False`, the image area can
 briefly be empty, causing a flicker/blink effect.
 
-<CodeExample path={frontMatter.examples + '/gapless_playback.py'} />
+<CodeExample path={frontMatter.examples + '/gapless_playback.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

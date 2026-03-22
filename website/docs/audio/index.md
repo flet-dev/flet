@@ -69,7 +69,7 @@ for installing on other Linux distributions.
 
 ### Basic example
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} />
+<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
 
 ## Description
 

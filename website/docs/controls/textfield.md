@@ -16,50 +16,50 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 ### Handling change events
 
-<CodeExample path={frontMatter.examples + '/handling_change_events.py'} />
+<CodeExample path={frontMatter.examples + '/handling_change_events.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/handling_change_events.gif'} alt="handling-change-events" width="55%" />
 
 ### Handling selection changes
 
-<CodeExample path={frontMatter.examples + '/selection_change.py'} />
+<CodeExample path={frontMatter.examples + '/selection_change.py'} language="python" />
 
 ### Password with reveal button
 
-<CodeExample path={frontMatter.examples + '/password.py'} />
+<CodeExample path={frontMatter.examples + '/password.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/password.gif'} alt="password" width="55%" />
 
 ### Multiline fields
 
-<CodeExample path={frontMatter.examples + '/multiline.py'} />
+<CodeExample path={frontMatter.examples + '/multiline.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/multiline.gif'} alt="multiline" width="55%" />
 
 ### Underlined and borderless TextFields
 
-<CodeExample path={frontMatter.examples + '/underlined_and_borderless.py'} />
+<CodeExample path={frontMatter.examples + '/underlined_and_borderless.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="55%" />
 
 ### Setting prefixes and suffixes
 
-<CodeExample path={frontMatter.examples + '/prefix_and_suffix.py'} />
+<CodeExample path={frontMatter.examples + '/prefix_and_suffix.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/prefix_and_suffix.gif'} alt="prefix-and-suffix" width="55%" />
 
 ### Styled TextField
 
-<CodeExample path={frontMatter.examples + '/styled.py'} />
+<CodeExample path={frontMatter.examples + '/styled.py'} language="python" />
 
 ### Custom label, hint, helper, and counter texts and styles
 
-<CodeExample path={frontMatter.examples + '/label_hint_helper_counter.py'} />
+<CodeExample path={frontMatter.examples + '/label_hint_helper_counter.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

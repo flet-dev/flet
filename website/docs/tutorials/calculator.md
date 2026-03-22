@@ -55,7 +55,7 @@ and a few [`Button`][flet.Button]s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
-<CodeExample path={frontMatter.examples + '/calc1.py'} />
+<CodeExample path={frontMatter.examples + '/calc1.py'} language="python" />
 
 Run the app and you should see a page like this:
 
@@ -67,7 +67,7 @@ Now let's arrange the text and buttons in 6 horizontal [`Row`][flet.Row]s.
 
 Replace `calc.py` contents with the following:
 
-<CodeExample path={frontMatter.examples + '/calc2.py'} />
+<CodeExample path={frontMatter.examples + '/calc2.py'} language="python" />
 
 Run the app and you should see a page like this:
 
@@ -202,7 +202,7 @@ content = ft.Column(
 <summary>Full code</summary>
 
     open: true
-<CodeExample path="tutorials/calculator/calc3.py" />
+<CodeExample path="tutorials/calculator/calc3.py" language="python" />
 </details>
 
 <Image src={frontMatter.example_images + '/calc3.png'} alt="calc3" width="50%" />

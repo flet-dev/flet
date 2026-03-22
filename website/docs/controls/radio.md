@@ -15,18 +15,18 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Handling selection changes
 
-<CodeExample path={frontMatter.examples + '/handling_selection_changes.py'} />
+<CodeExample path={frontMatter.examples + '/handling_selection_changes.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="55%" />
 
 ### Styled radio buttons
 
-<CodeExample path={frontMatter.examples + '/styled.py'} />
+<CodeExample path={frontMatter.examples + '/styled.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

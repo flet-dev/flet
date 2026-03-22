@@ -43,7 +43,7 @@ properties, described below, to enable implicit animation of its appearance:
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`Control.opacity`][flet.Control.opacity] property.
 
-<CodeExample path="controls/layout_control/animate_opacity.py" />
+<CodeExample path="controls/layout_control/animate_opacity.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_opacity.gif" alt="animate-opacity" width="55%" />
 
@@ -52,7 +52,7 @@ enables implicit animation of [`Control.opacity`][flet.Control.opacity] property
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate] property.
 
-<CodeExample path="controls/constrained-control/animate_rotation.py" />
+<CodeExample path="controls/constrained-control/animate_rotation.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="55%" />
 
@@ -61,7 +61,7 @@ enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] property.
 
-<CodeExample path="controls/layout_control/animate_scale.py" />
+<CodeExample path="controls/layout_control/animate_scale.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_scale.gif" alt="animate-scale" width="55%" />
 
@@ -76,7 +76,7 @@ a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
 
-<CodeExample path="controls/layout_control/animate_offset.py" />
+<CodeExample path="controls/layout_control/animate_offset.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_offset.gif" alt="animate-offset" width="55%" />
 
@@ -93,7 +93,7 @@ Note:
     - [`Stack`][flet.Stack] control
     - [`Page.overlay`][flet.Page.overlay] list
 
-<CodeExample path="controls/layout_control/animate_position.py" />
+<CodeExample path="controls/layout_control/animate_position.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_position.gif" alt="animate-position" width="55%" />
 
@@ -102,7 +102,7 @@ Note:
 Setting [`Container.animate`][flet.Container.animate] to [`AnimationValue`][flet.AnimationValue]
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-<CodeExample path="controls/container/animate.py" />
+<CodeExample path="controls/container/animate.py" language="python" />
 
 <Image src="../examples/controls/container/media/animate_1.gif" alt="animate" width="55%" />
 

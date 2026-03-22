@@ -14,10 +14,10 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ### Handling events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} />
+<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
 
 ### Programmatic transformations
 
-<CodeExample path={frontMatter.examples + '/transformations.py'} />
+<CodeExample path={frontMatter.examples + '/transformations.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

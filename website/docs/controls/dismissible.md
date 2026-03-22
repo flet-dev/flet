@@ -15,7 +15,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Dismissible `ListTile`s
 
-<CodeExample path={frontMatter.examples + '/dismissible_list_tiles.py'} />
+<CodeExample path={frontMatter.examples + '/dismissible_list_tiles.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/dismissible_list_tiles.gif'} alt="dismissible-list-tiles" width="55%" />
 
@@ -41,6 +41,6 @@ On Flutter’s side, though, the already-dismissed `Dismissible` widget in the m
 
 Example:
 
-<CodeExample path={frontMatter.examples + '/remove_on_dismiss_declarative.py'} />
+<CodeExample path={frontMatter.examples + '/remove_on_dismiss_declarative.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

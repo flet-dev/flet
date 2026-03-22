@@ -10,4 +10,4 @@ import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
 ### Example 1
 
-<CodeExample path="controls/types/margin/container.py" />
+<CodeExample path="controls/types/margin/container.py" language="python" />

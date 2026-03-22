@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Determinate and indeterminate progress bars
 
-<CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} />
+<CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="55%" />
 

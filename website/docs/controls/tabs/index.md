@@ -17,24 +17,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
 
 ### Nesting tabs
 
-<CodeExample path={frontMatter.examples + '/nested.py'} />
+<CodeExample path={frontMatter.examples + '/nested.py'} language="python" />
 
 ### Dynamic tab addition
 
-<CodeExample path={frontMatter.examples + '/dynamic_tab_addition.py'} />
+<CodeExample path={frontMatter.examples + '/dynamic_tab_addition.py'} language="python" />
 
 ### Custom indicator
 
-<CodeExample path={frontMatter.examples + '/custom_indicator.py'} />
+<CodeExample path={frontMatter.examples + '/custom_indicator.py'} language="python" />
 
 ### Programmatical Tab switch
 
-<CodeExample path={frontMatter.examples + '/move_to.py'} />
+<CodeExample path={frontMatter.examples + '/move_to.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

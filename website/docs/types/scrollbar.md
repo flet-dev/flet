@@ -12,6 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ### Showcase
 
-<CodeExample path={frontMatter.examples + '/showcase.py'} />
+<CodeExample path={frontMatter.examples + '/showcase.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

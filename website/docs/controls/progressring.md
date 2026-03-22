@@ -16,13 +16,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Determinate and indeterminate progress rings
 
-<CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} />
+<CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="55%" />
 
 ### Gauge with progress
 
-<CodeExample path={frontMatter.examples + '/gauge_with_progress.py'} />
+<CodeExample path={frontMatter.examples + '/gauge_with_progress.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/gauge_with_progress.png'} alt="determinate-and-indeterminate" width="55%" />
 

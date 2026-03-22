@@ -15,16 +15,16 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Animated switching between two containers with scale effect
 
-<CodeExample path={frontMatter.examples + '/scale_effect.py'} />
+<CodeExample path={frontMatter.examples + '/scale_effect.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/scale_effect.gif'} alt="scale-effect" width="55%" />
 
 ### Animate Image switch
 
-<CodeExample path={frontMatter.examples + '/image_switch.py'} />
+<CodeExample path={frontMatter.examples + '/image_switch.py'} language="python" />
 
 ### Animate Image switch buffered
 
-<CodeExample path={frontMatter.examples + '/image_switch_buffered.py'} />
+<CodeExample path={frontMatter.examples + '/image_switch_buffered.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Notched and non-notched list tiles
 
-<CodeExample path={frontMatter.examples + '/notched.py'} />
+<CodeExample path={frontMatter.examples + '/notched.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/notched.png'} alt="notched" width="55%" />
 

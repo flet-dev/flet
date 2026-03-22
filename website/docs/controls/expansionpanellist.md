@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} width="55%" />
 
@@ -24,6 +24,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 `ExpansionPanelList` supports scrolling through its [`scroll`][flet.ExpansionPanelList.scroll] property.
 
-<CodeExample path={frontMatter.examples + '/scrollable.py'} />
+<CodeExample path={frontMatter.examples + '/scrollable.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

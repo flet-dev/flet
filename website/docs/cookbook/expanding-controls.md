@@ -28,7 +28,7 @@ You can set `expand` to one of the following values:
 In this example, a [`TextField`][flet.TextField] stretches to fill all remaining space in the row,
 while the [`Button`][flet.Button] stays sized to its content:
 
-<CodeExample path={frontMatter.examples + '/expand_textfield_in_row.py'} />
+<CodeExample path={frontMatter.examples + '/expand_textfield_in_row.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/expand_textfield_in_row.png'} alt="expand textfield in row" width="45%" />
 
@@ -36,7 +36,7 @@ while the [`Button`][flet.Button] stays sized to its content:
 
 In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Container]s, distributed like 20% / 60% / 20%:
 
-<CodeExample path={frontMatter.examples + '/expand_row_proportional_1_3_1.py'} />
+<CodeExample path={frontMatter.examples + '/expand_row_proportional_1_3_1.py'} language="python" />
 
 Here, the available space is split into 5 total parts (1+3+1).
 The first and third containers get 1 part each (20%), and the middle one gets 3 parts (60%).
@@ -51,7 +51,7 @@ each expand to fill half of the available horizontal space using expand=True.
 The layout uses a parent [`Container`][flet.Container] and a nested row, where both controls are
 expanded equally, resulting in a 50/50 split.
 
-<CodeExample path={frontMatter.examples + '/expand_row_equal_split.py'} />
+<CodeExample path={frontMatter.examples + '/expand_row_equal_split.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/expand_row_equal_split.png'} alt="expand row equal split" width="45%" />
 
@@ -76,6 +76,6 @@ or any of their subclasses: [`Row`][flet.Row], [`Column`][flet.Column], [`View`]
 
 In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row]s with `expand_loose = True`:
 
-<CodeExample path={frontMatter.examples + '/expand_loose_chat_messages.py'} />
+<CodeExample path={frontMatter.examples + '/expand_loose_chat_messages.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/expand_loose_chat_messages.png'} alt="expand loose chat messages" width="45%" />

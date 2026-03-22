@@ -47,23 +47,23 @@ More details [here](tilelayer.md).
 
 ### Basic
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 ### Camera Controls
 
-<CodeExample path={frontMatter.examples + '/camera_controls.py'} />
+<CodeExample path={frontMatter.examples + '/camera_controls.py'} language="python" />
 
 ### Idle Camera
 
-<CodeExample path={frontMatter.examples + '/idle_camera.py'} />
+<CodeExample path={frontMatter.examples + '/idle_camera.py'} language="python" />
 
 ### Interaction Flags
 
-<CodeExample path={frontMatter.examples + '/interaction_flags.py'} />
+<CodeExample path={frontMatter.examples + '/interaction_flags.py'} language="python" />
 
 ### Multiple Layers
 
-<CodeExample path={frontMatter.examples + '/multi_layers.py'} />
+<CodeExample path={frontMatter.examples + '/multi_layers.py'} language="python" />
 
 ## Reference
 

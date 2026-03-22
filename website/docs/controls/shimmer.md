@@ -13,19 +13,19 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/image_for_docs.gif'} alt="custom-label" width="50%" />
 
 ### Skeleton list placeholders
 
-<CodeExample path={frontMatter.examples + '/basic_placeholder.py'} />
+<CodeExample path={frontMatter.examples + '/basic_placeholder.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic_placeholder.png'} alt="custom-label" width="50%" />
 
 ### Custom gradients and directions
 
-<CodeExample path={frontMatter.examples + '/custom_gradient.py'} />
+<CodeExample path={frontMatter.examples + '/custom_gradient.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/custom_gradient.png'} alt="custom-label" width="50%" />
 

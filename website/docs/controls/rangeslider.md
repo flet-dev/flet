@@ -15,13 +15,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} />
+<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="55%" />
 
 ### RangeSlider with events
 
-<CodeExample path={frontMatter.examples + '/handling_change_events.py'} />
+<CodeExample path={frontMatter.examples + '/handling_change_events.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_events.gif'} alt="handling_events" width="55%" />
 

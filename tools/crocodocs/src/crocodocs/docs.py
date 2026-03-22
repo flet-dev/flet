@@ -17,7 +17,8 @@ TAB_RE = re.compile(r"^/// tab \|", re.MULTILINE)
 DETAILS_RE = re.compile(r"^/// details \|", re.MULTILINE)
 CODE_ANNOTATION_RE = re.compile(r"# \(\d+\)!")
 INCLUDE_BLOCK_RE = re.compile(
-    r"```(?P<lang>[a-zA-Z0-9_+-]+)\n--8<--\s+\"(?P<path>[^\"]+)\"\n```", re.MULTILINE
+    r"```(?P<lang>[a-zA-Z0-9_+-]+)(?P<info>[^\n]*)\n--8<--\s+\"(?P<path>[^\"]+)\"\n```",
+    re.MULTILINE,
 )
 COMPONENT_TAG_RE = re.compile(r"<(ClassSummary|ClassMembers|ClassAll)\b([^>]*)/>")
 IMPORT_PARTIAL_RE = re.compile(r"@site/\.crocodocs/([a-z0-9._-]+\.mdx)")

@@ -10,6 +10,6 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 ### Container with radial gradient
 
-<CodeExample path="controls/types/gradient/radial_gradient/container.py" />
+<CodeExample path="controls/types/gradient/radial_gradient/container.py" language="python" />
 
 <Image src="../examples/controls/types/gradient/radial_gradient/media/container.png" alt="container" width="55%" />

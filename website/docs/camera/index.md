@@ -122,7 +122,7 @@ permissions = ["camera", "microphone"]
 </Tabs>
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} />
+<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
 
 ## Description
 

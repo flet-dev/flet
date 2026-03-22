@@ -15,13 +15,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Notched `FloatingActionButton`
 
-<CodeExample path={frontMatter.examples + '/notched_fab.py'} />
+<CodeExample path={frontMatter.examples + '/notched_fab.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/notched_fab.png'} width="55%" />
 
 ### Custom border radius
 
-<CodeExample path={frontMatter.examples + '/border_radius.py'} />
+<CodeExample path={frontMatter.examples + '/border_radius.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/border_radius.png'} width="55%" />
 

@@ -60,4 +60,4 @@ semantics debugger during app development:
 
 <Image src="../assets/cookbook/accessibility/debug-accessibility-toggle.gif" width="55%" />
 
-<CodeExample path="controls/page/semantics_debugger.py" />
+<CodeExample path="controls/page/semantics_debugger.py" language="python" />

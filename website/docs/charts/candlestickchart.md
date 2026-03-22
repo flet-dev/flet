@@ -13,7 +13,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Candlestick Chart
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} />
+<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="55%" />
 

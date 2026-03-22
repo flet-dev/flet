@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Handling events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} />
+<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
 
 ### Draggable containers
 
@@ -26,16 +26,16 @@ The following example demonstrates how a control can be freely dragged inside a 
 The sample also shows that GestureDetector can have a child control (blue container) as well as be nested
 inside another control (yellow container) giving the same results.
 
-<CodeExample path={frontMatter.examples + '/draggable_containers.py'} />
+<CodeExample path={frontMatter.examples + '/draggable_containers.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/draggable_containers.gif'} alt="draggable-containers" width="55%" />
 
 ### Window drag area
 
-<CodeExample path={frontMatter.examples + '/window_drag_area.py'} />
+<CodeExample path={frontMatter.examples + '/window_drag_area.py'} language="python" />
 
 ### Mouse Cursors
 
-<CodeExample path={frontMatter.examples + '/mouse_cursors.py'} />
+<CodeExample path={frontMatter.examples + '/mouse_cursors.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

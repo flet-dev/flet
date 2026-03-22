@@ -13,16 +13,16 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Triggers
 
-<CodeExample path={frontMatter.examples + '/triggers.py'} />
+<CodeExample path={frontMatter.examples + '/triggers.py'} language="python" />
 
 ## Programmatic open
 
-<CodeExample path={frontMatter.examples + '/programmatic_open.py'} />
+<CodeExample path={frontMatter.examples + '/programmatic_open.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/programmatic_open.png'} width="55%" />
 
 ## Programmatic open with custom trigger
 
-<CodeExample path={frontMatter.examples + '/custom_trigger.py'} />
+<CodeExample path={frontMatter.examples + '/custom_trigger.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

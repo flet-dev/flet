@@ -41,4 +41,4 @@ ft.run(main)
 
 Below is a more advanced example:
 
-<CodeExample path="controls/page/keyboard_events.py" />
+<CodeExample path="controls/page/keyboard_events.py" language="python" />

@@ -210,12 +210,20 @@ def _replace_includes(content: str) -> tuple[str, bool]:
         nonlocal replaced
         replaced = True
         raw_path = convert_include_path(match.group("path"))
+        info = match.group("info") or ""
+        title_match = re.search(r'title="([^"]+)"', info)
+        language = match.group("lang")
         if raw_path.startswith("{frontMatter.examples}/"):
             suffix = raw_path.removeprefix("{frontMatter.examples}/")
             path_expr = "{frontMatter.examples + " + repr("/" + suffix) + "}"
         else:
             path_expr = f'"{raw_path}"'
-        return f"<CodeExample path={path_expr} />"
+        props = [f"path={path_expr}"]
+        if language:
+            props.append(f'language="{language}"')
+        if title_match:
+            props.append(f'title="{title_match.group(1)}"')
+        return "<CodeExample " + " ".join(props) + " />"
 
     return INCLUDE_BLOCK_RE.sub(replace, content), replaced
 

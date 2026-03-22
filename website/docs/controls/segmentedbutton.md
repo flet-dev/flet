@@ -15,7 +15,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/single_multiple_selection.py'} />
+<CodeExample path={frontMatter.examples + '/single_multiple_selection.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/single_multiple_selection.png'} width="55%" />
 

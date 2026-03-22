@@ -25,7 +25,7 @@ A reliable setup uses a single source of truth: derive [`page.views`][flet.Page.
 
 The default route is `/` when no route is provided.
 
-<CodeExample path="apps/routing_navigation/initial_route.py" />
+<CodeExample path="apps/routing_navigation/initial_route.py" language="python" />
 
 All routes should start with `/`, for example `/store`, `/products/42`, `/settings/mail`.
 
@@ -35,7 +35,7 @@ Whenever route changes (URL edit, browser Back/Forward, or app navigation),
 [`page.on_route_change`][flet.Page.on_route_change] event is triggered.
 Use this event as the place where you decide which views must exist for the current route.
 
-<CodeExample path="apps/routing_navigation/route_change_event.py" />
+<CodeExample path="apps/routing_navigation/route_change_event.py" language="python" />
 
 ## Building views from route
 
@@ -52,7 +52,7 @@ The pattern below is the baseline for most apps:
 - Makes navigation deterministic and easier to debug.
 :::
 
-<CodeExample path="apps/routing_navigation/building_views_on_route_change.py" />
+<CodeExample path="apps/routing_navigation/building_views_on_route_change.py" language="python" />
 
 ## Programmatic navigation
 
@@ -70,14 +70,14 @@ When users go back, Flet triggers [`page.on_view_pop`][flet.Page.on_view_pop].
 For flows requiring confirmation (for example, unsaved changes), disable automatic pop
 and confirm manually with [`View.can_pop`][flet.View.can_pop] + [`View.on_confirm_pop`][flet.View.on_confirm_pop].
 
-<CodeExample path="apps/routing_navigation/pop_view_confirm.py" />
+<CodeExample path="apps/routing_navigation/pop_view_confirm.py" language="python" />
 
 ## Navigation UI patterns
 
 Routing composes well with navigation controls such as drawer, rail, and tabs.
 This example shows route-driven drawer navigation with multiple top-level destinations:
 
-<CodeExample path="apps/routing_navigation/drawer_navigation.py" />
+<CodeExample path="apps/routing_navigation/drawer_navigation.py" language="python" />
 
 ## Route templates (parameterized routes)
 
