@@ -11,7 +11,7 @@ Python using Flet framework and publish it as a desktop, mobile or web app.
 The app is a simple console program, yet it is a multi-platform application with
 similar to iPhone calculator app UI:
 
-<Image src="../examples/tutorials/calculator/media/app.png" alt="calc-app" width="80%" />
+<Image src="../examples/tutorials/calculator/media/app.png" alt="calc-app" width="55%" />
 
 You can find a live demo [here](https://examples.flet.dev/calculator/).
 
@@ -44,7 +44,7 @@ ft.run(main)
 
 Run this app and you will see a new window with a greeting:
 
-<Image src="../examples/tutorials/todo/media/hello-world.png" alt="hello-world" width="80%" />
+<Image src="../examples/tutorials/todo/media/hello-world.png" alt="hello-world" width="55%" />
 
 ## Adding page controls
 
@@ -79,7 +79,7 @@ To add a black background with rounded border around the calculator, we will be 
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
 [`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
 
-<Image src="../examples/tutorials/calculator/media/container-layout.svg" alt="container-layout" width="80%" />
+<Image src="../examples/tutorials/calculator/media/container-layout.svg" alt="container-layout" width="55%" />
 
 Here is the code for adding the container to the page:
 
@@ -261,7 +261,7 @@ Copy the entire code for this step from
 [here](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/calculator/calc.py).
 
 Run the app and see it in the action:
-<Image src="../examples/tutorials/calculator/media/app.gif" alt="calc-app2" width="80%" />
+<Image src="../examples/tutorials/calculator/media/app.gif" alt="calc-app2" width="55%" />
 
 ## Publishing your app
 

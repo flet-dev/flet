@@ -17,12 +17,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="80%" />
+<Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="55%" />
 
 ### RangeSlider with events
 
 <CodeExample path={frontMatter.examples + '/handling_change_events.py'} />
 
-<Image src={frontMatter.example_images + '/handling_events.gif'} alt="handling_events" width="80%" />
+<Image src={frontMatter.example_images + '/handling_events.gif'} alt="handling_events" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

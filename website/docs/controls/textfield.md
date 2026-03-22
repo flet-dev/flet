@@ -18,13 +18,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="80%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 ### Handling change events
 
 <CodeExample path={frontMatter.examples + '/handling_change_events.py'} />
 
-<Image src={frontMatter.example_media + '/handling_change_events.gif'} alt="handling-change-events" width="80%" />
+<Image src={frontMatter.example_media + '/handling_change_events.gif'} alt="handling-change-events" width="55%" />
 
 ### Handling selection changes
 
@@ -34,25 +34,25 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/password.py'} />
 
-<Image src={frontMatter.example_media + '/password.gif'} alt="password" width="80%" />
+<Image src={frontMatter.example_media + '/password.gif'} alt="password" width="55%" />
 
 ### Multiline fields
 
 <CodeExample path={frontMatter.examples + '/multiline.py'} />
 
-<Image src={frontMatter.example_media + '/multiline.gif'} alt="multiline" width="80%" />
+<Image src={frontMatter.example_media + '/multiline.gif'} alt="multiline" width="55%" />
 
 ### Underlined and borderless TextFields
 
 <CodeExample path={frontMatter.examples + '/underlined_and_borderless.py'} />
 
-<Image src={frontMatter.example_media + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="80%" />
+<Image src={frontMatter.example_media + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="55%" />
 
 ### Setting prefixes and suffixes
 
 <CodeExample path={frontMatter.examples + '/prefix_and_suffix.py'} />
 
-<Image src={frontMatter.example_media + '/prefix_and_suffix.gif'} alt="prefix-and-suffix" width="80%" />
+<Image src={frontMatter.example_media + '/prefix_and_suffix.gif'} alt="prefix-and-suffix" width="55%" />
 
 ### Styled TextField
 

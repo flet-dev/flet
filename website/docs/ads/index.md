@@ -110,4 +110,4 @@ testing purposes.
 
 <CodeExample path={frontMatter.examples + '/example_1.py'} />
 
-<Image src={frontMatter.example_images + '/example_1.gif'} width="80%" />
+<Image src={frontMatter.example_images + '/example_1.gif'} width="55%" />

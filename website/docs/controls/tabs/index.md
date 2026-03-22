@@ -19,7 +19,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.gif'} width="80%" />
+<Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
 
 ### Nesting tabs
 

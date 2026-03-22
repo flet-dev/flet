@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/file_deletion_confirmation.py'} />
 
-<Image src={frontMatter.example_images + '/file_deletion_confirmation.png'} alt="file-deletion-confirmation" width="80%" />
+<Image src={frontMatter.example_images + '/file_deletion_confirmation.png'} alt="file-deletion-confirmation" width="55%" />
 
 ### Cupertino, material and adaptive alert dialogs
 

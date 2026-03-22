@@ -17,12 +17,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.gif'} width="80%" />
+<Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
 
 ### Custom breakpoints
 
 <CodeExample path={frontMatter.examples + '/custom_breakpoint.py'} />
 
-<Image src={frontMatter.example_images + '/custom_breakpoint.gif'} width="80%" />
+<Image src={frontMatter.example_images + '/custom_breakpoint.gif'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

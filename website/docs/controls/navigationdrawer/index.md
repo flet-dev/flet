@@ -19,12 +19,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/position_start.py'} />
 
-<Image src={frontMatter.example_images + '/position_start.gif'} alt="position-start" width="80%" />
+<Image src={frontMatter.example_images + '/position_start.gif'} alt="position-start" width="55%" />
 
 ### End-aligned drawer
 
 <CodeExample path={frontMatter.examples + '/position_end.py'} />
 
-<Image src={frontMatter.example_images + '/position_end.gif'} alt="position-end" width="80%" />
+<Image src={frontMatter.example_images + '/position_end.gif'} alt="position-end" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

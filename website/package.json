@@ -6,8 +6,9 @@
     "crocodocs:inventory": "cd .. && uv --directory ./tools/crocodocs run crocodocs inventory",
     "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
     "crocodocs:migrate:bootstrap": "cd .. && uv --directory ./tools/crocodocs run crocodocs migrate --mode bootstrap",
-    "start": "yarn crocodocs:generate && docusaurus start",
-    "build": "yarn crocodocs:generate && docusaurus build",
+    "crocodocs:sync": "yarn crocodocs:migrate:bootstrap && yarn crocodocs:generate",
+    "start": "yarn crocodocs:sync && docusaurus start",
+    "build": "yarn crocodocs:sync && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy"
   },

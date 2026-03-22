@@ -92,7 +92,7 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 <CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path.py'} />
 
-<Image src={frontMatter.example_images + '/pick_save_and_get_directory_path.png'} width="80%" />
+<Image src={frontMatter.example_images + '/pick_save_and_get_directory_path.png'} width="55%" />
 
 ### Pick and upload files
 
@@ -101,7 +101,7 @@ and [upload][flet.FilePicker.upload] app.
 
 <CodeExample path={frontMatter.examples + '/pick_and_upload.py'} />
 
-<Image src={frontMatter.example_images + '/pick_and_upload.png'} width="80%" />
+<Image src={frontMatter.example_images + '/pick_and_upload.png'} width="55%" />
 
 ### Pick text content and save/download it
 

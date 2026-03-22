@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical.py'} />
 
-<Image src={frontMatter.example_images + '/horizontal_and_vertical.png'} alt="horizontal-and-vertical" width="80%" />
+<Image src={frontMatter.example_images + '/horizontal_and_vertical.png'} alt="horizontal-and-vertical" width="55%" />
 
 ### Custom drag handle
 

@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/autoscroll_and_dynamic_items.py'} />
 
-<Image src={frontMatter.example_media + '/autoscroll_and_dynamic_items.gif'} alt="autoscroll-and-dynamic-items" width="80%" />
+<Image src={frontMatter.example_media + '/autoscroll_and_dynamic_items.gif'} alt="autoscroll-and-dynamic-items" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

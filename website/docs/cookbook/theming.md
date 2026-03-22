@@ -71,4 +71,4 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<img alt="Nested themes" src="/docs/assets/cookbook/theming/nested-themes.png" />
+<figure className="doc-screenshot-figure"><img alt="Nested themes" className="doc-screenshot" src="/docs/assets/cookbook/theming/nested-themes.png" /></figure>

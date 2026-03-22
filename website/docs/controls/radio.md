@@ -17,13 +17,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="80%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Handling selection changes
 
 <CodeExample path={frontMatter.examples + '/handling_selection_changes.py'} />
 
-<Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="80%" />
+<Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="55%" />
 
 ### Styled radio buttons
 

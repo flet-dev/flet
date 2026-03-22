@@ -18,12 +18,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} />
 
-<Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="80%" />
+<Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="55%" />
 
 ### Gauge with progress
 
 <CodeExample path={frontMatter.examples + '/gauge_with_progress.py'} />
 
-<Image src={frontMatter.example_images + '/gauge_with_progress.png'} alt="determinate-and-indeterminate" width="80%" />
+<Image src={frontMatter.example_images + '/gauge_with_progress.png'} alt="determinate-and-indeterminate" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

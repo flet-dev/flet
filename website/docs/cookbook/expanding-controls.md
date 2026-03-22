@@ -30,7 +30,7 @@ while the [`Button`][flet.Button] stays sized to its content:
 
 <CodeExample path={frontMatter.examples + '/expand_textfield_in_row.py'} />
 
-<Image src={frontMatter.example_images + '/expand_textfield_in_row.png'} alt="expand textfield in row" width="70%" />
+<Image src={frontMatter.example_images + '/expand_textfield_in_row.png'} alt="expand textfield in row" width="45%" />
 
 ### Example 2
 
@@ -41,7 +41,7 @@ In this example, we create a [`Row`][flet.Row] with three [`Container`][flet.Con
 Here, the available space is split into 5 total parts (1+3+1).
 The first and third containers get 1 part each (20%), and the middle one gets 3 parts (60%).
 
-<Image src={frontMatter.example_images + '/expand_row_proportional_1_3_1.png'} alt="expand row proportional 1 3 1" width="70%" />
+<Image src={frontMatter.example_images + '/expand_row_proportional_1_3_1.png'} alt="expand row proportional 1 3 1" width="45%" />
 
 ### Example 3
 
@@ -53,7 +53,7 @@ expanded equally, resulting in a 50/50 split.
 
 <CodeExample path={frontMatter.examples + '/expand_row_equal_split.py'} />
 
-<Image src={frontMatter.example_images + '/expand_row_equal_split.png'} alt="expand row equal split" width="70%" />
+<Image src={frontMatter.example_images + '/expand_row_equal_split.png'} alt="expand row equal split" width="45%" />
 
 ## `expand_loose`
 
@@ -78,4 +78,4 @@ In this example, [`Container`][flet.Container]s being placed in [`Row`][flet.Row
 
 <CodeExample path={frontMatter.examples + '/expand_loose_chat_messages.py'} />
 
-<Image src={frontMatter.example_images + '/expand_loose_chat_messages.png'} alt="expand loose chat messages" width="70%" />
+<Image src={frontMatter.example_images + '/expand_loose_chat_messages.png'} alt="expand loose chat messages" width="45%" />

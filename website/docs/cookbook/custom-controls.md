@@ -145,7 +145,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/custom-controls/composite-controls.gif" alt="Composite controls" width="90%" />
+<Image src="../assets/cookbook/custom-controls/composite-controls.gif" alt="Composite controls" width="60%" />
 
 ## Life-cycle methods
 

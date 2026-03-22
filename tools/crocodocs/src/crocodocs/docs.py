@@ -22,6 +22,7 @@ INCLUDE_BLOCK_RE = re.compile(
 COMPONENT_TAG_RE = re.compile(r"<(ClassSummary|ClassMembers|ClassAll)\b([^>]*)/>")
 IMPORT_PARTIAL_RE = re.compile(r"@site/\.crocodocs/([a-z0-9._-]+\.mdx)")
 CODE_EXAMPLE_TAG_RE = re.compile(r"<CodeExample\b([^>]*)/>")
+PERCENT_WIDTH_RE = re.compile(r"^\s*(\d+(?:\.\d+)?)%\s*$")
 
 
 @dataclass
@@ -110,6 +111,18 @@ def default_title(front_matter: dict[str, Any], body: str, fallback: str) -> str
         if line.startswith("# "):
             return line[2:].strip()
     return fallback
+
+
+def normalize_migrated_image_width(value: str) -> str:
+    match = PERCENT_WIDTH_RE.fullmatch(value)
+    if not match:
+        return value
+    percent = float(match.group(1))
+    if percent < 60:
+        return value
+    scaled = round((percent * (2 / 3)) / 5) * 5
+    scaled = max(30, min(70, scaled))
+    return f"{scaled}%"
 
 
 def _snake_to_camel(name: str) -> str:
@@ -206,6 +219,13 @@ def macro_call_to_component(call: MacroCall) -> tuple[str, SymbolBlock] | None:
         }
         for index, prop_name in positional_summary_props.items():
             if len(call.args) > index:
+                if prop_name == "imageWidth":
+                    value = ast_to_python_value(call.args[index])
+                    if isinstance(value, str):
+                        props.append(
+                            f'imageWidth="{normalize_migrated_image_width(value)}"'
+                        )
+                        continue
                 props.append(f"{prop_name}={ast_to_jsx(call.args[index])}")
     options: dict[str, Any] = {}
     special_prop_names = {
@@ -216,6 +236,13 @@ def macro_call_to_component(call: MacroCall) -> tuple[str, SymbolBlock] | None:
     for key, value in call.kwargs.items():
         options[key] = ast_to_python_value(value)
         prop_name = special_prop_names.get(key, _snake_to_camel(key))
+        if prop_name == "imageWidth":
+            normalized = options[key]
+            if isinstance(normalized, str):
+                props.append(
+                    f'imageWidth="{normalize_migrated_image_width(normalized)}"'
+                )
+                continue
         props.append(f"{prop_name}={ast_to_jsx(value)}")
     component = f"<{component_name} " + " ".join(props) + " />"
     return component, SymbolBlock(kind=kind, symbol=symbol, options=options)
@@ -233,6 +260,11 @@ def image_macro_to_component(call: MacroCall) -> str | None:
         props.append(f"alt={ast_to_jsx(call.args[1])}")
     for key in ("alt", "width", "caption", "link"):
         if key in call.kwargs:
+            if key == "width":
+                value = ast_to_python_value(call.kwargs[key])
+                if isinstance(value, str):
+                    props.append(f'width="{normalize_migrated_image_width(value)}"')
+                    continue
             props.append(f"{key}={ast_to_jsx(call.kwargs[key])}")
     return "<Image " + " ".join(props) + " />"
 

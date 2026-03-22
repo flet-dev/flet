@@ -137,8 +137,13 @@ function renderImage(line, context, key) {
   const width = WIDTH_RE.exec(match[3] ?? "")?.[1];
   const src = resolveDocAssetUrl(match[2], context?.docId);
   return (
-    <figure key={key}>
-      <img alt={match[1]} src={src} style={width ? {width} : undefined} />
+    <figure className="doc-screenshot-figure" key={key}>
+      <img
+        alt={match[1]}
+        className="doc-screenshot"
+        src={src}
+        style={width ? {width} : undefined}
+      />
     </figure>
   );
 }

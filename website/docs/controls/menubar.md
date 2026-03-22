@@ -17,6 +17,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/nested_submenus.py'} />
 
-<Image src={frontMatter.example_images + '/nested_submenus.gif'} width="80%" />
+<Image src={frontMatter.example_images + '/nested_submenus.gif'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

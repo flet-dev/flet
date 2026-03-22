@@ -25,7 +25,7 @@ An alternative to assist chips are buttons, which should appear persistently and
 
 <CodeExample path={frontMatter.examples + '/assist_chips.py'} />
 
-<Image src={frontMatter.example_media + '/assist_chips.png'} alt="assist-chips" width="80%" />
+<Image src={frontMatter.example_media + '/assist_chips.png'} alt="assist-chips" width="55%" />
 
 ### Filter chips
 
@@ -36,6 +36,6 @@ They can be a good alternative to switches or checkboxes.
 
 <CodeExample path={frontMatter.examples + '/filter_chips.py'} />
 
-<Image src={frontMatter.example_media + '/filter_chips.png'} alt="filter-chips" width="80%" />
+<Image src={frontMatter.example_media + '/filter_chips.png'} alt="filter-chips" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

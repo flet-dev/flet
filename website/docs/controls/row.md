@@ -17,24 +17,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/spacing.py'} />
 
-<Image src={frontMatter.example_images + '/row_spacing_adjustment.gif'} alt="spacing" width="80%" />
+<Image src={frontMatter.example_images + '/row_spacing_adjustment.gif'} alt="spacing" width="55%" />
 
 ### Wrapping children
 
 <CodeExample path={frontMatter.examples + '/wrap.py'} />
 
-<Image src={frontMatter.example_images + '/wrap_adjustment.gif'} alt="wrap" width="80%" />
+<Image src={frontMatter.example_images + '/wrap_adjustment.gif'} alt="wrap" width="55%" />
 
 ### Setting horizontal alignment
 
 <CodeExample path={frontMatter.examples + '/alignment.py'} />
 
-<Image src={frontMatter.example_images + '/alignment.png'} alt="alignment" width="60%" />
+<Image src={frontMatter.example_images + '/alignment.png'} alt="alignment" width="40%" />
 
 ### Setting vertical alignment
 
 <CodeExample path={frontMatter.examples + '/vertical_alignment.py'} />
 
-<Image src={frontMatter.example_images + '/vertical_alignment.png'} alt="vertical-alignment" width="60%" />
+<Image src={frontMatter.example_images + '/vertical_alignment.png'} alt="vertical-alignment" width="40%" />
 
 <ClassMembers name={frontMatter.class_name} />

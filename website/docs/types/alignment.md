@@ -14,4 +14,4 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 <CodeExample path={frontMatter.examples + '/container.py'} />
 
-<Image src={frontMatter.example_media + '/container.png'} width="80%" />
+<Image src={frontMatter.example_media + '/container.png'} width="55%" />

@@ -18,13 +18,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="80%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 ### Code syntax highlight
 
 <CodeExample path={frontMatter.examples + '/code_syntax_highlight.py'} />
 
-<Image src={frontMatter.example_media + '/code_syntax_highlight.png'} alt="code-syntax-highlight" width="80%" />
+<Image src={frontMatter.example_media + '/code_syntax_highlight.png'} alt="code-syntax-highlight" width="55%" />
 
 ### Custom text theme
 

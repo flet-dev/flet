@@ -18,6 +18,6 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 
 <CodeExample path={frontMatter.examples + '/bar_chart.py'} />
 
-<Image src={frontMatter.example_images + '/bar_chart.png'} width="80%" />
+<Image src={frontMatter.example_images + '/bar_chart.png'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

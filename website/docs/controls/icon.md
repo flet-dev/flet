@@ -21,6 +21,6 @@ visit our [icons browser](https://examples.flet.dev/icons_browser/)
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="80%" />
+<Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

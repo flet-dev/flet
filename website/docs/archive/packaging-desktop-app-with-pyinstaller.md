@@ -95,7 +95,7 @@ macOS bundle details can be customized with the following `flet pack` macOS-spec
 * `--copyright` - copyright notice shown in "About" dialog.
 * `--bundle-id` unique bundle ID.
 
-<img alt="Flet app bundle about" src="/docs/assets/getting-started/package-desktop/flet-app-bundle-about.png" />
+<figure className="doc-screenshot-figure"><img alt="Flet app bundle about" className="doc-screenshot" src="/docs/assets/getting-started/package-desktop/flet-app-bundle-about.png" /></figure>
 
 ## Customizing Windows executable metadata
 

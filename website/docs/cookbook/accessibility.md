@@ -58,6 +58,6 @@ to show an overlay that shows the accessibility information reported by the fram
 You can implement a specific [keyboard shortcut](keyboard-shortcuts.md) to conveniently toggle
 semantics debugger during app development:
 
-<Image src="../assets/cookbook/accessibility/debug-accessibility-toggle.gif" width="80%" />
+<Image src="../assets/cookbook/accessibility/debug-accessibility-toggle.gif" width="55%" />
 
 <CodeExample path="controls/page/semantics_debugger.py" />

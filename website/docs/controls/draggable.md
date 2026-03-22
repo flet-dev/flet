@@ -23,6 +23,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative.py'} />
 
-<Image src={frontMatter.example_images + '/drag_and_drop_containers.gif'} alt="drag-and-drop-containers" width="80%" />
+<Image src={frontMatter.example_images + '/drag_and_drop_containers.gif'} alt="drag-and-drop-containers" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

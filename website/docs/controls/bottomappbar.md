@@ -17,12 +17,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/notched_fab.py'} />
 
-<Image src={frontMatter.example_images + '/notched_fab.png'} width="80%" />
+<Image src={frontMatter.example_images + '/notched_fab.png'} width="55%" />
 
 ### Custom border radius
 
 <CodeExample path={frontMatter.examples + '/border_radius.py'} />
 
-<Image src={frontMatter.example_images + '/border_radius.png'} width="80%" />
+<Image src={frontMatter.example_images + '/border_radius.png'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

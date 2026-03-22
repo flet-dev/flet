@@ -18,24 +18,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="80%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Handling clicks
 
 <CodeExample path={frontMatter.examples + '/handling_clicks.py'} />
 
-<Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="80%" />
+<Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="55%" />
 
 ### Icons
 
 <CodeExample path={frontMatter.examples + '/icons.py'} />
 
-<Image src={frontMatter.example_images + '/icons.png'} alt="icons" width="80%" />
+<Image src={frontMatter.example_images + '/icons.png'} alt="icons" width="55%" />
 
 ### Custom content
 
 <CodeExample path={frontMatter.examples + '/custom_content.py'} />
 
-<Image src={frontMatter.example_images + '/custom_content.png'} alt="custom-content" width="80%" />
+<Image src={frontMatter.example_images + '/custom_content.png'} alt="custom-content" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

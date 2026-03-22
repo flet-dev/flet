@@ -19,7 +19,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_images + '/basic.png'} width="80%" />
+<Image src={frontMatter.example_images + '/basic.png'} width="55%" />
 
 ### Horizontal margin and column spacing
 
@@ -44,7 +44,7 @@ sortable string and numeric columns, and stable selection across sorts and refre
 
 <CodeExample path={frontMatter.examples + '/sortable_and_selectable.py'} />
 
-<Image src={frontMatter.example_images + '/sortable_and_selectable.png'} width="80%" />
+<Image src={frontMatter.example_images + '/sortable_and_selectable.png'} width="55%" />
 
 ### Handling events
 

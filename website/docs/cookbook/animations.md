@@ -45,7 +45,7 @@ enables implicit animation of [`Control.opacity`][flet.Control.opacity] property
 
 <CodeExample path="controls/layout_control/animate_opacity.py" />
 
-<Image src="../examples/controls/layout_control/media/animate_opacity.gif" alt="animate-opacity" width="80%" />
+<Image src="../examples/controls/layout_control/media/animate_opacity.gif" alt="animate-opacity" width="55%" />
 
 ### Rotation animation
 
@@ -54,7 +54,7 @@ enables implicit animation of [`LayoutControl.rotate`][flet.LayoutControl.rotate
 
 <CodeExample path="controls/constrained-control/animate_rotation.py" />
 
-<Image src="../examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="80%" />
+<Image src="../examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="55%" />
 
 ### Scale animation
 
@@ -63,7 +63,7 @@ enables implicit animation of [`LayoutControl.scale`][flet.LayoutControl.scale] 
 
 <CodeExample path="controls/layout_control/animate_scale.py" />
 
-<Image src="../examples/controls/layout_control/media/animate_scale.gif" alt="animate-scale" width="80%" />
+<Image src="../examples/controls/layout_control/media/animate_scale.gif" alt="animate-scale" width="55%" />
 
 ### Offset animation
 
@@ -78,7 +78,7 @@ Offset animation is used for various sliding effects:
 
 <CodeExample path="controls/layout_control/animate_offset.py" />
 
-<Image src="../examples/controls/layout_control/media/animate_offset.gif" alt="animate-offset" width="80%" />
+<Image src="../examples/controls/layout_control/media/animate_offset.gif" alt="animate-offset" width="55%" />
 
 ### Position animation
 
@@ -95,7 +95,7 @@ Note:
 
 <CodeExample path="controls/layout_control/animate_position.py" />
 
-<Image src="../examples/controls/layout_control/media/animate_position.gif" alt="animate-position" width="80%" />
+<Image src="../examples/controls/layout_control/media/animate_position.gif" alt="animate-position" width="55%" />
 
 ### Animate
 
@@ -104,7 +104,7 @@ enables implicit animation of container properties such as size, background colo
 
 <CodeExample path="controls/container/animate.py" />
 
-<Image src="../examples/controls/container/media/animate_1.gif" alt="animate" width="80%" />
+<Image src="../examples/controls/container/media/animate_1.gif" alt="animate" width="55%" />
 
 ### Animated content switcher
 
@@ -141,7 +141,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/animations/animated-switcher.gif" alt="animated-switcher" width="80%" />
+<Image src="../assets/cookbook/animations/animated-switcher.gif" alt="animated-switcher" width="55%" />
 
 ### Animation end callback
 

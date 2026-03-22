@@ -19,7 +19,7 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 <CodeExample path={frontMatter.examples + '/basic.py'} />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="80%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />
 

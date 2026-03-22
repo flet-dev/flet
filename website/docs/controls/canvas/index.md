@@ -20,31 +20,31 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/smiling_face.py'} />
 
-<Image src={frontMatter.example_media + '/smiling_face.png'} alt="smiling-face" width="80%" />
+<Image src={frontMatter.example_media + '/smiling_face.png'} alt="smiling-face" width="55%" />
 
 ### Flet logo
 
 <CodeExample path={frontMatter.examples + '/flet_logo.py'} />
 
-<Image src={frontMatter.example_media + '/flet_logo.png'} alt="flet-logo" width="80%" />
+<Image src={frontMatter.example_media + '/flet_logo.png'} alt="flet-logo" width="55%" />
 
 ### Triangles
 
 <CodeExample path={frontMatter.examples + '/triangles.py'} />
 
-<Image src={frontMatter.example_media + '/triangles.png'} alt="triangles" width="80%" />
+<Image src={frontMatter.example_media + '/triangles.png'} alt="triangles" width="55%" />
 
 ### Bezier curves
 
 <CodeExample path={frontMatter.examples + '/bezier_curves.py'} />
 
-<Image src={frontMatter.example_media + '/bezier_curves.png'} alt="bezier-curves" width="80%" />
+<Image src={frontMatter.example_media + '/bezier_curves.png'} alt="bezier-curves" width="55%" />
 
 ### Text
 
 <CodeExample path={frontMatter.examples + '/text.py'} />
 
-<Image src={frontMatter.example_media + '/text.png'} alt="text" width="80%" />
+<Image src={frontMatter.example_media + '/text.png'} alt="text" width="55%" />
 
 ### Free-hand drawing with image capture
 

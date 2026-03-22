@@ -17,12 +17,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/online_avatar.py'} />
 
-<Image src={frontMatter.example_images + '/online_avatar.png'} alt="online-avatar" width="80%" />
+<Image src={frontMatter.example_images + '/online_avatar.png'} alt="online-avatar" width="55%" />
 
 ### Absolute positioning
 
 <CodeExample path={frontMatter.examples + '/absolute_positioning.py'} />
 
-<Image src={frontMatter.example_images + '/absolute_positioning.png'} alt="absolute-positioning" width="80%" />
+<Image src={frontMatter.example_images + '/absolute_positioning.png'} alt="absolute-positioning" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

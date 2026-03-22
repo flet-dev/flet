@@ -18,25 +18,25 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/clickable.py'} />
 
-<Image src={frontMatter.example_media + '/clickable.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/clickable.gif'} width="55%" />
 
 ### Handling clicks
 
 <CodeExample path={frontMatter.examples + '/handling_clicks.py'} />
 
-<Image src={frontMatter.example_media + '/handling_clicks.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/handling_clicks.gif'} width="55%" />
 
 ### Handling hovers
 
 <CodeExample path={frontMatter.examples + '/handling_hovers.py'} />
 
-<Image src={frontMatter.example_media + '/handling_hovers.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/handling_hovers.gif'} width="55%" />
 
 ### Animate 1
 
 <CodeExample path={frontMatter.examples + '/animate_1.py'} />
 
-<Image src={frontMatter.example_media + '/animate_1.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/animate_1.gif'} width="55%" />
 
 ### Animate 2
 
@@ -54,24 +54,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/nested_themes_1.py'} />
 
-<Image src={frontMatter.example_images + '/nested_themes_1.png'} width="80%" />
+<Image src={frontMatter.example_images + '/nested_themes_1.png'} width="55%" />
 
 ### Nested themes 2
 
 <CodeExample path={frontMatter.examples + '/nested_themes_2.py'} />
 
-<Image src={frontMatter.example_images + '/nested_themes_2.png'} width="80%" />
+<Image src={frontMatter.example_images + '/nested_themes_2.png'} width="55%" />
 
 ### Nested themes 3
 
 <CodeExample path={frontMatter.examples + '/nested_themes_3.py'} />
 
-<Image src={frontMatter.example_media + '/nested_themes_3.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/nested_themes_3.gif'} width="55%" />
 
 ### Size aware
 
 <CodeExample path={frontMatter.examples + '/size_aware.py'} />
 
-<Image src={frontMatter.example_images + '/size_aware.png'} width="80%" />
+<Image src={frontMatter.example_images + '/size_aware.png'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

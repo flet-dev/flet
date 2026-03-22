@@ -6,9 +6,16 @@ import {resolveDocAssetUrl} from "./utils";
 export default function Image({src, alt, width, caption, link}) {
   const {metadata} = useDoc();
   const resolvedSrc = resolveDocAssetUrl(src, metadata?.id);
-  const image = <img alt={alt ?? ""} src={resolvedSrc} style={width ? {width} : undefined} />;
+  const image = (
+    <img
+      alt={alt ?? ""}
+      className="doc-screenshot"
+      src={resolvedSrc}
+      style={width ? {width} : undefined}
+    />
+  );
   return (
-    <figure>
+    <figure className="doc-screenshot-figure">
       {link ? <a href={link}>{image}</a> : image}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>

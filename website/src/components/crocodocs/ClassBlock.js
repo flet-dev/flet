@@ -164,7 +164,7 @@ export default function ClassBlock({
   showMembers = true,
   image,
   imageCaption,
-  imageWidth = "50%",
+  imageWidth = "20%",
 }) {
   const {metadata} = useDoc();
   const api = getApiData();
@@ -220,9 +220,10 @@ export default function ClassBlock({
         </p>
       ) : null}
       {image ? (
-        <figure>
+        <figure className="doc-screenshot-figure">
           <img
             alt={entry.name}
+            className="doc-screenshot"
             src={resolveDocAssetUrl(image, metadata?.id)}
             style={{width: imageWidth}}
           />

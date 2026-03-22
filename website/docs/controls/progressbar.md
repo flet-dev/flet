@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/determinate_and_indeterminate.py'} />
 
-<Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="80%" />
+<Image src={frontMatter.example_media + '/determinate_and_indeterminate.gif'} alt="determinate-and-indeterminate" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

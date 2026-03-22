@@ -153,20 +153,32 @@ h6 {
   width: 22px;
 }
 
+.doc-screenshot-figure,
 .screenshot,
-.screenshot-10,
-.screenshot-20,
-.screenshot-30,
-.screenshot-40,
-.screenshot-50,
-.screenshot-60,
-.screenshot-70,
-.screenshot-80,
-.screenshot-90,
-.screenshot-100 {
+[class^='screenshot-'],
+[class*=' screenshot-'] {
   display: block;
   text-align: center;
   margin: auto auto var(--ifm-paragraph-margin-bottom);
+}
+
+.doc-screenshot-figure {
+  padding: 0.5rem 0 1rem;
+}
+
+.doc-screenshot {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.doc-screenshot-figure img,
+.screenshot img,
+[class^='screenshot-'] img,
+[class*=' screenshot-'] img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
 }
 
 .screenshot {
@@ -219,17 +231,25 @@ h6 {
 }
 
 @media only screen and (max-width: 768px) {
-
+  .doc-screenshot-figure,
   .screenshot,
-  .screenshot-40,
-  .screenshot-50,
-  .screenshot-60,
-  .screenshot-70 {
-    width: auto;
+  [class^='screenshot-'],
+  [class*=' screenshot-'] {
+    width: 100% !important;
+    max-width: 100%;
   }
 
-  .screenshot-10 {
-    width: 30%;
+  .doc-screenshot,
+  .doc-screenshot-figure img,
+  .screenshot img,
+  [class^='screenshot-'] img,
+  [class*=' screenshot-'] img,
+  .screenshot-80,
+  .screenshot-90,
+  .screenshot-100 {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto;
   }
 }
 

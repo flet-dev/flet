@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_clicks.py'} />
 
-<Image src={frontMatter.example_media + '/handling_clicks.gif'} alt="handling-clicks" width="80%" />
+<Image src={frontMatter.example_media + '/handling_clicks.gif'} alt="handling-clicks" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

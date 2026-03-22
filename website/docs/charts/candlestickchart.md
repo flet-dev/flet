@@ -7,7 +7,7 @@ title: "CandlestickChart"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic candlestick chart" imageWidth="80%" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic candlestick chart" imageWidth="55%" />
 
 ## Examples
 
@@ -15,6 +15,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/example_1.py'} />
 
-<Image src={frontMatter.example_images + '/example_1.png'} width="80%" />
+<Image src={frontMatter.example_images + '/example_1.png'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

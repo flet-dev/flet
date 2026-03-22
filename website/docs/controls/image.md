@@ -18,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/gallery.py'} />
 
-<Image src={frontMatter.example_media + '/gallery.gif'} width="80%" />
+<Image src={frontMatter.example_media + '/gallery.gif'} width="55%" />
 
 ### Fade-in images with a placeholder
 

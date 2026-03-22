@@ -8,7 +8,7 @@ title: "MatplotlibChartWithToolbar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/toolbar.png'} imageWidth="80%" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/toolbar.png'} imageWidth="55%" />
 
 ## Examples
 
@@ -18,24 +18,24 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 
 <CodeExample path={frontMatter.examples + '/toolbar.py'} />
 
-<Image src={frontMatter.example_images + '/toolbar.png'} width="80%" />
+<Image src={frontMatter.example_images + '/toolbar.png'} width="55%" />
 
 ### 3D chart
 
 <CodeExample path={frontMatter.examples + '/three_d.py'} />
 
-<Image src={frontMatter.example_images + '/three_d.png'} width="80%" />
+<Image src={frontMatter.example_images + '/three_d.png'} width="55%" />
 
 ### Handle events
 
 <CodeExample path={frontMatter.examples + '/handle_events.py'} />
 
-<Image src={frontMatter.example_images + '/handle_events.png'} width="80%" />
+<Image src={frontMatter.example_images + '/handle_events.png'} width="55%" />
 
 ### Animated chart
 
 <CodeExample path={frontMatter.examples + '/animate.py'} />
 
-<Image src={frontMatter.example_media + '/animate.png'} width="80%" />
+<Image src={frontMatter.example_media + '/animate.png'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

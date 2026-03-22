@@ -19,7 +19,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/programmatic_open.py'} />
 
-<Image src={frontMatter.example_images + '/programmatic_open.png'} width="80%" />
+<Image src={frontMatter.example_images + '/programmatic_open.png'} width="55%" />
 
 ## Programmatic open with custom trigger
 

@@ -10,11 +10,11 @@ We’ll show the switch using a tiny CRUD “User Manager” app. First, the imp
 
 The behavior in both examples stays the same - in the app you can see the list of users, add user, inline edit with save/cancel buttons and delete. This is how this simple app looks in both examples:
 
-<img alt="view" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud1.png" style={{width: "70%"}} />
+<figure className="doc-screenshot-figure"><img alt="view" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud1.png" style={{width: "45%"}} /></figure>
 
 After clicking inline Edit button:
 
-<img alt="view" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud2.png" style={{width: "80%"}} />
+<figure className="doc-screenshot-figure"><img alt="view" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud2.png" style={{width: "55%"}} /></figure>
 
 ## Example 1 — Imperative
 
@@ -117,7 +117,7 @@ In the declarative version, you think **model-first**: the model is a set of cla
 
 The UI is composed as components marked with `@ft.component` that return a view of the current state. Each row decides whether to show a read-only view or an inline editor using its own short-lived, local values (hooks), while the durable data lives on the model objects. Event handlers update state only (e.g., modify a user or add/remove items), not the controls themselves; Flet detects those changes and re-renders the affected parts. In short: **UI = f(state)**, with `User` and `App` providing the authoritative data.
 
-<img alt="diagram" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud-declarative.drawio.png" style={{width: "80%"}} />
+<figure className="doc-screenshot-figure"><img alt="diagram" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud-declarative.drawio.png" style={{width: "55%"}} /></figure>
 
 ```python
 from dataclasses import dataclass, field

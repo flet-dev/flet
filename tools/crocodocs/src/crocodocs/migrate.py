@@ -24,6 +24,7 @@ from .docs import (
     import_alias_for_partial,
     iter_markdown_files,
     macro_call_to_component,
+    normalize_migrated_image_width,
     parse_document,
     partial_name_for_macro,
     rebuild_document,
@@ -308,22 +309,25 @@ def _convert_markdown_image_attrs_to_mdx(
         ref = match.group(2)
         attrs = match.group(3)
         static_url = resolve_static_asset_url(ref, asset_mappings)
-        if not attrs and static_url is None:
-            return match.group(0)
-
         parsed_attrs = {
             key: value for key, value in MARKDOWN_IMAGE_ATTR_RE.findall(attrs or "")
         }
         style_parts: list[str] = []
         if "width" in parsed_attrs:
-            style_parts.append(f'width: "{parsed_attrs["width"]}"')
+            style_parts.append(
+                f'width: "{normalize_migrated_image_width(parsed_attrs["width"])}"'
+            )
         if "height" in parsed_attrs:
             style_parts.append(f'height: "{parsed_attrs["height"]}"')
         style_attr = ""
         if style_parts:
             style_attr = " style={{" + ", ".join(style_parts) + "}}"
         src = static_url or ref
-        return f'<img alt="{alt_text}" src="{src}"{style_attr} />'
+        return (
+            f'<figure className="doc-screenshot-figure">'
+            f'<img alt="{alt_text}" className="doc-screenshot" src="{src}"{style_attr} />'
+            f"</figure>"
+        )
 
     return MARKDOWN_IMAGE_RE.sub(replace, content)
 

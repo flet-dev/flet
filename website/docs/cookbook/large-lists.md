@@ -20,7 +20,7 @@ ft.run(main, view=ft.AppView.WEB_BROWSER)
 
 Run the program and notice that it's not just it takes a couple of seconds to initially load and render all text lines on a page, but scrolling is slow and laggy too:
 
-<img alt="Scroll column" src="/docs/assets/cookbook/large-lists/scroll-column.gif" />
+<figure className="doc-screenshot-figure"><img alt="Scroll column" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/scroll-column.gif" /></figure>
 
 For displaying lists with a lot of items use [`ListView`][flet.ListView] and [`GridView`][flet.GridView] controls which render items on demand, visible at the current scrolling position only.
 
@@ -46,7 +46,7 @@ ft.run(main, view=ft.AppView.WEB_BROWSER)
 
 Now the scrolling is smooth and fast enough to follow mouse movements:
 
-<img alt="Scroll listview" src="/docs/assets/cookbook/large-lists/scroll-listview.gif" />
+<figure className="doc-screenshot-figure"><img alt="Scroll listview" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/scroll-listview.gif" /></figure>
 
 :::note
 We used `expand=True` in ListView constructor. In order to function properly,
@@ -89,7 +89,7 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-<img alt="Row wrap as grid" src="/docs/assets/cookbook/large-lists/row-wrap-as-grid.png" />
+<figure className="doc-screenshot-figure"><img alt="Row wrap as grid" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/row-wrap-as-grid.png" /></figure>
 
 Try scrolling and resizing the browser window - everything works, but very laggy.
 
@@ -126,7 +126,7 @@ def main(page: ft.Page):
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
 
-<img alt="Grid view" src="/docs/assets/cookbook/large-lists/grid-view.png" />
+<figure className="doc-screenshot-figure"><img alt="Grid view" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/grid-view.png" /></figure>
 
 With GridView scrolling and window resizing are smooth and responsive!
 
@@ -157,4 +157,4 @@ def main(page: ft.Page):
 
 ft.run(main, view=ft.AppView.WEB_BROWSER)
 ```
-<img alt="Sending page updates in batches" src="/docs/assets/cookbook/large-lists/sending-page-updates-in-batches.png" />
+<figure className="doc-screenshot-figure"><img alt="Sending page updates in batches" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/sending-page-updates-in-batches.png" /></figure>
