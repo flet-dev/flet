@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 from typing import Any
 
 
@@ -26,6 +27,28 @@ def _load_member_filters(payload: dict[str, Any]) -> None:
     for key in MEMBER_FILTERS:
         values = raw.get(key, [])
         MEMBER_FILTERS[key] = {str(value) for value in values}
+
+
+def _resolve_extensions(
+    extensions: list[str],
+    search_paths: list[str],
+) -> list[str]:
+    resolved: list[str] = []
+    for extension in extensions:
+        if extension == "flet.utils.griffe_deprecations":
+            file_path = None
+            for search_path in search_paths:
+                candidate = (
+                    Path(search_path) / "flet" / "utils" / "griffe_deprecations.py"
+                )
+                if candidate.exists():
+                    file_path = candidate
+                    break
+            if file_path is not None:
+                resolved.append(str(file_path))
+                continue
+        resolved.append(extension)
+    return resolved
 
 
 def _is_filtered_member(kind: str, name: str) -> bool:
@@ -364,9 +387,10 @@ def main() -> int:
     from griffe import GriffeLoader, load_extensions
 
     search_paths = sorted({_normalize_path(path) for path in payload["search_paths"]})
+    extensions = _resolve_extensions(payload["extensions"], search_paths)
     loader = GriffeLoader(
         search_paths=search_paths,
-        extensions=load_extensions(*payload["extensions"]),
+        extensions=load_extensions(*extensions),
         docstring_parser="google",
     )
 

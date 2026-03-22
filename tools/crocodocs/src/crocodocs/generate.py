@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -202,32 +204,37 @@ def _extract_api_data_with_griffe(
     config: CrocoDocsConfig,
     symbols: list[str],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, str]]:
-    repo_root = config.project_root.parent.parent
     script_path = config.project_root / "src" / "crocodocs" / "griffe_extract_script.py"
+    search_paths = [str(path) for path in config.packages.values()]
     payload = {
         "packages": sorted({symbol.split(".", 1)[0] for symbol in symbols}),
-        "search_paths": [str(path) for path in config.packages.values()],
+        "search_paths": search_paths,
         "extensions": config.extensions,
         "symbols": symbols,
         "member_filters": {
             key: sorted(values) for key, values in config.member_filters.items()
         },
     }
+    env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = os.pathsep.join(
+        [*search_paths, *([existing_pythonpath] if existing_pythonpath else [])]
+    )
     result = subprocess.run(
-        [
-            "uv",
-            "--directory",
-            str(repo_root / "sdk/python"),
-            "run",
-            "python",
-            str(script_path),
-        ],
+        [sys.executable, str(script_path)],
         input=json.dumps(payload),
         text=True,
         capture_output=True,
-        cwd=repo_root,
-        check=True,
+        cwd=config.project_root.parent.parent,
+        env=env,
     )
+    if result.returncode != 0:
+        details = ["CrocoDocs Griffe extraction failed."]
+        if result.stdout.strip():
+            details.append(f"stdout:\n{result.stdout.strip()}")
+        if result.stderr.strip():
+            details.append(f"stderr:\n{result.stderr.strip()}")
+        raise RuntimeError("\n\n".join(details))
     data = json.loads(result.stdout)
     return (
         data["classes"],
