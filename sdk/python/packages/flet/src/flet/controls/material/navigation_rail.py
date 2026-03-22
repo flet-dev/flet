@@ -58,7 +58,7 @@ class NavigationRailDestination(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
+    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
     If `selected_icon` is provided, this will only be displayed when the destination is
@@ -71,7 +71,7 @@ class NavigationRailDestination(Control):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
+    The [name](https://flet.dev/docs/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     If this icon is not provided, the NavigationRail will display `icon` in either

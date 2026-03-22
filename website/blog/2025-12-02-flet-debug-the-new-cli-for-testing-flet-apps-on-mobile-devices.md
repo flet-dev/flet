@@ -6,13 +6,13 @@ tags: [news]
 toc_max_heading_level: 2
 ---
 
-Flet provides ["Flet" app](https://docs.flet.dev/getting-started/testing-on-mobile/), for both iOS and Android, to "experience" your app on a real device. While using Flet app your Python app is still running on your computer and UI changes are streamed to a mobile device. While this approach is fast and convenient it has limitations: the app is able to only use sensors,libraries and permissions coming with Flet app and you can't know whether the app and all its dependencies are going to work when packaged and executed by a Python mobile runtime.
+Flet provides ["Flet" app](https://flet.dev/docs/getting-started/testing-on-mobile/), for both iOS and Android, to "experience" your app on a real device. While using Flet app your Python app is still running on your computer and UI changes are streamed to a mobile device. While this approach is fast and convenient it has limitations: the app is able to only use sensors,libraries and permissions coming with Flet app and you can't know whether the app and all its dependencies are going to work when packaged and executed by a Python mobile runtime.
 
 In the latest Flet v1 pre-release we have introduced three new Flet CLI commands to package and run Flet app on a real device or emulator:
 
-- [`flet debug`](https://docs.flet.dev/cli/flet-debug/) - to run Flet app on a device or emulator.
-- [`flet devices`](https://docs.flet.dev/cli/flet-devices/) - to list connected devices.
-- [`flet emulators`](https://docs.flet.dev/cli/flet-emulators/) - to list iOS/Android emulators and manage Android emulators.
+- [`flet debug`](https://flet.dev/docs/cli/flet-debug/) - to run Flet app on a device or emulator.
+- [`flet devices`](https://flet.dev/docs/cli/flet-devices/) - to list connected devices.
+- [`flet emulators`](https://flet.dev/docs/cli/flet-emulators/) - to list iOS/Android emulators and manage Android emulators.
 
 <!-- truncate -->
 
@@ -38,7 +38,7 @@ Run the following command to build Flet app and run on your device:
 flet debug <ios|android> --device-id <device_id> -v
 ```
 
-> You can ommit `-v` option next time you run the command, if everything worked OK.
+> You can omit `-v` option next time you run the command, if everything worked OK.
 
 ## Testing on Android emulator
 
@@ -112,7 +112,7 @@ flet devices
 
 > When you connect an iOS device and open Xcode, it automatically downloads “device support” and symbol files from the iPhone. These files allow Xcode (and Flutter) to understand the exact iOS version on the device and provide fast, reliable debugging. Without them, Xcode can’t map system libraries correctly, which leads to slow startup, missing breakpoints, or warnings like “LLDB could not find the on-disk shared cache.” This setup happens only once per iOS version and is required for running or debugging apps on a physical device.
 
-* Create a new [provisioning profile](https://docs.flet.dev/publish/ios/#provisioning-profile) that includes your device ID and developer certificate.
+* Create a new [provisioning profile](https://flet.dev/docs/publish/ios/#provisioning-profile) that includes your device ID and developer certificate.
 * Configure app bundle ID and "debugging" profile in `pyproject.toml`:
 
 ```toml

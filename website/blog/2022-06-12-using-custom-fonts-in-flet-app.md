@@ -13,7 +13,7 @@ The following font formats are supported:
 * `.ttf`
 * `.otf`
 
-Use [`page.fonts`](https://docs.flet.dev/controls/page/#flet.Page.fonts) property to import fonts.
+Use [`page.fonts`](https://flet.dev/docs/controls/page/#flet.Page.fonts) property to import fonts.
 
 <!-- truncate -->
 
@@ -76,9 +76,8 @@ At the moment only [static](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS
 
 However, if you need to use a variable font in your app you can create static "instantiations" at specific weights using [fonttools](https://pypi.org/project/fonttools/), then use those:
 
-    fonttools varLib.mutator ./YourVariableFont-VF.ttf wght=140 wdth=85
+    fonttools varLib.mutator ./YourVariableFont-VF.ttf wght=140 width=85
 
 To explore available font features (e.g. possible options for `wght`) use [Wakamai Fondue](https://wakamaifondue.com/beta/) online tool.
 
-[Give Flet a try](https://docs.flet.dev/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
-
+[Give Flet a try](https://flet.dev/docs/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!

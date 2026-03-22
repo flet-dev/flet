@@ -7,7 +7,7 @@ tags: [release]
 
 We've just released [Flet 0.1.62](https://pypi.org/project/flet/0.1.62/) with support of gestures processing!
 
-There is a new control - [GestureDetector](https://docs.flet.dev/controls/gesturedetector/) which allows handling all sorts of gestures: single and double taps with a left (primary) and right (secondary) mouse (pointer) buttons, vertical, horizontal and bi-directional drags, zoom (pinch-in and pinch-out) gestures as well as hover events. Now, by wrapping it into `GestureDetector`, you can make any Flet control "clickable" and "draggable"!
+There is a new control - [GestureDetector](https://flet.dev/docs/controls/gesturedetector/) which allows handling all sorts of gestures: single and double taps with a left (primary) and right (secondary) mouse (pointer) buttons, vertical, horizontal and bi-directional drags, zoom (pinch-in and pinch-out) gestures as well as hover events. Now, by wrapping it into `GestureDetector`, you can make any Flet control "clickable" and "draggable"!
 
 Here is a simple example of an app which allows you to drag containers inside a Stack:
 

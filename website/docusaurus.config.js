@@ -12,7 +12,7 @@ module.exports = {
   organizationName: 'flet-dev', // Usually your GitHub org/user name.
   projectName: 'flet', // Usually your repo name.
   customFields: {
-    heroTitle: 'Build multi-platform apps in Python',
+    heroTitle: 'Build cross-platform apps in Python',
     heroSubTitle: 'Easily build realtime web, mobile and desktop apps in pure Python. No frontend experience required.',
   },
   themes: [
@@ -51,7 +51,7 @@ module.exports = {
       },
       items: [
         {
-          to: 'https://docs.flet.dev',
+          to: 'docs',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
@@ -94,11 +94,11 @@ module.exports = {
           items: [
             {
               label: 'Introduction',
-              to: 'https://docs.flet.dev',
+              to: '/docs',
             },
             {
               label: 'API Reference',
-              to: 'https://docs.flet.dev/api-reference',
+              to: '/docs/api-reference',
             }
           ],
         },

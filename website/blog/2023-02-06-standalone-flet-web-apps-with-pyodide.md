@@ -7,7 +7,7 @@ tags: [releases]
 
 import Card from '@site/src/components/card';
 
-We've just released [Flet 0.4.0](https://pypi.org/project/flet/) with a super exciting new feature - [packaging Flet apps into a standalone static website](https://docs.flet.dev/publish/web/static-website/) that can be run entirely in the browser! The app can be published to any free hosting for static websites such as GitHub Pages or Cloudflare Pages. Thanks to [Pyodide](https://pyodide.org/en/stable/) - a Python port to WebAssembly!
+We've just released [Flet 0.4.0](https://pypi.org/project/flet/) with a super exciting new feature - [packaging Flet apps into a standalone static website](https://flet.dev/docs/publish/web/static-website/) that can be run entirely in the browser! The app can be published to any free hosting for static websites such as GitHub Pages or Cloudflare Pages. Thanks to [Pyodide](https://pyodide.org/en/stable/) - a Python port to WebAssembly!
 
 <img src="/img/blog/pyodide/pyodide-logo.png" className="screenshot-50" />
 
@@ -94,7 +94,7 @@ export const ImageCard = ({title, href, imageUrl}) => (
   </section>
 </div>
 
-[Check the guide](https://docs.flet.dev/publish/web/static-website/) for more information about publishing Flet apps as standalone websites.
+[Check the guide](https://flet.dev/docs/publish/web/static-website/) for more information about publishing Flet apps as standalone websites.
 
 ## Built-in Fletd server in Python
 
@@ -140,7 +140,7 @@ async def main(page: ft.Page):
 ft.run(main)
 ```
 
-[Read the guide](https://docs.flet.dev/cookbook/async-apps/) for more information about writing async Flet apps.
+[Read the guide](https://flet.dev/docs/cookbook/async-apps/) for more information about writing async Flet apps.
 
 ## Conclusion
 
@@ -152,4 +152,4 @@ Flet 0.4.0 brings the following exciting features:
 
 Upgrade Flet module to the latest version (`pip install flet --upgrade`), give `flet publish` command a try and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
 
-Hey, by the way, [Flet project](https://github.com/flet-dev/flet) has reached ⭐️ 4.2K stars ⭐️ (+1K in just one month) - keep going! 
+Hey, by the way, [Flet project](https://github.com/flet-dev/flet) has reached ⭐️ 4.2K stars ⭐️ (+1K in just one month) - keep going!

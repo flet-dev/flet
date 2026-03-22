@@ -18,7 +18,7 @@
     <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
         <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
     <a href="https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet/docs/assets/badges/docs-coverage" target="_blank">
-        <img src="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
+        <img src="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
 ---
@@ -110,7 +110,7 @@ flet run counter.py
 This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/macos.png" width="45%" />
+    <img src="https://flet.dev/docs/assets/getting-started/counter-app/macos.png" width="45%" />
 </p>
 
 To run the same app as a web app use `--web` option with `flet run` command:
@@ -120,13 +120,13 @@ flet run --web counter.py
 ```
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/safari.png" width="60%" />
+    <img src="https://flet.dev/docs/assets/getting-started/counter-app/safari.png" width="60%" />
 </p>
 
 ## Learn more
 
 * [Website](https://flet.dev)
-* [Documentation](https://docs.flet.dev)
+* [Documentation](https://flet.dev/docs/)
 * [Roadmap](https://flet.dev/roadmap)
 * [Apps Gallery](https://flet.dev/gallery)
 
@@ -140,4 +140,4 @@ flet run --web counter.py
 
 ## Contributing
 
-Want to help improve Flet? Check out the [contribution guide](https://docs.flet.dev/contributing).
+Want to help improve Flet? Check out the [contribution guide](https://flet.dev/docs/contributing).

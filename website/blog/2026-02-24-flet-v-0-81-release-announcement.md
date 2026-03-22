@@ -71,7 +71,7 @@ ft.run(main)
 
 More info:
 
-* Docs: https://docs.flet.dev/camera/
+* Docs: https://flet.dev/docs/camera/
 * Issue: [#6190](https://github.com/flet-dev/flet/issues/6190)
 
 ## `CodeEditor`
@@ -103,7 +103,7 @@ ft.run(main)
 
 More info:
 
-* Docs: https://docs.flet.dev/codeeditor/
+* Docs: https://flet.dev/docs/codeeditor/
 * Issue: [#6162](https://github.com/flet-dev/flet/issues/6162)
 
 ## `PageView`
@@ -150,7 +150,7 @@ ft.run(main)
 
 More info:
 
-* Docs: https://docs.flet.dev/controls/pageview/
+* Docs: https://flet.dev/docs/controls/pageview/
 * Issue: [#6158](https://github.com/flet-dev/flet/issues/6158)
 
 ## Color pickers
@@ -180,7 +180,7 @@ ft.run(main)
 
 More info:
 
-* Docs: https://docs.flet.dev/colorpickers/
+* Docs: https://flet.dev/docs/colorpickers/
 * Issue: [#6109](https://github.com/flet-dev/flet/issues/6109)
 
 ## `Hero` animations
@@ -191,11 +191,11 @@ They solve abrupt navigation changes by visually connecting matching elements ac
 
 <img src="/img/blog/flet-0-81/hero.gif" className="screenshot-40" />
 
-[Code example](https://docs.flet.dev/controls/hero/#basic-example)
+[Code example](https://flet.dev/docs/controls/hero/#basic-example)
 
 More info:
 
-* Docs: https://docs.flet.dev/controls/hero/
+* Docs: https://flet.dev/docs/controls/hero/
 * Issue: [#6157](https://github.com/flet-dev/flet/issues/6157)
 
 ## `Matrix4` transforms and `RotatedBox`
@@ -232,8 +232,8 @@ ft.run(main)
 
 More info:
 
-* `LayoutControl` docs: https://docs.flet.dev/controls/layoutcontrol/
-* `RotatedBox` docs: https://docs.flet.dev/controls/rotatedbox/
+* `LayoutControl` docs: https://flet.dev/docs/controls/layoutcontrol/
+* `RotatedBox` docs: https://flet.dev/docs/controls/rotatedbox/
 * Issue: [#6198](https://github.com/flet-dev/flet/issues/6198)
 
 ## Build workflow updates: iOS simulator target and artifact naming
@@ -252,8 +252,8 @@ flet build macos --artifact "My Awesome App"
 
 More info:
 
-* iOS simulator build: https://docs.flet.dev/publish/ios/#flet-build-ios-simulator
-* Artifact name docs: https://docs.flet.dev/publish/#artifact-name
+* iOS simulator build: https://flet.dev/docs/publish/ios/#flet-build-ios-simulator
+* Artifact name docs: https://flet.dev/docs/publish/#artifact-name
 * Issues: [#6188](https://github.com/flet-dev/flet/issues/6188), [#6074](https://github.com/flet-dev/flet/issues/6074)
 
 ## `Clipboard`, `FilePicker`, locales, and size-aware layouts
@@ -302,10 +302,10 @@ ft.run(main)
 
 More info:
 
-* `Clipboard` docs: https://docs.flet.dev/services/clipboard/
-* `FilePicker` docs: https://docs.flet.dev/services/filepicker/
-* Locale type docs: https://docs.flet.dev/types/locale/
-* `LayoutControl` docs: https://docs.flet.dev/controls/layoutcontrol/
+* `Clipboard` docs: https://flet.dev/docs/services/clipboard/
+* `FilePicker` docs: https://flet.dev/docs/services/filepicker/
+* Locale type docs: https://flet.dev/docs/types/locale/
+* `LayoutControl` docs: https://flet.dev/docs/controls/layoutcontrol/
 * Issues: [#6141](https://github.com/flet-dev/flet/issues/6141), [#6199](https://github.com/flet-dev/flet/issues/6199), [#6191](https://github.com/flet-dev/flet/issues/6191), [#6099](https://github.com/flet-dev/flet/issues/6099)
 
 ## Improvements
@@ -331,7 +331,7 @@ More info:
 
 An updated `Flet` app for testing on mobile devices is coming to the App Store and Google Play soon.
 
-For now, see the current mobile testing guide: https://docs.flet.dev/getting-started/testing-on-mobile/
+For now, see the current mobile testing guide: https://flet.dev/docs/getting-started/testing-on-mobile/
 
 ## Conclusion
 

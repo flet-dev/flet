@@ -469,7 +469,7 @@ class Page(BasePage):
         local asset. The following font file formats are supported `.ttc`, `.ttf`
         and `.otf`.
 
-    Usage example [here](https://docs.flet.dev/cookbook/fonts#importing-fonts).
+    Usage example [here](https://flet.dev/docs/cookbook/fonts#importing-fonts).
     """
 
     on_platform_brightness_change: Optional[
@@ -536,7 +536,7 @@ class Page(BasePage):
     """
     Called upon successful or failed OAuth authorization flow.
 
-    See [Authentication](https://docs.flet.dev/cookbook/authentication#checking-authentication-results)
+    See [Authentication](https://flet.dev/docs/cookbook/authentication#checking-authentication-results)
     guide for more information and examples.
     """  # noqa: E501
 
@@ -934,7 +934,7 @@ class Page(BasePage):
         """
         Starts OAuth flow.
 
-        See [Authentication](https://docs.flet.dev/cookbook/authentication)
+        See [Authentication](https://flet.dev/docs/cookbook/authentication)
         guide for more information and examples.
         """
         self.__authorization = authorization(
@@ -1017,7 +1017,7 @@ class Page(BasePage):
     def logout(self) -> None:
         """
         Clears current authentication context. See \
-        [Authentication](https://docs.flet.dev/cookbook/authentication#signing-out) \
+        [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out) \
         guide for more information and examples.
         """  # noqa: E501
         self.__authorization = None

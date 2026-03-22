@@ -25,5 +25,4 @@ Some examples:
 * [To-Do](https://github.com/flet-dev/examples/blob/main/python/apps/todo/todo.py)
 * [Icons Browser](https://github.com/flet-dev/examples/blob/main/python/apps/icons-browser/main.py) ([Online Demo](https://gallery.flet.dev/icons-browser/))
 
-[Give Flet a try](https://docs.flet.dev/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
-
+[Give Flet a try](https://flet.dev/docs/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!

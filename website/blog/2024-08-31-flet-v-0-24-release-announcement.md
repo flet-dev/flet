@@ -5,33 +5,33 @@ authors: henri
 tags: [releases]
 ---
 
-I am very happy to announce the release of Flet version 0.24.0! 
+I am very happy to announce the release of Flet version 0.24.0!
 It comes with a very long list of bug fixes, several enhancements and new features.
 
 <!-- truncate -->
 
 ## New Controls
 
-- [`InteractiveViewer`](https://docs.flet.dev/controls/interactiveviewer/)
-- [`Placeholder`](https://docs.flet.dev/controls/placeholder/)
+- [`InteractiveViewer`](https://flet.dev/docs/controls/interactiveviewer/)
+- [`Placeholder`](https://flet.dev/docs/controls/placeholder/)
 
 ## New Properties
 
-- [`AudioRecorder`](https://docs.flet.dev/audio_recorder/): `cancel_recording()`
-- [`Video`](https://docs.flet.dev/video/): `on_completed`, `on_track_changed`
-- [`InputFilter`](https://docs.flet.dev/types/inputfilter/): `unicode`, `case_sensitive`, `dot_all`, `multiline`
-- [`Geolocator`](https://docs.flet.dev/geolocator/): `on_error`, `on_position_change`
-- [`Barchart`](https://docs.flet.dev/charts/bar_chart/), [`LineChart`](https://docs.flet.dev/charts/line_chart/): `tooltip_border_side`, `tooltip_direction`, `tooltip_fit_inside_horizontally`, `tooltip_fit_inside_vertically`, `tooltip_horizontal_offset`, `tooltip_margin`, `tooltip_max_content_width`, `tooltip_padding`, `tooltip_rounded_radius`, `tooltip_rotate_angle`
-- [`Container`](https://docs.flet.dev/controls/container/): `decoration`, `foreground_decoration`, `ignore_interactions`, `image`
-- [`Page`](https://docs.flet.dev/controls/page/), [`View`](https://docs.flet.dev/controls/view/): `decoration`, `foreground_decoration`
-- [`CupertinoTextField`](https://docs.flet.dev/controls/cupertinotextfield/): `enable_scribble`, `image`, `obscuring_character`, `padding`, `scroll_padding`, `on_click`
-- [`DataTable`](https://docs.flet.dev/controls/datatable/): `heading_row_alignment`
-- [`TextField`](https://docs.flet.dev/controls/textfield/): `counter`, `disabled_hint_content`, `options_fill_horizontally`
-- [`ExpansionTile`](https://docs.flet.dev/controls/expansiontile/): `min_tile_height`, `show_trailing_icon`
-- [`Markdown`](https://docs.flet.dev/controls/markdown/): `fit_content`, `img_error_content`, `md_style_sheet`, `shrink_wrap`, `soft_line_break`, `on_selection_change`
-- [`MenuItemButton`](https://docs.flet.dev/controls/menuitembutton/): `autofocus`, `overflow_axis`, `semantic_label`
-- [`Tabs`](https://docs.flet.dev/controls/tabs/): `label_padding`, `label_text_style`, `padding`, `splash_border_radius`, `unselected_label_text_style`, `on_click`
-- and lot of [new classes](https://docs.flet.dev/reference/) (enums, dataclasses, events)…
+- [`AudioRecorder`](https://flet.dev/docs/audio_recorder/): `cancel_recording()`
+- [`Video`](https://flet.dev/docs/video/): `on_completed`, `on_track_changed`
+- [`InputFilter`](https://flet.dev/docs/types/inputfilter/): `unicode`, `case_sensitive`, `dot_all`, `multiline`
+- [`Geolocator`](https://flet.dev/docs/geolocator/): `on_error`, `on_position_change`
+- [`Barchart`](https://flet.dev/docs/charts/bar_chart/), [`LineChart`](https://flet.dev/docs/charts/line_chart/): `tooltip_border_side`, `tooltip_direction`, `tooltip_fit_inside_horizontally`, `tooltip_fit_inside_vertically`, `tooltip_horizontal_offset`, `tooltip_margin`, `tooltip_max_content_width`, `tooltip_padding`, `tooltip_rounded_radius`, `tooltip_rotate_angle`
+- [`Container`](https://flet.dev/docs/controls/container/): `decoration`, `foreground_decoration`, `ignore_interactions`, `image`
+- [`Page`](https://flet.dev/docs/controls/page/), [`View`](https://flet.dev/docs/controls/view/): `decoration`, `foreground_decoration`
+- [`CupertinoTextField`](https://flet.dev/docs/controls/cupertinotextfield/): `enable_scribble`, `image`, `obscuring_character`, `padding`, `scroll_padding`, `on_click`
+- [`DataTable`](https://flet.dev/docs/controls/datatable/): `heading_row_alignment`
+- [`TextField`](https://flet.dev/docs/controls/textfield/): `counter`, `disabled_hint_content`, `options_fill_horizontally`
+- [`ExpansionTile`](https://flet.dev/docs/controls/expansiontile/): `min_tile_height`, `show_trailing_icon`
+- [`Markdown`](https://flet.dev/docs/controls/markdown/): `fit_content`, `img_error_content`, `md_style_sheet`, `shrink_wrap`, `soft_line_break`, `on_selection_change`
+- [`MenuItemButton`](https://flet.dev/docs/controls/menuitembutton/): `autofocus`, `overflow_axis`, `semantic_label`
+- [`Tabs`](https://flet.dev/docs/controls/tabs/): `label_padding`, `label_text_style`, `padding`, `splash_border_radius`, `unselected_label_text_style`, `on_click`
+- and lot of [new classes](https://flet.dev/docs/reference/) (enums, dataclasses, events)…
 
 ## Enhancements
 - Better string output of Events when printed
@@ -69,10 +69,10 @@ Thanks to all those who reported them!
 
 All deprecated items from this release will be removed in version 0.27.0.
 
-- `ThemeVisualDensity` is deprecated and has been renamed to [`VisualDensity`](https://docs.flet.dev/types/visualdensity/)
-- [`CupertinoButton`](https://docs.flet.dev/controls/cupertinobutton/): `disabled_color` is deprecated and has been renamed to `disabled_bgcolor`, which better reflects its use
-- [`Markdown`](https://docs.flet.dev/controls/markdown/): `code_style` is deprecated and should now be accessed as  `code_style_sheet.code_text_style`
-- [`Container`](https://docs.flet.dev/controls/container/): `image_fit`, `image_opacity`, `image_repeat`, `image_src` and `image_src_base64` are deprecated and should now be accessed from `image` which is of type [`DecorationImage`](https://docs.flet.dev/types/decorationimage/)
+- `ThemeVisualDensity` is deprecated and has been renamed to [`VisualDensity`](https://flet.dev/docs/types/visualdensity/)
+- [`CupertinoButton`](https://flet.dev/docs/controls/cupertinobutton/): `disabled_color` is deprecated and has been renamed to `disabled_bgcolor`, which better reflects its use
+- [`Markdown`](https://flet.dev/docs/controls/markdown/): `code_style` is deprecated and should now be accessed as  `code_style_sheet.code_text_style`
+- [`Container`](https://flet.dev/docs/controls/container/): `image_fit`, `image_opacity`, `image_repeat`, `image_src` and `image_src_base64` are deprecated and should now be accessed from `image` which is of type [`DecorationImage`](https://flet.dev/docs/types/decorationimage/)
 
 ## Breaking Changes and Migration
 
@@ -129,7 +129,7 @@ def main(page: ft.Page):
         width=300,
         height=300,
     )
-    
+
     # subscribe callbacks
     c.on_tap_down = print_one
     c.on_tap_down = print_two
@@ -139,7 +139,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-In the above code, we subscribe multiple callbacks to the [`Container.on_tap_down`](https://docs.flet.dev/controls/container/#flet.Container.on_tap_down) event. Prior to Flet version 0.24.0, running this code and tapping on the `Container`, you will see all the callbacks getting called ("1", "2" and "3" are printed out).
+In the above code, we subscribe multiple callbacks to the [`Container.on_tap_down`](https://flet.dev/docs/controls/container/#flet.Container.on_tap_down) event. Prior to Flet version 0.24.0, running this code and tapping on the `Container`, you will see all the callbacks getting called ("1", "2" and "3" are printed out).
 From Flet version 0.24.0 going forward, one event = one callback. Meaning only the lastly subscribed callback will get executed ("3" is printed out)
 So, if you still want the final output to resemble the first one you can simply create one callback which calls the others:
 
@@ -147,12 +147,12 @@ So, if you still want the final output to resemble the first one you can simply 
 
 def main(page: ft.Page):
     #....
-  
+
     def print_all(e):
             print_one(e)
             print_two(e)
             print_three(e)
-    
+
     c = ft.Container(
             bgcolor=ft.Colors.random_color(),
             width=300,

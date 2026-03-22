@@ -13,7 +13,7 @@ With Flet Android app you can see how your Flet Python app looks and behaves on 
 
 Similar to iOS, Flet for Android is a Flutter app written entirely in Python with the help of two open-source packages: [`serious_python`](https://pub.dev/packages/serious_python) and [`flet`](https://pub.dev/packages/flet). Resulting app package is technically compliant with Google Play requirements, so you can publish awesome Android apps in pure Python.
 
-**[Follow this guide](https://docs.flet.dev/getting-started/testing-on-mobile/)** to get started with testing your Flet apps on Android. Explore the app, browse gallery, play with sample projects and app settings.
+**[Follow this guide](https://flet.dev/docs/getting-started/testing-on-mobile/)** to get started with testing your Flet apps on Android. Explore the app, browse gallery, play with sample projects and app settings.
 
 <!-- truncate -->
 

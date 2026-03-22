@@ -57,7 +57,7 @@ class Stack(LayoutControl, AdaptiveControl):
     attached to the bottom.
 
     Stack is also useful if you want to implement implicit animations
-    (https://docs.flet.dev/cookbook/animations) that require knowing absolute
+    (https://flet.dev/docs/cookbook/animations) that require knowing absolute
     position of a target value.
 
     Example:

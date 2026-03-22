@@ -287,7 +287,7 @@ For better performance, multiple updates to observable properties are coalesced,
 
 Explore the [declarative examples collection](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/declarative) to see the new approach in action — from the simple [Counter](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/counter.py) and classic [To-Do](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/todo.py) to games like [Tic-Tac-Toe](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/tic-tac-toe.py), [Minesweeper](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/minesweeper.py), and [Solitaire](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/solitaire_declarative/solitaire-final/main.py).
 
-For a deeper dive, walk through the [Declarative vs Imperative CRUD app cookbook](https://docs.flet.dev/cookbook/declarative-vs-imperative-crud-app/#observables-your-source-of-truth).
+For a deeper dive, walk through the [Declarative vs Imperative CRUD app cookbook](https://flet.dev/docs/cookbook/declarative-vs-imperative-crud-app/#observables-your-source-of-truth).
 
 <img src="/img/blog/declarative-ui/minesweeper.png" alt="Minesweeper game built with declarative Flet components" className="screenshot-40 screenshot-rounded" />
 
@@ -393,6 +393,6 @@ While we update the docs to cover declarative programming in more depth, we enco
 
 We built a similar [declarative Tic-Tac-Toe](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/tic-tac-toe.py) Flet app that you can compare with its React counterpart as you work through the tutorial.
 
-The next stop is the Flet 1.0 Beta release. We're almost there — new docs (you can follow their progress [here](https://docs.flet.dev)), more integration tests, and plenty of polish are underway.
+The next stop is the Flet 1.0 Beta release. We're almost there — new docs (you can follow their progress [here](https://flet.dev/docs/)), more integration tests, and plenty of polish are underway.
 
 Happy Fletting!

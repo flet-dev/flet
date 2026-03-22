@@ -297,7 +297,7 @@ class TextStyle:
 
     font_family: Optional[str] = None
     """
-    See https://docs.flet.dev/controls/text#font_family.
+    See https://flet.dev/docs/controls/text#font_family.
     """
 
     font_family_fallback: Optional[list[str]] = None
@@ -308,12 +308,12 @@ class TextStyle:
 
     color: Optional[ColorValue] = None
     """
-    Text foreground https://docs.flet.dev/types/colors.
+    Text foreground https://flet.dev/docs/types/colors.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Text background https://docs.flet.dev/types/colors.
+    Text background https://flet.dev/docs/types/colors.
     """
 
     shadow: Optional[BoxShadowValue] = None

@@ -58,7 +58,7 @@ dependencies = [
 
 Flet now makes it easy to create and build projects with your custom controls based on Flutter widgets or Flutter 3rd-party packages:
 
-1. Create new virtual enviroment and [install Flet](https://docs.flet.dev/getting-started/installation/#virtual-environment) there.
+1. Create new virtual environment and [install Flet](https://flet.dev/docs/getting-started/installation/#virtual-environment) there.
 
 2. Create new Flet extension project from template:
 
@@ -86,7 +86,7 @@ open build/macos/my-control-example.app
 
 <img src="/img/blog/extensions/example.png" className="screenshot-30" />
 
-Read more about how to customise your extension [here](https://docs.flet.dev/extend/user-extensions/).
+Read more about how to customise your extension [here](https://flet.dev/docs/extend/user-extensions/).
 
 ## Development environment configuration
 
@@ -107,7 +107,7 @@ Flet 0.26.0 requires Python 3.9 or later. Python 3.8 has reached [EOL](https://d
 ## Other changes
 
 * Optional on-demand creation of `ListView.controls` ([#3931](https://github.com/flet-dev/flet/issues/3931))
-* Reset `InteractiveViewer` tranformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
+* Reset `InteractiveViewer` transformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
 * Passthrough of mouse events from main window to other applications ([#1438](https://github.com/flet-dev/flet/issues/1438))
 * Implemented `Window.ignore_mouse_events` ([#4465](https://github.com/flet-dev/flet/pull/4465))
 * Adding Google/Android TV platform support ([#4581](https://github.com/flet-dev/flet/pull/4581))

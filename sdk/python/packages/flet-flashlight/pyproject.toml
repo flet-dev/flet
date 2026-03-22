@@ -12,7 +12,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/flashlight"
+Documentation = "https://flet.dev/docs/flashlight"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-flashlight"
 Issues = "https://github.com/flet-dev/flet/issues"
 

@@ -29,7 +29,7 @@ Where file picker really shines is a desktop! All three dialogs return full path
 
 ## Using file picker in your app
 
-It is recommended to add file picker to [`page.overlay.controls`](https://docs.flet.dev/controls/page/#flet.Page.overlay) collection, so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
+It is recommended to add file picker to [`page.overlay.controls`](https://flet.dev/docs/controls/page/#flet.Page.overlay) collection, so it doesn't affect the layout of your app. Despite file picker has 0x0 size it is still considered as a control when put into `Row` or `Column`.
 
 ```python
 import flet as ft
@@ -69,7 +69,7 @@ file_picker = ft.FilePicker(on_result=on_dialog_result)
 
 The last result is always available in `FilePicker.result` property.
 
-Check [File picker](https://docs.flet.dev/services/filepicker/) control docs for all available dialog methods and their parameters.
+Check [File picker](https://flet.dev/docs/services/filepicker/) control docs for all available dialog methods and their parameters.
 
 ## Uploading files
 
@@ -152,7 +152,7 @@ Check that [example](https://github.com/flet-dev/examples/blob/main/python/contr
 
 <img src="/img/docs/controls/file-picker/file-picker-multiple-uploads.png" className="screenshot-40" />
 
-See [File picker](https://docs.flet.dev/services/filepicker/) control docs for all its properties and examples.
+See [File picker](https://flet.dev/docs/services/filepicker/) control docs for all its properties and examples.
 
 Upgrade Flet module to the latest version (`pip install flet --upgrade`), give File Picker a try and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
 

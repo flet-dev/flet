@@ -33,7 +33,7 @@ Flet packaging for iOS and Android has been relying on Kivy and it was super ann
 
 Flet does not depend on Kivy anymore and uses its own Python runtime "meticulously crafted in-house".
 
-Flet packaging implementation for iOS and Androind adheres to strict specifications defined in [PEP 730](https://peps.python.org/pep-0730/) (iOS) and [PEP 738](https://peps.python.org/pep-0738/) (Android) which were implemented and released in Python 3.13 (and back-ported to Python 3.12). When pypi.org supports wheel tags for iOS and Android and 3rd-party Python package maintainers start uploading their mobile packages Flet will be compatible with them and you'll be able to use them in your Flet app.
+Flet packaging implementation for iOS and Android adheres to strict specifications defined in [PEP 730](https://peps.python.org/pep-0730/) (iOS) and [PEP 738](https://peps.python.org/pep-0738/) (Android) which were implemented and released in Python 3.13 (and back-ported to Python 3.12). When pypi.org supports wheel tags for iOS and Android and 3rd-party Python package maintainers start uploading their mobile packages Flet will be compatible with them and you'll be able to use them in your Flet app.
 
 ### Pre-built binary packages
 
@@ -80,7 +80,7 @@ flet build \
     --android-features android.hardware.location.network=False
 ```
 
-[Read more about permissions in the docs](https://docs.flet.dev/publish/#permissions).
+[Read more about permissions in the docs](https://flet.dev/docs/publish/#permissions).
 
 ### Control over app compilation and cleanup
 
@@ -105,7 +105,7 @@ Read [Build and release an Android app](https://docs.flutter.dev/deployment/andr
 
 ### Deep linking configuration
 
-There is a new `--deep-linking-url` option to configure deep linking for iOS and Android builds. The value must be in the format `<sheme>://<host>`.
+There is a new `--deep-linking-url` option to configure deep linking for iOS and Android builds. The value must be in the format `<scheme>://<host>`.
 
 ### Faster re-builds
 
@@ -171,8 +171,8 @@ New Flet packages:
 
 * `flet` - required for minimal Flet setup, app entry point for various platforms with core logic and controls. Installed on all platforms.
 * `flet-cli` - contains Flet CLI commands. Installed on desktop only.
-* `flet-desktop` - contains pre-built Flet "client" app binary for macOS, Windows and Linux. By default installed on macOS and Windows desktops only. 
-* `flet-desktop-light` - contains a light-weight version (without Audio and Video controls) of Flet "client" for Linux. By default installed on Linux desktops only. 
+* `flet-desktop` - contains pre-built Flet "client" app binary for macOS, Windows and Linux. By default installed on macOS and Windows desktops only.
+* `flet-desktop-light` - contains a light-weight version (without Audio and Video controls) of Flet "client" for Linux. By default installed on Linux desktops only.
 * `flet-web` - contains Flet web "client" and FastAPI integration. Installed on desktop only.
 
 Packaged Flet app contains only `flet` package now.
@@ -194,7 +194,7 @@ Starting from this release the development version of `flet` package should be i
 pip install 'flet[all]'
 ```
 
-Ugrading `flet` package:
+Upgrading `flet` package:
 
 ```
 pip install 'flet[all]' --upgrade

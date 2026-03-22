@@ -15,13 +15,13 @@ Making drag-and-drop in Flet is a real joy - thanks to a smart drag-and-drop imp
 
 Take a look at [Drag-and-Drop example](https://github.com/flet-dev/examples/blob/main/python/controls/drag-and-drop/drag-drop-colors.py).
 
-Explore [`Draggable`](https://docs.flet.dev/controls/draggable/) and [`DragTarget`](https://docs.flet.dev/controls/dragtarget/) controls, their properties and events.
+Explore [`Draggable`](https://flet.dev/docs/controls/draggable/) and [`DragTarget`](https://flet.dev/docs/controls/dragtarget/) controls, their properties and events.
 
 <!-- truncate -->
 
 ## Absolute positioning inside Stack
 
-All visible controls now have `left` `top`, `right` and `bottom` properties to let them be absolutely positioned inside [`Stack`](https://docs.flet.dev/controls/stack/), for example:
+All visible controls now have `left` `top`, `right` and `bottom` properties to let them be absolutely positioned inside [`Stack`](https://flet.dev/docs/controls/stack/), for example:
 
 ```python {13-17}
 import flet as ft
@@ -57,11 +57,10 @@ ft.run(main)
 
 ## Clickable container
 
-[`Container`](https://docs.flet.dev/controls/container/) control has got `on_click` event which allows you to make a button from any control and with a beautiful material ripple effect when `ink` is set to `True`!
+[`Container`](https://flet.dev/docs/controls/container/) control has got `on_click` event which allows you to make a button from any control and with a beautiful material ripple effect when `ink` is set to `True`!
 
 <img src="/img/docs/controls/container/clickable-container.gif" className="screenshot-70" />
 
 See [source code](https://github.com/flet-dev/examples/blob/main/python/controls/container/clickable-container.py) for the example above.
 
-[Give Flet a try](https://docs.flet.dev/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
-
+[Give Flet a try](https://flet.dev/docs/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!

@@ -129,7 +129,7 @@ function Home() {
                 <div className={styles.buttons}>
                   <Link
                     className={styles.indexCtasGetStartedButton}
-                    to={useBaseUrl('https://docs.flet.dev')}>
+                    to={useBaseUrl('https://flet.dev/docs/')}>
                     Get Started
                   </Link>
                 </div>

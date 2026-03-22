@@ -90,23 +90,23 @@ Click "Go to Store" button and you'll see application URL is changed and a new i
 
 ## Page views
 
-Flet's [Page](https://docs.flet.dev/controls/page/) now is not just a single page, but a container for [View](https://docs.flet.dev/controls/view/) layered on top of each other like a sandwich:
+Flet's [Page](https://flet.dev/docs/controls/page/) now is not just a single page, but a container for [View](https://flet.dev/docs/controls/view/) layered on top of each other like a sandwich:
 
 <img src="/img/docs/navigation-routing/page-views.svg" className="screenshot-100" />
 
-A collection of views represents navigator history. Page has [`page.views`](https://docs.flet.dev/controls/page/#flet.Page.views) property to access views collection.
+A collection of views represents navigator history. Page has [`page.views`](https://flet.dev/docs/controls/page/#flet.Page.views) property to access views collection.
 
 The last view in the list is the one currently displayed on a page. Views list must have at least one element (root view).
 
 To simulate a transition between pages change `page.route` and add a new `View` in the end of `page.view` list.
 
-Pop the last view from the collection and change route to a "previous" one in [`page.on_view_pop`](https://docs.flet.dev/controls/page/#flet.Page.on_view_pop) event handler to go back.
+Pop the last view from the collection and change route to a "previous" one in [`page.on_view_pop`](https://flet.dev/docs/controls/page/#flet.Page.on_view_pop) event handler to go back.
 
 ## Building views on route change
 
 To build a reliable navigation there must be a single place in the program which builds a list of views depending on the current route. Other words, navigation history stack (represented by the list of views) must be a function of a route.
 
-This place is [`page.on_route_change`](https://docs.flet.dev/controls/page/#flet.Page.on_route_change) event handler.
+This place is [`page.on_route_change`](https://flet.dev/docs/controls/page/#flet.Page.on_route_change) event handler.
 
 Let's put everything together into a complete example which allows navigating between two pages:
 
@@ -155,10 +155,10 @@ ft.run(main, view=ft.AppView.WEB_BROWSER)
 Try navigating between pages using "Visit Store" and "Go Home" buttons, Back/Forward browser buttons, manually changing route in the URL - it works no matter what! :)
 
 :::note
-To "navigate" between pages we used [`page.go(route)`](https://docs.flet.dev/controls/page/#flet.Page.go) - a helper method that updates [`page.route`](https://docs.flet.dev/controls/page/#flet.Page.route), calls [`page.on_route_change`](https://docs.flet.dev/controls/page/#flet.Page.on_route_change) event handler to update views and finally calls `page.update()`.
+To "navigate" between pages we used [`page.go(route)`](https://flet.dev/docs/controls/page/#flet.Page.go) - a helper method that updates [`page.route`](https://flet.dev/docs/controls/page/#flet.Page.route), calls [`page.on_route_change`](https://flet.dev/docs/controls/page/#flet.Page.on_route_change) event handler to update views and finally calls `page.update()`.
 :::
 
-Notice the usage of [`page.on_view_pop`](https://docs.flet.dev/controls/page/#flet.Page.on_view_pop) event handler. It fires when the user clicks automatic "Back" button in [`AppBar`](https://docs.flet.dev/controls/appbar/) control. In the handler we remove the last element from views collection and navigate to view's root "under" it.
+Notice the usage of [`page.on_view_pop`](https://flet.dev/docs/controls/page/#flet.Page.on_view_pop) event handler. It fires when the user clicks automatic "Back" button in [`AppBar`](https://flet.dev/docs/controls/appbar/) control. In the handler we remove the last element from views collection and navigate to view's root "under" it.
 
 ## Route templates
 
@@ -181,5 +181,4 @@ You can read more about template syntax supported by `repath` library [here](htt
 
 That's all for today!
 
-[Give Flet a try](https://docs.flet.dev/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
-
+[Give Flet a try](https://flet.dev/docs/) and [let us know](https://discord.gg/dzWXP8SHG8) what you think!

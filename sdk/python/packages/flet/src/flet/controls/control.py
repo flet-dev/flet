@@ -27,7 +27,7 @@ class Control(BaseControl):
     parent layout.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand).
 
     Note:
         Has effect only if the direct parent of this control is one of the following
@@ -44,7 +44,7 @@ class Control(BaseControl):
     not require it to fill all available space.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand_loose).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand_loose).
 
     Note:
         If `expand_loose` is `True`, it will have effect only if:

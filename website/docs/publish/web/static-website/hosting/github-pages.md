@@ -34,7 +34,7 @@ concurrency: # (6)!
 env: # (9)!
   UV_PYTHON: 3.12 # (10)!
 
-  # https://docs.flet.dev/reference/environment-variables
+  # https://flet.dev/docs/reference/environment-variables
   FLET_CLI_NO_RICH_OUTPUT: 1 # (11)!
 
 jobs:

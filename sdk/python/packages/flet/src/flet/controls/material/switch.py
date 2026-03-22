@@ -142,7 +142,7 @@ class Switch(LayoutControl, AdaptiveControl):
     a Material Switch is created.
 
     Defaults to `False`. See the example of usage
-    [here](https://docs.flet.dev/controls/cupertinoswitch/#cupertino-material-and-adaptive-switches).
+    [here](https://flet.dev/docs/controls/cupertinoswitch/#cupertino-material-and-adaptive-switches).
     """  # noqa: E501
 
     hover_color: Optional[ColorValue] = None

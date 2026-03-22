@@ -1438,7 +1438,7 @@ env: # (6)!
   UV_PYTHON: 3.12 # (7)!
   PYTHONUTF8: 1 # (8)!
 
-  # https://docs.flet.dev/reference/environment-variables
+  # https://flet.dev/docs/reference/environment-variables
   FLET_CLI_NO_RICH_OUTPUT: 1 # (9)!
 
 jobs:

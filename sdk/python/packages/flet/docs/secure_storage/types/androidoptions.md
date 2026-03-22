@@ -78,7 +78,7 @@ To use biometric authentication on Android, you need to grant the necessary perm
 
 For configure permissions in your `pyproject.toml` or when building the app using `flet build`.
 
-See the official Flet documentation for details: [Android Permissions in Flet](https://docs.flet.dev/publish/android/#permissions)
+See the official Flet documentation for details: [Android Permissions in Flet](https://flet.dev/docs/publish/android/#permissions)
 
 Example configuration in `pyproject.toml`:
 

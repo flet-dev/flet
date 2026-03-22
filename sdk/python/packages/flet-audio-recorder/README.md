@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-audio-recorder.svg)](https://pypi.python.org/pypi/flet-audio-recorder)
 [![downloads](https://static.pepy.tech/badge/flet-audio-recorder/month)](https://pepy.tech/project/flet-audio-recorder)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-audio-recorder)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-audio-recorder.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-audio-recorder.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio-recorder.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio-recorder.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio-recorder/LICENSE)
 
 Adds audio recording support to [Flet](https://flet.dev) apps.
@@ -12,7 +12,7 @@ It is based on the [record](https://pub.dev/packages/record) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/audio-recorder/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/audio-recorder/).
 
 ## Platform Support
 

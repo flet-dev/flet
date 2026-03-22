@@ -11,17 +11,17 @@ We are excited to announce the release of Flet 0.23.0. It is a big release with 
 
 ## New Controls
 
-- [`AutoComplete`](https://docs.flet.dev/controls/autocomplete/)
-- [`AutoFillGroup`](https://docs.flet.dev/controls/autofillgroup/)
-- [`Flashlight`](https://docs.flet.dev/flashlight/)
-- [`Geolocator`](https://docs.flet.dev/geolocator/)
-- [`Map`](https://docs.flet.dev/map/)
-- [`PermissionHandler`](https://docs.flet.dev/permission_handler/)
+- [`AutoComplete`](https://flet.dev/docs/controls/autocomplete/)
+- [`AutoFillGroup`](https://flet.dev/docs/controls/autofillgroup/)
+- [`Flashlight`](https://flet.dev/docs/flashlight/)
+- [`Geolocator`](https://flet.dev/docs/geolocator/)
+- [`Map`](https://flet.dev/docs/map/)
+- [`PermissionHandler`](https://flet.dev/docs/permission_handler/)
 
 ## New Properties
 
-- [`Option`](https://docs.flet.dev/controls/dropdownoption/#flet.DropdownOption): `content`, `text_style`
-- [`TextStyle`](https://docs.flet.dev/types/textstyle/): `baseline`, `overflow`, `word_spacing`
+- [`Option`](https://flet.dev/docs/controls/dropdownoption/#flet.DropdownOption): `content`, `text_style`
+- [`TextStyle`](https://flet.dev/docs/types/textstyle/): `baseline`, `overflow`, `word_spacing`
 
 ## Error Handling
 
@@ -56,21 +56,21 @@ While doing "Error Handling" mentioned above, we had to mark some important prop
 
 The following properties are now "required" (must be provided and visible) when creating an instance of their classes:
 
-* [`AnimatedSwitcher.content`](https://docs.flet.dev/controls/animatedswitcher/#flet.AnimatedSwitcher.content)
-* [`Banner.content`](https://docs.flet.dev/controls/banner/#flet.Banner.content), [`Banner.actions`](https://docs.flet.dev/controls/banner/#flet.Banner.actions)
-* [`BottomSheet.content`](https://docs.flet.dev/controls/bottomsheet/#flet.BottomSheet.content)
-* [`CupertinoActionSheetAction.content`](https://docs.flet.dev/controls/cupertinoactionsheetaction/#flet.CupertinoActionSheetAction.content)
-* [`DataRow.cells`](https://docs.flet.dev/controls/datatable/)
-* [`DataTable.columns`](https://docs.flet.dev/controls/datatable/)
-* [`DragTarget.content`](https://docs.flet.dev/controls/dragtarget/#flet.DragTarget.content)
-* [`Draggable.content`](https://docs.flet.dev/controls/draggable/#flet.Draggable.content)
-* [`ExpansionTile.title`](https://docs.flet.dev/controls/expansiontile/#flet.ExpansionTile.title)
-* [`MenuBar.controls`](https://docs.flet.dev/controls/menubar/#flet.MenuBar.controls)
-* [`Pagelet.content`](https://docs.flet.dev/controls/pagelet/#flet.Pagelet.content)
-* [`RadioGroup.content`](https://docs.flet.dev/controls/radio/#flet.Radio.content)
-* [`SafeArea.content`](https://docs.flet.dev/controls/safearea/#flet.SafeArea.content)
-* [`ShaderMask.shader`](https://docs.flet.dev/controls/shadermask/#flet.ShaderMask.shader)
-* [`WindowDragArea.content`](https://docs.flet.dev/controls/windowdragarea/#flet.WindowDragArea.content)
+* [`AnimatedSwitcher.content`](https://flet.dev/docs/controls/animatedswitcher/#flet.AnimatedSwitcher.content)
+* [`Banner.content`](https://flet.dev/docs/controls/banner/#flet.Banner.content), [`Banner.actions`](https://flet.dev/docs/controls/banner/#flet.Banner.actions)
+* [`BottomSheet.content`](https://flet.dev/docs/controls/bottomsheet/#flet.BottomSheet.content)
+* [`CupertinoActionSheetAction.content`](https://flet.dev/docs/controls/cupertinoactionsheetaction/#flet.CupertinoActionSheetAction.content)
+* [`DataRow.cells`](https://flet.dev/docs/controls/datatable/)
+* [`DataTable.columns`](https://flet.dev/docs/controls/datatable/)
+* [`DragTarget.content`](https://flet.dev/docs/controls/dragtarget/#flet.DragTarget.content)
+* [`Draggable.content`](https://flet.dev/docs/controls/draggable/#flet.Draggable.content)
+* [`ExpansionTile.title`](https://flet.dev/docs/controls/expansiontile/#flet.ExpansionTile.title)
+* [`MenuBar.controls`](https://flet.dev/docs/controls/menubar/#flet.MenuBar.controls)
+* [`Pagelet.content`](https://flet.dev/docs/controls/pagelet/#flet.Pagelet.content)
+* [`RadioGroup.content`](https://flet.dev/docs/controls/radio/#flet.Radio.content)
+* [`SafeArea.content`](https://flet.dev/docs/controls/safearea/#flet.SafeArea.content)
+* [`ShaderMask.shader`](https://flet.dev/docs/controls/shadermask/#flet.ShaderMask.shader)
+* [`WindowDragArea.content`](https://flet.dev/docs/controls/windowdragarea/#flet.WindowDragArea.content)
 
 ## Bug Fixes
 
@@ -80,13 +80,13 @@ The below issues were successfully fixed:
   interacting with
 * [#3072](https://github.com/flet-dev/flet/issues/3072): High-resolution videos play laggy on Android TV devices.
 * [#3023](https://github.com/flet-dev/flet/issues/3023): (Regression) Some `LineChart` colors not visually respected
-* [#2989](https://github.com/flet-dev/flet/issues/2989): Color of [`Dropdown`](https://docs.flet.dev/controls/dropdown/) when disabled
+* [#2989](https://github.com/flet-dev/flet/issues/2989): Color of [`Dropdown`](https://flet.dev/docs/controls/dropdown/) when disabled
   doesn't reflect its disabled state
-* [#1753](https://github.com/flet-dev/flet/issues/1753): [`Markdown`](https://docs.flet.dev/controls/markdown/) code block not selectable
+* [#1753](https://github.com/flet-dev/flet/issues/1753): [`Markdown`](https://flet.dev/docs/controls/markdown/) code block not selectable
 * [#3097](https://github.com/flet-dev/flet/issues/3097): Hot-reload occurs when a file is opened
-* [#1647](https://github.com/flet-dev/flet/issues/1647): [`Container.theme_mode`](https://docs.flet.dev/controls/container/#flet.Container.theme_mode)
+* [#1647](https://github.com/flet-dev/flet/issues/1647): [`Container.theme_mode`](https://flet.dev/docs/controls/container/#flet.Container.theme_mode)
   not honoured when `Container.theme=None`
-* [#3064](https://github.com/flet-dev/flet/issues/3064): [`Container.on_tap_down`](https://docs.flet.dev/controls/container/#flet.Container.on_tap_down)
+* [#3064](https://github.com/flet-dev/flet/issues/3064): [`Container.on_tap_down`](https://flet.dev/docs/controls/container/#flet.Container.on_tap_down)
   not called when `Container.on_click=None`
 
 Special Thanks to the dynamic Flet community for reporting all the issues they encountered. We keep working hard on
@@ -94,24 +94,24 @@ solving the remaining ones.
 
 ## Deprecations
 
-* All the `Page.window_***` properties are now deprecated and moved to [`Page.window`](https://docs.flet.dev/controls/page/#flet.Page.window)
-  property, which is of type [`Window`](https://docs.flet.dev/types/window/).
+* All the `Page.window_***` properties are now deprecated and moved to [`Page.window`](https://flet.dev/docs/controls/page/#flet.Page.window)
+  property, which is of type [`Window`](https://flet.dev/docs/types/window/).
   To migrate, simply use change `window_` to `window.` as seen below:
   ```python
-  # before 
+  # before
   page.window_height = 200
   page.on_window_event = lambda e: print(e.type)
-  
+
   # now
   page.window.height = 200
   page.window.on_event = lambda e: print(e.type)
   ```
 
 * `SafeArea.minimum` is deprecated and has been renamed
-  to [`minimum_padding`](https://docs.flet.dev/controls/safearea/#flet.SafeArea.minimum_padding)
-* `MaterialState` enum is deprecated and has been renamed to [`ControlState`](https://docs.flet.dev/types/controlstate/)
+  to [`minimum_padding`](https://flet.dev/docs/controls/safearea/#flet.SafeArea.minimum_padding)
+* `MaterialState` enum is deprecated and has been renamed to [`ControlState`](https://flet.dev/docs/types/controlstate/)
 * `NavigationDestination` is deprecated and has been renamed
-  to [`NavigationBarDestination`](https://docs.flet.dev/controls/navigationbardestination/#flet.NavigationBarDestination)
+  to [`NavigationBarDestination`](https://flet.dev/docs/controls/navigationbardestination/#flet.NavigationBarDestination)
 
 Also, the deprecation policy has been modified. While Flet is pre-1.0, all deprecations will be removed from the API after the next 3 releases.
 So the above deprecations made in v0.23.0 (and all the other deprecations made in the previous versions), will be removed in v0.26.0.

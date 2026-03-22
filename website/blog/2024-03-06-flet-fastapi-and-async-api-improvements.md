@@ -125,7 +125,7 @@ Also, notice in `async def` handler you are not required to use `await page.add_
 Most of `Page.<method>_async()` and `Control.<method>_async()` methods have been deprecated and their `Page.<method>()` and `Control.<method>()` counterparts should be used instead.
 
 The only exception here is methods returning results, like those ones in `Audio` control: you still have to use async methods in async event handlers.
-::: 
+:::
 
 ## Custom controls API normalized
 
@@ -169,7 +169,7 @@ ft.run(main)
 Notice the usage of `self.page.run_task(self.update_timer)` to start a new task.
 There is also `self.page.run_thread()` method that must be used by control developer to start a new background job in a thread.
 
-If you want to spawn your own tasks or threads Flet provides the current event loop and thread executor via `Page.loop` and `Page.executor` properties respectively. 
+If you want to spawn your own tasks or threads Flet provides the current event loop and thread executor via `Page.loop` and `Page.executor` properties respectively.
 
 :::info API changes
 `Control._before_build_command()` replaced with `Control.before_update()`
@@ -218,10 +218,10 @@ The following app lifecycle transitions are recognized:
 * `RESTART`
 
 :::note
-Read more about each [lifecycle state](https://docs.flet.dev/controls/page/#flet.Page.on_app_lifecycle_state_change).
+Read more about each [lifecycle state](https://flet.dev/docs/controls/page/#flet.Page.on_app_lifecycle_state_change).
 :::
 
-Here's a small example of how this event can be used: 
+Here's a small example of how this event can be used:
 
 ```python
 import flet as ft

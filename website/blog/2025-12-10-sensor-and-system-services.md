@@ -10,19 +10,19 @@ We've just merged a [pull request](https://github.com/flet-dev/flet/pull/5846) i
 
 ### New sensor services
 
-* [Accelerometer](https://docs.flet.dev/services/accelerometer/) – Reads raw acceleration along the X, Y, and Z axes, including gravity.
-* [Barometer](https://docs.flet.dev/services/barometer/) – Provides atmospheric pressure readings useful for altitude estimation.
-* [Gyroscope](https://docs.flet.dev/services/gyroscope/) – Measures device rotation around each axis.
-* [Magnetometer](https://docs.flet.dev/services/magnetometer/) – Detects magnetic field strength, commonly used for compass functionality.
-* [UserAccelerometer](https://docs.flet.dev/services/useraccelerometer/) – Reports acceleration data with gravity filtered out for cleaner motion detection.
+* [Accelerometer](https://flet.dev/docs/services/accelerometer/) – Reads raw acceleration along the X, Y, and Z axes, including gravity.
+* [Barometer](https://flet.dev/docs/services/barometer/) – Provides atmospheric pressure readings useful for altitude estimation.
+* [Gyroscope](https://flet.dev/docs/services/gyroscope/) – Measures device rotation around each axis.
+* [Magnetometer](https://flet.dev/docs/services/magnetometer/) – Detects magnetic field strength, commonly used for compass functionality.
+* [UserAccelerometer](https://flet.dev/docs/services/useraccelerometer/) – Reports acceleration data with gravity filtered out for cleaner motion detection.
 
 ### New system services
 
-* [Battery](https://docs.flet.dev/services/battery/) – Monitors battery level, charging state, and power source changes.
-* [Connectivity](https://docs.flet.dev/services/connectivity/) – Detects network status and connection type (Wi-Fi, mobile, offline).
-* [ScreenBrightness](https://docs.flet.dev/services/screenbrightness/) – Allows reading and adjusting the device screen brightness.
-* [Share](https://docs.flet.dev/services/share/) – Invokes the system share sheet to share text, files, or URLs.
-* [Wakelock](https://docs.flet.dev/services/wakelock/) – Prevents the device screen from dimming or sleeping while active.
+* [Battery](https://flet.dev/docs/services/battery/) – Monitors battery level, charging state, and power source changes.
+* [Connectivity](https://flet.dev/docs/services/connectivity/) – Detects network status and connection type (Wi-Fi, mobile, offline).
+* [ScreenBrightness](https://flet.dev/docs/services/screenbrightness/) – Allows reading and adjusting the device screen brightness.
+* [Share](https://flet.dev/docs/services/share/) – Invokes the system share sheet to share text, files, or URLs.
+* [Wakelock](https://flet.dev/docs/services/wakelock/) – Prevents the device screen from dimming or sleeping while active.
 
 <img src="/img/blog/sensors/flet-sensor-services.png" alt="Flet sensor and system services" className="screenshot screenshot-70" />
 

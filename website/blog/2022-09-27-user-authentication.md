@@ -73,7 +73,7 @@ $ export GITHUB_CLIENT_SECRET="<client_secret>"
 ```
 :::
 
-[Read Authentication guide for more information and examples](https://docs.flet.dev/cookbook/authentication/).
+[Read Authentication guide for more information and examples](https://flet.dev/docs/cookbook/authentication/).
 
 ## Client storage
 
@@ -91,7 +91,7 @@ Reading data:
 value = page.client_storage.get("key")
 ```
 
-[Read Client storage guide for more information and examples](https://docs.flet.dev/cookbook/client-storage/).
+[Read Client storage guide for more information and examples](https://flet.dev/docs/cookbook/client-storage/).
 
 ## Session storage
 
@@ -109,7 +109,7 @@ Reading data:
 value = page.session.get("key")
 ```
 
-[Read Session storage guide for more information and examples](https://docs.flet.dev/cookbook/session-storage/)
+[Read Session storage guide for more information and examples](https://flet.dev/docs/cookbook/session-storage/)
 
 ## Encryption API
 
@@ -133,18 +133,18 @@ plain_text = decrypt(encrypted_data, secret_key)
 print(plain_text)
 ```
 
-[Continue reading for more information and examples](https://docs.flet.dev/cookbook/encrypting-sensitive-data/).
+[Continue reading for more information and examples](https://flet.dev/docs/cookbook/encrypting-sensitive-data/).
 
 ## Other improvements
 
 * SVG image support ([example](https://github.com/flet-dev/examples/blob/main/python/controls/image/svg-image.py)) and new images properties:
-  * [`Image.color`](https://docs.flet.dev/controls/image/#flet.Image.color)
-  * [`Image.color_blend_mode`](https://docs.flet.dev/controls/image/#flet.Image.color_blend_mode)
-  * [`Image.semantics_label`](https://docs.flet.dev/controls/image/#flet.Image.semantics_label)
-  * [`Image.gapless_playback`](https://docs.flet.dev/controls/image/#flet.Image.gapless_playback)
-* [`on_animation_end` callback](https://docs.flet.dev/cookbook/animations/#animation-end-callback) to chain animations.
-* [`Container.clip_behavior` property](https://docs.flet.dev/controls/container/#flet.Container.clip_behavior).
-* [`page.window.bgcolor`](https://docs.flet.dev/types/window/#flet.Window.bgcolor) to make cool transparent app window:
+  * [`Image.color`](https://flet.dev/docs/controls/image/#flet.Image.color)
+  * [`Image.color_blend_mode`](https://flet.dev/docs/controls/image/#flet.Image.color_blend_mode)
+  * [`Image.semantics_label`](https://flet.dev/docs/controls/image/#flet.Image.semantics_label)
+  * [`Image.gapless_playback`](https://flet.dev/docs/controls/image/#flet.Image.gapless_playback)
+* [`on_animation_end` callback](https://flet.dev/docs/cookbook/animations/#animation-end-callback) to chain animations.
+* [`Container.clip_behavior` property](https://flet.dev/docs/controls/container/#flet.Container.clip_behavior).
+* [`page.window.bgcolor`](https://flet.dev/docs/types/window/#flet.Window.bgcolor) to make cool transparent app window:
 
 ```python
 import flet as ft
@@ -159,14 +159,14 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-* [`page.get_clipboard()`](https://docs.flet.dev/controls/page/#flet.Page.get_clipboard)
-* [`page.launch_url()`](https://docs.flet.dev/controls/page/#flet.Page.launch_url) - better control with additional arguments:
+* [`page.get_clipboard()`](https://flet.dev/docs/controls/page/#flet.Page.get_clipboard)
+* [`page.launch_url()`](https://flet.dev/docs/controls/page/#flet.Page.launch_url) - better control with additional arguments:
     * `web_window_name` - window tab/name to open URL in: `_self` - the same tab, `_blank` - a new tab or `<your name>` - a named tab.
     * `web_popup_window` - set to `True` to display a URL in a browser popup window. Default is `False`.
     * `window_width` - optional, popup window width.
     * `window_height` - optional, popup window height.
-* [`page.window.to_front()`](https://docs.flet.dev/types/window/#flet.Window.to_front)
-* [`page.close_in_app_web_view()`](https://docs.flet.dev/controls/page/#flet.Page.close_in_app_web_view)
+* [`page.window.to_front()`](https://flet.dev/docs/types/window/#flet.Window.to_front)
+* [`page.close_in_app_web_view()`](https://flet.dev/docs/controls/page/#flet.Page.close_in_app_web_view)
 
 
 Upgrade Flet module to the latest version (`pip install flet --upgrade`), integrate auth in your app and [let us know](https://discord.gg/dzWXP8SHG8) what you think!
