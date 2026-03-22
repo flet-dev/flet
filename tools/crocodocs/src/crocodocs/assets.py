@@ -24,7 +24,7 @@ def _parse_virtual_asset_ref(
     ref: str,
     asset_mappings: dict[str, AssetMapping],
 ) -> tuple[AssetMapping, str] | None:
-    match = re.match(r"^(?:\.\./)+([^/]+)/(.*)$", ref)
+    match = re.match(r"^(?:(?:\.\./)+)?([^/]+)/(.*)$", ref)
     if not match:
         return None
     ref_root, remainder = match.groups()

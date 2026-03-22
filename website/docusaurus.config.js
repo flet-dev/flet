@@ -168,7 +168,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           remarkPlugins: [require('./plugins/remark-api-links')],
           editUrl:
-            'https://github.com/flet-dev/website/edit/main/',
+            'https://github.com/flet-dev/flet/website/edit/main/',
         },
         blog: {
           blogSidebarTitle: 'All posts',
@@ -176,7 +176,7 @@ module.exports = {
           postsPerPage: 5,
           showReadingTime: true,
           editUrl:
-            'https://github.com/flet-dev/website/edit/main/',
+            'https://github.com/flet-dev/flet/website/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

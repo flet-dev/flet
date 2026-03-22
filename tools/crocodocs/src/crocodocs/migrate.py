@@ -65,6 +65,7 @@ STYLE_BLOCK_RE = re.compile(r"<style>\s*\n(.*?)\n</style>", re.DOTALL)
 MARKDOWN_IMAGE_RE = re.compile(r"!\[([^\]]*)\]\((\.\./[^)]+)\)(\{[^}]*\})?")
 MARKDOWN_IMAGE_ATTR_RE = re.compile(r'(\w+)="([^"]*)"')
 HTML_STYLE_ATTR_RE = re.compile(r'style="([^"]*)"')
+HTML_IMG_SRC_RE = re.compile(r'(<img\b[^>]*\bsrc=")([^"]+)(")')
 
 
 def _consume_directive_body(
@@ -296,11 +297,22 @@ def _style_object_from_css(style_text: str) -> str:
     return "{{" + ", ".join(parts) + "}}"
 
 
-def _normalize_html_for_mdx(content: str) -> str:
+def _normalize_html_for_mdx(content: str, asset_mappings: dict) -> str:
     content = re.sub(r"\browspan=", "rowSpan=", content)
     content = re.sub(r"\bcolspan=", "colSpan=", content)
     content = re.sub(r"\bcellspacing=", "cellSpacing=", content)
     content = re.sub(r"\bcellpadding=", "cellPadding=", content)
+    content = HTML_IMG_SRC_RE.sub(
+        lambda match: (
+            match.group(1)
+            + (
+                resolve_static_asset_url(match.group(2), asset_mappings)
+                or match.group(2)
+            )
+            + match.group(3)
+        ),
+        content,
+    )
     content = HTML_STYLE_ATTR_RE.sub(
         lambda match: f"style={_style_object_from_css(match.group(1))}",
         content,
@@ -398,7 +410,7 @@ def run_migrate_bootstrap(
             input_root, config.asset_mappings, content, summary, path
         )
         content = _convert_markdown_image_attrs_to_mdx(content, config.asset_mappings)
-        content = _normalize_html_for_mdx(content)
+        content = _normalize_html_for_mdx(content, config.asset_mappings)
         if has_remaining_directives:
             follow_up_pages += 1
             summary.warn(
