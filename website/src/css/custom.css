@@ -153,6 +153,33 @@ h6 {
   width: 22px;
 }
 
+.crocodocs-member-heading {
+  align-items: center;
+  column-gap: 0.5rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.crocodocs-member-badges {
+  align-items: center;
+  column-gap: 0.35rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  position: relative;
+  top: 0.08em;
+}
+
+.crocodocs-member-badge {
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 999px;
+  color: var(--ifm-color-emphasis-700);
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.05rem 0.45rem;
+}
+
 .doc-screenshot-figure,
 .screenshot,
 [class^='screenshot-'],

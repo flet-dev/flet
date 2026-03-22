@@ -22,21 +22,7 @@ function HeadingLink({level: Tag, id, children}) {
 }
 
 function Badge({children}) {
-  return (
-    <span
-      style={{
-        border: "1px solid var(--ifm-toc-border-color)",
-        borderRadius: "999px",
-        color: "var(--ifm-color-emphasis-700)",
-        display: "inline-block",
-        fontSize: "0.85rem",
-        marginLeft: "0.5rem",
-        padding: "0.05rem 0.55rem",
-      }}
-    >
-      {children}
-    </span>
-  );
+  return <span className="crocodocs-member-badge">{children}</span>;
 }
 
 function SignatureBox({children}) {
@@ -117,7 +103,16 @@ function renderMemberHeading(item) {
   const id = normalizeAnchor(item.name);
   return (
     <HeadingLink level="h3" id={id}>
-      {item.name}
+      <span className="crocodocs-member-heading">
+        <span>{item.name}</span>
+        {(item.labels || []).length ? (
+          <span className="crocodocs-member-badges">
+            {(item.labels || []).map((label) => (
+              <Badge key={label}>{label}</Badge>
+            ))}
+          </span>
+        ) : null}
+      </span>
     </HeadingLink>
   );
 }
@@ -126,11 +121,6 @@ function renderAttribute(item, classSymbol, docId) {
   return (
     <div key={item.name}>
       {renderMemberHeading(item)}
-      <div style={{marginBottom: "1rem", marginTop: "-0.5rem"}}>
-        {(item.labels || []).map((label) => (
-          <Badge key={label}>{label}</Badge>
-        ))}
-      </div>
       {item.type ? (
         <SignatureBox>
           {item.name}: {item.type}
@@ -146,11 +136,6 @@ function renderMethod(item, classSymbol, docId) {
   return (
     <div key={item.name}>
       {renderMemberHeading(item)}
-      <div style={{marginBottom: "1rem", marginTop: "-0.5rem"}}>
-        {(item.labels || []).map((label) => (
-          <Badge key={label}>{label}</Badge>
-        ))}
-      </div>
       <SignatureBox>{item.signature ?? item.name}</SignatureBox>
       {renderDocstringSections(item.docstring_sections, {classSymbol, docId}) ??
         renderDocstring(item.docstring, {classSymbol, docId})}
