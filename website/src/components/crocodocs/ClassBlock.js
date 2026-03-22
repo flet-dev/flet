@@ -5,12 +5,14 @@ import {useDoc} from "@docusaurus/plugin-content-docs/client";
 import {
   firstSentenceFromDocstring,
   getApiData,
-  normalizeAnchor,
+  memberAnchor,
   renderCodeExpression,
   renderDocstring,
   renderDocstringSections,
   renderInlineMarkdown,
   resolveDocAssetUrl,
+  rootAnchor,
+  sectionAnchor,
 } from "./utils";
 
 const MEMBER_KIND_META = {
@@ -69,10 +71,9 @@ function Section({title, items, renderItem}) {
     return null;
   }
 
-  const sectionId = normalizeAnchor(title.toLowerCase());
   return (
     <section>
-      <HeadingLink level="h2" id={sectionId}>
+      <HeadingLink level="h2" id={items[0]?.__sectionId ?? null}>
         {title}
       </HeadingLink>
       {items.map(renderItem)}
@@ -173,8 +174,8 @@ function useInjectedToc(sectionGroups) {
   }, [sectionGroups]);
 }
 
-function renderMemberHeading(item, kind) {
-  const id = normalizeAnchor(item.name);
+function renderMemberHeading(item, classSymbol, kind) {
+  const id = memberAnchor(classSymbol, item.name);
   const meta = MEMBER_KIND_META[kind];
   return (
     <HeadingLink level="h3" id={id}>
@@ -202,9 +203,10 @@ function renderMemberHeading(item, kind) {
 
 function renderAttribute(item, classSymbol, docId) {
   const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const kind = item.name.startsWith("on_") ? "event" : "property";
   return (
     <div key={item.name}>
-      {renderMemberHeading(item, item.name.startsWith("on_") ? "event" : "property")}
+      {renderMemberHeading(item, classSymbol, kind)}
       {item.type ? (
         <SignatureBox text={signatureText}>
           {renderCodeExpression(signatureText, {classSymbol, docId})}
@@ -219,7 +221,7 @@ function renderMethod(item, classSymbol, docId) {
   const signatureText = item.signature ?? item.name;
   return (
     <div key={item.name}>
-      {renderMemberHeading(item, "method")}
+      {renderMemberHeading(item, classSymbol, "method")}
       <SignatureBox text={signatureText}>
         {renderCodeExpression(signatureText, {classSymbol, docId})}
       </SignatureBox>
@@ -240,7 +242,7 @@ function SummarySection({title, items, classSymbol}) {
       <ul>
         {items.map((item) => (
           <li key={item.name}>
-            <a href={`#${normalizeAnchor(item.name)}`}>
+            <a href={`#${memberAnchor(classSymbol, item.name)}`}>
               <span className="crocodocs-summary-name">{item.name}</span>
             </a>
             {item.summary ? (
@@ -281,13 +283,13 @@ export default function ClassBlock({
   if (!classEntry && !functionEntry && aliasEntry) {
     useInjectedToc(
       showRootHeading
-        ? [{title: entry.name, id: normalizeAnchor(entry.name), items: []}]
+        ? [{title: entry.name, id: rootAnchor(name), items: []}]
         : []
     );
     return (
       <div>
         {showRootHeading ? (
-          <HeadingLink level="h2" id={normalizeAnchor(entry.name)}>
+          <HeadingLink level="h2" id={rootAnchor(name)}>
             {entry.name}
           </HeadingLink>
         ) : null}
@@ -312,47 +314,63 @@ export default function ClassBlock({
   const methods = entry.methods ?? [];
   const propertySummaries = properties.map((item) => ({
     name: item.name,
+    kind: "property",
     summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
   }));
   const eventSummaries = events.map((item) => ({
     name: item.name,
+    kind: "event",
     summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
   }));
   const methodSummaries = methods.map((item) => ({
     name: item.name,
+    kind: "method",
     summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  }));
+
+  const propertiesWithSectionId = properties.map((item) => ({
+    ...item,
+    __sectionId: sectionAnchor(name, "properties"),
+  }));
+  const eventsWithSectionId = events.map((item) => ({
+    ...item,
+    __sectionId: sectionAnchor(name, "events"),
+  }));
+  const methodsWithSectionId = methods.map((item) => ({
+    ...item,
+    __sectionId: sectionAnchor(name, "methods"),
   }));
 
   useInjectedToc(
     [
       ...(showRootHeading
-        ? [{title: entry.name, id: normalizeAnchor(entry.name), items: []}]
+        ? [{title: entry.name, id: rootAnchor(name), items: []}]
         : []),
       ...(showMembers
         ? [
             {
               title: "Properties",
-              id: normalizeAnchor("properties"),
+              id: sectionAnchor(name, "properties"),
               items: properties.map((item) => ({
-                id: normalizeAnchor(item.name),
+                id: memberAnchor(name, item.name),
                 kind: "property",
                 label: item.name,
               })),
             },
             {
               title: "Events",
-              id: normalizeAnchor("events"),
+              id: sectionAnchor(name, "events"),
               items: events.map((item) => ({
-                id: normalizeAnchor(item.name),
+                id: memberAnchor(name, item.name),
                 kind: "event",
                 label: item.name,
               })),
             },
             {
               title: "Methods",
-              id: normalizeAnchor("methods"),
+              id: sectionAnchor(name, "methods"),
               items: methods.map((item) => ({
-                id: normalizeAnchor(item.name),
+                id: memberAnchor(name, item.name),
                 kind: "method",
                 label: item.name,
               })),
@@ -365,7 +383,7 @@ export default function ClassBlock({
   return (
     <div>
       {showRootHeading ? (
-        <HeadingLink level="h2" id={normalizeAnchor(entry.name)}>
+        <HeadingLink level="h2" id={rootAnchor(name)}>
           {entry.name}
         </HeadingLink>
       ) : null}
@@ -413,17 +431,17 @@ export default function ClassBlock({
         <>
           <Section
             title="Properties"
-            items={properties}
+            items={propertiesWithSectionId}
             renderItem={(item) => renderAttribute(item, name, metadata?.id)}
           />
           <Section
             title="Events"
-            items={events}
+            items={eventsWithSectionId}
             renderItem={(item) => renderAttribute(item, name, metadata?.id)}
           />
           <Section
             title="Methods"
-            items={methods}
+            items={methodsWithSectionId}
             renderItem={(item) => renderMethod(item, name, metadata?.id)}
           />
         </>

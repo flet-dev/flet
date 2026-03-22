@@ -316,6 +316,7 @@ def extract_symbol_blocks_from_mdx(
         component = match.group(1)
         attrs = match.group(2)
         symbol = None
+        options: dict[str, Any] = {}
         name_match = re.search(r'name="([^"]+)"', attrs)
         if name_match:
             symbol = name_match.group(1)
@@ -325,12 +326,14 @@ def extract_symbol_blocks_from_mdx(
                 raw = front_matter.get(fm_match.group(1))
                 if isinstance(raw, str):
                     symbol = raw
+        if re.search(r"showRootHeading=\{true\}", attrs):
+            options["showRootHeading"] = True
         kind = {
             "ClassSummary": "class_summary",
             "ClassMembers": "class_members",
             "ClassAll": "class_all_options",
         }[component]
-        blocks.append(SymbolBlock(kind=kind, symbol=symbol, options={}))
+        blocks.append(SymbolBlock(kind=kind, symbol=symbol, options=options))
     return blocks
 
 

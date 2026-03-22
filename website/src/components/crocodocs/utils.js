@@ -5,7 +5,8 @@ import codeExamples from "@site/.crocodocs/code-examples.json";
 const IMAGE_LINE_RE = /^!\[([^\]]*)\]\(([^)]+)\)(\{[^}]*\})?$/;
 const WIDTH_RE = /width="([^"]+)"/;
 const INLINE_TOKEN_RE = /(`[^`]+`)|\[(.*?)\]\((.*?)\)|\[(.*?)\]\[([^\]]+)\]/g;
-const API_SYMBOL_RE = /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*\b|\b[A-Z][A-Za-z0-9_]*\b/g;
+const API_SYMBOL_RE =
+  /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b|\b[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
 
 export function getApiData() {
   return apiData;
@@ -16,7 +17,24 @@ export function getExampleSource(path) {
 }
 
 export function normalizeAnchor(name) {
-  return name;
+  return String(name)
+    .replace(/["']/g, "")
+    .replace(/\[([^\]]+)\]/g, "-$1")
+    .replace(/[^A-Za-z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function rootAnchor(symbol) {
+  return normalizeAnchor(symbol);
+}
+
+export function sectionAnchor(symbol, sectionName) {
+  return normalizeAnchor(`${symbol}-${sectionName.toLowerCase()}`);
+}
+
+export function memberAnchor(symbol, memberName) {
+  return normalizeAnchor(`${symbol}-${memberName}`);
 }
 
 function classPackageCandidates(classSymbol) {
@@ -45,7 +63,8 @@ function formatApiSymbolLabel(symbol) {
     cleanSymbol.startsWith("flet.") ||
     cleanSymbol.startsWith("flet_")
   ) {
-    return cleanSymbol.split(".").pop();
+    const parts = cleanSymbol.split(".");
+    return parts.length > 1 ? parts.slice(1).join(".") : parts[0];
   }
   return cleanSymbol;
 }
@@ -72,6 +91,15 @@ export function resolveApiSymbolHref(symbol, context = {}) {
   }
 
   if (!cleanSymbol.includes(".")) {
+    for (const packageName of classPackageCandidates(context.classSymbol)) {
+      addCandidate(`${packageName}.${cleanSymbol}`);
+    }
+    addCandidate(`flet.${cleanSymbol}`);
+  } else if (
+    !cleanSymbol.startsWith("ft.") &&
+    !cleanSymbol.startsWith("flet.") &&
+    !cleanSymbol.startsWith("flet_")
+  ) {
     for (const packageName of classPackageCandidates(context.classSymbol)) {
       addCandidate(`${packageName}.${cleanSymbol}`);
     }
@@ -149,15 +177,44 @@ function resolveCrossReference(target, label, context) {
   const cleanLabel = stripTicks(label);
   const classSymbol = context?.classSymbol;
   const classRoute = classSymbol ? api.xref_map?.[classSymbol] : null;
+  const classBaseRoute = classRoute ? classRoute.split("#", 1)[0] : null;
+  const classEntry = classSymbol
+    ? api.classes?.[classSymbol] ?? api.functions?.[classSymbol] ?? api.aliases?.[classSymbol]
+    : null;
+
+  function resolveLocalMemberAnchor(memberName) {
+    if (!classSymbol || !classEntry) {
+      return null;
+    }
+    if (
+      classEntry.properties?.some((item) => item.name === memberName)
+    ) {
+      return memberAnchor(classSymbol, memberName);
+    }
+    if (
+      classEntry.events?.some((item) => item.name === memberName)
+    ) {
+      return memberAnchor(classSymbol, memberName);
+    }
+    if (
+      classEntry.methods?.some((item) => item.name === memberName)
+    ) {
+      return memberAnchor(classSymbol, memberName);
+    }
+    if (["properties", "events", "methods"].includes(memberName.toLowerCase())) {
+      return sectionAnchor(classSymbol, memberName);
+    }
+    return normalizeAnchor(memberName);
+  }
 
   if (target === "(c)" || target === "..") {
     return classRoute;
   }
-  if ((target === "(c)." || target === "..") && classRoute) {
-    return `${classRoute}#${normalizeAnchor(cleanLabel)}`;
+  if ((target === "(c)." || target === "..") && classBaseRoute) {
+    return `${classBaseRoute}#${resolveLocalMemberAnchor(cleanLabel)}`;
   }
-  if (target.startsWith("(c).") && classRoute) {
-    return `${classRoute}#${normalizeAnchor(target.slice(4))}`;
+  if (target.startsWith("(c).") && classBaseRoute) {
+    return `${classBaseRoute}#${resolveLocalMemberAnchor(target.slice(4))}`;
   }
   if (target.endsWith(".")) {
     const absoluteTarget = target + cleanLabel;
@@ -395,7 +452,11 @@ export function renderDocstringSections(sections, context = {}) {
             const fragments = [];
             let openedMeta = false;
             if (item.name) {
-              fragments.push(<code key="name">{item.name}</code>);
+              fragments.push(
+                <span className="crocodocs-summary-name" key="name">
+                  {item.name}
+                </span>
+              );
             }
             if (item.type) {
               fragments.push(

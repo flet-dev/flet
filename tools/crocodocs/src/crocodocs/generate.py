@@ -29,6 +29,26 @@ from .progress import ProgressReporter, Summary
 LOCAL_ASSET_REF_RE = re.compile(r"(?:\.\./)+[^/\s)\"'}>]+/[^\s)\"'}>]+")
 
 
+def _normalize_anchor(name: str) -> str:
+    anchor = re.sub(r"""["']""", "", str(name))
+    anchor = re.sub(r"\[([^\]]+)\]", r"-\1", anchor)
+    anchor = re.sub(r"[^A-Za-z0-9._-]+", "-", anchor)
+    anchor = re.sub(r"-+", "-", anchor)
+    return anchor.strip("-")
+
+
+def _root_anchor(symbol: str) -> str:
+    return _normalize_anchor(symbol)
+
+
+def _section_anchor(symbol: str, section_name: str) -> str:
+    return _normalize_anchor(f"{symbol}-{section_name.lower()}")
+
+
+def _member_anchor(symbol: str, member_name: str) -> str:
+    return _normalize_anchor(f"{symbol}-{member_name}")
+
+
 def _collect_public_aliases(package_name: str, root: Path) -> dict[str, str]:
     aliases: dict[str, str] = {}
     init_path = root / package_name / "__init__.py"
@@ -347,18 +367,23 @@ def run_generate(
         for block in page["symbol_blocks"]:
             symbol = block.get("symbol")
             if isinstance(symbol, str) and symbol:
-                xref_map[symbol] = route
+                use_root_anchor = block.get("options", {}).get("showRootHeading")
+                xref_map[symbol] = (
+                    f"{route}#{_root_anchor(symbol)}" if use_root_anchor else route
+                )
                 api_entry = classes.get(symbol)
                 if api_entry:
                     for prop in api_entry.get("properties", []):
-                        xref_map[f"{symbol}.{prop['name']}"] = f"{route}#{prop['name']}"
+                        xref_map[f"{symbol}.{prop['name']}"] = (
+                            f"{route}#{_member_anchor(symbol, prop['name'])}"
+                        )
                     for event in api_entry.get("events", []):
                         xref_map[f"{symbol}.{event['name']}"] = (
-                            f"{route}#{event['name']}"
+                            f"{route}#{_member_anchor(symbol, event['name'])}"
                         )
                     for method in api_entry.get("methods", []):
                         xref_map[f"{symbol}.{method['name']}"] = (
-                            f"{route}#{method['name']}"
+                            f"{route}#{_member_anchor(symbol, method['name'])}"
                         )
 
     reporter.stage("Writing API data")

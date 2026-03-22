@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import clsx from "clsx";
 import {ThemeClassNames, useWindowSize} from "@docusaurus/theme-common";
 import {useDoc} from "@docusaurus/plugin-content-docs/client";
+import {useLocation} from "@docusaurus/router";
 import DocItemPaginator from "@theme/DocItem/Paginator";
 import DocVersionBanner from "@theme/DocVersionBanner";
 import DocVersionBadge from "@theme/DocVersionBadge";
@@ -56,9 +57,45 @@ function useDocTOC() {
   };
 }
 
+function useHashAnchorScroll() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) {
+      return undefined;
+    }
+
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    let frameId = null;
+    let attempts = 0;
+
+    const scrollToAnchor = () => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView();
+        return;
+      }
+      if (attempts >= 30) {
+        return;
+      }
+      attempts += 1;
+      frameId = window.requestAnimationFrame(scrollToAnchor);
+    };
+
+    frameId = window.requestAnimationFrame(scrollToAnchor);
+
+    return () => {
+      if (frameId != null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [location.pathname, location.hash]);
+}
+
 export default function DocItemLayout({children}) {
   const docTOC = useDocTOC();
   const {metadata} = useDoc();
+  useHashAnchorScroll();
 
   return (
     <div className="row">
