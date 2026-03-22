@@ -5,6 +5,7 @@ import codeExamples from "@site/.crocodocs/code-examples.json";
 const IMAGE_LINE_RE = /^!\[([^\]]*)\]\(([^)]+)\)(\{[^}]*\})?$/;
 const WIDTH_RE = /width="([^"]+)"/;
 const INLINE_TOKEN_RE = /(`[^`]+`)|\[(.*?)\]\((.*?)\)|\[(.*?)\]\[([^\]]+)\]/g;
+const API_SYMBOL_RE = /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*\b|\b[A-Z][A-Za-z0-9_]*\b/g;
 
 export function getApiData() {
   return apiData;
@@ -16,6 +17,64 @@ export function getExampleSource(path) {
 
 export function normalizeAnchor(name) {
   return name;
+}
+
+function classPackageCandidates(classSymbol) {
+  if (!classSymbol || !classSymbol.includes(".")) {
+    return [];
+  }
+  const packageName = classSymbol.split(".", 1)[0];
+  return packageName ? [packageName] : [];
+}
+
+function cleanApiSymbol(symbol) {
+  return symbol.replace(/^['"]|['"]$/g, "");
+}
+
+function formatApiSymbolLabel(symbol) {
+  const cleanSymbol = cleanApiSymbol(symbol);
+  if (/^(?:ft|flet(?:_[a-z0-9_]+)?)\./.test(cleanSymbol)) {
+    return cleanSymbol.split(".").pop();
+  }
+  return cleanSymbol;
+}
+
+export function resolveApiSymbolHref(symbol, context = {}) {
+  if (!symbol) {
+    return null;
+  }
+
+  const api = context.api ?? getApiData();
+  const cleanSymbol = cleanApiSymbol(symbol);
+  const candidates = [];
+
+  function addCandidate(candidate) {
+    if (!candidate || candidates.includes(candidate)) {
+      return;
+    }
+    candidates.push(candidate);
+  }
+
+  addCandidate(cleanSymbol);
+  if (cleanSymbol.startsWith("ft.")) {
+    addCandidate(`flet.${cleanSymbol.slice(3)}`);
+  }
+
+  if (!cleanSymbol.includes(".")) {
+    for (const packageName of classPackageCandidates(context.classSymbol)) {
+      addCandidate(`${packageName}.${cleanSymbol}`);
+    }
+    addCandidate(`flet.${cleanSymbol}`);
+  }
+
+  for (const candidate of candidates) {
+    const href = api.xref_map?.[candidate];
+    if (href) {
+      return href;
+    }
+  }
+
+  return null;
 }
 
 function firstTextSectionValue(sections) {
@@ -93,7 +152,44 @@ function resolveCrossReference(target, label, context) {
     const absoluteTarget = target + cleanLabel;
     return api.xref_map?.[absoluteTarget] ?? null;
   }
-  return api.xref_map?.[target] ?? null;
+  return resolveApiSymbolHref(target, {...context, api});
+}
+
+function renderAutolinkedText(text, context, code = false) {
+  const nodes = [];
+  let lastIndex = 0;
+  let key = 0;
+
+  for (const match of text.matchAll(API_SYMBOL_RE)) {
+    const matchText = match[0];
+    const href = resolveApiSymbolHref(matchText, context);
+    if (!href) {
+      continue;
+    }
+    if (match.index > lastIndex) {
+      nodes.push(text.slice(lastIndex, match.index));
+    }
+    nodes.push(
+      <a
+        className={code ? "crocodocs-code-link" : undefined}
+        href={href}
+        key={key++}
+      >
+        {code ? formatApiSymbolLabel(matchText) : matchText}
+      </a>,
+    );
+    lastIndex = match.index + matchText.length;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes.length ? nodes : text;
+}
+
+export function renderCodeExpression(text, context = {}) {
+  return renderAutolinkedText(text, context, true);
 }
 
 export function renderInlineMarkdown(text, context) {
@@ -102,7 +198,7 @@ export function renderInlineMarkdown(text, context) {
   let key = 0;
   for (const match of text.matchAll(INLINE_TOKEN_RE)) {
     if (match.index > lastIndex) {
-      nodes.push(text.slice(lastIndex, match.index));
+      nodes.push(...[].concat(renderAutolinkedText(text.slice(lastIndex, match.index), context)));
     }
     if (match[1]) {
       nodes.push(<code key={key++}>{match[1].slice(1, -1)}</code>);
@@ -127,7 +223,7 @@ export function renderInlineMarkdown(text, context) {
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex));
+    nodes.push(...[].concat(renderAutolinkedText(text.slice(lastIndex), context)));
   }
   return nodes;
 }
@@ -294,7 +390,9 @@ export function renderDocstringSections(sections, context = {}) {
               fragments.push(
                 <React.Fragment key="type">
                   {item.name ? " (" : ""}
-                  <code>{item.type}</code>
+                  <span className="crocodocs-inline-code">
+                    {renderCodeExpression(item.type, context)}
+                  </span>
                 </React.Fragment>
               );
               openedMeta = Boolean(item.name);

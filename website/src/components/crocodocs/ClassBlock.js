@@ -1,12 +1,12 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Heading from "@theme/Heading";
-import CodeBlock from "@theme/CodeBlock";
 import {useDoc} from "@docusaurus/plugin-content-docs/client";
 
 import {
   firstSentenceFromDocstring,
   getApiData,
   normalizeAnchor,
+  renderCodeExpression,
   renderDocstring,
   renderDocstringSections,
   renderInlineMarkdown,
@@ -31,8 +31,37 @@ function Badge({children}) {
   return <span className="crocodocs-member-badge">{children}</span>;
 }
 
-function SignatureBox({children}) {
-  return <CodeBlock language="python">{children}</CodeBlock>;
+function SignatureBox({text, children}) {
+  const [copied, setCopied] = useState(false);
+
+  async function onCopy() {
+    if (!navigator?.clipboard || !text) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Ignore clipboard failures and leave the button idle.
+    }
+  }
+
+  return (
+    <div className="crocodocs-signature-box">
+      <button
+        className="crocodocs-signature-copy"
+        onClick={onCopy}
+        title={copied ? "Copied" : "Copy"}
+        type="button"
+      >
+        {copied ? "Copied" : "Copy"}
+      </button>
+      <pre className="crocodocs-signature-pre">
+        <code className="crocodocs-signature-content">{children}</code>
+      </pre>
+    </div>
+  );
 }
 
 function Section({title, items, renderItem}) {
@@ -152,13 +181,13 @@ function renderMemberHeading(item, kind) {
 }
 
 function renderAttribute(item, classSymbol, docId) {
+  const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
   return (
     <div key={item.name}>
       {renderMemberHeading(item, item.name.startsWith("on_") ? "event" : "property")}
       {item.type ? (
-        <SignatureBox>
-          {item.name}: {item.type}
-          {item.default != null ? ` = ${item.default}` : ""}
+        <SignatureBox text={signatureText}>
+          {renderCodeExpression(signatureText, {classSymbol, docId})}
         </SignatureBox>
       ) : null}
       {renderDocstring(item.docstring, {classSymbol, docId})}
@@ -167,28 +196,17 @@ function renderAttribute(item, classSymbol, docId) {
 }
 
 function renderMethod(item, classSymbol, docId) {
+  const signatureText = item.signature ?? item.name;
   return (
     <div key={item.name}>
       {renderMemberHeading(item, "method")}
-      <SignatureBox>{item.signature ?? item.name}</SignatureBox>
+      <SignatureBox text={signatureText}>
+        {renderCodeExpression(signatureText, {classSymbol, docId})}
+      </SignatureBox>
       {renderDocstringSections(item.docstring_sections, {classSymbol, docId}) ??
         renderDocstring(item.docstring, {classSymbol, docId})}
     </div>
   );
-}
-
-function resolveBaseHref(api, classSymbol, baseName) {
-  if (!baseName) {
-    return null;
-  }
-  if (baseName.includes(".")) {
-    return api.xref_map?.[baseName] ?? null;
-  }
-
-  const packagePrefix = classSymbol.includes(".")
-    ? `${classSymbol.split(".").slice(0, -1).join(".")}.`
-    : "";
-  return api.xref_map?.[`${packagePrefix}${baseName}`] ?? null;
 }
 
 function SummarySection({title, items, classSymbol}) {
@@ -203,7 +221,7 @@ function SummarySection({title, items, classSymbol}) {
         {items.map((item) => (
           <li key={item.name}>
             <a href={`#${normalizeAnchor(item.name)}`}>
-              <code>{item.name}</code>
+              <span className="crocodocs-summary-name">{item.name}</span>
             </a>
             {item.summary ? (
               <>
@@ -295,17 +313,16 @@ export default function ClassBlock({
         <p>
           <strong>Inherits:</strong>{" "}
           {entry.bases.map((baseName, index) => {
-            const href = resolveBaseHref(api, name, baseName);
             return (
               <React.Fragment key={baseName}>
                 {index > 0 ? ", " : ""}
-                {href ? (
-                  <a href={href}>
-                    <code>{baseName}</code>
-                  </a>
-                ) : (
-                  <code>{baseName}</code>
-                )}
+                <span className="crocodocs-inline-code">
+                  {renderCodeExpression(baseName, {
+                    api,
+                    classSymbol: name,
+                    docId: metadata?.id,
+                  })}
+                </span>
               </React.Fragment>
             );
           })}

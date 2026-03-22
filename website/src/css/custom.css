@@ -235,6 +235,78 @@ h6 {
   padding: 0.05rem 0.45rem;
 }
 
+.crocodocs-summary-name {
+  font-weight: 600;
+}
+
+.crocodocs-signature-box {
+  margin-bottom: var(--ifm-paragraph-margin-bottom);
+  position: relative;
+}
+
+.crocodocs-signature-copy {
+  background: var(--ifm-color-emphasis-200);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0;
+  padding: 0.35rem 0.55rem;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  transition: opacity 0.15s ease-in-out;
+  z-index: 1;
+}
+
+.crocodocs-signature-box:hover .crocodocs-signature-copy,
+.crocodocs-signature-copy:focus-visible {
+  opacity: 1;
+}
+
+.crocodocs-signature-pre {
+  background: var(--ifm-code-background);
+  border-radius: var(--ifm-code-border-radius);
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+}
+
+.crocodocs-signature-content {
+  color: var(--ifm-font-color-base);
+  display: block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.crocodocs-inline-code {
+  background: var(--ifm-code-background);
+  border-radius: var(--ifm-code-border-radius);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95em;
+  padding: 0.1em 0.35em;
+}
+
+.crocodocs-code-link {
+  color: var(--ifm-link-color);
+  text-decoration: none;
+}
+
+.crocodocs-signature-content .crocodocs-code-link,
+.crocodocs-inline-code .crocodocs-code-link {
+  color: var(--ifm-link-color);
+}
+
+.crocodocs-code-link:hover,
+.crocodocs-code-link:focus-visible {
+  text-decoration: underline;
+}
+
 .doc-screenshot-figure,
 .screenshot,
 [class^='screenshot-'],
