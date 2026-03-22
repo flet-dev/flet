@@ -116,7 +116,7 @@ function useInjectedToc(sectionGroups) {
 
     const created = [];
     for (const group of sectionGroups) {
-      if (!group.items.length && !group.id) {
+      if (!group.items.length && !group.showWhenEmpty) {
         continue;
       }
 
@@ -267,7 +267,7 @@ export default function ClassBlock({
   showMembers = true,
   image,
   imageCaption,
-  imageWidth = "20%",
+  imageWidth = "40%",
 }) {
   const {metadata} = useDoc();
   const api = getApiData();
@@ -283,7 +283,7 @@ export default function ClassBlock({
   if (!classEntry && !functionEntry && aliasEntry) {
     useInjectedToc(
       showRootHeading
-        ? [{title: entry.name, id: rootAnchor(name), items: []}]
+        ? [{title: entry.name, id: rootAnchor(name), items: [], showWhenEmpty: true}]
         : []
     );
     return (
@@ -344,7 +344,7 @@ export default function ClassBlock({
   useInjectedToc(
     [
       ...(showRootHeading
-        ? [{title: entry.name, id: rootAnchor(name), items: []}]
+        ? [{title: entry.name, id: rootAnchor(name), items: [], showWhenEmpty: true}]
         : []),
       ...(showMembers
         ? [

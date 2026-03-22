@@ -334,6 +334,10 @@ h6 {
   max-width: 100%;
 }
 
+.doc-screenshot-figure figcaption {
+  margin-top: 0.75rem;
+}
+
 .doc-screenshot-figure img,
 .screenshot img,
 [class^='screenshot-'] img,

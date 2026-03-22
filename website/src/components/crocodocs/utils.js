@@ -10,7 +10,7 @@ import remarkParse from "remark-parse";
 
 const IMAGE_LINE_RE = /^!\[([^\]]*)\]\(([^)]+)\)(\{[^}]*\})?$/;
 const WIDTH_RE = /width="([^"]+)"/;
-const XREF_TEXT_RE = /\[([^\]]+)\]\[([^\]]+)\]/g;
+const XREF_TEXT_RE = /\[([^\]]+)\]\[((?:[^\]]|\](?=[^.]))+?)\]/g;
 const API_SYMBOL_RE =
   /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b|\b[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
 const MARKDOWN_PARSER = unified()
@@ -302,6 +302,25 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
   }
 
   return nodes.length ? nodes : text;
+}
+
+function preprocessCrossReferenceMarkdown(text, context) {
+  if (!text) {
+    return text;
+  }
+
+  const segments = text.split(/(```[\s\S]*?```)/g);
+  return segments
+    .map((segment) => {
+      if (segment.startsWith("```")) {
+        return segment;
+      }
+      return segment.replace(XREF_TEXT_RE, (full, label, target) => {
+        const href = resolveCrossReference(target, label, context);
+        return href ? `[${label}](${href})` : full;
+      });
+    })
+    .join("");
 }
 
 export function renderCodeExpression(text, context = {}) {
@@ -655,7 +674,9 @@ export function renderInlineMarkdown(text, context) {
   if (!text) {
     return null;
   }
-  const tree = MARKDOWN_PARSER.parse(text);
+  const tree = MARKDOWN_PARSER.parse(
+    preprocessCrossReferenceMarkdown(text, context)
+  );
   const paragraph =
     tree.children.length === 1 && tree.children[0].type === "paragraph"
       ? tree.children[0]
@@ -669,7 +690,12 @@ export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
   if (!docstring) {
     return null;
   }
-  const tree = MARKDOWN_PARSER.parse(normalizeDocstringMarkdown(docstring));
+  const tree = MARKDOWN_PARSER.parse(
+    preprocessCrossReferenceMarkdown(
+      normalizeDocstringMarkdown(docstring),
+      context
+    )
+  );
   return renderMarkdownNode(tree, context, keyPrefix);
 }
 
