@@ -44,7 +44,7 @@ static_subpath = "docs/examples"
 copy_during = ["migrate", "generate"]
 
 [tool.crocodocs.asset_mappings."test-images"]
-source_path = "../../sdk/python/packages/flet/site/test-images"
+source_path = "../../sdk/python/packages/flet/integration_tests"
 static_subpath = "docs/test-images"
 copy_during = ["migrate", "generate"]
 
