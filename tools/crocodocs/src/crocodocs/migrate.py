@@ -11,7 +11,6 @@ from .assets import (
     copy_referenced_asset,
     iter_referenced_local_assets,
     resolve_local_asset_source,
-    resolve_asset_copy_targets,
     resolve_static_asset_url,
 )
 from .config import CrocoDocsConfig
@@ -67,32 +66,6 @@ MARKDOWN_IMAGE_RE = re.compile(r"!\[([^\]]*)\]\((\.\./[^)]+)\)(\{[^}]*\})?")
 MARKDOWN_IMAGE_ATTR_RE = re.compile(r'(\w+)="([^"]*)"')
 HTML_STYLE_ATTR_RE = re.compile(r'style="([^"]*)"')
 HTML_IMG_SRC_RE = re.compile(r'(<img\b[^>]*\bsrc=")([^"]+)(")')
-FRONT_MATTER_ASSET_KEYS = ("example_media", "example_images", "example_images_examples")
-
-
-def _log_front_matter_assets(
-    reporter: ProgressReporter,
-    front_matter: dict,
-    static_root: Path,
-    asset_mappings: dict,
-    phase: str,
-    source_label: str,
-) -> None:
-    for key in FRONT_MATTER_ASSET_KEYS:
-        value = front_matter.get(key)
-        if not isinstance(value, str) or not value.startswith(".."):
-            continue
-        resolution = resolve_asset_copy_targets(
-            value, static_root, asset_mappings, phase
-        )
-        if resolution is None:
-            reporter.info(f"{source_label}: {key}={value} (unmapped)")
-            continue
-        existence = "exists" if resolution.source_path.exists() else "missing"
-        reporter.info(
-            f"{source_label}: {key}={value} -> {resolution.public_url} "
-            f"[{existence}; source={resolution.source_path}; dest={resolution.static_destination}]"
-        )
 
 
 def _consume_directive_body(
@@ -458,14 +431,6 @@ def run_migrate_bootstrap(
 
         output_path = compute_output_path(input_root, output_root, path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        _log_front_matter_assets(
-            reporter,
-            front_matter,
-            static_root,
-            config.asset_mappings,
-            "migrate",
-            source_path,
-        )
         refs = iter_referenced_local_assets(
             front_matter, content, set(LOCAL_ASSET_REF_RE.findall(content))
         )

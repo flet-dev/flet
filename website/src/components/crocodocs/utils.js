@@ -383,14 +383,23 @@ function renderImage(line, context, key) {
 }
 
 function normalizeDocstringMarkdown(docstring) {
-  const lines = docstring
-    .replace(/\n\/\/\/ caption[^\n]*\n(?:\/\/\/\n)?/g, "\n")
-    .split("\n");
+  const lines = docstring.split("\n");
   const output = [];
   let index = 0;
 
   while (index < lines.length) {
     const trimmed = lines[index].trim();
+    if (trimmed.startsWith("/// caption")) {
+      index += 1;
+      if (index < lines.length && lines[index].trim() === "///") {
+        index += 1;
+      }
+      continue;
+    }
+    if (trimmed === "///") {
+      index += 1;
+      continue;
+    }
     const admonitionMatch = trimmed.match(
       /^\/\/\/\s*admonition(?:\s*\|\s*(.+))?$/
     );

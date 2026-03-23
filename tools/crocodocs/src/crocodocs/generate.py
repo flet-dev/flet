@@ -15,7 +15,6 @@ from .assets import (
     copy_referenced_asset,
     iter_referenced_local_assets,
     resolve_local_asset_source,
-    resolve_asset_copy_targets,
 )
 from .config import CrocoDocsConfig
 from .docs import (
@@ -30,32 +29,6 @@ from .partials import write_partial
 from .progress import ProgressReporter, Summary
 
 LOCAL_ASSET_REF_RE = re.compile(r"(?:\.\./)+[^/\s)\"'}>]+/[^\s)\"'}>]+")
-FRONT_MATTER_ASSET_KEYS = ("example_media", "example_images", "example_images_examples")
-
-
-def _log_front_matter_assets(
-    reporter: ProgressReporter,
-    front_matter: dict[str, Any],
-    static_root: Path,
-    asset_mappings: dict[str, Any],
-    phase: str,
-    source_label: str,
-) -> None:
-    for key in FRONT_MATTER_ASSET_KEYS:
-        value = front_matter.get(key)
-        if not isinstance(value, str) or not value.startswith(".."):
-            continue
-        resolution = resolve_asset_copy_targets(
-            value, static_root, asset_mappings, phase
-        )
-        if resolution is None:
-            reporter.info(f"{source_label}: {key}={value} (unmapped)")
-            continue
-        existence = "exists" if resolution.source_path.exists() else "missing"
-        reporter.info(
-            f"{source_label}: {key}={value} -> {resolution.public_url} "
-            f"[{existence}; source={resolution.source_path}; dest={resolution.static_destination}]"
-        )
 
 
 def _normalize_anchor(name: str) -> str:
@@ -446,14 +419,6 @@ def run_generate(
     for page in pages:
         output_path = docs_path / page["output_path"]
         document = parse_document(output_path.read_text(encoding="utf-8"))
-        _log_front_matter_assets(
-            reporter,
-            document.data,
-            static_root,
-            config.asset_mappings,
-            "generate",
-            page["output_path"],
-        )
         refs = iter_referenced_local_assets(
             document.data,
             document.body,
