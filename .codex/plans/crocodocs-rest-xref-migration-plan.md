@@ -121,6 +121,30 @@ Reason:
 
 That cleanup should be last, not bundled into the first parser change.
 
+### 5. Migrate hand-written Markdown xrefs separately
+
+Hand-written Markdown and MDX docs should not be converted to Sphinx roles.
+
+For Markdown files, mkdocs-style xrefs should be rewritten to normal Markdown links
+with real paths, routes, or anchors:
+
+- same-page anchor:
+  - `[Parameters](#parameters)`
+- another doc:
+  - `[FilePicker](../services/filepicker.md)`
+- another doc + specific member anchor:
+  - `[FilePicker.upload](../services/filepicker.md#flet.FilePicker-upload)`
+- reference-style Markdown is also acceptable as long as the reference resolves to a
+  real URL/path:
+  - `[FilePicker.upload][filepicker-upload]`
+  - `[filepicker-upload]: ../services/filepicker.md#flet.FilePicker-upload`
+
+This should be a distinct migration phase from Python docstring conversion because the
+source convention is different:
+
+- Python docstrings -> standard Sphinx/reST roles
+- hand-written Markdown/MDX -> normal Markdown links
+
 ---
 
 ## Exact Support Changes
@@ -235,9 +259,9 @@ Principle:
 
 | Found variant | Meaning today | Proposed reST form | Example conversion |
 | --- | --- | --- | --- |
-| ``[`Name`][flet.]`` | Append label to module/package prefix | globally qualified target with `~` shortening | ``[`Page`][flet.]`` -> `:class:`~flet.Page`` |
-| ``[`Name`][flet_map.]`` | Append label to package prefix | globally qualified target with `~` shortening | ``[`CircleLayer`][flet_map.]`` -> `:class:`~flet_map.CircleLayer`` |
-| ``[`Member`][flet.Page.]`` | Append label to explicit prefix | globally qualified target with `~` shortening | ``[`route`][flet.Page.]`` -> `:attr:`~flet.Page.route`` |
+| ``[`Name`][flet.]`` | Append label to module/package prefix | globally qualified target; use `~` only when shortening to the final segment is desired | ``[`Page`][flet.]`` -> `:class:`~flet.Page`` |
+| ``[`Name`][flet_map.]`` | Append label to package prefix | globally qualified target; use `~` only when shortening to the final segment is desired | ``[`CircleLayer`][flet_map.]`` -> `:class:`~flet_map.CircleLayer`` |
+| ``[`Member`][flet.Page.]`` | Append label to explicit prefix | globally qualified target; keep qualification when the label already carries it | ``[`route`][flet.Page.]`` -> `:attr:`~flet.Page.route`` |
 | ``[`Page.route`][flet.Page.route]`` | Fully explicit attribute/property target | globally qualified target | ``[`Page.route`][flet.Page.route]`` -> `:attr:`flet.Page.route`` |
 | ``[`upload()`][flet.FilePicker.upload]`` | Fully explicit method target | globally qualified target with `~` shortening | ``[`upload()`][flet.FilePicker.upload]`` -> `:meth:`~flet.FilePicker.upload`` |
 | ``[`encrypt()`][(m).encrypt]`` | Module-local function/method | local `:func:` when module context is known | ``[`encrypt()`][(m).encrypt]`` -> `:func:`encrypt`` |
@@ -248,6 +272,7 @@ Principle:
 | ``[`PieChartSection`][(p).]`` | Current package symbol resolved to package export | globally qualified target with `~` shortening | ``[`PieChartSection`][(p).]`` -> `:class:`~flet_charts.PieChartSection`` |
 | ``[`selected`][(p).CandlestickChartSpot.selected]`` | Package-relative explicit member | globally qualified target with `~` shortening | ``[`selected`][(p).CandlestickChartSpot.selected]`` -> `:data:`~flet_charts.CandlestickChartSpot.selected`` |
 | ``[`fill_color`][..]`` | Compact current-class member shorthand | same as `(c).` after normalization | ``[`fill_color`][..]`` -> `:attr:`fill_color`` |
+| ``[`Enum`][enum.Enum]`` | External or stdlib explicit symbol | plain inline code, not a reST xref | ``[`Enum`][enum.Enum]`` -> `enum.Enum` |
 
 ### Role selection rules
 
@@ -277,8 +302,9 @@ Guidelines:
 1. Prefer local member refs when current class/module context makes them obvious.
 2. Otherwise use globally qualified names, not short ambiguous qualifiers.
 3. Use `~` on globally qualified names when only the final display segment should be shown.
-4. Keep globally qualified names without `~` when the visible text should stay fully qualified.
-5. For custom prose labels such as `example`, rewrite the sentence instead of encoding
+4. If the original label already carries qualification such as `Card.margin`, keep the qualified display and do not add `~`.
+5. Replace external or stdlib explicit targets that are outside CrocoDocs API metadata with plain inline code such as `enum.Enum` or `dataclasses.dataclass`.
+6. For custom prose labels such as `example`, rewrite the sentence instead of encoding
    that prose in the xref itself.
 
 Examples:
@@ -286,8 +312,10 @@ Examples:
 - preferred in local context: `:attr:`start_angle``
 - preferred cross-type reference: `:class:`~flet.Page``
 - preferred qualified method reference: `:meth:`~flet.FilePicker.upload``
+- preferred qualified member display: `:attr:`flet.Card.margin``
 - acceptable when disambiguation is needed: `:class:`flet.Page``
 - acceptable when full visible qualification is wanted: `:meth:`flet.FilePicker.upload``
+- external/stdlib fallback: `dataclasses.dataclass`
 
 ---
 
@@ -304,7 +332,7 @@ Deliverable:
 
 - mixed old/new xrefs render correctly in generated API docs
 
-### B. Migration tool
+### B. Python docstring migration tool
 
 Suggested location:
 
@@ -320,11 +348,35 @@ Recommended approach:
 - select role by symbol kind using CrocoDocs/Griffe API data
 - rewrite docstring content only
 
-### C. Validation pass
+### C. Markdown/MDX xref migration tool
+
+Scope:
+
+- hand-written docs under `sdk/python/packages/flet/docs`
+- later, if needed, migrated docs under `website/docs`
+
+Recommended approach:
+
+- rewrite mkdocs-style xrefs in Markdown/MDX to normal Markdown links
+- preserve same-page anchors as `#anchor`
+- rewrite cross-doc links to relative `.md` paths
+- preserve or generate reference-style link definitions only when that keeps the file
+  clearer
+- do not introduce Sphinx/reST roles into Markdown/MDX source
+
+Examples:
+
+- ``[Parameters][#parameters]`` -> `[Parameters](#parameters)`
+- ``[`FilePicker`][flet.FilePicker]`` in Markdown -> `[FilePicker](../services/filepicker.md)`
+- ``[`FilePicker.upload`][flet.FilePicker.upload]`` in Markdown ->
+  `[FilePicker.upload](../services/filepicker.md#flet.FilePicker-upload)`
+
+### D. Validation pass
 
 Checks:
 
 - no remaining ``[...][...]`` xrefs in `sdk/python/packages/*/src`
+- no remaining mkdocs-style API xrefs in hand-written Markdown/MDX docs
 - generated API pages no longer render raw `:class:` or `:meth:` text
 - mixed-format transition works while migration is incomplete
 
@@ -340,7 +392,9 @@ Checks:
 5. Build the docstring-aware bulk migrator.
 6. Convert `flet` package first.
 7. Convert extension packages.
-8. Remove mkdocs-style compatibility after the last package is migrated.
+8. Build the Markdown/MDX xref migrator for hand-written docs.
+9. Convert hand-written Markdown/MDX mkdocs-style xrefs to normal Markdown links.
+10. Remove mkdocs-style compatibility after the last package is migrated.
 
 ---
 

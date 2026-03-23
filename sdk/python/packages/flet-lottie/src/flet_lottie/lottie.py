@@ -31,7 +31,7 @@ class Lottie(ft.LayoutControl):
     Whether the animation should repeat in a loop.
 
     Note:
-        Has no effect if [`animate`][(c).] is `False`.
+        Has no effect if :attr:`animate` is `False`.
     """
 
     reverse: bool = False
@@ -40,7 +40,7 @@ class Lottie(ft.LayoutControl):
     (from start to end and then continuously from end to start).
 
     Note:
-        Has no effect if [`animate`][(c).] or [`repeat`][(c).] is `False`.
+        Has no effect if :attr:`animate` or :attr:`repeat` is `False`.
     """
 
     animate: bool = True
@@ -84,13 +84,13 @@ class Lottie(ft.LayoutControl):
     A control to display when an error occurs
     while loading the Lottie animation.
 
-    For more information on the error, see [`on_error`][(c).].
+    For more information on the error, see :attr:`on_error`.
     """
 
     on_error: Optional[ft.ControlEventHandler["Lottie"]] = None
     """
     Fires when an error occurs while loading the Lottie animation.
 
-    The [`data`][flet.Event.data] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains information on the error.
     """

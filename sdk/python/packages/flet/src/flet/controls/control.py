@@ -31,8 +31,8 @@ class Control(BaseControl):
 
     Note:
         Has effect only if the direct parent of this control is one of the following
-        controls, or their subclasses: [`Column`][flet.], [`Row`][flet.],
-        [`View`][flet.], [`Page`][flet.].
+        controls, or their subclasses: :class:`~flet.Column`, :class:`~flet.Row`,
+        :class:`~flet.View`, :class:`~flet.Page`.
 
     Raises:
         ValueError: If it is not of type `bool` or `int`.
@@ -51,15 +51,15 @@ class Control(BaseControl):
 
         - `expand` is not `None` and
         - the direct parent of this control is one of the following controls, or their
-            subclasses: [`Column`][flet.], [`Row`][flet.], [`View`][flet.],
-            [`Page`][flet.].
+            subclasses: :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.View`,
+            :class:`~flet.Page`.
     """
 
     # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     col: ResponsiveNumber = 12
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.], this property is used \
-    to determine how many virtual columns of a screen this control will span.
+    If a parent of this control is a :class:`~flet.ResponsiveRow`, this property is \
+    used to determine how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.

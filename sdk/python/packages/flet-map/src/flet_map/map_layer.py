@@ -10,11 +10,11 @@ class MapLayer(ft.Control):
 
     The following layers are available:
 
-    - [`CircleLayer`][(p).]
-    - [`MarkerLayer`][(p).]
-    - [`PolygonLayer`][(p).]
-    - [`PolylineLayer`][(p).]
-    - [`RichAttribution`][(p).]
-    - [`SimpleAttribution`][(p).]
-    - [`TileLayer`][(p).]
+    - :class:`~flet_map.CircleLayer`
+    - :class:`~flet_map.MarkerLayer`
+    - :class:`~flet_map.PolygonLayer`
+    - :class:`~flet_map.PolylineLayer`
+    - :class:`~flet_map.RichAttribution`
+    - :class:`~flet_map.SimpleAttribution`
+    - :class:`~flet_map.TileLayer`
     """

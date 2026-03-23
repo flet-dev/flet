@@ -23,7 +23,7 @@ from flet.controls.types import (
 
 class PopupMenuPosition(Enum):
     """
-    Used to configure how the [`PopupMenuButton`][flet.] positions its popup menu.
+    Used to configure how the :class:`~flet.PopupMenuButton` positions its popup menu.
     """
 
     OVER = "over"
@@ -58,7 +58,7 @@ class PopupMenuItem(Control):
     Whether this menu item is checked.
 
     If set to `True`, a checkmark will be shown on the left of the
-    [`content`][(c).].
+    :attr:`content`.
     """
 
     height: Number = 48.0
@@ -73,11 +73,11 @@ class PopupMenuItem(Control):
     Defaults to `Padding.symmetric(horizontal=12)`.
 
     Note:
-        The [`height`][(c).] value of this menu item may
+        The :attr:`height` value of this menu item may
         influence the applied padding.
 
         For example, if a `height` greater than the height of the sum of the padding
-        and a [`content`][(c).] is provided, then the padding's
+        and a :attr:`content` is provided, then the padding's
         effect will not be visible.
     """
 

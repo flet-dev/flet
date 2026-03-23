@@ -66,7 +66,8 @@ class TileLayerEvictErrorTileStrategy(Enum):
 
 
 class AttributionAlignment(Enum):
-    """Position to anchor [`RichAttribution`][(p).] control relative to the map."""
+    """Position to anchor :class:`~flet_map.RichAttribution` control relative to the \
+    map."""
 
     BOTTOM_LEFT = "bottomLeft"
     """The bottom left corner."""
@@ -77,7 +78,7 @@ class AttributionAlignment(Enum):
 
 class PatternFit(Enum):
     """
-    Determines how a non-solid [`StrokePattern`][(p).] should be fit to a line
+    Determines how a non-solid :class:`~flet_map.StrokePattern` should be fit to a line
     when their lengths are not equal or multiples
     """
 
@@ -93,13 +94,13 @@ class PatternFit(Enum):
     SCALE_DOWN = "scaleDown"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (smaller version regarding rounding, cf. [`SCALE_UP`][(c).]).
+    polyline (smaller version regarding rounding, cf. :attr:`SCALE_UP`).
     """
 
     SCALE_UP = "scaleUp"
     """
     Scale the pattern to ensure it fits an integer number of times into the
-    polyline (bigger version regarding rounding, cf. [`SCALE_DOWN`][(c).]).
+    polyline (bigger version regarding rounding, cf. :attr:`SCALE_DOWN`).
     """
 
     APPEND_DOT = "appendDot"
@@ -115,7 +116,7 @@ class PatternFit(Enum):
     extending the final dash to the last point if it would not normally reach
     that point (there is a gap at that location).
 
-    Only useful when working with [`DashedStrokePattern`][(p).].
+    Only useful when working with :class:`~flet_map.DashedStrokePattern`.
     Similar to `APPEND_DOT` for `DottedStrokePattern`.
     """
 
@@ -161,9 +162,9 @@ class StrokePattern:
     This is an abstract class and shouldn't be used directly.
 
     See usable derivatives:
-    - [`SolidStrokePattern`][(p).]
-    - [`DashedStrokePattern`][(p).]
-    - [`DottedStrokePattern`][(p).]
+    - :class:`~flet_map.SolidStrokePattern`
+    - :class:`~flet_map.DashedStrokePattern`
+    - :class:`~flet_map.DottedStrokePattern`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -180,7 +181,7 @@ class SolidStrokePattern(StrokePattern):
 @ft.value
 class DashedStrokePattern(StrokePattern):
     """
-    A stroke pattern of alternating dashes and gaps, defined by [`segments`][(c).].
+    A stroke pattern of alternating dashes and gaps, defined by :attr:`segments`.
     """
 
     segments: list[ft.Number]
@@ -191,7 +192,7 @@ class DashedStrokePattern(StrokePattern):
 	values must be strictly positive.
 
 	'Units' refers to pixels, unless the pattern has been scaled due to the
-	[`pattern_fit`][(c).] being [`PatternFit.SCALE_UP`][flet_map.].
+	:attr:`pattern_fit` being :attr:`flet_map.PatternFit.SCALE_UP`.
 
 	If more than two items are specified, then each segments will
 	alternate/iterate through the values.
@@ -232,7 +233,7 @@ class DashedStrokePattern(StrokePattern):
 @ft.value
 class DottedStrokePattern(StrokePattern):
     """
-    A stroke pattern of circular dots, spaced with [`spacing_factor`][(c).].
+    A stroke pattern of circular dots, spaced with :attr:`spacing_factor`.
     """
 
     spacing_factor: ft.Number = 1.5
@@ -242,7 +243,7 @@ class DottedStrokePattern(StrokePattern):
     A value of `1.0` will result in spacing equal to the `stroke_width`.
     Increasing the value increases the spacing with the same scaling.
 
-    May also be scaled by the use of [`PatternFit.SCALE_UP`][(p).].
+    May also be scaled by the use of :attr:`flet_map.PatternFit.SCALE_UP`.
 
     Raises:
         ValueError: If it is less than or equal to zero.
@@ -292,8 +293,8 @@ class InteractionFlag(IntFlag):
     Flags to enable/disable certain interaction events on the map.
 
     Example:
-        - [`InteractionFlag.ALL`][(p).] to enable all events
-        - [`InteractionFlag.NONE`][(p).] to disable all events
+        - :attr:`flet_map.InteractionFlag.ALL` to enable all events
+        - :attr:`flet_map.InteractionFlag.NONE` to disable all events
     """
 
     NONE = 0
@@ -349,9 +350,9 @@ class InteractionFlag(IntFlag):
         """
         Returns:
             `True` if any multi-finger gesture flags
-                ([`MultiFingerGesture.PINCH_MOVE`][(p).],
-                [`MultiFingerGesture.PINCH_ZOOM`][(p).],
-                [`MultiFingerGesture.ROTATE`][(p).]) are enabled.
+                (:attr:`flet_map.MultiFingerGesture.PINCH_MOVE`,
+                :attr:`flet_map.MultiFingerGesture.PINCH_ZOOM`,
+                :attr:`flet_map.MultiFingerGesture.ROTATE`) are enabled.
         """
         return InteractionFlag.has_flag(
             flags,
@@ -366,7 +367,7 @@ class InteractionFlag(IntFlag):
     def has_drag(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`DRAG`][flet_map.InteractionFlag.DRAG] interaction
+            `True` if the :attr:`~flet_map.InteractionFlag.DRAG` interaction
                 flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DRAG)
@@ -375,7 +376,7 @@ class InteractionFlag(IntFlag):
     def has_fling_animation(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`FLING_ANIMATION`][flet_map.InteractionFlag.FLING_ANIMATION]
+            `True` if the :attr:`~flet_map.InteractionFlag.FLING_ANIMATION`
                 interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.FLING_ANIMATION)
@@ -384,7 +385,7 @@ class InteractionFlag(IntFlag):
     def has_pinch_move(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`PINCH_MOVE`][flet_map.InteractionFlag.PINCH_MOVE]
+            `True` if the :attr:`~flet_map.InteractionFlag.PINCH_MOVE`
                 interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.PINCH_MOVE)
@@ -393,7 +394,7 @@ class InteractionFlag(IntFlag):
     def has_fling_pinch_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`PINCH_ZOOM`][flet_map.InteractionFlag.PINCH_ZOOM]
+            `True` if the :attr:`~flet_map.InteractionFlag.PINCH_ZOOM`
                 interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.PINCH_ZOOM)
@@ -403,7 +404,7 @@ class InteractionFlag(IntFlag):
         """
         Returns:
             `True` if the
-                [`DOUBLE_TAP_DRAG_ZOOM`][flet_map.InteractionFlag.DOUBLE_TAP_DRAG_ZOOM]
+                :attr:`~flet_map.InteractionFlag.DOUBLE_TAP_DRAG_ZOOM`
                 interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DOUBLE_TAP_DRAG_ZOOM)
@@ -412,7 +413,7 @@ class InteractionFlag(IntFlag):
     def has_double_tap_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`DOUBLE_TAP_ZOOM`][flet_map.InteractionFlag.DOUBLE_TAP_ZOOM]
+            `True` if the :attr:`~flet_map.InteractionFlag.DOUBLE_TAP_ZOOM`
                 interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.DOUBLE_TAP_ZOOM)
@@ -421,7 +422,7 @@ class InteractionFlag(IntFlag):
     def has_rotate(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`ROTATE`][(c).] interactive flag is enabled.
+            `True` if the :attr:`ROTATE` interactive flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.ROTATE)
 
@@ -429,7 +430,7 @@ class InteractionFlag(IntFlag):
     def has_scroll_wheel_zoom(flags: int) -> bool:
         """
         Returns:
-            `True` if the [`SCROLL_WHEEL_ZOOM`][(c).] interaction flag is enabled.
+            `True` if the :attr:`SCROLL_WHEEL_ZOOM` interaction flag is enabled.
         """
         return InteractionFlag.has_flag(flags, InteractionFlag.SCROLL_WHEEL_ZOOM)
 
@@ -463,23 +464,23 @@ class InteractionConfiguration:
 
     enable_multi_finger_gesture_race: bool = False
     """
-    If `True`, then [`rotation_threshold`][(c).] and [`pinch_zoom_threshold`][(c).]
-    and [`pinch_move_threshold`][(c).] will race.
+    If `True`, then :attr:`rotation_threshold` and :attr:`pinch_zoom_threshold`
+    and :attr:`pinch_move_threshold` will race.
     If multiple gestures win at the same time, then precedence:
-    [`pinch_zoom_win_gestures`][(c).] > [`rotation_win_gestures`][(c).] >
-    [`pinch_move_win_gestures`][(c).]
+    :attr:`pinch_zoom_win_gestures` > :attr:`rotation_win_gestures` >
+    :attr:`pinch_move_win_gestures`
     """
 
     pinch_move_threshold: ft.Number = 40.0
     """
     Map starts to move when `pinch_move_threshold` has been achieved
     or another multi finger gesture wins which allows
-    [`MultiFingerGesture.PINCH_MOVE`][(p).].
+    :attr:`flet_map.MultiFingerGesture.PINCH_MOVE`.
 
     Note:
-        If [`InteractionConfiguration.flags`][(p).] doesn't contain
-        [`InteractionFlag.PINCH_MOVE`][(p).] or
-        [`enable_multi_finger_gesture_race`][(c).] is false then pinch move cannot win.
+        If :attr:`flet_map.InteractionConfiguration.flags` doesn't contain
+        :attr:`flet_map.InteractionFlag.PINCH_MOVE` or
+        :attr:`enable_multi_finger_gesture_race` is false then pinch move cannot win.
     """
 
     scroll_wheel_velocity: ft.Number = 0.005
@@ -492,23 +493,24 @@ class InteractionConfiguration:
     """
     Map starts to zoom when `pinch_zoom_threshold` has been achieved or
     another multi finger gesture wins which allows
-    [`MultiFingerGesture.PINCH_ZOOM`][(p).].
+    :attr:`flet_map.MultiFingerGesture.PINCH_ZOOM`.
 
     Note:
-        If [`InteractionConfiguration.flags`][(p).]
-        doesn't contain [`InteractionFlag.PINCH_ZOOM`][(p).]
-        or [`enable_multi_finger_gesture_race`][(c).] is false then zoom cannot win.
+        If :attr:`flet_map.InteractionConfiguration.flags`
+        doesn't contain :attr:`flet_map.InteractionFlag.PINCH_ZOOM`
+        or :attr:`enable_multi_finger_gesture_race` is false then zoom cannot win.
     """
 
     rotation_threshold: ft.Number = 20.0
     """
     Map starts to rotate when `rotation_threshold` has been achieved or
-    another multi finger gesture wins which allows [`MultiFingerGesture.ROTATE`][(p).].
+    another multi finger gesture wins which allows \
+    :attr:`flet_map.MultiFingerGesture.ROTATE`.
 
     Note:
-        If [`InteractionConfiguration.flags`][(p).]
-        doesn't contain [`InteractionFlag.ROTATE`][(p).]
-        or [`enable_multi_finger_gesture_race`][(c).] is false then rotate cannot win.
+        If :attr:`flet_map.InteractionConfiguration.flags`
+        doesn't contain :attr:`flet_map.InteractionFlag.ROTATE`
+        or :attr:`enable_multi_finger_gesture_race` is false then rotate cannot win.
     """
 
     flags: InteractionFlag = InteractionFlag.ALL
@@ -518,33 +520,34 @@ class InteractionConfiguration:
 
     rotation_win_gestures: MultiFingerGesture = MultiFingerGesture.ROTATE
     """
-    When [`rotation_threshold`][(c).] wins over [`pinch_zoom_threshold`][(c).] and
-    [`pinch_move_threshold`][(c).] then `rotation_win_gestures` gestures will be used.
+    When :attr:`rotation_threshold` wins over :attr:`pinch_zoom_threshold` and
+    :attr:`pinch_move_threshold` then `rotation_win_gestures` gestures will be used.
     """
 
     pinch_move_win_gestures: MultiFingerGesture = (
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When [`pinch_move_threshold`][(c).] wins over [`rotation_threshold`][(c).]
-    and [`pinch_zoom_threshold`][(c).] then `pinch_move_win_gestures` gestures
+    When :attr:`pinch_move_threshold` wins over :attr:`rotation_threshold`
+    and :attr:`pinch_zoom_threshold` then `pinch_move_win_gestures` gestures
     will be used.
 
-    By default [`MultiFingerGesture.PINCH_MOVE`][(p).]
-    and [`MultiFingerGesture.PINCH_ZOOM`][(p).]
-    gestures will take effect see [`MultiFingerGesture`][(p).] for custom settings.
+    By default :attr:`flet_map.MultiFingerGesture.PINCH_MOVE`
+    and :attr:`flet_map.MultiFingerGesture.PINCH_ZOOM`
+    gestures will take effect see :class:`~flet_map.MultiFingerGesture` for custom \
+    settings.
     """
 
     pinch_zoom_win_gestures: MultiFingerGesture = (
         MultiFingerGesture.PINCH_ZOOM | MultiFingerGesture.PINCH_MOVE
     )
     """
-    When [`pinch_zoom_threshold`][(c).] wins over [`rotation_threshold`][(c).]
-    and [`pinch_move_threshold`][(c).]
+    When :attr:`pinch_zoom_threshold` wins over :attr:`rotation_threshold`
+    and :attr:`pinch_move_threshold`
     then `pinch_zoom_win_gestures` gestures will be used.
 
-    By default [`MultiFingerGesture.PINCH_ZOOM`][(p).]
-    and [`MultiFingerGesture.PINCH_MOVE`][(p).]
+    By default :attr:`flet_map.MultiFingerGesture.PINCH_ZOOM`
+    and :attr:`flet_map.MultiFingerGesture.PINCH_MOVE`
     gestures will take effect see `MultiFingerGesture` for custom settings.
     """
 
@@ -567,7 +570,7 @@ class InteractionConfiguration:
 
 
 class MapEventSource(Enum):
-    """Defines the source of a [`MapEvent`][(p).]."""
+    """Defines the source of a :class:`~flet_map.MapEvent`."""
 
     MAP_CONTROLLER = "mapController"
     """The `MapEvent` is caused programmatically by the `MapController`."""
@@ -638,12 +641,12 @@ class MapEventSource(Enum):
     KEYBOARD = "keyboard"
     """
     The `MapEvent` is caused by a keyboard key.
-    See [`KeyboardConfiguration`][(p).] for details.
+    See :class:`~flet_map.KeyboardConfiguration` for details.
     """
 
 
 class MapEventType(Enum):
-    """Concrete subtype of a [`MapEvent`][(p).]."""
+    """Concrete subtype of a :class:`~flet_map.MapEvent`."""
 
     TAP = "tap"
     """A map tap event."""
@@ -710,7 +713,7 @@ class CameraFit:
     depending on which one was provided.
 
     Raises:
-        ValueError: If both [`bounds`][(c).] and [`coordinates`][(c).]
+        ValueError: If both :attr:`bounds` and :attr:`coordinates`
             are `None` or not `None`.
     """
 
@@ -719,7 +722,7 @@ class CameraFit:
     The bounds which the camera should contain once it is fitted.
 
     Note:
-        If this is not `None`, [`coordinates`][(c).] should be `None`, and vice versa.
+        If this is not `None`, :attr:`coordinates` should be `None`, and vice versa.
     """
 
     coordinates: Optional[list[MapLatitudeLongitude]] = None
@@ -727,7 +730,7 @@ class CameraFit:
     The coordinates which the camera should contain once it is fitted.
 
     Note:
-        If this is not `None`, [`bounds`][(c).] should be `None`, and vice versa.
+        If this is not `None`, :attr:`bounds` should be `None`, and vice versa.
     """
 
     max_zoom: Optional[ft.Number] = None
@@ -830,24 +833,29 @@ class MapEvent(ft.Event["Map"]):
     """
     Camera state before the event.
 
-    Set only for [`MapEventType.MOVE`][(p).], [`MapEventType.FLING_ANIMATION`][(p).],
-    [`MapEventType.DOUBLE_TAP_ZOOM`][(p).], [`MapEventType.SCROLL_WHEEL_ZOOM`][(p).],
-    [`MapEventType.ROTATE`][(p).], and [`MapEventType.NON_ROTATED_SIZE_CHANGE`][(p).].
+    Set only for :attr:`flet_map.MapEventType.MOVE`, \
+    :attr:`flet_map.MapEventType.FLING_ANIMATION`,
+    :attr:`flet_map.MapEventType.DOUBLE_TAP_ZOOM`, \
+    :attr:`flet_map.MapEventType.SCROLL_WHEEL_ZOOM`,
+    :attr:`flet_map.MapEventType.ROTATE`, and \
+    :attr:`flet_map.MapEventType.NON_ROTATED_SIZE_CHANGE`.
     """
 
     coordinates: Optional[MapLatitudeLongitude] = None
     """
     Tap/press coordinates associated with this event.
 
-    Set only for [`MapEventType.TAP`][(p).], [`MapEventType.SECONDARY_TAP`][(p).], and
-    [`MapEventType.LONG_PRESS`][(p).].
+    Set only for :attr:`flet_map.MapEventType.TAP`, \
+    :attr:`flet_map.MapEventType.SECONDARY_TAP`, and
+    :attr:`flet_map.MapEventType.LONG_PRESS`.
     """
 
     id: Optional[str] = None
     """
     Optional custom identifier associated with this event.
 
-    Set only for [`MapEventType.MOVE`][(p).] and [`MapEventType.ROTATE`][(p).].
+    Set only for :attr:`flet_map.MapEventType.MOVE` and \
+    :attr:`flet_map.MapEventType.ROTATE`.
     """
 
 
@@ -941,7 +949,7 @@ class KeyboardConfiguration:
     scales the velocity of the concerned gesture.
 
     Info:
-        See [`CursorKeyboardRotationConfiguration`][(p).] for options
+        See :class:`~flet_map.CursorKeyboardRotationConfiguration` for options
         to control the keyboard and
         mouse cursor being used together to rotate the map.
     """
@@ -956,10 +964,10 @@ class KeyboardConfiguration:
         default_factory=lambda: ft.Duration(milliseconds=450)
     )
     """
-    Duration of the curved ([`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
+    Duration of the curved (:attr:`flet.AnimationCurve.EASE_IN`)
     portion of the animation occurring
     after a key down event (and after a key up event if
-    [`animation_curve_reverse_duration`][(c).] is `None`)
+    :attr:`animation_curve_reverse_duration` is `None`)
     """
 
     animation_curve_reverse_duration: Optional[ft.DurationValue] = field(
@@ -967,10 +975,10 @@ class KeyboardConfiguration:
     )
     """
     Duration of the curved (reverse
-    [`AnimationCurve.EASE_IN`][flet.AnimationCurve.EASE_IN])
+    :attr:`flet.AnimationCurve.EASE_IN`)
     portion of the animation occurring after a key up event.
 
-    Set to `None` to use [`animation_curve_duration`][(c).].
+    Set to `None` to use :attr:`animation_curve_duration`.
     """
 
     animation_curve_curve: AnimationCurve = AnimationCurve.EASE_IN_OUT
@@ -1033,7 +1041,7 @@ class KeyboardConfiguration:
 
     Must be greater than 0 and less than or equal to 1.
     To disable leaping, or change the maximum length of the key press
-    that will trigger a leap, see [`perform_leap_trigger_duration`][(c).].
+    that will trigger a leap, see :attr:`perform_leap_trigger_duration`.
     """
 
     max_rotate_velocity: ft.Number = 3
@@ -1057,7 +1065,7 @@ class KeyboardConfiguration:
     The amount to scale the panning offset velocity by during a leap animation.
 
     The larger the number, the larger the movement during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
+    To change the duration of a leap, see :attr:`leap_max_of_curve_component`.
     """
 
     rotate_leap_velocity_multiplier: ft.Number = 3
@@ -1065,9 +1073,9 @@ class KeyboardConfiguration:
     The amount to scale the rotation velocity by during a leap animation
 
     The larger the number, the larger the rotation difference during a leap.
-    To change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
+    To change the duration of a leap, see :attr:`leap_max_of_curve_component`.
 
-    This may cause the pan velocity to exceed [`max_rotate_velocity`][(c).].
+    This may cause the pan velocity to exceed :attr:`max_rotate_velocity`.
     """
 
     zoom_leap_velocity_multiplier: ft.Number = 3
@@ -1075,9 +1083,9 @@ class KeyboardConfiguration:
     The amount to scale the zooming velocity by during a leap animation.
 
     The larger the number, the larger the zoom difference during a leap. To
-    change the duration of a leap, see [`leap_max_of_curve_component`][(c).].
+    change the duration of a leap, see :attr:`leap_max_of_curve_component`.
 
-    This may cause the pan velocity to exceed [`max_zoom_velocity`][(c).].
+    This may cause the pan velocity to exceed :attr:`max_zoom_velocity`.
     """
 
     perform_leap_trigger_duration: Optional[ft.DurationValue] = field(
@@ -1087,10 +1095,10 @@ class KeyboardConfiguration:
     Maximum duration between the key down and key up events of an animation
     which will trigger a 'leap'.
 
-    To customize the leap itself, see the [`leap_max_of_curve_component`][(c).] &
-    `*leap_velocity_multiplier` ([`zoom_leap_velocity_multiplier`][(c).],
-    [`pan_leap_velocity_multiplier`][(c).] and
-    [`rotate_leap_velocity_multiplier`][(c).]) properties.
+    To customize the leap itself, see the :attr:`leap_max_of_curve_component` &
+    `*leap_velocity_multiplier` (:attr:`zoom_leap_velocity_multiplier`,
+    :attr:`pan_leap_velocity_multiplier` and
+    :attr:`rotate_leap_velocity_multiplier`) properties.
 
     Set to `None` to disable leaping.
     """
@@ -1101,7 +1109,7 @@ class KeyboardConfiguration:
         Disable keyboard control of the map.
 
         Info:
-            [`CursorKeyboardRotationConfiguration`][(p).] may still be active,
+            :class:`~flet_map.CursorKeyboardRotationConfiguration` may still be active,
             and is not disabled if this is disabled.
         """
         return KeyboardConfiguration(
@@ -1179,7 +1187,7 @@ class CursorKeyboardRotationConfiguration:
 
 @ft.value
 class WMSTileLayerConfiguration:
-    """Configuration for a WMS [`TileLayer`][(p).]."""
+    """Configuration for a WMS :class:`~flet_map.TileLayer`."""
 
     base_url: str
     """WMS service's URL, for example `http://ows.mundialis.de/services/service?`"""

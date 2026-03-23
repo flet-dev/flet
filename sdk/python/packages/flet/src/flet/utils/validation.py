@@ -59,7 +59,7 @@ ClassMessage = Union[str, Callable[[Any], str]]
 """Static text or callable used to format a class-level error message."""
 
 ClassPredicate = Callable[[Any], bool]
-"""Boolean predicate used by [`V.ensure()`][(m).V.ensure]."""
+"""Boolean predicate used by `V.ensure()`."""
 
 
 class ValidationDeclarationError(RuntimeError):
@@ -1368,7 +1368,7 @@ class V:
         Validate `field_name > other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly greater than [`other_field`][(c).].`
+        `If it is not strictly greater than `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1418,7 +1418,7 @@ class V:
         Validate `field_name >= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not greater than or equal to [`other_field`][(c).].`
+        `If it is not greater than or equal to `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1468,7 +1468,7 @@ class V:
         Validate `field_name < other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly less than [`other_field`][(c).].`
+        `If it is not strictly less than `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1518,7 +1518,7 @@ class V:
         Validate `field_name <= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not less than or equal to [`other_field`][(c).].`
+        `If it is not less than or equal to `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.

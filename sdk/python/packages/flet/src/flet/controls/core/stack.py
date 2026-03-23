@@ -14,7 +14,7 @@ __all__ = ["Stack", "StackFit"]
 
 class StackFit(Enum):
     """
-    How to size the non-positioned children of a [`Stack`][flet.].
+    How to size the non-positioned children of a :class:`~flet.Stack`.
     """
 
     LOOSE = "loose"
@@ -31,7 +31,8 @@ class StackFit(Enum):
     The constraints passed to the stack from its parent are tightened to the
     biggest size allowed.
 
-    For example, if the [`Stack`][flet.] has loose constraints with a width in the range
+    For example, if the :class:`~flet.Stack` has loose constraints with a width in the \
+    range
     `10` to `100` and a height in the range `0` to `600`, then the non-positioned
     children of the stack would all be sized as `100` pixels wide and `600` high.
     """
@@ -41,7 +42,8 @@ class StackFit(Enum):
     The constraints passed to the stack from its parent are passed unmodified
     to the non-positioned children.
 
-    For example, if a [`Stack`][flet.] is an expanded child of a [`Row`][flet.], the
+    For example, if a :class:`~flet.Stack` is an expanded child of a \
+    :class:`~flet.Row`, the
     horizontal constraints will be tight and the vertical constraints will be loose.
     """
 
@@ -105,14 +107,14 @@ class Stack(LayoutControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Specifies the alignment for non-positioned (those without explicit alignment \
-    properties such as [`top`][flet.LayoutControl.]
-    or [`bottom`][flet.LayoutControl.]) and
-    partially-positioned [`controls`][(c).].
+    properties such as :attr:`~flet.LayoutControl.top`
+    or :attr:`~flet.LayoutControl.bottom`) and
+    partially-positioned :attr:`controls`.
     """
 
     fit: StackFit = StackFit.LOOSE
     """
-    How to size the non-positioned [`controls`][(c).].
+    How to size the non-positioned :attr:`controls`.
     """
 
     def init(self):

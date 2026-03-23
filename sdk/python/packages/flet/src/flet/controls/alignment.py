@@ -114,7 +114,7 @@ class Alignment:
 
 
 class AlignmentProperty:
-    """Descriptor used to expose predefined [`Alignment`][flet.] constants."""
+    """Descriptor used to expose predefined :class:`~flet.Alignment` constants."""
 
     def __init__(self, factory):
         self.factory = factory

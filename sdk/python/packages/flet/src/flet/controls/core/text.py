@@ -137,7 +137,7 @@ class TextSelection:
 
         Raises:
             AssertionError: If the selection is not valid,
-                i.e. [`is_valid`][(c).] is `False`.
+                i.e. :attr:`is_valid` is `False`.
         """
         assert self.is_valid
         return source_text[self.start : self.end]
@@ -224,7 +224,7 @@ class Text(LayoutControl):
     Display text.
 
     It consists of two sources combined to produce the final text:
-    [`value`][(c).] and [`spans`][(c).].
+    :attr:`value` and :attr:`spans`.
 
     Example:
     ```python
@@ -239,7 +239,7 @@ class Text(LayoutControl):
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`][flet.]
+    The list of :class:`~flet.TextSpan`
     objects to build a rich text paragraph.
     """
 
@@ -258,7 +258,7 @@ class Text(LayoutControl):
     font_family_fallback: Optional[list[str]] = None
     """
     Ordered fallback font families used when a glyph is unavailable in
-    [`font_family`][(c).].
+    :attr:`font_family`.
     """
 
     size: Optional[Number] = None
@@ -355,7 +355,7 @@ class Text(LayoutControl):
     Whether to show cursor (blinking caret) when the text is selected.
 
     Note:
-        Has effect only when [`selectable`][(c).] is `True`.
+        Has effect only when :attr:`selectable` is `True`.
     """
 
     enable_interactive_selection: bool = True
@@ -368,7 +368,7 @@ class Text(LayoutControl):
     the user, text cannot be copied.
 
     Note:
-        Has effect only when [`selectable`][(c).] is `True`.
+        Has effect only when :attr:`selectable` is `True`.
     """
 
     selection_cursor_width: Number = 2.0
@@ -382,7 +382,7 @@ class Text(LayoutControl):
     Negative values may be used to reverse this behavior.
 
     Note:
-        Has effect only when [`selectable`][(c).] is `True`.
+        Has effect only when :attr:`selectable` is `True`.
     """
 
     selection_cursor_height: Optional[Number] = None
@@ -402,7 +402,7 @@ class Text(LayoutControl):
     Called when the user taps on this selectable text.
 
     Note:
-        Has effect only when [`selectable`][(c).] is `True`.
+        Has effect only when :attr:`selectable` is `True`.
     """
 
     on_selection_change: Optional[EventHandler[TextSelectionChangeEvent["Text"]]] = None
@@ -411,5 +411,5 @@ class Text(LayoutControl):
     location).
 
     Note:
-        Has effect only when [`selectable`][(c).] is `True`.
+        Has effect only when :attr:`selectable` is `True`.
     """

@@ -69,5 +69,5 @@ BlurValue = Union[Number, tuple[Number, Number], Blur]
 Represents blur as either:
 - a single sigma value applied to both axes,
 - a `(sigma_x, sigma_y)` tuple,
-- or an explicit [`Blur`][flet.] object.
+- or an explicit :class:`~flet.Blur` object.
 """

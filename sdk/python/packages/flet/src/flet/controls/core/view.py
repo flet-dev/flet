@@ -34,7 +34,7 @@ class View(ScrollableControl, LayoutControl):
     View is the top most container for all other controls.
 
     A root view is automatically created when a new user session started.
-    From layout perspective the View represents a [`Column`][flet.]
+    From layout perspective the View represents a :class:`~flet.Column`
     control, so it has a similar behavior and shares same properties.
     """
 
@@ -46,52 +46,53 @@ class View(ScrollableControl, LayoutControl):
     route: str = field(default_factory=lambda: "/")
     """
     View's route - not currently used by Flet framework, but can be used in a user \
-    program to update [`Page.route`][flet.Page.route] when a view popped.
+    program to update :attr:`flet.Page.route` when a view popped.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     """
-    An [`AppBar`][flet.] control to display at the top of the `Page`.
+    An :class:`~flet.AppBar` control to display at the top of the `Page`.
     """
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.] control to display at the bottom of the `Page`.
+    A :class:`~flet.BottomAppBar` control to display at the bottom of the `Page`.
     """
 
     floating_action_button: Optional[FloatingActionButton] = None
     """
-    A [`FloatingActionButton`][flet.] control to display on top of `Page` content.
+    A :class:`~flet.FloatingActionButton` control to display on top of `Page` content.
     """
 
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
     """
-    Describes position of [`floating_action_button`][(c).]
+    Describes position of :attr:`floating_action_button`
     """
 
     navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
     """
-    A navigation bar ([`NavigationBar`][flet.] or [`CupertinoNavigationBar`][flet.]) \
-    control to display at the bottom of the `Page`.
+    A navigation bar (:class:`~flet.NavigationBar` or \
+    :class:`~flet.CupertinoNavigationBar`) control to display at the bottom of the \
+    `Page`.
     """
 
     drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the start \
-    edge of the view.
+    A :class:`~flet.NavigationDrawer` control to display as a panel sliding from the \
+    start edge of the view.
     """
 
     end_drawer: Optional[NavigationDrawer] = None
     """
-    A [`NavigationDrawer`][flet.] control to display as a panel sliding from the end \
-    edge of the view.
+    A :class:`~flet.NavigationDrawer` control to display as a panel sliding from the \
+    end edge of the view.
     """
 
     vertical_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed vertically.
+    Defines how the child :attr:`controls` should be placed vertically.
     """
 
     horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
@@ -101,12 +102,12 @@ class View(ScrollableControl, LayoutControl):
 
     spacing: Number = 10
     """
-    The vertical spacing between [`controls`][(c).] on the `Page`.
+    The vertical spacing between :attr:`controls` on the `Page`.
 
     Note:
-        Has effect only when [`vertical_alignment`][(c).]
-        is set to [`MainAxisAlignment.START`][flet.],
-        [`MainAxisAlignment.END`][flet.], or [`MainAxisAlignment.CENTER`][flet.].
+        Has effect only when :attr:`vertical_alignment`
+        is set to :attr:`flet.MainAxisAlignment.START`,
+        :attr:`flet.MainAxisAlignment.END`, or :attr:`flet.MainAxisAlignment.CENTER`.
     """
 
     padding: Optional[PaddingValue] = field(default_factory=lambda: Padding.all(10))
@@ -136,7 +137,7 @@ class View(ScrollableControl, LayoutControl):
 
     services: list[Service] = field(default_factory=list, metadata={"skip": True})
     """
-    A list of [`Service`][flet.] controls associated with this view.
+    A list of :class:`~flet.Service` controls associated with this view.
     """
 
     can_pop: bool = True
@@ -148,7 +149,7 @@ class View(ScrollableControl, LayoutControl):
     """
     An event handler that is called when the view is about to be popped.
     You can use this event to confirm or cancel the pop action by calling
-    [`confirm_pop`][(c).] method.
+    :meth:`confirm_pop` method.
     """
 
     def init(self):
@@ -163,7 +164,7 @@ class View(ScrollableControl, LayoutControl):
         """
         Resolves a pending pop-confirmation request for this view.
 
-        Call this from [`on_confirm_pop`][(c).] to allow or cancel the current
+        Call this from :attr:`on_confirm_pop` to allow or cancel the current
         back-navigation attempt.
 
         Args:
@@ -182,7 +183,7 @@ class View(ScrollableControl, LayoutControl):
         Show the drawer.
 
         Raises:
-            ValueError: If no [`drawer`][(c).] is defined.
+            ValueError: If no :attr:`drawer` is defined.
         """
         if self.drawer is None:
             raise ValueError("No drawer defined")
@@ -199,7 +200,7 @@ class View(ScrollableControl, LayoutControl):
         Show the end drawer.
 
         Raises:
-            ValueError: If no [`end_drawer`][(c).] is defined.
+            ValueError: If no :attr:`end_drawer` is defined.
         """
         if self.end_drawer is None:
             raise ValueError("No end_drawer defined")

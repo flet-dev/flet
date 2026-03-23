@@ -67,12 +67,12 @@ class Image(LayoutControl):
     color: Optional[ColorValue] = None
     """
     If set, this color is blended with each image pixel using \
-    [`color_blend_mode`][(c).].
+    :attr:`color_blend_mode`.
     """
 
     color_blend_mode: Optional[BlendMode] = None
     """
-    Used to combine [`color`][(c).] with the image.
+    Used to combine :attr:`color` with the image.
 
     In terms of the blend mode, color is the source and this image is the destination.
     """
@@ -112,13 +112,13 @@ class Image(LayoutControl):
     - A base64 string;
     - Raw bytes.
 
-    If `None`, no placeholder is shown while loading; the [`src`][(c).]
-    simply appears (or fades in if [`placeholder_src`][(c).] or
-    [`placeholder_fade_out_animation`][(c).] is not `None`).
+    If `None`, no placeholder is shown while loading; the :attr:`src`
+    simply appears (or fades in if :attr:`placeholder_src` or
+    :attr:`placeholder_fade_out_animation` is not `None`).
 
     Note:
         SVG sources are currently not supported as placeholders. If provided,
-        this property will be ignored and the [`src`][(c).] will be
+        this property will be ignored and the :attr:`src` will be
         displayed directly instead.
     """
 
@@ -126,28 +126,27 @@ class Image(LayoutControl):
     """
     Defines how to inscribe the placeholder into its space.
 
-    If `None`, default to [`fit`][(c).].
+    If `None`, default to :attr:`fit`.
     """
 
     fade_in_animation: Optional[Animation] = None
     """
-    Fade-in animation of the [`src`][(c).] image as it appears after loading, \
-    replacing the [`placeholder_src`][(c).].
+    Fade-in animation of the :attr:`src` image as it appears after loading, replacing \
+    the :attr:`placeholder_src`.
 
     If `None`, defaults to
     `Animation(Duration(milliseconds=250), AnimationCurve.EASE_IN_OUT)`,
-    if [`placeholder_src`][(c).] or [`placeholder_fade_out_animation`][(c).]
+    if :attr:`placeholder_src` or :attr:`placeholder_fade_out_animation`
     is not `None`.
     """
 
     placeholder_fade_out_animation: Optional[Animation] = None
     """
-    Fade-out animation for the [`placeholder_src`][(c).], after the [`src`][(c).] \
-    loads.
+    Fade-out animation for the :attr:`placeholder_src`, after the :attr:`src`     loads.
 
     If `None`, defaults to
     `Animation(Duration(milliseconds=150), AnimationCurve.EASE_OUT)`,
-    if [`placeholder_src`][(c).] or [`fade_in_animation`][(c).] is not `None`.
+    if :attr:`placeholder_src` or :attr:`fade_in_animation` is not `None`.
     """
 
     cache_width: Optional[int] = None

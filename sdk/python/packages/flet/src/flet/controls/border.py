@@ -60,8 +60,8 @@ class BorderSide:
 
     By default, the border is `1.0` logical pixels wide and solid black color.
 
-    To omit (not show) a side, set [`style`][(c).] to [`BorderStyle.NONE`][flet.].
-    It skips painting the border, but the border still has a [`width`][(c).].
+    To omit (not show) a side, set :attr:`style` to :attr:`flet.BorderStyle.NONE`.
+    It skips painting the border, but the border still has a :attr:`width`.
     """
 
     width: Number = 1.0
@@ -75,8 +75,8 @@ class BorderSide:
     double-hit pixels, giving it a slightly darker/lighter result.
 
     Tip:
-        To omit the border entirely, set the [`style`][(c).]
-        to [`BorderStyle.NONE`][flet.].
+        To omit the border entirely, set the :attr:`style`
+        to :attr:`flet.BorderStyle.NONE`.
 
     Raises:
         ValueError: If it is not greater than or equal to `0`.
@@ -111,8 +111,8 @@ class BorderSide:
         """
         The amount of the stroke width that lies inside this `BorderSide`.
 
-        For example, this will return the [`width`][(c).] for a [`stroke_align`][(c).]
-        of `-`1, half the [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and `0`
+        For example, this will return the :attr:`width` for a :attr:`stroke_align`
+        of `-`1, half the :attr:`width` for a :attr:`stroke_align` of `0`, and `0`
         for a `stroke_align` of `1`.
         """
         return self.width * (1 - (1 + self.stroke_align) / 2)
@@ -122,9 +122,9 @@ class BorderSide:
         """
         The amount of the stroke width that lies outside this `BorderSide`.
 
-        For example, this will return `0` for a [`stroke_align`][(c).] of `-1`, half the
-        [`width`][(c).] for a [`stroke_align`][(c).] of `0`, and the [`width`][(c).]
-        for a [`stroke_align`][(c).] of `1`.
+        For example, this will return `0` for a :attr:`stroke_align` of `-1`, half the
+        :attr:`width` for a :attr:`stroke_align` of `0`, and the :attr:`width`
+        for a :attr:`stroke_align` of `1`.
         """
         return self.width * (1 + self.stroke_align) / 2
 
@@ -133,9 +133,9 @@ class BorderSide:
         """
         The offset of the stroke, taking into account the stroke alignment.
 
-        For example, this will return the negative [`width`][(c).] of the stroke
-        for a [`stroke_align`][(c).] of -1, 0 for a [`stroke_align`][(c).] of 0, and the
-        [`width`][(c).] for a [`stroke_align`][(c).] of -1.
+        For example, this will return the negative :attr:`width` of the stroke
+        for a :attr:`stroke_align` of -1, 0 for a :attr:`stroke_align` of 0, and the
+        :attr:`width` for a :attr:`stroke_align` of -1.
         """
         return self.width * self.stroke_align
 
@@ -167,8 +167,8 @@ class BorderSide:
         Creates a border side that is not rendered.
 
         Returns:
-            A hairline black [`BorderSide`][flet.] with
-                [`style`][(c).] set to [`BorderStyle.NONE`][flet.].
+            A hairline black :class:`~flet.BorderSide` with
+                :attr:`style` set to :attr:`flet.BorderStyle.NONE`.
         """
         return BorderSide(width=0.0, style=BorderStyle.NONE)
 
@@ -179,7 +179,7 @@ class Border:
     A border comprised of four sides: `top`, `right`, `bottom`, `left`.
 
     Each side of the border is an instance of
-    [`BorderSide`][flet.].
+    :class:`~flet.BorderSide`.
     """
 
     top: BorderSide = field(default_factory=lambda: BorderSide.none())
@@ -219,11 +219,11 @@ class Border:
         Args:
             width: The side width. Used only when `side` is `None`.
             color: The side color. Used only when `side` is `None`.
-            side: The [`BorderSide`][flet.] to apply to all sides. If set,
+            side: The :class:`~flet.BorderSide` to apply to all sides. If set,
                 it has precedence over `width` and `color`.
 
         Returns:
-            A [`Border`][flet.] with identical sides.
+            A :class:`~flet.Border` with identical sides.
         """
         if side is not None:
             return Border(top=side, right=side, bottom=side, left=side)
@@ -240,8 +240,8 @@ class Border:
         """
         Creates a border with symmetrical vertical and horizontal sides.
 
-        The `vertical` argument applies to the [`left`][(c).] and [`right`][(c).] sides,
-        and the `horizontal` argument applies to the [`top`][(c).] and [`bottom`][(c).]
+        The `vertical` argument applies to the :attr:`left` and :attr:`right` sides,
+        and the `horizontal` argument applies to the :attr:`top` and :attr:`bottom`
         sides.
 
         Args:
@@ -249,7 +249,7 @@ class Border:
             horizontal: The side applied to the top and bottom.
 
         Returns:
-            A [`Border`][flet.] with mirrored side pairs.
+            A :class:`~flet.Border` with mirrored side pairs.
         """
         if vertical is None:
             vertical = BorderSide(width=0.0, style=BorderStyle.NONE)
@@ -276,7 +276,7 @@ class Border:
             bottom: The bottom side. Defaults to no border.
 
         Returns:
-            A [`Border`][flet.] built from the provided sides.
+            A :class:`~flet.Border` built from the provided sides.
         """
         return Border(
             left=left or BorderSide(width=0.0, style=BorderStyle.NONE),
@@ -348,6 +348,6 @@ BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
 """Type alias for border stroke alignment values.
 
 Represents stroke alignment as either:
-- a [`BorderSideStrokeAlign`][flet.] enum value,
+- a :class:`~flet.BorderSideStrokeAlign` enum value,
 - or a numeric alignment value.
 """

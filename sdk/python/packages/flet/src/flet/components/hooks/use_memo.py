@@ -11,7 +11,7 @@ MemoValueT = TypeVar("MemoValueT")
 @dataclass
 class MemoHook(Hook, Generic[MemoValueT]):
     """
-    Hook state container used by [`use_memo()`][flet.use_memo].
+    Hook state container used by :func:`~flet.use_memo`.
 
     It stores the last computed memo value together with the dependency snapshot
     used to decide whether recomputation is required on subsequent renders.

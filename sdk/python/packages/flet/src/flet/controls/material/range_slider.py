@@ -21,7 +21,7 @@ class RangeSlider(LayoutControl):
 
     A range slider can be used to select from either a continuous or a discrete
     set of values. The default is to use a continuous range of values from
-    [`min`][(c).] to [`max`][(c).].
+    :attr:`min` to :attr:`max`.
 
     Example:
     ```python
@@ -44,11 +44,11 @@ class RangeSlider(LayoutControl):
     The currently selected start value for this slider.
 
     The left thumb of this slider is drawn at a position that corresponds
-    to this value. Use [`label`][(c).] to change the label displayed on the thumb.
+    to this value. Use :attr:`label` to change the label displayed on the thumb.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`min`][(c).].
-        ValueError: If it is not less than or equal to [`end_value`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not less than or equal to :attr:`end_value`.
     """
 
     end_value: Annotated[
@@ -60,11 +60,11 @@ class RangeSlider(LayoutControl):
     The currently selected end value of this slider.
 
     The right thumb of this slider is drawn at a position that corresponds
-    to this value. Use [`label`][(c).] to change the label displayed on the thumb.
+    to this value. Use :attr:`label` to change the label displayed on the thumb.
 
     Raises:
-        ValueError: If it is not less than or equal to [`max`][(c).].
-        ValueError: If it is not greater than or equal to [`start_value`][(c).].
+        ValueError: If it is not less than or equal to :attr:`max`.
+        ValueError: If it is not greater than or equal to :attr:`start_value`.
     """
 
     label: Optional[str] = None
@@ -72,10 +72,10 @@ class RangeSlider(LayoutControl):
     A label to show above the slider thumbs when the slider is active.
 
     It may contain `{value}` which will be replaced with realtime values of
-    [`start_value`][(c).] and [`end_value`][(c).], in the corresponding slider thumbs.
+    :attr:`start_value` and :attr:`end_value`, in the corresponding slider thumbs.
 
     If not set, then the labels will not be displayed.
-    If [`divisions`][(c).] is not set, this slider is
+    If :attr:`divisions` is not set, this slider is
     continuous and labels are not displayed.
     """
 
@@ -87,11 +87,11 @@ class RangeSlider(LayoutControl):
     """
     The minimum value the user can select.
 
-    If the [`max`][(c).] is equal to the `min`, then the slider is disabled.
+    If the :attr:`max` is equal to the `min`, then the slider is disabled.
 
     Raises:
-        ValueError: If it is not less than or equal to [`start_value`][(c).].
-        ValueError: If it is not less than or equal to [`max`][(c).].
+        ValueError: If it is not less than or equal to :attr:`start_value`.
+        ValueError: If it is not less than or equal to :attr:`max`.
     """
 
     max: Annotated[
@@ -102,11 +102,11 @@ class RangeSlider(LayoutControl):
     """
     The maximum value the user can select.
 
-    If the [`max`][(c).] is equal to the [`min`][(c).], then the slider is disabled.
+    If the :attr:`max` is equal to the :attr:`min`, then the slider is disabled.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`end_value`][(c).].
-        ValueError: If it is not greater than or equal to [`min`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`end_value`.
+        ValueError: If it is not greater than or equal to :attr:`min`.
     """
 
     divisions: Annotated[
@@ -116,9 +116,9 @@ class RangeSlider(LayoutControl):
     """
     The number of discrete divisions.
 
-    Typically used with [`label`][(c).] to show the current discrete values.
+    Typically used with :attr:`label` to show the current discrete values.
 
-    If not set, this slider is continuous and [`label`][(c).] is not displayed.
+    If not set, this slider is continuous and :attr:`label` is not displayed.
 
     Raises:
         ValueError: If it is not strictly greater than `0`.
@@ -129,7 +129,7 @@ class RangeSlider(LayoutControl):
         V.between(0, 20),
     ] = 0
     """
-    The number of decimals displayed on the [`label`][(c).] containing `{value}`.
+    The number of decimals displayed on the :attr:`label` containing `{value}`.
 
     Defaults to `0` - value rounded to the nearest integer.
 
@@ -155,7 +155,8 @@ class RangeSlider(LayoutControl):
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color that's typically used to indicate that the range slider thumb \
-    is in [`ControlState.HOVERED`][flet.] or [`ControlState.DRAGGED`][flet.] state.
+    is in :attr:`flet.ControlState.HOVERED` or :attr:`flet.ControlState.DRAGGED` \
+    state.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None

@@ -39,7 +39,7 @@ class CupertinoSwitch(LayoutControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    The position of the [`label`][(c).] relative to this switch.
+    The position of the :attr:`label` relative to this switch.
     """
 
     thumb_color: Optional[ColorValue] = None
@@ -99,8 +99,8 @@ class CupertinoSwitch(LayoutControl):
     """
     The color to use on the thumb when this switch is off.
 
-    If `None`, defaults to [`thumb_color`][(c).], and if this is also `None`,
-    defaults to [`CupertinoColors.WHITE`][flet.].
+    If `None`, defaults to :attr:`thumb_color`, and if this is also `None`,
+    defaults to :attr:`flet.CupertinoColors.WHITE`.
     """
 
     inactive_track_color: Optional[ColorValue] = None
@@ -110,30 +110,30 @@ class CupertinoSwitch(LayoutControl):
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline color of this switch's track in various [`ControlState`][flet.]s.
+    The outline color of this switch's track in various :class:`~flet.ControlState`s.
 
-    Supported states: [`ControlState.SELECTED`][flet.],
-    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
-    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
+    Supported states: :attr:`flet.ControlState.SELECTED`,
+    :attr:`flet.ControlState.HOVERED`, :attr:`flet.ControlState.DISABLED`,
+    :attr:`flet.ControlState.FOCUSED`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The outline width of this switch's track in all or specific \
-    [`ControlState`][flet.]s.
+    :class:`~flet.ControlState`s.
 
-    Supported states: [`ControlState.SELECTED`][flet.],
-    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
-    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
+    Supported states: :attr:`flet.ControlState.SELECTED`,
+    :attr:`flet.ControlState.HOVERED`, :attr:`flet.ControlState.DISABLED`,
+    :attr:`flet.ControlState.FOCUSED`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
-    The icon of this Switch's thumb in various [`ControlState`][flet.]s.
+    The icon of this Switch's thumb in various :class:`~flet.ControlState`s.
 
-    Supported states: [`ControlState.SELECTED`][flet.],
-    [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
-    [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
+    Supported states: :attr:`flet.ControlState.SELECTED`,
+    :attr:`flet.ControlState.HOVERED`, :attr:`flet.ControlState.DISABLED`,
+    :attr:`flet.ControlState.FOCUSED`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoSwitch"]] = None
@@ -153,6 +153,6 @@ class CupertinoSwitch(LayoutControl):
 
     on_image_error: Optional[ControlEventHandler["CupertinoSwitch"]] = None
     """
-    Called when [`active_thumb_image_src`][(c).] or [`inactive_thumb_image_src`][(c).] \
+    Called when :attr:`active_thumb_image_src` or :attr:`inactive_thumb_image_src` \
     fails to load.
     """

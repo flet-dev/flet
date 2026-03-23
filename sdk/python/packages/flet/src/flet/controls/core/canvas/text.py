@@ -14,8 +14,7 @@ __all__ = ["Text"]
 @control("Text")
 class Text(Shape):
     """
-    Draws [`value`][(c).] with [`style`][(c).] at the given ([`x`][(c).], [`y`][(c).]) \
-    point.
+    Draws :attr:`value` with :attr:`style` at the given (:attr:`x`, :attr:`y`) point.
     """
 
     x: Number
@@ -40,7 +39,7 @@ class Text(Shape):
 
     spans: Optional[list[TextSpan]] = None
     """
-    The list of [`TextSpan`][flet.]
+    The list of :class:`~flet.TextSpan`
     objects to build a rich text paragraph.
     """
 

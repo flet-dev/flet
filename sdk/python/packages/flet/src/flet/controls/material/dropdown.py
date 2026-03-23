@@ -35,20 +35,20 @@ class DropdownOption(Control):
     """
     Option's key.
 
-    If not specified [`text`][(c).] will be used as fallback.
+    If not specified :attr:`text` will be used as fallback.
 
     Raises:
-        ValueError: If neither `key` nor [`text`][(c).] is provided.
+        ValueError: If neither `key` nor :attr:`text` is provided.
     """
 
     text: Optional[str] = None
     """
     Option's display text.
 
-    If not specified [`key`][(c).] will be used as fallback.
+    If not specified :attr:`key` will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor `text` is provided.
+        ValueError: If neither :attr:`key` nor `text` is provided.
     """
 
     content: Optional[Control] = None
@@ -87,7 +87,7 @@ Option = DropdownOption
 class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of \
-    [`options`][(c).].
+    :attr:`options`.
 
     Example:
     ```python
@@ -104,7 +104,7 @@ class Dropdown(LayoutControl):
 
     value: Optional[str] = None
     """
-    The [`key`][flet.DropdownOption.] of the dropdown [`options`][(c).]
+    The :attr:`~flet.DropdownOption.key` of the dropdown :attr:`options`
     corresponding to the selected option.
     """
 
@@ -132,7 +132,7 @@ class Dropdown(LayoutControl):
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = 8
     """
-    The dropdown's menu elevation in various [`ControlState`][flet.]
+    The dropdown's menu elevation in various :class:`~flet.ControlState`
     states.
     """
 
@@ -219,7 +219,7 @@ class Dropdown(LayoutControl):
 
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background color of the dropdown menu in various [`ControlState`][flet.]
+    The background color of the dropdown menu in various :class:`~flet.ControlState`
     states.
     """
 
@@ -230,7 +230,7 @@ class Dropdown(LayoutControl):
 
     on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Called when the [`text`][(c).] input of this dropdown has changed.
+    Called when the :attr:`text` input of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
@@ -247,14 +247,14 @@ class Dropdown(LayoutControl):
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`error_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`error_text`.
     """
 
     error_text: Optional[str] = None
     """
     Text that appears below the input border.
 
-    If non-null, the border's color animates to red and the [`helper_text`][(c).] is
+    If non-null, the border's color animates to red and the :attr:`helper_text` is
     not shown.
     """
 
@@ -265,7 +265,7 @@ class Dropdown(LayoutControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for text in input text field.
+    The :class:`~flet.TextStyle` to use for text in input text field.
     """
 
     label: Optional[StrOrControl] = None
@@ -281,7 +281,7 @@ class Dropdown(LayoutControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`label`][(c).]'s text style.
+    The :attr:`label`'s text style.
     """
 
     border: Optional[InputBorder] = None
@@ -309,7 +309,7 @@ class Dropdown(LayoutControl):
     Border color.
 
     Tip:
-        Set to [`Colors.TRANSPARENT`][flet.] to hide the border.
+        Set to :attr:`flet.Colors.TRANSPARENT` to hide the border.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -341,7 +341,7 @@ class Dropdown(LayoutControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme [`fill_color`][(c).].
+    Whether the decoration's container is filled with theme :attr:`fill_color`.
     """
 
     fill_color: Optional[ColorValue] = None
@@ -367,7 +367,7 @@ class Dropdown(LayoutControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`hint_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`hint_text`.
     """
 
     helper_text: Optional[str] = None
@@ -382,7 +382,7 @@ class Dropdown(LayoutControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`helper_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`helper_text`.
     """
 
     def __contains__(self, item):

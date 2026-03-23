@@ -12,6 +12,7 @@ import remarkParse from "remark-parse";
 const IMAGE_LINE_RE = /^!\[([^\]]*)\]\(([^)]+)\)(\{[^}]*\})?$/;
 const WIDTH_RE = /width="([^"]+)"/;
 const XREF_TEXT_RE = /\[([^\]]+)\]\[((?:[^\]]|\](?=[^.]))+?)\]/g;
+const REST_XREF_RE = /^:(?:py:)?(class|attr|meth|func|data|mod|obj):`([^`\n]+)`/;
 const API_SYMBOL_RE =
   /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b|\b[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
 const MARKDOWN_PARSER = unified()
@@ -81,6 +82,33 @@ function formatApiSymbolLabel(symbol) {
   return cleanSymbol;
 }
 
+function getApiEntry(symbol, api) {
+  return api.classes?.[symbol] ?? api.functions?.[symbol] ?? api.aliases?.[symbol] ?? null;
+}
+
+function resolveApiCandidateHref(candidate, api) {
+  if (!candidate) {
+    return null;
+  }
+
+  const directHref = api.xref_map?.[candidate];
+  if (directHref) {
+    return directHref;
+  }
+
+  const entry = getApiEntry(candidate, api);
+  if (!entry) {
+    return null;
+  }
+
+  return (
+    api.xref_map?.[entry.qualname] ??
+    api.xref_map?.[entry.canonical_path] ??
+    api.xref_map?.[entry.target_path] ??
+    null
+  );
+}
+
 export function resolveApiSymbolHref(symbol, context = {}) {
   if (!symbol) {
     return null;
@@ -119,7 +147,7 @@ export function resolveApiSymbolHref(symbol, context = {}) {
   }
 
   for (const candidate of candidates) {
-    const href = api.xref_map?.[candidate];
+    const href = resolveApiCandidateHref(candidate, api);
     if (href) {
       return href;
     }
@@ -184,53 +212,119 @@ function stripTicks(text) {
   return text.replace(/^`|`$/g, "");
 }
 
+function getContextEntry(context, api) {
+  return context?.classSymbol ? getApiEntry(context.classSymbol, api) : null;
+}
+
+function resolveLocalMemberAnchor(memberName, context, api) {
+  const classSymbol = context?.classSymbol;
+  const classEntry = getContextEntry(context, api);
+  if (!classSymbol || !classEntry) {
+    return null;
+  }
+
+  if (classEntry.name === memberName) {
+    return rootAnchor(classSymbol);
+  }
+
+  if (
+    classEntry.properties?.some((item) => item.name === memberName) ||
+    classEntry.events?.some((item) => item.name === memberName) ||
+    classEntry.methods?.some((item) => item.name === memberName)
+  ) {
+    return memberAnchor(classSymbol, memberName);
+  }
+
+  if (["properties", "events", "methods"].includes(memberName.toLowerCase())) {
+    return sectionAnchor(classSymbol, memberName);
+  }
+
+  return null;
+}
+
+function resolveLocalMemberHref(memberName, context, api) {
+  const classSymbol = context?.classSymbol;
+  if (!classSymbol) {
+    return null;
+  }
+
+  const classRoute = resolveApiSymbolHref(classSymbol, {...context, api});
+  const anchor = resolveLocalMemberAnchor(memberName, context, api);
+  if (!classRoute || !anchor) {
+    return null;
+  }
+
+  const classBaseRoute = classRoute.split("#", 1)[0];
+  return `${classBaseRoute}#${anchor}`;
+}
+
+function shortenQualifiedDisplay(target) {
+  return target.split(".").at(-1) ?? target;
+}
+
+function formatRestXrefLabel(target) {
+  const shortened = target.startsWith("~");
+  const normalized = shortened ? target.slice(1) : target;
+  const hasCall = normalized.endsWith("()");
+  const base = hasCall ? normalized.slice(0, -2) : normalized;
+  const display = shortened ? shortenQualifiedDisplay(base) : base;
+  return hasCall ? `${display}()` : display;
+}
+
+function resolveRestCrossReference(role, target, context) {
+  const api = context?.api ?? getApiData();
+  const trimmed = target.trim();
+  if (!trimmed || trimmed.includes("<")) {
+    return null;
+  }
+
+  const normalized = trimmed.startsWith("~") ? trimmed.slice(1) : trimmed;
+  const lookupTarget = role === "meth" && normalized.endsWith("()")
+    ? normalized.slice(0, -2)
+    : normalized;
+
+  let href = null;
+  if (!lookupTarget.includes(".") && ["attr", "meth", "data", "obj"].includes(role)) {
+    href = resolveLocalMemberHref(lookupTarget, context, api);
+  }
+
+  if (!href && !lookupTarget.includes(".") && role === "class") {
+    const contextEntry = getContextEntry(context, api);
+    if (contextEntry?.name === lookupTarget) {
+      href = resolveApiSymbolHref(context.classSymbol, {...context, api});
+    }
+  }
+
+  if (!href) {
+    href = resolveApiSymbolHref(lookupTarget, {...context, api});
+  }
+
+  if (!href) {
+    return null;
+  }
+
+  return {
+    href,
+    label: formatRestXrefLabel(trimmed),
+  };
+}
+
 function resolveCrossReference(target, label, context) {
   const api = getApiData();
   const cleanLabel = stripTicks(label);
-  const classSymbol = context?.classSymbol;
-  const classRoute = classSymbol ? api.xref_map?.[classSymbol] : null;
-  const classBaseRoute = classRoute ? classRoute.split("#", 1)[0] : null;
-  const classEntry = classSymbol
-    ? api.classes?.[classSymbol] ?? api.functions?.[classSymbol] ?? api.aliases?.[classSymbol]
-    : null;
 
-  function resolveLocalMemberAnchor(memberName) {
-    if (!classSymbol || !classEntry) {
-      return null;
-    }
-    if (
-      classEntry.properties?.some((item) => item.name === memberName)
-    ) {
-      return memberAnchor(classSymbol, memberName);
-    }
-    if (
-      classEntry.events?.some((item) => item.name === memberName)
-    ) {
-      return memberAnchor(classSymbol, memberName);
-    }
-    if (
-      classEntry.methods?.some((item) => item.name === memberName)
-    ) {
-      return memberAnchor(classSymbol, memberName);
-    }
-    if (["properties", "events", "methods"].includes(memberName.toLowerCase())) {
-      return sectionAnchor(classSymbol, memberName);
-    }
-    return normalizeAnchor(memberName);
+  if (target === "(c)") {
+    return resolveApiSymbolHref(context?.classSymbol, {...context, api});
   }
-
-  if (target === "(c)" || target === "..") {
-    return classRoute;
+  if (target === "(c)." || target === "..") {
+    return resolveLocalMemberHref(cleanLabel, context, api);
   }
-  if ((target === "(c)." || target === "..") && classBaseRoute) {
-    return `${classBaseRoute}#${resolveLocalMemberAnchor(cleanLabel)}`;
-  }
-  if (target.startsWith("(c).") && classBaseRoute) {
-    return `${classBaseRoute}#${resolveLocalMemberAnchor(target.slice(4))}`;
+  if (target.startsWith("(c).")) {
+    return resolveLocalMemberHref(target.slice(4), context, api);
   }
   if (target.endsWith(".")) {
     const absoluteTarget = target + cleanLabel;
-    return api.xref_map?.[absoluteTarget] ?? null;
+    return resolveApiCandidateHref(absoluteTarget, api);
   }
   return resolveApiSymbolHref(target, {...context, api});
 }
@@ -322,6 +416,56 @@ function preprocessCrossReferenceMarkdown(text, context) {
       });
     })
     .join("");
+}
+
+function preprocessRestCrossReferenceMarkdown(text, context) {
+  if (!text) {
+    return text;
+  }
+
+  let index = 0;
+  let output = "";
+
+  while (index < text.length) {
+    if (text.startsWith("```", index)) {
+      const fenceEnd = text.indexOf("```", index + 3);
+      if (fenceEnd < 0) {
+        output += text.slice(index);
+        break;
+      }
+      output += text.slice(index, fenceEnd + 3);
+      index = fenceEnd + 3;
+      continue;
+    }
+
+    const roleMatch = REST_XREF_RE.exec(text.slice(index));
+    if (roleMatch) {
+      const resolved = resolveRestCrossReference(roleMatch[1], roleMatch[2], context);
+      if (resolved) {
+        output += `[${resolved.label}](${resolved.href})`;
+      } else {
+        output += roleMatch[0];
+      }
+      index += roleMatch[0].length;
+      continue;
+    }
+
+    if (text[index] === "`") {
+      const inlineEnd = text.indexOf("`", index + 1);
+      if (inlineEnd < 0) {
+        output += text.slice(index);
+        break;
+      }
+      output += text.slice(index, inlineEnd + 1);
+      index = inlineEnd + 1;
+      continue;
+    }
+
+    output += text[index];
+    index += 1;
+  }
+
+  return output;
 }
 
 function escapeMdxUnsafeAngles(text) {
@@ -709,7 +853,12 @@ export function renderInlineMarkdown(text, context) {
     return null;
   }
   const tree = MARKDOWN_PARSER.parse(
-    escapeMdxUnsafeAngles(preprocessCrossReferenceMarkdown(text, context))
+    escapeMdxUnsafeAngles(
+      preprocessRestCrossReferenceMarkdown(
+        preprocessCrossReferenceMarkdown(text, context),
+        context
+      )
+    )
   );
   const paragraph =
     tree.children.length === 1 && tree.children[0].type === "paragraph"
@@ -726,8 +875,11 @@ export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
   }
   const tree = MARKDOWN_PARSER.parse(
     escapeMdxUnsafeAngles(
-      preprocessCrossReferenceMarkdown(
-        normalizeDocstringMarkdown(docstring),
+      preprocessRestCrossReferenceMarkdown(
+        preprocessCrossReferenceMarkdown(
+          normalizeDocstringMarkdown(docstring),
+          context
+        ),
         context
       )
     )

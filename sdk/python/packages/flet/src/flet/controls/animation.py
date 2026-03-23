@@ -235,8 +235,8 @@ class Animation:
     Explicit animation configuration for animatable control properties.
 
     Properties that accept animation usually also support shorthand values via
-    [`AnimationValue`][flet.]:
-    - `True`: enables a default `1000ms` [`LINEAR`][flet.AnimationCurve.] animation.
+    :data:`~flet.AnimationValue`:
+    - `True`: enables a default `1000ms` :attr:`~flet.AnimationCurve.LINEAR` animation.
     - `int`: interpreted as animation duration in milliseconds with a linear curve.
     """
 
@@ -245,7 +245,7 @@ class Animation:
     The duration of the animation.
 
     If provided as an integer, it is considered/assumed to be in milliseconds.
-    For more control and flexibility, use [`Duration`][flet.] instead.
+    For more control and flexibility, use :class:`~flet.Duration` instead.
     """
 
     curve: AnimationCurve = AnimationCurve.LINEAR
@@ -274,9 +274,9 @@ class AnimationStyle:
     Used to override the default parameters of an animation.
 
     Note:
-        If [`duration`][(c).] and [`reverse_duration`][(c).] are set to
-        [`Duration()`][flet.Duration], the corresponding animation will be disabled.
-        See [`no_animation()`][(c).no_animation] method for a convenient way to create
+        If :attr:`duration` and :attr:`reverse_duration` are set to
+        :class:`~flet.Duration`, the corresponding animation will be disabled.
+        See :meth:`no_animation` method for a convenient way to create
         such an instance.
     """
 
@@ -339,5 +339,5 @@ AnimationValue = Union[bool, int, Animation]
 Represents animation input as either:
 - `True` or `False` to enable or disable animation,
 - an `int` duration in milliseconds,
-- or an explicit [`Animation`][flet.] configuration.
+- or an explicit :class:`~flet.Animation` configuration.
 """

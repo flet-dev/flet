@@ -27,20 +27,20 @@ class Option(Control):
     """
     Option's key.
 
-    If not specified [`text`][(c).] will be used as fallback.
+    If not specified :attr:`text` will be used as fallback.
 
     Raises:
-        ValueError: If neither `key` nor [`text`][(c).] is provided.
+        ValueError: If neither `key` nor :attr:`text` is provided.
     """
 
     text: Optional[str] = None
     """
     Option's display text.
 
-    If not specified [`key`][(c).] will be used as fallback.
+    If not specified :attr:`key` will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor `text` is provided.
+        ValueError: If neither :attr:`key` nor `text` is provided.
     """
 
     content: Optional[Control] = None

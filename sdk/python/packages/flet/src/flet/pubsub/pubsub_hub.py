@@ -21,7 +21,7 @@ class PubSubHub:
     - global subscribers receive `(message)`;
     - topic subscribers receive `(topic, message)`.
 
-    This hub is used by session-scoped [`PubSubClient`][flet.PubSubClient]
+    This hub is used by session-scoped `PubSubClient`
     instances to fan out messages between connected sessions.
     """
 
@@ -188,7 +188,7 @@ class PubSubHub:
         Removes all global subscribers for a session.
 
         This does not remove topic subscriptions; use
-        [`unsubscribe_all()`][(c).unsubscribe_all] to remove both.
+        :meth:`unsubscribe_all` to remove both.
 
         Args:
             session_id: Session identifier to remove.

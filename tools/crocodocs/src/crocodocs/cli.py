@@ -14,6 +14,7 @@ from .config import (
 from .generate import run_generate
 from .inventory import run_inventory
 from .migrate import run_migrate_bootstrap
+from .python_xrefs import run_migrate_python_xrefs
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,6 +45,9 @@ def build_parser() -> argparse.ArgumentParser:
     generate.add_argument("--base-url")
     generate.add_argument("--package", action="append")
     generate.add_argument("--extensions", action="append")
+
+    migrate_python_xrefs = subparsers.add_parser("migrate-python-xrefs")
+    migrate_python_xrefs.add_argument("--package", action="append")
 
     return parser
 
@@ -95,6 +99,13 @@ def main(argv: list[str] | None = None) -> int:
             manifest_output=config.manifest_output,
             api_output=config.api_output,
             base_url=config.base_url,
+        )
+        return 0
+
+    if args.command == "migrate-python-xrefs":
+        run_migrate_python_xrefs(
+            config,
+            package_names=args.package,
         )
         return 0
 

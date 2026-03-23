@@ -160,13 +160,13 @@ class NotchShape:
 
     Typically used as the outline of a 'host' control to make a notch that
     accommodates a 'guest' control.
-    e.g the [`BottomAppBar`][flet.] may have a notch to accommodate
-    the [`FloatingActionButton`][flet.].
+    e.g the :class:`~flet.BottomAppBar` may have a notch to accommodate
+    the :class:`~flet.FloatingActionButton`.
 
     This class is not intended to be used directly. See usable derivatives:
 
-    - [`AutomaticNotchShape`][flet.]
-    - [`CircularRectangleNotchShape`][flet.]
+    - :class:`~flet.AutomaticNotchShape`
+    - :class:`~flet.CircularRectangleNotchShape`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -190,7 +190,7 @@ class CircularRectangleNotchShape(NotchShape):
 @value
 class AutomaticNotchShape(NotchShape):
     """
-    A notch sahpe created from [`ShapeBorder`][flet.]s.
+    A notch sahpe created from :class:`~flet.ShapeBorder`s.
     """
 
     host: "ShapeBorder"
@@ -202,10 +202,10 @@ class AutomaticNotchShape(NotchShape):
 
 class ResponsiveRowBreakpoint(Enum):
     """
-    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive properties such \
-    as [`Control.col`][flet.].
+    Breakpoint names used by :class:`~flet.ResponsiveRow` and responsive properties \
+    such as :attr:`flet.Control.col`.
 
-    To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
+    To define custom breakpoints, see :attr:`flet.ResponsiveRow.breakpoints`.
     """
 
     XS = "xs"
@@ -248,7 +248,7 @@ ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Numb
 Represents either:
 - a single numeric value used for all breakpoints,
 - or a breakpoint-to-value mapping keyed by string or
-  [`ResponsiveRowBreakpoint`][flet.].
+  :class:`~flet.ResponsiveRowBreakpoint`.
 """
 
 
@@ -347,7 +347,8 @@ class VerticalAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a [`Checkbox`][flet.], [`Radio`][flet.] or [`Switch`][flet.]
+    Position of label in a :class:`~flet.Checkbox`, :class:`~flet.Radio` or \
+    :class:`~flet.Switch`
     """
 
     RIGHT = "right"
@@ -440,15 +441,15 @@ class ScrollMode(Enum):
     """
     Defines scrolling behavior and scroll bar visibility for scrollable controls.
 
-    When assigned to [`ScrollableControl.scroll`][flet.], for example, each value
-    internally maps to a specific [`Scrollbar`][flet.] configuration.
+    When assigned to :attr:`flet.ScrollableControl.scroll`, for example, each value
+    internally maps to a specific :class:`~flet.Scrollbar` configuration.
     """
 
     AUTO = "auto"
     """
     Scrolling is enabled and scroll bar is only shown when scrolling occurs.
 
-    [`Scrollbar`][flet.] equivalent:
+    :class:`~flet.Scrollbar` equivalent:
 
     ```python
     ft.Scrollbar(
@@ -462,7 +463,7 @@ class ScrollMode(Enum):
     Scrolling is enabled and scroll bar is always shown when running app as web or \
     desktop.
 
-    [`Scrollbar`][flet.] equivalent:
+    :class:`~flet.Scrollbar` equivalent:
 
     ```python
     ft.Scrollbar(
@@ -476,7 +477,7 @@ class ScrollMode(Enum):
     """
     Scrolling is enabled and scroll bar is always shown.
 
-    [`Scrollbar`][flet.] equivalent:
+    :class:`~flet.Scrollbar` equivalent:
 
     ```python
     ft.Scrollbar(
@@ -490,7 +491,7 @@ class ScrollMode(Enum):
     """
     Scrolling is enabled, but scroll bar is always hidden.
 
-    [`Scrollbar`][flet.] equivalent:
+    :class:`~flet.Scrollbar` equivalent:
 
     ```python
     ft.Scrollbar(
@@ -673,7 +674,7 @@ class DeviceOrientation(Enum):
 
 class FloatingActionButtonLocation(Enum):
     """
-    Defines a position for the [`FloatingActionButton`][flet.].
+    Defines a position for the :class:`~flet.FloatingActionButton`.
 
     See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
     from Flutter documentation for placement location examples.
@@ -1093,7 +1094,7 @@ class VisualDensity(Enum):
     The default/standard profile for visual density.
 
     This default value represents a visual density that is less dense than
-    either [`COMFORTABLE`][(c).] or [`COMPACT`][(c).], and corresponds to
+    either :attr:`COMFORTABLE` or :attr:`COMPACT`, and corresponds to
     density values of zero in both axes.
     """
 
@@ -1102,9 +1103,9 @@ class VisualDensity(Enum):
     The profile for a "compact" interpretation of visual density.
 
     Individual components will interpret the density value independently, making
-    themselves more visually dense than [`STANDARD`][(c).] and [`COMFORTABLE`][(c).] to
+    themselves more visually dense than :attr:`STANDARD` and :attr:`COMFORTABLE` to
     different degrees based on the Material Design specification of the
-    [`COMFORTABLE`][(c).] setting for their particular use case.
+    :attr:`COMFORTABLE` setting for their particular use case.
 
     It corresponds to a density value of `-2` in both axes.
     """
@@ -1115,7 +1116,7 @@ class VisualDensity(Enum):
 
     Individual
     components will interpret the density value independently, making themselves more
-    visually dense than [`STANDARD`][(c).] and less dense than [`COMPACT`][(c).]
+    visually dense than :attr:`STANDARD` and less dense than :attr:`COMPACT`
     to different degrees based on the Material Design specification of the
     comfortable setting for their particular use case.
 
@@ -1126,7 +1127,7 @@ class VisualDensity(Enum):
     """
     Visual density that is adaptive based on the given platform.
 
-    For desktop platforms, this returns [`COMPACT`][(c).], and for other platforms,
+    For desktop platforms, this returns :attr:`COMPACT`, and for other platforms,
     it returns a default-constructed visual density.
     """
 
@@ -1284,9 +1285,9 @@ class LocaleConfiguration:
     The current locale.
 
     Note:
-        - Must be an item of [`supported_locales`][(c).] to take effect.
+        - Must be an item of :attr:`supported_locales` to take effect.
         - If `None` or invalid/unsupported, the first supported locale in
-            [`supported_locales`][(c).] is used.
+            :attr:`supported_locales` is used.
     """
 
     def __post_init__(self) -> None:
@@ -1303,8 +1304,8 @@ ColorValue = Union[str, Colors, CupertinoColors]
 
 Represents a color and can be:
 - a string (representing a color name or hex value),
-- a material color from the [`Colors`][flet.] enum,
-- or a Cupertino color from the [`CupertinoColors`][flet.] enum.
+- a material color from the :class:`~flet.Colors` enum,
+- or a Cupertino color from the :class:`~flet.CupertinoColors` enum.
 
 More information [here](https://flet.dev/docs/cookbook/cookbook/cookbook/colors).
 """
@@ -1314,9 +1315,9 @@ IconDataOrControl = Union[IconData, "Control"]
 """Type alias for icon-like values.
 
 Represents either:
-- an [`IconData`][flet.] value
-    (for example, a member of [`Icons`][flet.] or [`CupertinoIcons`][flet.]),
-- or a custom icon [`Control`][flet.].
+- an :class:`~flet.IconData` value
+    (for example, a member of :class:`~flet.Icons` or :class:`~flet.CupertinoIcons`),
+- or a custom icon :class:`~flet.Control`.
 """
 
 # Content
@@ -1325,7 +1326,7 @@ StrOrControl = Union[str, "Control"]
 Type alias for string or control values.
 
 Represents a string or a control and can be:
-- a string, which will be converted internally into a [`Text`][flet.] control,
+- a string, which will be converted internally into a :class:`~flet.Text` control,
 - or a control.
 """
 

@@ -99,7 +99,7 @@ class ServiceRegistry(Service):
     Internal container that hosts page-level service controls.
 
     Services register themselves through this registry so they can be mounted
-    under [`Page`][flet.Page] and synchronized with the frontend service
+    under :class:`~flet.Page` and synchronized with the frontend service
     bindings.
     """
 
@@ -152,7 +152,7 @@ class ServiceRegistry(Service):
 @dataclass
 class RouteChangeEvent(Event["Page"]):
     """
-    Event payload for [`Page.on_route_change`][flet.Page.on_route_change].
+    Event payload for :attr:`flet.Page.on_route_change`.
     """
 
     route: str
@@ -167,7 +167,7 @@ class PlatformBrightnessChangeEvent(Event["Page"]):
     Event payload for platform brightness changes.
 
     Delivered to
-    [`Page.on_platform_brightness_change`][flet.Page.on_platform_brightness_change].
+    :attr:`flet.Page.on_platform_brightness_change`.
     """
 
     brightness: Brightness
@@ -182,7 +182,7 @@ class LocaleChangeEvent(Event["Page"]):
     Event payload describing a change in the host platform's locale preferences.
 
     See also:
-    - [`Page.on_locale_change`][flet.]: event called when locale preferences/settings
+    - :attr:`flet.Page.on_locale_change`: event called when locale preferences/settings
         of the host platform have changed.
     """
 
@@ -199,7 +199,7 @@ class ViewPopEvent(Event["Page"]):
     """
     Event payload for view-pop navigation actions.
 
-    Delivered to [`Page.on_view_pop`][flet.Page.on_view_pop] when the top view
+    Delivered to :attr:`flet.Page.on_view_pop` when the top view
     is being popped by system or app-bar back behavior.
     """
 
@@ -210,7 +210,7 @@ class ViewPopEvent(Event["Page"]):
 
     view: Optional[View] = None
     """
-    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    Matched :class:`~flet.View` instance for `route`, if found on the page.
     """
 
 
@@ -219,7 +219,7 @@ class KeyboardEvent(Event["Page"]):
     """
     Event payload for keyboard key-down notifications.
 
-    Delivered to [`Page.on_keyboard_event`][flet.Page.on_keyboard_event].
+    Delivered to :attr:`flet.Page.on_keyboard_event`.
     """
 
     key: str
@@ -253,7 +253,7 @@ class LoginEvent(Event["Page"]):
     """
     Event payload for OAuth login completion.
 
-    Emitted to [`Page.on_login`][flet.Page.on_login] for both successful and
+    Emitted to :attr:`flet.Page.on_login` for both successful and
     failed authorization attempts.
     """
 
@@ -299,7 +299,7 @@ class AppLifecycleStateChangeEvent(Event["Page"]):
     Event payload for app lifecycle transitions.
 
     Delivered to
-    [`Page.on_app_lifecycle_state_change`][flet.Page.on_app_lifecycle_state_change].
+    :attr:`flet.Page.on_app_lifecycle_state_change`.
     """
 
     state: AppLifecycleState
@@ -313,7 +313,7 @@ class MultiViewAddEvent(Event["Page"]):
     """
     Event payload emitted when a new multi-view is created.
 
-    Delivered to [`Page.on_multi_view_add`][flet.].
+    Delivered to :attr:`flet.Page.on_multi_view_add`.
     """
 
     view_id: int
@@ -332,7 +332,7 @@ class MultiViewRemoveEvent(Event["Page"]):
     """
     Event payload emitted when a multi-view is removed.
 
-    Delivered to [`Page.on_multi_view_remove`][flet.].
+    Delivered to :attr:`flet.Page.on_multi_view_remove`.
     """
 
     view_id: int
@@ -344,7 +344,7 @@ class MultiViewRemoveEvent(Event["Page"]):
 @control("Page", isolated=True, post_init_args=2)
 class Page(BasePage):
     """
-    Page is a container for [`View`][flet.] controls.
+    Page is a container for :class:`~flet.View` controls.
 
     A page instance and the root view are automatically created when a new
     user session started.
@@ -502,7 +502,8 @@ class Page(BasePage):
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None
     """
-    Called when the user clicks automatic "Back" button in [`AppBar`][flet.] control.
+    Called when the user clicks automatic "Back" button in :class:`~flet.AppBar` \
+    control.
     """
 
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
@@ -1045,8 +1046,8 @@ class Page(BasePage):
         Args:
             url: The URL to open.
             web_popup_window_name: Window tab/name to open URL in. Use
-                [`UrlTarget.SELF`][flet.] for the same browser tab,
-                [`UrlTarget.BLANK`][flet.] for a new browser tab (or in external
+                :attr:`flet.UrlTarget.SELF` for the same browser tab,
+                :attr:`flet.UrlTarget.BLANK` for a new browser tab (or in external
                 application on a mobile device), or a custom name for a named tab.
             web_popup_window: Display the URL in a browser popup window.
             web_popup_window_width: Popup window width.

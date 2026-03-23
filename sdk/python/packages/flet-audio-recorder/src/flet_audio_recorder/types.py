@@ -184,8 +184,8 @@ class AndroidRecorderConfiguration:
     Some effects are available or not depending on this source.
 
     Most of the time, you should use
-    [`AndroidAudioSource.DEFAULT_SOURCE`][(p).] or
-    [`AndroidAudioSource.MIC`][(p).].
+    :attr:`flet_audio_recorder.AndroidAudioSource.DEFAULT_SOURCE` or
+    :attr:`flet_audio_recorder.AndroidAudioSource.MIC`.
     """
 
 

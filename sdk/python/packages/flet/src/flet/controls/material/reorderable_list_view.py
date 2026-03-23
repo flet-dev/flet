@@ -14,7 +14,8 @@ from flet.controls.types import MouseCursor, Number
 @dataclass
 class OnReorderEvent(Event["ReorderableListView"]):
     """
-    Payload for [`ReorderableListView`][flet.] events related to item reordering.
+    Payload for :class:`~flet.ReorderableListView` events related to item
+    reordering.
     """
 
     new_index: Optional[int] = None
@@ -22,8 +23,8 @@ class OnReorderEvent(Event["ReorderableListView"]):
     The new position of the item after the reordering, if available.
 
     Will be non-`None` only for the following events:
-    [`ReorderableListView.on_reorder`][flet.],
-    [`ReorderableListView.on_reorder_end`][flet.].
+    :attr:`~flet.ReorderableListView.on_reorder`,
+    :attr:`~flet.ReorderableListView.on_reorder_end`.
     """
 
     old_index: Optional[int] = None
@@ -31,8 +32,8 @@ class OnReorderEvent(Event["ReorderableListView"]):
     The previous position of the item before the reordering, if available.
 
     Will be non-`None` only for the following events:
-    [`ReorderableListView.on_reorder`][flet.],
-    [`ReorderableListView.on_reorder_start`][flet.].
+    :attr:`~flet.ReorderableListView.on_reorder`,
+    :attr:`~flet.ReorderableListView.on_reorder_start`.
     """
 
 
@@ -42,10 +43,11 @@ class ReorderableListView(ListView):
     A scrollable list of controls that can be reordered.
 
     Tip:
-        By default, each child control (from [`controls`][(c).]) is draggable using an
-        automatically created drag handle (see [`show_default_drag_handles`][(c).]).
-        To customize the draggable area, use the [`ReorderableDragHandle`][flet.] to
-        define your own drag handle or region.
+        By default, each child control (from :attr:`controls`) is draggable using an
+        automatically created drag handle (see
+        :attr:`show_default_drag_handles`). To customize the draggable area, use
+        :class:`~flet.ReorderableDragHandle` to define your own drag handle or
+        region.
 
     Example:
     ```python
@@ -64,13 +66,13 @@ class ReorderableListView(ListView):
 
     controls: list[Control] = field(default_factory=list)
     """
-    The controls displayed by this [`ReorderableListView`][(c)].
+    The controls displayed by this :class:`ReorderableListView`.
 
     Note:
-        When an item of this list gets reordered, [`on_reorder`][(c).] event gets
+        When an item of this list gets reordered, the :attr:`on_reorder` event gets
         fired, but it doesn't reorder the `controls` list automatically. So, to keep
         `controls` list in sync with the UI, reorder this list inside your
-        [`on_reorder`][(c).] event handler. ([example][(c).on_reorder])
+        :attr:`on_reorder` event handler. See :attr:`on_reorder` for an example.
     """
 
     anchor: Number = 0.0
@@ -88,30 +90,30 @@ class ReorderableListView(ListView):
 
     header: Optional[Control] = None
     """
-    A non-reorderable header item to show before the [`controls`][(c).].
+    A non-reorderable header item to show before :attr:`controls`.
     """
 
     footer: Optional[Control] = None
     """
-    A non-reorderable footer item to show after the [`controls`][(c).].
+    A non-reorderable footer item to show after :attr:`controls`.
     """
 
     show_default_drag_handles: bool = True
     """
-    Whether to show default drag handles for each [`controls`][(c).] item.
+    Whether to show default drag handles for each :attr:`controls` item.
 
     If `True`: on desktop platforms, a drag handle is stacked over the
     center of each item's trailing edge; on mobile platforms, a long
     press anywhere on the item starts a drag.
 
     The default desktop drag handle is just an `Icons.DRAG_HANDLE`
-    wrapped by a [`ReorderableDragHandle`][flet.]. On mobile platforms, the entire
-    item is wrapped with a [`ReorderableDragHandle`][flet.].
+    wrapped by a :class:`~flet.ReorderableDragHandle`. On mobile platforms, the
+    entire item is wrapped with a :class:`~flet.ReorderableDragHandle`.
 
     To customize the appearance or layout of drag handles, wrap each
-    [`controls`][(c).] item, or a control within each of them, with a
-    [`ReorderableDragHandle`][flet.]. For full control over the drag handles,
-    you might want to set `show_default_drag_handles` to `False`.
+    :attr:`controls` item, or a control within each of them, with a
+    :class:`~flet.ReorderableDragHandle`. For full control over the drag handles,
+    you might want to set :attr:`show_default_drag_handles` to `False`.
 
     Example:
         ```python
@@ -138,12 +140,12 @@ class ReorderableListView(ListView):
 
     on_reorder: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a [`controls`][(c).] item has been dragged to a new location/position.
+    Called when a :attr:`controls` item has been dragged to a new location/position.
 
     Note:
-        This event does not reorder [`controls`][(c).] automatically. So, to keep
-        [`controls`][(c).] list in sync with the UI, reorder it accordingly inside
-        your `on_reorder` event handler.
+        This event does not reorder :attr:`controls` automatically. So, to keep
+        :attr:`controls` list in sync with the UI, reorder it accordingly inside
+        your :attr:`on_reorder` event handler.
 
         /// admonition | Example
         ```python
@@ -158,10 +160,10 @@ class ReorderableListView(ListView):
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when a [`controls`][(c).] item drag has started.
+    Called when a :attr:`controls` item drag has started.
     """
 
     on_reorder_end: Optional[EventHandler[OnReorderEvent]] = None
     """
-    Called when the dragged [`controls`][(c).] item is dropped.
+    Called when the dragged :attr:`controls` item is dropped.
     """

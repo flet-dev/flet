@@ -26,8 +26,8 @@ __all__ = ["ExpansionTile", "TileAffinity"]
 
 class TileAffinity(Enum):
     """
-    Where to place a control in controls that use [`ListTile`][flet.] to position a \
-    control next to a label.
+    Where to place a control in controls that use :class:`~flet.ListTile` to position \
+    a control next to a label.
     """
 
     LEADING = "leading"
@@ -77,7 +77,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A Control to display as primary content of this tile.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
 
     Raises:
         ValueError: If it is neither a string nor a visible `Control`.
@@ -85,43 +85,43 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     controls: Optional[list[Control]] = None
     """
-    The controls to be displayed when this tile [expands][(c).expanded].
+    The controls to be displayed when this tile :attr:`expanded`.
 
-    Typically a list of [`ListTile`][flet.] controls.
+    Typically a list of :class:`~flet.ListTile` controls.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
-    Additional content displayed below the [`title`][(c).].
+    Additional content displayed below the :attr:`title`.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     leading: Optional[IconDataOrControl] = None
     """
-    A Control to display before the [`title`][(c).].
+    A Control to display before the :attr:`title`.
 
-    Typically a [`CircleAvatar`][flet.] control.
+    Typically a :class:`~flet.CircleAvatar` control.
 
-    Depending on the value of [`affinity`][(c).], this control
+    Depending on the value of :attr:`affinity`, this control
     may replace the rotating expansion arrow icon.
     """
 
     trailing: Optional[IconDataOrControl] = None
     """
-    A Control to display after the [`title`][(c).].
+    A Control to display after the :attr:`title`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
 
-    Depending on the value of [`affinity`][(c).], this control
+    Depending on the value of :attr:`affinity`, this control
     may replace the rotating expansion arrow icon.
     """
 
     controls_padding: Optional[PaddingValue] = None
     """
-    Defines the padding around the [`controls`][(c).].
+    Defines the padding around the :attr:`controls`.
 
-    If `None`, [`ExpansionTileTheme.controls_padding`][flet.] is used;
+    If `None`, :attr:`flet.ExpansionTileTheme.controls_padding` is used;
     if that is also `None`, then defaults to `Padding.all(0)`.
     """
 
@@ -129,41 +129,41 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     Defines the tile's padding.
 
-    Analogous to [`ListTile.content_padding`][flet.], this property defines the
-    insets for the [`leading`][(c).], [`title`][(c).], [`subtitle`][(c).] and
-    [`trailing`][(c).] controls. It does not inset the expanded
-    [`controls`][(c).] widgets.
+    Analogous to :attr:`flet.ListTile.content_padding`, this property defines the
+    insets for the :attr:`leading`, :attr:`title`, :attr:`subtitle` and
+    :attr:`trailing` controls. It does not inset the expanded
+    :attr:`controls` widgets.
 
-    If `None`, [`ExpansionTileTheme.tile_padding`][flet.] is used;
+    If `None`, :attr:`flet.ExpansionTileTheme.tile_padding` is used;
     if that is also `None`, then defaults to `Padding.symmetric(horizontal=16.0)`.
     """
 
     affinity: Optional[TileAffinity] = None
     """
-    Typically used to force the expansion arrow icon to the tile's [`leading`][(c).] \
-    or [`trailing`][(c).] edge.
+    Typically used to force the expansion arrow icon to the tile's :attr:`leading` or \
+    :attr:`trailing` edge.
 
-    If `None`, [`ListTileTheme.affinity`][flet.] is used;
-    if that is also `None`, then defaults to [`TileAffinity.TRAILING`][flet.]
+    If `None`, :attr:`flet.ListTileTheme.affinity` is used;
+    if that is also `None`, then defaults to :attr:`flet.TileAffinity.TRAILING`
     (the expansion arrow icon appears on the tile's trailing edge).
     """
 
     expanded_alignment: Optional[Alignment] = None
     """
-    Defines the alignment of [`controls`][(c).], which are arranged in a column when \
-    the tile is expanded.
+    Defines the alignment of :attr:`controls`, which are arranged in a column when the \
+    tile is expanded.
 
-    If `None`, [`ExpansionTileTheme.expanded_alignment`][flet.] is used;
-    if that is also `None`, then defaults to [`Alignment.CENTER`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.expanded_alignment` is used;
+    if that is also `None`, then defaults to :attr:`flet.Alignment.CENTER`.
     """
 
     expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
-    Defines the alignment of each child control within [`controls`][(c).] when the \
-    tile is expanded.
+    Defines the alignment of each child control within :attr:`controls` when the tile \
+    is expanded.
 
     Raises:
-        ValueError: If set to [`CrossAxisAlignment.BASELINE`][flet.].
+        ValueError: If set to :attr:`flet.CrossAxisAlignment.BASELINE`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
@@ -173,92 +173,92 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     If set and a custom collapsed or expanded shape is provided,
     this value determines how this tile is clipped.
 
-    If `None`, [`ExpansionTileTheme.clip_behavior`][flet.] is used;
-    if that is also `None`, then defaults to [`ClipBehavior.ANTI_ALIAS`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.clip_behavior` is used;
+    if that is also `None`, then defaults to :attr:`flet.ClipBehavior.ANTI_ALIAS`.
     """
 
     maintain_state: bool = False
     """
-    A boolean value which defines whether the state of the [`controls`][(c).] is \
-    maintained when this tile [expands][(c).expanded] and collapses.
+    A boolean value which defines whether the state of the :attr:`controls` is \
+    maintained when this tile :attr:`expanded` and collapses.
 
     When `True`, the children are kept in the tree while the tile is collapsed.
-    When `False` (default), the [`controls`][(c).] are removed from the tree when
+    When `False` (default), the :attr:`controls` are removed from the tree when
     the tile is collapsed and recreated upon expansion.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color of this tile's titles when the sublist is [`expanded`][(c).].
+    The color of this tile's titles when the sublist is :attr:`expanded`.
 
-    If `None`, [`ExpansionTileTheme.text_color`][flet.] is used;
-    if that is also `None`, then defaults to [`body_large`][flet.TextTheme.]
-    of the [`Theme.text_theme`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.text_color` is used;
+    if that is also `None`, then defaults to :attr:`~flet.TextTheme.body_large`
+    of the :attr:`flet.Theme.text_theme`.
     """
 
     icon_color: Optional[ColorValue] = None
     """
     The icon color of this tile's expansion arrow icon when the sublist is \
-    [`expanded`][(c).].
+    :attr:`expanded`.
 
-    If `None`, [`ExpansionTileTheme.icon_color`][flet.] is used;
-    if that is also `None`, then defaults to [`ColorScheme.primary`][flet.]
-    of the [`Page.theme`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.icon_color` is used;
+    if that is also `None`, then defaults to :attr:`flet.ColorScheme.primary`
+    of the :attr:`flet.Page.theme`.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    The border shape of this tile when the sublist is [`expanded`][(c).].
+    The border shape of this tile when the sublist is :attr:`expanded`.
 
-    If `None`, [`ExpansionTileTheme.shape`][flet.] is used;
-    if that is also `None`, then defaults to a [`Border`][flet.] with vertical sides
-    of color [`Theme.divider_color`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.shape` is used;
+    if that is also `None`, then defaults to a :class:`~flet.Border` with vertical sides
+    of color :attr:`flet.Theme.divider_color`.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The color to display behind the sublist when [`expanded`][(c).].
+    The color to display behind the sublist when :attr:`expanded`.
 
-    If `None`, [`ExpansionTileTheme.bgcolor`][flet.] is used;
-    if that is also `None`, then defaults to [`Colors.TRANSPARENT`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.bgcolor` is used;
+    if that is also `None`, then defaults to :attr:`flet.Colors.TRANSPARENT`.
     """
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
     Defines the background color of this tile when the sublist is collapsed \
-    ([`expanded`][(c).] is False).
+    (:attr:`expanded` is False).
 
-    If `None`, [`ExpansionTileTheme.collapsed_bgcolor`][flet.] is used;
-    if that is also `None`, then defaults to [`Colors.TRANSPARENT`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.collapsed_bgcolor` is used;
+    if that is also `None`, then defaults to :attr:`flet.Colors.TRANSPARENT`.
     """
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
     The icon color of this tile's expansion arrow icon when the sublist is collapsed \
-    ([`expanded`][(c).] is False).
+    (:attr:`expanded` is False).
 
-    If `None`, [`ExpansionTileTheme.collapsed_icon_color`][flet.] is used;
-    if that is also `None`, then defaults to [`ColorScheme.on_surface`][flet.]
-    of the [`Page.theme`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.collapsed_icon_color` is used;
+    if that is also `None`, then defaults to :attr:`flet.ColorScheme.on_surface`
+    of the :attr:`flet.Page.theme`.
     """
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    The color of this tile's titles when the sublist is collapsed ([`expanded`][(c).] \
-    is False).
+    The color of this tile's titles when the sublist is collapsed (:attr:`expanded` is \
+    False).
 
-    If `None`, [`ExpansionTileTheme.collapsed_text_color`][flet.] is used;
-    if that is also `None`, then defaults to [`body_large`][flet.TextTheme.]
-    of the [`Theme.text_theme`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.collapsed_text_color` is used;
+    if that is also `None`, then defaults to :attr:`~flet.TextTheme.body_large`
+    of the :attr:`flet.Theme.text_theme`.
     """
 
     collapsed_shape: Optional[OutlinedBorder] = None
     """
     The tile's border shape when the sublist is collapsed.
 
-    If `None`, [`ExpansionTileTheme.shape`][flet.] is used;
-    if that is also `None`, then defaults to a [`Border`][flet.] with vertical sides
-    of color [`Colors.TRANSPARENT`][flet.].
+    If `None`, :attr:`flet.ExpansionTileTheme.shape` is used;
+    if that is also `None`, then defaults to a :class:`~flet.Border` with vertical sides
+    of color :attr:`flet.Colors.TRANSPARENT`.
     """
 
     dense: Optional[bool] = None
@@ -269,7 +269,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     It is not recommended to set this property to `True` when in Material3.
 
-    If `None`, then its value is based on [`ListTileTheme.dense`][flet.].
+    If `None`, then its value is based on :attr:`flet.ListTileTheme.dense`.
     """
 
     enable_feedback: bool = True
@@ -281,7 +281,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
 
     show_trailing_icon: bool = True
     """
-    Whether this tile should build/show a default trailing icon, if [`trailing`][(c).] \
+    Whether this tile should build/show a default trailing icon, if :attr:`trailing` \
     is `None`.
     """
 
@@ -290,7 +290,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     The minimum height of this tile.
 
     If `None`, the default tile heights are `56.0`, `72.0`, and `88.0` for one, two,
-    and three lines of text respectively. If [`dense`][(c).] is `True`, these defaults
+    and three lines of text respectively. If :attr:`dense` is `True`, these defaults
     are changed to `48.0`, `64.0`, and `76.0`. A visual density value or a large title
     will also adjust the default tile heights.
     """
@@ -312,41 +312,43 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     Defines the animation style (curve and duration) for this tile's expansion and \
     collapse.
 
-    If [`AnimationStyle.duration`][flet.] is provided, it will be used to override
+    If :attr:`flet.AnimationStyle.duration` is provided, it will be used to override
     the expansion animation duration. If it is `None`, then
-    [`AnimationStyle.duration`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
+    :attr:`flet.AnimationStyle.duration` from the
+    :attr:`flet.ExpansionTileTheme.animation_style` will be used. If that is also
     `None`, `Duration(milliseconds=200)` will be used as default.
 
-    If [`AnimationStyle.curve`][flet.] is provided, it will be used to override
+    If :attr:`flet.AnimationStyle.curve` is provided, it will be used to override
     the expansion animation curve. If it is `None`, then
-    [`AnimationStyle.curve`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
-    `None`, [`AnimationCurve.EASE_IN`][flet.] will be used as default.
+    :attr:`flet.AnimationStyle.curve` from the
+    :attr:`flet.ExpansionTileTheme.animation_style` will be used. If that is also
+    `None`, :attr:`flet.AnimationCurve.EASE_IN` will be used as default.
 
-    If [`AnimationStyle.reverse_curve`][flet.] is provided, it will be used to override
+    If :attr:`flet.AnimationStyle.reverse_curve` is provided, it will be used to \
+    override
     the collapse animation curve. If it is `None`, then
-    [`AnimationStyle.reverse_curve`][flet.] from the
-    [`ExpansionTileTheme.animation_style`][flet.] will be used. If that is also
+    :attr:`flet.AnimationStyle.reverse_curve` from the
+    :attr:`flet.ExpansionTileTheme.animation_style` will be used. If that is also
     `None`, the expansion curve will be used as default.
 
     Tip:
         To disable the animations, use
-        [`AnimationStyle.no_animation()`][flet.AnimationStyle.no_animation].
+        :meth:`flet.AnimationStyle.no_animation`.
     """
 
     on_change: Optional[ControlEventHandler["ExpansionTile"]] = None
     """
     Called when a user clicks or taps the list tile.
 
-    The [`data`][flet.Event.] property of the event handler argument is a boolean
-    representing the [`expanded`][(c).] state of the tile after the change.
+    The :attr:`~flet.Event.data` property of the event handler argument is a boolean
+    representing the :attr:`expanded` state of the tile after the change.
     """
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: ctrl.expanded_cross_axis_alignment
-            != CrossAxisAlignment.BASELINE,
+            lambda ctrl: (
+                ctrl.expanded_cross_axis_alignment != CrossAxisAlignment.BASELINE
+            ),
             message=(
                 "expanded_cross_axis_alignment cannot be CrossAxisAlignment.BASELINE "
                 "since the expanded controls are aligned in a column, not a row. "

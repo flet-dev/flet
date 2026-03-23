@@ -40,8 +40,9 @@ class BarometerReadingEvent(Event["Barometer"]):
 @control("Barometer")
 class Barometer(Service):
     """
-    Streams barometer [readings][flet.BarometerReadingEvent] (atmospheric pressure in \
-    `hPa`). Useful for altitude calculations and weather-related experiences.
+    Streams barometer :class:`~flet.BarometerReadingEvent` samples (atmospheric \
+    pressure in `hPa`). Useful for altitude calculations and weather-related \
+    experiences.
 
     Note:
         * Supported platforms: Android, iOS.
@@ -73,8 +74,8 @@ class Barometer(Service):
 
     interval: Optional[Duration] = None
     """
-    Desired sampling interval provided as a [`Duration`][flet.Duration].
-    Defaults to 200 ms, though
+    Desired sampling interval provided as a :class:`~flet.Duration`. Defaults to
+    200 ms, though
     some platforms (such as iOS) ignore custom sampling intervals.
     """
 

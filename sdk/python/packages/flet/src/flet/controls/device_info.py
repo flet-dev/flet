@@ -26,12 +26,12 @@ class DeviceInfo:
     Base class for device information.
 
     Platform-specific classes include:
-    - [`AndroidDeviceInfo`][flet.]
-    - [`IosDeviceInfo`][flet.]
-    - [`LinuxDeviceInfo`][flet.]
-    - [`MacOsDeviceInfo`][flet.]
-    - [`WebDeviceInfo`][flet.]
-    - [`WindowsDeviceInfo`][flet.]
+    - :class:`~flet.AndroidDeviceInfo`
+    - :class:`~flet.IosDeviceInfo`
+    - :class:`~flet.LinuxDeviceInfo`
+    - :class:`~flet.MacOsDeviceInfo`
+    - :class:`~flet.WebDeviceInfo`
+    - :class:`~flet.WindowsDeviceInfo`
     """
 
     locales: list[Locale]
@@ -44,7 +44,7 @@ class DeviceInfo:
     The list is ordered in order of priority, with lower-indexed locales being
     preferred over higher-indexed ones. The first element is the primary locale.
 
-    The [`Page.on_locale_change`][flet.] event is called
+    The :attr:`flet.Page.on_locale_change` event is called
     whenever this value changes.
     """
 
@@ -54,7 +54,7 @@ class MacOsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for macOS hosts.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] when the
+    Returned by :meth:`flet.Page.get_device_info` when the
     current platform is macOS. Includes CPU, memory, model, and OS version
     fields collected from native system APIs.
     """
@@ -279,7 +279,7 @@ class AndroidBuildVersion:
     """
     Android OS version details derived from `android.os.Build.VERSION`.
 
-    This object is exposed as [`AndroidDeviceInfo.version`][flet.].
+    This object is exposed as :attr:`flet.AndroidDeviceInfo.version`.
     """
 
     code_name: str
@@ -328,7 +328,7 @@ class AndroidDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Android devices and emulators.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Android.
+    Returned by :meth:`flet.Page.get_device_info` on Android.
     """
 
     available_ram_size: int
@@ -623,7 +623,7 @@ class WindowsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Windows systems.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Windows.
+    Returned by :meth:`flet.Page.get_device_info` on Windows.
     """
 
     computer_name: str
@@ -798,7 +798,7 @@ class IosDeviceInfo(DeviceInfo):
     """
     Device information snapshot for iOS/iPadOS runtimes.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on iOS.
+    Returned by :meth:`flet.Page.get_device_info` on iOS.
     """
 
     available_ram_size: int

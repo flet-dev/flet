@@ -12,8 +12,8 @@ __all__ = ["Path"]
 @control("Path")
 class Path(Shape):
     """
-    Draws a path with given [`elements`][(c).]
-    with the given [`paint`][(c).].
+    Draws a path with given :attr:`elements`
+    with the given :attr:`paint`.
 
     Whether this shape is filled, stroked, or both, is controlled by `paint.style`.
     If the path is filled, then sub-paths within it are implicitly closed
@@ -25,8 +25,8 @@ class Path(Shape):
         """
         Base type for elements stored in `Path.elements`.
 
-        Use concrete subclasses such as [`MoveTo`][..],
-        [`LineTo`][..], [`Arc`][..], and [`Close`][..]
+        Use concrete subclasses such as :class:`MoveTo`,
+        :class:`LineTo`, :class:`Arc`, and :class:`Close`
         to build drawing commands in order.
         """
 
