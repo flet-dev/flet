@@ -2,6 +2,7 @@ import React from "react";
 import apiData from "@site/.crocodocs/api-data.json";
 import codeExamples from "@site/.crocodocs/code-examples.json";
 import Admonition from "@theme/Admonition";
+import CodeBlock from "@theme/CodeBlock";
 import {unified} from "unified";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
@@ -353,9 +354,9 @@ export function renderCodeExpression(text, context = {}) {
 
 function renderCodeBlock(code, language, key) {
   return (
-    <pre key={key}>
-      <code className={language ? `language-${language}` : undefined}>{code}</code>
-    </pre>
+    <CodeBlock key={key} language={language ?? "text"}>
+      {code}
+    </CodeBlock>
   );
 }
 

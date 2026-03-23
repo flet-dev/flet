@@ -21,6 +21,16 @@ const MEMBER_KIND_META = {
   method: {icon: "deployed_code", className: "crocodocs-member-icon--method"},
 };
 
+function stripImplicitSelf(signatureText) {
+  if (!signatureText) {
+    return signatureText;
+  }
+
+  return signatureText
+    .replace(/\(\s*self(?:\s*:\s*[^,)]+)?\s*,\s*/g, "(")
+    .replace(/\(\s*self(?:\s*:\s*[^,)]+)?\s*\)/g, "()");
+}
+
 function HeadingLink({level: Tag, id, children}) {
   return (
     <Heading as={Tag} id={id}>
@@ -218,7 +228,7 @@ function renderAttribute(item, classSymbol, docId) {
 }
 
 function renderMethod(item, classSymbol, docId) {
-  const signatureText = item.signature ?? item.name;
+  const signatureText = stripImplicitSelf(item.signature ?? item.name);
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
@@ -390,6 +400,17 @@ export default function ClassBlock({
       {showDocstring
         ? renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id})
         : null}
+      {image ? (
+        <figure className="doc-screenshot-figure">
+          <img
+            alt={entry.name}
+            className="doc-screenshot"
+            src={resolveDocAssetUrl(image, metadata?.id)}
+            style={{width: imageWidth}}
+          />
+          {imageCaption ? <figcaption>{imageCaption}</figcaption> : null}
+        </figure>
+      ) : null}
       {showBases && entry.bases?.length ? (
         <p>
           <strong>Inherits:</strong>{" "}
@@ -408,17 +429,6 @@ export default function ClassBlock({
             );
           })}
         </p>
-      ) : null}
-      {image ? (
-        <figure className="doc-screenshot-figure">
-          <img
-            alt={entry.name}
-            className="doc-screenshot"
-            src={resolveDocAssetUrl(image, metadata?.id)}
-            style={{width: imageWidth}}
-          />
-          {imageCaption ? <figcaption>{imageCaption}</figcaption> : null}
-        </figure>
       ) : null}
       {showSummary ? (
         <div>
