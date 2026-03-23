@@ -29,6 +29,7 @@ The tool exists because the old docs system and the new site are different in th
 sdk/python/packages/flet/docs + mkdocs.yml
   -> crocodocs migrate --mode bootstrap
   -> website/docs
+  -> website/sidebars.yml
   -> website/sidebars.js
   -> website/.crocodocs/docs-manifest.json
 
@@ -86,7 +87,7 @@ Current responsibilities:
 - convert MkDocs directives such as admonitions, tabs, and details
 - normalize image handling for Docusaurus/MDX
 - write the initial docs manifest
-- write `website/sidebars.js` from `mkdocs.yml`
+- write `website/sidebars.yml` from `mkdocs.yml`
 - copy bootstrap asset roots needed by migrated docs
 
 ### `generate`
@@ -97,6 +98,7 @@ Current responsibilities:
 
 - scan `website/docs`
 - refresh `website/.crocodocs/docs-manifest.json`
+- render `website/sidebars.js` from `website/sidebars.yml`
 - extract API data with Griffe
 - serialize classes, functions, aliases, members, docstrings, and deprecations
 - build `xref_map`
@@ -109,6 +111,7 @@ Current responsibilities:
 CrocoDocs writes these primary outputs:
 
 - [website/docs](../../website/docs)
+- [website/sidebars.yml](../../website/sidebars.yml)
 - [website/sidebars.js](../../website/sidebars.js)
 - [website/.crocodocs/docs-manifest.json](../../website/.crocodocs/docs-manifest.json)
 - [website/.crocodocs/api-data.json](../../website/.crocodocs/api-data.json)
@@ -137,6 +140,7 @@ Core paths and settings:
 - manifest output
 - API output
 - partial output directory
+- sidebar source
 - sidebar output
 - base URL
 - Griffe extensions
@@ -171,6 +175,72 @@ Controls which members are hidden from generated API output.
 Current use:
 
 - hide framework/internal methods like `init` and `before_update`
+
+## `sidebars.yml` Format
+
+CrocoDocs now treats [website/sidebars.yml](../../website/sidebars.yml) as the canonical sidebar source and generates [website/sidebars.js](../../website/sidebars.js) from it during `crocodocs generate`.
+
+Current flow:
+
+- `crocodocs migrate --mode bootstrap` writes `sidebars.yml` from `mkdocs.yml`
+- `crocodocs generate` reads `sidebars.yml` and emits `website/sidebars.js`
+
+The goal is to keep the authoring format compact and close to MkDocs nav, while still allowing Docusaurus-specific metadata when needed.
+
+### Rules
+
+- top-level section keys become sidebar categories
+- nested mapping keys become nested categories
+- `Label: path.md` means a labeled doc item
+- `- path.md` means a doc item whose label is inferred from the page
+- `_index: path.md` means the category links to that document
+- `_meta` holds category options such as `collapsed`
+
+### Compact Example
+
+```yml
+docs:
+  Learn:
+    Getting started:
+      - index.md
+      - getting-started/installation.md
+      - getting-started/create-flet-app.md
+
+    Tutorials:
+      Calculator: tutorials/calculator.md
+      ToDo: tutorials/todo.md
+
+  API Reference:
+    Services:
+      _index: services/index.md
+      - services/audio.md
+      - services/clipboard.md
+```
+
+### Example With Metadata
+
+```yml
+docs:
+  API Reference:
+    Services:
+      _index: services/index.md
+      _meta:
+        collapsed: false
+
+      Audio: services/audio.md
+      Clipboard: services/clipboard.md
+```
+
+### Why `_index` And `_meta` Are Separate
+
+`_index` is structural: it identifies the doc used as the category link.
+
+`_meta` is behavioral: it carries optional category settings such as:
+
+- `collapsed`
+- future Docusaurus-related options if we need them
+
+This keeps the format compact for normal cases and still extensible when the sidebar needs extra control.
 
 ## How Rendering Works
 

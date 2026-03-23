@@ -31,6 +31,7 @@ inventory_output = "../../website/.crocodocs/inventory-report.json"
 manifest_output = "../../website/.crocodocs/docs-manifest.json"
 api_output = "../../website/.crocodocs/api-data.json"
 partials_output_dir = "../../website/.crocodocs"
+sidebars_source = "../../website/sidebars.yml"
 sidebars_output = "../../website/sidebars.js"
 base_url = "/docs"
 extensions = ["flet.utils.griffe_deprecations"]

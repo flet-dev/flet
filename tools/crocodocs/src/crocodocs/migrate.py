@@ -31,7 +31,7 @@ from .docs import (
     route_for_output,
 )
 from .progress import ProgressReporter, Summary
-from .sidebars import build_nav_title_map, write_sidebars_js
+from .sidebars import build_nav_title_map, write_sidebars_yml
 
 
 def _slugify_tab_value(label: str) -> str:
@@ -472,8 +472,8 @@ def run_migrate_bootstrap(
         encoding="utf-8",
     )
 
-    reporter.info("Generating sidebar from mkdocs.yml")
-    write_sidebars_js(config.mkdocs_yml, pages, config.sidebars_output)
+    reporter.info("Generating sidebar source from mkdocs.yml")
+    write_sidebars_yml(config.mkdocs_yml, pages, config.sidebars_source)
 
     summary.add("pages converted", converted_pages)
     summary.add(
@@ -481,10 +481,10 @@ def run_migrate_bootstrap(
     )
     summary.add("pages needing follow-up", follow_up_pages)
     try:
-        sidebar_output = config.sidebars_output.relative_to(
+        sidebar_output = config.sidebars_source.relative_to(
             config.project_root
         ).as_posix()
     except ValueError:
-        sidebar_output = config.sidebars_output.as_posix()
-    summary.add("sidebar output", sidebar_output)
+        sidebar_output = config.sidebars_source.as_posix()
+    summary.add("sidebar source", sidebar_output)
     summary.print()

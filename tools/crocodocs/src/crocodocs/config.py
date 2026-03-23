@@ -31,6 +31,7 @@ class CrocoDocsConfig:
     manifest_output: Path
     api_output: Path
     partials_output_dir: Path
+    sidebars_source: Path
     sidebars_output: Path
     examples_root: Path
     asset_mappings: dict[str, AssetMapping]
@@ -84,6 +85,7 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
         manifest_output=_resolve_path(project_root, raw["manifest_output"]),
         api_output=_resolve_path(project_root, raw["api_output"]),
         partials_output_dir=_resolve_path(project_root, raw["partials_output_dir"]),
+        sidebars_source=_resolve_path(project_root, raw["sidebars_source"]),
         sidebars_output=_resolve_path(project_root, raw["sidebars_output"]),
         examples_root=examples_root,
         asset_mappings=asset_mappings,

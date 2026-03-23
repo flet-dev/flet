@@ -27,7 +27,8 @@ Implemented and in active use:
 - generated docs manifest at `website/.crocodocs/docs-manifest.json`
 - generated API data at `website/.crocodocs/api-data.json`
 - generated MDX partials under `website/.crocodocs/*.mdx`
-- left sidebar generation from the structured `nav` in `sdk/python/packages/flet/mkdocs.yml`
+- compact sidebar source generation at `website/sidebars.yml`
+- Docusaurus sidebar runtime generation at `website/sidebars.js`
 - Griffe-based API extraction for all configured Python packages
 - deprecation extraction through `flet.utils.griffe_deprecations`
 - alias serialization and alias page rendering
@@ -52,11 +53,13 @@ Known current workflow tradeoff:
 MkDocs docs + mkdocs.yml
   -> crocodocs migrate --mode bootstrap
   -> website/docs
+  -> website/sidebars.yml
   -> website/sidebars.js
   -> website/.crocodocs/docs-manifest.json
 
 website/docs
   -> crocodocs generate
+  -> website/sidebars.js (from website/sidebars.yml)
   -> website/.crocodocs/api-data.json
   -> website/.crocodocs/code-examples.json
   -> website/.crocodocs/*.mdx
@@ -99,6 +102,7 @@ Current notable config behavior:
 
 - source docs come from `sdk/python/packages/flet/docs`
 - migrated docs go to `website/docs`
+- sidebar source is `website/sidebars.yml`
 - sidebars are written to `website/sidebars.js`
 - API data is written to `website/.crocodocs/api-data.json`
 - generated partials go to `website/.crocodocs`
@@ -132,6 +136,7 @@ This session materially changed CrocoDocs in these areas:
 - added docstring support for MkDocs-style `/// admonition`
 - fixed docstring markdown edge cases that broke Cloudflare SSG
 - fixed docs landing page image path behavior on direct loads
+- introduced `website/sidebars.yml` as the canonical sidebar source and made `generate` compile it to `website/sidebars.js`
 - fixed Cloudflare CI failures caused by:
   - nested `uv` + Griffe environment assumptions
   - MkDocs-dependent overview partial generation

@@ -27,6 +27,7 @@ from .docs import (
 )
 from .partials import write_partial
 from .progress import ProgressReporter, Summary
+from .sidebars import write_sidebars_js_from_source
 
 LOCAL_ASSET_REF_RE = re.compile(r"(?:\.\./)+[^/\s)\"'}>]+/[^\s)\"'}>]+")
 
@@ -319,6 +320,9 @@ def run_generate(
         encoding="utf-8",
     )
 
+    reporter.stage("Generating sidebar runtime config")
+    write_sidebars_js_from_source(config.sidebars_source, pages, config.sidebars_output)
+
     reporter.stage("Generating MDX partials")
     generated_partials = 0
     sorted_partials = sorted(partial_filenames)
@@ -446,6 +450,20 @@ def run_generate(
     summary.add("symbols serialized", len(classes) + len(functions) + len(aliases))
     summary.add("partials generated", generated_partials)
     summary.add("code example entries", code_example_entries)
+    try:
+        sidebar_source = config.sidebars_source.relative_to(
+            config.project_root
+        ).as_posix()
+    except ValueError:
+        sidebar_source = config.sidebars_source.as_posix()
+    try:
+        sidebar_output = config.sidebars_output.relative_to(
+            config.project_root
+        ).as_posix()
+    except ValueError:
+        sidebar_output = config.sidebars_output.as_posix()
+    summary.add("sidebar source", sidebar_source)
+    summary.add("sidebar output", sidebar_output)
     summary.add("asset refs synced", len(synced_asset_refs))
     summary.add("asset copies performed", synced_assets)
     summary.add("xref entries", len(xref_map))

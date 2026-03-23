@@ -31,6 +31,7 @@ def build_parser() -> argparse.ArgumentParser:
     migrate.add_argument("--output")
     migrate.add_argument("--mkdocs-yml")
     migrate.add_argument("--manifest")
+    migrate.add_argument("--sidebars-source")
     migrate.add_argument("--sidebars-output")
     migrate.add_argument("--base-url")
 
@@ -38,6 +39,8 @@ def build_parser() -> argparse.ArgumentParser:
     generate.add_argument("--docs-path")
     generate.add_argument("--manifest-output")
     generate.add_argument("--output")
+    generate.add_argument("--sidebars-source")
+    generate.add_argument("--sidebars-output")
     generate.add_argument("--base-url")
     generate.add_argument("--package", action="append")
     generate.add_argument("--extensions", action="append")
@@ -64,6 +67,7 @@ def main(argv: list[str] | None = None) -> int:
         apply_path_override(config, "docs_path", args.output)
         apply_path_override(config, "mkdocs_yml", args.mkdocs_yml)
         apply_path_override(config, "manifest_output", args.manifest)
+        apply_path_override(config, "sidebars_source", args.sidebars_source)
         apply_path_override(config, "sidebars_output", args.sidebars_output)
         apply_value_override(config, "base_url", args.base_url)
         run_migrate_bootstrap(
@@ -79,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
         apply_path_override(config, "docs_path", args.docs_path)
         apply_path_override(config, "manifest_output", args.manifest_output)
         apply_path_override(config, "api_output", args.output)
+        apply_path_override(config, "sidebars_source", args.sidebars_source)
+        apply_path_override(config, "sidebars_output", args.sidebars_output)
         apply_value_override(config, "base_url", args.base_url)
         apply_package_overrides(config, args.package)
         if args.extensions:
