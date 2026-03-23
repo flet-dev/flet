@@ -97,10 +97,10 @@ AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_
 testing purposes.
 
 * **AdMob app ID**: `"ca-app-pub-3940256099942544~3347511713"`
-* [`BannerAd.unit_id`][flet_ads.BannerAd]
+* [`BannerAd.unit_id`](bannerad.md)
     - **Android**: `"ca-app-pub-3940256099942544/9214589741"`
     - **iOS**: `"ca-app-pub-3940256099942544/2435281174"`
-* [`InterstitialAd.unit_id`][flet_ads.InterstitialAd]
+* [`InterstitialAd.unit_id`](interstitialad.md)
     - **Android**: `"ca-app-pub-3940256099942544/1033173712"`
     - **iOS**: `"ca-app-pub-3940256099942544/4411468910"`
 

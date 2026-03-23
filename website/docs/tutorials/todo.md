@@ -49,9 +49,9 @@ Run this app and you will see a new window with a greeting:
 
 ## Adding page controls and handling events
 
-To start, we'll need a [`TextField`][flet.TextField] for entering a task name, and "+"
-[`FloatingActionButton`][flet.FloatingActionButton] with an event handler that
-will display a [`Checkbox`][flet.Checkbox] with a new task.
+To start, we'll need a [`TextField`](../controls/textfield.md) for entering a task name, and "+"
+[`FloatingActionButton`](../controls/floatingactionbutton.md) with an event handler that
+will display a [`Checkbox`](../controls/checkbox.md) with a new task.
 
 Create `todo.py` with the following contents:
 
@@ -69,8 +69,8 @@ button should be aligned horizontally, and take up full app width:
 
 <Image src="../examples/tutorials/todo/media/diagram-1.svg" width="55%" />
 
-[`Row`][flet.Row]  is a control that is used to lay its children controls out horizontally on a page.
-[`Column`][flet.Column] is a control that is used to lay its children controls out vertically on a page.
+[`Row`](../controls/row.md)  is a control that is used to lay its children controls out horizontally on a page.
+[`Column`](../controls/column.md) is a control that is used to lay its children controls out vertically on a page.
 
 Replace `todo.py` contents with the following:
 
@@ -266,7 +266,7 @@ In this tutorial, you have learnt how to:
 
 * Create a simple Flet app;
 * Work with [Reusable UI components](../cookbook/custom-controls.md);
-* Design UI layout using [`Column`][flet.Column] and [`Row`][flet.Row] controls;
+* Design UI layout using [`Column`](../controls/column.md) and [`Row`](../controls/row.md) controls;
 * Work with lists: view, edit and delete items, filtering;
 * [Publish](../publish/index.md) your Flet app to multiple platforms;
 

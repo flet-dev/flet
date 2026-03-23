@@ -57,18 +57,18 @@ The layout for this step could look like this:
 
 To implement this layout, we will be using these Flet controls:
 
-* [`Column`][flet.Column] - a container to display chat messages (`Text` controls) vertically.
-* [`Text`][flet.Text] - chat message displayed in the chat Column.
-* [`Row`][flet.Row] - a container to display `TextField` and `Button` horizontally.
-* [`TextField`][flet.TextField] - input control used for taking new message input from the user.
-* [`Button`][flet.Button] - "Send" button that will add new message to the chat Column.
+* [`Column`](../controls/column.md) - a container to display chat messages (`Text` controls) vertically.
+* [`Text`](../controls/text.md) - chat message displayed in the chat Column.
+* [`Row`](../controls/row.md) - a container to display `TextField` and `Button` horizontally.
+* [`TextField`](../controls/textfield.md) - input control used for taking new message input from the user.
+* [`Button`](../controls/button.md) - "Send" button that will add new message to the chat Column.
 
 Create `chat.py` with the following contents:
 
 <CodeExample path={frontMatter.examples + '/chat_1.py'} language="python" />
 
-When user clicks on the "Send" button, it triggers [`on_click`][flet.Button.on_click] event which calls `send_click` method. `send_click`
-then adds new [`Text`][flet.Text] control to the list of [`Column.controls`][flet.Column.controls] and clears `new_message` text field value.
+When user clicks on the "Send" button, it triggers [`on_click`](../controls/button.md#flet.Button-on_click) event which calls `send_click` method. `send_click`
+then adds new [`Text`](../controls/text.md) control to the list of [`Column.controls`](../controls/column.md#flet.Column-controls) and clears `new_message` text field value.
 
 :::note[Note]
 After any properties of a control are updated in event handler, there is no need to call an `update()` method as the update will be done automatically, but it should be called in case properties are updated outside of the event.
@@ -133,7 +133,7 @@ Here is the full code for this step:
 
 Chat app that you have created in the previous step has basic functionality needed to exchange messages between user sessions. It is not very user-friendly though, since it shows `session.id` that sent a message, which doesn't tell much about who you are communicating with.
 
-Let's improve our app to show user name instead of `session.id` for each message. To capture user name we will be using [`AlertDialog`][flet.AlertDialog] control. Let's add it to the page:
+Let's improve our app to show user name instead of `session.id` for each message. To capture user name we will be using [`AlertDialog`](../controls/alertdialog.md) control. Let's add it to the page:
 
 ```python
     user_name = ft.TextField(label="Enter your name")
@@ -235,10 +235,10 @@ You may want to show messages in a different format, like this:
 
 <Image src="../examples/tutorials/chat/media/layout-chatmessage.svg" alt="chat-layout-chatmessage" width="55%" />
 
-Chat message will now be a [`Row`][flet.Row] containing [`CircleAvatar`][flet.CircleAvatar] with username initials and
-[`Column`][flet.Column] that contains two [`Text`][flet.Text] controls: user name and message text.
+Chat message will now be a [`Row`](../controls/row.md) containing [`CircleAvatar`](../controls/circleavatar.md) with username initials and
+[`Column`](../controls/column.md) that contains two [`Text`](../controls/text.md) controls: user name and message text.
 
-We will need to show quite a few chat messages in the chat app, so it makes sense to create your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage` dataclass that will inherit from [`Row`][flet.Row].
+We will need to show quite a few chat messages in the chat app, so it makes sense to create your own [reusable control](../cookbook/custom-controls.md). Lets create a new `ChatMessage` dataclass that will inherit from [`Row`](../controls/row.md).
 
 When creating an instance of `ChatMessage` class, we will pass a `Message` object as an argument and then `ChatMessage` will display itself based on `message.user_name` and `message.text`:
 
@@ -313,10 +313,10 @@ Instances of `ChatMessage` will be created instead of plain `Text` chat messages
 
 Other improvements suggested with the new layout are:
 
-* [`ListView`][flet.ListView] instead of [`Column`][flet.Column] for displaying messages, to be able to scroll through the messages later
-* [`Container`][flet.Container] for displaying border around [`ListView`][flet.ListView]
-* [`IconButton`][flet.IconButton] instead of [`Button`][flet.Button] to send messages
-* Use of [`expand`][flet.Control.expand] property for controls to fill available space
+* [`ListView`](../controls/listview.md) instead of [`Column`](../controls/column.md) for displaying messages, to be able to scroll through the messages later
+* [`Container`](../controls/container.md) for displaying border around [`ListView`](../controls/listview.md)
+* [`IconButton`](../controls/iconbutton.md) instead of [`Button`](../controls/button.md) to send messages
+* Use of [`expand`](../controls/control.md#flet.Control-expand) property for controls to fill available space
 
 Here is how you can implement this layout:
 
@@ -382,25 +382,25 @@ initial focus to the control. If there is more than one control on a page with `
 We set `autofocus=True` on a username TextField inside a dialog and then on a TextField for entering chat message to set initial focus on it when the dialog is closed.
 
 When a user click "Send" button or presses Enter to submit a chat message, TextField loses focus.
-To programmatically set control focus we used [`TextField.focus()`][flet.FormFieldControl.focus] method.
+To programmatically set control focus we used [`TextField.focus()`](../controls/formfieldcontrol.md#flet.FormFieldControl-focus) method.
 
 #### Submitting forms on `Enter`
 
 It's so tempting to submit forms with just pushing `Enter` button on the keyboard!
 Type your name in the dialog, hit `Enter`, type a new message, hit `Enter`, type another, hit `Enter` - no mouse involved at all! 🚀
 
-Flet has support for that by providing [`TextField.on_submit`][flet.TextField.on_submit] event handler which fires when a user press `Enter` button while the focus is on the TextField.
+Flet has support for that by providing [`TextField.on_submit`](../controls/textfield.md#flet.TextField-on_submit) event handler which fires when a user press `Enter` button while the focus is on the TextField.
 
 #### Entering multiline messages
 
 What about multiline TextFields where `Enter` must advance a cursor to the next line?
-We've got that covered too! `TextField` control has [`shift_enter`][flet.TextField.shift_enter] property which when set to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while hitting just `Enter` submits a form.
+We've got that covered too! `TextField` control has [`shift_enter`](../controls/textfield.md#flet.TextField-shift_enter) property which when set to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while hitting just `Enter` submits a form.
 
 ### Animated scrolling to the last message
 
 Noticed a nice animation of scrolling to the last message in a chat window?
-It could be enabled by setting [`ListView.auto_scroll`][flet.ListView.auto_scroll] property to `True`.
-The top most `Page` class, being a scrollable container itself, also supports [`auto_scroll`][flet.Page.auto_scroll].
+It could be enabled by setting [`ListView.auto_scroll`](../controls/listview.md) property to `True`.
+The top most `Page` class, being a scrollable container itself, also supports [`auto_scroll`](../controls/page.md).
 
 ### Page title
 

@@ -47,7 +47,7 @@ creating the illusion of infinite list:
 
 ### Scrolling programmatically
 
-This example shows how to use [`scroll_to()`][flet.Column.scroll_to] to programmatically scroll a column:
+This example shows how to use [`scroll_to()`](column.md) to programmatically scroll a column:
 
 <CodeExample path={frontMatter.examples + '/programmatic_scroll.py'} language="python" />
 

@@ -86,7 +86,7 @@ ft.run(main)
 
 ## Threading
 
-To run something in the background use [`page.run_task()`][flet.Page.run_task]. For example, "Countdown" custom control
+To run something in the background use [`page.run_task()`](../controls/page.md#flet.Page-run_task). For example, "Countdown" custom control
 which is self-updating on background could be implemented as following:
 
 ```python

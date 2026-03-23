@@ -4,9 +4,9 @@ title: "flet-controls"
 
 User interface is made of **Controls** (aka widgets).
 
-To make controls visible to a user they must be added to a [`Page`][flet.Page] (the top-most control in the tree)
+To make controls visible to a user they must be added to a [`Page`](../controls/page.md) (the top-most control in the tree)
 or inside other controls.
-Nesting controls into each other could be represented as a tree with [`Page`][flet.Page] as a root.
+Nesting controls into each other could be represented as a tree with [`Page`](../controls/page.md) as a root.
 
 Controls are just regular Python classes. Create control instances via constructors with parameters matching
 their properties, for example:
@@ -199,8 +199,8 @@ ft.run(main)
 ## Textbox
 
 Flet provides a number of [controls](../controls/index.md) for building forms:
-[`TextField`][flet.TextField], [`Checkbox`][flet.Checkbox], [`Dropdown`][flet.Dropdown],
-[`Button`][flet.Button].
+[`TextField`](../controls/textfield.md), [`Checkbox`](../controls/checkbox.md), [`Dropdown`](../controls/dropdown/index.md),
+[`Button`](../controls/button.md).
 
 Let's ask a user for a name:
 
@@ -228,7 +228,7 @@ ft.run(main)
 
 ## Checkbox
 
-The [`Checkbox`][flet.Checkbox] control provides you with various properties and events emmiters for ease of use.
+The [`Checkbox`](../controls/checkbox.md) control provides you with various properties and events emmiters for ease of use.
 
 Let's create a one checkbox ToDo:
 

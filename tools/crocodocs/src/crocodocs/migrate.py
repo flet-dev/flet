@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import shutil
 from dataclasses import asdict
@@ -352,6 +353,140 @@ def _convert_markdown_image_attrs_to_mdx(
     return MARKDOWN_IMAGE_RE.sub(replace, content)
 
 
+XREF_RE = re.compile(r"\[([^\]]+)\]\[([^\]]+)\]")
+
+
+def _fenced_ranges(text: str) -> list[tuple[int, int]]:
+    ranges: list[tuple[int, int]] = []
+    offset = 0
+    in_fence = False
+    fence_start = 0
+    fence_char = ""
+    fence_len = 0
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+        if not in_fence:
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                ch = stripped[0]
+                n = len(stripped) - len(stripped.lstrip(ch))
+                in_fence = True
+                fence_start = offset
+                fence_char = ch
+                fence_len = n
+        else:
+            if (
+                stripped.startswith(fence_char * fence_len)
+                and stripped.rstrip() == fence_char * len(stripped.rstrip())
+                and len(stripped.rstrip()) >= fence_len
+            ):
+                in_fence = False
+                ranges.append((fence_start, offset + len(line)))
+        offset += len(line) + 1  # +1 for the \n
+    return ranges
+
+
+def _in_fenced_block(pos: int, ranges: list[tuple[int, int]]) -> bool:
+    for start, end in ranges:
+        if start <= pos < end:
+            return True
+        if pos < start:
+            break
+    return False
+
+
+def _resolve_xref_route(target: str, xref_map: dict[str, str]) -> str | None:
+    url = xref_map.get(target)
+    if url:
+        return url
+    # For member targets like flet.Page.views, link to the parent class page
+    parts = target.rsplit(".", 1)
+    if len(parts) == 2:
+        parent_url = xref_map.get(parts[0])
+        if parent_url:
+            return parent_url
+    return None
+
+
+def _route_to_md_path(route: str, base_url: str, source_root: Path) -> str | None:
+    relative = route.removeprefix(base_url.rstrip("/") + "/")
+    anchor = ""
+    if "#" in relative:
+        relative, anchor = relative.split("#", 1)
+    for suffix in (".md", ".mdx", "/index.md", "/index.mdx"):
+        candidate = source_root / f"{relative}{suffix}"
+        if candidate.exists():
+            result = candidate.relative_to(source_root).as_posix()
+            if anchor:
+                return f"{result}#{anchor}"
+            return result
+    return None
+
+
+def _convert_xrefs(
+    content: str,
+    xref_map: dict[str, str],
+    source_path: Path,
+    source_root: Path,
+    base_url: str,
+) -> tuple[str, int]:
+    if not xref_map:
+        return content, 0
+
+    fenced = _fenced_ranges(content)
+    converted = 0
+    source_rel_dir = source_path.parent.relative_to(source_root)
+
+    def replace(match: re.Match[str]) -> str:
+        nonlocal converted
+        if _in_fenced_block(match.start(), fenced):
+            return match.group(0)
+
+        label, target = match.group(1), match.group(2)
+        if "." not in target:
+            return match.group(0)
+
+        route = _resolve_xref_route(target, xref_map)
+        if not route:
+            return match.group(0)
+
+        md_path = _route_to_md_path(route, base_url, source_root)
+        if not md_path:
+            return match.group(0)
+
+        anchor = ""
+        if "#" in md_path:
+            md_path, anchor = md_path.rsplit("#", 1)
+
+        from os.path import relpath
+
+        rel_str = relpath(md_path, source_rel_dir).replace("\\", "/")
+
+        link = rel_str if anchor == "" else f"{rel_str}#{anchor}"
+        converted += 1
+        return f"[{label}]({link})"
+
+    result = XREF_RE.sub(replace, content)
+    return result, converted
+
+
+def _load_xref_map(config: CrocoDocsConfig) -> dict[str, str]:
+    api_output = config.api_output
+    if not api_output.exists():
+        return {}
+    data = json.loads(api_output.read_text(encoding="utf-8"))
+    xref_map = data.get("xref_map", {})
+    # Add short-name aliases: flet_ads.banner_ad.BannerAd -> also flet_ads.BannerAd
+    extras: dict[str, str] = {}
+    for key, url in xref_map.items():
+        parts = key.split(".")
+        if len(parts) >= 3:
+            short = f"{parts[0]}.{parts[-1]}"
+            if short not in xref_map and short not in extras:
+                extras[short] = url
+    xref_map.update(extras)
+    return xref_map
+
+
 def run_migrate_bootstrap(
     config: CrocoDocsConfig,
     input_root: Path,
@@ -364,6 +499,7 @@ def run_migrate_bootstrap(
     reporter.stage("Scanning source docs")
     docs = iter_markdown_files(input_root)
     nav_titles = build_nav_title_map(config.mkdocs_yml)
+    xref_map = _load_xref_map(config)
     static_root = output_root.parent / "static"
     assets_mapping = config.asset_mappings.get("assets")
     if (
@@ -379,6 +515,7 @@ def run_migrate_bootstrap(
         )
     pages: list[dict] = []
     converted_pages = 0
+    converted_xrefs = 0
     follow_up_pages = 0
 
     for index, path in enumerate(docs, start=1):
@@ -411,6 +548,10 @@ def run_migrate_bootstrap(
         )
         content = _convert_markdown_image_attrs_to_mdx(content, config.asset_mappings)
         content = _normalize_html_for_mdx(content, config.asset_mappings)
+        content, xref_count = _convert_xrefs(
+            content, xref_map, path, input_root, base_url
+        )
+        converted_xrefs += xref_count
         if has_remaining_directives:
             follow_up_pages += 1
             summary.warn(
@@ -476,6 +617,7 @@ def run_migrate_bootstrap(
     write_sidebars_yml(config.mkdocs_yml, pages, config.sidebars_source)
 
     summary.add("pages converted", converted_pages)
+    summary.add("xrefs converted", converted_xrefs)
     summary.add(
         "component imports inserted", sum(len(page["symbol_blocks"]) for page in pages)
     )

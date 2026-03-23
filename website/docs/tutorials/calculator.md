@@ -50,8 +50,8 @@ Run this app and you will see a new window with a greeting:
 
 Now you are ready to create a calculator app.
 
-To start, you'll need a [`Text`][flet.Text] control for showing the result of calculation,
-and a few [`Button`][flet.Button]s with all the numbers and actions on them.
+To start, you'll need a [`Text`](../controls/text.md) control for showing the result of calculation,
+and a few [`Button`](../controls/button.md)s with all the numbers and actions on them.
 
 Create `calc.py` with the following contents:
 
@@ -63,7 +63,7 @@ Run the app and you should see a page like this:
 
 ## Building page layout
 
-Now let's arrange the text and buttons in 6 horizontal [`Row`][flet.Row]s.
+Now let's arrange the text and buttons in 6 horizontal [`Row`](../controls/row.md)s.
 
 Replace `calc.py` contents with the following:
 
@@ -75,9 +75,9 @@ Run the app and you should see a page like this:
 
 ### Using Container for decoration
 
-To add a black background with rounded border around the calculator, we will be using [`Container`][flet.Container] control.
+To add a black background with rounded border around the calculator, we will be using [`Container`](../controls/container.md) control.
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
-[`Column`][flet.Column] that will be used as the container's [`content`][flet.Container.content]:
+[`Column`](../controls/column.md) that will be used as the container's [`content`](../controls/container.md#flet.Container-content):
 
 <Image src="../examples/tutorials/calculator/media/container-layout.svg" alt="container-layout" width="55%" />
 

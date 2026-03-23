@@ -38,8 +38,8 @@ Use `Text.semantics_label` property to override default Text control semantics.
 All buttons with text on them generate proper semantics.
 
 Use `tooltip` property to add screen reader semantics for
-[`IconButton`][flet.IconButton], [`FloatingActionButton`][flet.FloatingActionButton]
-and [`PopupMenuButton`][flet.PopupMenuButton] buttons.
+[`IconButton`](../controls/iconbutton.md), [`FloatingActionButton`](../controls/floatingactionbutton.md)
+and [`PopupMenuButton`](../controls/popupmenubutton.md) buttons.
 
 ### `TextField` and `Dropdown`
 
@@ -48,11 +48,11 @@ reader semantics to those controls.
 
 ### Custom semantics
 
-For any specific requirements use [`Semantics`][flet.Semantics] control.
+For any specific requirements use [`Semantics`](../controls/semantics.md) control.
 
 ### Debugging semantics
 
-Set [`Page.show_semantics_debugger`][flet.Page.show_semantics_debugger] to `True`
+Set [`Page.show_semantics_debugger`](../controls/page.md) to `True`
 to show an overlay that shows the accessibility information reported by the framework.
 
 You can implement a specific [keyboard shortcut](keyboard-shortcuts.md) to conveniently toggle

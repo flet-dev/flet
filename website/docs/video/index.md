@@ -72,7 +72,7 @@ flet build apk \
 ```
 </TabItem>
 </Tabs>
-Use [`PermissionHandler`][flet_permission_handler.PermissionHandler] to **request** permissions at runtime.
+Use [`PermissionHandler`](../permission_handler/index.md) to **request** permissions at runtime.
 
 See also:
 

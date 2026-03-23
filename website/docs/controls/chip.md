@@ -16,8 +16,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Assist chips
 
-Assist chips are chips with [`leading`][flet.Chip.leading] icon
-and [`on_click`][flet.Chip.on_click] event specified.
+Assist chips are chips with [`leading`](chip.md#flet.Chip-leading) icon
+and [`on_click`](chip.md#flet.Chip-on_click) event specified.
 
 They represent smart or automated actions that appear dynamically and contextually in a UI.
 
@@ -29,9 +29,9 @@ An alternative to assist chips are buttons, which should appear persistently and
 
 ### Filter chips
 
-Filter chips are chips with [`on_select`][flet.Chip.on_select] event specified.
+Filter chips are chips with [`on_select`](chip.md#flet.Chip-on_select) event specified.
 
-They use tags or descriptive words provided in the [`label`][flet.Chip.label] to filter content.
+They use tags or descriptive words provided in the [`label`](chip.md#flet.Chip-label) to filter content.
 They can be a good alternative to switches or checkboxes.
 
 <CodeExample path={frontMatter.examples + '/filter_chips.py'} language="python" />

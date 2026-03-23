@@ -22,7 +22,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Scrolling
 
-`ExpansionPanelList` supports scrolling through its [`scroll`][flet.ExpansionPanelList.scroll] property.
+`ExpansionPanelList` supports scrolling through its [`scroll`](expansionpanellist.md) property.
 
 <CodeExample path={frontMatter.examples + '/scrollable.py'} language="python" />
 

@@ -1381,7 +1381,7 @@ we may ask you to share this verbose log.
 In packaged apps (`flet build` output), all output from your Python code such as
 `print()` statements, `sys.stdout.write()` calls, and messages from the Python
 `logging` module is redirected to a `console.log` file. The full path to this file is available via
-[`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename] or the
+[`StoragePaths.get_console_log_filename()`](../services/storagepaths.md#flet.StoragePaths-get_console_log_filename) or the
 `FLET_APP_CONSOLE` environment variable.
 
 Note: `FLET_APP_CONSOLE` is only set in production builds;

@@ -82,7 +82,7 @@ Most of Flet controls are based on [Material design](https://m3.material.io/).
 
 There is also a number of iOS-style controls in Flet that are called Cupertino controls.
 
-Cupertino controls usually have a matching Material control that has [`adaptive`][flet.AdaptiveControl.adaptive] property
+Cupertino controls usually have a matching Material control that has [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property
 which defaults to`False`. When using a Material control with `adaptive` property set to `True`,
 a different control will
 be created depending on the platform, for example:
@@ -90,13 +90,13 @@ be created depending on the platform, for example:
 ft.Checkbox(adaptive=True, value=True, label="Adaptive Checkbox")
 ```
 
-Flet checks the value of [`Page.platform`][flet.Page.platform] property and if it is
+Flet checks the value of [`Page.platform`](../controls/page.md#flet.Page-platform) property and if it is
 `PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created;
 in all other cases Material control will be created.
 
 :::note[Note]
-[`adaptive`][flet.AdaptiveControl.adaptive] property can be set for an individual control or
-a container-controls (ex: [`Row`][flet.Row], [`Column`][flet.Column]) that has children controls.
+[`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property can be set for an individual control or
+a container-controls (ex: [`Row`](../controls/row.md), [`Column`](../controls/column.md)) that has children controls.
 If a container-control is made adaptive, all its children will be adaptive too,
 unless `adaptive` property is explicitly set to `False` for a child control.
 :::
@@ -108,151 +108,151 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 <div class="grid cards" markdown>
 
--   [:octicons-arrow-right-24: `AlertDialog`][flet.AlertDialog]
+-   [:octicons-arrow-right-24: `AlertDialog`](../controls/alertdialog.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="AlertDialog" className="doc-screenshot" src="/docs/examples/controls/alert_dialog/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoAlertDialog`][flet.CupertinoAlertDialog]
+-   [:octicons-arrow-right-24: `CupertinoAlertDialog`](../controls/cupertinoalertdialog.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoAlertDialog" className="doc-screenshot" src="/docs/examples/controls/cupertino_alert_dialog/media/adaptive.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Any button in Dialog actions`][flet.Button]
+-   [:octicons-arrow-right-24: `Any button in Dialog actions`](../controls/button.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="Dialog actions" className="doc-screenshot" src="/docs/examples/controls/alert_dialog/media/adaptive_dialog_action.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoDialogAction`][flet.CupertinoDialogAction]
+-   [:octicons-arrow-right-24: `CupertinoDialogAction`](../controls/cupertinodialogaction.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoDialogAction" className="doc-screenshot" src="/docs/examples/controls/cupertino_alert_dialog/media/adaptive_dialog_action.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `AppBar`][flet.AppBar]
+-   [:octicons-arrow-right-24: `AppBar`](../controls/appbar.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="AppBar" className="doc-screenshot" src="/docs/examples/controls/app_bar/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoAppBar`][flet.CupertinoAppBar]
+-   [:octicons-arrow-right-24: `CupertinoAppBar`](../controls/cupertinoappbar.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoAppBar" className="doc-screenshot" src="/docs/examples/controls/cupertino_app_bar/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `NavigationBar`][flet.NavigationBar]
+-   [:octicons-arrow-right-24: `NavigationBar`](../controls/navigationbar/index.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="NavigationBar" className="doc-screenshot" src="/docs/examples/controls/navigation_bar/media/adaptive.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoNavigationBar`][flet.CupertinoNavigationBar]
+-   [:octicons-arrow-right-24: `CupertinoNavigationBar`](../controls/cupertinonavigationbar.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoNavigationBar" className="doc-screenshot" src="/docs/examples/controls/cupertino_navigation_bar/media/adaptive.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `ListTile`][flet.ListTile]
+-   [:octicons-arrow-right-24: `ListTile`](../controls/listtile.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="ListTile" className="doc-screenshot" src="/docs/examples/controls/list_tile/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoListTile`][flet.CupertinoListTile]
+-   [:octicons-arrow-right-24: `CupertinoListTile`](../controls/cupertinolisttile.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoListTile" className="doc-screenshot" src="/docs/examples/controls/cupertino_list_tile/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `TextField`][flet.TextField]
+-   [:octicons-arrow-right-24: `TextField`](../controls/textfield.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="TextField" className="doc-screenshot" src="/docs/examples/controls/text_field/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoTextField`][flet.CupertinoTextField]
+-   [:octicons-arrow-right-24: `CupertinoTextField`](../controls/cupertinotextfield.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoTextField" className="doc-screenshot" src="/docs/examples/controls/cupertino_text_field/media/index.png" style={{width: "55%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Checkbox`][flet.Checkbox]
+-   [:octicons-arrow-right-24: `Checkbox`](../controls/checkbox.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="Checkbox" className="doc-screenshot" src="/docs/examples/controls/checkbox/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoCheckbox`][flet.CupertinoCheckbox]
+-   [:octicons-arrow-right-24: `CupertinoCheckbox`](../controls/cupertinocheckbox.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoCheckbox" className="doc-screenshot" src="/docs/examples/controls/cupertino_checkbox/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Slider`][flet.Slider]
+-   [:octicons-arrow-right-24: `Slider`](../controls/slider.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="Slider" className="doc-screenshot" src="/docs/test-images/examples/material/golden/macos/slider/image_for_docs.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoSlider`][flet.CupertinoSlider]
+-   [:octicons-arrow-right-24: `CupertinoSlider`](../controls/cupertinoslider.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoSlider" className="doc-screenshot" src="/docs/examples/controls/cupertino_slider/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Switch`][flet.Switch]
+-   [:octicons-arrow-right-24: `Switch`](../controls/switch.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="Switch" className="doc-screenshot" src="/docs/examples/controls/switch/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoSwitch`][flet.CupertinoSwitch]
+-   [:octicons-arrow-right-24: `CupertinoSwitch`](../controls/cupertinoswitch.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoSwitch" className="doc-screenshot" src="/docs/examples/controls/cupertino_switch/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Radio`][flet.Radio]
+-   [:octicons-arrow-right-24: `Radio`](../controls/radio.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="Radio" className="doc-screenshot" src="/docs/examples/controls/radio/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoRadio`][flet.CupertinoRadio]
+-   [:octicons-arrow-right-24: `CupertinoRadio`](../controls/cupertinoradio.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoRadio" className="doc-screenshot" src="/docs/examples/controls/cupertino_radio/media/index.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `FilledButton`][flet.FilledButton]
+-   [:octicons-arrow-right-24: `FilledButton`](../controls/filledbutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="FilledButton" className="doc-screenshot" src="/docs/examples/controls/filled_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoFilledButton`][flet.CupertinoFilledButton]
+-   [:octicons-arrow-right-24: `CupertinoFilledButton`](../controls/cupertinofilledbutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoFilledButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_filled_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `FilledTonalButton`][flet.FilledTonalButton]
+-   [:octicons-arrow-right-24: `FilledTonalButton`](../controls/filledtonalbutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="FilledTonalButton" className="doc-screenshot" src="/docs/examples/controls/filled_tonal_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
+-   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoButtonTonal" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive_tonal_button.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `IconButton`][flet.IconButton]
+-   [:octicons-arrow-right-24: `IconButton`](../controls/iconbutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="IconButton" className="doc-screenshot" src="/docs/examples/controls/icon_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
+-   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoIconButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive_icon_button.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `Button`][flet.Button]
+-   [:octicons-arrow-right-24: `Button`](../controls/button.md)
 
     <figure className="doc-screenshot-figure"><img alt="Button" className="doc-screenshot" src="/docs/examples/controls/button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
     ---
-    [:octicons-arrow-right-24: `OutlinedButton`][flet.OutlinedButton]
+    [:octicons-arrow-right-24: `OutlinedButton`](../controls/outlinedbutton.md)
 
     <figure className="doc-screenshot-figure"><img alt="OutlinedButton" className="doc-screenshot" src="/docs/examples/controls/outlined_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
     ---
-    [:octicons-arrow-right-24: `TextButton`][flet.TextButton]
+    [:octicons-arrow-right-24: `TextButton`](../controls/textbutton.md)
 
     <figure className="doc-screenshot-figure"><img alt="TextButton" className="doc-screenshot" src="/docs/examples/controls/text_button/media/adaptive.png" style={{width: "45%"}} /></figure>
 
--   [:octicons-arrow-right-24: `CupertinoButton`][flet.CupertinoButton]
+-   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
 
     ---
     <figure className="doc-screenshot-figure"><img alt="CupertinoButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive.png" style={{width: "45%"}} /></figure>
@@ -265,7 +265,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform
 
-automatically using their [`adaptive`][flet.AdaptiveControl.adaptive] property, there will be
+automatically using their [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property, there will be
 cases when you need more specific adaptive UI presentation, for example, using different
 icon, background color, padding, etc., depending on the platform.
 
@@ -274,7 +274,7 @@ and implement specific properties you need.
 
 In the example below, we are creating a new `AdaptiveNavigationBarDestination`
 [custom control](custom-controls.md) that will be displaying different icon on iOS and Android, and use it
-as destination for the [`NavigationBar`][flet.NavigationBar]:
+as destination for the [`NavigationBar`](../controls/navigationbar/index.md):
 
 ```python
 import flet as ft
@@ -342,8 +342,8 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 
 :::note[Note]
 You may utilise [reusable controls approach](../cookbook/custom-controls.md) to
-adapt your app not only depending on the [`Page.platform`][flet.Page.platform],
-but also use [`Page.web`][flet.Page.web] property to have different UI depending on whether the
+adapt your app not only depending on the [`Page.platform`](../controls/page.md#flet.Page-platform),
+but also use [`Page.web`](../controls/page.md#flet.Page-web) property to have different UI depending on whether the
 app is running in a browser or not, or even combine the usage of both properties to have specific
 UI for your apps.
 :::

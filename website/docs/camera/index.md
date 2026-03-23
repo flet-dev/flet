@@ -40,7 +40,7 @@ pip install flet-camera  # (1)!
 </TabItem>
 </Tabs>
 :::tip[Permissions]
-Request camera (and microphone if recording video with audio) permissions on mobile platforms before initializing the control. You can use [`PermissionHandler`][flet_permission_handler.PermissionHandler] to prompt the user.
+Request camera (and microphone if recording video with audio) permissions on mobile platforms before initializing the control. You can use [`PermissionHandler`](../permission_handler/index.md) to prompt the user.
 You can also use [predefined cross-platform permission bundles](../publish/index.md#predefined-cross-platform-permission-bundles) for camera and microphone permissions.
 :::
 
@@ -80,7 +80,7 @@ See also:
 Configuration to be made to access the camera and optionally the microphone:
 
 - [`NSCameraUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSCameraUsageDescription): Required for camera usage.
-- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription) (optional): Required only for video recording with audio. For example, when `enable_audio` parameter of [`Camera.initialize`][flet_camera.Camera.initialize] is set to `True` (default).
+- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription) (optional): Required only for video recording with audio. For example, when `enable_audio` parameter of [`Camera.initialize`](index.md#flet_camera.Camera-initialize) is set to `True` (default).
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">

@@ -4,8 +4,8 @@ title: "Drag and Drop"
 
 import {Image} from '@site/src/components/crocodocs';
 
-The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`][flet.Draggable]
-control and "drops" it on [`DragTarget`][flet.DragTarget]. If both draggable and drag target has the same `group` a
+The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`](../controls/draggable.md)
+control and "drops" it on [`DragTarget`](../controls/dragtarget.md). If both draggable and drag target has the same `group` a
 drag target will call `on_accept` event handler and pass draggable control ID as event data. In this case draggable serves as a source "data" for drag-and-drop operation.
 
 Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of

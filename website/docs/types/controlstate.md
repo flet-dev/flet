@@ -31,7 +31,7 @@ For more control, you can provide a dictionary where the key is the state name a
 
 #### **Example**
 
-To configure different fill colors of a [`Radio`][flet.Radio] button for `ControlState.HOVERED` and
+To configure different fill colors of a [`Radio`](../controls/radio.md) button for `ControlState.HOVERED` and
 `ControlState.FOCUSED`, with a fallback color for all other states:
 
 ```python

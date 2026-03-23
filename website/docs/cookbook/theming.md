@@ -6,11 +6,11 @@ It is possible to configure your application and/or the containing controls to f
 
 ### App-wide themes
 
-The [`Page`][flet.Page] control (uppermost control in the tree) has two useful properties for this: [`theme`][flet.Page.theme]
-and [`dark_theme`][flet.Page.dark_theme] properties to configure the appearance/theme of the entire app in light and
+The [`Page`](../controls/page.md) control (uppermost control in the tree) has two useful properties for this: [`theme`](../controls/page.md)
+and [`dark_theme`](../controls/page.md) properties to configure the appearance/theme of the entire app in light and
 dark theme modes respectively.
 
-Both of type [`Theme`][flet.Theme], they represent the default/fallback themes to be used app-wide,
+Both of type [`Theme`](../types/theme/index.md), they represent the default/fallback themes to be used app-wide,
 except explicitly modified/overriden in the tree.
 
 ```python
@@ -23,7 +23,7 @@ page.dark_theme = ft.Theme(color_scheme_seed=ft.Colors.BLUE)
 You can have a part of your app to use a different theme or override some theme styles for specific controls.
 
 Some container-like controls have `theme` and `theme_mode` properties of type
-[`Theme`][flet.Theme] and [`ThemeMode`][flet.ThemeMode] respectively.
+[`Theme`](../types/theme/index.md) and [`ThemeMode`](../types/thememode.md) respectively.
 
 Specifying `theme_mode` in the `Container` means you don't want to inherit parent theme mode,
 but want a completely new, unique scheme for all controls inside the container.

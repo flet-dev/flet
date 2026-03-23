@@ -53,14 +53,14 @@ you'll still need to tell the OS which permissions your app might potentially us
 See:
 
 - [full list of Android permissions](https://developer.android.com/reference/android/Manifest.permission)
-- [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions
+- [`Permission`](types/permission.md) enum, which lists all the supported permissions
 - [setting Android permissions](../publish/android.md#permissions)
 
 ### iOS
 
 See:
 
-- [`Permission`][flet_permission_handler.Permission] enum, which lists all the supported permissions and their `Info.plist` keys
+- [`Permission`](types/permission.md) enum, which lists all the supported permissions and their `Info.plist` keys
 - [setting iOS permissions](../publish/ios.md#permissions)
 
 ## Example

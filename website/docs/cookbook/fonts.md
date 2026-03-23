@@ -7,7 +7,7 @@ title: "Fonts"
 You can use the (system) fonts installed on your computer, e.g. "Consolas", "Arial", "Verdana", "Tahoma", etc.
 
 :::note[Limitation]
-System fonts cannot be used in Flet web apps rendered with [canvas kit][flet.WebRenderer.CANVAS_KIT] web renderer.
+System fonts cannot be used in Flet web apps rendered with [canvas kit](../types/webrenderer.md#flet.WebRenderer-CANVAS_KIT) web renderer.
 :::
 
 ### Usage Example
@@ -33,16 +33,16 @@ ft.run(main)
 Font can be imported from external resource by providing an absolute URL or
 from application assets directory (see [Assets Guide](assets.md)).
 
-This is done by setting the page's [`fonts`][flet.Page.fonts] property.
+This is done by setting the page's [`fonts`](../controls/page.md#flet.Page-fonts) property.
 
 To apply one of the imported fonts, you can:
-- Use [`Theme.font_family`][flet.Theme.font_family] to set a default/fallback app-wide font family.
-- Specify a font for individual controls. For example, [`Text.font_family`][flet.Text.font_family].
+- Use [`Theme.font_family`](../types/theme/index.md#flet.Theme-font_family) to set a default/fallback app-wide font family.
+- Specify a font for individual controls. For example, [`Text.font_family`](../controls/text.md#flet.Text-font_family).
 
 ### Usage Example
 
 The example below loads the "Kanit" font from GitHub and `"Open Sans"` from local assets.
-"Kanit" is set as the default app font, while `"Open Sans"` is applied to a specific [`Text`][flet.Text] control.
+"Kanit" is set as the default app font, while `"Open Sans"` is applied to a specific [`Text`](../controls/text.md) control.
 
 ```python
 import flet as ft

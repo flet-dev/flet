@@ -41,7 +41,7 @@ The same approach applies to other asset types like fonts, Lottie animations, Ri
 
 ## Accessing Asset Files in Production
 
-For UI controls such as [`Image`][flet.Image], you usually pass a path relative to `assets_dir`:
+For UI controls such as [`Image`](../controls/image.md), you usually pass a path relative to `assets_dir`:
 
 ```python
 ft.Image(src="images/sample.png")

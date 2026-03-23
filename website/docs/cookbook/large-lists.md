@@ -2,7 +2,7 @@
 title: "Large Lists"
 ---
 
-You can use [`Column`][flet.Column] and [`Row`][flet.Row] controls to display lists in the most cases, but if the list contains hundreds or thousands of items `Column` and `Row` will be ineffective with lagging UI as they render all items at once even they are not visible at the current scrolling position.
+You can use [`Column`](../controls/column.md) and [`Row`](../controls/row.md) controls to display lists in the most cases, but if the list contains hundreds or thousands of items `Column` and `Row` will be ineffective with lagging UI as they render all items at once even they are not visible at the current scrolling position.
 
 In the following example we are adding 5,000 text controls to a page. Page uses `Column` as a default layout container:
 
@@ -22,11 +22,11 @@ Run the program and notice that it's not just it takes a couple of seconds to in
 
 <figure className="doc-screenshot-figure"><img alt="Scroll column" className="doc-screenshot" src="/docs/assets/cookbook/large-lists/scroll-column.gif" /></figure>
 
-For displaying lists with a lot of items use [`ListView`][flet.ListView] and [`GridView`][flet.GridView] controls which render items on demand, visible at the current scrolling position only.
+For displaying lists with a lot of items use [`ListView`](../controls/listview.md) and [`GridView`](../controls/gridview.md) controls which render items on demand, visible at the current scrolling position only.
 
 ## ListView
 
-[`ListView`][flet.ListView] could be either vertical (default) or horizontal. ListView items are displayed one after another in the scroll direction.
+[`ListView`](../controls/listview.md) could be either vertical (default) or horizontal. ListView items are displayed one after another in the scroll direction.
 
 ListView already implements effective on demand rendering of its children, but scrolling performance could be further improved if you can set the same fixed height or width (for `horizontal` ListView) for all items ("extent"). This could be done by either setting absolute extent with `item_extent` property or making the extent of all children equal to the extent of the first child by setting `first_item_prototype` to `True`.
 
@@ -53,12 +53,12 @@ We used `expand=True` in ListView constructor. In order to function properly,
 ListView must have a height (or width if `horizontal`) specified.
 You could set an absolute size, e.g. `ListView(height=300, spacing=10)`, but in the
 example above we make ListView to take all available space on the page, i.e. expand.
-Read more about [`Control.expand`][flet.Control.expand] property.
+Read more about [`Control.expand`](../controls/control.md#flet.Control-expand) property.
 :::
 
 ## GridView
 
-[`GridView`][flet.GridView] allows arranging controls into a scrollable grid.
+[`GridView`](../controls/gridview.md) allows arranging controls into a scrollable grid.
 
 You can make a "grid" with `ft.Column(wrap=True)` or `ft.Row(wrap=True)`, for example:
 
