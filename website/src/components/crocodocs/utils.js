@@ -258,6 +258,17 @@ function resolveLocalMemberHref(memberName, context, api) {
   return `${classBaseRoute}#${anchor}`;
 }
 
+function resolveQualifiedSymbol(symbol, api) {
+  if (getApiEntry(symbol, api)) {
+    return symbol;
+  }
+  const publicName = api.canonical_map?.[symbol];
+  if (publicName && getApiEntry(publicName, api)) {
+    return publicName;
+  }
+  return null;
+}
+
 function shortenQualifiedDisplay(target) {
   return target.split(".").at(-1) ?? target;
 }
@@ -297,6 +308,37 @@ function resolveRestCrossReference(role, target, context) {
 
   if (!href) {
     href = resolveApiSymbolHref(lookupTarget, {...context, api});
+  }
+
+  // For unqualified members, try base classes (handles inherited members)
+  if (!href && !lookupTarget.includes(".") && context?.classSymbol) {
+    const entry = getApiEntry(context.classSymbol, api);
+    for (const base of entry?.bases ?? []) {
+      const resolvedBase = resolveQualifiedSymbol(base, api);
+      if (!resolvedBase) continue;
+      href = resolveLocalMemberHref(lookupTarget, {...context, classSymbol: resolvedBase}, api);
+      if (href) break;
+    }
+  }
+
+  // For qualified member targets (e.g. flet.Card.margin), resolve class then walk bases
+  if (!href && lookupTarget.includes(".")) {
+    const lastDot = lookupTarget.lastIndexOf(".");
+    const classPart = lookupTarget.slice(0, lastDot);
+    const memberName = lookupTarget.slice(lastDot + 1);
+    const resolvedClass = resolveQualifiedSymbol(classPart, api);
+    if (resolvedClass) {
+      href = resolveLocalMemberHref(memberName, {classSymbol: resolvedClass}, api);
+      if (!href) {
+        const entry = getApiEntry(resolvedClass, api);
+        for (const base of entry?.bases ?? []) {
+          const resolvedBase = resolveQualifiedSymbol(base, api);
+          if (!resolvedBase) continue;
+          href = resolveLocalMemberHref(memberName, {classSymbol: resolvedBase}, api);
+          if (href) break;
+        }
+      }
+    }
   }
 
   if (!href) {

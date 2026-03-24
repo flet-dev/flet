@@ -119,7 +119,7 @@ class CupertinoListTile(LayoutControl):
 
     leading_to_title: Optional[Number] = None
     """
-    The horizontal space between :attr:`leading` and `:attr:`title`.
+    The horizontal space between :attr:`leading` and :attr:`title`.
 
     Defaults to `12.0`, if :attr:`notched` is `True`, else `16.0`.
     """

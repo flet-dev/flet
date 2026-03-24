@@ -372,6 +372,18 @@ def run_generate(
     classes = _apply_public_aliases(classes, class_aliases)
     functions = _apply_public_aliases(functions, function_aliases)
 
+    # Build reverse map: internal qualname -> public name
+    reverse_aliases: dict[str, str] = {
+        qualname: public_name for public_name, qualname in public_aliases.items()
+    }
+
+    # Normalize bases in all class entries to use public names
+    for cls_entry in classes.values():
+        bases = cls_entry.get("bases")
+        if not bases:
+            continue
+        cls_entry["bases"] = [reverse_aliases.get(b, b) for b in bases]
+
     xref_map: dict[str, str] = {}
     for page in pages:
         route = page["route"]
@@ -397,12 +409,26 @@ def run_generate(
                             f"{route}#{_member_anchor(symbol, method['name'])}"
                         )
 
+    # Add public-alias xref entries so short names like flet_ads.BaseAd resolve
+    for public_name, qualname in class_aliases.items():
+        if qualname in xref_map and public_name not in xref_map:
+            xref_map[public_name] = xref_map[qualname]
+            # Also alias members: flet_ads.BaseAd.on_open -> flet_ads.base_ad.BaseAd.on_open
+            prefix = f"{qualname}."
+            public_prefix = f"{public_name}."
+            for key, url in list(xref_map.items()):
+                if key.startswith(prefix):
+                    member_alias = public_prefix + key[len(prefix) :]
+                    if member_alias not in xref_map:
+                        xref_map[member_alias] = url
+
     reporter.stage("Writing API data")
     api_output.parent.mkdir(parents=True, exist_ok=True)
     api_output.write_text(
         json.dumps(
             {
                 "version": "1.0",
+                "canonical_map": reverse_aliases,
                 "classes": classes,
                 "functions": functions,
                 "aliases": aliases,

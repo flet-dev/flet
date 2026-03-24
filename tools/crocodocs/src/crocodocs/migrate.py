@@ -474,17 +474,7 @@ def _load_xref_map(config: CrocoDocsConfig) -> dict[str, str]:
     if not api_output.exists():
         return {}
     data = json.loads(api_output.read_text(encoding="utf-8"))
-    xref_map = data.get("xref_map", {})
-    # Add short-name aliases: flet_ads.banner_ad.BannerAd -> also flet_ads.BannerAd
-    extras: dict[str, str] = {}
-    for key, url in xref_map.items():
-        parts = key.split(".")
-        if len(parts) >= 3:
-            short = f"{parts[0]}.{parts[-1]}"
-            if short not in xref_map and short not in extras:
-                extras[short] = url
-    xref_map.update(extras)
-    return xref_map
+    return data.get("xref_map", {})
 
 
 def run_migrate_bootstrap(

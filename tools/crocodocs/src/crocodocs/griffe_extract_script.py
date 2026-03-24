@@ -228,7 +228,12 @@ def _bases_text(obj: Any) -> list[str]:
     target = _unwrap(obj)
     if target is None:
         return []
-    return [str(base) for base in getattr(target, "bases", [])]
+    result = []
+    for base in getattr(target, "bases", []):
+        # Try to get the fully-qualified path via griffe resolution
+        canonical = getattr(base, "canonical_path", None)
+        result.append(canonical if canonical else str(base))
+    return result
 
 
 def _parameter_text(parameter: Any) -> str:
@@ -419,17 +424,36 @@ def main() -> int:
     aliases: dict[str, Any] = {}
     public_aliases: dict[str, str] = {}
 
-    for package_name in payload["packages"]:
-        module = loader.load(package_name)
-        for member_name, member in module.members.items():
+    # Walk all modules recursively to discover every path a symbol is exported as
+    canonical_to_paths: dict[str, list[str]] = {}
+
+    def _walk_module(mod: Any) -> None:
+        for member in mod.members.values():
+            # Recurse into sub-modules first
+            member_kind = member.__class__.__name__
+            if member_kind == "Module":
+                _walk_module(member)
+                continue
             resolved = _unwrap(member)
             if resolved is None:
                 continue
             kind = resolved.__class__.__name__
-            if kind in {"Class", "Function"}:
-                public_aliases[
-                    getattr(member, "path", f"{package_name}.{member_name}")
-                ] = getattr(resolved, "path", getattr(member, "path", ""))
+            if kind not in {"Class", "Function"}:
+                continue
+            canonical = getattr(resolved, "path", "")
+            alias_path = getattr(member, "path", "")
+            if canonical and alias_path:
+                canonical_to_paths.setdefault(canonical, []).append(alias_path)
+
+    for package_name in payload["packages"]:
+        module = loader.load(package_name)
+        _walk_module(module)
+
+    # Pick the shortest public path for each canonical symbol
+    for canonical, paths in canonical_to_paths.items():
+        shortest = min(paths, key=len)
+        if shortest != canonical:
+            public_aliases[shortest] = canonical
 
     modules_collection = loader.modules_collection
     for symbol in payload["symbols"]:

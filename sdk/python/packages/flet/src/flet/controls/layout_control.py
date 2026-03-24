@@ -51,7 +51,7 @@ class LayoutControl(Control):
     capabilities, including:
 
     - explicit sizing (:attr:`width`, :attr:`height`, :attr:`aspect_ratio`);
-    - absolute positioning (:attr:`left`, [`top`], :attr:`right`, :attr:`bottom`);
+    - absolute positioning (:attr:`left`, :attr:`top`, :attr:`right`, :attr:`bottom`);
     - parent-space placement (:attr:`align`, :attr:`margin`);
     - 2D transforms (:attr:`rotate`, :attr:`scale`, :attr:`offset`,
       :attr:`flip`, :attr:`transform`);
