@@ -39,7 +39,7 @@ The below sections show the required configurations for each platform.
 
 ### Android
 
-You may need to declare & request file-system/storage permissions, depending on your usecase:
+You may need to declare and request file-system/storage permissions, depending on your use case:
 
 - [`android.permission.READ_MEDIA_AUDIO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_AUDIO) (optional): Allows to read audio files from external storage. Android 13 or higher.
 - [`android.permission.READ_MEDIA_VIDEO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_VIDEO) (optional): Allows to read video files from external storage. Android 13 or higher.
@@ -49,10 +49,10 @@ You may need to declare & request file-system/storage permissions, depending on 
 /// tab | `flet build`
 ```bash
 flet build apk \
-  --android-permissions android.permission.READ_MEDIA_AUDIO=True \
-      android.permission.READ_MEDIA_VIDEO=True \
-      android.permission.READ_EXTERNAL_STORAGE=True \
-      android.permission.WRITE_EXTERNAL_STORAGE=True
+  --android-permissions android.permission.READ_MEDIA_AUDIO=true \
+  --android-permissions android.permission.READ_MEDIA_VIDEO=true \
+  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
+  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
 ```
 ///
 /// tab | `pyproject.toml`

@@ -160,7 +160,7 @@ class GeolocatorIosActivityType(Enum):
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorPosition:
     """Detailed location information."""
 
@@ -256,7 +256,7 @@ class GeolocatorPosition:
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorConfiguration:
     """
     Base configuration for position requests and position-stream updates.
@@ -287,7 +287,7 @@ class GeolocatorConfiguration:
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorWebConfiguration(GeolocatorConfiguration):
     """Web specific settings."""
 
@@ -300,7 +300,7 @@ class GeolocatorWebConfiguration(GeolocatorConfiguration):
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorIosConfiguration(GeolocatorConfiguration):
     """iOS specific settings."""
 
@@ -339,7 +339,7 @@ class GeolocatorIosConfiguration(GeolocatorConfiguration):
     """
 
 
-@dataclass
+@ft.value
 class ForegroundNotificationConfiguration:
     """
     Android foreground-service notification settings for background tracking.
@@ -397,7 +397,7 @@ class ForegroundNotificationConfiguration:
     # foreground_notification_color: Optional[ft.ColorValue] = None
 
 
-@dataclass
+@ft.value
 class GeolocatorAndroidConfiguration(GeolocatorConfiguration):
     """Android specific settings."""
 

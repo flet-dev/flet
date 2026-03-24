@@ -1,9 +1,3 @@
-#
-# Use -n (--hidden) option to run this example with `flet run` command:
-#
-#     flet run --hidden window_hidden_on_start.py
-#
-
 import asyncio
 
 import flet as ft

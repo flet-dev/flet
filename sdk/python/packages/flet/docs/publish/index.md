@@ -878,7 +878,12 @@ feature, or content within the app, enhancing user experience and engagement.
 - **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
 - **Host**: deep linking URL host.
 
-See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
+See also:
+
+- [Flutter deep linking](https://docs.flutter.dev/ui/navigation/deep-linking)
+- [Android intents and intent filters](https://developer.android.com/guide/components/intents-filters)
+- [Defining a custom URL scheme for your app](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app)
+- [Universal Links](https://developer.apple.com/ios/universal-links/)
 
 #### Resolution order
 
@@ -905,6 +910,43 @@ flet build <target_platform> \
 [tool.flet.deep_linking]    # or [tool.flet.<PLATFORM>.deep_linking]
 scheme = "https"
 host = "mydomain.com"
+```
+///
+
+/// details | Template translation
+    type: example
+In the Android [`AndroidManifest.xml`](android.md#android-manifest),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+<intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="https" android:host="mydomain.com" />
+</intent-filter>
+```
+
+In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<key>FlutterDeepLinkingEnabled</key>
+<true />
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>mydomain.com</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>https</string>
+        </array>
+    </dict>
+</array>
 ```
 ///
 
@@ -1102,9 +1144,9 @@ permissions = ["location", "microphone"]
 ### Build template
 
 `flet build` creates (and reuses) a Flutter project under `<app_root>/build/flutter` using a
-[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
-repository. The version of the template used is determined by the
-[template reference](#template-reference) option.
+[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template. By default, the template
+is downloaded as a zip artifact from the matching Flet GitHub Release. The version of the template
+used is determined by the installed Flet version.
 
 The cached project is refreshed when template inputs change or when you pass
 [`--clear-cache`](../cli/flet-build.md#-clear-cache).
@@ -1117,6 +1159,7 @@ Supported values include:
 
 - A GitHub repository using the `gh:` prefix (e.g., `gh:org/template`)
 - A full Git URL (e.g., `https://github.com/org/template.git`)
+- A zip URL (e.g., `https://github.com/flet-dev/flet/releases/download/v0.83.0/flet-build-template.zip`)
 - A local directory path
 
 #### Resolution order
@@ -1125,19 +1168,19 @@ Its value is determined in the following order of precedence:
 
 1. [`--template`](../cli/flet-build.md#-template)
 2. `[tool.flet.template].url`
-3. [`"gh:flet-dev/flet-build-template"`](https://github.com/flet-dev/flet-build-template)
+3. The default zip URL from the Flet GitHub Release matching the installed version
 
 #### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk --template gh:flet-dev/flet-build-template
+flet build apk --template gh:my-org/my-custom-template
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.template]
-url = "gh:flet-dev/flet-build-template"
+url = "gh:my-org/my-custom-template"
 ```
 ///
 
@@ -1507,7 +1550,7 @@ This creates a version mismatch/incompatibility for apps packaged with `flet bui
 * The packaged Flutter shell may still be using an older stable `flet` version.
 * At runtime, the app fails because the Flutter layer does not recognize the new controls/features in your prerelease `flet` package, leading to errors like `Unknown control: <ControlName>`.
 
-**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started#running-app)),
+**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started/running-app.md)),
 as the `flet` Flutter dependency is only resolved during the `flet build` process.
 
 ### Solution

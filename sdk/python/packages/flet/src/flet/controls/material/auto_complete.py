@@ -2,14 +2,14 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet import LayoutControl
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.types import Number
 
 __all__ = ["AutoComplete", "AutoCompleteSelectEvent", "AutoCompleteSuggestion"]
 
 
-@dataclass
+@value
 class AutoCompleteSuggestion:
     """
     Represents a suggestion item for the [`AutoComplete`][flet.] control.

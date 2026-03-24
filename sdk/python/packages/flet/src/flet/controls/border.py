@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.colors import Colors
 from flet.controls.types import ColorValue, Number
 from flet.utils import deprecated
@@ -52,7 +53,7 @@ class BorderStyle(Enum):
     """Draw the border as a solid line."""
 
 
-@dataclass
+@value
 class BorderSide:
     """
     Creates the side of a border.
@@ -78,7 +79,7 @@ class BorderSide:
         to [`BorderStyle.NONE`][flet.].
 
     Raises:
-        ValueError: If it is less than zero.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     color: ColorValue = Colors.BLACK
@@ -172,7 +173,7 @@ class BorderSide:
         return BorderSide(width=0.0, style=BorderStyle.NONE)
 
 
-@dataclass
+@value
 class Border:
     """
     A border comprised of four sides: `top`, `right`, `bottom`, `left`.

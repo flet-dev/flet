@@ -1,9 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationStyle
+from flet.controls.base_control import value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
@@ -94,7 +95,7 @@ class PageTransitionTheme(Enum):
     """
 
 
-@dataclass
+@value
 class PageTransitionsTheme:
     """
     Per-platform mapping of route transition presets.
@@ -139,7 +140,7 @@ class PageTransitionsTheme:
     """
 
 
-@dataclass
+@value
 class ColorScheme:
     """
     A set of more than 40 colors based on the [Material \
@@ -423,7 +424,7 @@ class ColorScheme:
     """
 
 
-@dataclass
+@value
 class TextTheme:
     """
     Customizes [`Text`][flet.] styles.
@@ -518,7 +519,7 @@ class TextTheme:
     """
 
 
-@dataclass
+@value
 class ScrollbarTheme:
     """
     Customizes the colors, thickness, and shape of scrollbars across the app.
@@ -604,7 +605,7 @@ class ScrollbarTheme:
     """
 
 
-@dataclass
+@value
 class TabBarTheme:
     """
     Customizes the appearance of [`TabBar`][flet.] control across the app.
@@ -686,7 +687,7 @@ class TabBarTheme:
     """
 
 
-@dataclass
+@value
 class SystemOverlayStyle:
     """
     Allows the customization of the mobile's system overlay (which consists of the \
@@ -736,7 +737,7 @@ class SystemOverlayStyle:
     """
 
 
-@dataclass
+@value
 class DialogTheme:
     """
     Customizes the appearance of [`AlertDialog`][flet.] across the app.
@@ -815,7 +816,7 @@ class DialogTheme:
     """
 
 
-@dataclass
+@value
 class ButtonTheme:
     """
     Customizes the appearance of [`Button`][flet.] across the app.
@@ -828,7 +829,7 @@ class ButtonTheme:
     """
 
 
-@dataclass
+@value
 class OutlinedButtonTheme:
     """
     Customizes the appearance of [`OutlinedButton`][flet.] across the app.
@@ -841,7 +842,7 @@ class OutlinedButtonTheme:
     """
 
 
-@dataclass
+@value
 class TextButtonTheme:
     """
     Customizes the appearance of [`TextButton`][flet.] across the app.
@@ -854,7 +855,7 @@ class TextButtonTheme:
     """
 
 
-@dataclass
+@value
 class FilledButtonTheme:
     """
     Customizes the appearance of [`FilledButton`][flet.] across the app.
@@ -868,7 +869,7 @@ class FilledButtonTheme:
     """
 
 
-@dataclass
+@value
 class IconButtonTheme:
     """
     Customizes the appearance of [`IconButton`][flet.] across the app.
@@ -881,7 +882,7 @@ class IconButtonTheme:
     """
 
 
-@dataclass
+@value
 class BottomSheetTheme:
     """
     Customizes the appearance of [`BottomSheet`][flet.] across the app.
@@ -942,7 +943,7 @@ class BottomSheetTheme:
     """
 
 
-@dataclass
+@value
 class CardTheme:
     """
     Customizes the appearance of [`Card`][flet.] across the app.
@@ -985,7 +986,7 @@ class CardTheme:
     """
 
 
-@dataclass
+@value
 class ChipTheme:
     """
     Customizes the appearance of [`Chip`][flet.] across the app.
@@ -1109,7 +1110,7 @@ class ChipTheme:
     # secondary_label_text_style: Optional[TextStyle] = None
 
 
-@dataclass
+@value
 class FloatingActionButtonTheme:
     """
     Customizes the appearance of [`FloatingActionButton`][flet.]
@@ -1219,7 +1220,7 @@ class FloatingActionButtonTheme:
     # small_size_constraints: Optional[BoxConstraints] = None
 
 
-@dataclass
+@value
 class NavigationRailTheme:
     """
     Customizes the appearance of [`NavigationRail`][flet.] across the app.
@@ -1293,7 +1294,7 @@ class NavigationRailTheme:
     """
 
 
-@dataclass
+@value
 class AppBarTheme:
     """
     Customizes the appearance of [`AppBar`][flet.] controls across the app.
@@ -1372,7 +1373,7 @@ class AppBarTheme:
     """
 
 
-@dataclass
+@value
 class BottomAppBarTheme:
     """
     Customizes the appearance of [`BottomAppBar`][flet.] controls across the app.
@@ -1415,7 +1416,7 @@ class BottomAppBarTheme:
     """
 
 
-@dataclass
+@value
 class RadioTheme:
     """
     Defines default property values for descendant [`Radio`][flet.] controls.
@@ -1452,7 +1453,7 @@ class RadioTheme:
     """
 
 
-@dataclass
+@value
 class CheckboxTheme:
     """
     Defines default property values for descendant [`Checkbox`][flet.] controls.
@@ -1507,7 +1508,7 @@ class CheckboxTheme:
     """
 
 
-@dataclass
+@value
 class BadgeTheme:
     """
     Defines default property values for descendant [`Badge`][flet.] controls.
@@ -1562,7 +1563,7 @@ class BadgeTheme:
     """
 
 
-@dataclass
+@value
 class SwitchTheme:
     """
     Defines default property values for descendant [`Switch`][flet.] controls.
@@ -1623,7 +1624,7 @@ class SwitchTheme:
     """
 
 
-@dataclass
+@value
 class DividerTheme:
     """
     Defines the visual properties of [`Divider`][flet.], [`VerticalDivider`][flet.], \
@@ -1662,7 +1663,7 @@ class DividerTheme:
     """
 
 
-@dataclass
+@value
 class SnackBarTheme:
     """
     Defines default property values for descendant [`SnackBar`][flet.] controls.
@@ -1759,7 +1760,7 @@ class SnackBarTheme:
     """
 
 
-@dataclass
+@value
 class BannerTheme:
     """
     Defines default property values for descendant [`Banner`][flet.] controls.
@@ -1808,7 +1809,7 @@ class BannerTheme:
     """
 
 
-@dataclass
+@value
 class DatePickerTheme:
     """
     Customizes the appearance of [`DatePicker`][flet.] controls across the app.
@@ -2077,7 +2078,7 @@ class DatePickerTheme:
     """
 
 
-@dataclass
+@value
 class TimePickerTheme:
     """
     Customizes the appearance of [`TimePicker`][flet.] controls across the app.
@@ -2216,7 +2217,7 @@ class TimePickerTheme:
     """
 
 
-@dataclass
+@value
 class DropdownTheme:
     """
     Customizes the appearance of [`Dropdown`][flet.] across the app.
@@ -2233,7 +2234,7 @@ class DropdownTheme:
     """
 
 
-@dataclass
+@value
 class ListTileTheme:
     """
     Customizes the appearance of descendant [`ListTile`][flet.] controls.
@@ -2351,7 +2352,7 @@ class ListTileTheme:
     """
 
 
-@dataclass
+@value
 class TooltipTheme:
     """
     Customizes the appearance of descendant [`Tooltip`][flet.] controls.
@@ -2428,7 +2429,7 @@ class TooltipTheme:
     """
 
 
-@dataclass
+@value
 class ExpansionTileTheme:
     """
     Customizes the appearance of descendant [`ExpansionTile`][flet.]
@@ -2501,7 +2502,7 @@ class ExpansionTileTheme:
     """
 
 
-@dataclass
+@value
 class SliderTheme:
     """
     Customizes the appearance of descendant [`Slider`][flet.] controls.
@@ -2652,7 +2653,7 @@ class SliderTheme:
     """
 
 
-@dataclass
+@value
 class ProgressIndicatorTheme:
     """
     Customizes the appearance of progress indicators ([`ProgressBar`][flet.], \
@@ -2738,7 +2739,7 @@ class ProgressIndicatorTheme:
     """
 
 
-@dataclass
+@value
 class PopupMenuTheme:
     """
     Customizes the appearance of [`PopupMenuButton`][flet.] across the app.
@@ -2811,7 +2812,7 @@ class PopupMenuTheme:
     """
 
 
-@dataclass
+@value
 class SearchBarTheme:
     """
     Customizes the appearance of [`SearchBar`][flet.] controls across the app.
@@ -2884,7 +2885,7 @@ class SearchBarTheme:
     """
 
 
-@dataclass
+@value
 class SearchViewTheme:
     """
     Customizes the appearance of [`SearchBar`][flet.] controls across the app.
@@ -2962,7 +2963,7 @@ class SearchViewTheme:
     """
 
 
-@dataclass
+@value
 class NavigationDrawerTheme:
     """
     Customizes the appearance of descendant [`NavigationDrawer`][flet.]
@@ -3012,7 +3013,7 @@ class NavigationDrawerTheme:
     """
 
 
-@dataclass
+@value
 class NavigationBarTheme:
     """
     Customizes the appearance of [`NavigationBar`][flet.]
@@ -3071,7 +3072,7 @@ class NavigationBarTheme:
     """
 
 
-@dataclass
+@value
 class SegmentedButtonTheme:
     """
     Customizes the appearance of [`SegmentedButton`][flet.]
@@ -3089,7 +3090,7 @@ class SegmentedButtonTheme:
     """
 
 
-@dataclass
+@value
 class IconTheme:
     """
     Customizes the appearance of [`Icon`][flet.] controls across the app.
@@ -3141,7 +3142,7 @@ class IconTheme:
     """
 
 
-@dataclass
+@value
 class DataTableTheme:
     """
     Customizes the appearance of [`DataTable`][flet.] controls across the app.
@@ -3223,7 +3224,7 @@ class DataTableTheme:
     """
 
 
-@dataclass
+@value
 class Theme:
     """
     Customizes the overall appearance of the application.

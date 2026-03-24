@@ -9,7 +9,6 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
     "flet-ads",
     "flet-audio",
@@ -34,7 +33,6 @@ dependencies = [
 flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
-flet-desktop-light = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
@@ -93,7 +91,6 @@ docs = [
     "mkdocs-glightbox >=0.5.1",
     "mkdocs-open-in-new-tab >=1.0.8",
     "mkdocs-section-index >=0.3.10",
-    "griffe-warnings-deprecated >=1.1.0",
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",
     "pydocstyle >=6.3.0",

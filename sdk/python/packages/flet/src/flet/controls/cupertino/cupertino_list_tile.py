@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -11,6 +11,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoListTile"]
 
@@ -34,14 +35,17 @@ class CupertinoListTile(LayoutControl):
     ```
     """
 
-    title: StrOrControl
+    title: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The primary content of this list tile.
 
     Typically a [`Text`][flet.] control.
 
     Raises:
-        ValueError: If [`title`][(c).] is neither a string nor a visible Control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     subtitle: Optional[StrOrControl] = None
@@ -129,8 +133,3 @@ class CupertinoListTile(LayoutControl):
     """
     Called when a user clicks/taps the list tile.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (isinstance(self.title, str) or self.title.visible):
-            raise ValueError("title must be a string or a visible Control")

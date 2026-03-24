@@ -51,7 +51,7 @@ else
 
     # Construct the package version: <major>.<minor>.<patch>
     export PKG_VER="${major}.${minor}.${patch}"
-    # PyPI build version: <PKG_VER>+<BUILD_NUM>
+    # PyPI build version: <PKG_VER>.dev<BUILD_NUM>
     export PYPI_VER="${PKG_VER}.dev${BUILD_NUM}"
 fi
 

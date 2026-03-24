@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		{% macro render_value(value) -%}
+		{% if value is string -%}
+		<string>{{ value }}</string>
+		{% elif value is boolean -%}
+		<{{ "true" if value else "false" }} />
+		{% elif value is integer -%}
+		<integer>{{ value }}</integer>
+		{% elif value is float -%}
+		<real>{{ value }}</real>
+		{% elif value is mapping -%}
+		<dict>
+			{{ render_dict(value) }}
+		</dict>
+		{% elif value is sequence -%}
+		<array>
+			{% for item in value -%}
+				{{ render_value(item) }}
+			{% endfor -%}
+		</array>
+		{% endif -%}
+		{% endmacro -%}
+		{% macro render_dict(d) -%}
+		{% for key, value in d.items() -%}
+		<key>{{ key }}</key>
+		{{ render_value(value) }}
+		{% endfor -%}
+		{% endmacro -%}
+		{{ render_dict(cookiecutter.options.macos_entitlements) }}
+	</dict>
+</plist>

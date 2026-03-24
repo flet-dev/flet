@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.utils.validation import V
 
 __all__ = ["Draggable"]
 
@@ -19,7 +20,10 @@ class Draggable(Control):
     given the opportunity to complete drag-and-drop flow.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display when the draggable is not being dragged.
 
@@ -27,7 +31,7 @@ class Draggable(Control):
     [`content_when_dragging`][(c).] is displayed instead.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     group: str = "default"
@@ -75,7 +79,10 @@ class Draggable(Control):
         with other gestures in that direction.
     """
 
-    max_simultaneous_drags: Optional[int] = None
+    max_simultaneous_drags: Annotated[
+        Optional[int],
+        V.ge(0),
+    ] = None
     """
     Specifies how many simultaneous drag operations are allowed for this draggable.
 
@@ -84,11 +91,11 @@ class Draggable(Control):
         For a better user experience, you may want to provide an "empty" widget for
         [`content_when_dragging`][(c).]
         to visually indicate the item is being moved.
-    - Set to any positive integer to allow that many concurrent drags.
-    - If `None`, there is no limit on the number of simultaneous drags.
+    - any other positive integer -  allows that many concurrent drags.
+    - `None` - no limit on the number of simultaneous drags.
 
     Raises:
-        ValueError: If [`max_simultaneous_drags`][(c).] is set to a negative value.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     on_drag_start: Optional[ControlEventHandler["Draggable"]] = None
@@ -100,13 +107,3 @@ class Draggable(Control):
     """
     Called when this draggable is dropped and accepted by a [`DragTarget`][flet.].
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
-        if self.max_simultaneous_drags is not None and self.max_simultaneous_drags < 0:
-            raise ValueError(
-                f"max_simultaneous_drags must be greater than or equal to 0, "
-                f"got {self.max_simultaneous_drags}"
-            )

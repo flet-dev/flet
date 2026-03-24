@@ -1,7 +1,5 @@
 import pytest
 
-import flet as ft
-import flet_charts as fch
 import flet.testing as ftt
 from examples.controls.charts.pie_chart import example_1, example_2, example_3
 

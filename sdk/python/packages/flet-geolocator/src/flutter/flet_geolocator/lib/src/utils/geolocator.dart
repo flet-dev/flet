@@ -58,7 +58,7 @@ LocationSettings? parseLocationSettings(dynamic value,
         intervalDuration: parseDuration(
             value["interval_duration"], const Duration(milliseconds: 5000))!,
         useMSLAltitude: parseBool(value["use_msl_altitude"], false)!,
-        // Needed to prevet background to stop working when app goes in background
+        // Needed to prevent background to stop working when app goes in background
         foregroundNotificationConfig: (value["foreground_notification_text"] !=
                     null ||
                 value["foreground_notification_title"] != null)
@@ -77,7 +77,7 @@ LocationSettings? parseLocationSettings(dynamic value,
                     value["foreground_notification_channel_name"] ??
                         'Background Location',
                 setOngoing: parseBool(
-                    value["foreground_notification_set_ongoing"], true)!)
+                    value["foreground_notification_set_ongoing"], false)!)
             : null);
   } else if (isApplePlatform()) {
     return AppleSettings(

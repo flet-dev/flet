@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>{{ cookiecutter.product_name }}</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>{{ cookiecutter.project_name }}</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true />
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true />
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true />
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true />
+		</dict>
+		<!-- flet: deep linking {% if cookiecutter.options.deep_linking.scheme and cookiecutter.options.deep_linking.host%} -->
+		<key>FlutterDeepLinkingEnabled</key>
+		<true />
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>{{ cookiecutter.options.deep_linking.host }}</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>{{ cookiecutter.options.deep_linking.scheme }}</string>
+				</array>
+			</dict>
+		</array>
+		<!-- flet: end of deep linking {% endif %} -->
+
+		{% macro render_value(value) -%}
+		{% if value is string -%}
+		<string>{{ value }}</string>
+		{% elif value is boolean -%}
+		<{{ "true" if value else "false" }}/>
+		{% elif value is integer -%}
+		<integer>{{ value }}</integer>
+		{% elif value is float -%}
+		<real>{{ value }}</real>
+		{% elif value is mapping -%}
+		<dict>
+			{{ render_dict(value) }}
+		</dict>
+		{% elif value is sequence -%}  {# Support for lists/arrays #}
+		<array>
+			{% for item in value -%}
+				{{ render_value(item) }}
+			{% endfor -%}
+		</array>
+		{% endif -%}
+		{% endmacro -%}
+		{% macro render_dict(d) -%}
+		{% for key, value in d.items() -%}
+		<key>{{ key }}</key>
+		{{ render_value(value) }}
+		{% endfor -%}
+		{% endmacro -%}
+		{{ render_dict(cookiecutter.options.info_plist) }}
+	</dict>
+</plist>

@@ -52,6 +52,7 @@ theme:
     - content.tabs.link
     - navigation.tabs
     - navigation.instant
+    - navigation.instant.preview
     - navigation.tracking
     - navigation.sections
     - navigation.footer
@@ -138,6 +139,7 @@ plugins:
             separate_signature: true
             inherited_members: false
             modernize_annotations: true
+            unwrap_annotated: true
             summary:
                 attributes: false
                 functions: false
@@ -145,7 +147,7 @@ plugins:
               - "!^_" # Exclude private members starting with only one underscore
               - "!^(init|before_update|build|will_unmount|did_mount)$"
             extensions:
-              - griffe_warnings_deprecated
+              - flet.utils.griffe_deprecations
             extra:
               show_children: false
               show_class_docstring: false
@@ -815,6 +817,7 @@ nav:
               - component: types/component.md
               - control: types/control.md
               - observable: types/observabledecorator.md
+              - value: types/value.md
           - Enums:
               - Ads:
                   - PrecisionType: ads/types/precisiontype.md
@@ -876,6 +879,8 @@ nav:
               - PointMode: types/pointmode.md
               - PopupMenuPosition: types/popupmenuposition.md
               - RouteUrlStrategy: types/routeurlstrategy.md
+              - Scrollbar: types/scrollbar.md
+              - ScrollbarOrientation: types/scrollbarorientation.md
               - ScrollDirection: types/scrolldirection.md
               - ScrollMode: types/scrollmode.md
               - ScrollType: types/scrolltype.md
@@ -936,6 +941,7 @@ nav:
               - DragUpdateEvent: types/dragupdateevent.md
               - DragWillAcceptEvent: types/dragwillacceptevent.md
               - Event: types/event.md
+              - ExpansionPanelListChangeEvent: types/expansionpanellistchangeevent.md
               - FilePickerUploadEvent: types/filepickeruploadevent.md
               - GyroscopeReadingEvent: types/gyroscopereadingevent.md
               - HoverEvent: types/hoverevent.md
@@ -1027,4 +1033,5 @@ nav:
       - PubSub: cookbook/pub-sub.md
       - Read and Write Files: cookbook/read-and-write-files.md
       - Session Storage: cookbook/session-storage.md
+      - Subprocess: cookbook/subprocess.md
       - Theming: cookbook/theming.md

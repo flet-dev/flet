@@ -4,6 +4,7 @@ from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import StrOrControl
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["CupertinoActionSheet"]
 
@@ -16,17 +17,18 @@ class CupertinoActionSheet(LayoutControl):
     Action sheets are generally used to give the user a choice between
     two or more choices for the current context.
 
+    Example:
     ```python
     sheet = ft.CupertinoActionSheet(
         title=ft.Text("Choose an option"),
         message=ft.Text("Select what you would like to do"),
+        cancel=ft.CupertinoActionSheetAction(content=ft.Text("Cancel")),
         actions=[
             ft.CupertinoActionSheetAction(content=ft.Text("Save")),
             ft.CupertinoActionSheetAction(
                 content=ft.Text("Delete"), destructive=True
             ),
         ],
-        cancel=ft.CupertinoActionSheetAction(content=ft.Text("Cancel")),
     )
     page.show_dialog(ft.CupertinoBottomSheet(sheet))
     ```
@@ -66,15 +68,26 @@ class CupertinoActionSheet(LayoutControl):
     Typically a [`CupertinoActionSheetAction`][flet.] button.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            self.actions is not None
-            or self.title is not None
-            or self.message is not None
-            or self.cancel is not None
-        ):
-            raise ValueError(
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.actions, list)
+                    and any(action.visible for action in ctrl.actions)
+                )
+                or (
+                    isinstance(ctrl.title, str)
+                    or (isinstance(ctrl.title, Control) and ctrl.title.visible)
+                )
+                or (
+                    isinstance(ctrl.message, str)
+                    or (isinstance(ctrl.message, Control) and ctrl.message.visible)
+                )
+                or (ctrl.cancel is not None and ctrl.cancel.visible)
+            ),
+            message=(
                 "This action sheet must have a non-None value for at least one of the "
                 "following arguments: `actions`, `title`, `message`, or `cancel`"
-            )
+            ),
+        ),
+    )

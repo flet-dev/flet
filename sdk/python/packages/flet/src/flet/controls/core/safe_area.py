@@ -1,8 +1,11 @@
+from typing import Annotated
+
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
+from flet.utils.validation import V
 
 __all__ = ["SafeArea"]
 
@@ -23,14 +26,15 @@ class SafeArea(LayoutControl, AdaptiveControl):
     or the safe area padding will be applied.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     avoid_intrusions_left: bool = True
@@ -70,8 +74,3 @@ class SafeArea(LayoutControl, AdaptiveControl):
 
     The greater of the minimum insets and the media padding will be applied.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

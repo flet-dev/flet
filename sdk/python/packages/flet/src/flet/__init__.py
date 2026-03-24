@@ -26,7 +26,7 @@ from flet.controls.animation import (
     AnimationStyle,
     AnimationValue,
 )
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, Value, control, value
 from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
 from flet.controls.blur import (
     Blur,
@@ -105,7 +105,7 @@ from flet.controls.core.draggable import Draggable
 from flet.controls.core.flet_app import FletApp
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
-from flet.controls.core.hero import Hero, HeroTag
+from flet.controls.core.hero import Hero
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
 from flet.controls.core.interactive_viewer import InteractiveViewer
@@ -304,7 +304,11 @@ from flet.controls.material.divider import Divider
 from flet.controls.material.dropdown import Dropdown, DropdownOption
 from flet.controls.material.dropdownm2 import DropdownM2
 from flet.controls.material.elevated_button import ElevatedButton
-from flet.controls.material.expansion_panel import ExpansionPanel, ExpansionPanelList
+from flet.controls.material.expansion_panel import (
+    ExpansionPanel,
+    ExpansionPanelList,
+    ExpansionPanelListChangeEvent,
+)
 from flet.controls.material.expansion_tile import ExpansionTile, TileAffinity
 from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
@@ -419,6 +423,8 @@ from flet.controls.ref import Ref
 from flet.controls.scrollable_control import (
     OnScrollEvent,
     ScrollableControl,
+    Scrollbar,
+    ScrollbarOrientation,
     ScrollDirection,
     ScrollType,
 )
@@ -775,6 +781,7 @@ __all__ = [
     "EventHandler",
     "ExpansionPanel",
     "ExpansionPanelList",
+    "ExpansionPanelListChangeEvent",
     "ExpansionTile",
     "ExpansionTileTheme",
     "FilePicker",
@@ -808,7 +815,6 @@ __all__ = [
     "GyroscopeReadingEvent",
     "HapticFeedback",
     "Hero",
-    "HeroTag",
     "HoverEvent",
     "Icon",
     "IconButton",
@@ -962,6 +968,8 @@ __all__ = [
     "ScrollMode",
     "ScrollType",
     "ScrollableControl",
+    "Scrollbar",
+    "ScrollbarOrientation",
     "ScrollbarTheme",
     "SearchBar",
     "SearchBarTheme",
@@ -1058,6 +1066,7 @@ __all__ = [
     "UrlTarget",
     "UserAccelerometer",
     "UserAccelerometerReadingEvent",
+    "Value",
     "ValueKey",
     "VerticalAlignment",
     "VerticalDivider",
@@ -1106,6 +1115,7 @@ __all__ = [
     "use_memo",
     "use_ref",
     "use_state",
+    "value",
 ]
 
 _THEME_EXPORTS = {

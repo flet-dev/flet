@@ -1,0 +1,14 @@
+// Application-level settings for the Runner target.
+//
+// This may be replaced with something auto-generated from metadata (e.g., pubspec.yaml) in the
+// future. If not, the values below would default to using the project name when this becomes a
+// 'flutter create' template.
+
+// The application's bundle name on disk.
+PRODUCT_NAME = {{ cookiecutter.artifact_name }}
+
+// The application's bundle identifier
+PRODUCT_BUNDLE_IDENTIFIER = {{ cookiecutter.bundle_id }}
+
+// The copyright displayed in application information
+PRODUCT_COPYRIGHT = {{ cookiecutter.copyright }}. All rights reserved.

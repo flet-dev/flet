@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
@@ -22,6 +22,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 
 @dataclass
@@ -52,7 +53,10 @@ class DataColumn(Control):
     Column configuration for a [`DataTable`][flet.].
     """
 
-    label: StrOrControl
+    label: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The column heading.
 
@@ -61,8 +65,7 @@ class DataColumn(Control):
     or a combination of both in a [`Row`][flet.].
 
     Raises:
-        ValueError: If the [`label`][(c).] is neither a string nor
-            a visible control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     numeric: bool = False
@@ -96,14 +99,6 @@ class DataColumn(Control):
         super().init()
         self._internals["skip_properties"] = ["tooltip"]
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            isinstance(self.label, str)
-            or (isinstance(self.label, Control) and self.label.visible)
-        ):
-            raise ValueError("label must a string or a visible control")
-
 
 @control("DataCell")
 class DataCell(Control):
@@ -111,7 +106,10 @@ class DataCell(Control):
     The data for a cell of a [`DataTable`][flet.].
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The content of this cell.
 
@@ -127,8 +125,7 @@ class DataCell(Control):
         [`Stack`][flet.], which have a `controls` property.
 
     Raises:
-        ValueError: If the [`content`][(c).] is neither a string nor a visible
-            control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     placeholder: bool = False
@@ -201,32 +198,30 @@ class DataCell(Control):
         attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
     """
 
-    def before_update(self):
-        super().before_update()
-        if isinstance(self.content, Control) and not self.content.visible:
-            raise ValueError("content must be visible")
-
 
 @control("DataRow")
 class DataRow(Control):
     """
-    Row configuration and cell data for a [DataTable][flet.DataTable].
+    Row configuration and cell data for a [`DataTable`][flet.].
 
     One row configuration must be provided for each row to display in the table.
 
     The data for this row of the table is provided in the [`cells`][(c).] property.
     """
 
-    cells: list[DataCell] = field(default_factory=list)
+    cells: Annotated[
+        list[DataCell],
+        V.visible_controls(min_count=1),
+    ] = field(default_factory=list)
     """
     The data for this row: a list of [`DataCell`][flet.] controls.
 
     Note:
-        There must be exactly as many cells as there are columns in the table.
+        There must be exactly as many cells as there are visible
+        [`columns`][flet.DataTable.] in the table.
 
     Raises:
-        ValueError: If [`cells`][(c).] does not contain at least one visible
-            [`DataCell`][flet.].
+        ValueError: If it does not contain at least one visible [`DataCell`][flet.].
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
@@ -287,17 +282,13 @@ class DataRow(Control):
     def __contains__(self, item):
         return item in self.cells
 
-    def before_update(self):
-        super().before_update()
-        if not any(cell.visible for cell in self.cells):
-            raise ValueError("cells must contain at minimum one visible DataCell")
-
 
 @control("DataTable")
 class DataTable(LayoutControl):
     """
     A Material Design data table.
 
+    Example:
     ```python
     ft.DataTable(
         columns=[
@@ -376,8 +367,7 @@ class DataTable(LayoutControl):
     any of the columns.
 
     Raises:
-        ValueError: If [`sort_column_index`][(c).] is out of range relative to the
-            visible [`columns`][(c).].
+        ValueError: If it is out of range relative to the visible [`columns`][(c).].
     """
 
     show_bottom_border: bool = False
@@ -429,21 +419,23 @@ class DataTable(LayoutControl):
     it is recommended to use a translucent background color.
     """
 
-    data_row_min_height: Optional[Number] = None
+    data_row_min_height: Annotated[
+        Optional[Number],
+        V.le_field("data_row_max_height"),
+    ] = None
     """
     The minimum height of each row (excluding the row that contains column headings).
 
     Defaults to `48.0`.
 
-    Note:
-        Must be less than or equal to [`data_row_max_height`][(c).].
-
     Raises:
-        ValueError: If [`data_row_min_height`][(c).] is greater than
-            [`data_row_max_height`][(c).].
+        ValueError: If it is not less than or equal to [`data_row_max_height`][(c).].
     """
 
-    data_row_max_height: Optional[Number] = None
+    data_row_max_height: Annotated[
+        Optional[Number],
+        V.ge_field("data_row_min_height"),
+    ] = None
     """
     The maximum height of each row (excluding the row that contains column headings).
     Set to `float("inf")` for the height of each row to adjust automatically with its
@@ -451,12 +443,8 @@ class DataTable(LayoutControl):
 
     Defaults to `48.0`.
 
-    Note:
-        Must be greater than or equal to [`data_row_min_height`][(c).].
-
     Raises:
-        ValueError: If [`data_row_max_height`][(c).] is less than
-            [`data_row_min_height`][(c).].
+        ValueError: If it is not greater than or equal to [`data_row_min_height`][(c).].
     """
 
     data_text_style: Optional[TextStyle] = None
@@ -474,15 +462,15 @@ class DataTable(LayoutControl):
     The background gradient of this table.
     """
 
-    divider_thickness: Number = 1.0
+    divider_thickness: Annotated[
+        Number,
+        V.ge(0),
+    ] = 1.0
     """
     The width of the divider that appears between [`rows`][(c).].
 
-    Note:
-        Must be greater than or equal to zero.
-
     Raises:
-        ValueError: If [`divider_thickness`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
@@ -554,20 +542,6 @@ class DataTable(LayoutControl):
             raise ValueError(
                 f"each visible DataRow must contain exactly as many visible DataCells "
                 f"as there are visible DataColumns ({visible_columns_count})"
-            )
-        if (
-            self.data_row_min_height is not None
-            and self.data_row_max_height is not None
-            and self.data_row_min_height > self.data_row_max_height
-        ):
-            raise ValueError(
-                f"data_row_min_height ({self.data_row_min_height}) must be less than "
-                f"or equal to data_row_max_height ({self.data_row_max_height})"
-            )
-        if self.divider_thickness is not None and self.divider_thickness < 0:
-            raise ValueError(
-                f"divider_thickness must be greater than or equal to 0, "
-                f"got {self.divider_thickness}"
             )
         if self.sort_column_index is not None and not (
             0 <= self.sort_column_index < visible_columns_count

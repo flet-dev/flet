@@ -1,4 +1,5 @@
 import argparse
+import copy
 import glob
 import os
 import platform
@@ -7,7 +8,6 @@ from pathlib import Path
 from typing import Optional, cast
 
 import yaml
-from packaging import version
 from packaging.requirements import Requirement
 from rich.panel import Panel
 from rich.table import Column, Table
@@ -23,15 +23,20 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
-DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
+DEFAULT_TEMPLATE_URL = (
+    "https://github.com/flet-dev/flet/releases/download/"
+    "v{version}/flet-build-template.zip"
+)
 
 
 class BaseBuildCommand(BaseFlutterCommand):
@@ -250,8 +255,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            help="Files and/or directories to exclude from the package "
-            "(can be used multiple times)",
+            help="Files and/or directories to exclude from the package"
+            "; can be used multiple times",
         )
         parser.add_argument(
             "--clear-cache",
@@ -499,42 +504,49 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--info-plist",
             dest="info_plist",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` pairs to add to Info.plist "
-            "for macOS and iOS builds (macos, ipa and ios-simulator only)",
+            help="The list of `<key>=<value>` pairs to add to Info.plist. Values can "
+            "be booleans, strings, numbers, TOML arrays, or TOML inline tables "
+            "(macos, ipa and ios-simulator only); can be used multiple times",
         )
         parser.add_argument(
             "--macos-entitlements",
             dest="macos_entitlements",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<key>=<value>|True|False` entitlements for "
-            "macOS builds (macos only)",
+            help="The list of `<key>=<value>` entitlements. Values can be booleans, "
+            "strings, numbers, TOML arrays, or TOML inline tables "
+            "(macos only); can be used multiple times",
         )
         parser.add_argument(
             "--android-features",
             dest="android_features",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<feature_name>=True|False` features to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            help="The list of `<feature_name>=true|false` features to add to "
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-permissions",
             dest="android_permissions",
+            action="extend",
             nargs="+",
             default=[],
-            help="The list of `<permission_name>=True|False` permissions to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            help="The list of `<permission_name>=true|false` permissions to add to "
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--android-meta-data",
             dest="android_meta_data",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of `<name>=<value>` app meta-data entries to add to "
-            "AndroidManifest.xml for Android builds (android only)",
+            "AndroidManifest.xml (android only); can be used multiple times",
         )
         parser.add_argument(
             "--permissions",
@@ -853,11 +865,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             if i > -1:
                 k = p[:i]
                 v = p[i + 1 :]
-                info_plist[k] = (
-                    (v.lower() == "true") if v.lower() in {"true", "false"} else v
-                )
+                info_plist[k] = parse_cli_plist_value(v)
             else:
                 self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+        for key, value in info_plist.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported Info.plist value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
 
         macos_entitlements = merge_dict(
             macos_entitlements,
@@ -868,9 +888,19 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.macos_entitlements:
             i = p.find("=")
             if i > -1:
-                macos_entitlements[p[:i]] = p[i + 1 :] == "True"
+                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
             else:
                 self.cleanup(1, f"Invalid macOS entitlement option: {p}")
+
+        for key, value in macos_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported macOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
 
         android_permissions = merge_dict(
             android_permissions,
@@ -881,7 +911,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_permissions:
             i = p.find("=")
             if i > -1:
-                android_permissions[p[:i]] = p[i + 1 :] == "True"
+                try:
+                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android permission option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
@@ -894,7 +931,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         for p in self.options.android_features:
             i = p.find("=")
             if i > -1:
-                android_features[p[:i]] = p[i + 1 :] == "True"
+                try:
+                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android feature option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
             else:
                 self.cleanup(1, f"Invalid Android feature option: {p}")
 
@@ -1100,18 +1144,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
         )
 
-        template_url = (
-            self.options.template
-            or self.get_pyproject("tool.flet.template.url")
-            or DEFAULT_TEMPLATE_URL
+        template_url = self.options.template or self.get_pyproject(
+            "tool.flet.template.url"
         )
-        hash.update(template_url)
 
         template_ref = self.options.template_ref or self.get_pyproject(
             "tool.flet.template.ref"
         )
         if not template_ref:
-            template_ref = version.Version(flet.version.flet_version).base_version
+            template_ref = flet.version.flet_version
+
+        is_local_dev = False
+        if template_url:
+            # User-provided template (git repo or local path) — use checkout
+            checkout = template_ref
+        else:
+            # Check for local dev templates first (running from source checkout)
+            local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
+            if local_tpl.is_dir():
+                template_url = str(local_tpl)
+                checkout = None
+                is_local_dev = True
+            else:
+                template_url = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                checkout = None
+
+        hash.update(template_url)
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1137,17 +1195,18 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                self.update_status(
-                    "[bold blue]Creating app shell from "
-                    f'{template_url} with ref "{template_ref}"...'
-                )
+                status = f"[bold blue]Creating app shell from {template_url}"
+                if checkout:
+                    status += f' with ref "{template_ref}"'
+                status += "..."
+                self.update_status(status)
 
             try:
                 from cookiecutter.main import cookiecutter
 
                 cookiecutter(
                     template=template_url,
-                    checkout=template_ref,
+                    checkout=checkout,
                     directory=template_dir,
                     output_dir=str(self.flutter_dir.parent),
                     no_input=True,
@@ -1160,10 +1219,35 @@ class BaseBuildCommand(BaseFlutterCommand):
                 shutil.rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
 
+            # For local development, override flet dependency with path
+            if is_local_dev:
+                repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
+                if repo_root:
+                    flet_pkg_path = str(repo_root / "packages" / "flet")
+                    pubspec = self.load_yaml(self.pubspec_path)
+                    pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
+                    pubspec.setdefault("dependency_overrides", {})["flet"] = {
+                        "path": flet_pkg_path
+                    }
+                    self.save_yaml(self.pubspec_path, pubspec)
+
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 
             if pyproject_pubspec:
+                pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
                 pubspec = self.load_yaml(self.pubspec_path)
+                # Replace individual dependency entries from pyproject rather
+                # than deep-merging them — a Dart dependency can only have one
+                # source, so merging {"path":…} with {"git":…} is invalid.
+                for section in (
+                    "dependencies",
+                    "dependency_overrides",
+                    "dev_dependencies",
+                ):
+                    if section in pyproject_pubspec:
+                        pubspec.setdefault(section, {}).update(
+                            pyproject_pubspec.pop(section)
+                        )
                 pubspec = merge_dict(pubspec, pyproject_pubspec)
                 self.save_yaml(self.pubspec_path, pubspec)
 

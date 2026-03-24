@@ -21,6 +21,29 @@ Flet supports 64-bit version of Microsoft Windows 10 and Windows 11.
 
 Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
 
+/// details | Desktop flavor (audio & video support)
+    type: note
+
+On Linux, the Flet desktop client is available in two flavors: **full** and **light**.
+
+The **light** flavor (default on Linux) does not include audio and video extensions, resulting in a smaller download. The **full** flavor bundles audio and video support out of the box.
+
+To select the flavor, either set the `FLET_DESKTOP_FLAVOR` environment variable:
+
+```bash
+export FLET_DESKTOP_FLAVOR=full
+```
+
+or add the setting to your project's `pyproject.toml`:
+
+```toml
+[tool.flet]
+desktop_flavor = "full"
+```
+
+If you use the **light** flavor and need audio or video, you will need to install the required libraries yourself — see the [Audio](../audio/index.md#linux-requirements) and [Video](../video/index.md#linux) setup guides.
+///
+
 /// details | Windows Subsystem for Linux (WSL)
     type: note
 

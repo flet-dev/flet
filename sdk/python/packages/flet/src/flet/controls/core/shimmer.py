@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -9,6 +9,7 @@ from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ColorValue,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Shimmer", "ShimmerDirection"]
 
@@ -62,9 +63,15 @@ class Shimmer(LayoutControl):
     ```
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to render with the shimmer effect.
+
+    Raises:
+        ValueError: If it is not visible.
     """
 
     gradient: Optional[Gradient] = None
@@ -92,18 +99,23 @@ class Shimmer(LayoutControl):
     Direction of the shimmering animation.
     """
 
-    loop: int = 0
+    loop: Annotated[
+        Optional[int],
+        V.ge(0),
+    ] = 0
     """
     Number of times the animation should repeat. `0` means infinite.
+
+    Raises:
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.content is None:
-            raise ValueError("content must be provided.")
-        if self.gradient is None and (
-            self.base_color is None or self.highlight_color is None
-        ):
-            raise ValueError("Either gradient or both base_color and highlight_color must be provided.")
-        if self.loop is not None and self.loop < 0:
-            raise ValueError("loop must be a non-negative integer (greater than or equal to 0).")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.gradient is not None
+            or (ctrl.base_color is not None and ctrl.highlight_color is not None),
+            message=(
+                "either gradient or both base_color and highlight_color must be set"
+            ),
+        ),
+    )

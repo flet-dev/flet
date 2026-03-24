@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
@@ -18,6 +18,7 @@ from flet.controls.types import (
     StrOrControl,
     VisualDensity,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Chip"]
 
@@ -61,7 +62,10 @@ class Chip(LayoutControl):
     The color used for this chip's background when it is selected.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     A non-negative value which defines the size of the shadow below this chip.
 
@@ -163,7 +167,10 @@ class Chip(LayoutControl):
     The color that fills this chip in various [`ControlState`][flet.].
     """
 
-    elevation_on_click: Optional[Number] = None
+    elevation_on_click: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation to be applied on this chip relative to its parent during the press \
     motion. This controls the size of the shadow below this chip.
@@ -171,7 +178,7 @@ class Chip(LayoutControl):
     Defaults to `8.0`.
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0.0`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
@@ -258,16 +265,9 @@ class Chip(LayoutControl):
     Called when this chip has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.on_select is not None and self.on_click is not None:
-            raise ValueError("on_select and on_click cannot be used together")
-        if self.elevation is not None and self.elevation < 0.0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if self.elevation_on_click is not None and self.elevation_on_click < 0.0:
-            raise ValueError(
-                "elevation_on_click must be greater than or equal to 0, got "
-                f"{self.elevation_on_click}"
-            )
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.on_select is None or ctrl.on_click is None,
+            message="on_select and on_click cannot be used together",
+        ),
+    )
