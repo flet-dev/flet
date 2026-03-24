@@ -222,7 +222,8 @@ function renderAttribute(item, classSymbol, docId) {
           {renderCodeExpression(signatureText, {classSymbol, docId})}
         </SignatureBox>
       ) : null}
-      {renderDocstring(item.docstring, {classSymbol, docId})}
+      {renderDocstringSections(item.docstring_sections, {classSymbol, docId}) ??
+        renderDocstring(item.docstring, {classSymbol, docId})}
     </div>
   );
 }

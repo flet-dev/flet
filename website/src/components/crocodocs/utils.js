@@ -944,6 +944,16 @@ export function renderDocstringSections(sections, context = {}) {
       continue;
     }
 
+    if (section.kind === "admonition") {
+      const admonitionType = section.admonition_kind || "note";
+      blocks.push(
+        <Admonition key={`section-${key++}`} type={admonitionType} title={section.title}>
+          {renderDocstring(section.value, context, `adm-${key}`)}
+        </Admonition>
+      );
+      continue;
+    }
+
     if (!section.items?.length) {
       continue;
     }

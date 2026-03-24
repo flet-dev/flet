@@ -91,6 +91,7 @@ def _parameter_lookup(obj: Any) -> dict[str, Any]:
 def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
     try:
         from griffe import (
+            DocstringSectionAdmonition,
             DocstringSectionParameters,
             DocstringSectionRaises,
             DocstringSectionReturns,
@@ -155,6 +156,21 @@ def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
                 )
             if items:
                 sections.append({"kind": "raises", "items": items})
+        elif isinstance(section, DocstringSectionAdmonition):
+            admonition = getattr(section, "value", None)
+            if admonition is not None:
+                kind = getattr(admonition, "annotation", "note") or "note"
+                description = getattr(admonition, "description", "") or ""
+                title = getattr(section, "title", None)
+                if description.strip():
+                    entry: dict[str, Any] = {
+                        "kind": "admonition",
+                        "admonition_kind": kind,
+                        "value": description,
+                    }
+                    if title:
+                        entry["title"] = title
+                    sections.append(entry)
     return sections
 
 
@@ -250,6 +266,7 @@ def _attribute_entry(obj: Any) -> dict[str, Any]:
             "type": None,
             "default": None,
             "docstring": _docstring_value(obj),
+            "docstring_sections": _docstring_sections(obj),
             "deprecation": _deprecation_value(obj),
             "labels": [],
             "inherited_from": None,
@@ -262,6 +279,7 @@ def _attribute_entry(obj: Any) -> dict[str, Any]:
         "type": _annotation_text(obj),
         "default": _value_text(obj),
         "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
         "deprecation": _deprecation_value(obj),
         "labels": _labels(obj),
         "inherited_from": None,
