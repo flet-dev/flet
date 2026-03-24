@@ -305,7 +305,8 @@ export default function ClassBlock({
           </HeadingLink>
         ) : null}
         {showDocstring
-          ? renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id})
+          ? (renderDocstringSections(entry.docstring_sections, {classSymbol: name, docId: metadata?.id}) ??
+             renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id}))
           : null}
         {entry.value ? (
           <SignatureBox text={entry.value}>
@@ -399,7 +400,8 @@ export default function ClassBlock({
         </HeadingLink>
       ) : null}
       {showDocstring
-        ? renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id})
+        ? (renderDocstringSections(entry.docstring_sections, {classSymbol: name, docId: metadata?.id}) ??
+           renderDocstring(entry.docstring, {classSymbol: name, docId: metadata?.id}))
         : null}
       {image ? (
         <figure className="doc-screenshot-figure">
