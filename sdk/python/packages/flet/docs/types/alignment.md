@@ -3,7 +3,7 @@ examples: ../../examples/controls/types/alignment
 example_media: ../examples/controls/types/alignment/media
 ---
 
-{{ class_all_options("flet.Alignment", members_order="source") }}
+{{ class_all_options("flet.Alignment", members_order="source", image=example_media + "/overview.png", image_caption="Alignment explained") }}
 
 ## Examples
 

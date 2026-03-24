@@ -5,7 +5,7 @@ example_media: ../examples/controls/container/media
 example_images: ../test-images/examples/material/golden/macos/container
 ---
 
-{{ class_summary(class_name) }}
+{{ class_summary(class_name, image=example_media + "/overview_padding_margin_border.png", image_caption="Container explained") }}
 
 ## Examples
 

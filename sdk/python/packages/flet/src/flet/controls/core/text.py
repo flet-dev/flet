@@ -342,12 +342,9 @@ class Text(LayoutControl):
 
     This is useful for replacing abbreviations or shorthands with the full text value:
 
-    /// details | Example
-        type: example
     ```python
     ft.Text("$$", semantics_label="Double dollars")
     ```
-    ///
     """
 
     show_selection_cursor: bool = False

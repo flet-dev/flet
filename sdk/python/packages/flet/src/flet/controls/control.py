@@ -64,10 +64,8 @@ class Control(BaseControl):
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
 
-    This control spans the 12 virtual columns by default.
+    This control spans the 12 virtual columns by default:
 
-    /// details | Dimensions
-        type: info
     | Breakpoint | Dimension |
     |---|---|
     | xs | <576px |
@@ -76,7 +74,6 @@ class Control(BaseControl):
     | lg | ≥992px |
     | xl | ≥1200px |
     | xxl | ≥1400px |
-    ///
     """
 
     opacity: Annotated[

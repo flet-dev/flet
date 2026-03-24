@@ -8,7 +8,7 @@ title: "Container"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_media + '/overview_padding_margin_border.png'} imageCaption="Container explained" />
 
 ## Examples
 

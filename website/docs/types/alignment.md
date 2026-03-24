@@ -6,7 +6,7 @@ title: "Alignment"
 
 import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet.Alignment" membersOrder="source" />
+<ClassAll name="flet.Alignment" membersOrder="source" image={frontMatter.example_media + '/overview.png'} imageCaption="Alignment explained" />
 
 ## Examples
 

@@ -85,7 +85,7 @@ class TileLayer(MapLayer):
 
     Provider Examples: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
 
-    Info: Placeholders
+    Placeholders:
         As well as the standard XYZ placeholders in the template, the following
         placeholders may also be used:
 
@@ -97,7 +97,7 @@ class TileLayer(MapLayer):
         and are filled in with the specified values in :attr:`additional_options`.
         This can be used to easier add switchable styles or access tokens.
 
-    Danger: Compliance with tile server requirements
+    Compliance with tile server requirements:
         It is your own responsibility to comply with any appropriate restrictions and
         requirements set by your chosen tile server/provider. Always read their terms
         of service. Failure to do so may lead to any punishment,
@@ -107,8 +107,7 @@ class TileLayer(MapLayer):
         other projects, libraries, and packages suggesting that OpenStreetMap provides
         free-to-use map tiles are incorrect.
 
-        /// admonition | Case Example: OpenStreetMap (direct)
-            type: example
+    Case Example - OpenStreetMap (direct):
         OpenStreetMap (OSM) is one of the most popular sources for map tiles and
         data. Their data is free for everyone to use (under
         [ODbL](https://opendatacommons.org/licenses/odbl/)), but their public
@@ -127,7 +126,6 @@ class TileLayer(MapLayer):
 
         Read more on their tile usage policy
         [here](https://operations.osmfoundation.org/policies/tiles/).
-        ///
     """
 
     fallback_url: Optional[str] = None

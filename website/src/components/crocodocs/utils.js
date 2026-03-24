@@ -843,6 +843,49 @@ function renderMarkdownNode(node, context, key, inline = false) {
         return renderHtmlImage(node.value, context, key);
       }
       return <div dangerouslySetInnerHTML={{__html: node.value}} key={key} />;
+    case "table":
+      return (
+        <table key={key} className="docstring-table">
+          <thead>
+            {node.children.slice(0, 1).flatMap((child, i) =>
+              renderMarkdownNode(
+                {...child, data: {...child.data, isHeader: true}},
+                context,
+                `${key}-h${i}`
+              )
+            )}
+          </thead>
+          <tbody>
+            {node.children.slice(1).flatMap((child, i) =>
+              renderMarkdownNode(child, context, `${key}-b${i}`)
+            )}
+          </tbody>
+        </table>
+      );
+    case "tableRow":
+      return (
+        <tr key={key}>
+          {node.children.flatMap((child, i) =>
+            renderMarkdownNode(
+              node.data?.isHeader
+                ? {...child, data: {...child.data, isHeader: true}}
+                : child,
+              context,
+              `${key}-${i}`
+            )
+          )}
+        </tr>
+      );
+    case "tableCell": {
+      const Tag = node.data?.isHeader ? "th" : "td";
+      return (
+        <Tag key={key}>
+          {node.children.flatMap((child, i) =>
+            renderMarkdownNode(child, context, `${key}-${i}`)
+          )}
+        </Tag>
+      );
+    }
     default:
       return [];
   }

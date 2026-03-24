@@ -49,8 +49,6 @@ class Barometer(Service):
         * Barometer APIs are not exposed on the web or desktop platforms.
         * iOS ignores custom sampling intervals.
 
-    /// admonition | Running on iOS
-        type: danger
     On iOS you must also include a key called `NSMotionUsageDescription`
     in your app's `Info.plist` file. This key provides a message that tells
     the user why the app is requesting access to the device's motion data.
@@ -64,7 +62,6 @@ class Barometer(Service):
 
     **Adding `NSMotionUsageDescription` is a requirement and not doing so will
     crash your app when it attempts to access motion data.**
-    ///
     """  # noqa: E501
 
     enabled: bool = True

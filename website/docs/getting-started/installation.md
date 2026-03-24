@@ -47,7 +47,7 @@ or add the setting to your project's `pyproject.toml`:
 desktop_flavor = "full"
 ```
 
-If you use the **light** flavor and need audio or video, you will need to install the required libraries yourself — see the [Audio](../audio/index.md#linux-requirements) and [Video](../video/index.md#linux) setup guides.
+If you use the **light** flavor and need audio or video, you will need to install the required libraries yourself — see the [Audio](../audio/index.md#usage) and [Video](../video/index.md#linux) setup guides.
 </details>
 
 <details>

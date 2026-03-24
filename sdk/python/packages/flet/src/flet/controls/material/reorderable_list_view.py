@@ -147,7 +147,8 @@ class ReorderableListView(ListView):
         :attr:`controls` list in sync with the UI, reorder it accordingly inside
         your :attr:`on_reorder` event handler.
 
-        /// admonition | Example
+        Example:
+
         ```python
             def handle_reorder(e: ft.OnReorderEvent):
                 rlv = e.control
@@ -155,7 +156,6 @@ class ReorderableListView(ListView):
                 rlv.controls.insert(e.new_index, moved_item)  # Insert the reordered item into its new position
                 rlv.update()
         ```
-        ///
     """  # noqa: E501
 
     on_reorder_start: Optional[EventHandler[OnReorderEvent]] = None
