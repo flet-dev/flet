@@ -3,6 +3,7 @@ import flet as ft
 
 def main(page: ft.Page):
     def on_reorder(e: ft.OnReorderEvent):
+        # Reorder controls list to match the UI change
         e.control.controls.insert(e.new_index, e.control.controls.pop(e.old_index))
 
     page.add(
