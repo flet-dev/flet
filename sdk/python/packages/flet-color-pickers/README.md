@@ -12,7 +12,7 @@ It is based on the [flutter_colorpicker](https://pub.dev/packages/flutter_colorp
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/color_picker/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/colorpickers/).
 
 ## Platform Support
 

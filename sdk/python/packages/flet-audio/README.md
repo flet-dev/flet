@@ -12,7 +12,7 @@ It is based on the [audioplayers](https://pub.dev/packages/audioplayers) Flutter
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/audio/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/audio/).
 
 ## Platform Support
 

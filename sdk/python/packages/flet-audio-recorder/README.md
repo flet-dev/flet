@@ -12,7 +12,7 @@ It is based on the [record](https://pub.dev/packages/record) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/audio-recorder/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/audiorecorder/).
 
 ## Platform Support
 

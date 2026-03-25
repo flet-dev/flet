@@ -12,7 +12,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet.dev/docs/camera"
+Documentation = "https://flet.dev/docs/controls/camera"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-camera"
 Issues = "https://github.com/flet-dev/flet/issues"
 

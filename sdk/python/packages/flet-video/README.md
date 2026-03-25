@@ -12,7 +12,7 @@ It is based on the [media_kit](https://pub.dev/packages/media_kit) Flutter packa
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/video/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/video/).
 
 ## Platform Support
 

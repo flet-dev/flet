@@ -13,7 +13,7 @@ and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter 
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/webview/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/webview/).
 
 ## Platform Support
 

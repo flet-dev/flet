@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any
 
 from .config import CrocoDocsConfig
-from .sidebars import _load_nav
 
 LOCAL_MARKDOWN_LINK_RE = re.compile(
     r"(?P<prefix>\]\()(?P<target>(?![a-z][a-z0-9+.-]*:|/|#)[^)]+?\.md)(?P<anchor>#[^)]+)?(?P<suffix>\))",
@@ -169,6 +168,22 @@ def _format_nav_list(
     return lines
 
 
+def _sidebar_docs_to_nav_list(docs: Any) -> list[Any]:
+    if isinstance(docs, list):
+        result = []
+        for item in docs:
+            if isinstance(item, dict):
+                result.append(
+                    {k: _sidebar_docs_to_nav_list(v) for k, v in item.items()}
+                )
+            else:
+                result.append(item)
+        return result
+    if isinstance(docs, dict):
+        return [{k: _sidebar_docs_to_nav_list(v)} for k, v in docs.items()]
+    return docs
+
+
 def _render_nav_overview_from_mkdocs(
     config: CrocoDocsConfig,
     nav_path: list[str],
@@ -176,7 +191,10 @@ def _render_nav_overview_from_mkdocs(
     base_dir: str,
     skip_paths: set[str] | None = None,
 ) -> str:
-    nav_items = _load_nav(config.mkdocs_yml)
+    from .sidebars import _load_sidebar_source
+
+    sidebar_docs = _load_sidebar_source(config.sidebars_source)
+    nav_items = _sidebar_docs_to_nav_list(sidebar_docs)
     branch = _find_nav_branch_for_path(nav_items, nav_path)
     nodes = (
         _build_nav_nodes(branch, skip_paths or set())

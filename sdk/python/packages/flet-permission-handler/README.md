@@ -17,7 +17,7 @@ and brings similar functionality to Flet, including:
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/permission-handler/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/permissionhandler/).
 
 ## Platform Support
 

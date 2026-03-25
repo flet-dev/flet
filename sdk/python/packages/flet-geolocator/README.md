@@ -18,7 +18,7 @@ It is based on the [geolocator](https://pub.dev/packages/geolocator) Flutter pac
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/geolocator/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/geolocator/).
 
 ## Platform Support
 

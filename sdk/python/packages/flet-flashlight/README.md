@@ -14,7 +14,7 @@ It is based on the [flashlight](https://pub.dev/packages/flashlight) Flutter pac
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/flashlight/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/flashlight/).
 
 ## Platform Support
 

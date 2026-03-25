@@ -20,7 +20,7 @@ sudo apt-get install libsecret-1-dev libsecret-1-0
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/secure_storage/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/securestorage/).
 
 ## Platform Support
 

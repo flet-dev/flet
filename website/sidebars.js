@@ -205,20 +205,20 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "ads/bannerad"
+                  "id": "controls/ads/bannerad"
                 },
                 {
                   "type": "doc",
-                  "id": "ads/basead"
+                  "id": "controls/ads/basead"
                 },
                 {
                   "type": "doc",
-                  "id": "ads/interstitialad"
+                  "id": "controls/ads/interstitialad"
                 }
               ],
               "link": {
                 "type": "doc",
-                "id": "ads/index"
+                "id": "controls/ads/index"
               }
             },
             {
@@ -263,7 +263,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "camera/index"
+              "id": "controls/camera/index"
             },
             {
               "type": "category",
@@ -339,44 +339,44 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "charts/barchart"
+                  "id": "controls/charts/barchart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/candlestickchart"
+                  "id": "controls/charts/candlestickchart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/linechart"
+                  "id": "controls/charts/linechart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/matplotlibchart"
+                  "id": "controls/charts/matplotlibchart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/matplotlibchartwithtoolbar"
+                  "id": "controls/charts/matplotlibchartwithtoolbar"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/piechart"
+                  "id": "controls/charts/piechart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/plotlychart"
+                  "id": "controls/charts/plotlychart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/radarchart"
+                  "id": "controls/charts/radarchart"
                 },
                 {
                   "type": "doc",
-                  "id": "charts/scatterchart"
+                  "id": "controls/charts/scatterchart"
                 }
               ],
               "link": {
                 "type": "doc",
-                "id": "charts/index"
+                "id": "controls/charts/index"
               }
             },
             {
@@ -393,7 +393,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "codeeditor/index"
+              "id": "controls/codeeditor/index"
             },
             {
               "type": "category",
@@ -402,32 +402,32 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "colorpickers/colorpicker"
+                  "id": "controls/colorpickers/colorpicker"
                 },
                 {
                   "type": "doc",
-                  "id": "colorpickers/blockpicker"
+                  "id": "controls/colorpickers/blockpicker"
                 },
                 {
                   "type": "doc",
-                  "id": "colorpickers/hueringpicker"
+                  "id": "controls/colorpickers/hueringpicker"
                 },
                 {
                   "type": "doc",
-                  "id": "colorpickers/materialpicker"
+                  "id": "controls/colorpickers/materialpicker"
                 },
                 {
                   "type": "doc",
-                  "id": "colorpickers/multiplechoiceblockpicker"
+                  "id": "controls/colorpickers/multiplechoiceblockpicker"
                 },
                 {
                   "type": "doc",
-                  "id": "colorpickers/slidepicker"
+                  "id": "controls/colorpickers/slidepicker"
                 }
               ],
               "link": {
                 "type": "doc",
-                "id": "colorpickers/index"
+                "id": "controls/colorpickers/index"
               }
             },
             {
@@ -590,16 +590,16 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "datatable2/datacolumn2"
+                  "id": "controls/datatable2/datacolumn2"
                 },
                 {
                   "type": "doc",
-                  "id": "datatable2/datarow2"
+                  "id": "controls/datatable2/datarow2"
                 }
               ],
               "link": {
                 "type": "doc",
-                "id": "datatable2/index"
+                "id": "controls/datatable2/index"
               }
             },
             {
@@ -715,7 +715,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "lottie/index"
+              "id": "controls/lottie/index"
             },
             {
               "type": "category",
@@ -724,7 +724,7 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "map/map"
+                  "id": "controls/map/mapcontrol"
                 },
                 {
                   "type": "category",
@@ -733,27 +733,27 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "map/maplayer"
+                      "id": "controls/map/maplayer"
                     },
                     {
                       "type": "doc",
-                      "id": "map/tilelayer"
+                      "id": "controls/map/tilelayer"
                     },
                     {
                       "type": "doc",
-                      "id": "map/markerlayer"
+                      "id": "controls/map/markerlayer"
                     },
                     {
                       "type": "doc",
-                      "id": "map/circlelayer"
+                      "id": "controls/map/circlelayer"
                     },
                     {
                       "type": "doc",
-                      "id": "map/polygonlayer"
+                      "id": "controls/map/polygonlayer"
                     },
                     {
                       "type": "doc",
-                      "id": "map/polylinelayer"
+                      "id": "controls/map/polylinelayer"
                     }
                   ]
                 },
@@ -764,19 +764,19 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "map/marker"
+                      "id": "controls/map/marker"
                     },
                     {
                       "type": "doc",
-                      "id": "map/circlemarker"
+                      "id": "controls/map/circlemarker"
                     },
                     {
                       "type": "doc",
-                      "id": "map/polygonmarker"
+                      "id": "controls/map/polygonmarker"
                     },
                     {
                       "type": "doc",
-                      "id": "map/polylinemarker"
+                      "id": "controls/map/polylinemarker"
                     }
                   ]
                 },
@@ -787,30 +787,30 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "map/sourceattribution"
+                      "id": "controls/map/sourceattribution"
                     },
                     {
                       "type": "doc",
-                      "id": "map/simpleattribution"
+                      "id": "controls/map/simpleattribution"
                     },
                     {
                       "type": "doc",
-                      "id": "map/richattribution"
+                      "id": "controls/map/richattribution"
                     },
                     {
                       "type": "doc",
-                      "id": "map/textsourceattribution"
+                      "id": "controls/map/textsourceattribution"
                     },
                     {
                       "type": "doc",
-                      "id": "map/imagesourceattribution"
+                      "id": "controls/map/imagesourceattribution"
                     }
                   ]
                 }
               ],
               "link": {
                 "type": "doc",
-                "id": "map/index"
+                "id": "controls/map/index"
               }
             },
             {
@@ -948,7 +948,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "rive/index"
+              "id": "controls/rive/index"
             },
             {
               "type": "doc",
@@ -1062,7 +1062,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "video/index"
+              "id": "controls/video/index"
             },
             {
               "type": "doc",
@@ -1070,7 +1070,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "webview/index"
+              "id": "controls/webview/index"
             },
             {
               "type": "doc",
@@ -1093,11 +1093,11 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "audio/index"
+              "id": "services/audio/index"
             },
             {
               "type": "doc",
-              "id": "audio_recorder/index"
+              "id": "services/audiorecorder/index"
             },
             {
               "type": "doc",
@@ -1125,11 +1125,11 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "flashlight/index"
+              "id": "services/flashlight/index"
             },
             {
               "type": "doc",
-              "id": "geolocator/index"
+              "id": "services/geolocator/index"
             },
             {
               "type": "doc",
@@ -1145,7 +1145,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "permission_handler/index"
+              "id": "services/permissionhandler/index"
             },
             {
               "type": "doc",
@@ -1165,7 +1165,7 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "secure_storage/index"
+              "id": "services/securestorage/index"
             },
             {
               "type": "doc",
@@ -1366,7 +1366,7 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "ads/types/adrequest"
+                      "id": "controls/ads/types/adrequest"
                     }
                   ]
                 },
@@ -1393,23 +1393,23 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "audio/types/audiodurationchangeevent"
+                      "id": "services/audio/types/audiodurationchangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "audio/types/audiopositionchangeevent"
+                      "id": "services/audio/types/audiopositionchangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "audio/types/audiostatechangeevent"
+                      "id": "services/audio/types/audiostatechangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "audio/types/audiostate"
+                      "id": "services/audio/types/audiostate"
                     },
                     {
                       "type": "doc",
-                      "id": "audio/types/releasemode"
+                      "id": "services/audio/types/releasemode"
                     }
                   ]
                 },
@@ -1420,39 +1420,39 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/androidaudiosource"
+                      "id": "services/audiorecorder/types/androidaudiosource"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/androidrecorderconfiguration"
+                      "id": "services/audiorecorder/types/androidrecorderconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/audioencoder"
+                      "id": "services/audiorecorder/types/audioencoder"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/audiorecorderconfiguration"
+                      "id": "services/audiorecorder/types/audiorecorderconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/audiorecorderstatechangeevent"
+                      "id": "services/audiorecorder/types/audiorecorderstatechangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/audiorecorderstate"
+                      "id": "services/audiorecorder/types/audiorecorderstate"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/inputdevice"
+                      "id": "services/audiorecorder/types/inputdevice"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/iosaudiocategoryoption"
+                      "id": "services/audiorecorder/types/iosaudiocategoryoption"
                     },
                     {
                       "type": "doc",
-                      "id": "audio_recorder/types/iosrecorderconfiguration"
+                      "id": "services/audiorecorder/types/iosrecorderconfiguration"
                     }
                   ]
                 },
@@ -1499,47 +1499,47 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "camera/types/cameradescription"
+                      "id": "controls/camera/types/cameradescription"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/cameraimageevent"
+                      "id": "controls/camera/types/cameraimageevent"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/cameralensdirection"
+                      "id": "controls/camera/types/cameralensdirection"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/cameralenstype"
+                      "id": "controls/camera/types/cameralenstype"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/camerapreviewsize"
+                      "id": "controls/camera/types/camerapreviewsize"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/camerastateevent"
+                      "id": "controls/camera/types/camerastateevent"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/exposuremode"
+                      "id": "controls/camera/types/exposuremode"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/flashmode"
+                      "id": "controls/camera/types/flashmode"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/focusmode"
+                      "id": "controls/camera/types/focusmode"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/imageformatgroup"
+                      "id": "controls/camera/types/imageformatgroup"
                     },
                     {
                       "type": "doc",
-                      "id": "camera/types/resolutionpreset"
+                      "id": "controls/camera/types/resolutionpreset"
                     }
                   ]
                 },
@@ -1550,159 +1550,159 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "charts/types/barchartevent"
+                      "id": "controls/charts/types/barchartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barchartgroup"
+                      "id": "controls/charts/types/barchartgroup"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barchartrod"
+                      "id": "controls/charts/types/barchartrod"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barchartrodstackitem"
+                      "id": "controls/charts/types/barchartrodstackitem"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barchartrodtooltip"
+                      "id": "controls/charts/types/barchartrodtooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barcharttooltip"
+                      "id": "controls/charts/types/barcharttooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/barcharttooltipdirection"
+                      "id": "controls/charts/types/barcharttooltipdirection"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/candlestickchartevent"
+                      "id": "controls/charts/types/candlestickchartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/candlestickchartspot"
+                      "id": "controls/charts/types/candlestickchartspot"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/candlestickchartspottooltip"
+                      "id": "controls/charts/types/candlestickchartspottooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/candlestickcharttooltip"
+                      "id": "controls/charts/types/candlestickcharttooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartaxis"
+                      "id": "controls/charts/types/chartaxis"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartaxislabel"
+                      "id": "controls/charts/types/chartaxislabel"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartcirclepoint"
+                      "id": "controls/charts/types/chartcirclepoint"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartcrosspoint"
+                      "id": "controls/charts/types/chartcrosspoint"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartdatapointtooltip"
+                      "id": "controls/charts/types/chartdatapointtooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/charteventtype"
+                      "id": "controls/charts/types/charteventtype"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartgridlines"
+                      "id": "controls/charts/types/chartgridlines"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartpointline"
+                      "id": "controls/charts/types/chartpointline"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartpointshape"
+                      "id": "controls/charts/types/chartpointshape"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/chartsquarepoint"
+                      "id": "controls/charts/types/chartsquarepoint"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/horizontalalignment"
+                      "id": "controls/charts/types/horizontalalignment"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linechartdata"
+                      "id": "controls/charts/types/linechartdata"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linechartdatapoint"
+                      "id": "controls/charts/types/linechartdatapoint"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linechartdatapointtooltip"
+                      "id": "controls/charts/types/linechartdatapointtooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linechartevent"
+                      "id": "controls/charts/types/linechartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linecharteventspot"
+                      "id": "controls/charts/types/linecharteventspot"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/linecharttooltip"
+                      "id": "controls/charts/types/linecharttooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/piechartevent"
+                      "id": "controls/charts/types/piechartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/piechartsection"
+                      "id": "controls/charts/types/piechartsection"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/radarchartevent"
+                      "id": "controls/charts/types/radarchartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/radarcharttitle"
+                      "id": "controls/charts/types/radarcharttitle"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/radardataset"
+                      "id": "controls/charts/types/radardataset"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/radardatasetentry"
+                      "id": "controls/charts/types/radardatasetentry"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/radarshape"
+                      "id": "controls/charts/types/radarshape"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/scatterchartevent"
+                      "id": "controls/charts/types/scatterchartevent"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/scatterchartspot"
+                      "id": "controls/charts/types/scatterchartspot"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/scatterchartspottooltip"
+                      "id": "controls/charts/types/scatterchartspottooltip"
                     },
                     {
                       "type": "doc",
-                      "id": "charts/types/scattercharttooltip"
+                      "id": "controls/charts/types/scattercharttooltip"
                     }
                   ]
                 },
@@ -1788,43 +1788,43 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "geolocator/types/foregroundnotificationconfiguration"
+                      "id": "services/geolocator/types/foregroundnotificationconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorandroidconfiguration"
+                      "id": "services/geolocator/types/geolocatorandroidconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorconfiguration"
+                      "id": "services/geolocator/types/geolocatorconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatoriosactivitytype"
+                      "id": "services/geolocator/types/geolocatoriosactivitytype"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatoriosconfiguration"
+                      "id": "services/geolocator/types/geolocatoriosconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorpermissionstatus"
+                      "id": "services/geolocator/types/geolocatorpermissionstatus"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorposition"
+                      "id": "services/geolocator/types/geolocatorposition"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorpositionaccuracy"
+                      "id": "services/geolocator/types/geolocatorpositionaccuracy"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorpositionchangeevent"
+                      "id": "services/geolocator/types/geolocatorpositionchangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "geolocator/types/geolocatorwebconfiguration"
+                      "id": "services/geolocator/types/geolocatorwebconfiguration"
                     }
                   ]
                 },
@@ -1897,115 +1897,115 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "map/types/attributionalignment"
+                      "id": "controls/map/types/attributionalignment"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/camera"
+                      "id": "controls/map/types/camera"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/camerafit"
+                      "id": "controls/map/types/camerafit"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/cursorkeyboardrotationconfiguration"
+                      "id": "controls/map/types/cursorkeyboardrotationconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/cursorrotationbehaviour"
+                      "id": "controls/map/types/cursorrotationbehaviour"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/dashedstrokepattern"
+                      "id": "controls/map/types/dashedstrokepattern"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/dottedstrokepattern"
+                      "id": "controls/map/types/dottedstrokepattern"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/fadeintiledisplay"
+                      "id": "controls/map/types/fadeintiledisplay"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/instantaneoustiledisplay"
+                      "id": "controls/map/types/instantaneoustiledisplay"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/interactionconfiguration"
+                      "id": "controls/map/types/interactionconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/interactionflag"
+                      "id": "controls/map/types/interactionflag"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/keyboardconfiguration"
+                      "id": "controls/map/types/keyboardconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/mapevent"
+                      "id": "controls/map/types/mapevent"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/mapeventtype"
+                      "id": "controls/map/types/mapeventtype"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/mapeventsource"
+                      "id": "controls/map/types/mapeventsource"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/maphoverevent"
+                      "id": "controls/map/types/maphoverevent"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/maplatitudelongitude"
+                      "id": "controls/map/types/maplatitudelongitude"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/maplatitudelongitudebounds"
+                      "id": "controls/map/types/maplatitudelongitudebounds"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/mappointerevent"
+                      "id": "controls/map/types/mappointerevent"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/mappositionchangeevent"
+                      "id": "controls/map/types/mappositionchangeevent"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/maptapevent"
+                      "id": "controls/map/types/maptapevent"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/multifingergesture"
+                      "id": "controls/map/types/multifingergesture"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/patternfit"
+                      "id": "controls/map/types/patternfit"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/solidstrokepattern"
+                      "id": "controls/map/types/solidstrokepattern"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/strokepattern"
+                      "id": "controls/map/types/strokepattern"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/tiledisplay"
+                      "id": "controls/map/types/tiledisplay"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/tilelayerevicterrortilestrategy"
+                      "id": "controls/map/types/tilelayerevicterrortilestrategy"
                     },
                     {
                       "type": "doc",
-                      "id": "map/types/wmstilelayerconfiguration"
+                      "id": "controls/map/types/wmstilelayerconfiguration"
                     }
                   ]
                 },
@@ -2125,11 +2125,11 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "permission_handler/types/permission"
+                      "id": "services/permissionhandler/types/permission"
                     },
                     {
                       "type": "doc",
-                      "id": "permission_handler/types/permissionstatus"
+                      "id": "services/permissionhandler/types/permissionstatus"
                     }
                   ]
                 },
@@ -2168,27 +2168,27 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/windowsoptions"
+                      "id": "services/securestorage/types/windowsoptions"
                     },
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/androidoptions"
+                      "id": "services/securestorage/types/androidoptions"
                     },
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/appleoptions"
+                      "id": "services/securestorage/types/appleoptions"
                     },
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/macosoptions"
+                      "id": "services/securestorage/types/macosoptions"
                     },
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/iosoptions"
+                      "id": "services/securestorage/types/iosoptions"
                     },
                     {
                       "type": "doc",
-                      "id": "secure_storage/types/weboptions"
+                      "id": "services/securestorage/types/weboptions"
                     }
                   ]
                 },
@@ -2446,19 +2446,19 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "codeeditor/types/codelanguage"
+                      "id": "controls/codeeditor/types/codelanguage"
                     },
                     {
                       "type": "doc",
-                      "id": "codeeditor/types/codetheme"
+                      "id": "controls/codeeditor/types/codetheme"
                     },
                     {
                       "type": "doc",
-                      "id": "codeeditor/types/customcodetheme"
+                      "id": "controls/codeeditor/types/customcodetheme"
                     },
                     {
                       "type": "doc",
-                      "id": "codeeditor/types/gutterstyle"
+                      "id": "controls/codeeditor/types/gutterstyle"
                     }
                   ]
                 },
@@ -2469,23 +2469,23 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "video/types/playlistmode"
+                      "id": "controls/video/types/playlistmode"
                     },
                     {
                       "type": "doc",
-                      "id": "video/types/videoconfiguration"
+                      "id": "controls/video/types/videoconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "video/types/videomedia"
+                      "id": "controls/video/types/videomedia"
                     },
                     {
                       "type": "doc",
-                      "id": "video/types/videosubtitleconfiguration"
+                      "id": "controls/video/types/videosubtitleconfiguration"
                     },
                     {
                       "type": "doc",
-                      "id": "video/types/videosubtitletrack"
+                      "id": "controls/video/types/videosubtitletrack"
                     }
                   ]
                 },
@@ -2496,23 +2496,23 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "webview/types/requestmethod"
+                      "id": "controls/webview/types/requestmethod"
                     },
                     {
                       "type": "doc",
-                      "id": "webview/types/loglevelseverity"
+                      "id": "controls/webview/types/loglevelseverity"
                     },
                     {
                       "type": "doc",
-                      "id": "webview/types/webviewconsolemessageevent"
+                      "id": "controls/webview/types/webviewconsolemessageevent"
                     },
                     {
                       "type": "doc",
-                      "id": "webview/types/webviewjavascriptevent"
+                      "id": "controls/webview/types/webviewjavascriptevent"
                     },
                     {
                       "type": "doc",
-                      "id": "webview/types/webviewscrollevent"
+                      "id": "controls/webview/types/webviewscrollevent"
                     }
                   ]
                 }
@@ -2553,7 +2553,7 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "ads/types/precisiontype"
+                      "id": "controls/ads/types/precisiontype"
                     }
                   ]
                 },
@@ -2672,7 +2672,7 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "datatable2/types/datacolumnsize"
+                      "id": "controls/datatable2/types/datacolumnsize"
                     }
                   ]
                 },
@@ -2926,19 +2926,19 @@ module.exports = {
                 },
                 {
                   "type": "doc",
-                  "id": "secure_storage/types/accesscontrolflag"
+                  "id": "services/securestorage/types/accesscontrolflag"
                 },
                 {
                   "type": "doc",
-                  "id": "secure_storage/types/keychainaccessibility"
+                  "id": "services/securestorage/types/keychainaccessibility"
                 },
                 {
                   "type": "doc",
-                  "id": "secure_storage/types/keycipheralgorithm"
+                  "id": "services/securestorage/types/keycipheralgorithm"
                 },
                 {
                   "type": "doc",
-                  "id": "secure_storage/types/storagecipheralgorithm"
+                  "id": "services/securestorage/types/storagecipheralgorithm"
                 }
               ]
             },
@@ -2958,7 +2958,7 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "ads/types/paidadevent"
+                      "id": "controls/ads/types/paidadevent"
                     }
                   ]
                 },
@@ -3180,7 +3180,7 @@ module.exports = {
                 },
                 {
                   "type": "doc",
-                  "id": "secure_storage/types/securestorageevent"
+                  "id": "services/securestorage/types/securestorageevent"
                 },
                 {
                   "type": "doc",

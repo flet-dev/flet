@@ -11,7 +11,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet.dev/docs/secure-storage"
+Documentation = "https://flet.dev/docs/services/securestorage"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-secure-storage"
 Issues = "https://github.com/flet-dev/flet/issues"
 

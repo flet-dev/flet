@@ -12,7 +12,7 @@ It is based on the [flutter_map](https://pub.dev/packages/flutter_map) Flutter p
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/map/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/map/).
 
 ## Platform Support
 

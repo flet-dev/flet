@@ -12,7 +12,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet.dev/docs/audio"
+Documentation = "https://flet.dev/docs/services/audio"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-audio"
 Issues = "https://github.com/flet-dev/flet/issues"
 

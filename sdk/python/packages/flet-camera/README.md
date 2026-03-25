@@ -12,7 +12,7 @@ It is powered by the [camera](https://pub.dev/packages/camera) Flutter package.
 
 ## Documentation
 
-Detailed documentation for this package can be found [here](https://flet.dev/docs/camera/).
+Detailed documentation for this package can be found [here](https://flet.dev/docs/controls/camera/).
 
 ## Platform Support
 

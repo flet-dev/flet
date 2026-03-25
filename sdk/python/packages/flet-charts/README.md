@@ -12,7 +12,7 @@ It is based on the [fl_chart](https://pub.dev/packages/fl_chart) Flutter package
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/charts/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/charts/).
 
 ## Platform Support
 
@@ -43,11 +43,11 @@ For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/
 
 ### Available charts
 
-- [`BarChart`](https://flet.dev/docs/charts/bar_chart/)
-- [`CandlestickChart`](https://flet.dev/docs/charts/candlestick_chart/)
-- [`LineChart`](https://flet.dev/docs/charts/line_chart/)
-- [`MatplotlibChart`](https://flet.dev/docs/charts/matplotlib_chart/)
-- [`PieChart`](https://flet.dev/docs/charts/pie_chart/)
-- [`PlotlyChart`](https://flet.dev/docs/charts/plotly_chart/)
-- [`RadarChart`](https://flet.dev/docs/charts/radar_chart/)
-- [`ScatterChart`](https://flet.dev/docs/charts/scatter_chart/)
+- [`BarChart`](https://flet.dev/docs/controls/charts/barchart)
+- [`CandlestickChart`](https://flet.dev/docs/controls/charts/candlestickchart)
+- [`LineChart`](https://flet.dev/docs/controls/charts/linechart)
+- [`MatplotlibChart`](https://flet.dev/docs/controls/charts/matplotlibchart)
+- [`PieChart`](https://flet.dev/docs/controls/charts/piechart)
+- [`PlotlyChart`](https://flet.dev/docs/controls/charts/plotlychart)
+- [`RadarChart`](https://flet.dev/docs/controls/charts/radarchart)
+- [`ScatterChart`](https://flet.dev/docs/controls/charts/scatterchart)

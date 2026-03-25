@@ -12,7 +12,7 @@ It is based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ad
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/ads/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/ads/).
 
 ## Platform Support
 

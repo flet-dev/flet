@@ -12,7 +12,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://flet.dev/docs/webview"
+Documentation = "https://flet.dev/docs/controls/webview"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-webview"
 Issues = "https://github.com/flet-dev/flet/issues"
 

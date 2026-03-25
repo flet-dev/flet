@@ -12,7 +12,7 @@ It is based on the [lottie](https://pub.dev/packages/lottie) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/lottie/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/lottie/).
 
 ## Platform Support
 

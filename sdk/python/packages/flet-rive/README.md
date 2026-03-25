@@ -12,7 +12,7 @@ It is based on the [rive](https://pub.dev/packages/rive) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://flet.dev/docs/rive/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/rive/).
 
 ## Platform Support
 

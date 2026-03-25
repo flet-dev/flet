@@ -13,7 +13,7 @@ It is based on [data_table_2](https://pub.dev/packages/data_table_2) Flutter pac
 
 ## Documentation
 
-You can find its documentation [here](https://flet.dev/docs/datatable2/).
+You can find its documentation [here](https://flet.dev/docs/controls/datatable2/).
 
 ## Platform Support
 
