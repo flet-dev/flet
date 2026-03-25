@@ -7,6 +7,7 @@ class State:
 
 def main(page: ft.Page):
     state = State()
+    message = ft.Text("0", size=50)
 
     def handle_button_click(e: ft.Event[ft.FloatingActionButton]):
         state.counter += 1
@@ -22,11 +23,12 @@ def main(page: ft.Page):
         ft.SafeArea(
             expand=True,
             content=ft.Container(
-                message := ft.Text("0", size=50),
                 alignment=ft.Alignment.CENTER,
+                content=message,
             ),
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
