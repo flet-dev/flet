@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -104,6 +105,7 @@ for key, params in requests.items():
 print(json.dumps(results))
 """
     repo_root = config.project_root.parent.parent
+    env = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
     result = subprocess.run(
         [
             "uv",
@@ -118,7 +120,10 @@ print(json.dumps(results))
         capture_output=True,
         text=True,
         cwd=repo_root,
+        env=env,
     )
+    if not result.stdout.strip():
+        raise RuntimeError(f"Subprocess returned empty output. stderr: {result.stderr}")
     return json.loads(result.stdout)
 
 
