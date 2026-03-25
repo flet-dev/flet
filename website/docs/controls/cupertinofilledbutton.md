@@ -1,8 +1,8 @@
 ---
 class_name: "flet.CupertinoFilledButton"
 examples: "controls/cupertino_filled_button"
-example_images: "../test-images/examples/cupertino/golden/macos/cupertino_filled_button"
-example_media: "../examples/controls/cupertino_filled_button/media"
+example_images: "test-images/examples/cupertino/golden/macos/cupertino_filled_button"
+example_media: "examples/controls/cupertino_filled_button/media"
 title: "CupertinoFilledButton"
 ---
 

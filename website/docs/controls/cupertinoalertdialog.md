@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoAlertDialog"
 examples: "controls/cupertino_alert_dialog"
-example_images: "../examples/controls/cupertino_alert_dialog/media"
+example_images: "examples/controls/cupertino_alert_dialog/media"
 title: "CupertinoAlertDialog"
 ---
 

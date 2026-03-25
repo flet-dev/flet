@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoDatePicker"
 examples: "controls/cupertino_date_picker"
-example_images: "../examples/controls/cupertino_date_picker/media"
+example_images: "examples/controls/cupertino_date_picker/media"
 title: "CupertinoDatePicker"
 ---
 

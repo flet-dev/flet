@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Switch"
 examples: "controls/switch"
-example_images: "../test-images/examples/material/golden/macos/switch"
-example_media: "../examples/controls/switch/media"
+example_images: "test-images/examples/material/golden/macos/switch"
+example_media: "examples/controls/switch/media"
 title: "Switch"
 ---
 

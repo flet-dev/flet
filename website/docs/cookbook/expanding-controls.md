@@ -1,7 +1,7 @@
 ---
 title: "Expanding Controls"
 examples: "controls/control"
-example_images: "../test-images/examples/core/golden/macos/control"
+example_images: "test-images/examples/core/golden/macos/control"
 ---
 
 import {CodeExample, Image} from '@site/src/components/crocodocs';

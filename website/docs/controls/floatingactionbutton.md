@@ -1,8 +1,8 @@
 ---
 class_name: "flet.FloatingActionButton"
 examples: "controls/floating_action_button"
-example_images: "../test-images/examples/material/golden/macos/floating_action_button"
-example_media: "../examples/controls/floating_action_button/media"
+example_images: "test-images/examples/material/golden/macos/floating_action_button"
+example_media: "examples/controls/floating_action_button/media"
 title: "FloatingActionButton"
 ---
 

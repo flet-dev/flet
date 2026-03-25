@@ -1,8 +1,8 @@
 ---
 class_name: "flet.CupertinoButton"
 examples: "controls/cupertino_button"
-example_images: "../test-images/examples/cupertino/golden/macos/cupertino_button"
-example_media: "../examples/controls/cupertino_button/media"
+example_images: "test-images/examples/cupertino/golden/macos/cupertino_button"
+example_media: "examples/controls/cupertino_button/media"
 title: "CupertinoButton"
 ---
 

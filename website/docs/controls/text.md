@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Text"
 examples: "controls/text"
-example_images: "../test-images/examples/core/golden/macos/text"
-example_media: "../examples/controls/text/media"
+example_images: "test-images/examples/core/golden/macos/text"
+example_media: "examples/controls/text/media"
 title: "Text"
 ---
 

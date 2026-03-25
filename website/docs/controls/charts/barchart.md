@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.bar_chart.BarChart"
 examples: "controls/charts/bar_chart"
-example_images: "../../test-images-charts/examples/golden/macos/bar_chart"
+example_images: "test-images-charts/examples/golden/macos/bar_chart"
 diagram: "/docs/assets/controls/charts/bar-chart-diagram.svg"
 title: "BarChart"
 ---

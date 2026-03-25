@@ -1,7 +1,7 @@
 ---
 class_name: "flet.DateRangePicker"
 examples: "controls/date_range_picker"
-example_images: "../test-images/controls/material/golden/macos/date_range_picker"
+example_images: "test-images/controls/material/golden/macos/date_range_picker"
 title: "DateRangePicker"
 ---
 

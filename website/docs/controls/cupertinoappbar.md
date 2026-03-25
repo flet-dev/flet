@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoAppBar"
 examples: "controls/cupertino_app_bar"
-example_images: "../examples/controls/cupertino_app_bar/media"
+example_images: "examples/controls/cupertino_app_bar/media"
 title: "CupertinoAppBar"
 ---
 

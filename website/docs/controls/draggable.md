@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Draggable"
 examples: "controls/drag_target_and_draggable"
-example_images: "../examples/controls/drag_target_and_draggable/media"
+example_images: "examples/controls/drag_target_and_draggable/media"
 title: "Draggable"
 ---
 

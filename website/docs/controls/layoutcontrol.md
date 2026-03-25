@@ -1,7 +1,7 @@
 ---
 class_name: "flet.LayoutControl"
 examples: "controls/layout_control"
-example_images: "../test-images/controls/core/golden/macos/layout_control"
+example_images: "test-images/controls/core/golden/macos/layout_control"
 example_images_examples: "../test-images/examples/core/golden/macos/layout_control"
 title: "LayoutControl"
 ---

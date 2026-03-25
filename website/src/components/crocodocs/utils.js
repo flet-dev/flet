@@ -200,6 +200,10 @@ export function resolveDocAssetUrl(src, docId) {
   if (!src || /^(?:[a-z]+:)?\/\//i.test(src) || src.startsWith("/") || src.startsWith("#")) {
     return src;
   }
+  // Paths without ../ are relative to /docs/ static root
+  if (!src.startsWith("..")) {
+    return `/docs/${src}`;
+  }
   if (!docId) {
     return src;
   }

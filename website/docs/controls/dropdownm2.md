@@ -1,8 +1,8 @@
 ---
 class_name: "flet.DropdownM2"
 examples: "controls/dropdown_m2"
-example_images: "../test-images/examples/material/golden/macos/dropdown_m2"
-example_media: "../examples/controls/dropdown_m2/media"
+example_images: "test-images/examples/material/golden/macos/dropdown_m2"
+example_media: "examples/controls/dropdown_m2/media"
 title: "DropdownM2"
 ---
 

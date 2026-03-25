@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.radar_chart.RadarChart"
 examples: "controls/charts/radar_chart"
-example_images: "../../test-images-charts/examples/golden/macos/radar_chart"
+example_images: "test-images-charts/examples/golden/macos/radar_chart"
 title: "RadarChart"
 ---
 

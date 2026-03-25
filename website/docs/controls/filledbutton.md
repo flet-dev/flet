@@ -1,8 +1,8 @@
 ---
 class_name: "flet.FilledButton"
 examples: "controls/filled_button"
-example_images: "../test-images/examples/material/golden/macos/filled_button"
-example_media: "../examples/controls/filled_button/media"
+example_images: "test-images/examples/material/golden/macos/filled_button"
+example_media: "examples/controls/filled_button/media"
 title: "FilledButton"
 ---
 

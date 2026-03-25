@@ -1,7 +1,7 @@
 ---
 title: "Calculator Tutorial"
 examples: "tutorials/calculator"
-example_images: "../test-images/tutorials/golden/macos/calculator"
+example_images: "test-images/tutorials/golden/macos/calculator"
 ---
 
 import {CodeExample, Image} from '@site/src/components/crocodocs';

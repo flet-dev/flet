@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.pie_chart.PieChart"
 examples: "controls/charts/pie_chart"
-example_images: "../../test-images-charts/examples/golden/macos/pie_chart"
+example_images: "test-images-charts/examples/golden/macos/pie_chart"
 diagram: "/docs/assets/controls/charts/pie-chart-diagram.svg"
 title: "PieChart"
 ---

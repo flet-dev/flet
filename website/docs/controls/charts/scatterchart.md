@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.scatter_chart.ScatterChart"
 examples: "controls/charts/scatter_chart"
-example_images: "../../test-images-charts/examples/golden/macos/scatter_chart"
+example_images: "test-images-charts/examples/golden/macos/scatter_chart"
 title: "ScatterChart"
 ---
 

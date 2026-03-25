@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Icon"
 examples: "controls/icon"
-example_images: "../test-images/examples/core/golden/macos/icon"
-example_media: "../examples/controls/icon/media"
+example_images: "test-images/examples/core/golden/macos/icon"
+example_media: "examples/controls/icon/media"
 title: "Icon"
 ---
 

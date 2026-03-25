@@ -1,7 +1,7 @@
 ---
 class_name: "flet.FilePicker"
 examples: "services/file_picker"
-example_images: "../examples/services/file_picker/media"
+example_images: "examples/services/file_picker/media"
 title: "FilePicker"
 ---
 

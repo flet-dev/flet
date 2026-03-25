@@ -1,6 +1,6 @@
 ---
 title: "Adaptive apps"
-example_media: "../examples/controls"
+example_media: "examples/controls"
 ---
 
 import {Image} from '@site/src/components/crocodocs';

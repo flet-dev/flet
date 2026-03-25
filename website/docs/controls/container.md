@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Container"
 examples: "controls/container"
-example_media: "../examples/controls/container/media"
-example_images: "../test-images/examples/material/golden/macos/container"
+example_media: "examples/controls/container/media"
+example_images: "test-images/examples/material/golden/macos/container"
 title: "Container"
 ---
 

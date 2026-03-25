@@ -1,6 +1,6 @@
 ---
 class_name: "flet.FilledTonalIconButton"
-example_images: "../test-images/examples/material/golden/macos/filled_tonal_icon_button"
+example_images: "test-images/examples/material/golden/macos/filled_tonal_icon_button"
 title: "FilledTonalIconButton"
 ---
 

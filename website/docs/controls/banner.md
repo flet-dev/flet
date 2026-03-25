@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Banner"
 examples: "controls/banner"
-example_images: "../test-images/examples/material/golden/macos/banner"
-example_media: "../examples/controls/banner/media"
+example_images: "test-images/examples/material/golden/macos/banner"
+example_media: "examples/controls/banner/media"
 title: "Banner"
 ---
 

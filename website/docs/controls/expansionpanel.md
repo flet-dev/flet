@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ExpansionPanel"
-example_images: "../test-images/examples/material/golden/macos/expansion_panel"
+example_images: "test-images/examples/material/golden/macos/expansion_panel"
 title: "ExpansionPanel"
 ---
 

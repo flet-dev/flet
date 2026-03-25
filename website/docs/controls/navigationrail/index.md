@@ -1,7 +1,7 @@
 ---
 class_name: "flet.NavigationRail"
 examples: "controls/navigation_rail"
-example_images: "../../test-images/examples/material/golden/macos/navigation_rail"
+example_images: "test-images/examples/material/golden/macos/navigation_rail"
 title: "NavigationRail"
 ---
 

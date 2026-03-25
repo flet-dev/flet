@@ -1,6 +1,6 @@
 ---
 examples: "controls/ads"
-example_images: "../../examples/controls/ads/media"
+example_images: "examples/controls/ads/media"
 title: "Ads"
 ---
 

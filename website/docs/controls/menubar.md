@@ -1,7 +1,7 @@
 ---
 class_name: "flet.MenuBar"
 examples: "controls/menu_bar"
-example_images: "../test-images/examples/material/golden/macos/menu_bar"
+example_images: "test-images/examples/material/golden/macos/menu_bar"
 title: "MenuBar"
 ---
 

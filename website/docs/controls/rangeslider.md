@@ -1,7 +1,7 @@
 ---
 class_name: "flet.RangeSlider"
 examples: "controls/range_slider"
-example_images: "../test-images/examples/material/golden/macos/range_slider"
+example_images: "test-images/examples/material/golden/macos/range_slider"
 title: "RangeSlider"
 ---
 

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.DatePicker"
 examples: "controls/date_picker"
-example_images: "../examples/controls/date_picker/media"
+example_images: "examples/controls/date_picker/media"
 title: "DatePicker"
 ---
 
