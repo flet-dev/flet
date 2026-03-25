@@ -41,18 +41,18 @@ def main(page: ft.Page):
     async def handle_tap(e: ft.Event[ft.SearchBar]):
         await anchor.open_view()
 
-    page.add(
-        anchor := ft.SearchBar(
-            view_elevation=4,
-            divider_color=ft.Colors.AMBER,
-            bar_hint_text="Search colors...",
-            view_hint_text="Choose a color from the suggestions...",
-            on_change=handle_change,
-            on_submit=handle_submit,
-            on_tap=handle_tap,
-            controls=build_tiles(colors),
-        ),
+    anchor = ft.SearchBar(
+        view_elevation=4,
+        divider_color=ft.Colors.AMBER,
+        bar_hint_text="Search colors...",
+        view_hint_text="Choose a color from the suggestions...",
+        on_change=handle_change,
+        on_submit=handle_submit,
+        on_tap=handle_tap,
+        controls=build_tiles(colors),
     )
+
+    page.add(ft.SafeArea(content=anchor))
 
 
 if __name__ == "__main__":

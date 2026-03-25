@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.search_bar.basic.main as basic
 import flet as ft
 import flet.testing as ftt
-from examples.controls.search_bar import basic
 
 
 @pytest.mark.asyncio(loop_scope="function")
