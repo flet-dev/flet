@@ -47,7 +47,7 @@ export function sectionAnchor(symbol, sectionName) {
 }
 
 export function memberAnchor(symbol, memberName) {
-  return normalizeAnchor(`${symbol}-${memberName}`);
+  return normalizeAnchor(`${symbol}.${memberName}`);
 }
 
 function classPackageCandidates(classSymbol) {

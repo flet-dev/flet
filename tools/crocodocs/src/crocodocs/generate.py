@@ -43,7 +43,7 @@ def _section_anchor(symbol: str, section_name: str) -> str:
 
 
 def _member_anchor(symbol: str, member_name: str) -> str:
-    return _normalize_anchor(f"{symbol}-{member_name}")
+    return _normalize_anchor(f"{symbol}.{member_name}")
 
 
 def _collect_public_aliases(package_name: str, root: Path) -> dict[str, str]:
