@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/text_button
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/text_button
 ### Icons
 
 ```python
---8<-- "{{ examples }}/icons.py"
+--8<-- "{{ examples }}/icons/main.py"
 ```
 
 {{ image(example_images + "/icons.png", alt="icons", width="80%") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/material/golden/macos/text_button
 ### Handling clicks
 
 ```python
---8<-- "{{ examples }}/handling_clicks.py"
+--8<-- "{{ examples }}/handling_clicks/main.py"
 ```
 
 {{ image(example_images + "/handling_clicks.png", alt="handling-clicks", width="80%") }}
@@ -40,7 +40,7 @@ example_images: ../test-images/examples/material/golden/macos/text_button
 ### Custom content
 
 ```python
---8<-- "{{ examples }}/custom_content.py"
+--8<-- "{{ examples }}/custom_content/main.py"
 ```
 
 {{ image(example_images + "/custom_content.png", alt="custom-content", width="80%") }}

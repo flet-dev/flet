@@ -14,7 +14,7 @@ example_media: ../examples/controls/text/media
 ### Custom text styles
 
 ```python
---8<-- "{{ examples }}/custom_styles.py"
+--8<-- "{{ examples }}/custom_styles/main.py"
 ```
 
 {{ image(example_media + "/custom_styles.gif", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/text/media
 ### Pre-defined theme text styles
 
 ```python
---8<-- "{{ examples }}/text_theme_styles.py"
+--8<-- "{{ examples }}/text_theme_styles/main.py"
 ```
 
 {{ image(example_media + "/text_theme_styles.png", width="80%") }}
@@ -32,7 +32,7 @@ example_media: ../examples/controls/text/media
 ### Font with variable weight
 
 ```python
---8<-- "{{ examples }}/variable_font_weight.py"
+--8<-- "{{ examples }}/variable_font_weight/main.py"
 ```
 
 {{ image(example_media + "/variable_font_weight.gif", width="80%") }}
@@ -41,7 +41,7 @@ example_media: ../examples/controls/text/media
 ### Basic rich text example
 
 ```python
---8<-- "{{ examples }}/rich_text_basic.py"
+--8<-- "{{ examples }}/rich_text_basic/main.py"
 ```
 
 {{ image(example_media + "/rich_text_basic.png", width="80%") }}
@@ -50,7 +50,7 @@ example_media: ../examples/controls/text/media
 ### Rich text with borders and stroke
 
 ```python
---8<-- "{{ examples }}/rich_text_border_stroke.py"
+--8<-- "{{ examples }}/rich_text_border_stroke/main.py"
 ```
 
 {{ image(example_media + "/rich_text_border_stroke.png", width="80%") }}
@@ -59,7 +59,7 @@ example_media: ../examples/controls/text/media
 ### Rich text with gradient
 
 ```python
---8<-- "{{ examples }}/rich_text_gradient.py"
+--8<-- "{{ examples }}/rich_text_gradient/main.py"
 ```
 
 {{ image(example_media + "/rich_text_gradient.png", width="80%") }}

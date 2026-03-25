@@ -1,0 +1,26 @@
+[project]
+name = "text-custom-styles"
+version = "1.0.0"
+description = "Demonstrates Text size, color, weight, selection, and overflow styling variations."
+requires-python = ">=3.10"
+keywords = ["text", "styles", "typography", "overflow", "selection"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/Text"]
+
+[tool.flet.metadata]
+title = "Custom text styles"
+controls = ["SafeArea", "Column", "Text"]
+layout_pattern = "stacked-content"
+complexity = "basic"
+features = ["custom text styling", "overflow handling", "selectable text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
