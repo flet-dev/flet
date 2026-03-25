@@ -159,18 +159,39 @@ def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
         elif isinstance(section, DocstringSectionAdmonition):
             admonition = getattr(section, "value", None)
             if admonition is not None:
-                kind = getattr(admonition, "annotation", "note") or "note"
+                raw_kind = getattr(admonition, "annotation", "note") or "note"
                 description = getattr(admonition, "description", "") or ""
                 title = getattr(section, "title", None)
-                if description.strip():
+                if not description.strip():
+                    continue
+                admonition_map = {
+                    "note": "note",
+                    "notes": "note",
+                    "tip": "tip",
+                    "hint": "tip",
+                    "example": "tip",
+                    "examples": "tip",
+                    "info": "info",
+                    "warning": "warning",
+                    "warn": "warning",
+                    "important": "warning",
+                    "danger": "danger",
+                    "caution": "caution",
+                }
+                mapped_kind = admonition_map.get(raw_kind)
+                if mapped_kind:
                     entry: dict[str, Any] = {
                         "kind": "admonition",
-                        "admonition_kind": kind,
+                        "admonition_kind": mapped_kind,
                         "value": description,
                     }
                     if title:
                         entry["title"] = title
                     sections.append(entry)
+                else:
+                    # Not a real admonition — fold back into text
+                    text = f"{title}:\n\n{description}" if title else description
+                    sections.append({"kind": "text", "value": text})
     return sections
 
 

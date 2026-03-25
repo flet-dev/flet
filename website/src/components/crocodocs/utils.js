@@ -991,7 +991,12 @@ export function renderDocstringSections(sections, context = {}) {
     }
 
     if (section.kind === "admonition") {
-      const admonitionType = section.admonition_kind || "note";
+      const VALID_TYPES = new Set([
+        "note", "tip", "info", "warning", "danger", "caution",
+      ]);
+      const admonitionType = VALID_TYPES.has(section.admonition_kind)
+        ? section.admonition_kind
+        : "note";
       blocks.push(
         <Admonition key={`section-${key++}`} type={admonitionType} title={section.title}>
           {renderDocstring(section.value, context, `adm-${key}`)}
