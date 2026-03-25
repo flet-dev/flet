@@ -122,9 +122,12 @@ print(json.dumps(results))
         cwd=repo_root,
         env=env,
     )
-    if not result.stdout.strip():
-        raise RuntimeError(f"Subprocess returned empty output. stderr: {result.stderr}")
-    return json.loads(result.stdout)
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"JSON parse failed: {exc}\nstdout: {result.stdout[:500]}\nstderr: {result.stderr[:500]}"
+        ) from exc
 
 
 # ---------------------------------------------------------------------------
