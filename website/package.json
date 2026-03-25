@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "crocodocs:generate": "cd .. && uv --directory ./sdk/python sync && uv --directory ./tools/crocodocs run crocodocs generate",
+    "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
     "start": "yarn crocodocs:generate && docusaurus start",
     "build": "yarn crocodocs:generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
