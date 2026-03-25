@@ -37,7 +37,7 @@ pip install flet-webview  # (1)!
 ## Example
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 ## Troubleshooting

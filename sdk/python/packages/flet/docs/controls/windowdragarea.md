@@ -11,7 +11,7 @@ example_images: ../test-images/examples/core/golden/macos/window_drag_area
 ### No frame window
 
 ```python
---8<-- "{{ examples }}/no_frame_window.py"
+--8<-- "{{ examples }}/no_frame_window/main.py"
 ```
 
 {{ image(example_images + "/no_frame_window.png", alt="no-frame-window", width="80%") }}

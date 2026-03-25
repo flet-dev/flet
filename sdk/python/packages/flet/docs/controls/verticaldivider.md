@@ -13,7 +13,7 @@ example_images: ../test-images/examples/core/golden/macos/vertical_divider
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
