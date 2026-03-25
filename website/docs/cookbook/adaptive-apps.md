@@ -1,6 +1,9 @@
 ---
 title: "Adaptive apps"
+example_media: "../examples/controls"
 ---
+
+import {Image} from '@site/src/components/crocodocs';
 
 Flet framework allows you to develop adaptive apps which means having a single codebase that
 will deliver different look depending on the device's platform.
@@ -62,19 +65,9 @@ ft.run(main)
 
 By setting just `page.adaptive = True` you can make you app looking awesome on both iOS and Android devices:
 
-<div class="grid cards" markdown>
-
--   **iPhone**
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="iPhone" className="doc-screenshot" src="/docs/assets/cookbook/adaptive-apps/iphone.png" style={{width: "55%"}} /></figure>
-
--   **Android**
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Android" className="doc-screenshot" src="/docs/assets/cookbook/adaptive-apps/android.png" style={{width: "55%"}} /></figure>
-
-</div>
+| iPhone | Android |
+|:---:|:---:|
+| <Image src="/docs/assets/cookbook/adaptive-apps/iphone.png" width="80%" /> | <Image src="/docs/assets/cookbook/adaptive-apps/android.png" width="80%" /> |
 
 ## Material and Cupertino controls
 
@@ -106,158 +99,36 @@ unless `adaptive` property is explicitly set to `False` for a child control.
 
 Below is the list of adaptive Material controls and their matching Cupertino controls:
 
-<div class="grid cards" markdown>
-
--   [:octicons-arrow-right-24: `AlertDialog`](../controls/alertdialog.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="AlertDialog" className="doc-screenshot" src="/docs/examples/controls/alert_dialog/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoAlertDialog`](../controls/cupertinoalertdialog.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoAlertDialog" className="doc-screenshot" src="/docs/examples/controls/cupertino_alert_dialog/media/adaptive.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Any button in Dialog actions`](../controls/button.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Dialog actions" className="doc-screenshot" src="/docs/examples/controls/alert_dialog/media/adaptive_dialog_action.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoDialogAction`](../controls/cupertinodialogaction.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoDialogAction" className="doc-screenshot" src="/docs/examples/controls/cupertino_alert_dialog/media/adaptive_dialog_action.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `AppBar`](../controls/appbar.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="AppBar" className="doc-screenshot" src="/docs/examples/controls/app_bar/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoAppBar`](../controls/cupertinoappbar.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoAppBar" className="doc-screenshot" src="/docs/examples/controls/cupertino_app_bar/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `NavigationBar`](../controls/navigationbar/index.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="NavigationBar" className="doc-screenshot" src="/docs/examples/controls/navigation_bar/media/adaptive.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoNavigationBar`](../controls/cupertinonavigationbar.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoNavigationBar" className="doc-screenshot" src="/docs/examples/controls/cupertino_navigation_bar/media/adaptive.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `ListTile`](../controls/listtile.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="ListTile" className="doc-screenshot" src="/docs/examples/controls/list_tile/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoListTile`](../controls/cupertinolisttile.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoListTile" className="doc-screenshot" src="/docs/examples/controls/cupertino_list_tile/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `TextField`](../controls/textfield.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="TextField" className="doc-screenshot" src="/docs/examples/controls/text_field/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoTextField`](../controls/cupertinotextfield.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoTextField" className="doc-screenshot" src="/docs/examples/controls/cupertino_text_field/media/index.png" style={{width: "55%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Checkbox`](../controls/checkbox.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Checkbox" className="doc-screenshot" src="/docs/examples/controls/checkbox/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoCheckbox`](../controls/cupertinocheckbox.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoCheckbox" className="doc-screenshot" src="/docs/examples/controls/cupertino_checkbox/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Slider`](../controls/slider.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Slider" className="doc-screenshot" src="/docs/test-images/examples/material/golden/macos/slider/image_for_docs.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoSlider`](../controls/cupertinoslider.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoSlider" className="doc-screenshot" src="/docs/examples/controls/cupertino_slider/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Switch`](../controls/switch.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Switch" className="doc-screenshot" src="/docs/examples/controls/switch/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoSwitch`](../controls/cupertinoswitch.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoSwitch" className="doc-screenshot" src="/docs/examples/controls/cupertino_switch/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Radio`](../controls/radio.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="Radio" className="doc-screenshot" src="/docs/examples/controls/radio/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoRadio`](../controls/cupertinoradio.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoRadio" className="doc-screenshot" src="/docs/examples/controls/cupertino_radio/media/index.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `FilledButton`](../controls/filledbutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="FilledButton" className="doc-screenshot" src="/docs/examples/controls/filled_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoFilledButton`](../controls/cupertinofilledbutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoFilledButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_filled_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `FilledTonalButton`](../controls/filledtonalbutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="FilledTonalButton" className="doc-screenshot" src="/docs/examples/controls/filled_tonal_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoButtonTonal" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive_tonal_button.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `IconButton`](../controls/iconbutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="IconButton" className="doc-screenshot" src="/docs/examples/controls/icon_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoIconButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive_icon_button.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `Button`](../controls/button.md)
-
-    <figure className="doc-screenshot-figure"><img alt="Button" className="doc-screenshot" src="/docs/examples/controls/button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
-    ---
-    [:octicons-arrow-right-24: `OutlinedButton`](../controls/outlinedbutton.md)
-
-    <figure className="doc-screenshot-figure"><img alt="OutlinedButton" className="doc-screenshot" src="/docs/examples/controls/outlined_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
-    ---
-    [:octicons-arrow-right-24: `TextButton`](../controls/textbutton.md)
-
-    <figure className="doc-screenshot-figure"><img alt="TextButton" className="doc-screenshot" src="/docs/examples/controls/text_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
--   [:octicons-arrow-right-24: `CupertinoButton`](../controls/cupertinobutton.md)
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoButton" className="doc-screenshot" src="/docs/examples/controls/cupertino_button/media/adaptive.png" style={{width: "45%"}} /></figure>
-
-</div>
+| Material | Cupertino |
+|:---:|:---:|
+| [`AlertDialog`](../controls/alertdialog.md) | [`CupertinoAlertDialog`](../controls/cupertinoalertdialog.md) |
+| <Image src={frontMatter.example_media + '/alert_dialog/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_alert_dialog/media/adaptive.png'} width="55%" /> |
+| [`Dialog actions`](../controls/button.md) | [`CupertinoDialogAction`](../controls/cupertinodialogaction.md) |
+| <Image src={frontMatter.example_media + '/alert_dialog/media/adaptive_dialog_action.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_alert_dialog/media/adaptive_dialog_action.png'} width="55%" /> |
+| [`AppBar`](../controls/appbar.md) | [`CupertinoAppBar`](../controls/cupertinoappbar.md) |
+| <Image src={frontMatter.example_media + '/app_bar/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_app_bar/media/index.png'} width="55%" /> |
+| [`NavigationBar`](../controls/navigationbar/index.md) | [`CupertinoNavigationBar`](../controls/cupertinonavigationbar.md) |
+| <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_navigation_bar/media/adaptive.png'} width="55%" /> |
+| [`ListTile`](../controls/listtile.md) | [`CupertinoListTile`](../controls/cupertinolisttile.md) |
+| <Image src={frontMatter.example_media + '/list_tile/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_list_tile/media/index.png'} width="55%" /> |
+| [`TextField`](../controls/textfield.md) | [`CupertinoTextField`](../controls/cupertinotextfield.md) |
+| <Image src={frontMatter.example_media + '/text_field/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_text_field/media/index.png'} width="55%" /> |
+| [`Checkbox`](../controls/checkbox.md) | [`CupertinoCheckbox`](../controls/cupertinocheckbox.md) |
+| <Image src={frontMatter.example_media + '/checkbox/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_checkbox/media/index.png'} width="45%" /> |
+| [`Slider`](../controls/slider.md) | [`CupertinoSlider`](../controls/cupertinoslider.md) |
+| <Image src="/docs/test-images/examples/material/golden/macos/slider/image_for_docs.png" width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_slider/media/index.png'} width="45%" /> |
+| [`Switch`](../controls/switch.md) | [`CupertinoSwitch`](../controls/cupertinoswitch.md) |
+| <Image src={frontMatter.example_media + '/switch/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_switch/media/index.png'} width="45%" /> |
+| [`Radio`](../controls/radio.md) | [`CupertinoRadio`](../controls/cupertinoradio.md) |
+| <Image src={frontMatter.example_media + '/radio/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_radio/media/index.png'} width="45%" /> |
+| [`FilledButton`](../controls/filledbutton.md) | [`CupertinoFilledButton`](../controls/cupertinofilledbutton.md) |
+| <Image src={frontMatter.example_media + '/filled_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_filled_button/media/adaptive.png'} width="45%" /> |
+| [`FilledTonalButton`](../controls/filledtonalbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
+| <Image src={frontMatter.example_media + '/filled_tonal_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive_tonal_button.png'} width="45%" /> |
+| [`IconButton`](../controls/iconbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
+| <Image src={frontMatter.example_media + '/icon_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive_icon_button.png'} width="45%" /> |
+| [`Button`](../controls/button.md) / [`OutlinedButton`](../controls/outlinedbutton.md) / [`TextButton`](../controls/textbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
+| <Image src={frontMatter.example_media + '/button/media/adaptive.png'} width="45%" /> <Image src={frontMatter.example_media + '/outlined_button/media/adaptive.png'} width="45%" /> <Image src={frontMatter.example_media + '/text_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive.png'} width="45%" /> |
 
 </details>
 
@@ -326,19 +197,9 @@ ft.run(main)
 
 Now the `NavigationBar` and icons within it will look like different on Android and iOS:
 
-<div class="grid cards" markdown>
-
--   **iOS**
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoNavigationBar" className="doc-screenshot" src="/docs/examples/controls/navigation_bar/media/adaptive.png" style={{width: "60%"}} /></figure>
-
--   **Android**
-
-    ---
-    <figure className="doc-screenshot-figure"><img alt="CupertinoNavigationBar" className="doc-screenshot" src="/docs/examples/controls/navigation_bar/media/adaptive.png" style={{width: "60%"}} /></figure>
-
-</div>
+| iOS | Android |
+|:---:|:---:|
+| <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="60%" /> | <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="60%" /> |
 
 :::note[Note]
 You may utilise [reusable controls approach](../cookbook/custom-controls.md) to
