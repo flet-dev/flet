@@ -500,3 +500,59 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .legal ol ol ol ol ol {
   list-style-type: upper-alpha;
 }
+
+/* Compact card grid for generated-index pages (Controls, Services, Cookbook) */
+/* Compact card grid for generated-index pages (Controls, Services, Cookbook) */
+[class*="generatedIndexPage"] .card.padding--lg {
+  padding: 0.6rem 0.85rem !important;
+  box-shadow: none;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+[class*="generatedIndexPage"] .card.padding--lg:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+[class*="generatedIndexPage"] [class*="cardTitle"] {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+[class*="generatedIndexPage"] [class*="cardDescription"] {
+  display: none;
+}
+
+[class*="generatedIndexPage"] [class*="docCardListItem"] {
+  margin-bottom: 0.5rem;
+}
+
+[class*="generatedIndexPage"] .col--6 {
+  --ifm-col-width: 25%;
+  padding: 0 0.3rem;
+}
+
+@media (max-width: 1200px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 33.333%;
+  }
+}
+
+@media (max-width: 768px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 100%;
+  }
+}

@@ -41,7 +41,10 @@ docs:
   API Reference:
     _index: api-reference/index.md
     Controls:
-      _index: controls/index.md
+      _generated_index:
+        title: Controls
+        slug: /controls
+        description: Browse the complete catalog of controls available in Flet.
       Ads:
         _index: controls/ads/index.md
         BannerAd: controls/ads/bannerad.md
@@ -249,7 +252,10 @@ docs:
       WebView: controls/webview/index.md
       WindowDragArea: controls/windowdragarea.md
     Services:
-      _index: services/index.md
+      _generated_index:
+        title: Services
+        slug: /services
+        description: Browse the complete catalog of services available in Flet.
       Accelerometer: services/accelerometer.md
       Audio: services/audio/index.md
       AudioRecorder: services/audiorecorder/index.md
@@ -786,7 +792,10 @@ docs:
     Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
     Environment Variables: reference/environment-variables.md
   Cookbook:
-    _index: cookbook/index.md
+    _generated_index:
+      title: Cookbook
+      slug: /cookbook
+      description: Recipes and guides for common Flet development tasks.
     Accessibility: cookbook/accessibility.md
     Adaptive apps: cookbook/adaptive-apps.md
     Animations: cookbook/animations.md

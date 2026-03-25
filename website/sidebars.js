@@ -1078,8 +1078,10 @@ module.exports = {
             }
           ],
           "link": {
-            "type": "doc",
-            "id": "controls/index"
+            "type": "generated-index",
+            "title": "Controls",
+            "slug": "/controls",
+            "description": "Browse the complete catalog of controls available in Flet."
           }
         },
         {
@@ -1189,8 +1191,10 @@ module.exports = {
             }
           ],
           "link": {
-            "type": "doc",
-            "id": "services/index"
+            "type": "generated-index",
+            "title": "Services",
+            "slug": "/services",
+            "description": "Browse the complete catalog of services available in Flet."
           }
         },
         {
@@ -3445,8 +3449,10 @@ module.exports = {
         }
       ],
       "link": {
-        "type": "doc",
-        "id": "cookbook/index"
+        "type": "generated-index",
+        "title": "Cookbook",
+        "slug": "/cookbook",
+        "description": "Recipes and guides for common Flet development tasks."
       }
     }
   ]

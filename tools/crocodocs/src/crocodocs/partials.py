@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import contextlib
 import importlib.util
-import os
 import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 from .config import CrocoDocsConfig
 
@@ -75,135 +73,6 @@ def _run_python_renderer(
             details.append(f"stderr:\n{result.stderr.strip()}")
         raise RuntimeError("\n\n".join(details))
     return result.stdout
-
-
-def _find_nav_branch(items: list[Any] | None, label: str):
-    if not isinstance(items, list):
-        return None
-    for entry in items:
-        if isinstance(entry, dict) and label in entry:
-            return entry[label]
-    return None
-
-
-def _find_nav_branch_for_path(nav_items: list[Any], nav_path: list[str]):
-    items = nav_items
-    for label in nav_path:
-        items = _find_nav_branch(items, label)
-        if items is None:
-            return None
-    return items
-
-
-def _relative_markdown_path(path: str, base_dir: str) -> str:
-    base = base_dir or "."
-    return os.path.relpath(path, base).replace(os.sep, "/")
-
-
-def _build_link(target: str, title: str, base_dir: str) -> str:
-    return f"[`{title}`]({_relative_markdown_path(target, base_dir)})"
-
-
-def _partition_section_entries(
-    entries: list[Any], skip_paths: set[str]
-) -> tuple[str | None, list[Any]]:
-    overview_path: str | None = None
-    remaining: list[Any] = []
-    for item in entries:
-        if isinstance(item, str):
-            if overview_path is None and item not in skip_paths:
-                overview_path = item
-                continue
-        elif isinstance(item, dict):
-            used_for_overview = False
-            if overview_path is None:
-                for title, value in item.items():
-                    if (
-                        isinstance(value, str)
-                        and title.casefold() == "overview"
-                        and value not in skip_paths
-                    ):
-                        overview_path = value
-                        used_for_overview = True
-                        break
-            if used_for_overview:
-                continue
-        remaining.append(item)
-    return overview_path, remaining
-
-
-def _build_nav_nodes(entries: list[Any] | None, skip_paths: set[str]):
-    nodes: list[dict[str, Any]] = []
-    for entry in entries or []:
-        if isinstance(entry, str):
-            continue
-        if isinstance(entry, dict):
-            for title, value in entry.items():
-                if isinstance(value, list):
-                    overview_path, remainder = _partition_section_entries(
-                        value, skip_paths
-                    )
-                    children = _build_nav_nodes(remainder, skip_paths)
-                    nodes.append(
-                        {"title": title, "path": overview_path, "children": children}
-                    )
-                elif value not in skip_paths:
-                    nodes.append({"title": title, "path": value, "children": []})
-    return nodes
-
-
-def _format_nav_list(
-    nodes: list[dict[str, Any]], base_dir: str, depth: int = 0
-) -> list[str]:
-    lines: list[str] = []
-    indent = " " * (depth * 4)
-    for node in nodes:
-        children = node.get("children") or []
-        path = node.get("path")
-        title = node["title"]
-        label = _build_link(path, title, base_dir) if path else f"**{title}**"
-        lines.append(f"{indent}- {label}")
-        if children:
-            lines.extend(_format_nav_list(children, base_dir, depth + 1))
-    return lines
-
-
-def _sidebar_docs_to_nav_list(docs: Any) -> list[Any]:
-    if isinstance(docs, list):
-        result = []
-        for item in docs:
-            if isinstance(item, dict):
-                result.append(
-                    {k: _sidebar_docs_to_nav_list(v) for k, v in item.items()}
-                )
-            else:
-                result.append(item)
-        return result
-    if isinstance(docs, dict):
-        return [{k: _sidebar_docs_to_nav_list(v)} for k, v in docs.items()]
-    return docs
-
-
-def _render_nav_overview_from_mkdocs(
-    config: CrocoDocsConfig,
-    nav_path: list[str],
-    *,
-    base_dir: str,
-    skip_paths: set[str] | None = None,
-) -> str:
-    from .sidebars import _load_sidebar_source
-
-    sidebar_docs = _load_sidebar_source(config.sidebars_source)
-    nav_items = _sidebar_docs_to_nav_list(sidebar_docs)
-    branch = _find_nav_branch_for_path(nav_items, nav_path)
-    nodes = (
-        _build_nav_nodes(branch, skip_paths or set())
-        if isinstance(branch, list)
-        else []
-    )
-    if not nodes:
-        return ""
-    return "\n".join(_format_nav_list(nodes, base_dir)) + "\n"
 
 
 def _normalize_local_markdown_links(content: str) -> str:
@@ -328,42 +197,11 @@ print(module.cross_platform_permissions_list(), end="")
     return _run_python_renderer(config, script=script)
 
 
-def _render_overview_partial(config: CrocoDocsConfig, filename: str) -> str:
-    if filename == "controls-overview.mdx":
-        return _render_nav_overview_from_mkdocs(
-            config,
-            ["API Reference", "Controls"],
-            base_dir="controls",
-            skip_paths={"controls/index.md", "services/index.md"},
-        )
-    if filename == "services-overview.mdx":
-        return _render_nav_overview_from_mkdocs(
-            config,
-            ["API Reference", "Services"],
-            base_dir="services",
-            skip_paths={"controls/index.md", "services/index.md"},
-        )
-    if filename == "cookbook-overview.mdx":
-        return _render_nav_overview_from_mkdocs(
-            config,
-            ["Cookbook"],
-            base_dir="cookbook",
-            skip_paths={"cookbook/index.md"},
-        )
-    raise ValueError(f"Unsupported overview partial filename: {filename}")
-
-
 def render_partial(config: CrocoDocsConfig, filename: str) -> str:
     if filename == "pypi-index.mdx":
         return _render_pypi_partial(config)
     if filename == "cross-platform-permissions.mdx":
         return _render_permissions_partial(config)
-    if filename in {
-        "controls-overview.mdx",
-        "services-overview.mdx",
-        "cookbook-overview.mdx",
-    }:
-        return _render_overview_partial(config, filename)
     if filename.startswith("cli-") and filename.endswith(".mdx"):
         command = filename.removesuffix(".mdx").removeprefix("cli-").replace("-", " ")
         if command == "root":

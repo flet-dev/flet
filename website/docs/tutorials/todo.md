@@ -270,4 +270,4 @@ In this tutorial, you have learnt how to:
 * Work with lists: view, edit and delete items, filtering;
 * [Publish](../publish/index.md) your Flet app to multiple platforms;
 
-For further reading you can explore [controls](../controls/index.md) and [examples](https://github.com/flet-dev/flet/tree/main/sdk/python/examples).
+For further reading you can explore [controls](/docs/controls) and [examples](https://github.com/flet-dev/flet/tree/main/sdk/python/examples).

@@ -2,7 +2,7 @@
 title: "Creating an Extension"
 ---
 
-While [Flet controls](../controls/index.md) leverage many built-in [Flutter widgets](https://docs.flutter.dev/ui/widgets) to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
+While [Flet controls](/docs/controls) leverage many built-in [Flutter widgets](https://docs.flutter.dev/ui/widgets) to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
 
 To address this, the Flet framework provides an extensibility mechanism. This allows you to incorporate widgets and APIs from your own custom Flutter packages or [third-party libraries](https://pub.dev/packages?sort=popularity) directly into your Flet application.
 

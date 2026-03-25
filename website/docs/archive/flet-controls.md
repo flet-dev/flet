@@ -198,7 +198,7 @@ ft.run(main)
 
 ## Textbox
 
-Flet provides a number of [controls](../controls/index.md) for building forms:
+Flet provides a number of [controls](/docs/controls) for building forms:
 [`TextField`](../controls/textfield.md), [`Checkbox`](../controls/checkbox.md), [`Dropdown`](../controls/dropdown/index.md),
 [`Button`](../controls/button.md).
 

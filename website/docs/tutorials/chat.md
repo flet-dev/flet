@@ -446,4 +446,4 @@ In this tutorial, you have learnt how to:
 * Build page layout with reusable controls;
 * Deploy your Flet app to the web;
 
-For further reading you can explore [controls](../controls/index.md) and [examples](https://github.com/flet-dev/flet/tree/main/sdk/python/examples).
+For further reading you can explore [controls](/docs/controls) and [examples](https://github.com/flet-dev/flet/tree/main/sdk/python/examples).

@@ -11,7 +11,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover
     yaml = None
 
-SPECIAL_KEYS = {"_index", "_meta"}
+SPECIAL_KEYS = {"_index", "_generated_index", "_meta"}
 
 
 def _doc_id_for_output_path(output_path: str) -> str:
@@ -324,9 +324,20 @@ def _convert_category_mapping(
         "collapsed": collapsed,
         "items": items,
     }
-    index_ref = mapping.get("_index")
-    if isinstance(index_ref, str):
-        category["link"] = _doc_item("", index_ref, page_by_output, page_by_source)
+    generated_index = mapping.get("_generated_index")
+    if isinstance(generated_index, dict):
+        link: dict[str, Any] = {"type": "generated-index"}
+        if "title" in generated_index:
+            link["title"] = generated_index["title"]
+        if "slug" in generated_index:
+            link["slug"] = generated_index["slug"]
+        if "description" in generated_index:
+            link["description"] = generated_index["description"]
+        category["link"] = link
+    else:
+        index_ref = mapping.get("_index")
+        if isinstance(index_ref, str):
+            category["link"] = _doc_item("", index_ref, page_by_output, page_by_source)
     return category
 
 
