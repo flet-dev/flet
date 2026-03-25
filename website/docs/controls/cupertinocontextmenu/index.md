@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoContextMenu"
-examples: "../../examples/controls/cupertino_context_menu"
+examples: "controls/cupertino_context_menu"
 example_images: "../../examples/controls/cupertino_context_menu/media"
 title: "CupertinoContextMenu"
 ---

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Accelerometer"
-examples: "../../examples/services/accelerometer"
+examples: "services/accelerometer"
 title: "Accelerometer"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.FontWeight"
-examples: "../../examples/controls/types/font_weight"
+examples: "controls/types/font_weight"
 title: "FontWeight"
 ---
 

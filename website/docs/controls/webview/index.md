@@ -1,6 +1,6 @@
 ---
 class_name: "flet_webview.WebView"
-examples: "../../../examples/controls/webview"
+examples: "controls/webview"
 title: "WebView"
 ---
 

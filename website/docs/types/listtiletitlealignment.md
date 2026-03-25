@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ListTileTitleAlignment"
-examples: "../../examples/controls/types/list_tile_title_alignment"
+examples: "controls/types/list_tile_title_alignment"
 title: "ListTileTitleAlignment"
 ---
 

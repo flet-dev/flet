@@ -1,6 +1,6 @@
 ---
 class_name: "flet.WindowDragArea"
-examples: "../../examples/controls/window_drag_area"
+examples: "controls/window_drag_area"
 example_images: "../test-images/examples/core/golden/macos/window_drag_area"
 title: "WindowDragArea"
 ---

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ListView"
-examples: "../../examples/controls/list_view"
+examples: "controls/list_view"
 example_media: "../examples/controls/list_view/media"
 example_images: "../test-images/examples/core/golden/macos/list_view"
 title: "ListView"

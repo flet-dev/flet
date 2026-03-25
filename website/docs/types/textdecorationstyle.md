@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TextDecorationStyle"
-examples: "../../examples/controls/types/text_decoration_style"
+examples: "controls/types/text_decoration_style"
 title: "TextDecorationStyle"
 ---
 

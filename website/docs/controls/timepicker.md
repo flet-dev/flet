@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TimePicker"
-examples: "../../examples/controls/time_picker"
+examples: "controls/time_picker"
 example_images: "../test-images/examples/material/golden/macos/time_picker"
 title: "TimePicker"
 ---

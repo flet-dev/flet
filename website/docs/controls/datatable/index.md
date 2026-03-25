@@ -1,6 +1,6 @@
 ---
 class_name: "flet.DataTable"
-examples: "../../examples/controls/data_table"
+examples: "controls/data_table"
 example_images: "../../test-images/examples/material/golden/macos/datatable"
 title: "DataTable"
 ---

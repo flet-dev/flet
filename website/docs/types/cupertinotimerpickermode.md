@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoTimerPickerMode"
-examples: "../../examples/controls/types/cupertino_timer_picker_mode"
+examples: "controls/types/cupertino_timer_picker_mode"
 title: "CupertinoTimerPickerMode"
 ---
 

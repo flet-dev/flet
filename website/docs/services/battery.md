@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Battery"
-examples: "../../examples/services/battery"
+examples: "services/battery"
 title: "Battery"
 ---
 

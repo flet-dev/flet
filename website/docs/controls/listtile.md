@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ListTile"
-examples: "../../examples/controls/list_tile"
+examples: "controls/list_tile"
 example_images: "../test-images/examples/material/golden/macos/list_tile"
 example_media: "../examples/controls/list_tile/media"
 title: "ListTile"

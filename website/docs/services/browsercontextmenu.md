@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BrowserContextMenu"
-examples: "../../examples/services/browsercontextmenu"
+examples: "services/browsercontextmenu"
 title: "BrowserContextMenu"
 ---
 

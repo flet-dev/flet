@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SearchBar"
-examples: "../../examples/controls/search_bar"
+examples: "controls/search_bar"
 example_images: "../test-images/examples/material/golden/macos/search_bar"
 title: "SearchBar"
 ---

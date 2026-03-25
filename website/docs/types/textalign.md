@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TextAlign"
-examples: "../../examples/controls/types/text_align"
+examples: "controls/types/text_align"
 title: "TextAlign"
 ---
 

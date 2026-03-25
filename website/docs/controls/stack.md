@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Stack"
-examples: "../../examples/controls/stack"
+examples: "controls/stack"
 example_images: "../test-images/examples/core/golden/macos/stack"
 title: "Stack"
 ---

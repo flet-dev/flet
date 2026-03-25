@@ -1,6 +1,6 @@
 ---
 class_name: "flet.AutoComplete"
-examples: "../../examples/controls/auto_complete"
+examples: "controls/auto_complete"
 example_images: "../examples/controls/auto_complete/media"
 title: "AutoComplete"
 ---

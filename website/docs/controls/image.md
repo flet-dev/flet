@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Image"
-examples: "../../examples/controls/image"
+examples: "controls/image"
 example_images: "../test-images/examples/core/golden/macos/image"
 example_media: "../examples/controls/image/media"
 title: "Image"

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.MainAxisAlignment"
-examples: "../../examples/controls/types/main_axis_alignment"
+examples: "controls/types/main_axis_alignment"
 title: "MainAxisAlignment"
 ---
 

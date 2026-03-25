@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SnackBarBehavior"
-examples: "../../examples/controls/types/snack_bar_behavior"
+examples: "controls/types/snack_bar_behavior"
 title: "SnackBarBehavior"
 ---
 

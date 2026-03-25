@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Badge"
-examples: "../../examples/controls/badge"
+examples: "controls/badge"
 example_images: "../test-images/examples/material/golden/macos/badge"
 title: "Badge"
 ---

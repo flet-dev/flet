@@ -1,6 +1,6 @@
 ---
 class_name: "flet_audio_recorder.AudioRecorder"
-examples: "../../../examples/services/audio_recorder"
+examples: "services/audio_recorder"
 title: "AudioRecorder"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoNavigationBar"
-examples: "../../examples/controls/cupertino_navigation_bar"
+examples: "controls/cupertino_navigation_bar"
 example_images: "../examples/controls/cupertino_navigation_bar/media"
 title: "CupertinoNavigationBar"
 ---

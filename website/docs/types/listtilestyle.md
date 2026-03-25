@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ListTileStyle"
-examples: "../../examples/controls/types/list_tile_style"
+examples: "controls/types/list_tile_style"
 title: "ListTileStyle"
 ---
 

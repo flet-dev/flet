@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Gyroscope"
-examples: "../../examples/services/gyroscope"
+examples: "services/gyroscope"
 title: "Gyroscope"
 ---
 

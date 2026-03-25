@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ResponsiveRow"
-examples: "../../examples/controls/responsive_row"
+examples: "controls/responsive_row"
 example_images: "../test-images/examples/core/golden/macos/responsive_row"
 title: "ResponsiveRow"
 ---

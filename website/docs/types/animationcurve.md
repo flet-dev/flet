@@ -1,6 +1,6 @@
 ---
 class_name: "flet.AnimationCurve"
-examples: "../../examples/controls/types/animation_curve"
+examples: "controls/types/animation_curve"
 title: "AnimationCurve"
 ---
 

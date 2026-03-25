@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Hero"
-examples: "../../examples/controls/hero"
+examples: "controls/hero"
 example_images: "../test-images/examples/core/golden/macos/hero"
 title: "Hero"
 ---

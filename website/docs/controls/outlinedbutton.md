@@ -1,6 +1,6 @@
 ---
 class_name: "flet.OutlinedButton"
-examples: "../../examples/controls/outlined_button"
+examples: "controls/outlined_button"
 example_media: "../examples/controls/outlined_button/media"
 example_images: "../test-images/examples/material/golden/macos/outlined_button"
 title: "OutlinedButton"

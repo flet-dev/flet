@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BlendMode"
-examples: "../../examples/controls/types/blend_mode"
+examples: "controls/types/blend_mode"
 title: "BlendMode"
 ---
 

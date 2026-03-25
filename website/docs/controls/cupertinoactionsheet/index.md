@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoActionSheet"
-examples: "../../examples/controls/cupertino_action_sheet"
+examples: "controls/cupertino_action_sheet"
 example_images: "../../test-images/examples/cupertino/golden/macos/cupertino_action_sheet"
 example_media: "../../examples/controls/cupertino_action_sheet/media"
 title: "CupertinoActionSheet"

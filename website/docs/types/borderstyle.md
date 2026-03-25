@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BorderStyle"
-examples: "../../examples/controls/types/border_style"
+examples: "controls/types/border_style"
 title: "BorderStyle"
 ---
 

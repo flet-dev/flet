@@ -1,6 +1,6 @@
 ---
 class_name: "flet.MenuItemButton"
-examples: "../../examples/controls/menu_item_button"
+examples: "controls/menu_item_button"
 example_images: "../test-images/examples/material/golden/macos/menu_item_button"
 title: "MenuItemButton"
 ---

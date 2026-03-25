@@ -1,5 +1,5 @@
 ---
-examples: "../../examples/controls/types/alignment"
+examples: "controls/types/alignment"
 example_media: "../examples/controls/types/alignment/media"
 title: "Alignment"
 ---

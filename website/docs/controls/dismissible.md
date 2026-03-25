@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Dismissible"
-examples: "../../examples/controls/dismissible"
+examples: "controls/dismissible"
 example_images: "../examples/controls/dismissible/media"
 title: "Dismissible"
 ---

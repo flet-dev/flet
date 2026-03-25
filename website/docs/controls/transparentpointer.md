@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TransparentPointer"
-examples: "../../examples/controls/transparent_pointer"
+examples: "controls/transparent_pointer"
 title: "TransparentPointer"
 ---
 

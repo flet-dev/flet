@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SubmenuButton"
-examples: "../../examples/controls/submenu_button"
+examples: "controls/submenu_button"
 example_images: "../test-images/examples/material/golden/macos/submenu_button"
 title: "SubmenuButton"
 ---

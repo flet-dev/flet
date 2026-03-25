@@ -1,6 +1,6 @@
 ---
 title: "Chat Tutorial"
-examples: "../../examples/tutorials/chat"
+examples: "tutorials/chat"
 ---
 
 import {CodeExample, Image} from '@site/src/components/crocodocs';

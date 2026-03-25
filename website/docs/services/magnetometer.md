@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Magnetometer"
-examples: "../../examples/services/magnetometer"
+examples: "services/magnetometer"
 title: "Magnetometer"
 ---
 

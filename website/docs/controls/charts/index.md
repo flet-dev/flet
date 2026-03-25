@@ -1,5 +1,5 @@
 ---
-examples: "../../../examples/controls/charts"
+examples: "controls/charts"
 title: "Overview"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.StrokeCap"
-examples: "../../examples/controls/types/stroke_cap"
+examples: "controls/types/stroke_cap"
 title: "StrokeCap"
 ---
 

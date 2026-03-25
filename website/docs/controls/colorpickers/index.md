@@ -1,5 +1,5 @@
 ---
-examples: "../../../examples/controls/color_pickers"
+examples: "controls/color_pickers"
 title: "Color pickers"
 ---
 

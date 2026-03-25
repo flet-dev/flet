@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SliderInteraction"
-examples: "../../examples/controls/types/slider_interaction"
+examples: "controls/types/slider_interaction"
 title: "SliderInteraction"
 ---
 

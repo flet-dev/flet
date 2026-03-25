@@ -259,8 +259,6 @@ def _generate_code_examples(examples_root: Path, output_path: Path) -> int:
         relative = source_path.relative_to(examples_root).as_posix()
         content = source_path.read_text(encoding="utf-8")
         mapping[relative] = content
-        mapping[f"../../examples/{relative}"] = content
-        mapping[f"../../../examples/{relative}"] = content
 
     output_path.write_text(
         json.dumps(mapping, indent=2, sort_keys=True), encoding="utf-8"

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ImageRepeat"
-examples: "../../examples/controls/types/image_repeat"
+examples: "controls/types/image_repeat"
 title: "ImageRepeat"
 ---
 

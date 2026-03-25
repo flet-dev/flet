@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ScrollMode"
-examples: "../../examples/controls/types/scroll_mode"
+examples: "controls/types/scroll_mode"
 title: "ScrollMode"
 ---
 

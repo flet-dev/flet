@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Row"
-examples: "../../examples/controls/row"
+examples: "controls/row"
 example_images: "../test-images/examples/core/golden/macos/row"
 title: "Row"
 ---

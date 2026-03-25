@@ -1,6 +1,6 @@
 ---
 class_name: "flet_geolocator.Geolocator"
-examples: "../../../examples/services/geolocator"
+examples: "services/geolocator"
 title: "Geolocator"
 ---
 

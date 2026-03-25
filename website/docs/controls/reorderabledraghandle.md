@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ReorderableDragHandle"
-examples: "../../examples/controls/reorderable_drag_handle"
+examples: "controls/reorderable_drag_handle"
 title: "ReorderableDragHandle"
 ---
 

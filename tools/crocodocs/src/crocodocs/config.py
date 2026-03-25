@@ -67,16 +67,10 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
         )
         for ref_root, mapping in raw_asset_mappings.items()
     }
-    examples_mapping = asset_mappings.get("examples")
     examples_root_value = raw.get("examples_root")
-    if examples_root_value is not None:
-        examples_root = _resolve_path(project_root, examples_root_value)
-    elif examples_mapping is not None:
-        examples_root = examples_mapping.source_path
-    else:
-        raise KeyError(
-            "CrocoDocs config requires either 'examples_root' or an asset mapping for 'examples'."
-        )
+    if examples_root_value is None:
+        raise KeyError("CrocoDocs config requires 'examples_root'.")
+    examples_root = _resolve_path(project_root, examples_root_value)
 
     return CrocoDocsConfig(
         project_root=project_root,

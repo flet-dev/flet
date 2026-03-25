@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TimePickerEntryMode"
-examples: "../../examples/controls/types/time_picker_entry_mode"
+examples: "controls/types/time_picker_entry_mode"
 title: "TimePickerEntryMode"
 ---
 

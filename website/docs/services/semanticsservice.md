@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SemanticsService"
-examples: "../../examples/services/semantics_service"
+examples: "services/semantics_service"
 title: "SemanticsService"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.LabelPosition"
-examples: "../../examples/controls/types/label_position"
+examples: "controls/types/label_position"
 title: "LabelPosition"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.AnimatedSwitcherTransition"
-examples: "../../examples/controls/types/animated_switcher_transition"
+examples: "controls/types/animated_switcher_transition"
 title: "AnimatedSwitcherTransition"
 ---
 

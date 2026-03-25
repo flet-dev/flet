@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Screenshot"
-examples: "../../examples/controls/screenshot"
+examples: "controls/screenshot"
 title: "Screenshot"
 ---
 

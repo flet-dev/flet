@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoDatePickerDateOrder"
-examples: "../../examples/controls/types/cupertino_date_picker_date_order"
+examples: "controls/types/cupertino_date_picker_date_order"
 title: "CupertinoDatePickerDateOrder"
 ---
 

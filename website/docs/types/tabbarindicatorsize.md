@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TabBarIndicatorSize"
-examples: "../../examples/controls/types/tab_bar_indicator_size"
+examples: "controls/types/tab_bar_indicator_size"
 title: "TabBarIndicatorSize"
 ---
 

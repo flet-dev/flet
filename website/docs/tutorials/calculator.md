@@ -1,6 +1,6 @@
 ---
 title: "Calculator Tutorial"
-examples: "../../examples/tutorials/calculator"
+examples: "tutorials/calculator"
 example_images: "../test-images/tutorials/golden/macos/calculator"
 ---
 

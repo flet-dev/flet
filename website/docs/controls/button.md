@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Button"
-examples: "../../examples/controls/button"
+examples: "controls/button"
 example_images: "../test-images/examples/material/golden/macos/button"
 title: "Button"
 ---

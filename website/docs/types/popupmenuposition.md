@@ -1,6 +1,6 @@
 ---
 class_name: "flet.PopupMenuPosition"
-examples: "../../examples/controls/types/popup_menu_position"
+examples: "controls/types/popup_menu_position"
 title: "PopupMenuPosition"
 ---
 

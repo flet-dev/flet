@@ -1,6 +1,6 @@
 ---
 class_name: "flet.PageView"
-examples: "../../examples/controls/page_view"
+examples: "controls/page_view"
 title: "PageView"
 ---
 

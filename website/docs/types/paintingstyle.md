@@ -1,6 +1,6 @@
 ---
 class_name: "flet.PaintingStyle"
-examples: "../../examples/controls/types/painting_style"
+examples: "controls/types/painting_style"
 title: "PaintingStyle"
 ---
 

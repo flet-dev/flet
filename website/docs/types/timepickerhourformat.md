@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TimePickerHourFormat"
-examples: "../../examples/controls/types/time_picker_hour_format"
+examples: "controls/types/time_picker_hour_format"
 title: "TimePickerHourFormat"
 ---
 

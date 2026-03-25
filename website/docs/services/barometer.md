@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Barometer"
-examples: "../../examples/services/barometer"
+examples: "services/barometer"
 title: "Barometer"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.WindowEventType"
-examples: "../../examples/controls/types/window_event_type"
+examples: "controls/types/window_event_type"
 title: "WindowEventType"
 ---
 

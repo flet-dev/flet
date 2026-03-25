@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoBottomSheet"
-examples: "../../examples/controls/cupertino_action_sheet"
+examples: "controls/cupertino_action_sheet"
 example_images: "../examples/controls/cupertino_action_sheet/media"
 title: "CupertinoBottomSheet"
 ---

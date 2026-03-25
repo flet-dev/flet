@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ScreenBrightness"
-examples: "../../examples/services/screen_brightness"
+examples: "services/screen_brightness"
 title: "ScreenBrightness"
 ---
 

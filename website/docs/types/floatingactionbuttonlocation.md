@@ -1,6 +1,6 @@
 ---
 class_name: "flet.FloatingActionButtonLocation"
-examples: "../../examples/controls/types/floating_action_button_location"
+examples: "controls/types/floating_action_button_location"
 title: "FloatingActionButtonLocation"
 ---
 

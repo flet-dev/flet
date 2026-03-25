@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Placeholder"
-examples: "../../examples/controls/placeholder"
+examples: "controls/placeholder"
 example_images: "../test-images/examples/core/golden/macos/placeholder"
 title: "Placeholder"
 ---

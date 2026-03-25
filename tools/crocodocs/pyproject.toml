@@ -35,6 +35,7 @@ sidebars_source = "../../website/sidebars.yml"
 sidebars_output = "../../website/sidebars.js"
 base_url = "/docs"
 extensions = ["flet.utils.griffe_deprecations"]
+examples_root = "../../sdk/python/examples"
 
 [tool.crocodocs.member_filters]
 methods = ["init", "before_update"]

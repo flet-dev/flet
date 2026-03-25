@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Shimmer"
-examples: "../../examples/controls/shimmer"
+examples: "controls/shimmer"
 example_images: "../test-images/examples/core/golden/macos/shimmer"
 title: "Shimmer"
 ---

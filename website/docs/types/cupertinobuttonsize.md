@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoButtonSize"
-examples: "../../examples/controls/types/cupertino_button_size"
+examples: "controls/types/cupertino_button_size"
 title: "CupertinoButtonSize"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.canvas.PointMode"
-examples: "../../examples/controls/types/point_mode"
+examples: "controls/types/point_mode"
 title: "PointMode"
 ---
 

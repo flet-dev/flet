@@ -1,6 +1,6 @@
 ---
 class_name: "flet_secure_storage.SecureStorage"
-examples: "../../../examples/services/secure_storage"
+examples: "services/secure_storage"
 title: "SecureStorage"
 ---
 

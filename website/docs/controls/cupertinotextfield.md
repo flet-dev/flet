@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoTextField"
-examples: "../../examples/controls/cupertino_text_field"
+examples: "controls/cupertino_text_field"
 example_images: "../test-images/examples/cupertino/golden/macos/cupertino_textfield"
 example_media: "../examples/controls/cupertino_text_field/media"
 title: "CupertinoTextField"

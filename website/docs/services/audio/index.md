@@ -1,6 +1,6 @@
 ---
 class_name: "flet_audio.Audio"
-examples: "../../../examples/services/audio"
+examples: "services/audio"
 title: "Audio"
 ---
 

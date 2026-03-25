@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ExpansionTile"
-examples: "../../examples/controls/expansion_tile"
+examples: "controls/expansion_tile"
 example_images: "../test-images/examples/material/golden/macos/expansion_tile"
 title: "ExpansionTile"
 ---

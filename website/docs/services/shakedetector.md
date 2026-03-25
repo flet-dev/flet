@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ShakeDetector"
-examples: "../../examples/services/shake_detector"
+examples: "services/shake_detector"
 title: "ShakeDetector"
 ---
 

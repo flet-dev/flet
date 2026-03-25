@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Wakelock"
-examples: "../../examples/services/wakelock"
+examples: "services/wakelock"
 title: "Wakelock"
 ---
 

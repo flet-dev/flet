@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoSegmentedButton"
-examples: "../../examples/controls/cupertino_segmented_button"
+examples: "controls/cupertino_segmented_button"
 example_images: "../test-images/examples/cupertino/golden/macos/cupertino_segmented_button"
 example_media: "../examples/controls/cupertino_segmented_button/media"
 title: "CupertinoSegmentedButton"

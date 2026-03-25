@@ -1,6 +1,6 @@
 ---
 class_name: "flet.StoragePaths"
-examples: "../../examples/services/storagepaths"
+examples: "services/storagepaths"
 title: "StoragePaths"
 ---
 

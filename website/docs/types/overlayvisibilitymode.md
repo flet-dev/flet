@@ -1,6 +1,6 @@
 ---
 class_name: "flet.OverlayVisibilityMode"
-examples: "../../examples/controls/types/overlay_visibility_mode"
+examples: "controls/types/overlay_visibility_mode"
 title: "OverlayVisibilityMode"
 ---
 

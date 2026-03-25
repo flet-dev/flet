@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BlurTileMode"
-examples: "../../examples/controls/types/blur_tile_mode"
+examples: "controls/types/blur_tile_mode"
 title: "BlurTileMode"
 ---
 

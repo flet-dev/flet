@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Share"
-examples: "../../examples/services/share"
+examples: "services/share"
 title: "Share"
 ---
 

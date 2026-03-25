@@ -1,6 +1,6 @@
 ---
 class_name: "flet.HapticFeedback"
-examples: "../../examples/services/haptic_feedback"
+examples: "services/haptic_feedback"
 title: "HapticFeedback"
 ---
 

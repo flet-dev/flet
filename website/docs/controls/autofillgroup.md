@@ -1,6 +1,6 @@
 ---
 class_name: "flet.AutofillGroup"
-examples: "../../examples/controls/autofill_group"
+examples: "controls/autofill_group"
 example_images: "../examples/controls/autofill_group/media"
 title: "AutofillGroup"
 ---

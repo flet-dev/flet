@@ -1,6 +1,6 @@
 ---
 title: "ToDo Tutorial"
-examples: "../../examples/tutorials/todo"
+examples: "tutorials/todo"
 ---
 
 import {CodeExample, Image} from '@site/src/components/crocodocs';

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.NavigationRailLabelType"
-examples: "../../examples/controls/types/navigation_rail_label_type"
+examples: "controls/types/navigation_rail_label_type"
 title: "NavigationRailLabelType"
 ---
 

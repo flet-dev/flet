@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoDatePickerMode"
-examples: "../../examples/controls/types/cupertino_date_picker_mode"
+examples: "controls/types/cupertino_date_picker_mode"
 title: "CupertinoDatePickerMode"
 ---
 

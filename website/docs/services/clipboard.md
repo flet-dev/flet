@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Clipboard"
-examples: "../../examples/services/clipboard"
+examples: "services/clipboard"
 title: "Clipboard"
 ---
 

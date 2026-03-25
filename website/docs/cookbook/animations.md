@@ -52,7 +52,7 @@ enables implicit animation of [`Control.opacity`](../controls/control.md#flet.Co
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.rotate`](../controls/layoutcontrol.md#flet.LayoutControl-rotate) property.
 
-<CodeExample path="controls/constrained-control/animate_rotation.py" language="python" />
+<CodeExample path="controls/layout_control/animate_rotation.py" language="python" />
 
 <Image src="../examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="55%" />
 
@@ -102,7 +102,7 @@ Note:
 Setting [`Container.animate`](../controls/container.md#flet.Container-animate) to [`AnimationValue`](../types/aliases.md#flet.AnimationValue)
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-<CodeExample path="controls/container/animate.py" language="python" />
+<CodeExample path="controls/container/animate_1.py" language="python" />
 
 <Image src="../examples/controls/container/media/animate_1.gif" alt="animate" width="55%" />
 

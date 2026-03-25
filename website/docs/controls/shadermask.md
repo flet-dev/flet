@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ShaderMask"
-examples: "../../examples/controls/shader_mask"
+examples: "controls/shader_mask"
 example_images: "../test-images/examples/core/golden/macos/shader_mask"
 title: "ShaderMask"
 ---

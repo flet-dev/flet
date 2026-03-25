@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ClipBehavior"
-examples: "../../examples/controls/types/clip_behavior"
+examples: "controls/types/clip_behavior"
 title: "ClipBehavior"
 ---
 

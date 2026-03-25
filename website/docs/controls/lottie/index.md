@@ -1,6 +1,6 @@
 ---
 class_name: "flet_lottie.Lottie"
-examples: "../../../examples/controls/lottie"
+examples: "controls/lottie"
 title: "Lottie"
 ---
 
@@ -41,7 +41,7 @@ pip install flet-lottie  # (1)!
 </Tabs>
 ## Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
 
 ## Description
 

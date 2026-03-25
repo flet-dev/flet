@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Orientation"
-examples: "../../examples/controls/types/orientation"
+examples: "controls/types/orientation"
 title: "Orientation"
 ---
 

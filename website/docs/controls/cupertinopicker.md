@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoPicker"
-examples: "../../examples/controls/cupertino_picker"
+examples: "controls/cupertino_picker"
 example_images: "../examples/controls/cupertino_picker/media"
 title: "CupertinoPicker"
 ---

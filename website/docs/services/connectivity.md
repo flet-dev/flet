@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Connectivity"
-examples: "../../examples/services/connectivity"
+examples: "services/connectivity"
 title: "Connectivity"
 ---
 

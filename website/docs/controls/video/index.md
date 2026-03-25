@@ -1,6 +1,6 @@
 ---
 class_name: "flet_video.Video"
-examples: "../../../examples/controls/video"
+examples: "controls/video"
 title: "Video"
 ---
 
