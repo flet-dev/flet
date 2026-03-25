@@ -9,17 +9,9 @@ def main(page: ft.Page):
         color = e.control.content.value
         background_container.content.value = f"{color} background color"
         background_container.bgcolor = color.lower()
-        page.update()
 
     def handle_alignment_click(e: ft.Event[ft.MenuItemButton]):
-        print(
-            f"bg_container.alignment: {background_container.alignment}, bg_container.content: {background_container.content}"
-        )
         background_container.alignment = e.control.data
-        print(
-            f"e.control.content.value: {e.control.content.value}, e.control.data: {e.control.data}"
-        )
-        page.update()
 
     def handle_on_hover(e: ft.Event[ft.MenuItemButton]):
         print(f"{e.control.content.value}.on_hover")
@@ -123,16 +115,25 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Row(controls=[menubar]),
-        background_container := ft.Container(
+        ft.SafeArea(
             expand=True,
-            bgcolor=ft.Colors.SURFACE_TINT,
-            alignment=ft.Alignment.CENTER,
-            content=ft.Text(
-                value="Choose a bgcolor from the menu",
-                style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD),
+            content=ft.Column(
+                expand=True,
+                spacing=0,
+                controls=[
+                    ft.Row(controls=[menubar]),
+                    background_container := ft.Container(
+                        expand=True,
+                        bgcolor=ft.Colors.SURFACE_TINT,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            value="Choose a bgcolor from the menu",
+                            style=ft.TextStyle(size=24, weight=ft.FontWeight.BOLD),
+                        ),
+                    ),
+                ],
             ),
-        ),
+        )
     )
 
 

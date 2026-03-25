@@ -14,7 +14,7 @@ example_media: ../examples/controls/switch/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/switch/media
 ### Handling change events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ image(example_media + "/handling_events.gif", alt="handling-events", width="80%") }}

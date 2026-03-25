@@ -33,6 +33,7 @@ Ensure each runnable example is a standalone project containing:
 - If `foo/main.py` already exists, keep it and do not recreate/move files.
 - If folder exists but `main.py` is missing, repair structure only when there is a clear source file.
 - Do not create `foo/__init__.py`; import example modules directly in tests/docs (for example `import examples.controls.foo.bar.main as bar` or `import examples.controls.foo.bar as bar` when using namespace-package imports).
+- When a control folder has been fully converted to project-per-example layout, delete the control-level `examples/controls/<control>/__init__.py` too. The converted folders should behave like namespace packages, matching prior migrations such as commit `7e65ad566`.
 
 3. Add `pyproject.toml` for each example project.
 - Infer from path and code.
@@ -97,22 +98,26 @@ Ensure each runnable example is a standalone project containing:
 
 10. Update references.
 - Docs code includes: change from `.../example.py` to `.../example/main.py`.
+- Inspect the relevant docs pages for each touched control/service/example area (for example `sdk/python/packages/flet/docs/controls/<control>.md`) and update any `--8<--` includes or direct file-path references to the new `main.py` path.
 - Tests/imports: use direct module imports and avoid relying on package-level `__init__.py` re-exports.
 - For already-converted examples, only update references that are stale; avoid unnecessary churn.
+- If removing a control-level `__init__.py`, confirm no remaining imports rely on `from examples.controls.<control> import ...`.
 
 11. Validate.
 - Run `python -m compileall` on changed `main.py` files.
 - Run `uv run ruff check` on changed example files and fix violations until it passes (respecting repository `pyproject.toml` under `[tool.ruff]`).
 - Search for stale paths to old flat files.
+- Search docs and package sources for stale references to the migrated flat example paths and fix any hits in scope.
 - Check `git status` to confirm expected moves and edits.
 - When integration tests exist for the touched control, run the targeted test file(s).
 - Confirm all in-scope `main.py` files include both top-level `ft.SafeArea` wrapping and the `if __name__ == "__main__": ft.run(main)` entrypoint.
 - Confirm in-scope `ft.SafeArea` wrappers use `expand=True` only where needed for correct behavior and sizing; avoid forcing it by default.
-
 - Confirm there are no unnecessary `page.update()` calls in in-scope examples (unless explicitly required by isolated-control or non-auto-update behavior).
 - Confirm no in-scope examples use `use_material3`.
 - Confirm each in-scope `pyproject.toml` has a meaningful, example-specific `[project].description` (not generic or templated text).
 - Confirm metadata features include `"save to file"` when the example code supports file export/save behavior.
+- Confirm there is no stale control-level `__init__.py` left behind once a touched control folder has been fully converted.
+- Confirm the relevant docs pages were updated to reference `main.py` and that no stale doc includes remain for the touched examples.
 
 
 ## Code style
