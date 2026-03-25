@@ -26,8 +26,20 @@ def main(page: ft.Page):
         )
 
     page.add(
-        ft.Button("Open SnackBar with a Simple action", on_click=open_simple_action),
-        ft.Button("Open SnackBar with a Custom action", on_click=open_custom_action),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Button(
+                        "Open SnackBar with a Simple action",
+                        on_click=open_simple_action,
+                    ),
+                    ft.Button(
+                        "Open SnackBar with a Custom action",
+                        on_click=open_custom_action,
+                    ),
+                ]
+            )
+        )
     )
 
 

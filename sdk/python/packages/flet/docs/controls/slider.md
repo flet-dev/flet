@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/slider
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/material/golden/macos/slider
 ### Setting a custom label
 
 ```python
---8<-- "{{ examples }}/custom_label.py"
+--8<-- "{{ examples }}/custom_label/main.py"
 ```
 
 {{ image(example_images + "/custom_label.png", alt="custom-label", width="80%") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/material/golden/macos/slider
 ### Handling events
 
 ```python
---8<-- "{{ examples }}/handling_events.py"
+--8<-- "{{ examples }}/handling_events/main.py"
 ```
 
 {{ image(example_images + "/handling_events.png", alt="handling-events", width="80%") }}

@@ -1,0 +1,26 @@
+[project]
+name = "slider-basic"
+version = "1.0.0"
+description = "Compare enabled and disabled Slider controls with the default settings."
+requires-python = ">=3.10"
+keywords = ["slider", "input", "disabled", "basic"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Slider"]
+
+[tool.flet.metadata]
+title = "Slider basic"
+controls = ["Slider", "Text", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["enabled and disabled states"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

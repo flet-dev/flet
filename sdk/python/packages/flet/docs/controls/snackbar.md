@@ -14,7 +14,7 @@ snack_bar_action_class_name: flet.SnackBarAction
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.png", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ snack_bar_action_class_name: flet.SnackBarAction
 ### Counter
 
 ```python
---8<-- "{{ examples }}/counter.py"
+--8<-- "{{ examples }}/counter/main.py"
 ```
 
 {{ image(example_images + "/snack_bar_flow.gif", alt="Snack bar with counter", caption="Snack bar with counter",width="50%") }}
@@ -31,7 +31,7 @@ snack_bar_action_class_name: flet.SnackBarAction
 ### Action
 
 ```python
---8<-- "{{ examples }}/action.py"
+--8<-- "{{ examples }}/action/main.py"
 ```
 
 {{ image(example_images + "/action_simple.png", alt="Snack bar with a simple action", caption="Snack bar with a simple action", width="50%") }}

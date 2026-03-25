@@ -31,7 +31,9 @@ def main(page: ft.Page):
             page.show_dialog(snack_bar)
         page.update()
 
-    page.add(ft.Button("Open SnackBar", on_click=handle_button_click))
+    page.add(
+        ft.SafeArea(content=ft.Button("Open SnackBar", on_click=handle_button_click))
+    )
 
 
 if __name__ == "__main__":

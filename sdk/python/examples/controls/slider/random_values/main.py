@@ -10,9 +10,17 @@ async def main(page: ft.Page):
         message.update()
 
     page.add(
-        ft.Text("Slider with 'on_change' event:"),
-        slider := ft.Slider(label="{value}", on_change=handle_slider_change),
-        message := ft.Text(),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text("Slider with 'on_change' event:"),
+                    slider := ft.Slider(
+                        label="{value}", on_change=handle_slider_change
+                    ),
+                    message := ft.Text(),
+                ]
+            )
+        )
     )
 
     while True:

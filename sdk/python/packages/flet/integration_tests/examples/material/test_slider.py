@@ -1,12 +1,10 @@
 import pytest
 
+import examples.controls.slider.basic.main as basic
+import examples.controls.slider.custom_label.main as custom_label
+import examples.controls.slider.handling_events.main as handling_events
 import flet as ft
 import flet.testing as ftt
-from examples.controls.slider import (
-    basic,
-    custom_label,
-    handling_events,
-)
 
 
 @pytest.mark.asyncio(loop_scope="function")

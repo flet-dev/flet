@@ -1,8 +1,10 @@
 import pytest
 
+import examples.controls.snack_bar.action.main as action
+import examples.controls.snack_bar.basic.main as basic
+import examples.controls.snack_bar.counter.main as counter
 import flet as ft
 import flet.testing as ftt
-from examples.controls.snack_bar import action, basic, counter
 
 
 @pytest.mark.asyncio(loop_scope="function")
