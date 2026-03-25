@@ -28,12 +28,19 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Button(
-            content="Pick time",
-            icon=ft.Icons.TIME_TO_LEAVE,
-            on_click=lambda: page.show_dialog(time_picker),
+        ft.SafeArea(
+            content=ft.Column(
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Button(
+                        content="Pick time",
+                        icon=ft.Icons.TIME_TO_LEAVE,
+                        on_click=lambda: page.show_dialog(time_picker),
+                    ),
+                    selection := ft.Text(weight=ft.FontWeight.BOLD),
+                ],
+            ),
         ),
-        selection := ft.Text(weight=ft.FontWeight.BOLD),
     )
 
 
