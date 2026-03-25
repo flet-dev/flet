@@ -14,7 +14,7 @@ example_media: ../examples/controls/text_field/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_media + "/basic.gif", alt="basic", width="80%") }}
@@ -23,7 +23,7 @@ example_media: ../examples/controls/text_field/media
 ### Handling change events
 
 ```python
---8<-- "{{ examples }}/handling_change_events.py"
+--8<-- "{{ examples }}/handling_change_events/main.py"
 ```
 
 {{ image(example_media + "/handling_change_events.gif", alt="handling-change-events", width="80%") }}
@@ -31,13 +31,13 @@ example_media: ../examples/controls/text_field/media
 ### Handling selection changes
 
 ```python
---8<-- "{{ examples }}/selection_change.py"
+--8<-- "{{ examples }}/selection_change/main.py"
 ```
 
 ### Password with reveal button
 
 ```python
---8<-- "{{ examples }}/password.py"
+--8<-- "{{ examples }}/password/main.py"
 ```
 
 {{ image(example_media + "/password.gif", alt="password", width="80%") }}
@@ -46,7 +46,7 @@ example_media: ../examples/controls/text_field/media
 ### Multiline fields
 
 ```python
---8<-- "{{ examples }}/multiline.py"
+--8<-- "{{ examples }}/multiline/main.py"
 ```
 
 {{ image(example_media + "/multiline.gif", alt="multiline", width="80%") }}
@@ -55,7 +55,7 @@ example_media: ../examples/controls/text_field/media
 ### Underlined and borderless TextFields
 
 ```python
---8<-- "{{ examples }}/underlined_and_borderless.py"
+--8<-- "{{ examples }}/underlined_and_borderless/main.py"
 ```
 
 {{ image(example_media + "/underlined_and_borderless.gif", alt="underlined-and-borderless", width="80%") }}
@@ -64,7 +64,7 @@ example_media: ../examples/controls/text_field/media
 ### Setting prefixes and suffixes
 
 ```python
---8<-- "{{ examples }}/prefix_and_suffix.py"
+--8<-- "{{ examples }}/prefix_and_suffix/main.py"
 ```
 
 {{ image(example_media + "/prefix_and_suffix.gif", alt="prefix-and-suffix", width="80%") }}
@@ -73,13 +73,13 @@ example_media: ../examples/controls/text_field/media
 ### Styled TextField
 
 ```python
---8<-- "{{ examples }}/styled.py"
+--8<-- "{{ examples }}/styled/main.py"
 ```
 
 ### Custom label, hint, helper, and counter texts and styles
 
 ```python
---8<-- "{{ examples }}/label_hint_helper_counter.py"
+--8<-- "{{ examples }}/label_hint_helper_counter/main.py"
 ```
 
 {{ class_members(class_name) }}
