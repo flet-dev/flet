@@ -46,8 +46,7 @@ def get_poetry_dependencies(
         if isinstance(dependency_value, dict):
             version = dependency_value.get("version")
             if version:
-                sep = "=="
-                value = version
+                value = version.replace(" ", "")
             else:
                 git_url = dependency_value.get("git")
                 if git_url:
@@ -87,22 +86,27 @@ def get_poetry_dependencies(
             if markers is not None:
                 suffix = f";{markers}"
         else:
-            value = dependency_value
-            sep = "=="
+            value = dependency_value.replace(" ", "")
+            sep = ""
 
         if value.startswith("^"):
             sep = ">="
             value = value[1:]
-        elif value.startswith("~"):
-            sep = "~="
-            value = value[1:]
-            return f"{dependency_name}~={value[1:]}"
-        elif "<=" in value or "<" in value:
-            sep = " "
-            value = value.replace(" ", "")
-        elif ">" in value:
+        elif "*" in value:
             sep = ""
-            value = value.replace(" ", "")
+            value = ""
+        elif value.startswith("~"):
+            sep = ""
+            if "~=" not in value:
+                value = value.replace("~", "~=")
+        elif any(s in value for s in ("!", "<", ">")):
+            sep = ""
+            for s in ("!", "<"):
+                if s in value:
+                    value = value.replace(s, f" {s}")
+                    break
+        elif value[0].isdigit():
+            sep = "=="
 
         return f"{dependency_name}{sep}{value}{suffix}"
 
@@ -134,12 +138,13 @@ def get_project_dependencies(
     dependencies: set[str] = set()
 
     for dep in project_dependencies:
-        for sep in ("<=", "<"):
-            if sep in dep and "," not in dep:
+        for sep in ("<=", "<", "!"):
+            if sep in dep:
+                dep = dep.replace(" ", "")
                 value, _, suffix = dep.partition(sep)
                 dependencies.add(f"{value} {sep}{suffix}")
                 break
         else:
-            dependencies.add(dep.strip())
+            dependencies.add(dep.replace(" ", ""))
 
     return sorted(dependencies)
