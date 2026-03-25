@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import contextlib
-import importlib.util
+import json
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 from .config import CrocoDocsConfig
@@ -18,61 +16,6 @@ LOCAL_MARKDOWN_LINK_RE = re.compile(
 CLI_H3_TICK_RE = re.compile(r"^(### )`([^`]+)`$", re.MULTILINE)
 ANGLE_TAG_RE = re.compile(r"<([a-z][a-z0-9_-]*)>", re.IGNORECASE)
 ESCAPED_PLACEHOLDER_RE = re.compile(r"&lt;([^>\n]+?)&gt;")
-
-
-def _load_module(module_name: str, path: Path):
-    spec = importlib.util.spec_from_file_location(module_name, path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Could not load module from {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-@contextlib.contextmanager
-def _temporary_sys_path(paths: list[Path]):
-    originals = list(sys.path)
-    for path in reversed(paths):
-        sys.path.insert(0, str(path))
-    try:
-        yield
-    finally:
-        sys.path[:] = originals
-
-
-def _macro_module_path(config: CrocoDocsConfig, filename: str) -> Path:
-    return config.source_docs_path / "extras" / "macros" / filename
-
-
-def _run_python_renderer(
-    config: CrocoDocsConfig,
-    *,
-    script: str,
-) -> str:
-    repo_root = config.project_root.parent.parent
-    result = subprocess.run(
-        [
-            "uv",
-            "--directory",
-            str(repo_root / "sdk/python"),
-            "run",
-            "python",
-            "-c",
-            script,
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
-        cwd=repo_root,
-    )
-    if result.returncode != 0:
-        details = ["CrocoDocs Python renderer failed."]
-        if result.stdout.strip():
-            details.append(f"stdout:\n{result.stdout.strip()}")
-        if result.stderr.strip():
-            details.append(f"stderr:\n{result.stderr.strip()}")
-        raise RuntimeError("\n\n".join(details))
-    return result.stdout
 
 
 def _normalize_local_markdown_links(content: str) -> str:
@@ -120,29 +63,80 @@ def _normalize_cli_partial_markdown(content: str) -> str:
     return ESCAPED_PLACEHOLDER_RE.sub(r"`<\1>`", content)
 
 
-def _render_cli_partial(config: CrocoDocsConfig, command: str) -> str:
-    module_path = _macro_module_path(config, "cli_to_md.py")
-    script = f"""
-import importlib.util
-spec = importlib.util.spec_from_file_location("crocodocs_cli_to_md", {str(module_path)!r})
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-print(module.render_flet_cli_as_markdown(command={command!r}, subcommands_only=True), end="")
-"""
-    rendered = _run_python_renderer(config, script=script)
-    return _normalize_cli_partial_markdown(rendered)
+# ---------------------------------------------------------------------------
+# Flet-CLI-dependent partials (batched subprocess)
+# ---------------------------------------------------------------------------
+
+_FLET_CLI_SCRIPT_DIR = Path(__file__).parent / "scripts"
 
 
-def _render_pypi_partial(config: CrocoDocsConfig) -> str:
-    module_path = _macro_module_path(config, "pypi_index.py")
+def _run_flet_cli_partials(
+    config: CrocoDocsConfig, requests: dict[str, dict]
+) -> dict[str, str]:
+    """Run a single subprocess that generates all flet-cli-dependent partials.
+
+    *requests* maps partial keys to their parameters.  Returns a dict
+    mapping the same keys to rendered Markdown strings.
+    """
+    cli_script = _FLET_CLI_SCRIPT_DIR / "cli_to_md.py"
+    permissions_script = _FLET_CLI_SCRIPT_DIR / "cross_platform_permissions.py"
     script = f"""
-import importlib.util
-spec = importlib.util.spec_from_file_location("crocodocs_pypi_index", {str(module_path)!r})
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-print(module.render_pypi_index(base_url="https://pypi.flet.dev/", timeout_s=20.0, workers=12, output_format="md", strict=False), end="")
+import importlib.util, json, sys
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+cli_mod = _load("cli_to_md", {str(cli_script)!r})
+perm_mod = _load("cross_platform_permissions", {str(permissions_script)!r})
+
+requests = json.loads({json.dumps(requests)!r})
+results = {{}}
+for key, params in requests.items():
+    if params.get("type") == "cli":
+        results[key] = cli_mod.render_flet_cli_as_markdown(
+            command=params["command"], subcommands_only=True
+        )
+    elif params.get("type") == "permissions":
+        results[key] = perm_mod.cross_platform_permissions_list()
+print(json.dumps(results))
 """
-    rendered = _run_python_renderer(config, script=script)
+    repo_root = config.project_root.parent.parent
+    result = subprocess.run(
+        [
+            "uv",
+            "--directory",
+            str(repo_root / "sdk/python"),
+            "run",
+            "python",
+            "-c",
+            script,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=repo_root,
+    )
+    return json.loads(result.stdout)
+
+
+# ---------------------------------------------------------------------------
+# PyPI index partial (in-process, no flet dependency)
+# ---------------------------------------------------------------------------
+
+
+def _render_pypi_partial() -> str:
+    from .pypi_index import render_pypi_index
+
+    rendered = render_pypi_index(
+        base_url="https://pypi.flet.dev/",
+        timeout_s=20.0,
+        workers=12,
+        output_format="md",
+        strict=False,
+    )
     lines = rendered.splitlines()
     if len(lines) < 2:
         return rendered
@@ -185,34 +179,55 @@ print(module.render_pypi_index(base_url="https://pypi.flet.dev/", timeout_s=20.0
     return "\n".join(normalized_lines) + ("\n" if rendered.endswith("\n") else "")
 
 
-def _render_permissions_partial(config: CrocoDocsConfig) -> str:
-    module_path = _macro_module_path(config, "cross_platform_permissions.py")
-    script = f"""
-import importlib.util
-spec = importlib.util.spec_from_file_location("crocodocs_cross_platform_permissions", {str(module_path)!r})
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
-print(module.cross_platform_permissions_list(), end="")
-"""
-    return _run_python_renderer(config, script=script)
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
 
-def render_partial(config: CrocoDocsConfig, filename: str) -> str:
-    if filename == "pypi-index.mdx":
-        return _render_pypi_partial(config)
-    if filename == "cross-platform-permissions.mdx":
-        return _render_permissions_partial(config)
-    if filename.startswith("cli-") and filename.endswith(".mdx"):
-        command = filename.removesuffix(".mdx").removeprefix("cli-").replace("-", " ")
-        if command == "root":
-            command = ""
-        return _render_cli_partial(config, command)
-    raise ValueError(f"Unsupported partial filename: {filename}")
+def render_partials(config: CrocoDocsConfig, filenames: set[str]) -> dict[str, str]:
+    """Render all requested partials, batching subprocess calls."""
+    results: dict[str, str] = {}
+
+    # Classify partials
+    flet_cli_requests: dict[str, dict] = {}
+    pypi_filenames: list[str] = []
+    for filename in filenames:
+        if filename == "pypi-index.mdx":
+            pypi_filenames.append(filename)
+        elif filename == "cross-platform-permissions.mdx":
+            flet_cli_requests[filename] = {"type": "permissions"}
+        elif filename.startswith("cli-") and filename.endswith(".mdx"):
+            command = (
+                filename.removesuffix(".mdx").removeprefix("cli-").replace("-", " ")
+            )
+            if command == "root":
+                command = ""
+            flet_cli_requests[filename] = {"type": "cli", "command": command}
+
+    # Batch flet-cli subprocess
+    if flet_cli_requests:
+        rendered = _run_flet_cli_partials(config, flet_cli_requests)
+        for filename, content in rendered.items():
+            if filename.startswith("cli-"):
+                results[filename] = _normalize_cli_partial_markdown(content)
+            else:
+                results[filename] = content
+
+    # PyPI index (in-process)
+    for filename in pypi_filenames:
+        results[filename] = _render_pypi_partial()
+
+    return results
 
 
-def write_partial(config: CrocoDocsConfig, filename: str) -> Path:
-    target = config.partials_output_dir / filename
-    target.parent.mkdir(parents=True, exist_ok=True)
-    content = _normalize_local_markdown_links(render_partial(config, filename))
-    target.write_text(content, encoding="utf-8")
-    return target
+def write_partials(config: CrocoDocsConfig, filenames: set[str]) -> int:
+    """Render and write all requested partials. Returns count written."""
+    rendered = render_partials(config, filenames)
+    count = 0
+    for filename, content in rendered.items():
+        target = config.partials_output_dir / filename
+        target.parent.mkdir(parents=True, exist_ok=True)
+        normalized = _normalize_local_markdown_links(content)
+        target.write_text(normalized, encoding="utf-8")
+        count += 1
+    return count

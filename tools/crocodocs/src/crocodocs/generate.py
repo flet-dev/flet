@@ -19,7 +19,7 @@ from .docs import (
     iter_markdown_files,
     parse_document,
 )
-from .partials import write_partial
+from .partials import write_partials
 from .progress import ProgressReporter, Summary
 from .sidebars import write_sidebars_js_from_source
 
@@ -302,15 +302,11 @@ def run_generate(
     )
 
     reporter.stage("Generating MDX partials")
-    generated_partials = 0
-    sorted_partials = sorted(partial_filenames)
-    for index, filename in enumerate(sorted_partials, start=1):
-        reporter.info(f"[{index}/{len(sorted_partials)}] {filename}")
-        try:
-            write_partial(config, filename)
-            generated_partials += 1
-        except Exception as exc:  # noqa: BLE001
-            summary.warn(f"Could not generate partial {filename}: {exc}")
+    try:
+        generated_partials = write_partials(config, partial_filenames)
+    except Exception as exc:  # noqa: BLE001
+        generated_partials = 0
+        summary.warn(f"Could not generate partials: {exc}")
 
     reporter.stage("Generating code example data")
     code_examples_output = config.partials_output_dir / "code-examples.json"
