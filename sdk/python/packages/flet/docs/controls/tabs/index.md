@@ -15,7 +15,7 @@ example_images: ../../examples/controls/tabs/media
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ image(example_images + "/basic.gif", width="80%") }}
@@ -24,25 +24,25 @@ example_images: ../../examples/controls/tabs/media
 ### Nesting tabs
 
 ```python
---8<-- "{{ examples }}/nested.py"
+--8<-- "{{ examples }}/nested/main.py"
 ```
 
 ### Dynamic tab addition
 
 ```python
---8<-- "{{ examples }}/dynamic_tab_addition.py"
+--8<-- "{{ examples }}/dynamic_tab_addition/main.py"
 ```
 
 ### Custom indicator
 
 ```python
---8<-- "{{ examples }}/custom_indicator.py"
+--8<-- "{{ examples }}/custom_indicator/main.py"
 ```
 
 ### Programmatical Tab switch
 
 ```python
---8<-- "{{ examples }}/move_to.py"
+--8<-- "{{ examples }}/move_to/main.py"
 ```
 
 {{ class_members(class_name) }}
