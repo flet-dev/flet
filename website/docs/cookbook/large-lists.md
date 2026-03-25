@@ -53,7 +53,7 @@ We used `expand=True` in ListView constructor. In order to function properly,
 ListView must have a height (or width if `horizontal`) specified.
 You could set an absolute size, e.g. `ListView(height=300, spacing=10)`, but in the
 example above we make ListView to take all available space on the page, i.e. expand.
-Read more about [`Control.expand`](../controls/control.md#flet.Control-expand) property.
+Read more about [`Control.expand`](../controls/control.md#flet.Control.expand) property.
 :::
 
 ## GridView

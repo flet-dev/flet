@@ -75,7 +75,7 @@ Most of Flet controls are based on [Material design](https://m3.material.io/).
 
 There is also a number of iOS-style controls in Flet that are called Cupertino controls.
 
-Cupertino controls usually have a matching Material control that has [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property
+Cupertino controls usually have a matching Material control that has [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl.adaptive) property
 which defaults to`False`. When using a Material control with `adaptive` property set to `True`,
 a different control will
 be created depending on the platform, for example:
@@ -83,12 +83,12 @@ be created depending on the platform, for example:
 ft.Checkbox(adaptive=True, value=True, label="Adaptive Checkbox")
 ```
 
-Flet checks the value of [`Page.platform`](../controls/page.md#flet.Page-platform) property and if it is
+Flet checks the value of [`Page.platform`](../controls/page.md#flet.Page.platform) property and if it is
 `PagePlatform.IOS` or `ft.PagePlatform.MACOS`, Cupertino control will be created;
 in all other cases Material control will be created.
 
 :::note[Note]
-[`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property can be set for an individual control or
+[`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl.adaptive) property can be set for an individual control or
 a container-controls (ex: [`Row`](../controls/row.md), [`Column`](../controls/column.md)) that has children controls.
 If a container-control is made adaptive, all its children will be adaptive too,
 unless `adaptive` property is explicitly set to `False` for a child control.
@@ -136,7 +136,7 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 
 While Flet offers a number of [controls](#material-and-cupertino-controls) that will be adapted to a platform
 
-automatically using their [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl-adaptive) property, there will be
+automatically using their [`adaptive`](../controls/adaptivecontrol.md#flet.AdaptiveControl.adaptive) property, there will be
 cases when you need more specific adaptive UI presentation, for example, using different
 icon, background color, padding, etc., depending on the platform.
 
@@ -203,8 +203,8 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 
 :::note[Note]
 You may utilise [reusable controls approach](../cookbook/custom-controls.md) to
-adapt your app not only depending on the [`Page.platform`](../controls/page.md#flet.Page-platform),
-but also use [`Page.web`](../controls/page.md#flet.Page-web) property to have different UI depending on whether the
+adapt your app not only depending on the [`Page.platform`](../controls/page.md#flet.Page.platform),
+but also use [`Page.web`](../controls/page.md#flet.Page.web) property to have different UI depending on whether the
 app is running in a browser or not, or even combine the usage of both properties to have specific
 UI for your apps.
 :::

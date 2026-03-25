@@ -77,7 +77,7 @@ Run the app and you should see a page like this:
 
 To add a black background with rounded border around the calculator, we will be using [`Container`](../controls/container.md) control.
 Container may decorate only one control, so we will need to wrap all the 6 rows into a single vertical
-[`Column`](../controls/column.md) that will be used as the container's [`content`](../controls/container.md#flet.Container-content):
+[`Column`](../controls/column.md) that will be used as the container's [`content`](../controls/container.md#flet.Container.content):
 
 <Image src="../examples/tutorials/calculator/media/container-layout.svg" alt="container-layout" width="55%" />
 

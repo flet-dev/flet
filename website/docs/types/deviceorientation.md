@@ -13,6 +13,6 @@ import {ClassMembers, ClassSummary} from '@site/src/components/crocodocs';
 
 See the [Page mobile device orientation example](../controls/page.md#mobile-device-orientation-configuration),
 which demonstrates how to use [`DeviceOrientation`](deviceorientation.md)
-with [`Page.set_allowed_device_orientations()`](../controls/page.md#flet.Page-set_allowed_device_orientations).
+with [`Page.set_allowed_device_orientations()`](../controls/page.md#flet.Page.set_allowed_device_orientations).
 
 <ClassMembers name={frontMatter.class_name} separateSignature={false} />

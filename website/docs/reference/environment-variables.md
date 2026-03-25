@@ -46,7 +46,7 @@ def main(page: ft.Page):
 ft.run(main, assets_dir="assets")
 ```
 
-For control properties like [`Image.src`](../controls/image.md#flet.Image-src), continue using paths relative
+For control properties like [`Image.src`](../controls/image.md#flet.Image.src), continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
 ### `FLET_ANDROID_SIGNING_KEY_ALIAS`

@@ -20,8 +20,8 @@ file_picker = ft.FilePicker()
 ```
 
 To open the file picker dialog call one of these three methods:
-[`pick_files()`](filepicker.md#flet.FilePicker-pick_files), [`save_file()`](filepicker.md#flet.FilePicker-save_file)
-or [`get_directory_path()`](filepicker.md#flet.FilePicker-get_directory_path), depending on the use case.
+[`pick_files()`](filepicker.md#flet.FilePicker.pick_files), [`save_file()`](filepicker.md#flet.FilePicker.save_file)
+or [`get_directory_path()`](filepicker.md#flet.FilePicker.get_directory_path), depending on the use case.
 
 In most cases you can use a lambda function for that:
 
@@ -34,14 +34,14 @@ ft.Button(
 
 ### Uploading files
 
-To upload one or more files, call [`FilePicker.pick_files()`](filepicker.md#flet.FilePicker-pick_files)
+To upload one or more files, call [`FilePicker.pick_files()`](filepicker.md#flet.FilePicker.pick_files)
 to let the user select files, then pass the returned list to
-[`FilePicker.upload()`](filepicker.md#flet.FilePicker-upload) to perform the upload.
+[`FilePicker.upload()`](filepicker.md#flet.FilePicker.upload) to perform the upload.
 
 :::note[Separate uploads per user]
 If you need to separate uploads for each user you can specify a filename
 prepended with any number of directories in
-[`page.get_upload_url()`](../controls/page.md#flet.Page-get_upload_url) call, for example:
+[`page.get_upload_url()`](../controls/page.md#flet.Page.get_upload_url) call, for example:
 
 ```python
 upload_url = page.get_upload_url(f"/{username}/pictures/{f.name}", 600)
@@ -52,7 +52,7 @@ upload_url = page.get_upload_url(f"/{username}/pictures/{f.name}", 600)
 
 ### Upload storage
 
-Notice the usage of [`page.get_upload_url()`](../controls/page.md#flet.Page-get_upload_url) method –
+Notice the usage of [`page.get_upload_url()`](../controls/page.md#flet.Page.get_upload_url) method –
 it generates a presigned upload URL for Flet's internal upload storage.
 
 :::note[Use any storage for file uploads]
@@ -96,8 +96,8 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 ### Pick and upload files
 
-The following example demonstrates multi-file [pick](filepicker.md#flet.FilePicker-pick_files)
-and [upload](filepicker.md#flet.FilePicker-upload) app.
+The following example demonstrates multi-file [pick](filepicker.md#flet.FilePicker.pick_files)
+and [upload](filepicker.md#flet.FilePicker.upload) app.
 
 <CodeExample path={frontMatter.examples + '/pick_and_upload.py'} language="python" />
 
@@ -105,9 +105,9 @@ and [upload](filepicker.md#flet.FilePicker-upload) app.
 
 ### Pick text content and save/download it
 
-Use [`pick_files()`](filepicker.md#flet.FilePicker-pick_files) with `with_data=True` when
+Use [`pick_files()`](filepicker.md#flet.FilePicker.pick_files) with `with_data=True` when
 you need file contents directly, such as in web apps where
-[`FilePickerFile.path`](../types/filepickerfile.md#flet.FilePickerFile-path) is not available.
+[`FilePickerFile.path`](../types/filepickerfile.md#flet.FilePickerFile.path) is not available.
 
 <CodeExample path={frontMatter.examples + '/pick_and_save_text_content.py'} language="python" />
 

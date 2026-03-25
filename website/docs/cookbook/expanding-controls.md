@@ -12,7 +12,7 @@ When a child control is placed into a [`Row`](../controls/row.md), [`Column`](..
 or [`Page`](../controls/page.md) you can "expand" it to fill the available space.
 
 When adding child controls to a [`Row`](../controls/row.md), you can make them automatically
-grow to fill available horizontal space using the [`expand`](../controls/control.md#flet.Control-expand) property,
+grow to fill available horizontal space using the [`expand`](../controls/control.md#flet.Control.expand) property,
 which all Flet controls (inheriting from [`Control`](../controls/control.md)) have.
 
 It lets you control how they use free space inside a
@@ -57,11 +57,11 @@ expanded equally, resulting in a 50/50 split.
 
 ## `expand_loose`
 
-The [`expand_loose`](../controls/control.md#flet.Control-expand_loose) property allows a control to *optionally* expand
+The [`expand_loose`](../controls/control.md#flet.Control.expand_loose) property allows a control to *optionally* expand
 and fill the available space along the main axis of its parent container
 (e.g., horizontally in a [`Row`](../controls/row.md), or vertically in a [`Column`](../controls/column.md)).
 
-Unlike [`expand`](../controls/control.md#flet.Control-expand), which *forces* the control to occupy all available space,
+Unlike [`expand`](../controls/control.md#flet.Control.expand), which *forces* the control to occupy all available space,
 `expand_loose` gives the control **flexibility** to grow **if needed**, but it’s not required to fill the space.
 
 :::note[Note]
@@ -69,7 +69,7 @@ For this property to have effect:
 
 - it must be used on child controls within the following layout containers,
 or any of their subclasses: [`Row`](../controls/row.md), [`Column`](../controls/column.md), [`View`](../controls/view.md), [`Page`](../controls/page.md)
-- the control using this property must have a non-none value for [`expand`](../controls/control.md#flet.Control-expand).
+- the control using this property must have a non-none value for [`expand`](../controls/control.md#flet.Control.expand).
 :::
 
 ### Example 1

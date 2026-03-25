@@ -15,11 +15,9 @@ from .assets import bulk_copy_assets
 from .config import CrocoDocsConfig
 from .docs import (
     IMPORT_PARTIAL_RE,
-    default_title,
     extract_symbol_blocks_from_mdx,
     iter_markdown_files,
     parse_document,
-    route_for_output,
 )
 from .partials import write_partial
 from .progress import ProgressReporter, Summary
@@ -276,35 +274,25 @@ def run_generate(
     reporter = ProgressReporter("generate")
     summary = Summary("generate")
 
-    reporter.stage("Scanning Docusaurus docs")
+    reporter.stage("Generating sidebar runtime config")
+    write_sidebars_js_from_source(config.sidebars_source, config.sidebars_output)
+
+    reporter.stage("Scanning docs for API symbols and partials")
     docs = iter_markdown_files(docs_path)
     pages: list[dict[str, Any]] = []
     partial_filenames: set[str] = set()
-    for index, path in enumerate(docs, start=1):
-        if index == 1 or index % 100 == 0 or index == len(docs):
-            reporter.info(f"Processed {index}/{len(docs)} files")
-        document = parse_document(path.read_text(encoding="utf-8"))
-        route = route_for_output(base_url, docs_path, path)
-        pages.append(
-            {
-                "source_path": path.relative_to(docs_path).as_posix(),
-                "output_path": path.relative_to(docs_path).as_posix(),
-                "route": route,
-                "title": default_title(document.data, document.body, path.stem),
-                "front_matter": document.data,
-                "symbol_blocks": [
-                    {
-                        "kind": block.kind,
-                        "symbol": block.symbol,
-                        "options": block.options,
-                    }
-                    for block in extract_symbol_blocks_from_mdx(
-                        document.body, document.data
-                    )
-                ],
-            }
-        )
-        partial_filenames.update(IMPORT_PARTIAL_RE.findall(document.body))
+    for path in docs:
+        content = path.read_text(encoding="utf-8")
+        document = parse_document(content)
+        blocks = [
+            {"kind": b.kind, "symbol": b.symbol, "options": b.options}
+            for b in extract_symbol_blocks_from_mdx(document.body, document.data)
+        ]
+        if blocks:
+            relative = path.relative_to(docs_path).as_posix()
+            doc_id = relative.removesuffix(".md").removesuffix(".mdx")
+            pages.append({"route": f"{base_url}/{doc_id}", "symbol_blocks": blocks})
+        partial_filenames.update(IMPORT_PARTIAL_RE.findall(content))
 
     reporter.stage("Writing manifest")
     manifest_output.parent.mkdir(parents=True, exist_ok=True)
@@ -313,14 +301,9 @@ def run_generate(
         encoding="utf-8",
     )
 
-    reporter.stage("Generating sidebar runtime config")
-    write_sidebars_js_from_source(config.sidebars_source, pages, config.sidebars_output)
-
     reporter.stage("Generating MDX partials")
     generated_partials = 0
     sorted_partials = sorted(partial_filenames)
-    if not sorted_partials:
-        reporter.info("No MDX partials referenced by docs")
     for index, filename in enumerate(sorted_partials, start=1):
         reporter.info(f"[{index}/{len(sorted_partials)}] {filename}")
         try:

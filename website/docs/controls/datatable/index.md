@@ -23,15 +23,15 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Horizontal margin and column spacing
 
-Use [`horizontal_margin`](index.md#flet.DataTable-horizontal_margin) to control the left and right
+Use [`horizontal_margin`](index.md#flet.DataTable.horizontal_margin) to control the left and right
 edge spacing of the first and last columns.
-Use [`column_spacing`](index.md#flet.DataTable-column_spacing) to control spacing between columns.
+Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacing between columns.
 
 <CodeExample path={frontMatter.examples + '/spacing.py'} language="python" />
 
 ### Adaptive row heights
 
-Setting [`data_row_max_height`](index.md#flet.DataTable-data_row_max_height) to `float('inf')`
+Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')`
 (infinity) will cause the `DataTable` to let each individual row adapt its height to its
 respective content, instead of all rows having the same height.
 

@@ -13,7 +13,7 @@ Animation produces interpolated values between the old and the new value over th
 
 By default, the animation is *linearly* increasing the animation value, however, a *curve* can be
 applied to the animation which changes the value according to the provided curve.
-For example, [`AnimationCurve.EASE_OUT_CUBIC`](../types/animationcurve.md#flet.AnimationCurve-EASE_OUT_CUBIC) curve increases the animation value quickly at the
+For example, [`AnimationCurve.EASE_OUT_CUBIC`](../types/animationcurve.md#flet.AnimationCurve.EASE_OUT_CUBIC) curve increases the animation value quickly at the
 beginning of the animation and then slows down until the target value is reached:
 
 <video controls>
@@ -34,14 +34,14 @@ properties, described below, to enable implicit animation of its appearance:
 
 * Instance of [`Animation`](../types/animation.md) - allows configuring the duration and the curve of the
 * animation, for example `animate_rotation=Animation(duration=300, curve=AnimationCurve.BOUNCE_OUT)`.
-  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve-LINEAR).
-* `int` value - enables animation with specified duration in milliseconds and [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve-LINEAR) curve.
-* `bool` value - enables animation with the duration of 1000 milliseconds and [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve-LINEAR) curve.
+  See [this](https://api.flutter.dev/flutter/animation/Curves-class.html) Flutter docs on animation curves for possible values. Default is [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve.LINEAR).
+* `int` value - enables animation with specified duration in milliseconds and [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve.LINEAR) curve.
+* `bool` value - enables animation with the duration of 1000 milliseconds and [`AnimationCurve.LINEAR`](../types/animationcurve.md#flet.AnimationCurve.LINEAR) curve.
 
 ### Opacity animation
 
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`Control.opacity`](../controls/control.md#flet.Control-opacity) property.
+enables implicit animation of [`Control.opacity`](../controls/control.md#flet.Control.opacity) property.
 
 <CodeExample path="controls/layout_control/animate_opacity.py" language="python" />
 
@@ -50,7 +50,7 @@ enables implicit animation of [`Control.opacity`](../controls/control.md#flet.Co
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`LayoutControl.rotate`](../controls/layoutcontrol.md#flet.LayoutControl-rotate) property.
+enables implicit animation of [`LayoutControl.rotate`](../controls/layoutcontrol.md#flet.LayoutControl.rotate) property.
 
 <CodeExample path="controls/layout_control/animate_rotation.py" language="python" />
 
@@ -59,7 +59,7 @@ enables implicit animation of [`LayoutControl.rotate`](../controls/layoutcontrol
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`LayoutControl.scale`](../controls/layoutcontrol.md#flet.LayoutControl-scale) property.
+enables implicit animation of [`LayoutControl.scale`](../controls/layoutcontrol.md#flet.LayoutControl.scale) property.
 
 <CodeExample path="controls/layout_control/animate_scale.py" language="python" />
 
@@ -68,7 +68,7 @@ enables implicit animation of [`LayoutControl.scale`](../controls/layoutcontrol.
 ### Offset animation
 
 Setting control's `animate_offset` to either `True`, number or an instance of `Animation` class (see above)
-enables implicit animation of [`LayoutControl.offset`](../controls/layoutcontrol.md#flet.LayoutControl-offset) property.
+enables implicit animation of [`LayoutControl.offset`](../controls/layoutcontrol.md#flet.LayoutControl.offset) property.
 
 `offset` property is an instance of `Offset` class which specifies horizontal `x` and vertical `y`
 offset of a control scaled to control's size. For example, an offset `Offset(-0.25, 0)` will result in
@@ -84,8 +84,8 @@ Offset animation is used for various sliding effects:
 
 Setting control's `animate_position` to either `True`, number or an instance of `Animation` class
 (see above) enables implicit animation of the following `LayoutControl` properties:
-[`left`](../controls/layoutcontrol.md#flet.LayoutControl-left), [`right`](../controls/layoutcontrol.md#flet.LayoutControl-right),
-[`bottom`](../controls/layoutcontrol.md#flet.LayoutControl-bottom), [`top`](../controls/layoutcontrol.md#flet.LayoutControl-top).
+[`left`](../controls/layoutcontrol.md#flet.LayoutControl.left), [`right`](../controls/layoutcontrol.md#flet.LayoutControl.right),
+[`bottom`](../controls/layoutcontrol.md#flet.LayoutControl.bottom), [`top`](../controls/layoutcontrol.md#flet.LayoutControl.top).
 
 Note:
     Positioning is effective only if the control is a descendant of one of the following:
@@ -99,7 +99,7 @@ Note:
 
 ### Animate
 
-Setting [`Container.animate`](../controls/container.md#flet.Container-animate) to [`AnimationValue`](../types/aliases.md#flet.AnimationValue)
+Setting [`Container.animate`](../controls/container.md#flet.Container.animate) to [`AnimationValue`](../types/aliases.md#flet.AnimationValue)
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
 <CodeExample path="controls/container/animate_1.py" language="python" />
@@ -146,10 +146,10 @@ ft.run(main)
 ### Animation end callback
 
 [`LayoutControl`](../controls/layoutcontrol.md) also has an
-[`on_animation_end`](../controls/layoutcontrol.md#flet.LayoutControl-on_animation_end) event handler, which is called
+[`on_animation_end`](../controls/layoutcontrol.md#flet.LayoutControl.on_animation_end) event handler, which is called
 when an animation is complete. It can be used to chain multiple animations.
 
-Event's [`data`](../types/event.md#flet.Event-data) field/property contains the name of animation:
+Event's [`data`](../types/event.md#flet.Event.data) field/property contains the name of animation:
 
 * `"opacity"`
 * `"rotation"`

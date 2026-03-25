@@ -80,7 +80,7 @@ See also:
 Configuration to be made to access the camera and optionally the microphone:
 
 - [`NSCameraUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSCameraUsageDescription): Required for camera usage.
-- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription) (optional): Required only for video recording with audio. For example, when `enable_audio` parameter of [`Camera.initialize`](index.md#flet_camera.Camera-initialize) is set to `True` (default).
+- [`NSMicrophoneUsageDescription`](https://developer.apple.com/documentation/BundleResources/Information-Property-List/NSMicrophoneUsageDescription) (optional): Required only for video recording with audio. For example, when `enable_audio` parameter of [`Camera.initialize`](index.md#flet_camera.Camera.initialize) is set to `True` (default).
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">

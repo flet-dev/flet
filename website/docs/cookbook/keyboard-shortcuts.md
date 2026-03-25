@@ -6,7 +6,7 @@ import {CodeExample, Image} from '@site/src/components/crocodocs';
 
 A solid keyboard support is a key for user productivity while using your web and, especially, desktop app. Indeed, it could be really annoying to constantly switch between mouse and keyboard.
 
-In addition to form controls' `.autofocus` property and [`TextField.focus()`](../controls/formfieldcontrol.md#flet.FormFieldControl-focus) method Flet allows handling "global" keyboard events.
+In addition to form controls' `.autofocus` property and [`TextField.focus()`](../controls/formfieldcontrol.md#flet.FormFieldControl.focus) method Flet allows handling "global" keyboard events.
 
 To capture all keystrokes implement `page.on_keyboard_event` handler. Event handler parameter `e` is an instance of `KeyboardEvent` class with the following properties:
 

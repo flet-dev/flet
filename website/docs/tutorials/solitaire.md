@@ -65,7 +65,7 @@ a complete short program to run and test.
 
 In this step we will create a [`Stack`](../controls/stack.md) (Solitaire game field)
 and a [`GestureDetector`](../controls/gesturedetector.md) (Solitaire card).
-The card will then be added to the list of the [`Stack.controls`](../controls/stack.md#flet.Stack-controls).
+The card will then be added to the list of the [`Stack.controls`](../controls/stack.md#flet.Stack.controls).
 [`top`](../controls/gesturedetector.md) and [`left`](../controls/gesturedetector.md) properties of the
 `GestureDetector` are used for absolute positioning of the card in the `Stack`.
 
@@ -88,11 +88,11 @@ Run the app to see the card added to the stack:
 
 <Image src="../examples/tutorials/solitaire/media/drag-and-drop1.png" alt="drag_and_drop1" width="55%" />
 
-To be able to move the card, we'll create a `drag` method that will be called in [`on_pan_update`](../controls/gesturedetector.md#flet.GestureDetector-on_pan_update)
-event of `GestureDetector` which happens every [`drag_interval`](../controls/gesturedetector.md#flet.GestureDetector-drag_interval) while the user drags the card with their mouse.
+To be able to move the card, we'll create a `drag` method that will be called in [`on_pan_update`](../controls/gesturedetector.md#flet.GestureDetector.on_pan_update)
+event of `GestureDetector` which happens every [`drag_interval`](../controls/gesturedetector.md#flet.GestureDetector.drag_interval) while the user drags the card with their mouse.
 
 To show the card's movement, we’ll be updating the card’s [`top`](../controls/gesturedetector.md) and [`left`](../controls/gesturedetector.md) properties in the `drag`
-callback each time the [`on_pan_update`](../controls/gesturedetector.md#flet.GestureDetector-on_pan_update) event happens.
+callback each time the [`on_pan_update`](../controls/gesturedetector.md#flet.GestureDetector.on_pan_update) event happens.
 
 Below is the simplest code for dragging `GestureDetector` in `Stack`:
 
@@ -186,7 +186,7 @@ Now, if the card is not close enough, we need to bounce it back to its original 
 Unfortunately, we don’t know the original position coordinates, since the card’s `top` and `left` properties were changed on `on_pan_update` event.
 
 To solve this problem, let’s create a `Solitaire` class object to keep track of the original position of
-the card when [`on_pan_start`](../controls/gesturedetector.md#flet.GestureDetector-on_pan_start) event of the card is called:
+the card when [`on_pan_start`](../controls/gesturedetector.md#flet.GestureDetector.on_pan_start) event of the card is called:
 
 ```python
 class Solitaire:
@@ -202,7 +202,7 @@ def start_drag(e: ft.DragStartEvent):
     e.control.update()
 ```
 
-Now let’s update [`on_pan_end`](../controls/gesturedetector.md#flet.GestureDetector-on_pan_end) event with the option to bounce card back:
+Now let’s update [`on_pan_end`](../controls/gesturedetector.md#flet.GestureDetector.on_pan_end) event with the option to bounce card back:
 ```python
 def bounce_back(game, card):
     """return card to its original position"""
@@ -251,8 +251,8 @@ yellow card (`card2`) is moving as expected but the green the card (`card1`) is 
 
 <Image src="../examples/tutorials/solitaire/media/drag-and-drop4.gif" alt="drag_and_drop4.gif" width="55%" />
 
-It happens because `card2` is added to the list of stack's [`controls`](../controls/stack.md#flet.Stack-controls) after `card1`. To fix this problem,
-we need to move the draggable card to the top of the list of controls on [`on_pan_start`](../controls/gesturedetector.md#flet.GestureDetector-on_pan_start) event:
+It happens because `card2` is added to the list of stack's [`controls`](../controls/stack.md#flet.Stack.controls) after `card1`. To fix this problem,
+we need to move the draggable card to the top of the list of controls on [`on_pan_start`](../controls/gesturedetector.md#flet.GestureDetector.on_pan_start) event:
 
 ```python
 def move_on_top(card, controls):

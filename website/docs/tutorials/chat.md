@@ -67,8 +67,8 @@ Create `chat.py` with the following contents:
 
 <CodeExample path={frontMatter.examples + '/chat_1.py'} language="python" />
 
-When user clicks on the "Send" button, it triggers [`on_click`](../controls/button.md#flet.Button-on_click) event which calls `send_click` method. `send_click`
-then adds new [`Text`](../controls/text.md) control to the list of [`Column.controls`](../controls/column.md#flet.Column-controls) and clears `new_message` text field value.
+When user clicks on the "Send" button, it triggers [`on_click`](../controls/button.md#flet.Button.on_click) event which calls `send_click` method. `send_click`
+then adds new [`Text`](../controls/text.md) control to the list of [`Column.controls`](../controls/column.md#flet.Column.controls) and clears `new_message` text field value.
 
 :::note[Note]
 After any properties of a control are updated in event handler, there is no need to call an `update()` method as the update will be done automatically, but it should be called in case properties are updated outside of the event.
@@ -316,7 +316,7 @@ Other improvements suggested with the new layout are:
 * [`ListView`](../controls/listview.md) instead of [`Column`](../controls/column.md) for displaying messages, to be able to scroll through the messages later
 * [`Container`](../controls/container.md) for displaying border around [`ListView`](../controls/listview.md)
 * [`IconButton`](../controls/iconbutton.md) instead of [`Button`](../controls/button.md) to send messages
-* Use of [`expand`](../controls/control.md#flet.Control-expand) property for controls to fill available space
+* Use of [`expand`](../controls/control.md#flet.Control.expand) property for controls to fill available space
 
 Here is how you can implement this layout:
 
@@ -382,19 +382,19 @@ initial focus to the control. If there is more than one control on a page with `
 We set `autofocus=True` on a username TextField inside a dialog and then on a TextField for entering chat message to set initial focus on it when the dialog is closed.
 
 When a user click "Send" button or presses Enter to submit a chat message, TextField loses focus.
-To programmatically set control focus we used [`TextField.focus()`](../controls/formfieldcontrol.md#flet.FormFieldControl-focus) method.
+To programmatically set control focus we used [`TextField.focus()`](../controls/formfieldcontrol.md#flet.FormFieldControl.focus) method.
 
 #### Submitting forms on `Enter`
 
 It's so tempting to submit forms with just pushing `Enter` button on the keyboard!
 Type your name in the dialog, hit `Enter`, type a new message, hit `Enter`, type another, hit `Enter` - no mouse involved at all! 🚀
 
-Flet has support for that by providing [`TextField.on_submit`](../controls/textfield.md#flet.TextField-on_submit) event handler which fires when a user press `Enter` button while the focus is on the TextField.
+Flet has support for that by providing [`TextField.on_submit`](../controls/textfield.md#flet.TextField.on_submit) event handler which fires when a user press `Enter` button while the focus is on the TextField.
 
 #### Entering multiline messages
 
 What about multiline TextFields where `Enter` must advance a cursor to the next line?
-We've got that covered too! `TextField` control has [`shift_enter`](../controls/textfield.md#flet.TextField-shift_enter) property which when set to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while hitting just `Enter` submits a form.
+We've got that covered too! `TextField` control has [`shift_enter`](../controls/textfield.md#flet.TextField.shift_enter) property which when set to `True` enables Discord-like behavior: to get to a new line user presses `Shift`+`Enter` while hitting just `Enter` submits a form.
 
 ### Animated scrolling to the last message
 

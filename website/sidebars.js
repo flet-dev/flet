@@ -109,15 +109,18 @@ module.exports = {
                       "items": [
                         {
                           "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/fly-io"
+                          "id": "publish/web/dynamic-website/hosting/fly-io",
+                          "label": "Fly.io"
                         },
                         {
                           "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/replit"
+                          "id": "publish/web/dynamic-website/hosting/replit",
+                          "label": "Replit"
                         },
                         {
                           "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/self-hosting"
+                          "id": "publish/web/dynamic-website/hosting/self-hosting",
+                          "label": "Self-Hosting"
                         }
                       ],
                       "link": {
@@ -205,15 +208,18 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/ads/bannerad"
+                  "id": "controls/ads/bannerad",
+                  "label": "BannerAd"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/ads/basead"
+                  "id": "controls/ads/basead",
+                  "label": "BaseAd"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/ads/interstitialad"
+                  "id": "controls/ads/interstitialad",
+                  "label": "InterstitialAd"
                 }
               ],
               "link": {
@@ -223,47 +229,58 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/alertdialog"
+              "id": "controls/alertdialog",
+              "label": "AlertDialog"
             },
             {
               "type": "doc",
-              "id": "controls/animatedswitcher"
+              "id": "controls/animatedswitcher",
+              "label": "AnimatedSwitcher"
             },
             {
               "type": "doc",
-              "id": "controls/appbar"
+              "id": "controls/appbar",
+              "label": "AppBar"
             },
             {
               "type": "doc",
-              "id": "controls/autocomplete"
+              "id": "controls/autocomplete",
+              "label": "AutoComplete"
             },
             {
               "type": "doc",
-              "id": "controls/autofillgroup"
+              "id": "controls/autofillgroup",
+              "label": "AutofillGroup"
             },
             {
               "type": "doc",
-              "id": "types/badge"
+              "id": "types/badge",
+              "label": "Badge"
             },
             {
               "type": "doc",
-              "id": "controls/banner"
+              "id": "controls/banner",
+              "label": "Banner"
             },
             {
               "type": "doc",
-              "id": "controls/bottomappbar"
+              "id": "controls/bottomappbar",
+              "label": "BottomAppBar"
             },
             {
               "type": "doc",
-              "id": "controls/bottomsheet"
+              "id": "controls/bottomsheet",
+              "label": "BottomSheet"
             },
             {
               "type": "doc",
-              "id": "controls/button"
+              "id": "controls/button",
+              "label": "Button"
             },
             {
               "type": "doc",
-              "id": "controls/camera/index"
+              "id": "controls/camera/index",
+              "label": "Camera"
             },
             {
               "type": "category",
@@ -272,55 +289,68 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/canvas/arc"
+                  "id": "controls/canvas/arc",
+                  "label": "Arc"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/circle"
+                  "id": "controls/canvas/circle",
+                  "label": "Circle"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/color"
+                  "id": "controls/canvas/color",
+                  "label": "Color"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/fill"
+                  "id": "controls/canvas/fill",
+                  "label": "Fill"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/image"
+                  "id": "controls/canvas/image",
+                  "label": "Image"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/line"
+                  "id": "controls/canvas/line",
+                  "label": "Line"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/oval"
+                  "id": "controls/canvas/oval",
+                  "label": "Oval"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/path"
+                  "id": "controls/canvas/path",
+                  "label": "Path"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/points"
+                  "id": "controls/canvas/points",
+                  "label": "Points"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/rect"
+                  "id": "controls/canvas/rect",
+                  "label": "Rect"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/shadow"
+                  "id": "controls/canvas/shadow",
+                  "label": "Shadow"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/shape"
+                  "id": "controls/canvas/shape",
+                  "label": "Shape"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/canvas/text"
+                  "id": "controls/canvas/text",
+                  "label": "Text"
                 }
               ],
               "link": {
@@ -330,7 +360,8 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/card"
+              "id": "controls/card",
+              "label": "Card"
             },
             {
               "type": "category",
@@ -339,39 +370,48 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/charts/barchart"
+                  "id": "controls/charts/barchart",
+                  "label": "BarChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/candlestickchart"
+                  "id": "controls/charts/candlestickchart",
+                  "label": "CandlestickChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/linechart"
+                  "id": "controls/charts/linechart",
+                  "label": "LineChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/matplotlibchart"
+                  "id": "controls/charts/matplotlibchart",
+                  "label": "MatplotlibChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/matplotlibchartwithtoolbar"
+                  "id": "controls/charts/matplotlibchartwithtoolbar",
+                  "label": "MatplotlibChartWithToolbar"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/piechart"
+                  "id": "controls/charts/piechart",
+                  "label": "PieChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/plotlychart"
+                  "id": "controls/charts/plotlychart",
+                  "label": "PlotlyChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/radarchart"
+                  "id": "controls/charts/radarchart",
+                  "label": "RadarChart"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/charts/scatterchart"
+                  "id": "controls/charts/scatterchart",
+                  "label": "ScatterChart"
                 }
               ],
               "link": {
@@ -381,19 +421,23 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/checkbox"
+              "id": "controls/checkbox",
+              "label": "Checkbox"
             },
             {
               "type": "doc",
-              "id": "controls/chip"
+              "id": "controls/chip",
+              "label": "Chip"
             },
             {
               "type": "doc",
-              "id": "controls/circleavatar"
+              "id": "controls/circleavatar",
+              "label": "CircleAvatar"
             },
             {
               "type": "doc",
-              "id": "controls/codeeditor/index"
+              "id": "controls/codeeditor/index",
+              "label": "CodeEditor"
             },
             {
               "type": "category",
@@ -402,27 +446,33 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/colorpicker"
+                  "id": "controls/colorpickers/colorpicker",
+                  "label": "ColorPicker"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/blockpicker"
+                  "id": "controls/colorpickers/blockpicker",
+                  "label": "BlockPicker"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/hueringpicker"
+                  "id": "controls/colorpickers/hueringpicker",
+                  "label": "HueRingPicker"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/materialpicker"
+                  "id": "controls/colorpickers/materialpicker",
+                  "label": "MaterialPicker"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/multiplechoiceblockpicker"
+                  "id": "controls/colorpickers/multiplechoiceblockpicker",
+                  "label": "MultipleChoiceBlockPicker"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/colorpickers/slidepicker"
+                  "id": "controls/colorpickers/slidepicker",
+                  "label": "SlidePicker"
                 }
               ],
               "link": {
@@ -432,15 +482,18 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/column"
+              "id": "controls/column",
+              "label": "Column"
             },
             {
               "type": "doc",
-              "id": "controls/container"
+              "id": "controls/container",
+              "label": "Container"
             },
             {
               "type": "doc",
-              "id": "controls/contextmenu"
+              "id": "controls/contextmenu",
+              "label": "ContextMenu"
             },
             {
               "type": "category",
@@ -449,7 +502,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/cupertinoactionsheetaction"
+                  "id": "controls/cupertinoactionsheetaction",
+                  "label": "CupertinoActionSheetAction"
                 }
               ],
               "link": {
@@ -459,27 +513,33 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoactivityindicator"
+              "id": "controls/cupertinoactivityindicator",
+              "label": "CupertinoActivityIndicator"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoalertdialog"
+              "id": "controls/cupertinoalertdialog",
+              "label": "CupertinoAlertDialog"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoappbar"
+              "id": "controls/cupertinoappbar",
+              "label": "CupertinoAppBar"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinobottomsheet"
+              "id": "controls/cupertinobottomsheet",
+              "label": "CupertinoBottomSheet"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinobutton"
+              "id": "controls/cupertinobutton",
+              "label": "CupertinoButton"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinocheckbox"
+              "id": "controls/cupertinocheckbox",
+              "label": "CupertinoCheckbox"
             },
             {
               "type": "category",
@@ -488,7 +548,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/cupertinocontextmenuaction"
+                  "id": "controls/cupertinocontextmenuaction",
+                  "label": "CupertinoContextMenuAction"
                 }
               ],
               "link": {
@@ -498,67 +559,83 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/cupertinodatepicker"
+              "id": "controls/cupertinodatepicker",
+              "label": "CupertinoDatePicker"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinodialogaction"
+              "id": "controls/cupertinodialogaction",
+              "label": "CupertinoDialogAction"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinofilledbutton"
+              "id": "controls/cupertinofilledbutton",
+              "label": "CupertinoFilledButton"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinolisttile"
+              "id": "controls/cupertinolisttile",
+              "label": "CupertinoListTile"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinonavigationbar"
+              "id": "controls/cupertinonavigationbar",
+              "label": "CupertinoNavigationBar"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinopicker"
+              "id": "controls/cupertinopicker",
+              "label": "CupertinoPicker"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoradio"
+              "id": "controls/cupertinoradio",
+              "label": "CupertinoRadio"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinosegmentedbutton"
+              "id": "controls/cupertinosegmentedbutton",
+              "label": "CupertinoSegmentedButton"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoslider"
+              "id": "controls/cupertinoslider",
+              "label": "CupertinoSlider"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoslidingsegmentedbutton"
+              "id": "controls/cupertinoslidingsegmentedbutton",
+              "label": "CupertinoSlidingSegmentedButton"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinoswitch"
+              "id": "controls/cupertinoswitch",
+              "label": "CupertinoSwitch"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinotextfield"
+              "id": "controls/cupertinotextfield",
+              "label": "CupertinoTextField"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinotimerpicker"
+              "id": "controls/cupertinotimerpicker",
+              "label": "CupertinoTimerPicker"
             },
             {
               "type": "doc",
-              "id": "controls/cupertinotintedbutton"
+              "id": "controls/cupertinotintedbutton",
+              "label": "CupertinoTintedButton"
             },
             {
               "type": "doc",
-              "id": "controls/datepicker"
+              "id": "controls/datepicker",
+              "label": "DatePicker"
             },
             {
               "type": "doc",
-              "id": "controls/daterangepicker"
+              "id": "controls/daterangepicker",
+              "label": "DateRangePicker"
             },
             {
               "type": "category",
@@ -567,15 +644,18 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/datacell"
+                  "id": "controls/datacell",
+                  "label": "DataCell"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/datacolumn"
+                  "id": "controls/datacolumn",
+                  "label": "DataColumn"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/datarow"
+                  "id": "controls/datarow",
+                  "label": "DataRow"
                 }
               ],
               "link": {
@@ -590,11 +670,13 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/datatable2/datacolumn2"
+                  "id": "controls/datatable2/datacolumn2",
+                  "label": "DataColumn2"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/datatable2/datarow2"
+                  "id": "controls/datatable2/datarow2",
+                  "label": "DataRow2"
                 }
               ],
               "link": {
@@ -604,19 +686,23 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/dismissible"
+              "id": "controls/dismissible",
+              "label": "Dismissible"
             },
             {
               "type": "doc",
-              "id": "controls/divider"
+              "id": "controls/divider",
+              "label": "Divider"
             },
             {
               "type": "doc",
-              "id": "controls/dragtarget"
+              "id": "controls/dragtarget",
+              "label": "DragTarget"
             },
             {
               "type": "doc",
-              "id": "controls/draggable"
+              "id": "controls/draggable",
+              "label": "Draggable"
             },
             {
               "type": "category",
@@ -625,7 +711,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/dropdownoption"
+                  "id": "controls/dropdownoption",
+                  "label": "DropdownOption"
                 }
               ],
               "link": {
@@ -635,87 +722,108 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/dropdownm2"
+              "id": "controls/dropdownm2",
+              "label": "DropdownM2"
             },
             {
               "type": "doc",
-              "id": "controls/expansionpanel"
+              "id": "controls/expansionpanel",
+              "label": "ExpansionPanel"
             },
             {
               "type": "doc",
-              "id": "controls/expansionpanellist"
+              "id": "controls/expansionpanellist",
+              "label": "ExpansionPanelList"
             },
             {
               "type": "doc",
-              "id": "controls/expansiontile"
+              "id": "controls/expansiontile",
+              "label": "ExpansionTile"
             },
             {
               "type": "doc",
-              "id": "controls/filledbutton"
+              "id": "controls/filledbutton",
+              "label": "FilledButton"
             },
             {
               "type": "doc",
-              "id": "controls/fillediconbutton"
+              "id": "controls/fillediconbutton",
+              "label": "FilledIconButton"
             },
             {
               "type": "doc",
-              "id": "controls/filledtonalbutton"
+              "id": "controls/filledtonalbutton",
+              "label": "FilledTonalButton"
             },
             {
               "type": "doc",
-              "id": "controls/filledtonaliconbutton"
+              "id": "controls/filledtonaliconbutton",
+              "label": "FilledTonalIconButton"
             },
             {
               "type": "doc",
-              "id": "controls/fletapp"
+              "id": "controls/fletapp",
+              "label": "FletApp"
             },
             {
               "type": "doc",
-              "id": "controls/floatingactionbutton"
+              "id": "controls/floatingactionbutton",
+              "label": "FloatingActionButton"
             },
             {
               "type": "doc",
-              "id": "controls/gesturedetector"
+              "id": "controls/gesturedetector",
+              "label": "GestureDetector"
             },
             {
               "type": "doc",
-              "id": "controls/gridview"
+              "id": "controls/gridview",
+              "label": "GridView"
             },
             {
               "type": "doc",
-              "id": "controls/hero"
+              "id": "controls/hero",
+              "label": "Hero"
             },
             {
               "type": "doc",
-              "id": "controls/icon"
+              "id": "controls/icon",
+              "label": "Icon"
             },
             {
               "type": "doc",
-              "id": "controls/iconbutton"
+              "id": "controls/iconbutton",
+              "label": "IconButton"
             },
             {
               "type": "doc",
-              "id": "controls/image"
+              "id": "controls/image",
+              "label": "Image"
             },
             {
               "type": "doc",
-              "id": "controls/interactiveviewer"
+              "id": "controls/interactiveviewer",
+              "label": "InteractiveViewer"
             },
             {
               "type": "doc",
-              "id": "controls/keyboardlistener"
+              "id": "controls/keyboardlistener",
+              "label": "KeyboardListener"
             },
             {
               "type": "doc",
-              "id": "controls/listtile"
+              "id": "controls/listtile",
+              "label": "ListTile"
             },
             {
               "type": "doc",
-              "id": "controls/listview"
+              "id": "controls/listview",
+              "label": "ListView"
             },
             {
               "type": "doc",
-              "id": "controls/lottie/index"
+              "id": "controls/lottie/index",
+              "label": "Lottie"
             },
             {
               "type": "category",
@@ -724,7 +832,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/map/mapcontrol"
+                  "id": "controls/map/mapcontrol",
+                  "label": "Map"
                 },
                 {
                   "type": "category",
@@ -815,23 +924,28 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/markdown"
+              "id": "controls/markdown",
+              "label": "Markdown"
             },
             {
               "type": "doc",
-              "id": "controls/menubar"
+              "id": "controls/menubar",
+              "label": "MenuBar"
             },
             {
               "type": "doc",
-              "id": "controls/menuitembutton"
+              "id": "controls/menuitembutton",
+              "label": "MenuItemButton"
             },
             {
               "type": "doc",
-              "id": "controls/mergesemantics"
+              "id": "controls/mergesemantics",
+              "label": "MergeSemantics"
             },
             {
               "type": "doc",
-              "id": "controls/multiview"
+              "id": "controls/multiview",
+              "label": "MultiView"
             },
             {
               "type": "category",
@@ -840,7 +954,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/navigationbardestination"
+                  "id": "controls/navigationbardestination",
+                  "label": "NavigationBarDestination"
                 }
               ],
               "link": {
@@ -855,7 +970,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/navigationdrawerdestination"
+                  "id": "controls/navigationdrawerdestination",
+                  "label": "NavigationDrawerDestination"
                 }
               ],
               "link": {
@@ -870,7 +986,8 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/navigationraildestination"
+                  "id": "controls/navigationraildestination",
+                  "label": "NavigationRailDestination"
                 }
               ],
               "link": {
@@ -880,83 +997,103 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/outlinedbutton"
+              "id": "controls/outlinedbutton",
+              "label": "OutlinedButton"
             },
             {
               "type": "doc",
-              "id": "controls/outlinediconbutton"
+              "id": "controls/outlinediconbutton",
+              "label": "OutlinedIconButton"
             },
             {
               "type": "doc",
-              "id": "controls/page"
+              "id": "controls/page",
+              "label": "Page"
             },
             {
               "type": "doc",
-              "id": "controls/pagelet"
+              "id": "controls/pagelet",
+              "label": "Pagelet"
             },
             {
               "type": "doc",
-              "id": "controls/pageview"
+              "id": "controls/pageview",
+              "label": "PageView"
             },
             {
               "type": "doc",
-              "id": "controls/placeholder"
+              "id": "controls/placeholder",
+              "label": "Placeholder"
             },
             {
               "type": "doc",
-              "id": "controls/popupmenubutton"
+              "id": "controls/popupmenubutton",
+              "label": "PopupMenuButton"
             },
             {
               "type": "doc",
-              "id": "controls/progressbar"
+              "id": "controls/progressbar",
+              "label": "ProgressBar"
             },
             {
               "type": "doc",
-              "id": "controls/progressring"
+              "id": "controls/progressring",
+              "label": "ProgressRing"
             },
             {
               "type": "doc",
-              "id": "controls/radio"
+              "id": "controls/radio",
+              "label": "Radio"
             },
             {
               "type": "doc",
-              "id": "controls/radiogroup"
+              "id": "controls/radiogroup",
+              "label": "RadioGroup"
             },
             {
               "type": "doc",
-              "id": "controls/rangeslider"
+              "id": "controls/rangeslider",
+              "label": "RangeSlider"
             },
             {
               "type": "doc",
-              "id": "controls/reorderabledraghandle"
+              "id": "controls/reorderabledraghandle",
+              "label": "ReorderableDragHandle"
             },
             {
               "type": "doc",
-              "id": "controls/reorderablelistview"
+              "id": "controls/reorderablelistview",
+              "label": "ReorderableListView"
             },
             {
               "type": "doc",
-              "id": "controls/responsiverow"
+              "id": "controls/responsiverow",
+              "label": "ResponsiveRow"
             },
             {
               "type": "doc",
-              "id": "controls/rotatedbox"
+              "id": "controls/rotatedbox",
+              "label": "RotatedBox"
             },
             {
               "type": "doc",
-              "id": "controls/row"
+              "id": "controls/row",
+              "label": "Row"
             },
             {
               "type": "doc",
-              "id": "controls/rive/index"
+              "id": "controls/rive/index",
+              "label": "Rive"
             },
             {
               "type": "doc",
-              "id": "controls/safearea"
+              "id": "controls/safearea",
+              "label": "SafeArea"
             },
             {
               "type": "doc",
-              "id": "controls/searchbar"
+              "id": "controls/searchbar",
+              "label": "SearchBar"
             },
             {
               "type": "category",
@@ -975,43 +1112,53 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/selectionarea"
+              "id": "controls/selectionarea",
+              "label": "SelectionArea"
             },
             {
               "type": "doc",
-              "id": "controls/semantics"
+              "id": "controls/semantics",
+              "label": "Semantics"
             },
             {
               "type": "doc",
-              "id": "controls/screenshot"
+              "id": "controls/screenshot",
+              "label": "Screenshot"
             },
             {
               "type": "doc",
-              "id": "controls/shadermask"
+              "id": "controls/shadermask",
+              "label": "ShaderMask"
             },
             {
               "type": "doc",
-              "id": "controls/shimmer"
+              "id": "controls/shimmer",
+              "label": "Shimmer"
             },
             {
               "type": "doc",
-              "id": "controls/slider"
+              "id": "controls/slider",
+              "label": "Slider"
             },
             {
               "type": "doc",
-              "id": "controls/snackbar"
+              "id": "controls/snackbar",
+              "label": "SnackBar"
             },
             {
               "type": "doc",
-              "id": "controls/stack"
+              "id": "controls/stack",
+              "label": "Stack"
             },
             {
               "type": "doc",
-              "id": "controls/submenubutton"
+              "id": "controls/submenubutton",
+              "label": "SubmenuButton"
             },
             {
               "type": "doc",
-              "id": "controls/switch"
+              "id": "controls/switch",
+              "label": "Switch"
             },
             {
               "type": "category",
@@ -1020,15 +1167,18 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/tab"
+                  "id": "controls/tab",
+                  "label": "Tab"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/tabbar"
+                  "id": "controls/tabbar",
+                  "label": "TabBar"
                 },
                 {
                   "type": "doc",
-                  "id": "controls/tabbarview"
+                  "id": "controls/tabbarview",
+                  "label": "TabBarView"
                 }
               ],
               "link": {
@@ -1038,43 +1188,53 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/text"
+              "id": "controls/text",
+              "label": "Text"
             },
             {
               "type": "doc",
-              "id": "controls/textbutton"
+              "id": "controls/textbutton",
+              "label": "TextButton"
             },
             {
               "type": "doc",
-              "id": "controls/textfield"
+              "id": "controls/textfield",
+              "label": "TextField"
             },
             {
               "type": "doc",
-              "id": "controls/timepicker"
+              "id": "controls/timepicker",
+              "label": "TimePicker"
             },
             {
               "type": "doc",
-              "id": "controls/transparentpointer"
+              "id": "controls/transparentpointer",
+              "label": "TransparentPointer"
             },
             {
               "type": "doc",
-              "id": "controls/verticaldivider"
+              "id": "controls/verticaldivider",
+              "label": "VerticalDivider"
             },
             {
               "type": "doc",
-              "id": "controls/video/index"
+              "id": "controls/video/index",
+              "label": "Video"
             },
             {
               "type": "doc",
-              "id": "controls/view"
+              "id": "controls/view",
+              "label": "View"
             },
             {
               "type": "doc",
-              "id": "controls/webview/index"
+              "id": "controls/webview/index",
+              "label": "WebView"
             },
             {
               "type": "doc",
-              "id": "controls/windowdragarea"
+              "id": "controls/windowdragarea",
+              "label": "WindowDragArea"
             }
           ],
           "link": {
@@ -1091,103 +1251,128 @@ module.exports = {
           "items": [
             {
               "type": "doc",
-              "id": "services/accelerometer"
+              "id": "services/accelerometer",
+              "label": "Accelerometer"
             },
             {
               "type": "doc",
-              "id": "services/audio/index"
+              "id": "services/audio/index",
+              "label": "Audio"
             },
             {
               "type": "doc",
-              "id": "services/audiorecorder/index"
+              "id": "services/audiorecorder/index",
+              "label": "AudioRecorder"
             },
             {
               "type": "doc",
-              "id": "services/barometer"
+              "id": "services/barometer",
+              "label": "Barometer"
             },
             {
               "type": "doc",
-              "id": "services/battery"
+              "id": "services/battery",
+              "label": "Battery"
             },
             {
               "type": "doc",
-              "id": "services/browsercontextmenu"
+              "id": "services/browsercontextmenu",
+              "label": "BrowserContextMenu"
             },
             {
               "type": "doc",
-              "id": "services/clipboard"
+              "id": "services/clipboard",
+              "label": "Clipboard"
             },
             {
               "type": "doc",
-              "id": "services/connectivity"
+              "id": "services/connectivity",
+              "label": "Connectivity"
             },
             {
               "type": "doc",
-              "id": "services/filepicker"
+              "id": "services/filepicker",
+              "label": "FilePicker"
             },
             {
               "type": "doc",
-              "id": "services/flashlight/index"
+              "id": "services/flashlight/index",
+              "label": "Flashlight"
             },
             {
               "type": "doc",
-              "id": "services/geolocator/index"
+              "id": "services/geolocator/index",
+              "label": "Geolocator"
             },
             {
               "type": "doc",
-              "id": "services/gyroscope"
+              "id": "services/gyroscope",
+              "label": "Gyroscope"
             },
             {
               "type": "doc",
-              "id": "services/hapticfeedback"
+              "id": "services/hapticfeedback",
+              "label": "HapticFeedback"
             },
             {
               "type": "doc",
-              "id": "services/magnetometer"
+              "id": "services/magnetometer",
+              "label": "Magnetometer"
             },
             {
               "type": "doc",
-              "id": "services/permissionhandler/index"
+              "id": "services/permissionhandler/index",
+              "label": "PermissionHandler"
             },
             {
               "type": "doc",
-              "id": "services/screenbrightness"
+              "id": "services/screenbrightness",
+              "label": "ScreenBrightness"
             },
             {
               "type": "doc",
-              "id": "services/semanticsservice"
+              "id": "services/semanticsservice",
+              "label": "SemanticsService"
             },
             {
               "type": "doc",
-              "id": "services/shakedetector"
+              "id": "services/shakedetector",
+              "label": "ShakeDetector"
             },
             {
               "type": "doc",
-              "id": "services/share"
+              "id": "services/share",
+              "label": "Share"
             },
             {
               "type": "doc",
-              "id": "services/securestorage/index"
+              "id": "services/securestorage/index",
+              "label": "SecureStorage"
             },
             {
               "type": "doc",
-              "id": "services/sharedpreferences"
+              "id": "services/sharedpreferences",
+              "label": "SharedPreferences"
             },
             {
               "type": "doc",
-              "id": "services/storagepaths"
+              "id": "services/storagepaths",
+              "label": "StoragePaths"
             },
             {
               "type": "doc",
-              "id": "services/urllauncher"
+              "id": "services/urllauncher",
+              "label": "UrlLauncher"
             },
             {
               "type": "doc",
-              "id": "services/useraccelerometer"
+              "id": "services/useraccelerometer",
+              "label": "UserAccelerometer"
             },
             {
               "type": "doc",
-              "id": "services/wakelock"
+              "id": "services/wakelock",
+              "label": "Wakelock"
             }
           ],
           "link": {
@@ -1204,43 +1389,53 @@ module.exports = {
           "items": [
             {
               "type": "doc",
-              "id": "cli/flet-build"
+              "id": "cli/flet-build",
+              "label": "flet build"
             },
             {
               "type": "doc",
-              "id": "cli/flet-create"
+              "id": "cli/flet-create",
+              "label": "flet create"
             },
             {
               "type": "doc",
-              "id": "cli/flet-debug"
+              "id": "cli/flet-debug",
+              "label": "flet debug"
             },
             {
               "type": "doc",
-              "id": "cli/flet-devices"
+              "id": "cli/flet-devices",
+              "label": "flet devices"
             },
             {
               "type": "doc",
-              "id": "cli/flet-doctor"
+              "id": "cli/flet-doctor",
+              "label": "flet doctor"
             },
             {
               "type": "doc",
-              "id": "cli/flet-emulators"
+              "id": "cli/flet-emulators",
+              "label": "flet emulators"
             },
             {
               "type": "doc",
-              "id": "cli/flet-pack"
+              "id": "cli/flet-pack",
+              "label": "flet pack"
             },
             {
               "type": "doc",
-              "id": "cli/flet-publish"
+              "id": "cli/flet-publish",
+              "label": "flet publish"
             },
             {
               "type": "doc",
-              "id": "cli/flet-run"
+              "id": "cli/flet-run",
+              "label": "flet run"
             },
             {
               "type": "doc",
-              "id": "cli/flet-serve"
+              "id": "cli/flet-serve",
+              "label": "flet serve"
             }
           ],
           "link": {
@@ -1255,7 +1450,8 @@ module.exports = {
           "items": [
             {
               "type": "doc",
-              "id": "types/aliases"
+              "id": "types/aliases",
+              "label": "Aliases"
             },
             {
               "type": "category",
@@ -1285,19 +1481,23 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/auth/auth0oauthprovider"
+                      "id": "types/auth/auth0oauthprovider",
+                      "label": "Auth0OAuthProvider"
                     },
                     {
                       "type": "doc",
-                      "id": "types/auth/azureoauthprovider"
+                      "id": "types/auth/azureoauthprovider",
+                      "label": "AzureOAuthProvider"
                     },
                     {
                       "type": "doc",
-                      "id": "types/auth/githuboauthprovider"
+                      "id": "types/auth/githuboauthprovider",
+                      "label": "GitHubOAuthProvider"
                     },
                     {
                       "type": "doc",
-                      "id": "types/auth/googleoauthprovider"
+                      "id": "types/auth/googleoauthprovider",
+                      "label": "GoogleOAuthProvider"
                     }
                   ],
                   "link": {
@@ -1733,27 +1933,33 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/androiddeviceinfo"
+                      "id": "types/androiddeviceinfo",
+                      "label": "AndroidDeviceInfo"
                     },
                     {
                       "type": "doc",
-                      "id": "types/iosdeviceinfo"
+                      "id": "types/iosdeviceinfo",
+                      "label": "IosDeviceInfo"
                     },
                     {
                       "type": "doc",
-                      "id": "types/linuxdeviceinfo"
+                      "id": "types/linuxdeviceinfo",
+                      "label": "LinuxDeviceInfo"
                     },
                     {
                       "type": "doc",
-                      "id": "types/macosdeviceinfo"
+                      "id": "types/macosdeviceinfo",
+                      "label": "MacOsDeviceInfo"
                     },
                     {
                       "type": "doc",
-                      "id": "types/webdeviceinfo"
+                      "id": "types/webdeviceinfo",
+                      "label": "WebDeviceInfo"
                     },
                     {
                       "type": "doc",
-                      "id": "types/windowsdeviceinfo"
+                      "id": "types/windowsdeviceinfo",
+                      "label": "WindowsDeviceInfo"
                     }
                   ],
                   "link": {
@@ -1839,15 +2045,18 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/lineargradient"
+                      "id": "types/lineargradient",
+                      "label": "LinearGradient"
                     },
                     {
                       "type": "doc",
-                      "id": "types/radialgradient"
+                      "id": "types/radialgradient",
+                      "label": "RadialGradient"
                     },
                     {
                       "type": "doc",
-                      "id": "types/sweepgradient"
+                      "id": "types/sweepgradient",
+                      "label": "SweepGradient"
                     }
                   ],
                   "link": {
@@ -1874,11 +2083,13 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/scrollkey"
+                      "id": "types/scrollkey",
+                      "label": "ScrollKey"
                     },
                     {
                       "type": "doc",
-                      "id": "types/valuekey"
+                      "id": "types/valuekey",
+                      "label": "ValueKey"
                     }
                   ],
                   "link": {
@@ -2040,11 +2251,13 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/automaticnotchshape"
+                      "id": "types/automaticnotchshape",
+                      "label": "AutomaticNotchShape"
                     },
                     {
                       "type": "doc",
-                      "id": "types/circularrectanglenotchshape"
+                      "id": "types/circularrectanglenotchshape",
+                      "label": "CircularRectangleNotchShape"
                     }
                   ],
                   "link": {
@@ -2067,23 +2280,28 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/beveledrectangleborder"
+                      "id": "types/beveledrectangleborder",
+                      "label": "BeveledRectangleBorder"
                     },
                     {
                       "type": "doc",
-                      "id": "types/circleborder"
+                      "id": "types/circleborder",
+                      "label": "CircleBorder"
                     },
                     {
                       "type": "doc",
-                      "id": "types/continuousrectangleborder"
+                      "id": "types/continuousrectangleborder",
+                      "label": "ContinuousRectangleBorder"
                     },
                     {
                       "type": "doc",
-                      "id": "types/roundedrectangleborder"
+                      "id": "types/roundedrectangleborder",
+                      "label": "RoundedRectangleBorder"
                     },
                     {
                       "type": "doc",
-                      "id": "types/stadiumborder"
+                      "id": "types/stadiumborder",
+                      "label": "StadiumBorder"
                     }
                   ],
                   "link": {
@@ -2106,15 +2324,18 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/paintlineargradient"
+                      "id": "types/paintlineargradient",
+                      "label": "PaintLinearGradient"
                     },
                     {
                       "type": "doc",
-                      "id": "types/paintradialgradient"
+                      "id": "types/paintradialgradient",
+                      "label": "PaintRadialGradient"
                     },
                     {
                       "type": "doc",
-                      "id": "types/paintsweepgradient"
+                      "id": "types/paintsweepgradient",
+                      "label": "PaintSweepGradient"
                     }
                   ],
                   "link": {
@@ -2247,175 +2468,218 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
-                      "id": "types/appbartheme"
+                      "id": "types/appbartheme",
+                      "label": "AppBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/badgetheme"
+                      "id": "types/badgetheme",
+                      "label": "BadgeTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/bannertheme"
+                      "id": "types/bannertheme",
+                      "label": "BannerTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/bottomappbartheme"
+                      "id": "types/bottomappbartheme",
+                      "label": "BottomAppBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/bottomsheettheme"
+                      "id": "types/bottomsheettheme",
+                      "label": "BottomSheetTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/buttontheme"
+                      "id": "types/buttontheme",
+                      "label": "ButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/cardtheme"
+                      "id": "types/cardtheme",
+                      "label": "CardTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/checkboxtheme"
+                      "id": "types/checkboxtheme",
+                      "label": "CheckboxTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/chiptheme"
+                      "id": "types/chiptheme",
+                      "label": "ChipTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/colorscheme"
+                      "id": "types/colorscheme",
+                      "label": "ColorScheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/datatabletheme"
+                      "id": "types/datatabletheme",
+                      "label": "DataTableTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/datepickertheme"
+                      "id": "types/datepickertheme",
+                      "label": "DatePickerTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/dialogtheme"
+                      "id": "types/dialogtheme",
+                      "label": "DialogTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/dividertheme"
+                      "id": "types/dividertheme",
+                      "label": "DividerTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/dropdowntheme"
+                      "id": "types/dropdowntheme",
+                      "label": "DropdownTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/expansiontiletheme"
+                      "id": "types/expansiontiletheme",
+                      "label": "ExpansionTileTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/filledbuttontheme"
+                      "id": "types/filledbuttontheme",
+                      "label": "FilledButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/floatingactionbuttontheme"
+                      "id": "types/floatingactionbuttontheme",
+                      "label": "FloatingActionButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/iconbuttontheme"
+                      "id": "types/iconbuttontheme",
+                      "label": "IconButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/icontheme"
+                      "id": "types/icontheme",
+                      "label": "IconTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/listtiletheme"
+                      "id": "types/listtiletheme",
+                      "label": "ListTileTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/navigationbartheme"
+                      "id": "types/navigationbartheme",
+                      "label": "NavigationBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/navigationdrawertheme"
+                      "id": "types/navigationdrawertheme",
+                      "label": "NavigationDrawerTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/navigationrailtheme"
+                      "id": "types/navigationrailtheme",
+                      "label": "NavigationRailTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/outlinedbuttontheme"
+                      "id": "types/outlinedbuttontheme",
+                      "label": "OutlinedButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/pagetransitionstheme"
+                      "id": "types/pagetransitionstheme",
+                      "label": "PageTransitionsTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/pagetransitiontheme"
+                      "id": "types/pagetransitiontheme",
+                      "label": "PageTransitionTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/popupmenutheme"
+                      "id": "types/popupmenutheme",
+                      "label": "PopupMenuTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/progressindicatortheme"
+                      "id": "types/progressindicatortheme",
+                      "label": "ProgressIndicatorTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/radiotheme"
+                      "id": "types/radiotheme",
+                      "label": "RadioTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/scrollbartheme"
+                      "id": "types/scrollbartheme",
+                      "label": "ScrollBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/searchbartheme"
+                      "id": "types/searchbartheme",
+                      "label": "SearchBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/searchviewtheme"
+                      "id": "types/searchviewtheme",
+                      "label": "SearchViewTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/segmentedbuttontheme"
+                      "id": "types/segmentedbuttontheme",
+                      "label": "SegmentedButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/slidertheme"
+                      "id": "types/slidertheme",
+                      "label": "SliderTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/snackbartheme"
+                      "id": "types/snackbartheme",
+                      "label": "SnackBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/switchtheme"
+                      "id": "types/switchtheme",
+                      "label": "SwitchTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/systemoverlaystyle"
+                      "id": "types/systemoverlaystyle",
+                      "label": "SystemOverlayStyle"
                     },
                     {
                       "type": "doc",
-                      "id": "types/tabbartheme"
+                      "id": "types/tabbartheme",
+                      "label": "TabBarTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/textbuttontheme"
+                      "id": "types/textbuttontheme",
+                      "label": "TextButtonTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/texttheme"
+                      "id": "types/texttheme",
+                      "label": "TextTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/timepickertheme"
+                      "id": "types/timepickertheme",
+                      "label": "TimePickerTheme"
                     },
                     {
                       "type": "doc",
-                      "id": "types/tooltiptheme"
+                      "id": "types/tooltiptheme",
+                      "label": "TooltipTheme"
                     }
                   ],
                   "link": {
@@ -3223,15 +3487,18 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "types/fletpagedisconnectedexception"
+                  "id": "types/fletpagedisconnectedexception",
+                  "label": "FletPageDisconnectedException"
                 },
                 {
                   "type": "doc",
-                  "id": "types/fletunimplementedplatformexception"
+                  "id": "types/fletunimplementedplatformexception",
+                  "label": "FletUnimplementedPlatformException"
                 },
                 {
                   "type": "doc",
-                  "id": "types/fletunsupportedplatformexception"
+                  "id": "types/fletunsupportedplatformexception",
+                  "label": "FletUnsupportedPlatformException"
                 }
               ],
               "link": {
@@ -3333,11 +3600,13 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "reference/binary-packages-android-ios"
+          "id": "reference/binary-packages-android-ios",
+          "label": "Built-in binary Python packages for Android and iOS"
         },
         {
           "type": "doc",
-          "id": "reference/environment-variables"
+          "id": "reference/environment-variables",
+          "label": "Environment Variables"
         }
       ],
       "link": {
@@ -3352,31 +3621,38 @@ module.exports = {
       "items": [
         {
           "type": "doc",
-          "id": "cookbook/accessibility"
+          "id": "cookbook/accessibility",
+          "label": "Accessibility"
         },
         {
           "type": "doc",
-          "id": "cookbook/adaptive-apps"
+          "id": "cookbook/adaptive-apps",
+          "label": "Adaptive apps"
         },
         {
           "type": "doc",
-          "id": "cookbook/animations"
+          "id": "cookbook/animations",
+          "label": "Animations"
         },
         {
           "type": "doc",
-          "id": "cookbook/assets"
+          "id": "cookbook/assets",
+          "label": "Assets"
         },
         {
           "type": "doc",
-          "id": "cookbook/async-apps"
+          "id": "cookbook/async-apps",
+          "label": "Async apps"
         },
         {
           "type": "doc",
-          "id": "cookbook/authentication"
+          "id": "cookbook/authentication",
+          "label": "Authentication"
         },
         {
           "type": "doc",
-          "id": "cookbook/client-storage"
+          "id": "cookbook/client-storage",
+          "label": "Client Storage"
         },
         {
           "type": "doc",
@@ -3385,67 +3661,83 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "cookbook/control-refs"
+          "id": "cookbook/control-refs",
+          "label": "Control Refs"
         },
         {
           "type": "doc",
-          "id": "cookbook/custom-controls"
+          "id": "cookbook/custom-controls",
+          "label": "Custom Controls"
         },
         {
           "type": "doc",
-          "id": "cookbook/drag-and-drop"
+          "id": "cookbook/drag-and-drop",
+          "label": "Drag and Drop"
         },
         {
           "type": "doc",
-          "id": "cookbook/declarative-vs-imperative-crud-app"
+          "id": "cookbook/declarative-vs-imperative-crud-app",
+          "label": "Declarative vs Imperative CRUD app"
         },
         {
           "type": "doc",
-          "id": "cookbook/encrypting-sensitive-data"
+          "id": "cookbook/encrypting-sensitive-data",
+          "label": "Encrypting sensitive data"
         },
         {
           "type": "doc",
-          "id": "cookbook/expanding-controls"
+          "id": "cookbook/expanding-controls",
+          "label": "Expanding Controls"
         },
         {
           "type": "doc",
-          "id": "cookbook/fonts"
+          "id": "cookbook/fonts",
+          "label": "Fonts"
         },
         {
           "type": "doc",
-          "id": "cookbook/keyboard-shortcuts"
+          "id": "cookbook/keyboard-shortcuts",
+          "label": "Keyboard Shortcuts"
         },
         {
           "type": "doc",
-          "id": "cookbook/large-lists"
+          "id": "cookbook/large-lists",
+          "label": "Large Lists"
         },
         {
           "type": "doc",
-          "id": "cookbook/logging"
+          "id": "cookbook/logging",
+          "label": "Logging"
         },
         {
           "type": "doc",
-          "id": "cookbook/navigation-and-routing"
+          "id": "cookbook/navigation-and-routing",
+          "label": "Navigation and Routing"
         },
         {
           "type": "doc",
-          "id": "cookbook/pub-sub"
+          "id": "cookbook/pub-sub",
+          "label": "PubSub"
         },
         {
           "type": "doc",
-          "id": "cookbook/read-and-write-files"
+          "id": "cookbook/read-and-write-files",
+          "label": "Read and Write Files"
         },
         {
           "type": "doc",
-          "id": "cookbook/session-storage"
+          "id": "cookbook/session-storage",
+          "label": "Session Storage"
         },
         {
           "type": "doc",
-          "id": "cookbook/subprocess"
+          "id": "cookbook/subprocess",
+          "label": "Subprocess"
         },
         {
           "type": "doc",
-          "id": "cookbook/theming"
+          "id": "cookbook/theming",
+          "label": "Theming"
         }
       ],
       "link": {

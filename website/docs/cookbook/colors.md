@@ -44,8 +44,8 @@ You can define named colors in two ways:
 
 [Live Example](https://flet-controls-gallery.fly.dev/colors/themecolors)
 
-There are 30 named theme colors in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme-color_scheme) that are generated based on
-the [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme-color_scheme_seed), which defaults to [`Colors.BLUE`](../types/colors.md#flet.Colors-BLUE).
+There are 30 named theme colors in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme) that are generated based on
+the [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme.color_scheme_seed), which defaults to [`Colors.BLUE`](../types/colors.md#flet.Colors.BLUE).
 
 ```python-repl
 >>> page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)
@@ -79,15 +79,15 @@ colors designed to work together harmoniously.
 Each **color swatch** (palette) includes multiple shades of a specific color, where lower numbers
 represent lighter shades and higher numbers represent darker ones.
 Most palettes range from `50` to `900`, in increments of `100`, while **accent swatches**
-(e.g., [`Colors.RED_ACCENT`](../types/colors.md#flet.Colors-RED_ACCENT)) have only `100`, `200`, `400`, and `700`.
+(e.g., [`Colors.RED_ACCENT`](../types/colors.md#flet.Colors.RED_ACCENT)) have only `100`, `200`, `400`, and `700`.
 
 In addition to color swatches, Flet provides named black and white variants with built-in opacities, such as:
-- [`Colors.BLACK_54`](../types/colors.md#flet.Colors-BLACK_54) → black at 54% opacity
-- [`Colors.WHITE_70`](../types/colors.md#flet.Colors-WHITE_70) → white at 70% opacity
+- [`Colors.BLACK_54`](../types/colors.md#flet.Colors.BLACK_54) → black at 54% opacity
+- [`Colors.WHITE_70`](../types/colors.md#flet.Colors.WHITE_70) → white at 70% opacity
 
 These palette colors can be used:
 - directly as values for control color properties (e.g., `bgcolor`, `color`)
-- as seed colors for generating dynamic theme color schemes using [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme-color_scheme_seed)
+- as seed colors for generating dynamic theme color schemes using [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme.color_scheme_seed)
 
 ### Color opacity
 
@@ -117,7 +117,7 @@ For colors in hex format, you can specify the `aa` channel with values between `
 
 ## Defining colors for Flet controls
 
-Most Flet controls have default colors defined by the [`Theme.color_scheme`](../types/theme/index.md#flet.Theme-color_scheme),
+Most Flet controls have default colors defined by the [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme),
 and these can be overridden at various levels.
 
 [Live example](https://flet-controls-gallery.fly.dev/colors/controlcolors)
@@ -142,21 +142,21 @@ Note:
 The [`Theme`](../types/theme/index.md) object has a lot of properties that can be used to override default
 colors for Flet controls.
 
-For example, the nearest [`Theme.card_bgcolor`](../types/theme/index.md#flet.Theme-card_bgcolor) will be used for the
+For example, the nearest [`Theme.card_bgcolor`](../types/theme/index.md#flet.Theme.card_bgcolor) will be used for the
 [`Card`](../controls/card.md) control.
 
 Note:
     If you need to change theme for particular descendants, you can wrap
     them in a [`Container`](../controls/container.md), for example, and customize its
-    [`theme`](../controls/container.md#flet.Container-theme) property, which will be applied to
+    [`theme`](../controls/container.md#flet.Container.theme) property, which will be applied to
     all its descendants.
 
 ### Ancestor Theme Level
 
 Flet searches upward in the widget tree to find the nearest ancestor with a defined `theme`, and will take color
-from its [`Theme.color_scheme`](../types/theme/index.md#flet.Theme-color_scheme). In the example below, the nearest ancestor for the [`FilledButton`](../controls/filledbutton.md)
+from its [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme). In the example below, the nearest ancestor for the [`FilledButton`](../controls/filledbutton.md)
 is [`Container`](../controls/container.md), and the `primary` color that is used for the button will be taken from the
-[`Container.theme`](../controls/container.md#flet.Container-theme).
+[`Container.theme`](../controls/container.md#flet.Container.theme).
 
 ```python
 import flet as ft

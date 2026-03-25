@@ -29,7 +29,7 @@ from .docs import (
     route_for_output,
 )
 from .progress import ProgressReporter, Summary
-from .sidebars import build_nav_title_map, write_sidebars_yml
+from .sidebars import build_nav_title_map
 
 
 def _slugify_tab_value(label: str) -> str:
@@ -570,9 +570,6 @@ def run_migrate_bootstrap(
         __import__("json").dumps({"version": "1.0", "pages": pages}, indent=2),
         encoding="utf-8",
     )
-
-    reporter.info("Generating sidebar source from mkdocs.yml")
-    write_sidebars_yml(config.mkdocs_yml, pages, config.sidebars_source)
 
     summary.add("pages converted", converted_pages)
     summary.add("xrefs converted", converted_xrefs)

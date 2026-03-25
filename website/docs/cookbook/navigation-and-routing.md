@@ -14,12 +14,12 @@ This page focuses on the current routing model and maintained examples.
 
 A [`Page`](../controls/page.md) is a container of views ([`page.views`](../controls/page.md)), where each view represents one route-level screen.
 
-- [`page.route`](../controls/page.md#flet.Page-route) is the current route string (for example `/`, `/store`, `/settings/mail`).
+- [`page.route`](../controls/page.md#flet.Page.route) is the current route string (for example `/`, `/store`, `/settings/mail`).
 - [`page.views`](../controls/page.md) is the active navigation stack.
-- [`page.on_route_change`](../controls/page.md#flet.Page-on_route_change) rebuilds the stack when route changes.
-- [`page.on_view_pop`](../controls/page.md#flet.Page-on_view_pop) handles Back navigation (system Back, AppBar Back, browser Back).
+- [`page.on_route_change`](../controls/page.md#flet.Page.on_route_change) rebuilds the stack when route changes.
+- [`page.on_view_pop`](../controls/page.md#flet.Page.on_view_pop) handles Back navigation (system Back, AppBar Back, browser Back).
 
-A reliable setup uses a single source of truth: derive [`page.views`](../controls/page.md) from [`page.route`](../controls/page.md#flet.Page-route).
+A reliable setup uses a single source of truth: derive [`page.views`](../controls/page.md) from [`page.route`](../controls/page.md#flet.Page.route).
 
 ## Route basics
 
@@ -32,7 +32,7 @@ All routes should start with `/`, for example `/store`, `/products/42`, `/settin
 ## Handling route changes
 
 Whenever route changes (URL edit, browser Back/Forward, or app navigation),
-[`page.on_route_change`](../controls/page.md#flet.Page-on_route_change) event is triggered.
+[`page.on_route_change`](../controls/page.md#flet.Page.on_route_change) event is triggered.
 Use this event as the place where you decide which views must exist for the current route.
 
 <CodeExample path="apps/routing_navigation/route_change_event.py" language="python" />
@@ -43,8 +43,8 @@ The pattern below is the baseline for most apps:
 
 1. Clear [`page.views`](../controls/page.md).
 2. Add root view (`/`).
-3. Add extra views conditionally based on [`page.route`](../controls/page.md#flet.Page-route).
-4. Handle Back in [`page.on_view_pop`](../controls/page.md#flet.Page-on_view_pop) and navigate to the new top view.
+3. Add extra views conditionally based on [`page.route`](../controls/page.md#flet.Page.route).
+4. Handle Back in [`page.on_view_pop`](../controls/page.md#flet.Page.on_view_pop) and navigate to the new top view.
 
 :::tip[Why is this pattern important?]
 - Keeps URL, history stack, and visible UI synchronized.
@@ -56,7 +56,7 @@ The pattern below is the baseline for most apps:
 
 ## Programmatic navigation
 
-Use [`page.push_route()`](../controls/page.md#flet.Page-push_route) to navigate.
+Use [`page.push_route()`](../controls/page.md#flet.Page.push_route) to navigate.
 
 You can also pass query parameters as keyword arguments:
 
@@ -66,9 +66,9 @@ await page.push_route("/search", q="flet", page=2)
 
 ## Back navigation and pop confirmation
 
-When users go back, Flet triggers [`page.on_view_pop`](../controls/page.md#flet.Page-on_view_pop).
+When users go back, Flet triggers [`page.on_view_pop`](../controls/page.md#flet.Page.on_view_pop).
 For flows requiring confirmation (for example, unsaved changes), disable automatic pop
-and confirm manually with [`View.can_pop`](../controls/view.md#flet.View-can_pop) + [`View.on_confirm_pop`](../controls/view.md#flet.View-on_confirm_pop).
+and confirm manually with [`View.can_pop`](../controls/view.md#flet.View.can_pop) + [`View.on_confirm_pop`](../controls/view.md#flet.View.on_confirm_pop).
 
 <CodeExample path="apps/routing_navigation/pop_view_confirm.py" language="python" />
 
@@ -116,6 +116,6 @@ environment variable.
 ## Practical recommendations
 
 - Always keep a root `/` view in [`page.views`](../controls/page.md).
-- Keep route handling centralized in [`page.on_route_change`](../controls/page.md#flet.Page-on_route_change); avoid mutating [`page.views`](../controls/page.md) from many places.
+- Keep route handling centralized in [`page.on_route_change`](../controls/page.md#flet.Page.on_route_change); avoid mutating [`page.views`](../controls/page.md) from many places.
 - When adding new routes, test these cases: direct deep link, browser Back/Forward, app Back button, and reload.
 - Use route templates for dynamic segments instead of manual string splitting.
