@@ -13,7 +13,7 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 ### Pink glow around image edges
 
 ```python
---8<-- "{{ examples }}/pink_radial_glow.py"
+--8<-- "{{ examples }}/pink_radial_glow/main.py"
 ```
 
 {{ image(example_images + "/pink_radial_glow.png", alt="pink-radial-glow", width="80%") }}
@@ -23,7 +23,7 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 ### Fade out bottom edge of an image
 
 ```python
---8<-- "{{ examples }}/fade_out_image_bottom.py"
+--8<-- "{{ examples }}/fade_out_image_bottom/main.py"
 ```
 
 {{ image(example_images + "/fade_out_image_bottom.png", alt="fade-out-image-bottom", width="80%") }}
@@ -32,7 +32,7 @@ example_images: ../test-images/examples/core/golden/macos/shader_mask
 ### Applying linear and radial gradients/shaders
 
 ```python
---8<-- "{{ examples }}/linear_and_radial_gradients.py"
+--8<-- "{{ examples }}/linear_and_radial_gradients/main.py"
 ```
 
 {{ image(example_images + "/linear_and_radial_gradients.png", alt="fade-out-image-bottom", width="80%") }}

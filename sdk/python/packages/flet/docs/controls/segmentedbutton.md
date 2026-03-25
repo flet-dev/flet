@@ -13,7 +13,7 @@ example_images: ../test-images/examples/material/golden/macos/segmented_button
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/single_multiple_selection.py"
+--8<-- "{{ examples }}/single_multiple_selection/main.py"
 ```
 
 {{ image(example_images + "/single_multiple_selection.png", width="80%") }}

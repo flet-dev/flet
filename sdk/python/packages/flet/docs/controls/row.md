@@ -13,7 +13,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 ### Spacing children
 
 ```python
---8<-- "{{ examples }}/spacing.py"
+--8<-- "{{ examples }}/spacing/main.py"
 ```
 
 {{ image(example_images + "/row_spacing_adjustment.gif", alt="spacing", width="80%") }}
@@ -22,7 +22,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 ### Wrapping children
 
 ```python
---8<-- "{{ examples }}/wrap.py"
+--8<-- "{{ examples }}/wrap/main.py"
 ```
 
 {{ image(example_images + "/wrap_adjustment.gif", alt="wrap", width="80%") }}
@@ -31,7 +31,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 ### Setting horizontal alignment
 
 ```python
---8<-- "{{ examples }}/alignment.py"
+--8<-- "{{ examples }}/alignment/main.py"
 ```
 
 {{ image(example_images + "/alignment.png", alt="alignment", width="60%") }}
@@ -40,7 +40,7 @@ example_images: ../test-images/examples/core/golden/macos/row
 ### Setting vertical alignment
 
 ```python
---8<-- "{{ examples }}/vertical_alignment.py"
+--8<-- "{{ examples }}/vertical_alignment/main.py"
 ```
 
 {{ image(example_images + "/vertical_alignment.png", alt="vertical-alignment", width="60%") }}

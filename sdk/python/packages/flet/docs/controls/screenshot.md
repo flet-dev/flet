@@ -10,7 +10,7 @@ examples: ../../examples/controls/screenshot
 ### Taking control screenshot
 
 ```python
---8<-- "{{ examples }}/taking_screenshot.py"
+--8<-- "{{ examples }}/taking_screenshot/main.py"
 ```
 
 {{ class_members(class_name) }}

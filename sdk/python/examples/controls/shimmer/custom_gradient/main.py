@@ -62,7 +62,7 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(cards)
+    page.add(ft.SafeArea(content=cards))
 
 
 if __name__ == "__main__":
