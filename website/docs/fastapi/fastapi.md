@@ -4,4 +4,4 @@ title: "FastAPI"
 
 import {ClassAll} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet.fastapi.FastAPI" />
+<ClassAll name="flet_web.fastapi.FastAPI" />

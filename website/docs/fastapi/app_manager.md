@@ -4,4 +4,4 @@ title: "app_manager"
 
 import {ClassAll} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet.fastapi.app_manager" />
+<ClassAll name="flet_web.fastapi.app_manager" />
