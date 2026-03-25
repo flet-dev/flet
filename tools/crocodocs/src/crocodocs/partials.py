@@ -122,8 +122,13 @@ print(json.dumps(results))
         cwd=repo_root,
         env=env,
     )
+    stdout = result.stdout
+    # Strip non-JSON lines (e.g. flet-cli "Error getting Git version" warnings)
+    json_start = stdout.find("{")
+    if json_start > 0:
+        stdout = stdout[json_start:]
     try:
-        return json.loads(result.stdout)
+        return json.loads(stdout)
     except json.JSONDecodeError as exc:
         raise RuntimeError(
             f"JSON parse failed: {exc}\nstdout: {result.stdout[:500]}\nstderr: {result.stderr[:500]}"
