@@ -4,13 +4,10 @@ from __future__ import annotations
 
 import json
 import re
-import shutil
 from dataclasses import asdict
 from pathlib import Path
 
 from .assets import (
-    copy_referenced_asset,
-    iter_referenced_local_assets,
     resolve_local_asset_source,
     resolve_static_asset_url,
 )
@@ -490,19 +487,6 @@ def run_migrate_bootstrap(
     docs = iter_markdown_files(input_root)
     nav_titles = build_nav_title_map(config.mkdocs_yml)
     xref_map = _load_xref_map(config)
-    static_root = output_root.parent / "static"
-    assets_mapping = config.asset_mappings.get("assets")
-    if (
-        assets_mapping
-        and assets_mapping.source_path.exists()
-        and "migrate" in assets_mapping.copy_during
-    ):
-        reporter.info("Copying docs assets")
-        shutil.copytree(
-            assets_mapping.source_path,
-            static_root / assets_mapping.static_subpath,
-            dirs_exist_ok=True,
-        )
     pages: list[dict] = []
     converted_pages = 0
     converted_xrefs = 0
@@ -562,11 +546,6 @@ def run_migrate_bootstrap(
 
         output_path = compute_output_path(input_root, output_root, path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        refs = iter_referenced_local_assets(
-            front_matter, content, set(LOCAL_ASSET_REF_RE.findall(content))
-        )
-        for ref in refs:
-            copy_referenced_asset(ref, static_root, config.asset_mappings, "migrate")
         output_path.write_text(
             rebuild_document(front_matter, imports, content),
             encoding="utf-8",
@@ -586,17 +565,6 @@ def run_migrate_bootstrap(
         )
 
     reporter.stage("Writing bootstrap manifest")
-    reporter.info("Copying referenced example and test-image assets")
-    for generated_path in iter_markdown_files(output_root):
-        generated_doc = parse_document(generated_path.read_text(encoding="utf-8"))
-        refs = iter_referenced_local_assets(
-            generated_doc.data,
-            generated_doc.body,
-            set(LOCAL_ASSET_REF_RE.findall(generated_doc.body)),
-        )
-        for ref in refs:
-            copy_referenced_asset(ref, static_root, config.asset_mappings, "migrate")
-
     manifest_output.parent.mkdir(parents=True, exist_ok=True)
     manifest_output.write_text(
         __import__("json").dumps({"version": "1.0", "pages": pages}, indent=2),

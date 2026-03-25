@@ -16,7 +16,6 @@ class AssetResolution:
     source_path: Path
     static_destination: Path
     public_url: str
-    should_copy: bool
 
 
 def iter_referenced_local_assets(
@@ -70,7 +69,6 @@ def resolve_asset_copy_targets(
     ref: str,
     static_root: Path,
     asset_mappings: dict[str, AssetMapping],
-    phase: str,
 ) -> AssetResolution | None:
     parsed = _parse_virtual_asset_ref(ref, asset_mappings)
     if parsed is None:
@@ -81,28 +79,42 @@ def resolve_asset_copy_targets(
         source_path=mapping.source_path / remainder,
         static_destination=(static_root / mapping.static_subpath / remainder).resolve(),
         public_url="/" + "/".join([mapping.static_subpath.strip("/"), remainder]),
-        should_copy=phase in mapping.copy_during,
     )
 
 
-def copy_referenced_asset(
-    ref: str,
-    static_root: Path,
-    asset_mappings: dict[str, AssetMapping],
-    phase: str,
-) -> bool:
-    resolution = resolve_asset_copy_targets(ref, static_root, asset_mappings, phase)
-    if resolution is None:
-        return False
-    if not resolution.should_copy:
-        return False
-    if not resolution.source_path.exists():
-        return False
-    resolution.static_destination.parent.mkdir(parents=True, exist_ok=True)
-    if resolution.source_path.is_dir():
-        shutil.copytree(
-            resolution.source_path, resolution.static_destination, dirs_exist_ok=True
-        )
-    else:
-        shutil.copy2(resolution.source_path, resolution.static_destination)
-    return True
+def _ext_ignore(include_exts: set[str]):
+    """Return an ignore callback for shutil.copytree that skips files
+    whose suffix is not in *include_exts*."""
+
+    def _ignore(directory: str, contents: list[str]) -> list[str]:
+        ignored: list[str] = []
+        for name in contents:
+            path = Path(directory) / name
+            if path.is_file() and path.suffix.lower() not in include_exts:
+                ignored.append(name)
+        return ignored
+
+    return _ignore
+
+
+def bulk_copy_assets(
+    source_root: Path,
+    dest_root: Path,
+    include_exts: set[str] | None = None,
+) -> int:
+    """Copy all matching files from *source_root* to *dest_root*.
+
+    Returns the number of files copied.
+    """
+    copied = 0
+    for source_path in sorted(source_root.rglob("*")):
+        if not source_path.is_file():
+            continue
+        if include_exts and source_path.suffix.lower() not in include_exts:
+            continue
+        relative = source_path.relative_to(source_root)
+        dest_path = dest_root / relative
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, dest_path)
+        copied += 1
+    return copied

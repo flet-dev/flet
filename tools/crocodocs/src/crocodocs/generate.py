@@ -11,11 +11,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .assets import (
-    copy_referenced_asset,
-    iter_referenced_local_assets,
-    resolve_local_asset_source,
-)
+from .assets import bulk_copy_assets
 from .config import CrocoDocsConfig
 from .docs import (
     IMPORT_PARTIAL_RE,
@@ -28,8 +24,6 @@ from .docs import (
 from .partials import write_partial
 from .progress import ProgressReporter, Summary
 from .sidebars import write_sidebars_js_from_source
-
-LOCAL_ASSET_REF_RE = re.compile(r"(?:\.\./)+[^/\s)\"'}>]+/[^\s)\"'}>]+")
 
 
 def _normalize_anchor(name: str) -> str:
@@ -442,35 +436,16 @@ def run_generate(
         encoding="utf-8",
     )
 
-    reporter.stage("Syncing referenced assets")
+    reporter.stage("Syncing assets")
     static_root = docs_path.parent / "static"
-    synced_asset_refs: set[str] = set()
     synced_assets = 0
-    missing_asset_refs: set[str] = set()
-    for page in pages:
-        output_path = docs_path / page["output_path"]
-        document = parse_document(output_path.read_text(encoding="utf-8"))
-        refs = iter_referenced_local_assets(
-            document.data,
-            document.body,
-            set(LOCAL_ASSET_REF_RE.findall(document.body)),
+    for mapping in config.asset_mappings.values():
+        if not mapping.source_path.exists():
+            continue
+        dest = static_root / mapping.static_subpath
+        synced_assets += bulk_copy_assets(
+            mapping.source_path, dest, mapping.include_exts
         )
-        for ref in refs:
-            source_path = resolve_local_asset_source(ref, config.asset_mappings)
-            if source_path is None:
-                continue
-            synced_asset_refs.add(ref)
-            if copy_referenced_asset(
-                ref,
-                static_root,
-                config.asset_mappings,
-                "generate",
-            ):
-                synced_assets += 1
-            else:
-                missing_asset_refs.add(ref)
-    for ref in sorted(missing_asset_refs):
-        summary.warn(f"Referenced asset source not found: {ref}")
 
     summary.add("docs scanned", len(docs))
     summary.add("packages loaded", len(config.packages))
@@ -491,7 +466,6 @@ def run_generate(
         sidebar_output = config.sidebars_output.as_posix()
     summary.add("sidebar source", sidebar_source)
     summary.add("sidebar output", sidebar_output)
-    summary.add("asset refs synced", len(synced_asset_refs))
-    summary.add("asset copies performed", synced_assets)
+    summary.add("assets copied", synced_assets)
     summary.add("xref entries", len(xref_map))
     summary.print()

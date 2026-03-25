@@ -18,7 +18,7 @@ class AssetMapping:
     ref_root: str
     source_path: Path
     static_subpath: str
-    copy_during: set[str]
+    include_exts: set[str] | None
 
 
 @dataclass
@@ -61,7 +61,9 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
             ref_root=ref_root,
             source_path=_resolve_path(project_root, mapping["source_path"]),
             static_subpath=str(mapping["static_subpath"]).strip("/"),
-            copy_during=set(mapping.get("copy_during", [])),
+            include_exts=set(mapping["include_exts"])
+            if "include_exts" in mapping
+            else None,
         )
         for ref_root, mapping in raw_asset_mappings.items()
     }

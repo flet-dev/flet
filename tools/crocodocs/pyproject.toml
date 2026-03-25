@@ -42,22 +42,17 @@ methods = ["init", "before_update"]
 [tool.crocodocs.asset_mappings.examples]
 source_path = "../../sdk/python/examples"
 static_subpath = "docs/examples"
-copy_during = ["migrate", "generate"]
+include_exts = [".png", ".gif", ".svg"]
 
 [tool.crocodocs.asset_mappings."test-images"]
 source_path = "../../sdk/python/packages/flet/integration_tests"
 static_subpath = "docs/test-images"
-copy_during = ["migrate", "generate"]
-
-[tool.crocodocs.asset_mappings.assets]
-source_path = "../../sdk/python/packages/flet/docs/assets"
-static_subpath = "docs/assets"
-copy_during = ["migrate"]
+include_exts = [".png", ".gif", ".svg"]
 
 [tool.crocodocs.asset_mappings."test-images-charts"]
 source_path = "../../sdk/python/packages/flet-charts/integration_tests"
 static_subpath = "docs/test-images-charts"
-copy_during = ["migrate", "generate"]
+include_exts = [".png", ".gif", ".svg"]
 
 [tool.crocodocs.packages]
 flet = "../../sdk/python/packages/flet/src"
