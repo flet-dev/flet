@@ -11,6 +11,8 @@
 * Speed up control diffing and nested value tracking with sparse `Prop` updates and `@value` types ([#6098](https://github.com/flet-dev/flet/issues/6098), [#6270](https://github.com/flet-dev/flet/issues/6270), [#6117](https://github.com/flet-dev/flet/issues/6117), [#6296](https://github.com/flet-dev/flet/pull/6296)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
 * Consolidate app/build templates into the monorepo and publish pre-release `flet` packages and template artifacts from CI ([#6306](https://github.com/flet-dev/flet/issues/6306), [#6331](https://github.com/flet-dev/flet/pull/6331)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
 * Move desktop client binaries from PyPI wheels to GitHub Releases and unify desktop packaging around `flet-desktop` ([#6290](https://github.com/flet-dev/flet/issues/6290), [#6309](https://github.com/flet-dev/flet/pull/6309)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Lightweight dataclass validation and deprecation with `Annotated` + auto-added deprecation admonitions in docs ([#6278](https://github.com/flet-dev/flet/pull/6278))  by [@ndonkoHenri](https://github.com/ndonkoHenri).
+
 
 ### Bug fixes
 
