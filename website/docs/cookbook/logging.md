@@ -27,16 +27,3 @@ logging.getLogger("flet_core").setLevel(logging.INFO)
 Debug logging is usually needed for troubleshooting purposes, when submitting a new Flet issue.
 
 In the most cases you should be fine with `INFO` logging level.
-
-## Fletd server
-
-You can control the logging of Fletd - built-in Flet web server.
-
-When `flet` Python logger level is configured its value is implicitly passed to Fletd server and
-you can see its log messages in the output.
-
-However, you can use `FLET_LOG_LEVEL` environment variable to override Fletd log level:
-`debug`, `info`, `warning`, `debug`, `panic`, `fatal`.
-
-Additionally, to redirect Flet logs output to a file you can set `FLET_LOG_TO_FILE` environment variable to `true`.
-Flet logs will be saved to `/tmp/flet-server.log` on macOS and Linux and to `%TEMP%\flet-server.log` on Windows.
