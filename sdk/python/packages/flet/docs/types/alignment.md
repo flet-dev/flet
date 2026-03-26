@@ -10,7 +10,7 @@ example_media: ../examples/controls/types/alignment/media
 ### Example 1
 
 ```python
---8<-- "{{ examples }}/container.py"
+--8<-- "{{ examples }}/container/main.py"
 ```
 
 {{ image(example_media + "/container.png", width="80%") }}
