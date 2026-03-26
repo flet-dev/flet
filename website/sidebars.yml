@@ -2,17 +2,42 @@
 # This is the CrocoDocs sidebar source consumed by `crocodocs generate`.
 
 docs:
+  Introduction: index.md
   Getting started:
-  - index.md
   - getting-started/installation.md
   - getting-started/create-flet-app.md
   - getting-started/running-app.md
   - getting-started/testing-on-mobile.md
   Tutorials:
   - Calculator: tutorials/calculator.md
+  - ToDo: tutorials/todo.md
   - Chat: tutorials/chat.md
   - Solitaire: tutorials/solitaire.md
-  - ToDo: tutorials/todo.md
+  Cookbook:
+    Accessibility: cookbook/accessibility.md
+    Adaptive apps: cookbook/adaptive-apps.md
+    Animations: cookbook/animations.md
+    Assets: cookbook/assets.md
+    Async apps: cookbook/async-apps.md
+    Authentication: cookbook/authentication.md
+    Client Storage: cookbook/client-storage.md
+    Colors: cookbook/colors.md
+    Control Refs: cookbook/control-refs.md
+    Custom Controls: cookbook/custom-controls.md
+    Drag and Drop: cookbook/drag-and-drop.md
+    Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
+    Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+    Expanding Controls: cookbook/expanding-controls.md
+    Fonts: cookbook/fonts.md
+    Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
+    Large Lists: cookbook/large-lists.md
+    Logging: cookbook/logging.md
+    Navigation and Routing: cookbook/navigation-and-routing.md
+    PubSub: cookbook/pub-sub.md
+    Read and Write Files: cookbook/read-and-write-files.md
+    Session Storage: cookbook/session-storage.md
+    Subprocess: cookbook/subprocess.md
+    Theming: cookbook/theming.md
   Publishing Flet app:
     _index: publish/index.md
     Android: publish/android.md
@@ -280,18 +305,6 @@ docs:
       UrlLauncher: services/urllauncher.md
       UserAccelerometer: services/useraccelerometer.md
       Wakelock: services/wakelock.md
-    CLI:
-      _index: cli/index.md
-      flet build: cli/flet-build.md
-      flet create: cli/flet-create.md
-      flet debug: cli/flet-debug.md
-      flet devices: cli/flet-devices.md
-      flet doctor: cli/flet-doctor.md
-      flet emulators: cli/flet-emulators.md
-      flet pack: cli/flet-pack.md
-      flet publish: cli/flet-publish.md
-      flet run: cli/flet-run.md
-      flet serve: cli/flet-serve.md
     Types:
       _index: types/index.md
       Aliases: types/aliases.md
@@ -788,34 +801,17 @@ docs:
       - types/usememo.md
       - types/useref.md
       - types/usestate.md
-    Built-in binary Python packages for Android and iOS: reference/binary-packages-android-ios.md
+    CLI:
+      _index: cli/index.md
+      flet build: cli/flet-build.md
+      flet create: cli/flet-create.md
+      flet debug: cli/flet-debug.md
+      flet devices: cli/flet-devices.md
+      flet doctor: cli/flet-doctor.md
+      flet emulators: cli/flet-emulators.md
+      flet pack: cli/flet-pack.md
+      flet publish: cli/flet-publish.md
+      flet run: cli/flet-run.md
+      flet serve: cli/flet-serve.md
+    Python packages built in Flet: reference/binary-packages-android-ios.md
     Environment Variables: reference/environment-variables.md
-  Cookbook:
-    _generated_index:
-      title: Cookbook
-      slug: /cookbook
-      description: Recipes and guides for common Flet development tasks.
-    Accessibility: cookbook/accessibility.md
-    Adaptive apps: cookbook/adaptive-apps.md
-    Animations: cookbook/animations.md
-    Assets: cookbook/assets.md
-    Async apps: cookbook/async-apps.md
-    Authentication: cookbook/authentication.md
-    Client Storage: cookbook/client-storage.md
-    Colors: cookbook/colors.md
-    Control Refs: cookbook/control-refs.md
-    Custom Controls: cookbook/custom-controls.md
-    Drag and Drop: cookbook/drag-and-drop.md
-    Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
-    Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
-    Expanding Controls: cookbook/expanding-controls.md
-    Fonts: cookbook/fonts.md
-    Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
-    Large Lists: cookbook/large-lists.md
-    Logging: cookbook/logging.md
-    Navigation and Routing: cookbook/navigation-and-routing.md
-    PubSub: cookbook/pub-sub.md
-    Read and Write Files: cookbook/read-and-write-files.md
-    Session Storage: cookbook/session-storage.md
-    Subprocess: cookbook/subprocess.md
-    Theming: cookbook/theming.md

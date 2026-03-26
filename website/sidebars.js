@@ -4,14 +4,15 @@
 module.exports = {
   "docs": [
     {
+      "type": "doc",
+      "id": "index",
+      "label": "Introduction"
+    },
+    {
       "type": "category",
       "label": "Getting started",
       "collapsed": true,
       "items": [
-        {
-          "type": "doc",
-          "id": "index"
-        },
         {
           "type": "doc",
           "id": "getting-started/installation"
@@ -54,6 +55,133 @@ module.exports = {
           "type": "doc",
           "id": "tutorials/todo",
           "label": "ToDo"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Cookbook",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "cookbook/accessibility",
+          "label": "Accessibility"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/adaptive-apps",
+          "label": "Adaptive apps"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/animations",
+          "label": "Animations"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/assets",
+          "label": "Assets"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/async-apps",
+          "label": "Async apps"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/authentication",
+          "label": "Authentication"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/client-storage",
+          "label": "Client Storage"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/colors",
+          "label": "Colors"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/control-refs",
+          "label": "Control Refs"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/custom-controls",
+          "label": "Custom Controls"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/drag-and-drop",
+          "label": "Drag and Drop"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/declarative-vs-imperative-crud-app",
+          "label": "Declarative vs Imperative CRUD app"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/encrypting-sensitive-data",
+          "label": "Encrypting sensitive data"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/expanding-controls",
+          "label": "Expanding Controls"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/fonts",
+          "label": "Fonts"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/keyboard-shortcuts",
+          "label": "Keyboard Shortcuts"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/large-lists",
+          "label": "Large Lists"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/logging",
+          "label": "Logging"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/navigation-and-routing",
+          "label": "Navigation and Routing"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/pub-sub",
+          "label": "PubSub"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/read-and-write-files",
+          "label": "Read and Write Files"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/session-storage",
+          "label": "Session Storage"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/subprocess",
+          "label": "Subprocess"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/theming",
+          "label": "Theming"
         }
       ]
     },
@@ -1373,67 +1501,6 @@ module.exports = {
             "title": "Services",
             "slug": "/services",
             "description": "Browse the complete catalog of services available in Flet."
-          }
-        },
-        {
-          "type": "category",
-          "label": "CLI",
-          "collapsed": true,
-          "items": [
-            {
-              "type": "doc",
-              "id": "cli/flet-build",
-              "label": "flet build"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-create",
-              "label": "flet create"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-debug",
-              "label": "flet debug"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-devices",
-              "label": "flet devices"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-doctor",
-              "label": "flet doctor"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-emulators",
-              "label": "flet emulators"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-pack",
-              "label": "flet pack"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-publish",
-              "label": "flet publish"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-run",
-              "label": "flet run"
-            },
-            {
-              "type": "doc",
-              "id": "cli/flet-serve",
-              "label": "flet serve"
-            }
-          ],
-          "link": {
-            "type": "doc",
-            "id": "cli/index"
           }
         },
         {
@@ -3592,9 +3659,70 @@ module.exports = {
           }
         },
         {
+          "type": "category",
+          "label": "CLI",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "id": "cli/flet-build",
+              "label": "flet build"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-create",
+              "label": "flet create"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-debug",
+              "label": "flet debug"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-devices",
+              "label": "flet devices"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-doctor",
+              "label": "flet doctor"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-emulators",
+              "label": "flet emulators"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-pack",
+              "label": "flet pack"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-publish",
+              "label": "flet publish"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-run",
+              "label": "flet run"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-serve",
+              "label": "flet serve"
+            }
+          ],
+          "link": {
+            "type": "doc",
+            "id": "cli/index"
+          }
+        },
+        {
           "type": "doc",
           "id": "reference/binary-packages-android-ios",
-          "label": "Built-in binary Python packages for Android and iOS"
+          "label": "Python packages built in Flet"
         },
         {
           "type": "doc",
@@ -3605,139 +3733,6 @@ module.exports = {
       "link": {
         "type": "doc",
         "id": "reference/index"
-      }
-    },
-    {
-      "type": "category",
-      "label": "Cookbook",
-      "collapsed": true,
-      "items": [
-        {
-          "type": "doc",
-          "id": "cookbook/accessibility",
-          "label": "Accessibility"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/adaptive-apps",
-          "label": "Adaptive apps"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/animations",
-          "label": "Animations"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/assets",
-          "label": "Assets"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/async-apps",
-          "label": "Async apps"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/authentication",
-          "label": "Authentication"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/client-storage",
-          "label": "Client Storage"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/colors",
-          "label": "Colors"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/control-refs",
-          "label": "Control Refs"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/custom-controls",
-          "label": "Custom Controls"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/drag-and-drop",
-          "label": "Drag and Drop"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/declarative-vs-imperative-crud-app",
-          "label": "Declarative vs Imperative CRUD app"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/encrypting-sensitive-data",
-          "label": "Encrypting sensitive data"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/expanding-controls",
-          "label": "Expanding Controls"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/fonts",
-          "label": "Fonts"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/keyboard-shortcuts",
-          "label": "Keyboard Shortcuts"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/large-lists",
-          "label": "Large Lists"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/logging",
-          "label": "Logging"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/navigation-and-routing",
-          "label": "Navigation and Routing"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/pub-sub",
-          "label": "PubSub"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/read-and-write-files",
-          "label": "Read and Write Files"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/session-storage",
-          "label": "Session Storage"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/subprocess",
-          "label": "Subprocess"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/theming",
-          "label": "Theming"
-        }
-      ],
-      "link": {
-        "type": "generated-index",
-        "title": "Cookbook",
-        "slug": "/cookbook",
-        "description": "Recipes and guides for common Flet development tasks."
       }
     }
   ]
