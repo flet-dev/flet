@@ -4,17 +4,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     name: Build Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Build docs
-        working-directory: sdk/python/packages/flet
+      - name: Build website
         run: |
-          uv run --group docs mkdocs build
+          cd website
+          yarn install
+          yarn build
+
+      - name: Check for broken images and unresolved xrefs
+        run: bash .github/scripts/check_docs.sh website/build
