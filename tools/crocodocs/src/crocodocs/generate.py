@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import json
 import os
 import re
@@ -36,43 +35,8 @@ def _root_anchor(symbol: str) -> str:
     return _normalize_anchor(symbol)
 
 
-def _section_anchor(symbol: str, section_name: str) -> str:
-    return _normalize_anchor(f"{symbol}-{section_name.lower()}")
-
-
 def _member_anchor(symbol: str, member_name: str) -> str:
     return _normalize_anchor(f"{symbol}.{member_name}")
-
-
-def _collect_public_aliases(package_name: str, root: Path) -> dict[str, str]:
-    aliases: dict[str, str] = {}
-    init_path = root / package_name / "__init__.py"
-    if not init_path.exists():
-        return aliases
-
-    tree = ast.parse(init_path.read_text(encoding="utf-8"))
-    for node in tree.body:
-        if not isinstance(node, ast.ImportFrom):
-            continue
-        if node.module is None:
-            continue
-        if any(alias.name == "*" for alias in node.names):
-            continue
-
-        if node.level > 0:
-            base_parts = package_name.split(".")
-            if node.level > 1:
-                base_parts = base_parts[: -(node.level - 1)]
-            module_parts = base_parts + node.module.split(".")
-        else:
-            module_parts = node.module.split(".")
-        module_name = ".".join(part for part in module_parts if part)
-
-        for imported in node.names:
-            public_name = imported.asname or imported.name
-            aliases[f"{package_name}.{public_name}"] = f"{module_name}.{imported.name}"
-
-    return aliases
 
 
 def _apply_public_aliases(
@@ -88,109 +52,6 @@ def _apply_public_aliases(
         copied["public_qualname"] = public_name
         aliased[public_name] = copied
     return aliased
-
-
-def _signature_from_function(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
-    parts: list[str] = []
-    for arg in node.args.posonlyargs + node.args.args:
-        parts.append(arg.arg)
-    if node.args.vararg:
-        parts.append("*" + node.args.vararg.arg)
-    for arg in node.args.kwonlyargs:
-        parts.append(arg.arg)
-    if node.args.kwarg:
-        parts.append("**" + node.args.kwarg.arg)
-    return f"{node.name}(" + ", ".join(parts) + ")"
-
-
-def _extract_module_objects(
-    module_name: str, path: Path
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    tree = ast.parse(path.read_text(encoding="utf-8"))
-    classes: dict[str, Any] = {}
-    functions: dict[str, Any] = {}
-    for node in tree.body:
-        if isinstance(node, ast.ClassDef) and not node.name.startswith("_"):
-            qualname = f"{module_name}.{node.name}"
-            methods = []
-            properties = []
-            events = []
-            for child in node.body:
-                if isinstance(
-                    child, (ast.FunctionDef, ast.AsyncFunctionDef)
-                ) and not child.name.startswith("_"):
-                    methods.append(
-                        {
-                            "name": child.name,
-                            "signature": _signature_from_function(child),
-                            "docstring": ast.get_docstring(child),
-                            "parameters": [arg.arg for arg in child.args.args],
-                            "return_type": None,
-                            "deprecation": None,
-                        }
-                    )
-                elif isinstance(child, ast.AnnAssign) and isinstance(
-                    child.target, ast.Name
-                ):
-                    entry = {
-                        "name": child.target.id,
-                        "type": ast.unparse(child.annotation)
-                        if child.annotation
-                        else None,
-                        "default": ast.unparse(child.value)
-                        if child.value is not None
-                        else None,
-                        "docstring": None,
-                        "deprecation": None,
-                        "inherited_from": None,
-                    }
-                    if child.target.id.startswith("on_"):
-                        events.append(entry)
-                    elif not child.target.id.startswith("_"):
-                        properties.append(entry)
-            classes[qualname] = {
-                "name": node.name,
-                "qualname": qualname,
-                "docstring": ast.get_docstring(node),
-                "bases": [ast.unparse(base) for base in node.bases],
-                "deprecation": None,
-                "properties": properties,
-                "events": events,
-                "methods": methods,
-            }
-        elif isinstance(
-            node, (ast.FunctionDef, ast.AsyncFunctionDef)
-        ) and not node.name.startswith("_"):
-            qualname = f"{module_name}.{node.name}"
-            functions[qualname] = {
-                "name": node.name,
-                "qualname": qualname,
-                "signature": _signature_from_function(node),
-                "docstring": ast.get_docstring(node),
-                "parameters": [arg.arg for arg in node.args.args],
-                "return_type": None,
-                "deprecation": None,
-            }
-    return classes, functions
-
-
-def _extract_api_data(
-    package_name: str, root: Path
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    classes: dict[str, Any] = {}
-    functions: dict[str, Any] = {}
-    package_dir = root / package_name
-    if not package_dir.exists():
-        return classes, functions
-    for path in sorted(package_dir.rglob("*.py")):
-        if "__pycache__" in path.parts:
-            continue
-        rel = path.relative_to(root).with_suffix("")
-        module_name = ".".join(rel.parts)
-        module_classes, module_functions = _extract_module_objects(module_name, path)
-        classes.update(module_classes)
-        functions.update(module_functions)
-    return classes, functions
 
 
 def _extract_api_data_with_griffe(

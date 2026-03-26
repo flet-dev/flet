@@ -66,32 +66,3 @@ def parse_front_matter(text: str) -> FrontMatterDocument:
 
     body = text[match.end() :]
     return FrontMatterDocument(data=data, body=body)
-
-
-def _dump_scalar(value: Any) -> str:
-    if value is True:
-        return "true"
-    if value is False:
-        return "false"
-    if value is None:
-        return "null"
-    if isinstance(value, (int, float)):
-        return str(value)
-    text = str(value)
-    escaped = text.replace("\\", "\\\\").replace('"', '\\"')
-    return f'"{escaped}"'
-
-
-def dump_front_matter(data: dict[str, Any]) -> str:
-    if not data:
-        return ""
-    lines = ["---"]
-    for key, value in data.items():
-        if isinstance(value, list):
-            lines.append(f"{key}:")
-            for item in value:
-                lines.append(f"  - {_dump_scalar(item)}")
-        else:
-            lines.append(f"{key}: {_dump_scalar(value)}")
-    lines.append("---")
-    return "\n".join(lines) + "\n"

@@ -24,10 +24,7 @@ class AssetMapping:
 @dataclass
 class CrocoDocsConfig:
     project_root: Path
-    source_docs_path: Path
-    mkdocs_yml: Path
     docs_path: Path
-    inventory_output: Path
     manifest_output: Path
     api_output: Path
     partials_output_dir: Path
@@ -74,10 +71,7 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
 
     return CrocoDocsConfig(
         project_root=project_root,
-        source_docs_path=_resolve_path(project_root, raw["source_docs_path"]),
-        mkdocs_yml=_resolve_path(project_root, raw["mkdocs_yml"]),
         docs_path=_resolve_path(project_root, raw["docs_path"]),
-        inventory_output=_resolve_path(project_root, raw["inventory_output"]),
         manifest_output=_resolve_path(project_root, raw["manifest_output"]),
         api_output=_resolve_path(project_root, raw["api_output"]),
         partials_output_dir=_resolve_path(project_root, raw["partials_output_dir"]),

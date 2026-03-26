@@ -26,52 +26,12 @@ def _load_yaml(text_path: Path) -> Any:
     return yaml.safe_load(text_path.read_text(encoding="utf-8"))
 
 
-def _load_nav(mkdocs_yml: Path) -> list[Any]:
-    text = mkdocs_yml.read_text(encoding="utf-8")
-    marker = "\nnav:\n"
-    if marker in text:
-        text = text[text.index(marker) + 1 :]
-    elif text.startswith("nav:\n"):
-        text = text
-    else:
-        raise ValueError(f"Could not find 'nav:' section in {mkdocs_yml}")
-    data = yaml.safe_load(text) or {}
-    nav = data.get("nav")
-    if not isinstance(nav, list):
-        raise ValueError(f"Expected 'nav' list in {mkdocs_yml}")
-    return nav
-
-
 def _load_sidebar_source(sidebars_yml: Path) -> Any:
     data = _load_yaml(sidebars_yml) or {}
     docs = data.get("docs")
     if docs is None:
         raise ValueError(f"Expected top-level 'docs' key in {sidebars_yml}")
     return docs
-
-
-def _normalize_label(value: str) -> str:
-    return value.strip().lower()
-
-
-def _collect_nav_titles(entries: list[Any], out: dict[str, str]) -> None:
-    for entry in entries:
-        if isinstance(entry, str):
-            continue
-        if not isinstance(entry, dict) or len(entry) != 1:
-            continue
-        label, value = next(iter(entry.items()))
-        if isinstance(value, str):
-            out[value] = label
-            continue
-        if isinstance(value, list):
-            _collect_nav_titles(value, out)
-
-
-def build_nav_title_map(mkdocs_yml: Path) -> dict[str, str]:
-    titles: dict[str, str] = {}
-    _collect_nav_titles(_load_nav(mkdocs_yml), titles)
-    return titles
 
 
 def _doc_item(label: str, ref: str) -> dict[str, Any]:

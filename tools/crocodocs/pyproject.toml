@@ -25,10 +25,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.crocodocs]
-source_docs_path = "../../sdk/python/packages/flet/docs"
-mkdocs_yml = "../../sdk/python/packages/flet/mkdocs.yml"
 docs_path = "../../website/docs"
-inventory_output = "../../website/.crocodocs/inventory-report.json"
 manifest_output = "../../website/.crocodocs/docs-manifest.json"
 api_output = "../../website/.crocodocs/api-data.json"
 partials_output_dir = "../../website/.crocodocs"
