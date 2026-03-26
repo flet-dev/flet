@@ -14,30 +14,30 @@ docs:
   - Chat: tutorials/chat.md
   - Solitaire: tutorials/solitaire.md
   Cookbook:
-    Accessibility: cookbook/accessibility.md
-    Adaptive apps: cookbook/adaptive-apps.md
-    Animations: cookbook/animations.md
-    Assets: cookbook/assets.md
-    Async apps: cookbook/async-apps.md
-    Authentication: cookbook/authentication.md
-    Client Storage: cookbook/client-storage.md
+    Expanding Controls: cookbook/expanding-controls.md
     Colors: cookbook/colors.md
+    Fonts: cookbook/fonts.md
+    Theming: cookbook/theming.md
+    Assets: cookbook/assets.md
+    Animations: cookbook/animations.md
+    Adaptive apps: cookbook/adaptive-apps.md
+    Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
+    Drag and Drop: cookbook/drag-and-drop.md
+    Large Lists: cookbook/large-lists.md
+    Accessibility: cookbook/accessibility.md
+    Navigation and Routing: cookbook/navigation-and-routing.md
     Control Refs: cookbook/control-refs.md
     Custom Controls: cookbook/custom-controls.md
-    Drag and Drop: cookbook/drag-and-drop.md
     Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
-    Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
-    Expanding Controls: cookbook/expanding-controls.md
-    Fonts: cookbook/fonts.md
-    Keyboard Shortcuts: cookbook/keyboard-shortcuts.md
-    Large Lists: cookbook/large-lists.md
-    Logging: cookbook/logging.md
-    Navigation and Routing: cookbook/navigation-and-routing.md
-    PubSub: cookbook/pub-sub.md
+    Async apps: cookbook/async-apps.md
     Read and Write Files: cookbook/read-and-write-files.md
+    Client Storage: cookbook/client-storage.md
     Session Storage: cookbook/session-storage.md
+    PubSub: cookbook/pub-sub.md
     Subprocess: cookbook/subprocess.md
-    Theming: cookbook/theming.md
+    Logging: cookbook/logging.md
+    Authentication: cookbook/authentication.md
+    Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
   Publishing Flet app:
     _index: publish/index.md
     Android: publish/android.md

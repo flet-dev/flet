@@ -43,6 +43,11 @@ module.exports = {
         },
         {
           "type": "doc",
+          "id": "tutorials/todo",
+          "label": "ToDo"
+        },
+        {
+          "type": "doc",
           "id": "tutorials/chat",
           "label": "Chat"
         },
@@ -50,11 +55,6 @@ module.exports = {
           "type": "doc",
           "id": "tutorials/solitaire",
           "label": "Solitaire"
-        },
-        {
-          "type": "doc",
-          "id": "tutorials/todo",
-          "label": "ToDo"
         }
       ]
     },
@@ -65,18 +65,23 @@ module.exports = {
       "items": [
         {
           "type": "doc",
-          "id": "cookbook/accessibility",
-          "label": "Accessibility"
+          "id": "cookbook/expanding-controls",
+          "label": "Expanding Controls"
         },
         {
           "type": "doc",
-          "id": "cookbook/adaptive-apps",
-          "label": "Adaptive apps"
+          "id": "cookbook/colors",
+          "label": "Colors"
         },
         {
           "type": "doc",
-          "id": "cookbook/animations",
-          "label": "Animations"
+          "id": "cookbook/fonts",
+          "label": "Fonts"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/theming",
+          "label": "Theming"
         },
         {
           "type": "doc",
@@ -85,23 +90,38 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "cookbook/async-apps",
-          "label": "Async apps"
+          "id": "cookbook/animations",
+          "label": "Animations"
         },
         {
           "type": "doc",
-          "id": "cookbook/authentication",
-          "label": "Authentication"
+          "id": "cookbook/adaptive-apps",
+          "label": "Adaptive apps"
         },
         {
           "type": "doc",
-          "id": "cookbook/client-storage",
-          "label": "Client Storage"
+          "id": "cookbook/keyboard-shortcuts",
+          "label": "Keyboard Shortcuts"
         },
         {
           "type": "doc",
-          "id": "cookbook/colors",
-          "label": "Colors"
+          "id": "cookbook/drag-and-drop",
+          "label": "Drag and Drop"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/large-lists",
+          "label": "Large Lists"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/accessibility",
+          "label": "Accessibility"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/navigation-and-routing",
+          "label": "Navigation and Routing"
         },
         {
           "type": "doc",
@@ -115,53 +135,13 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "cookbook/drag-and-drop",
-          "label": "Drag and Drop"
-        },
-        {
-          "type": "doc",
           "id": "cookbook/declarative-vs-imperative-crud-app",
           "label": "Declarative vs Imperative CRUD app"
         },
         {
           "type": "doc",
-          "id": "cookbook/encrypting-sensitive-data",
-          "label": "Encrypting sensitive data"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/expanding-controls",
-          "label": "Expanding Controls"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/fonts",
-          "label": "Fonts"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/keyboard-shortcuts",
-          "label": "Keyboard Shortcuts"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/large-lists",
-          "label": "Large Lists"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/logging",
-          "label": "Logging"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/navigation-and-routing",
-          "label": "Navigation and Routing"
-        },
-        {
-          "type": "doc",
-          "id": "cookbook/pub-sub",
-          "label": "PubSub"
+          "id": "cookbook/async-apps",
+          "label": "Async apps"
         },
         {
           "type": "doc",
@@ -170,8 +150,18 @@ module.exports = {
         },
         {
           "type": "doc",
+          "id": "cookbook/client-storage",
+          "label": "Client Storage"
+        },
+        {
+          "type": "doc",
           "id": "cookbook/session-storage",
           "label": "Session Storage"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/pub-sub",
+          "label": "PubSub"
         },
         {
           "type": "doc",
@@ -180,8 +170,18 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "cookbook/theming",
-          "label": "Theming"
+          "id": "cookbook/logging",
+          "label": "Logging"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/authentication",
+          "label": "Authentication"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/encrypting-sensitive-data",
+          "label": "Encrypting sensitive data"
         }
       ]
     },
