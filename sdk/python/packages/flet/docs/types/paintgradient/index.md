@@ -5,5 +5,5 @@
 ### Canvas paint
 
 ```python
---8<-- "../../examples/controls/types/paint_gradient/canvas_paint.py"
+--8<-- "../../examples/controls/types/paint_gradient/canvas_paint/main.py"
 ```

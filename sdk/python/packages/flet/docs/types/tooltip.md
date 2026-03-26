@@ -5,7 +5,7 @@
 ### Tooltip with decoration
 
 ```python
---8<-- "../../examples/controls/types/tooltip/with_decoration.py"
+--8<-- "../../examples/controls/types/tooltip/with_decoration/main.py"
 ```
 
 {{ image("../examples/controls/types/tooltip/media/with_decoration.gif", alt="with-decoration", width="80%") }}

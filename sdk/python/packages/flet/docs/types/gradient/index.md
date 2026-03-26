@@ -5,5 +5,5 @@
 ### Containers with gradients
 
 ```python
---8<-- "../../examples/controls/types/gradient/container.py"
+--8<-- "../../examples/controls/types/gradient/container/main.py"
 ```

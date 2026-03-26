@@ -10,7 +10,7 @@ examples: ../../examples/controls/types/context_menu_trigger
 ### Showcase
 
 ```python
---8<-- "{{ examples }}/showcase.py"
+--8<-- "{{ examples }}/showcase/main.py"
 ```
 
 {{ class_members(class_name, separate_signature=False) }}

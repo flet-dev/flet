@@ -10,7 +10,7 @@ examples: ../../examples/controls/types/popup_menu_position
 ### Showcase
 
 ```python
---8<-- "{{ examples }}/showcase.py"
+--8<-- "{{ examples }}/showcase/main.py"
 ```
 
 {{ class_members(class_name, separate_signature=False) }}

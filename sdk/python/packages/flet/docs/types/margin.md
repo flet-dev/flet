@@ -5,5 +5,5 @@
 ### Example 1
 
 ```python
---8<-- "../../examples/controls/types/margin/container.py"
+--8<-- "../../examples/controls/types/margin/container/main.py"
 ```

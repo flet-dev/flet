@@ -5,7 +5,7 @@
 ### Container with radial gradient
 
 ```python
---8<-- "../../examples/controls/types/gradient/radial_gradient/container.py"
+--8<-- "../../examples/controls/types/gradient/radial_gradient/container/main.py"
 ```
 
 {{ image("../examples/controls/types/gradient/radial_gradient/media/container.png", alt="container", width="80%") }}

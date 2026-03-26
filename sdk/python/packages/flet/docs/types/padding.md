@@ -5,7 +5,7 @@
 ### Example 1
 
 ```python
---8<-- "../../examples/controls/types/padding/container.py"
+--8<-- "../../examples/controls/types/padding/container/main.py"
 ```
 
 {{ image("../examples/controls/types/padding/media/container.png", alt="container", width="80%") }}
