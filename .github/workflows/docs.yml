@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
