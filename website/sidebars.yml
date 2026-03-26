@@ -2,44 +2,43 @@
 # This is the CrocoDocs sidebar source consumed by `crocodocs generate`.
 
 docs:
-  Learn:
-  - Getting started:
-    - index.md
-    - getting-started/installation.md
-    - getting-started/create-flet-app.md
-    - getting-started/running-app.md
-    - getting-started/testing-on-mobile.md
-  - Tutorials:
-    - Calculator: tutorials/calculator.md
-    - Chat: tutorials/chat.md
-    - Solitaire: tutorials/solitaire.md
-    - ToDo: tutorials/todo.md
-  - Publishing Flet app:
-      _index: publish/index.md
-      Android: publish/android.md
-      iOS: publish/ios.md
-      Linux: publish/linux.md
-      macOS: publish/macos.md
-      Windows: publish/windows.md
-      Web:
-        _index: publish/web/index.md
-        Dynamic Website:
-          _index: publish/web/dynamic-website/index.md
-          Hosting:
-            _index: publish/web/dynamic-website/hosting/index.md
-            Fly.io: publish/web/dynamic-website/hosting/fly-io.md
-            Replit: publish/web/dynamic-website/hosting/replit.md
-            Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
-        Static Website:
-          _index: publish/web/static-website/index.md
-          Hosting:
-          - Cloudflare: publish/web/static-website/hosting/cloudflare.md
-          - GitHub Pages: publish/web/static-website/hosting/github-pages.md
-  - Extending Flet:
-    - extend/user-extensions.md
-    - extend/built-in-extensions.md
-  API Reference:
-    _index: api-reference/index.md
+  Getting started:
+  - index.md
+  - getting-started/installation.md
+  - getting-started/create-flet-app.md
+  - getting-started/running-app.md
+  - getting-started/testing-on-mobile.md
+  Tutorials:
+  - Calculator: tutorials/calculator.md
+  - Chat: tutorials/chat.md
+  - Solitaire: tutorials/solitaire.md
+  - ToDo: tutorials/todo.md
+  Publishing Flet app:
+    _index: publish/index.md
+    Android: publish/android.md
+    iOS: publish/ios.md
+    Linux: publish/linux.md
+    macOS: publish/macos.md
+    Windows: publish/windows.md
+    Web:
+      _index: publish/web/index.md
+      Dynamic Website:
+        _index: publish/web/dynamic-website/index.md
+        Hosting:
+          _index: publish/web/dynamic-website/hosting/index.md
+          Fly.io: publish/web/dynamic-website/hosting/fly-io.md
+          Replit: publish/web/dynamic-website/hosting/replit.md
+          Self-Hosting: publish/web/dynamic-website/hosting/self-hosting.md
+      Static Website:
+        _index: publish/web/static-website/index.md
+        Hosting:
+        - Cloudflare: publish/web/static-website/hosting/cloudflare.md
+        - GitHub Pages: publish/web/static-website/hosting/github-pages.md
+  Extending Flet:
+  - extend/user-extensions.md
+  - extend/built-in-extensions.md
+  Reference:
+    _index: reference/index.md
     Controls:
       _generated_index:
         title: Controls

@@ -97,8 +97,8 @@ module.exports = {
               to: '/docs',
             },
             {
-              label: 'API Reference',
-              to: '/docs/api-reference',
+              label: 'Reference',
+              to: '/docs/reference',
             }
           ],
         },

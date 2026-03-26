@@ -5,195 +5,188 @@ module.exports = {
   "docs": [
     {
       "type": "category",
-      "label": "Learn",
+      "label": "Getting started",
       "collapsed": true,
       "items": [
         {
-          "type": "category",
-          "label": "Getting started",
-          "collapsed": true,
-          "items": [
-            {
-              "type": "doc",
-              "id": "index"
-            },
-            {
-              "type": "doc",
-              "id": "getting-started/installation"
-            },
-            {
-              "type": "doc",
-              "id": "getting-started/create-flet-app"
-            },
-            {
-              "type": "doc",
-              "id": "getting-started/running-app"
-            },
-            {
-              "type": "doc",
-              "id": "getting-started/testing-on-mobile"
-            }
-          ]
+          "type": "doc",
+          "id": "index"
         },
         {
-          "type": "category",
-          "label": "Tutorials",
-          "collapsed": true,
-          "items": [
-            {
-              "type": "doc",
-              "id": "tutorials/calculator",
-              "label": "Calculator"
-            },
-            {
-              "type": "doc",
-              "id": "tutorials/chat",
-              "label": "Chat"
-            },
-            {
-              "type": "doc",
-              "id": "tutorials/solitaire",
-              "label": "Solitaire"
-            },
-            {
-              "type": "doc",
-              "id": "tutorials/todo",
-              "label": "ToDo"
-            }
-          ]
+          "type": "doc",
+          "id": "getting-started/installation"
         },
         {
-          "type": "category",
-          "label": "Publishing Flet app",
-          "collapsed": true,
-          "items": [
-            {
-              "type": "doc",
-              "id": "publish/android",
-              "label": "Android"
-            },
-            {
-              "type": "doc",
-              "id": "publish/ios",
-              "label": "iOS"
-            },
-            {
-              "type": "doc",
-              "id": "publish/linux",
-              "label": "Linux"
-            },
-            {
-              "type": "doc",
-              "id": "publish/macos",
-              "label": "macOS"
-            },
-            {
-              "type": "doc",
-              "id": "publish/windows",
-              "label": "Windows"
-            },
-            {
-              "type": "category",
-              "label": "Web",
-              "collapsed": true,
-              "items": [
-                {
-                  "type": "category",
-                  "label": "Dynamic Website",
-                  "collapsed": true,
-                  "items": [
-                    {
-                      "type": "category",
-                      "label": "Hosting",
-                      "collapsed": true,
-                      "items": [
-                        {
-                          "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/fly-io",
-                          "label": "Fly.io"
-                        },
-                        {
-                          "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/replit",
-                          "label": "Replit"
-                        },
-                        {
-                          "type": "doc",
-                          "id": "publish/web/dynamic-website/hosting/self-hosting",
-                          "label": "Self-Hosting"
-                        }
-                      ],
-                      "link": {
-                        "type": "doc",
-                        "id": "publish/web/dynamic-website/hosting/index"
-                      }
-                    }
-                  ],
-                  "link": {
-                    "type": "doc",
-                    "id": "publish/web/dynamic-website/index"
-                  }
-                },
-                {
-                  "type": "category",
-                  "label": "Static Website",
-                  "collapsed": true,
-                  "items": [
-                    {
-                      "type": "category",
-                      "label": "Hosting",
-                      "collapsed": true,
-                      "items": [
-                        {
-                          "type": "doc",
-                          "id": "publish/web/static-website/hosting/cloudflare",
-                          "label": "Cloudflare"
-                        },
-                        {
-                          "type": "doc",
-                          "id": "publish/web/static-website/hosting/github-pages",
-                          "label": "GitHub Pages"
-                        }
-                      ]
-                    }
-                  ],
-                  "link": {
-                    "type": "doc",
-                    "id": "publish/web/static-website/index"
-                  }
-                }
-              ],
-              "link": {
-                "type": "doc",
-                "id": "publish/web/index"
-              }
-            }
-          ],
-          "link": {
-            "type": "doc",
-            "id": "publish/index"
-          }
+          "type": "doc",
+          "id": "getting-started/create-flet-app"
         },
         {
-          "type": "category",
-          "label": "Extending Flet",
-          "collapsed": true,
-          "items": [
-            {
-              "type": "doc",
-              "id": "extend/user-extensions"
-            },
-            {
-              "type": "doc",
-              "id": "extend/built-in-extensions"
-            }
-          ]
+          "type": "doc",
+          "id": "getting-started/running-app"
+        },
+        {
+          "type": "doc",
+          "id": "getting-started/testing-on-mobile"
         }
       ]
     },
     {
       "type": "category",
-      "label": "API Reference",
+      "label": "Tutorials",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "tutorials/calculator",
+          "label": "Calculator"
+        },
+        {
+          "type": "doc",
+          "id": "tutorials/chat",
+          "label": "Chat"
+        },
+        {
+          "type": "doc",
+          "id": "tutorials/solitaire",
+          "label": "Solitaire"
+        },
+        {
+          "type": "doc",
+          "id": "tutorials/todo",
+          "label": "ToDo"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Publishing Flet app",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "publish/android",
+          "label": "Android"
+        },
+        {
+          "type": "doc",
+          "id": "publish/ios",
+          "label": "iOS"
+        },
+        {
+          "type": "doc",
+          "id": "publish/linux",
+          "label": "Linux"
+        },
+        {
+          "type": "doc",
+          "id": "publish/macos",
+          "label": "macOS"
+        },
+        {
+          "type": "doc",
+          "id": "publish/windows",
+          "label": "Windows"
+        },
+        {
+          "type": "category",
+          "label": "Web",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "category",
+              "label": "Dynamic Website",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "category",
+                  "label": "Hosting",
+                  "collapsed": true,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "publish/web/dynamic-website/hosting/fly-io",
+                      "label": "Fly.io"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "publish/web/dynamic-website/hosting/replit",
+                      "label": "Replit"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "publish/web/dynamic-website/hosting/self-hosting",
+                      "label": "Self-Hosting"
+                    }
+                  ],
+                  "link": {
+                    "type": "doc",
+                    "id": "publish/web/dynamic-website/hosting/index"
+                  }
+                }
+              ],
+              "link": {
+                "type": "doc",
+                "id": "publish/web/dynamic-website/index"
+              }
+            },
+            {
+              "type": "category",
+              "label": "Static Website",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "category",
+                  "label": "Hosting",
+                  "collapsed": true,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "publish/web/static-website/hosting/cloudflare",
+                      "label": "Cloudflare"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "publish/web/static-website/hosting/github-pages",
+                      "label": "GitHub Pages"
+                    }
+                  ]
+                }
+              ],
+              "link": {
+                "type": "doc",
+                "id": "publish/web/static-website/index"
+              }
+            }
+          ],
+          "link": {
+            "type": "doc",
+            "id": "publish/web/index"
+          }
+        }
+      ],
+      "link": {
+        "type": "doc",
+        "id": "publish/index"
+      }
+    },
+    {
+      "type": "category",
+      "label": "Extending Flet",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "extend/user-extensions"
+        },
+        {
+          "type": "doc",
+          "id": "extend/built-in-extensions"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Reference",
       "collapsed": true,
       "items": [
         {
@@ -3611,7 +3604,7 @@ module.exports = {
       ],
       "link": {
         "type": "doc",
-        "id": "api-reference/index"
+        "id": "reference/index"
       }
     },
     {
