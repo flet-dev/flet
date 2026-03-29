@@ -75,8 +75,11 @@ dev = [
     "kaleido>=1.2.0",
     { include-group = 'test' },
 ]
-docs = [
+docs-coverage = [
     "docstr-coverage >=2.3.2",
+]
+docs = [
+    { include-group = 'docs-coverage' },
 ]
 all = [
     { include-group = 'dev' },
