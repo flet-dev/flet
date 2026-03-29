@@ -1,6 +1,6 @@
 flet --version
 DIST_PATH=$PWD/dist
-flet publish apps/todo/todo.py --distpath $DIST_PATH/todo --base-url todo --app-name "Flet To-Do" --app-description "A classic To-Do app inspired by TodoMVC project."
+flet publish apps/todo/basic/main.py --distpath $DIST_PATH/todo --base-url todo --app-name "Flet To-Do" --app-description "A classic To-Do app inspired by TodoMVC project."
 flet publish apps/icons_browser/main.py --distpath $DIST_PATH/icons_browser --base-url icons_browser --app-name "Flet Icons Browser" --app-description "Quickly search through icons collection to use in your app."
 flet publish tutorials/calculator/calc.py --distpath $DIST_PATH/calculator --base-url calculator --app-name "Calculator" --app-description "A simple calculator app written in Flet."
 flet publish tutorials/solitaire_declarative/solitaire-final/main.py --distpath $DIST_PATH/solitaire --base-url solitaire --assets assets --app-name "Solitaire" --app-description "Learn how to handle gestures and position controls on a page."

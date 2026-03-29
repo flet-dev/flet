@@ -71,7 +71,6 @@ class Task(ft.Column):
 
 
 class TodoApp(ft.Column):
-    # application's root control is a Column containing all other controls
     def build(self):
         self.new_task = ft.TextField(
             hint_text="What needs to be done?", on_submit=self.add_clicked, expand=True
@@ -162,9 +161,8 @@ def main(page: ft.Page):
     page.title = "ToDo App"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.scroll = ft.ScrollMode.ADAPTIVE
-
-    # create app control and add it to the page
-    page.add(TodoApp())
+    page.add(ft.SafeArea(content=TodoApp()))
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
