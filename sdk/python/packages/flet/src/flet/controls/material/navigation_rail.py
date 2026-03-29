@@ -56,7 +56,7 @@ class NavigationRailDestination(Control):
     Represents a destination in a `NavigationRail`.
     """
 
-    icon: Optional[IconDataOrControl] = None
+    icon: IconDataOrControl
     """
     The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
     destination.

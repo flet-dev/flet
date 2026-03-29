@@ -25,6 +25,14 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
     return withPageSize((context, view) {
       var result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
+        if (!constraints.hasBoundedWidth) {
+          return const ErrorControl(
+            "Error displaying ResponsiveRow: width is unbounded.",
+            description:
+                "Set a fixed width, a non-zero expand, or place it inside a control with bounded width.",
+          );
+        }
+
         // breakpoints
         final rawBreakpoints =
             control.get<Map>("breakpoints", view.breakpoints)!;
