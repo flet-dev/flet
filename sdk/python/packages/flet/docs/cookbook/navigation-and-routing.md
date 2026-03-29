@@ -20,7 +20,7 @@ A reliable setup uses a single source of truth: derive [`page.views`][flet.Page.
 The default route is `/` when no route is provided.
 
 ```python
---8<-- "../../examples/apps/routing_navigation/initial_route.py"
+--8<-- "../../examples/apps/routing_navigation/initial_route/main.py"
 ```
 
 All routes should start with `/`, for example `/store`, `/products/42`, `/settings/mail`.
@@ -32,7 +32,7 @@ Whenever route changes (URL edit, browser Back/Forward, or app navigation),
 Use this event as the place where you decide which views must exist for the current route.
 
 ```python
---8<-- "../../examples/apps/routing_navigation/route_change_event.py"
+--8<-- "../../examples/apps/routing_navigation/route_change_event/main.py"
 ```
 
 ## Building views from route
@@ -52,7 +52,7 @@ The pattern below is the baseline for most apps:
 ///
 
 ```python
---8<-- "../../examples/apps/routing_navigation/building_views_on_route_change.py"
+--8<-- "../../examples/apps/routing_navigation/building_views_on_route_change/main.py"
 ```
 
 ## Programmatic navigation
@@ -72,7 +72,7 @@ For flows requiring confirmation (for example, unsaved changes), disable automat
 and confirm manually with [`View.can_pop`][flet.View.can_pop] + [`View.on_confirm_pop`][flet.View.on_confirm_pop].
 
 ```python
---8<-- "../../examples/apps/routing_navigation/pop_view_confirm.py"
+--8<-- "../../examples/apps/routing_navigation/pop_view_confirm/main.py"
 ```
 
 ## Navigation UI patterns
@@ -81,7 +81,7 @@ Routing composes well with navigation controls such as drawer, rail, and tabs.
 This example shows route-driven drawer navigation with multiple top-level destinations:
 
 ```python
---8<-- "../../examples/apps/routing_navigation/drawer_navigation.py"
+--8<-- "../../examples/apps/routing_navigation/drawer_navigation/main.py"
 ```
 
 ## Route templates (parameterized routes)

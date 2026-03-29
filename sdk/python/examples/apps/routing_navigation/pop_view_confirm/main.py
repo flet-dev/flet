@@ -28,9 +28,15 @@ class MainView(ft.View):
     def __init__(self, path):
         super().__init__(
             route=path,
-            appbar=ft.AppBar(title=ft.Text("Flet app")),
             controls=[
-                ft.Button("Go to store", on_click=self.open_store),
+                ft.SafeArea(
+                    content=ft.Column(
+                        controls=[
+                            ft.AppBar(title=ft.Text("Flet app")),
+                            ft.Button("Go to store", on_click=self.open_store),
+                        ]
+                    )
+                )
             ],
         )
 
@@ -42,7 +48,13 @@ class PermissionView(ft.View):
     def __init__(self, path):
         super().__init__(
             route=path,
-            appbar=ft.AppBar(title=ft.Text(f"{path} View")),
+            controls=[
+                ft.SafeArea(
+                    content=ft.Column(
+                        controls=[ft.AppBar(title=ft.Text(f"{path} View"))]
+                    )
+                )
+            ],
             can_pop=False,
             on_confirm_pop=self.ask_pop_permission,
         )
@@ -74,7 +86,6 @@ class PermissionView(ft.View):
         )
 
         self.page.show_dialog(dlg_modal)
-        # await self.confirm_pop(True)
 
 
 if __name__ == "__main__":

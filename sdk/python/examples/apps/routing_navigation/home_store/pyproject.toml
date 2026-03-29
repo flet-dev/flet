@@ -1,0 +1,26 @@
+[project]
+name = "apps-routing-navigation-home-store"
+version = "1.0.0"
+description = "Shows a minimal route-driven home and store flow using view stack navigation."
+requires-python = ">=3.10"
+keywords = ["apps", "routing", "navigation", "home", "store", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Home store"
+controls = ["View", "SafeArea", "Column", "AppBar", "Button"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["routing", "view stack", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
