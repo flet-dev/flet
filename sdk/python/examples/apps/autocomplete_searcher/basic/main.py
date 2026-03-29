@@ -38,7 +38,6 @@ def main(page: ft.Page):
             if str_lower
             else []
         )
-        page.update()
 
     list_items = {
         name: ft.ListTile(
@@ -51,7 +50,15 @@ def main(page: ft.Page):
     text_field = ft.TextField(label="Search name:", on_change=textbox_changed)
     list_view = ft.ListView(expand=1, spacing=10, padding=20)
 
-    page.add(text_field, list_view)
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                expand=True,
+                controls=[text_field, list_view],
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
