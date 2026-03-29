@@ -1,0 +1,26 @@
+[project]
+name = "apps-timer-declarative"
+version = "1.0.0"
+description = "Declarative stopwatch example driven by observable timer state and async ticking."
+requires-python = ">=3.10"
+keywords = ["apps", "timer", "declarative", "stopwatch", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Time"]
+
+[tool.flet.metadata]
+title = "Declarative timer"
+controls = ["SafeArea", "Column", "Row", "Text", "FilledButton", "TextButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["async", "timer controls", "observable state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
