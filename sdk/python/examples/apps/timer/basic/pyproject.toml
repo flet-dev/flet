@@ -1,9 +1,9 @@
 [project]
-name = "apps-timer-imperative"
+name = "apps-timer-basic"
 version = "1.0.0"
-description = "Imperative stopwatch example with start, pause, resume, and stop controls."
+description = "Stopwatch example with start, pause, resume, and stop controls."
 requires-python = ">=3.10"
-keywords = ["apps", "timer", "imperative", "stopwatch", "async"]
+keywords = ["apps", "timer", "stopwatch", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet"]
 
@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Apps/Time"]
 
 [tool.flet.metadata]
-title = "Imperative timer"
+title = "Basic timer"
 controls = ["SafeArea", "Column", "Row", "Text", "FilledButton", "TextButton"]
 layout_pattern = "center-stage"
 complexity = "basic"

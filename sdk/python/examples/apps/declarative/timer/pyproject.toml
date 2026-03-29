@@ -1,9 +1,9 @@
 [project]
-name = "apps-timer-declarative"
+name = "apps-declarative-timer"
 version = "1.0.0"
 description = "Declarative stopwatch example driven by observable timer state and async ticking."
 requires-python = ">=3.10"
-keywords = ["apps", "timer", "declarative", "stopwatch", "async"]
+keywords = ["apps", "declarative", "timer", "stopwatch", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet"]
 
@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/Time"]
+categories = ["Apps/Declarative", "Apps/Time"]
 
 [tool.flet.metadata]
 title = "Declarative timer"
