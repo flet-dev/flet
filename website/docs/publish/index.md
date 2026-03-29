@@ -15,62 +15,15 @@ Flet app into a standalone executable or installable package for distribution.
 
 ### Platform matrix
 
-Use the following matrix to choose which OS to run `flet build`
-on for each target platform:
+Use the following matrix to determine on which OS `flet build` can be run in order to target each platform:
 
-<style>{`    table {
-      border-collapse: collapse;
-      width: 100%;
-      text-align: center;
-    }
-    th, td {
-      border: 1px solid #000;
-    }`}</style>
-<table border="1" cellSpacing="0" cellPadding="6" style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}>
-  <thead>
-    <tr>
-      <th rowSpan="2" style={{verticalAlign: "middle", textAlign: "center"}}>Run on</th>
-      <th colSpan="6" style={{textAlign: "center"}}>Target Platform</th>
-    </tr>
-    <tr>
-      <th style={{textAlign: "center"}}><a href="android.md">apk/aab</a></th>
-      <th style={{textAlign: "center"}}><a href="ios.md">ipa/ios-simulator</a></th>
-      <th style={{textAlign: "center"}}><a href="macos.md">macos</a></th>
-      <th style={{textAlign: "center"}}><a href="linux.md">linux</a></th>
-      <th style={{textAlign: "center"}}><a href="windows.md">windows</a></th>
-      <th style={{textAlign: "center"}}><a href="web/index.md">web</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>macOS</strong></td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td></td>
-      <td></td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td><strong>Windows</strong></td>
-      <td>✅</td>
-      <td></td>
-      <td></td>
-      <td><a href="https://docs.microsoft.com/en-us/windows/wsl/about">✅ (WSL)</a></td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td><strong>Linux</strong></td>
-      <td>✅</td>
-      <td></td>
-      <td></td>
-      <td>✅</td>
-      <td></td>
-      <td>✅</td>
-    </tr>
-  </tbody>
-</table>
+| Run on | [apk/aab](./android.md) | [ipa/ios-simulator](./ios.md) | [macos](./macos.md) | [linux](./linux.md) | [windows](./windows.md) | [web](./web/index.md) |
+|--------|---------|-------------------|-------|-------|---------|-----|
+| macOS  | ✅      | ✅                | ✅    |       |         | ✅  |
+| Windows| ✅      |                   |       | ✅ (WSL) | ✅   | ✅  |
+| Linux  | ✅      |                   |       | ✅    |         | ✅  |
+
+
 
 ### Flutter SDK
 
