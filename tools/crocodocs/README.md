@@ -1,344 +1,264 @@
 # CrocoDocs
 
-CrocoDocs is the internal documentation toolchain that migrates Flet Python docs from MkDocs to Docusaurus and generates the structured API artifacts consumed by the website.
+CrocoDocs is the internal documentation toolchain that generates structured API artifacts for the Flet Docusaurus website.
 
-It lives in:
-
-- [tools/crocodocs](./)
-
-It is currently used by the website build in:
-
-- [website/package.json](../../website/package.json)
+It lives in [tools/crocodocs](./) and is invoked by the website build in [website/package.json](../../website/package.json).
 
 ## What It Does
 
-CrocoDocs currently handles two related jobs:
+CrocoDocs runs a single `generate` command that:
 
-1. Bootstrap-migrate the MkDocs docs corpus into `website/docs`.
-2. Generate Docusaurus-side artifacts from migrated docs and Python packages.
+- renders `website/sidebars.js` from the hand-authored `website/sidebars.yml`
+- extracts API data from Python packages using Griffe
+- builds the `xref_map` for cross-reference resolution
+- generates MDX partials (CLI docs, PyPI index, cross-platform permissions)
+- generates code example data from `sdk/python/examples`
+- syncs image assets into Docusaurus static paths
 
-The tool exists because the old docs system and the new site are different in three important ways:
-
-- the source docs currently come from the MkDocs corpus under `sdk/python/packages/flet/docs`
-- API rendering in MkDocs depended on `mkdocstrings` and Griffe
-- Docusaurus needs generated MDX/docs data, sidebars, and static assets arranged differently
-
-## Current Pipeline
+## Build Pipeline
 
 ```text
-sdk/python/packages/flet/docs + mkdocs.yml
-  -> crocodocs migrate --mode bootstrap
-  -> website/docs
-  -> website/sidebars.yml
-  -> website/sidebars.js
-  -> website/.crocodocs/docs-manifest.json
-
-website/docs
+website/docs (hand-authored)
+website/sidebars.yml (hand-authored)
+sdk/python/packages/*/src (Python source)
+sdk/python/examples (code examples + screenshots)
   -> crocodocs generate
+  -> website/sidebars.js
   -> website/.crocodocs/api-data.json
   -> website/.crocodocs/code-examples.json
-  -> website/.crocodocs/*.mdx
-  -> refreshed docs-manifest.json
+  -> website/.crocodocs/*.mdx (partials)
+  -> website/static/docs/* (synced assets)
 
 Docusaurus
   -> website/build
 ```
 
-At the moment the website runs both phases on every local build:
-
-- `yarn start`
-- `yarn build`
-
-through:
-
-- `yarn crocodocs:sync`
-
-This is still the right tradeoff while the MkDocs docs remain the source of truth.
-
-## Commands
-
-All commands are run from the repository root:
+### Building locally
 
 ```bash
-uv --directory ./tools/crocodocs run crocodocs inventory
-uv --directory ./tools/crocodocs run crocodocs migrate --mode bootstrap
+# Requires Node.js 20+
+nvm use 20
+
+cd website
+yarn install
+yarn build        # runs crocodocs generate + docusaurus build
+yarn start        # runs crocodocs generate + docusaurus dev server
+```
+
+### Running CrocoDocs directly
+
+```bash
 uv --directory ./tools/crocodocs run crocodocs generate
 ```
 
-### `inventory`
-
-Scans the source docs corpus and reports what CrocoDocs needs to support.
-
-Current use:
-
-- inspect front matter keys
-- inspect macro usage
-- inspect directive/admonition patterns
-- inspect reference link and asset patterns
-
-### `migrate --mode bootstrap`
-
-Converts the MkDocs docs corpus into Docusaurus-compatible markdown/MDX.
-
-Current responsibilities:
-
-- migrate docs from `sdk/python/packages/flet/docs` to `website/docs`
-- convert macros to CrocoDocs components or generated partial imports
-- convert MkDocs directives such as admonitions, tabs, and details
-- normalize image handling for Docusaurus/MDX
-- write the initial docs manifest
-- write `website/sidebars.yml` from `mkdocs.yml`
-- copy bootstrap asset roots needed by migrated docs
-
-### `generate`
-
-Runs on top of migrated docs and Python packages.
-
-Current responsibilities:
-
-- scan `website/docs`
-- refresh `website/.crocodocs/docs-manifest.json`
-- render `website/sidebars.js` from `website/sidebars.yml`
-- extract API data with Griffe
-- serialize classes, functions, aliases, members, docstrings, and deprecations
-- build `xref_map`
-- generate MDX partials
-- generate code example data
-- sync configured virtual asset roots into Docusaurus-served static paths
-
-## Main Outputs
-
-CrocoDocs writes these primary outputs:
-
-- [website/docs](../../website/docs)
-- [website/sidebars.yml](../../website/sidebars.yml)
-- [website/sidebars.js](../../website/sidebars.js)
-- [website/.crocodocs/docs-manifest.json](../../website/.crocodocs/docs-manifest.json)
-- [website/.crocodocs/api-data.json](../../website/.crocodocs/api-data.json)
-- [website/.crocodocs/code-examples.json](../../website/.crocodocs/code-examples.json)
-- [website/.crocodocs](../../website/.crocodocs) generated partials such as:
-  - `cli-build.mdx`
-  - `controls-overview.mdx`
-  - `cookbook-overview.mdx`
-  - `services-overview.mdx`
-
 ## Configuration
 
-CrocoDocs is configured in:
-
-- [tools/crocodocs/pyproject.toml](./pyproject.toml)
-
-Key sections:
+CrocoDocs is configured in [tools/crocodocs/pyproject.toml](./pyproject.toml).
 
 ### `[tool.crocodocs]`
 
 Core paths and settings:
 
-- source docs path
-- `mkdocs.yml` path
-- output docs path
-- manifest output
-- API output
-- partial output directory
-- sidebar source
-- sidebar output
-- base URL
-- Griffe extensions
+| Key | Purpose |
+|-----|---------|
+| `docs_path` | Path to `website/docs` |
+| `api_output` | Where to write `api-data.json` |
+| `manifest_output` | Where to write `docs-manifest.json` |
+| `partials_output_dir` | Where to write generated `.mdx` partials |
+| `sidebars_source` | Path to `sidebars.yml` |
+| `sidebars_output` | Path to generated `sidebars.js` |
+| `base_url` | Base URL for docs routes (e.g. `/docs`) |
+| `examples_root` | Path to code examples directory |
+| `extensions` | Griffe extensions to load |
 
 ### `[tool.crocodocs.packages]`
 
-Maps import package names to source roots under `sdk/python/packages/*/src`.
-
-These are the packages scanned during API generation.
+Maps Python import names to source roots. These packages are scanned during API extraction.
 
 ### `[tool.crocodocs.asset_mappings.*]`
 
-Defines virtual docs asset roots.
+Defines directories to bulk-copy into `website/static/docs/` during generate. Each mapping has:
 
-Current important mappings:
+| Key | Purpose |
+|-----|---------|
+| `source_path` | Source directory to copy from |
+| `static_subpath` | Destination under `website/static/` |
+| `include_exts` | File extensions to copy (e.g. `[".png", ".gif", ".svg"]`) |
 
-- `examples` -> `sdk/python/examples`
-- `test-images` -> `sdk/python/packages/flet/integration_tests`
-- `assets` -> `sdk/python/packages/flet/docs/assets`
-- `test-images-charts` -> `sdk/python/packages/flet-charts/integration_tests`
+Current mappings:
 
-Each mapping has:
-
-- `source_path`
-- `static_subpath`
-- `copy_during`
+- `examples` — `sdk/python/examples` (screenshots alongside code examples)
+- `test-images` — `sdk/python/packages/flet/integration_tests` (golden test images)
+- `test-images-charts` — `sdk/python/packages/flet-charts/integration_tests`
 
 ### `[tool.crocodocs.member_filters]`
 
-Controls which members are hidden from generated API output.
-
-Current use:
-
-- hide framework/internal methods like `init` and `before_update`
+Controls which class members are hidden from API output (e.g. `init`, `before_update`).
 
 ## `sidebars.yml` Format
 
-CrocoDocs now treats [website/sidebars.yml](../../website/sidebars.yml) as the canonical sidebar source and generates [website/sidebars.js](../../website/sidebars.js) from it during `crocodocs generate`.
-
-Current flow:
-
-- `crocodocs migrate --mode bootstrap` writes `sidebars.yml` from `mkdocs.yml`
-- `crocodocs generate` reads `sidebars.yml` and emits `website/sidebars.js`
-
-The goal is to keep the authoring format compact and close to MkDocs nav, while still allowing Docusaurus-specific metadata when needed.
+[website/sidebars.yml](../../website/sidebars.yml) is the hand-authored sidebar source. CrocoDocs generates [website/sidebars.js](../../website/sidebars.js) from it during `crocodocs generate`.
 
 ### Rules
 
-- top-level section keys become sidebar categories
-- nested mapping keys become nested categories
-- `Label: path.md` means a labeled doc item
-- `- path.md` means a doc item whose label is inferred from the page
-- `_index: path.md` means the category links to that document
-- `_meta` holds category options such as `collapsed`
+- Top-level keys become sidebar categories
+- Nested mapping keys become nested categories
+- `Label: path.md` — labeled doc item
+- `- path.md` — doc item with label inferred from the page title
+- `_index: path.md` — category links to that document
+- `_meta` — category options (e.g. `collapsed`)
+- `_generated_index` — Docusaurus auto-generated index page with `title`, `slug`, `description`
 
-### Compact Example
-
-```yml
-docs:
-  Learn:
-    Getting started:
-      - index.md
-      - getting-started/installation.md
-      - getting-started/create-flet-app.md
-
-    Tutorials:
-      Calculator: tutorials/calculator.md
-      ToDo: tutorials/todo.md
-
-  API Reference:
-    Services:
-      _index: services/index.md
-      - services/audio.md
-      - services/clipboard.md
-```
-
-### Example With Metadata
+### Example
 
 ```yml
 docs:
-  API Reference:
+  Getting started:
+    - index.md
+    - getting-started/installation.md
+
+  Tutorials:
+    Calculator: tutorials/calculator.md
+    ToDo: tutorials/todo.md
+
+  Reference:
+    Controls:
+      _generated_index:
+        title: Controls
+        slug: /controls
+        description: Browse the complete catalog of controls.
+      AlertDialog: controls/alertdialog.md
+      AppBar: controls/appbar.md
+
     Services:
       _index: services/index.md
       _meta:
         collapsed: false
-
-      Audio: services/audio.md
-      Clipboard: services/clipboard.md
+      Audio: services/audio/index.md
 ```
 
-### Why `_index` And `_meta` Are Separate
+## Doc Page Format
 
-`_index` is structural: it identifies the doc used as the category link.
+### Front matter
 
-`_meta` is behavioral: it carries optional category settings such as:
+```yaml
+---
+class_name: "flet.Container"
+examples: "controls/container"              # relative to examples_root
+example_images: "test-images/examples/material/golden/macos/container"  # relative to /docs/ static root
+example_media: "examples/controls/container/media"  # relative to /docs/ static root
+title: "Container"
+---
+```
 
-- `collapsed`
-- future Docusaurus-related options if we need them
+- `examples` — path relative to the configured `examples_root`, used by `<CodeExample>`
+- `example_images` / `example_media` — paths relative to `/docs/` static root, used by `<Image>`. No `../` navigation needed regardless of doc file depth.
 
-This keeps the format compact for normal cases and still extensible when the sidebar needs extra control.
+### Cross-references in docstrings
+
+Python docstrings use reST-style cross-references:
+
+```python
+"""See :class:`~flet.Page` and :attr:`flet.Control.visible`."""
+```
+
+Supported roles: `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`, `:obj:`
+
+The `~` prefix shortens the display to the last component (e.g. `Page` instead of `flet.Page`).
+
+### Cross-references in Markdown
+
+Hand-written docs use standard Markdown links with relative `.md` paths:
+
+```markdown
+See [`Page`](../controls/page.md) and its [`visible`](../controls/control.md#flet.Control.visible) property.
+```
+
+Anchor format uses dots: `#flet.ClassName.member_name`
+
+### Admonitions in docstrings
+
+Google-style docstring sections are rendered as Docusaurus admonitions:
+
+```python
+"""
+Note:
+    This only works on mobile platforms.
+
+Warning:
+    Deprecated since v0.80.
+"""
+```
+
+Supported admonition types: `note`, `tip`, `info`, `warning`, `danger`, `caution`. Other section types (like `Example:`) are rendered as `tip` admonitions. Non-recognized titles are rendered as plain text.
 
 ## How Rendering Works
 
-CrocoDocs does not emit final HTML. It feeds the Docusaurus website runtime.
+CrocoDocs generates data; the Docusaurus website renders it.
 
-Main website pieces:
+Website components in [website/src/components/crocodocs/](../../website/src/components/crocodocs/):
 
-- [website/src/components/crocodocs/ClassBlock.js](../../website/src/components/crocodocs/ClassBlock.js)
-- [website/src/components/crocodocs/ClassSummary.js](../../website/src/components/crocodocs/ClassSummary.js)
-- [website/src/components/crocodocs/ClassMembers.js](../../website/src/components/crocodocs/ClassMembers.js)
-- [website/src/components/crocodocs/ClassAll.js](../../website/src/components/crocodocs/ClassAll.js)
-- [website/src/components/crocodocs/CodeExample.js](../../website/src/components/crocodocs/CodeExample.js)
-- [website/src/components/crocodocs/utils.js](../../website/src/components/crocodocs/utils.js)
+| Component | Purpose |
+|-----------|---------|
+| `ClassAll.js` | Full class page (summary + members) |
+| `ClassSummary.js` | Class header with signature, image, inherits |
+| `ClassMembers.js` | Properties, events, and methods listing |
+| `ClassBlock.js` | Individual member rendering |
+| `CodeExample.js` | Inline code example with syntax highlighting |
+| `Image.js` | Doc image with `/docs/` prefix for root-relative paths |
+| `utils.js` | Markdown rendering, xref resolution, admonition support |
 
-Current rendering features:
+### Key rendering features
 
-- Griffe-based class/function/alias rendering
-- qualified anchors for symbols and members
-- generated TOC injection
-- xref resolution across pages and within local class pages
-- structured method docs (`Parameters`, `Returns`, `Raises`)
-- docstring rendering through remark/unified
-- support for MkDocs-style admonitions in Python docstrings
+- Griffe-based class/function/alias rendering with Google-style docstring sections
+- Qualified anchors: `#flet.ClassName.member_name`
+- reST cross-reference resolution (`:class:`, `:attr:`, `:meth:`, etc.)
+- Inherited member resolution via base class walking
+- Public alias resolution (e.g. `flet_ads.BaseAd` → `flet_ads.base_ad.BaseAd`)
+- Generated TOC injection for properties, events, and methods
 
-## Why Some Things Still Look Transitional
+## Verification
 
-CrocoDocs is still in migration mode.
+### Broken link check
 
-That means some current behavior is intentionally transitional:
+Docusaurus checks for broken links and anchors during `yarn build`. The build fails if any are found.
 
-- bootstrap migration runs during normal website build
-- some MkDocs syntax is still normalized rather than eliminated at the source
-- some website-side logic exists to preserve behavior until the docs source becomes canonical in Docusaurus
+### Broken image check
 
-This is expected for now.
+Run after building:
 
-## What Will Change After Migration
-
-Once `website/docs` becomes the canonical docs source, CrocoDocs should shrink in scope.
-
-Target long-term role:
-
-- keep `generate`
-- stop running bootstrap migration on every build
-- keep API extraction, xref generation, manifest refresh, partial generation, and asset syncing
-- remove compatibility logic that only exists to bridge the old MkDocs corpus
-
-Expected post-migration build flow:
-
-```text
-website/docs
-  -> crocodocs generate
-  -> docusaurus build
+```bash
+bash .github/scripts/check_docs.sh website/build
 ```
 
-At that point:
+This scans all built HTML for `<img>` tags pointing to missing files and for unresolved reST xrefs (`:attr:`, `:class:`, etc.) in the output.
 
-- `migrate --mode bootstrap` becomes an explicit maintenance tool, not a normal build step
-- asset mappings should only point to tracked, reproducible source trees
-- the website runtime should only keep the rendering logic that still adds clear value
+## CI Integration
 
-## Notes For CI / Cloudflare
+The `docs_build` job in [.github/workflows/ci.yml](../../.github/workflows/ci.yml) runs the full build and verification on every push. It gates the publishing jobs — no release can proceed with broken documentation.
 
-Two CI-specific issues already shaped the current implementation:
+Cloudflare Pages runs the same build via `pip install uv && yarn build` with root directory set to `website/`.
 
-### API extraction
+## Source Files
 
-CrocoDocs no longer depends on nesting a second `uv run` into `sdk/python` for Griffe extraction. That was fragile in CI.
+Core tool:
 
-### Test-image sources
-
-CrocoDocs must source `test-images` from tracked integration test directories, not from ignored `packages/flet/site` output.
-
-That is why the current mapping uses:
-
-- `sdk/python/packages/flet/integration_tests`
-
-instead of:
-
-- `sdk/python/packages/flet/site/test-images`
-
-## Relevant Source Files
-
-Core tool files:
-
-- [tools/crocodocs/src/crocodocs/cli.py](./src/crocodocs/cli.py)
-- [tools/crocodocs/src/crocodocs/config.py](./src/crocodocs/config.py)
-- [tools/crocodocs/src/crocodocs/inventory.py](./src/crocodocs/inventory.py)
-- [tools/crocodocs/src/crocodocs/migrate.py](./src/crocodocs/migrate.py)
-- [tools/crocodocs/src/crocodocs/generate.py](./src/crocodocs/generate.py)
-- [tools/crocodocs/src/crocodocs/griffe_extract_script.py](./src/crocodocs/griffe_extract_script.py)
-- [tools/crocodocs/src/crocodocs/partials.py](./src/crocodocs/partials.py)
-- [tools/crocodocs/src/crocodocs/sidebars.py](./src/crocodocs/sidebars.py)
-- [tools/crocodocs/src/crocodocs/assets.py](./src/crocodocs/assets.py)
+- [cli.py](./src/crocodocs/cli.py) — CLI entry point
+- [config.py](./src/crocodocs/config.py) — Configuration loading
+- [generate.py](./src/crocodocs/generate.py) — Main generate command
+- [griffe_extract_script.py](./src/crocodocs/griffe_extract_script.py) — Griffe API extraction
+- [partials.py](./src/crocodocs/partials.py) — MDX partial generation
+- [sidebars.py](./src/crocodocs/sidebars.py) — Sidebar YAML → JS conversion
+- [assets.py](./src/crocodocs/assets.py) — Asset bulk copying
+- [docs.py](./src/crocodocs/docs.py) — Markdown/MDX parsing helpers
+- [pypi_index.py](./src/crocodocs/pypi_index.py) — PyPI package index renderer
+- [scripts/](./src/crocodocs/scripts/) — CLI and permissions renderers (run via subprocess in `sdk/python` venv)
 
 Website integration:
 
-- [website/package.json](../../website/package.json)
-- [website/plugins/remark-api-links.js](../../website/plugins/remark-api-links.js)
-- [website/src/theme/DocItem/Layout/index.js](../../website/src/theme/DocItem/Layout/index.js)
-- [website/src/css/custom.css](../../website/src/css/custom.css)
+- [website/package.json](../../website/package.json) — Build scripts
+- [website/plugins/remark-api-links.js](../../website/plugins/remark-api-links.js) — Remark plugin for xref resolution in Markdown
+- [website/src/components/crocodocs/](../../website/src/components/crocodocs/) — React rendering components
+- [website/src/theme/DocItem/Layout/index.js](../../website/src/theme/DocItem/Layout/index.js) — Swizzled doc layout
+- [website/src/theme/DocCard/index.js](../../website/src/theme/DocCard/index.js) — Swizzled card component (compact, no emoji)
+- [website/src/css/custom.css](../../website/src/css/custom.css) — Custom styles including generated-index grid
