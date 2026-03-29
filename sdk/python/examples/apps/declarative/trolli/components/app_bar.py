@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from models import TrolliState
+
 import flet as ft
 
-from models import TrolliState
 from .dialogs import show_login_dialog, show_settings_dialog
 
 

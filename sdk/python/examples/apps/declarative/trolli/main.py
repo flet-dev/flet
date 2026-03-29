@@ -48,41 +48,36 @@ def App():
             return None
 
     def route_change(e: ft.RouteChangeEvent):
-        # Keep route as a single source of truth for navigation-related UI (e.g. sidebar selection).
+        # Keep route as the single source of truth for navigation-related UI.
         app.route = e.route
 
-        # deal with bad or incomplete routes first
         if e.route.startswith("/board/"):
             board_id = parse_board_id_from_route(e.route)
             if board_id is None or app.get_board_by_id(board_id) is None:
                 asyncio.create_task(ft.context.page.push_route("/boards"))
-                # ft.context.page.go("/boards")
                 app.active_screen = "boards"
                 app.current_board_id = None
                 app.route = "/boards"
                 return
 
-        match e.route:
-            # trigger re-render by changing active_screen
-            case "/" | "/boards":
-                app.active_screen = "boards"
-                app.current_board_id = None
-            case "/members":
-                app.active_screen = "members"
-                app.current_board_id = None
-            case "/settings":
-                app.active_screen = "settings"
-                app.current_board_id = None
-            case name if name.startswith("/board/"):
-                app.active_screen = "board"
-                app.current_board_id = board_id
-            case _:
-                asyncio.create_task(ft.context.page.push_route("/boards"))
-                # ft.context.page.go("/boards")
-                app.active_screen = "boards"
-                app.current_board_id = None
-                app.route = "/boards"
-                return
+        if e.route in ("/", "/boards"):
+            app.active_screen = "boards"
+            app.current_board_id = None
+        elif e.route == "/members":
+            app.active_screen = "members"
+            app.current_board_id = None
+        elif e.route == "/settings":
+            app.active_screen = "settings"
+            app.current_board_id = None
+        elif e.route.startswith("/board/"):
+            app.active_screen = "board"
+            app.current_board_id = board_id
+        else:
+            asyncio.create_task(ft.context.page.push_route("/boards"))
+            app.active_screen = "boards"
+            app.current_board_id = None
+            app.route = "/boards"
+            return
 
     ft.context.page.on_route_change = route_change
 
@@ -103,30 +98,27 @@ def App():
     board_id = parse_board_id_from_route(app.route)
     board = app.get_board_by_id(board_id) if board_id is not None else None
 
-    content: ft.Control
-    match app.active_screen:
-        case "boards":
-            content = BoardsView(app)
-        case "members":
-            content = ft.Text("Members view placeholder", align=ft.Alignment.CENTER)
-        case "settings":
-            content = ft.Text("Settings view placeholder", align=ft.Alignment.CENTER)
-        case "board":
-            board = (
-                app.get_board_by_id(app.current_board_id)
-                if app.current_board_id
-                else None
-            )
-            content = BoardView(board) if board else BoardsView(app)
+    if app.active_screen == "boards":
+        content: ft.Control = BoardsView(app)
+    elif app.active_screen == "members":
+        content = ft.Text("Members view placeholder", align=ft.Alignment.CENTER)
+    elif app.active_screen == "settings":
+        content = ft.Text("Settings view placeholder", align=ft.Alignment.CENTER)
+    else:
+        board = (
+            app.get_board_by_id(app.current_board_id) if app.current_board_id else None
+        )
+        content = BoardView(board) if board else BoardsView(app)
 
-    return ft.Column(
+    return ft.SafeArea(
         expand=True,
-        spacing=0,
-        controls=[
-            TrolliAppBar(app),
-            ft.SafeArea(
-                expand=True,
-                content=ft.Row(
+        content=ft.Column(
+            expand=True,
+            spacing=0,
+            controls=[
+                TrolliAppBar(app),
+                ft.Row(
+                    expand=True,
                     vertical_alignment=ft.CrossAxisAlignment.START,
                     controls=[
                         Sidebar(app),
@@ -151,9 +143,14 @@ def App():
                         ),
                     ],
                 ),
-            ),
-        ],
+            ],
+        ),
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main, route_url_strategy="hash")

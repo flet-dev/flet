@@ -1,6 +1,6 @@
-import flet as ft
-
 from models import Card
+
+import flet as ft
 
 
 @ft.component

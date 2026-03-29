@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import asyncio
 
-import flet as ft
-
 from models import TrolliState
+
+import flet as ft
 
 
 @ft.component
@@ -17,7 +18,9 @@ def Sidebar(app: TrolliState):
     top_index = (
         0
         if app.active_screen == "boards"
-        else 1 if app.active_screen == "members" else None
+        else 1
+        if app.active_screen == "members"
+        else None
     )
 
     def top_nav_change(e: ft.Event[ft.NavigationRail]):

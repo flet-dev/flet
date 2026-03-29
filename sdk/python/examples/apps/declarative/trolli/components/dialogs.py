@@ -1,12 +1,12 @@
 from __future__ import annotations
+
 import asyncio
-
-from typing import cast
 from dataclasses import dataclass
-
-import flet as ft
+from typing import cast
 
 from models import Board, TrolliState
+
+import flet as ft
 
 
 @dataclass(frozen=True)

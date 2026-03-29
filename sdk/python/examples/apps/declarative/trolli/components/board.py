@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from models import Board
+
 import flet as ft
 
-from models import Board
 from .board_list import BoardListView
 from .dialogs import show_new_list_dialog
 

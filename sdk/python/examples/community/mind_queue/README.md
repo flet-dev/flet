@@ -44,7 +44,7 @@ It helps you organize your life into **Systems → Headers → Tasks**, with a f
 
 ## **Data Storage**
 
-All data is stored locally in `data.json`:
+All data is stored locally in `assets/data.json`:
 
 ```json
 {

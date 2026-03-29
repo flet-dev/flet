@@ -1,8 +1,9 @@
 import asyncio
 
+from models import TrolliState
+
 import flet as ft
 
-from models import TrolliState
 from .dialogs import show_new_board_dialog
 
 

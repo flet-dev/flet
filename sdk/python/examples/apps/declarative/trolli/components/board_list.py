@@ -1,8 +1,9 @@
 # from __future__ import annotations
 
+from models import BoardList
+
 import flet as ft
 
-from models import BoardList
 from .card import CardView
 
 

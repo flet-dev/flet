@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 import flet as ft
 
