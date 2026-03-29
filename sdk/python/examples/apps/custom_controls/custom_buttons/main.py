@@ -36,10 +36,17 @@ def main(page: ft.Page):
             self.icon = ft.Icons.HEADPHONES
 
     page.add(
-        ft.Row([MyButton(content="1")]),
-        ft.Row([MyButton2(content="2")]),
-        ft.Row([MyButton3(content="3")]),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Row(controls=[MyButton(content="1")]),
+                    ft.Row(controls=[MyButton2(content="2")]),
+                    ft.Row(controls=[MyButton3(content="3")]),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
