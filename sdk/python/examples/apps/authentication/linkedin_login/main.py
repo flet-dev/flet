@@ -2,7 +2,7 @@
 # Run this example with:
 #   export LINKEDIN_CLIENT_ID=<your_linkedin_oauth_app_client_id>
 #   export LINKEDIN_CLIENT_SECRET=<your_linkedin_oauth_app_client_secret>
-#   flet run --web --port 8550 linkedin_login.py
+#   flet run --web --port 8550 main.py
 #
 import os
 
@@ -42,7 +42,14 @@ def main(page: ft.Page):
             )
 
     page.on_login = on_login
-    page.add(ft.Button("Login with LinkedIn", on_click=login_click))
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[ft.Button("Login with LinkedIn", on_click=login_click)],
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

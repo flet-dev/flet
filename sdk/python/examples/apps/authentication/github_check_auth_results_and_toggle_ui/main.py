@@ -2,7 +2,7 @@
 # Run this example with:
 #   export GITHUB_CLIENT_ID=<your_github_oauth_app_client_id>
 #   export GITHUB_CLIENT_SECRET=<your_github_oauth_app_client_secret>
-#   flet run --web --port 8550 github_check_auth_results_and_toggle_ui.py
+#   flet run --web --port 8550 main.py
 #
 import os
 
@@ -45,7 +45,14 @@ def main(page: ft.Page):
     toggle_login_buttons()
     page.on_login = on_login
     page.on_logout = on_logout
-    page.add(login_button, logout_button)
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[login_button, logout_button],
+            )
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

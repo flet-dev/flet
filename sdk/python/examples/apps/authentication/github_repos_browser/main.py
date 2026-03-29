@@ -3,7 +3,7 @@
 #   export GITHUB_CLIENT_ID=<your_github_oauth_app_client_id>
 #   export GITHUB_CLIENT_SECRET=<your_github_oauth_app_client_secret>
 #   export MY_APP_SECRET_KEY=<your_app_secret_key_for_token_encryption>
-#   flet run --web --port 8550 github_repos_browser.py
+#   flet run --web --port 8550 main.py
 #
 import json
 import logging
@@ -25,26 +25,22 @@ def get_env_variable(name: str) -> str:
 
 
 async def main(page: ft.Page):
-    # encryption passphrase
     secret_key = get_env_variable("MY_APP_SECRET_KEY")
 
-    # configure provider
     provider = GitHubOAuthProvider(
         client_id=get_env_variable("GITHUB_CLIENT_ID"),
         client_secret=get_env_variable("GITHUB_CLIENT_SECRET"),
         redirect_url="http://127.0.0.1:8550/oauth_callback",
     )
 
-    # client storage keys
-    AUTH_TOKEN_KEY = "myapp.auth_token"
+    auth_token_key = "myapp.auth_token"
 
     async def perform_login(e):
         login_button.disabled = True
         login_button.update()
 
-        # perform login
         saved_token = None
-        ejt = await ft.SharedPreferences().get(AUTH_TOKEN_KEY)
+        ejt = await ft.SharedPreferences().get(auth_token_key)
         if ejt:
             saved_token = decrypt(ejt, secret_key)
         if e is not None or saved_token is not None:
@@ -64,15 +60,13 @@ async def main(page: ft.Page):
 
         assert page.auth
 
-        # save token in a client storage
         jt = (await page.auth.get_token()).to_json()
         ejt = encrypt(jt, secret_key)
-        await ft.SharedPreferences().set(AUTH_TOKEN_KEY, ejt)
+        await ft.SharedPreferences().set(auth_token_key, ejt)
 
         logged_user.value = f"Hello, {page.auth.user['name']}!"
         toggle_login_buttons()
         await list_github_repositories()
-        page.update()
 
     async def list_github_repositories():
         repos_view.controls.clear()
@@ -96,7 +90,7 @@ async def main(page: ft.Page):
                     )
 
     async def logout_button_click(e):
-        await ft.SharedPreferences().remove(AUTH_TOKEN_KEY)
+        await ft.SharedPreferences().remove(auth_token_key)
         page.logout()
 
     async def on_logout(e):
@@ -115,8 +109,22 @@ async def main(page: ft.Page):
     page.on_login = on_login
     page.on_logout = on_logout
     toggle_login_buttons()
-    page.add(ft.Row([logged_user, login_button, logout_button]), repos_view)
+    page.add(
+        ft.SafeArea(
+            expand=True,
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.Row(
+                        controls=[logged_user, login_button, logout_button],
+                    ),
+                    repos_view,
+                ],
+            ),
+        )
+    )
     await perform_login(None)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
