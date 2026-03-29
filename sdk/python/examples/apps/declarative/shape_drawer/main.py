@@ -83,22 +83,29 @@ def App():
         # add new polygon
         state.polygons.append(Polygon())
 
-    return ft.GestureDetector(
-        on_tap_down=handle_tap_down,
-        on_secondary_tap_down=handle_secondary_tap_down,
-        on_hover=handle_hover,
-        content=ft.Container(
-            content=canvas.Canvas(
-                width=float("inf"),
-                height=float("inf"),
-                shapes=[PolygonView(polygon) for polygon in state.polygons],
+    return ft.SafeArea(
+        content=ft.GestureDetector(
+            on_tap_down=handle_tap_down,
+            on_secondary_tap_down=handle_secondary_tap_down,
+            on_hover=handle_hover,
+            content=ft.Container(
+                content=canvas.Canvas(
+                    width=float("inf"),
+                    height=float("inf"),
+                    shapes=[PolygonView(polygon) for polygon in state.polygons],
+                ),
+                width=500,
+                height=500,
+                bgcolor=ft.Colors.GREY_300,
+                alignment=ft.Alignment.TOP_LEFT,
             ),
-            width=500,
-            height=500,
-            bgcolor=ft.Colors.GREY_300,
-            alignment=ft.Alignment.TOP_LEFT,
-        ),
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

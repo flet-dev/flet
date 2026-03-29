@@ -73,7 +73,7 @@ def ItemView(item: Item, **kwargs):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Divider(
-                color=ft.Colors.BLACK38,
+                color=ft.Colors.BLACK_38,
                 thickness=2,
                 height=2,
                 radius=2,
@@ -133,7 +133,7 @@ def GroupView(group: Group, move_group, **kwargs):
         intrinsic_height=True,
         controls=[
             ft.VerticalDivider(
-                color=ft.Colors.BLACK54,
+                color=ft.Colors.BLACK_54,
                 width=2,
                 thickness=2,
                 radius=2,
@@ -159,9 +159,9 @@ def GroupView(group: Group, move_group, **kwargs):
                         on_accept=on_group_accept,
                         on_leave=lambda: set_is_group_over(False),
                         content=ft.Container(
-                            border=ft.Border.all(2, ft.Colors.BLACK12)
+                            border=ft.Border.all(2, ft.Colors.BLACK_12)
                             if not is_group_over
-                            else ft.Border.all(2, ft.Colors.BLACK38),
+                            else ft.Border.all(2, ft.Colors.BLACK_38),
                             border_radius=ft.BorderRadius.all(15),
                             bgcolor=group.color,
                             padding=ft.Padding.all(20),
@@ -196,7 +196,7 @@ def GroupView(group: Group, move_group, **kwargs):
                                                 for item in group.items
                                             ],
                                             ft.Divider(
-                                                color=ft.Colors.BLACK38,
+                                                color=ft.Colors.BLACK_38,
                                                 thickness=2,
                                                 height=2,
                                                 radius=2,
@@ -245,14 +245,21 @@ def App():
 
     ft.on_mounted(on_mounted)
 
-    return ft.Row(
-        spacing=4,
-        vertical_alignment=ft.CrossAxisAlignment.START,
-        controls=[
-            GroupView(group, move_group=app.move_group, key=group.title)
-            for group in app.groups
-        ],
+    return ft.SafeArea(
+        content=ft.Row(
+            spacing=4,
+            vertical_alignment=ft.CrossAxisAlignment.START,
+            controls=[
+                GroupView(group, move_group=app.move_group, key=group.title)
+                for group in app.groups
+            ],
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

@@ -11,14 +11,19 @@ def App():
         ),
         controls=[
             ft.SafeArea(
-                ft.Container(
-                    ft.Text(value=f"{count}", size=50),
-                    alignment=ft.Alignment.CENTER,
-                ),
                 expand=True,
+                content=ft.Container(
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text(value=f"{count}", size=50),
+                ),
             )
         ],
     )
 
 
-ft.run(lambda page: page.render_views(App))
+def main(page: ft.Page):
+    page.render_views(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

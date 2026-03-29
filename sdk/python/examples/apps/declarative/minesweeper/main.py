@@ -10,8 +10,8 @@ import flet as ft
 # ----------- Visual constants ----------
 SQUARE_SIZE = 30
 
-LIGHT = ft.Colors.WHITE70
-DARK = ft.Colors.BLACK38
+LIGHT = ft.Colors.WHITE_70
+DARK = ft.Colors.BLACK_38
 
 BEVEL_RAISED = ft.Border(
     bottom=ft.BorderSide(4, DARK),
@@ -314,34 +314,39 @@ def App():
         expand=True,
     )
 
-    return ft.Container(
-        content=ft.Column(
-            controls=[
-                ft.Container(
-                    content=top_menu,
-                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
-                    padding=10,
-                ),
-                ft.Container(
-                    content=board,
-                    # alignment=ft.Alignment.TOP_CENTER,
-                    # content=ft.Text("sdfsdfsfd"),
-                    foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
-                    padding=5,
-                    height=SQUARE_SIZE * game.rows + 10,
-                    width=SQUARE_SIZE * game.cols + 10,
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.START,
-            horizontal_alignment=ft.CrossAxisAlignment.START,
-            spacing=10,
-        ),
-        bgcolor=ft.Colors.GREY_400,
-        foreground_decoration=ft.BoxDecoration(border=BEVEL_RAISED),
-        width=SQUARE_SIZE * (game.cols + 1),
-        height=SQUARE_SIZE * (game.rows + 1) + 100,
-        padding=10,
+    return ft.SafeArea(
+        content=ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Container(
+                        content=top_menu,
+                        foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+                        padding=10,
+                    ),
+                    ft.Container(
+                        content=board,
+                        foreground_decoration=ft.BoxDecoration(border=BEVEL_SUNKEN),
+                        padding=5,
+                        height=SQUARE_SIZE * game.rows + 10,
+                        width=SQUARE_SIZE * game.cols + 10,
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                horizontal_alignment=ft.CrossAxisAlignment.START,
+                spacing=10,
+            ),
+            bgcolor=ft.Colors.GREY_400,
+            foreground_decoration=ft.BoxDecoration(border=BEVEL_RAISED),
+            width=SQUARE_SIZE * (game.cols + 1),
+            height=SQUARE_SIZE * (game.rows + 1) + 100,
+            padding=10,
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

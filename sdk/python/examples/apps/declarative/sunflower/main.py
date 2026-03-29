@@ -79,7 +79,8 @@ def Sunflower():
         appbar=ft.AppBar(title=ft.Text("Sunflower")),
         controls=[
             ft.SafeArea(
-                ft.Column(
+                expand=True,
+                content=ft.Column(
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     expand=True,
                     controls=[
@@ -118,10 +119,14 @@ def Sunflower():
                         ),
                     ],
                 ),
-                expand=True,
             )
         ],
     )
 
 
-ft.run(lambda page: page.render_views(Sunflower))
+def main(page: ft.Page):
+    page.render_views(Sunflower)
+
+
+if __name__ == "__main__":
+    ft.run(main)

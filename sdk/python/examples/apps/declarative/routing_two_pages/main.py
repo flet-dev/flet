@@ -96,16 +96,22 @@ def RoutingExample():
                 route="/",
                 appbar=AppBar(),
                 controls=[
-                    ft.Button(
-                        "Visit Store",
-                        on_click=lambda _: asyncio.create_task(
-                            ft.context.page.push_route("/store")
-                        ),
-                    ),
-                    ft.Button(
-                        "Do something",
-                        on_click=lambda _: asyncio.create_task(
-                            ft.context.page.push_route("/do-something")
+                    ft.SafeArea(
+                        content=ft.Column(
+                            controls=[
+                                ft.Button(
+                                    "Visit Store",
+                                    on_click=lambda _: asyncio.create_task(
+                                        ft.context.page.push_route("/store")
+                                    ),
+                                ),
+                                ft.Button(
+                                    "Do something",
+                                    on_click=lambda _: asyncio.create_task(
+                                        ft.context.page.push_route("/do-something")
+                                    ),
+                                ),
+                            ]
                         ),
                     ),
                 ],
@@ -116,10 +122,16 @@ def RoutingExample():
                         route="/store",
                         appbar=AppBar(),
                         controls=[
-                            ft.Button(
-                                "Go Home",
-                                on_click=lambda _: asyncio.create_task(
-                                    ft.context.page.push_route("/")
+                            ft.SafeArea(
+                                content=ft.Column(
+                                    controls=[
+                                        ft.Button(
+                                            "Go Home",
+                                            on_click=lambda _: asyncio.create_task(
+                                                ft.context.page.push_route("/")
+                                            ),
+                                        ),
+                                    ]
                                 ),
                             ),
                         ],
@@ -132,4 +144,9 @@ def RoutingExample():
     )
 
 
-ft.run(lambda page: page.render_views(RoutingExample))
+def main(page: ft.Page):
+    page.render_views(RoutingExample)
+
+
+if __name__ == "__main__":
+    ft.run(main)

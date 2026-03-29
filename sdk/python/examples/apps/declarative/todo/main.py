@@ -81,51 +81,61 @@ def TodoAppView():
     return ft.View(
         scroll=ft.ScrollMode.AUTO,
         controls=[
-            ft.Column(
-                [
-                    Header(),
-                    ft.Row(
-                        controls=[
-                            ft.TextField(
-                                ref=new_task_field,
-                                hint_text="What needs to be done?",
-                                on_submit=add_task,
-                                value=new_task_name,
-                                on_change=lambda e: set_new_task_name(e.control.value),
-                                autofocus=True,
-                                expand=True,
-                            ),
-                            ft.FloatingActionButton(
-                                icon=ft.Icons.ADD,
-                                on_click=add_task,
-                            ),
-                        ],
-                    ),
-                    ft.Column(
-                        spacing=25,
-                        controls=[
-                            ft.Tabs(
-                                selected_index=state.statuses.index(state.status),
-                                length=len(state.statuses),
-                                on_change=state.status_changed,
-                                content=ft.TabBar(
-                                    scrollable=False,
-                                    tabs=[ft.Tab(label=tab) for tab in state.statuses],
+            ft.SafeArea(
+                content=ft.Column(
+                    [
+                        Header(),
+                        ft.Row(
+                            controls=[
+                                ft.TextField(
+                                    ref=new_task_field,
+                                    hint_text="What needs to be done?",
+                                    on_submit=add_task,
+                                    value=new_task_name,
+                                    on_change=lambda e: set_new_task_name(
+                                        e.control.value
+                                    ),
+                                    autofocus=True,
+                                    expand=True,
                                 ),
-                            ),
-                            ft.Column(
-                                [
-                                    TaskItemView(task, state.delete_task, key=task.id)
-                                    for task in state.get_tasks()
-                                ]
-                            ),
-                            Footer(
-                                active_tasks_number=state.active_tasks_number,
-                                clear_completed=state.clear_completed,
-                            ),
-                        ],
-                    ),
-                ]
+                                ft.FloatingActionButton(
+                                    icon=ft.Icons.ADD,
+                                    on_click=add_task,
+                                ),
+                            ],
+                        ),
+                        ft.Column(
+                            spacing=25,
+                            controls=[
+                                ft.Tabs(
+                                    selected_index=state.statuses.index(state.status),
+                                    length=len(state.statuses),
+                                    on_change=state.status_changed,
+                                    content=ft.TabBar(
+                                        scrollable=False,
+                                        tabs=[
+                                            ft.Tab(label=tab) for tab in state.statuses
+                                        ],
+                                    ),
+                                ),
+                                ft.Column(
+                                    [
+                                        TaskItemView(
+                                            task,
+                                            state.delete_task,
+                                            key=task.id,
+                                        )
+                                        for task in state.get_tasks()
+                                    ]
+                                ),
+                                Footer(
+                                    active_tasks_number=state.active_tasks_number,
+                                    clear_completed=state.clear_completed,
+                                ),
+                            ],
+                        ),
+                    ]
+                )
             )
         ],
     )
@@ -220,4 +230,9 @@ def Footer(active_tasks_number: int, clear_completed):
     )
 
 
-ft.run(lambda page: page.render_views(TodoAppView))
+def main(page: ft.Page):
+    page.render_views(TodoAppView)
+
+
+if __name__ == "__main__":
+    ft.run(main)

@@ -20,10 +20,19 @@ class AppState:
 def App():
     state, _ = ft.use_state(AppState(counter=0))
 
-    return [
-        ft.ProgressBar(state.counter),
-        ft.Button("Run!", on_click=state.start_counter),
-    ]
+    return ft.SafeArea(
+        content=ft.Column(
+            controls=[
+                ft.ProgressBar(state.counter),
+                ft.Button("Run!", on_click=state.start_counter),
+            ]
+        )
+    )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)

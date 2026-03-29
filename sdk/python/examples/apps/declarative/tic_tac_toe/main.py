@@ -75,12 +75,14 @@ def Game():
         for move, _ in enumerate(history)
     ]
 
-    return ft.Row(
-        [
-            Board(x_is_next, history[current_move], handle_play),
-            ft.Column(moves),
-        ],
-        vertical_alignment=ft.CrossAxisAlignment.START,
+    return ft.SafeArea(
+        content=ft.Row(
+            [
+                Board(x_is_next, history[current_move], handle_play),
+                ft.Column(moves),
+            ],
+            vertical_alignment=ft.CrossAxisAlignment.START,
+        )
     )
 
 
@@ -102,4 +104,9 @@ def calculate_winner(squares: list[str]):
     return None
 
 
-ft.run(lambda page: page.render(Game))
+def main(page: ft.Page):
+    page.render(Game)
+
+
+if __name__ == "__main__":
+    ft.run(main)

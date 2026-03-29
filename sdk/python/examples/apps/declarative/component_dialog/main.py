@@ -73,18 +73,25 @@ def App():
         )
     )
 
-    return ft.Container(
-        padding=20,
-        content=ft.Column(
-            controls=[
-                ft.Text("Main App", size=22, weight=ft.FontWeight.BOLD),
-                ft.ElevatedButton(
-                    "Open User Panel",
-                    on_click=open_user_dialog,
-                ),
-            ]
-        ),
+    return ft.SafeArea(
+        content=ft.Container(
+            padding=20,
+            content=ft.Column(
+                controls=[
+                    ft.Text("Main App", size=22, weight=ft.FontWeight.BOLD),
+                    ft.Button(
+                        "Open User Panel",
+                        on_click=open_user_dialog,
+                    ),
+                ]
+            ),
+        )
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)
