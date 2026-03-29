@@ -10,7 +10,7 @@ examples: ../../examples/services/semantics_service
 ### Retrieve accessibility features
 
 ```python
---8<-- "{{ examples }}/accessibility_features.py"
+--8<-- "{{ examples }}/accessibility_features/main.py"
 ```
 
 {{ class_members(class_name) }}

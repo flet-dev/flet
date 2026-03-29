@@ -10,7 +10,7 @@ examples: ../../examples/services/storagepaths
 ### Basic Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ class_members(class_name) }}

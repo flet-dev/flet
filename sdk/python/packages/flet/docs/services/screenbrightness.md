@@ -8,7 +8,7 @@ examples: ../../examples/services/screen_brightness
 ## Examples
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 {{ class_members(class_name) }}

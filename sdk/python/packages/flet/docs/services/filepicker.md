@@ -90,7 +90,7 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 ### Pick, save, and get directory paths
 
 ```python
---8<-- "{{ examples }}/pick_save_and_get_directory_path.py"
+--8<-- "{{ examples }}/pick_save_and_get_directory_path/main.py"
 ```
 
 {{ image(example_images + "/pick_save_and_get_directory_path.png", width="80%") }}
@@ -102,7 +102,7 @@ The following example demonstrates multi-file [pick][flet.FilePicker.pick_files]
 and [upload][flet.FilePicker.upload] app.
 
 ```python
---8<-- "{{ examples }}/pick_and_upload.py"
+--8<-- "{{ examples }}/pick_and_upload/main.py"
 ```
 
 {{ image(example_images + "/pick_and_upload.png", width="80%") }}
@@ -114,7 +114,7 @@ you need file contents directly, such as in web apps where
 [`FilePickerFile.path`][flet.FilePickerFile.path] is not available.
 
 ```python
---8<-- "{{ examples }}/pick_and_save_text_content.py"
+--8<-- "{{ examples }}/pick_and_save_text_content/main.py"
 ```
 
 

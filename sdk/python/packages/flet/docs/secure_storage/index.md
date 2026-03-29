@@ -47,7 +47,7 @@ pip install flet-secure-storage  # (1)!
 ## Example
 
 ```python
---8<-- "{{ examples }}/basic.py"
+--8<-- "{{ examples }}/basic/main.py"
 ```
 
 ## Description

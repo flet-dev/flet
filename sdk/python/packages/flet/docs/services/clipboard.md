@@ -10,19 +10,19 @@ examples: ../../examples/services/clipboard
 ### Text
 
 ```python
---8<-- "{{ examples }}/text.py"
+--8<-- "{{ examples }}/text/main.py"
 ```
 
 ### Images
 
 ```python
---8<-- "{{ examples }}/images.py"
+--8<-- "{{ examples }}/images/main.py"
 ```
 
 ### Files
 
 ```python
---8<-- "{{ examples }}/files.py"
+--8<-- "{{ examples }}/files/main.py"
 ```
 
 {{ class_members(class_name) }}

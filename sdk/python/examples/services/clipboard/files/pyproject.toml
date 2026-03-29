@@ -1,0 +1,26 @@
+[project]
+name = "services-clipboard-files"
+version = "1.0.0"
+description = "Writes sample file references to the clipboard and reads clipboard file entries back."
+requires-python = ">=3.10"
+keywords = ["clipboard", "files", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Clipboard"]
+
+[tool.flet.metadata]
+title = "Clipboard files"
+controls = ["SafeArea", "Column", "Page", "Button", "Clipboard", "Row", "Text", "IconButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["clipboard file references", "desktop file open"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

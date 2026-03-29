@@ -1,0 +1,26 @@
+[project]
+name = "services-haptic-feedback-basic"
+version = "1.0.0"
+description = "Triggers heavy, medium, light, and vibration haptic feedback actions."
+requires-python = ">=3.10"
+keywords = ["haptic feedback", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/HapticFeedback"]
+
+[tool.flet.metadata]
+title = "Basic haptic feedback"
+controls = ["SafeArea", "Column", "Page", "HapticFeedback", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["haptic feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

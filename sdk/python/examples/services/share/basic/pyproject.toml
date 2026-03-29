@@ -1,0 +1,26 @@
+[project]
+name = "services-share-basic"
+version = "1.0.0"
+description = "Shares text, links, and files while showing the raw share result status."
+requires-python = ">=3.10"
+keywords = ["share", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Share"]
+
+[tool.flet.metadata]
+title = "Basic share"
+controls = ["SafeArea", "Column", "Page", "Share", "Text", "Row", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["share sheet", "file sharing"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
