@@ -75,7 +75,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          exec > docstr_coverage.log 2>&1
+          # exec > docstr_coverage.log 2>&1
           status=0
           for pkg in packages/*; do
             if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
