@@ -75,13 +75,13 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          # exec > docstr_coverage.log 2>&1
+          exec > docstr_coverage.log 2>&1
           status=0
           for pkg in packages/*; do
             if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
               pkg_name=$(basename "$pkg")
               echo "====== $pkg ======"
-              uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="website/static/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
+              uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="../../website/static/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
               echo
             fi
           done
