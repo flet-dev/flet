@@ -65,7 +65,7 @@ for installing on other Linux distributions.
 ### Basic example
 
 ```python
---8<-- "{{ examples }}/example_1.py"
+--8<-- "{{ examples }}/example_1/main.py"
 ```
 
 ## Description

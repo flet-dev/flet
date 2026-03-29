@@ -4,7 +4,6 @@ import flet as ft
 def main(page: ft.Page):
     def handle_reading(e: ft.AccelerometerReadingEvent):
         reading.value = f"x={e.x:.2f} m/s^2, y={e.y:.2f} m/s^2, z={e.z:.2f} m/s^2"
-        page.update()
 
     def handle_error(e: ft.SensorErrorEvent):
         page.add(ft.Text(f"Accelerometer error: {e.message}"))
@@ -19,9 +18,16 @@ def main(page: ft.Page):
     )
 
     page.add(
-        ft.Text("Move your device to see accelerometer readings."),
-        reading := ft.Text("Waiting for data..."),
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text("Move your device to see accelerometer readings."),
+                    reading := ft.Text("Waiting for data..."),
+                ]
+            )
+        )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

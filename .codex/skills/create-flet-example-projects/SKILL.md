@@ -39,6 +39,10 @@ Ensure each runnable example is a standalone project containing:
 - Infer from path and code.
 - Create missing `pyproject.toml` files for existing project folders.
 - Update obviously stale metadata when migrating existing examples (for example wrong title/description/categories).
+- Verify platform support before adding or omitting `[tool.flet].platforms`:
+  - Check the local implementation and docs for explicit platform guards, support tables, or platform-specific exceptions.
+  - If support is limited, add `[tool.flet].platforms` with only the supported platforms.
+  - If support is broad/all-platform, omit `[tool.flet].platforms`.
 - Required fields:
   - `[project]`: `name`, `version`, `description`, `requires-python`, `keywords`, `authors`, `dependencies`
   - `[dependency-groups].dev`: include `flet-cli`, `flet-desktop`, `flet-web`

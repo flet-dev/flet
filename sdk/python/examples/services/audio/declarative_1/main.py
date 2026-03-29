@@ -1,10 +1,6 @@
 import flet as ft
 import flet_audio as fta
 
-# https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3
-# https://luan.xyz/files/audio/ambient_c_motion.mp3
-# https://github.com/mdn/webaudio-examples/blob/main/audio-analyser/viper.mp3?raw=true
-
 
 @ft.component
 def App():
@@ -20,8 +16,7 @@ def App():
         )
     )
 
-    print("duration:", duration)
-    print("position:", position)
+    ft.on_mounted(lambda: ft.context.page.services.append(audio))
 
     async def play():
         await audio.play()
@@ -32,12 +27,21 @@ def App():
     async def resume():
         await audio.resume()
 
-    return [
-        ft.ProgressBar(position / duration if duration > 0 else 0),
-        ft.Button("Play", disabled=duration == 0, on_click=play),
-        ft.Button("Pause", disabled=duration == 0, on_click=pause),
-        ft.Button("Resume", disabled=duration == 0, on_click=resume),
-    ]
+    return ft.SafeArea(
+        content=ft.Column(
+            controls=[
+                ft.ProgressBar(position / duration if duration > 0 else 0),
+                ft.Button("Play", disabled=duration == 0, on_click=play),
+                ft.Button("Pause", disabled=duration == 0, on_click=pause),
+                ft.Button("Resume", disabled=duration == 0, on_click=resume),
+            ]
+        )
+    )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.render(App)
+
+
+if __name__ == "__main__":
+    ft.run(main)
