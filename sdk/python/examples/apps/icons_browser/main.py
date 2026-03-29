@@ -147,30 +147,34 @@ class IconBrowser(ft.Container):
 def main(page: ft.Page):
     page.title = "Flet icons browser"
     page.add(
-        ft.Tabs(
-            selected_index=0,
-            length=2,
+        ft.SafeArea(
             expand=True,
-            content=ft.Column(
+            content=ft.Tabs(
+                selected_index=0,
+                length=2,
                 expand=True,
-                controls=[
-                    ft.TabBar(
-                        tabs=[
-                            ft.Tab(label="Material"),
-                            ft.Tab(label="Cupertino"),
-                        ]
-                    ),
-                    ft.TabBarView(
-                        expand=True,
-                        controls=[
-                            IconBrowser(ft.Icons, expand=True),
-                            IconBrowser(ft.CupertinoIcons, expand=True),
-                        ],
-                    ),
-                ],
+                content=ft.Column(
+                    expand=True,
+                    controls=[
+                        ft.TabBar(
+                            tabs=[
+                                ft.Tab(label="Material"),
+                                ft.Tab(label="Cupertino"),
+                            ]
+                        ),
+                        ft.TabBarView(
+                            expand=True,
+                            controls=[
+                                IconBrowser(ft.Icons, expand=True),
+                                IconBrowser(ft.CupertinoIcons, expand=True),
+                            ],
+                        ),
+                    ],
+                ),
             ),
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
