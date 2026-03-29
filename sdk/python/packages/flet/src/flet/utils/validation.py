@@ -1774,8 +1774,21 @@ def _compile_class_spec(model_cls: type[Any]) -> _ClassValidationSpec:
         if cls is object:
             continue
 
+        declared_hints = _get_declared_type_hints(cls)
+
+        # A subclass field declaration replaces the inherited field definition,
+        # so inherited field-level rules for that field must be dropped even if
+        # the override itself carries no Annotated metadata.
+        if declared_hints:
+            declared_field_names = set(declared_hints)
+            field_rules = [
+                (field_name, rule)
+                for field_name, rule in field_rules
+                if field_name not in declared_field_names
+            ]
+
         # Collect field-level rules from Annotated metadata.
-        for field_name, hint in _get_declared_type_hints(cls).items():
+        for field_name, hint in declared_hints.items():
             if get_origin(hint) is Annotated:
                 for metadata in get_args(hint)[1:]:
                     if isinstance(metadata, FieldRule):
