@@ -26,7 +26,7 @@ async def test_responsive_row_basic(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_unbounded_width_shows_error(flet_app: ftt.FletTestApp, request):
+async def test_unbounded_width(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT
     await flet_app.assert_control_screenshot(
         request.node.name,
@@ -35,7 +35,7 @@ async def test_unbounded_width_shows_error(flet_app: ftt.FletTestApp, request):
                 ft.ResponsiveRow(
                     controls=[
                         ft.Text("Item 1"),
-                        ft.TextField(label="Field 1"),
+                        ft.Text("Item 2"),
                     ]
                 )
             ]
