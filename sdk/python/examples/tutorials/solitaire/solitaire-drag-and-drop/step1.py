@@ -6,8 +6,8 @@ import flet as ft
 
 def main(page: ft.Page):
     def drag(e: ft.DragUpdateEvent):
-        e.control.top = max(0, e.control.top + e.delta_y)
-        e.control.left = max(0, e.control.left + e.delta_x)
+        e.control.top = max(0, e.control.top + e.local_delta.y)
+        e.control.left = max(0, e.control.left + e.local_delta.x)
         e.control.update()
 
     card = ft.GestureDetector(

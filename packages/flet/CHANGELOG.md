@@ -1,3 +1,31 @@
+## 0.83.1
+
+### Bug fixes
+
+* Fix solitaire tutorial and drag examples to use `local_delta.x` and `local_delta.y` instead of removed `delta_x` and `delta_y` ([#6317](https://github.com/flet-dev/flet/issues/6317), [#6344](https://github.com/flet-dev/flet/pull/6344)) by @Krishnachaitanyakc.
+* Fix inherited dataclass field validation rules applying to overridden subclass fields and breaking `flet-datatable2` on `0.83.0` ([#6349](https://github.com/flet-dev/flet/issues/6349), [#6350](https://github.com/flet-dev/flet/pull/6350)) by @ndonkoHenri.
+
+## 0.83.0
+
+### New features
+
+* Add customizable scrollbars for scrollable controls and pages ([#5912](https://github.com/flet-dev/flet/issues/5912), [#6282](https://github.com/flet-dev/flet/pull/6282)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Add scrolling support and richer change events to `ExpansionPanelList` ([#6294](https://github.com/flet-dev/flet/pull/6294)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Expand `SharedPreferences` to support `int`, `float`, `bool`, and `list[str]` values ([#6304](https://github.com/flet-dev/flet/issues/6304), [#6267](https://github.com/flet-dev/flet/pull/6267)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+
+### Improvements
+
+* Speed up control diffing and nested value tracking with sparse `Prop` updates and `@value` types ([#6098](https://github.com/flet-dev/flet/issues/6098), [#6270](https://github.com/flet-dev/flet/issues/6270), [#6117](https://github.com/flet-dev/flet/issues/6117), [#6296](https://github.com/flet-dev/flet/pull/6296)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Consolidate app/build templates into the monorepo and publish pre-release `flet` packages and template artifacts from CI ([#6306](https://github.com/flet-dev/flet/issues/6306), [#6331](https://github.com/flet-dev/flet/pull/6331)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Move desktop client binaries from PyPI wheels to GitHub Releases and unify desktop packaging around `flet-desktop` ([#6290](https://github.com/flet-dev/flet/issues/6290), [#6309](https://github.com/flet-dev/flet/pull/6309)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+
+### Bug fixes
+
+* Align Dart-side default values with Python across core and extension packages ([#6329](https://github.com/flet-dev/flet/issues/6329), [#6330](https://github.com/flet-dev/flet/pull/6330)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Skip redundant page auto-updates after handlers call `.update()` explicitly ([#6236](https://github.com/flet-dev/flet/issues/6236), [#6298](https://github.com/flet-dev/flet/pull/6298)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Fix `ReorderableListView` reorder event deserialization for start/end callbacks ([#6177](https://github.com/flet-dev/flet/issues/6177), [#6315](https://github.com/flet-dev/flet/pull/6315)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Skip loading `micropip` for Pyodide apps that already define dependencies in `pyproject.toml` ([#6259](https://github.com/flet-dev/flet/issues/6259), [#6300](https://github.com/flet-dev/flet/pull/6300)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+
 ## 0.82.2
 
 ### Bug fixes
@@ -819,7 +847,7 @@ from flet.auth.providers import GitHubOAuthProvider
 * Pyodide publishing fixes and improvements ([#953](https://github.com/flet-dev/flet/issues/953))
 * feat: Add PaddingValue to __init__.py ([#936](https://github.com/flet-dev/flet/issues/936))
 * Standalone Flet web apps with Pyodide ([#913](https://github.com/flet-dev/flet/issues/913))
-* modified `tooltip` attribute from `prefere*` to `prefer*` ([#909](https://github.com/flet-dev/flet/issues/909))
+* modified `tooltip` attribute from `prefer*` to `preferred*` ([#909](https://github.com/flet-dev/flet/issues/909))
 * Fix unicode encoding in `FletTcpSocketServerProtocol`
 * Fix relative assets path in desktop app
 * PDM changed to Poetry

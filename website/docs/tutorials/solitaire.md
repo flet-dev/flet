@@ -104,8 +104,8 @@ import flet as ft
 
 def main(page: ft.Page):
    def drag(e: ft.DragUpdateEvent):
-       e.control.top = max(0, e.control.top + e.delta_y)
-       e.control.left = max(0, e.control.left + e.delta_x)
+       e.control.top = max(0, e.control.top + e.local_delta.y)
+       e.control.left = max(0, e.control.left + e.local_delta.x)
        e.control.update()
 
    card = ft.GestureDetector(
@@ -417,8 +417,8 @@ class Card(ft.GestureDetector):
        self.update()
 
    def drag(self, e: ft.DragUpdateEvent):
-       self.top = max(0, self.top + e.delta_y)
-       self.left = max(0, self.left + e.delta_x)
+       self.top = max(0, self.top + e.local_delta.y)
+       self.left = max(0, self.left + e.local_delta.x)
        self.update()
 
    def drop(self, e: ft.DragEndEvent):
@@ -576,10 +576,10 @@ positions of all the cards being dragged:
     def drag(self, e: ft.DragUpdateEvent):
         for card in self.draggable_pile:
             card.top = (
-                max(0, self.top + e.delta_y)
+                max(0, self.top + e.local_delta.y)
                 + self.draggable_pile.index(card) * CARD_OFFSET
             )
-            card.left = max(0, self.left + e.delta_x)
+            card.left = max(0, self.left + e.local_delta.x)
             self.solitaire.update()
 ```
 
@@ -894,8 +894,8 @@ def start_drag(self, e: ft.DragStartEvent):
 def drag(self, e: ft.DragUpdateEvent):
     if self.face_up:
         for card in self.draggable_pile:
-            card.top = max(0, self.top + e.delta_y) + self.draggable_pile.index(card) * CARD_OFFSET
-            card.left = max(0, self.left + e.delta_x)
+            card.top = max(0, self.top + e.local_delta.y) + self.draggable_pile.index(card) * CARD_OFFSET
+            card.left = max(0, self.left + e.local_delta.x)
             card.solitaire.update()
 
 def drop(self, e: ft.DragEndEvent):
