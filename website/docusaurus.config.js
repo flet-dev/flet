@@ -16,8 +16,12 @@ module.exports = {
     heroSubTitle: 'Easily build realtime web, mobile and desktop apps in pure Python. No frontend experience required.',
   },
   themes: [
-    'docusaurus-theme-github-codeblock'
+    'docusaurus-theme-github-codeblock',
+    '@docusaurus/theme-mermaid',
   ],
+  markdown: {
+    mermaid: true,
+  },
   themeConfig: {
     // github codeblock theme configuration
     codeblock: {
