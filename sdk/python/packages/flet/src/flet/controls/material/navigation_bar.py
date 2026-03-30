@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -16,6 +16,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
 
@@ -110,12 +111,16 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     """
 
-    destinations: list[NavigationBarDestination] = field(default_factory=list)
+    destinations: Annotated[
+        list[NavigationBarDestination],
+        V.visible_controls(min_count=2),
+    ] = field(default_factory=list)
     """
     Defines the appearance of the button items that are arrayed within the navigation \
     bar.
 
-    The value must be a list of two or more `NavigationBarDestination` instances.
+    Raises:
+        ValueError: If it does not contain at least two visible destinations.
     """
 
     selected_index: int = 0
@@ -192,12 +197,9 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         visible_destinations_count = len([d for d in self.destinations if d.visible])
-        if visible_destinations_count < 2:
-            raise ValueError(
-                "destinations must contain at minimum two visible controls, "
-                f"got {visible_destinations_count}"
-            )
-        if not (0 <= self.selected_index < visible_destinations_count):
+        if visible_destinations_count >= 2 and not (
+            0 <= self.selected_index < visible_destinations_count
+        ):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
                 f"Expected a value between 0 and {visible_destinations_count - 1} "

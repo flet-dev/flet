@@ -21,6 +21,26 @@ example_images: ../../test-images/examples/material/golden/macos/datatable
 {{ image(example_images + "/basic.png", width="80%") }}
 
 
+### Horizontal margin and column spacing
+
+Use [`horizontal_margin`][flet.DataTable.horizontal_margin] to control the left and right
+edge spacing of the first and last columns.
+Use [`column_spacing`][flet.DataTable.column_spacing] to control spacing between columns.
+
+```python
+--8<-- "{{ examples }}/spacing.py"
+```
+
+### Adaptive row heights
+
+Setting [`data_row_max_height`][flet.DataTable.data_row_max_height] to `float('inf')`
+(infinity) will cause the `DataTable` to let each individual row adapt its height to its
+respective content, instead of all rows having the same height.
+
+```python
+--8<-- "{{ examples }}/adaptive_row_heights.py"
+```
+
 ### Sortable columns and selectable rows
 
 This example demonstrates row selection (including select-all),

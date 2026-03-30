@@ -1,0 +1,101 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '13.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+=begin
+{% set permission_mapping = {
+  "PERMISSION_EVENTS": ["NSCalendarsUsageDescription", "NSCalendarWriteOnlyAccessUsageDescription"],
+  "PERMISSION_EVENTS_FULL_ACCESS": ["NSCalendarsFullAccessUsageDescription"],
+  "PERMISSION_REMINDERS": ["NSRemindersFullAccessUsageDescription"],
+  "PERMISSION_CONTACTS": ["NSContactsUsageDescription"],
+  "PERMISSION_CAMERA": ["NSCameraUsageDescription"],
+  "PERMISSION_MICROPHONE": ["NSMicrophoneUsageDescription"],
+  "PERMISSION_SPEECH_RECOGNIZER": ["NSSpeechRecognitionUsageDescription"],
+  "PERMISSION_PHOTOS": ["NSPhotoLibraryUsageDescription"],
+  "PERMISSION_PHOTOS_ADD_ONLY": ["NSPhotoLibraryAddUsageDescription"],
+  "PERMISSION_LOCATION": [
+    "NSLocationUsageDescription",
+    "NSLocationAlwaysAndWhenInUseUsageDescription",
+    "NSLocationWhenInUseUsageDescription"
+  ],
+  "PERMISSION_LOCATION_WHENINUSE": ["NSLocationWhenInUseUsageDescription"],
+  "PERMISSION_MEDIA_LIBRARY": ["NSAppleMusicUsageDescription"],
+  "PERMISSION_SENSORS": ["NSMotionUsageDescription"],
+  "PERMISSION_BLUETOOTH": ["NSBluetoothAlwaysUsageDescription", "NSBluetoothPeripheralUsageDescription"],
+  "PERMISSION_APP_TRACKING_TRANSPARENCY": ["NSUserTrackingUsageDescription"],
+  "PERMISSION_CRITICAL_ALERTS": ["UNAuthorizationOptionCriticalAlert"],
+  "PERMISSION_ASSISTANT": ["NSSiriUsageDescription"]
+} %}
+=end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    # Ensure rive_native's setup script runs from the project root so pubspec.yaml is found in CI.
+    if target.name == 'rive_native'
+      target.shell_script_build_phases.each do |phase|
+        script = phase.shell_script
+        next unless script&.include?('rive_native:setup')
+        next if script.include?('PROJECT_ROOT="${SRCROOT}/../.."')
+
+        phase.shell_script = script.sub(
+          "set -e\n",
+          "set -e\nPROJECT_ROOT=\"${SRCROOT}/../..\"\ncd \"$PROJECT_ROOT\"\n"
+        )
+      end
+    end
+
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+
+        {%- for macro, plist_keys in permission_mapping.items() %}
+          {%- set ns = namespace(enabled=False) %}
+          {%- for key in plist_keys %}
+            {%- if key in cookiecutter.options.info_plist %}
+              {%- set ns.enabled = True %}
+            {%- endif %}
+          {%- endfor %}
+          {%- if ns.enabled %}
+        '{{ macro }}=1',
+          {%- endif %}
+        {%- endfor %}
+      ]
+    end
+  end
+end

@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -10,6 +10,7 @@ from flet.controls.types import (
     ColorValue,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoPicker"]
 
@@ -25,12 +26,15 @@ class CupertinoPicker(LayoutControl):
     A list of controls representing items in this picker.
     """
 
-    item_extent: Number = 32.0
+    item_extent: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 32.0
     """
     The uniform height of all [`controls`][(c).].
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     selected_index: int = 0
@@ -53,7 +57,10 @@ class CupertinoPicker(LayoutControl):
     If `True`, children on a wheel can be scrolled in a loop.
     """
 
-    magnification: Number = 1.0
+    magnification: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 1.0
     """
     The zoomed-in or magnification rate of the magnifier.
 
@@ -65,15 +72,18 @@ class CupertinoPicker(LayoutControl):
         Has effect only if [`use_magnifier`][(c).] is `True`.
 
     Raises:
-        ValueError: If [`magnification`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
-    squeeze: Number = 1.45
+    squeeze: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 1.45
     """
     The angular compactness of the children on the wheel.
 
     Raises:
-        ValueError: If [`squeeze`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     diameter_ratio: Number = 1.07
@@ -106,19 +116,3 @@ class CupertinoPicker(LayoutControl):
     """
     Called when the selection changes.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.squeeze <= 0.0:
-            raise ValueError(
-                f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
-            )
-        if self.magnification <= 0.0:
-            raise ValueError(
-                f"magnification must be strictly greater than 0.0, "
-                f"got {self.magnification}"
-            )
-        if self.item_extent <= 0.0:
-            raise ValueError(
-                f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
-            )

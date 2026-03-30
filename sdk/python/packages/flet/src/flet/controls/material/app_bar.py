@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,6 +12,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 
 @control("AppBar")
@@ -19,15 +20,16 @@ class AppBar(AdaptiveControl):
     """
     A material design app bar.
 
+    Example:
     ```python
     ft.AppBar(
         leading=ft.Icon(ft.Icons.MENU),
         title=ft.Text("Dashboard"),
+        bgcolor=ft.Colors.SURFACE_CONTAINER,
         actions=[
             ft.IconButton(ft.Icons.SEARCH),
             ft.IconButton(ft.Icons.MORE_VERT),
         ],
-        bgcolor=ft.Colors.SURFACE_CONTAINER,
     )
     ```
     """
@@ -95,7 +97,10 @@ class AppBar(AdaptiveControl):
     Default color is defined by [`AppBarTheme.bgcolor`][flet.]
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The app bar's elevation.
 
@@ -104,15 +109,18 @@ class AppBar(AdaptiveControl):
         (when [`Theme.use_material3`][flet.] is `False`).
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    elevation_on_scroll: Optional[Number] = None
+    elevation_on_scroll: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation to be used if this app bar has something scrolled underneath it.
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -180,7 +188,10 @@ class AppBar(AdaptiveControl):
     The padding between the [`actions`][(c).] and the end of this app bar.
     """
 
-    toolbar_opacity: Number = 1.0
+    toolbar_opacity: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 1.0
     """
     The opacity of the toolbar.
 
@@ -188,7 +199,7 @@ class AppBar(AdaptiveControl):
     - `1.0`: fully opaque
 
     Raises:
-        ValueError: If it is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     title_text_style: Optional[TextStyle] = None
@@ -206,20 +217,3 @@ class AppBar(AdaptiveControl):
     """
     The shape of this app bar's Material as well as its shadow.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if self.elevation_on_scroll is not None and self.elevation_on_scroll < 0:
-            raise ValueError(
-                "elevation_on_scroll must be greater than or equal to 0, "
-                f"got {self.elevation_on_scroll}"
-            )
-        if not (0 <= self.toolbar_opacity <= 1):
-            raise ValueError(
-                "toolbar_opacity must be between 0.0 and 1.0 inclusive, "
-                f"got {self.toolbar_opacity}"
-            )

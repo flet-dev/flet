@@ -1,5 +1,7 @@
 from flet.auth.oauth_provider import OAuthProvider
 
+__all__ = ["GoogleOAuthProvider"]
+
 
 class GoogleOAuthProvider(OAuthProvider):
     """

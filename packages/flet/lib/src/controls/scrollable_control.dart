@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/keys.dart';
-import '../utils/misc.dart';
 import '../utils/numbers.dart';
-import '../utils/platform.dart';
+import '../utils/scrollbar.dart';
 import '../utils/time.dart';
 import '../widgets/flet_store_mixin.dart';
 
@@ -95,10 +94,11 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("ScrollableControl build: ${widget.control.id}");
-    ScrollMode scrollMode =
-        widget.control.getScrollMode("scroll", ScrollMode.none)!;
+    final scrollConfiguration =
+        widget.control.getScrollbarConfiguration("scroll");
 
-    if (widget.control.getBool("auto_scroll", false)!) {
+    if (widget.control.getBool("auto_scroll", false)! &&
+        scrollConfiguration != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.animateTo(
           _controller.position.maxScrollExtent,
@@ -107,30 +107,26 @@ class _ScrollableControlState extends State<ScrollableControl>
         );
       });
     }
-    return scrollMode != ScrollMode.none
-        ? Scrollbar(
-            // todo: create class ScrollBarConfiguration on Py end, for more customizability
-            thumbVisibility: (scrollMode == ScrollMode.always ||
-                    (scrollMode == ScrollMode.adaptive &&
-                        !isMobilePlatform())) &&
-                scrollMode != ScrollMode.hidden,
-            thickness: scrollMode == ScrollMode.hidden
-                ? 0
-                : isMobilePlatform()
-                    ? 4.0
-                    : null,
-            controller: _controller,
-            child: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: widget.wrapIntoScrollableView
-                  ? SingleChildScrollView(
-                      controller: _controller,
-                      scrollDirection: widget.scrollDirection,
-                      child: widget.child,
-                    )
-                  : widget.child,
-            ))
-        : widget.child;
+
+    if (scrollConfiguration == null) return widget.child;
+
+    return Scrollbar(
+        thumbVisibility: scrollConfiguration.thumbVisibility,
+        trackVisibility: scrollConfiguration.trackVisibility,
+        thickness: scrollConfiguration.thickness,
+        radius: scrollConfiguration.radius,
+        interactive: scrollConfiguration.interactive,
+        scrollbarOrientation: scrollConfiguration.orientation,
+        controller: _controller,
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: widget.wrapIntoScrollableView
+              ? SingleChildScrollView(
+                  controller: _controller,
+                  scrollDirection: widget.scrollDirection,
+                  child: widget.child,
+                )
+              : widget.child,
+        ));
   }
 }

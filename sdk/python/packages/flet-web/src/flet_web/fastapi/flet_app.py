@@ -433,7 +433,7 @@ class FletApp(Connection):
         )
         app_manager.store_state(state_id, state)
 
-    def __get_unique_session_id(self, session_id: str):
+    def __get_unique_session_id(self, session_id: str) -> str:
         """
         Compose a stable unique session key scoped to page and client identity.
 

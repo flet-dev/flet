@@ -26,7 +26,9 @@ class Tester(Service):
         """
         return await self._invoke_method("pump", {"duration": duration})
 
-    async def pump_and_settle(self, duration: Optional[DurationValue] = None):
+    async def pump_and_settle(
+        self, duration: Optional[DurationValue] = None, timeout: Optional[float] = 10
+    ):
         """
         Repeatedly calls pump until there are no longer any frames scheduled.
         This will call `pump` at least once, even if no frames are scheduled when
@@ -37,8 +39,11 @@ class Tester(Service):
 
         Args:
             duration: A duration after which to trigger a frame.
+            timeout: Maximum seconds to wait for completion.
         """
-        return await self._invoke_method("pump_and_settle", {"duration": duration})
+        return await self._invoke_method(
+            "pump_and_settle", {"duration": duration}, timeout=timeout
+        )
 
     async def find_by_text(self, text: str) -> Finder:
         """
@@ -163,8 +168,11 @@ class Tester(Service):
             "mouse_hover", {"finder_id": finder.id, "finder_index": finder.index}
         )
 
-    async def teardown(self):
+    async def teardown(self, timeout: Optional[float] = 10):
         """
         Teardown Flutter integration test and exit Flutter process.
+
+        Args:
+            timeout: Maximum seconds to wait for teardown acknowledgement.
         """
-        await self._invoke_method("teardown")
+        await self._invoke_method("teardown", timeout=timeout)

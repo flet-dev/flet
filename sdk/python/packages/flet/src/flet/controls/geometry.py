@@ -1,6 +1,6 @@
-from dataclasses import dataclass
 from typing import Optional
 
+from flet.controls.base_control import value
 from flet.controls.transform import Offset
 from flet.controls.types import Number
 
@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class Size:
     """
     A 2D size with width and height.
@@ -100,7 +100,7 @@ class Size:
         )
 
 
-@dataclass
+@value
 class Rect:
     """
     A 2D, axis-aligned, floating-point rectangle whose coordinates are relative to a \

@@ -26,7 +26,7 @@ from flet.controls.animation import (
     AnimationStyle,
     AnimationValue,
 )
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, Value, control, value
 from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
 from flet.controls.blur import (
     Blur,
@@ -105,7 +105,7 @@ from flet.controls.core.draggable import Draggable
 from flet.controls.core.flet_app import FletApp
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
-from flet.controls.core.hero import Hero, HeroTag
+from flet.controls.core.hero import Hero
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
 from flet.controls.core.interactive_viewer import InteractiveViewer
@@ -129,6 +129,7 @@ from flet.controls.core.pagelet import Pagelet
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
 from flet.controls.core.responsive_row import ResponsiveRow
+from flet.controls.core.rotated_box import RotatedBox
 from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.screenshot import Screenshot
@@ -303,7 +304,11 @@ from flet.controls.material.divider import Divider
 from flet.controls.material.dropdown import Dropdown, DropdownOption
 from flet.controls.material.dropdownm2 import DropdownM2
 from flet.controls.material.elevated_button import ElevatedButton
-from flet.controls.material.expansion_panel import ExpansionPanel, ExpansionPanelList
+from flet.controls.material.expansion_panel import (
+    ExpansionPanel,
+    ExpansionPanelList,
+    ExpansionPanelListChangeEvent,
+)
 from flet.controls.material.expansion_tile import ExpansionTile, TileAffinity
 from flet.controls.material.filled_button import FilledButton
 from flet.controls.material.filled_tonal_button import FilledTonalButton
@@ -418,6 +423,8 @@ from flet.controls.ref import Ref
 from flet.controls.scrollable_control import (
     OnScrollEvent,
     ScrollableControl,
+    Scrollbar,
+    ScrollbarOrientation,
     ScrollDirection,
     ScrollType,
 )
@@ -487,12 +494,15 @@ from flet.controls.text_style import (
     TextThemeStyle,
 )
 from flet.controls.transform import (
+    Flip,
+    Matrix4,
     Offset,
     OffsetValue,
     Rotate,
     RotateValue,
     Scale,
     ScaleValue,
+    Transform,
 )
 from flet.controls.types import (
     AppLifecycleState,
@@ -771,6 +781,7 @@ __all__ = [
     "EventHandler",
     "ExpansionPanel",
     "ExpansionPanelList",
+    "ExpansionPanelListChangeEvent",
     "ExpansionTile",
     "ExpansionTileTheme",
     "FilePicker",
@@ -789,6 +800,7 @@ __all__ = [
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
     "FletUnsupportedPlatformException",
+    "Flip",
     "FloatingActionButton",
     "FloatingActionButtonLocation",
     "FloatingActionButtonTheme",
@@ -803,7 +815,6 @@ __all__ = [
     "GyroscopeReadingEvent",
     "HapticFeedback",
     "Hero",
-    "HeroTag",
     "HoverEvent",
     "Icon",
     "IconButton",
@@ -858,6 +869,7 @@ __all__ = [
     "MarkdownCustomCodeTheme",
     "MarkdownExtensionSet",
     "MarkdownStyleSheet",
+    "Matrix4",
     "MenuBar",
     "MenuItemButton",
     "MenuStyle",
@@ -936,6 +948,7 @@ __all__ = [
     "ResponsiveRowBreakpoint",
     "Rotate",
     "RotateValue",
+    "RotatedBox",
     "RoundedRectangleBorder",
     "RouteChangeEvent",
     "RouteUrlStrategy",
@@ -955,6 +968,8 @@ __all__ = [
     "ScrollMode",
     "ScrollType",
     "ScrollableControl",
+    "Scrollbar",
+    "ScrollbarOrientation",
     "ScrollbarTheme",
     "SearchBar",
     "SearchBarTheme",
@@ -1043,6 +1058,7 @@ __all__ = [
     "TooltipTheme",
     "TooltipTriggerMode",
     "TooltipValue",
+    "Transform",
     "TransparentPointer",
     "UnderlineTabIndicator",
     "Url",
@@ -1050,6 +1066,7 @@ __all__ = [
     "UrlTarget",
     "UserAccelerometer",
     "UserAccelerometerReadingEvent",
+    "Value",
     "ValueKey",
     "VerticalAlignment",
     "VerticalDivider",
@@ -1098,6 +1115,7 @@ __all__ = [
     "use_memo",
     "use_ref",
     "use_state",
+    "value",
 ]
 
 _THEME_EXPORTS = {

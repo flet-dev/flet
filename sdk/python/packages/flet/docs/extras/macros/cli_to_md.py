@@ -1,4 +1,5 @@
 import argparse
+import re
 import textwrap
 from typing import Optional
 
@@ -90,6 +91,19 @@ def render_flet_cli_as_markdown(
         if t[-1] not in ".!?":
             t += "."
         return t
+
+    def _extract_env_vars(s: Optional[str]) -> tuple[Optional[str], list[str]]:
+        """Extract `[env: VAR=]` annotations from help text."""
+        if not s:
+            return s, []
+        env_vars = re.findall(r"\[env:\s*([A-Z0-9_]+)=\]", s)
+        text = re.sub(r"\s*\[env:\s*[A-Z0-9_]+=\]", "", s).strip()
+        return text, env_vars
+
+    def _env_var_link(env_var: str) -> str:
+        """Return a markdown link to the environment variable reference entry."""
+        anchor = env_var.lower()
+        return f"[`{env_var}`](../reference/environment-variables.md#{anchor})"
 
     def _head(level: int, text: str) -> str:
         """Markdown heading helper."""
@@ -249,7 +263,8 @@ def render_flet_cli_as_markdown(
             out.append(_head(entry_level, title))
 
             body_lines: list[str] = []
-            help_text = _cap_first(_clean(a.help)) or ""
+            help_text_raw, env_vars = _extract_env_vars(_clean(a.help))
+            help_text = _cap_first(help_text_raw) or ""
             if help_text:
                 body_lines.append(help_text)
 
@@ -271,6 +286,19 @@ def render_flet_cli_as_markdown(
                 # No default -> explicit required true/false
                 _ensure_blank(body_lines)
                 body_lines.append(f"**Required:** {'true' if a.required else 'false'}")
+
+            if env_vars:
+                _ensure_blank(body_lines)
+                label = (
+                    "**Environment variable:**"
+                    if len(env_vars) == 1
+                    else "**Environment variables:**"
+                )
+                body_lines.append(
+                    label
+                    + " "
+                    + ", ".join(_env_var_link(env_var) for env_var in env_vars)
+                )
 
             if body_lines:
                 out.extend(body_lines)
@@ -296,7 +324,8 @@ def render_flet_cli_as_markdown(
             out.append(_head(entry_level, f"`{title_flag}`"))
 
             body_lines: list[str] = []
-            help_text = _cap_first(_clean(a.help)) or ""
+            help_text_raw, env_vars = _extract_env_vars(_clean(a.help))
+            help_text = _cap_first(help_text_raw) or ""
             if help_text:
                 body_lines.append(help_text)
 
@@ -319,6 +348,19 @@ def render_flet_cli_as_markdown(
             if getattr(a, "required", False):
                 _ensure_blank(body_lines)
                 body_lines.append("**Required:** true")
+
+            if env_vars:
+                _ensure_blank(body_lines)
+                label = (
+                    "**Environment variable:**"
+                    if len(env_vars) == 1
+                    else "**Environment variables:**"
+                )
+                body_lines.append(
+                    label
+                    + " "
+                    + ", ".join(_env_var_link(env_var) for env_var in env_vars)
+                )
 
             # Aliases (excluding the title flag)
             aliases = [f for f in _all_flags(a) if f != title_flag]

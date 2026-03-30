@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.types import ColorValue, Number
+from flet.utils.validation import V
 
 __all__ = ["Divider"]
 
@@ -33,7 +34,10 @@ class Divider(Control):
     If `None`, [`DividerTheme.color`][flet.] is used.
     """
 
-    height: Optional[Number] = None
+    height: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The divider's height extent. The divider itself is always drawn as a horizontal \
     line that is centered within the height specified by this value.
@@ -45,7 +49,10 @@ class Divider(Control):
         ValueError: If [`height`][(c).] is negative.
     """
 
-    leading_indent: Optional[Number] = None
+    leading_indent: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The amount of empty space to the leading edge of the divider.
 
@@ -53,10 +60,13 @@ class Divider(Control):
     If that's is also `None`, defaults to `0.0`.
 
     Raises:
-        ValueError: If [`leading_indent`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    thickness: Optional[Number] = None
+    thickness: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The thickness of the line drawn within the divider.
 
@@ -70,7 +80,10 @@ class Divider(Control):
         ValueError: If [`thickness`][(c).] is negative.
     """
 
-    trailing_indent: Optional[Number] = None
+    trailing_indent: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The amount of empty space to the trailing edge of the divider.
 
@@ -78,31 +91,10 @@ class Divider(Control):
     If that is also `None`, defaults to `0.0`.
 
     Raises:
-        ValueError: If [`trailing_indent`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     radius: Optional[BorderRadiusValue] = None
     """
     The border radius of the divider.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.height is not None and self.height < 0:
-            raise ValueError(
-                f"height must be greater than or equal to 0, got {self.height}"
-            )
-        if self.thickness is not None and self.thickness < 0:
-            raise ValueError(
-                f"thickness must be greater than or equal to 0, got {self.thickness}"
-            )
-        if self.leading_indent is not None and self.leading_indent < 0:
-            raise ValueError(
-                f"leading_indent must be greater than or equal to 0, "
-                f"got {self.leading_indent}"
-            )
-        if self.trailing_indent is not None and self.trailing_indent < 0:
-            raise ValueError(
-                f"trailing_indent must be greater than or equal to 0, "
-                f"got {self.trailing_indent}"
-            )

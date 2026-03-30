@@ -168,7 +168,7 @@ First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in 
 -  To build the Flutter client for Web, run the below command:
     ```
     flutter build web
-    ```   
+    ```
     When the build is complete, a directory `client/build/web` will be created.
 
 ### Running the Flutter client
@@ -211,8 +211,7 @@ uv run flet run -w -p 8550 playground/<your-main.py>
   * Add `# {version}` with new/changed/fixed items into `CHANGELOG.md`. Only `packages/flet/CHANGELOG.md` should contain real items; other packages could have just a stub.
 * Copy `# {version}` section from `packages/flet/CHANGELOG.md` to the root `CHANGELOG.md`.
 * Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
-* Create a new `{version}` branch in [flet-dev/flet-app-templates](https://github.com/flet-dev/flet-app-templates) repository from a previously released `{current-version}` branch.
-* Create a new `{version}` branch in [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) repository from a previously released `{current-version}` branch.
+* Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
 * Create `Prepare Flet {version}` PR to merge into `main` branch.
 * In `Build Flet package for Flutter` job of [Flet CI build](https://ci.appveyor.com/project/flet-dev/flet) make sure analysis report of every `flet*` Flutter package has only 1 issue "Publishable packages can't have 'path' dependencies.".
 * Merge `Prepare Flet {version}` PR.

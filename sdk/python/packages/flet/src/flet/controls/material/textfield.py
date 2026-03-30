@@ -1,9 +1,8 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, control, value
 from flet.controls.control_event import ControlEventHandler, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
@@ -18,6 +17,7 @@ from flet.controls.types import (
     Number,
     TextAlign,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "InputFilter",
@@ -187,7 +187,7 @@ class TextCapitalization(Enum):
     """
 
 
-@dataclass
+@value
 class InputFilter:
     """
     An input filter that uses a regular expression to allow or deny/block certain \
@@ -274,6 +274,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     A text field lets the user enter text, either with hardware keyboard or with an \
     onscreen keyboard.
 
+    Example:
     ```python
     ft.TextField(label="Name", hint_text="Jane Doe")
     ```
@@ -281,7 +282,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     value: str = ""
     """
-    Current value of the TextField.
+    Current value of this text field.
     """
 
     selection: Optional[TextSelection] = None
@@ -308,7 +309,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     Whether this field can contain multiple lines of text.
     """
 
-    min_lines: Optional[int] = None
+    min_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+        V.le_field("max_lines"),
+    ] = None
     """
     The minimum number of lines to occupy when the content spans fewer lines.
 
@@ -318,11 +323,16 @@ class TextField(FormFieldControl, AdaptiveControl):
     Defaults to `1`.
 
     Raises:
-        ValueError: If [`min_lines`][(c).] is not positive or exceeds
-            [`max_lines`][(c).] when both are set.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to [`max_lines`][(c).] when both
+            are set.
     """
 
-    max_lines: Optional[int] = None
+    max_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+        V.ge_field("min_lines"),
+    ] = None
     """
     The maximum number of lines to show at one time, wrapping if necessary.
 
@@ -333,33 +343,39 @@ class TextField(FormFieldControl, AdaptiveControl):
     instead.
 
     Raises:
-        ValueError: If [`max_lines`][(c).] is not positive or is less than
-            [`min_lines`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to [`min_lines`][(c).] when
+            both are set.
     """
 
-    max_length: Optional[int] = None
+    max_length: Annotated[
+        Optional[int],
+        V.or_(
+            V.gt(0),
+            V.eq(-1),
+            message="max_length must be either strictly greater than 0 or equal to -1",
+        ),
+    ] = None
     """
     Limits a maximum number of characters that can be entered into TextField.
 
     Raises:
-        ValueError: If [`max_length`][(c).] is neither `-1` nor a positive integer.
+        ValueError: If it is not strictly greater than `0` or equal to `-1`.
     """
 
     password: bool = False
     """
     Whether to hide the text being edited.
-
-    Defaults to `False`.
     """
 
     can_reveal_password: bool = False
     """
     Displays a toggle icon button that allows revealing the entered password. Is shown \
-    if both `password` and `can_reveal_password` are `True`.
+    if both [`password`][(c).] and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as `suffix` and in case both
-    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is
-    not shown.
+    The icon is displayed in the same location as [`suffix`][flet.FormFieldControl.]
+    and in case both `can_reveal_password`/[`password`][(c).] and `suffix` are
+    provided, then the [`suffix`][flet.FormFieldControl.] won't be shown.
     """
 
     read_only: bool = False
@@ -368,15 +384,13 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     When this is set to `True`, the text cannot be modified by any shortcut or keyboard
     operation. The text is still selectable.
-
-    Defaults to `False`.
     """
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, \
-    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires \
-    `on_submit` event.
+    Changes the behavior of `Enter` button in [`multiline`][(c).] textfield to be \
+    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just \
+    `Enter` fires [`on_submit`][(c).] event.
     """
 
     ignore_up_down_keys: bool = False
@@ -391,7 +405,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Defaults to `TextAlign.LEFT`.
+    Defaults to [`TextAlign.LEFT`][flet.].
     """
 
     autofocus: bool = False
@@ -405,14 +419,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Defaults to `TextCapitalization.NONE`.
+    Defaults to [`TextCapitalization.NONE`][flet.].
     """
 
     autocorrect: bool = True
     """
     Whether to enable autocorrection.
-
-    Defaults to `True`.
     """
 
     enable_suggestions: bool = True
@@ -422,8 +434,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects Android. On iOS, suggestions are tied directly to
     `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`.
     On Android autocorrection and suggestion are controlled separately.
-
-    Defaults to `True`.
     """
 
     smart_dashes_type: bool = True
@@ -433,8 +443,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS versions 11 and above. As an example of what this does,
     two consecutive hyphen characters will be automatically replaced with one en dash,
     and three consecutive hyphens will become one em dash.
-
-    Defaults to `True`.
     """
 
     smart_quotes_type: bool = True
@@ -444,15 +452,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS. As an example of what this does, a standard vertical
     double quote character will be automatically replaced by a left or right double
     quote depending on its position in a word.
-
-    Defaults to `True`.
     """
 
     show_cursor: bool = True
     """
     Whether the field's cursor is to be shown.
-
-    Defaults to `True`.
     """
 
     cursor_color: Optional[ColorValue] = None
@@ -489,8 +493,8 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Provides as-you-type filtering/validation.
 
-    Similar to the `on_change` callback, the input filters are not applied when the
-    content of the field is changed programmatically.
+    Similar to the [`on_change`][(c).] callback, the input filters are not applied
+    when the content of the field is changed programmatically.
     """
 
     obscuring_character: str = "•"
@@ -617,22 +621,6 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.min_lines is not None and self.min_lines <= 0:
-            raise ValueError("min_lines must be greater than 0")
-        if self.max_lines is not None and self.max_lines <= 0:
-            raise ValueError("max_lines must be greater than 0")
-        if (
-            self.max_lines is not None
-            and self.min_lines is not None
-            and self.min_lines > self.max_lines
-        ):
-            raise ValueError("min_lines can't be greater than max_lines")
-        if (
-            self.max_length is not None
-            and self.max_length != -1
-            and self.max_length <= 0
-        ):
-            raise ValueError("max_length must be either equal to -1 or greater than 0")
         if (
             self.bgcolor is not None
             or self.fill_color is not None

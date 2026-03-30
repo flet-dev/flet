@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
 __all__ = [
@@ -9,7 +9,18 @@ __all__ = [
 ]
 
 
-@dataclass()
+def _lazy_value(cls=None, **kwargs):
+    """Deferred proxy for ``value`` to avoid circular import with base_control."""
+    from flet.controls.base_control import value as _v
+
+    if cls is not None:
+        return _v(cls)
+    if kwargs:
+        return _v(**kwargs)
+    return _v()
+
+
+@_lazy_value
 class Key:
     """
     Base class for control keys.
@@ -31,7 +42,7 @@ class Key:
         return str(self.value)
 
 
-@dataclass
+@_lazy_value
 class ValueKey(Key):
     """
     General-purpose key for control identity.
@@ -44,7 +55,7 @@ class ValueKey(Key):
         self._type = "value"
 
 
-@dataclass
+@_lazy_value
 class ScrollKey(Key):
     """
     Key type used for imperative scroll targeting.

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@ft.value
 class ChartGridLines:
     """
     Configures the appearance of horizontal and vertical grid lines within the chart.
@@ -66,7 +66,7 @@ class ChartGridLines:
         )
 
 
-@dataclass
+@ft.value
 class ChartPointShape:
     """
     Base class for chart point shapes.
@@ -81,7 +81,7 @@ class ChartPointShape:
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@ft.value
 class ChartCirclePoint(ChartPointShape):
     """Draws a circle."""
 
@@ -131,7 +131,7 @@ class ChartCirclePoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartSquarePoint(ChartPointShape):
     """Draws a square."""
 
@@ -181,7 +181,7 @@ class ChartSquarePoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartCrossPoint(ChartPointShape):
     """Draws a cross-mark (X)."""
 
@@ -221,7 +221,7 @@ class ChartCrossPoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartPointLine:
     """Defines style of a line."""
 
@@ -358,7 +358,7 @@ class ChartEventType(Enum):
     """
 
 
-@dataclass
+@ft.value
 class ChartDataPointTooltip:
     """
     Configuration of the tooltip for data points in charts.

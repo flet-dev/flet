@@ -7,10 +7,11 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overl
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.id_counter import ControlId
-from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
+from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count
+from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -23,13 +24,25 @@ else:
 
 if TYPE_CHECKING:
     from .base_page import BasePage
+    from .keys import KeyValue
     from .page import Page
 
 __all__ = [
     "BaseControl",
+    "Prop",
+    "Value",
     "control",
     "skip_field",
+    "value",
 ]
+
+# ---------------------------------------------------------------------------
+# Sparse property tracking is defined in value_types.py to avoid circular
+# imports: value types (Duration, Alignment, etc.) need @value but are
+# imported transitively by this module.
+# Prop, Value, _install_props and value are re-exported from here
+# for backwards compatibility.
+# ---------------------------------------------------------------------------
 
 
 def skip_field():
@@ -123,6 +136,7 @@ def _apply_control(
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
+    _install_props(cls)  # Install Prop descriptors for sparse tracking
 
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
@@ -147,6 +161,26 @@ class BaseControl:
     Base class for all Flet controls and services.
     """
 
+    # ------------------------------------------------------------------
+    # Sparse property tracking — MUST be the first two init=False fields
+    # so the dataclass-generated __init__ initialises them before any
+    # Prop.__set__ call for init=True fields.
+    # ------------------------------------------------------------------
+    _values: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
+    _dirty: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
+
     _i: int = field(init=False, compare=False)
     """
     Runtime-generated internal control id used by the session protocol.
@@ -162,7 +196,7 @@ class BaseControl:
     Arbitrary data of any type.
     """
 
-    key: Optional[KeyValue] = None
+    key: Optional["KeyValue"] = None
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -195,6 +229,9 @@ class BaseControl:
             ref.current = self
 
         self.init()
+        # Construction is not a mutation: clear dirty tracking so only
+        # post-construction mutations are visible to the non-frozen diff.
+        self._dirty.clear()
 
         # control_id = self._i
         # object_id = id(self)
@@ -228,7 +265,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Union["Page", "BasePage"]:
+    def page(self) -> "Union[Page, BasePage]":
         """
         The page to which this control belongs to.
         """
@@ -291,6 +328,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
+        validate(self, suppress_repeated_errors=True)
 
         if frozen is not None:
             self._frozen = frozen
@@ -311,7 +349,7 @@ class BaseControl:
         Override to start resources that require an attached page, for example
         subscriptions, timers, or service listeners.
         """
-        controls_log.debug(f"{self}.did_mount()")
+        controls_log.debug("%s.did_mount()", self)
         pass
 
     def will_unmount(self):
@@ -321,7 +359,7 @@ class BaseControl:
         Override to dispose resources created in `did_mount()`, such as
         subscriptions, timers, or external handles.
         """
-        controls_log.debug(f"{self}.will_unmount()")
+        controls_log.debug("%s.will_unmount()", self)
         pass
 
     # public methods
@@ -398,7 +436,7 @@ class BaseControl:
             _context_page.set(self.page)
             context.reset_auto_update()
 
-            controls_log.debug(f"Trigger event {self}.{field_name} {e}")
+            controls_log.debug("Trigger event %s.%s %s", self, field_name, e)
 
             if not self.page:
                 raise RuntimeError(
@@ -460,3 +498,8 @@ class BaseControl:
         Return a debug-friendly control identifier string.
         """
         return f"{self._c}({self._i} - {id(self)})"
+
+
+# Install Prop descriptors for BaseControl's own public fields (key).
+# Subclasses decorated with @control get this called via _apply_control.
+_install_props(BaseControl)

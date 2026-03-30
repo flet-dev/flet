@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.border import Border
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -29,7 +30,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class ColorFilter:
     """
     Defines a color filter.
@@ -122,7 +123,7 @@ class BlurStyle(Enum):
     """
 
 
-@dataclass
+@value
 class BoxShadow:
     """
     Configuration for a box's shadow.
@@ -276,7 +277,7 @@ class BoxFit(Enum):
     """  # noqa: E501
 
 
-@dataclass
+@value
 class DecorationImage:
     """
     An image for a box decoration.
@@ -381,7 +382,7 @@ class DecorationImage:
         )
 
 
-@dataclass
+@value
 class BoxDecoration:
     """
     BoxDecoration provides a description of how to paint a box.
@@ -470,7 +471,7 @@ class BoxDecoration:
         )
 
 
-@dataclass
+@value
 class BoxConstraints:
     """
     Constraints that must be respected by a size of a box.

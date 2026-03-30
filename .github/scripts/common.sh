@@ -6,7 +6,7 @@ function patch_python_package_versions() (
     uv sync --no-default-groups || true
 
     # Update package versions in version.py and pyproject.toml files
-    for pkg in flet flet-cli flet-desktop flet-desktop-light flet-web; do
+    for pkg in flet flet-cli flet-desktop flet-web; do
       version_py="packages/$pkg/src/${pkg//-/_}/version.py"
       if [[ -f "$version_py" ]]; then
         sed -i -e "s/^flet_version = \"\"/flet_version = \"$PYPI_VER\"/g" "$version_py"
@@ -15,6 +15,7 @@ function patch_python_package_versions() (
         echo "Skipping version patch: $version_py not found"
       fi
       uv version --package "$pkg" "$PYPI_VER"
+      uv run "$SCRIPTS/patch_toml_versions.py" "packages/$pkg/pyproject.toml" "$PYPI_VER"
       echo "Patched version for $pkg to $PYPI_VER"
     done
 

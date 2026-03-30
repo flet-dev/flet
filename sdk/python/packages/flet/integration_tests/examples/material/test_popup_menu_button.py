@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-
 from examples.controls.popup_menu_button import basic
 
 
@@ -13,7 +12,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.update()
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.add(
-        pmb := ft.PopupMenuButton(
+        ft.PopupMenuButton(
             key="popup",
             items=[
                 ft.PopupMenuItem(content="Sm"),

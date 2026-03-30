@@ -1,12 +1,12 @@
 import json
 from typing import Optional
 
-import httpx
-
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
 from flet.version import flet_version
+
+__all__ = ["GitHubOAuthProvider"]
 
 
 class GitHubOAuthProvider(OAuthProvider):
@@ -38,6 +38,8 @@ class GitHubOAuthProvider(OAuthProvider):
         Returns:
             A list of [`Group`][flet.auth.] mapped from `/user/teams`.
         """
+        import httpx
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
                 httpx.Request(
@@ -69,6 +71,8 @@ class GitHubOAuthProvider(OAuthProvider):
             A [`User`][flet.auth.] built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
+        import httpx
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(
                 httpx.Request(
@@ -95,7 +99,7 @@ class GitHubOAuthProvider(OAuthProvider):
                     break
             return User(uj, id=str(uj["id"]))
 
-    def __get_client_headers(self, access_token):
+    def __get_client_headers(self, access_token: str) -> dict[str, str]:
         """
         Builds common GitHub API request headers.
 

@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
-from typing import Optional, cast
+from typing import Annotated, Optional, cast
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
+from flet.utils.validation import V
 
 __all__ = [
     "DragTarget",
@@ -96,14 +97,15 @@ class DragTarget(Control):
     asked to accept the `Draggable`'s data.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this control.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     group: str = "default"
@@ -137,8 +139,3 @@ class DragTarget(Control):
     """
     Called when a draggable moves within this target.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

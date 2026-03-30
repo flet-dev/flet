@@ -5,7 +5,10 @@ examples: ../../examples/controls/webview
 
 # WebView
 
-Display web content inside your [Flet](https://flet.dev) app using the `flet-webview` extension, which wraps Flutter's [`webview_flutter`](https://pub.dev/packages/webview_flutter) package.
+Display web content in a WebView to be shown in your [Flet](https://flet.dev) apps.
+
+It is powered by the [webview_flutter](https://pub.dev/packages/webview_flutter)
+and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
 
 ## Platform Support
 
@@ -49,8 +52,9 @@ doing this in order to avoid compromising user data.
 For more details, see [this](https://developer.android.com/privacy-and-security/security-config#CleartextTraffic)
 and [this](https://kinsta.com/blog/net-err_cleartext_not_permitted/).
 
-To fix it, the `AndroidManifest.xml` file needs to be modified, to include the `android:usesCleartextTraffic=”true”`.
-This can be done through one of the following methods:
+To fix it, your app's configuration
+(precisely, the [manifest application attributes](../publish/android.md#application-attributes))
+needs to be modified as follows:
 
 /// tab | `pyproject.toml`
 ```toml
@@ -58,6 +62,7 @@ This can be done through one of the following methods:
 usesCleartextTraffic = "true"
 ```
 ///
+
 
 ## Description
 

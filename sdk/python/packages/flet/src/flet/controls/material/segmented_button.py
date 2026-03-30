@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
@@ -13,6 +13,7 @@ from flet.controls.types import (
     IconDataOrControl,
     StrOrControl,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Segment", "SegmentedButton"]
 
@@ -25,12 +26,17 @@ class Segment(Control):
 
     value: str
     """
-    Used to identify the `Segment`.
+    Used to identify this segment.
     """
 
     icon: Optional[IconDataOrControl] = None
     """
-    The icon (typically an [`Icon`][flet.]) to be displayed in the segment.
+    The icon to be displayed in the segment.
+
+    Typically an [`Icon`][flet.].
+
+    Raises:
+        ValueError: If neither it nor [`label`][(c).] is set and visible.
     """
 
     label: Optional[StrOrControl] = None
@@ -38,18 +44,22 @@ class Segment(Control):
     The label (usually a [`Text`][flet.]) to be displayed in the segment.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
+        ValueError: If neither it nor [`icon`][(c).] is set and visible.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            (isinstance(self.icon, IconData))
-            or (isinstance(self.icon, Control) and self.icon.visible)
-            or (isinstance(self.label, str))
-            or (isinstance(self.label, Control) and self.label.visible)
-        ):
-            raise ValueError("one of icon or label must be set and visible")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                isinstance(ctrl.icon, IconData)
+                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+            )
+            or (
+                isinstance(ctrl.label, str)
+                or (isinstance(ctrl.label, Control) and ctrl.label.visible)
+            ),
+            message="at least icon or label must be set and visible",
+        ),
+    )
 
 
 @control("SegmentedButton")
@@ -58,13 +68,15 @@ class SegmentedButton(LayoutControl):
     A segmented button control.
     """
 
-    segments: list[Segment]
+    segments: Annotated[
+        list[Segment],
+        V.visible_controls(min_count=1),
+    ]
     """
     The segments of this button.
 
     Raises:
-        ValueError: If [`segments`][(c).] is empty or does not have at least one
-            visible `Segment`.
+        ValueError: If it does not contain at least one visible `Segment`.
     """
 
     style: Optional[ButtonStyle] = None
@@ -161,16 +173,16 @@ class SegmentedButton(LayoutControl):
     contains a list of strings identifying the selected segments.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not any(segment.visible for segment in self.segments):
-            raise ValueError("segments must have at minimum one visible Segment")
-        if len(self.selected) == 0 and not self.allow_empty_selection:
-            raise ValueError(
-                "allow_empty_selection must be True for selected to be empty"
-            )
-        if len(self.selected) >= 2 and not self.allow_multiple_selection:
-            raise ValueError(
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: len(ctrl.selected) > 0 or ctrl.allow_empty_selection,
+            message="allow_empty_selection must be True for selected to be empty",
+        ),
+        V.ensure(
+            lambda ctrl: len(ctrl.selected) < 2 or ctrl.allow_multiple_selection,
+            message=(
                 "allow_multiple_selection must be True for selected to "
                 "have more than one item"
-            )
+            ),
+        ),
+    )

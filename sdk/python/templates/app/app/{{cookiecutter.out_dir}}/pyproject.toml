@@ -1,0 +1,31 @@
+[project]
+name = "{{cookiecutter.project_name}}"
+version = "0.1.0"
+description = "{{cookiecutter.description}}"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+    "flet>={{cookiecutter.flet_version}}"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli>={{cookiecutter.flet_version}}",
+    "flet-desktop>={{cookiecutter.flet_version}}",
+    "flet-web>={{cookiecutter.flet_version}}",
+]
+
+[tool.flet]
+{%- if cookiecutter.platform == "linux" %}
+desktop_flavor = "light"    # Change to "full" to use flet-audio and flet-video
+{%- endif %}
+org = "com.mycompany"
+product = "{{cookiecutter.project_name}}"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"

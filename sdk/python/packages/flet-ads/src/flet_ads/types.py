@@ -53,7 +53,7 @@ class PaidAdEvent(ft.Event[ft.EventControlType]):
     """
 
 
-@dataclass
+@ft.value
 class AdRequest:
     """
     Targeting info per the AdMob API.
@@ -112,7 +112,7 @@ class NativeTemplateFontStyle(Enum):
     MONOSPACE = "monospace"
 
 
-@dataclass
+@ft.value
 class NativeAdTemplateTextStyle:
     size: Optional[ft.Number] = None
     text_color: Optional[ft.ColorValue] = None
@@ -120,7 +120,7 @@ class NativeAdTemplateTextStyle:
     style: Optional[NativeTemplateFontStyle] = None
 
 
-@dataclass
+@ft.value
 class NativeAdTemplateStyle:
     template_type: NativeAdTemplateType = NativeAdTemplateType.MEDIUM
     main_bgcolor: Optional[ft.ColorValue] = None

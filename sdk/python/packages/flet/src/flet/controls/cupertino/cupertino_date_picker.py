@@ -1,13 +1,14 @@
 from dataclasses import field
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Locale, Number
+from flet.utils.validation import V
 
 __all__ = [
     "CupertinoDatePicker",
@@ -106,19 +107,20 @@ class CupertinoDatePicker(LayoutControl):
     """
     The initial date and/or time of the picker.
 
-    It must conform to the intervals set in [`first_date`][(c).], [`last_date`][(c).],
-    [`minimum_year`][(c).], and [`maximum_year`][(c).],
-    else a `ValueError` will be raised.
-
     Defaults to the present date and time.
 
     Raises:
-        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
-            after [`last_date`][(c).].
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
-            greater than [`maximum_year`][(c).].
-        ValueError: If [`value`][(c).] minute is not divisible by
-            [`minute_interval`][(c).].
+        ValueError: If it is not greater than or equal to [`first_date`][(c).], when
+            [`first_date`][(c).] is set.
+        ValueError: If it is not less than or equal to [`last_date`][(c).], when
+            [`last_date`][(c).] is set.
+        ValueError: If its year is not greater than or equal to
+            [`minimum_year`][(c).], when [`date_picker_mode`][(c).] is
+            [`CupertinoDatePickerMode.DATE`][flet.] or
+            [`CupertinoDatePickerMode.MONTH_YEAR`][flet.].
+        ValueError: If its year is not less than or equal to [`maximum_year`][(c).],
+            when [`maximum_year`][(c).] is set.
+        ValueError: If its minute is not a multiple of [`minute_interval`][(c).].
     """
 
     locale: Optional[Locale] = None
@@ -128,8 +130,8 @@ class CupertinoDatePicker(LayoutControl):
 
     Notes:
         - The locale must be supported by Flutter's global localization delegates;
-          otherwise the override is ignored and the control uses the page or system
-          locale.
+            otherwise the override is ignored and the control uses the page or system
+            locale.
         - If `None` (the default), the page or system locale is used.
     """
 
@@ -170,17 +172,18 @@ class CupertinoDatePicker(LayoutControl):
     The background color of this date picker.
     """
 
-    minute_interval: int = 1
+    minute_interval: Annotated[
+        int,
+        V.gt(0),
+        V.factor_of(60),
+    ] = 1
     """
     The granularity of the minutes spinner, if it is shown in the current \
     [`date_picker_mode`][(c).].
 
-    Note:
-        Must be an integer factor of `60`.
-
     Raises:
-        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not a factor of `60`.
     """
 
     minimum_year: int = 1
@@ -189,7 +192,7 @@ class CupertinoDatePicker(LayoutControl):
     [`CupertinoDatePickerMode.DATE`][flet.] mode.
 
     Raises:
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).].
+        ValueError: If it is greater than [`value`][(c).] year.
     """
 
     maximum_year: Optional[int] = None
@@ -200,7 +203,7 @@ class CupertinoDatePicker(LayoutControl):
     Defaults to `None` - no limit.
 
     Raises:
-        ValueError: If [`value`][(c).] year is greater than [`maximum_year`][(c).].
+        ValueError: If it is less than [`value`][(c).] year.
     """
 
     item_extent: Number = 32.0
@@ -208,7 +211,7 @@ class CupertinoDatePicker(LayoutControl):
     The uniform height of all children.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     use_24h_format: bool = False
@@ -223,8 +226,7 @@ class CupertinoDatePicker(LayoutControl):
     Whether to show day of week alongside day.
 
     Raises:
-        ValueError: If [`show_day_of_week`][(c).] is set when
-            [`date_picker_mode`][(c).] is not
+        ValueError: If it is set when [`date_picker_mode`][(c).] is not
             [`CupertinoDatePickerMode.DATE`][flet.].
     """
 
@@ -267,12 +269,6 @@ class CupertinoDatePicker(LayoutControl):
             raise ValueError(
                 f"item_extent must be strictly greater than 0, got {self.item_extent}"
             )
-        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
-            raise ValueError(
-                f"minute_interval must be a positive integer factor of 60, "
-                f"got {self.minute_interval}"
-            )
-
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date and value < self.first_date:
                 raise ValueError(
@@ -318,8 +314,8 @@ class CupertinoDatePicker(LayoutControl):
                 "CupertinoDatePickerMode.DATE"
             )
 
-        if value.minute % self.minute_interval != 0:
+        if self.minute_interval > 0 and value.minute % self.minute_interval != 0:
             raise ValueError(
-                f"value.minute ({value.minute}) must be divisible by minute_interval "
+                f"value.minute ({value.minute}) must be a multiple of minute_interval "
                 f"({self.minute_interval})"
             )

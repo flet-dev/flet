@@ -106,7 +106,7 @@ class PyodideConnection(Connection):
         """
         action = ClientAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -176,7 +176,7 @@ class PyodideConnection(Connection):
         Args:
             message: Client message to serialize with MsgPack and send.
         """
-        transport_log.debug(f"send_message: {message}")
+        transport_log.debug("send_message: %s", message)
         m = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),

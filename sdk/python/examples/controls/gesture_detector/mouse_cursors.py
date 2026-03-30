@@ -5,8 +5,8 @@ import flet as ft
 
 def main(page: ft.Page):
     def on_pan_update(event: ft.DragUpdateEvent[ft.GestureDetector]):
-        container.top = max(0.0, container.top + event.delta_y)
-        container.left = max(0.0, container.left + event.delta_x)
+        container.top = max(0.0, container.top + event.local_delta.y)
+        container.left = max(0.0, container.left + event.local_delta.x)
         container.update()
 
     gesture_detector = ft.GestureDetector(

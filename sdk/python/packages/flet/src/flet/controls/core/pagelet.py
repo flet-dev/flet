@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,6 +12,7 @@ from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.transform import OffsetValue
 from flet.controls.types import ColorValue, FloatingActionButtonLocation
+from flet.utils.validation import V
 
 __all__ = ["Pagelet"]
 
@@ -26,15 +27,18 @@ class Pagelet(LayoutControl, AdaptiveControl):
     such as demos and galleries.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
-    A child Control contained by the Pagelet.
+    A child Control contained by this Pagelet.
 
     The control in the content of the Pagelet is positioned at the top-left of the
     available space between the app bar and the bottom of the Pagelet.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
@@ -55,7 +59,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
 
     bottom_appbar: Optional[BottomAppBar] = None
     """
-    A [`BottomAppBar`][flet.] control to display at the bottom of the `Pagelet`.
+    A [`BottomAppBar`][flet.] control to display at the bottom of this Pagelet.
 
     Note:
         If both the `bottom_appbar` and [`navigation_bar`][(c).]
@@ -66,7 +70,7 @@ class Pagelet(LayoutControl, AdaptiveControl):
     bottom_sheet: Optional[Control] = None
     """
     The persistent bottom sheet to show information that supplements the primary \
-    content of the Pagelet.
+    content of this Pagelet.
     """
 
     drawer: Optional[NavigationDrawer] = None
@@ -84,25 +88,20 @@ class Pagelet(LayoutControl, AdaptiveControl):
     floating_action_button: Optional[Control] = None
     """
     A [`FloatingActionButton`][flet.]
-    control to display on top of Pagelet content.
+    control to display on top of this Pagelet's content.
     """
 
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = FloatingActionButtonLocation.END_FLOAT
     """
-    Defines a position for the `FloatingActionButton`.
+    Defines the position of the [`floating_action_button`][(c).].
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Background color of the Pagelet.
+    Background color of this Pagelet.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
 
     async def show_drawer(self):
         """

@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.duration import Duration, DurationValue
 
 __all__ = [
@@ -228,7 +229,7 @@ class AnimationCurve(Enum):
     """
 
 
-@dataclass
+@value
 class Animation:
     """
     Explicit animation configuration for animatable control properties.
@@ -267,7 +268,7 @@ class Animation:
         )
 
 
-@dataclass
+@value
 class AnimationStyle:
     """
     Used to override the default parameters of an animation.

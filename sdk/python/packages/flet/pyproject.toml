@@ -25,13 +25,11 @@ Documentation = "https://docs.flet.dev/"
 all = [
     "flet-cli",
     "flet-web",
-    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light; platform_system == 'Linux'",
+    "flet-desktop",
 ]
 cli = ["flet-cli"]
 desktop = [
-    "flet-desktop; platform_system == 'Darwin' or platform_system == 'Windows'",
-    "flet-desktop-light; platform_system == 'Linux'",
+    "flet-desktop",
 ]
 web = ["flet-web"]
 
@@ -78,7 +76,7 @@ docs-coverage = [
     "docstr-coverage >=2.3.2",
 ]
 docs = [
-    "mkdocs >=1.6.1",
+    "mkdocs >=1.6.1,<2.0.0",
     "mkdocs-material >=9.6.20",
     "mkdocstrings-python >=1.18.2",
     "mkdocstrings-python-xref >=1.16.4",
@@ -89,7 +87,6 @@ docs = [
     "mkdocs-glightbox >=0.5.1",
     "mkdocs-open-in-new-tab >=1.0.8",
     "mkdocs-section-index >=0.3.10",
-    "griffe-warnings-deprecated >=1.1.0",
     "pygments >=2.16",
     "markdown-exec[ansi] >=1.11.0",
     "pydocstyle >=6.3.0",

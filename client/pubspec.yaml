@@ -88,17 +88,12 @@ dependencies:
   flet_code_editor:
     path: ../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor
 
-  cupertino_icons: ^1.0.6
-  wakelock_plus: ^1.4.0
-  package_info_plus: ^9.0.0
-
   integration_test:
     sdk: flutter
 
 dependency_overrides:
   flet:
     path: ../packages/flet
-  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:

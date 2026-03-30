@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import BaseControl
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.types import Number, ResponsiveNumber
+from flet.utils.validation import V
 
 __all__ = ["Control"]
 
@@ -17,7 +18,10 @@ class Control(BaseControl):
     Not meant to be used directly.
     """
 
-    expand: Optional[Union[bool, int]] = None
+    expand: Annotated[
+        Optional[Union[bool, int]],
+        V.instance_of((bool, int)),
+    ] = None
     """
     Specifies whether/how this control should expand to fill available space in its \
     parent layout.
@@ -31,7 +35,7 @@ class Control(BaseControl):
         [`View`][flet.], [`Page`][flet.].
 
     Raises:
-        ValueError: If [`expand`][(c).] is not `None` and not of type `bool` or `int`.
+        ValueError: If it is not of type `bool` or `int`.
     """
 
     expand_loose: bool = False
@@ -75,7 +79,10 @@ class Control(BaseControl):
     ///
     """
 
-    opacity: Number = 1.0
+    opacity: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 1.0
     """
     Defines the transparency of the control.
 
@@ -83,7 +90,7 @@ class Control(BaseControl):
     without any transparency).
 
     Raises:
-        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     tooltip: Optional[TooltipValue] = None
@@ -114,35 +121,22 @@ class Control(BaseControl):
         The value of this property will be propagated down to all children controls
         recursively.
 
-    /// details | Example
-        type: example
-    For example, if you have a form with multiple entry controls you can disable them
-    all together by disabling container:
+    Example:
+        For example, if you have a form with multiple entry controls you can
+        disable them all together by disabling container:
 
-    ```python
-    ft.Column(
-        disabled = True,
-        controls=[
-            ft.TextField(),
-            ft.TextField()
-        ]
-    )
-    ```
-    ///
+        ```python
+        ft.Column(
+            disabled = True,
+            controls=[
+                ft.TextField(),
+                ft.TextField()
+            ]
+        )
+        ```
     """
 
     rtl: bool = False
     """
     Whether the text direction of the control should be right-to-left (RTL).
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0.0 <= self.opacity <= 1.0):
-            raise ValueError(
-                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-            )
-        if self.expand is not None and not isinstance(self.expand, (bool, int)):
-            raise ValueError(
-                f"expand must be of type bool or int, got {type(self.expand)}"
-            )

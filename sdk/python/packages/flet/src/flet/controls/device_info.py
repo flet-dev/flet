@@ -1,7 +1,8 @@
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+
+from flet.controls.base_control import value
 
 __all__ = [
     "AndroidBuildVersion",
@@ -19,7 +20,7 @@ __all__ = [
 from flet.controls.types import Locale
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class DeviceInfo:
     """
     Base class for device information.
@@ -48,7 +49,7 @@ class DeviceInfo:
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class MacOsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for macOS hosts.
@@ -146,7 +147,7 @@ class WebBrowserName(Enum):
     """Unknown web browser"""
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class WebDeviceInfo(DeviceInfo):
     """
     Information derived from `navigator`.
@@ -273,7 +274,7 @@ class WebDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class AndroidBuildVersion:
     """
     Android OS version details derived from `android.os.Build.VERSION`.
@@ -322,7 +323,7 @@ class AndroidBuildVersion:
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class AndroidDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Android devices and emulators.
@@ -482,7 +483,7 @@ class AndroidDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class LinuxDeviceInfo(DeviceInfo):
     """
     Device information for a Linux system.
@@ -617,7 +618,7 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class WindowsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Windows systems.
@@ -713,7 +714,7 @@ class WindowsDeviceInfo(DeviceInfo):
     build_lab_ex: str
     """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx` registry key.
 
-    For example: `"22000.1.amd64fre.co_release.210604-1628"`.
+    For example: `"22000.1.amd64free.co_release.210604-1628"`.
     """  # noqa: E501
 
     # digital_product_id: str
@@ -768,7 +769,7 @@ class WindowsDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@value
 class IosUtsname:
     """
     Information derived from `utsname`.
@@ -792,7 +793,7 @@ class IosUtsname:
     """Version level."""
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class IosDeviceInfo(DeviceInfo):
     """
     Device information snapshot for iOS/iPadOS runtimes.

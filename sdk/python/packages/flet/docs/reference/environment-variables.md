@@ -23,9 +23,57 @@ It is already pre-created and its location depends on the platform the app is ru
 
 ### `FLET_ASSETS_DIR`
 
-Absolute path to the app's "assets" directory.
+Absolute path to the app's assets directory.
 
-Defaults to `"assets"`.
+In production apps built with [`flet build`](../publish/index.md), this environment-variable points to the bundled assets absolute location at runtime.
+Use it when your code needs a filesystem path to bundled files (for example, JSON configs, databases, or model files).
+
+For local runs, it may be unset depending on how the app is started, so use a fallback:
+
+```python
+import os
+from pathlib import Path
+import flet as ft
+
+default_assets_dir = Path(__file__).parent / "assets"
+assets_dir = Path(os.environ.get("FLET_ASSETS_DIR", str(default_assets_dir))).resolve()
+
+def main(page: ft.Page):
+	...
+
+ft.run(main, assets_dir="assets")
+```
+
+For control properties like [`Image.src`][flet.Image.src], continue using paths relative
+to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
+
+### `FLET_ANDROID_SIGNING_KEY_ALIAS`
+
+Android signing key alias used by
+[`flet build`](../publish/android.md#key-alias) for Android app signing.
+
+It is used only when a [keystore](../publish/android.md#key-store) is configured.
+
+### `FLET_ANDROID_SIGNING_KEY_PASSWORD`
+
+Android signing key password used by
+[`flet build`](../publish/android.md#key-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`](#flet_android_signing_key_store_password) is set
+but this variable is not, the keystore password is reused as the key password.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE`
+
+Path to the Android upload keystore (`.jks`) used by [`flet build`](../publish/android.md#key-store)
+for Android app signing.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
+
+Android signing keystore password used by
+[`flet build`](../publish/android.md#key-store-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_PASSWORD`](#flet_android_signing_key_password) is set
+but this variable is not, the key password is reused as the keystore password.
 
 ### `FLET_CLI_NO_RICH_OUTPUT`
 

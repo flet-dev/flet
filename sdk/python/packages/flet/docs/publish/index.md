@@ -641,7 +641,13 @@ dependencies = [
 By default, packaging for mobile and web only installs binary wheels. Use source packages
 to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
 
-On desktop targets, source installs are already allowed, so this setting is mainly for
+This can be useful for installing - pure Python - dependencies that do not have pre-built wheels for the
+target mobile platform or an all-platform wheel (`*-py3-none-any.whl`), but instead provide a source distribution (`*.tar.gz`).
+
+For more information on pure vs non-pure Python packages, see our
+[blog post](https://flet.dev/blog/flet-packaging-update#pure-python-packages) on the topic.
+
+On desktop targets, source installs are already allowed, so this setting is mainly/only for
 [Android](android.md) and [iOS](ios.md) builds.
 
 #### Resolution order
@@ -872,7 +878,12 @@ feature, or content within the app, enhancing user experience and engagement.
 - **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
 - **Host**: deep linking URL host.
 
-See [this](https://docs.flutter.dev/ui/navigation/deep-linking) guide for more information.
+See also:
+
+- [Flutter deep linking](https://docs.flutter.dev/ui/navigation/deep-linking)
+- [Android intents and intent filters](https://developer.android.com/guide/components/intents-filters)
+- [Defining a custom URL scheme for your app](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app)
+- [Universal Links](https://developer.apple.com/ios/universal-links/)
 
 #### Resolution order
 
@@ -889,7 +900,9 @@ Both scheme and host are required; if either is missing, the deep-linking entrie
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --deep-linking-scheme "https" --deep-linking-host "mydomain.com"
+flet build <target_platform> \
+  --deep-linking-scheme "https" \
+  --deep-linking-host "mydomain.com"
 ```
 ///
 /// tab | `pyproject.toml`
@@ -897,6 +910,43 @@ flet build <target_platform> --deep-linking-scheme "https" --deep-linking-host "
 [tool.flet.deep_linking]    # or [tool.flet.<PLATFORM>.deep_linking]
 scheme = "https"
 host = "mydomain.com"
+```
+///
+
+/// details | Template translation
+    type: example
+In the Android [`AndroidManifest.xml`](android.md#android-manifest),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+<intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="https" android:host="mydomain.com" />
+</intent-filter>
+```
+
+In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<key>FlutterDeepLinkingEnabled</key>
+<true />
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>mydomain.com</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>https</string>
+        </array>
+    </dict>
+</array>
 ```
 ///
 
@@ -992,9 +1042,6 @@ removes known junk files and any additional globs you specify.
       (implies `cleanup-packages`)
     * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
 
-`[tool.flet.compile].cleanup` (deprecated) enables both `cleanup-app` and
-`cleanup-packages` when set to `true`.
-
 By default, Flet does **not** compile your app files during packaging.
 This allows the build process to complete even if there are syntax errors,
 which can be useful for debugging or rapid iteration.
@@ -1026,7 +1073,9 @@ The values of `cleanup-app-files` and `cleanup-package-files` are respectively d
 
 /// tab | `flet build`
 ```bash
-flet build <target_platform> --compile-app --compile-packages --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
+flet build <target_platform> \
+  --compile-app --compile-packages \
+  --cleanup-app-files "**/*.c" "**/*.h" --cleanup-package-files "**/*.pyi"
 ```
 ///
 /// tab | `pyproject.toml`
@@ -1095,9 +1144,9 @@ permissions = ["location", "microphone"]
 ### Build template
 
 `flet build` creates (and reuses) a Flutter project under `<app_root>/build/flutter` using a
-[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template from the flet-dev/flet-build-template
-repository. The version of the template used is determined by the
-[template reference](#template-reference) option.
+[cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) template. By default, the template
+is downloaded as a zip artifact from the matching Flet GitHub Release. The version of the template
+used is determined by the installed Flet version.
 
 The cached project is refreshed when template inputs change or when you pass
 [`--clear-cache`](../cli/flet-build.md#-clear-cache).
@@ -1110,6 +1159,7 @@ Supported values include:
 
 - A GitHub repository using the `gh:` prefix (e.g., `gh:org/template`)
 - A full Git URL (e.g., `https://github.com/org/template.git`)
+- A zip URL (e.g., `https://github.com/flet-dev/flet/releases/download/v0.83.0/flet-build-template.zip`)
 - A local directory path
 
 #### Resolution order
@@ -1118,19 +1168,19 @@ Its value is determined in the following order of precedence:
 
 1. [`--template`](../cli/flet-build.md#-template)
 2. `[tool.flet.template].url`
-3. [`"gh:flet-dev/flet-build-template"`](https://github.com/flet-dev/flet-build-template)
+3. The default zip URL from the Flet GitHub Release matching the installed version
 
 #### Example
 
 /// tab | `flet build`
 ```bash
-flet build apk --template gh:flet-dev/flet-build-template
+flet build apk --template gh:my-org/my-custom-template
 ```
 ///
 /// tab | `pyproject.toml`
 ```toml
 [tool.flet.template]
-url = "gh:flet-dev/flet-build-template"
+url = "gh:my-org/my-custom-template"
 ```
 ///
 
@@ -1477,3 +1527,42 @@ You can further customize the workflow for your specific needs, for example,
 restricting the build targets or adding additional steps.
 
 See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).
+
+## Troubleshooting
+
+### Prerelease compatibility
+
+If you are using a prerelease version of the [Flet Python package](https://pypi.org/project/flet) (for example, `0.80.6.devNNNN`) to build an app,
+the [build template](#build-template) may still resolve the latest **stable** [`flet` Flutter package](https://pub.dev/packages/flet), which can lead to version incompatibility issues.
+
+**Why?**: Under normal circumstances, each prerelease of the Flet Python package would require
+a matching prerelease of the Flutter Flet package to guarantee compatibility.
+However, we don't publish prerelease versions of the Flutter package to [pub.dev](https://pub.dev/).
+Because of this, the build template resolves the latest **stable** Flutter `flet` release instead.
+
+This creates a version mismatch/incompatibility for apps packaged with `flet build`:
+
+* Your Python code may depend on newly introduced controls or features.
+* The packaged Flutter shell may still be using an older stable `flet` version.
+* At runtime, the app fails because the Flutter layer does not recognize the new controls/features in your prerelease `flet` package, leading to errors like `Unknown control: <ControlName>`.
+
+**Note**: this issue does not affect the development workflows (ex: running an app with [`flet run`](../getting-started/running-app.md)),
+as the `flet` Flutter dependency is only resolved during the `flet build` process.
+
+### Solution
+
+The rule-of-thumb is, if you are using a prerelease Flet Python package, always ensure the Flutter `flet`
+dependency is aligned with the same development version before building your app:
+
+1. Override the Flutter `flet` dependency to point to the corresponding development Git reference.
+
+    /// tab | `pyproject.toml`
+    ```toml
+    [tool.flet.flutter.pubspec.dependency_overrides]
+    flet = { git = { url = "https://github.com/flet-dev/flet.git", ref = "main", path = "packages/flet" } }
+    ```
+    ///
+
+2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#-clear-cache); or manually delete `build/flutter`)
+
+To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.
