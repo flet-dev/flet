@@ -447,19 +447,11 @@ jobs:
             sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
           apt-get update --allow-releaseinfo-change
-          apt-get install -y \
-            lld llvm binutils clang cmake ninja-build pkg-config \
-            libgtk-3-dev libasound2-dev libunwind-dev \
-            libsecret-1-0 libsecret-1-dev \
-            libmpv-dev mpv \
-            libgstreamer1.0-dev \
-            libgstreamer-plugins-base1.0-dev \
-            libgstreamer-plugins-bad1.0-dev \
-            gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-            gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
-            gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x \
-            gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
-            gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+          LINUX_DEPS="$(
+            uv run --project sdk/python/packages/flet \
+              python -c 'import flet.utils; print(flet.utils.linux_client_dependencies_apt)'
+          )"
+          apt-get install -y $LINUX_DEPS
 
       - name: Build Flutter Linux clients
         shell: bash
