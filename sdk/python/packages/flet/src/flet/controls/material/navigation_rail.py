@@ -56,13 +56,13 @@ class NavigationRailDestination(Control):
     Represents a destination in a `NavigationRail`.
     """
 
-    icon: Optional[IconDataOrControl] = None
+    icon: IconDataOrControl
     """
     The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
     destination.
 
-    If `selected_icon` is provided, this will only be displayed when the destination is
-    not selected.
+    If [`selected_icon`][(c).] is provided, this will only be displayed when the
+    destination is not selected.
 
     To make the NavigationRail more accessible, consider choosing an icon with a stroked
     and filled version, such as `Icons.CLOUD` and `Icons.CLOUD_QUEUE`. The icon
@@ -105,6 +105,7 @@ class NavigationRail(LayoutControl):
     A material widget that is meant to be displayed at the left or right of an app to \
     navigate between a small number of views, typically between three and five.
 
+    Example:
     ```python
     ft.NavigationRail(
         selected_index=0,
