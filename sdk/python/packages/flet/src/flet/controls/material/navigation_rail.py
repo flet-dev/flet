@@ -209,6 +209,31 @@ class NavigationRail(LayoutControl):
     rendered when `extended=True`.
     """
 
+    pin_leading_to_top: bool = True
+    """
+    Whether to pin the [`leading`][(c).] control to the top of the rail.
+
+    If `False`, the leading control becomes part of the main group together with the
+    destinations and participates in scrolling/alignment.
+    """
+
+    pin_trailing_to_bottom: bool = False
+    """
+    Whether to pin the [`trailing`][(c).] control to the bottom of the rail.
+
+    If `False`, the trailing control becomes part of the main group together with the
+    destinations and participates in scrolling/alignment.
+    """
+
+    scrollable: bool = False
+    """
+    Whether the main group of [`destinations`][(c).] should become scrollable when \
+    vertical space is insufficient.
+
+    When [`pin_leading_to_top`][(c).] or [`pin_trailing_to_bottom`][(c).] are
+    `False`, the respective controls also become part of the scrollable group.
+    """
+
     min_width: Annotated[
         Optional[Number],
         V.ge(0),
