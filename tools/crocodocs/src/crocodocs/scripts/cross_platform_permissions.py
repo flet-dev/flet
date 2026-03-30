@@ -89,12 +89,14 @@ def cross_platform_permissions_list() -> str:
                 [
                     f"- `{name}`",
                     "",
-                    "    /// details | `pyproject.toml` equivalent",
-                    "        type: example",
+                    "    <details>",
+                    "    <summary><code>pyproject.toml</code> equivalent</summary>",
+                    "",
                     "    ```toml",
                     toml_block,
                     "    ```",
-                    "    ///",
+                    "",
+                    "    </details>",
                 ]
             )
         )
