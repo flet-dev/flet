@@ -64,6 +64,7 @@ jobs:
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
           uv run --no-dev --group test pytest packages/flet/tests
+          uv run --no-dev --group test pytest packages/flet-cli/tests
 
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'
