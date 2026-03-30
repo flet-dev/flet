@@ -9,19 +9,19 @@ from packaging.requirements import Requirement
 
 
 def _windows_safe(req_str: str) -> str:
-    """Insert a space before bare ``<`` or ``>`` so Windows cmd.exe does not
-    interpret them as shell redirection when the string is passed via ``-r``
-    to a ``.BAT`` subprocess."""
+    """Insert a space before bare `<` or `>` so Windows cmd.exe does not
+    interpret them as shell redirection when the string is passed via `-r`
+    to a `.BAT` subprocess."""
     return re.sub(r"(?<=[^ ])([<>])", r" \1", req_str)
 
 
 def _poetry_version_to_pep440(version: str) -> str:
     """Convert a Poetry version constraint to PEP 440 syntax.
 
-    - ``^1.2.3`` → ``>=1.2.3``
-    - ``~1.2.3`` → ``~=1.2.3``  (``~=`` passes through unchanged)
-    - ``*``      → ``""`` (no constraint)
-    - ``1.2.3`` (bare version) → ``==1.2.3``
+    - `^1.2.3` → `>=1.2.3`
+    - `~1.2.3` → `~=1.2.3`  (`~=` passes through unchanged)
+    - `*`      → `""` (no constraint)
+    - `1.2.3` (bare version) → `==1.2.3`
     - Anything else is returned as-is (already PEP 440).
     """
     version = version.replace(" ", "")
@@ -111,13 +111,13 @@ def get_project_dependencies(
     project_dependencies: Optional[list[str]] = None,
 ) -> Optional[list[str]]:
     """
-    Normalize PEP 621 ``project.dependencies`` into a sorted unique list.
+    Normalize PEP 621 `project.dependencies` into a sorted unique list.
 
     Args:
-        project_dependencies: Value from ``project.dependencies``.
+        project_dependencies: Value from `project.dependencies`.
 
     Returns:
-        Sorted dependency strings, or ``None`` when input is ``None``.
+        Sorted dependency strings, or `None` when input is `None`.
     """
     if project_dependencies is None:
         return None
