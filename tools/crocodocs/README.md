@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="media/crocodocs-logo.png" alt="Crocodocs"></a>
+</p>
+
 # CrocoDocs
 
 CrocoDocs is the internal documentation toolchain that generates structured API artifacts for the Flet Docusaurus website.
