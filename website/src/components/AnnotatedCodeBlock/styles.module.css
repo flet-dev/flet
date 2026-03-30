@@ -1,0 +1,82 @@
+.wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--ifm-color-emphasis-500);
+  color: #fff;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: color 0.15s, background 0.15s;
+}
+
+.marker:hover {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 100;
+  min-width: 200px;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: var(--ifm-background-surface-color, #fff);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+.tooltip p {
+  margin: 0 0 0.5em;
+}
+
+.tooltip p:last-child {
+  margin-bottom: 0;
+}
+
+.tooltip code {
+  background: var(--ifm-color-emphasis-100);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.tooltip a {
+  color: var(--ifm-color-primary);
+  text-decoration: underline;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-theme="dark"] .marker {
+  color: #1e1e1e;
+}
+
+[data-theme="dark"] .tooltip {
+  background: var(--ifm-background-surface-color, #1e1e1e);
+  border-color: var(--ifm-color-emphasis-300);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
