@@ -41,3 +41,33 @@ async def test_unbounded_width(flet_app: ftt.FletTestApp, request):
             ]
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_zero_col_controls_are_hidden_at_breakpoint(
+    flet_app: ftt.FletTestApp, request
+):
+    flet_app.resize_page(360, 240)
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.ResponsiveRow(
+            controls=[
+                ft.Container(
+                    col={"xs": 0, "xl": 2},
+                    bgcolor=ft.Colors.GREEN,
+                    content=ft.Text("Left"),
+                ),
+                ft.Container(
+                    col={"xs": 12, "xl": 8},
+                    bgcolor=ft.Colors.RED,
+                    content=ft.Text("Center"),
+                ),
+                ft.Container(
+                    col={"xs": 0, "xl": 2},
+                    bgcolor=ft.Colors.BLUE,
+                    content=ft.Text("Right"),
+                ),
+            ],
+        ),
+    )
