@@ -1,3 +1,8 @@
+---
+name: docs-build-and-verify
+description: Use when asked to build, preview, or verify the Flet documentation website, including checking for broken links, broken images, and unresolved reST cross-references.
+---
+
 # Docs Build and Verification
 
 ## Prerequisites

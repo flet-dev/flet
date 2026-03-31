@@ -1,3 +1,8 @@
+---
+name: docs-conventions
+description: Use when writing or reviewing Flet documentation, including Python docstrings (Google style, reST roles, admonitions), Markdown docs (cross-references, images, code examples), and sidebar navigation.
+---
+
 # Documentation Conventions
 
 ## Python Docstrings
