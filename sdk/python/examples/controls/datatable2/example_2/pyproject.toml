@@ -1,0 +1,26 @@
+[project]
+name = "datatable2-example-2"
+version = "1.0.0"
+description = "Builds an interactive DataTable2 with sortable nutrition columns and selectable rows."
+requires-python = ">=3.10"
+keywords = ["datatable2", "sorting", "selection", "rows", "extension"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-datatable2"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable2"]
+
+[tool.flet.metadata]
+title = "Example 2"
+controls = ["SafeArea", "DataTable2", "DataColumn2", "DataRow2", "DataCell", "Text"]
+layout_pattern = "table-view"
+complexity = "basic"
+features = ["column sorting", "row selection", "select-all callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

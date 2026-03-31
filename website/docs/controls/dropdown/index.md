@@ -18,18 +18,18 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Color selection with filtering
 
-<CodeExample path={frontMatter.examples + '/color_selection_with_filtering.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/color_selection_with_filtering/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/color_selection_with_filtering.gif'} alt="color-selection-with-filtering" width="55%" />
 
 ### Icon selection
 
-<CodeExample path={frontMatter.examples + '/icon_selection.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/icon_selection/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/icon_selection.png'} alt="icon-selection" width="55%" />
 
 ### Styled dropdowns
 
-<CodeExample path={frontMatter.examples + '/styled.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

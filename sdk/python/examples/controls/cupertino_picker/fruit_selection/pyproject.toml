@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-picker-fruit-selection"
+version = "1.0.0"
+description = "Opens a CupertinoPicker in a bottom sheet to choose a fruit and reflect the selected value."
+requires-python = ">=3.10"
+keywords = ["cupertino", "picker", "bottom sheet", "selection", "dialog"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoPicker"]
+
+[tool.flet.metadata]
+title = "Fruit selection"
+controls = ["SafeArea", "Row", "Text", "TextButton", "CupertinoBottomSheet", "CupertinoPicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["picker selection callback", "bottom sheet presentation", "live value update"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

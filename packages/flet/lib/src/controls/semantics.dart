@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
+import '../widgets/error.dart';
 import 'base_controls.dart';
 
 class SemanticsControl extends StatelessWidget {
@@ -12,7 +14,10 @@ class SemanticsControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Semantics build: ${control.id}");
+    final content = control.buildWidget("content");
     Semantics semantics = Semantics(
+      child: content ??
+          const ErrorControl("Semantics.content must be provided and visible"),
       label: control.getString("label"),
       enabled: !control.disabled,
       expanded: control.getBool("expanded"),

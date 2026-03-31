@@ -1,0 +1,26 @@
+[project]
+name = "animated-switcher-image-switch-buffered"
+version = "1.0.0"
+description = "Buffered AnimatedSwitcher image transitions with preloaded base64 images."
+requires-python = ">=3.10"
+keywords = ["animated switcher", "animation", "image", "buffering", "async", "httpx"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "httpx"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Animations/AnimatedSwitcher"]
+
+[tool.flet.metadata]
+title = "Animate image switch buffered"
+controls = ["SafeArea", "Column", "AnimatedSwitcher", "Image", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["@ft.control custom switcher", "buffered image queue", "async preloading", "gapless playback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

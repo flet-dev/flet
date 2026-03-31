@@ -1,0 +1,26 @@
+[project]
+name = "services-file-picker-pick-and-save-text-content"
+version = "1.0.0"
+description = "Loads text file contents from picked files and saves or downloads edited text output."
+requires-python = ">=3.10"
+keywords = ["file picker", "pick and save text content", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/FilePicker"]
+
+[tool.flet.metadata]
+title = "Pick and save text content"
+controls = ["SafeArea", "Column", "Page", "Text", "TextField", "Button", "FilePicker"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["file picking", "save to file"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

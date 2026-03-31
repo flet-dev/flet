@@ -17,11 +17,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 #### Imperative
 
-<CodeExample path={frontMatter.examples + '/drag_and_drop_containers.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers/main.py'} language="python" />
 
 #### Declarative
 
-<CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/drag_and_drop_containers.gif'} alt="drag-and-drop-containers" width="55%" />
 

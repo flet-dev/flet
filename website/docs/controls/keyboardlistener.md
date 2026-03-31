@@ -12,6 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ### Press any keys
 
-<CodeExample path={frontMatter.examples + '/detect_keys.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/detect_keys/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

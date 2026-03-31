@@ -16,12 +16,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 ### Adjusting segments padding
 
-<CodeExample path={frontMatter.examples + '/segments_padding.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/segments_padding/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -1,0 +1,26 @@
+[project]
+name = "radio-basic"
+version = "1.0.0"
+description = "Shows radio selection with a submit action and simple message display."
+requires-python = ">=3.10"
+keywords = ["radio", "radio group", "selection", "input controls"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Radio"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["RadioGroup", "Radio", "Button", "Text", "SafeArea"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["radio selection", "form submission"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "outlined-button-basic"
+version = "1.0.0"
+description = "Shows enabled and disabled OutlinedButton variants."
+requires-python = ">=3.10"
+keywords = ["outlined button", "button", "material", "disabled states"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/OutlinedButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "OutlinedButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["enabled and disabled states"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

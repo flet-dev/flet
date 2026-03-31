@@ -1,0 +1,26 @@
+[project]
+name = "page-set-platform"
+version = "1.0.0"
+description = "Demonstrates switching page platform at runtime between iOS and Android."
+requires-python = ">=3.10"
+keywords = ["page", "platform", "ios", "android", "switch"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Set platform"
+controls = ["SafeArea", "Column", "Switch", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["runtime platform switching", "page platform update"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

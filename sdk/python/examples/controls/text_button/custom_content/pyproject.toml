@@ -1,0 +1,26 @@
+[project]
+name = "text-button-custom-content"
+version = "1.0.0"
+description = "Builds TextButton controls with rows of icons and compound multi-line content."
+requires-python = ">=3.10"
+keywords = ["text button", "custom content", "icons", "compound", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/TextButton"]
+
+[tool.flet.metadata]
+title = "TextButton custom content"
+controls = ["SafeArea", "Column", "TextButton", "Row", "Container", "Column", "Icon", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["custom button content", "compound button layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

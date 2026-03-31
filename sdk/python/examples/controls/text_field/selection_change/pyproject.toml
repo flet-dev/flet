@@ -1,0 +1,26 @@
+[project]
+name = "text-field-selection-change"
+version = "1.0.0"
+description = "Tracks TextField selection ranges and moves the caret with buttons."
+requires-python = ">=3.10"
+keywords = ["text field", "selection", "caret", "async", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Handling selection changes"
+controls = ["SafeArea", "Column", "TextField", "Text", "Button"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["selection events", "caret control"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

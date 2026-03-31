@@ -1,0 +1,26 @@
+[project]
+name = "canvas-dash-strokes"
+version = "1.0.0"
+description = "Toggle dashed stroke patterns across multiple canvas shapes."
+requires-python = ">=3.10"
+keywords = ["canvas", "stroke", "dash", "reactive", "shapes"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Dash strokes"
+controls = ["SafeArea", "Column", "Button", "Canvas", "Line", "Circle", "Oval", "Arc", "Rect"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["reactive state", "dash stroke toggle", "multiple shape styles"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

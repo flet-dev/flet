@@ -1,0 +1,26 @@
+[project]
+name = "keyboard-listener-detect-keys"
+version = "1.0.0"
+description = "Tracks pressed keys with KeyboardListener and shows active keys in real time."
+requires-python = ">=3.10"
+keywords = ["keyboard listener", "keyboard", "key down", "key up", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/KeyboardListener"]
+
+[tool.flet.metadata]
+title = "Press any keys"
+controls = ["SafeArea", "Column", "KeyboardListener", "Row", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["key down and key up handling", "active key list", "keyboard focus"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "bottom-sheet-basic"
+version = "1.0.0"
+description = "Basic BottomSheet dialog with dismiss handling."
+requires-python = ">=3.10"
+keywords = ["bottom sheet", "dialog", "material", "dismiss", "actions"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/BottomSheet"]
+
+[tool.flet.metadata]
+title = "Basic BottomSheet"
+controls = ["SafeArea", "Column", "Button", "BottomSheet", "Container", "Text"]
+layout_pattern = "dialog-flow"
+complexity = "basic"
+features = ["bottom sheet dialog", "dismiss callback", "dialog actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

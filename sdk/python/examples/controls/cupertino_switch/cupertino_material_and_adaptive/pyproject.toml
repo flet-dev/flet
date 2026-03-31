@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-switch-cupertino-material-and-adaptive"
+version = "1.0.0"
+description = "Shows Cupertino, Material, and adaptive switch controls with custom switch styling."
+requires-python = ">=3.10"
+keywords = ["cupertino", "switch", "adaptive", "material", "toggle"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoSwitch"]
+
+[tool.flet.metadata]
+title = "Cupertino, material and adaptive"
+controls = ["SafeArea", "Column", "CupertinoSwitch", "Switch", "Text", "Container"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["adaptive switch", "cupertino and material comparison", "custom thumb and track colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

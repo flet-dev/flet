@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-shape-drawer"
+version = "1.0.0"
+description = "Draws polygons on a canvas declaratively in response to tap and hover gestures."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "canvas", "drawing", "gestures"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative", "Apps/Canvas"]
+
+[tool.flet.metadata]
+title = "Shape drawer"
+controls = ["SafeArea", "GestureDetector", "Container", "Canvas"]
+layout_pattern = "center-stage"
+complexity = "intermediate"
+features = ["canvas drawing", "gesture input"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

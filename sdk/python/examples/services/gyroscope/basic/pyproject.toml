@@ -1,0 +1,27 @@
+[project]
+name = "services-gyroscope-basic"
+version = "1.0.0"
+description = "Streams gyroscope rotation readings and reports sensor errors from supported devices."
+requires-python = ">=3.10"
+keywords = ["gyroscope", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Gyroscope"]
+
+[tool.flet.metadata]
+title = "Basic gyroscope"
+controls = ["SafeArea", "Column", "Page", "GyroscopeReadingEvent", "Text", "Gyroscope"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live sensor readings", "sensor error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios", "web"]

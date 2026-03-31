@@ -16,25 +16,25 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
 
 ### Dropdown with label and hint
 
-<CodeExample path={frontMatter.examples + '/label_and_hint.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/label_and_hint/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/label_and_hint.gif'} alt="label-and-hint" width="55%" />
 
 ### Handling events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/handling_events.gif'} alt="handling-events" width="55%" />
 
 ### Add and delete options
 
-<CodeExample path={frontMatter.examples + '/add_and_delete_options.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/add_and_delete_options/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/add_and_delete_options.gif'} alt="add-and-delete-options" width="55%" />
 

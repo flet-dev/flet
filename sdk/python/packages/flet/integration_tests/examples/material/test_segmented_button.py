@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.segmented_button.single_multiple_selection.main as sms
 import flet as ft
 import flet.testing as ftt
-from examples.controls.segmented_button import single_multiple_selection
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -41,7 +41,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": single_multiple_selection.main}],
+    [{"flet_app_main": sms.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

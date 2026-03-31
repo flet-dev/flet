@@ -1,0 +1,26 @@
+[project]
+name = "icon-button-selected-icon"
+version = "1.0.0"
+description = "Toggles IconButton selected state and switches between default and selected icons."
+requires-python = ">=3.10"
+keywords = ["icon button", "selected icon", "toggle", "button style"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/IconButton"]
+
+[tool.flet.metadata]
+title = "Selected icon"
+controls = ["SafeArea", "IconButton", "ButtonStyle"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["selected state toggle", "selected icon", "state-based colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -8,10 +8,10 @@ import {CodeExample, Image} from '@site/src/components/crocodocs';
 In this tutorial we will show you, step-by-step, how to create a To-Do app in Python
 using Flet framework and then publish it as a desktop, mobile or web app.
 The app is a single-file console program of just
-[163 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/todo.py),
+[163 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/basic/main.py),
 yet it is a multi-platform application with rich, responsive UI:
 
-<Image src="../examples/tutorials/todo/media/complete-demo-web.gif" width="55%" />
+<Image src="examples/tutorials/todo/media/complete-demo-web.gif" width="55%" />
 
 You can see the live demo [here](https://examples.flet.dev/todo/).
 
@@ -45,7 +45,7 @@ Create `hello.py` with the following contents:
 
 Run this app and you will see a new window with a greeting:
 
-<Image src="../examples/tutorials/todo/media/hello-world.png" width="55%" />
+<Image src="examples/tutorials/todo/media/hello-world.png" width="55%" />
 
 ## Adding page controls and handling events
 
@@ -59,7 +59,7 @@ Create `todo.py` with the following contents:
 
 Run the app and you should see a page like this:
 
-<Image src="../examples/tutorials/todo/media/app-1.png" width="55%" />
+<Image src="examples/tutorials/todo/media/app-1.png" width="55%" />
 
 ### Page layout
 
@@ -67,7 +67,7 @@ Now let's make the app look nice! We want the entire app to be at the top
 center of the page, taking up 600 px width. The TextField and the "+"
 button should be aligned horizontally, and take up full app width:
 
-<Image src="../examples/tutorials/todo/media/diagram-1.svg" width="55%" />
+<Image src="examples/tutorials/todo/media/diagram-1.svg" width="55%" />
 
 [`Row`](../controls/row.md)  is a control that is used to lay its children controls out horizontally on a page.
 [`Column`](../controls/column.md) is a control that is used to lay its children controls out vertically on a page.
@@ -78,7 +78,7 @@ Replace `todo.py` contents with the following:
 
 Run the app and you should see a page like this:
 
-<Image src="../examples/tutorials/todo/media/app-2.png" width="55%" />
+<Image src="examples/tutorials/todo/media/app-2.png" width="55%" />
 
 ### Reusable UI components
 
@@ -114,7 +114,7 @@ In the [previous step](#adding-page-controls-and-handling-events), we created a 
 Let's improve the app by adding "Edit" and "Delete" buttons next to a task name.
 The "Edit" button will switch a task item to edit mode.
 
-<Image src="../examples/tutorials/todo/media/diagram-2.svg" width="55%" />
+<Image src="examples/tutorials/todo/media/diagram-2.svg" width="55%" />
 
 Each task item is represented by two rows: `display_view` row with Checkbox,
 "Edit" and "Delete" buttons and `edit_view` row with TextField and "Save" button.
@@ -135,7 +135,7 @@ called it on "Delete" button event handler.
 
 Run the app and try to edit and delete tasks:
 
-<Image src="../examples/tutorials/todo/media/view-edit-delete.gif" width="55%" />
+<Image src="examples/tutorials/todo/media/view-edit-delete.gif" width="55%" />
 
 ## Filtering list items
 
@@ -238,7 +238,7 @@ class Task(ft.Column):
 
 Run the app and try filtering tasks by clicking on the tabs:
 
-<Image src="../examples/tutorials/todo/media/filtering.gif" width="55%" />
+<Image src="examples/tutorials/todo/media/filtering.gif" width="55%" />
 
 ## Final touches
 
@@ -250,7 +250,7 @@ Our Todo app is almost complete now. As a final touch, we will add a footer (`Co
 <CodeExample path="tutorials/todo/todo.py" language="python" />
 </details>
 
-<Image src="../examples/tutorials/todo/media/app-4.png" alt="app-4" width="55%" />
+<Image src="examples/tutorials/todo/media/app-4.png" alt="app-4" width="55%" />
 
 ## Publishing the app
 

@@ -15,7 +15,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="55%" />
 
@@ -23,7 +23,7 @@ Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
 Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
-<CodeExample path={frontMatter.examples + '/example_2.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="55%" />
 
@@ -31,7 +31,7 @@ Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
 Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 
-<CodeExample path={frontMatter.examples + '/example_3.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_3.png'} width="55%" />
 
@@ -39,7 +39,7 @@ Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 
 Based on an official [Plotly example](https://plotly.com/python/box-plots).
 
-<CodeExample path={frontMatter.examples + '/example_4.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_4/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_4.png'} width="55%" />
 

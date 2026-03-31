@@ -1,0 +1,27 @@
+[project]
+name = "services-accelerometer-basic"
+version = "1.0.0"
+description = "Streams live accelerometer readings and displays sensor errors from the device."
+requires-python = ">=3.10"
+keywords = ["services", "accelerometer", "sensor", "device", "readings"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Accelerometer"]
+
+[tool.flet.metadata]
+title = "Basic accelerometer"
+controls = ["SafeArea", "Column", "Text", "Accelerometer"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live sensor readings", "sensor error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios", "web"]

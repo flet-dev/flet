@@ -1,0 +1,26 @@
+[project]
+name = "apps-hello-world-basic"
+version = "1.0.0"
+description = "Minimal app that renders a single hello-world text message."
+requires-python = ">=3.10"
+keywords = ["apps", "hello world", "minimal", "text"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Hello world"
+controls = ["SafeArea", "Text"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["minimal app"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

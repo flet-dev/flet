@@ -1,0 +1,26 @@
+[project]
+name = "types-alignment-container"
+version = "1.0.0"
+description = "Shows how container content placement changes with preset and custom alignment values."
+requires-python = ">=3.10"
+keywords = ["alignment", "types", "container", "layout", "positioning"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Container alignment"
+controls = ["SafeArea", "Column", "Row", "Container", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["preset alignment", "custom alignment coordinates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

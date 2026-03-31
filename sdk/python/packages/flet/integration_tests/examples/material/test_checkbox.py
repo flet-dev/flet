@@ -1,8 +1,10 @@
 import pytest
 
+import examples.controls.checkbox.basic.main as basic
+import examples.controls.checkbox.handling_events.main as handling_events
+import examples.controls.checkbox.styled.main as styled
 import flet as ft
 import flet.testing as ftt
-from examples.controls.checkbox import basic, handling_events, styled
 
 
 @pytest.mark.asyncio(loop_scope="function")

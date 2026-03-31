@@ -16,13 +16,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Handling change events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/handling_events.gif'} alt="handling-events" width="55%" />
 

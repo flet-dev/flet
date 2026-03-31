@@ -1,0 +1,26 @@
+[project]
+name = "markdown-custom-text-theme"
+version = "1.0.0"
+description = "Applies a custom text theme to Markdown and toggles light/dark theme mode."
+requires-python = ">=3.10"
+keywords = ["markdown", "theme", "text theme", "dark mode", "switch"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Markdown"]
+
+[tool.flet.metadata]
+title = "Custom text theme"
+controls = ["SafeArea", "Row", "Container", "Markdown", "Switch", "Theme", "TextTheme"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom markdown text colors", "theme mode toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

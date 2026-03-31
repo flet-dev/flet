@@ -43,27 +43,27 @@ properties, described below, to enable implicit animation of its appearance:
 Setting control's `animate_opacity` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`Control.opacity`](../controls/control.md#flet.Control.opacity) property.
 
-<CodeExample path="controls/layout_control/animate_opacity.py" language="python" />
+<CodeExample path="controls/layout_control/animate_opacity/main.py" language="python" />
 
-<Image src="../examples/controls/layout_control/media/animate_opacity.gif" alt="animate-opacity" width="55%" />
+<Image src="examples/controls/layout_control/media/animate_opacity.gif" alt="animate-opacity" width="55%" />
 
 ### Rotation animation
 
 Setting control's `animate_rotation` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.rotate`](../controls/layoutcontrol.md#flet.LayoutControl.rotate) property.
 
-<CodeExample path="controls/layout_control/animate_rotation.py" language="python" />
+<CodeExample path="controls/layout_control/animate_rotation/main.py" language="python" />
 
-<Image src="../examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="55%" />
+<Image src="examples/controls/layout_control/media/animate_rotation.gif" alt="animate-rotation" width="55%" />
 
 ### Scale animation
 
 Setting control's `animate_scale` to either `True`, number or an instance of `Animation` class (see above)
 enables implicit animation of [`LayoutControl.scale`](../controls/layoutcontrol.md#flet.LayoutControl.scale) property.
 
-<CodeExample path="controls/layout_control/animate_scale.py" language="python" />
+<CodeExample path="controls/layout_control/animate_scale/main.py" language="python" />
 
-<Image src="../examples/controls/layout_control/media/animate_scale.gif" alt="animate-scale" width="55%" />
+<Image src="examples/controls/layout_control/media/animate_scale.gif" alt="animate-scale" width="55%" />
 
 ### Offset animation
 
@@ -76,9 +76,9 @@ a horizontal translation of one quarter the width of the control.
 
 Offset animation is used for various sliding effects:
 
-<CodeExample path="controls/layout_control/animate_offset.py" language="python" />
+<CodeExample path="controls/layout_control/animate_offset/main.py" language="python" />
 
-<Image src="../examples/controls/layout_control/media/animate_offset.gif" alt="animate-offset" width="55%" />
+<Image src="examples/controls/layout_control/media/animate_offset.gif" alt="animate-offset" width="55%" />
 
 ### Position animation
 
@@ -93,18 +93,18 @@ Note:
     - [`Stack`](../controls/stack.md) control
     - [`Page.overlay`](../controls/page.md) list
 
-<CodeExample path="controls/layout_control/animate_position.py" language="python" />
+<CodeExample path="controls/layout_control/animate_position/main.py" language="python" />
 
-<Image src="../examples/controls/layout_control/media/animate_position.gif" alt="animate-position" width="55%" />
+<Image src="examples/controls/layout_control/media/animate_position.gif" alt="animate-position" width="55%" />
 
 ### Animate
 
 Setting [`Container.animate`](../controls/container.md#flet.Container.animate) to [`AnimationValue`](../types/aliases.md#flet.AnimationValue)
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-<CodeExample path="controls/container/animate_1.py" language="python" />
+<CodeExample path="controls/container/animate_1/main.py" language="python" />
 
-<Image src="../examples/controls/container/media/animate_1.gif" alt="animate" width="55%" />
+<Image src="examples/controls/container/media/animate_1.gif" alt="animate" width="55%" />
 
 ### Animated content switcher
 
@@ -141,7 +141,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/animations/animated-switcher.gif" alt="animated-switcher" width="55%" />
+<Image src="assets/cookbook/animations/animated-switcher.gif" alt="animated-switcher" width="55%" />
 
 ### Animation end callback
 

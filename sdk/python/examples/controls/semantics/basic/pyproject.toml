@@ -1,0 +1,26 @@
+[project]
+name = "semantics-basic"
+version = "1.0.0"
+description = "Attach semantics labels and accessibility focus events to a text field."
+requires-python = ">=3.10"
+keywords = ["semantics", "accessibility", "textfield", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Semantics"]
+
+[tool.flet.metadata]
+title = "Semantics basic"
+controls = ["Semantics", "TextField", "Icon", "Column", "SafeArea"]
+layout_pattern = "form-field"
+complexity = "basic"
+features = ["accessibility labels", "focus events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

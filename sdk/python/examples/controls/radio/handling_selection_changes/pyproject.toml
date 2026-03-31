@@ -1,0 +1,26 @@
+[project]
+name = "radio-handling-selection-changes"
+version = "1.0.0"
+description = "Shows live RadioGroup selection updates using on_change events."
+requires-python = ">=3.10"
+keywords = ["radio", "selection changes", "on_change", "input controls"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Radio"]
+
+[tool.flet.metadata]
+title = "Handling Selection Changes"
+controls = ["RadioGroup", "Radio", "Text", "SafeArea"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["selection change handling", "reactive feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

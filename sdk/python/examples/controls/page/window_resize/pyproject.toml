@@ -1,0 +1,27 @@
+[project]
+name = "page-window-resize"
+version = "1.0.0"
+description = "Demonstrates resizing the app window programmatically in desktop contexts."
+requires-python = ">=3.10"
+keywords = ["page", "window", "resize", "desktop", "window metrics"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Window resize"
+controls = ["SafeArea", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["window geometry", "desktop platform behavior"]
+
+[tool.flet]
+platforms = ["macos", "windows", "linux"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

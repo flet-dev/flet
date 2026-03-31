@@ -1,7 +1,9 @@
 import pytest
 
+import examples.controls.code_editor.example_1.main as example_1
+import examples.controls.code_editor.example_2.main as example_2
+import examples.controls.code_editor.example_3.main as example_3
 import flet.testing as ftt
-from examples.controls.code_editor import example_1, example_2, example_3
 
 
 @pytest.mark.parametrize(

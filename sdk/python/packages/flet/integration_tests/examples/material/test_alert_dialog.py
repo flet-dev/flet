@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.alert_dialog.modal_and_non_modal.main as modal_and_non_modal
 import flet as ft
 import flet.testing as ftt
-from examples.controls.alert_dialog import modal_and_non_modal
 
 
 @pytest.mark.asyncio(loop_scope="function")

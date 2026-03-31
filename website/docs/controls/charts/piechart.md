@@ -14,19 +14,19 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Example 1
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="55%" />
 
 ### Example 2
 
-<CodeExample path={frontMatter.examples + '/example_2.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="55%" />
 
 ### Example 3
 
-<CodeExample path={frontMatter.examples + '/example_3.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_3.png'} width="55%" />
 

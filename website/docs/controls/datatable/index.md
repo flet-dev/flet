@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} width="55%" />
 
@@ -27,7 +27,7 @@ Use [`horizontal_margin`](index.md#flet.DataTable.horizontal_margin) to control 
 edge spacing of the first and last columns.
 Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacing between columns.
 
-<CodeExample path={frontMatter.examples + '/spacing.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
 ### Adaptive row heights
 
@@ -35,19 +35,19 @@ Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to 
 (infinity) will cause the `DataTable` to let each individual row adapt its height to its
 respective content, instead of all rows having the same height.
 
-<CodeExample path={frontMatter.examples + '/adaptive_row_heights.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/adaptive_row_heights/main.py'} language="python" />
 
 ### Sortable columns and selectable rows
 
 This example demonstrates row selection (including select-all),
 sortable string and numeric columns, and stable selection across sorts and refreshes.
 
-<CodeExample path={frontMatter.examples + '/sortable_and_selectable.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/sortable_and_selectable/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/sortable_and_selectable.png'} width="55%" />
 
 ### Handling events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

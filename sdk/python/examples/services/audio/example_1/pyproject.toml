@@ -1,0 +1,26 @@
+[project]
+name = "services-audio-example-1"
+version = "1.0.0"
+description = "Controls audio playback, seek position, volume, and balance for a remote track."
+requires-python = ">=3.10"
+keywords = ["services", "audio", "playback", "seek", "volume", "balance", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-audio"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Audio"]
+
+[tool.flet.metadata]
+title = "Audio playback controls"
+controls = ["SafeArea", "Column", "Row", "Button", "Audio"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["audio playback", "seek control", "volume adjustment", "balance adjustment"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -23,7 +23,7 @@ They represent smart or automated actions that appear dynamically and contextual
 
 An alternative to assist chips are buttons, which should appear persistently and consistently.
 
-<CodeExample path={frontMatter.examples + '/assist_chips.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/assist_chips/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/assist_chips.png'} alt="assist-chips" width="55%" />
 
@@ -34,7 +34,7 @@ Filter chips are chips with [`on_select`](chip.md#flet.Chip.on_select) event spe
 They use tags or descriptive words provided in the [`label`](chip.md#flet.Chip.label) to filter content.
 They can be a good alternative to switches or checkboxes.
 
-<CodeExample path={frontMatter.examples + '/filter_chips.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/filter_chips/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/filter_chips.png'} alt="filter-chips" width="55%" />
 

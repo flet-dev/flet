@@ -1,0 +1,26 @@
+[project]
+name = "transparent-pointer-basic"
+version = "1.0.0"
+description = "Lets pointer events pass through an overlaid button using TransparentPointer."
+requires-python = ">=3.10"
+keywords = ["transparent pointer", "gesture", "overlay", "stack", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TransparentPointer"]
+
+[tool.flet.metadata]
+title = "TransparentPointer basic"
+controls = ["SafeArea", "Stack", "GestureDetector", "TransparentPointer", "Container", "Button"]
+layout_pattern = "overlay"
+complexity = "basic"
+features = ["pointer pass-through", "gesture handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

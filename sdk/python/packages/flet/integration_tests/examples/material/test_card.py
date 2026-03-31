@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.card.music_info.main as music_info
 import flet as ft
 import flet.testing as ftt
-from examples.controls.card import music_info
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -34,7 +34,6 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_music_info(flet_app_function: ftt.FletTestApp):
     flet_app_function.assert_screenshot(
-        test_music_info.__name__,
+        "music_info",
         await flet_app_function.take_page_controls_screenshot(),
-        similarity_threshold=98.4,
     )

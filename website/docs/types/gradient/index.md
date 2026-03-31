@@ -10,4 +10,4 @@ import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
 ### Containers with gradients
 
-<CodeExample path="controls/types/gradient/container.py" language="python" />
+<CodeExample path="controls/types/gradient/container/main.py" language="python" />

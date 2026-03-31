@@ -1,0 +1,26 @@
+[project]
+name = "types-border-container"
+version = "1.0.0"
+description = "Demonstrates how Border values change container presentation and layout."
+requires-python = ">=3.10"
+keywords = ["border", "container"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Border"
+controls = ["SafeArea", "Column", "Page", "Row", "Container"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["border preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -19,7 +19,7 @@ visit our [icons browser](https://examples.flet.dev/icons_browser/)
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="55%" />
 

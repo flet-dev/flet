@@ -15,13 +15,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="40%" />
 
 ### Fullscreen
 
-<CodeExample path={frontMatter.examples + '/fullscreen.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/fullscreen/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/fullscreen.gif'} width="40%" />
 

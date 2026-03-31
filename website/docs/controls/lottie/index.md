@@ -41,7 +41,7 @@ pip install flet-lottie  # (1)!
 </Tabs>
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 ## Description
 

@@ -15,13 +15,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Avatar with online status
 
-<CodeExample path={frontMatter.examples + '/online_avatar.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/online_avatar/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/online_avatar.png'} alt="online-avatar" width="55%" />
 
 ### Absolute positioning
 
-<CodeExample path={frontMatter.examples + '/absolute_positioning.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/absolute_positioning/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/absolute_positioning.png'} alt="absolute-positioning" width="55%" />
 

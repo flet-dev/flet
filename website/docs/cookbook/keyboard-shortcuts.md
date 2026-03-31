@@ -37,8 +37,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/keyboard/shortcuts.png" alt="Keyboard shortcuts" />
+<Image src="assets/cookbook/keyboard/shortcuts.png" alt="Keyboard shortcuts" />
 
 Below is a more advanced example:
 
-<CodeExample path="controls/page/keyboard_events.py" language="python" />
+<CodeExample path="controls/page/keyboard_events/main.py" language="python" />

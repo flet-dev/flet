@@ -1,0 +1,26 @@
+[project]
+name = "services-geolocator-example-1"
+version = "1.0.0"
+description = "Requests location permissions and exercises geolocator actions from one dashboard."
+requires-python = ">=3.10"
+keywords = ["geolocator", "example 1", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-geolocator"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Geolocator"]
+
+[tool.flet.metadata]
+title = "Geolocator example"
+controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "GeolocatorPositionChangeEvent", "TextButton", "OutlinedButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["permission handling", "location actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

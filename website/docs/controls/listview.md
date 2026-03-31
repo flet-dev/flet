@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Auto-scrolling and dynamical items addition
 
-<CodeExample path={frontMatter.examples + '/autoscroll_and_dynamic_items.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/autoscroll_and_dynamic_items/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/autoscroll_and_dynamic_items.gif'} alt="autoscroll-and-dynamic-items" width="55%" />
 

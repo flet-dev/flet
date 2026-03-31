@@ -10,4 +10,4 @@ import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
 ### Canvas paint
 
-<CodeExample path="controls/types/paint_gradient/canvas_paint.py" language="python" />
+<CodeExample path="controls/types/paint_gradient/canvas_paint/main.py" language="python" />

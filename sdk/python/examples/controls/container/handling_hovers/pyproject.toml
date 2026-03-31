@@ -1,0 +1,26 @@
+[project]
+name = "container-handling-hovers"
+version = "1.0.0"
+description = "Container hover example that changes background color on pointer enter and leave."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Handling hovers"
+controls = ["SafeArea", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["hover handling", "dynamic styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

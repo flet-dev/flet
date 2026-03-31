@@ -43,7 +43,7 @@ Host `.riv` files locally or load them from a CDN. Use `placeholder` to keep lay
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 ## Description
 

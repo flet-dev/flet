@@ -1,0 +1,26 @@
+[project]
+name = "outlined-button-handling-clicks"
+version = "1.0.0"
+description = "Demonstrates OutlinedButton click handling with a live counter."
+requires-python = ">=3.10"
+keywords = ["outlined button", "events", "on_click", "counter", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/OutlinedButton"]
+
+[tool.flet.metadata]
+title = "Handling clicks"
+controls = ["SafeArea", "Column", "OutlinedButton", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click event handling", "dynamic label updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

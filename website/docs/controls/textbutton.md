@@ -15,25 +15,25 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Icons
 
-<CodeExample path={frontMatter.examples + '/icons.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/icons/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/icons.png'} alt="icons" width="55%" />
 
 ### Handling clicks
 
-<CodeExample path={frontMatter.examples + '/handling_clicks.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_clicks.png'} alt="handling-clicks" width="55%" />
 
 ### Custom content
 
-<CodeExample path={frontMatter.examples + '/custom_content.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/custom_content/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/custom_content.png'} alt="custom-content" width="55%" />
 

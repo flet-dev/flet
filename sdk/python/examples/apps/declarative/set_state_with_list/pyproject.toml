@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-set-state-with-list"
+version = "1.0.0"
+description = "Appends rows to a scrolling list over time to demonstrate list state updates."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "list view", "auto scroll", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Set state with list"
+controls = ["SafeArea", "Column", "ListView", "Text", "OutlinedButton"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["async", "auto scroll", "list state updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

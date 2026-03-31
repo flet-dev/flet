@@ -13,7 +13,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 [Live example](https://flet-controls-gallery.fly.dev/layout/card)
 
-<CodeExample path={frontMatter.examples + '/music_info.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/music_info/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/music_info.png'} alt="music-info" width="50%" />
 

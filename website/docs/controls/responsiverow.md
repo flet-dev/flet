@@ -15,13 +15,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### ResponsiveRow
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
 
 ### Custom breakpoints
 
-<CodeExample path={frontMatter.examples + '/custom_breakpoint.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/custom_breakpoint/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/custom_breakpoint.gif'} width="55%" />
 

@@ -1,0 +1,26 @@
+[project]
+name = "types-animated-switcher-transition-showcase"
+version = "1.0.0"
+description = "Compares Animated Switcher Transition values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["animated switcher transition", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Animated Switcher Transition showcase"
+controls = ["SafeArea", "Column", "Container", "AnimatedSwitcher", "Text", "Button", "Page", "AppBar"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

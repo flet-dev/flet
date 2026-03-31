@@ -1,0 +1,26 @@
+[project]
+name = "map-camera-controls"
+version = "1.0.0"
+description = "Controls map camera programmatically with zoom, rotate, center, move, and state text updates."
+requires-python = ">=3.10"
+keywords = ["map", "camera controls", "zoom", "rotate", "markers"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Camera Controls"
+controls = ["SafeArea", "Column", "Row", "Map", "TileLayer", "SimpleAttribution", "MarkerLayer", "Marker", "Button", "Text", "Icon", "AppBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["programmatic camera actions", "camera state display", "predefined map centers"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

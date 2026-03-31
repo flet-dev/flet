@@ -15,19 +15,19 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Setting a custom label
 
-<CodeExample path={frontMatter.examples + '/custom_label.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/custom_label/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/custom_label.png'} alt="custom-label" width="55%" />
 
 ### Handling events
 
-<CodeExample path={frontMatter.examples + '/handling_events.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_events.png'} alt="handling-events" width="55%" />
 

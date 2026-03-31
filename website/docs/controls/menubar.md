@@ -15,7 +15,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### `MenuBar` with Nested Submenus
 
-<CodeExample path={frontMatter.examples + '/nested_submenus.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/nested_submenus/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/nested_submenus.gif'} width="55%" />
 

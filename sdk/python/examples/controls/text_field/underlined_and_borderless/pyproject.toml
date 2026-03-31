@@ -1,0 +1,26 @@
+[project]
+name = "text-field-underlined-and-borderless"
+version = "1.0.0"
+description = "Shows underlined and borderless TextField styles with filled and unfilled variants."
+requires-python = ">=3.10"
+keywords = ["text field", "border", "underlined", "borderless", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Underlined and borderless TextFields"
+controls = ["SafeArea", "Column", "TextField"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["underlined border", "borderless style"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

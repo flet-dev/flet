@@ -1,0 +1,26 @@
+[project]
+name = "drag-and-drop-containers"
+version = "1.0.0"
+description = "Implements imperative drag-and-drop between Draggable color chips and a DragTarget box."
+requires-python = ">=3.10"
+keywords = ["draggable", "drag target", "drag and drop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Draggable"]
+
+[tool.flet.metadata]
+title = "Drag and drop containers"
+controls = ["SafeArea", "Row", "Column", "Draggable", "DragTarget", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["drag and drop", "drop acceptance feedback", "target color update"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

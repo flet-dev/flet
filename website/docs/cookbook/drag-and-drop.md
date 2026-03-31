@@ -60,7 +60,7 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/drag-and-drop/image-1.gif" alt="Drag and drop number" />
+<Image src="assets/cookbook/drag-and-drop/image-1.gif" alt="Drag and drop number" />
 
 So, it's developer's responsibility to determine what happens with "source" (draggable) and "destination" (drag target)
 controls when `on_accept` event occurs.
@@ -100,7 +100,7 @@ just "1" under cursor while dragging:
 ...
 ```
 
-<Image src="../assets/cookbook/drag-and-drop/image-2.gif" alt="Drag and drop number 2" />
+<Image src="assets/cookbook/drag-and-drop/image-2.gif" alt="Drag and drop number 2" />
 
 Drag target control additionally has `on_will_accept` and `on_leave` event handlers which help better
 visualize when it's a good time to "drop" something on the target. Let's modify DragTarget in our example
@@ -179,4 +179,4 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-<Image src="../assets/cookbook/drag-and-drop/image-3.gif" alt="Drag and drop number 3" />
+<Image src="assets/cookbook/drag-and-drop/image-3.gif" alt="Drag and drop number 3" />

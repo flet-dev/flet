@@ -1,0 +1,26 @@
+[project]
+name = "text-rich-text-border-stroke"
+version = "1.0.0"
+description = "Layers stroked and filled rich text in a Stack to create an outlined title effect."
+requires-python = ">=3.10"
+keywords = ["text", "rich text", "stroke", "outline", "stack"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/Text"]
+
+[tool.flet.metadata]
+title = "Rich text border stroke"
+controls = ["SafeArea", "Stack", "Text", "TextSpan"]
+layout_pattern = "overlay"
+complexity = "basic"
+features = ["stroked text effect"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

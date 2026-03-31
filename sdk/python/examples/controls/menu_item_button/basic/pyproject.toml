@@ -1,0 +1,26 @@
+[project]
+name = "menu-item-button-basic"
+version = "1.0.0"
+description = "Uses MenuItemButton items to change page background color from a submenu with hover styling."
+requires-python = ">=3.10"
+keywords = ["menu item button", "submenu", "hover style", "events", "background color"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/MenuItemButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "Row", "MenuBar", "SubmenuButton", "MenuItemButton", "Container", "Text", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["submenu item click handling", "menu item hover styling", "dynamic background color updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

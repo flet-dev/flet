@@ -15,24 +15,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} width="55%" />
 
 ## Programmatic expansion/collapse
 
-<CodeExample path={frontMatter.examples + '/programmatic_expansion.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/programmatic_expansion/main.py'} language="python" />
 
 ## Custom animations
 
-<CodeExample path={frontMatter.examples + '/custom_animations.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/custom_animations/main.py'} language="python" />
 
 ### Theme mode toggle
 
-<CodeExample path={frontMatter.examples + '/theme_mode_toggle.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
 
 ### Borders
 
-<CodeExample path={frontMatter.examples + '/borders.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/borders/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

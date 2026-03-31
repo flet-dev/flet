@@ -1,0 +1,26 @@
+[project]
+name = "banner-basic"
+version = "1.0.0"
+description = "Basic Banner dialog with action buttons."
+requires-python = ">=3.10"
+keywords = ["banner", "dialog", "actions", "material", "notification"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/Banner"]
+
+[tool.flet.metadata]
+title = "Basic Banner"
+controls = ["SafeArea", "Column", "Button", "Banner", "Icon", "Text", "TextButton"]
+layout_pattern = "dialog-flow"
+complexity = "basic"
+features = ["banner dialog", "action buttons", "dialog close and follow-up message"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "drag-and-drop-ordering-declarative"
+version = "1.0.0"
+description = "Provides declarative drag-and-drop ordering across groups with nested DragTarget and Draggable controls."
+requires-python = ">=3.10"
+keywords = ["draggable", "drag target", "ordering", "declarative", "kanban"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Draggable"]
+
+[tool.flet.metadata]
+title = "Drag and drop ordering declarative"
+controls = ["SafeArea", "Row", "Column", "Draggable", "DragTarget", "Card", "TextField", "TextButton", "Divider", "VerticalDivider"]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = ["group reordering", "item reordering", "nested drag targets", "declarative state updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

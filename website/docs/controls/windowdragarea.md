@@ -13,7 +13,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### No frame window
 
-<CodeExample path={frontMatter.examples + '/no_frame_window.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/no_frame_window/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/no_frame_window.png'} alt="no-frame-window" width="55%" />
 

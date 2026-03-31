@@ -1,0 +1,26 @@
+[project]
+name = "list-view-autoscroll-and-dynamic-items"
+version = "1.0.0"
+description = "Adds new ListView items over time and toggles auto-scroll behavior with a switch."
+requires-python = ">=3.10"
+keywords = ["list view", "auto scroll", "dynamic items", "async", "switch"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ListView"]
+
+[tool.flet.metadata]
+title = "Auto-scrolling and dynamical items addition"
+controls = ["SafeArea", "Row", "Container", "ListView", "Text", "Switch"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["auto-scroll toggle", "dynamic list item appending", "async updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Cupertino, Material and Adaptive Switches
 
-<CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/cupertino_material_and_adaptive.gif'} alt="cupertino-material-and-adaptive" width="55%" />
 

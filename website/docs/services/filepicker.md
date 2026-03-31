@@ -90,7 +90,7 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 ### Pick, save, and get directory paths
 
-<CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pick_save_and_get_directory_path.png'} width="55%" />
 
@@ -99,7 +99,7 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 The following example demonstrates multi-file [pick](filepicker.md#flet.FilePicker.pick_files)
 and [upload](filepicker.md#flet.FilePicker.upload) app.
 
-<CodeExample path={frontMatter.examples + '/pick_and_upload.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/pick_and_upload/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pick_and_upload.png'} width="55%" />
 
@@ -109,6 +109,6 @@ Use [`pick_files()`](filepicker.md#flet.FilePicker.pick_files) with `with_data=T
 you need file contents directly, such as in web apps where
 [`FilePickerFile.path`](../types/filepickerfile.md#flet.FilePickerFile.path) is not available.
 
-<CodeExample path={frontMatter.examples + '/pick_and_save_text_content.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/pick_and_save_text_content/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

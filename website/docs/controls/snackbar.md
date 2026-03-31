@@ -16,19 +16,19 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 ### Basic Example
 
-<CodeExample path={frontMatter.examples + '/basic.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
 
 ### Counter
 
-<CodeExample path={frontMatter.examples + '/counter.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/counter/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/snack_bar_flow.gif'} alt="Snack bar with counter" width="50%" caption="Snack bar with counter" />
 
 ### Action
 
-<CodeExample path={frontMatter.examples + '/action.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/action/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/action_simple.png'} alt="Snack bar with a simple action" width="50%" caption="Snack bar with a simple action" />
 
