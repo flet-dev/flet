@@ -22,6 +22,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Theme and Material Mode Toggles
 
-<CodeExample path={frontMatter.examples + '/theme_and_material_mode_toggles/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

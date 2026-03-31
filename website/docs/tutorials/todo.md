@@ -41,7 +41,7 @@ Once you have Flet installed, let's [create](../getting-started/create-flet-app.
 
 Create `hello.py` with the following contents:
 
-<CodeExample path={frontMatter.examples + '/hello/main.py'} language="python" title="hello/main.py" />
+<CodeExample path={frontMatter.examples + '/hello.py'} language="python" title="hello.py" />
 
 Run this app and you will see a new window with a greeting:
 
@@ -55,7 +55,7 @@ will display a [`Checkbox`](../controls/checkbox.md) with a new task.
 
 Create `todo.py` with the following contents:
 
-<CodeExample path={frontMatter.examples + '/step_1/main.py'} language="python" title="todo/main.py" />
+<CodeExample path={frontMatter.examples + '/step_1.py'} language="python" title="todo.py" />
 
 Run the app and you should see a page like this:
 
@@ -74,7 +74,7 @@ button should be aligned horizontally, and take up full app width:
 
 Replace `todo.py` contents with the following:
 
-<CodeExample path={frontMatter.examples + '/step_2/main.py'} language="python" title="hello/main.py" />
+<CodeExample path={frontMatter.examples + '/step_2.py'} language="python" title="hello.py" />
 
 Run the app and you should see a page like this:
 
@@ -91,7 +91,7 @@ Flet apps with composability and reusability in mind.
 To make a reusable To-Do app component, we are going to encapsulate its state
 and presentation logic in a separate class:
 
-<CodeExample path={frontMatter.examples + '/step_3/main.py'} language="python" title="todo/main.py" />
+<CodeExample path={frontMatter.examples + '/step_3.py'} language="python" title="todo.py" />
 
 <details>
 <summary>Try this out!</summary>
@@ -131,7 +131,7 @@ class which accepts task control instance as a parameter.
 Then, we passed a reference to `task_delete` method into Task constructor and
 called it on "Delete" button event handler.
 
-<CodeExample path={frontMatter.examples + '/step_4/main.py'} language="python" title="todo/main.py" />
+<CodeExample path={frontMatter.examples + '/step_4.py'} language="python" title="todo.py" />
 
 Run the app and try to edit and delete tasks:
 
@@ -247,7 +247,7 @@ Our Todo app is almost complete now. As a final touch, we will add a footer (`Co
 <details>
 <summary>Full code</summary>
 
-<CodeExample path="tutorials/todo/todo/main.py" language="python" />
+<CodeExample path="tutorials/todo/todo.py" language="python" />
 </details>
 
 <Image src="../examples/tutorials/todo/media/app-4.png" alt="app-4" width="55%" />

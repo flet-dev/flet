@@ -1,0 +1,26 @@
+[project]
+name = "expansion-panel-list-scrollable"
+version = "1.0.0"
+description = "Builds an ExpansionPanelList with scrollable panels."
+requires-python = ">=3.10"
+keywords = ["expansion panel list", "panels", "scrollable", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionPanelList"]
+
+[tool.flet.metadata]
+title = "Scrollable"
+controls = ["SafeArea", "ExpansionPanelList", "ExpansionPanel", "ListTile", "IconButton", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["panel expand/collapse", "scrollable panels", "panel change callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

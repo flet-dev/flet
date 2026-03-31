@@ -46,10 +46,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/animate_3/main.py'} language="python" />
 
-### Animate 4
-
-<CodeExample path={frontMatter.examples + '/animate_4/main.py'} language="python" />
-
 ### Nested themes 1
 
 <CodeExample path={frontMatter.examples + '/nested_themes_1/main.py'} language="python" />

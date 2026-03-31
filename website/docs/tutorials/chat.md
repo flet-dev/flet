@@ -65,7 +65,7 @@ To implement this layout, we will be using these Flet controls:
 
 Create `chat.py` with the following contents:
 
-<CodeExample path={frontMatter.examples + '/chat_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/chat_1.py'} language="python" />
 
 When user clicks on the "Send" button, it triggers [`on_click`](../controls/button.md#flet.Button.on_click) event which calls `send_click` method. `send_click`
 then adds new [`Text`](../controls/text.md) control to the list of [`Column.controls`](../controls/column.md#flet.Column.controls) and clears `new_message` text field value.
@@ -125,7 +125,7 @@ Finally, you need to call `pubsub.send_all()` method when the user clicks on "Se
 
 Here is the full code for this step:
 
-<CodeExample path={frontMatter.examples + '/chat_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/chat_2.py'} language="python" />
 
 <Image src="../examples/tutorials/chat/media/chat-2.gif" alt="chat-2" width="55%" />
 
@@ -215,12 +215,10 @@ def send_click(e):
 
 <details>
 <summary>Code</summary>
-
-    open: true
-<CodeExample path="tutorials/chat/chat_3/main.py" language="python" />
+<CodeExample path="tutorials/chat/chat_3.py" language="python" />
 </details>
 
-<Image src="../examples/tutorials/chat/media/chat-3.gif" alt="chat-3" width="55%" />
+<Image src="examples/tutorials/chat/media/chat-3.gif" alt="chat-3" width="55%" />
 
 ## Enhancing user interface
 
@@ -366,7 +364,7 @@ Here is how you can implement this layout:
 <summary>Full code</summary>
 
     open: true
-<CodeExample path="tutorials/chat/main/main.py" language="python" />
+<CodeExample path="tutorials/chat/main.py" language="python" />
 </details>
 
 This is the final version of the chat app for the purpose of this tutorial.
