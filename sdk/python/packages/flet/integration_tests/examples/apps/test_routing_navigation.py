@@ -6,6 +6,7 @@ from examples.apps.routing_navigation.drawer_navigation import main as drawer_na
 from examples.apps.routing_navigation.home_store import main as home_store
 from examples.apps.routing_navigation.initial_route import main as initial_route
 from examples.apps.routing_navigation.pop_view_confirm import main as pop_view_confirm
+from examples.apps.routing_navigation.pop_views_until import main as pop_views_until
 from examples.apps.routing_navigation.route_change_event import (
     main as route_change_event,
 )
@@ -13,7 +14,7 @@ from examples.apps.routing_navigation.route_change_event import (
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": initial_route.main}],
+    [{"flet_app_main": initial_route}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -24,7 +25,7 @@ async def test_initial_route(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": route_change_event.main}],
+    [{"flet_app_main": route_change_event}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -39,7 +40,7 @@ async def test_route_change_event(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": home_store.main}],
+    [{"flet_app_main": home_store}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -75,7 +76,7 @@ async def test_home_store(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": pop_view_confirm.main}],
+    [{"flet_app_main": pop_view_confirm}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -133,7 +134,7 @@ async def test_pop_view_confirm(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": drawer_navigation.main}],
+    [{"flet_app_main": drawer_navigation}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -185,3 +186,61 @@ async def test_drawer_navigation(flet_app_function: ftt.FletTestApp):
     # Verify home view
     home_text = await flet_app_function.tester.find_by_text("Welcome to Home Page")
     assert home_text.count == 1
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": pop_views_until}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_pop_views_until(flet_app_function: ftt.FletTestApp):
+    # Verify initial view
+    button = await flet_app_function.tester.find_by_text_containing("Start flow")
+    assert button.count == 1
+    result_text = await flet_app_function.tester.find_by_text("No result yet")
+    assert result_text.count == 1
+
+    # Navigate to Step 1
+    await flet_app_function.tester.tap(button)
+    await flet_app_function.tester.pump_and_settle()
+    step1_text = await flet_app_function.tester.find_by_text("Step 1 of the flow")
+    assert step1_text.count == 1
+
+    # Navigate to Step 2
+    step2_button = await flet_app_function.tester.find_by_text_containing(
+        "Go to Step 2"
+    )
+    assert step2_button.count == 1
+    await flet_app_function.tester.tap(step2_button)
+    await flet_app_function.tester.pump_and_settle()
+    step2_text = await flet_app_function.tester.find_by_text("Step 2 of the flow")
+    assert step2_text.count == 1
+
+    # Navigate to Step 3
+    step3_button = await flet_app_function.tester.find_by_text_containing(
+        "Go to Step 3"
+    )
+    assert step3_button.count == 1
+    await flet_app_function.tester.tap(step3_button)
+    await flet_app_function.tester.pump_and_settle()
+    final_text = await flet_app_function.tester.find_by_text("Flow complete!")
+    assert final_text.count == 1
+
+    # Click "Finish and go Home" — triggers pop_views_until
+    finish_button = await flet_app_function.tester.find_by_text_containing(
+        "Finish and go Home"
+    )
+    assert finish_button.count == 1
+    await flet_app_function.tester.tap(finish_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Verify back at Home with result
+    result_text = await flet_app_function.tester.find_by_text(
+        "Result: Flow completed!"
+    )
+    assert result_text.count == 1
+
+    # Verify we can start the flow again
+    button = await flet_app_function.tester.find_by_text_containing("Start flow")
+    assert button.count == 1
