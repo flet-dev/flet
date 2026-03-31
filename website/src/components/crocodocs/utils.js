@@ -21,14 +21,23 @@ const MARKDOWN_PARSER = unified()
   .use(remarkDirective)
   .use(remarkMdx);
 
+/** Return the bundled api-data.json object. */
 export function getApiData() {
   return apiData;
 }
 
+/**
+ * Return the source code string for a bundled example file, or null if not found.
+ * @param {string} path - Relative path key as it appears in code-examples.json.
+ */
 export function getExampleSource(path) {
   return codeExamples[path] ?? null;
 }
 
+/**
+ * Convert a name string to a URL-safe anchor by stripping quotes, replacing brackets,
+ * collapsing non-alphanumeric runs to hyphens, and trimming leading/trailing hyphens.
+ */
 export function normalizeAnchor(name) {
   return String(name)
     .replace(/["']/g, "")
@@ -38,18 +47,25 @@ export function normalizeAnchor(name) {
     .replace(/^-|-$/g, "");
 }
 
+/** Return the anchor ID for the root heading of a symbol's documentation page. */
 export function rootAnchor(symbol) {
   return normalizeAnchor(symbol);
 }
 
+/** Return the anchor ID for a named section (e.g. 'properties', 'events') within a symbol's page. */
 export function sectionAnchor(symbol, sectionName) {
   return normalizeAnchor(`${symbol}-${sectionName.toLowerCase()}`);
 }
 
+/** Return the anchor ID for a named member (property, event, or method) within a symbol's page. */
 export function memberAnchor(symbol, memberName) {
   return normalizeAnchor(`${symbol}.${memberName}`);
 }
 
+/**
+ * Return all package-path prefixes of classSymbol (longest first) as symbol resolution candidates.
+ * Used to expand an unqualified name like 'Text' to 'flet.controls.text.Text', etc.
+ */
 function classPackageCandidates(classSymbol) {
   if (!classSymbol || !classSymbol.includes(".")) {
     return [];
@@ -65,10 +81,15 @@ function classPackageCandidates(classSymbol) {
   return candidates;
 }
 
+/** Strip surrounding single or double quotes from a symbol string. */
 function cleanApiSymbol(symbol) {
   return symbol.replace(/^['"]|['"]$/g, "");
 }
 
+/**
+ * Format a symbol for display in a code link by stripping the leading package prefix
+ * (ft., flet., or flet_*.) so that only the short class/member name is shown.
+ */
 function formatApiSymbolLabel(symbol) {
   const cleanSymbol = cleanApiSymbol(symbol);
   if (
@@ -82,10 +103,16 @@ function formatApiSymbolLabel(symbol) {
   return cleanSymbol;
 }
 
+/** Look up a symbol in classes, functions, or aliases and return the first match, or null. */
 function getApiEntry(symbol, api) {
   return api.classes?.[symbol] ?? api.functions?.[symbol] ?? api.aliases?.[symbol] ?? null;
 }
 
+/**
+ * Resolve a single candidate symbol string to a documentation URL.
+ * First checks xref_map directly, then falls back to the entry's qualname/canonical_path.
+ * Returns null if no URL can be found.
+ */
 function resolveApiCandidateHref(candidate, api) {
   if (!candidate) {
     return null;
@@ -109,6 +136,14 @@ function resolveApiCandidateHref(candidate, api) {
   );
 }
 
+/**
+ * Resolve a symbol string to its documentation URL, trying multiple candidate forms.
+ * Handles ft./flet. aliases and unqualified names relative to the current class context.
+ *
+ * @param {string} symbol - Symbol to resolve (may be qualified or unqualified).
+ * @param {object} [context] - Optional context with api and classSymbol fields.
+ * @returns {string|null} The resolved URL, or null if not found.
+ */
 export function resolveApiSymbolHref(symbol, context = {}) {
   if (!symbol) {
     return null;
@@ -118,6 +153,7 @@ export function resolveApiSymbolHref(symbol, context = {}) {
   const cleanSymbol = cleanApiSymbol(symbol);
   const candidates = [];
 
+  /** Append candidate to the list if it is non-empty and not already present. */
   function addCandidate(candidate) {
     if (!candidate || candidates.includes(candidate)) {
       return;
@@ -156,6 +192,10 @@ export function resolveApiSymbolHref(symbol, context = {}) {
   return null;
 }
 
+/**
+ * Return the value of the first 'text' section in a docstring sections array, or null.
+ * Used to fall back to structured sections when a plain docstring string is absent.
+ */
 function firstTextSectionValue(sections) {
   if (!sections || sections.length === 0) {
     return null;
@@ -166,6 +206,10 @@ function firstTextSectionValue(sections) {
   return textSection?.value ?? null;
 }
 
+/**
+ * Extract the first sentence from a docstring string or its structured sections,
+ * for use in summary tables. Returns null when no text is available.
+ */
 export function firstSentenceFromDocstring(docstring, docstringSections) {
   const source = (typeof docstring === "string" && docstring.trim()) ? docstring : firstTextSectionValue(docstringSections);
   if (!source) {
@@ -181,6 +225,10 @@ export function firstSentenceFromDocstring(docstring, docstringSections) {
   return sentenceMatch ? sentenceMatch[1].trim() : firstParagraph;
 }
 
+/**
+ * Resolve a split URL path array by processing '..' and '.' segments,
+ * returning the resulting parts array without empty or '.' entries.
+ */
 function normalizeDocPath(parts) {
   const out = [];
   for (const part of parts) {
@@ -196,6 +244,16 @@ function normalizeDocPath(parts) {
   return out;
 }
 
+/**
+ * Resolve a doc-relative asset path to an absolute URL.
+ * Absolute URLs, protocol-relative URLs, root-relative paths, and fragment refs are returned as-is.
+ * Paths without '..' are served from the /docs/ static root.
+ * Paths with '..' are resolved relative to the current doc's directory.
+ *
+ * @param {string} src - The image or asset source path.
+ * @param {string} docId - The current doc's ID (e.g. 'controls/button').
+ * @returns {string} The resolved absolute URL.
+ */
 export function resolveDocAssetUrl(src, docId) {
   if (!src || /^(?:[a-z]+:)?\/\//i.test(src) || src.startsWith("/") || src.startsWith("#")) {
     return src;
@@ -212,14 +270,21 @@ export function resolveDocAssetUrl(src, docId) {
   return `/${["docs", ...resolved].join("/")}`;
 }
 
+/** Remove leading and trailing backtick characters from a string. */
 function stripTicks(text) {
   return text.replace(/^`|`$/g, "");
 }
 
+/** Return the API entry for context.classSymbol, or null when no classSymbol is set. */
 function getContextEntry(context, api) {
   return context?.classSymbol ? getApiEntry(context.classSymbol, api) : null;
 }
 
+/**
+ * Resolve memberName to an anchor ID within the current class context.
+ * Matches the class name itself, any of its properties/events/methods, or section names.
+ * Returns null when there is no match.
+ */
 function resolveLocalMemberAnchor(memberName, context, api) {
   const classSymbol = context?.classSymbol;
   const classEntry = getContextEntry(context, api);
@@ -246,6 +311,10 @@ function resolveLocalMemberAnchor(memberName, context, api) {
   return null;
 }
 
+/**
+ * Build a full href (route + anchor) for a member name within the current class context.
+ * Returns null when the class route or member anchor cannot be resolved.
+ */
 function resolveLocalMemberHref(memberName, context, api) {
   const classSymbol = context?.classSymbol;
   if (!classSymbol) {
@@ -262,6 +331,10 @@ function resolveLocalMemberHref(memberName, context, api) {
   return `${classBaseRoute}#${anchor}`;
 }
 
+/**
+ * Return symbol if it exists in the API, or its canonical public name if found via canonical_map.
+ * Returns null when neither form resolves to an API entry.
+ */
 function resolveQualifiedSymbol(symbol, api) {
   if (getApiEntry(symbol, api)) {
     return symbol;
@@ -273,10 +346,16 @@ function resolveQualifiedSymbol(symbol, api) {
   return null;
 }
 
+/** Return the last dot-separated segment of a qualified name (e.g. 'flet.Button' -> 'Button'). */
 function shortenQualifiedDisplay(target) {
   return target.split(".").at(-1) ?? target;
 }
 
+/**
+ * Format the display label for a reStructuredText cross-reference target.
+ * A leading '~' causes the label to be shortened to just the last component.
+ * A trailing '()' is preserved on the display label.
+ */
 function formatRestXrefLabel(target) {
   const shortened = target.startsWith("~");
   const normalized = shortened ? target.slice(1) : target;
@@ -286,6 +365,11 @@ function formatRestXrefLabel(target) {
   return hasCall ? `${display}()` : display;
 }
 
+/**
+ * Resolve a reStructuredText cross-reference (:py:class:`Foo`, :attr:`bar`, etc.) to a href and label.
+ * Tries local member resolution, then class context, then full symbol lookup, then base class walking.
+ * Returns null when no href can be found.
+ */
 function resolveRestCrossReference(role, target, context) {
   const api = context?.api ?? getApiData();
   const trimmed = target.trim();
@@ -355,6 +439,11 @@ function resolveRestCrossReference(role, target, context) {
   };
 }
 
+/**
+ * Resolve a CrocoDocs cross-reference target string (from [label][target] syntax) to a href.
+ * Special targets: '(c)' = current class, '(c).' = local member, '(c).Foo' = specific local member,
+ * 'Pkg.' = absolute qualified lookup (appended with label). All other values use resolveApiSymbolHref.
+ */
 function resolveCrossReference(target, label, context) {
   const api = getApiData();
   const cleanLabel = stripTicks(label);
@@ -375,6 +464,11 @@ function resolveCrossReference(target, label, context) {
   return resolveApiSymbolHref(target, {...context, api});
 }
 
+/**
+ * Scan text for API symbol patterns and wrap each resolved symbol in an anchor element.
+ * When code=true, uses formatApiSymbolLabel for the link label and adds a code-link class.
+ * Returns the original text string when no symbols resolve.
+ */
 function renderAutolinkedText(text, context, code = false) {
   const nodes = [];
   let lastIndex = 0;
@@ -408,6 +502,10 @@ function renderAutolinkedText(text, context, code = false) {
   return nodes.length ? nodes : text;
 }
 
+/**
+ * Render a text string by resolving [label][target] cross-references to anchor elements
+ * and auto-linking any remaining bare API symbols.
+ */
 function renderTextWithCrossReferences(text, context, keyPrefix) {
   const nodes = [];
   let lastIndex = 0;
@@ -445,6 +543,10 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
   return nodes.length ? nodes : text;
 }
 
+/**
+ * Replace [label][target] cross-references in markdown text with standard [label](href) links
+ * before the text is fed to the Markdown parser. Skips fenced code blocks.
+ */
 function preprocessCrossReferenceMarkdown(text, context) {
   if (!text) {
     return text;
@@ -464,6 +566,11 @@ function preprocessCrossReferenceMarkdown(text, context) {
     .join("");
 }
 
+/**
+ * Replace reStructuredText :role:`target` cross-references in markdown text with
+ * [label](href) links before the text is fed to the Markdown parser.
+ * Skips fenced code blocks and inline code spans.
+ */
 function preprocessRestCrossReferenceMarkdown(text, context) {
   if (!text) {
     return text;
@@ -514,6 +621,11 @@ function preprocessRestCrossReferenceMarkdown(text, context) {
   return output;
 }
 
+/**
+ * Escape bare '<' characters (not followed by tag-start or '!') to '&lt;' in non-code text.
+ * Prevents MDX from treating angle brackets in docstrings as JSX elements.
+ * Skips fenced code blocks and inline backtick spans.
+ */
 function escapeMdxUnsafeAngles(text) {
   if (!text) {
     return text;
@@ -538,10 +650,15 @@ function escapeMdxUnsafeAngles(text) {
     .join("");
 }
 
+/**
+ * Render a code expression string as React nodes, auto-linking any API symbols it contains.
+ * Intended for use inside signature boxes and inline type/default value displays.
+ */
 export function renderCodeExpression(text, context = {}) {
   return renderAutolinkedText(text, context, true);
 }
 
+/** Render a fenced code block using the Docusaurus CodeBlock theme component. */
 function renderCodeBlock(code, language, key) {
   return (
     <CodeBlock key={key} language={language ?? "text"}>
@@ -550,6 +667,10 @@ function renderCodeBlock(code, language, key) {
   );
 }
 
+/**
+ * Render an image figure from a regex match array [_, alt, url, attrs].
+ * Resolves the src path via resolveDocAssetUrl and applies an optional width override.
+ */
 function renderImageFromMatch(match, context, key, widthOverride = null) {
   const width = widthOverride ?? WIDTH_RE.exec(match[3] ?? "")?.[1];
   const src = resolveDocAssetUrl(match[2], context?.docId);
@@ -565,6 +686,10 @@ function renderImageFromMatch(match, context, key, widthOverride = null) {
   );
 }
 
+/**
+ * Render a single markdown line as either an image figure (if it matches IMAGE_LINE_RE)
+ * or a plain paragraph with inline markdown.
+ */
 function renderImage(line, context, key) {
   const match = IMAGE_LINE_RE.exec(line.trim());
   if (!match) {
@@ -573,6 +698,10 @@ function renderImage(line, context, key) {
   return renderImageFromMatch(match, context, key);
 }
 
+/**
+ * Transform docstring Markdown that uses the Python '/// admonition' convention into
+ * Docusaurus ':::type' admonition syntax. Also strips '/// caption' and bare '///' lines.
+ */
 function normalizeDocstringMarkdown(docstring) {
   const lines = docstring.split("\n");
   const output = [];
@@ -630,6 +759,10 @@ function normalizeDocstringMarkdown(docstring) {
   return output.join("\n");
 }
 
+/**
+ * Extract the directiveLabel paragraph child from a directive node and render it.
+ * Returns the rendered label and the remaining children array (without the label node).
+ */
 function extractDirectiveLabel(node, context, keyPrefix) {
   const labelIndex = node.children?.findIndex(
     (child) => child.type === "paragraph" && child.data?.directiveLabel
@@ -647,6 +780,10 @@ function extractDirectiveLabel(node, context, keyPrefix) {
   return {label, children};
 }
 
+/**
+ * Extract a width value from an mdxTextExpression, mdxJsxFlowElement, or mdxJsxTextElement node.
+ * Returns null when no width is present.
+ */
 function extractImageWidth(node) {
   if (!node) {
     return null;
@@ -664,6 +801,10 @@ function extractImageWidth(node) {
   return null;
 }
 
+/**
+ * Render an image figure from a raw HTML img string, resolving the src and applying width.
+ * Returns null when no src attribute is found in the string.
+ */
 function renderHtmlImage(raw, context, key, widthOverride = null) {
   const srcMatch = raw.match(/\bsrc="([^"]+)"/);
   if (!srcMatch) {
@@ -684,6 +825,11 @@ function renderHtmlImage(raw, context, key, widthOverride = null) {
   );
 }
 
+/**
+ * Render an array of inline AST nodes to React elements.
+ * Pre-processes adjacent text/inlineCode/text triplets that form '[`code`][target]'
+ * cross-references into synthetic 'crocodocsCodeReference' nodes before rendering.
+ */
 function renderInlineNodes(nodes, context, keyPrefix) {
   const repaired = [];
   for (let index = 0; index < nodes.length; index += 1) {
@@ -721,6 +867,12 @@ function renderInlineNodes(nodes, context, keyPrefix) {
   );
 }
 
+/**
+ * Recursively render a single remark AST node to React elements.
+ * Handles all standard Markdown node types plus MDX JSX image elements,
+ * directives (admonitions), tables, and the custom 'crocodocsCodeReference' type.
+ * Returns an empty array for unknown or unsupported node types.
+ */
 function renderMarkdownNode(node, context, key, inline = false) {
   if (!node) {
     return [];
@@ -937,6 +1089,11 @@ function renderMarkdownNode(node, context, key, inline = false) {
   }
 }
 
+/**
+ * Parse and render a markdown text string as inline React nodes.
+ * Applies cross-reference preprocessing and MDX angle-bracket escaping before parsing.
+ * Returns null for empty/null input.
+ */
 export function renderInlineMarkdown(text, context) {
   if (!text) {
     return null;
@@ -958,6 +1115,11 @@ export function renderInlineMarkdown(text, context) {
     : renderMarkdownNode(paragraph, context, "inline");
 }
 
+/**
+ * Parse and render a full docstring as block React elements.
+ * Applies admonition normalization, cross-reference preprocessing, and MDX escaping.
+ * Returns null for empty/null input.
+ */
 export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
   if (!docstring) {
     return null;
@@ -976,6 +1138,11 @@ export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
   return renderMarkdownNode(tree, context, keyPrefix);
 }
 
+/**
+ * Render a structured docstring sections array (as produced by griffe_extract_script) to React elements.
+ * Handles 'text', 'admonition', 'parameters', 'returns', and 'raises' section kinds.
+ * Returns null when sections is empty or null.
+ */
 export function renderDocstringSections(sections, context = {}) {
   if (!sections || sections.length === 0) {
     return null;

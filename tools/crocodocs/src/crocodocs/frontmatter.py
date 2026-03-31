@@ -17,6 +17,7 @@ _FRONT_MATTER_RE = re.compile(r"\A---\n(.*?)\n---\n?", re.DOTALL)
 
 
 def _parse_scalar(value: str) -> Any:
+    """Parse a YAML scalar string into a Python bool, int, None, or plain string."""
     value = value.strip()
     if value == "":
         return ""
@@ -38,6 +39,10 @@ def _parse_scalar(value: str) -> Any:
 
 
 def parse_front_matter(text: str) -> FrontMatterDocument:
+    """Split a document string into a front matter data dict and the remaining body text.
+
+    Returns a FrontMatterDocument with empty data when no front matter block is present.
+    """
     match = _FRONT_MATTER_RE.match(text)
     if not match:
         return FrontMatterDocument(data={}, body=text)

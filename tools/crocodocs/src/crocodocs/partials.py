@@ -20,6 +20,8 @@ ESCAPED_PLACEHOLDER_RE = re.compile(r"&lt;([^>\n]+?)&gt;")
 
 
 def _normalize_local_markdown_links(content: str) -> str:
+    """Rewrite relative .md links to strip the .md extension, collapsing 'index.md' to '.'."""
+
     def replace(match: re.Match[str]) -> str:
         path = match.group("target")
         anchor = match.group("anchor") or ""
@@ -35,6 +37,10 @@ def _normalize_local_markdown_links(content: str) -> str:
 
 
 def _escape_mdx_text_outside_code(content: str) -> str:
+    """Escape bare HTML-like angle-bracket tags to &lt;tag&gt; in non-code regions of MDX content.
+
+    Leaves fenced code blocks and inline backtick spans untouched.
+    """
     lines = content.splitlines()
     normalized: list[str] = []
     in_fence = False
@@ -59,6 +65,7 @@ def _escape_mdx_text_outside_code(content: str) -> str:
 
 
 def _normalize_cli_partial_markdown(content: str) -> str:
+    """Apply CLI-partial normalizations: strip backticks from H3 headings, escape angle brackets, and convert escaped placeholders back to inline code."""
     content = CLI_H3_TICK_RE.sub(r"\1\2", content)
     content = _escape_mdx_text_outside_code(content)
     return ESCAPED_PLACEHOLDER_RE.sub(r"`<\1>`", content)
@@ -141,6 +148,7 @@ print(json.dumps(results))
 
 
 def _render_pypi_partial() -> str:
+    """Fetch and render the PyPI package index, filtering non-flet packages and converting admonition syntax to MDX format."""
     from .pypi_index import render_pypi_index
 
     rendered = render_pypi_index(

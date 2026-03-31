@@ -39,10 +39,12 @@ class CrocoDocsConfig:
 
 
 def _resolve_path(project_root: Path, value: str) -> Path:
+    """Join project_root with value and return the resolved absolute path."""
     return (project_root / value).resolve()
 
 
 def load_config(project_root: Path) -> CrocoDocsConfig:
+    """Read [tool.crocodocs] from pyproject.toml and return a CrocoDocsConfig instance."""
     pyproject_path = project_root / "pyproject.toml"
     if not pyproject_path.exists():
         raise FileNotFoundError(f"CrocoDocs config not found: {pyproject_path}")
@@ -96,6 +98,10 @@ def load_config(project_root: Path) -> CrocoDocsConfig:
 def apply_path_override(
     config: CrocoDocsConfig, field_name: str, value: str | None
 ) -> None:
+    """Set a Path field on config from a CLI string value, resolving it relative to project_root.
+
+    Does nothing when value is None.
+    """
     if value is None:
         return
     setattr(config, field_name, (config.project_root / value).resolve())
@@ -104,6 +110,7 @@ def apply_path_override(
 def apply_value_override(
     config: CrocoDocsConfig, field_name: str, value: Any | None
 ) -> None:
+    """Set a scalar field on config to value. Does nothing when value is None."""
     if value is None:
         return
     setattr(config, field_name, value)
@@ -112,6 +119,10 @@ def apply_value_override(
 def apply_package_overrides(
     config: CrocoDocsConfig, overrides: list[str] | None
 ) -> None:
+    """Apply NAME:PATH package entries from CLI --package flags to config.packages.
+
+    Each override must have the form 'NAME:PATH'; raises ArgumentTypeError otherwise.
+    """
     if not overrides:
         return
     for item in overrides:

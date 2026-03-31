@@ -21,6 +21,10 @@ const MEMBER_KIND_META = {
   method: {icon: "deployed_code", className: "crocodocs-member-icon--method"},
 };
 
+/**
+ * Remove implicit `self` (with optional type annotation) from a Python method signature string.
+ * Handles both `(self, ...)` and `(self)` forms.
+ */
 function stripImplicitSelf(signatureText) {
   if (!signatureText) {
     return signatureText;
@@ -31,6 +35,9 @@ function stripImplicitSelf(signatureText) {
     .replace(/\(\s*self(?:\s*:\s*[^,)]+)?\s*\)/g, "()");
 }
 
+/**
+ * Renders a Docusaurus-aware heading element at the given level with an anchor id.
+ */
 function HeadingLink({level: Tag, id, children}) {
   return (
     <Heading as={Tag} id={id}>
@@ -39,13 +46,19 @@ function HeadingLink({level: Tag, id, children}) {
   );
 }
 
+/** Renders a small badge label (e.g. "classmethod", "deprecated") next to a member heading. */
 function Badge({children}) {
   return <span className="crocodocs-member-badge">{children}</span>;
 }
 
+/**
+ * Renders a styled signature box with a copy-to-clipboard button.
+ * `text` is the plain string written to the clipboard; `children` is the rendered content.
+ */
 function SignatureBox({text, children}) {
   const [copied, setCopied] = useState(false);
 
+  /** Copy `text` to the clipboard and briefly show a "Copied" confirmation. */
   async function onCopy() {
     if (!navigator?.clipboard || !text) {
       return;
@@ -76,6 +89,10 @@ function SignatureBox({text, children}) {
   );
 }
 
+/**
+ * Renders a titled section (Properties, Events, or Methods) containing a list of member items.
+ * Returns null when items is empty.
+ */
 function Section({title, items, renderItem}) {
   if (!items || items.length === 0) {
     return null;
@@ -91,6 +108,11 @@ function Section({title, items, renderItem}) {
   );
 }
 
+/**
+ * Create a DOM span element bearing the Material Symbols icon for a member kind
+ * ('property', 'event', or 'method'), for injection into the table-of-contents.
+ * Returns null for unknown kinds.
+ */
 function createMemberIconNode(kind) {
   const meta = MEMBER_KIND_META[kind];
   if (!meta) {
@@ -105,6 +127,11 @@ function createMemberIconNode(kind) {
 
 let tocOwnerCounter = 0;
 
+/**
+ * Hook that injects API-member entries into Docusaurus's table-of-contents sidebar.
+ * Each call owns a unique set of TOC nodes identified by an auto-incremented owner ID,
+ * and cleans them up on unmount or when sectionGroups changes.
+ */
 function useInjectedToc(sectionGroups) {
   const ownerRef = useRef(null);
   if (ownerRef.current == null) {
@@ -184,6 +211,13 @@ function useInjectedToc(sectionGroups) {
   }, [sectionGroups]);
 }
 
+/**
+ * Render an h3 heading for an API member with its icon and any label badges.
+ *
+ * @param item - The member entry (must have name and labels fields).
+ * @param classSymbol - The fully-qualified class name used to build the anchor id.
+ * @param kind - 'property', 'event', or 'method'.
+ */
 function renderMemberHeading(item, classSymbol, kind) {
   const id = memberAnchor(classSymbol, item.name);
   const meta = MEMBER_KIND_META[kind];
@@ -211,6 +245,10 @@ function renderMemberHeading(item, classSymbol, kind) {
   );
 }
 
+/**
+ * Render a full detail entry for a property or event attribute member,
+ * including its type signature box and docstring.
+ */
 function renderAttribute(item, classSymbol, docId) {
   const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
   const kind = item.name.startsWith("on_") ? "event" : "property";
@@ -228,6 +266,10 @@ function renderAttribute(item, classSymbol, docId) {
   );
 }
 
+/**
+ * Render a full detail entry for a method member,
+ * including its signature box (with `self` stripped) and docstring.
+ */
 function renderMethod(item, classSymbol, docId) {
   const signatureText = stripImplicitSelf(item.signature ?? item.name);
   return (
@@ -242,6 +284,10 @@ function renderMethod(item, classSymbol, docId) {
   );
 }
 
+/**
+ * Renders a compact summary list of member names with their first-sentence descriptions,
+ * each linking to the corresponding detail anchor. Returns null when items is empty.
+ */
 function SummarySection({title, items, classSymbol}) {
   if (!items.length) {
     return null;
@@ -269,6 +315,21 @@ function SummarySection({title, items, classSymbol}) {
   );
 }
 
+/**
+ * Core component that renders a complete API entry (class, function, or alias).
+ * Controlled by show* flags so that ClassSummary, ClassMembers, and ClassAll
+ * can reuse it with different visibility combinations.
+ *
+ * @param {string} name - Fully-qualified API symbol name to look up in api-data.json.
+ * @param {boolean} [showRootHeading=false] - Whether to render an h2 heading for the symbol.
+ * @param {boolean} [showDocstring=true] - Whether to render the class-level docstring.
+ * @param {boolean} [showBases=true] - Whether to render the "Inherits:" base-class list.
+ * @param {boolean} [showSummary=true] - Whether to render the member summary tables.
+ * @param {boolean} [showMembers=true] - Whether to render the full per-member detail sections.
+ * @param {string} [image] - Optional screenshot image path to display after the docstring.
+ * @param {string} [imageCaption] - Optional figcaption for the screenshot image.
+ * @param {string} [imageWidth="40%"] - CSS width for the screenshot image.
+ */
 export default function ClassBlock({
   name,
   showRootHeading = false,

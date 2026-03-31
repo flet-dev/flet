@@ -9,6 +9,7 @@ from typing import Any
 
 
 def _normalize_path(value: str | None) -> str | None:
+    """Convert a path string to use forward slashes, or return None if value is None."""
     if value is None:
         return None
     return str(value).replace("\\", "/")
@@ -23,6 +24,7 @@ MEMBER_FILTERS: dict[str, set[str]] = {
 
 
 def _load_member_filters(payload: dict[str, Any]) -> None:
+    """Populate the global MEMBER_FILTERS dict from the payload's 'member_filters' key."""
     raw = payload.get("member_filters", {})
     for key in MEMBER_FILTERS:
         values = raw.get(key, [])
@@ -33,6 +35,11 @@ def _resolve_extensions(
     extensions: list[str],
     search_paths: list[str],
 ) -> list[str]:
+    """Resolve extension names to file paths where possible.
+
+    The known extension 'flet.utils.griffe_deprecations' is looked up in search_paths
+    and replaced with its absolute file path if found.
+    """
     resolved: list[str] = []
     for extension in extensions:
         if extension == "flet.utils.griffe_deprecations":
@@ -52,10 +59,15 @@ def _resolve_extensions(
 
 
 def _is_filtered_member(kind: str, name: str) -> bool:
+    """Return True if name appears in the global exclusion filter for its kind or for 'all'."""
     return name in MEMBER_FILTERS["all"] or name in MEMBER_FILTERS.get(kind, set())
 
 
 def _unwrap(obj: Any) -> Any:
+    """Follow Alias chains to reach the underlying Griffe object.
+
+    Returns None if a cycle is detected or if the alias target cannot be resolved.
+    """
     target = obj
     seen: set[int] = set()
     while target.__class__.__name__ == "Alias" and id(target) not in seen:
@@ -68,6 +80,7 @@ def _unwrap(obj: Any) -> Any:
 
 
 def _docstring_value(obj: Any) -> str | None:
+    """Return the raw docstring text for a Griffe object, or None if absent."""
     docstring = getattr(obj, "docstring", None)
     if docstring is None:
         return None
@@ -75,12 +88,14 @@ def _docstring_value(obj: Any) -> str | None:
 
 
 def _annotation_to_text(value: Any) -> str | None:
+    """Convert a Griffe annotation object to its string representation, or None."""
     if value is None:
         return None
     return str(value)
 
 
 def _parameter_lookup(obj: Any) -> dict[str, Any]:
+    """Return a name-keyed dict of parameter objects for a Griffe function or method."""
     target = _unwrap(obj)
     if target is None:
         return {}
@@ -89,6 +104,12 @@ def _parameter_lookup(obj: Any) -> dict[str, Any]:
 
 
 def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
+    """Parse a Griffe docstring into a list of structured section dicts.
+
+    Each dict has a 'kind' key ('text', 'parameters', 'returns', 'raises', 'admonition')
+    plus kind-specific fields. Returns an empty list when griffe is unavailable or the
+    object has no docstring.
+    """
     try:
         from griffe import (
             DocstringSectionAdmonition,
@@ -196,6 +217,7 @@ def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
 
 
 def _deprecation_value(obj: Any) -> str | None:
+    """Extract the text of a 'Deprecated' admonition from a docstring, or return None."""
     try:
         from griffe import DocstringSectionAdmonition
     except Exception:  # pragma: no cover
@@ -219,6 +241,7 @@ def _deprecation_value(obj: Any) -> str | None:
 
 
 def _labels(obj: Any) -> list[str]:
+    """Return sorted label strings (e.g. 'classmethod', 'property') attached to an object."""
     target = _unwrap(obj)
     if target is None:
         return []
@@ -226,6 +249,7 @@ def _labels(obj: Any) -> list[str]:
 
 
 def _annotation_text(obj: Any) -> str | None:
+    """Return the type annotation of a Griffe object as a string, or None."""
     target = _unwrap(obj)
     if target is None:
         return None
@@ -236,6 +260,7 @@ def _annotation_text(obj: Any) -> str | None:
 
 
 def _value_text(obj: Any) -> str | None:
+    """Return the default/assigned value of a Griffe object as a string, or None."""
     target = _unwrap(obj)
     if target is None:
         return None
@@ -246,6 +271,7 @@ def _value_text(obj: Any) -> str | None:
 
 
 def _bases_text(obj: Any) -> list[str]:
+    """Return the list of base-class path strings for a Griffe class object."""
     target = _unwrap(obj)
     if target is None:
         return []
@@ -258,6 +284,7 @@ def _bases_text(obj: Any) -> list[str]:
 
 
 def _parameter_text(parameter: Any) -> str:
+    """Format a single Griffe parameter as 'name: type = default' text, with * or ** prefix when needed."""
     prefix = ""
     kind = str(getattr(parameter, "kind", ""))
     if "keyword_variadic" in kind or "var_keyword" in kind:
@@ -274,6 +301,7 @@ def _parameter_text(parameter: Any) -> str:
 
 
 def _signature_text(obj: Any) -> str:
+    """Format the full function/method signature as 'name(param, ...)' text."""
     target = _unwrap(obj)
     if target is None:
         return obj.name
@@ -283,6 +311,7 @@ def _signature_text(obj: Any) -> str:
 
 
 def _attribute_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe attribute object to a JSON-ready dict."""
     target = _unwrap(obj)
     if target is None:
         return {
@@ -314,6 +343,7 @@ def _attribute_entry(obj: Any) -> dict[str, Any]:
 
 
 def _function_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe function object to a JSON-ready dict including signature and return type."""
     target = _unwrap(obj)
     if target is None:
         return {
@@ -348,6 +378,7 @@ def _function_entry(obj: Any) -> dict[str, Any]:
 
 
 def _class_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe class object (with its properties, events, and methods) to a JSON-ready dict."""
     target = _unwrap(obj)
     if target is None:
         return {
@@ -410,6 +441,7 @@ def _class_entry(obj: Any) -> dict[str, Any]:
 
 
 def _alias_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe alias object to a JSON-ready dict with target kind and path info."""
     target = _unwrap(obj)
     target_kind = target.__class__.__name__ if target is not None else None
     return {
@@ -427,6 +459,12 @@ def _alias_entry(obj: Any) -> dict[str, Any]:
 
 
 def main() -> int:
+    """Read a JSON payload from stdin, extract API data via Griffe, and write JSON to stdout.
+
+    The payload must contain 'packages', 'search_paths', 'extensions', 'symbols', and
+    'member_filters' keys. The output is a JSON object with 'classes', 'functions',
+    'aliases', and 'public_aliases' keys.
+    """
     payload = json.loads(sys.stdin.read())
     _load_member_filters(payload)
 
@@ -449,6 +487,7 @@ def main() -> int:
     canonical_to_paths: dict[str, list[str]] = {}
 
     def _walk_module(mod: Any) -> None:
+        """Recursively walk a Griffe module and populate canonical_to_paths with every export path."""
         for member in mod.members.values():
             # Recurse into sub-modules first
             member_kind = member.__class__.__name__

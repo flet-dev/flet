@@ -21,6 +21,7 @@ class SymbolBlock:
 
 
 def iter_markdown_files(root: Path) -> list[Path]:
+    """Return all .md and .mdx files under root, sorted by path."""
     return sorted(
         path
         for path in root.rglob("*")
@@ -31,6 +32,11 @@ def iter_markdown_files(root: Path) -> list[Path]:
 def extract_symbol_blocks_from_mdx(
     text: str, front_matter: dict[str, Any]
 ) -> list[SymbolBlock]:
+    """Scan MDX body for ClassSummary/ClassMembers/ClassAll JSX tags and return SymbolBlock entries.
+
+    Symbol names may be literal (name="Foo") or resolved from front matter
+    (name={frontMatter.key}).
+    """
     blocks: list[SymbolBlock] = []
     for match in COMPONENT_TAG_RE.finditer(text):
         component = match.group(1)
@@ -58,4 +64,5 @@ def extract_symbol_blocks_from_mdx(
 
 
 def parse_document(text: str) -> FrontMatterDocument:
+    """Parse a Markdown/MDX document string into a FrontMatterDocument with data and body."""
     return parse_front_matter(text)

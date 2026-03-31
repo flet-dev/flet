@@ -3,6 +3,14 @@ import CodeBlock from "@theme/CodeBlock";
 
 import {getExampleSource} from "./utils";
 
+/**
+ * Renders a syntax-highlighted code block for a bundled example file.
+ * Shows an error message if the example path is not found in the code-examples bundle.
+ *
+ * @param {string} path - Relative path to the example file within the examples root.
+ * @param {string} [language="python"] - Language identifier for syntax highlighting.
+ * @param {string} [title] - Optional title displayed above the code block.
+ */
 export default function CodeExample({path, language = "python", title}) {
   const source = getExampleSource(path);
 

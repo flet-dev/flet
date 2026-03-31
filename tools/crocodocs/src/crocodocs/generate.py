@@ -24,6 +24,7 @@ from .sidebars import write_sidebars_js_from_source
 
 
 def _normalize_anchor(name: str) -> str:
+    """Convert a name to a URL-safe anchor string by stripping/replacing special characters."""
     anchor = re.sub(r"""["']""", "", str(name))
     anchor = re.sub(r"\[([^\]]+)\]", r"-\1", anchor)
     anchor = re.sub(r"[^A-Za-z0-9._-]+", "-", anchor)
@@ -32,10 +33,12 @@ def _normalize_anchor(name: str) -> str:
 
 
 def _root_anchor(symbol: str) -> str:
+    """Return the anchor ID for the root heading of a symbol's documentation page."""
     return _normalize_anchor(symbol)
 
 
 def _member_anchor(symbol: str, member_name: str) -> str:
+    """Return the anchor ID for a named member (property, event, or method) of a symbol."""
     return _normalize_anchor(f"{symbol}.{member_name}")
 
 
@@ -43,6 +46,11 @@ def _apply_public_aliases(
     entries: dict[str, Any],
     aliases: dict[str, str],
 ) -> dict[str, Any]:
+    """Return a copy of entries augmented with public-alias copies tagged with public_qualname.
+
+    For each (public_name -> qualname) pair in aliases, a copy of the qualname entry is
+    inserted under public_name with a 'public_qualname' field added.
+    """
     aliased = dict(entries)
     for public_name, qualname in aliases.items():
         entry = entries.get(qualname)
@@ -58,6 +66,11 @@ def _extract_api_data_with_griffe(
     config: CrocoDocsConfig,
     symbols: list[str],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, str]]:
+    """Run the griffe extraction script in a subprocess and return (classes, functions, aliases, public_aliases).
+
+    The script receives a JSON payload on stdin and writes a JSON result to stdout.
+    Raises RuntimeError if the subprocess exits with a non-zero code.
+    """
     script_path = config.project_root / "src" / "crocodocs" / "griffe_extract_script.py"
     search_paths = [str(path) for path in config.packages.values()]
     payload = {
@@ -99,6 +112,7 @@ def _extract_api_data_with_griffe(
 
 
 def _should_skip_example_path(root: Path, path: Path) -> bool:
+    """Return True if path is inside a hidden directory or a build/dist/cache directory."""
     relative_parts = path.relative_to(root).parts
     return any(
         part.startswith(".") or part in {"__pycache__", "build", "dist"}
@@ -107,6 +121,10 @@ def _should_skip_example_path(root: Path, path: Path) -> bool:
 
 
 def _generate_code_examples(examples_root: Path, output_path: Path) -> int:
+    """Write a JSON file mapping relative example paths to their source text.
+
+    Skips hidden directories and build/dist artifacts. Returns the count of entries written.
+    """
     mapping: dict[str, str] = {}
     if not examples_root.exists():
         output_path.write_text("{}", encoding="utf-8")
@@ -132,6 +150,18 @@ def run_generate(
     api_output: Path,
     base_url: str,
 ) -> None:
+    """Orchestrate the full generate pipeline.
+
+    Steps in order:
+    1. Write the Docusaurus sidebars.js from the YAML source.
+    2. Scan docs to build the page manifest (symbol blocks + partials).
+    3. Write the manifest JSON file.
+    4. Generate MDX partial files for CLI docs, permissions, and PyPI index.
+    5. Write the code-examples JSON file.
+    6. Extract API data (classes, functions, aliases) via Griffe.
+    7. Write the api-data JSON file with xref map.
+    8. Sync asset files to the static directory.
+    """
     reporter = ProgressReporter("generate")
     summary = Summary("generate")
 

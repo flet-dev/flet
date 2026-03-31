@@ -2,11 +2,13 @@ import argparse
 
 
 def _indent_block(text: str, indent: int) -> str:
+    """Indent every line of text by the given number of spaces."""
     prefix = " " * indent
     return "\n".join(f"{prefix}{line}" for line in text.splitlines())
 
 
 def _toml_key(key: str) -> str:
+    """Return the TOML representation of a key, quoting it if it contains special characters."""
     if key.replace("-", "").replace("_", "").isalnum():
         return key
     escaped = key.replace("\\", "\\\\").replace('"', '\\"')
@@ -14,6 +16,7 @@ def _toml_key(key: str) -> str:
 
 
 def _toml_value(value) -> str:
+    """Return the TOML representation of a scalar Python value (bool, None, or string)."""
     if isinstance(value, bool):
         return "true" if value else "false"
     if value is None:
@@ -23,6 +26,7 @@ def _toml_value(value) -> str:
 
 
 def _load_cross_platform_permissions() -> dict:
+    """Load the cross-platform permissions dict from flet-cli's BaseBuildCommand."""
     from flet_cli.commands.build_base import BaseBuildCommand
 
     parser = argparse.ArgumentParser(add_help=False)
@@ -31,6 +35,7 @@ def _load_cross_platform_permissions() -> dict:
 
 
 def _render_toml_block(config: dict) -> str:
+    """Render a single permission config entry as a TOML snippet covering iOS, macOS, and Android sections."""
     ios_info_plist = config.get("ios_info_plist") or {}
     macos_info_plist = config.get("macos_info_plist") or {}
     legacy_info_plist = config.get("info_plist") or {}
@@ -80,6 +85,7 @@ def _render_toml_block(config: dict) -> str:
 
 
 def cross_platform_permissions_list() -> str:
+    """Render all cross-platform permissions as a Markdown list with collapsible pyproject.toml code blocks."""
     permissions = _load_cross_platform_permissions()
     items = []
     for name, config in permissions.items():

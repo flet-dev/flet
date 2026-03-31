@@ -15,6 +15,7 @@ from .generate import run_generate
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Build and return the top-level argument parser with all subcommands registered."""
     parser = argparse.ArgumentParser(prog="crocodocs")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -32,6 +33,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Parse CLI arguments, apply any overrides to the loaded config, and run the command.
+
+    Returns an exit code (0 on success, 2 on error).
+    """
     parser = build_parser()
     args = parser.parse_args(argv)
 
