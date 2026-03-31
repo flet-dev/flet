@@ -6,6 +6,7 @@ import 'package:flet_code_editor/src/utils/flet_code_controller.dart';
 import 'package:flet_code_editor/src/utils/json_analyzer.dart';
 
 void main() {
+  // ISSUE-6312: Regression coverage for missing JSON gutter error markers.
   group('FletCodeController JSON analyzer', () {
     test('uses JSON analyzer for JSON language', () {
       final controller = FletCodeController(

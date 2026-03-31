@@ -5,12 +5,16 @@ import 'package:highlight/languages/json.dart';
 import 'json_analyzer.dart';
 
 class FletCodeController extends fce.CodeController {
+  // ISSUE-6312: Use a dedicated analyzer for JSON so invalid JSON can surface
+  // gutter markers instead of falling back to the default fold-only analyzer.
   FletCodeController({super.text, super.language})
     : super(analyzer: _analyzerForLanguage(language));
 
   bool autocompletionEnabled = false;
 
   static fce.AbstractAnalyzer _analyzerForLanguage(dynamic language) {
+    // ISSUE-6312: Keep existing behavior for other languages and only switch
+    // JSON to the custom analyzer added for this bug fix.
     return language != json
         ? const fce.DefaultLocalAnalyzer()
         : const JsonLocalAnalyzer();
