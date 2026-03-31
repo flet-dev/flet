@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Added
 
 - `Lottie` control new properties: `enable_merge_paths`, `enable_layers_opacity`, `headers`, `error_content`.
-- Deployed online documentation: https://docs.flet.dev/lottie/
+- Deployed online documentation: https://flet.dev/docs/lottie/
 
 ### Changed
 

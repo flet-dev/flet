@@ -18,7 +18,7 @@ class SubmenuButton(LayoutControl):
     """
     A menu button that displays a cascading menu.
 
-    Typically used in a [`MenuBar`][flet.] control.
+    Typically used in a :class:`~flet.MenuBar` control.
 
     ```python
     ft.SubmenuButton(
@@ -44,14 +44,14 @@ class SubmenuButton(LayoutControl):
     """
     The child control to be displayed in the middle portion of this button.
 
-    Typically this is the button's label, using a [`Text`][flet.] control.
+    Typically this is the button's label, using a :class:`~flet.Text` control.
     """
 
     controls: list[Control] = field(default_factory=list)
     """
     A list of controls that appear in the menu when it is opened.
 
-    Typically either [`MenuItemButton`][flet.] or
+    Typically either :class:`~flet.MenuItemButton` or
     `SubMenuButton` controls.
 
     If this list is empty, then the button for this menu item will be disabled.
@@ -59,16 +59,16 @@ class SubmenuButton(LayoutControl):
 
     leading: Optional[Control] = None
     """
-    An optional control to display before the [`content`][(c).].
+    An optional control to display before the :attr:`content`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     trailing: Optional[Control] = None
     """
-    An optional control to display after the [`content`][(c).].
+    An optional control to display after the :attr:`content`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -89,7 +89,7 @@ class SubmenuButton(LayoutControl):
     alignment_offset: Optional[OffsetValue] = None
     """
     The offset of the menu relative to the alignment origin determined by \
-    [`MenuStyle.alignment`][flet.] on the [`style`][(c).] attribute.
+    :attr:`flet.MenuStyle.alignment` on the :attr:`style` attribute.
     """
 
     on_open: Optional[ControlEventHandler["SubmenuButton"]] = None

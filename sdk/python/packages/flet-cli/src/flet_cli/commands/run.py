@@ -151,11 +151,11 @@ class Command(BaseCommand):
 
         This method prepares the script/module path, selects transport
         configuration (port or UDS), resolves assets and ignore directories,
-        starts the child app process through [`Handler`][(m).], and keeps the
+        starts the child app process through `Handler`, and keeps the
         observer running until termination.
 
         Args:
-            options: Parsed command options produced by [`add_arguments`][(c).].
+            options: Parsed command options produced by :meth:`add_arguments`.
         """
 
         from flet.utils.pip import (

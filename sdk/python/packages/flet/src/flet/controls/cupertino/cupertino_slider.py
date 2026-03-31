@@ -41,8 +41,8 @@ class CupertinoSlider(LayoutControl):
     The slider's thumb is drawn at a position that corresponds to this value.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`min`][(c).].
-        ValueError: If it is not less than or equal to [`max`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not less than or equal to :attr:`max`.
     """
 
     min: Annotated[
@@ -53,12 +53,12 @@ class CupertinoSlider(LayoutControl):
     """
     The minimum value the user can select.
 
-    If [`max`][(c).] is equal to the `min`, then this slider is disabled.
+    If :attr:`max` is equal to the `min`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is not less than or equal to [`max`][(c).].
-        ValueError: If it is not less than or equal to [`value`][(c).], when
-            [`value`][(c).] is set.
+        ValueError: If it is not less than or equal to :attr:`max`.
+        ValueError: If it is not less than or equal to :attr:`value`, when
+            :attr:`value` is set.
     """
 
     max: Annotated[
@@ -69,12 +69,12 @@ class CupertinoSlider(LayoutControl):
     """
     The maximum value the user can select.
 
-    If [`min`][(c).] is equal to the `max`, then this slider is disabled.
+    If :attr:`min` is equal to the `max`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`min`][(c).].
-        ValueError: If it is not greater than or equal to [`value`][(c).], when
-            [`value`][(c).] is set.
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not greater than or equal to :attr:`value`, when
+            :attr:`value` is set.
     """
 
     divisions: Optional[int] = None

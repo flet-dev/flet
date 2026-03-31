@@ -37,7 +37,7 @@ class ScrollType(Enum):
     """
     Scroll position changed.
 
-    See [`OnScrollEvent.scroll_delta`][flet.].
+    See :attr:`flet.OnScrollEvent.scroll_delta`.
     """
 
     END = "end"
@@ -49,15 +49,15 @@ class ScrollType(Enum):
     """
     User scroll direction changed.
 
-    See [`OnScrollEvent.direction`][flet.].
+    See :attr:`flet.OnScrollEvent.direction`.
     """
 
     OVERSCROLL = "overscroll"
     """
     Viewport was overscrolled.
 
-    See [`overscroll`][flet.OnScrollEvent.] and
-    [`velocity`][flet.OnScrollEvent.] are available.
+    See :attr:`~flet.OnScrollEvent.overscroll` and
+    :attr:`~flet.OnScrollEvent.velocity` are available.
     """
 
 
@@ -65,8 +65,8 @@ class ScrollDirection(Enum):
     """
     User scroll direction reported by Flutter user-scroll notifications.
 
-    Used by [`OnScrollEvent.direction`][flet.] when
-    [`OnScrollEvent.event_type`][flet.] is [`ScrollType.USER`][flet.].
+    Used by :attr:`flet.OnScrollEvent.direction` when
+    :attr:`flet.OnScrollEvent.event_type` is :attr:`flet.ScrollType.USER`.
     """
 
     IDLE = "idle"
@@ -87,7 +87,7 @@ class ScrollDirection(Enum):
 
 class ScrollbarOrientation(Enum):
     """
-    Defines the edge/side of the viewport where the [`Scrollbar`][flet.] is shown.
+    Defines the edge/side of the viewport where the :class:`~flet.Scrollbar` is shown.
     """
 
     LEFT = "left"
@@ -123,16 +123,16 @@ class Scrollbar:
     scrolled. When `False`, the scrollbar will be shown during scrolling and
     will fade out otherwise.
 
-    If `None`, then [`ScrollbarTheme.thumb_visibility`][flet.] is used.
+    If `None`, then :attr:`flet.ScrollbarTheme.thumb_visibility` is used.
     If that is also `None`, defaults to `False`.
     """
 
     track_visibility: Optional[bool] = None
     """
     Indicates whether the scrollbar track should be visible,
-    so long as the [thumb][(c).thumb_visibility] is visible.
+    so long as the :attr:`thumb_visibility` is visible.
 
-    If `None`, then [`ScrollbarTheme.track_visibility`][flet.] is used.
+    If `None`, then :attr:`flet.ScrollbarTheme.track_visibility` is used.
     If that is also `None`, defaults to `False`.
     """
 
@@ -143,9 +143,9 @@ class Scrollbar:
 
     If `None`, the default value is platform dependent:
     `4.0` pixels on Android
-    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]) and iOS
-    ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
-    [`ScrollbarTheme.thickness`][flet.] on the remaining platforms.
+    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.ANDROID`) and iOS
+    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.IOS`);
+    :attr:`flet.ScrollbarTheme.thickness` on the remaining platforms.
     """
 
     radius: Optional[Number] = None
@@ -157,8 +157,8 @@ class Scrollbar:
 
     If `None`, the default value is platform dependent:
     no radius is applied on Android
-    ([`Page.platform`][flet.] == [`PagePlatform.ANDROID`][flet.]);
-    `1.5` pixels on iOS ([`Page.platform`][flet.] == [`PagePlatform.IOS`][flet.]);
+    (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.ANDROID`);
+    `1.5` pixels on iOS (:attr:`flet.Page.platform` == :attr:`flet.PagePlatform.IOS`);
     `8.0` pixels on the remaining platforms.
     """
 
@@ -177,15 +177,18 @@ class Scrollbar:
     """
     Specifies where the scrollbar should appear relative to the scrollable.
 
-    If `None`, for a vertical scroll, defaults to [`ScrollbarOrientation.RIGHT`][flet.]
-    for left-to-right text direction and [`ScrollbarOrientation.LEFT`][flet.]
+    If `None`, for a vertical scroll, defaults to \
+    :attr:`flet.ScrollbarOrientation.RIGHT`
+    for left-to-right text direction and :attr:`flet.ScrollbarOrientation.LEFT`
     for right-to-left text direction, while for a horizontal scroll, it defaults to
-    [`ScrollbarOrientation.BOTTOM`][flet.].
+    :attr:`flet.ScrollbarOrientation.BOTTOM`.
 
     Note:
-        [`ScrollbarOrientation.TOP`][flet.] and [`ScrollbarOrientation.BOTTOM`][flet.]
-        can only be used with a horizontal scroll; [`ScrollbarOrientation.LEFT`][flet.]
-        and [`ScrollbarOrientation.RIGHT`][flet.] can only be used with a vertical
+        :attr:`flet.ScrollbarOrientation.TOP` and \
+        :attr:`flet.ScrollbarOrientation.BOTTOM`
+        can only be used with a horizontal scroll; \
+        :attr:`flet.ScrollbarOrientation.LEFT`
+        and :attr:`flet.ScrollbarOrientation.RIGHT` can only be used with a vertical
         scroll.
     """
 
@@ -193,7 +196,7 @@ class Scrollbar:
 @dataclass
 class OnScrollEvent(Event["ScrollableControl"]):
     """
-    Payload for [`ScrollableControl.on_scroll`][flet.] handlers.
+    Payload for :attr:`flet.ScrollableControl.on_scroll` handlers.
     """
 
     event_type: ScrollType
@@ -202,9 +205,9 @@ class OnScrollEvent(Event["ScrollableControl"]):
 
     Determines which optional fields are populated:
 
-    - [`ScrollType.UPDATE`][flet.]: [`scroll_delta`][(c).]
-    - [`ScrollType.USER`][flet.]: [`direction`][(c).direction]
-    - [`ScrollType.OVERSCROLL`][flet.]: [`overscroll`][(c).] and [`velocity`][(c).]
+    - :attr:`flet.ScrollType.UPDATE`: :attr:`scroll_delta`
+    - :attr:`flet.ScrollType.USER`: :attr:`direction`
+    - :attr:`flet.ScrollType.OVERSCROLL`: :attr:`overscroll` and :attr:`velocity`
     """
 
     pixels: float
@@ -214,17 +217,17 @@ class OnScrollEvent(Event["ScrollableControl"]):
 
     min_scroll_extent: float
     """
-    Minimum in-range value for [`pixels`][(c).].
+    Minimum in-range value for :attr:`pixels`.
 
-    [`pixels`][(c).] may still be [`out_of_range`][(c).] during overscroll.
+    :attr:`pixels` may still be :attr:`out_of_range` during overscroll.
     For unbounded scrollables this value can be negative infinity.
     """
 
     max_scroll_extent: float
     """
-    Maximum in-range value for [`pixels`][(c).].
+    Maximum in-range value for :attr:`pixels`.
 
-    [`pixels`][(c).] may still be [`out_of_range`][(c).] during overscroll.
+    :attr:`pixels` may still be :attr:`out_of_range` during overscroll.
     For unbounded scrollables this value can be positive infinity.
     """
 
@@ -237,14 +240,14 @@ class OnScrollEvent(Event["ScrollableControl"]):
     """
     Delta in logical pixels since the previous update.
 
-    Populated for [`ScrollType.UPDATE`][flet.] notifications.
+    Populated for :attr:`flet.ScrollType.UPDATE` notifications.
     """
 
     direction: Optional[ScrollDirection] = None
     """
     User scroll direction reported by Flutter.
 
-    Populated for [`ScrollType.USER`][flet.] notifications.
+    Populated for :attr:`flet.ScrollType.USER` notifications.
     """
 
     overscroll: Optional[float] = None
@@ -252,24 +255,25 @@ class OnScrollEvent(Event["ScrollableControl"]):
     Logical pixels that were prevented from being applied to `pixels`.
 
     Negative values indicate overscroll on the start side; positive values
-    indicate overscroll on the end side. Populated for [`ScrollType.OVERSCROLL`][flet.].
+    indicate overscroll on the end side. Populated for \
+    :attr:`flet.ScrollType.OVERSCROLL`.
     """
 
     velocity: Optional[float] = None
     """
     Scroll velocity when overscroll occurred, in logical pixels per second.
 
-    Populated for [`ScrollType.OVERSCROLL`][flet.].
+    Populated for :attr:`flet.ScrollType.OVERSCROLL`.
     """
 
     @property
     def out_of_range(self) -> bool:
         """
-        Whether [`pixels`][(c).] is outside scroll extents.
+        Whether :attr:`pixels` is outside scroll extents.
 
         Returns:
-            `True` if [`pixels`][(c).] < [`min_scroll_extent`][(c).] or
-                [`pixels`][(c).] > [`max_scroll_extent`][(c).]; otherwise `False`.
+            `True` if :attr:`pixels` < :attr:`min_scroll_extent` or
+                :attr:`pixels` > :attr:`max_scroll_extent`; otherwise `False`.
         """
         return (
             self.pixels < self.min_scroll_extent or self.pixels > self.max_scroll_extent
@@ -278,7 +282,7 @@ class OnScrollEvent(Event["ScrollableControl"]):
     @property
     def at_edge(self) -> bool:
         """
-        Whether [`pixels`][(c).] is exactly at either scroll edge.
+        Whether :attr:`pixels` is exactly at either scroll edge.
 
         Returns:
             `True` when `pixels` equals `min_scroll_extent` or
@@ -314,8 +318,8 @@ class OnScrollEvent(Event["ScrollableControl"]):
         """
         Total conceptual content extent available to the scrollable.
 
-        Equivalent to: [`max_scroll_extent`][(c).] - [`min_scroll_extent`][(c).]
-        + [`viewport_dimension`][(c).].
+        Equivalent to: :attr:`max_scroll_extent` - :attr:`min_scroll_extent`
+        + :attr:`viewport_dimension`.
         """
         return self.max_scroll_extent - self.min_scroll_extent + self.viewport_dimension
 
@@ -326,21 +330,22 @@ class ScrollableControl(Control):
     Shared scroll behavior for controls that expose a scrollable viewport.
 
     This mixin-style control is inherited by controls such as
-    [`Column`][flet.], [`Row`][flet.], [`View`][flet.],
-    [`ListView`][flet.], and [`GridView`][flet.]. It provides a common API for:
+    :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.View`,
+    :class:`~flet.ListView`, and :class:`~flet.GridView`. It provides a common API for:
 
-    - enabling/disabling scrolling and scrollbar visibility via [`scroll`][(c).];
-    - receiving throttled scroll notifications via [`on_scroll`][(c).] and
-        [`scroll_interval`][(c).];
-    - imperatively changing position with [`scroll_to()`][(c).scroll_to].
+    - enabling/disabling scrolling and scrollbar visibility via :attr:`scroll`;
+    - receiving throttled scroll notifications via :attr:`on_scroll` and
+        :attr:`scroll_interval`;
+    - imperatively changing position with :meth:`scroll_to`.
     """
 
     scroll: Optional[Union[ScrollMode, Scrollbar]] = None
     """
     Defines the scroll bar configuration of this control.
 
-    Can be a [`Scrollbar`][flet.] instance for full control over the appearance of the
-    scrollbar, or a [`ScrollMode`][flet.] value, for ready-made scrollbar behaviors.
+    Can be a :class:`~flet.Scrollbar` instance for full control over the appearance of \
+    the
+    scrollbar, or a :class:`~flet.ScrollMode` value, for ready-made scrollbar behaviors.
     """
 
     auto_scroll: bool = False
@@ -349,12 +354,12 @@ class ScrollableControl(Control):
     children updated.
 
     Note:
-        Must be `False` for [`scroll_to()`][(c).scroll_to] method to work.
+        Must be `False` for :meth:`scroll_to` method to work.
     """
 
     scroll_interval: Number = 10
     """
-    Throttling in milliseconds for [`on_scroll`][(c).] event.
+    Throttling in milliseconds for :attr:`on_scroll` event.
     """
 
     on_scroll: Optional[EventHandler[OnScrollEvent]] = None
@@ -384,9 +389,10 @@ class ScrollableControl(Control):
 
         Notes:
             - Exactly one of `offset`, `delta` or `scroll_key` should be provided.
-            - [`auto_scroll`][(c).] must be `False`.
+            - :attr:`auto_scroll` must be `False`.
             - This method is ineffective for controls (e.g.
-                [`ListView`][flet.], [`GridView`][flet.]) that build items dynamically.
+                :class:`~flet.ListView`, :class:`~flet.GridView`) that build items \
+                dynamically.
 
         Examples:
             ```python

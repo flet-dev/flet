@@ -30,7 +30,7 @@ class BarChartTooltipDirection(Enum):
 
 @ft.value
 class BarChartTooltip:
-    """Configuration of the tooltip for [`BarChart`][(p).]s."""
+    """Configuration of the tooltip for :class:`~flet_charts.BarChart`s."""
 
     bgcolor: ft.ColorValue = ft.Colors.SECONDARY
     """
@@ -202,20 +202,20 @@ class BarChart(ft.LayoutControl):
 
     groups: list[BarChartGroup] = field(default_factory=list)
     """
-    The list of [`BarChartGroup`][(p).]s to draw.
+    The list of :class:`~flet_charts.BarChartGroup`s to draw.
     """
 
     group_spacing: ft.Number = 16.0
     """
-    An amount of space between bar [`groups`][(c).].
+    An amount of space between bar :attr:`groups`.
     """
 
     group_alignment: ft.MainAxisAlignment = ft.MainAxisAlignment.SPACE_EVENLY
     """
-    The alignment of the bar [`groups`][(c).] within this chart.
+    The alignment of the bar :attr:`groups` within this chart.
 
-    If set to [`MainAxisAlignment.CENTER`][flet.MainAxisAlignment.CENTER],
-    the space between the `groups` can be specified using [`group_spacing`][(c).].
+    If set to :attr:`flet.MainAxisAlignment.CENTER`,
+    the space between the `groups` can be specified using :attr:`group_spacing`.
     """
 
     animation: ft.AnimationValue = field(

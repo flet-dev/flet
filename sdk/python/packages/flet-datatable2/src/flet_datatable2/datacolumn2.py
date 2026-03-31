@@ -14,7 +14,8 @@ class DataColumnSize(Enum):
     When determining column widths, ratios between `S`, `M` and `L`
     columns are kept (i.e. Large columns are set to 1.2x width of Medium ones).
 
-    See [`DataTable2.sm_ratio`][(p).], [`DataTable2.lm_ratio`][(p).].
+    See :attr:`flet_datatable2.DataTable2.sm_ratio`, \
+    :attr:`flet_datatable2.DataTable2.lm_ratio`.
     """
 
     S = "s"
@@ -25,16 +26,16 @@ class DataColumnSize(Enum):
 @ft.control("DataColumn2")
 class DataColumn2(ft.DataColumn):
     """
-    Extends [`flet.DataColumn`][flet.DataColumn],
+    Extends :class:`flet.DataColumn`,
     adding the ability to set relative column size and fixed column width.
 
-    Meant to be used as an item of [`DataTable2.columns`][(p).].
+    Meant to be used as an item of :attr:`flet_datatable2.DataTable2.columns`.
     """
 
     fixed_width: Optional[ft.Number] = None
     """
     Defines absolute width of the column in pixels
-    (as opposed to relative [`size`][(c).] used by default).
+    (as opposed to relative :attr:`size` used by default).
     """
 
     size: Optional[DataColumnSize] = DataColumnSize.S

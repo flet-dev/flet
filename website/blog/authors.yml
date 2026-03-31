@@ -1,0 +1,17 @@
+feodor:
+  name: Feodor Fitsner
+  title: Flet founder and developer
+  url: ttps://github.com/FeodorFitsner
+  image_url: https://avatars0.githubusercontent.com/u/5041459?s=400&v=4
+  socials:
+    github: FeodorFitsner
+    x: fletdev
+
+henri:
+  name: Henri Ndonko
+  title: Flet Contributor and Maintainer
+  url: https://github.com/ndonkoHenri
+  image_url: https://avatars.githubusercontent.com/u/98978078?v=4
+  socials:
+    github: ndonkoHenri
+    x: ndonkoHenri

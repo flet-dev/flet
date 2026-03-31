@@ -20,7 +20,7 @@ class Audio(ft.Service):
     The audio source.
 
     It can be one of the following:
-    - A URL or local [asset file](https://docs.flet.dev/cookbook/assets) path;
+    - A URL or local [asset file](https://flet.dev/docs/cookbook/assets) path;
     - A base64 string;
     - Raw bytes.
 
@@ -117,7 +117,7 @@ class Audio(ft.Service):
         """
         Pauses the audio that is currently playing.
 
-        If you call [`resume()`][flet_audio.Audio.resume] later,
+        If you call :meth:`~flet_audio.Audio.resume` later,
         the audio will resume from the point that it has been paused.
         """
         await self._invoke_method("pause")
@@ -132,7 +132,7 @@ class Audio(ft.Service):
         """
         Releases the resources associated with this media player.
         These are going to be fetched or buffered again as soon as
-        you change the source or call [`resume()`][flet_audio.Audio.resume].
+        you change the source or call :meth:`~flet_audio.Audio.resume`.
         """
         await self._invoke_method("release")
 

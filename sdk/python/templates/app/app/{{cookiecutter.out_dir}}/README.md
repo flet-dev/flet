@@ -16,7 +16,7 @@ Run as a web app:
 uv run flet run --web
 ```
 
-For more details on running the app, refer to the [Getting Started Guide](https://docs.flet.dev/).
+For more details on running the app, refer to the [Getting Started Guide](https://flet.dev/docs/).
 
 ## Build the app
 
@@ -26,7 +26,7 @@ For more details on running the app, refer to the [Getting Started Guide](https:
 flet build apk -v
 ```
 
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://docs.flet.dev/publish/android/).
+For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://flet.dev/docs/publish/android/).
 
 ### iOS
 
@@ -34,7 +34,7 @@ For more details on building and signing `.apk` or `.aab`, refer to the [Android
 flet build ipa -v
 ```
 
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://docs.flet.dev/publish/ios/).
+For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://flet.dev/docs/publish/ios/).
 
 ### macOS
 
@@ -42,7 +42,7 @@ For more details on building and signing `.ipa`, refer to the [iOS Packaging Gui
 flet build macos -v
 ```
 
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://docs.flet.dev/publish/macos/).
+For more details on building macOS package, refer to the [macOS Packaging Guide](https://flet.dev/docs/publish/macos/).
 
 ### Linux
 
@@ -50,7 +50,7 @@ For more details on building macOS package, refer to the [macOS Packaging Guide]
 flet build linux -v
 ```
 
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://docs.flet.dev/publish/linux/).
+For more details on building Linux package, refer to the [Linux Packaging Guide](https://flet.dev/docs/publish/linux/).
 
 ### Windows
 
@@ -58,7 +58,7 @@ For more details on building Linux package, refer to the [Linux Packaging Guide]
 flet build windows -v
 ```
 
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
+For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
 
 ### Web
 
@@ -66,4 +66,4 @@ For more details on building Windows package, refer to the [Windows Packaging Gu
 flet build web -v
 ```
 
-For more details on building Web app, refer to the [Web Packaging Guide](https://docs.flet.dev/publish/web/).
+For more details on building Web app, refer to the [Web Packaging Guide](https://flet.dev/docs/publish/web/).

@@ -54,8 +54,8 @@ class DisposalMode(Enum):
 
 class FletTestApp:
     """
-    Flet app test controller coordinates running a Python-based Flet app alongside a \
-    Flutter integration test.
+    Flet app test controller coordinates running a Python-based Flet app alongside \
+    a Flutter integration test.
 
     This class launches the Python Flet app, starts the Flutter test process,
     and facilitates programmatic interaction with the app's controls for
@@ -68,7 +68,7 @@ class FletTestApp:
         flet_app_main:
             A callable or coroutine function representing the main entry point
             of the Flet app under test. This will be invoked with a
-            [`Page`][flet.] instance when the app starts.
+            :class:`~flet.Page` instance when the app starts.
 
         assets_dir:
             Path to the directory containing static assets for the Flet app.
@@ -170,7 +170,7 @@ class FletTestApp:
     @property
     def page(self) -> ft.Page:
         """
-        Returns an instance of Flet's app [`Page`][flet.].
+        Returns an instance of Flet's app :class:`~flet.Page`.
         """
         if self.__page is None:
             raise RuntimeError("page is not initialized")
@@ -179,7 +179,7 @@ class FletTestApp:
     @property
     def tester(self) -> Tester:
         """
-        Returns an instance of [`Tester`][flet.testing.] class that programmatically \
+        Returns an instance of `Tester` class that programmatically \
         interacts with page controls and the test environment.
         """
         if self.__tester is None:
@@ -198,7 +198,7 @@ class FletTestApp:
             Initializes the test page and runs the user-provided Flet app entry point.
 
             Args:
-                page: Connected app [`Page`][flet.] instance.
+                page: Connected app :class:`~flet.Page` instance.
             """
             self.__page = page
             self.__tester = Tester()

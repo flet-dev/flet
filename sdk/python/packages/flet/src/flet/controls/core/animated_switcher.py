@@ -14,7 +14,7 @@ __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 
 class AnimatedSwitcherTransition(Enum):
     """
-    Visual transition strategy used by [`AnimatedSwitcher.transition`][flet.].
+    Visual transition strategy used by :attr:`flet.AnimatedSwitcher.transition`.
 
     Controls how old and new content are animated while the switch occurs.
     """
@@ -57,25 +57,25 @@ class AnimatedSwitcher(LayoutControl):
 
     duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
     """
-    The duration of the transition from the old [`content`][(c).] to the new one.
+    The duration of the transition from the old :attr:`content` to the new one.
     """
 
     reverse_duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
     """
-    The duration of the transition from the new [`content`][(c).] to the old one.
+    The duration of the transition from the new :attr:`content` to the old one.
     """
 
     switch_in_curve: AnimationCurve = AnimationCurve.LINEAR
     """
-    The animation curve to use when transitioning in a new [`content`][(c).].
+    The animation curve to use when transitioning in a new :attr:`content`.
     """
 
     switch_out_curve: AnimationCurve = AnimationCurve.LINEAR
     """
-    The animation curve to use when transitioning an old [`content`][(c).] out.
+    The animation curve to use when transitioning an old :attr:`content` out.
     """
 
     transition: AnimatedSwitcherTransition = AnimatedSwitcherTransition.FADE
     """
-    An animation type to transition between new and old [`content`][(c).].
+    An animation type to transition between new and old :attr:`content`.
     """

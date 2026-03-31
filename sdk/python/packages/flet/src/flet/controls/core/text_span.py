@@ -15,10 +15,10 @@ class TextSpan(Control):
     """
     A text span.
 
-    Usage Example: As a child of [`Text.spans`][flet.].
+    Usage Example: As a child of :attr:`flet.Text.spans`.
 
-    For the object to be useful, at least one of [`text`][(c).] or
-    [`spans`][(c).] should be set.
+    For the object to be useful, at least one of :attr:`text` or
+    :attr:`spans` should be set.
     """
 
     text: Optional[str] = None
@@ -26,7 +26,7 @@ class TextSpan(Control):
     The text contained in this span.
 
     Note:
-        If both `text` and [`spans`][(c).] are defined,
+        If both `text` and :attr:`spans` are defined,
         the `text` takes precedence.
     """
 
@@ -40,7 +40,7 @@ class TextSpan(Control):
     Additional spans to include as children.
 
     Note:
-        If both `spans` and [`text`][(c).] are defined,
+        If both `spans` and :attr:`text` are defined,
         the `text` takes precedence.
     """
 
@@ -48,7 +48,7 @@ class TextSpan(Control):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is provided,
+    Additionally, if :attr:`on_click` event callback is provided,
     it is fired after that.
     """
 
@@ -60,7 +60,7 @@ class TextSpan(Control):
     actual text.
 
     Raises:
-        ValueError: If it is set when [`text`][(c).] is `None`.
+        ValueError: If it is set when :attr:`text` is `None`.
     """
 
     spell_out: Optional[bool] = None

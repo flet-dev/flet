@@ -21,7 +21,8 @@ class CupertinoListTile(LayoutControl):
     """
     An iOS-style list tile.
 
-    The CupertinoListTile is a Cupertino equivalent of the Material [`ListTile`][flet.].
+    The CupertinoListTile is a Cupertino equivalent of the Material \
+    :class:`~flet.ListTile`.
 
     ```python
     ft.CupertinoListTile(
@@ -42,7 +43,7 @@ class CupertinoListTile(LayoutControl):
     """
     The primary content of this list tile.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
 
     Raises:
         ValueError: If it is neither a string nor a visible `Control`.
@@ -50,21 +51,21 @@ class CupertinoListTile(LayoutControl):
 
     subtitle: Optional[StrOrControl] = None
     """
-    Additional content displayed below the [`title`][(c).].
+    Additional content displayed below the :attr:`title`.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     leading: Optional[IconDataOrControl] = None
     """
-    A control to display before the [`title`][(c).].
+    A control to display before the :attr:`title`.
     """
 
     trailing: Optional[IconDataOrControl] = None
     """
-    A control to display after the [`title`][(c).].
+    A control to display after the :attr:`title`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -80,47 +81,47 @@ class CupertinoListTile(LayoutControl):
     padding: Optional[PaddingValue] = None
     """
     The tile's internal padding. Insets a CupertinoListTile's contents: its \
-    [`leading`][(c).], [`title`][(c).], [`subtitle`][(c).], [`additional_info`][(c).] \
-    and [`trailing`][(c).] controls.
+    :attr:`leading`, :attr:`title`, :attr:`subtitle`, :attr:`additional_info` and \
+    :attr:`trailing` controls.
     """
 
     url: Optional[Union[str, Url]] = None
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is
+    Additionally, if :attr:`on_click` event callback is
     provided, it is fired after that.
     """
 
     toggle_inputs: bool = False
     """
     Whether clicking on this tile should toggle the state of (visible) toggleable \
-    controls like [`Radio`][flet.], [`Checkbox`][flet.] or [`Switch`][flet.] inside \
-    it.
+    controls like :class:`~flet.Radio`, :class:`~flet.Checkbox` or \
+    :class:`~flet.Switch` inside it.
     """
 
     additional_info: Optional[StrOrControl] = None
     """
-    A `Control` to display on the right of the list tile, before [`trailing`][(c).].
+    A `Control` to display on the right of the list tile, before :attr:`trailing`.
 
-    Similar to [`subtitle`][(c).], an [`additional_info`][(c).]
+    Similar to :attr:`subtitle`, an :attr:`additional_info`
     is used to display additional information.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     leading_size: Optional[Number] = None
     """
-    Used to constrain the width and height of [`leading`][(c).] control.
+    Used to constrain the width and height of :attr:`leading` control.
 
-    Defaults to `30.0`, if [`notched`][(c).] is `True`, else `28.0`.
+    Defaults to `30.0`, if :attr:`notched` is `True`, else `28.0`.
     """
 
     leading_to_title: Optional[Number] = None
     """
-    The horizontal space between [`leading`][(c).] and `[`title`][(c).].
+    The horizontal space between :attr:`leading` and :attr:`title`.
 
-    Defaults to `12.0`, if [`notched`][(c).] is `True`, else `16.0`.
+    Defaults to `12.0`, if :attr:`notched` is `True`, else `16.0`.
     """
 
     notched: bool = False

@@ -128,8 +128,8 @@ class KeyboardType(Enum):
     Requests a keyboard that includes keys useful for web searches as well as URLs.
 
     - On iOS, requests a default keyboard with ready access to the `"."` key.
-        In contrast to [`URL`][(c).], a space bar is available.
-    - On Android this is remapped to the [`URL`][(c).] keyboard type as it always
+        In contrast to :attr:`URL`, a space bar is available.
+    - On Android this is remapped to the :attr:`URL` keyboard type as it always
         shows a space bar.
     """
 
@@ -140,7 +140,7 @@ class KeyboardType(Enum):
     Requests a keyboard that includes keys useful for handles and tags.
 
     - On iOS, requests a default keyboard with ready access to the `"@"` and `"#"` keys.
-    - On Android this is remapped to the [`EMAIL`][(c).] keyboard type as it
+    - On Android this is remapped to the :attr:`EMAIL` keyboard type as it
         always shows the `"@"` key.
     """
 
@@ -293,9 +293,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     If no text is selected, it contains an empty range indicating the caret position.
 
     Setting this property visually updates the field's selection to match the given
-    value, and hence leads to the [`on_selection_change`][(c).] event being triggered.
+    value, and hence leads to the :attr:`on_selection_change` event being triggered.
     To ensure the selection is visible and the event is fired, the text field must
-    be focused. Call [`focus()`][flet.FormFieldControl.focus]
+    be focused. Call :meth:`~flet.FormFieldControl.focus`
     on the field before setting this property.
     """
 
@@ -324,7 +324,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     Raises:
         ValueError: If it is not strictly greater than `0`.
-        ValueError: If it is not less than or equal to [`max_lines`][(c).] when both
+        ValueError: If it is not less than or equal to :attr:`max_lines` when both
             are set.
     """
 
@@ -344,7 +344,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     Raises:
         ValueError: If it is not strictly greater than `0`.
-        ValueError: If it is not greater than or equal to [`min_lines`][(c).] when
+        ValueError: If it is not greater than or equal to :attr:`min_lines` when
             both are set.
     """
 
@@ -371,11 +371,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     can_reveal_password: bool = False
     """
     Displays a toggle icon button that allows revealing the entered password. Is shown \
-    if both [`password`][(c).] and `can_reveal_password` are `True`.
+    if both :attr:`password` and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as [`suffix`][flet.FormFieldControl.]
-    and in case both `can_reveal_password`/[`password`][(c).] and `suffix` are
-    provided, then the [`suffix`][flet.FormFieldControl.] won't be shown.
+    The icon is displayed in the same location as :attr:`~flet.FormFieldControl.suffix`
+    and in case both `can_reveal_password`/:attr:`password` and `suffix` are
+    provided, then the :attr:`~flet.FormFieldControl.suffix` won't be shown.
     """
 
     read_only: bool = False
@@ -388,9 +388,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in [`multiline`][(c).] textfield to be \
+    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be \
     chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just \
-    `Enter` fires [`on_submit`][(c).] event.
+    `Enter` fires :attr:`on_submit` event.
     """
 
     ignore_up_down_keys: bool = False
@@ -405,7 +405,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Defaults to [`TextAlign.LEFT`][flet.].
+    Defaults to :attr:`flet.TextAlign.LEFT`.
     """
 
     autofocus: bool = False
@@ -419,7 +419,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Defaults to [`TextCapitalization.NONE`][flet.].
+    Defaults to :attr:`flet.TextCapitalization.NONE`.
     """
 
     autocorrect: bool = True
@@ -493,7 +493,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Provides as-you-type filtering/validation.
 
-    Similar to the [`on_change`][(c).] callback, the input filters are not applied
+    Similar to the :attr:`on_change` callback, the input filters are not applied
     when the content of the field is changed programmatically.
     """
 
@@ -582,7 +582,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     Called when the text selection or caret position changes.
 
     This can be triggered either by user interaction (selecting text or moving
-    the caret) or programmatically (through the [`selection`][(c).] property).
+    the caret) or programmatically (through the :attr:`selection` property).
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
