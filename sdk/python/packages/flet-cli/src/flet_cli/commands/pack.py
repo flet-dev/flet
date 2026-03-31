@@ -316,37 +316,45 @@ class Command(BaseCommand):
                                 app_path = os.path.join(hook_config.temp_bin_dir, entry)
                                 break
 
-                    if app_path:
-                        # icon
-                        if options.icon:
-                            icon_path = options.icon
-                            if not Path(icon_path).is_absolute():
-                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                            update_flet_view_icon(app_path, icon_path)
-
-                        # version info
-                        app_path = update_flet_view_version_info(
-                            app_path=app_path,
-                            bundle_id=options.bundle_id,
-                            product_name=options.product_name,
-                            product_version=options.product_version,
-                            copyright=options.copyright,
+                    if not app_path:
+                        print(
+                            "Error: macOS app bundle not found in "
+                            f"{hook_config.temp_bin_dir}. "
+                            "Set FLET_VIEW_PATH to the directory "
+                            "containing your Flet.app."
                         )
+                        sys.exit(1)
 
-                        # assemble
-                        assemble_app_bundle(app_path, tar_path)
+                    # icon
+                    if options.icon:
+                        icon_path = options.icon
+                        if not Path(icon_path).is_absolute():
+                            icon_path = str(Path(os.getcwd()).joinpath(icon_path))
+                        update_flet_view_icon(app_path, icon_path)
 
-                        # Remove everything except the tar.gz so
-                        # PyInstaller doesn't try to process loose
-                        # framework binaries.
-                        for entry in os.listdir(hook_config.temp_bin_dir):
-                            entry_path = os.path.join(hook_config.temp_bin_dir, entry)
-                            if entry_path == tar_path:
-                                continue
-                            if os.path.isdir(entry_path):
-                                shutil.rmtree(entry_path, ignore_errors=True)
-                            else:
-                                os.remove(entry_path)
+                    # version info
+                    app_path = update_flet_view_version_info(
+                        app_path=app_path,
+                        bundle_id=options.bundle_id,
+                        product_name=options.product_name,
+                        product_version=options.product_version,
+                        copyright=options.copyright,
+                    )
+
+                    # assemble
+                    assemble_app_bundle(app_path, tar_path)
+
+                    # Remove everything except the tar.gz so
+                    # PyInstaller doesn't try to process loose
+                    # framework binaries.
+                    for entry in os.listdir(hook_config.temp_bin_dir):
+                        entry_path = os.path.join(hook_config.temp_bin_dir, entry)
+                        if entry_path == tar_path:
+                            continue
+                        if os.path.isdir(entry_path):
+                            shutil.rmtree(entry_path, ignore_errors=True)
+                        else:
+                            os.remove(entry_path)
 
             # run PyInstaller!
             print("Running PyInstaller:", pyi_args)
