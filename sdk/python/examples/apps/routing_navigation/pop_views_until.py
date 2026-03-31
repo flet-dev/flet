@@ -81,9 +81,7 @@ def main(page: ft.Page):
                         ft.Button(
                             "Finish and go Home",
                             on_click=lambda _: asyncio.create_task(
-                                page.pop_until_with_result(
-                                    "/", result="Flow completed!"
-                                )
+                                page.pop_views_until("/", result="Flow completed!")
                             ),
                         ),
                     ],
@@ -92,7 +90,7 @@ def main(page: ft.Page):
 
         page.update()
 
-    def on_pop_result(e: ft.ViewPopResultEvent):
+    def on_pop_result(e: ft.ViewsPopUntilEvent):
         result_text.value = f"Result: {e.result}"
         page.show_dialog(ft.SnackBar(ft.Text(f"Result: {e.result}")))
         page.update()
@@ -105,7 +103,7 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-    page.on_view_pop_result = on_pop_result
+    page.on_views_pop_until = on_pop_result
 
     route_change()
 

@@ -215,10 +215,10 @@ class ViewPopEvent(Event["Page"]):
 
 
 @dataclass
-class ViewPopResultEvent(Event["Page"]):
+class ViewsPopUntilEvent(Event["Page"]):
     """
-    Event payload delivered when [`Page.pop_until_with_result`]\
-    [flet.Page.pop_until_with_result] completes navigation.
+    Event payload delivered when [`Page.pop_views_until`]\
+    [flet.Page.pop_views_until] completes navigation.
 
     Carries the result value back to the destination view, analogous to
     Flutter's `Navigator.popUntilWithResult`.
@@ -232,7 +232,7 @@ class ViewPopResultEvent(Event["Page"]):
     result: Any = None
     """
     The result value passed from the caller of
-    [`pop_until_with_result`][flet.Page.pop_until_with_result].
+    [`pop_views_until`][flet.Page.pop_views_until].
     """
 
     view: Optional[View] = None
@@ -533,9 +533,9 @@ class Page(BasePage):
     control.
     """
 
-    on_view_pop_result: Optional[EventHandler[ViewPopResultEvent]] = None
+    on_views_pop_until: Optional[EventHandler[ViewsPopUntilEvent]] = None
     """
-    Called when [`pop_until_with_result`][flet.Page.pop_until_with_result] reaches
+    Called when [`pop_views_until`][flet.Page.pop_views_until] reaches
     the destination view.
 
     The event carries the result value passed by the caller.
@@ -742,7 +742,7 @@ class Page(BasePage):
             self.__last_route = e.route
             self.query()
 
-        elif isinstance(e, ViewPopEvent | ViewPopResultEvent):
+        elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
             for v in unwrap_component(self.views):
                 v = unwrap_component(v)
                 if v.route == e.route:
@@ -932,11 +932,11 @@ class Page(BasePage):
             arguments={"route": new_route},
         )
 
-    async def pop_until_with_result(self, route: str, result: Any = None) -> None:
+    async def pop_views_until(self, route: str, result: Any = None) -> None:
         """
         Pops views from the navigation stack until a view with the given
         `route` is found, then delivers `result` via the
-        [`on_view_pop_result`][flet.Page.on_view_pop_result] event.
+        [`on_views_pop_until`][flet.Page.on_views_pop_until] event.
 
         This is the Flet equivalent of Flutter's `Navigator.popUntilWithResult`.
 
@@ -946,14 +946,14 @@ class Page(BasePage):
 
 
             def main(page: ft.Page):
-                def on_pop_result(e: ft.ViewPopResultEvent):
+                def on_pop_result(e: ft.ViewsPopUntilEvent):
                     page.show_dialog(ft.SnackBar(ft.Text(f"Result: {e.result}")))
 
-                page.on_view_pop_result = on_pop_result
+                page.on_views_pop_until = on_pop_result
 
                 # ... later, from a deeply nested view:
                 async def go_back(ev):
-                    await page.pop_until_with_result("/", result="Done!")
+                    await page.pop_views_until("/", result="Done!")
             ```
 
         Args:
@@ -961,7 +961,7 @@ class Page(BasePage):
                 of an existing [`View`][flet.View] in
                 [`page.views`][flet.Page.views].
             result: Optional value delivered to
-                [`on_view_pop_result`][flet.Page.on_view_pop_result] on the
+                [`on_views_pop_until`][flet.Page.on_views_pop_until] on the
                 destination view.
 
         Raises:
@@ -987,17 +987,17 @@ class Page(BasePage):
         # Update browser URL
         await self.push_route(route)
 
-        # Fire on_view_pop_result for the destination view
-        if self.on_view_pop_result:
+        # Fire on_views_pop_until for the destination view
+        if self.on_views_pop_until:
             target_view = unwrap_component(views[target_idx])
-            e = ViewPopResultEvent(
-                name="view_pop_result",
+            e = ViewsPopUntilEvent(
+                name="views_pop_until",
                 control=self,
                 route=route,
                 result=result,
                 view=target_view,
             )
-            await self._trigger_event("view_pop_result", event_data=None, e=e)
+            await self._trigger_event("views_pop_until", event_data=None, e=e)
 
         self.update()
 

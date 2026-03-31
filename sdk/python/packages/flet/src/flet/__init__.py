@@ -410,7 +410,7 @@ from flet.controls.page import (
     PlatformBrightnessChangeEvent,
     RouteChangeEvent,
     ViewPopEvent,
-    ViewPopResultEvent,
+    ViewsPopUntilEvent,
 )
 from flet.controls.painting import (
     Paint,
@@ -1074,7 +1074,7 @@ __all__ = [
     "VerticalDivider",
     "View",
     "ViewPopEvent",
-    "ViewPopResultEvent",
+    "ViewsPopUntilEvent",
     "VisualDensity",
     "Wakelock",
     "WebBrowserName",
