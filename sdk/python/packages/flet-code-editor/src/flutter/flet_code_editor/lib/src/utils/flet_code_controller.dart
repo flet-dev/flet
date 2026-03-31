@@ -1,13 +1,20 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart' as fce;
+import 'package:highlight/languages/json.dart';
+
+import 'json_analyzer.dart';
 
 class FletCodeController extends fce.CodeController {
-  FletCodeController({
-    super.text,
-    super.language,
-  });
+  FletCodeController({super.text, super.language})
+    : super(analyzer: _analyzerForLanguage(language));
 
   bool autocompletionEnabled = false;
+
+  static fce.AbstractAnalyzer _analyzerForLanguage(dynamic language) {
+    return language != json
+        ? const fce.DefaultLocalAnalyzer()
+        : const JsonLocalAnalyzer();
+  }
 
   @override
   Future<void> generateSuggestions() async {
@@ -44,10 +51,7 @@ class FletCodeController extends fce.CodeController {
       extentOffset: endSelectionPosition,
     );
 
-    value = TextEditingValue(
-      text: replacedText,
-      selection: adjustedSelection,
-    );
+    value = TextEditingValue(text: replacedText, selection: adjustedSelection);
 
     popupController.hide();
   }
