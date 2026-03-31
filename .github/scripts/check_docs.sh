@@ -39,4 +39,20 @@ else
     echo "No unresolved reST cross-references found."
 fi
 
+echo "=== Checking missing code examples ==="
+if grep -rl 'Missing code example for' "$BUILD_DIR/docs/" --include='*.html' 2>/dev/null; then
+    echo "ERROR: Found pages with missing code examples (listed above)."
+    exit 1
+else
+    echo "No missing code examples found."
+fi
+
+echo "=== Checking missing API entries ==="
+if grep -rl 'Missing API entry for' "$BUILD_DIR/docs/" --include='*.html' 2>/dev/null; then
+    echo "ERROR: Found pages with missing API entries (listed above)."
+    exit 1
+else
+    echo "No missing API entries found."
+fi
+
 echo "=== All checks passed ==="
