@@ -12,4 +12,4 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 <CodeExample path="controls/types/paint_gradient/paint_radial_gradient/canvas_paint/main.py" language="python" />
 
-<Image src="../examples/controls/types/paint_gradient/paint_radial_gradient/media/canvas_paint.png" alt="canvas-paint" width="55%" />
+<Image src="examples/controls/types/paint_gradient/paint_radial_gradient/media/canvas_paint.png" alt="canvas-paint" width="55%" />

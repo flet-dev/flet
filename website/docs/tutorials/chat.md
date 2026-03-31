@@ -19,7 +19,7 @@ In this tutorial you will learn how to:
 
 The complete application will look like this:
 
-<Image src="../examples/tutorials/chat/media/chat.gif" alt="chat" width="55%" />
+<Image src="examples/tutorials/chat/media/chat.gif" alt="chat" width="55%" />
 
 You can try the live demo [here](https://flet-chat.fly.dev).
 
@@ -46,14 +46,14 @@ ft.run(main)
 
 Run this app you will see a new window with a greeting:
 
-<Image src="../examples/tutorials/todo/media/hello-world.png" alt="hello-world" width="55%" />
+<Image src="examples/tutorials/todo/media/hello-world.png" alt="hello-world" width="55%" />
 
 ## Adding page controls and handling events
 
 To start, we want to be able to take user input (chat message) and show messages history on the screen.
 The layout for this step could look like this:
 
-<Image src="../examples/tutorials/chat/media/layout-1.svg" alt="chat-layout-1" width="55%" />
+<Image src="examples/tutorials/chat/media/layout-1.svg" alt="chat-layout-1" width="55%" />
 
 To implement this layout, we will be using these Flet controls:
 
@@ -75,7 +75,7 @@ After any properties of a control are updated in event handler, there is no need
 :::
 
 Chat app now looks like this:
-<Image src="../examples/tutorials/chat/media/chat-1.png" alt="chat-1" width="55%" />
+<Image src="examples/tutorials/chat/media/chat-1.png" alt="chat-1" width="55%" />
 
 ## Broadcasting chat messages
 
@@ -127,7 +127,7 @@ Here is the full code for this step:
 
 <CodeExample path={frontMatter.examples + '/chat_2.py'} language="python" />
 
-<Image src="../examples/tutorials/chat/media/chat-2.gif" alt="chat-2" width="55%" />
+<Image src="examples/tutorials/chat/media/chat-2.gif" alt="chat-2" width="55%" />
 
 ## User name dialog
 
@@ -154,11 +154,11 @@ Let's improve our app to show user name instead of `session.id` for each message
 A dialog will be opened on the start of the program since we have set its `open` property to `True`.
 :::
 
-<Image src="../examples/tutorials/chat/media/username-dialog.png" alt="username-dialog" width="55%" />
+<Image src="examples/tutorials/chat/media/username-dialog.png" alt="username-dialog" width="55%" />
 
 When the user clicks on "Join chat" button, it will call `join_click` method that should send a message to all subscribers, informing them that the user has joined the chat. This message should look different from the regular chat message, for example, like this:
 
-<Image src="../examples/tutorials/chat/media/chat-4.png" alt="chat-4" width="55%" />
+<Image src="examples/tutorials/chat/media/chat-4.png" alt="chat-4" width="55%" />
 
 Let's add `message_type` property to the `Message` class to differentiate between login and chat messages:
 
@@ -231,7 +231,7 @@ Before moving on to [deploying your app](#deploying-the-app), we suggest adding 
 
 You may want to show messages in a different format, like this:
 
-<Image src="../examples/tutorials/chat/media/layout-chatmessage.svg" alt="chat-layout-chatmessage" width="55%" />
+<Image src="examples/tutorials/chat/media/layout-chatmessage.svg" alt="chat-layout-chatmessage" width="55%" />
 
 Chat message will now be a [`Row`](../controls/row.md) containing [`CircleAvatar`](../controls/circleavatar.md) with username initials and
 [`Column`](../controls/column.md) that contains two [`Text`](../controls/text.md) controls: user name and message text.
@@ -295,7 +295,7 @@ Later, if you decide to improve control layout or its logic, it won't affect the
 
 Now you can use your brand new `ChatMessage` to build a better layout for the chat app:
 
-<Image src="../examples/tutorials/chat/media/layout-2.svg" alt="chat-layout-2" width="55%" />
+<Image src="examples/tutorials/chat/media/layout-2.svg" alt="chat-layout-2" width="55%" />
 
 Instances of `ChatMessage` will be created instead of plain `Text` chat messages in `on_message` method:
 
