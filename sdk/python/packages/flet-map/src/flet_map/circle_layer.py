@@ -11,7 +11,7 @@ __all__ = ["CircleLayer", "CircleMarker"]
 class CircleMarker(ft.Control):
     """
     A circular marker displayed on the Map at the specified
-    location through the [`CircleLayer`][(p).].
+    location through the :class:`~flet_map.CircleLayer`.
     """
 
     radius: ft.Number
@@ -28,7 +28,7 @@ class CircleMarker(ft.Control):
     The color of the circle border line.
 
     Tip:
-        [`border_stroke_width`][(c).] must be greater than
+        :attr:`border_stroke_width` must be greater than
         `0.0` in order for this color to be visible.
     """
 
@@ -42,7 +42,7 @@ class CircleMarker(ft.Control):
 
     use_radius_in_meter: bool = False
     """
-    Whether the [`radius`][(c).] should use the unit meters.
+    Whether the :attr:`radius` should use the unit meters.
     """
 
     def before_update(self):
@@ -57,8 +57,8 @@ class CircleMarker(ft.Control):
 @ft.control("CircleLayer")
 class CircleLayer(MapLayer):
     """
-    A layer to display [`CircleMarker`][(p).]s.
+    A layer to display :class:`~flet_map.CircleMarker`.
     """
 
     circles: list[CircleMarker]
-    """A list of [`CircleMarker`][(p).]s to display."""
+    """A list of :class:`~flet_map.CircleMarker` to display."""

@@ -11,7 +11,7 @@ Initial release.
 
 ### Added
 
-- Deployed online documentation: https://docs.flet.dev/charts/
+- Deployed online documentation: https://flet.dev/docs/charts/
 - New Chart control: `ScatterChart`
 - New Chart control: `CandlestickChart`
 

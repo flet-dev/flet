@@ -48,8 +48,8 @@ class BrowserContextMenu(Service):
 
         This flag is managed by this service instance:
         - initialized to `False`;
-        - set to `True` after [`disable()`][(c).disable];
-        - set to `False` after [`enable()`][(c).enable].
+        - set to `True` after :meth:`disable`;
+        - set to `False` after :meth:`enable`.
 
         Note:
             On non-web platforms, browser context menu control is not applicable,

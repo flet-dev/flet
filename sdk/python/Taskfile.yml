@@ -65,18 +65,11 @@ tasks:
       - uv run --group test pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 
   serve-docs:
-    desc: "Serve MkDocs documentation from the 'packages/flet' directory."
+    desc: "Start Docusaurus dev server for the documentation website."
     aliases:
       - docs
     cmds:
-      - uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
-
-  serve-docs-fast:
-    desc: "Serve MkDocs documentation from the 'packages/flet' directory without watching for file changes. Use this if you don't want to restart the server on every file change."
-    aliases:
-      - docs-fast
-    cmds:
-      - FLET_DOCS_SKIP_PYPI_INDEX=1 uv run --group docs --directory packages/flet mkdocs serve --dirtyreload
+      - cd ../../website && yarn start
 
   docs-coverage:
     desc: "Run docstring coverage report for all SDK Python packages."
@@ -87,7 +80,7 @@ tasks:
           if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
             pkg_name=$(basename "$pkg")
             echo "====== $pkg ======"
-            uv run --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
+            uv run --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="../../website/static/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
             echo
           fi
         done
@@ -96,7 +89,7 @@ tasks:
   docs-coverage-flet:
     desc: "Run docstring coverage report for 'flet' package only."
     cmds:
-      - uv run --group docs-coverage docstr-coverage -C .docstr.yaml packages/flet/src --badge="packages/flet/docs/assets/badges/docs-coverage/flet.svg"
+      - uv run --group docs-coverage docstr-coverage -C .docstr.yaml packages/flet/src --badge="../../website/static/docs/assets/badges/docs-coverage/flet.svg"
 
   free-port-8550:
     desc: "Frees Unix port 8550 by killing any process using it. Useful when you receive 'Address already in use' error."

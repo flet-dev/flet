@@ -13,7 +13,7 @@ class Hook(ComponentOwned):
     Base class for component hook state objects.
 
     Each hook instance is bound to an owning component via
-    [`ComponentOwned`][flet.] and reused by position across
+    `ComponentOwned` and reused by position across
     renders, allowing hook-specific subclasses to persist state between renders.
     """
 

@@ -92,7 +92,7 @@ class AccessibilityFeatures:
     supports_announcements: bool
     """
     Whether the platform supports accessibility announcement API, i.e.
-    [`SemanticsService.announce_message()`][flet.SemanticsService.announce_message].
+    :meth:`flet.SemanticsService.announce_message`.
 
     Will be `False` on platforms where announcements are deprecated or
     unsupported by the underlying platform and `True` on platforms where such
@@ -104,7 +104,7 @@ class AccessibilityFeatures:
         may be ignored. Consider using other way to convey message to the
         user. For example, Android discourages the uses of direct message
         announcement, and rather encourages using other semantic
-        properties such as [`Semantics.live_region`][flet.] to convey
+        properties such as :attr:`flet.Semantics.live_region` to convey
         message to the user.
     """
 

@@ -737,12 +737,12 @@ def test_validate_merges_mro_rules_in_base_to_child_order():
     @dataclass
     class Base:
         events: list[str] = field(default_factory=list)
-        value: Annotated[int, field_rule("base_field")] = 1
+        base_value: Annotated[int, field_rule("base_field")] = 1
         __validation_rules__: ValidationRules = (control_rule("base_control"),)
 
     @dataclass
     class Child(Base):
-        value: Annotated[int, field_rule("child_field")] = 2
+        child_value: Annotated[int, field_rule("child_field")] = 2
         __validation_rules__ = (
             control_rule("child_control"),
             "not-a-rule",
@@ -757,3 +757,44 @@ def test_validate_merges_mro_rules_in_base_to_child_order():
         "base_control",
         "child_control",
     ]
+
+
+def test_validate_child_field_override_replaces_inherited_field_rules():
+    """Ensure a child field declaration replaces inherited field-level rules."""
+
+    def field_rule(tag: str):
+        return V.field(lambda ctrl, _field_name, _value: ctrl.events.append(tag))
+
+    @dataclass
+    class Base:
+        events: list[str] = field(default_factory=list)
+        value: Annotated[int, field_rule("base_field")] = 1
+
+    @dataclass
+    class Child(Base):
+        value: Annotated[int, field_rule("child_field")] = 2
+
+    child = Child()
+    validate(child)
+
+    assert child.events == ["child_field"]
+
+
+def test_validate_child_plain_override_clears_inherited_field_comparison_rules():
+    """Ensure non-annotated child overrides clear inherited field comparison rules."""
+
+    @dataclass
+    class Base:
+        current: Annotated[Optional[int], V.le_field("other")] = None
+        other: Annotated[Optional[int], V.ge_field("current")] = None
+
+    @dataclass
+    class Child(Base):
+        current: None = field(
+            init=False, repr=False, compare=False, metadata={"skip": True}
+        )
+        other: None = field(
+            init=False, repr=False, compare=False, metadata={"skip": True}
+        )
+
+    validate(Child())

@@ -25,7 +25,7 @@ class SimpleAttribution(MapLayer):
 
     bgcolor: ft.ColorValue = ft.Colors.SURFACE
     """
-    The color of the box containing the [`text`][(c).].
+    The color of the box containing the :attr:`text`.
     """
 
     on_click: Optional[ft.ControlEventHandler["SimpleAttribution"]] = None

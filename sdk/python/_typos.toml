@@ -2,3 +2,5 @@
 # AAC High Efficiency audio codec enum member name
 AACHE = "AACHE"
 ROUTEROS = "ROUTEROS"
+# OpenType variable font axis tag for width
+wdth = "wdth"

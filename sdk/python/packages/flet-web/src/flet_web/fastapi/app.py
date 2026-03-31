@@ -43,7 +43,7 @@ def app(
     Args:
         main: Application entry point. It is called for newly connected users.
             Handler (function or coroutine) must have 1 parameter of
-            instance [`Page`][flet.Page].
+            instance :class:`~flet.Page`.
         before_main: Called after `Page` was created, but before calling `main`.
         proxy_path: URL prefix when the app is mounted under a proxy.
         assets_dir: an absolute path to app's assets directory.
@@ -92,7 +92,7 @@ def app(
         """
         Handles Flet WebSocket session lifecycle for one client connection.
 
-        The handler creates a new [`FletApp`][flet_web.fastapi.flet_app.]
+        The handler creates a new `FletApp`
         instance and delegates message send/receive processing to it.
         """
         await FletApp(

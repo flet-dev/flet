@@ -1,0 +1,110 @@
+/* stylelint-disable docusaurus/copyright-header */
+
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+ .heroBanner {
+  padding: 0;
+  /* background: url('/img/hero_back_light.svg') right 60px/115% auto no-repeat; */
+  /* text-align: center; */
+}
+
+.codeSample {
+  width: 100%;
+  margin: 2rem auto;
+}
+
+/* html[data-theme='dark'] .heroBanner {
+  background-image: url('/img/hero_back_dark.svg');
+}
+
+html[data-theme='dark'] .bkg {
+  background-image: url('/img/hero_flet_dark.svg');
+} */
+
+.right {
+  padding: 3rem 5rem 0 0;
+}
+
+@media screen and (max-width: 768px) {
+  .heroBanner {
+    /* padding: 1rem; */
+    text-align: center;
+  }
+
+  .heroBanner .hero__title {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featuresSection h2 {
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 1rem 0;
+  color: #333;
+}
+
+html[data-theme='dark'] .featuresSection h2 {
+  color: #e6e6e6;
+}
+
+html[data-theme='dark'] .feature h3 {
+  color: #e6e6e6;
+}
+
+html[data-theme='dark'] .feature p {
+  color: #a7a7a7;
+}
+
+.feature p {
+  text-align: center;
+  color: #555;
+}
+
+.featureImage {
+  height: 50px;
+  width: 50px;
+}
+
+.indexCtasGetStartedButton {
+  background-color: #f81d5b;
+  display: inline-block;
+  line-height: 1.2em;
+  text-decoration: none !important;
+  transition: background 0.6s;
+  border-radius: 8px;
+  border-width: 2px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
+  padding: 14px 25px;
+}
+
+.indexCtasGetStartedButton:hover {
+  color: #fff;
+  background-color: #db0f49;
+}

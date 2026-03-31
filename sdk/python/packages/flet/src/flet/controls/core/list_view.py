@@ -36,7 +36,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     horizontal: bool = False
     """
-    Whether the [`controls`][(c).] should be laid out horizontally.
+    Whether the :attr:`controls` should be laid out horizontally.
     """
 
     reverse: bool = False
@@ -44,7 +44,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     Whether the scroll view scrolls in the reading direction.
 
     For example, if the reading direction is left-to-right and
-    [`horizontal`][(c).] is `True`,
+    :attr:`horizontal` is `True`,
     then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 
@@ -54,17 +54,17 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     spacing: Number = 0
     """
-    The height of divider between the [`controls`][(c).].
+    The height of divider between the :attr:`controls`.
     """
 
     item_extent: Optional[Number] = None
     """
-    A fixed height or width (when [`horizontal`][(c).] is `True`) of an item to \
-    optimize rendering.
+    A fixed height or width (when :attr:`horizontal` is `True`) of an item to optimize \
+    rendering.
 
     Note:
-        This property has effect only when [`build_controls_on_demand`][(c).]
-        is `True` or [`spacing`][(c).] is `0`.
+        This property has effect only when :attr:`build_controls_on_demand`
+        is `True` or :attr:`spacing` is `0`.
     """
 
     first_item_prototype: bool = False
@@ -81,8 +81,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     `width` will be the same as the `prototype_item`.
 
     Note:
-        This property has effect only when [`build_controls_on_demand`][(c).]
-        is `True` or [`spacing`][(c).] is `0`.
+        This property has effect only when :attr:`build_controls_on_demand`
+        is `True` or :attr:`spacing` is `0`.
     """
 
     divider_thickness: Number = 0
@@ -92,12 +92,12 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space by which to inset the [`controls`][(c).].
+    The amount of space by which to inset the :attr:`controls`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    Defines how to clip the [`controls`][(c).].
+    Defines how to clip the :attr:`controls`.
     """
 
     semantic_child_count: Optional[int] = None
@@ -126,8 +126,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     build_controls_on_demand: bool = True
     """
-    Whether the [`controls`][(c).] should be built lazily/on-demand, i.e. only when \
-    they are about to become visible.
+    Whether the :attr:`controls` should be built lazily/on-demand, i.e. only when they \
+    are about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
     """

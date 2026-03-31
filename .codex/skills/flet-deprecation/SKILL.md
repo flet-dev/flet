@@ -22,8 +22,6 @@ Do not use this skill for non-deprecation validation logic; use
   `sdk/python/packages/flet/src/flet/utils/validation.py` (`V.deprecated`)
 - Docs extraction/labeling extension:
   `sdk/python/packages/flet/src/flet/utils/griffe_deprecations.py`
-- Docs xref patching for admonition contents:
-  `sdk/python/packages/flet/docs/extras/macros/python_xref_patch.py`
 
 ## Deprecation Decision Order
 

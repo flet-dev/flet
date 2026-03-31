@@ -103,7 +103,7 @@ uv run python main.py
 
 ### **Run on Mobile**
 
-1. [Install Flet App for Mobile](https://docs.flet.dev/getting-started/testing-on-mobile/)
+1. [Install Flet App for Mobile](https://flet.dev/docs/getting-started/testing-on-mobile/)
 2. Then, run
 ```
 uv run flet run --android

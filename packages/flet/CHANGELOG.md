@@ -1,3 +1,10 @@
+## 0.83.1
+
+### Bug fixes
+
+* Fix solitaire tutorial and drag examples to use `local_delta.x` and `local_delta.y` instead of removed `delta_x` and `delta_y` ([#6317](https://github.com/flet-dev/flet/issues/6317), [#6344](https://github.com/flet-dev/flet/pull/6344)) by @Krishnachaitanyakc.
+* Fix inherited dataclass field validation rules applying to overridden subclass fields and breaking `flet-datatable2` on `0.83.0` ([#6349](https://github.com/flet-dev/flet/issues/6349), [#6350](https://github.com/flet-dev/flet/pull/6350)) by @ndonkoHenri.
+
 ## 0.83.0
 
 ### New features

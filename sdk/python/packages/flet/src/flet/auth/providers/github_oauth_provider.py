@@ -36,7 +36,7 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A list of [`Group`][flet.auth.] mapped from `/user/teams`.
+            A list of :class:`~flet.auth.Group` mapped from `/user/teams`.
         """
         import httpx
 
@@ -68,7 +68,7 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A [`User`][flet.auth.] built from `/user`; its `email` is populated
+            A :class:`~flet.auth.User` built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
         import httpx

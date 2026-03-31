@@ -1,0 +1,555 @@
+"""Extract API data using Griffe inside the sdk/python environment."""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+
+def _normalize_path(value: str | None) -> str | None:
+    """Convert a path string to use forward slashes, or return None if value is None."""
+    if value is None:
+        return None
+    return str(value).replace("\\", "/")
+
+
+MEMBER_FILTERS: dict[str, set[str]] = {
+    "all": set(),
+    "properties": set(),
+    "events": set(),
+    "methods": set(),
+}
+
+
+def _load_member_filters(payload: dict[str, Any]) -> None:
+    """Populate the global MEMBER_FILTERS dict from the payload's 'member_filters' key."""
+    raw = payload.get("member_filters", {})
+    for key in MEMBER_FILTERS:
+        values = raw.get(key, [])
+        MEMBER_FILTERS[key] = {str(value) for value in values}
+
+
+def _resolve_extensions(
+    extensions: list[str],
+    search_paths: list[str],
+) -> list[str]:
+    """Resolve extension names to file paths where possible.
+
+    The known extension 'flet.utils.griffe_deprecations' is looked up in search_paths
+    and replaced with its absolute file path if found.
+    """
+    resolved: list[str] = []
+    for extension in extensions:
+        if extension == "flet.utils.griffe_deprecations":
+            file_path = None
+            for search_path in search_paths:
+                candidate = (
+                    Path(search_path) / "flet" / "utils" / "griffe_deprecations.py"
+                )
+                if candidate.exists():
+                    file_path = candidate
+                    break
+            if file_path is not None:
+                resolved.append(str(file_path))
+                continue
+        resolved.append(extension)
+    return resolved
+
+
+def _is_filtered_member(kind: str, name: str) -> bool:
+    """Return True if name appears in the global exclusion filter for its kind or for 'all'."""
+    return name in MEMBER_FILTERS["all"] or name in MEMBER_FILTERS.get(kind, set())
+
+
+def _unwrap(obj: Any) -> Any:
+    """Follow Alias chains to reach the underlying Griffe object.
+
+    Returns None if a cycle is detected or if the alias target cannot be resolved.
+    """
+    target = obj
+    seen: set[int] = set()
+    while target.__class__.__name__ == "Alias" and id(target) not in seen:
+        seen.add(id(target))
+        try:
+            target = target.target
+        except Exception:
+            return None
+    return target
+
+
+def _docstring_value(obj: Any) -> str | None:
+    """Return the raw docstring text for a Griffe object, or None if absent."""
+    docstring = getattr(obj, "docstring", None)
+    if docstring is None:
+        return None
+    return docstring.value or None
+
+
+def _annotation_to_text(value: Any) -> str | None:
+    """Convert a Griffe annotation object to its string representation, or None."""
+    if value is None:
+        return None
+    return str(value)
+
+
+def _parameter_lookup(obj: Any) -> dict[str, Any]:
+    """Return a name-keyed dict of parameter objects for a Griffe function or method."""
+    target = _unwrap(obj)
+    if target is None:
+        return {}
+    parameters = getattr(target, "parameters", []) or []
+    return {parameter.name: parameter for parameter in parameters}
+
+
+def _docstring_sections(obj: Any) -> list[dict[str, Any]]:
+    """Parse a Griffe docstring into a list of structured section dicts.
+
+    Each dict has a 'kind' key ('text', 'parameters', 'returns', 'raises', 'admonition')
+    plus kind-specific fields. Returns an empty list when griffe is unavailable or the
+    object has no docstring.
+    """
+    try:
+        from griffe import (
+            DocstringSectionAdmonition,
+            DocstringSectionParameters,
+            DocstringSectionRaises,
+            DocstringSectionReturns,
+            DocstringSectionText,
+        )
+    except Exception:  # pragma: no cover
+        return []
+
+    docstring = getattr(obj, "docstring", None)
+    if docstring is None:
+        return []
+
+    parameter_lookup = _parameter_lookup(obj)
+    sections: list[dict[str, Any]] = []
+    for section in docstring.parsed:
+        if isinstance(section, DocstringSectionText):
+            value = getattr(section, "value", None)
+            if isinstance(value, str) and value.strip():
+                sections.append({"kind": "text", "value": value})
+        elif isinstance(section, DocstringSectionParameters):
+            items = []
+            for item in getattr(section, "value", []) or []:
+                parameter = parameter_lookup.get(getattr(item, "name", ""))
+                default = getattr(item, "value", None)
+                if default is None and parameter is not None:
+                    default = getattr(parameter, "default", None)
+                items.append(
+                    {
+                        "name": getattr(item, "name", "") or "",
+                        "type": _annotation_to_text(
+                            getattr(item, "annotation", None)
+                            or getattr(parameter, "annotation", None)
+                            if parameter
+                            else None
+                        ),
+                        "default": _annotation_to_text(default),
+                        "description": getattr(item, "description", None) or None,
+                    }
+                )
+            if items:
+                sections.append({"kind": "parameters", "items": items})
+        elif isinstance(section, DocstringSectionReturns):
+            items = []
+            for item in getattr(section, "value", []) or []:
+                items.append(
+                    {
+                        "name": getattr(item, "name", "") or "",
+                        "type": _annotation_to_text(getattr(item, "annotation", None)),
+                        "description": getattr(item, "description", None) or None,
+                    }
+                )
+            if items:
+                sections.append({"kind": "returns", "items": items})
+        elif isinstance(section, DocstringSectionRaises):
+            items = []
+            for item in getattr(section, "value", []) or []:
+                items.append(
+                    {
+                        "type": _annotation_to_text(getattr(item, "annotation", None)),
+                        "description": getattr(item, "description", None) or None,
+                    }
+                )
+            if items:
+                sections.append({"kind": "raises", "items": items})
+        elif isinstance(section, DocstringSectionAdmonition):
+            admonition = getattr(section, "value", None)
+            if admonition is not None:
+                raw_kind = getattr(admonition, "annotation", "note") or "note"
+                description = getattr(admonition, "description", "") or ""
+                title = getattr(section, "title", None)
+                if not description.strip():
+                    continue
+                admonition_map = {
+                    "note": "note",
+                    "notes": "note",
+                    "tip": "tip",
+                    "hint": "tip",
+                    "example": "tip",
+                    "examples": "tip",
+                    "info": "info",
+                    "warning": "warning",
+                    "warn": "warning",
+                    "important": "warning",
+                    "danger": "danger",
+                    "caution": "caution",
+                }
+                mapped_kind = admonition_map.get(raw_kind)
+                if mapped_kind:
+                    entry: dict[str, Any] = {
+                        "kind": "admonition",
+                        "admonition_kind": mapped_kind,
+                        "value": description,
+                    }
+                    if title:
+                        entry["title"] = title
+                    sections.append(entry)
+                else:
+                    # Not a real admonition — fold back into text
+                    text = f"{title}:\n\n{description}" if title else description
+                    sections.append({"kind": "text", "value": text})
+    return sections
+
+
+def _deprecation_value(obj: Any) -> str | None:
+    """Extract the text of a 'Deprecated' admonition from a docstring, or return None."""
+    try:
+        from griffe import DocstringSectionAdmonition
+    except Exception:  # pragma: no cover
+        return None
+
+    docstring = getattr(obj, "docstring", None)
+    if docstring is None:
+        return None
+    for section in docstring.parsed:
+        if (
+            isinstance(section, DocstringSectionAdmonition)
+            and section.title == "Deprecated"
+        ):
+            value = getattr(section, "value", None)
+            text = getattr(value, "contents", None) or getattr(
+                value, "description", None
+            )
+            if isinstance(text, str) and text.strip():
+                return text
+    return None
+
+
+def _labels(obj: Any) -> list[str]:
+    """Return sorted label strings (e.g. 'classmethod', 'property') attached to an object."""
+    target = _unwrap(obj)
+    if target is None:
+        return []
+    return sorted(str(label) for label in getattr(target, "labels", set()))
+
+
+def _annotation_text(obj: Any) -> str | None:
+    """Return the type annotation of a Griffe object as a string, or None."""
+    target = _unwrap(obj)
+    if target is None:
+        return None
+    annotation = getattr(target, "annotation", None)
+    if annotation is None:
+        return None
+    return str(annotation)
+
+
+def _value_text(obj: Any) -> str | None:
+    """Return the default/assigned value of a Griffe object as a string, or None."""
+    target = _unwrap(obj)
+    if target is None:
+        return None
+    value = getattr(target, "value", None)
+    if value is None:
+        return None
+    return str(value)
+
+
+def _bases_text(obj: Any) -> list[str]:
+    """Return the list of base-class path strings for a Griffe class object."""
+    target = _unwrap(obj)
+    if target is None:
+        return []
+    result = []
+    for base in getattr(target, "bases", []):
+        # Try to get the fully-qualified path via griffe resolution
+        canonical = getattr(base, "canonical_path", None)
+        result.append(canonical if canonical else str(base))
+    return result
+
+
+def _parameter_text(parameter: Any) -> str:
+    """Format a single Griffe parameter as 'name: type = default' text, with * or ** prefix when needed."""
+    prefix = ""
+    kind = str(getattr(parameter, "kind", ""))
+    if "keyword_variadic" in kind or "var_keyword" in kind:
+        prefix = "**"
+    elif "variadic" in kind or "var_positional" in kind:
+        prefix = "*"
+
+    text = prefix + parameter.name
+    if getattr(parameter, "annotation", None) is not None:
+        text += f": {parameter.annotation}"
+    if getattr(parameter, "default", None) is not None:
+        text += f" = {parameter.default}"
+    return text
+
+
+def _signature_text(obj: Any) -> str:
+    """Format the full function/method signature as 'name(param, ...)' text."""
+    target = _unwrap(obj)
+    if target is None:
+        return obj.name
+    parameters = getattr(target, "parameters", [])
+    rendered = ", ".join(_parameter_text(parameter) for parameter in parameters)
+    return f"{obj.name}({rendered})"
+
+
+def _attribute_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe attribute object to a JSON-ready dict."""
+    target = _unwrap(obj)
+    if target is None:
+        return {
+            "name": obj.name,
+            "qualname": getattr(obj, "path", None),
+            "canonical_path": None,
+            "type": None,
+            "default": None,
+            "docstring": _docstring_value(obj),
+            "docstring_sections": _docstring_sections(obj),
+            "deprecation": _deprecation_value(obj),
+            "labels": [],
+            "inherited_from": None,
+            "lineno": None,
+        }
+    return {
+        "name": obj.name,
+        "qualname": getattr(obj, "path", None),
+        "canonical_path": getattr(target, "path", None),
+        "type": _annotation_text(obj),
+        "default": _value_text(obj),
+        "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
+        "deprecation": _deprecation_value(obj),
+        "labels": _labels(obj),
+        "inherited_from": None,
+        "lineno": getattr(target, "lineno", None),
+    }
+
+
+def _function_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe function object to a JSON-ready dict including signature and return type."""
+    target = _unwrap(obj)
+    if target is None:
+        return {
+            "name": obj.name,
+            "qualname": getattr(obj, "path", None),
+            "canonical_path": None,
+            "signature": obj.name,
+            "docstring": _docstring_value(obj),
+            "docstring_sections": _docstring_sections(obj),
+            "parameters": [],
+            "return_type": None,
+            "deprecation": _deprecation_value(obj),
+            "labels": [],
+            "lineno": None,
+        }
+    returns = getattr(target, "returns", None)
+    return {
+        "name": obj.name,
+        "qualname": getattr(obj, "path", None),
+        "canonical_path": getattr(target, "path", None),
+        "signature": _signature_text(obj),
+        "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
+        "parameters": [
+            parameter.name for parameter in getattr(target, "parameters", [])
+        ],
+        "return_type": str(returns) if returns is not None else None,
+        "deprecation": _deprecation_value(obj),
+        "labels": _labels(obj),
+        "lineno": getattr(target, "lineno", None),
+    }
+
+
+def _class_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe class object (with its properties, events, and methods) to a JSON-ready dict."""
+    target = _unwrap(obj)
+    if target is None:
+        return {
+            "name": obj.name,
+            "qualname": getattr(obj, "path", None),
+            "canonical_path": None,
+            "docstring": _docstring_value(obj),
+            "docstring_sections": _docstring_sections(obj),
+            "bases": [],
+            "deprecation": _deprecation_value(obj),
+            "labels": [],
+            "properties": [],
+            "events": [],
+            "methods": [],
+            "lineno": None,
+        }
+    properties: list[dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
+    methods: list[dict[str, Any]] = []
+
+    members = getattr(obj, "members", None) or getattr(target, "members", {})
+    for member in members.values():
+        resolved = _unwrap(member)
+        if resolved is None:
+            continue
+        member_type = resolved.__class__.__name__
+        if member_type == "Attribute":
+            item = _attribute_entry(member)
+            if item["name"].startswith("on_"):
+                if _is_filtered_member("events", item["name"]):
+                    continue
+                events.append(item)
+            elif not item["name"].startswith("_"):
+                if _is_filtered_member("properties", item["name"]):
+                    continue
+                properties.append(item)
+        elif member_type == "Function" and not member.name.startswith("_"):
+            if _is_filtered_member("methods", member.name):
+                continue
+            methods.append(_function_entry(member))
+
+    properties.sort(key=lambda item: item["name"].casefold())
+    events.sort(key=lambda item: item["name"].casefold())
+    methods.sort(key=lambda item: item["name"].casefold())
+
+    return {
+        "name": obj.name,
+        "qualname": getattr(obj, "path", None),
+        "canonical_path": getattr(target, "path", None),
+        "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
+        "bases": _bases_text(obj),
+        "deprecation": _deprecation_value(obj),
+        "labels": _labels(obj),
+        "properties": properties,
+        "events": events,
+        "methods": methods,
+        "lineno": getattr(target, "lineno", None),
+    }
+
+
+def _alias_entry(obj: Any) -> dict[str, Any]:
+    """Serialize a Griffe alias object to a JSON-ready dict with target kind and path info."""
+    target = _unwrap(obj)
+    target_kind = target.__class__.__name__ if target is not None else None
+    return {
+        "name": obj.name,
+        "qualname": getattr(obj, "path", None),
+        "canonical_path": getattr(target, "path", None) if target else None,
+        "docstring": _docstring_value(obj),
+        "docstring_sections": _docstring_sections(obj),
+        "value": _value_text(obj),
+        "target_kind": target_kind,
+        "deprecation": _deprecation_value(obj),
+        "labels": _labels(obj),
+        "lineno": getattr(target, "lineno", None) if target else None,
+    }
+
+
+def main() -> int:
+    """Read a JSON payload from stdin, extract API data via Griffe, and write JSON to stdout.
+
+    The payload must contain 'packages', 'search_paths', 'extensions', 'symbols', and
+    'member_filters' keys. The output is a JSON object with 'classes', 'functions',
+    'aliases', and 'public_aliases' keys.
+    """
+    payload = json.loads(sys.stdin.read())
+    _load_member_filters(payload)
+
+    from griffe import GriffeLoader, load_extensions
+
+    search_paths = sorted({_normalize_path(path) for path in payload["search_paths"]})
+    extensions = _resolve_extensions(payload["extensions"], search_paths)
+    loader = GriffeLoader(
+        search_paths=search_paths,
+        extensions=load_extensions(*extensions),
+        docstring_parser="google",
+    )
+
+    classes: dict[str, Any] = {}
+    functions: dict[str, Any] = {}
+    aliases: dict[str, Any] = {}
+    public_aliases: dict[str, str] = {}
+
+    # Walk all modules recursively to discover every path a symbol is exported as
+    canonical_to_paths: dict[str, list[str]] = {}
+
+    def _walk_module(mod: Any) -> None:
+        """Recursively walk a Griffe module and populate canonical_to_paths with every export path."""
+        for member in mod.members.values():
+            # Recurse into sub-modules first
+            member_kind = member.__class__.__name__
+            if member_kind == "Module":
+                _walk_module(member)
+                continue
+            resolved = _unwrap(member)
+            if resolved is None:
+                continue
+            kind = resolved.__class__.__name__
+            if kind not in {"Class", "Function"}:
+                continue
+            canonical = getattr(resolved, "path", "")
+            alias_path = getattr(member, "path", "")
+            if canonical and alias_path:
+                canonical_to_paths.setdefault(canonical, []).append(alias_path)
+
+    for package_name in payload["packages"]:
+        module = loader.load(package_name)
+        _walk_module(module)
+
+    # Pick the shortest public path for each canonical symbol
+    for canonical, paths in canonical_to_paths.items():
+        shortest = min(paths, key=len)
+        if shortest != canonical:
+            public_aliases[shortest] = canonical
+
+    modules_collection = loader.modules_collection
+    for symbol in payload["symbols"]:
+        try:
+            obj = modules_collection.get_member(symbol)
+        except Exception:
+            continue
+        obj_kind = obj.__class__.__name__
+        resolved = _unwrap(obj)
+        if resolved is None:
+            continue
+        kind = resolved.__class__.__name__
+        if obj_kind == "Alias":
+            aliases[symbol] = _alias_entry(obj)
+            if kind == "Class":
+                classes[symbol] = _class_entry(obj)
+            elif kind == "Function":
+                functions[symbol] = _function_entry(obj)
+        elif kind == "Class":
+            classes[symbol] = _class_entry(obj)
+        elif kind == "Function":
+            functions[symbol] = _function_entry(obj)
+
+    sys.stdout.write(
+        json.dumps(
+            {
+                "aliases": aliases,
+                "classes": classes,
+                "functions": functions,
+                "public_aliases": public_aliases,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

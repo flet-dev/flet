@@ -6,7 +6,7 @@ from flet.controls.services.service import Service
 __all__ = ["SharedPreferences", "SharedPreferencesValueType"]
 
 SharedPreferencesValueType: TypeAlias = Union[str, int, float, bool, list[str]]
-"""Supported types for [`SharedPreferences`][flet.] values."""
+"""Supported types for :class:`~flet.SharedPreferences` values."""
 
 
 @control("SharedPreferences")

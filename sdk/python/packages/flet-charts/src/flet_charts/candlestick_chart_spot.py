@@ -9,7 +9,7 @@ __all__ = ["CandlestickChartSpot", "CandlestickChartSpotTooltip"]
 
 @ft.value
 class CandlestickChartSpotTooltip(ChartDataPointTooltip):
-    """Tooltip configuration for the [`CandlestickChartSpot`][(p).]."""
+    """Tooltip configuration for the :class:`~flet_charts.CandlestickChartSpot`."""
 
     bottom_margin: ft.Number = 8
     """
@@ -45,7 +45,7 @@ class CandlestickChartSpotTooltip(ChartDataPointTooltip):
 
 @ft.control("CandlestickChartSpot")
 class CandlestickChartSpot(ft.BaseControl):
-    """Represents a candlestick rendered on a [`CandlestickChart`][(p).]."""
+    """Represents a candlestick rendered on a :class:`~flet_charts.CandlestickChart`."""
 
     x: ft.Number
     """

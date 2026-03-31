@@ -13,12 +13,12 @@ class Arc(Shape):
     """
     Draws an arc scaled to fit inside the given rectangle.
 
-    It starts from [`start_angle`][(c).] radians around the oval up to
-    [`start_angle`][(c).] +
-    [`sweep_angle`][(c).] radians around the oval, with zero radians being the point on
+    It starts from :attr:`start_angle` radians around the oval up to
+    :attr:`start_angle` +
+    :attr:`sweep_angle` radians around the oval, with zero radians being the point on
     the right hand side of the oval that crosses the horizontal line that
     intersects the center of the rectangle and with positive angles going
-    clockwise around the oval. If [`use_center`][(c).] is `True`, the arc is closed back
+    clockwise around the oval. If :attr:`use_center` is `True`, the arc is closed back
     to the center, forming a circle sector. Otherwise, the arc is not closed,
     forming a circle segment.
 

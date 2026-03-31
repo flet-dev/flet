@@ -9,14 +9,14 @@ __all__ = ["LineChartDataPoint", "LineChartDataPointTooltip"]
 
 @ft.value
 class LineChartDataPointTooltip(ChartDataPointTooltip):
-    """Tooltip configuration for the [`LineChartDataPoint`][(p).]."""
+    """Tooltip configuration for the :class:`~flet_charts.LineChartDataPoint`."""
 
     text: Optional[str] = None
     """
     The text to display in the tooltip.
 
     When `None`, defaults to
-    [`LineChartDataPoint.y`][flet_charts.line_chart_data_point.LineChartDataPoint.y].
+    :attr:`flet_charts.LineChartDataPoint.y`.
     """
 
     def copy(
@@ -44,7 +44,7 @@ class LineChartDataPointTooltip(ChartDataPointTooltip):
 
 @ft.control("LineChartDataPoint")
 class LineChartDataPoint(ft.BaseControl):
-    """A [`LineChartData`][(p).] point."""
+    """A :class:`~flet_charts.LineChartData` point."""
 
     x: ft.Number
     """
@@ -59,7 +59,7 @@ class LineChartDataPoint(ft.BaseControl):
     selected: bool = False
     """
     Draw the point as selected when
-    [`LineChart.interactive`][flet_charts.line_chart.LineChart.interactive]
+    :attr:`flet_charts.LineChart.interactive`
     is set to `False`.
     """
 
@@ -88,7 +88,8 @@ class LineChartDataPoint(ft.BaseControl):
     A vertical line drawn between selected line point and the bottom edge of the chart.
 
     The value is either `True` - draw a line with default style, `False` - do not draw a
-    line under selected point, or an instance of [`ChartPointLine`][(p).] class to
+    line under selected point, or an instance of :class:`~flet_charts.ChartPointLine` \
+    class to
     specify line style to draw.
     """
 
@@ -101,7 +102,7 @@ class LineChartDataPoint(ft.BaseControl):
 
     show_tooltip: bool = True
     """
-    Whether the [`tooltip`][(c).] should be shown when this data point is hovered over.
+    Whether the :attr:`tooltip` should be shown when this data point is hovered over.
     """
 
     def before_update(self):

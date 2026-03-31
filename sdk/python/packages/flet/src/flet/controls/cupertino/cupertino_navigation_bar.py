@@ -38,13 +38,13 @@ class CupertinoNavigationBar(LayoutControl):
 
     selected_index: int = 0
     """
-    The index into [`destinations`][(c).] for the currently selected \
-    [`NavigationBarDestination`][flet.].
+    The index into :attr:`destinations` for the currently selected \
+    :class:`~flet.NavigationBarDestination`.
 
     Raises:
         IndexError: If it is not greater than or equal to `0`.
         IndexError: If it is not less than the length of visible
-            [`destinations`][(c).].
+            :attr:`destinations`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -54,14 +54,12 @@ class CupertinoNavigationBar(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The foreground color of the icon and title of the selected \
-    [`destination`][(c).destinations].
+    The foreground color of the icon and title of the selected     :attr:`destinations`.
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground color of the icon and title of the unselected \
-    [`destinations`][(c).].
+    The foreground color of the icon and title of the unselected :attr:`destinations`.
     """
 
     border: Optional[Border] = None

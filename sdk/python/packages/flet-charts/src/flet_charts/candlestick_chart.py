@@ -15,7 +15,7 @@ __all__ = [
 
 @ft.value
 class CandlestickChartTooltip:
-    """Configuration of the tooltip for [`CandlestickChart`][(p).]s."""
+    """Configuration of the tooltip for :class:`~flet_charts.CandlestickChart`s."""
 
     bgcolor: ft.ColorValue = "#FFFFECEF"
     """
@@ -133,7 +133,7 @@ class CandlestickChartTooltip:
 
 @dataclass
 class CandlestickChartEvent(ft.Event["CandlestickChart"]):
-    """Event raised for interactions with a [`CandlestickChart`][(p).]."""
+    """Event raised for interactions with a :class:`~flet_charts.CandlestickChart`."""
 
     type: ChartEventType
     """
@@ -195,7 +195,7 @@ class CandlestickChart(ft.LayoutControl):
     show_tooltips_for_selected_spots_only: bool = False
     """
     Whether to permanently and only show the tooltips of spots with their
-    [`selected`][(p).CandlestickChartSpot.selected] property set to `True`.
+    :attr:`~flet_charts.CandlestickChartSpot.selected` property set to `True`.
     """
 
     long_press_duration: Optional[ft.DurationValue] = None

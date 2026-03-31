@@ -27,4 +27,5 @@ repos:
     rev: v1.43.4
     hooks:
       - id: typos
+        args: [ --config, sdk/python/_typos.toml ]
         exclude: /templates/

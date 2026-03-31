@@ -42,11 +42,10 @@ class CupertinoSegmentedButton(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the [`controls`][(c).] \
-    list.
+    The index (starting from 0) of the selected segment in the :attr:`controls` list.
 
     Raises:
-        IndexError: If [`selected_index`][(c).] is out of range relative to the
+        IndexError: If :attr:`selected_index` is out of range relative to the
             visible controls.
     """
 
@@ -75,7 +74,7 @@ class CupertinoSegmentedButton(LayoutControl):
     The color used to fill the background of this control when temporarily interacting \
     with through a long press or drag.
 
-    Defaults to the [`selected_color`][(c).]
+    Defaults to the :attr:`selected_color`
     with 20% opacity.
     """
 
@@ -84,9 +83,9 @@ class CupertinoSegmentedButton(LayoutControl):
     The color used to fill the background of the segment when it is disabled.
 
     If `None`, this color will be 50% opacity of the
-    [`selected_color`][(c).] when
+    :attr:`selected_color` when
     the segment is selected. If the segment is unselected, this color will be
-    set to the [`unselected_color`][(c).].
+    set to the :attr:`unselected_color`.
     """
 
     disabled_text_color: Optional[ColorValue] = None

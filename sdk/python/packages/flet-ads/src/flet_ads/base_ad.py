@@ -37,7 +37,7 @@ class BaseAd(ft.BaseControl):
     """
     Called when an ad request failed.
 
-    Event handler argument [`data`][flet.Event.data] property
+    Event handler argument :attr:`~flet.Event.data` property
     contains information about the error.
     """
 
@@ -53,7 +53,7 @@ class BaseAd(ft.BaseControl):
     on_close: Optional[ft.ControlEventHandler["BaseAd"]] = None
     """
     Called when the full screen view has been closed. You should restart
-    anything paused while handling [`on_open`][flet_ads.BaseAd.on_open].
+    anything paused while handling :attr:`~flet_ads.BaseAd.on_open`.
     """
 
     on_impression: Optional[ft.ControlEventHandler["BaseAd"]] = None

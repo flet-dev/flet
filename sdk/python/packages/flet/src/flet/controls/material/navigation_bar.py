@@ -43,7 +43,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     icon: IconDataOrControl
     """
-    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
+    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
     Example with icon name:
@@ -70,7 +70,7 @@ class NavigationBarDestination(AdaptiveControl):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
+    The [name](https://flet.dev/docs/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     Example with icon name:
@@ -146,7 +146,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     label_padding: Optional[PaddingValue] = None
     """
-    The padding around the [`NavigationBarDestination.label`][flet.].
+    The padding around the :attr:`flet.NavigationBarDestination.label`.
     """
 
     elevation: Optional[Number] = None
@@ -183,9 +183,9 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color of the `NavigationBarDestination` in various \
-    [`ControlState`][flet.] states.
+    :class:`~flet.ControlState` states.
 
-    The following [`ControlState`][flet.]
+    The following :class:`~flet.ControlState`
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 
