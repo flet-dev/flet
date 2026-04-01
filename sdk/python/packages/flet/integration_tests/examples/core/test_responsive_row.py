@@ -34,7 +34,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": basic.main}],
+    [{"flet_app_main": basic}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -86,7 +86,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": custom_breakpoint.main}],
+    [{"flet_app_main": custom_breakpoint}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

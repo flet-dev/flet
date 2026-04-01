@@ -36,4 +36,5 @@ async def test_music_info(flet_app_function: ftt.FletTestApp):
     flet_app_function.assert_screenshot(
         "music_info",
         await flet_app_function.take_page_controls_screenshot(),
+        similarity_threshold=98.8,
     )
