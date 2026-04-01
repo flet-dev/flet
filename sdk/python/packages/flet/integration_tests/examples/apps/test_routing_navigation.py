@@ -236,9 +236,7 @@ async def test_pop_views_until(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
 
     # Verify back at Home with result
-    result_text = await flet_app_function.tester.find_by_text(
-        "Result: Flow completed!"
-    )
+    result_text = await flet_app_function.tester.find_by_text("Result: Flow completed!")
     assert result_text.count == 1
 
     # Verify we can start the flow again

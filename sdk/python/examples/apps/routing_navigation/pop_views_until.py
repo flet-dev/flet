@@ -92,7 +92,7 @@ def main(page: ft.Page):
 
     def on_pop_result(e: ft.ViewsPopUntilEvent):
         result_text.value = f"Result: {e.result}"
-        page.show_dialog(ft.SnackBar(ft.Text(f"Result: {e.result}")))
+        page.show_dialog(ft.SnackBar(ft.Text(f"Got result: {e.result}")))
         page.update()
 
     async def view_pop(e: ft.ViewPopEvent):
