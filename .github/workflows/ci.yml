@@ -195,7 +195,7 @@ jobs:
         shell: bash
         run: |
           PUBSPEC="sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml"
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/* && "$GITHUB_REF" != *".dev"* ]]; then
             uv run "$SCRIPTS/patch_pubspec_version.py" \
               "$PUBSPEC" "$PKG_VER" --dependencies-only --exact
           else
