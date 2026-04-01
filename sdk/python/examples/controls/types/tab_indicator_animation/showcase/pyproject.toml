@@ -1,0 +1,26 @@
+[project]
+name = "types-tab-indicator-animation-showcase"
+version = "1.0.0"
+description = "Compares Tab Indicator Animation values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["tab indicator animation", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Navigation/Tabs"]
+
+[tool.flet.metadata]
+title = "Tab Indicator Animation showcase"
+controls = ["SafeArea", "Column", "Container", "TabBar", "UnderlineTabIndicator", "Tab", "TabBarView", "Text"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

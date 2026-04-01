@@ -1,0 +1,26 @@
+[project]
+name = "safe-area-basic"
+version = "1.0.0"
+description = "Keep centered content inside device safe insets while updating a counter."
+requires-python = ">=3.10"
+keywords = ["safearea", "layout", "counter", "floatingactionbutton", "mobile"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/SafeArea"]
+
+[tool.flet.metadata]
+title = "SafeArea basic"
+controls = ["SafeArea", "Container", "Text", "FloatingActionButton"]
+layout_pattern = "centered-single-action"
+complexity = "basic"
+features = ["safe insets", "floating action button", "counter updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "auto-complete-basic"
+version = "1.0.0"
+description = "Basic AutoComplete with change and select event handling."
+requires-python = ">=3.10"
+keywords = ["autocomplete", "input", "suggestions", "events", "selection"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/AutoComplete"]
+
+[tool.flet.metadata]
+title = "Basic AutoComplete"
+controls = ["SafeArea", "Column", "AutoComplete", "AutoCompleteSuggestion", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["input suggestions", "on_change handling", "on_select handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

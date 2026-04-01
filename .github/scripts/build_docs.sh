@@ -1,19 +1,27 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
 # install uv
 pip install uv
 
 # generate coverage report and badges
+cd sdk/python
 for pkg in packages/*; do
-if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
+  if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
     pkg_name=$(basename "$pkg")
     echo "====== $pkg ======"
-    uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage/${pkg_name}.svg"
+    uv run --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" \
+      --badge="../../website/static/docs/assets/badges/docs-coverage/${pkg_name}.svg"
     echo
-fi
+  fi
 done
-
-# generate docs website
-cd packages/flet
-uv sync --group docs && uv run mkdocs build
 cd -
+
+# build website
+cd website
+yarn install
+yarn build
+cd -
+
+# run verification checks
+bash .github/scripts/check_docs.sh website/build

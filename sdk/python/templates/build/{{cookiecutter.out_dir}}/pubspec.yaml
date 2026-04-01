@@ -32,6 +32,8 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
+  device_info_plus: 12.3.0 # remove that in May, 2026 once CI moved to macOS 26
+  connectivity_plus: 7.0.0 # remove that in May, 2026 once CI moved to macOS 26
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1

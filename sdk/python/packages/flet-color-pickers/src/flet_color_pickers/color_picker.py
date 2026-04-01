@@ -24,7 +24,8 @@ class ColorLabelType(Enum):
 
 class PaletteType(Enum):
     """
-    Defines the interactive palette layout used by [`ColorPicker`][(m).].
+    Defines the interactive palette layout used by \
+    :class:`~flet_color_pickers.ColorPicker`.
 
     Each value selects which color channels are controlled by the 2D palette and
     which channel is moved to a separate slider.
@@ -160,7 +161,7 @@ class ColorPicker(ft.LayoutControl):
     """
     Called when the picker color is changed.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains
+    The :attr:`~flet.Event.data` property of the event handler argument contains
     the color value as a hex string.
     """
 
@@ -168,7 +169,7 @@ class ColorPicker(ft.LayoutControl):
     """
     Called when the history palette is changed.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains
+    The :attr:`~flet.Event.data` property of the event handler argument contains
     the list of color values as hex strings.
     """
 
@@ -176,6 +177,6 @@ class ColorPicker(ft.LayoutControl):
     """
     Called when the picker HSV color is changed.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains
+    The :attr:`~flet.Event.data` property of the event handler argument contains
     the HSV values as a dict with keys: `alpha`, `hue`, `saturation`, `value`.
     """

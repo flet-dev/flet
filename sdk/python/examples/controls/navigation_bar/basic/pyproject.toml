@@ -1,0 +1,26 @@
+[project]
+name = "navigation-bar-basic"
+version = "1.0.0"
+description = "Demonstrates a Material NavigationBar with three destination tabs."
+requires-python = ">=3.10"
+keywords = ["navigation bar", "bottom navigation", "destinations", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/NavigationBar"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["NavigationBar", "NavigationBarDestination", "SafeArea", "Text"]
+layout_pattern = "tabbed-navigation"
+complexity = "basic"
+features = ["bottom navigation", "destination tabs"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

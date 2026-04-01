@@ -1,0 +1,26 @@
+[project]
+name = "services-connectivity-basic"
+version = "1.0.0"
+description = "Displays current connectivity state and listens for connectivity change events."
+requires-python = ">=3.10"
+keywords = ["connectivity", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Connectivity"]
+
+[tool.flet.metadata]
+title = "Basic connectivity"
+controls = ["SafeArea", "Column", "Page", "Connectivity", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["connectivity status", "change events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

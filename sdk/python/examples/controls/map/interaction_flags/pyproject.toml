@@ -1,0 +1,26 @@
+[project]
+name = "map-interaction-flags"
+version = "1.0.0"
+description = "Toggles map interaction flags with checkboxes and displays live map event details."
+requires-python = ">=3.10"
+keywords = ["map", "interaction flags", "checkbox", "events", "attribution"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Interaction Flags"
+controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "Checkbox", "Map", "TileLayer", "RichAttribution", "TextSourceAttribution", "Text", "AppBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["runtime interaction toggles", "map event logging", "custom attributions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

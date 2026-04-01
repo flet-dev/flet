@@ -34,7 +34,7 @@ class Session:
     """
     Represents a server-side Flet session.
 
-    A session owns the root [`Page`][flet.], tracks mounted controls, dispatches
+    A session owns the root :class:`~flet.Page`, tracks mounted controls, dispatches
     control events, synchronizes UI patches with the client connection, and coordinates
     deferred updates/effects.
     """
@@ -72,7 +72,7 @@ class Session:
 
         Returns:
             Active `Connection` instance. It may be `None` after
-            [`disconnect()`][(c).disconnect] until a reconnect occurs.
+            :meth:`disconnect` until a reconnect occurs.
         """
         return self.__conn
 
@@ -102,14 +102,14 @@ class Session:
         Returns the live control index for this session.
 
         Returns:
-            Weak mapping of control IDs to mounted [`BaseControl`][flet.] instances.
+            Weak mapping of control IDs to mounted :class:`~flet.BaseControl` instances.
         """
         return self.__index
 
     @property
     def page(self):
         """
-        Returns the root [`Page`][flet.] associated with this session.
+        Returns the root :class:`~flet.Page` associated with this session.
         """
         return self.__page
 
@@ -578,7 +578,7 @@ class Session:
 
         The scheduler waits for work signals, updates pending controls, then executes
         pending effect hook setup/cleanup callbacks. Errors inside effect processing
-        are reported to the client via [`error()`][(c).error].
+        are reported to the client via :meth:`error`.
         """
         try:
             while not self.__closed:

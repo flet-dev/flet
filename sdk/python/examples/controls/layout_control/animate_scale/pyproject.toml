@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-scale"
+version = "1.0.0"
+description = "Animates container scale between normal and enlarged sizes."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate scale", "container", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate scale"
+controls = ["SafeArea", "Column", "Container", "Button", "Animation"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["scale animation", "toggle scaling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

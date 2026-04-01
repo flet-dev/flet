@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-drag-and-drop-containers"
+version = "1.0.0"
+description = "Drag colored squares onto a target container to update its background color declaratively."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "drag and drop", "containers", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Drag and drop containers"
+controls = ["SafeArea", "Row", "Column", "Draggable", "DragTarget", "Container"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["drag and drop", "live state updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

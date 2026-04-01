@@ -1,0 +1,26 @@
+[project]
+name = "tabs-basic"
+version = "1.0.0"
+description = "Displays a basic Tabs layout with icons, an avatar tab label, and matching tab content."
+requires-python = ">=3.10"
+keywords = ["tabs", "navigation", "icons", "avatar", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Tabs"]
+
+[tool.flet.metadata]
+title = "Tabs basic"
+controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "Container", "Text", "CircleAvatar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["icon tabs", "avatar tab label"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

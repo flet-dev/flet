@@ -1,0 +1,26 @@
+[project]
+name = "icon-basic"
+version = "1.0.0"
+description = "Displays Material and Cupertino icons with different sizes and colors."
+requires-python = ">=3.10"
+keywords = ["icon", "material icons", "cupertino icons", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Icon"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "Row", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["material icons", "cupertino icons", "icon color and size"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

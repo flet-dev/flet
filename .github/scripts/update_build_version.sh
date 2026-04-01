@@ -30,8 +30,11 @@ if [[ "$GITHUB_REF" == refs/tags/* ]]; then
     # Extract the tag name (strip "refs/tags/")
     tag="${GITHUB_REF#refs/tags/}"
     # Remove leading "v" if present (e.g. "v1.2.3" → "1.2.3")
-    export PKG_VER="${tag#v}"
-    export PYPI_VER="$PKG_VER"
+    ver="${tag#v}"
+    # Strip .devN suffix for Flutter package version (pubspec.yaml doesn't support dev versions)
+    export PKG_VER="${ver%.dev*}"
+    # PyPI version keeps the full version (e.g. "1.2.3.dev0" for pre-releases)
+    export PYPI_VER="$ver"
 else
     # -------------------------------------------------------------
     # Case 2: This is not a tagged build (e.g. main branch commit)

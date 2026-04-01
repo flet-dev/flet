@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-minimal-reactive"
+version = "1.0.0"
+description = "Renders a minimal declarative component to show the smallest reactive app structure."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "minimal", "reactive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Minimal reactive"
+controls = ["SafeArea", "Text"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["reactive rendering"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

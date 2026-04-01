@@ -1,0 +1,26 @@
+[project]
+name = "column-scroll-events"
+version = "1.0.0"
+description = "Column on_scroll event handling example."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "on_scroll", "events", "scroll"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column scroll events"
+controls = ["Container", "Column", "Text"]
+layout_pattern = "event-monitor"
+complexity = "basic"
+features = ["on_scroll callback", "scroll event inspection"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

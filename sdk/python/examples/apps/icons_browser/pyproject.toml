@@ -1,0 +1,26 @@
+[project]
+name = "apps-icons-browser"
+version = "1.0.0"
+description = "Searches Material and Cupertino icon sets and copies selected icon constants to the clipboard."
+requires-python = ">=3.10"
+keywords = ["apps", "icons", "search", "clipboard", "tabs", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Search"]
+
+[tool.flet.metadata]
+title = "Icons browser"
+controls = ["SafeArea", "Tabs", "TabBar", "TabBarView", "TextField", "IconButton", "GridView", "TextButton", "SnackBar"]
+layout_pattern = "list-detail"
+complexity = "intermediate"
+features = ["icon search", "clipboard copy", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

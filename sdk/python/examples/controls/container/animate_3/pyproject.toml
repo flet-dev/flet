@@ -1,0 +1,26 @@
+[project]
+name = "container-animate-3"
+version = "1.0.0"
+description = "Slide-in side menu built with animated container offset and overlay controls."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Animate 3"
+controls = ["SafeArea", "Button", "Container", "Column", "Row", "IconButton", "ListTile"]
+layout_pattern = "overlay"
+complexity = "basic"
+features = ["overlay menu", "offset animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

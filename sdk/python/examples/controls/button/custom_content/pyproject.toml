@@ -1,0 +1,26 @@
+[project]
+name = "button-custom-content"
+version = "1.0.0"
+description = "Buttons with custom row and column content."
+requires-python = ">=3.10"
+keywords = ["button", "custom content", "layout", "icons", "text"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/Button"]
+
+[tool.flet.metadata]
+title = "Custom content"
+controls = ["SafeArea", "Column", "Button", "Row", "Container", "Icon", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["custom button content", "compound button layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

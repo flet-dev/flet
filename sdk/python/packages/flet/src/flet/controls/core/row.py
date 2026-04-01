@@ -16,7 +16,7 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     Displays its children in a horizontal array.
 
     To cause a child control to expand and fill the available horizontal space, set
-    its [`expand`][flet.Control.expand] property.
+    its :attr:`~flet.Control.expand` property.
 
     Example:
     ```python
@@ -44,59 +44,59 @@ class Row(LayoutControl, ScrollableControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed horizontally.
+    Defines how the child :attr:`controls` should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     """
-    Defines how the child [`controls`][(c).] should be placed vertically.
+    Defines how the child :attr:`controls` should be placed vertically.
 
     Note:
-        When [`wrap`][(c).] is `True`, this property doesn't support
-        [`CrossAxisAlignment.STRETCH`][flet.] or
-        [`CrossAxisAlignment.BASELINE`][flet.]. If either is used,
-        [`CrossAxisAlignment.CENTER`][flet.] will be applied instead.
+        When :attr:`wrap` is `True`, this property doesn't support
+        :attr:`flet.CrossAxisAlignment.STRETCH` or
+        :attr:`flet.CrossAxisAlignment.BASELINE`. If either is used,
+        :attr:`flet.CrossAxisAlignment.CENTER` will be applied instead.
     """
 
     spacing: Number = 10
     """
-    The spacing between the child [`controls`][(c).].
+    The spacing between the child :attr:`controls`.
 
     Note:
-        Has effect only when [`alignment`][(c).] is set to
-        [`MainAxisAlignment.START`][flet.], [`MainAxisAlignment.END`][flet.],
-        or [`MainAxisAlignment.CENTER`][flet.].
+        Has effect only when :attr:`alignment` is set to
+        :attr:`flet.MainAxisAlignment.START`, :attr:`flet.MainAxisAlignment.END`,
+        or :attr:`flet.MainAxisAlignment.CENTER`.
     """
 
     tight: bool = False
     """
     Whether this row should occupy all available horizontal space (`True`), or only as \
-    much as needed by its children [`controls`][(c).] (`False`).
+    much as needed by its children :attr:`controls` (`False`).
 
     Note:
-        Has effect only when [`wrap`][(c).] is `False`.
+        Has effect only when :attr:`wrap` is `False`.
     """
 
     wrap: bool = False
     """
-    Whether this row should put child [`controls`][(c).] into additional rows (runs) \
-    if they don't fit in a single row.
+    Whether this row should put child :attr:`controls` into additional rows (runs) if \
+    they don't fit in a single row.
     """
 
     run_spacing: Number = 10
     """
-    The spacing between runs when [`wrap`][(c).] is `True`.
+    The spacing between runs when :attr:`wrap` is `True`.
     """
 
     run_alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    How the runs should be placed in the cross-axis when [`wrap`][(c).] is `True`.
+    How the runs should be placed in the cross-axis when :attr:`wrap` is `True`.
     """
 
     intrinsic_height: bool = False
     """
     Whether this row should be as tall as the tallest child control in \
-    [`controls`][(c).].
+    :attr:`controls`.
     """
 
     def init(self):

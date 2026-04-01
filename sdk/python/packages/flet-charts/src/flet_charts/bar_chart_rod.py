@@ -11,7 +11,7 @@ __all__ = ["BarChartRod", "BarChartRodTooltip"]
 @ft.value
 class BarChartRodTooltip(ChartDataPointTooltip):
     """
-    Tooltip configuration for the  [`BarChartRod`][(p).].
+    Tooltip configuration for the  :class:`~flet_charts.BarChartRod`.
     """
 
     text: Optional[str] = None
@@ -19,7 +19,7 @@ class BarChartRodTooltip(ChartDataPointTooltip):
     The text to display in the tooltip.
 
     When `None`, defaults to
-    [`BarChartRod.to_y`][flet_charts.bar_chart_rod.BarChartRod.to_y].
+    :attr:`flet_charts.BarChartRod.to_y`.
     """
 
     def copy(
@@ -47,11 +47,12 @@ class BarChartRodTooltip(ChartDataPointTooltip):
 
 @ft.control("BarChartRod")
 class BarChartRod(ft.BaseControl):
-    """A bar rod in a [`BarChartGroup`][(p).]."""
+    """A bar rod in a :class:`~flet_charts.BarChartGroup`."""
 
     stack_items: list[BarChartRodStackItem] = field(default_factory=list)
     """
-    Optional list of [`BarChartRodStackItem`][(p).] objects to draw a stacked bar.
+    Optional list of :class:`~flet_charts.BarChartRodStackItem` objects to draw a \
+    stacked bar.
     """
 
     from_y: ft.Number = 0
@@ -113,7 +114,7 @@ class BarChartRod(ft.BaseControl):
     selected: bool = False
     """
     If set to `True` a tooltip is always shown on top of the bar when
-    [`BarChart.interactive`][flet_charts.bar_chart.BarChart.interactive]
+    :attr:`flet_charts.BarChart.interactive`
     is set to `False`.
     """
 

@@ -29,7 +29,7 @@ def configure_encode_object_for_msgpack(control_cls):
 
     The returned function is passed to `msgpack.packb(..., default=...)` and handles
     protocol-specific serialization rules for dataclasses, enums, date/time objects,
-    [`Duration`][flet.], and extension values exchanged with Dart.
+    :class:`~flet.Duration`, and extension values exchanged with Dart.
 
     Encoding behavior highlights:
     - dataclasses are converted to dictionaries with control-aware default pruning;

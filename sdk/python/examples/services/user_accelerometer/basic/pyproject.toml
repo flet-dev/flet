@@ -1,0 +1,27 @@
+[project]
+name = "services-user-accelerometer-basic"
+version = "1.0.0"
+description = "Streams linear acceleration readings without gravity and reports sensor errors."
+requires-python = ">=3.10"
+keywords = ["user accelerometer", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/UserAccelerometer"]
+
+[tool.flet.metadata]
+title = "Basic user accelerometer"
+controls = ["SafeArea", "Column", "Page", "UserAccelerometerReadingEvent", "Text", "UserAccelerometer"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live sensor readings", "sensor error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios", "web"]

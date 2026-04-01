@@ -10,14 +10,14 @@ __all__ = ["ScatterChartSpot", "ScatterChartSpotTooltip"]
 @ft.value
 class ScatterChartSpotTooltip(ChartDataPointTooltip):
     """
-    Tooltip configuration for the [`ScatterChartSpot`][(p).].
+    Tooltip configuration for the :class:`~flet_charts.ScatterChartSpot`.
     """
 
     text: Optional[str] = None
     """
     The text to display in the tooltip.
 
-    When `None`, defaults to [`ScatterChartSpot.y`][(p).].
+    When `None`, defaults to :attr:`flet_charts.ScatterChartSpot.y`.
     """
 
     bottom_margin: ft.Number = 8

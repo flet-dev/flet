@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-todo"
+version = "1.0.0"
+description = "Tracks, filters, edits, and clears tasks in a declarative to-do application."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "todo", "tabs", "forms"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative", "Apps/Productivity"]
+
+[tool.flet.metadata]
+title = "To-do"
+controls = ["View", "SafeArea", "Column", "Row", "TextField", "Tabs", "Checkbox", "IconButton", "FloatingActionButton"]
+layout_pattern = "form"
+complexity = "intermediate"
+features = ["task filtering", "editing", "list state updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

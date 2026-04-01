@@ -1,0 +1,26 @@
+[project]
+name = "services-audio-declarative-1"
+version = "1.0.0"
+description = "Builds a declarative audio player with playback controls and live progress updates."
+requires-python = ">=3.10"
+keywords = ["services", "audio", "declarative", "progress", "playback", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-audio"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Audio"]
+
+[tool.flet.metadata]
+title = "Declarative audio player"
+controls = ["SafeArea", "Column", "ProgressBar", "Button", "Audio"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["declarative state", "audio playback", "live progress updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

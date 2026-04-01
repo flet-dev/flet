@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-text-field-cupertino-material-and-adaptive"
+version = "1.0.0"
+description = "Compares Material, Cupertino, and adaptive text fields with placeholder and label styling."
+requires-python = ">=3.10"
+keywords = ["cupertino", "text field", "adaptive", "material", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoTextField"]
+
+[tool.flet.metadata]
+title = "Cupertino, material and adaptive"
+controls = ["SafeArea", "Column", "CupertinoTextField", "TextField", "TextStyle"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["adaptive text field", "cupertino and material comparison"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

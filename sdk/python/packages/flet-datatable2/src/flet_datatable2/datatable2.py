@@ -12,15 +12,15 @@ __all__ = ["DataTable2"]
 class DataTable2(ft.DataTable):
     """
     Provides sticky header row, scrollable data rows,
-    and additional layout flexibility with [`DataColumn2`][(p).]
-    and [`DataRow2`][(p).].
+    and additional layout flexibility with :class:`~flet_datatable2.DataColumn2`
+    and :class:`~flet_datatable2.DataRow2`.
 
     Note:
         `DataTable2` doesn't support
-        [`DataTable.data_row_min_height`][flet.DataTable.data_row_min_height]
-        and [`DataTable.data_row_max_height`][flet.DataTable.data_row_max_height]
-        properties present in the parent [`DataTable`][flet.DataTable].
-        Use [`data_row_height`][(c).] instead.
+        :attr:`flet.DataTable.data_row_min_height`
+        and :attr:`flet.DataTable.data_row_max_height`
+        properties present in the parent :class:`~flet.DataTable`.
+        Use :attr:`data_row_height` instead.
     """
 
     columns: list[Union[DataColumn2, ft.DataColumn]]

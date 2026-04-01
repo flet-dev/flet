@@ -23,17 +23,17 @@ __all__ = ["ExpansionPanel", "ExpansionPanelList", "ExpansionPanelListChangeEven
 @dataclass
 class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
     """
-    Payload for [`ExpansionPanelList.on_change`][flet.] event.
+    Payload for :attr:`flet.ExpansionPanelList.on_change` event.
     """
 
     index: int
     """
-    The index of the panel in [`ExpansionPanelList.controls`][flet.] that was toggled.
+    The index of the panel in :attr:`flet.ExpansionPanelList.controls` that was toggled.
 
-    Panels with [`visible`][flet.Control.] set to `False` are not counted/indexed.
+    Panels with :attr:`~flet.Control.visible` set to `False` are not counted/indexed.
     This means the value may differ from the panel's position in the original
-    [`ExpansionPanelList.controls`][flet.] list when some panels are invisible.
-    To map it back, filter [`ExpansionPanelList.controls`][flet.] to only visible
+    :attr:`flet.ExpansionPanelList.controls` list when some panels are invisible.
+    To map it back, filter :attr:`flet.ExpansionPanelList.controls` to only visible
     panels and use this index on that filtered list.
     """
 
@@ -74,7 +74,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     The control to be found in the header of this panel.
 
     It is always visible, regardless of whether this panel is expanded or collapsed.
-    If [`can_tap_header`][(c).] is `True`, tapping on this `header` will expand or
+    If :attr:`can_tap_header` is `True`, tapping on this `header` will expand or
     collapse this panel.
 
     If this property is `None`, this panel will have a placeholder `Text` as
@@ -85,7 +85,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     The control to be found in the body of this panel.
 
-    It is displayed below the [`header`][(c).] when this panel is [`expanded`][(c).].
+    It is displayed below the :attr:`header` when this panel is :attr:`expanded`.
 
     If this property is `None`, this panel will have a placeholder `Text` as
     content.
@@ -103,33 +103,33 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
 
     can_tap_header: bool = False
     """
-    Whether tapping on this panel's [`header`][(c).] will expand or collapse it.
+    Whether tapping on this panel's :attr:`header` will expand or collapse it.
     """
 
     splash_color: Optional[ColorValue] = None
     """
-    Defines the splash color of this panel if [`can_tap_header`][(c).] is `True`, \
-    or the splash color of the expand/collapse `IconButton` if \
-    [`can_tap_header`][(c).] is `False`.
+    Defines the splash color of this panel if :attr:`can_tap_header` is `True`, or the \
+    splash color of the expand/collapse `IconButton` if :attr:`can_tap_header` is \
+    `False`.
 
-    If [`can_tap_header`][(c).] is `False`, and [`Theme.use_material3`][flet.] is
-    `True`, this field will be ignored, as [`IconButton.splash_color`][flet.]
-    will be ignored, and you should use [`highlight_color`][(c).] instead.
+    If :attr:`can_tap_header` is `False`, and :attr:`flet.Theme.use_material3` is
+    `True`, this field will be ignored, as :attr:`flet.IconButton.splash_color`
+    will be ignored, and you should use :attr:`highlight_color` instead.
 
     If this is `None`, then the icon button will use its default splash color
-    [`Theme.splash_color`][flet.], and this panel will use its default splash color
-    [`Theme.splash_color`][flet.] (if [`can_tap_header`][(c).] is `True`).
+    :attr:`flet.Theme.splash_color`, and this panel will use its default splash color
+    :attr:`flet.Theme.splash_color` (if :attr:`can_tap_header` is `True`).
     """
 
     highlight_color: Optional[ColorValue] = None
     """
-    Defines the highlight color of this panel if [`can_tap_header`][(c).] is `True`, \
-    or the highlight color of the expand/collapse `IconButton` \
-    if [`can_tap_header`][(c).] is `False`.
+    Defines the highlight color of this panel if :attr:`can_tap_header` is `True`, or \
+    the highlight color of the expand/collapse `IconButton` if :attr:`can_tap_header` \
+    is `False`.
 
     If this is `None`, then the icon button will use its default highlight color
-    [`Theme.highlight_color`][flet.], and this panel will use its default highlight
-    color [`Theme.highlight_color`][flet.] (if [`can_tap_header`][(c).] is `True`).
+    :attr:`flet.Theme.highlight_color`, and this panel will use its default highlight
+    color :attr:`flet.Theme.highlight_color` (if :attr:`can_tap_header` is `True`).
     """
 
 
@@ -165,7 +165,7 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
 
     divider_color: Optional[ColorValue] = None
     """
-    The color of the divider when [`ExpansionPanel.expanded`][flet.] is `False`.
+    The color of the divider when :attr:`flet.ExpansionPanel.expanded` is `False`.
     """
 
     elevation: Annotated[
@@ -173,7 +173,7 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
         V.ge(0),
     ] = 2
     """
-    Defines the elevation of the [`controls`][(c).], when expanded.
+    Defines the elevation of the :attr:`controls`, when expanded.
 
     Raises:
         ValueError: If it is not greater than or equal to `0`.
@@ -190,16 +190,16 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
     The color of the icon.
 
-    Defaults to [`Colors.BLACK_54`][flet.] in light theme mode and
-    [`Colors.WHITE_60`][flet.] in dark theme mode.
+    Defaults to :attr:`flet.Colors.BLACK_54` in light theme mode and
+    :attr:`flet.Colors.WHITE_60` in dark theme mode.
     """
 
     spacing: Optional[Number] = None
     """
-    The size of the gap between the [`controls`][(c).]s when expanded.
+    The size of the gap between the :attr:`controls`s when expanded.
     """
 
     on_change: Optional[EventHandler[ExpansionPanelListChangeEvent]] = None
     """
-    Called when an item of [`controls`][(c).] is expanded or collapsed.
+    Called when an item of :attr:`controls` is expanded or collapsed.
     """

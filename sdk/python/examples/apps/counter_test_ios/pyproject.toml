@@ -1,0 +1,26 @@
+[project]
+name = "apps-counter-test-ios"
+version = "1.0.0"
+description = "Minimal floating-action-button counter app used for testing Flet on mobile devices."
+requires-python = ">=3.10"
+keywords = ["apps", "counter", "mobile", "floating action button", "ios"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Counter test iOS"
+controls = ["SafeArea", "Container", "Text", "FloatingActionButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["counter updates", "mobile testing"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

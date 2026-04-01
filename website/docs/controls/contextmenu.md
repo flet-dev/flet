@@ -1,0 +1,28 @@
+---
+class_name: "flet.ContextMenu"
+examples: "controls/context_menu"
+example_images: "test-images/examples/material/golden/macos/context_menu"
+title: "ContextMenu"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ContextMenu" />
+
+## Examples
+
+### Triggers
+
+<CodeExample path={frontMatter.examples + '/triggers/main.py'} language="python" />
+
+## Programmatic open
+
+<CodeExample path={frontMatter.examples + '/programmatic_open/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/programmatic_open.png'} width="55%" />
+
+## Programmatic open with custom trigger
+
+<CodeExample path={frontMatter.examples + '/custom_trigger/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

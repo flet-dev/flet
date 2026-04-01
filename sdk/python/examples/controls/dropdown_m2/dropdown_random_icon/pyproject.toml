@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-m2-dropdown-random-icon"
+version = "1.0.0"
+description = "Adds random icon options to DropdownM2 and supports shuffling option order interactively."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "icons", "dynamic options", "shuffle", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/DropdownM2"]
+
+[tool.flet.metadata]
+title = "Dropdown random icon"
+controls = ["SafeArea", "Column", "DropdownM2", "Button", "Icon", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["random option generation", "option shuffling", "selection callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

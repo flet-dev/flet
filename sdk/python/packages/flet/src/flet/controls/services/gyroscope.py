@@ -37,8 +37,8 @@ class GyroscopeReadingEvent(Event["Gyroscope"]):
 @control("Gyroscope")
 class Gyroscope(Service):
     """
-    Streams gyroscope [readings][flet.GyroscopeReadingEvent], reporting device \
-    rotation rate around each axis in `rad/s`.
+    Streams gyroscope :class:`flet.GyroscopeReadingEvent`, reporting device rotation \
+    rate around each axis in `rad/s`.
 
     Note:
         * Supported platforms: Android, iOS and web.
@@ -52,7 +52,7 @@ class Gyroscope(Service):
 
     interval: Optional[Duration] = None
     """
-    Desired sampling interval provided as a [`Duration`][flet.Duration].
+    Desired sampling interval provided as a :class:`~flet.Duration`.
     Defaults to 200 ms.
     """
 

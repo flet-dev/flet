@@ -72,7 +72,7 @@ flet-secure-storage = "../../../packages/flet-secure-storage"
 flet-video = "../../../packages/flet-video"
 flet-webview = "../../../packages/flet-webview"
 
-# Docs: https://docs.flet.dev/publish/
+# Docs: https://flet.dev/docs/publish/
 [tool.flet]
 product = "Flet Build Test"
 artifact = "flet-build-test"

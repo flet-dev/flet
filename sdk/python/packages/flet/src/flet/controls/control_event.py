@@ -140,7 +140,7 @@ ControlEventHandler = Union[Callable[[], Any], Callable[[Event[EventControlType]
 
 Represents a callback that accepts either:
 - no arguments,
-- or a typed [`Event`][flet.] for a specific control type.
+- or a typed :class:`~flet.Event` for a specific control type.
 """
 
 EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
@@ -148,7 +148,7 @@ EventHandler = Union[Callable[[], Any], Callable[[EventType], Any]]
 
 Represents a callback that accepts either:
 - no arguments,
-- or an [`Event`][flet.]-derived payload.
+- or an :class:`~flet.Event`-derived payload.
 """
 
 ControlEvent = Event[_BaseControlType]

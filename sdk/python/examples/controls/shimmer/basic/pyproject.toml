@@ -1,0 +1,26 @@
+[project]
+name = "shimmer-basic"
+version = "1.0.0"
+description = "Show a basic Shimmer loading effect over stacked placeholder blocks."
+requires-python = ">=3.10"
+keywords = ["shimmer", "loading", "placeholder", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/Shimmer"]
+
+[tool.flet.metadata]
+title = "Shimmer basic"
+controls = ["Shimmer", "Column", "Container", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["loading placeholders", "animated highlight"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

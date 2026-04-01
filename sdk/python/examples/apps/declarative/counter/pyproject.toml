@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-counter"
+version = "1.0.0"
+description = "Declarative counter app that updates a centered value from a floating action button."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "counter", "floating action button", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Declarative counter"
+controls = ["View", "SafeArea", "Container", "Text", "FloatingActionButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["counter updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

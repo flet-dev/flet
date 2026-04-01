@@ -64,7 +64,7 @@ class LineChartEvent(ft.Event["LineChart"]):
 
 @ft.value
 class LineChartTooltip:
-    """Configuration of the tooltip for [`LineChart`][(p).]s."""
+    """Configuration of the tooltip for :class:`~flet_charts.LineChart`s."""
 
     bgcolor: ft.ColorValue = "#FF607D8B"
     """
@@ -210,7 +210,7 @@ class LineChart(ft.LayoutControl):
 
     data_series: list[LineChartData] = field(default_factory=list)
     """
-    A list of [`LineChartData`][(p).]
+    A list of :class:`~flet_charts.LineChartData`
     controls drawn as separate lines on a chart.
     """
 

@@ -1,0 +1,26 @@
+[project]
+name = "services-semantics-service-accessibility-features"
+version = "1.0.0"
+description = "Reads accessibility feature flags from SemanticsService and refreshes them on demand."
+requires-python = ">=3.10"
+keywords = ["semantics service", "accessibility features", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/SemanticsService"]
+
+[tool.flet.metadata]
+title = "Accessibility features"
+controls = ["SafeArea", "Column", "Page", "SemanticsService", "Button", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["accessibility features"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

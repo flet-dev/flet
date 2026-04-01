@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Added
 
-- Deployed online documentation: https://docs.flet.dev/permission-handler/
+- Deployed online documentation: https://flet.dev/docs/permission-handler/
 - `PermissionHandler` control new methods:
     - `get_status_async`
     - `request_async`
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - `request_permission` → use `request_async` instead
   - `open_app_settings` → use `open_app_settings_async` instead
 - `PermissionHandler` must now be added to `Page.services` before being used instead of `Page.overlay`.
-- `PermissionHandler` can now only be used on the following platforms: Windows, iOS, Android, and Web. A `FletUnimplementedPlatformEception` will be raised if used on unsupported platforms.
+- `PermissionHandler` can now only be used on the following platforms: Windows, iOS, Android, and Web. A `FletUnimplementedPlatformException` will be raised if used on unsupported platforms.
 
 ## 0.1.0
 

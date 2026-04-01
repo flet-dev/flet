@@ -15,7 +15,7 @@ __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
 class CupertinoTimerPickerMode(Enum):
     """
-    Different modes of [`CupertinoTimerPicker`][flet.].
+    Different modes of :class:`~flet.CupertinoTimerPicker`.
     """
 
     HOUR_MINUTE = "hm"
@@ -64,8 +64,8 @@ class CupertinoTimerPicker(LayoutControl):
     Raises:
         ValueError: If it is not greater than or equal to `0`.
         ValueError: If it is not strictly less than `24` hours.
-        ValueError: If it is not a multiple of [`minute_interval`][(c).].
-        ValueError: If it is not a multiple of [`second_interval`][(c).].
+        ValueError: If it is not a multiple of :attr:`minute_interval`.
+        ValueError: If it is not a multiple of :attr:`second_interval`.
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -121,9 +121,9 @@ class CupertinoTimerPicker(LayoutControl):
     """
     Called when the timer's duration changes.
 
-    The [`data`][flet.Event.] property of the event
+    The :attr:`~flet.Event.data` property of the event
     handler contains the new duration value.
-    Its type matches [`value`][(c).]: if `value` is a `Duration`,
+    Its type matches :attr:`value`: if `value` is a `Duration`,
     then `data` is also a `Duration`; otherwise, it is an `int` (seconds).
     """
 

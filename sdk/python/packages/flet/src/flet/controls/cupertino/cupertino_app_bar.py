@@ -15,19 +15,20 @@ class CupertinoAppBar(Control):
     An iOS-styled app bar.
 
     Note:
-        The alignment of the [`title`][(c).] depends on whether
-        this app bar is [`large`][(c).] or not.
-        If it is `True`, the [`title`][(c).] is left-aligned and if it
-        is `False` (the default), the [`title`][(c).] is centered.
+        The alignment of the :attr:`title` depends on whether
+        this app bar is :attr:`large` or not.
+        If it is `True`, the :attr:`title` is left-aligned and if it
+        is `False` (the default), the :attr:`title` is centered.
     """
 
     leading: Optional[Control] = None
     """
     A control to display at the start of this app bar.
 
-    Typically the leading control is an [`Icon`][flet.] or an [`IconButton`][flet.] .
+    Typically the leading control is an :class:`~flet.Icon` or an \
+    :class:`~flet.IconButton` .
 
-    If it is `None` and [`automatically_imply_leading`][(c).] is `True`,
+    If it is `None` and :attr:`automatically_imply_leading` is `True`,
     an appropriate button will be automatically created.
     """
 
@@ -35,7 +36,7 @@ class CupertinoAppBar(Control):
     """
     A string or a control to display in the middle of this app bar.
 
-    Typically a [`Text`][flet.].
+    Typically a :class:`~flet.Text`.
     """
 
     trailing: Optional[Control] = None
@@ -54,20 +55,20 @@ class CupertinoAppBar(Control):
 
     automatically_imply_leading: Optional[bool] = None
     """
-    Whether we should try to imply the [`leading`][(c).] control if `None`.
+    Whether we should try to imply the :attr:`leading` control if `None`.
 
-    - If `True` and [`leading`][(c).] is `None`, the app bar will automatically
+    - If `True` and :attr:`leading` is `None`, the app bar will automatically
         determine an appropriate leading control.
-    - If `False` and [`leading`][(c).] is `None`,
-        the space is allocated to the [`title`][(c).].
-    - If a [`leading`][(c).] control is provided, this parameter has no effect.
+    - If `False` and :attr:`leading` is `None`,
+        the space is allocated to the :attr:`title`.
+    - If a :attr:`leading` control is provided, this parameter has no effect.
     """
 
     automatically_imply_title: Optional[bool] = None
     """
     Whether we should try to imply the `title` control if `None`.
 
-    - If True and `title` is `None`, a [`Text`][flet.] control containing the
+    - If True and `title` is `None`, a :class:`~flet.Text` control containing the
         current route's title will be automatically filled in.
     - If the `title` is not `None`, this parameter has no effect.
     """
@@ -116,22 +117,22 @@ class CupertinoAppBar(Control):
     leading back button.
 
     Overrides the text shown with the back chevron instead of automatically showing the
-    previous route's title when [`automatically_imply_leading`][(c).] is `True`.
+    previous route's title when :attr:`automatically_imply_leading` is `True`.
 
     Note:
         Has no effect if `leading` is not `None` or if
-        [`automatically_imply_leading`][(c).] is `False`.
+        :attr:`automatically_imply_leading` is `False`.
     """
 
     brightness: Optional[Brightness] = None
     """
-    The brightness of the specified [`bgcolor`][(c).].
+    The brightness of the specified :attr:`bgcolor`.
 
     Setting this value changes the style of the system status bar. It is typically used
-    to increase the contrast ratio of the system status bar over [`bgcolor`][(c).].
+    to increase the contrast ratio of the system status bar over :attr:`bgcolor`.
 
     If `None` (the default), its value will be inferred from the relative luminance of
-    the [`bgcolor`][(c).].
+    the :attr:`bgcolor`.
     """
 
     automatic_background_visibility: Optional[bool] = None
@@ -139,14 +140,14 @@ class CupertinoAppBar(Control):
     Whether the navigation bar should appear transparent when content is scrolled \
     under it.
 
-    If `False`, the navigation bar will display its [`bgcolor`][(c).].
+    If `False`, the navigation bar will display its :attr:`bgcolor`.
     """
 
     enable_background_filter_blur: Optional[bool] = None
     """
-    Whether to have a blur effect when a non-opaque [`bgcolor`][(c).] is used.
+    Whether to have a blur effect when a non-opaque :attr:`bgcolor` is used.
 
-    This will only be respected when [`automatic_background_visibility`][(c).]
+    This will only be respected when :attr:`automatic_background_visibility`
     is `False` or until content scrolls under the navigation bar.
     """
 
@@ -154,6 +155,6 @@ class CupertinoAppBar(Control):
     """
     Whether to use a large app bar layout.
 
-    If `True`, the [`title`][(c).] is left-aligned;
-    if `False`, the [`title`][(c).] is centered.
+    If `True`, the :attr:`title` is left-aligned;
+    if `False`, the :attr:`title` is centered.
     """

@@ -1,0 +1,26 @@
+[project]
+name = "responsive-row-basic"
+version = "1.0.0"
+description = "Builds a four-column responsive layout and form row that adapt to breakpoints."
+requires-python = ">=3.10"
+keywords = ["responsive row", "layout", "breakpoints", "grid", "adaptive columns"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ResponsiveRow"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "TextField", "Text"]
+layout_pattern = "responsive-grid"
+complexity = "basic"
+features = ["responsive columns", "text field reflow", "window-aware spacing"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

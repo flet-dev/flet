@@ -18,8 +18,8 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     A scrollable, 2D array of controls.
 
     It is very effective for large lists (thousands of items).
-    Prefer it over wrapping [`Column`][flet.]s or
-    [`Row`][flet.]s for smooth scrolling.
+    Prefer it over wrapping :class:`~flet.Column`s or
+    :class:`~flet.Row`s for smooth scrolling.
 
     ```python
     ft.GridView(

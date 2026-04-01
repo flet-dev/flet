@@ -1,0 +1,26 @@
+[project]
+name = "services-battery-basic"
+version = "1.0.0"
+description = "Shows battery level, battery state, and battery saver status with a refresh action."
+requires-python = ">=3.10"
+keywords = ["battery", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Battery"]
+
+[tool.flet.metadata]
+title = "Basic battery"
+controls = ["SafeArea", "Column", "Page", "Button", "Battery", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["battery state", "battery saver status"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

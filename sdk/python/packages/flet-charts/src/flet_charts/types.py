@@ -73,9 +73,9 @@ class ChartPointShape:
 
     See usable subclasses:
 
-    * [`ChartCirclePoint`][(p).]
-    * [`ChartCrossPoint`][(p).]
-    * [`ChartSquarePoint`][(p).]
+    * :class:`~flet_charts.ChartCirclePoint`
+    * :class:`~flet_charts.ChartCrossPoint`
+    * :class:`~flet_charts.ChartSquarePoint`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)

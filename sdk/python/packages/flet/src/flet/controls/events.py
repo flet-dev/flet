@@ -90,8 +90,8 @@ class MultiTapEvent(ControlEvent):
     correct_touches: bool = field(metadata={"data_field": "ct"})
     """
     `True` when the active touch count reaches \
-    [`GestureDetector.multi_tap_touches`][flet.]; \
-    otherwise `False` is emitted when the sequence is interrupted.
+    :attr:`flet.GestureDetector.multi_tap_touches`; otherwise `False` is emitted when \
+    the sequence is interrupted.
     """
 
 

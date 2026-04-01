@@ -1,0 +1,26 @@
+[project]
+name = "hero-basic"
+version = "1.0.0"
+description = "Demonstrates Hero animation between home and details views with a shared tagged card."
+requires-python = ">=3.10"
+keywords = ["hero", "animation", "route transition", "navigation", "gesture"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Hero"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["View", "SafeArea", "Container", "Column", "GestureDetector", "Hero", "AppBar", "Button", "Text", "Icon"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["hero route transition", "shared hero tag", "view navigation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

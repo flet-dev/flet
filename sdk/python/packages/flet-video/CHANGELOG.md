@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Deployed online documentation: https://docs.flet.dev/video/
+- Deployed online documentation: https://flet.dev/docs/video/
 - `Video` new property: `subtitle_track`
 - `VideoConfiguration` new properties: `width`, `height`, `scale`
 

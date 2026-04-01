@@ -19,7 +19,7 @@ class ChartAxisLabel(ft.BaseControl):
 
     label: Optional[ft.StrOrControl] = None
     """
-    The label to display for the specified [`value`][(c).].
+    The label to display for the specified :attr:`value`.
     """
 
 
@@ -41,13 +41,13 @@ class ChartAxis(ft.BaseControl):
 
     show_labels: bool = True
     """
-    Whether to display the [`labels`][(c).] along the axis.
+    Whether to display the :attr:`labels` along the axis.
     If `labels` is empty then automatic labels are displayed.
     """
 
     labels: list[ChartAxisLabel] = field(default_factory=list)
     """
-    The list of [`ChartAxisLabel`][(p).]
+    The list of :class:`~flet_charts.ChartAxisLabel`
     objects to set custom axis labels for only specific values.
     """
 
@@ -61,7 +61,7 @@ class ChartAxis(ft.BaseControl):
 
     label_size: ft.Number = 22
     """
-    The maximum space for each label in [`labels`][(c).].
+    The maximum space for each label in :attr:`labels`.
 
     Each label will stretch to fit this space.
     """

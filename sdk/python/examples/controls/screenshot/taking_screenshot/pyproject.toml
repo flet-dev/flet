@@ -1,0 +1,26 @@
+[project]
+name = "screenshot-taking-screenshot"
+version = "1.0.0"
+description = "Capture a Screenshot control asynchronously and save the image to a file."
+requires-python = ">=3.10"
+keywords = ["screenshot", "capture", "button", "async", "file"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Screenshot"]
+
+[tool.flet.metadata]
+title = "Taking screenshot"
+controls = ["Screenshot", "Container", "Button", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["async capture", "save to file", "button interaction"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "outlined-button-icons"
+version = "1.0.0"
+description = "Shows OutlinedButtons with icon and color variations."
+requires-python = ">=3.10"
+keywords = ["outlined button", "icon button", "material icons", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/OutlinedButton"]
+
+[tool.flet.metadata]
+title = "Icons"
+controls = ["SafeArea", "OutlinedButton", "Icon"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["icon support"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -20,7 +20,7 @@ DEFAULT_ANIMATION_CURVE = AnimationCurve.LINEAR
 @control("PageView")
 class PageView(LayoutControl):
     """
-    Displays its child [`controls`][(c).] one page at a time and lets users swipe
+    Displays its child :attr:`controls` one page at a time and lets users swipe
     between them, similar to a carousel.
 
     It is helpful for onboarding flows, photo carousels,
@@ -39,7 +39,7 @@ class PageView(LayoutControl):
     """
     The zero-based index of the currently visible page.
 
-    Changing it later on (followed by [`update()`][flet.BaseControl.update])
+    Changing it later on (followed by :meth:`~flet.BaseControl.update`)
     jumps to the specified page without animation.
 
     Raises:
@@ -63,11 +63,11 @@ class PageView(LayoutControl):
     Whether to reverse the order in which pages are read and swiped.
 
     For example, if the reading direction is left-to-right and
-    [`horizontal`][(c).] is `True`, then this page view scrolls from
+    :attr:`horizontal` is `True`, then this page view scrolls from
     left to right when `reverse` is `False` and from right to left when
     `reverse` is `True`.
 
-    Similarly, if [`horizontal`][(c).] is `False`, then this page view
+    Similarly, if :attr:`horizontal` is `False`, then this page view
     scrolls from top to bottom when `reverse` is `False` and from bottom to top
     when `reverse` is `True`.
     """
@@ -78,7 +78,7 @@ class PageView(LayoutControl):
     ] = 1.0
     """
     The fraction of the viewport that each page should occupy in the
-    scrolling direction (see [`horizontal`][(c).]).
+    scrolling direction (see :attr:`horizontal`).
 
     For example, `1.0` (default), means each page fills the viewport.
 
@@ -90,7 +90,7 @@ class PageView(LayoutControl):
     """
     Whether the view should snap to exact page boundaries after a drag.
 
-    If the [`pad_ends`][(c).] is `False` and [`viewport_fraction`][(c).] < `1.0`,
+    If the :attr:`pad_ends` is `False` and :attr:`viewport_fraction` < `1.0`,
     the page will snap to the beginning of the viewport; otherwise, the page
     will snap to the center of the viewport.
     """
@@ -114,12 +114,12 @@ class PageView(LayoutControl):
     """
     Whether to add padding to both ends of the list.
 
-    If this is set to `True` and [`viewport_fraction`][(c).] < `1.0`,
+    If this is set to `True` and :attr:`viewport_fraction` < `1.0`,
     padding will be added before the first page and after the last page so they snap
     to the center of the viewport when scrolled all the way to the start or end.
 
     Note:
-        If [`viewport_fraction`][(c).] >= 1.0, this property has no effect.
+        If :attr:`viewport_fraction` >= 1.0, this property has no effect.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
@@ -131,7 +131,7 @@ class PageView(LayoutControl):
     """
     Fired when the visible page changes.
 
-    The [`data`][flet.Event.] property of the event argument contains
+    The :attr:`~flet.Event.data` property of the event argument contains
     the index of the new page.
     """
 
@@ -203,7 +203,7 @@ class PageView(LayoutControl):
     ):
         """
         Animates to the next page. Same as calling
-        [`go_to_page()`][flet.PageView.go_to_page] with `selected_index + 1`.
+        :meth:`~flet.PageView.go_to_page` with `selected_index + 1`.
 
         Args:
             animation_duration: Length of the animation.
@@ -221,7 +221,7 @@ class PageView(LayoutControl):
     ):
         """
         Animates to the previous page. Same as calling
-        [`go_to_page()`][flet.PageView.go_to_page] with `selected_index - 1`.
+        :meth:`~flet.PageView.go_to_page` with `selected_index - 1`.
 
         Args:
             animation_duration: Length of the animation.

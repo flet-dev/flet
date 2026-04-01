@@ -6,7 +6,7 @@ from pathlib import Path
 import flet as ft
 
 APP_NAME = "Mind Queue"
-DATA_FILE = Path(__file__).resolve().parent / "data.json"
+DATA_FILE = Path(__file__).resolve().parent / "assets" / "data.json"
 
 
 def load_data():
@@ -25,7 +25,7 @@ def main(page: ft.Page):
     page.title = APP_NAME
     page.theme_mode = ft.ThemeMode.DARK
     page.bgcolor = "#111111"
-    page.padding = ft.padding.symmetric(horizontal=24, vertical=24)
+    page.padding = ft.Padding.symmetric(horizontal=24, vertical=24)
     page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.scroll = ft.ScrollMode.HIDDEN
@@ -165,7 +165,7 @@ def main(page: ft.Page):
                         [ft.Text(system_name, size=18, weight=ft.FontWeight.W_600)],
                     ),
                     padding=10,
-                    margin=ft.margin.only(bottom=8),
+                    margin=ft.Margin.only(bottom=8),
                     border_radius=8,
                     bgcolor="#1c1c1c",
                 ),
@@ -221,15 +221,17 @@ def main(page: ft.Page):
         )
 
         page.add(
-            ft.Column(
-                [
-                    title,
-                    ft.Column(systems_list, spacing=4),
-                    ft.Container(height=14),
-                    add_system_btn,
-                ],
-                spacing=12,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            ft.SafeArea(
+                content=ft.Column(
+                    [
+                        title,
+                        ft.Column(systems_list, spacing=4),
+                        ft.Container(height=14),
+                        add_system_btn,
+                    ],
+                    spacing=12,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                )
             )
         )
         page.update()
@@ -593,7 +595,7 @@ def main(page: ft.Page):
             for idx, (title_str, label, done) in enumerate(tasks):
                 current_index = idx  # capture for lambdas
 
-                color = ft.Colors.WHITE70 if done else ft.Colors.WHITE
+                color = ft.Colors.WHITE_70 if done else ft.Colors.WHITE
                 deco = (
                     ft.TextDecoration.LINE_THROUGH if done else ft.TextDecoration.NONE
                 )
@@ -696,7 +698,9 @@ def main(page: ft.Page):
             )
         )
 
-        page.add(ft.Column(content_controls, spacing=6, expand=True))
+        page.add(
+            ft.SafeArea(content=ft.Column(content_controls, spacing=6, expand=True))
+        )
         page.update()
 
     # start at dashboard

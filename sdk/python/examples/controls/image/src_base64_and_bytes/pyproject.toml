@@ -1,0 +1,26 @@
+[project]
+name = "image-src-base64-and-bytes"
+version = "1.0.0"
+description = "Renders images from base64 string and decoded byte data sources."
+requires-python = ">=3.10"
+keywords = ["image", "base64", "bytes", "binary data"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Displaying images from base64 strings and byte data"
+controls = ["SafeArea", "Row", "Image"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["base64 image source", "bytes image source"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

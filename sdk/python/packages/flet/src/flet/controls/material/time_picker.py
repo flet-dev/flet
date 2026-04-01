@@ -27,7 +27,7 @@ __all__ = [
 
 class TimePickerHourFormat(Enum):
     """
-    Defines the hour format for the [`TimePicker`][flet.] control.
+    Defines the hour format for the :class:`~flet.TimePicker` control.
     """
 
     SYSTEM = "system"
@@ -42,10 +42,10 @@ class TimePickerHourFormat(Enum):
 
 class TimePickerEntryMode(Enum):
     """
-    Interactive input mode of the [`TimePicker`][flet.] dialog.
+    Interactive input mode of the :class:`~flet.TimePicker` dialog.
 
-    In [`DIAL`][(c).] mode, a clock dial is displayed, and the user taps or drags
-    the time they wish to select. In [`INPUT`][(c).] mode, [`TextField`][flet.]s are
+    In :attr:`DIAL` mode, a clock dial is displayed, and the user taps or drags
+    the time they wish to select. In :attr:`INPUT` mode, :class:`~flet.TextField`s are
     displayed and the user types in the time they wish to select.
     """
 
@@ -53,14 +53,14 @@ class TimePickerEntryMode(Enum):
     """
     User picks time from a clock dial.
 
-    Can switch to [`INPUT`][(c).] by activating a mode button in the time picker dialog.
+    Can switch to :attr:`INPUT` by activating a mode button in the time picker dialog.
     """
 
     INPUT = "input"
     """
     User can input the time by typing it into text fields.
 
-    Can switch to [`DIAL`][(c).] by activating a mode button in the time picker dialog.
+    Can switch to :attr:`DIAL` by activating a mode button in the time picker dialog.
     """
 
     DIAL_ONLY = "dialOnly"
@@ -81,7 +81,7 @@ class TimePickerEntryMode(Enum):
 @dataclass
 class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """
-    Represents the event triggered when the entry mode of a [`TimePicker`][flet.] \
+    Represents the event triggered when the entry mode of a :class:`~flet.TimePicker` \
     changes.
     """
 
@@ -95,9 +95,9 @@ class TimePicker(DialogControl):
     A Material-style time picker dialog.
 
     Can be opened by calling the
-    [`Page.show_dialog()`][flet.Page.show_dialog] method.
+    :meth:`flet.Page.show_dialog` method.
 
-    Depending on the [`entry_mode`][(c).], it will show either a Dial or
+    Depending on the :attr:`entry_mode`, it will show either a Dial or
     an Input (hour and minute text fields) for picking a time.
 
     Example:
@@ -122,12 +122,13 @@ class TimePicker(DialogControl):
     The locale for this time picker dialog. It is intended for (rare) cases where this \
     dialog should be localized differently from the rest of the page.
 
-    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    It overrides the locale used by the page (see \
+    :attr:`flet.Page.locale_configuration`),
     but does not participate in page-level locale resolution.
 
     If set to `None` (the default) or an inexistent/unsupported locale,
-    the [`current_locale`][flet.LocaleConfiguration.] of the
-    [`Page.locale_configuration`][flet.] is used as fallback.
+    the :attr:`~flet.LocaleConfiguration.current_locale` of the
+    :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
     modal: bool = False
@@ -139,7 +140,7 @@ class TimePicker(DialogControl):
     """
     The initial mode of time entry method for this picker.
 
-    Defaults to [`TimePickerEntryMode.DIAL`][flet.].
+    Defaults to :attr:`flet.TimePickerEntryMode.DIAL`.
     """
 
     hour_label_text: Optional[str] = None
@@ -195,28 +196,28 @@ class TimePicker(DialogControl):
     """
     The color of the modal barrier that darkens everything below this picker's dialog.
 
-    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
-    If it is also `None`, then [`Colors.BLACK_54`][flet.] is used.
+    If `None`, the :attr:`flet.DialogTheme.barrier_color` is used.
+    If it is also `None`, then :attr:`flet.Colors.BLACK_54` is used.
     """
 
     switch_to_timer_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
-    is [`TimePickerEntryMode.INPUT`][flet.].
+    The icon displayed in the corner of this picker's dialog when :attr:`entry_mode` \
+    is :attr:`flet.TimePickerEntryMode.INPUT`.
 
-    Clicking on this icon changes the [`entry_mode`][(c).] to
-    [`TimePickerEntryMode.DIAL`][flet.].
+    Clicking on this icon changes the :attr:`entry_mode` to
+    :attr:`flet.TimePickerEntryMode.DIAL`.
 
     If `None`, defaults to `Icons.ACCESS_TIME`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
-    is [`TimePickerEntryMode.DIAL`][flet.].
+    The icon displayed in the corner of this picker's dialog when :attr:`entry_mode` \
+    is :attr:`flet.TimePickerEntryMode.DIAL`.
 
-    Clicking on icon changes the [`entry_mode`][(c).] to
-    [`TimePickerEntryMode.INPUT`][flet.].
+    Clicking on icon changes the :attr:`entry_mode` to
+    :attr:`flet.TimePickerEntryMode.INPUT`.
 
     If `None`, defaults to `Icons.KEYBOARD_OUTLINED`.
     """
@@ -225,14 +226,14 @@ class TimePicker(DialogControl):
     """
     Called when user clicks confirm button.
 
-    [`value`][(c).] property is updated with selected time.
-    Additionally, the [`data`][flet.Event.] property of the event handler argument
+    :attr:`value` property is updated with selected time.
+    Additionally, the :attr:`~flet.Event.data` property of the event handler argument
     also contains the selected time.
     """
 
     on_entry_mode_change: Optional[EventHandler[TimePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`entry_mode`][(c).] is changed through the time picker dialog.
+    Called when the :attr:`entry_mode` is changed through the time picker dialog.
     """
 
     hour_format: TimePickerHourFormat = TimePickerHourFormat.SYSTEM

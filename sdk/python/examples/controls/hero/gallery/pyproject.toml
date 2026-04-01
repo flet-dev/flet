@@ -1,0 +1,26 @@
+[project]
+name = "hero-gallery"
+version = "1.0.0"
+description = "Shows a gallery of items with unique Hero tags and animated transitions to detail views."
+requires-python = ">=3.10"
+keywords = ["hero", "gallery", "animation", "navigation", "cards"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Hero"]
+
+[tool.flet.metadata]
+title = "Gallery"
+controls = ["View", "SafeArea", "Column", "Row", "Container", "Card", "GestureDetector", "Hero", "AppBar", "Button", "Text", "Icon"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["multiple hero tags", "list-to-details transition", "scrollable gallery"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

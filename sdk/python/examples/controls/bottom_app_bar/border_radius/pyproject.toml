@@ -1,0 +1,26 @@
+[project]
+name = "bottom-app-bar-border-radius"
+version = "1.0.0"
+description = "BottomAppBar with custom border radius."
+requires-python = ">=3.10"
+keywords = ["bottom app bar", "navigation", "border radius", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/BottomAppBar"]
+
+[tool.flet.metadata]
+title = "BottomAppBar border radius"
+controls = ["BottomAppBar", "Row", "IconButton", "Container", "SafeArea", "Column", "Text"]
+layout_pattern = "navigation"
+complexity = "basic"
+features = ["custom border radius", "app bar actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

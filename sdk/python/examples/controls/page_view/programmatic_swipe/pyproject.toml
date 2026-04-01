@@ -1,0 +1,40 @@
+[project]
+name = "page-view-programmatic-swipe"
+version = "1.0.0"
+description = "Demonstrates programmatic PageView navigation via previous/next actions."
+requires-python = ">=3.10"
+keywords = [
+  "page view",
+  "pageview",
+  "programmatic swipe",
+  "floating action button",
+  "async",
+]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/PageView"]
+
+[tool.flet.metadata]
+title = "Programmatic Swipe"
+controls = [
+  "PageView",
+  "SafeArea",
+  "Container",
+  "Column",
+  "Text",
+  "Row",
+  "FloatingActionButton",
+]
+layout_pattern = "programmatic-controls"
+complexity = "basic"
+features = ["programmatic page navigation", "manual swipe control"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

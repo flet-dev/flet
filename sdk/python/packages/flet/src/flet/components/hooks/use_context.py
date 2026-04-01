@@ -34,11 +34,11 @@ ProviderResultT = TypeVar(
 
 class ContextProvider(Protocol[T]):
     """
-    Protocol describing objects returned by [`create_context()`][flet.create_context].
+    Protocol describing objects returned by :func:`~flet.create_context`.
 
     A context provider is both:
     - a callable wrapper that executes a callback under a provided context value;
-    - a holder of context metadata used by [`use_context()`][flet.use_context] lookup.
+    - a holder of context metadata used by :func:`~flet.use_context` lookup.
     """
 
     default_value: T

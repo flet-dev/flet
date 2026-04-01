@@ -14,9 +14,9 @@ __all__ = ["Canvas", "CanvasResizeEvent"]
 @dataclass
 class CanvasResizeEvent(Event["Canvas"]):
     """
-    Event emitted when a [`Canvas`][(p).] reports a new rendered size.
+    Event emitted when a :class:`~flet.canvas.Canvas` reports a new rendered size.
 
-    This event is delivered through [`on_resize`][flet.canvas.Canvas.on_resize]
+    This event is delivered through :attr:`~flet.canvas.Canvas.on_resize`
     and carries the latest measured dimensions in logical pixels.
     """
 
@@ -81,7 +81,7 @@ class Canvas(LayoutControl):
     """
     Sampling interval in milliseconds for `on_resize` event.
 
-    Setting to `0` calls [`on_resize`][(c).] immediately
+    Setting to `0` calls :attr:`on_resize` immediately
     on every change.
     """
 

@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-flip"
+version = "1.0.0"
+description = "Toggles flip_x and flip_y on a card using LayoutControl flip transform."
+requires-python = ">=3.10"
+keywords = ["layout control", "flip", "transform", "card"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Flip"
+controls = ["SafeArea", "Column", "Container", "Text", "Flip", "Row", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["flip_x toggle", "flip_y toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

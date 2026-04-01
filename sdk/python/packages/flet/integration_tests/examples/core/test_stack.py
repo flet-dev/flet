@@ -1,11 +1,9 @@
 import pytest
 
+import examples.controls.stack.absolute_positioning.main as absolute_positioning
+import examples.controls.stack.online_avatar.main as online_avatar
 import flet as ft
 import flet.testing as ftt
-from examples.controls.stack import (
-    absolute_positioning,
-    online_avatar,
-)
 
 
 @pytest.mark.asyncio(loop_scope="function")
