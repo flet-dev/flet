@@ -159,8 +159,9 @@ module.exports = {
     algolia: {
       apiKey: '4b060907ba79d92e8869e9d1ff80bce7',
       indexName: 'flet',
-      appId: 'ESNSJEY7OD', // Optional, if you run the DocSearch crawler on your own
-      algoliaOptions: {}, // Optional, if provided by Algolia
+      appId: 'ESNSJEY7OD',
+      askAi: '48c9b8c8-278a-48b3-aa3e-ed18efad6fdd',
+      algoliaOptions: {}
     }
   },
   presets: [
