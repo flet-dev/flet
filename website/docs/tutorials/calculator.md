@@ -110,9 +110,9 @@ result = ft.Text(value="0", color=ft.Colors.WHITE, size=20)
 
 For the buttons, if we look again at the UI we are aiming to achieve, there are 3 types of buttons:
 
-1. **Digit Buttons**. They have dark grey background color and white text, size is the same for all.
+1. **Digit Buttons**. They have dark grey background color and white text, size is the same for all except `0` button which is twice as large.
 
-2. **Action Buttons**.  They have orange background color and white text, size is the same for all except `0` button which is twice as large.
+2. **Action Buttons**.  They have orange background color and white text, size is the same for all.
 
 3. **Extra action buttons**. They have light grey background color and dark text, size is the same for all.
 
