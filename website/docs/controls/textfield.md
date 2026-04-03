@@ -8,7 +8,7 @@ title: "TextField"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic TextField" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic TextField" imageWidth="30%"/>
 
 ## Examples
 
@@ -18,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="45%" />
 
 ### Handling change events
 

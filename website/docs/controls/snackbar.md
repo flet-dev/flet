@@ -8,7 +8,7 @@ title: "SnackBar"
 
 import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Opened snack bar" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Opened snack bar" imageWidth="30%"/>
 
 ## Examples
 
@@ -18,13 +18,13 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="30%" />
 
 ### Counter
 
 <CodeExample path={frontMatter.examples + '/counter/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/snack_bar_flow.gif'} alt="Snack bar with counter" width="50%" caption="Snack bar with counter" />
+<Image src={frontMatter.example_images + '/snack_bar_flow.gif'} alt="Snack bar with counter" width="30%" caption="Snack bar with counter" />
 
 ### Action
 

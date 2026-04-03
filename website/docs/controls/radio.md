@@ -7,7 +7,7 @@ title: "Radio"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Simple radio buttons" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Simple radio buttons" imageWidth="80%"/>
 
 ## Examples
 
@@ -17,13 +17,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="25%" />
 
 ### Handling selection changes
 
 <CodeExample path={frontMatter.examples + '/handling_selection_changes/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="55%" />
+<Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="25%" />
 
 ### Styled radio buttons
 
