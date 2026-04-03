@@ -28,11 +28,11 @@ module.exports = {
       appId: 'ESNSJEY7OD',
       apiKey: '4b060907ba79d92e8869e9d1ff80bce7',
       indexName: 'flet',
-      askAi: {
-        assistantId: '48c9b8c8-278a-48b3-aa3e-ed18efad6fdd',
-        agentStudio: true,
-        sidePanel: true,
-      },
+    //   askAi: {
+    //     assistantId: '48c9b8c8-278a-48b3-aa3e-ed18efad6fdd',
+    //     agentStudio: true,
+    //     sidePanel: true,
+    //   },
       contextualSearch: true,
     },
     // github codeblock theme configuration
