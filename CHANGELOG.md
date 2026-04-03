@@ -8,6 +8,8 @@
 
 ### Other changes
 
+* Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
+
 ## 0.84.0
 
 ### Improvements
