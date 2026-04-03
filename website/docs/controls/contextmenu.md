@@ -7,7 +7,7 @@ title: "ContextMenu"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ContextMenu" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ContextMenu" imageWidth="30%"/>
 
 ## Examples
 
@@ -19,7 +19,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/programmatic_open/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/programmatic_open.png'} width="55%" />
+<Image src={frontMatter.example_images + '/programmatic_open.png'} width="30%" />
 
 ## Programmatic open with custom trigger
 
