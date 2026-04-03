@@ -7,7 +7,7 @@ title: "MenuBar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic menu bar" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic menu bar" imageWidth="18%"/>
 
 ## Examples
 
@@ -17,6 +17,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/nested_submenus/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/nested_submenus.gif'} width="55%" />
+<Image src={frontMatter.example_images + '/nested_submenus.gif'} width="45%" />
 
 <ClassMembers name={frontMatter.class_name} />

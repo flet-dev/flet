@@ -9,7 +9,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # DataTable
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic DataTable" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic DataTable" imageWidth="25%"/>
 
 ## Examples
 
@@ -19,7 +19,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/basic.png'} width="55%" />
+<Image src={frontMatter.example_images + '/basic.png'} width="40%" />
 
 ### Horizontal margin and column spacing
 
