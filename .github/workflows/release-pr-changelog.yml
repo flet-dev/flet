@@ -1,0 +1,42 @@
+name: Release PR Changelog
+
+on:
+  pull_request:
+    branches:
+      - 'release/**'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+      - ready_for_review
+
+jobs:
+  changelog_record:
+    name: Require changelog record
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify root changelog update
+        shell: bash
+        run: |
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.event.pull_request.head.sha }}"
+
+          changed_files=$(git diff --name-only "$base_sha...$head_sha")
+
+          if ! grep -qx 'CHANGELOG.md' <<<"$changed_files"; then
+            echo "PRs targeting release branches must update the root CHANGELOG.md."
+            exit 1
+          fi
+
+          added_records=$(git diff --unified=0 "$base_sha...$head_sha" -- CHANGELOG.md | grep -E '^\+\* ' || true)
+
+          if [[ -z "$added_records" ]]; then
+            echo "PRs targeting release branches must add at least one new changelog record to CHANGELOG.md."
+            exit 1
+          fi
