@@ -2263,6 +2263,20 @@ class BaseBuildCommand(BaseFlutterCommand):
                     style=verbose1_style,
                 )
 
+    # Preferred icon extensions per target platform. Earlier entries win.
+    # .png is a universal fallback supported by flutter_launcher_icons on
+    # every platform, while .icns is macOS-only and .ico is Windows-only.
+    _PLATFORM_IMAGE_PREFERENCE: dict[str, list[str]] = {
+        "windows": [".ico", ".png", ".jpg", ".jpeg", ".bmp"],
+        "macos": [".icns", ".png", ".jpg", ".jpeg"],
+        "linux": [".png", ".jpg", ".jpeg", ".bmp"],
+        "web": [".png", ".jpg", ".jpeg", ".svg"],
+        "apk": [".png", ".jpg", ".jpeg"],
+        "aab": [".png", ".jpg", ".jpeg"],
+        "ipa": [".png", ".jpg", ".jpeg"],
+        "ios-simulator": [".png", ".jpg", ".jpeg"],
+    }
+
     def find_platform_image(
         self,
         src_path: Path,
@@ -2272,7 +2286,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash: HashStamp,
     ):
         """
-        Find first matching image file by base name and queue it for copy.
+        Find the best matching image file for the current target platform.
+
+        When multiple files share the same base name (e.g. ``icon.icns``,
+        ``icon.ico``, ``icon.png``), the method picks the one whose extension
+        is most appropriate for the build target.  For example, ``.icns`` is
+        skipped on Windows builds because ``flutter_launcher_icons`` cannot
+        decode it.
 
         Args:
             src_path: Source assets directory.
@@ -2282,20 +2302,35 @@ class BaseBuildCommand(BaseFlutterCommand):
             hash: Hash accumulator used for change detection.
 
         Returns:
-            File name of matched image, or `None` if not found.
+            File name of matched image, or ``None`` if not found.
         """
 
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
-        if len(images) > 0:
-            if self.verbose > 0:
-                console.log(
-                    f'Found "{image_name}" image at {images[0]}', style=verbose1_style
-                )
-            copy_ops.append((images[0], dest_path))
-            hash.update(images[0])
-            hash.update(Path(images[0]).stat().st_mtime)
-            return Path(images[0]).name
-        return None
+        if not images:
+            return None
+
+        preferred = self._PLATFORM_IMAGE_PREFERENCE.get(
+            self.target_platform, [".png"]
+        )
+
+        def _sort_key(path: str) -> int:
+            ext = Path(path).suffix.lower()
+            try:
+                return preferred.index(ext)
+            except ValueError:
+                return len(preferred)
+
+        images.sort(key=_sort_key)
+
+        best = images[0]
+        if self.verbose > 0:
+            console.log(
+                f'Found "{image_name}" image at {best}', style=verbose1_style
+            )
+        copy_ops.append((best, dest_path))
+        hash.update(best)
+        hash.update(Path(best).stat().st_mtime)
+        return Path(best).name
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
         """
