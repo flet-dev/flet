@@ -7,6 +7,7 @@
 ### Bug fixes
 
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
+* Handle unbounded width in `ResponsiveRow` with an explicit error, treat child controls with `col=0` as hidden, and clarify `Container` expansion behavior when `alignment` is set ([#1951](https://github.com/flet-dev/flet/issues/1951), [#3805](https://github.com/flet-dev/flet/issues/3805), [#5209](https://github.com/flet-dev/flet/issues/5209), [#6354](https://github.com/flet-dev/flet/pull/6354)) by @ndonkoHenri.
 
 ### Other changes
 
