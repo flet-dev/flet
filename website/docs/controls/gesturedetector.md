@@ -28,7 +28,7 @@ inside another control (yellow container) giving the same results.
 
 <CodeExample path={frontMatter.examples + '/draggable_containers/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/draggable_containers.gif'} alt="draggable-containers" width="55%" />
+<Image src={frontMatter.example_images + '/draggable_containers.gif'} alt="draggable-containers" width="40%" />
 
 ### Window drag area
 

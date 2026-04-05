@@ -8,7 +8,7 @@ title: "Image"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Image" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Image" imageWidth="10%" />
 
 ## Examples
 
@@ -18,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/gallery/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/gallery.gif'} width="55%" />
+<Image src={frontMatter.example_media + '/gallery.gif'} width="45%" />
 
 ### Fade-in images with a placeholder
 

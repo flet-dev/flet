@@ -8,7 +8,7 @@ title: "Markdown"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Markdown" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Markdown" imageWidth="30%"/>
 
 ## Examples
 
@@ -24,7 +24,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/code_syntax_highlight/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/code_syntax_highlight.png'} alt="code-syntax-highlight" width="55%" />
+<Image src={frontMatter.example_media + '/code_syntax_highlight.png'} alt="code-syntax-highlight" width="65%" />
 
 ### Custom text theme
 

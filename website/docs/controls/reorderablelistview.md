@@ -7,7 +7,7 @@ title: "ReorderableListView"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Reorderable list view" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Reorderable list view" imageWidth="70%"/>
 
 ## Examples
 
@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/horizontal_and_vertical.png'} alt="horizontal-and-vertical" width="55%" />
+<Image src={frontMatter.example_images + '/horizontal_and_vertical.png'} alt="horizontal-and-vertical" width="65%" />
 
 ### Custom drag handle
 

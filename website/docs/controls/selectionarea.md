@@ -8,7 +8,7 @@ title: "SelectionArea"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Selectable and unselectable text" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Selectable and unselectable text" imageWidth="15%"/>
 
 ## Examples
 
@@ -16,6 +16,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="30%" />
 
 <ClassMembers name={frontMatter.class_name} />

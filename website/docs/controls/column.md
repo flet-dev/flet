@@ -8,7 +8,7 @@ title: "Column"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Column with Text controls" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Column with Text controls" imageWidth="25%"/>
 
 ## Examples
 
@@ -36,7 +36,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/horizontal_alignment/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/horizontal_alignment.png'} alt="horizontal-alignment" width="55%" />
+<Image src={frontMatter.example_media + '/horizontal_alignment.png'} alt="horizontal-alignment" width="40%" />
 
 ### Infinite scrolling
 

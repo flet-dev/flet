@@ -9,7 +9,7 @@ title: "PopupMenuButton"
 
 import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Opened popup menu under button" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Opened popup menu under button" imageWidth="11%"/>
 
 ## Examples
 
@@ -19,7 +19,7 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />
 
