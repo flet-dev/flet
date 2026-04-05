@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-activity-indicator-basic"
+version = "1.0.0"
+description = "Shows a centered CupertinoActivityIndicator with custom color and radius."
+requires-python = ">=3.10"
+keywords = ["cupertino", "activity indicator", "loading", "spinner"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/CupertinoActivityIndicator"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "CupertinoActivityIndicator"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["indeterminate loading state", "custom radius", "custom color"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -24,9 +24,9 @@ class MutableRef(Generic[RefValueT]):
 @dataclass
 class RefHook(Hook, Generic[RefValueT]):
     """
-    Hook state container backing [`use_ref()`][flet.use_ref].
+    Hook state container backing :func:`~flet.use_ref`.
 
-    Stores the stable [`MutableRef`][flet.MutableRef] instance for a component so
+    Stores the stable `MutableRef` instance for a component so
     it can be reused across renders without triggering updates when `.current`
     changes.
     """

@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-opacity"
+version = "1.0.0"
+description = "Toggles a container between visible and transparent states with animate_opacity."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate opacity", "container", "fade"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate opacity"
+controls = ["SafeArea", "Column", "Container", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["opacity animation", "fade toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

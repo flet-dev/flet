@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.selection_area.basic.main as basic
 import flet as ft
 import flet.testing as ftt
-from examples.controls.selection_area import basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

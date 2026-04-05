@@ -11,7 +11,7 @@ __all__ = ["ScatterChart", "ScatterChartEvent", "ScatterChartTooltip"]
 
 @ft.value
 class ScatterChartTooltip:
-    """Configuration of the tooltip for [`ScatterChart`][(p).]s."""
+    """Configuration of the tooltip for :class:`~flet_charts.ScatterChart`s."""
 
     bgcolor: ft.ColorValue = "#FF607D8B"
     """
@@ -137,7 +137,7 @@ class ScatterChart(ft.LayoutControl):
     A scatter chart control.
 
     ScatterChart draws some points in a square space,
-    points are defined by [`ScatterChartSpot`][(p).]s.
+    points are defined by :class:`~flet_charts.ScatterChartSpot`s.
 
     ```python
     fch.ScatterChart(
@@ -156,7 +156,7 @@ class ScatterChart(ft.LayoutControl):
 
     spots: list[ScatterChartSpot] = field(default_factory=list)
     """
-    List of [`ScatterChartSpot`][(p).]s to show on the chart.
+    List of :class:`~flet_charts.ScatterChartSpot`s to show on the chart.
     """
 
     animation: ft.AnimationValue = field(
@@ -256,7 +256,7 @@ class ScatterChart(ft.LayoutControl):
     show_tooltips_for_selected_spots_only: bool = False
     """
     Whether to permanently and only show the tooltips of spots with their
-    [`selected`][(p).ScatterChartSpot.selected] property set to `True`.
+    :attr:`~flet_charts.ScatterChartSpot.selected` property set to `True`.
     """
 
     rotation_quarter_turns: ft.Number = 0

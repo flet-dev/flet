@@ -1,0 +1,26 @@
+[project]
+name = "code-editor-example-3"
+version = "1.0.0"
+description = "CodeEditor folding demo with predefined selection and toolbar actions for folding code blocks."
+requires-python = ">=3.10"
+keywords = ["code editor", "folding", "selection", "toolbar", "python"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-code-editor"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utilities/CodeEditor"]
+
+[tool.flet.metadata]
+title = "Folding and initial selection"
+controls = ["SafeArea", "Column", "Row", "Button", "CodeEditor"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["code folding", "initial text selection", "selection change events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

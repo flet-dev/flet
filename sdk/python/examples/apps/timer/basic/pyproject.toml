@@ -1,0 +1,26 @@
+[project]
+name = "apps-timer-basic"
+version = "1.0.0"
+description = "Stopwatch example with start, pause, resume, and stop controls."
+requires-python = ">=3.10"
+keywords = ["apps", "timer", "stopwatch", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Time"]
+
+[tool.flet.metadata]
+title = "Basic timer"
+controls = ["SafeArea", "Column", "Row", "Text", "FilledButton", "TextButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["async", "timer controls"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

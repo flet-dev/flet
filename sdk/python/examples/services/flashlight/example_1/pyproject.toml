@@ -1,0 +1,27 @@
+[project]
+name = "services-flashlight-example-1"
+version = "1.0.0"
+description = "Turns the device flashlight on and off with two simple actions."
+requires-python = ">=3.10"
+keywords = ["flashlight", "example 1", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-flashlight"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Flashlight"]
+
+[tool.flet.metadata]
+title = "Flashlight example"
+controls = ["SafeArea", "Column", "Page", "Flashlight", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["flashlight toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["ios", "android"]

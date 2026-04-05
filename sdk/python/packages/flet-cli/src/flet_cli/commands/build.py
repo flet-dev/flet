@@ -13,7 +13,7 @@ class Command(BaseBuildCommand):
     Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
     customization options for metadata, assets, splash screens, and signing.
 
-    Detailed guide with usage examples: https://docs.flet.dev/publish
+    Detailed guide with usage examples: https://flet.dev/docs/publish
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:

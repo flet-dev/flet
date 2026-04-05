@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-component-dialog"
+version = "1.0.0"
+description = "Opens a declarative alert dialog that loads user data asynchronously before rendering it."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "dialog", "async", "httpx"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "httpx"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Component dialog"
+controls = ["SafeArea", "Container", "Column", "Text", "ElevatedButton", "AlertDialog", "ProgressRing"]
+layout_pattern = "center-stage"
+complexity = "intermediate"
+features = ["dialog management", "async", "data loading"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

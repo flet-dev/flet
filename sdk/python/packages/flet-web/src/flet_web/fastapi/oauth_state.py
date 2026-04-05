@@ -8,7 +8,7 @@ class OAuthState:
     """
     Temporary OAuth flow state persisted between auth start and callback.
 
-    Instances are stored by [`FletAppManager`][flet_web.fastapi.flet_app_manager.]
+    Instances are stored by `FletAppManager`
     and keyed by the `flet_oauth_state` cookie value.
     """
 

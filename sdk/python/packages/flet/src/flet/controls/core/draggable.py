@@ -12,10 +12,10 @@ __all__ = ["Draggable"]
 @control("Draggable")
 class Draggable(Control):
     """
-    A control that can be dragged from to a [`DragTarget`][flet.].
+    A control that can be dragged from to a :class:`~flet.DragTarget`.
 
     When a draggable control recognizes the start of a drag gesture, it displays the
-    [`content_feedback`][(c).] control that tracks the user's finger across the screen.
+    :attr:`content_feedback` control that tracks the user's finger across the screen.
     If the user lifts their finger while on top of a `DragTarget`, this target is
     given the opportunity to complete drag-and-drop flow.
     """
@@ -28,7 +28,7 @@ class Draggable(Control):
     The control to display when the draggable is not being dragged.
 
     If the draggable is being dragged, the
-    [`content_when_dragging`][(c).] is displayed instead.
+    :attr:`content_when_dragging` is displayed instead.
 
     Raises:
         ValueError: If it is not visible.
@@ -39,13 +39,13 @@ class Draggable(Control):
     The group this draggable belongs to.
 
     Note:
-        For a [`DragTarget`][flet.] to accept an incoming drop from a `Draggable`,
+        For a :class:`~flet.DragTarget` to accept an incoming drop from a `Draggable`,
         they must both be in the same `group`.
     """
 
     content_when_dragging: Optional[Control] = None
     """
-    The control to display instead of [`content`][(c).] when this draggable is being \
+    The control to display instead of :attr:`content` when this draggable is being \
     dragged.
 
     If set, this control visually replaces `content` during an active drag operation,
@@ -89,7 +89,7 @@ class Draggable(Control):
     - `0` - disables dragging entirely.
     - `1` - allows only one drag at a time.
         For a better user experience, you may want to provide an "empty" widget for
-        [`content_when_dragging`][(c).]
+        :attr:`content_when_dragging`
         to visually indicate the item is being moved.
     - any other positive integer -  allows that many concurrent drags.
     - `None` - no limit on the number of simultaneous drags.
@@ -105,5 +105,5 @@ class Draggable(Control):
 
     on_drag_complete: Optional[ControlEventHandler["Draggable"]] = None
     """
-    Called when this draggable is dropped and accepted by a [`DragTarget`][flet.].
+    Called when this draggable is dropped and accepted by a :class:`~flet.DragTarget`.
     """

@@ -1,0 +1,26 @@
+[project]
+name = "markdown-basic"
+version = "1.0.0"
+description = "Renders a long Markdown document with links, images, tables, and code blocks."
+requires-python = ">=3.10"
+keywords = ["markdown", "rich text", "links", "tables", "code blocks"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Markdown"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Markdown"]
+layout_pattern = "article"
+complexity = "basic"
+features = ["github markdown rendering", "link tap callback", "scrollable markdown"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

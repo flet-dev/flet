@@ -95,7 +95,7 @@ class GeolocatorPermissionStatus(Enum):
     Permission to access the device's location is denied.
 
     The app should try to request permission using the
-    [`Geolocator.request_permission`][(p).] method.
+    :meth:`flet_geolocator.Geolocator.request_permission` method.
     """
 
     DENIED_FOREVER = "deniedForever"
@@ -121,7 +121,8 @@ class GeolocatorPermissionStatus(Enum):
     """
     Permission status cannot be determined.
 
-    This status is only returned by the [`Geolocator.request_permission`][(p).] method
+    This status is only returned by the \
+    :meth:`flet_geolocator.Geolocator.request_permission` method
     on the web platform for browsers that did not implement the Permissions API.
     See: https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API
     """

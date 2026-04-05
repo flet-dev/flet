@@ -28,12 +28,12 @@ from flet.utils.validation import V
 @dataclass
 class DataColumnSortEvent(Event["DataColumn"]):
     """
-    Event emitted when a [`DataColumn`][flet.] requests sorting.
+    Event emitted when a :class:`~flet.DataColumn` requests sorting.
 
-    This event is delivered to [`DataColumn.on_sort`][flet.] when the user triggers
-    sorting from a column header. Use [`column_index`][(c).] and
-    [`ascending`][(c).] to update table state (for example, `sort_column_index` and
-    `sort_ascending` on [`DataTable`][flet.]).
+    This event is delivered to :attr:`flet.DataColumn.on_sort` when the user triggers
+    sorting from a column header. Use :attr:`column_index` and
+    :attr:`ascending` to update table state (for example, `sort_column_index` and
+    `sort_ascending` on :class:`~flet.DataTable`).
     """
 
     column_index: int = field(metadata={"data_field": "ci"})
@@ -50,7 +50,7 @@ class DataColumnSortEvent(Event["DataColumn"]):
 @control("DataColumn")
 class DataColumn(Control):
     """
-    Column configuration for a [`DataTable`][flet.].
+    Column configuration for a :class:`~flet.DataTable`.
     """
 
     label: Annotated[
@@ -60,9 +60,9 @@ class DataColumn(Control):
     """
     The column heading.
 
-    Typically, this will be a [`Text`][flet.] control.
-    It could also be an [`Icon`][flet.] (typically using size 18),
-    or a combination of both in a [`Row`][flet.].
+    Typically, this will be a :class:`~flet.Text` control.
+    It could also be an :class:`~flet.Icon` (typically using size 18),
+    or a combination of both in a :class:`~flet.Row`.
 
     Raises:
         ValueError: If it is neither a string nor a visible `Control`.
@@ -103,7 +103,7 @@ class DataColumn(Control):
 @control("DataCell")
 class DataCell(Control):
     """
-    The data for a cell of a [`DataTable`][flet.].
+    The data for a cell of a :class:`~flet.DataTable`.
     """
 
     content: Annotated[
@@ -113,16 +113,16 @@ class DataCell(Control):
     """
     The content of this cell.
 
-    Typically a [`Text`][flet.] control or a [`Dropdown`][flet.] control.
+    Typically a :class:`~flet.Text` control or a :class:`~flet.Dropdown` control.
 
-    If the cell has no data, then a [`Text`][flet.] control with placeholder text
-    should be provided instead, and [`placeholder`][(c).] should be set to
+    If the cell has no data, then a :class:`~flet.Text` control with placeholder text
+    should be provided instead, and :attr:`placeholder` should be set to
     `True`.
 
     Tip:
-        To lay out multiple children, set the [`content`][(c).] to a
-        container-like control such as [`Row`][flet.], [`Column`][flet.], or
-        [`Stack`][flet.], which have a `controls` property.
+        To lay out multiple children, set the :attr:`content` to a
+        container-like control such as :class:`~flet.Row`, :class:`~flet.Column`, or
+        :class:`~flet.Stack`, which have a `controls` property.
 
     Raises:
         ValueError: If it is neither a string nor a visible `Control`.
@@ -130,7 +130,7 @@ class DataCell(Control):
 
     placeholder: bool = False
     """
-    Whether the [`content`][(c).] is actually a placeholder.
+    Whether the :attr:`content` is actually a placeholder.
 
     If this is `True`, the default text style for the cell is changed to be appropriate
     for placeholder text.
@@ -141,10 +141,10 @@ class DataCell(Control):
     Whether to show an edit icon at the end of this cell.
 
     This does not make the cell actually editable; the caller must implement editing
-    behavior if desired (initiated from the [`on_tap`][(c).] callback).
+    behavior if desired (initiated from the :attr:`on_tap` callback).
 
     Note:
-        If this is set, [`on_tap`][(c).] should also be set,
+        If this is set, :attr:`on_tap` should also be set,
         otherwise tapping the icon will have no effect.
     """
 
@@ -153,9 +153,10 @@ class DataCell(Control):
     Called if this cell is tapped.
 
     Note:
-        If this is `None` (including [`on_double_tap`][(c).], [`on_long_press`][(c).],
-        [`on_tap_cancel`][(c).], [`on_tap_down`][(c).]), tapping this cell will
-        attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
+        If this is `None` (including :attr:`on_double_tap`, :attr:`on_long_press`,
+        :attr:`on_tap_cancel`, :attr:`on_tap_down`), tapping this cell will
+        attempt to select its row (if :attr:`flet.DataRow.on_select_change` is \
+        provided).
     """
 
     on_double_tap: Optional[ControlEventHandler["DataCell"]] = None
@@ -163,9 +164,10 @@ class DataCell(Control):
     Called when this cell is double tapped.
 
     Note:
-        If this is `None` (including [`on_tap`][(c).], [`on_long_press`][(c).],
-        [`on_tap_cancel`][(c).], [`on_tap_down`][(c).]), tapping this cell will
-        attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
+        If this is `None` (including :attr:`on_tap`, :attr:`on_long_press`,
+        :attr:`on_tap_cancel`, :attr:`on_tap_down`), tapping this cell will
+        attempt to select its row (if :attr:`flet.DataRow.on_select_change` is \
+        provided).
     """
 
     on_long_press: Optional[ControlEventHandler["DataCell"]] = None
@@ -173,9 +175,9 @@ class DataCell(Control):
     Called if this cell is long-pressed.
 
     Note:
-        If this is `None` (including [`on_tap`][(c).], [`on_double_tap`][(c).],
-        [`on_tap_cancel`][(c).], [`on_tap_down`][(c).]), tapping this cell will attempt
-        to select its row (if [`DataRow.on_select_change`][flet.] is provided).
+        If this is `None` (including :attr:`on_tap`, :attr:`on_double_tap`,
+        :attr:`on_tap_cancel`, :attr:`on_tap_down`), tapping this cell will attempt
+        to select its row (if :attr:`flet.DataRow.on_select_change` is provided).
     """
 
     on_tap_cancel: Optional[ControlEventHandler["DataCell"]] = None
@@ -183,9 +185,10 @@ class DataCell(Control):
     Called if the user cancels a tap was started on cell.
 
     Note:
-        If this is `None` (including [`on_tap`][(c).], [`on_double_tap`][(c).],
-        [`on_long_press`][(c).], [`on_tap_down`][(c).]), tapping this cell will
-        attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
+        If this is `None` (including :attr:`on_tap`, :attr:`on_double_tap`,
+        :attr:`on_long_press`, :attr:`on_tap_down`), tapping this cell will
+        attempt to select its row (if :attr:`flet.DataRow.on_select_change` is \
+        provided).
     """
 
     on_tap_down: Optional[EventHandler[TapEvent["DataCell"]]] = None
@@ -193,20 +196,21 @@ class DataCell(Control):
     Called if this cell is tapped down.
 
     Note:
-        If this is `None` (including [`on_tap`][(c).], [`on_double_tap`][(c).],
-        [`on_long_press`][(c).], [`on_tap_cancel`][(c).]), tapping this cell will
-        attempt to select its row (if [`DataRow.on_select_change`][flet.] is provided).
+        If this is `None` (including :attr:`on_tap`, :attr:`on_double_tap`,
+        :attr:`on_long_press`, :attr:`on_tap_cancel`), tapping this cell will
+        attempt to select its row (if :attr:`flet.DataRow.on_select_change` is \
+        provided).
     """
 
 
 @control("DataRow")
 class DataRow(Control):
     """
-    Row configuration and cell data for a [`DataTable`][flet.].
+    Row configuration and cell data for a :class:`~flet.DataTable`.
 
     One row configuration must be provided for each row to display in the table.
 
-    The data for this row of the table is provided in the [`cells`][(c).] property.
+    The data for this row of the table is provided in the :attr:`cells` property.
     """
 
     cells: Annotated[
@@ -214,14 +218,14 @@ class DataRow(Control):
         V.visible_controls(min_count=1),
     ] = field(default_factory=list)
     """
-    The data for this row: a list of [`DataCell`][flet.] controls.
+    The data for this row: a list of :class:`~flet.DataCell` controls.
 
     Note:
         There must be exactly as many cells as there are visible
-        [`columns`][flet.DataTable.] in the table.
+        :attr:`~flet.DataTable.columns` in the table.
 
     Raises:
-        ValueError: If it does not contain at least one visible [`DataCell`][flet.].
+        ValueError: If it does not contain at least one visible :class:`~flet.DataCell`.
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
@@ -231,7 +235,7 @@ class DataRow(Control):
     By default, the color is transparent unless selected. Selected rows has a grey
     translucent color.
 
-    The effective color can depend on the [`ControlState`][flet.]
+    The effective color can depend on the :class:`~flet.ControlState`
     state, if the row is selected, pressed, hovered, focused, disabled or enabled. The
     color is painted as an overlay to the row. To make sure that the row's InkWell is
     visible (when pressed, hovered and focused), it is recommended to use a translucent
@@ -253,9 +257,9 @@ class DataRow(Control):
     """
     Called when this row is long-pressed.
 
-    If a [`DataCell`][flet.] in the row has its [`DataCell.on_tap`][flet.],
-    [`DataCell.on_double_tap`][flet.], [`DataCell.on_long_press`][flet.],
-    [`DataCell.on_tap_cancel`][flet.] or [`DataCell.on_tap_down`][flet.]
+    If a :class:`~flet.DataCell` in the row has its :attr:`flet.DataCell.on_tap`,
+    :attr:`flet.DataCell.on_double_tap`, :attr:`flet.DataCell.on_long_press`,
+    :attr:`flet.DataCell.on_tap_cancel` or :attr:`flet.DataCell.on_tap_down`
     callback defined, that callback behavior overrides the gesture behavior of the row
     for that particular cell.
     """
@@ -274,7 +278,7 @@ class DataRow(Control):
     A row whose `on_select_change` callback is null is ignored for the purposes of
     determining the state of the "all" checkbox, and its checkbox is disabled.
 
-    If a [`DataCell`][flet.] in the row has its [`DataCell.on_tap`][flet.]
+    If a :class:`~flet.DataCell` in the row has its :attr:`flet.DataCell.on_tap`
     callback defined, that callback behavior overrides the gesture behavior of the
     row for that particular cell.
     """
@@ -315,24 +319,24 @@ class DataTable(LayoutControl):
 
     columns: list[DataColumn]
     """
-    A list of [`DataColumn`][flet.] controls describing table columns.
+    A list of :class:`~flet.DataColumn` controls describing table columns.
 
     Raises:
-        ValueError: If there are no visible [`columns`][(c).].
+        ValueError: If there are no visible :attr:`columns`.
     """
 
     rows: list[DataRow] = field(default_factory=list)
     """
-    A list of [`DataRow`][flet.] controls defining table rows.
+    A list of :class:`~flet.DataRow` controls defining table rows.
 
     Raises:
         ValueError: If any visible row does not contain exactly as many visible
-            [`DataCell`][flet.]s as there are visible [`columns`][(c).].
+            :class:`~flet.DataCell`s as there are visible :attr:`columns`.
     """
 
     sort_ascending: bool = False
     """
-    Whether the column mentioned in [`sort_column_index`][(c).], if any, is sorted in \
+    Whether the column mentioned in :attr:`sort_column_index`, if any, is sorted in \
     ascending order.
 
     If `True`, the order is ascending (meaning the rows with the smallest values for
@@ -347,7 +351,7 @@ class DataTable(LayoutControl):
     Whether the control should display checkboxes for selectable rows.
 
     If `True`, a checkbox will be placed at the beginning of each row that is
-    selectable. However, if [`DataRow.on_select_change`][flet.]
+    selectable. However, if :attr:`flet.DataRow.on_select_change`
     is not set for any row, checkboxes will not be placed, even if this value is `True`.
 
     If `False`, all rows will not display a checkbox.
@@ -359,7 +363,7 @@ class DataTable(LayoutControl):
 
     If specified, indicates that the indicated column is the column by which the data
     is sorted. The number must correspond to the index of the relevant column in
-    [`columns`][(c).].
+    :attr:`columns`.
 
     Setting this will cause the relevant column to have a sort indicator displayed.
 
@@ -367,7 +371,7 @@ class DataTable(LayoutControl):
     any of the columns.
 
     Raises:
-        ValueError: If it is out of range relative to the visible [`columns`][(c).].
+        ValueError: If it is out of range relative to the visible :attr:`columns`.
     """
 
     show_bottom_border: bool = False
@@ -413,7 +417,7 @@ class DataTable(LayoutControl):
     The background color for the data rows.
 
     The effective background color can be made to depend on the
-    [`ControlState`][flet.] state, i.e. if the row is selected, pressed, hovered,
+    :class:`~flet.ControlState` state, i.e. if the row is selected, pressed, hovered,
     focused, disabled or enabled. The color is painted as an overlay to the row.
     To make sure that the row's InkWell is visible (when pressed, hovered and focused),
     it is recommended to use a translucent background color.
@@ -429,7 +433,7 @@ class DataTable(LayoutControl):
     Defaults to `48.0`.
 
     Raises:
-        ValueError: If it is not less than or equal to [`data_row_max_height`][(c).].
+        ValueError: If it is not less than or equal to :attr:`data_row_max_height`.
     """
 
     data_row_max_height: Annotated[
@@ -444,12 +448,12 @@ class DataTable(LayoutControl):
     Defaults to `48.0`.
 
     Raises:
-        ValueError: If it is not greater than or equal to [`data_row_min_height`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`data_row_min_height`.
     """
 
     data_text_style: Optional[TextStyle] = None
     """
-    The text style of the data [`rows`][(c).].
+    The text style of the data :attr:`rows`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -467,7 +471,7 @@ class DataTable(LayoutControl):
         V.ge(0),
     ] = 1.0
     """
-    The width of the divider that appears between [`rows`][(c).].
+    The width of the divider that appears between :attr:`rows`.
 
     Raises:
         ValueError: If it is not greater than or equal to `0`.
@@ -478,7 +482,7 @@ class DataTable(LayoutControl):
     The background color for the heading row.
 
     The effective background color can be made to depend on the
-    [`ControlState`][flet.] state, i.e. if the row is pressed, hovered,
+    :class:`~flet.ControlState` state, i.e. if the row is pressed, hovered,
     focused when sorted. The color is painted as an overlay to the row. To make sure
     that the row's InkWell is visible (when pressed, hovered and focused), it is
     recommended to use a translucent color.
@@ -513,12 +517,12 @@ class DataTable(LayoutControl):
     Invoked when the user selects or unselects every row, using the checkbox in the \
     heading row.
 
-    If this is `None`, then the [`DataRow.on_select_change`][flet.]
-    callback of every [row][(c).rows] of this table is invoked appropriately instead.
+    If this is `None`, then the :attr:`flet.DataRow.on_select_change`
+    callback of every :attr:`rows` of this table is invoked appropriately instead.
 
     Tip:
         To control whether a particular row is selectable or not, see
-        [`DataRow.on_select_change`][flet.]. This callback is only relevant if
+        :attr:`flet.DataRow.on_select_change`. This callback is only relevant if
         any row is selectable.
     """
 

@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-3"
+version = "1.0.0"
+description = "SlidePicker example using RGB color model with styled indicator and color change callback."
+requires-python = ">=3.10"
+keywords = ["color picker", "slide picker", "rgb", "callback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "SlidePicker"
+controls = ["SafeArea", "SlidePicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["color change callback", "rgb color model", "indicator styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "placeholder-basic"
+version = "1.0.0"
+description = "Shows a basic Placeholder control with fallback dimensions and custom styling."
+requires-python = ">=3.10"
+keywords = ["placeholder", "layout", "fallback size", "ui shell"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Placeholder"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["Placeholder", "SafeArea"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["placeholder layout", "fallback dimensions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

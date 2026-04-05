@@ -1,0 +1,26 @@
+[project]
+name = "context-menu-programmatic-open"
+version = "1.0.0"
+description = "Programmatically opens ContextMenu from a button and handles selected menu actions."
+requires-python = ">=3.10"
+keywords = ["context menu", "programmatic open", "popup menu", "selection"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/ContextMenu"]
+
+[tool.flet.metadata]
+title = "Programmatic open"
+controls = ["SafeArea", "ContextMenu", "PopupMenuItem", "Button", "SnackBar"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["programmatic menu opening", "selection callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

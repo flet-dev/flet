@@ -1,0 +1,26 @@
+[project]
+name = "container-nested-themes-1"
+version = "1.0.0"
+description = "Nested theme containers demonstrating inherited and overridden button color schemes."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Nested themes 1"
+controls = ["SafeArea", "Column", "Container", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["nested themes", "theme override"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

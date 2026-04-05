@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-permission-handler.svg)](https://pypi.python.org/pypi/flet-permission-handler)
 [![downloads](https://static.pepy.tech/badge/flet-permission-handler/month)](https://pepy.tech/project/flet-permission-handler)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-permission-handler)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-permission-handler.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-permission-handler.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-permission-handler/LICENSE)
 
 A [Flet](https://flet.dev) extension that simplifies working with device permissions.
@@ -17,7 +17,7 @@ and brings similar functionality to Flet, including:
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/permission-handler/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/permissionhandler/).
 
 ## Platform Support
 

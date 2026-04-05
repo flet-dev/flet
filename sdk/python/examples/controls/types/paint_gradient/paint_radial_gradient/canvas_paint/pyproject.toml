@@ -1,0 +1,26 @@
+[project]
+name = "types-paint-gradient-paint-radial-gradient-canvas-paint"
+version = "1.0.0"
+description = "Draws a canvas preview using Paint Radial Gradient gradient settings and paint objects."
+requires-python = ">=3.10"
+keywords = ["paint gradient", "paint radial gradient", "canvas paint"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Canvas/Shapes"]
+
+[tool.flet.metadata]
+title = "Paint Radial Gradient"
+controls = ["SafeArea", "Column", "Canvas", "Circle"]
+layout_pattern = "canvas"
+complexity = "basic"
+features = ["canvas drawing", "gradient paint preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

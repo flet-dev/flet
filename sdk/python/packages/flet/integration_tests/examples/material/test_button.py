@@ -1,16 +1,14 @@
 import pytest
 
+import examples.controls.button.animate_on_hover.main as animate_on_hover
+import examples.controls.button.basic.main as basic
+import examples.controls.button.button_shapes.main as button_shapes
+import examples.controls.button.custom_content.main as custom_content
+import examples.controls.button.handling_clicks.main as handling_clicks
+import examples.controls.button.icons.main as icons
+import examples.controls.button.styling.main as styling
 import flet as ft
 import flet.testing as ftt
-from examples.controls.button import (
-    animate_on_hover,
-    basic,
-    button_shapes,
-    custom_content,
-    handling_clicks,
-    icons,
-    styling,
-)
 
 
 @pytest.mark.asyncio(loop_scope="function")

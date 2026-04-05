@@ -28,7 +28,7 @@ class ReleaseMode(Enum):
             let it go. Data will be buffered again when needed (if it's a remote file,
             it will be downloaded again).
         - On iOS and macOS, works just like
-            [`Audio.release()`][flet_audio.Audio.release] method.
+            :meth:`flet_audio.Audio.release` method.
     """
 
     LOOP = "loop"

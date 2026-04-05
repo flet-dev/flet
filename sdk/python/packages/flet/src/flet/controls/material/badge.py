@@ -14,8 +14,8 @@ __all__ = ["Badge", "BadgeValue"]
 class Badge(BaseControl):
     """
     Badges are used to show notifications, counts, or status information on navigation \
-    items such as [`NavigationBar`][flet.] or [`NavigationRail`][flet.] destinations \
-    or a button's icon.
+    items such as :class:`~flet.NavigationBar` or :class:`~flet.NavigationRail` \
+    destinations or a button's icon.
 
     ```python
     ft.FilledIconButton(
@@ -32,86 +32,86 @@ class Badge(BaseControl):
     Typically a `1` to `4` characters text.
 
     If the label is not provided, the badge is shown as a filled circle of
-    [`small_size`][(c).] diameter.
+    :attr:`small_size` diameter.
 
-    If `label` is provided, it is a [`StadiumBorder`][flet.] shaped
-    badge with height equal to [`large_size`][(c).].
+    If `label` is provided, it is a :class:`~flet.StadiumBorder` shaped
+    badge with height equal to :attr:`large_size`.
     """
 
     offset: Optional[OffsetValue] = None
     """
-    Combined with `alignment` to determine the location of the [`label`][(c).] \
-    relative to the content.
+    Combined with `alignment` to determine the location of the :attr:`label` relative \
+    to the content.
 
     Note:
-        Has effect only used if [`label`][(c).] is also provided.
+        Has effect only used if :attr:`label` is also provided.
     """
 
     alignment: Optional[Alignment] = None
     """
-    Aligns the [`label`][flet.Badge.label] relative to the content of the badge.
+    Aligns the :attr:`~flet.Badge.label` relative to the content of the badge.
 
-    The alignment positions the [`label`][(c).] in similar way
-    [`Container.content`][flet.] is positioned using [`Container.alignment`][flet.],
+    The alignment positions the :attr:`label` in similar way
+    :attr:`flet.Container.content` is positioned using :attr:`flet.Container.alignment`,
     except that the badge alignment is resolved as if the `label` was a
-    [`large_size`][(c).] square and [`offset`][(c).] is added to the result.
+    :attr:`large_size` square and :attr:`offset` is added to the result.
 
     Note:
-        Has effect only used if [`label`][(c).] is also provided.
+        Has effect only used if :attr:`label` is also provided.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background color of the [`label`][(c).].
+    The background color of the :attr:`label`.
     """
 
     label_visible: bool = True
     """
-    Whether the [`label`][(c).] should be visible.
+    Whether the :attr:`label` should be visible.
 
     It can be used to create a badge only shown under certain conditions.
     """
 
     large_size: Optional[Number] = None
     """
-    The badge's label height if [`label`][(c).] is provided.
+    The badge's label height if :attr:`label` is provided.
 
     If the default value is overridden then it may be useful to also override
-    [`padding`][(c).] and [`alignment`][(c).].
+    :attr:`padding` and :attr:`alignment`.
 
-    Defaults to [`BadgeTheme.large_size`][flet.], or if that is `None`,
+    Defaults to :attr:`flet.BadgeTheme.large_size`, or if that is `None`,
     falls back to `16`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The padding added to the [`label`][(c).].
+    The padding added to the :attr:`label`.
 
-    Defaults to [`BadgeTheme.padding`][flet.], or if that is `None`,
+    Defaults to :attr:`flet.BadgeTheme.padding`, or if that is `None`,
     falls back to `4` pixels on the left and right.
 
     Note:
-        Has effect only if [`label`][(c).] is not `None`.
+        Has effect only if :attr:`label` is not `None`.
     """
 
     small_size: Optional[Number] = None
     """
-    The badge's label diameter if [`label`][(c).] is not provided.
+    The badge's label diameter if :attr:`label` is not provided.
 
-    Defaults to [`BadgeTheme.small_size`][flet.], or if that is `None`,
+    Defaults to :attr:`flet.BadgeTheme.small_size`, or if that is `None`,
     falls back to `6`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color of the text shown in the [`label`][(c).].
+    The color of the text shown in the :attr:`label`.
 
-    It overrides the color of the [`label`][(c).]'s [`text_style`][(c).].
+    It overrides the color of the :attr:`label`'s :attr:`text_style`.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    The text style to use for text in the [`label`][(c).].
+    The text style to use for text in the :attr:`label`.
     """
 
 
@@ -120,5 +120,5 @@ BadgeValue = Union[str, Badge]
 
 Represents a badge as either:
 - a `str` value, rendered as a text label badge,
-- or a [`Badge`][flet.].
+- or a :class:`~flet.Badge`.
 """

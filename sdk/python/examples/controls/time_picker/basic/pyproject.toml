@@ -1,0 +1,26 @@
+[project]
+name = "time-picker-basic"
+version = "1.0.0"
+description = "Opens a TimePicker dialog and reports selection, dismissal, and entry mode changes."
+requires-python = ">=3.10"
+keywords = ["time picker", "dialog", "events", "selection", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/TimePicker"]
+
+[tool.flet.metadata]
+title = "TimePicker basic"
+controls = ["SafeArea", "Column", "Button", "Text", "TimePicker", "SnackBar"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["dialog opening", "change callbacks", "dismiss callbacks"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

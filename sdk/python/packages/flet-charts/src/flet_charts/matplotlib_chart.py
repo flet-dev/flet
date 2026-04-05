@@ -86,7 +86,7 @@ class MatplotlibChart(ft.GestureDetector):
     Displays a [Matplotlib](https://matplotlib.org/) chart.
 
     To display a Matplotlib figure with a built-in toolbar UI, use
-    [`MatplotlibChartWithToolbar`][flet_charts.matplotlib_chart_with_toolbar.].
+    :class:`~flet_charts.MatplotlibChartWithToolbar`.
 
     Warning:
         This control requires the [`matplotlib`](https://matplotlib.org/)

@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-1"
+version = "1.0.0"
+description = "ColorPicker example with RGB palette mode, color history, and HSV/history change callbacks."
+requires-python = ">=3.10"
+keywords = ["color picker", "rgb", "hsv", "history", "palette"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "ColorPicker"
+controls = ["SafeArea", "ColorPicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["color change callback", "color history", "hsv updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

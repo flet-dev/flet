@@ -1,0 +1,27 @@
+[project]
+name = "services-barometer-basic"
+version = "1.0.0"
+description = "Streams atmospheric pressure readings and reports barometer errors from the device sensor."
+requires-python = ">=3.10"
+keywords = ["barometer", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Barometer"]
+
+[tool.flet.metadata]
+title = "Basic barometer"
+controls = ["SafeArea", "Column", "Page", "BarometerReadingEvent", "Text", "Barometer"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live sensor readings", "sensor error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios"]

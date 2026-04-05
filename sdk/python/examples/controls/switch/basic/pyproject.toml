@@ -1,0 +1,26 @@
+[project]
+name = "switch-basic"
+version = "1.0.0"
+description = "Compares checked, unchecked, disabled, and left-labeled Switch controls and reports their values."
+requires-python = ">=3.10"
+keywords = ["switch", "input", "states", "button", "label"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Switch"]
+
+[tool.flet.metadata]
+title = "Switch basic"
+controls = ["SafeArea", "Column", "Switch", "Button", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["multiple states", "value summary"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

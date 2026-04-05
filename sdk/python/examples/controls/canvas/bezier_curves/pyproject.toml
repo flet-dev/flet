@@ -1,0 +1,26 @@
+[project]
+name = "canvas-bezier-curves"
+version = "1.0.0"
+description = "Canvas bezier curve drawing with gradient fills."
+requires-python = ">=3.10"
+keywords = ["canvas", "bezier", "path", "gradient"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Bezier curves"
+controls = ["SafeArea", "Canvas", "Path"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["quadratic and cubic paths", "radial gradient fill"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

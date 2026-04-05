@@ -1,0 +1,26 @@
+[project]
+name = "map-idle-camera"
+version = "1.0.0"
+description = "Tracks map events and reports settled camera state when idle-related events occur."
+requires-python = ">=3.10"
+keywords = ["map", "camera idle", "events", "interaction flags"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Idle Camera"
+controls = ["SafeArea", "Column", "Map", "TileLayer", "SimpleAttribution", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["map event handling", "idle camera detection", "camera status output"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

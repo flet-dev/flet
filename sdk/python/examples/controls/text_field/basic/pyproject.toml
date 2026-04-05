@@ -1,0 +1,26 @@
+[project]
+name = "text-field-basic"
+version = "1.0.0"
+description = "Compares standard, disabled, read-only, placeholder, and icon TextField states."
+requires-python = ">=3.10"
+keywords = ["text field", "input", "disabled", "read-only", "basic"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "TextField basic"
+controls = ["SafeArea", "Column", "TextField", "Button", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["multiple field states", "value summary"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

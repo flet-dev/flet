@@ -43,8 +43,8 @@ class MagnetometerReadingEvent(Event["Magnetometer"]):
 @control("Magnetometer")
 class Magnetometer(Service):
     """
-    Streams magnetometer [readings][flet.MagnetometerReadingEvent] reporting the \
-    ambient magnetic field (`uT`) per axis for compass-style use cases.
+    Streams magnetometer :class:`flet.MagnetometerReadingEvent` reporting the ambient \
+    magnetic field (`uT`) per axis for compass-style use cases.
 
     Note:
         * Supported platforms: Android, iOS.
@@ -59,7 +59,7 @@ class Magnetometer(Service):
 
     interval: Optional[Duration] = None
     """
-    Desired sampling interval provided as a [`Duration`][flet.Duration].
+    Desired sampling interval provided as a :class:`~flet.Duration`.
     Defaults to 200 ms.
     """
 

@@ -14,7 +14,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
     """
     A cupertino context menu action.
 
-    Typically used as a child of [`CupertinoContextMenu.actions`][flet.].
+    Typically used as a child of :attr:`flet.CupertinoContextMenu.actions`.
     """
 
     content: Annotated[
@@ -40,7 +40,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     trailing_icon: Optional[IconData] = None
     """
-    An icon to display at the right of the [`content`][(c).] control.
+    An icon to display at the right of the :attr:`content` control.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoContextMenuAction"]] = None

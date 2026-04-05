@@ -1,0 +1,26 @@
+import flet as ft
+
+
+def main(page: ft.Page):
+    def button_clicked(e: ft.Event[ft.Button]):
+        button.data += 1
+        message.value = f"Button clicked {button.data} time(s)"
+
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    button := ft.Button(
+                        content="Button with 'click' event",
+                        data=0,
+                        on_click=button_clicked,
+                    ),
+                    message := ft.Text(),
+                ]
+            )
+        ),
+    )
+
+
+if __name__ == "__main__":
+    ft.run(main)

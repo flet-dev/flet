@@ -11,9 +11,9 @@ __all__ = ["Hero"]
 @control("Hero")
 class Hero(LayoutControl):
     """
-    Marks the [`content`][(c).] as a shared element for route transitions.
+    Marks the :attr:`content` as a shared element for route transitions.
 
-    Place a `Hero` with the same [`tag`][(c).] in both source and destination views to
+    Place a `Hero` with the same :attr:`tag` in both source and destination views to
     animate that control between routes.
     """
 

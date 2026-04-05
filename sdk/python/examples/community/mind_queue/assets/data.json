@@ -1,0 +1,64 @@
+{
+    "House Chores": {
+        "Monday": [
+            [
+                "Morning",
+                "Cook Meal",
+                true
+            ],
+            [
+                "Evening",
+                "Vacuum",
+                false
+            ]
+        ],
+        "Tuesday": [
+            [
+                "Morning",
+                "Cook Meal",
+                false
+            ],
+            [
+                "Evening",
+                "Mopping",
+                true
+            ]
+        ],
+        "Wednesday": [
+            [
+                "Morning",
+                "Washing Clothes",
+                false
+            ],
+            [
+                "Evening",
+                "Vacuum",
+                false
+            ]
+        ],
+        "Thursday": [
+            [
+                "Morning",
+                "Cook Meal",
+                true
+            ],
+            [
+                "Evening",
+                "Mopping",
+                true
+            ]
+        ],
+        "Friday": [
+            [
+                "Morning",
+                "Washing Clothes",
+                true
+            ],
+            [
+                "Evening",
+                "Deep Cleaning",
+                false
+            ]
+        ]
+    }
+}

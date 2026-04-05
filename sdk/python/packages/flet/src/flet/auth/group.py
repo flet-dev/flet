@@ -5,10 +5,10 @@ __all__ = ["Group"]
 
 class Group(dict):
     """
-    Group or role entry associated with an authenticated [`User`][(p).].
+    Group or role entry associated with an authenticated :class:`~flet.auth.User`.
 
     The instance behaves like a mutable mapping with provider-specific metadata,
-    while exposing a normalized [`name`][(c).] attribute commonly used by app logic.
+    while exposing a normalized :attr:`name` attribute commonly used by app logic.
 
     Args:
         kwargs: Provider-specific group fields to store in the mapping.

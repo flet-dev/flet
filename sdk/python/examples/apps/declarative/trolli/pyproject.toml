@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-trolli"
+version = "1.0.0"
+description = "Declarative Trello-style board app with draggable lists, cards, dialogs, and route-based navigation."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "kanban", "drag and drop", "routing", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative", "Apps/Productivity"]
+
+[tool.flet.metadata]
+title = "Trolli"
+controls = ["SafeArea", "Column", "Row", "Stack", "AppBar", "NavigationRail", "Draggable", "DragTarget", "TextField", "AlertDialog"]
+layout_pattern = "dashboard"
+complexity = "advanced"
+features = ["drag and drop", "routing", "dialogs", "async", "kanban board"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

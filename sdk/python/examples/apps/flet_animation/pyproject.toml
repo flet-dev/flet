@@ -1,0 +1,26 @@
+[project]
+name = "apps-flet-animation"
+version = "1.0.0"
+description = "Animates scattered blocks into the FLET logo with randomized colors, size, and rotation."
+requires-python = ">=3.10"
+keywords = ["apps", "animation", "logo", "stack", "implicit animations"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Animation"]
+
+[tool.flet.metadata]
+title = "Flet animation"
+controls = ["SafeArea", "Column", "Stack", "Container", "Button"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["implicit animations", "randomized layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

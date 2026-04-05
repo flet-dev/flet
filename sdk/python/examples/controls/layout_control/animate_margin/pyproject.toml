@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-margin"
+version = "1.0.0"
+description = "Animates container and text margins to show layout spacing transitions."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate margin", "container", "text"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate margin"
+controls = ["SafeArea", "Column", "Container", "Text", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["margin animation", "container animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

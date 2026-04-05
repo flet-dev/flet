@@ -1,0 +1,26 @@
+[project]
+name = "window-drag-area-no-frame-window"
+version = "1.0.0"
+description = "Creates a frameless window with a custom draggable title area and close button."
+requires-python = ">=3.10"
+keywords = ["window drag area", "desktop", "window", "frameless", "drag"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/WindowDragArea"]
+
+[tool.flet.metadata]
+title = "No frame window"
+controls = ["SafeArea", "Row", "WindowDragArea", "Container", "Text", "IconButton"]
+layout_pattern = "toolbar-content"
+complexity = "basic"
+features = ["frameless window", "custom window dragging"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,40 @@
+{
+  "name": "flet-dev",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
+    "start": "yarn crocodocs:generate && docusaurus start",
+    "build": "yarn crocodocs:generate && docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy"
+  },
+  "dependencies": {
+    "@docsearch/docusaurus-adapter": "^4.6.2",
+    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/plugin-client-redirects": "^3.9.2",
+    "@docusaurus/preset-classic": "^3.9.2",
+    "@docusaurus/theme-mermaid": "^3.9.2",
+    "@hcaptcha/react-hcaptcha": "^1.0.0",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^1.1.1",
+    "docusaurus-theme-github-codeblock": "^2.0.2",
+    "prism-react-renderer": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wrangler": "^0.0.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "packageManager": "yarn@4.6.0"
+}

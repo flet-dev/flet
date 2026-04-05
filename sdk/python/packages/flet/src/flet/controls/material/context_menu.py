@@ -36,7 +36,7 @@ class ContextMenuTrigger(Enum):
 
 @dataclass(kw_only=True)
 class ContextMenuDismissEvent(Event["ContextMenu"]):
-    """Event fired when a [`ContextMenu`][flet.] is dismissed."""
+    """Event fired when a :class:`~flet.ContextMenu` is dismissed."""
 
     global_position: Offset = field(metadata={"data_field": "g"})
     """
@@ -53,9 +53,9 @@ class ContextMenuDismissEvent(Event["ContextMenu"]):
     Mouse button that triggered the menu.
 
     If a string, can be one of:
-    `"primary"` (linked to [`ContextMenu.primary_items`][flet.]),
-    `"secondary"` (linked to [`ContextMenu.secondary_items`][flet.]),
-    or `"tertiary"` (linked to [`ContextMenu.tertiary_items`][flet.]).
+    `"primary"` (linked to :attr:`flet.ContextMenu.primary_items`),
+    `"secondary"` (linked to :attr:`flet.ContextMenu.secondary_items`),
+    or `"tertiary"` (linked to :attr:`flet.ContextMenu.tertiary_items`).
     """
 
     trigger: Optional[ContextMenuTrigger] = field(
@@ -73,7 +73,7 @@ class ContextMenuDismissEvent(Event["ContextMenu"]):
 
 @dataclass(kw_only=True)
 class ContextMenuSelectEvent(ContextMenuDismissEvent):
-    """Event fired when a [`ContextMenu`][flet.] item is selected."""
+    """Event fired when a :class:`~flet.ContextMenu` item is selected."""
 
     item_id: Optional[int] = field(default=None, metadata={"data_field": "id"})
     """
@@ -94,12 +94,11 @@ class ContextMenuSelectEvent(ContextMenuDismissEvent):
 @control("ContextMenu")
 class ContextMenu(LayoutControl):
     """
-    Wraps its [`content`][(c).] and displays contextual menus for specific mouse \
-    events.
+    Wraps its :attr:`content` and displays contextual menus for specific mouse events.
 
     Tip:
-        On web, call [`disable()`][flet.BrowserContextMenu.disable] method of
-        [`Page.browser_context_menu`][flet.] to suppress the default browser
+        On web, call :meth:`~flet.BrowserContextMenu.disable` method of
+        :attr:`flet.Page.browser_context_menu` to suppress the default browser
         context menu before relying on custom menus.
     """
 
@@ -116,8 +115,7 @@ class ContextMenu(LayoutControl):
 
     items: list[PopupMenuItem] = field(default_factory=list)
     """
-    A list of menu items to display in the context menu, when [`open()`][(c).open] is \
-    called.
+    A list of menu items to display in the context menu, when :meth:`open` is called.
     """
 
     primary_items: list[PopupMenuItem] = field(default_factory=list)
@@ -126,7 +124,7 @@ class ContextMenu(LayoutControl):
     mouse button actions.
 
     These items are displayed when the corresponding
-    [`primary_trigger`][(c).] is activated.
+    :attr:`primary_trigger` is activated.
     """
 
     secondary_items: list[PopupMenuItem] = field(default_factory=list)
@@ -135,7 +133,7 @@ class ContextMenu(LayoutControl):
     mouse button actions.
 
     These items are displayed when the corresponding
-    [`secondary_trigger`][(c).] is activated.
+    :attr:`secondary_trigger` is activated.
     """
 
     tertiary_items: list[PopupMenuItem] = field(default_factory=list)
@@ -144,26 +142,26 @@ class ContextMenu(LayoutControl):
     mouse button actions.
 
     These items are displayed when the corresponding
-    [`tertiary_trigger`][(c).] is activated.
+    :attr:`tertiary_trigger` is activated.
     """
 
     primary_trigger: Optional[ContextMenuTrigger] = None
     """
-    Defines a trigger mode for the display of [`primary_items`][(c).].
+    Defines a trigger mode for the display of :attr:`primary_items`.
 
     If set to `None`, the trigger is disabled.
     """
 
     secondary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
     """
-    Defines a trigger mode for the display of [`secondary_items`][(c).].
+    Defines a trigger mode for the display of :attr:`secondary_items`.
 
     If set to `None`, the trigger is disabled.
     """
 
     tertiary_trigger: Optional[ContextMenuTrigger] = ContextMenuTrigger.DOWN
     """
-    Defines a trigger mode for the display of [`tertiary_items`][(c).].
+    Defines a trigger mode for the display of :attr:`tertiary_items`.
 
     If set to `None`, the trigger is disabled.
     """
@@ -185,13 +183,13 @@ class ContextMenu(LayoutControl):
         local_position: Optional[OffsetValue] = None,
     ) -> None:
         """
-        Opens the context menu programmatically, and displays [`items`][(c).].
+        Opens the context menu programmatically, and displays :attr:`items`.
 
         Args:
             global_position: A global coordinate describing where the menu
                 should appear. If omitted, `local_position` or the center of the
-                [`content`][(c).] is used.
-            local_position: A local coordinate relative to the [`content`][(c).].
+                :attr:`content` is used.
+            local_position: A local coordinate relative to the :attr:`content`.
                 When provided without `global_position`, the coordinate is translated
                 to global space automatically.
         """

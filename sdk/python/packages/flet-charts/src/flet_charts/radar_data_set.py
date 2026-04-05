@@ -10,7 +10,7 @@ __all__ = ["RadarDataSet", "RadarDataSetEntry"]
 @ft.control("RadarDataSetEntry")
 class RadarDataSetEntry(ft.BaseControl):
     """
-    A single data point rendered on a [`RadarChart`][(p).].
+    A single data point rendered on a :class:`~flet_charts.RadarChart`.
     """
 
     value: ft.Number
@@ -22,7 +22,8 @@ class RadarDataSetEntry(ft.BaseControl):
 @ft.control("RadarDataSet")
 class RadarDataSet(ft.BaseControl):
     """
-    A collection of [`RadarDataSetEntry`][(p).] drawn as a filled radar shape.
+    A collection of :class:`~flet_charts.RadarDataSetEntry` drawn as a filled radar \
+    shape.
     """
 
     entries: Annotated[
@@ -48,7 +49,7 @@ class RadarDataSet(ft.BaseControl):
     """
     The gradient used to fill this dataset.
 
-    Takes precedence over [`fill_color`][..].
+    Takes precedence over :attr:`fill_color`.
     """
 
     border_color: ft.ColorValue = ft.Colors.CYAN

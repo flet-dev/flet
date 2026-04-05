@@ -15,7 +15,7 @@ class CardVariant(Enum):
     """
     Material card visual style preset.
 
-    Used to define the [`Card.variant`][flet.].
+    Used to define the :attr:`flet.Card.variant`.
     """
 
     ELEVATED = "elevated"
@@ -61,8 +61,8 @@ class Card(LayoutControl, AdaptiveControl):
     The Control to display inside the card.
 
     Tip:
-        To display multiple children, wrap them in a control like [`Row`][flet.],
-        [`Column`][flet.], or [`Stack`][flet.], which accept
+        To display multiple children, wrap them in a control like :class:`~flet.Row`,
+        :class:`~flet.Column`, or :class:`~flet.Stack`, which accept
         a `controls` list.
     """
 
@@ -71,7 +71,7 @@ class Card(LayoutControl, AdaptiveControl):
     The z-coordinate at which to place this card.
     Defines the size of the shadow below the card.
 
-    Defaults to [`CardTheme.elevation`][flet.], or if that is `None`,
+    Defaults to :attr:`flet.CardTheme.elevation`, or if that is `None`,
     falls back to `1.0`.
     """
 
@@ -84,22 +84,22 @@ class Card(LayoutControl, AdaptiveControl):
     """
     The color to paint the shadow below this card.
 
-    Defaults to [`CardTheme.shadow_color`][flet.]
+    Defaults to :attr:`flet.CardTheme.shadow_color`
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     The shape of this card.
 
-    Defaults to [`CardTheme.shape`][flet.], or if that is `None`,
+    Defaults to :attr:`flet.CardTheme.shape`, or if that is `None`,
     falls back to `RoundedRectangleBorder(radius=12.0)`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Defines how the [`content`][(c).] will be clipped.
+    Defines how the :attr:`content` will be clipped.
 
-    Defaults to [`CardTheme.clip_behavior`][flet.],
+    Defaults to :attr:`flet.CardTheme.clip_behavior`,
     or if that is `None`, falls back to `ClipBehavior.NONE`.
     """
 
@@ -111,8 +111,8 @@ class Card(LayoutControl, AdaptiveControl):
 
     show_border_on_foreground: bool = True
     """
-    Whether the shape of the border should be painted in front of the \
-    [`content`][(c).] or behind.
+    Whether the shape of the border should be painted in front of the :attr:`content` \
+    or behind.
     """
 
     variant: CardVariant = CardVariant.ELEVATED

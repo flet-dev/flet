@@ -6,6 +6,7 @@ on:
       - '**'
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
     paths:
       - '.github/workflows/ci.yml'
       - '.github/scripts/**'
@@ -13,6 +14,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   pull_request:
     paths:
@@ -22,6 +25,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   workflow_dispatch:
 
@@ -76,7 +81,7 @@ jobs:
             if [ -f "$pkg/pyproject.toml" ] && [ -d "$pkg/src" ]; then
               pkg_name=$(basename "$pkg")
               echo "====== $pkg ======"
-              uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="packages/flet/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
+              uv run --no-dev --group docs-coverage docstr-coverage -C .docstr.yaml "$pkg/src" --badge="../../website/static/docs/assets/badges/docs-coverage/${pkg_name}.svg" || status=$?
               echo
             fi
           done
@@ -88,6 +93,36 @@ jobs:
         with:
           name: docs-coverage
           path: sdk/python/docstr_coverage.log
+
+  # ==========
+  # Docs build
+  # ==========
+  docs_build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build website
+        run: |
+          cd website
+          yarn install
+          yarn build
+
+      - name: Check for broken images and unresolved xrefs
+        run: bash .github/scripts/check_docs.sh website/build
 
   # ===========================
   # Build Flet Flutter package
@@ -135,7 +170,7 @@ jobs:
         run: dart pub publish --dry-run
 
       - name: Publish to pub.dev
-        if: ${{ github.ref_type == 'tag' }}
+        if: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '.dev') }}
         shell: bash
         working-directory: packages/flet
         run: dart pub publish -f
@@ -160,7 +195,7 @@ jobs:
         shell: bash
         run: |
           PUBSPEC="sdk/python/templates/build/{{cookiecutter.out_dir}}/pubspec.yaml"
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/* && "$GITHUB_REF" != *".dev"* ]]; then
             uv run "$SCRIPTS/patch_pubspec_version.py" \
               "$PUBSPEC" "$PKG_VER" --dependencies-only --exact
           else
@@ -729,19 +764,68 @@ jobs:
             sdk/python/dist/*.whl
             sdk/python/dist/*.tar.gz
 
-  # ===============================
-  # Publish Python packages to PyPI
-  # ===============================
+  # ==============
+  # GitHub Release
+  # ==============
+  release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs:
+      - python_tests
+      - docs_build
+      - build_flet_package
+      - build_windows
+      - build_macos
+      - build_linux
+      - build_web
+      - build_templates
+      - build_flet_extensions
+      - build_flet_cli_desktop
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    steps:
+      - name: Detect pre-release
+        id: prerelease
+        run: |
+          if [[ "${{ github.ref_name }}" == *".dev"* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create/Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
+          generate_release_notes: true
+          preserve_order: true
+          overwrite_files: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/**/*.whl
+            dist/**/*.tar.gz
+            dist/**/*.zip
+            dist/**/flet-build-template.zip
+            dist/**/flet-app-templates.zip
+
+  # ===============
+  # Python publish
+  # ===============
   py_publish:
     name: Publish Python packages to PyPI
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
-      - python_tests
-      - build_flet_package
-      - build_flet_cli_desktop
-      - build_web
-      - build_flet_extensions
+      - release
     steps:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
@@ -784,79 +868,3 @@ jobs:
             flet_webview; do
             uv publish dist/**/${pkg}-*
           done
-
-  # ==============
-  # GitHub Release
-  # ==============
-  release:
-    name: Publish GitHub Release
-    runs-on: ubuntu-latest
-    needs:
-      - py_publish
-      - build_windows
-      - build_macos
-      - build_linux
-      - build_templates
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Create/Update GitHub Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          name: ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          generate_release_notes: true
-          preserve_order: true
-          overwrite_files: true
-          fail_on_unmatched_files: true
-          files: |
-            dist/**/*.whl
-            dist/**/*.tar.gz
-            dist/**/*.zip
-            dist/**/flet-build-template.zip
-            dist/**/flet-app-templates.zip
-
-  # =====================
-  # Dev GitHub Release
-  # =====================
-  dev_release:
-    name: Publish dev GitHub Release
-    runs-on: ubuntu-latest
-    needs:
-      - build_flet_package
-      - build_windows
-      - build_macos
-      - build_linux
-      - build_templates
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Create/Update dev GitHub Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          name: v${{ needs.build_flet_package.outputs.PYPI_VER }}
-          tag_name: v${{ needs.build_flet_package.outputs.PYPI_VER }}
-          prerelease: true
-          generate_release_notes: true
-          overwrite_files: true
-          fail_on_unmatched_files: true
-          files: |
-            dist/**/flet-windows.zip
-            dist/**/flet-macos.tar.gz
-            dist/**/flet-linux*.tar.gz
-            dist/**/flet-build-template.zip
-            dist/**/flet-app-templates.zip

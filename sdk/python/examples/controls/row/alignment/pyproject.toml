@@ -1,0 +1,26 @@
+[project]
+name = "row-alignment"
+version = "1.0.0"
+description = "Row main-axis alignment modes demonstrated side by side."
+requires-python = ">=3.10"
+keywords = ["row", "layout", "alignment", "mainaxisalignment", "scroll"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Row"]
+
+[tool.flet.metadata]
+title = "Row alignment"
+controls = ["Column", "Row", "Container", "Text"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["main axis alignment", "layout comparison", "vertical scrolling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

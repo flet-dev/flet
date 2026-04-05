@@ -1,0 +1,26 @@
+[project]
+name = "snack-bar-basic"
+version = "1.0.0"
+description = "Open a basic SnackBar from a button tap."
+requires-python = ">=3.10"
+keywords = ["snackbar", "dialog", "button", "feedback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/SnackBar"]
+
+[tool.flet.metadata]
+title = "SnackBar basic"
+controls = ["SnackBar", "Button", "Text", "SafeArea"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["dialog open"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

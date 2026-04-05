@@ -1,0 +1,26 @@
+[project]
+name = "types-visual-density-showcase"
+version = "1.0.0"
+description = "Compares Visual Density values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["visual density", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Visual Density showcase"
+controls = ["SafeArea", "Column", "Container", "Theme", "Text", "IconButton", "Checkbox", "Chip"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

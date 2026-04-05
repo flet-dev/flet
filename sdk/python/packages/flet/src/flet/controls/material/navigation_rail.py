@@ -22,10 +22,10 @@ __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelTy
 
 class NavigationRailLabelType(Enum):
     """
-    Defines how destination labels are shown in a [`NavigationRail`][flet.].
+    Defines how destination labels are shown in a :class:`~flet.NavigationRail`.
 
     This setting affects the non-extended rail layout
-    ([`extended`][flet.NavigationRail.]). When the rail is
+    (:attr:`~flet.NavigationRail.extended`). When the rail is
     extended, labels are shown next to icons regardless of this value.
     """
 
@@ -58,7 +58,7 @@ class NavigationRailDestination(Control):
 
     icon: IconDataOrControl
     """
-    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
+    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
     If [`selected_icon`][(c).] is provided, this will only be displayed when the
@@ -71,7 +71,7 @@ class NavigationRailDestination(Control):
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
+    The [name](https://flet.dev/docs/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     If this icon is not provided, the NavigationRail will display `icon` in either
@@ -90,7 +90,7 @@ class NavigationRailDestination(Control):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the [`indicator_shape`][(c).] when this destination is selected.
+    The color of the :attr:`indicator_shape` when this destination is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -159,7 +159,7 @@ class NavigationRail(LayoutControl):
     The rail will implicitly animate between the extended and normal state.
 
     If the rail is going to be in the extended state, then
-    [`label_type`][(c).] should be set to [`NavigationRailLabelType.NONE`][flet.]
+    :attr:`label_type` should be set to :attr:`flet.NavigationRailLabelType.NONE`
     """
 
     label_type: Optional[NavigationRailLabelType] = None
@@ -186,7 +186,7 @@ class NavigationRail(LayoutControl):
     """
     The shape of the navigation rail's indicator.
 
-    Defaults to [`StadiumBorder()`][flet.StadiumBorder].
+    Defaults to :class:`~flet.StadiumBorder`.
     """
 
     leading: Optional[Control] = None
@@ -195,7 +195,7 @@ class NavigationRail(LayoutControl):
 
     Its location is not affected by `group_alignment`.
 
-    Typically a [`FloatingActionButton`][flet.], but
+    Typically a :class:`~flet.FloatingActionButton`, but
     may also be a non-button, such as a logo.
     """
 
@@ -247,7 +247,7 @@ class NavigationRail(LayoutControl):
     This value also defines the min width and min height of the destinations.
 
     To make a compact rail, set this to `56` and set
-    [`label_type`][(c).] to [`NavigationRailLabelType.NONE`][flet.]
+    :attr:`label_type` to :attr:`flet.NavigationRailLabelType.NONE`
 
     Raises:
         ValueError: If it is not greater than or equal to `0`.
@@ -284,7 +284,7 @@ class NavigationRail(LayoutControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a destination's label when it is selected.
+    The :class:`~flet.TextStyle` of a destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
     used.
@@ -292,25 +292,24 @@ class NavigationRail(LayoutControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a destination's label when it is not selected.
+    The :class:`~flet.TextStyle` of a destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
     """
 
     use_indicator: Optional[bool] = None
     """
-    Whether to add a rounded navigation indicator behind the selected destination's \
-    icon.
+    Whether to add a rounded navigation indicator behind the selected destination's     icon.
 
-    The indicator's shape will be circular if [`label_type`][(c).]
-    is [`NavigationRailLabelType.NONE`][flet.], or a
-    [`StadiumBorder`][flet.] if [`label_type`][(c).]
-    is [`NavigationRailLabelType.ALL`][flet.] or
-    [`NavigationRailLabelType.SELECTED`][flet.].
+    The indicator's shape will be circular if :attr:`label_type`
+    is :attr:`flet.NavigationRailLabelType.NONE`, or a
+    :class:`~flet.StadiumBorder` if :attr:`label_type`
+    is :attr:`flet.NavigationRailLabelType.ALL` or
+    :attr:`flet.NavigationRailLabelType.SELECTED`.
 
     If `None`, defaults to
-    [`NavigationRailTheme.use_indicator`][flet.].
-    If that is also `None`, defaults to [`Theme.use_material3`][flet.].
+    :attr:`flet.NavigationRailTheme.use_indicator`.
+    If that is also `None`, defaults to :attr:`flet.Theme.use_material3`.
     """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None

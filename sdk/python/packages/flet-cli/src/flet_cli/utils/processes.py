@@ -19,14 +19,14 @@ def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
         args: Command and arguments passed to the subprocess.
         cwd: Working directory for the command.
         env: Extra environment variables merged into the current process env.
-        capture_output: If `True`, run with [`subprocess.run`][subprocess.run] and
+        capture_output: If `True`, run with `subprocess.run` and
             capture output in memory. If `False`, stream combined output line by line.
         log: Optional callback receiving each output line when `capture_output=False`.
 
     Returns:
-        A completed [`subprocess.CompletedProcess`][subprocess.CompletedProcess]
+        A completed `subprocess.CompletedProcess`
             when `capture_output=True`, otherwise a finished
-            [`subprocess.Popen`][subprocess.Popen] instance.
+            `subprocess.Popen` instance.
 
     Raises:
         KeyboardInterrupt: Re-raised after terminating the child process when

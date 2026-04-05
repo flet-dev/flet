@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-tic-tac-toe"
+version = "1.0.0"
+description = "Plays tic-tac-toe declaratively with move history and winner detection."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "game", "tic tac toe", "history"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Games", "Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Tic tac toe"
+controls = ["SafeArea", "Row", "Column", "Button", "Icon", "Text", "TextButton"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["game state", "move history"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

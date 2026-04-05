@@ -1,0 +1,26 @@
+[project]
+name = "shader-mask-pink-radial-glow"
+version = "1.0.0"
+description = "Apply a radial ShaderMask glow to an image using a burn blend mode."
+requires-python = ">=3.10"
+keywords = ["shadermask", "image", "radialgradient", "blendmode", "visual-effect"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/ShaderMask"]
+
+[tool.flet.metadata]
+title = "ShaderMask pink radial glow"
+controls = ["ShaderMask", "Image", "Row", "SafeArea"]
+layout_pattern = "single-focus"
+complexity = "basic"
+features = ["radial gradient", "blend mode", "image masking"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

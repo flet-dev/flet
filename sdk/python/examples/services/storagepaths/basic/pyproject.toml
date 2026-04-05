@@ -1,0 +1,26 @@
+[project]
+name = "services-storagepaths-basic"
+version = "1.0.0"
+description = "Lists storage path APIs and shows unsupported-path errors on the current platform."
+requires-python = ">=3.10"
+keywords = ["storagepaths", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Storagepaths"]
+
+[tool.flet.metadata]
+title = "Basic storage paths"
+controls = ["SafeArea", "Column", "Page", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["path discovery", "platform fallback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

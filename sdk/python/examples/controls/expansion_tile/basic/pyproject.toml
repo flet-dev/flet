@@ -1,0 +1,26 @@
+[project]
+name = "expansion-tile-basic"
+version = "1.0.0"
+description = "Shows ExpansionTile variants with trailing and leading arrows, snack feedback, and nested list tiles."
+requires-python = ">=3.10"
+keywords = ["expansion tile", "layout", "events", "list tiles"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionTile"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "ExpansionTile", "ListTile", "Text", "Icon", "SnackBar"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["tile expand/collapse", "change callback", "custom arrow affinity"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

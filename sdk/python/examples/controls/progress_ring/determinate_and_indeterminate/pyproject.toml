@@ -1,0 +1,26 @@
+[project]
+name = "progress-ring-determinate-and-indeterminate"
+version = "1.0.0"
+description = "Shows determinate and indeterminate circular progress indicators."
+requires-python = ">=3.10"
+keywords = ["progress ring", "circular progress", "progress", "async", "loading"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/ProgressRing"]
+
+[tool.flet.metadata]
+title = "Determinate and Indeterminate"
+controls = ["ProgressRing", "SafeArea", "Column", "Row", "Text"]
+layout_pattern = "status-dashboard"
+complexity = "basic"
+features = ["circular progress animation", "determinate updates", "indeterminate progress", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
