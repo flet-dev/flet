@@ -2,6 +2,8 @@
 
 ### New features
 
+* Add `ft.use_dialog()` hook for declarative dialog management from within `@ft.component` functions, with frozen-diff reactive updates and automatic open/close lifecycle ([#6335](https://github.com/flet-dev/flet/pull/6335)) by @FeodorFitsner.
+
 ### Improvements
 
 ### Bug fixes
