@@ -61,7 +61,7 @@ class NavigationRailDestination(Control):
     The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
-    If [`selected_icon`][(c).] is provided, this will only be displayed when the
+    If :attr:`selected_icon` is provided, this will only be displayed when the
     destination is not selected.
 
     To make the NavigationRail more accessible, consider choosing an icon with a stroked
@@ -211,7 +211,7 @@ class NavigationRail(LayoutControl):
 
     pin_leading_to_top: bool = True
     """
-    Whether to pin the [`leading`][(c).] control to the top of the rail.
+    Whether to pin the :attr:`leading` control to the top of the rail.
 
     If `False`, the leading control becomes part of the main group together with the
     destinations and participates in scrolling/alignment.
@@ -219,7 +219,7 @@ class NavigationRail(LayoutControl):
 
     pin_trailing_to_bottom: bool = False
     """
-    Whether to pin the [`trailing`][(c).] control to the bottom of the rail.
+    Whether to pin the :attr:`trailing` control to the bottom of the rail.
 
     If `False`, the trailing control becomes part of the main group together with the
     destinations and participates in scrolling/alignment.
@@ -227,10 +227,10 @@ class NavigationRail(LayoutControl):
 
     scrollable: bool = False
     """
-    Whether the main group of [`destinations`][(c).] should become scrollable when \
+    Whether the main group of :attr:`destinations` should become scrollable when \
     vertical space is insufficient.
 
-    When [`pin_leading_to_top`][(c).] or [`pin_trailing_to_bottom`][(c).] are
+    When :attr:`pin_leading_to_top` or :attr:`pin_trailing_to_bottom` are
     `False`, the respective controls also become part of the scrollable group.
     """
 
