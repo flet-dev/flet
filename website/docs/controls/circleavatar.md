@@ -8,7 +8,7 @@ title: "CircleAvatar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CircleAvatar" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CircleAvatar" imageWidth="5%"/>
 
 ## Examples
 
@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/user_avatars/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/user_avatars.png'} alt="user-avatars" width="55%" />
+<Image src={frontMatter.example_media + '/user_avatars.png'} alt="user-avatars" width="7%" />
 
 <ClassMembers name={frontMatter.class_name} />

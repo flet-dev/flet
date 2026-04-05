@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/dismissible_list_tiles/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/dismissible_list_tiles.gif'} alt="dismissible-list-tiles" width="55%" />
+<Image src={frontMatter.example_images + '/dismissible_list_tiles.gif'} alt="dismissible-list-tiles" width="30%" />
 
 ### Remove Dismissible `on_dismiss` inside component
 

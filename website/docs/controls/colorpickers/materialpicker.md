@@ -9,7 +9,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 # MaterialPicker
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/material_picker.png'} imageCaption="Basic MaterialPicker" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/material_picker.png'} imageCaption="Basic MaterialPicker" imageWidth="55%"/>
 
 ## Example
 

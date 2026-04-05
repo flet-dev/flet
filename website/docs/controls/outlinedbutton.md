@@ -8,7 +8,7 @@ title: "OutlinedButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Simple Outlined Button" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Simple Outlined Button" imageWidth="25%"/>
 
 ## Examples
 
@@ -18,24 +18,24 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="25%" />
 
 ### Handling clicks
 
 <CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="55%" />
+<Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="40%" />
 
 ### Icons
 
 <CodeExample path={frontMatter.examples + '/icons/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/icons.png'} alt="icons" width="55%" />
+<Image src={frontMatter.example_images + '/icons.png'} alt="icons" width="35%" />
 
 ### Custom content
 
 <CodeExample path={frontMatter.examples + '/custom_content/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/custom_content.png'} alt="custom-content" width="55%" />
+<Image src={frontMatter.example_images + '/custom_content.png'} alt="custom-content" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />
