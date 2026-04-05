@@ -49,7 +49,7 @@ pip install flet-datatable2  # (1)!
 
 <CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/example_2.gif'} width="55%" />
+<Image src={frontMatter.example_media + '/example_2.gif'} width="65%" />
 
 ## Description
 
