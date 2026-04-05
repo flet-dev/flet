@@ -2288,10 +2288,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         Find the best matching image file for the current target platform.
 
-        When multiple files share the same base name (e.g. ``icon.icns``,
-        ``icon.ico``, ``icon.png``), the method picks the one whose extension
-        is most appropriate for the build target.  For example, ``.icns`` is
-        skipped on Windows builds because ``flutter_launcher_icons`` cannot
+        When multiple files share the same base name (e.g. icon.icns,
+        icon.ico, icon.png), the method picks the one whose extension
+        is most appropriate for the build target.  For example, .icns is
+        skipped on Windows builds because flutter_launcher_icons cannot
         decode it.
 
         Args:
@@ -2302,7 +2302,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             hash: Hash accumulator used for change detection.
 
         Returns:
-            File name of matched image, or ``None`` if not found.
+            File name of matched image, or None if not found.
         """
 
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
