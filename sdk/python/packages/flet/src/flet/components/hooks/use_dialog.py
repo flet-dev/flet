@@ -8,10 +8,10 @@ from flet.controls.dialog_control import DialogControl
 
 def use_dialog(dialog: DialogControl | None = None):
     """
-    Portal a [`DialogControl`][flet.DialogControl] to the page's dialog overlay.
+    Portal a :class:`~flet.DialogControl` to the page's dialog overlay.
 
-    Call this hook inside a [`@component`][flet.component] function on every render.
-    Pass a [`DialogControl`][flet.DialogControl] instance to show the dialog,
+    Call this hook inside a :func:`~flet.component` function on every render.
+    Pass a :class:`~flet.DialogControl` instance to show the dialog,
     or `None` to hide/remove it. The dialog content is updated
     reactively on each re-render.
 
@@ -20,7 +20,7 @@ def use_dialog(dialog: DialogControl | None = None):
     component unmounts.
 
     Args:
-        dialog: A [`DialogControl`][flet.DialogControl] to display, or `None`
+        dialog: A :class:`~flet.DialogControl` to display, or `None`
             to hide it.
     """
     ref = use_ref(None)
