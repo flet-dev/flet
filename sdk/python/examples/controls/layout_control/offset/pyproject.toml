@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-offset"
+version = "1.0.0"
+description = "Visualizes Offset translation relative to control size with labeled overlays."
+requires-python = ">=3.10"
+keywords = ["layout control", "offset", "transform", "stack"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Offset"
+controls = ["SafeArea", "Stack", "Container", "Text", "Icon", "Offset"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["offset translation", "visual offset comparison"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

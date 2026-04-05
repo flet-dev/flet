@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-activity-indicator-progress"
+version = "1.0.0"
+description = "Drives CupertinoActivityIndicator progress with a slider for determinate loading feedback."
+requires-python = ">=3.10"
+keywords = ["cupertino", "activity indicator", "progress", "slider"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/CupertinoActivityIndicator"]
+
+[tool.flet.metadata]
+title = "Progress"
+controls = ["SafeArea", "Column", "CupertinoActivityIndicator", "Slider"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["determinate progress", "slider-driven updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,27 @@
+[project]
+name = "ads-example-1"
+version = "1.0.0"
+description = "Mobile ads example with BannerAd and InterstitialAd."
+requires-python = ">=3.10"
+keywords = ["ads", "banner ad", "interstitial ad", "admob", "mobile"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-ads"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Ads"]
+
+[tool.flet.metadata]
+title = "BannerAd and InterstitialAd"
+controls = ["SafeArea", "Column", "OutlinedButton", "AppBar", "BannerAd", "InterstitialAd"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["banner ad loading", "interstitial ad loading", "ad lifecycle callbacks", "platform-specific ad units"]
+
+[tool.flet]
+platforms = ["web", "ios", "android"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -25,8 +25,8 @@ class DismissibleDismissEvent(Event["Dismissible"]):
     """
     Event payload for dismissal confirmation and completion callbacks.
 
-    Used by [`on_confirm_dismiss`][flet.Dismissible.] and
-    [`on_dismiss`][flet.Dismissible.].
+    Used by :attr:`~flet.Dismissible.on_confirm_dismiss` and
+    :attr:`~flet.Dismissible.on_dismiss`.
     """
 
     direction: DismissDirection
@@ -66,14 +66,14 @@ class DismissibleUpdateEvent(Event["Dismissible"]):
 class Dismissible(LayoutControl, AdaptiveControl):
     """
     A control that can be dismissed by dragging in the indicated \
-    [`dismiss_direction`][(c).].
-    When dragged or flung in the specified [`dismiss_direction`][(c).],
-    its [`content`][(c).] smoothly slides out of view.
+    :attr:`dismiss_direction`.
+    When dragged or flung in the specified :attr:`dismiss_direction`,
+    its :attr:`content` smoothly slides out of view.
 
-    After completing the sliding animation, if a [`resize_duration`][(c).] is provided,
+    After completing the sliding animation, if a :attr:`resize_duration` is provided,
     this control further animates its height (or width, depending on what is
-    perpendicular to the [`dismiss_direction`][(c).]), gradually reducing it to zero
-    over the specified [`resize_duration`][(c).].
+    perpendicular to the :attr:`dismiss_direction`), gradually reducing it to zero
+    over the specified :attr:`resize_duration`.
     """
 
     content: Annotated[
@@ -89,21 +89,21 @@ class Dismissible(LayoutControl, AdaptiveControl):
 
     background: Optional[Control] = None
     """
-    A control that is stacked behind the [`content`][(c).].
+    A control that is stacked behind the :attr:`content`.
 
-    If [`secondary_background`][(c).] is also
+    If :attr:`secondary_background` is also
     specified, then this control only appears when the content has been dragged
     down or to the right.
     """
 
     secondary_background: Optional[Control] = None
     """
-    A control that is stacked behind the [`content`][(c).] and is exposed when it has \
+    A control that is stacked behind the :attr:`content` and is exposed when it has \
     been dragged up or to the left.
 
     Raises:
         ValueError: If it is provided and visible
-            but the [`background`][(c).] is not provided and visible.
+            but the :attr:`background` is not provided and visible.
     """
 
     dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
@@ -117,8 +117,8 @@ class Dismissible(LayoutControl, AdaptiveControl):
     """
     The offset threshold the item has to be dragged in order to be considered as \
     dismissed. This is specified as a dictionary where the key is of type \
-    [`DismissDirection`][flet.] and the value is the threshold (a fractional/decimal \
-    value between `0.0` and `1.0`, inclusive).
+    :class:`~flet.DismissDirection` and the value is the threshold (a \
+    fractional/decimal value between `0.0` and `1.0`, inclusive).
 
     Example:
         ```python
@@ -136,7 +136,7 @@ class Dismissible(LayoutControl, AdaptiveControl):
         default_factory=lambda: Duration(milliseconds=200)
     )
     """
-    The duration for [`content`][(c).] to dismiss or to come back to original position \
+    The duration for :attr:`content` to dismiss or to come back to original position \
     if not dismissed.
     """
 
@@ -144,13 +144,13 @@ class Dismissible(LayoutControl, AdaptiveControl):
         default_factory=lambda: Duration(milliseconds=300)
     )
     """
-    The amount of time the control will spend contracting before [`on_dismiss`][(c).] \
-    is called.
+    The amount of time the control will spend contracting before :attr:`on_dismiss` is \
+    called.
     """
 
     cross_axis_end_offset: Number = 0.0
     """
-    Specifies the end offset along the main axis once the [`content`][(c).] has been \
+    Specifies the end offset along the main axis once the :attr:`content` has been \
     dismissed.
 
     If set to a non-zero value, then this dismissible moves in cross direction
@@ -173,7 +173,7 @@ class Dismissible(LayoutControl, AdaptiveControl):
     This dismissible cannot be dragged again until this pending dismissal is resolved.
 
     To resolve the pending dismissal, call the
-    [`confirm_dismiss()`][flet.Dismissible.confirm_dismiss] method
+    :meth:`~flet.Dismissible.confirm_dismiss` method
     passing it a boolean representing the decision. If `True`, then the control will be
     dismissed, otherwise it will be moved back to its original location.
     """
@@ -196,10 +196,10 @@ class Dismissible(LayoutControl, AdaptiveControl):
 
     async def confirm_dismiss(self, dismiss: bool):
         """
-        Resolve a pending dismissal decision triggered by [`on_confirm_dismiss`][(c).].
+        Resolve a pending dismissal decision triggered by :attr:`on_confirm_dismiss`.
 
         Call this method from your confirmation flow after handling
-        [`on_confirm_dismiss`][(c).].
+        :attr:`on_confirm_dismiss`.
 
         Args:
             dismiss: `True` to continue dismissing the control, `False` to cancel

@@ -1,0 +1,26 @@
+[project]
+name = "date-range-picker-basic"
+version = "1.0.0"
+description = "Opens DateRangePicker and displays start and end date values after selection."
+requires-python = ">=3.10"
+keywords = ["date range picker", "dialog", "events", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/DateRangePicker"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "Button", "DateRangePicker", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["open dialog", "range change callback", "dismiss callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

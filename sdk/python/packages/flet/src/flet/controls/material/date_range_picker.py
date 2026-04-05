@@ -26,9 +26,9 @@ class DateRangePicker(DialogControl):
     """
     A Material-style date range picker dialog.
 
-    It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
+    It can be opened by calling :meth:`flet.Page.show_dialog` method.
 
-    Depending on the [`entry_mode`][(c).], it will show either a Calendar
+    Depending on the :attr:`entry_mode`, it will show either a Calendar
     or an Input (text field) for picking a date range.
     """
 
@@ -36,14 +36,14 @@ class DateRangePicker(DialogControl):
     """
     The selected start date that the picker should display.
 
-    Defaults to [`current_date`][(c).].
+    Defaults to :attr:`current_date`.
     """
 
     end_value: Optional[DateTimeValue] = None
     """
     The selected end date that the picker should display.
 
-    Defaults to [`current_date`][(c).].
+    Defaults to :attr:`current_date`.
     """
 
     save_text: Optional[str] = None
@@ -86,12 +86,13 @@ class DateRangePicker(DialogControl):
     The locale for this date picker dialog. It is intended for (rare) cases where this \
     dialog should be localized differently from the rest of the page.
 
-    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    It overrides the locale used by the page (see \
+    :attr:`flet.Page.locale_configuration`),
     but does not participate in page-level locale resolution.
 
     If set to `None` (the default) or an inexistent/unsupported locale,
-    the [`current_locale`][flet.LocaleConfiguration.] of the
-    [`Page.locale_configuration`][flet.] is used as fallback.
+    the :attr:`~flet.LocaleConfiguration.current_locale` of the
+    :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
     keyboard_type: KeyboardType = KeyboardType.DATETIME
@@ -130,7 +131,7 @@ class DateRangePicker(DialogControl):
     error_invalid_text: Optional[str] = None
     """
     The error message displayed below the TextField if the date is earlier than \
-    [`first_date`][(c).] or later than [`last_date`][(c).].
+    :attr:`first_date` or later than :attr:`last_date`.
     """
 
     field_start_hint_text: Optional[str] = None
@@ -156,10 +157,10 @@ class DateRangePicker(DialogControl):
     switch_to_calendar_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when \
-    [`entry_mode`][(c).] is [`DatePickerEntryMode.INPUT`][flet.].
+    :attr:`entry_mode` is :attr:`flet.DatePickerEntryMode.INPUT`.
 
     Clicking on this icon changes the `entry_mode` to
-    [`DatePickerEntryMode.CALENDAR`][flet.].
+    :attr:`flet.DatePickerEntryMode.CALENDAR`.
 
     If `None`, `Icons.CALENDAR_TODAY` is used.
     """
@@ -167,10 +168,10 @@ class DateRangePicker(DialogControl):
     switch_to_input_icon: Optional[IconData] = None
     """
     The name of the icon displayed in the corner of the dialog when \
-    [`entry_mode`][(c).] is [`DatePickerEntryMode.CALENDAR`][flet.].
+    :attr:`entry_mode` is :attr:`flet.DatePickerEntryMode.CALENDAR`.
 
     Clicking on this icon changes the `entry_mode` to
-    [`DatePickerEntryMode.INPUT`][flet.].
+    :attr:`flet.DatePickerEntryMode.INPUT`.
 
     If `None`, `Icons.EDIT_OUTLINED` is used.
     """
@@ -179,7 +180,7 @@ class DateRangePicker(DialogControl):
     """
     The color of the modal barrier that darkens everything below the date picker.
 
-    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
+    If `None`, the :attr:`flet.DialogTheme.barrier_color` is used.
     If it is also `None`, then `Colors.BLACK_54` is used.
     """
 
@@ -187,8 +188,8 @@ class DateRangePicker(DialogControl):
     """
     Called when user clicks confirm button.
 
-    [`start_value`][(c).] and [`end_value`][(c).] are updated with selected dates.
+    :attr:`start_value` and :attr:`end_value` are updated with selected dates.
 
-    The [`data`][flet.Event.] property of the event handler
+    The :attr:`~flet.Event.data` property of the event handler
     argument contains the selected dates.
     """

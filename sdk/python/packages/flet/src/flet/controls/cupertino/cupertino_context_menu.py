@@ -11,8 +11,7 @@ __all__ = ["CupertinoContextMenu"]
 @control("CupertinoContextMenu")
 class CupertinoContextMenu(AdaptiveControl):
     """
-    A full-screen modal route that opens up when the [`content`][(c).] is \
-    long-pressed.
+    A full-screen modal route that opens up when the :attr:`content` is long-pressed.
     """
 
     content: Annotated[
@@ -38,7 +37,7 @@ class CupertinoContextMenu(AdaptiveControl):
     """
     A list of action buttons to be shown in the menu.
 
-    Typically [`CupertinoContextMenuAction`][flet.]s.
+    Typically :class:`~flet.CupertinoContextMenuAction`s.
 
     Raises:
         ValueError: If it does not contain at least one visible `Control`.
@@ -46,5 +45,5 @@ class CupertinoContextMenu(AdaptiveControl):
 
     enable_haptic_feedback: bool = True
     """
-    Whether a click on the [`actions`][(c).] should produce haptic feedback.
+    Whether a click on the :attr:`actions` should produce haptic feedback.
     """

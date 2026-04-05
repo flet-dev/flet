@@ -1,0 +1,26 @@
+[project]
+name = "apps-authentication-github-minimal"
+version = "1.0.0"
+description = "Shows a minimal GitHub OAuth login flow and prints the access token and user ID."
+requires-python = ">=3.10"
+keywords = ["apps", "authentication", "github", "oauth", "login", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Authentication"]
+
+[tool.flet.metadata]
+title = "Minimal GitHub login"
+controls = ["SafeArea", "Column", "Button", "Text", "GitHubOAuthProvider"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["oauth login", "access token display"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

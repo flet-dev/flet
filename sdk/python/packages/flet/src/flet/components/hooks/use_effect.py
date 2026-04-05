@@ -10,7 +10,7 @@ from flet.components.utils import current_component
 @dataclass
 class EffectHook(Hook):
     """
-    Hook state container backing [`use_effect()`][flet.use_effect].
+    Hook state container backing :func:`~flet.use_effect`.
 
     Stores effect callbacks, dependency snapshots, and runtime task handles used
     to schedule async setup/cleanup work across mount, update, and unmount

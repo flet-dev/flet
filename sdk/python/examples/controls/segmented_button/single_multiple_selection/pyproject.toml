@@ -1,0 +1,26 @@
+[project]
+name = "segmented-button-single-multiple-selection"
+version = "1.0.0"
+description = "Compare single and multiple selection behavior with SegmentedButton."
+requires-python = ">=3.10"
+keywords = ["segmentedbutton", "selection", "multiple", "single", "icons"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/SegmentedButton"]
+
+[tool.flet.metadata]
+title = "SegmentedButton single and multiple selection"
+controls = ["SegmentedButton", "Segment", "Icon", "Text", "Column", "SafeArea"]
+layout_pattern = "comparison-stack"
+complexity = "basic"
+features = ["single selection", "multiple selection", "selection change"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

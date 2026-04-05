@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-radio-basic"
+version = "1.0.0"
+description = "Collects color selection with CupertinoRadio controls in a RadioGroup and submit action."
+requires-python = ">=3.10"
+keywords = ["cupertino", "radio", "radio group", "selection", "form"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoRadio"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "RadioGroup", "CupertinoRadio", "Text", "Button"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["single-choice selection", "submit callback", "custom active colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

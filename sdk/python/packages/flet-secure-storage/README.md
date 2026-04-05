@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-secure-storage.svg)](https://pypi.python.org/pypi/flet-secure-storage)
 [![downloads](https://static.pepy.tech/badge/flet-secure-storage/month)](https://pepy.tech/project/flet-secure-storage)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-secure-storage)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-secure-storage.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-secure-storage.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-secure-storage/LICENSE)
 
 A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
@@ -20,7 +20,7 @@ sudo apt-get install libsecret-1-dev libsecret-1-0
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/secure_storage/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/securestorage/).
 
 ## Platform Support
 

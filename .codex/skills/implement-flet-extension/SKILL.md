@@ -76,8 +76,8 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 
 ## Docs, Examples, Tests
 
-- Add control/service docs under `sdk/python/packages/flet/docs/<name>`.
-- Add all custom enums/types docs and update `sdk/python/packages/flet/mkdocs.yml` navigation.
+- Add control/service docs under `website/docs/controls/<name>` for controls and `website/docs/services/<name>` for services.
+- Add all custom enums/types docs and update `website/sidebars.yml` navigation.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
 - Add examples under `sdk/python/examples` in the appropriate category for control vs service.
 - Add integration tests under `packages/flet/integration_tests` in the appropriate category for control vs service.

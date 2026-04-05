@@ -123,7 +123,7 @@ def is_enum(tp: Any) -> bool:
         tp: Value to check.
 
     Returns:
-        `True` if `tp` is a subclass of [`Enum`][enum.Enum], otherwise `False`.
+        `True` if `tp` is a subclass of `enum.Enum`, otherwise `False`.
     """
     return isinstance(tp, type) and issubclass(tp, Enum)
 

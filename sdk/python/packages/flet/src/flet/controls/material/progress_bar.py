@@ -88,23 +88,24 @@ class ProgressBar(LayoutControl):
     """
     The color of the stop indicator.
 
-    If [`ProgressBar.year_2023`][flet.] is `True` or [`Theme.use_material3`][flet.]
+    If :attr:`flet.ProgressBar.year_2023` is `True` or :attr:`flet.Theme.use_material3`
     is `False`, then no stop indicator will be drawn.
 
-    If not set, then the [`ProgressIndicatorTheme.stop_indicator_color`][flet.] will
-    be used. If that is not set, then the [`ColorScheme.primary`][flet.] will be used.
+    If not set, then the :attr:`flet.ProgressIndicatorTheme.stop_indicator_color` will
+    be used. If that is not set, then the :attr:`flet.ColorScheme.primary` will be used.
     """
 
     stop_indicator_radius: Optional[Number] = None
     """
     The radius of the stop indicator.
 
-    If [`ProgressBar.year_2023`][flet.] is `True` or [`Theme.use_material3`][flet.] is
+    If :attr:`flet.ProgressBar.year_2023` is `True` or \
+    :attr:`flet.Theme.use_material3` is
     `False`, then no stop indicator will be drawn.
 
     Set `stop_indicator_radius` to `0` to hide the stop indicator.
 
-    If not set, then the [`ProgressIndicatorTheme.stop_indicator_radius`][flet.]
+    If not set, then the :attr:`flet.ProgressIndicatorTheme.stop_indicator_radius`
     will be used. If that is not set, then defaults to `2`.
     """
 
@@ -112,11 +113,11 @@ class ProgressBar(LayoutControl):
     """
     The gap between the indicator and the track.
 
-    If [`ProgressBar.year_2023`][flet.] is `True` or
-    [`Theme.use_material3`][flet.] is `False`, then no track gap
+    If :attr:`flet.ProgressBar.year_2023` is `True` or
+    :attr:`flet.Theme.use_material3` is `False`, then no track gap
     will be drawn.
 
-    If not set, then the [`ProgressIndicatorTheme.track_gap`][flet.] will be
+    If not set, then the :attr:`flet.ProgressIndicatorTheme.track_gap` will be
     used. If that is not set, then defaults to `4`.
 
     Tip:
@@ -130,8 +131,8 @@ class ProgressBar(LayoutControl):
 
     When `True`, the ProgressBar will use the 2023 Material Design 3 appearance.
 
-    If not set, then the [`ProgressIndicatorTheme.year_2023`][flet.] will be
+    If not set, then the :attr:`flet.ProgressIndicatorTheme.year_2023` will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.] is `False`, then this property is ignored.
+    If :attr:`flet.Theme.use_material3` is `False`, then this property is ignored.
     """

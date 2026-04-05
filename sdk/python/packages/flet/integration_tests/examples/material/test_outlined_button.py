@@ -2,12 +2,12 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.outlined_button import (
-    basic,
-    custom_content,
-    handling_clicks,
-    icons,
+from examples.controls.outlined_button.basic.main import main as basic
+from examples.controls.outlined_button.custom_content.main import main as custom_content
+from examples.controls.outlined_button.handling_clicks.main import (
+    main as handling_clicks,
 )
+from examples.controls.outlined_button.icons.main import main as icons
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -21,7 +21,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": basic.main}],
+    [{"flet_app_main": basic}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -35,7 +35,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": custom_content.main}],
+    [{"flet_app_main": custom_content}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -49,7 +49,7 @@ async def test_custom_content(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": icons.main}],
+    [{"flet_app_main": icons}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -63,7 +63,7 @@ async def test_icons(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": handling_clicks.main}],
+    [{"flet_app_main": handling_clicks}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

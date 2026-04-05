@@ -1,0 +1,26 @@
+[project]
+name = "types-point-mode-showcase"
+version = "1.0.0"
+description = "Compares Point Mode values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["point mode", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Canvas/Shapes"]
+
+[tool.flet.metadata]
+title = "Point Mode showcase"
+controls = ["SafeArea", "Column", "Container", "Text", "Canvas", "Points", "AppBar", "Row"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "apps-authentication-github-check-auth-results-and-toggle-ui"
+version = "1.0.0"
+description = "Toggles GitHub sign-in and sign-out buttons based on authentication events."
+requires-python = ">=3.10"
+keywords = ["apps", "authentication", "github", "oauth", "login", "web", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Authentication"]
+
+[tool.flet.metadata]
+title = "GitHub auth button toggle"
+controls = ["SafeArea", "Column", "Button", "GitHubOAuthProvider"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["oauth login", "oauth logout", "auth-aware UI"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

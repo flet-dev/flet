@@ -1,0 +1,26 @@
+[project]
+name = "filled-button-basic"
+version = "1.0.0"
+description = "Shows enabled, disabled, and icon variants of FilledButton in a simple vertical layout."
+requires-python = ">=3.10"
+keywords = ["filled button", "button states", "icon button", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/FilledButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "FilledButton"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["enabled and disabled states", "button with icon"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -18,8 +18,8 @@ class WindowEventType(Enum):
     """
     Type of native desktop window event.
 
-    Values are reported in [`WindowEvent.type`][flet.] and
-    delivered by [`Window.on_event`][flet.]. Event availability
+    Values are reported in :attr:`flet.WindowEvent.type` and
+    delivered by :attr:`flet.Window.on_event`. Event availability
     depends on the operating system and underlying window manager.
     """
 
@@ -71,7 +71,7 @@ class WindowEventType(Enum):
 
 class WindowResizeEdge(Enum):
     """
-    Edge or corner used by [`Window.start_resizing()`][flet.Window.start_resizing].
+    Edge or corner used by :meth:`flet.Window.start_resizing`.
 
     The selected value defines which resize handle is used when initiating
     native window resizing programmatically.
@@ -105,7 +105,7 @@ class WindowResizeEdge(Enum):
 @dataclass
 class WindowEvent(Event[EventControlType]):
     """
-    Payload for [`Window.on_event`][flet.] callbacks.
+    Payload for :attr:`flet.Window.on_event` callbacks.
     """
 
     type: WindowEventType
@@ -129,7 +129,7 @@ class Window(BaseControl):
     Sets background color of an application window.
 
     Tip:
-        Can be used together with [`Page.bgcolor`][flet.] to make
+        Can be used together with :attr:`flet.Page.bgcolor` to make
         a window transparent.
     """
 
@@ -369,9 +369,9 @@ class Window(BaseControl):
         Requests graceful closing of the app window.
 
         This sends a native close request equivalent to pressing the window
-        close button. If [`prevent_close`][(c).] is enabled, the close may be
-        intercepted and reported via [`on_event`][(c).] with
-        [`WindowEventType.CLOSE`][flet.].
+        close button. If :attr:`prevent_close` is enabled, the close may be
+        intercepted and reported via :attr:`on_event` with
+        :attr:`flet.WindowEventType.CLOSE`.
         """
         await self._invoke_method("close")
 

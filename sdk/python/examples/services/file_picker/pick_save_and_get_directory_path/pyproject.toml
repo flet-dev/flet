@@ -1,0 +1,26 @@
+[project]
+name = "services-file-picker-pick-save-and-get-directory-path"
+version = "1.0.0"
+description = "Demonstrates file picking, save dialogs, and directory selection in one example."
+requires-python = ">=3.10"
+keywords = ["file picker", "pick save and get directory path", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/FilePicker"]
+
+[tool.flet.metadata]
+title = "Pick, save, and browse directories"
+controls = ["SafeArea", "Column", "Page", "Button", "FilePicker", "Row", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["file picking", "save dialog", "directory picker"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-m2-label-and-hint"
+version = "1.0.0"
+description = "Shows DropdownM2 with label, hint text, and autofocus configuration."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "label", "hint", "autofocus", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/DropdownM2"]
+
+[tool.flet.metadata]
+title = "Dropdown with label and hint"
+controls = ["SafeArea", "DropdownM2"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["label text", "hint text", "autofocus"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

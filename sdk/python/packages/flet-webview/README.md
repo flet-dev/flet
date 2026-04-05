@@ -3,7 +3,7 @@
 [![pypi](https://img.shields.io/pypi/v/flet-webview.svg)](https://pypi.python.org/pypi/flet-webview)
 [![downloads](https://static.pepy.tech/badge/flet-webview/month)](https://pepy.tech/project/flet-webview)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-webview)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-webview.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-webview.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-webview.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-webview.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-webview/LICENSE)
 
 A [Flet](https://flet.dev) extension for displaying web content in a WebView.
@@ -13,7 +13,7 @@ and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter 
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/webview/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/webview/).
 
 ## Platform Support
 

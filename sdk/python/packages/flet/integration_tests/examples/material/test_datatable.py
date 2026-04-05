@@ -2,7 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.data_table import basic, sortable_and_selectable
+from examples.controls.data_table.basic import main as basic
+from examples.controls.data_table.sortable_and_selectable import (
+    main as sortable_and_selectable,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

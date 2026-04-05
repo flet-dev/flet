@@ -1,8 +1,9 @@
 import pytest
 
+import examples.controls.bottom_app_bar.border_radius.main as border_radius
+import examples.controls.bottom_app_bar.notched_fab.main as notched_fab
 import flet as ft
 import flet.testing as ftt
-from examples.controls.bottom_app_bar import border_radius, notched_fab
 
 
 @pytest.mark.asyncio(loop_scope="function")

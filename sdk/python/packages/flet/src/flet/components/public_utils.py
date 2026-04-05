@@ -7,7 +7,7 @@ def unwrap_component(c: Any):
     """
     Resolves a component wrapper chain to its rendered payload.
 
-    If `c` is a [`Component`][flet.], this function repeatedly follows
+    If `c` is a `Component`, this function repeatedly follows
     its rendered body (`_b`) until the value is no longer a `Component`.
 
     Args:

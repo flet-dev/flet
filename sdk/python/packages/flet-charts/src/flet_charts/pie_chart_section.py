@@ -9,7 +9,7 @@ __all__ = ["PieChartSection"]
 @ft.control("PieChartSection")
 class PieChartSection(ft.BaseControl):
     """
-    Configures a [PieChart][(p).] section.
+    Configures a :class:`~flet_charts.PieChart` section.
     """
 
     value: ft.Number
@@ -45,12 +45,12 @@ class PieChartSection(ft.BaseControl):
 
     title_position: Optional[ft.Number] = None
     """
-    The position/offset of the [`title`][(c).] relative to the section's center.
+    The position/offset of the :attr:`title` relative to the section's center.
 
     - `0.0`: near the center
     - `1.0`: near the outside of the chart
 
-    By default the [`title`][(c).] is drawn in the middle of the section.
+    By default the :attr:`title` is drawn in the middle of the section.
     """
 
     badge: Optional[ft.Control] = None
@@ -60,12 +60,12 @@ class PieChartSection(ft.BaseControl):
 
     badge_position: Optional[ft.Number] = None
     """
-    The position/offset of the [`badge`][(c).] relative to the section's center.
+    The position/offset of the :attr:`badge` relative to the section's center.
 
     - `0.0`: near the center
     - `1.0`: near the outside of the chart
 
-    By default the [`badge`][(c).] is drawn in the middle of the section.
+    By default the :attr:`badge` is drawn in the middle of the section.
     """
 
     gradient: Optional[ft.Gradient] = None

@@ -39,22 +39,22 @@ class Button(LayoutControl, AdaptiveControl):
     content: Optional[StrOrControl] = None
     """
     The button's label.
-    Typically a [`Text`][flet.] control or a string.
-    If a string is provided, it will be wrapped in a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control or a string.
+    If a string is provided, it will be wrapped in a :class:`~flet.Text` control.
 
     Raises:
-        ValueError: If neither `content` nor [`icon`][(c).]
+        ValueError: If neither `content` nor :attr:`icon`
             (string or visible control) is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
     """
     The icon to display inside the button.
-    Typically an [`Icon`][flet.] control or an `IconData`.
-    If an `IconData` is provided, it will be wrapped in an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control or an `IconData`.
+    If an `IconData` is provided, it will be wrapped in an :class:`~flet.Icon` control.
 
     Raises:
-        ValueError: If neither `icon` nor [`content`][(c).]
+        ValueError: If neither `icon` nor :attr:`content`
             (string or visible control) is provided.
     """
     icon_color: Optional[ColorValue] = None

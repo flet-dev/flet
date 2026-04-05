@@ -23,15 +23,15 @@ __all__ = ["DismissDirection", "SnackBar", "SnackBarAction", "SnackBarBehavior"]
 
 class SnackBarBehavior(Enum):
     """
-    Defines where a [`SnackBar`][flet.] appears within a page and how it is positioned \
-    relative to bottom UI elements.
+    Defines where a :class:`~flet.SnackBar` appears within a page and how it is \
+    positioned relative to bottom UI elements.
     """
 
     FIXED = "fixed"
     """
     Anchors the snack bar to the bottom of the page.
 
-    If a [`NavigationBar`][flet.] is present, the snack bar is shown above it.
+    If a :class:`~flet.NavigationBar` is present, the snack bar is shown above it.
     Other non-fixed content can be pushed upward while the snack bar is visible.
     """
 
@@ -39,14 +39,14 @@ class SnackBarBehavior(Enum):
     """
     Displays the snack bar as a floating surface above page content.
 
-    This mode can overlay bottom widgets, such as a [`NavigationBar`][flet.] and a
-    bottom-positioned [`FloatingActionButton`][flet.].
+    This mode can overlay bottom widgets, such as a :class:`~flet.NavigationBar` and a
+    bottom-positioned :class:`~flet.FloatingActionButton`.
     """
 
 
 class DismissDirection(Enum):
     """
-    Defines swipe directions allowed for dismissing a [`SnackBar`][flet.].
+    Defines swipe directions allowed for dismissing a :class:`~flet.SnackBar`.
 
     The direction controls which drag gestures can close the snack bar when
     dismissal is enabled.
@@ -101,9 +101,9 @@ class DismissDirection(Enum):
 @control("SnackBar")
 class SnackBarAction(Control):
     """
-    A button that can be used as an action in a [`SnackBar`][flet.].
+    A button that can be used as an action in a :class:`~flet.SnackBar`.
 
-    An action button for a [`SnackBar`][flet.].
+    An action button for a :class:`~flet.SnackBar`.
 
     Note:
         - Snack bar actions are always enabled. Instead of disabling a snack bar
@@ -121,7 +121,7 @@ class SnackBarAction(Control):
     """
     The button label color.
 
-    If `None`, [`SnackBarTheme.action_text_color`][flet.] is used.
+    If `None`, :attr:`flet.SnackBarTheme.action_text_color` is used.
     """
 
     disabled_text_color: Optional[ColorValue] = None
@@ -134,7 +134,7 @@ class SnackBarAction(Control):
     """
     The button background fill color.
 
-    If `None`, [`SnackBarTheme.action_bgcolor`][flet.] is used.
+    If `None`, :attr:`flet.SnackBarTheme.action_bgcolor` is used.
     """
 
     disabled_bgcolor: Optional[ColorValue] = None
@@ -142,7 +142,7 @@ class SnackBarAction(Control):
     The button disabled background color.
     This color is shown after the action is dismissed.
 
-    If `None`, [`SnackBarTheme.disabled_action_bgcolor`][flet.] is used.
+    If `None`, :attr:`flet.SnackBarTheme.disabled_action_bgcolor` is used.
     """
 
     on_click: Optional[ControlEventHandler["SnackBarAction"]] = None
@@ -170,7 +170,7 @@ class SnackBar(DialogControl):
     """
     The primary content of the snack bar.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
 
     Raises:
         ValueError: If it is neither a string nor a visible `Control`.
@@ -181,26 +181,26 @@ class SnackBar(DialogControl):
     This defines the behavior and location of the snack bar.
 
     Defines where a SnackBar should appear within a page and how its location
-    should be adjusted when the page also includes a [`FloatingActionButton`][flet.]
-    or a [`NavigationBar`][flet.].
+    should be adjusted when the page also includes a :class:`~flet.FloatingActionButton`
+    or a :class:`~flet.NavigationBar`.
 
-    If `None`, [`SnackBarTheme.behavior`][flet.] is used.
-    If that's is also `None`, defaults to [`SnackBarBehavior.FIXED`][flet.].
+    If `None`, :attr:`flet.SnackBarTheme.behavior` is used.
+    If that's is also `None`, defaults to :attr:`flet.SnackBarBehavior.FIXED`.
 
     Note:
-        - If [`behavior`][(c).] is [`SnackBarBehavior.FLOATING`][flet.], the length of
-            the bar is defined by either [`width`][(c).] and [`margin`][(c).], and if
+        - If :attr:`behavior` is :attr:`flet.SnackBarBehavior.FLOATING`, the length of
+            the bar is defined by either :attr:`width` and :attr:`margin`, and if
             both are specified, `width` takes precedence over `margin`.
-        - [`width`][(c).] and [`margin`][(c).] are ignored if [`behavior`][(c).]
-            is not [`SnackBarBehavior.FLOATING`][flet.].
+        - :attr:`width` and :attr:`margin` are ignored if :attr:`behavior`
+            is not :attr:`flet.SnackBarBehavior.FLOATING`.
     """
 
     dismiss_direction: Optional[DismissDirection] = None
     """
     The direction in which the SnackBar can be dismissed.
 
-    If `None`, [`SnackBarTheme.dismiss_direction`][flet.] is used.
-    If that's is also `None`, defaults to [`DismissDirection.DOWN`][flet.].
+    If `None`, :attr:`flet.SnackBarTheme.dismiss_direction` is used.
+    If that's is also `None`, defaults to :attr:`flet.DismissDirection.DOWN`.
     """
 
     show_close_icon: bool = False
@@ -222,7 +222,7 @@ class SnackBar(DialogControl):
 
     close_icon_color: Optional[ColorValue] = None
     """
-    The color of the close icon, if [`show_close_icon`][(c).] is `True`.
+    The color of the close icon, if :attr:`show_close_icon` is `True`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -256,7 +256,7 @@ class SnackBar(DialogControl):
     available space.
 
     Note:
-        Has effect only when [`behavior`][(c).] is [`SnackBarBehavior.FLOATING`][flet.].
+        Has effect only when :attr:`behavior` is :attr:`flet.SnackBarBehavior.FLOATING`.
         It can not be used if `margin` is specified.
     """
 
@@ -279,7 +279,7 @@ class SnackBar(DialogControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    The [`content`][(c).] will be clipped (or not) according to this option.
+    The :attr:`content` will be clipped (or not) according to this option.
     """
 
     action_overflow_threshold: Annotated[
@@ -287,12 +287,12 @@ class SnackBar(DialogControl):
         V.between(0.0, 1.0),
     ] = 0.25
     """
-    The percentage threshold for [`action`][(c).]'s width before it overflows to a new \
+    The percentage threshold for :attr:`action`'s width before it overflows to a new \
     line.
 
-    If the width of the snackbar's [`content`][(c).] is greater than this percentage
+    If the width of the snackbar's :attr:`content` is greater than this percentage
     of the width of the snackbar minus the width of its `action`, then the `action`
-    will appear below the [`content`][(c).].
+    will appear below the :attr:`content`.
 
     At a value of `0.0`, the `action` will not overflow to a new line.
 
@@ -309,7 +309,7 @@ class SnackBar(DialogControl):
 
     If `False`, the snack bar will be dismissed after the timeout.
 
-    If not provided, but the snackbar [`action`][(c).] is not null,
+    If not provided, but the snackbar :attr:`action` is not null,
     the snackbar will persist as well.
     """
 

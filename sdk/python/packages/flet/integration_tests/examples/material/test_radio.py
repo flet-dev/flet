@@ -2,7 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.radio import basic, handling_selection_changes
+from examples.controls.radio.basic.main import main as basic
+from examples.controls.radio.handling_selection_changes.main import (
+    main as handling_selection_changes,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -23,7 +26,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": basic.main}],
+    [{"flet_app_main": basic}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -45,7 +48,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": handling_selection_changes.main}],
+    [{"flet_app_main": handling_selection_changes}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

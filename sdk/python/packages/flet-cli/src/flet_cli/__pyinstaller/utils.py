@@ -4,27 +4,28 @@ import uuid
 from pathlib import Path
 
 from flet.utils import copy_tree
-from flet_desktop import ensure_client_cached, get_package_bin_dir
+from flet_desktop import ensure_client_cached
 
 
 def get_flet_bin_path():
     """
     Return path to Flet desktop binaries, if available.
 
-    Checks the package ``app/`` directory first (for PyInstaller-bundled
-    builds), then falls back to the download cache at ``~/.flet/client/``,
-    triggering a download if necessary.
+    Resolution order:
+
+    1. FLET_VIEW_PATH environment variable.
+    2. Cached / downloaded client from ~/.flet/client/.
 
     Returns:
-        Absolute binaries directory path or ``None`` when not found.
+        Absolute binaries directory path or `None` when not found.
     """
 
-    # Check bundled binaries in the package (PyInstaller or legacy wheel).
-    bin_path = get_package_bin_dir()
-    if os.path.exists(bin_path) and os.listdir(bin_path):
-        return bin_path
+    # 1. Check FLET_VIEW_PATH (developer / custom build mode).
+    flet_view_path = os.environ.get("FLET_VIEW_PATH")
+    if flet_view_path and os.path.exists(flet_view_path):
+        return flet_view_path
 
-    # Fall back to cached / downloaded client.
+    # 2. Fall back to cached / downloaded client.
     cache_dir = ensure_client_cached()
     if cache_dir and cache_dir.exists():
         return str(cache_dir)
@@ -37,7 +38,7 @@ def copy_flet_bin():
     Copy packaged Flet desktop binaries into a temporary directory.
 
     Returns:
-        Path to the temporary copied binaries directory, or ``None`` when source
+        Path to the temporary copied binaries directory, or `None` when source
         binaries are unavailable.
     """
 

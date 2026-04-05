@@ -42,9 +42,9 @@ class StoragePaths(Service):
 
         For non-user-generated data, consider using:
 
-        - [`get_application_support_directory()`][(c).get_application_support_directory]
-        - [`get_application_cache_directory()`][(c).get_application_cache_directory]
-        - [`get_external_storage_directory()`][(c).get_external_storage_directory]
+        - :meth:`get_application_support_directory`
+        - :meth:`get_application_cache_directory`
+        - :meth:`get_external_storage_directory`
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
@@ -191,8 +191,7 @@ class StoragePaths(Service):
         """Returns the path to a `console.log` file for debugging.
 
         This file is located in the
-        [application cache
-        directory][flet.StoragePaths.get_application_cache_directory].
+        :meth:`flet.StoragePaths.get_application_cache_directory`.
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.

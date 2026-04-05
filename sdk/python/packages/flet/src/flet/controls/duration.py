@@ -237,7 +237,7 @@ DurationValue = Union[Duration, int]
 """Type alias for duration values.
 
 Represents duration as either:
-- a [`Duration`][flet.] object,
+- a :class:`~flet.Duration` object,
 - or an integer number of milliseconds (or seconds, depending on context).
 """
 

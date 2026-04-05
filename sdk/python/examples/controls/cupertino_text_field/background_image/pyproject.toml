@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-text-field-background-image"
+version = "1.0.0"
+description = "Applies a background decoration image to CupertinoTextField with custom label styling."
+requires-python = ">=3.10"
+keywords = ["cupertino", "text field", "background image", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoTextField"]
+
+[tool.flet.metadata]
+title = "Background image"
+controls = ["SafeArea", "CupertinoTextField", "TextStyle", "DecorationImage"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["text field background image", "custom label style"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

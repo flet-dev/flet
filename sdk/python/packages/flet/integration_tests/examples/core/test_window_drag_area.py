@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.window_drag_area.no_frame_window.main as no_frame_window
 import flet as ft
 import flet.testing as ftt
-from examples.controls.window_drag_area import no_frame_window
 
 
 @pytest.mark.asyncio(loop_scope="function")

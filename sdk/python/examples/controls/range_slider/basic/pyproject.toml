@@ -1,0 +1,26 @@
+[project]
+name = "range-slider-basic"
+version = "1.0.0"
+description = "Shows a configured RangeSlider with labels and divisions."
+requires-python = ">=3.10"
+keywords = ["range slider", "slider", "input controls", "selection range"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/RangeSlider"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["RangeSlider", "SafeArea", "Text", "Column", "Container"]
+layout_pattern = "input-panel"
+complexity = "basic"
+features = ["range selection", "labeled ranges"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

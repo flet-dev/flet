@@ -1,12 +1,12 @@
 import pytest
 
 import flet.testing as ftt
-from examples.controls.rotated_box import basic
+from examples.controls.rotated_box.basic.main import main as basic
 
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": basic.main}],
+    [{"flet_app_main": basic}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

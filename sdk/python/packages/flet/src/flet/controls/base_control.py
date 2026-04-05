@@ -96,7 +96,7 @@ def control(
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving like \
-    [`@dataclass`][dataclasses.dataclass].
+    `dataclasses.dataclass`.
 
     Parameters:
         dart_widget_name: The name of widget on Dart side.

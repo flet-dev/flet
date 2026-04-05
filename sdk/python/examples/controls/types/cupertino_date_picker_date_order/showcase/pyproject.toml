@@ -1,0 +1,26 @@
+[project]
+name = "types-cupertino-date-picker-date-order-showcase"
+version = "1.0.0"
+description = "Compares Cupertino Date Picker Date Order values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["cupertino date picker date order", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Cupertino Date Picker Date Order showcase"
+controls = ["SafeArea", "Column", "Container", "CupertinoDatePicker", "CupertinoBottomSheet", "Text", "Button", "CupertinoIcons"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

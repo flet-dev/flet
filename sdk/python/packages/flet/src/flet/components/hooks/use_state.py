@@ -15,15 +15,15 @@ Updater = Callable[[StateT], StateT]
 @dataclass
 class StateHook(Hook):
     """
-    Hook state container backing [`use_state()`][flet.use_state].
+    Hook state container backing :func:`~flet.use_state`.
     """
 
     value: Any
     """
-    Current state value returned by [`use_state()`][flet.use_state].
+    Current state value returned by :func:`~flet.use_state`.
 
     Updated by the `set_state` setter. It may hold any Python value,
-    including an [`Observable`][flet.].
+    including an :class:`~flet.Observable`.
     """
 
     subscription: ObservableSubscription | None = None
@@ -32,7 +32,7 @@ class StateHook(Hook):
 
     Set by `update_subscription()` to track observable changes and schedule
     component updates. `None` when `value` is not an
-    [`Observable`][flet.] or after detachment.
+    :class:`~flet.Observable` or after detachment.
     """
 
     version: int = 0
@@ -73,7 +73,7 @@ def use_state(
         Refreshes observable subscription for the current state value.
 
         Detaches any previous subscription and, if `h.value` is an
-        [`Observable`][flet.], attaches a new [`ObservableSubscription`][flet.]
+        :class:`~flet.Observable`, attaches a new `ObservableSubscription`
         owned by the current component.
 
         Args:

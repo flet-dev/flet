@@ -1,0 +1,26 @@
+[project]
+name = "navigation-rail-basic"
+version = "1.0.0"
+description = "Demonstrates a Material NavigationRail with three destinations and custom leading FAB."
+requires-python = ">=3.10"
+keywords = ["navigation rail", "material", "navigation", "rail", "destinations"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/NavigationRail"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["NavigationRail", "NavigationRailDestination", "SafeArea", "FloatingActionButton", "SelectionArea", "Page", "VerticalDivider", "Column", "Row", "Text"]
+layout_pattern = "side-navigation"
+complexity = "basic"
+features = ["navigation rail", "destination selection", "leading action button"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

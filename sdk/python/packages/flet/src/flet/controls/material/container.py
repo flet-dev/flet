@@ -39,11 +39,7 @@ class Container(LayoutControl, AdaptiveControl):
     """
     Allows to decorate a control with background color and border and position it with \
     padding, margin and alignment.
-
-    ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/container/media/overview-padding-margin-border.png){width="80%"}
-    /// caption
-    ///
-    """  # noqa: E501
+    """
 
     content: Optional[Control] = None
     """
@@ -58,13 +54,13 @@ class Container(LayoutControl, AdaptiveControl):
 
     alignment: Optional[Alignment] = None
     """
-    Defines the alignment of the [`content`][(c).] inside this container.
+    Defines the alignment of the :attr:`content` inside this container.
 
     Note:
         If `alignment` is non-`None`, this container may expand to fill the
-        available space from its parent (before positioning its [`content`][(c).]
+        available space from its parent (before positioning its :attr:`content`
         within itself according to the given `alignment`) instead of shrinking to its
-        [`content`][(c).]. If you need this container to keep a fixed size, give it
+        :attr:`content`. If you need this container to keep a fixed size, give it
         container an explicit `width` and/or `height` values, or constrain it via
         its parent.
     """
@@ -103,9 +99,9 @@ class Container(LayoutControl, AdaptiveControl):
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Defines how the [`content`][(c).] of this container is clipped.
+    Defines how the :attr:`content` of this container is clipped.
 
-    Defaults to `ClipBehavior.ANTI_ALIAS` if [`border_radius`][(c).] is not `None`;
+    Defaults to `ClipBehavior.ANTI_ALIAS` if :attr:`border_radius` is not `None`;
     otherwise `ClipBehavior.NONE`.
     """
 
@@ -182,7 +178,7 @@ class Container(LayoutControl, AdaptiveControl):
     """
     The URL to open when this container is clicked.
 
-    Additionally, if an [`on_click`][(c).] callback is provided,
+    Additionally, if an :attr:`on_click` callback is provided,
     it is fired after that.
     """
 
@@ -201,7 +197,7 @@ class Container(LayoutControl, AdaptiveControl):
     theme_mode: Optional[ThemeMode] = None
     """
     "Resets" parent theme and creates a new, unique scheme for all controls inside the \
-    container. Otherwise the styles defined in container's [`theme`][(c).] property \
+    container. Otherwise the styles defined in container's :attr:`theme` property \
     override corresponding styles from the parent, inherited theme.
 
     Defaults to `ThemeMode.SYSTEM`.
@@ -243,7 +239,7 @@ class Container(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists the container area.
 
-    The [`data`][flet.Event.] property of the event handler argument is a boolean:
+    The :attr:`~flet.Event.data` property of the event handler argument is a boolean:
     `True` when the cursor enters and `False` when it exits this container.
     """
 

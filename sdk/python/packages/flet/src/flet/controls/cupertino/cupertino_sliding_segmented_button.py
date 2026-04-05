@@ -46,12 +46,11 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the [`controls`][(c).] \
-    list.
+    The index (starting from 0) of the selected segment in the :attr:`controls` list.
 
     Raises:
         IndexError: If it is not between `0` and the length of visible
-            [`controls`][(c).], inclusive.
+            :attr:`controls`, inclusive.
     """
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
@@ -68,7 +67,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
     """
-    The amount of space by which to inset the [`controls`][(c).].
+    The amount of space by which to inset the :attr:`controls`.
     """
 
     proportional_width: bool = False
@@ -87,8 +86,8 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Called when the state of the button is changed - when one of the \
-    [`controls`][(c).] is clicked.
+    Called when the state of the button is changed - when one of the :attr:`controls` \
+    is clicked.
     """
 
     def before_update(self):

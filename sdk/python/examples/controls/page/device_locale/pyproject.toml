@@ -1,0 +1,26 @@
+[project]
+name = "page-device-locale"
+version = "1.0.0"
+description = "Demonstrates locale-change handling and initial locale reporting in a Page."
+requires-python = ">=3.10"
+keywords = ["page", "locale", "locales", "on_locale_change", "scroll"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Device locale"
+controls = ["SafeArea", "Column", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["locale change handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

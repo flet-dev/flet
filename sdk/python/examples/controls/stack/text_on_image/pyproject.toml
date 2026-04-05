@@ -1,0 +1,26 @@
+[project]
+name = "stack-text-on-image"
+version = "1.0.0"
+description = "Layers a centered title over a base64-backed image inside a Stack."
+requires-python = ">=3.10"
+keywords = ["stack", "image", "text", "overlay", "base64"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Stack"]
+
+[tool.flet.metadata]
+title = "Text on image"
+controls = ["SafeArea", "Stack", "Image", "Row", "Text"]
+layout_pattern = "overlay"
+complexity = "basic"
+features = ["text overlay"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

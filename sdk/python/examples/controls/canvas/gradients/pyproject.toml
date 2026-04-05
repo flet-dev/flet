@@ -1,0 +1,26 @@
+[project]
+name = "canvas-gradients"
+version = "1.0.0"
+description = "Canvas gradient fills with linear, radial, and sweep gradients."
+requires-python = ">=3.10"
+keywords = ["canvas", "gradients", "linear", "radial", "sweep"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Gradients"
+controls = ["SafeArea", "Canvas", "Rect", "Circle", "Path"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["linear gradient", "radial gradient", "sweep gradient"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

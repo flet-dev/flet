@@ -226,5 +226,5 @@ BorderRadiusValue = Union[Number, BorderRadius]
 
 Represents radius as either:
 - a single numeric radius applied to all corners,
-- or an explicit [`BorderRadius`][flet.] configuration.
+- or an explicit :class:`~flet.BorderRadius` configuration.
 """

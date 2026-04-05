@@ -1,0 +1,26 @@
+[project]
+name = "tabs-custom-indicator"
+version = "1.0.0"
+description = "Customizes the tab underline indicator with elastic animation, rounded corners, and insets."
+requires-python = ">=3.10"
+keywords = ["tabs", "indicator", "underline", "animation", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Tabs"]
+
+[tool.flet.metadata]
+title = "Custom tab indicator"
+controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "Text", "UnderlineTabIndicator"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom indicator", "elastic indicator animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

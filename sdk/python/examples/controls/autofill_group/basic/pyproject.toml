@@ -1,0 +1,26 @@
+[project]
+name = "autofill-group-basic"
+version = "1.0.0"
+description = "Basic AutofillGroup with common autofill hints."
+requires-python = ">=3.10"
+keywords = ["autofillgroup", "autofill", "input", "text field", "form"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/AutofillGroup"]
+
+[tool.flet.metadata]
+title = "Basic AutofillGroup"
+controls = ["SafeArea", "AutofillGroup", "Column", "TextField"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["autofill hints", "grouped form fields"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

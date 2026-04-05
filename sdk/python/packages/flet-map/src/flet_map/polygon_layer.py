@@ -10,7 +10,7 @@ __all__ = ["PolygonLayer", "PolygonMarker"]
 @ft.control("PolygonMarker")
 class PolygonMarker(ft.Control):
     """
-    A marker for the [`PolygonLayer`][(p).].
+    A marker for the :class:`~flet_map.PolygonLayer`.
     """
 
     coordinates: list[MapLatitudeLongitude]
@@ -26,7 +26,8 @@ class PolygonMarker(ft.Control):
         Specifying a label will reduce performance, as the internal
         canvas must be drawn to and 'saved' more frequently to ensure the proper
         stacking order is maintained. This can be avoided, potentially at the
-        expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(p).].
+        expense of appearance, by setting \
+        :attr:`flet_map.PolygonLayer.draw_labels_last`.
     """
 
     label_text_style: Optional[ft.TextStyle] = None
@@ -90,7 +91,7 @@ class PolygonLayer(MapLayer):
 
     polygons: list[PolygonMarker]
     """
-    A list of [`PolygonMarker`][(p).]s to display.
+    A list of :class:`~flet_map.PolygonMarker`s to display.
     """
 
     polygon_culling: bool = True

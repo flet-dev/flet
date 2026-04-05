@@ -1,0 +1,26 @@
+[project]
+name = "search-bar-basic"
+version = "1.0.0"
+description = "Search colors with async suggestions shown inside a SearchBar view."
+requires-python = ">=3.10"
+keywords = ["searchbar", "search", "suggestions", "listtile", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/SearchBar"]
+
+[tool.flet.metadata]
+title = "SearchBar basic"
+controls = ["SearchBar", "ListTile", "Text", "SafeArea"]
+layout_pattern = "search-overlay"
+complexity = "basic"
+features = ["async suggestions", "live filtering", "search submit"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

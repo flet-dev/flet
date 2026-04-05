@@ -1,3 +1,28 @@
+## 0.85.0
+
+### New features
+
+### Improvements
+
+### Bug fixes
+
+* Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
+
+### Other changes
+
+* Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
+
+## 0.84.0
+
+### Improvements
+
+* Migrate Flet docs from MkDocs to Docusaurus for a more maintainable documentation pipeline ([#6359](https://github.com/flet-dev/flet/pull/6359)) by @FeodorFitsner.
+* Migrate examples into standalone projects with metadata, dependencies, and assets to improve discovery and make every sample runnable as-is ([#6281](https://github.com/flet-dev/flet/issues/6281), [#6355](https://github.com/flet-dev/flet/pull/6355)) by @InesaFitsner.
+
+### Bug fixes
+
+* Fix `flet pack` on macOS after the move to GitHub Releases by handling extracted app bundles, matching the cached tarball name, and cleaning up loose frameworks during packaging ([#6358](https://github.com/flet-dev/flet/issues/6358), [#6361](https://github.com/flet-dev/flet/pull/6361)) by @FeodorFitsner.
+
 ## 0.83.1
 
 ### Bug fixes

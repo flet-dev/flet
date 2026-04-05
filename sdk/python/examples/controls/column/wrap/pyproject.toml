@@ -1,0 +1,26 @@
+[project]
+name = "column-wrap"
+version = "1.0.0"
+description = "Column wrapping behavior controlled by dynamic height."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "wrap", "slider", "responsive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column wrapping"
+controls = ["Column", "Container", "Text", "Slider"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["wrap behavior", "height-driven layout", "slider interaction"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

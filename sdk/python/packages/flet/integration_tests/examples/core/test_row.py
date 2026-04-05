@@ -1,8 +1,11 @@
 import pytest
 
+import examples.controls.row.alignment.main as alignment
+import examples.controls.row.spacing.main as spacing
+import examples.controls.row.vertical_alignment.main as vertical_alignment
+import examples.controls.row.wrap.main as wrap
 import flet as ft
 import flet.testing as ftt
-from examples.controls.row import alignment, spacing, vertical_alignment, wrap
 
 
 @pytest.mark.asyncio(loop_scope="function")

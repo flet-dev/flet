@@ -1,0 +1,26 @@
+[project]
+name = "apps-routing-navigation-initial-route"
+version = "1.0.0"
+description = "Displays the initial route string passed into a Flet app."
+requires-python = ">=3.10"
+keywords = ["apps", "routing", "route", "text", "minimal"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Initial route"
+controls = ["SafeArea", "Text"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["routing basics"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -119,7 +119,7 @@ class MatplotlibChartWithToolbar(ft.Column):
         Show status text produced by the underlying chart toolbar backend.
 
         Args:
-            e: Message event emitted by [`MatplotlibChart`][flet_charts.].
+            e: Message event emitted by :class:`~flet_charts.MatplotlibChart`.
         """
 
         self.msg.value = e.message
@@ -133,7 +133,7 @@ class MatplotlibChartWithToolbar(ft.Column):
 
         Args:
             e: Toolbar state update event from
-                [`MatplotlibChart`][flet_charts.MatplotlibChart].
+                :class:`~flet_charts.MatplotlibChart`.
         """
 
         self.back_btn.disabled = not e.back_enabled

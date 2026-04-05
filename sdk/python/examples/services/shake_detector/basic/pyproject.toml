@@ -1,0 +1,26 @@
+[project]
+name = "services-shake-detector-basic"
+version = "1.0.0"
+description = "Detects shake gestures and appends a message each time a shake is recognized."
+requires-python = ">=3.10"
+keywords = ["shake detector", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/ShakeDetector"]
+
+[tool.flet.metadata]
+title = "Basic shake detector"
+controls = ["SafeArea", "Column", "Page", "ShakeDetector", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["shake detection"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -32,7 +32,7 @@ class Geolocator(ft.Service):
     """
     Fires when an error occurs.
 
-    The [`data`][flet.Event.] property of the event
+    The :attr:`~flet.Event.data` property of the event
     handler argument contains information on the error.
     """
 
@@ -55,17 +55,19 @@ class Geolocator(ft.Service):
         Note:
             Depending on the availability of different location services,
             this can take several seconds. It is recommended to call the
-            [`get_last_known_position`][(c).] method first to receive a
+            :meth:`get_last_known_position` method first to receive a
             known/cached position and update it with the result of the
-            [`get_current_position`][(c).] method.
+            :meth:`get_current_position` method.
 
         Args:
             configuration: Additional configuration for the location request.
-                If not specified, then the [`Geolocator.configuration`][(p).]
+                If not specified, then the \
+                :attr:`flet_geolocator.Geolocator.configuration`
                 property is used.
 
         Returns:
-            The current position of the device as a [`GeolocatorPosition`][(p).].
+            The current position of the device as a \
+            :class:`~flet_geolocator.GeolocatorPosition`.
         """
         r = await self._invoke_method(
             method_name="get_current_position",
@@ -77,10 +79,11 @@ class Geolocator(ft.Service):
         """
         Gets the last known position stored on the user's device.
         The accuracy can be defined using the
-        [`Geolocator.configuration`][(p).] property.
+        :attr:`~flet_geolocator.Geolocator.configuration` property.
 
         Returns:
-            The last known position of the device as a [`GeolocatorPosition`][(p).].
+            The last known position of the device as a \
+            :class:`~flet_geolocator.GeolocatorPosition`.
 
         Raises:
             FletUnsupportedPlatformException: If invoked on a web platform.

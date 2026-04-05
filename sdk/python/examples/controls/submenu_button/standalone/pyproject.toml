@@ -1,0 +1,26 @@
+[project]
+name = "submenu-button-standalone"
+version = "1.0.0"
+description = "Shows a standalone SubmenuButton with hover-driven text style previews."
+requires-python = ">=3.10"
+keywords = ["submenu button", "menu", "text style", "hover", "standalone"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/SubmenuButton"]
+
+[tool.flet.metadata]
+title = "Standalone SubmenuButton"
+controls = ["SafeArea", "Row", "SubmenuButton", "MenuItemButton", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["hover styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

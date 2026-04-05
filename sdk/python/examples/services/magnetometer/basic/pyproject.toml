@@ -1,0 +1,27 @@
+[project]
+name = "services-magnetometer-basic"
+version = "1.0.0"
+description = "Streams ambient magnetic field readings and reports magnetometer errors."
+requires-python = ">=3.10"
+keywords = ["magnetometer", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Magnetometer"]
+
+[tool.flet.metadata]
+title = "Basic magnetometer"
+controls = ["SafeArea", "Column", "Page", "MagnetometerReadingEvent", "Text", "Magnetometer"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live sensor readings", "sensor error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios"]

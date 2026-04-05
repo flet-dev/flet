@@ -1,0 +1,26 @@
+[project]
+name = "selection-area-basic"
+version = "1.0.0"
+description = "Compare selectable and non-selectable text using a SelectionArea wrapper."
+requires-python = ">=3.10"
+keywords = ["selectionarea", "text", "selection", "typography"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/SelectionArea"]
+
+[tool.flet.metadata]
+title = "SelectionArea basic"
+controls = ["SelectionArea", "Column", "Text", "SafeArea"]
+layout_pattern = "comparison-stack"
+complexity = "basic"
+features = ["text selection", "selectable content", "styled text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

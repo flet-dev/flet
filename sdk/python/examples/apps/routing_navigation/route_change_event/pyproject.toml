@@ -1,0 +1,26 @@
+[project]
+name = "apps-routing-navigation-route-change-event"
+version = "1.0.0"
+description = "Logs each route change by appending the new route string to the page."
+requires-python = ">=3.10"
+keywords = ["apps", "routing", "events", "route change", "text"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Route change event"
+controls = ["SafeArea", "Text"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["routing basics", "route change event"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

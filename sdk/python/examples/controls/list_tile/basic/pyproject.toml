@@ -1,0 +1,26 @@
+[project]
+name = "list-tile-basic"
+version = "1.0.0"
+description = "Showcases one-line and two-line ListTile variants with leading/trailing controls and selection state."
+requires-python = ">=3.10"
+keywords = ["list tile", "material", "popup menu", "selection", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ListTile"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Card", "Container", "Column", "ListTile", "Icon", "Image", "PopupMenuButton", "PopupMenuItem", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["tile variants", "leading and trailing controls", "selected and dense states"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

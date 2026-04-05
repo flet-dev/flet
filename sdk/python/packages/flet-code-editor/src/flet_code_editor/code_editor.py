@@ -34,7 +34,7 @@ class CodeEditor(ft.LayoutControl):
     Represents the current text selection or caret position in the editor.
 
     Setting this property updates the editor selection and may trigger
-    [`on_selection_change`][(c).] when the editor is focused.
+    :attr:`on_selection_change` when the editor is focused.
     """
 
     gutter_style: Optional[GutterStyle] = None

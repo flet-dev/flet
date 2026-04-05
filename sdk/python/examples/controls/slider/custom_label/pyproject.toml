@@ -1,0 +1,26 @@
+[project]
+name = "slider-custom-label"
+version = "1.0.0"
+description = "Show Slider values with a preset position and a custom percentage label."
+requires-python = ">=3.10"
+keywords = ["slider", "label", "divisions", "range"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Slider"]
+
+[tool.flet.metadata]
+title = "Slider custom label"
+controls = ["Slider", "Text", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["custom label", "custom range", "divisions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -27,12 +27,12 @@ class Control(BaseControl):
     parent layout.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand).
 
     Note:
         Has effect only if the direct parent of this control is one of the following
-        controls, or their subclasses: [`Column`][flet.], [`Row`][flet.],
-        [`View`][flet.], [`Page`][flet.].
+        controls, or their subclasses: :class:`~flet.Column`, :class:`~flet.Row`,
+        :class:`~flet.View`, :class:`~flet.Page`.
 
     Raises:
         ValueError: If it is not of type `bool` or `int`.
@@ -44,33 +44,31 @@ class Control(BaseControl):
     not require it to fill all available space.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand_loose).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand_loose).
 
     Note:
         If `expand_loose` is `True`, it will have effect only if:
 
         - `expand` is not `None` and
         - the direct parent of this control is one of the following controls, or their
-            subclasses: [`Column`][flet.], [`Row`][flet.], [`View`][flet.],
-            [`Page`][flet.].
+            subclasses: :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.View`,
+            :class:`~flet.Page`.
     """
 
     # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     col: ResponsiveNumber = 12
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.], this property is used \
-    to determine how many virtual columns of a screen this control will span.
+    If a parent of this control is a :class:`~flet.ResponsiveRow`, this property is \
+    used to determine how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
 
     A value of `0` hides the control for that breakpoint, so it does not occupy any
-    columns in the parent [`ResponsiveRow`][flet.].
+    columns in the parent :class:`~flet.ResponsiveRow`.
 
     This control spans the 12 virtual columns by default.
 
-    /// details | Dimensions
-        type: info
     | Breakpoint | Dimension |
     |---|---|
     | xs | <576px |
@@ -79,7 +77,6 @@ class Control(BaseControl):
     | lg | ≥992px |
     | xl | ≥1200px |
     | xxl | ≥1400px |
-    ///
     """
 
     opacity: Annotated[
