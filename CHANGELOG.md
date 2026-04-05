@@ -6,6 +6,8 @@
 
 ### Bug fixes
 
+* Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
+
 ### Other changes
 
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
