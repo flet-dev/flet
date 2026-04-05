@@ -1,0 +1,26 @@
+[project]
+name = "time-picker-hour-formats"
+version = "1.0.0"
+description = "Switches a TimePicker between system, 12-hour, and 24-hour display formats."
+requires-python = ">=3.10"
+keywords = ["time picker", "hour format", "dropdown", "12h", "24h"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/TimePicker"]
+
+[tool.flet.metadata]
+title = "Hour formats"
+controls = ["SafeArea", "Column", "Row", "Dropdown", "Button", "Text", "TimePicker"]
+layout_pattern = "toolbar-content"
+complexity = "basic"
+features = ["hour format switching", "system format detection"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

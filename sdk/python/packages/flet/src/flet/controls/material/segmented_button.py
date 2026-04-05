@@ -21,7 +21,7 @@ __all__ = ["Segment", "SegmentedButton"]
 @control("Segment")
 class Segment(Control):
     """
-    A segment for a [`SegmentedButton`][flet.].
+    A segment for a :class:`~flet.SegmentedButton`.
     """
 
     value: str
@@ -33,29 +33,31 @@ class Segment(Control):
     """
     The icon to be displayed in the segment.
 
-    Typically an [`Icon`][flet.].
+    Typically an :class:`~flet.Icon`.
 
     Raises:
-        ValueError: If neither it nor [`label`][(c).] is set and visible.
+        ValueError: If neither it nor :attr:`label` is set and visible.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`][flet.]) to be displayed in the segment.
+    The label (usually a :class:`~flet.Text`) to be displayed in the segment.
 
     Raises:
-        ValueError: If neither it nor [`icon`][(c).] is set and visible.
+        ValueError: If neither it nor :attr:`icon` is set and visible.
     """
 
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
-                isinstance(ctrl.icon, IconData)
-                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
-            )
-            or (
-                isinstance(ctrl.label, str)
-                or (isinstance(ctrl.label, Control) and ctrl.label.visible)
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.label, str)
+                    or (isinstance(ctrl.label, Control) and ctrl.label.visible)
+                )
             ),
             message="at least icon or label must be set and visible",
         ),
@@ -96,8 +98,8 @@ class SegmentedButton(LayoutControl):
     not be called.
 
     Raises:
-        ValueError: If [`selected`][(c).] is empty while
-            [`allow_empty_selection`][(c).] is `False`.
+        ValueError: If :attr:`selected` is empty while
+            :attr:`allow_empty_selection` is `False`.
     """
 
     allow_multiple_selection: bool = False
@@ -112,8 +114,8 @@ class SegmentedButton(LayoutControl):
     is selected, any previously selected segment will be unselected.
 
     Raises:
-        ValueError: If [`selected`][(c).] has more than one item while
-            [`allow_multiple_selection`][(c).] is `False`.
+        ValueError: If :attr:`selected` has more than one item while
+            :attr:`allow_multiple_selection` is `False`.
     """
 
     selected: list[str] = field(default_factory=list)
@@ -122,9 +124,9 @@ class SegmentedButton(LayoutControl):
     when the user (un)selects a segment.
 
     Raises:
-        ValueError: If [`selected`][(c).] violates the constraints defined by
-            [`allow_empty_selection`][(c).] or
-            [`allow_multiple_selection`][(c).].
+        ValueError: If :attr:`selected` violates the constraints defined by
+            :attr:`allow_empty_selection` or
+            :attr:`allow_multiple_selection`.
     """
 
     selected_icon: Optional[IconDataOrControl] = None
@@ -169,7 +171,7 @@ class SegmentedButton(LayoutControl):
     """
     Called when the selection changes.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains a list of strings identifying the selected segments.
     """
 

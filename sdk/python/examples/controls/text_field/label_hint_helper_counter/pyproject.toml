@@ -1,0 +1,26 @@
+[project]
+name = "text-field-label-hint-helper-counter"
+version = "1.0.0"
+description = "Styles TextField label, hint, helper, and counter text independently."
+requires-python = ">=3.10"
+keywords = ["text field", "label", "hint", "helper", "counter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Custom label, hint, helper, and counter texts and styles"
+controls = ["SafeArea", "Column", "TextField", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["custom label styling", "custom hint styling", "custom helper and counter styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

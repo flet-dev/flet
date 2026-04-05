@@ -1,0 +1,26 @@
+[project]
+name = "services-sharedpreferences-basic"
+version = "1.0.0"
+description = "Writes and reads plain SharedPreferences values using keyed inputs."
+requires-python = ">=3.10"
+keywords = ["sharedpreferences", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/SharedPreferences"]
+
+[tool.flet.metadata]
+title = "Basic shared preferences"
+controls = ["SafeArea", "Column", "Page", "SharedPreferences", "Text", "Row", "TextField", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["key-value storage"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

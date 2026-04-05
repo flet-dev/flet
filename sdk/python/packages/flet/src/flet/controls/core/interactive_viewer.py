@@ -22,7 +22,7 @@ __all__ = ["InteractiveViewer"]
 @control("InteractiveViewer")
 class InteractiveViewer(LayoutControl):
     """
-    Allows you to pan, zoom, and rotate its [`content`][(c).].
+    Allows you to pan, zoom, and rotate its :attr:`content`.
     """
 
     content: Annotated[
@@ -54,7 +54,7 @@ class InteractiveViewer(LayoutControl):
     constrained: bool = True
     """
     Whether the normal size constraints at this point in the control tree are applied \
-    to the [`content`][(c).].
+    to the :attr:`content`.
 
     If set to `False`, then the content will be given infinite constraints. This
     is often useful when a content should be bigger than this `InteractiveViewer`.
@@ -79,7 +79,7 @@ class InteractiveViewer(LayoutControl):
 
     Raises:
         ValueError: If it is not strictly greater than `0`.
-        ValueError: If it is not greater than or equal to [`min_scale`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min_scale`.
     """
 
     min_scale: Annotated[
@@ -90,7 +90,7 @@ class InteractiveViewer(LayoutControl):
     """
     The minimum allowed scale.
 
-    The effective scale is limited by the value of [`boundary_margin`][(c).].
+    The effective scale is limited by the value of :attr:`boundary_margin`.
     If scaling would cause the content to be displayed outside the defined boundary,
     it is prevented. By default, `boundary_margin` is set to `Margin.all(0)`,
     so scaling below `1.0` is typically not possible unless you increase the
@@ -98,7 +98,7 @@ class InteractiveViewer(LayoutControl):
 
     Raises:
         ValueError: If it is not strictly greater than `0`.
-        ValueError: If it is not less than or equal to [`max_scale`][(c).].
+        ValueError: If it is not less than or equal to :attr:`max_scale`.
     """
 
     interaction_end_friction_coefficient: Annotated[
@@ -125,22 +125,22 @@ class InteractiveViewer(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    Defines how to clip the [`content`][(c).].
+    Defines how to clip the :attr:`content`.
 
-    If set to [`ClipBehavior.NONE`][flet.], the [`content`][(c).] can visually overflow
+    If set to :attr:`flet.ClipBehavior.NONE`, the :attr:`content` can visually overflow
     the bounds of this `InteractiveViewer`, but gesture events (such as pan or zoom)
     will only be recognized within the viewer's area. Ensure this `InteractiveViewer`
-    is sized appropriately when using [`ClipBehavior.NONE`][flet.].
+    is sized appropriately when using :attr:`flet.ClipBehavior.NONE`.
     """
 
     alignment: Optional[Alignment] = None
     """
-    The alignment of the [`content`][(c).] within this viewer.
+    The alignment of the :attr:`content` within this viewer.
     """
 
     boundary_margin: MarginValue = field(default_factory=lambda: Margin.all(0))
     """
-    A margin for the visible boundaries of the [`content`][(c).].
+    A margin for the visible boundaries of the :attr:`content`.
 
     Any transformation that results in the viewport being able to view outside
     of the boundaries will be stopped at the boundary. The boundaries do not
@@ -150,13 +150,13 @@ class InteractiveViewer(LayoutControl):
     To produce no boundaries at all, pass an infinite value.
 
     Defaults to `Margin.all(0)`, which results in boundaries that are the
-    exact same size and position as the [`content`][(c).].
+    exact same size and position as the :attr:`content`.
     """
 
     interaction_update_interval: int = 200
     """
-    The interval (in milliseconds) at which the [`on_interaction_update`][(c).] event \
-    is fired.
+    The interval (in milliseconds) at which the :attr:`on_interaction_update` event is \
+    fired.
     """
 
     on_interaction_start: Optional[
@@ -201,7 +201,7 @@ class InteractiveViewer(LayoutControl):
         Saves a snapshot of the current transform matrix.
 
         The saved state can later be restored using
-        [`restore_state()`][(c).restore_state]. Calling this method again
+        :meth:`restore_state`. Calling this method again
         overwrites the previously saved snapshot.
         """
         await self._invoke_method("save_state")
@@ -209,7 +209,7 @@ class InteractiveViewer(LayoutControl):
     async def restore_state(self):
         """
         Restores the transform matrix previously captured by
-        [`save_state()`][(c).save_state].
+        :meth:`save_state`.
 
         If no state has been saved yet, this method has no effect.
         """
@@ -225,9 +225,9 @@ class InteractiveViewer(LayoutControl):
                 zoom out.
 
         Note:
-            The resulting scale is clamped to [`min_scale`][(c).] and
-            [`max_scale`][(c).]. Additional boundary clamping is applied so the
-            visible viewport remains within [`boundary_margin`][(c).] limits.
+            The resulting scale is clamped to :attr:`min_scale` and
+            :attr:`max_scale`. Additional boundary clamping is applied so the
+            visible viewport remains within :attr:`boundary_margin` limits.
         """
         await self._invoke_method("zoom", arguments={"factor": factor})
 

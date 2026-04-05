@@ -1,0 +1,26 @@
+[project]
+name = "floating-action-button-handling-clicks"
+version = "1.0.0"
+description = "Adds list tiles with a FloatingActionButton click and shows a SnackBar confirmation."
+requires-python = ">=3.10"
+keywords = ["floating action button", "list tile", "click handling", "snackbar"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/FloatingActionButton"]
+
+[tool.flet.metadata]
+title = "Handling clicks"
+controls = ["SafeArea", "Column", "Container", "Row", "Text", "FloatingActionButton", "ListTile", "SnackBar", "Icon"]
+layout_pattern = "feed"
+complexity = "basic"
+features = ["floating action button click", "dynamic list updates", "snackbar feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

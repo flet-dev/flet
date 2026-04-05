@@ -1,0 +1,26 @@
+[project]
+name = "types-tile-affinity-showcase"
+version = "1.0.0"
+description = "Compares Tile Affinity values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["tile affinity", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Tile Affinity showcase"
+controls = ["SafeArea", "Column", "Container", "ExpansionTile", "ListTile", "Text", "AppBar", "Row"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

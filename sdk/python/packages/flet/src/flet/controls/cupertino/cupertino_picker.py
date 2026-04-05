@@ -31,7 +31,7 @@ class CupertinoPicker(LayoutControl):
         V.gt(0.0),
     ] = 32.0
     """
-    The uniform height of all [`controls`][(c).].
+    The uniform height of all :attr:`controls`.
 
     Raises:
         ValueError: If it is not strictly greater than `0.0`.
@@ -39,7 +39,7 @@ class CupertinoPicker(LayoutControl):
 
     selected_index: int = 0
     """
-    The index (starting from `0`) of the selected item in the [`controls`][(c).] list.
+    The index (starting from `0`) of the selected item in the :attr:`controls` list.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -69,7 +69,7 @@ class CupertinoPicker(LayoutControl):
     list. The item will be zoomed-out if magnification is less than `1.0`.
 
     Note:
-        Has effect only if [`use_magnifier`][(c).] is `True`.
+        Has effect only if :attr:`use_magnifier` is `True`.
 
     Raises:
         ValueError: If it is not strictly greater than `0.0`.
@@ -104,12 +104,12 @@ class CupertinoPicker(LayoutControl):
     matching the height of the center row.
 
     Defaults to a rounded rectangle in iOS 14 style with
-    [`default_selection_overlay_bgcolor`][(c).] as background color.
+    :attr:`default_selection_overlay_bgcolor` as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background color of the [`selection_overlay`][(c).].
+    The default background color of the :attr:`selection_overlay`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None

@@ -12,9 +12,9 @@ class FletException(Exception):
 
     See these subclasses/implementations:
 
-    - [`FletUnsupportedPlatformException`][flet.]
-    - [`FletUnimplementedPlatformException`][flet.]
-    - [`FletPageDisconnectedException`][flet.]
+    - :class:`~flet.FletUnsupportedPlatformException`
+    - :class:`~flet.FletUnimplementedPlatformException`
+    - :class:`~flet.FletPageDisconnectedException`
     """
 
 

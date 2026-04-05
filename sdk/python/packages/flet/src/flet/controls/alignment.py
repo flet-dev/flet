@@ -33,11 +33,7 @@ class Axis(Enum):
 class Alignment:
     """
     Defines an alignment relative to the center.
-
-    ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
-    /// caption
-    ///
-    """  # noqa: E501
+    """
 
     x: Number
     """
@@ -114,7 +110,7 @@ class Alignment:
 
 
 class AlignmentProperty:
-    """Descriptor used to expose predefined [`Alignment`][flet.] constants."""
+    """Descriptor used to expose predefined :class:`~flet.Alignment` constants."""
 
     def __init__(self, factory):
         self.factory = factory

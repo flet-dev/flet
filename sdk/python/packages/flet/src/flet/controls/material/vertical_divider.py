@@ -49,7 +49,7 @@ class VerticalDivider(Control):
     The divider's width. The divider itself is always drawn as a vertical line that is \
     centered within the width specified by this value.
 
-    If `None`, [`DividerTheme.space`][flet.] is used.
+    If `None`, :attr:`flet.DividerTheme.space` is used.
     If that's is also `None`, defaults to `16.0`.
 
     Raises:
@@ -67,7 +67,7 @@ class VerticalDivider(Control):
         A divider with a thickness of `0.0` is always drawn as a line with a width of
         exactly one device pixel.
 
-    If `None`, [`DividerTheme.thickness`][flet.] is used.
+    If `None`, :attr:`flet.DividerTheme.thickness` is used.
     If that's is also `None`, defaults to `0.0`.
 
     Raises:
@@ -78,7 +78,7 @@ class VerticalDivider(Control):
     """
     The color to use when painting the line.
 
-    If `None`, [`DividerTheme.color`][flet.] is used.
+    If `None`, :attr:`flet.DividerTheme.color` is used.
     """
 
     leading_indent: Annotated[
@@ -88,7 +88,7 @@ class VerticalDivider(Control):
     """
     The amount of empty space to the leading edge of the divider.
 
-    If `None`, [`DividerTheme.leading_indent`][flet.] is used.
+    If `None`, :attr:`flet.DividerTheme.leading_indent` is used.
     If that's is also `None`, defaults to `0.0`.
 
     Raises:
@@ -102,7 +102,7 @@ class VerticalDivider(Control):
     """
     The amount of empty space to the trailing edge of the divider.
 
-    If `None`, [`DividerTheme.trailing_indent`][flet.] is used.
+    If `None`, :attr:`flet.DividerTheme.trailing_indent` is used.
     If that's is also `None`, defaults to `0.0`.
 
     Raises:

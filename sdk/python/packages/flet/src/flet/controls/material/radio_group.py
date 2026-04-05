@@ -25,7 +25,7 @@ class RadioGroup(Control):
     `Row`.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If :attr:`content` is not visible.
     """
 
     value: Optional[str] = None

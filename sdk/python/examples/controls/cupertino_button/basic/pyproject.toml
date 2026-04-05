@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-button-basic"
+version = "1.0.0"
+description = "Demonstrates styled, disabled, and adaptive CupertinoButton variations in one layout."
+requires-python = ">=3.10"
+keywords = ["cupertino", "button", "adaptive", "disabled", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/CupertinoButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "CupertinoButton", "Button", "Text", "Row", "Icon"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["custom button styling", "disabled button", "adaptive button"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

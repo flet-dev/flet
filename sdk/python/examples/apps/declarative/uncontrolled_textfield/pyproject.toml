@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-uncontrolled-textfield"
+version = "1.0.0"
+description = "Shows how uncontrolled text fields behave in a declarative form with submit and reset actions."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "textfield", "form", "uncontrolled"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Uncontrolled textfield"
+controls = ["SafeArea", "Column", "Row", "TextField", "FilledButton", "FilledTonalButton", "AlertDialog"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["form submission", "uncontrolled inputs"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,114 @@
+import argparse
+
+
+def _indent_block(text: str, indent: int) -> str:
+    """Indent every line of text by the given number of spaces."""
+    prefix = " " * indent
+    return "\n".join(f"{prefix}{line}" for line in text.splitlines())
+
+
+def _toml_key(key: str) -> str:
+    """Return the TOML representation of a key, quoting it if it contains special characters."""
+    if key.replace("-", "").replace("_", "").isalnum():
+        return key
+    escaped = key.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def _toml_value(value) -> str:
+    """Return the TOML representation of a scalar Python value (bool, None, or string)."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if value is None:
+        return "null"
+    escaped = str(value).replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def _load_cross_platform_permissions() -> dict:
+    """Load the cross-platform permissions dict from flet-cli's BaseBuildCommand."""
+    from flet_cli.commands.build_base import BaseBuildCommand
+
+    parser = argparse.ArgumentParser(add_help=False)
+    command = BaseBuildCommand(parser)
+    return command.cross_platform_permissions
+
+
+def _render_toml_block(config: dict) -> str:
+    """Render a single permission config entry as a TOML snippet covering iOS, macOS, and Android sections."""
+    ios_info_plist = config.get("ios_info_plist") or {}
+    macos_info_plist = config.get("macos_info_plist") or {}
+    legacy_info_plist = config.get("info_plist") or {}
+    macos_entitlements = config.get("macos_entitlements") or {}
+    android_permissions = config.get("android_permissions") or {}
+    android_features = config.get("android_features") or {}
+
+    sections = []
+
+    if legacy_info_plist:
+        if not ios_info_plist:
+            ios_info_plist = legacy_info_plist
+        if not macos_info_plist:
+            macos_info_plist = legacy_info_plist
+
+    if ios_info_plist:
+        lines = ["# iOS", "[tool.flet.ios.info]"]
+        for key, value in ios_info_plist.items():
+            lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+        sections.append("\n".join(lines))
+
+    if macos_info_plist or macos_entitlements:
+        lines = ["# macOS"]
+        if macos_info_plist:
+            lines.append("[tool.flet.macos.info]")
+            for key, value in macos_info_plist.items():
+                lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+        if macos_entitlements:
+            if macos_info_plist:
+                lines.append("")
+            lines.append("[tool.flet.macos.entitlement]")
+            for key, value in macos_entitlements.items():
+                lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+        sections.append("\n".join(lines))
+
+    if android_permissions:
+        lines = ["# Android", "[tool.flet.android.permission]"]
+        for key, value in android_permissions.items():
+            lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+        if android_features:
+            lines.extend(["", "[tool.flet.android.feature]"])
+            for key, value in android_features.items():
+                lines.append(f"{_toml_key(key)} = {_toml_value(value)}")
+        sections.append("\n".join(lines))
+
+    return "\n\n".join(sections)
+
+
+def cross_platform_permissions_list() -> str:
+    """Render all cross-platform permissions as a Markdown list with collapsible pyproject.toml code blocks."""
+    permissions = _load_cross_platform_permissions()
+    items = []
+    for name, config in permissions.items():
+        toml_block = _indent_block(_render_toml_block(config), 4)
+        items.append(
+            "\n".join(
+                [
+                    f"- `{name}`",
+                    "",
+                    "    <details>",
+                    "    <summary><code>pyproject.toml</code> equivalent</summary>",
+                    "",
+                    "    ```toml",
+                    toml_block,
+                    "    ```",
+                    "",
+                    "    </details>",
+                ]
+            )
+        )
+
+    return "\n\n".join(items) + "\n"
+
+
+if __name__ == "__main__":
+    print(cross_platform_permissions_list())

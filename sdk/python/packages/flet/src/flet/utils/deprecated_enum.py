@@ -19,7 +19,7 @@ class DeprecatedEnumMeta(EnumMeta):
         Resolve deprecated enum alias to its canonical member.
 
         Looks up `name` in `_deprecated_members_`, emits a
-        [`DeprecationWarning`][warnings.DeprecationWarning] when matched, and
+        `warnings.DeprecationWarning` when matched, and
         returns the canonical enum member.
 
         Args:

@@ -39,7 +39,7 @@ class FloatingActionButton(LayoutControl):
     The content of this button.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor a valid `content`
+        ValueError: If neither :attr:`icon` nor a valid `content`
             (string or visible Control) is provided.
     """
 
@@ -86,7 +86,7 @@ class FloatingActionButton(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the [`content`][(c).] is clipped.
+    Defines how the :attr:`content` is clipped.
     """
 
     elevation: Annotated[
@@ -109,7 +109,7 @@ class FloatingActionButton(LayoutControl):
     """
     The elevation of this button when disabled.
 
-    Defaults to [`elevation`][(c).].
+    Defaults to :attr:`elevation`.
 
     Raises:
         ValueError: If it is not greater than or equal to `0`.
@@ -175,7 +175,7 @@ class FloatingActionButton(LayoutControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback
+    Additionally, if :attr:`on_click` event callback
     is provided, it is fired after that.
     """
 
@@ -193,12 +193,14 @@ class FloatingActionButton(LayoutControl):
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ctrl: (
-                isinstance(ctrl.icon, IconData)
-                or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
-            )
-            or (
-                isinstance(ctrl.content, str)
-                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
             ),
             message=(
                 "at minimum, icon or a content (string or visible Control) "

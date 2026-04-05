@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-alert-dialog-file-deletion-confirmation"
+version = "1.0.0"
+description = "Shows a CupertinoAlertDialog for file deletion confirmation with dismiss and action callbacks."
+requires-python = ">=3.10"
+keywords = ["cupertino", "alert dialog", "confirmation", "actions"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/CupertinoAlertDialog"]
+
+[tool.flet.metadata]
+title = "File deletion confirmation"
+controls = ["SafeArea", "Column", "CupertinoFilledButton", "CupertinoAlertDialog", "CupertinoDialogAction", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["open dialog", "dismiss callback", "action callbacks", "destructive action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

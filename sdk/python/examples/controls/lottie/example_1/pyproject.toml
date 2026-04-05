@@ -1,0 +1,26 @@
+[project]
+name = "lottie-example-1"
+version = "1.0.0"
+description = "Plays Lottie animations from a remote URL and local JSON file with error fallback content."
+requires-python = ">=3.10"
+keywords = ["lottie", "animation", "json", "remote", "assets"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-lottie"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Lottie"]
+
+[tool.flet.metadata]
+title = "Example 1"
+controls = ["SafeArea", "Column", "Lottie", "Placeholder", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["remote lottie animation", "local lottie asset", "error callback and fallback content"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

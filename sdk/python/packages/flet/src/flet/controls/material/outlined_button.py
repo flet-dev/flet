@@ -37,7 +37,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     A Control representing custom button content.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor `content` is provided.
+        ValueError: If neither :attr:`icon` nor `content` is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -71,7 +71,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is
+    Additionally, if :attr:`on_click` event callback is
     provided, it is fired after that.
     """
 

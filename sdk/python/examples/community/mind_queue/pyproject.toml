@@ -1,0 +1,26 @@
+[project]
+name = "community-mind-queue"
+version = "1.0.0"
+description = "Community productivity app for organizing systems, headers, and tasks with local JSON storage."
+requires-python = ">=3.10"
+keywords = ["community", "productivity", "tasks", "json storage", "dialogs"]
+authors = [{ name = "Flet community", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Community/Productivity"]
+
+[tool.flet.metadata]
+title = "Mind Queue"
+controls = ["SafeArea", "Column", "Row", "Text", "TextField", "Checkbox", "FilledButton", "IconButton", "AlertDialog", "AppBar"]
+layout_pattern = "list-detail"
+complexity = "intermediate"
+features = ["task organization", "local persistence", "dialogs"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

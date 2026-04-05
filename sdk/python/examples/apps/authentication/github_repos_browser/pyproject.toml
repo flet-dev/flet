@@ -1,0 +1,27 @@
+[project]
+name = "apps-authentication-github-repos-browser"
+version = "1.0.0"
+description = "Logs in with GitHub, restores a saved token, and lists the signed-in user's repositories."
+requires-python = ">=3.10"
+keywords = ["apps", "authentication", "github", "oauth", "repositories", "web", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "httpx"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Authentication"]
+
+[tool.flet.metadata]
+title = "GitHub repos browser"
+controls = ["SafeArea", "Column", "Row", "Text", "Button", "ListView", "ListTile", "GitHubOAuthProvider"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["oauth login", "saved token restore", "github api request"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["web"]

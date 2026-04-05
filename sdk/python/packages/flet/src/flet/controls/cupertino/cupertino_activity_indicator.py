@@ -42,7 +42,7 @@ class CupertinoActivityIndicator(LayoutControl):
     Whether this indicator is running its animation.
 
     Note:
-        Has no effect if [`progress`][(c).] is not `None`.
+        Has no effect if :attr:`progress` is not `None`.
     """
 
     progress: Annotated[
@@ -57,7 +57,7 @@ class CupertinoActivityIndicator(LayoutControl):
     a time as the user continues to drag down.
 
     Note:
-        If not `None`, then [`animating`][(c).] will be ignored.
+        If not `None`, then :attr:`animating` will be ignored.
 
     Raises:
         ValueError: If it is not between `0.0` and `1.0`, inclusive.

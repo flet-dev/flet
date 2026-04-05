@@ -17,8 +17,8 @@ Listener = Callable[[Any, Optional[str]], None]  # (sender, field|None)
 
 def observable(cls):
     """
-    Makes a class observable by mixing in [`Observable`][flet.Observable].
-    Can be applied to any class including [`dataclass`][dataclasses.dataclass].
+    Makes a class observable by mixing in :class:`~flet.Observable`.
+    Can be applied to any class including `dataclasses.dataclass`.
     For dataclasses, decorator can be placed either above or below
     the `@dataclass` decorator.
 

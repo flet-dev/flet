@@ -15,7 +15,7 @@ class CupertinoDialogAction(Control):
     """
     A dialog action button.
 
-    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.].
+    Typically used as a child of :attr:`flet.CupertinoAlertDialog.actions`.
     """
 
     content: Annotated[
@@ -36,7 +36,7 @@ class CupertinoDialogAction(Control):
 
     Info:
         Multiple actions can have this property set to `True`
-        in a [`CupertinoAlertDialog`][flet.].
+        in a :class:`~flet.CupertinoAlertDialog`.
     """
 
     destructive: bool = False
@@ -51,7 +51,7 @@ class CupertinoDialogAction(Control):
     """
     The text style to use for text in this button.
 
-    Can be useful when [`content`][(c).] is a string.
+    Can be useful when :attr:`content` is a string.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None

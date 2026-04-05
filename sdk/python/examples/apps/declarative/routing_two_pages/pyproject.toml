@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-routing-two-pages"
+version = "1.0.0"
+description = "Demonstrates declarative view routing with theme context shared across two pages."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "routing", "views", "context", "theme"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative", "Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Routing two pages"
+controls = ["View", "SafeArea", "Column", "Button", "AppBar", "Switch"]
+layout_pattern = "list-detail"
+complexity = "intermediate"
+features = ["routing", "context", "theme switching"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

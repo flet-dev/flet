@@ -71,7 +71,7 @@ class Gradient:
     The colors the gradient should obtain at each of the stops. This list must contain \
     at least two colors.
 
-    If [`stops`][(c).] is provided, this list must have the same length as it.
+    If :attr:`stops` is provided, this list must have the same length as it.
     """
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
@@ -90,11 +90,11 @@ class Gradient:
     """
     A list of values from `0.0` to `1.0` that denote fractions along the gradient.
 
-    If provided, this list must have the same length as [`colors`][(c).].
+    If provided, this list must have the same length as :attr:`colors`.
     If the first value is not `0.0`, then a stop with position `0.0` and a
-    color equal to the first color in [`colors`][(c).] is implied.
+    color equal to the first color in :attr:`colors` is implied.
     If the last value is not `1.0`, then a stop with position `1.0`
-    and a color equal to the last color in [`colors`][(c).] is implied.
+    and a color equal to the last color in :attr:`colors` is implied.
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -146,13 +146,13 @@ class RadialGradient(Gradient):
     The radius of the gradient, as a fraction of the shortest side of the paint box.
     For example, if a radial gradient is painted on a box that is `100.0` pixels wide
     and `200.0` pixels tall, then a radius of `1.0` will place the `1.0` stop at
-    `100.0` pixels from the [`center`][(c).].
+    `100.0` pixels from the :attr:`center`.
     """
 
     focal: Optional[Alignment] = None
     """
     The focal point of the gradient. If specified, the gradient will appear to be \
-    focused along the vector from [`center`][(c).] to focal.
+    focused along the vector from :attr:`center` to focal.
     """
 
     focal_radius: Number = 0.0
@@ -182,7 +182,7 @@ class SweepGradient(Gradient):
     The center of the gradient, as an offset into the `(-1.0, -1.0)` x `(1.0, 1.0)` \
     square describing the gradient which will be mapped onto the paint box.
 
-    For example, an [`Alignment.CENTER`][flet.] will place the sweep gradient
+    For example, an :attr:`flet.Alignment.CENTER` will place the sweep gradient
     in the center of the box.
     """
 

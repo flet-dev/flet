@@ -1,0 +1,39 @@
+[project]
+name = "rotated-box-basic"
+version = "1.0.0"
+description = "Compares normal layouted controls with quarter_turns RotatedBox rendering."
+requires-python = ">=3.10"
+keywords = ["rotated box", "layout", "rotation", "transform", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/RotatedBox"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = [
+    "SafeArea",
+    "Column",
+    "Row",
+    "Container",
+    "RotatedBox",
+    "Text",
+    "Button",
+    "ProgressBar",
+]
+layout_pattern = "compare-layout"
+complexity = "basic"
+features = [
+    "rotation before layout",
+    "visual space comparison",
+    "before-after examples",
+]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

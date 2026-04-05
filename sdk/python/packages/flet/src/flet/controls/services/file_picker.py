@@ -18,7 +18,7 @@ __all__ = [
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the [`FilePicker`][flet.].
+    Defines the file types that can be selected using the :class:`~flet.FilePicker`.
     """
 
     ANY = "any"
@@ -28,7 +28,7 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of [`VIDEO`][(c).] and [`IMAGE`][(c).].
+    A combination of :attr:`VIDEO` and :attr:`IMAGE`.
     """
 
     IMAGE = "image"
@@ -55,13 +55,13 @@ class FilePickerFileType(Enum):
 @dataclass
 class FilePickerUploadFile:
     """
-    Upload descriptor for one file selected by [`FilePicker`][flet.].
+    Upload descriptor for one file selected by :class:`~flet.FilePicker`.
 
-    Instances are passed to [`FilePicker.upload()`][flet.FilePicker.upload].
-    During upload, Flet resolves the selected file by [`id`][(c).] first and,
-    when `id` is absent or not found, falls back to [`name`][(c).].
+    Instances are passed to :meth:`flet.FilePicker.upload`.
+    During upload, Flet resolves the selected file by :attr:`id` first and,
+    when `id` is absent or not found, falls back to :attr:`name`.
 
-    At least one of [`id`][(c).] or [`name`][(c).] should be provided.
+    At least one of :attr:`id` or :attr:`name` should be provided.
     """
 
     upload_url: str
@@ -69,7 +69,7 @@ class FilePickerUploadFile:
     Upload destination URL.
 
     Can be an absolute URL or a page-relative URL returned by
-    [`Page.get_upload_url()`][flet.Page.get_upload_url].
+    :meth:`flet.Page.get_upload_url`.
     """
 
     method: str = "PUT"
@@ -80,14 +80,14 @@ class FilePickerUploadFile:
     id: Optional[int] = None
     """
     Selected file identifier returned by
-    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+    :meth:`flet.FilePicker.pick_files`.
 
     This is the preferred lookup key when both `id` and `name` are specified.
     """
 
     name: Optional[str] = None
     """
-    Selected file name used as fallback lookup when [`id`][(c).] is missing
+    Selected file name used as fallback lookup when :attr:`id` is missing
     or does not match any currently selected file.
     """
 
@@ -96,10 +96,10 @@ class FilePickerUploadFile:
 class FilePickerFile:
     """
     Metadata for a file selected via
-    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+    :meth:`flet.FilePicker.pick_files`.
 
-    Returned by [`FilePicker.pick_files()`][flet.FilePicker.pick_files] and
-    used as input context for [`FilePickerUploadFile`][flet.FilePickerUploadFile]
+    Returned by :meth:`flet.FilePicker.pick_files` and
+    used as input context for :class:`~flet.FilePickerUploadFile`
     when uploading selected files.
     """
 
@@ -108,7 +108,7 @@ class FilePickerFile:
     Selection-scoped file identifier assigned by Flet.
 
     This value is stable for the current picker selection and is preferred for
-    upload matching in [`FilePickerUploadFile`][flet.FilePickerUploadFile].
+    upload matching in :class:`~flet.FilePickerUploadFile`.
     """
 
     name: str
@@ -135,7 +135,7 @@ class FilePickerFile:
     """
     File contents.
 
-    Returned only when [`pick_files()`][flet.FilePicker.pick_files] is called with
+    Returned only when :meth:`~flet.FilePicker.pick_files` is called with
     `with_data=True`. Otherwise this value is `None`.
     """
 
@@ -144,7 +144,7 @@ class FilePickerFile:
 class FilePickerUploadEvent(Event["FilePicker"]):
     """
     Event emitted when a file is uploaded via \
-    [`FilePicker.upload()`][flet.FilePicker.upload] method.
+    :meth:`flet.FilePicker.upload` method.
     """
 
     file_name: str
@@ -182,11 +182,11 @@ class FilePicker(Service):
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
-    Called when a file is uploaded via [`upload()`][(c).upload] method.
+    Called when a file is uploaded via :meth:`upload` method.
 
     This callback is invoked at least twice for each uploaded file: once with `0.0`
-    [`progress`][flet.FilePickerUploadEvent.] before the upload starts, and once with
-    `1.0` [`progress`][flet.FilePickerUploadEvent.] when the upload completes.
+    :attr:`~flet.FilePickerUploadEvent.progress` before the upload starts, and once with
+    `1.0` :attr:`~flet.FilePickerUploadEvent.progress` when the upload completes.
 
     For files larger than 1 MB, additional progress events are emitted
     at every 10% increment (for example, `0.1`, `0.2`, ...).
@@ -196,14 +196,14 @@ class FilePicker(Service):
         """
         Uploads picked files to specified upload URLs.
 
-        Before calling this method, [`pick_files()`][(c).pick_files] first has to be
+        Before calling this method, :meth:`pick_files` first has to be
         called to ensure the internal file picker selection is not empty.
 
         Once called, Flet asynchronously starts uploading selected files
-        one-by-one and reports the progress via [`on_upload`][(c).] event.
+        one-by-one and reports the progress via :attr:`on_upload` event.
 
         Args:
-            files: A list of [`FilePickerUploadFile`][flet.], where
+            files: A list of :class:`~flet.FilePickerUploadFile`, where
                 each item specifies which file to upload, and where
                 (with `PUT` or `POST`).
         """
@@ -271,7 +271,7 @@ class FilePicker(Service):
                 iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is
-                [`FilePickerFileType.CUSTOM`][flet.].
+                :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Raises:
             ValueError: If `src_bytes` is not provided, when called in web mode,
@@ -313,7 +313,7 @@ class FilePicker(Service):
         Opens a pick file dialog.
 
         Tip:
-            To upload the picked files, pass them to [`upload()`][(c).upload] method,
+            To upload the picked files, pass them to :meth:`upload` method,
             along with their upload URLs.
 
         Args:
@@ -322,9 +322,9 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
-                [`bytes`][flet.FilePickerFile.].
+                :attr:`~flet.FilePickerFile.bytes`.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is [`FilePickerFileType.CUSTOM`][flet.].
+                `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Returns:
             A list of selected files.

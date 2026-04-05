@@ -1,0 +1,26 @@
+[project]
+name = "container-nested-themes-3"
+version = "1.0.0"
+description = "Theme toggle example using a switch to change page mode across nested containers."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Nested themes 3"
+controls = ["SafeArea", "Column", "Row", "Container", "Button", "Switch"]
+layout_pattern = "stacked-sections"
+complexity = "basic"
+features = ["theme mode toggle", "nested themes"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

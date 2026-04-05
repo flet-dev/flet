@@ -263,7 +263,7 @@ def open_flet_view(page_url, assets_dir, hidden):
     Returns:
         A tuple containing:
             - `subprocess.Popen`: started desktop process.
-            - `str`: path to a temporary PID file used by [`close_flet_view()`][(m).].
+            - `str`: path to a temporary PID file used by `close_flet_view()`.
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
@@ -284,7 +284,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     Returns:
         A tuple containing:
             - `asyncio.subprocess.Process`: started desktop process.
-            - `str`: path to a temporary PID file used by [`close_flet_view()`][(m).].
+            - `str`: path to a temporary PID file used by `close_flet_view()`.
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
@@ -305,8 +305,8 @@ def close_flet_view(pid_file):
     intentionally ignored, but the PID file is removed when possible.
 
     Args:
-        pid_file: Path to the PID file returned by [`open_flet_view()`][(m).]
-            or [`open_flet_view_async()`][(m).].
+        pid_file: Path to the PID file returned by `open_flet_view()`
+            or `open_flet_view_async()`.
     """
 
     if pid_file is not None and os.path.exists(pid_file):

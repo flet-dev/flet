@@ -112,8 +112,8 @@ class Video(ft.LayoutControl):
 
     Note:
         Android was reported to show blurry images when using
-        [`FilterQuality.HIGH`][flet.FilterQuality.HIGH].
-        Prefer the usage of [`FilterQuality.MEDIUM`][flet.FilterQuality.MEDIUM]
+        :attr:`flet.FilterQuality.HIGH`.
+        Prefer the usage of :attr:`flet.FilterQuality.MEDIUM`
         on this platform.
     """
 
@@ -125,7 +125,7 @@ class Video(ft.LayoutControl):
     resume_upon_entering_foreground_mode: bool = False
     """
     Whether to resume the video when application enters foreground mode.
-    Has effect only if [`pause_upon_entering_background_mode`][(c).] is also set to
+    Has effect only if :attr:`pause_upon_entering_background_mode` is also set to
     `True`.
     """
 
@@ -166,7 +166,7 @@ class Video(ft.LayoutControl):
     """
     Fires when an error occurs.
 
-    Event handler argument's [`data`][flet.Event.data] property contains
+    Event handler argument's :attr:`~flet.Event.data` property contains
     information about the error.
     """
 
@@ -177,7 +177,7 @@ class Video(ft.LayoutControl):
     """
     Fires when a video track changes.
 
-    Event handler argument's [`data`][flet.Event.data] property contains
+    Event handler argument's :attr:`~flet.Event.data` property contains
     the index of the new track.
     """
 
@@ -208,17 +208,17 @@ class Video(ft.LayoutControl):
         await self._invoke_method("stop")
 
     async def next(self):
-        """Jumps to the next `VideoMedia` in the [`playlist`][(c).]."""
+        """Jumps to the next `VideoMedia` in the :attr:`playlist`."""
         await self._invoke_method("next")
 
     async def previous(self):
-        """Jumps to the previous `VideoMedia` in the [`playlist`][(c).]."""
+        """Jumps to the previous `VideoMedia` in the :attr:`playlist`."""
         await self._invoke_method("previous")
 
     async def seek(self, position: ft.DurationValue):
         """
         Seeks the currently playing `VideoMedia` from the
-        [`playlist`][(c).] at the specified `position`.
+        :attr:`playlist` at the specified `position`.
         """
         await self._invoke_method(
             "seek",
@@ -228,7 +228,7 @@ class Video(ft.LayoutControl):
     async def jump_to(self, media_index: int):
         """
         Jumps to the `VideoMedia` at the specified `media_index`
-        in the [`playlist`][(c).].
+        in the :attr:`playlist`.
         """
         if not (-len(self.playlist) <= media_index < len(self.playlist)):
             raise IndexError("media_index is out of range")

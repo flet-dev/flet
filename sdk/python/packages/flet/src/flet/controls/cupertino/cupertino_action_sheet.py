@@ -38,7 +38,7 @@ class CupertinoActionSheet(LayoutControl):
     """
     A control containing the title of the action sheet.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     message: Optional[StrOrControl] = None
@@ -46,18 +46,18 @@ class CupertinoActionSheet(LayoutControl):
     A control containing a descriptive message that provides more details about the \
     reason for the alert.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     actions: Optional[list[Control]] = None
     """
     A list of action buttons to be shown in the sheet.
 
-    These actions are typically [`CupertinoActionSheetAction`][flet.]s.
+    These actions are typically :class:`~flet.CupertinoActionSheetAction`s.
 
     Raises:
-        ValueError: If none of [`actions`][(c).], [`title`][(c).], [`message`][(c).],
-            or [`cancel`][(c).] are provided.
+        ValueError: If none of :attr:`actions`, :attr:`title`, :attr:`message`,
+            or :attr:`cancel` are provided.
     """
 
     cancel: Optional[Control] = None
@@ -65,7 +65,7 @@ class CupertinoActionSheet(LayoutControl):
     An optional control to be shown below the actions but grouped separately from \
     them.
 
-    Typically a [`CupertinoActionSheetAction`][flet.] button.
+    Typically a :class:`~flet.CupertinoActionSheetAction` button.
     """
 
     __validation_rules__: ValidationRules = (

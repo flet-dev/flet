@@ -15,7 +15,7 @@ class Line(Shape):
 
     Note:
         The line is always rendered as a stroke, regardless of the value
-        of [`paint`][(c).]'s [`style`][flet.Paint.] property.
+        of :attr:`paint`'s :attr:`~flet.Paint.style` property.
     """
 
     x1: Number

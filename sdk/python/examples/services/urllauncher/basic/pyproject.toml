@@ -1,0 +1,26 @@
+[project]
+name = "services-urllauncher-basic"
+version = "1.0.0"
+description = "Launches URLs in multiple modes including web view, browser view, and popup windows."
+requires-python = ">=3.10"
+keywords = ["urllauncher", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/UrlLauncher"]
+
+[tool.flet.metadata]
+title = "Basic URL launcher"
+controls = ["SafeArea", "Column", "Page", "UrlLauncher", "TextField", "Text", "LaunchMode", "WebViewConfiguration"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["URL launch modes", "popup window"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

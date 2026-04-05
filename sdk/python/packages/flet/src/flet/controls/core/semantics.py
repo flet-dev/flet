@@ -27,7 +27,7 @@ class Semantics(Control):
 
     label: Optional[str] = None
     """
-    A textual description of the [`content`][(c).].
+    A textual description of the :attr:`content`.
     """
 
     expanded: Optional[bool] = None
@@ -54,12 +54,12 @@ class Semantics(Control):
 
     obscured: Optional[bool] = None
     """
-    Whether [`value`][(c).] should be obscured.
+    Whether :attr:`value` should be obscured.
     """
 
     multiline: Optional[bool] = None
     """
-    Whether the [`value`][(c).] is coming from a field that supports multiline text \
+    Whether the :attr:`value` is coming from a field that supports multiline text \
     editing.
     """
 

@@ -1,0 +1,45 @@
+[project]
+name = "pagelet-basic"
+version = "1.0.0"
+description = "Shows a Pagelet configured with app bars, drawers, and a floating action button."
+requires-python = ">=3.10"
+keywords = [
+  "pagelet",
+  "navigation drawer",
+  "app bar",
+  "floating action button",
+  "async",
+]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Pagelet"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = [
+  "Pagelet",
+  "SafeArea",
+  "AppBar",
+  "BottomAppBar",
+  "NavigationDrawer",
+  "NavigationDrawerDestination",
+  "FloatingActionButton",
+  "Text",
+  "IconButton",
+  "Row",
+  "Column",
+  "Container",
+]
+layout_pattern = "app-shell"
+complexity = "basic"
+features = ["drawer navigation", "floating action behavior", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

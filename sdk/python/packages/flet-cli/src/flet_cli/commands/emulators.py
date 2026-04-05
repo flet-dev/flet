@@ -238,7 +238,7 @@ class Command(BaseFlutterCommand):
         Delete the selected Android virtual device.
 
         Resolves SDK location, then delegates deletion to
-        [`AndroidSDK`][flet_cli.utils.android_sdk.].
+        `AndroidSDK`.
         """
 
         assert self.emulator_target

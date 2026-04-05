@@ -68,7 +68,7 @@ class MenuStyle:
     """
     The color and weight of the menu's outline.
 
-    This value is combined with [`shape`][(c).] to create a
+    This value is combined with :attr:`shape` to create a
     shape decorated with an outline.
     """
 
@@ -76,7 +76,7 @@ class MenuStyle:
     """
     The menu's shape.
 
-    This shape is combined with [`side`][(c).] to create a
+    This shape is combined with :attr:`side` to create a
     shape decorated with an outline.
     """
 
@@ -89,8 +89,8 @@ class MenuStyle:
     """
     The menu's size.
 
-    This size is still constrained by the style's [`min_size`][(c).] and
-    [`max_size`][(c).]. Fixed size dimensions whose value is `float('inf')` are
+    This size is still constrained by the style's :attr:`min_size` and
+    :attr:`max_size`. Fixed size dimensions whose value is `float('inf')` are
     ignored.
 
     To specify menus with a fixed width and the default height use
@@ -102,17 +102,17 @@ class MenuStyle:
     """
     The maximum size of the menu itself.
 
-    A [`Size.infinite`][flet.] or `None` value for this property
+    A :meth:`flet.Size.infinite` or `None` value for this property
     means that the menu's maximum size is not constrained.
 
-    This value must be greater than or equal to [`min_size`][(c).].
+    This value must be greater than or equal to :attr:`min_size`.
     """
 
     min_size: Optional[ControlStateValue[Size]] = None
     """
     The minimum size of the menu itself.
 
-    This value must be less than or equal to [`max_size`][(c).].
+    This value must be less than or equal to :attr:`max_size`.
     """
 
     visual_density: Optional[VisualDensity] = None

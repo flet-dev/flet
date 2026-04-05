@@ -12,15 +12,15 @@ __all__ = ["Marker", "MarkerLayer"]
 class Marker(ft.Control):
     """
     A marker displayed on the Map at the specified location
-    through the [`MarkerLayer`][(p).].
+    through the :class:`~flet_map.MarkerLayer`.
     """
 
     content: ft.Control
     """
-    The content to be displayed at [`coordinates`][(c).].
+    The content to be displayed at :attr:`coordinates`.
 
     Raises:
-        ValueError: If it is not [`visible`][flet.Control.visible].
+        ValueError: If it is not :attr:`~flet.Control.visible`.
     """
 
     coordinates: MapLatitudeLongitude
@@ -28,7 +28,7 @@ class Marker(ft.Control):
     The coordinates of the marker.
 
     This will be the center of the marker,
-    if [`alignment`][(c).] is [`Alignment.CENTER`][flet.].
+    if :attr:`alignment` is :attr:`flet.Alignment.CENTER`.
     """
 
     rotate: Optional[bool] = None
@@ -38,7 +38,7 @@ class Marker(ft.Control):
     So, when `True`, this marker will always appear upright and
     vertical from the user's perspective.
 
-    If `None`, defaults to the value of the parent [`MarkerLayer.rotate`][(p).].
+    If `None`, defaults to the value of the parent :attr:`flet_map.MarkerLayer.rotate`.
 
     Note:
         This is not used to apply a custom rotation in degrees to this marker.
@@ -47,7 +47,7 @@ class Marker(ft.Control):
 
     height: ft.Number = 30.0
     """
-    The height of the [`content`][(c).] Control.
+    The height of the :attr:`content` Control.
 
     Raises:
         ValueError: If it is less than `0.0`.
@@ -55,7 +55,7 @@ class Marker(ft.Control):
 
     width: ft.Number = 30.0
     """
-    The width of the [`content`][(c).] Control.
+    The width of the :attr:`content` Control.
 
     Raises:
         ValueError: If it is less than `0.0`.
@@ -63,9 +63,9 @@ class Marker(ft.Control):
 
     alignment: Optional[ft.Alignment] = None
     """
-    Alignment of the marker relative to the normal center at [`coordinates`][(c).].
+    Alignment of the marker relative to the normal center at :attr:`coordinates`.
 
-    Defaults to the value of the parent [`MarkerLayer.alignment`][(p).].
+    Defaults to the value of the parent :attr:`flet_map.MarkerLayer.alignment`.
     """
 
     def before_update(self):
@@ -90,7 +90,7 @@ class MarkerLayer(MapLayer):
 
     markers: list[Marker]
     """
-    A list of [`Marker`][(p).]s to display.
+    A list of :class:`~flet_map.Marker`s to display.
     """
 
     alignment: Optional[ft.Alignment] = field(
@@ -98,11 +98,11 @@ class MarkerLayer(MapLayer):
     )
     """
     The alignment of each marker relative to its normal center at
-    [`Marker.coordinates`][(p).].
+    :attr:`flet_map.Marker.coordinates`.
     """
 
     rotate: bool = False
     """
-    Whether to counter-rotate [`markers`][(c).] to the map's rotation,
+    Whether to counter-rotate :attr:`markers` to the map's rotation,
     to keep a fixed orientation.
     """

@@ -51,7 +51,8 @@ class PageTransitionTheme(Enum):
     """
     Page transition preset for route changes.
 
-    These could, for example, be used together with [`PageTransitionsTheme`][flet.] to
+    These could, for example, be used together with \
+    :class:`~flet.PageTransitionsTheme` to
     define per-platform navigation animations.
     """
 
@@ -100,7 +101,7 @@ class PageTransitionsTheme:
     """
     Per-platform mapping of route transition presets.
 
-    Assigned to [`Theme.page_transitions`][flet.] to
+    Assigned to :attr:`flet.Theme.page_transitions` to
     override how Material routes animate on each target platform.
     """
 
@@ -108,35 +109,35 @@ class PageTransitionsTheme:
     """
     Transition preset for Android routes.
 
-    If `None`, defaults to [`PageTransitionTheme.FADE_UPWARDS`][flet.].
+    If `None`, defaults to :attr:`flet.PageTransitionTheme.FADE_UPWARDS`.
     """
 
     ios: Optional[PageTransitionTheme] = None
     """
     Transition preset for iOS routes.
 
-    If `None`, defaults to [`PageTransitionTheme.CUPERTINO`][flet.].
+    If `None`, defaults to :attr:`flet.PageTransitionTheme.CUPERTINO`.
     """
 
     linux: Optional[PageTransitionTheme] = None
     """
     Transition preset for Linux desktop routes.
 
-    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    If `None`, defaults to :attr:`flet.PageTransitionTheme.ZOOM`.
     """
 
     macos: Optional[PageTransitionTheme] = None
     """
     Transition preset for macOS desktop routes.
 
-    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    If `None`, defaults to :attr:`flet.PageTransitionTheme.ZOOM`.
     """
 
     windows: Optional[PageTransitionTheme] = None
     """
     Transition preset for Windows desktop routes.
 
-    If `None`, defaults to [`PageTransitionTheme.ZOOM`][flet.].
+    If `None`, defaults to :attr:`flet.PageTransitionTheme.ZOOM`.
     """
 
 
@@ -157,106 +158,106 @@ class ColorScheme:
 
     on_primary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on [`primary`][(c).].
+    A color that's clearly legible when drawn on :attr:`primary`.
     """
 
     primary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than [`primary`][(c).].
+    A color used for elements needing less emphasis than :attr:`primary`.
     """
 
     on_primary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`primary_container`][(c).].
+    A color that's clearly legible when drawn on :attr:`primary_container`.
     """
 
     secondary: Optional[ColorValue] = None
     """
     An accent color used for less prominent components in the UI, such as filter \
-    [`Chip`][flet.]s, while expanding the opportunity for color expression.
+    :class:`~flet.Chip`s, while expanding the opportunity for color expression.
     """
 
     on_secondary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on [`secondary`][(c).].
+    A color that's clearly legible when drawn on :attr:`secondary`.
     """
 
     secondary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than [`secondary`][(c).].
+    A color used for elements needing less emphasis than :attr:`secondary`.
     """
 
     on_secondary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`secondary_container`][(c).].
+    A color that's clearly legible when drawn on :attr:`secondary_container`.
     """
 
     tertiary: Optional[ColorValue] = None
     """
-    A color used as a contrasting accent that can balance [`primary`][(c).] and \
-    [`secondary`][(c).] colors or bring heightened attention to an element, such as an \
+    A color used as a contrasting accent that can balance :attr:`primary` and \
+    :attr:`secondary` colors or bring heightened attention to an element, such as an \
     input field.
     """
 
     on_tertiary: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on [`tertiary`][(c).].
+    A color that's clearly legible when drawn on :attr:`tertiary`.
     """
 
     tertiary_container: Optional[ColorValue] = None
     """
-    A color used for elements needing less emphasis than [`tertiary`][(c).].
+    A color used for elements needing less emphasis than :attr:`tertiary`.
     """
 
     on_tertiary_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`tertiary_container`][(c).].
+    A color that's clearly legible when drawn on :attr:`tertiary_container`.
     """
 
     error: Optional[ColorValue] = None
     """
     The color to use for input validation errors, e.g. for \
-    [`FormFieldControl.error`][flet.].
+    :attr:`flet.FormFieldControl.error`.
     """
 
     on_error: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on [`error`][(c).].
+    A color that's clearly legible when drawn on :attr:`error`.
     """
 
     error_container: Optional[ColorValue] = None
     """
-    A color used for error elements needing less emphasis than [`error`][(c).].
+    A color used for error elements needing less emphasis than :attr:`error`.
     """
 
     on_error_container: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`error_container`][(c).].
+    A color that's clearly legible when drawn on :attr:`error_container`.
     """
 
     surface: Optional[ColorValue] = None
     """
-    The background color for widgets like [`Card`][flet.].
+    The background color for widgets like :class:`~flet.Card`.
     """
 
     on_surface: Optional[ColorValue] = field(default=None, metadata={"event": False})
     """
-    A color that's clearly legible when drawn on [`surface`][(c).].
+    A color that's clearly legible when drawn on :attr:`surface`.
     """
 
     on_surface_variant: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`surface_container_highest`][(c).].
+    A color that's clearly legible when drawn on :attr:`surface_container_highest`.
     """
 
     outline: Optional[ColorValue] = None
@@ -283,20 +284,20 @@ class ColorScheme:
     inverse_surface: Optional[ColorValue] = None
     """
     A surface color used for displaying the reverse of what’s seen in the surrounding \
-    UI, for example in a [`SnackBar`][flet.] to bring attention to an alert.
+    UI, for example in a :class:`~flet.SnackBar` to bring attention to an alert.
     """
 
     on_inverse_surface: Optional[ColorValue] = field(
         default=None, metadata={"event": False}
     )
     """
-    A color that's clearly legible when drawn on [`inverse_surface`][(c).].
+    A color that's clearly legible when drawn on :attr:`inverse_surface`.
     """
 
     inverse_primary: Optional[ColorValue] = None
     """
-    An accent color used for displaying a highlight color on [`inverse_surface`][(c).]
-    backgrounds, like button text in a [`SnackBar`][flet.].
+    An accent color used for displaying a highlight color on :attr:`inverse_surface`
+    backgrounds, like button text in a :class:`~flet.SnackBar`.
     """
 
     surface_tint: Optional[ColorValue] = None
@@ -309,7 +310,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having \
-    [`primary_fixed`][(c).] color.
+    :attr:`primary_fixed` color.
     """
 
     on_secondary_fixed: Optional[ColorValue] = field(
@@ -317,7 +318,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having \
-    [`secondary_fixed`][(c).] color.
+    :attr:`secondary_fixed` color.
     """
 
     on_tertiary_fixed: Optional[ColorValue] = field(
@@ -325,7 +326,7 @@ class ColorScheme:
     )
     """
     A color that is used for text and icons that exist on top of elements having \
-    [`tertiary_fixed`][(c).] color.
+    :attr:`tertiary_fixed` color.
     """
 
     on_primary_fixed_variant: Optional[ColorValue] = field(
@@ -333,7 +334,7 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than \
-    [`on_primary_fixed`][(c).].
+    :attr:`on_primary_fixed`.
     """
 
     on_secondary_fixed_variant: Optional[ColorValue] = field(
@@ -341,7 +342,7 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than \
-    [`on_secondary_fixed`][(c).].
+    :attr:`on_secondary_fixed`.
     """
 
     on_tertiary_fixed_variant: Optional[ColorValue] = field(
@@ -349,35 +350,35 @@ class ColorScheme:
     )
     """
     A color that provides a lower-emphasis option for text and icons than \
-    [`on_tertiary_fixed`][(c).].
+    :attr:`on_tertiary_fixed`.
     """
 
     primary_fixed: Optional[ColorValue] = None
     """
-    A substitute for [`primary_container`][(c).] that's the same color for the dark \
+    A substitute for :attr:`primary_container` that's the same color for the dark \
     and light themes.
     """
 
     secondary_fixed: Optional[ColorValue] = None
     """
-    A substitute for [`secondary_container`][(c).] that's the same color for the dark \
+    A substitute for :attr:`secondary_container` that's the same color for the dark \
     and light themes.
     """
 
     tertiary_fixed: Optional[ColorValue] = None
     """
-    A substitute for [`tertiary_container`][(c).] that's the same color for dark and \
+    A substitute for :attr:`tertiary_container` that's the same color for dark and \
     light themes.
     """
 
     primary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than [`primary_fixed`][(c).].
+    A color used for elements needing more emphasis than :attr:`primary_fixed`.
     """
 
     secondary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than [`secondary_fixed`][(c).].
+    A color used for elements needing more emphasis than :attr:`secondary_fixed`.
     """
 
     surface_bright: Optional[ColorValue] = None
@@ -404,7 +405,7 @@ class ColorScheme:
     surface_container_low: Optional[ColorValue] = None
     """
     A surface container color with a lighter tone that creates less emphasis than \
-    `surface_container` but more emphasis than [`surface_container_lowest`][(c).].
+    `surface_container` but more emphasis than :attr:`surface_container_lowest`.
     """
 
     surface_container_lowest: Optional[ColorValue] = None
@@ -420,14 +421,14 @@ class ColorScheme:
 
     tertiary_fixed_dim: Optional[ColorValue] = None
     """
-    A color used for elements needing more emphasis than [`tertiary_fixed`][(c).].
+    A color used for elements needing more emphasis than :attr:`tertiary_fixed`.
     """
 
 
 @value
 class TextTheme:
     """
-    Customizes [`Text`][flet.] styles.
+    Customizes :class:`~flet.Text` styles.
 
     Material 3 design
     [defines](http://localhost:3000/docs/controls/text#pre-defined-theme-text-styles)
@@ -488,8 +489,8 @@ class TextTheme:
     """
     Largest of the label styles. Label styles are smaller, utilitarian styles, used \
     for areas of the UI such as text inside of components or very small supporting \
-    text in the content body, like captions. Used for text on [`Button`][flet.], \
-    [`TextButton`][flet.] and [`OutlinedButton`][flet.].
+    text in the content body, like captions. Used for text on :class:`~flet.Button`, \
+    :class:`~flet.TextButton` and :class:`~flet.OutlinedButton`.
     """
 
     label_medium: Optional[TextStyle] = None
@@ -608,82 +609,82 @@ class ScrollbarTheme:
 @value
 class TabBarTheme:
     """
-    Customizes the appearance of [`TabBar`][flet.] control across the app.
+    Customizes the appearance of :class:`~flet.TabBar` control across the app.
     """
 
     indicator_size: Optional[TabBarIndicatorSize] = None
     """
-    Overrides the default value for [`TabBar.indicator_size`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.indicator_size`.
     """
 
     indicator: Optional[UnderlineTabIndicator] = None
     """
-    Overrides the default value for [`TabBar.indicator`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.indicator`.
     """
 
     indicator_animation: Optional[TabIndicatorAnimation] = None
     """
-    Overrides the default value for [`TabBar.indicator_animation`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.indicator_animation`.
     """
 
     splash_border_radius: Optional[BorderRadiusValue] = None
     """
-    Overrides the default value for [`TabBar.splash_border_radius`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.splash_border_radius`.
     """
 
     tab_alignment: Optional[TabAlignment] = None
     """
-    Overrides the default value for [`TabBar.tab_alignment`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.tab_alignment`.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value for [`TabBar.overlay_color`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.overlay_color`.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`TabBar.divider_color`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.divider_color`.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`TabBar.indicator_color`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.indicator_color`.
     """
 
     mouse_cursor: Optional[ControlStateValue[Optional[MouseCursor]]] = None
     """
-    Overrides the default value for [`TabBar.mouse_cursor`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.mouse_cursor`.
     """
 
     divider_height: Optional[Number] = None
     """
-    Overrides the default value for [`TabBar.divider_height`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.divider_height`.
     """
 
     label_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`TabBar.label_color`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.label_color`.
     """
 
     unselected_label_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`TabBar.unselected_label_color`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.unselected_label_color`.
     """
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`TabBar.label_padding`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.label_padding`.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`TabBar.label_text_style`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.label_text_style`.
     """
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`TabBar.unselected_label_text_style`][flet.].
+    Overrides the default value for :attr:`flet.TabBar.unselected_label_text_style`.
     """
 
 
@@ -740,364 +741,371 @@ class SystemOverlayStyle:
 @value
 class DialogTheme:
     """
-    Customizes the appearance of [`AlertDialog`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.AlertDialog` across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AlertDialog.bgcolor`][flet.] in all descendant \
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.bgcolor` in all descendant \
+    :class:`~flet.AlertDialog` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AlertDialog.shadow_color`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.shadow_color` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Used to configure the [`IconTheme`][flet.] for the [`AlertDialog.icon`][flet.] \
+    Used to configure the :class:`~flet.IconTheme` for the \
+    :attr:`flet.AlertDialog.icon` \
     control.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`AlertDialog.elevation`][flet.] in all descendant \
+    Overrides the default value of :attr:`flet.AlertDialog.elevation` in all \
+    descendant \
     dialog controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`AlertDialog.shape`][flet.] in all descendant \
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.shape` in all descendant \
+    :class:`~flet.AlertDialog` controls.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`AlertDialog.title_text_style`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.title_text_style` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     content_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`AlertDialog.content_text_style`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.content_text_style` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     alignment: Optional[Alignment] = None
     """
-    Overrides the default value of [`AlertDialog.alignment`][flet.] in all descendant \
-    [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.alignment` in all \
+    descendant \
+    :class:`~flet.AlertDialog` controls.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`AlertDialog.actions_padding`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.actions_padding` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of [`AlertDialog.clip_behavior`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.clip_behavior` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AlertDialog.barrier_color`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.barrier_color` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
     inset_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`AlertDialog.inset_padding`][flet.] in all \
-    descendant [`AlertDialog`][flet.] controls.
+    Overrides the default value of :attr:`flet.AlertDialog.inset_padding` in all \
+    descendant :class:`~flet.AlertDialog` controls.
     """
 
 
 @value
 class ButtonTheme:
     """
-    Customizes the appearance of [`Button`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Button` across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`Button.style`][flet.] in all descendant \
-    [`Button`][flet.] controls.
+    Overrides the default value of :attr:`flet.Button.style` in all descendant \
+    :class:`~flet.Button` controls.
     """
 
 
 @value
 class OutlinedButtonTheme:
     """
-    Customizes the appearance of [`OutlinedButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.OutlinedButton` across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`OutlinedButton.style`][flet.] in all descendant \
-    [`OutlinedButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.OutlinedButton.style` in all descendant \
+    :class:`~flet.OutlinedButton` controls.
     """
 
 
 @value
 class TextButtonTheme:
     """
-    Customizes the appearance of [`TextButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.TextButton` across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`TextButton.style`][flet.] in all descendant \
-    [`TextButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.TextButton.style` in all descendant \
+    :class:`~flet.TextButton` controls.
     """
 
 
 @value
 class FilledButtonTheme:
     """
-    Customizes the appearance of [`FilledButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.FilledButton` across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`Button.style`][flet.Button.style]
+    Overrides the default value of :attr:`flet.Button.style`
     in all descendant \
-    [`FilledButton`][flet.] controls.
+    :class:`~flet.FilledButton` controls.
     """
 
 
 @value
 class IconButtonTheme:
     """
-    Customizes the appearance of [`IconButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.IconButton` across the app.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value of [`IconButton.style`][flet.] in all descendant \
-    [`IconButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.IconButton.style` in all descendant \
+    :class:`~flet.IconButton` controls.
     """
 
 
 @value
 class BottomSheetTheme:
     """
-    Customizes the appearance of [`BottomSheet`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.BottomSheet` across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`BottomSheet.bgcolor`][flet.] in all descendant \
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.bgcolor` in all descendant \
+    :class:`~flet.BottomSheet` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`BottomSheet.elevation`][flet.] in all descendant \
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.elevation` in all \
+    descendant \
+    :class:`~flet.BottomSheet` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`BottomSheet.shape`][flet.] in all descendant \
-    [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.shape` in all descendant \
+    :class:`~flet.BottomSheet` controls.
     """
 
     show_drag_handle: Optional[bool] = None
     """
-    Overrides the default value of [`BottomSheet.show_drag_handle`][flet.] in all \
-    descendant [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.show_drag_handle` in all \
+    descendant :class:`~flet.BottomSheet` controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of [`BottomSheet.clip_behavior`][flet.] in all \
-    descendant [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.clip_behavior` in all \
+    descendant :class:`~flet.BottomSheet` controls.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of [`BottomSheet.size_constraints`][flet.] in all \
-    descendant [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.size_constraints` in all \
+    descendant :class:`~flet.BottomSheet` controls.
     """
 
     barrier_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`BottomSheet.barrier_color`][flet.] in all \
-    descendant [`BottomSheet`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomSheet.barrier_color` in all \
+    descendant :class:`~flet.BottomSheet` controls.
     """
 
     drag_handle_color: Optional[ColorValue] = None
     """
     Overrides the default value of drag handle color in all descendant \
-    [`BottomSheet`][flet.] controls.
+    :class:`~flet.BottomSheet` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
     Overrides the default value of shadow color in all descendant \
-    [`BottomSheet`][flet.] controls.
+    :class:`~flet.BottomSheet` controls.
     """
 
 
 @value
 class CardTheme:
     """
-    Customizes the appearance of [`Card`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Card` across the app.
     """
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Card.clip_behavior`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.clip_behavior` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Card.shadow_color`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.shadow_color` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`Card.elevation`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.elevation` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`Card.shape`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.shape` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value of [`Card.clip_behavior`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.clip_behavior` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
     margin: Optional[MarginValue] = None
     """
-    Overrides the default value of [`Card.margin`][flet.] in all descendant \
-    [`Card`][flet.] controls.
+    Overrides the default value of :attr:`flet.Card.margin` in all descendant \
+    :class:`~flet.Card` controls.
     """
 
 
 @value
 class ChipTheme:
     """
-    Customizes the appearance of [`Chip`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Chip` across the app.
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Chip.color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.color` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.bgcolor`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.bgcolor` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.shadow_color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.shadow_color` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     selected_shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.selected_shadow_color`][flet.] in all \
-    descendant [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.selected_shadow_color` in all \
+    descendant :class:`~flet.Chip` controls.
     """
 
     disabled_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.disabled_color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.disabled_color` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.selected_color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.selected_color` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     check_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.check_color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.check_color` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     delete_icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Chip.delete_icon_color`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.delete_icon_color` in all \
+    descendant \
+    :class:`~flet.Chip` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`Chip.elevation`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.elevation` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     elevation_on_click: Optional[Number] = None
     """
-    Overrides the default value of [`Chip.elevation_on_click`][flet.] in all \
-    descendant [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.elevation_on_click` in all \
+    descendant :class:`~flet.Chip` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`Chip.shape`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.shape` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Chip.padding`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.padding` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Chip.label_padding`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.label_padding` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`Chip.label_text_style`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.label_text_style` in all \
+    descendant \
+    :class:`~flet.Chip` controls.
     """
 
     border_side: Optional[BorderSide] = None
     """
-    Overrides the default value of [`Chip.border_side`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.border_side` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     show_checkmark: Optional[bool] = None
     """
-    Overrides the default value of [`Chip.show_checkmark`][flet.] in all descendant \
-    [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.show_checkmark` in all descendant \
+    :class:`~flet.Chip` controls.
     """
 
     leading_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of [`Chip.leading_size_constraints`][flet.] in all \
-    descendant [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.leading_size_constraints` in all \
+    descendant :class:`~flet.Chip` controls.
     """
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of [`Chip.delete_icon_size_constraints`][flet.] in all \
-    descendant [`Chip`][flet.] controls.
+    Overrides the default value of :attr:`flet.Chip.delete_icon_size_constraints` in \
+    all \
+    descendant :class:`~flet.Chip` controls.
     """
 
     brightness: Optional[Brightness] = None
@@ -1113,13 +1121,13 @@ class ChipTheme:
 @value
 class FloatingActionButtonTheme:
     """
-    Customizes the appearance of [`FloatingActionButton`][flet.]
+    Customizes the appearance of :class:`~flet.FloatingActionButton`
     across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Color to be used for the unselected, enabled [`FloatingActionButton`][flet.]'s \
+    Color to be used for the unselected, enabled :class:`~flet.FloatingActionButton`'s \
     background.
     """
 
@@ -1136,20 +1144,21 @@ class FloatingActionButtonTheme:
 
     foreground_color: Optional[ColorValue] = None
     """
-    Color to be used for the unselected, enabled [`FloatingActionButton`][flet.]'s \
+    Color to be used for the unselected, enabled :class:`~flet.FloatingActionButton`'s \
     foreground.
     """
 
     splash_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`FloatingActionButton.splash_color`][flet.] in all \
-    descendant [`FloatingActionButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.FloatingActionButton.splash_color` in \
+    all \
+    descendant :class:`~flet.FloatingActionButton` controls.
     """
 
     elevation: Optional[Number] = None
     """
     The z-coordinate to be used for the unselected, enabled \
-    [`FloatingActionButton`][flet.]'s elevation foreground.
+    :class:`~flet.FloatingActionButton`'s elevation foreground.
     """
 
     focus_elevation: Optional[Number] = None
@@ -1167,52 +1176,54 @@ class FloatingActionButtonTheme:
     highlight_elevation: Optional[Number] = None
     """
     The z-coordinate to be used for the selected, enabled \
-    [`FloatingActionButton`][flet.]'s elevation foreground.
+    :class:`~flet.FloatingActionButton`'s elevation foreground.
     """
 
     disabled_elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the disabled [`FloatingActionButton`][flet.]'s \
+    The z-coordinate to be used for the disabled :class:`~flet.FloatingActionButton`'s \
     elevation foreground.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`FloatingActionButton.shape`][flet.] in all \
-    descendant [`FloatingActionButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.FloatingActionButton.shape` in all \
+    descendant :class:`~flet.FloatingActionButton` controls.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    If specified, defines the feedback property for [`FloatingActionButton`][flet.].
+    If specified, defines the feedback property for :class:`~flet.FloatingActionButton`.
     """
 
     extended_padding: Optional[PaddingValue] = None
     """
-    The padding for a [`FloatingActionButton`][flet.]'s that has both icon and \
+    The padding for a :class:`~flet.FloatingActionButton`'s that has both icon and \
     content.
     """
 
     text_style: Optional[TextStyle] = None
     """
     Text style merged into default text style of \
-    [`FloatingActionButton.content`][flet.].
+    :attr:`flet.FloatingActionButton.content`.
     """
 
     icon_label_spacing: Optional[Number] = None
     """
-    The spacing between the icon and the label for [`FloatingActionButton`][flet.].
+    The spacing between the icon and the label for :class:`~flet.FloatingActionButton`.
     """
 
     extended_size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default size constraints of [`FloatingActionButton`][flet.] that has \
+    Overrides the default size constraints of :class:`~flet.FloatingActionButton` that \
+    has \
     both icon and content.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default size constraints of [`FloatingActionButton`][flet.] that has \
+    Overrides the default size constraints of :class:`~flet.FloatingActionButton` that \
+    has \
     either icon or content and is not a mini button.
     """
 
@@ -1223,419 +1234,428 @@ class FloatingActionButtonTheme:
 @value
 class NavigationRailTheme:
     """
-    Customizes the appearance of [`NavigationRail`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.NavigationRail` across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Color to be used for the [`NavigationRail`][flet.]'s background.
+    Color to be used for the :class:`~flet.NavigationRail`'s background.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`NavigationRail.indicator_color`][flet.] in all \
-    descendant [`NavigationRail`][flet.] controls. when \
-    [`NavigationRailTheme.use_indicator`][flet.]
+    Overrides the default value of :attr:`flet.NavigationRail.indicator_color` in all \
+    descendant :class:`~flet.NavigationRail` controls. when \
+    :attr:`flet.NavigationRailTheme.use_indicator`
     is true.
     """
 
     elevation: Optional[Number] = None
     """
-    The z-coordinate to be used for the [`NavigationRail`][flet.]'s elevation.
+    The z-coordinate to be used for the :class:`~flet.NavigationRail`'s elevation.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`NavigationRail.indicator_shape`][flet.] in all \
-    descendant [`NavigationRail`][flet.] controls.
+    Overrides the default value of :attr:`flet.NavigationRail.indicator_shape` in all \
+    descendant :class:`~flet.NavigationRail` controls.
     """
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
     Overrides the default value of \
-    [`NavigationRail.unselected_label_text_style`][flet.]
-    in all descendant [`NavigationRail`][flet.] controls.
+    :attr:`flet.NavigationRail.unselected_label_text_style`
+    in all descendant :class:`~flet.NavigationRail` controls.
     """
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`NavigationRail.selected_label_text_style`][flet.]
-    in all descendant [`NavigationRail`][flet.] controls.
+    Overrides the default value of :attr:`flet.NavigationRail.selected_label_text_style`
+    in all descendant :class:`~flet.NavigationRail` controls.
     """
 
     label_type: Optional[NavigationRailLabelType] = None
     """
     The type that defines the layout and behavior of the labels in the \
-    [`NavigationRail`][flet.].
+    :class:`~flet.NavigationRail`.
     """
 
     min_width: Optional[Number] = None
     """
-    Overrides the default value of [`NavigationRail.min_width`][flet.] in all \
-    descendant [`NavigationRail`][flet.] controls when they are not extended.
+    Overrides the default value of :attr:`flet.NavigationRail.min_width` in all \
+    descendant :class:`~flet.NavigationRail` controls when they are not extended.
     """
 
     min_extended_width: Optional[Number] = None
     """
-    Overrides the default value of [`NavigationRail.min_extended_width`][flet.] in all \
-    descendant [`NavigationRail`][flet.] controls when they are extended.
+    Overrides the default value of :attr:`flet.NavigationRail.min_extended_width` in \
+    all \
+    descendant :class:`~flet.NavigationRail` controls when they are extended.
     """
 
     group_alignment: Optional[Number] = None
     """
-    The alignment for the [`NavigationRail.destinations`][flet.] as they are \
-    positioned within the [`NavigationRail`][flet.].
+    The alignment for the :attr:`flet.NavigationRail.destinations` as they are \
+    positioned within the :class:`~flet.NavigationRail`.
     """
 
     use_indicator: Optional[bool] = None
     """
-    Overrides the default value of [`NavigationRail.use_indicator`][flet.] in all \
-    descendant [`NavigationRail`][flet.] controls.
+    Overrides the default value of :attr:`flet.NavigationRail.use_indicator` in all \
+    descendant :class:`~flet.NavigationRail` controls.
     """
 
 
 @value
 class AppBarTheme:
     """
-    Customizes the appearance of [`AppBar`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.AppBar` controls across the app.
     """
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AppBar.color`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.color` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AppBar.bgcolor`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.bgcolor` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`AppBar.shadow_color`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.shadow_color` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`AppBar.elevation`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.elevation` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`AppBar.shape`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.shape` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`AppBar.title_text_style`][flet.] in all \
-    descendant [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.title_text_style` in all \
+    descendant :class:`~flet.AppBar` controls.
     """
 
     toolbar_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`AppBar.toolbar_text_style`][flet.] in all \
-    descendant [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.toolbar_text_style` in all \
+    descendant :class:`~flet.AppBar` controls.
     """
 
     center_title: Optional[bool] = None
     """
-    Overrides the default value of [`AppBar.center_title`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.center_title` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     title_spacing: Optional[Number] = None
     """
-    Overrides the default value of [`AppBar.title_spacing`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.title_spacing` in all descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     elevation_on_scroll: Optional[Number] = None
     """
-    Overrides the default value of [`AppBar.elevation_on_scroll`][flet.] in all \
-    descendant [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.elevation_on_scroll` in all \
+    descendant :class:`~flet.AppBar` controls.
     """
 
     toolbar_height: Optional[Number] = None
     """
-    Overrides the default value of [`AppBar.toolbar_height`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.toolbar_height` in all \
+    descendant \
+    :class:`~flet.AppBar` controls.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`AppBar.actions_padding`][flet.] in all descendant \
-    [`AppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.AppBar.actions_padding` in all \
+    descendant \
+    :class:`~flet.AppBar` controls.
     """
 
 
 @value
 class BottomAppBarTheme:
     """
-    Customizes the appearance of [`BottomAppBar`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.BottomAppBar` controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`BottomAppBar.bgcolor`][flet.]
-    in all descendant [`BottomAppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.bgcolor`
+    in all descendant :class:`~flet.BottomAppBar` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`BottomAppBar.shadow_color`][flet.] in all \
-    descendant [`BottomAppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.shadow_color` in all \
+    descendant :class:`~flet.BottomAppBar` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`BottomAppBar.elevation`][flet.] in all descendant \
-    `BottomAppBar`][flet.BottomAppBar] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.elevation` in all \
+    descendant :class:`~flet.BottomAppBar` controls.
     """
 
     height: Optional[Number] = None
     """
-    Overrides the default value of [`BottomAppBar.height`][flet.] in all descendant \
-    [`BottomAppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.height` in all descendant \
+    :class:`~flet.BottomAppBar` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`BottomAppBar.padding`][flet.]
-    in all descendant [`BottomAppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.padding`
+    in all descendant :class:`~flet.BottomAppBar` controls.
     """
 
     shape: Optional[NotchShape] = None
     """
-    Overrides the default value of [`BottomAppBar.shape`][flet.] in all descendant \
-    [`BottomAppBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.BottomAppBar.shape` in all descendant \
+    :class:`~flet.BottomAppBar` controls.
     """
 
 
 @value
 class RadioTheme:
     """
-    Defines default property values for descendant [`Radio`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.Radio` controls.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Radio.fill_color`][flet.] in all descendant \
-    [`Radio`][flet.] controls.
+    Overrides the default value of :attr:`flet.Radio.fill_color` in all descendant \
+    :class:`~flet.Radio` controls.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Radio.overlay_color`][flet.] in all descendant \
-    [`Radio`][flet.] controls.
+    Overrides the default value of :attr:`flet.Radio.overlay_color` in all descendant \
+    :class:`~flet.Radio` controls.
     """
 
     splash_radius: Optional[Number] = None
     """
-    Overrides the default value of [`Radio.splash_radius`][flet.] in all descendant \
-    [`Radio`][flet.] controls.
+    Overrides the default value of :attr:`flet.Radio.splash_radius` in all descendant \
+    :class:`~flet.Radio` controls.
     """
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value of [`Radio.visual_density`][flet.]
-    in all descendant [`Radio`][flet.] controls.
+    Overrides the default value of :attr:`flet.Radio.visual_density`
+    in all descendant :class:`~flet.Radio` controls.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value of [`Radio.mouse_cursor`][flet.]
-    in all descendant [`Radio`][flet.] controls.
+    Overrides the default value of :attr:`flet.Radio.mouse_cursor`
+    in all descendant :class:`~flet.Radio` controls.
     """
 
 
 @value
 class CheckboxTheme:
     """
-    Defines default property values for descendant [`Checkbox`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.Checkbox` controls.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Checkbox.overlay_color`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.overlay_color` in all \
+    descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     check_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Checkbox.check_color`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.check_color` in all descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Checkbox.fill_color`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.fill_color` in all descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     splash_radius: Optional[Number] = None
     """
-    Overrides the default value of [`Checkbox.splash_radius`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.splash_radius` in all \
+    descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     border_side: Optional[BorderSide] = None
     """
-    Overrides the default value of [`Checkbox.border_side`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.border_side` in all descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value of [`Checkbox.visual_density`][flet.] in all \
-    descendant [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.visual_density` in all \
+    descendant :class:`~flet.Checkbox` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`Checkbox.shape`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.shape` in all descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value of [`Checkbox.mouse_cursor`][flet.] in all descendant \
-    [`Checkbox`][flet.] controls.
+    Overrides the default value of :attr:`flet.Checkbox.mouse_cursor` in all \
+    descendant \
+    :class:`~flet.Checkbox` controls.
     """
 
 
 @value
 class BadgeTheme:
     """
-    Defines default property values for descendant [`Badge`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.Badge` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Badge.bgcolor`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.bgcolor` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Badge.text_color`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.text_color` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     small_size: Optional[Number] = None
     """
-    Overrides the default value of [`Badge.small_size`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.small_size` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     large_size: Optional[Number] = None
     """
-    Overrides the default value of [`Badge.large_size`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.large_size` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     alignment: Optional[Alignment] = None
     """
-    Overrides the default value of [`Badge.alignment`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.alignment` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Badge.padding`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.padding` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     offset: Optional[OffsetValue] = None
     """
-    Overrides the default value of [`Badge.offset`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.offset` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`Badge.text_style`][flet.] in all descendant \
-    [`Badge`][flet.] controls.
+    Overrides the default value of :attr:`flet.Badge.text_style` in all descendant \
+    :class:`~flet.Badge` controls.
     """
 
 
 @value
 class SwitchTheme:
     """
-    Defines default property values for descendant [`Switch`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.Switch` controls.
     """
 
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Switch.thumb_color`][flet.] in all descendant \
-    [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.thumb_color` in all descendant \
+    :class:`~flet.Switch` controls.
     """
 
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Switch.track_color`][flet.] in all descendant \
-    [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.track_color` in all descendant \
+    :class:`~flet.Switch` controls.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Switch.overlay_color`][flet.]
-    in all descendant [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.overlay_color`
+    in all descendant :class:`~flet.Switch` controls.
     """
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`Switch.track_outline_color`][flet.] in all \
-    descendant [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.track_outline_color` in all \
+    descendant :class:`~flet.Switch` controls.
     """
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
-    Overrides the default value of [`Switch.thumb_icon`][flet.] in all descendant \
-    [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.thumb_icon` in all descendant \
+    :class:`~flet.Switch` controls.
     """
 
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    Overrides the default value of [`Switch.track_outline_width`][flet.] in all \
-    descendant [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.track_outline_width` in all \
+    descendant :class:`~flet.Switch` controls.
     """
 
     splash_radius: Optional[Number] = None
     """
-    Overrides the default value of [`Switch.splash_radius`][flet.]
-    in all descendant [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.splash_radius`
+    in all descendant :class:`~flet.Switch` controls.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value of [`Switch.mouse_cursor`][flet.] in all descendant \
-    [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.mouse_cursor` in all descendant \
+    :class:`~flet.Switch` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Switch.padding`][flet.] in all descendant \
-    [`Switch`][flet.] controls.
+    Overrides the default value of :attr:`flet.Switch.padding` in all descendant \
+    :class:`~flet.Switch` controls.
     """
 
 
 @value
 class DividerTheme:
     """
-    Defines the visual properties of [`Divider`][flet.], [`VerticalDivider`][flet.], \
-    dividers between [`ListTile`][flet.]s, and dividers between rows in \
-    [`DataTable`][flet.].
+    Defines the visual properties of :class:`~flet.Divider`,
+    :class:`~flet.VerticalDivider`,
+    dividers between :class:`~flet.ListTile`s, and dividers between rows in \
+    :class:`~flet.DataTable`.
     """
 
     color: Optional[ColorValue] = None
     """
-    The color of [`Divider`][flet.]s and [`VerticalDivider`][flet.]s, also used \
-    between [`ListTile`][flet.]s, between rows in [`DataTable`][flet.]s, and so forth.
+    The color of :class:`~flet.Divider`s and :class:`~flet.VerticalDivider`s, also \
+    used between :class:`~flet.ListTile`s, between rows in \
+    :class:`~flet.DataTable`s, and \
+    so forth.
     """
 
     thickness: Optional[Number] = None
@@ -1645,70 +1665,72 @@ class DividerTheme:
 
     space: Optional[Number] = None
     """
-    The [`Divider`][flet.]'s height or the [`VerticalDivider`][flet.]'s width.
+    The :class:`~flet.Divider`'s height or the :class:`~flet.VerticalDivider`'s width.
 
     This represents the amount of horizontal or vertical space the divider takes up.
     """
 
     leading_indent: Optional[Number] = None
     """
-    The amount of empty space at the leading edge of [`Divider`][flet.] or top edge of \
-    [`VerticalDivider`][flet.].
+    The amount of empty space at the leading edge of :class:`~flet.Divider` or top \
+    edge of \
+    :class:`~flet.VerticalDivider`.
     """
 
     trailing_indent: Optional[Number] = None
     """
-    The amount of empty space at the trailing edge of [`Divider`][flet.] or bottom \
-    edge of [`VerticalDivider`][flet.].
+    The amount of empty space at the trailing edge of :class:`~flet.Divider` or bottom \
+    edge of :class:`~flet.VerticalDivider`.
     """
 
 
 @value
 class SnackBarTheme:
     """
-    Defines default property values for descendant [`SnackBar`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.SnackBar` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`SnackBar.bgcolor`][flet.] in all descendant \
-    [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.bgcolor` in all descendant \
+    :class:`~flet.SnackBar` controls.
     """
 
     action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `text_color` of [`SnackBar.action`][flet.] in all \
-    descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of `text_color` of :attr:`flet.SnackBar.action` in all \
+    descendant :class:`~flet.SnackBar` controls.
     """
 
     action_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of `bgcolor` of [`SnackBar.action`][flet.] in all \
-    descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of `bgcolor` of :attr:`flet.SnackBar.action` in all \
+    descendant :class:`~flet.SnackBar` controls.
     """
 
     close_icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`SnackBar.close_icon_color`][flet.] in all \
-    descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.close_icon_color` in all \
+    descendant :class:`~flet.SnackBar` controls.
     """
 
     disabled_action_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value of `disabled_text_color` of [`SnackBar.action`][flet.] \
-    in all descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of `disabled_text_color` of \
+    :attr:`flet.SnackBar.action` \
+    in all descendant :class:`~flet.SnackBar` controls.
     """
 
     disabled_action_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of `disabled_color` of [`SnackBar.action`][flet.] in \
-    all descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of `disabled_color` of :attr:`flet.SnackBar.action` in \
+    all descendant :class:`~flet.SnackBar` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`SnackBar.elevation`][flet.] in all descendant \
-    [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.elevation` in all descendant \
+    :class:`~flet.SnackBar` controls.
     """
 
     content_text_style: Optional[TextStyle] = None
@@ -1718,139 +1740,141 @@ class SnackBarTheme:
 
     width: Optional[Number] = None
     """
-    Overrides the default value of [`SnackBar.width`][flet.] in all descendant \
-    [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.width` in all descendant \
+    :class:`~flet.SnackBar` controls.
     """
 
     show_close_icon: Optional[bool] = None
     """
-    Overrides the default value of [`SnackBar.show_close_icon`][flet.] in all \
-    descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.show_close_icon` in all \
+    descendant :class:`~flet.SnackBar` controls.
     """
 
     dismiss_direction: Optional[DismissDirection] = None
     """
-    Overrides the default value of [`SnackBar.dismiss_direction`][flet.] in all \
-    descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.dismiss_direction` in all \
+    descendant :class:`~flet.SnackBar` controls.
     """
 
     behavior: Optional[SnackBarBehavior] = None
     """
-    Overrides the default value of [`SnackBar.behavior`][flet.] in all descendant \
-    [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.behavior` in all descendant \
+    :class:`~flet.SnackBar` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`SnackBar.shape`][flet.] in all descendant \
-    [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.shape` in all descendant \
+    :class:`~flet.SnackBar` controls.
     """
 
     inset_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`SnackBar.margin`][flet.].
+    Overrides the default value for :attr:`flet.SnackBar.margin`.
 
     This value is only used when behavior is SnackBarBehavior.floating.
     """
 
     action_overflow_threshold: Optional[Number] = None
     """
-    Overrides the default value of [`SnackBar.action_overflow_threshold`][flet.] in \
-    all descendant [`SnackBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SnackBar.action_overflow_threshold` in \
+    all descendant :class:`~flet.SnackBar` controls.
     """
 
 
 @value
 class BannerTheme:
     """
-    Defines default property values for descendant [`Banner`][flet.] controls.
+    Defines default property values for descendant :class:`~flet.Banner` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Banner.bgcolor`][flet.] in all descendant \
-    [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.bgcolor` in all descendant \
+    :class:`~flet.Banner` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Banner.shadow_color`][flet.] in all descendant \
-    [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.shadow_color` in all descendant \
+    :class:`~flet.Banner` controls.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`Banner.divider_color`][flet.]
-    in all descendant [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.divider_color`
+    in all descendant :class:`~flet.Banner` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Banner.content_padding`][flet.] in all descendant \
-    [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.content_padding` in all \
+    descendant \
+    :class:`~flet.Banner` controls.
     """
 
     leading_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`Banner.leading_padding`][flet.] in all descendant \
-    [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.leading_padding` in all \
+    descendant \
+    :class:`~flet.Banner` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`Banner.elevation`][flet.] in all descendant \
-    [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.elevation` in all descendant \
+    :class:`~flet.Banner` controls.
     """
 
     content_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`Banner.content_text_style`][flet.] in all \
-    descendant [`Banner`][flet.] controls.
+    Overrides the default value of :attr:`flet.Banner.content_text_style` in all \
+    descendant :class:`~flet.Banner` controls.
     """
 
 
 @value
 class DatePickerTheme:
     """
-    Customizes the appearance of [`DatePicker`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.DatePicker` controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color of the surface in all descendant \
-    [`DatePicker`][flet.] controls.
+    :class:`~flet.DatePicker` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default shadow color in all descendant [`DatePicker`][flet.] \
+    Overrides the default shadow color in all descendant :class:`~flet.DatePicker` \
     controls.
     """
 
     divider_color: Optional[ColorValue] = None
     """
     Overrides the default color used to paint the divider in all descendant \
-    [`DatePicker`][flet.] controls.
+    :class:`~flet.DatePicker` controls.
     """
 
     header_bgcolor: Optional[ColorValue] = None
     """
     Overrides the header's default background fill color.
 
-    The [`DatePicker`][flet.]'s header displays the currently selected date.
+    The :class:`~flet.DatePicker`'s header displays the currently selected date.
     """
 
     today_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default color used to paint the background of the \
     [`DatePicker.current_date`].[flet.DatePicker.current_date] label in the grid of \
-    the [`DatePicker`][flet.].
+    the :class:`~flet.DatePicker`.
     """
 
     day_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default color used to paint the background of the day labels in the \
-    grid of the [`DatePicker`][flet.].
+    grid of the :class:`~flet.DatePicker`.
     """
 
     day_overlay_color: Optional[ControlStateValue[ColorValue]] = None
@@ -1862,15 +1886,15 @@ class DatePickerTheme:
     day_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default color used to paint the day labels in the grid of the \
-    [`DatePicker`][flet.].
+    :class:`~flet.DatePicker`.
 
     This will be used instead of the color provided in
-    [`DatePickerTheme.day_text_style`][flet.].
+    :attr:`flet.DatePickerTheme.day_text_style`.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`DatePicker`][flet.] elevation.
+    Overrides the default value of :class:`~flet.DatePicker` elevation.
     """
 
     range_picker_elevation: Optional[Number] = None
@@ -1881,30 +1905,30 @@ class DatePickerTheme:
     day_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for each individual day label in the grid of \
-    the [`DatePicker`][flet.].
+    the :class:`~flet.DatePicker`.
 
-    The color in [`DatePickerTheme.day_text_style`][flet.] is not
-    used, [`DatePickerTheme.day_foreground_color`][flet.] is used instead.
+    The color in :attr:`flet.DatePickerTheme.day_text_style` is not
+    used, :attr:`flet.DatePickerTheme.day_foreground_color` is used instead.
     """
 
     weekday_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the row of weekday labels at the top of \
-    the [`DatePicker`][flet.] grid.
+    the :class:`~flet.DatePicker` grid.
     """
 
     year_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used to paint each of the year entries in the \
-    year selector of the [`DatePicker`][flet.].
+    year selector of the :class:`~flet.DatePicker`.
 
-    The color of the [`DatePickerTheme.year_text_style`][flet.] is not used,
-    [`DatePickerTheme.year_foreground_color`][flet.] is used instead.
+    The color of the :attr:`flet.DatePickerTheme.year_text_style` is not used,
+    :attr:`flet.DatePickerTheme.year_foreground_color` is used instead.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`DatePicker`][flet.] shape.
+    Overrides the default value of :class:`~flet.DatePicker` shape.
 
     If elevation is greater than zero then a shadow is shown and the shadow's shape
     mirrors the shape of the dialog.
@@ -1912,12 +1936,13 @@ class DatePickerTheme:
 
     cancel_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the cancel button of a [`DatePicker`][flet.].
+    Overrides the default style of the cancel button of a :class:`~flet.DatePicker`.
     """
 
     confirm_button_style: Optional[ButtonStyle] = None
     """
-    Overrides the default style of the confirm (OK) button of a [`DatePicker`][flet.].
+    Overrides the default style of the confirm (OK) button of a \
+    :class:`~flet.DatePicker`.
     """
 
     header_foreground_color: Optional[ColorValue] = None
@@ -1927,8 +1952,8 @@ class DatePickerTheme:
     The dialog's header displays the currently selected date.
 
     This is used instead of the color property of
-    [`DatePickerTheme.header_headline_text_style`][flet.]
-    and [`DatePickerTheme.header_help_text_style`][flet.].
+    :attr:`flet.DatePickerTheme.header_headline_text_style`
+    and :attr:`flet.DatePickerTheme.header_help_text_style`.
     """
 
     header_headline_text_style: Optional[TextStyle] = None
@@ -1937,8 +1962,8 @@ class DatePickerTheme:
 
     The dialog's header displays the currently selected date.
 
-    The color of the [`DatePickerTheme.header_headline_text_style`][flet.]
-    is not used, [`DatePickerTheme.header_foreground_color`][flet.] is used instead.
+    The color of the :attr:`flet.DatePickerTheme.header_headline_text_style`
+    is not used, :attr:`flet.DatePickerTheme.header_foreground_color` is used instead.
     """
 
     header_help_text_style: Optional[TextStyle] = None
@@ -1949,17 +1974,17 @@ class DatePickerTheme:
     usually a prompt to the user at the top of the header (i.e. 'Select date').
 
     The color of the `header_help_style` is not used,
-    [`DatePickerTheme.header_foreground_color`][flet.] is used instead.
+    :attr:`flet.DatePickerTheme.header_foreground_color` is used instead.
     """
 
     range_picker_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background color for [`DateRangePicker`][flet.].
+    Overrides the default background color for :class:`~flet.DateRangePicker`.
     """
 
     range_picker_header_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default background fill color for [`DateRangePicker`][flet.].
+    Overrides the default background fill color for :class:`~flet.DateRangePicker`.
 
     The dialog's header displays the currently selected date range.
     """
@@ -1967,7 +1992,7 @@ class DatePickerTheme:
     range_picker_header_foreground_color: Optional[ColorValue] = None
     """
     Overrides the default color used for text labels and icons in the header of a full \
-    screen [`DateRangePicker`][flet.].
+    screen :class:`~flet.DateRangePicker`.
 
     The dialog's header displays the currently selected date range.
 
@@ -1978,12 +2003,12 @@ class DatePickerTheme:
 
     today_foreground_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default color used to paint the [`DatePicker.current_date`][flet.] \
+    Overrides the default color used to paint the :attr:`flet.DatePicker.current_date` \
     label in the grid of the dialog's CalendarDatePicker and the corresponding year in \
     the dialog's YearPicker.
 
     This will be used instead of the color provided in
-    [`DatePickerTheme.day_text_style`][flet.].
+    :attr:`flet.DatePickerTheme.day_text_style`.
     """
 
     range_picker_shape: Optional[OutlinedBorder] = None
@@ -2009,7 +2034,7 @@ class DatePickerTheme:
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the headline text in the header of a \
-    full screen [`DateRangePicker`][flet.].
+    full screen :class:`~flet.DateRangePicker`.
 
     The dialog's header displays the currently selected date range.
 
@@ -2020,29 +2045,31 @@ class DatePickerTheme:
     range_selection_bgcolor: Optional[ColorValue] = None
     """
     Overrides the default background color used to paint days selected between the \
-    start and end dates in a [`DateRangePicker`][flet.].
+    start and end dates in a :class:`~flet.DateRangePicker`.
     """
 
     range_selection_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default highlight color that's typically used to indicate that a \
-    date in the selected range of a [`DateRangePicker`][flet.] is focused, hovered, or \
+    date in the selected range of a :class:`~flet.DateRangePicker` is focused, \
+    hovered, or \
     pressed.
     """
 
     today_border_side: Optional[BorderSide] = None
     """
-    Overrides the border used to paint the [`DatePicker.current_date`][flet.] label in \
-    the grid of the [`DatePicker`][flet.].
+    Overrides the border used to paint the :attr:`flet.DatePicker.current_date` label \
+    in \
+    the grid of the :class:`~flet.DatePicker`.
 
     The border side's [`BorderSide.color`] is not used,
-    [`DatePickerTheme.today_foreground_color`][flet.] is used instead.
+    :attr:`flet.DatePickerTheme.today_foreground_color` is used instead.
     """
 
     year_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     Overrides the default color used to paint the background of the year labels in the \
-    year selector of the of the [`DatePicker`][flet.].
+    year selector of the of the :class:`~flet.DatePicker`.
     """
 
     year_foreground_color: Optional[ControlStateValue[ColorValue]] = None
@@ -2051,7 +2078,7 @@ class DatePickerTheme:
     the date picker.
 
     This will be used instead of the color provided in
-    [`DatePickerTheme.year_text_style`][flet.].
+    :attr:`flet.DatePickerTheme.year_text_style`.
     """
 
     year_overlay_color: Optional[ControlStateValue[ColorValue]] = None
@@ -2063,17 +2090,17 @@ class DatePickerTheme:
     day_shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
     Overrides the default shape used to paint the shape decoration of the day labels \
-    in the grid of the [`DatePicker`][flet.].
+    in the grid of the :class:`~flet.DatePicker`.
 
     If the selected day is the current day, the provided shape with the value of
-    [`DatePickerTheme.today_bgcolor`][flet.] is used to
+    :attr:`flet.DatePickerTheme.today_bgcolor` is used to
     paint the shape decoration of the day label and the value of
-    [`DatePickerTheme.today_border_side`][flet.] and
-    [`DatePickerTheme.today_foreground_color`][flet.]
+    :attr:`flet.DatePickerTheme.today_border_side` and
+    :attr:`flet.DatePickerTheme.today_foreground_color`
     is used to paint the border.
 
     If the selected day is not the current day, the provided shape with the value of
-    [`DatePickerTheme.day_bgcolor`][flet.] is used to paint
+    :attr:`flet.DatePickerTheme.day_bgcolor` is used to paint
     the shape decoration of the day label.
     """
 
@@ -2081,15 +2108,15 @@ class DatePickerTheme:
 @value
 class TimePickerTheme:
     """
-    Customizes the appearance of [`TimePicker`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.TimePicker` controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The background color of a [`TimePicker`][flet.].
+    The background color of a :class:`~flet.TimePicker`.
 
     If this is null, the time picker defaults to the overall theme's
-    [`ColorScheme.surface_container_high`][flet.].
+    :attr:`flet.ColorScheme.surface_container_high`.
     """
 
     day_period_color: Optional[ColorValue] = None
@@ -2105,13 +2132,13 @@ class TimePickerTheme:
     dial_bgcolor: Optional[ColorValue] = None
     """
     The background color of the time picker dial when the entry mode is \
-    [`TimePickerEntryMode.DIAL`][flet.] or [`TimePickerEntryMode.DIAL_ONLY`][flet.].
+    :attr:`flet.TimePickerEntryMode.DIAL` or :attr:`flet.TimePickerEntryMode.DIAL_ONLY`.
     """
 
     dial_hand_color: Optional[ColorValue] = None
     """
     The color of the time picker dial's hand when the entry mode is \
-    [`TimePickerEntryMode.DIAL`][flet.] or [`TimePickerEntryMode.DIAL_ONLY`][flet.].
+    :attr:`flet.TimePickerEntryMode.DIAL` or :attr:`flet.TimePickerEntryMode.DIAL_ONLY`.
     """
 
     dial_text_color: Optional[ColorValue] = None
@@ -2121,7 +2148,7 @@ class TimePickerTheme:
 
     entry_mode_icon_color: Optional[ColorValue] = None
     """
-    The color of the entry mode [`IconButton`][flet.].
+    The color of the entry mode :class:`~flet.IconButton`.
     """
 
     hour_minute_color: Optional[ColorValue] = None
@@ -2136,41 +2163,41 @@ class TimePickerTheme:
 
     day_period_button_style: Optional[ButtonStyle] = None
     """
-    The style of the AM/PM toggle control of a [`TimePicker`][flet.].
+    The style of the AM/PM toggle control of a :class:`~flet.TimePicker`.
     """
 
     cancel_button_style: Optional[ButtonStyle] = None
     """
-    The style of the cancel button of a [`TimePicker`][flet.].
+    The style of the cancel button of a :class:`~flet.TimePicker`.
     """
 
     confirm_button_style: Optional[ButtonStyle] = None
     """
-    The style of the confirm (OK) button of a [`TimePicker`][flet.].
+    The style of the confirm (OK) button of a :class:`~flet.TimePicker`.
     """
 
     day_period_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [`TextStyle`][flet.TextStyle] for the AM/PM toggle control.
+    Used to configure the :class:`~flet.TextStyle` for the AM/PM toggle control.
 
     If this is null, the time picker defaults to the overall theme's
-    [`TextTheme.title_medium`][flet.].
+    :attr:`flet.TextTheme.title_medium`.
     """
 
     dial_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] for the numbers on the time selection dial.
+    The :class:`~flet.TextStyle` for the numbers on the time selection dial.
     """
 
     help_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [`TextStyle`][flet.TextStyle] for the helper text in the \
+    Used to configure the :class:`~flet.TextStyle` for the helper text in the \
     header.
     """
 
     hour_minute_text_style: Optional[TextStyle] = None
     """
-    Used to configure the [`TextStyle`][flet.] for the hour/minute controls.
+    Used to configure the :class:`~flet.TextStyle` for the hour/minute controls.
     """
 
     elevation: Optional[Number] = None
@@ -2185,12 +2212,12 @@ class TimePickerTheme:
 
     day_period_shape: Optional[OutlinedBorder] = None
     """
-    The shape of the day period that the [`TimePicker`][flet.] uses.
+    The shape of the day period that the :class:`~flet.TimePicker` uses.
     """
 
     hour_minute_shape: Optional[OutlinedBorder] = None
     """
-    The shape of the hour and minute controls that the [`TimePicker`][flet.]
+    The shape of the hour and minute controls that the :class:`~flet.TimePicker`
     uses.
     """
 
@@ -2202,7 +2229,7 @@ class TimePickerTheme:
     padding: Optional[PaddingValue] = None
     """
     The padding around the time picker dialog when the entry mode is \
-    [`TimePickerEntryMode.DIAL`][flet.] or [`TimePickerEntryMode.DIAL_ONLY`][flet.].
+    :attr:`flet.TimePickerEntryMode.DIAL` or :attr:`flet.TimePickerEntryMode.DIAL_ONLY`.
     """
 
     time_selector_separator_color: Optional[ControlStateValue[ColorValue]] = None
@@ -2220,384 +2247,386 @@ class TimePickerTheme:
 @value
 class DropdownTheme:
     """
-    Customizes the appearance of [`Dropdown`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Dropdown` across the app.
     """
 
     menu_style: Optional[MenuStyle] = None
     """
-    Overrides the default value for [`Dropdown.menu_style`][flet.].
+    Overrides the default value for :attr:`flet.Dropdown.menu_style`.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`Dropdown.text_style`][flet.].
+    Overrides the default value for :attr:`flet.Dropdown.text_style`.
     """
 
 
 @value
 class ListTileTheme:
     """
-    Customizes the appearance of descendant [`ListTile`][flet.] controls.
+    Customizes the appearance of descendant :class:`~flet.ListTile` controls.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.icon_color`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.icon_color`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.text_color`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.text_color`.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.bgcolor`.
     """
 
     selected_tile_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.selected_tile_color`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.selected_tile_color`.
     """
 
     selected_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ListTile.selected_color`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.selected_color`.
     """
 
     is_three_line: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.is_three_line`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.is_three_line`.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.enable_feedback`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.enable_feedback`.
     """
 
     dense: Optional[bool] = None
     """
-    Overrides the default value for [`ListTile.dense`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.dense`.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`ListTile.shape`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.shape`.
     """
 
     visual_density: Optional[VisualDensity] = None
     """
-    Overrides the default value for [`ListTile.visual_density`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.visual_density`.
     """
 
     content_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`ListTile.content_padding`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.content_padding`.
     """
 
     min_vertical_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`ListTile.min_vertical_padding`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.min_vertical_padding`.
     """
 
     horizontal_spacing: Optional[Number] = None
     """
-    Overrides the default value for [`ListTile.horizontal_spacing`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.horizontal_spacing`.
     """
 
     min_leading_width: Optional[Number] = None
     """
-    Overrides the default value for [`ListTile.min_leading_width`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.min_leading_width`.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`ListTile.title_text_style`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.title_text_style`.
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`ListTile.subtitle_text_style`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.subtitle_text_style`.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
     Overrides the default value for \
-    [`ListTile.leading_and_trailing_text_style`][flet.].
+    :attr:`flet.ListTile.leading_and_trailing_text_style`.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for [`ListTile.mouse_cursor`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.mouse_cursor`.
     """
 
     min_height: Optional[Number] = None
     """
-    Overrides the default value for [`ListTile.min_height`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.min_height`.
     """
 
     affinity: Optional[TileAffinity] = None
     """
-    Overrides the default value for [`ExpansionTile.affinity`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.affinity`.
     """
 
     style: Optional[ListTileStyle] = None
     """
-    Overrides the default value for [`ListTile.style`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.style`.
     """
 
     title_alignment: Optional[ListTileTitleAlignment] = None
     """
-    Overrides the default value for [`ListTile.title_alignment`][flet.].
+    Overrides the default value for :attr:`flet.ListTile.title_alignment`.
     """
 
 
 @value
 class TooltipTheme:
     """
-    Customizes the appearance of descendant [`Tooltip`][flet.] controls.
+    Customizes the appearance of descendant :class:`~flet.Tooltip` controls.
     """
 
     text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`Tooltip.text_style`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.text_style`.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value for [`Tooltip.enable_feedback`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.enable_feedback`.
     """
 
     exclude_from_semantics: Optional[bool] = None
     """
-    Overrides the default value for [`Tooltip.exclude_from_semantics`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.exclude_from_semantics`.
     """
 
     prefer_below: Optional[bool] = None
     """
-    Overrides the default value for [`Tooltip.prefer_below`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.prefer_below`.
     """
 
     vertical_offset: Optional[Number] = None
     """
-    Overrides the default value for [`Tooltip.vertical_offset`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.vertical_offset`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`Tooltip.padding`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.padding`.
     """
 
     wait_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for [`Tooltip.wait_duration`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.wait_duration`.
     """
 
     exit_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for [`Tooltip.exit_duration`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.exit_duration`.
     """
 
     show_duration: Optional[DurationValue] = None
     """
-    Overrides the default value for [`Tooltip.show_duration`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.show_duration`.
     """
 
     margin: Optional[MarginValue] = None
     """
-    Overrides the default value for [`Tooltip.margin`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.margin`.
     """
 
     trigger_mode: Optional[TooltipTriggerMode] = None
     """
-    Overrides the default value for [`Tooltip.trigger_mode`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.trigger_mode`.
     """
 
     decoration: Optional[BoxDecoration] = None
     """
-    Overrides the default value for [`Tooltip.decoration`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.decoration`.
     """
 
     text_align: Optional[TextAlign] = None
     """
-    Overrides the default value for [`Tooltip.text_align`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.text_align`.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value for [`Tooltip.size_constraints`][flet.].
+    Overrides the default value for :attr:`flet.Tooltip.size_constraints`.
     """
 
 
 @value
 class ExpansionTileTheme:
     """
-    Customizes the appearance of descendant [`ExpansionTile`][flet.]
+    Customizes the appearance of descendant :class:`~flet.ExpansionTile`
     controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.bgcolor`.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.icon_color`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.icon_color`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.text_color`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.text_color`.
     """
 
     collapsed_bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.collapsed_bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.collapsed_bgcolor`.
     """
 
     collapsed_icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.collapsed_icon_color`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.collapsed_icon_color`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
-    Overrides the default value for [`ExpansionTile.clip_behavior`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.clip_behavior`.
     """
 
     collapsed_text_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ExpansionTile.collapsed_text_color`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.collapsed_text_color`.
     """
 
     tile_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`ExpansionTile.tile_padding`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.tile_padding`.
     """
 
     expanded_alignment: Optional[Alignment] = None
     """
-    Overrides the default value for [`ExpansionTile.expanded_alignment`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.expanded_alignment`.
     """
 
     controls_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`ExpansionTile.controls_padding`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.controls_padding`.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`ExpansionTile.shape`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.shape`.
     """
 
     collapsed_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`ExpansionTile.collapsed_shape`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.collapsed_shape`.
     """
 
     animation_style: Optional[AnimationStyle] = None
     """
-    Overrides the default value for [`ExpansionTile.animation_style`][flet.].
+    Overrides the default value for :attr:`flet.ExpansionTile.animation_style`.
     """
 
 
 @value
 class SliderTheme:
     """
-    Customizes the appearance of descendant [`Slider`][flet.] controls.
+    Customizes the appearance of descendant :class:`~flet.Slider` controls.
     """
 
     active_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Slider.active_color`][flet.].
+    Overrides the default value for :attr:`flet.Slider.active_color`.
     """
 
     inactive_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Slider.inactive_color`][flet.].
+    Overrides the default value for :attr:`flet.Slider.inactive_color`.
     """
 
     thumb_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Slider.thumb_color`][flet.].
+    Overrides the default value for :attr:`flet.Slider.thumb_color`.
     """
 
     overlay_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Slider.overlay_color`][flet.].
+    Overrides the default value for :attr:`flet.Slider.overlay_color`.
     """
 
     value_indicator_color: Optional[ColorValue] = None
     """
-    The color given to the [`Slider`][flet.]'s value indicator to draw itself with.
+    The color given to the :class:`~flet.Slider`'s value indicator to draw itself with.
     """
 
     disabled_thumb_color: Optional[ColorValue] = None
     """
-    The color given to the thumb to draw itself with when the [`Slider`][flet.]
+    The color given to the thumb to draw itself with when the :class:`~flet.Slider`
     is disabled.
     """
 
     value_indicator_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.TextStyle] for the text on the value indicator.
+    The :class:`~flet.TextStyle` for the text on the value indicator.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for [`Slider.mouse_cursor`][flet.].
+    Overrides the default value for :attr:`flet.Slider.mouse_cursor`.
     """
 
     active_tick_mark_color: Optional[ColorValue] = None
     """
     The color of the track's tick marks that are drawn between the \
-    [Slider.min][flet.Slider.min] position and the current thumb position.
+    :attr:`flet.Slider.min` position and the current thumb position.
     """
 
     disabled_active_tick_mark_color: Optional[ColorValue] = None
     """
     The color of the track's tick marks that are drawn between the current thumb \
-    osition and the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.] \
+    osition and the :attr:`flet.Slider.max` position when the :class:`~flet.Slider` \
     is disabled.
     """
 
     disabled_active_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.] track between the [Slider.min][flet.Slider.min] \
-    position and the current thumb position when the [`Slider`][flet.] is disabled.
+    The color of the :class:`~flet.Slider` track between the :attr:`flet.Slider.min` \
+    position and the current thumb position when the :class:`~flet.Slider` is disabled.
     """
 
     disabled_inactive_tick_mark_color: Optional[ColorValue] = None
     """
     The color of the track's tick marks that are drawn between the current thumb \
-    position and the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.] \
+    position and the :attr:`flet.Slider.max` position when the :class:`~flet.Slider` \
     is disabled.
     """
 
     disabled_inactive_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.] track between the current thumb position and \
-    the [Slider.max][flet.Slider.max] position when the [`Slider`][flet.] is disabled.
+    The color of the :class:`~flet.Slider` track between the current thumb position \
+    and \
+    the :attr:`flet.Slider.max` position when the :class:`~flet.Slider` is disabled.
     """
 
     disabled_secondary_active_track_color: Optional[ColorValue] = None
     """
-    The color of the [`Slider`][flet.] track between the current thumb position and \
-    the [Slider.secondary_track_value][flet.Slider.secondary_track_value] position \
-    when the [`Slider`][flet.] is disabled.
+    The color of the :class:`~flet.Slider` track between the current thumb position \
+    and \
+    the :attr:`flet.Slider.secondary_track_value` position \
+    when the :class:`~flet.Slider` is disabled.
     """
 
     inactive_tick_mark_color: Optional[ColorValue] = None
     """
     The color of the track's tick marks that are drawn between the current thumb \
-    position and the [Slider.max][flet.Slider.max] position.
+    position and the :attr:`flet.Slider.max` position.
     """
 
     overlapping_shape_stroke_color: Optional[ColorValue] = None
     """
     The color given to the perimeter of the top range thumbs of a \
-    [RangeSlider][flet.RangeSlider] when the thumbs are overlapping and the top range \
+    :class:`~flet.RangeSlider` when the thumbs are overlapping and the top range \
     value indicator when the value indicators are overlapping.
     """
 
@@ -2613,12 +2642,12 @@ class SliderTheme:
 
     secondary_active_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Slider.secondary_active_color`][flet.].
+    Overrides the default value for :attr:`flet.Slider.secondary_active_color`.
     """
 
     track_height: Optional[Number] = None
     """
-    The height of the [Slider][flet.Slider] track.
+    The height of the :class:`~flet.Slider` track.
     """
 
     value_indicator_stroke_color: Optional[ColorValue] = None
@@ -2628,12 +2657,12 @@ class SliderTheme:
 
     interaction: Optional[SliderInteraction] = None
     """
-    Overrides the default value for [`Slider.interaction`][flet.].
+    Overrides the default value for :attr:`flet.Slider.interaction`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`Slider.padding`][flet.].
+    Overrides the default value for :attr:`flet.Slider.padding`.
     """
 
     track_gap: Optional[Number] = None
@@ -2649,31 +2678,31 @@ class SliderTheme:
 
     year_2023: bool = False
     """
-    Overrides the default value for [`Slider.year_2023`][flet.].
+    Overrides the default value for :attr:`flet.Slider.year_2023`.
     """
 
 
 @value
 class ProgressIndicatorTheme:
     """
-    Customizes the appearance of progress indicators ([`ProgressBar`][flet.], \
-    [`ProgressRing`][flet.]) across the app.
+    Customizes the appearance of progress indicators (:class:`~flet.ProgressBar`, \
+    :class:`~flet.ProgressRing`) across the app.
     """
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default values for [`ProgressBar.color`][flet.] and \
-    [`ProgressRing.color`][flet.].
+    Overrides the default values for :attr:`flet.ProgressBar.color` and \
+    :attr:`flet.ProgressRing.color`.
     """
 
     circular_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ProgressRing.bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.bgcolor`.
     """
 
     linear_track_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ProgressBar.bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.ProgressBar.bgcolor`.
     """
 
     refresh_bgcolor: Optional[ColorValue] = None
@@ -2683,332 +2712,340 @@ class ProgressIndicatorTheme:
 
     linear_min_height: Optional[Number] = None
     """
-    Overrides the default value for [`ProgressBar.bar_height`][flet.].
+    Overrides the default value for :attr:`flet.ProgressBar.bar_height`.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
     """
-    Overrides the default value for [`ProgressBar.border_radius`][flet.].
+    Overrides the default value for :attr:`flet.ProgressBar.border_radius`.
     """
 
     track_gap: Optional[Number] = None
     """
-    Overrides the default values for [`ProgressBar.track_gap`][flet.] and \
-    [`ProgressRing.track_gap`][flet.].
+    Overrides the default values for :attr:`flet.ProgressBar.track_gap` and \
+    :attr:`flet.ProgressRing.track_gap`.
     """
 
     circular_track_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`ProgressRing.padding`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.padding`.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value for [`ProgressRing.size_constraints`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.size_constraints`.
     """
 
     stop_indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`ProgressBar.stop_indicator_color`][flet.].
+    Overrides the default value for :attr:`flet.ProgressBar.stop_indicator_color`.
     """
 
     stop_indicator_radius: Optional[Number] = None
     """
-    Overrides the default value for [`ProgressBar.stop_indicator_radius`][flet.].
+    Overrides the default value for :attr:`flet.ProgressBar.stop_indicator_radius`.
     """
 
     stroke_align: Optional[Number] = None
     """
-    Overrides the default value for [`ProgressRing.stroke_align`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.stroke_align`.
     """
 
     stroke_cap: Optional[StrokeCap] = None
     """
-    Overrides the default value for [`ProgressRing.stroke_cap`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.stroke_cap`.
     """
 
     stroke_width: Optional[Number] = None
     """
-    Overrides the default value for [`ProgressRing.stroke_width`][flet.].
+    Overrides the default value for :attr:`flet.ProgressRing.stroke_width`.
     """
 
     year_2023: bool = False
     """
-    Overrides the default values for [`ProgressBar.year_2023`][flet.] and \
-    [`ProgressRing.year_2023`][flet.].
+    Overrides the default values for :attr:`flet.ProgressBar.year_2023` and \
+    :attr:`flet.ProgressRing.year_2023`.
     """
 
 
 @value
 class PopupMenuTheme:
     """
-    Customizes the appearance of [`PopupMenuButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.PopupMenuButton` across the app.
     """
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`PopupMenuButton.bgcolor`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.bgcolor` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`PopupMenuButton.shadow_color`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.shadow_color` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     icon_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`PopupMenuButton.icon_color`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.icon_color` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`PopupMenuItem.label_text_style`][flet.]
-    in all descendant [`PopupMenuItem`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuItem.label_text_style`
+    in all descendant :class:`~flet.PopupMenuItem` controls.
     """
 
     enable_feedback: Optional[bool] = None
     """
-    Overrides the default value of [`PopupMenuButton.enable_feedback`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls
+    Overrides the default value of :attr:`flet.PopupMenuButton.enable_feedback` in all \
+    descendant :class:`~flet.PopupMenuButton` controls
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`PopupMenuButton.elevation`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.elevation` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     icon_size: Optional[Number] = None
     """
-    Overrides the default value of [`PopupMenuButton.icon_size`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.icon_size` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`PopupMenuButton.shape`][flet.] in all descendant \
-    [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.shape` in all \
+    descendant \
+    :class:`~flet.PopupMenuButton` controls.
     """
 
     menu_position: Optional[PopupMenuPosition] = None
     """
-    Overrides the default value of [`PopupMenuButton.menu_position`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.menu_position` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     mouse_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value of [`PopupMenuItem.mouse_cursor`][flet.] in all \
-    descendant [`PopupMenuItem`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuItem.mouse_cursor` in all \
+    descendant :class:`~flet.PopupMenuItem` controls.
     """
 
     menu_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`PopupMenuButton.menu_padding`][flet.] in all \
-    descendant [`PopupMenuButton`][flet.] controls.
+    Overrides the default value of :attr:`flet.PopupMenuButton.menu_padding` in all \
+    descendant :class:`~flet.PopupMenuButton` controls.
     """
 
 
 @value
 class SearchBarTheme:
     """
-    Customizes the appearance of [`SearchBar`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.SearchBar` controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`SearchBar.bar_bgcolor`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_bgcolor` in all \
+    descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     text_capitalization: Optional[TextCapitalization] = None
     """
-    Overrides the default value of [`SearchBar.capitalization`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.capitalization` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     shadow_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`SearchBar.bar_shadow_color`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_shadow_color` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value of [`SearchBar.bar_overlay_color`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_overlay_color` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = None
     """
-    Overrides the default value of [`SearchBar.bar_elevation`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_elevation` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    Overrides the default value of [`SearchBar.bar_text_style`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_text_style` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     hint_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    Overrides the default value of [`SearchBar.bar_hint_text_style`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_hint_text_style` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     shape: Optional[ControlStateValue[OutlinedBorder]] = None
     """
-    Overrides the default value of [`SearchBar.bar_shape`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_shape` in all descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     padding: Optional[ControlStateValue[PaddingValue]] = None
     """
-    Overrides the default value of [`SearchBar.bar_padding`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_padding` in all \
+    descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of [`SearchBar.bar_size_constraints`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_size_constraints` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    Overrides the default value of [`SearchBar.bar_border_side`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.bar_border_side` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
 
 @value
 class SearchViewTheme:
     """
-    Customizes the appearance of [`SearchBar`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.SearchBar` controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value of [`SearchBar.view_bgcolor`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_bgcolor` in all \
+    descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default value of [`SearchBar.divider_color`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.divider_color` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value of [`SearchBar.view_elevation`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_elevation` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     header_hint_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`SearchBar.view_hint_text_style`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_hint_text_style` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     header_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value of [`SearchBar.view_header_text_style`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_header_text_style` in \
+    all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value of [`SearchBar.view_shape`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_shape` in all descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     border_side: Optional[BorderSide] = None
-    """Overrides the default value of [`SearchBar.view_side`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    """
+    Overrides the default value of :attr:`flet.SearchBar.view_side` in all descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    Overrides the default value of [`SearchBar.view_size_constraints`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_size_constraints` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     header_height: Optional[Number] = None
     """
-    Overrides the default value of [`SearchBar.view_header_height`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_header_height` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`SearchBar.view_padding`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_padding` in all \
+    descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
     bar_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value of [`SearchBar.view_bar_padding`][flet.] in all \
-    descendant [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.view_bar_padding` in all \
+    descendant :class:`~flet.SearchBar` controls.
     """
 
     shrink_wrap: Optional[bool] = None
     """
-    Overrides the default value of [`SearchBar.shrink_wrap`][flet.] in all descendant \
-    [`SearchBar`][flet.] controls.
+    Overrides the default value of :attr:`flet.SearchBar.shrink_wrap` in all \
+    descendant \
+    :class:`~flet.SearchBar` controls.
     """
 
 
 @value
 class NavigationDrawerTheme:
     """
-    Customizes the appearance of descendant [`NavigationDrawer`][flet.]
+    Customizes the appearance of descendant :class:`~flet.NavigationDrawer`
     controls.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Overrides the default value for [`NavigationDrawer.bgcolor`][flet.].
+    Overrides the default value for :attr:`flet.NavigationDrawer.bgcolor`.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`NavigationDrawer.shadow_color`][flet.].
+    Overrides the default value for :attr:`flet.NavigationDrawer.shadow_color`.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`NavigationDrawer.indicator_color`][flet.].
+    Overrides the default value for :attr:`flet.NavigationDrawer.indicator_color`.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value for [`NavigationDrawer.elevation`][flet.].
+    Overrides the default value for :attr:`flet.NavigationDrawer.elevation`.
     """
 
     tile_height: Optional[Number] = None
     """
-    Overrides the default height of [`NavigationDrawerDestination`][flet.].
+    Overrides the default height of :class:`~flet.NavigationDrawerDestination`.
     """
 
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     The style to merge with the default text style for \
-    [`NavigationDrawerDestination`][flet.] labels.
+    :class:`~flet.NavigationDrawerDestination` labels.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`NavigationDrawer.indicator_shape`][flet.].
+    Overrides the default value for :attr:`flet.NavigationDrawer.indicator_shape`.
     """
 
     indicator_size: Optional[Size] = None
     """
-    Overrides the default size of the [`NavigationDrawer`][flet.]'s selection \
+    Overrides the default size of the :class:`~flet.NavigationDrawer`'s selection \
     indicator.
     """
 
@@ -3016,33 +3053,33 @@ class NavigationDrawerTheme:
 @value
 class NavigationBarTheme:
     """
-    Customizes the appearance of [`NavigationBar`][flet.]
+    Customizes the appearance of :class:`~flet.NavigationBar`
     controls across the
     app.
     """
 
     bgcolor: Optional[ColorValue] = None
-    """Overrides the default value for [`NavigationBar.bgcolor`][flet.].
+    """Overrides the default value for :attr:`flet.NavigationBar.bgcolor`.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`NavigationBar.shadow_color`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.shadow_color`.
     """
 
     indicator_color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`NavigationBar.indicator_color`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.indicator_color`.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value for [`NavigationBar.overlay_color`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.overlay_color`.
     """
 
     elevation: Optional[Number] = None
     """
-    Overrides the default value for [`NavigationBar.elevation`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.elevation`.
     """
 
     height: Optional[Number] = None
@@ -3053,62 +3090,62 @@ class NavigationBarTheme:
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
     The style to merge with the default text style for \
-    [`NavigationBarDestination`][flet.] labels.
+    :class:`~flet.NavigationBarDestination` labels.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default value for [`NavigationBar.indicator_shape`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.indicator_shape`.
     """
 
     label_behavior: Optional[NavigationBarLabelBehavior] = None
     """
-    Overrides the default value for [`NavigationBar.label_behavior`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.label_behavior`.
     """
 
     label_padding: Optional[PaddingValue] = None
     """
-    Overrides the default value for [`NavigationBar.label_padding`][flet.].
+    Overrides the default value for :attr:`flet.NavigationBar.label_padding`.
     """
 
 
 @value
 class SegmentedButtonTheme:
     """
-    Customizes the appearance of [`SegmentedButton`][flet.]
+    Customizes the appearance of :class:`~flet.SegmentedButton`
     controls across the app.
     """
 
     selected_icon: Optional[IconData] = None
     """
-    Overrides the default value for [`SegmentedButton.selected_icon`][flet.].
+    Overrides the default value for :attr:`flet.SegmentedButton.selected_icon`.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    Overrides the default value for [`SegmentedButton.style`][flet.].
+    Overrides the default value for :attr:`flet.SegmentedButton.style`.
     """
 
 
 @value
 class IconTheme:
     """
-    Customizes the appearance of [`Icon`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.Icon` controls across the app.
     """
 
     color: Optional[ColorValue] = None
     """
-    Overrides the default value for [`Icon.color`][flet.].
+    Overrides the default value for :attr:`flet.Icon.color`.
     """
 
     apply_text_scaling: Optional[bool] = None
     """
-    Overrides the default value for [`Icon.apply_text_scaling`][flet.].
+    Overrides the default value for :attr:`flet.Icon.apply_text_scaling`.
     """
 
     fill: Optional[Number] = None
     """
-    Overrides the default value for [`Icon.fill`][flet.].
+    Overrides the default value for :attr:`flet.Icon.fill`.
     """
 
     opacity: Optional[Number] = None
@@ -3118,109 +3155,109 @@ class IconTheme:
 
     size: Optional[Number] = None
     """
-    Overrides the default value for [`Icon.size`][flet.].
+    Overrides the default value for :attr:`flet.Icon.size`.
     """
 
     optical_size: Optional[Number] = None
     """
-    Overrides the default value for [`Icon.optical_size`][flet.].
+    Overrides the default value for :attr:`flet.Icon.optical_size`.
     """
 
     grade: Optional[Number] = None
     """
-    Overrides the default value for [`Icon.grade`][flet.].
+    Overrides the default value for :attr:`flet.Icon.grade`.
     """
 
     weight: Optional[Number] = None
     """
-    Overrides the default value for [`Icon.weight`][flet.].
+    Overrides the default value for :attr:`flet.Icon.weight`.
     """
 
     shadows: Optional[BoxShadowValue] = None
     """
-    Overrides the default value for [`Icon.shadows`][flet.].
+    Overrides the default value for :attr:`flet.Icon.shadows`.
     """
 
 
 @value
 class DataTableTheme:
     """
-    Customizes the appearance of [`DataTable`][flet.] controls across the app.
+    Customizes the appearance of :class:`~flet.DataTable` controls across the app.
     """
 
     checkbox_horizontal_margin: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.checkbox_horizontal_margin`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.checkbox_horizontal_margin`.
     """
 
     column_spacing: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.column_spacing`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.column_spacing`.
     """
 
     data_row_max_height: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.data_row_max_height`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.data_row_max_height`.
     """
 
     data_row_min_height: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.data_row_min_height`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.data_row_min_height`.
     """
 
     data_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value for [`DataTable.data_row_color`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.data_row_color`.
     """
 
     data_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`DataTable.data_text_style`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.data_text_style`.
     """
 
     divider_thickness: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.divider_thickness`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.divider_thickness`.
     """
 
     horizontal_margin: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.horizontal_margin`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.horizontal_margin`.
     """
 
     heading_text_style: Optional[TextStyle] = None
     """
-    Overrides the default value for [`DataTable.heading_text_style`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.heading_text_style`.
     """
 
     heading_row_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    Overrides the default value for [`DataTable.heading_row_color`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.heading_row_color`.
     """
 
     heading_row_height: Optional[Number] = None
     """
-    Overrides the default value for [`DataTable.heading_row_height`][flet.].
+    Overrides the default value for :attr:`flet.DataTable.heading_row_height`.
     """
 
     data_row_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for [`DataRow`][flet.] mouse cursor.
+    Overrides the default value for :class:`~flet.DataRow` mouse cursor.
     """
 
     decoration: Optional[BoxDecoration] = None
     """
-    Overrides the default value for [`DataTable`][flet.] decoration.
+    Overrides the default value for :class:`~flet.DataTable` decoration.
     """
 
     heading_row_alignment: Optional[MainAxisAlignment] = None
     """
-    Overrides the default value for [`DataColumn.heading_row_alignment`][flet.].
+    Overrides the default value for :attr:`flet.DataColumn.heading_row_alignment`.
     """
 
     heading_cell_cursor: Optional[ControlStateValue[MouseCursor]] = None
     """
-    Overrides the default value for [`DataColumn`][flet.] mouse cursor.
+    Overrides the default value for :class:`~flet.DataColumn` mouse cursor.
     """
 
 
@@ -3232,7 +3269,8 @@ class Theme:
 
     color_scheme_seed: Optional[ColorValue] = None
     """
-    Overrides the default color scheme seed used to generate [`ColorScheme`][flet.]. \
+    Overrides the default color scheme seed used to generate
+    :class:`~flet.ColorScheme`.
     The default color is blue.
     """
 
@@ -3255,92 +3293,94 @@ class Theme:
     checkbox_theme: Optional[CheckboxTheme] = None
     chip_theme: Optional[ChipTheme] = None
     """
-    Customizes the appearance of [`Chip`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Chip` across the app.
     """
 
     color_scheme: Optional[ColorScheme] = None
     """
-    Overrides the default [`ColorScheme`][flet.] used for the application.
+    Overrides the default :class:`~flet.ColorScheme` used for the application.
     """
 
     data_table_theme: Optional[DataTableTheme] = None
     """
-    Customizes the appearance of [`DataTable`][flet.DataTable] across the app.
+    Customizes the appearance of :class:`~flet.DataTable` across the app.
     """
 
     date_picker_theme: Optional[DatePickerTheme] = None
     """
-    Customizes the appearance of [`DatePicker`][flet.DatePicker] across the app.
+    Customizes the appearance of :class:`~flet.DatePicker` across the app.
     """
 
     dialog_theme: Optional[DialogTheme] = None
     """
-    Customizes the appearance of [`AlertDialog`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.AlertDialog` across the app.
     """
 
     divider_theme: Optional[DividerTheme] = None
     """
-    Defines the visual properties of [`Divider`][flet.], [`VerticalDivider`][flet.], \
-    dividers between [`ListTile`][flet.]s, and dividers between rows in \
-    [`DataTable`][flet.].
+    Defines the visual properties of :class:`~flet.Divider`, \
+    :class:`~flet.VerticalDivider`, \
+    dividers between :class:`~flet.ListTile`s, and dividers between rows in \
+    :class:`~flet.DataTable`.
     """
 
     divider_color: Optional[ColorValue] = None
     """
-    Overrides the default color of dividers used in [`Divider`][flet.], \
-    [`VerticalDivider`][flet.], dividers between [`ListTile`][flet.]s, and dividers \
-    between rows in [`DataTable`][flet.].
+    Overrides the default color of dividers used in :class:`~flet.Divider`, \
+    :class:`~flet.VerticalDivider`, dividers between :class:`~flet.ListTile`s, and \
+    dividers \
+    between rows in :class:`~flet.DataTable`.
     """
 
     dropdown_theme: Optional[DropdownTheme] = None
     """
-    Customizes the appearance of [`Dropdown`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Dropdown` across the app.
     """
 
     button_theme: Optional[ButtonTheme] = None
     """
-    Customizes the appearance of [`Button`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Button` across the app.
     """
 
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
     """
-    Customizes the appearance of [`OutlinedButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.OutlinedButton` across the app.
     """
 
     text_button_theme: Optional[TextButtonTheme] = None
     """
-    Customizes the appearance of [`TextButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.TextButton` across the app.
     """
 
     filled_button_theme: Optional[FilledButtonTheme] = None
     """
-    Customizes the appearance of [`FilledButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.FilledButton` across the app.
     """
 
     icon_button_theme: Optional[IconButtonTheme] = None
     """
-    Customizes the appearance of [`IconButton`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.IconButton` across the app.
     """
 
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
     """
-    Customizes the appearance of [`ExpansionTile`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.ExpansionTile` across the app.
     """
 
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
     """
-    Customizes the appearance of [`FloatingActionButton`][flet.]
+    Customizes the appearance of :class:`~flet.FloatingActionButton`
     across the app.
     """
 
     icon_theme: Optional[IconTheme] = None
     """
-    Customizes the appearance of [`Icon`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.Icon` across the app.
     """
 
     list_tile_theme: Optional[ListTileTheme] = None
     """
-    Customizes the appearance of [`ListTile`][flet.] across the app.
+    Customizes the appearance of :class:`~flet.ListTile` across the app.
     """
 
     navigation_bar_theme: Optional[NavigationBarTheme] = None

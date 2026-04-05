@@ -1,0 +1,26 @@
+[project]
+name = "code-editor-example-2"
+version = "1.0.0"
+description = "CodeEditor selection demo with custom theme, gutter styling, and caret/selection controls."
+requires-python = ">=3.10"
+keywords = ["code editor", "selection", "caret", "theme", "gutter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-code-editor"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utilities/CodeEditor"]
+
+[tool.flet.metadata]
+title = "Selection handling"
+controls = ["SafeArea", "Column", "CodeEditor", "Text", "Row", "Button"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["selection change handling", "programmatic caret movement", "custom code theme"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

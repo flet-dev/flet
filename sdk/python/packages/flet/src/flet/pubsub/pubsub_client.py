@@ -8,7 +8,7 @@ logger = logging.getLogger("flet")
 
 class PubSubClient:
     """
-    Session-scoped facade over [`PubSubHub`][flet.PubSubHub].
+    Session-scoped facade over `PubSubHub`.
 
     This client binds all pub/sub operations to one session ID so callers can
     publish and subscribe without passing their session identity explicitly on

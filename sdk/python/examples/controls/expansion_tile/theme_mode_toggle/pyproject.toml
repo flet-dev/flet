@@ -1,0 +1,26 @@
+[project]
+name = "expansion-tile-theme-mode-toggle"
+version = "1.0.0"
+description = "Combines ExpansionTile layouts with a switch to toggle page theme mode and icon state."
+requires-python = ">=3.10"
+keywords = ["expansion tile", "theme mode", "toggle", "switch", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionTile"]
+
+[tool.flet.metadata]
+title = "Theme mode toggle"
+controls = ["SafeArea", "Column", "Row", "ExpansionTile", "ListTile", "Switch", "SnackBar", "Text", "Icon"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["theme toggle", "expansion change feedback", "custom tile colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

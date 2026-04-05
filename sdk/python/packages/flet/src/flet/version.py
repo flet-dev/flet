@@ -30,7 +30,7 @@ when available.
 flutter_version = ""
 """
 The Flutter SDK version used when building the flet client or packaging
-apps with [`flet build`](https://docs.flet.dev/cli/flet-build/).
+apps with [`flet build`](https://flet.dev/docs/cli/flet-build/).
 
 This value is set explicitly in CI for released packages. When running from
 source and no version is provided, it is resolved from the repository's
@@ -40,7 +40,7 @@ source and no version is provided, it is resolved from the repository's
 PYODIDE_VERSION = "0.27.7"
 """
 The Pyodide version being used when packaging
-with [`flet build web`](https://docs.flet.dev/cli/flet-build/).
+with [`flet build web`](https://flet.dev/docs/cli/flet-build/).
 """
 
 

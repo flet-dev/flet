@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-list-tile-notched"
+version = "1.0.0"
+description = "Compares CupertinoListTile with and without notched layout, including leading, trailing, and click actions."
+requires-python = ">=3.10"
+keywords = ["cupertino", "list tile", "notched", "layout", "click"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/CupertinoListTile"]
+
+[tool.flet.metadata]
+title = "Notched"
+controls = ["SafeArea", "Column", "CupertinoListTile", "Text", "Icon"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["notched tile", "tile click callback", "additional info"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

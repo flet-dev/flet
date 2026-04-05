@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-sliding-segmented-button-basic"
+version = "1.0.0"
+description = "Displays CupertinoSlidingSegmentedButton and shows feedback when segment selection changes."
+requires-python = ">=3.10"
+keywords = ["cupertino", "sliding segmented button", "selection", "snackbar"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/CupertinoSlidingSegmentedButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "CupertinoSlidingSegmentedButton", "Text", "SnackBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["segment change callback", "selection feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

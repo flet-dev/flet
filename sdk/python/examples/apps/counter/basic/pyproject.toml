@@ -1,0 +1,26 @@
+[project]
+name = "apps-counter-basic"
+version = "1.0.0"
+description = "Classic counter app with increment and decrement buttons around a numeric text field."
+requires-python = ">=3.10"
+keywords = ["apps", "counter", "buttons", "text field", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Basic counter"
+controls = ["SafeArea", "Column", "Row", "IconButton", "TextField"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["counter updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

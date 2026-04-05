@@ -1,0 +1,26 @@
+[project]
+name = "progress-ring-gauge-with-progress"
+version = "1.0.0"
+description = "Shows a fixed gauge-style ProgressRing with an overlaid percentage label."
+requires-python = ">=3.10"
+keywords = ["progress ring", "gauge", "circular progress", "static progress"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/ProgressRing"]
+
+[tool.flet.metadata]
+title = "Gauge with Progress"
+controls = ["ProgressRing", "SafeArea", "Stack", "Container", "Text"]
+layout_pattern = "status-dashboard"
+complexity = "basic"
+features = ["gauge-style indicator", "overlay text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

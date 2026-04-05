@@ -1,0 +1,26 @@
+[project]
+name = "services-secure-storage-basic"
+version = "1.0.0"
+description = "Stores, reads, removes, and clears protected key-value entries in secure storage."
+requires-python = ">=3.10"
+keywords = ["secure storage", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-secure-storage"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/SecureStorage"]
+
+[tool.flet.metadata]
+title = "Basic secure storage"
+controls = ["SafeArea", "Column", "Page", "SecureStorage", "TextField", "Text", "Row", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["protected storage", "key-value operations"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

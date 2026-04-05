@@ -13,7 +13,7 @@ from flet.utils.validation import V
 class WindowDragArea(LayoutControl):
     """
     It mimics the behavior (drag, move, maximize, restore) of a native OS window title \
-    bar on the [`content`][(c).] control.
+    bar on the :attr:`content` control.
     """
 
     content: Annotated[
@@ -38,7 +38,7 @@ class WindowDragArea(LayoutControl):
     Called when the `WindowDragArea` is double-tapped and `maximizable=True`.
 
     Info:
-        When a double-tap event is fired, the [`type`][flet.WindowEvent.]
+        When a double-tap event is fired, the :attr:`~flet.WindowEvent.type`
         property of the event handler argument can only be one of the following:
         `WindowEventType.MAXIMIZE`, `WindowEventType.UNMAXIMIZE`.
     """

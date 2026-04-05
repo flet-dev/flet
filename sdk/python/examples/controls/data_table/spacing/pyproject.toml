@@ -1,0 +1,26 @@
+[project]
+name = "data-table-spacing"
+version = "1.0.0"
+description = "Adjusts DataTable horizontal margin and column spacing interactively with sliders and presets."
+requires-python = ">=3.10"
+keywords = ["data table", "spacing", "horizontal margin", "slider", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable"]
+
+[tool.flet.metadata]
+title = "Spacing"
+controls = ["SafeArea", "Column", "DataTable", "DataColumn", "DataRow", "DataCell", "Slider", "FilledButton", "OutlinedButton", "Container", "Text", "AppBar"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["interactive spacing controls", "preset spacing buttons", "live table layout updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

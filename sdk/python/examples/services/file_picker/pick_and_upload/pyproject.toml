@@ -1,0 +1,27 @@
+[project]
+name = "services-file-picker-pick-and-upload"
+version = "1.0.0"
+description = "Picks multiple files in web mode and uploads them with live progress indicators."
+requires-python = ">=3.10"
+keywords = ["file picker", "pick and upload", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/FilePicker"]
+
+[tool.flet.metadata]
+title = "Pick and upload files"
+controls = ["SafeArea", "Column", "FilePicker", "FilePickerFile", "Page", "Text", "ProgressRing", "FilePickerUploadEvent"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["file upload", "upload progress"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["web"]

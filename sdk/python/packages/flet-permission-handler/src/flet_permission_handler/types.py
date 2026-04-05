@@ -7,7 +7,7 @@ __all__ = [
 
 
 class PermissionStatus(Enum):
-    """Defines the state of a [`Permission`][(p).]."""
+    """Defines the state of a :class:`~flet_permission_handler.Permission`."""
 
     GRANTED = "granted"
     """
@@ -183,7 +183,7 @@ class Permission(Enum):
     Permission for writing to the device's calendar.
 
     On iOS 16 and lower, this permission is identical to
-    [`CALENDAR_FULL_ACCESS`][(c).].
+    :attr:`CALENDAR_FULL_ACCESS`.
     """
 
     CAMERA = "camera"
@@ -376,9 +376,9 @@ class Permission(Enum):
 
     Info:
         - Android: Requests access to microphone
-            (identical to requesting [`MICROPHONE`][(c).]).
+            (identical to requesting :attr:`MICROPHONE`).
         - iOS: Requests speech access (different from requesting
-            [`MICROPHONE`][(c).]).
+            :attr:`MICROPHONE`).
     """
 
     STORAGE = "storage"

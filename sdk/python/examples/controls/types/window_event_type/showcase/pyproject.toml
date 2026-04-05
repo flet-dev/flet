@@ -1,0 +1,26 @@
+[project]
+name = "types-window-event-type-showcase"
+version = "1.0.0"
+description = "Compares Window Event Type values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["window event type", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Window Event Type showcase"
+controls = ["SafeArea", "Column", "Text", "AppBar", "Row", "Container"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
