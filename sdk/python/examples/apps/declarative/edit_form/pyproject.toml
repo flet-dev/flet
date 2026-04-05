@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-edit-form"
+version = "1.0.0"
+description = "Edits a small form declaratively and submits or resets the fields through observable state."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "form", "text fields", "observable state", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Edit form"
+controls = ["SafeArea", "Column", "Row", "TextField", "FilledButton", "FilledTonalButton", "AlertDialog"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["form editing", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

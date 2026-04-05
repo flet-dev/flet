@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.submenu_button.basic.main as basic
 import flet as ft
 import flet.testing as ftt
-from examples.controls.submenu_button import basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

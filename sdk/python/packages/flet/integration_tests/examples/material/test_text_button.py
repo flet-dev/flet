@@ -1,8 +1,11 @@
 import pytest
 
+import examples.controls.text_button.basic.main as basic
+import examples.controls.text_button.custom_content.main as custom_content
+import examples.controls.text_button.handling_clicks.main as handling_clicks
+import examples.controls.text_button.icons.main as icons
 import flet as ft
 import flet.testing as ftt
-from examples.controls.text_button import basic, custom_content, handling_clicks, icons
 
 
 @pytest.mark.asyncio(loop_scope="function")

@@ -1,0 +1,26 @@
+[project]
+name = "date-picker-basic"
+version = "1.0.0"
+description = "Opens DatePicker dialog and logs selected date and dismiss events in the page content."
+requires-python = ">=3.10"
+keywords = ["date picker", "dialog", "events", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/DatePicker"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "Button", "DatePicker", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["open dialog", "date change callback", "dismiss callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

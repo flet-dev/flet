@@ -1,0 +1,26 @@
+[project]
+name = "types-tooltip-with-decoration"
+version = "1.0.0"
+description = "Shows simple and decorated tooltips with custom gradient styling."
+requires-python = ">=3.10"
+keywords = ["tooltip", "with decoration"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Displays/Tooltip"]
+
+[tool.flet.metadata]
+title = "Tooltip with decoration"
+controls = ["SafeArea", "Column", "Text", "Tooltip", "BoxDecoration"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["tooltip styling", "gradient decoration"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

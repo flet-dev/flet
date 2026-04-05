@@ -1,0 +1,26 @@
+[project]
+name = "image-gallery"
+version = "1.0.0"
+description = "Shows a local app icon and a horizontally scrollable gallery of remote images."
+requires-python = ">=3.10"
+keywords = ["image", "gallery", "scroll", "assets", "network images"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Image gallery"
+controls = ["SafeArea", "Column", "Row", "Image"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["local asset image", "horizontal scrolling", "network image thumbnails"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

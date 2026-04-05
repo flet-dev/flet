@@ -59,7 +59,7 @@ ClassMessage = Union[str, Callable[[Any], str]]
 """Static text or callable used to format a class-level error message."""
 
 ClassPredicate = Callable[[Any], bool]
-"""Boolean predicate used by [`V.ensure()`][(m).V.ensure]."""
+"""Boolean predicate used by `V.ensure()`."""
 
 
 class ValidationDeclarationError(RuntimeError):
@@ -1368,7 +1368,7 @@ class V:
         Validate `field_name > other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly greater than [`other_field`][(c).].`
+        `If it is not strictly greater than `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1418,7 +1418,7 @@ class V:
         Validate `field_name >= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not greater than or equal to [`other_field`][(c).].`
+        `If it is not greater than or equal to `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1468,7 +1468,7 @@ class V:
         Validate `field_name < other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not strictly less than [`other_field`][(c).].`
+        `If it is not strictly less than `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1518,7 +1518,7 @@ class V:
         Validate `field_name <= other_field` on an instance.
 
         Property docstring Raises wording:
-        `If it is not less than or equal to [`other_field`][(c).].`
+        `If it is not less than or equal to `other_field`.`
 
         This rule is attached to one field via `Annotated[...]` and compares that
         field value against another field in the same instance.
@@ -1774,8 +1774,21 @@ def _compile_class_spec(model_cls: type[Any]) -> _ClassValidationSpec:
         if cls is object:
             continue
 
+        declared_hints = _get_declared_type_hints(cls)
+
+        # A subclass field declaration replaces the inherited field definition,
+        # so inherited field-level rules for that field must be dropped even if
+        # the override itself carries no Annotated metadata.
+        if declared_hints:
+            declared_field_names = set(declared_hints)
+            field_rules = [
+                (field_name, rule)
+                for field_name, rule in field_rules
+                if field_name not in declared_field_names
+            ]
+
         # Collect field-level rules from Annotated metadata.
-        for field_name, hint in _get_declared_type_hints(cls).items():
+        for field_name, hint in declared_hints.items():
             if get_origin(hint) is Annotated:
                 for metadata in get_args(hint)[1:]:
                     if isinstance(metadata, FieldRule):

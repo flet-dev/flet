@@ -1,0 +1,26 @@
+[project]
+name = "types-card-variant-showcase"
+version = "1.0.0"
+description = "Compares Card Variant values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["card variant", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Card Variant showcase"
+controls = ["SafeArea", "Column", "Container", "Card", "Text", "Page", "AppBar", "Row"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

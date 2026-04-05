@@ -44,12 +44,12 @@ class CupertinoCheckbox(LayoutControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    Defines on which side of this checkbox the [`label`][(c).] should be shown.
+    Defines on which side of this checkbox the :attr:`label` should be shown.
     """
 
     spacing: Optional[Number] = 10
     """
-    The space between this checkbox and the [`label`][(c).].
+    The space between this checkbox and the :attr:`label`.
     """
 
     value: Optional[bool] = False
@@ -58,13 +58,13 @@ class CupertinoCheckbox(LayoutControl):
 
     - If `True`, this checkbox is checked.
     - If `False`, this checkbox is unchecked.
-    - If `None` and [`tristate`][(c).] is `True`,
+    - If `None` and :attr:`tristate` is `True`,
         this checkbox is indeterminate (displayed as a dash).
     """
 
     tristate: bool = False
     """
-    If `True`, this checkbox's [`value`][(c).] can be `True`, `False`, or `None`.
+    If `True`, this checkbox's :attr:`value` can be `True`, `False`, or `None`.
     """
 
     autofocus: bool = False
@@ -83,8 +83,8 @@ class CupertinoCheckbox(LayoutControl):
     """
     The color used to fill checkbox when it is checked/selected.
 
-    If [`fill_color`][(c).] returns a non-null color in the
-    [`ControlState.SELECTED`][flet.] state, it will be used instead of this color.
+    If :attr:`fill_color` returns a non-null color in the
+    :attr:`flet.ControlState.SELECTED` state, it will be used instead of this color.
     """
 
     focus_color: Optional[ColorValue] = None
@@ -94,19 +94,19 @@ class CupertinoCheckbox(LayoutControl):
 
     fill_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color used to fill this checkbox in all or specific [`ControlState`][flet.]
+    The color used to fill this checkbox in all or specific :class:`~flet.ControlState`
     states.
 
-    [`active_color`][(c).] is used as fallback color when
-    the checkbox is in the [`SELECTED`][flet.ControlState.] state,
-    [`CupertinoColors.WHITE`][flet.] at `50%` opacity is used as fallback color
-    when this checkbox is in the [`DISABLED`][flet.ControlState.] state, and
-    [`CupertinoColors.WHITE`][flet.] otherwise.
+    :attr:`active_color` is used as fallback color when
+    the checkbox is in the :attr:`~flet.ControlState.SELECTED` state,
+    :attr:`flet.CupertinoColors.WHITE` at `50%` opacity is used as fallback color
+    when this checkbox is in the :attr:`~flet.ControlState.DISABLED` state, and
+    :attr:`flet.CupertinoColors.WHITE` otherwise.
 
     Note:
-        Supported states: [`ControlState.SELECTED`][flet.],
-        [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
-        [`ControlState.FOCUSED`][flet.], and [`ControlState.DEFAULT`][flet.].
+        Supported states: :attr:`flet.ControlState.SELECTED`,
+        :attr:`flet.ControlState.HOVERED`, :attr:`flet.ControlState.DISABLED`,
+        :attr:`flet.ControlState.FOCUSED`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -131,14 +131,14 @@ class CupertinoCheckbox(LayoutControl):
 
     border_side: Optional[ControlStateValue[BorderSide]] = None
     """
-    Defines the checkbox's border sides in all or specific [`ControlState`][flet.] \
+    Defines the checkbox's border sides in all or specific :class:`~flet.ControlState` \
     states.
 
     Note:
-        Supported states: [`ControlState.SELECTED`][flet.],
-        [`ControlState.HOVERED`][flet.], [`ControlState.DISABLED`][flet.],
-        [`ControlState.FOCUSED`][flet.], [`ControlState.PRESSED`][flet.],
-        [`ControlState.ERROR`][flet.], and [`ControlState.DEFAULT`][flet.].
+        Supported states: :attr:`flet.ControlState.SELECTED`,
+        :attr:`flet.ControlState.HOVERED`, :attr:`flet.ControlState.DISABLED`,
+        :attr:`flet.ControlState.FOCUSED`, :attr:`flet.ControlState.PRESSED`,
+        :attr:`flet.ControlState.ERROR`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoCheckbox"]] = None

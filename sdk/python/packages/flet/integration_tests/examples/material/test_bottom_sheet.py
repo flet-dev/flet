@@ -1,8 +1,9 @@
 import pytest
 
+import examples.controls.bottom_sheet.basic.main as basic
+import examples.controls.bottom_sheet.fullscreen.main as fullscreen
 import flet as ft
 import flet.testing as ftt
-from examples.controls.bottom_sheet import basic, fullscreen
 
 
 @pytest.mark.asyncio(loop_scope="function")

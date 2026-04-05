@@ -1,0 +1,26 @@
+[project]
+name = "icon-button-handling-clicks"
+version = "1.0.0"
+description = "Counts IconButton clicks and updates a text status message."
+requires-python = ">=3.10"
+keywords = ["icon button", "click handling", "events", "counter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/IconButton"]
+
+[tool.flet.metadata]
+title = "Handling clicks"
+controls = ["SafeArea", "Column", "IconButton", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["click callback", "live click counter"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

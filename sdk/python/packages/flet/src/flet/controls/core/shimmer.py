@@ -43,7 +43,7 @@ class ShimmerDirection(Enum):
 @control("Shimmer")
 class Shimmer(LayoutControl):
     """
-    Applies an animated shimmering effect to its [`content`][(c).].
+    Applies an animated shimmering effect to its :attr:`content`.
 
     Use it to create lightweight loading placeholders or to add motion to
     otherwise static layouts.
@@ -81,12 +81,12 @@ class Shimmer(LayoutControl):
 
     base_color: Optional[ColorValue] = None
     """
-    Base color used when no [`gradient`][(c).] is provided.
+    Base color used when no :attr:`gradient` is provided.
     """
 
     highlight_color: Optional[ColorValue] = None
     """
-    Highlight color used when no [`gradient`][(c).] is provided.
+    Highlight color used when no :attr:`gradient` is provided.
     """
 
     period: DurationValue = 1500
@@ -112,8 +112,10 @@ class Shimmer(LayoutControl):
 
     __validation_rules__: ValidationRules = (
         V.ensure(
-            lambda ctrl: ctrl.gradient is not None
-            or (ctrl.base_color is not None and ctrl.highlight_color is not None),
+            lambda ctrl: (
+                ctrl.gradient is not None
+                or (ctrl.base_color is not None and ctrl.highlight_color is not None)
+            ),
             message=(
                 "either gradient or both base_color and highlight_color must be set"
             ),

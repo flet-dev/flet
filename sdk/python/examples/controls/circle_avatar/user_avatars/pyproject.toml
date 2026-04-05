@@ -1,0 +1,26 @@
+[project]
+name = "circle-avatar-user-avatars"
+version = "1.0.0"
+description = "CircleAvatar showcase with images, icons, fallback content, and online status badge."
+requires-python = ">=3.10"
+keywords = ["circleavatar", "avatar", "image", "icon", "status"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/CircleAvatar"]
+
+[tool.flet.metadata]
+title = "User avatars"
+controls = ["SafeArea", "CircleAvatar", "Text", "Icon", "Stack", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["image avatar", "fallback content", "online status indicator"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,10 +1,8 @@
 import pytest
 
+import examples.controls.switch.basic.main as basic
 import flet as ft
 import flet.testing as ftt
-from examples.controls.switch import (
-    basic,
-)
 
 
 @pytest.mark.asyncio(loop_scope="function")

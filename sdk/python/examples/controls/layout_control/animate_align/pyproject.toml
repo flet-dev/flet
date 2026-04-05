@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-align"
+version = "1.0.0"
+description = "Animates Text alignment within a Stack using animate_align."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate align", "text", "stack"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate align"
+controls = ["SafeArea", "Column", "Stack", "Text", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["alignment animation", "button-triggered transition"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

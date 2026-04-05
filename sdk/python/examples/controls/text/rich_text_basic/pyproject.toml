@@ -1,0 +1,26 @@
+[project]
+name = "text-rich-text-basic"
+version = "1.0.0"
+description = "Combines nested TextSpan styles, interactive spans, and an external link in rich text."
+requires-python = ">=3.10"
+keywords = ["text", "rich text", "textspan", "link", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/Text"]
+
+[tool.flet.metadata]
+title = "Basic rich text"
+controls = ["SafeArea", "Column", "Text", "TextSpan"]
+layout_pattern = "stacked-content"
+complexity = "basic"
+features = ["nested text spans", "clickable spans", "external links"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

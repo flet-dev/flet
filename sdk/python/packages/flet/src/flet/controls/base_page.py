@@ -70,7 +70,7 @@ class PageMediaData:
 
     view_padding: Padding
     """
-    Similar to [`padding`][(c).], but includes padding that is always reserved (even \
+    Similar to :attr:`padding`, but includes padding that is always reserved (even \
     when the system UI is hidden).
     """
 
@@ -132,21 +132,22 @@ class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
-    `BasePage` serves as the base class for [Page][flet.] and [`MultiView`][flet.],
+    `BasePage` serves as the base class for :class:`~flet.Page` and \
+    :class:`~flet.MultiView`,
     and provides a unified surface for rendering application content, app bars,
     navigation elements, dialogs, overlays, and more. It manages one or more
-    [`View`][flet.] instances and exposes high-level layout,
+    :class:`~flet.View` instances and exposes high-level layout,
     scrolling, and theming properties.
 
-    Unlike lower-level layout controls (e.g., [`Column`][flet.],
-    [`Container`][flet.]), [`BasePage`][flet.] represents
+    Unlike lower-level layout controls (e.g., :class:`~flet.Column`,
+    :class:`~flet.Container`), :class:`~flet.BasePage` represents
     an entire logical view or screen of the app. It provides direct access
-    to view-level controls such as [`AppBar`][flet.], [`NavigationBar`][flet.],
-    [`FloatingActionButton`][flet.], and supports system-level events like window
+    to view-level controls such as :class:`~flet.AppBar`, :class:`~flet.NavigationBar`,
+    :class:`~flet.FloatingActionButton`, and supports system-level events like window
     resizing and media changes.
 
     This class is not intended to be used directly in most apps; instead,
-    use [`Page`][flet.] or [`MultiView`][flet.], which extend this base
+    use :class:`~flet.Page` or :class:`~flet.MultiView`, which extend this base
     functionality.
     """
 
@@ -154,7 +155,7 @@ class BasePage(AdaptiveControl):
     """
     A list of views managed by the page.
 
-    Each [`View`][flet.] represents a distinct navigation state or screen
+    Each :class:`~flet.View` represents a distinct navigation state or screen
     in the application.
 
     The first view in the list is considered the active one by default.
@@ -214,7 +215,7 @@ class BasePage(AdaptiveControl):
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
-    Called when [`media`][(c).] has changed.
+    Called when :attr:`media` has changed.
     """
 
     media: PageMediaData = field(
@@ -243,7 +244,8 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`width`][flet.Window.] property of [`Page.window`][flet.] instead.
+            use the :attr:`~flet.Window.width` property of :attr:`flet.Page.window` \
+            instead.
     """
 
     height: Optional[Number] = None
@@ -254,8 +256,8 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`height`][flet.Window.] property of
-            [`Page.window`][flet.] instead.
+            use the :attr:`~flet.Window.height` property of
+            :attr:`flet.Page.window` instead.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
@@ -266,7 +268,7 @@ class BasePage(AdaptiveControl):
         Return the root view of this page container.
 
         Returns:
-            The first [`View`][flet.] in [`views`][(c).].
+            The first :class:`~flet.View` in :attr:`views`.
 
         Raises:
             RuntimeError: If no views are available.
@@ -281,7 +283,7 @@ class BasePage(AdaptiveControl):
         Return the top-most (active) view in the view stack.
 
         Returns:
-            The last [`View`][flet.] in [`views`][(c).].
+            The last :class:`~flet.View` in :attr:`views`.
 
         Raises:
             RuntimeError: If no views are available.
@@ -362,7 +364,7 @@ class BasePage(AdaptiveControl):
         Moves scroll position to either absolute `offset`, relative `delta` or jump to \
         the control with specified `scroll_key`.
 
-        See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
+        See :meth:`flet.Column.scroll_to` for method details
         and examples.
         """
         await self.__root_view().scroll_to(
@@ -379,7 +381,7 @@ class BasePage(AdaptiveControl):
 
         This method adds the specified `dialog` to the active dialog stack
         and renders it on the page.
-        The [`on_dismiss`][flet.DialogControl.] handler of the dialog
+        The :attr:`~flet.DialogControl.on_dismiss` handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
@@ -469,7 +471,7 @@ class BasePage(AdaptiveControl):
         Show the drawer.
 
         Raises:
-            ValueError: If no [`drawer`][(c).] is defined.
+            ValueError: If no :attr:`drawer` is defined.
         """
         await self.__top_view().show_drawer()
 
@@ -484,7 +486,7 @@ class BasePage(AdaptiveControl):
         Show the end drawer.
 
         Raises:
-            ValueError: If no [`end_drawer`][(c).] is defined.
+            ValueError: If no :attr:`end_drawer` is defined.
         """
         await self.__top_view().show_end_drawer()
 
@@ -541,8 +543,8 @@ class BasePage(AdaptiveControl):
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         """
-        Gets or sets the top application bar ([AppBar][flet.AppBar] or \
-        [CupertinoAppBar][flet.CupertinoAppBar]) for the view.
+        Gets or sets the top application bar (:class:`~flet.AppBar` or \
+        :class:`~flet.CupertinoAppBar`) for the view.
 
         The app bar typically displays the page title and optional actions
         such as navigation icons, menus, or other interactive elements.

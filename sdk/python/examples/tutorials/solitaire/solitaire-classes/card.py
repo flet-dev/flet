@@ -45,8 +45,8 @@ class Card(ft.GestureDetector):
         self.update()
 
     def drag(self, e: ft.DragUpdateEvent):
-        self.top = max(0, self.top + e.delta_y)
-        self.left = max(0, self.left + e.delta_x)
+        self.top = max(0, self.top + e.local_delta.y)
+        self.left = max(0, self.left + e.local_delta.x)
         self.update()
 
     def drop(self, e: ft.DragEndEvent):

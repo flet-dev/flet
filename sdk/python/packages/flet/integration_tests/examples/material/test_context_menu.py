@@ -1,8 +1,8 @@
 import pytest
 
+import examples.controls.context_menu.programmatic_open.main as programmatic_open
 import flet as ft
 import flet.testing as ftt
-from examples.controls.context_menu import programmatic_open
 
 
 @pytest.mark.asyncio(loop_scope="function")

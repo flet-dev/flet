@@ -23,11 +23,11 @@ class SelectionArea(Control):
     The child control this selection area applies to.
 
     If you need to have multiple selectable controls, use container-like controls
-    like [`Row`][flet.] or [`Column`][flet.], which have a `controls` property
+    like :class:`~flet.Row` or :class:`~flet.Column`, which have a `controls` property
     for this purpose.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If :attr:`content` is not visible.
     """
 
     on_change: Optional[ControlEventHandler["SelectionArea"]] = None

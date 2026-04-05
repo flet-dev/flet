@@ -8,13 +8,13 @@ class InterstitialAd(ft.Service, BaseAd):
     Displays a full-screen interstitial ad.
 
     Note:
-        Each instance is allowed to be shown (using [`show()`][(c).show]) only once.
+        Each instance is allowed to be shown (using :meth:`show`) only once.
         To show another ad, create a new instance. Reusing an already-shown instance
         will result in errors or unexpected behavior.
 
     Example: Test IDs
         AdMob [provides](https://developers.google.com/admob/flutter/banner#always_test_with_test_ads)
-        unit IDs for testing purposes. Set [`unit_id`][flet_ads.BaseAd.]
+        unit IDs for testing purposes. Set :attr:`~flet_ads.BaseAd.unit_id`
         to the appropriate value based on the platform you're testing on:
 
         - Android: `"ca-app-pub-3940256099942544/1033173712"`

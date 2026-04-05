@@ -1,11 +1,11 @@
 import pytest
 
+import examples.controls.shader_mask.fade_out_image_bottom.main as fade_out_image_bottom
+import examples.controls.shader_mask.pink_radial_glow.main as pink_radial_glow
 import flet as ft
 import flet.testing as ftt
-from examples.controls.shader_mask import (
-    fade_out_image_bottom,
-    linear_and_radial_gradients,
-    pink_radial_glow,
+from examples.controls.shader_mask.linear_and_radial_gradients import (
+    main as linear_gradients,
 )
 
 
@@ -59,7 +59,7 @@ async def test_pink_radial_glow(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": linear_and_radial_gradients.main}],
+    [{"flet_app_main": linear_gradients.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

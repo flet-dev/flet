@@ -69,7 +69,7 @@ class Tester(Service):
 
     async def find_by_key(self, key: KeyValue) -> Finder:
         """
-        Finds controls by a [Key][flet.Key] instance or key name.
+        Finds controls by a :class:`~flet.Key` instance or key name.
 
         Args:
             key: A key instance or its name.

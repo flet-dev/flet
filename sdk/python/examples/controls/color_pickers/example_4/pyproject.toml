@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-4"
+version = "1.0.0"
+description = "MaterialPicker example with callbacks for both selected color and primary swatch changes."
+requires-python = ">=3.10"
+keywords = ["color picker", "material picker", "swatch", "callback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "MaterialPicker"
+controls = ["SafeArea", "MaterialPicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["color change callback", "primary swatch callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

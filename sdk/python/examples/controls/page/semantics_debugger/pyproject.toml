@@ -1,0 +1,26 @@
+[project]
+name = "page-semantics-debugger"
+version = "1.0.0"
+description = "Demonstrates toggling the semantics debugger using a keyboard shortcut."
+requires-python = ">=3.10"
+keywords = ["page", "semantics", "accessibility", "keyboard shortcut", "debugger"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Semantics debugger"
+controls = ["SafeArea", "Column", "Text", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["semantics debugger toggle", "keyboard interaction"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

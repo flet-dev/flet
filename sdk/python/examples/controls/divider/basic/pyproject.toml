@@ -1,0 +1,26 @@
+[project]
+name = "divider-basic"
+version = "1.0.0"
+description = "Demonstrates Divider height, thickness, and color between vertically stacked containers."
+requires-python = ">=3.10"
+keywords = ["divider", "layout", "spacing", "separator"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Divider"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "Container", "Divider"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom divider thickness", "custom divider color", "section separation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

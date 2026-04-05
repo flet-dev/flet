@@ -1,0 +1,26 @@
+[project]
+name = "types-animation-curve-showcase"
+version = "1.0.0"
+description = "Compares Animation Curve values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["animation curve", "showcase", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Animation Curve showcase"
+controls = ["SafeArea", "Column", "Page", "AnimationCurve", "Container", "Icon", "Text", "Stack"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

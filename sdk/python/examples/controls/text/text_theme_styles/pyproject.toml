@@ -1,0 +1,26 @@
+[project]
+name = "text-theme-styles"
+version = "1.0.0"
+description = "Shows the built-in TextThemeStyle variants from display styles through body and labels."
+requires-python = ">=3.10"
+keywords = ["text", "theme", "typography", "styles", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/Text"]
+
+[tool.flet.metadata]
+title = "Theme text styles"
+controls = ["SafeArea", "Column", "Text"]
+layout_pattern = "stacked-content"
+complexity = "basic"
+features = ["theme typography"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -17,7 +17,14 @@ Thank you for your interest in contributing to Flet!
   - [Building the Flutter client](#building-the-flutter-client)
   - [Running the Flutter client](#running-the-flutter-client)
   - [Restarting/Rebuilding](#restartingrebuilding)
-- [Releasing Flet](#releasing-flet)
+- [Development & Release Workflow](#development--release-workflow)
+  - [Branching strategy](#branching-strategy)
+  - [Contributor guidelines](#contributor-guidelines)
+  - [Starting a release cycle](#starting-a-release-cycle)
+  - [Publishing a pre-release](#publishing-a-pre-release)
+  - [Publishing a stable release](#publishing-a-stable-release)
+  - [Hotfixes](#hotfixes)
+  - [Release preparation steps](#release-preparation-steps)
 - [New macOS environment for Flet developer](#new-macos-environment-for-flet-developer)
 
 ## Clone repo
@@ -203,20 +210,55 @@ You will be able to see the debugging outputs of the flet client in this termina
 uv run flet run -w -p 8550 playground/<your-main.py>
 ```
 
-## Releasing Flet
+## Development & Release Workflow
 
-* Create a new `prepare-{version}` branch in [flet-dev/flet](https://github.com/flet-dev/flet) repository.
-* For every package in `packages/flet*` directory:
-  * Update package version to `{version}` in `pubspec.yaml`.
-  * Add `# {version}` with new/changed/fixed items into `CHANGELOG.md`. Only `packages/flet/CHANGELOG.md` should contain real items; other packages could have just a stub.
-* Copy `# {version}` section from `packages/flet/CHANGELOG.md` to the root `CHANGELOG.md`.
+### Branching strategy
+
+* **`main`** — always contains the latest stable release. Protected branch.
+* **`release/v{version}`** — integration branch for the next release, for example `release/v0.85.0`. Created from `main` at the start of a release cycle.
+* **`feature/*`**, **`fix/*`** — short-lived branches created from the release branch and merged back into it via PR.
+
+### Contributor guidelines
+
+* Target your PRs to the active `release/v{version}` branch (not `main`).
+* Add a new changelog record to the active release section in the root `CHANGELOG.md` in every PR targeting `release/v{version}`.
+* Assign the release milestone to all related issues and PRs.
+
+### Starting a release cycle
+
+1. Create a new GitHub milestone for the version (e.g., `0.85.0`).
+2. Create a `release/v{version}` branch from `main`.
+3. Update package version to `{version}` in `packages/flet/pubspec.yaml`.
+4. Add `## {version}` into `CHANGELOG.md` and `packages/flet/CHANGELOG.md`.
+5. Require every PR targeting `release/v{version}` to append a new record to the active root changelog section.
+
+### Publishing a pre-release
+
+1. On the release branch, create and push a tag with the format `vX.Y.Z.devN` (start from `dev0`, e.g., `v0.85.0.dev0`).
+2. CI builds and runs all tests. If everything passes, it creates a pre-release GitHub Release and publishes pre-release packages to PyPI. Pre-releases are **not** published to pub.dev.
+3. Increment `N` for each subsequent pre-release (`dev1`, `dev2`, ...).
+
+### Publishing a stable release
+
+1. Prepare the release on the release branch (see [Release preparation steps](#release-preparation-steps) below).
+2. Create `Flet {version}` PR from `release/v{version}` into `main`.
+3. Merge into `main` using a **regular merge** (not squash).
+4. Create and push a `v{version}` tag on `main` (e.g., `v0.85.0`).
+5. CI publishes to PyPI, pub.dev, and creates a GitHub Release.
+6. Close the milestone — mark remaining issues as fixed.
+7. Delete the `release/v{version}` branch.
+8. Clean up pre-release GitHub Releases and pre-release versions on PyPI.
+
+### Hotfixes
+
+For patches to the current stable release, branch directly from `main`, fix, open a PR back to `main`, merge and tag.
+
+### Release preparation steps
+
+* Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
+* Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
 * Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
 * Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
-* Create `Prepare Flet {version}` PR to merge into `main` branch.
-* In `Build Flet package for Flutter` job of [Flet CI build](https://ci.appveyor.com/project/flet-dev/flet) make sure analysis report of every `flet*` Flutter package has only 1 issue "Publishable packages can't have 'path' dependencies.".
-* Merge `Prepare Flet {version}` PR.
-* Create and push new `v{version}` tag (with `v` prefix).
-* Update release notes at `https://github.com/flet-dev/flet/releases/tag/v{version}`.
 
 ## New macOS environment for Flet developer
 

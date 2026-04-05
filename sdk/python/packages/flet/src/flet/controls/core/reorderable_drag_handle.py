@@ -11,10 +11,10 @@ from flet.utils.validation import V
 @control("ReorderableDragHandle")
 class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     """
-    Used to drag an item in a [`ReorderableListView`][flet.].
+    Used to drag an item in a :class:`~flet.ReorderableListView`.
 
     It creates a listener for a drag immediately following a pointer down
-    event over the given [`content`][(c).] control.
+    event over the given :attr:`content` control.
 
     Example:
     ```python

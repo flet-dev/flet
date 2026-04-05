@@ -1,0 +1,26 @@
+[project]
+name = "animated-switcher-scale-effect"
+version = "1.0.0"
+description = "AnimatedSwitcher transitions between two containers with multiple effects."
+requires-python = ">=3.10"
+keywords = ["animated switcher", "animation", "scale", "fade", "rotation", "transition"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Animations/AnimatedSwitcher"]
+
+[tool.flet.metadata]
+title = "Scale, fade, and rotate effects"
+controls = ["SafeArea", "Column", "Container", "Text", "AnimatedSwitcher", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["multiple transitions", "animated content swap", "button-triggered effects"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

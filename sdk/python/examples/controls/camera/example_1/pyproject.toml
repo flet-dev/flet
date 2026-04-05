@@ -1,0 +1,27 @@
+[project]
+name = "camera-example-1"
+version = "1.0.0"
+description = "Comprehensive camera demo with preview, photos, video recording, and streaming."
+requires-python = ">=3.10"
+keywords = ["camera", "photo", "video", "streaming", "device orientation", "media"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-camera"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Camera"]
+
+[tool.flet.metadata]
+title = "Camera playground"
+controls = ["SafeArea", "Column", "Row", "Container", "IconButton", "Dropdown", "Text", "Image", "FilledIconButton", "FilledTonalIconButton", "OutlinedIconButton", "Camera"]
+layout_pattern = "control-panel"
+complexity = "advanced"
+features = ["camera initialization", "photo capture", "video recording", "record pause/resume", "image streaming", "preview pause/resume", "camera state events"]
+
+[tool.flet]
+platforms = ["web", "ios", "android"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "charts-matplotlib-chart-animate"
+version = "1.0.0"
+description = "Animated 3D random-walk Matplotlib chart embedded in a Flet application."
+requires-python = ">=3.10"
+keywords = ["charts", "matplotlib-chart", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts", "matplotlib", "numpy"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/MatplotlibChart"]
+
+[tool.flet.metadata]
+title = "Animate"
+controls = ["SafeArea", "MatplotlibChart"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["animated chart", "save to file"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

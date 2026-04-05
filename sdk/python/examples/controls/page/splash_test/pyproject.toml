@@ -1,0 +1,26 @@
+[project]
+name = "page-splash-test"
+version = "1.0.0"
+description = "Shows overlay progress-bar feedback while an async task runs."
+requires-python = ">=3.10"
+keywords = ["page", "overlay", "async", "progress", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Splash test"
+controls = ["SafeArea", "Column", "Button", "ProgressBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["async task execution", "page overlay usage"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

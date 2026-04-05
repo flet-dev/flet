@@ -1,0 +1,26 @@
+[project]
+name = "badge-basic"
+version = "1.0.0"
+description = "Basic Badge usage on NavigationBar icons."
+requires-python = ">=3.10"
+keywords = ["badge", "display", "navigation bar", "icon", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Badge"]
+
+[tool.flet.metadata]
+title = "Basic Badge"
+controls = ["NavigationBar", "NavigationBarDestination", "Icon", "Badge", "SafeArea", "Column", "Text"]
+layout_pattern = "navigation"
+complexity = "basic"
+features = ["badge on icon", "text badge", "small badge indicator"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Deployed online documentation: https://docs.flet.dev/geolocator/
+- Deployed online documentation: https://flet.dev/docs/geolocator/
 - `Geolocator` control new methods: `distance_between`
 - `Geolocator` control new properties: `position`, `configuration`
 - New dataclasses:

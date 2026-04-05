@@ -1,0 +1,26 @@
+[project]
+name = "datatable2-example-1"
+version = "1.0.0"
+description = "Shows an empty DataTable2 state with configured columns and placeholder content."
+requires-python = ">=3.10"
+keywords = ["datatable2", "data table", "empty state", "extension"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-datatable2"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable2"]
+
+[tool.flet.metadata]
+title = "Example 1"
+controls = ["SafeArea", "DataTable2", "DataColumn2", "Text"]
+layout_pattern = "table-view"
+complexity = "basic"
+features = ["empty table state", "DataTable2 columns"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

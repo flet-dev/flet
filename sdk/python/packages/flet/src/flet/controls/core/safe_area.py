@@ -13,7 +13,7 @@ __all__ = ["SafeArea"]
 @control("SafeArea")
 class SafeArea(LayoutControl, AdaptiveControl):
     """
-    A control that insets its [`content`][(c).] by sufficient padding to avoid \
+    A control that insets its :attr:`content` by sufficient padding to avoid \
     intrusions by the operating system.
 
     For example, this will indent the `content` by enough to avoid the status bar at
@@ -22,7 +22,7 @@ class SafeArea(LayoutControl, AdaptiveControl):
     It will also indent the `content` by the amount necessary to avoid the Notch on the
     iPhone X, or other similar creative physical features of the display.
 
-    When a [`minimum_padding`][(c).] is specified, the greater of the minimum padding
+    When a :attr:`minimum_padding` is specified, the greater of the minimum padding
     or the safe area padding will be applied.
     """
 

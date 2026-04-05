@@ -95,5 +95,5 @@ MarginValue = Union[Number, Margin]
 
 Represents margin as either:
 - a single numeric value applied to all sides,
-- or an explicit [`Margin`][flet.] configuration.
+- or an explicit :class:`~flet.Margin` configuration.
 """

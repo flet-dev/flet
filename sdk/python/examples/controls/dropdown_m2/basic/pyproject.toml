@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-m2-basic"
+version = "1.0.0"
+description = "Submits selected DropdownM2 value and displays it in a message label."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "selection", "submit", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/DropdownM2"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "DropdownM2", "Button", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["value selection", "submit callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

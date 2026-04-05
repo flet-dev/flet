@@ -41,20 +41,21 @@ class Chip(LayoutControl):
     """
     The primary content of this chip.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     leading: Optional[Control] = None
     """
-    A `Control` to display to the left of this chip's [`label`][(c).].
+    A `Control` to display to the left of this chip's :attr:`label`.
 
-    Typically the leading control is an [`Icon`][flet.] or a [`CircleAvatar`][flet.].
+    Typically the leading control is an :class:`~flet.Icon` or a \
+    :class:`~flet.CircleAvatar`.
     """
 
     selected: bool = False
     """
-    If [`on_select`][(c).] event is specified, `selected` property is used to \
-    determine whether this chip is selected or not.
+    If :attr:`on_select` event is specified, `selected` property is used to determine \
+    whether this chip is selected or not.
     """
 
     selected_color: Optional[ColorValue] = None
@@ -72,7 +73,7 @@ class Chip(LayoutControl):
     Defaults to `0`.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If :attr:`elevation` is negative.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -82,8 +83,8 @@ class Chip(LayoutControl):
 
     show_checkmark: bool = True
     """
-    If [`on_select`][(c).] event is specified and chip is selected, `show_checkmark` \
-    is used to determine whether or not to show a checkmark.
+    If :attr:`on_select` event is specified and chip is selected, `show_checkmark` is \
+    used to determine whether or not to show a checkmark.
     """
 
     check_color: Optional[ColorValue] = None
@@ -101,21 +102,21 @@ class Chip(LayoutControl):
     """
     The shape of the border around this chip.
 
-    Defaults to [`ChipTheme.shape`][flet.], or if that is resolves to
+    Defaults to :attr:`flet.ChipTheme.shape`, or if that is resolves to
     `None`, falls back to `RoundedRectangleBorder(radius=8)`.
     """
 
     padding: Optional[PaddingValue] = None
     """
-    The padding between the [`label`][(c).] and the outside shape.
+    The padding between the :attr:`label` and the outside shape.
 
     Defaults to `8` logical pixels on all sides.
     """
 
     delete_icon: Optional[Control] = None
     """
-    A `Control` to display to the right of this chip's [`label`][(c).]
-    in case [`on_delete`][(c).] event is specified.
+    A `Control` to display to the right of this chip's :attr:`label`
+    in case :attr:`on_delete` event is specified.
     """
 
     delete_icon_tooltip: Optional[str] = None
@@ -127,7 +128,7 @@ class Chip(LayoutControl):
 
     delete_icon_color: Optional[ColorValue] = None
     """
-    The color of the [`delete_icon`][(c).].
+    The color of the :attr:`delete_icon`.
     """
 
     disabled_color: Optional[ColorValue] = None
@@ -137,15 +138,15 @@ class Chip(LayoutControl):
 
     label_padding: Optional[PaddingValue] = None
     """
-    The padding around the [`label`][(c).].
+    The padding around the :attr:`label`.
 
     By default, this is `4` logical pixels at the beginning and the end of
-    the [`label`][(c).], and zero on `top` and `bottom`.
+    the :attr:`label`, and zero on `top` and `bottom`.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    The style to be applied to this chip's [`label`][(c).].
+    The style to be applied to this chip's :attr:`label`.
     """
 
     selected_shadow_color: Optional[ColorValue] = None
@@ -164,7 +165,7 @@ class Chip(LayoutControl):
 
     color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color that fills this chip in various [`ControlState`][flet.].
+    The color that fills this chip in various :class:`~flet.ControlState`.
     """
 
     elevation_on_click: Annotated[
@@ -198,7 +199,7 @@ class Chip(LayoutControl):
 
     leading_size_constraints: Optional[BoxConstraints] = None
     """
-    The size constraints for the [`leading`][(c).] control.
+    The size constraints for the :attr:`leading` control.
 
     If `None`, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of `8.0` pixels on all sides.
@@ -206,7 +207,7 @@ class Chip(LayoutControl):
 
     delete_icon_size_constraints: Optional[BoxConstraints] = None
     """
-    The size constraints for the [`delete_icon`][(c).] control.
+    The size constraints for the :attr:`delete_icon` control.
 
     If `None`, it defaults to a minimum size of chip height or label height
     (whichever is greater) and a padding of 8.0 pixels on all sides.
@@ -224,12 +225,12 @@ class Chip(LayoutControl):
 
     leading_drawer_animation_style: Optional[AnimationStyle] = None
     """
-    The animation style for the [`leading`][(c).] control's animations.
+    The animation style for the :attr:`leading` control's animations.
     """
 
     delete_drawer_animation_style: Optional[AnimationStyle] = None
     """
-    The animation style for the [`delete_icon`][(c).]'s animations.
+    The animation style for the :attr:`delete_icon`'s animations.
     """
 
     on_click: Optional[ControlEventHandler["Chip"]] = None
@@ -237,22 +238,22 @@ class Chip(LayoutControl):
     Called when the user clicks on this chip.
 
     Raises:
-        ValueError: If specified together with [`on_select`][(c).].
+        ValueError: If specified together with :attr:`on_select`.
     """
 
     on_delete: Optional[ControlEventHandler["Chip"]] = None
     """
-    Called when the user clicks on the [`delete_icon`][(c).].
+    Called when the user clicks on the :attr:`delete_icon`.
     """
 
     on_select: Optional[ControlEventHandler["Chip"]] = None
     """
     Called when the user clicks on this chip.
 
-    It internally changes [`selected`][(c).] property to the opposite value.
+    It internally changes :attr:`selected` property to the opposite value.
 
     Raises:
-        ValueError: If specified together with [`on_click`][(c).].
+        ValueError: If specified together with :attr:`on_click`.
     """
 
     on_focus: Optional[ControlEventHandler["Chip"]] = None

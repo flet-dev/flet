@@ -1,0 +1,26 @@
+[project]
+name = "page-view-basic"
+version = "1.0.0"
+description = "Demonstrates a swipeable PageView with page-change callback and peeked viewport pages."
+requires-python = ">=3.10"
+keywords = ["page view", "pageview", "swipe", "carousel", "callback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/PageView"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["PageView", "SafeArea", "Container", "Column", "Text", "Icon"]
+layout_pattern = "pager"
+complexity = "basic"
+features = ["horizontal swipe navigation", "page change callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

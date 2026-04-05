@@ -44,14 +44,14 @@ class DatePickerEntryMode(Enum):
     """
     User picks a date from calendar grid.
 
-    Can switch to [`INPUT`][(c).] by activating a mode button in the dialog.
+    Can switch to :attr:`INPUT` by activating a mode button in the dialog.
     """
 
     INPUT = "input"
     """
     User can input the date by typing it into a text field.
 
-    Can switch to [`CALENDAR`][(c).] by activating a mode button in the dialog.
+    Can switch to :attr:`CALENDAR` by activating a mode button in the dialog.
     """
 
     CALENDAR_ONLY = "calendarOnly"
@@ -71,7 +71,7 @@ class DatePickerEntryMode(Enum):
 
 @dataclass
 class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
-    """Event fired when the [`DatePicker`][flet.] entry mode is changed."""
+    """Event fired when the :class:`~flet.DatePicker` entry mode is changed."""
 
     entry_mode: DatePickerEntryMode
     """The new date picker entry mode."""
@@ -82,9 +82,9 @@ class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.
 
-    It can be opened by calling [`Page.show_dialog()`][flet.Page.show_dialog] method.
+    It can be opened by calling :meth:`flet.Page.show_dialog` method.
 
-    Depending on the [`entry_mode`][(c).], it will show either a Calendar
+    Depending on the :attr:`entry_mode`, it will show either a Calendar
     or an Input (TextField) for picking a date.
     """
 
@@ -92,7 +92,7 @@ class DatePicker(DialogControl):
     """
     The selected date that the picker should display.
 
-    Defaults to [`current_date`][(c).].
+    Defaults to :attr:`current_date`.
     """
 
     modal: bool = False
@@ -128,12 +128,13 @@ class DatePicker(DialogControl):
     The locale for this date picker dialog. It is intended for (rare) cases where this \
     dialog should be localized differently from the rest of the page.
 
-    It overrides the locale used by the page (see [`Page.locale_configuration`][flet.]),
+    It overrides the locale used by the page (see \
+    :attr:`flet.Page.locale_configuration`),
     but does not participate in page-level locale resolution.
 
     If set to `None` (the default) or an inexistent/unsupported locale,
-    the [`current_locale`][flet.LocaleConfiguration.] of the
-    [`Page.locale_configuration`][flet.] is used as fallback.
+    the :attr:`~flet.LocaleConfiguration.current_locale` of the
+    :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
     keyboard_type: KeyboardType = KeyboardType.DATETIME
@@ -185,7 +186,7 @@ class DatePicker(DialogControl):
     error_invalid_text: Optional[str] = None
     """
     The error message displayed below the text field if the date is earlier than \
-    [`first_date`][(c).] or later than [`last_date`][(c).].
+    :attr:`first_date` or later than :attr:`last_date`.
 
     Defaults to `"Out of range"`.
     """
@@ -210,22 +211,22 @@ class DatePicker(DialogControl):
 
     switch_to_calendar_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
-    is [`DatePickerEntryMode.INPUT`][flet.].
+    The icon displayed in the corner of this picker's dialog when :attr:`entry_mode` \
+    is :attr:`flet.DatePickerEntryMode.INPUT`.
 
-    Clicking on this icon changes the [`entry_mode`][(c).] to
-    [`DatePickerEntryMode.CALENDAR`][flet.].
+    Clicking on this icon changes the :attr:`entry_mode` to
+    :attr:`flet.DatePickerEntryMode.CALENDAR`.
 
     If `None`, defaults to `Icons.CALENDAR_TODAY`.
     """
 
     switch_to_input_icon: Optional[IconData] = None
     """
-    The icon displayed in the corner of this picker's dialog when [`entry_mode`][(c).] \
-    is [`DatePickerEntryMode.CALENDAR`][flet.].
+    The icon displayed in the corner of this picker's dialog when :attr:`entry_mode` \
+    is :attr:`flet.DatePickerEntryMode.CALENDAR`.
 
-    Clicking on icon changes the [`entry_mode`][(c).] to
-    [`DatePickerEntryMode.INPUT`][flet.].
+    Clicking on icon changes the :attr:`entry_mode` to
+    :attr:`flet.DatePickerEntryMode.INPUT`.
 
     If `None`, defaults to `Icons.EDIT_OUTLINED`.
     """
@@ -234,16 +235,16 @@ class DatePicker(DialogControl):
     """
     The color of the modal barrier that darkens everything below this picker's dialog.
 
-    If `None`, the [`DialogTheme.barrier_color`][flet.] is used.
-    If it is also `None`, then [`Colors.BLACK_54`][flet.] is used.
+    If `None`, the :attr:`flet.DialogTheme.barrier_color` is used.
+    If it is also `None`, then :attr:`flet.Colors.BLACK_54` is used.
     """
 
     inset_padding: PaddingValue = field(
         default_factory=lambda: Padding.symmetric(horizontal=16.0, vertical=24.0)
     )
     """
-    The amount of padding added to [`view_insets`][flet.PageMediaData.] of the \
-    [`Page.media`][flet.] on the outside of this picker's dialog.
+    The amount of padding added to :attr:`~flet.PageMediaData.view_insets` of the \
+    :attr:`flet.Page.media` on the outside of this picker's dialog.
 
     This defines the minimum space between the screen's edges and the dialog.
     """
@@ -251,13 +252,13 @@ class DatePicker(DialogControl):
     on_change: Optional[ControlEventHandler["DatePicker"]] = None
     """
     Called when user clicks confirm button.
-    [`value`][(c).] is updated with selected date.
+    :attr:`value` is updated with selected date.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains the selected date.
     """
 
     on_entry_mode_change: Optional[EventHandler[DatePickerEntryModeChangeEvent]] = None
     """
-    Called when the [`entry_mode`][(c).] is changed from the user interface.
+    Called when the :attr:`entry_mode` is changed from the user interface.
     """

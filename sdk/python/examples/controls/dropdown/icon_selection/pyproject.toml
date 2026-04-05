@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-icon-selection"
+version = "1.0.0"
+description = "Displays dropdown options with leading icons and interactive text filtering."
+requires-python = ">=3.10"
+keywords = ["dropdown", "icons", "filter", "editable", "search"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Dropdown"]
+
+[tool.flet.metadata]
+title = "Icon selection"
+controls = ["SafeArea", "Dropdown", "DropdownOption"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["leading icons", "editable dropdown", "option filtering"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

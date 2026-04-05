@@ -1,0 +1,26 @@
+[project]
+name = "map-basic"
+version = "1.0.0"
+description = "Shows a basic flet-map tile layer with error callback handling."
+requires-python = ">=3.10"
+keywords = ["map", "tile layer", "flet-map", "geospatial"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Map", "TileLayer"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["map tile rendering", "tile load error callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

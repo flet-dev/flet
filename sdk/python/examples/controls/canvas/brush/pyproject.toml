@@ -1,0 +1,26 @@
+[project]
+name = "canvas-brush"
+version = "1.0.0"
+description = "Free-hand canvas drawing with capture and save support."
+requires-python = ">=3.10"
+keywords = ["canvas", "brush", "gesture", "capture", "save"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Brush"
+controls = ["SafeArea", "Column", "Button", "Container", "Canvas", "GestureDetector", "Line", "Fill"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["pan drawing", "canvas capture", "save to file"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

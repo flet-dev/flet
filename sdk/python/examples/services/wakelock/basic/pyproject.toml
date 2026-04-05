@@ -1,0 +1,26 @@
+[project]
+name = "services-wakelock-basic"
+version = "1.0.0"
+description = "Enables and disables wakelock while showing the current wakelock state."
+requires-python = ">=3.10"
+keywords = ["wakelock", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/Wakelock"]
+
+[tool.flet.metadata]
+title = "Basic wakelock"
+controls = ["SafeArea", "Column", "Page", "Wakelock", "Text", "Row", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["wakelock toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

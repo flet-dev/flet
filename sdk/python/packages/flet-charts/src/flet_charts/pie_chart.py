@@ -43,7 +43,7 @@ class PieChart(ft.LayoutControl):
 
     sections: list[PieChartSection] = field(default_factory=list)
     """
-    A list of [`PieChartSection`][(p).]
+    A list of :class:`~flet_charts.PieChartSection`
     controls drawn in a circle.
     """
 

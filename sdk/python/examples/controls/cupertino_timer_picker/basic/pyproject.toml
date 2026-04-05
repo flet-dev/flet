@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-timer-picker-basic"
+version = "1.0.0"
+description = "Opens CupertinoTimerPicker in a bottom sheet and updates displayed timer value on change."
+requires-python = ">=3.10"
+keywords = ["cupertino", "timer picker", "bottom sheet", "time", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoTimerPicker"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Row", "Text", "CupertinoButton", "CupertinoBottomSheet", "CupertinoTimerPicker"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["timer selection", "on_change callback", "bottom sheet presentation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
