@@ -14,7 +14,7 @@ from examples.apps.routing_navigation.route_change_event import (
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": initial_route}],
+    [{"flet_app_main": initial_route.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -25,7 +25,7 @@ async def test_initial_route(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": route_change_event}],
+    [{"flet_app_main": route_change_event.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -40,7 +40,7 @@ async def test_route_change_event(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": home_store}],
+    [{"flet_app_main": home_store.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -76,7 +76,7 @@ async def test_home_store(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": pop_view_confirm}],
+    [{"flet_app_main": pop_view_confirm.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -134,7 +134,7 @@ async def test_pop_view_confirm(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": drawer_navigation}],
+    [{"flet_app_main": drawer_navigation.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -190,7 +190,7 @@ async def test_drawer_navigation(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": pop_views_until}],
+    [{"flet_app_main": pop_views_until.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
