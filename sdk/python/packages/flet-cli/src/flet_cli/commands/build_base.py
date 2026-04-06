@@ -2263,18 +2263,18 @@ class BaseBuildCommand(BaseFlutterCommand):
                     style=verbose1_style,
                 )
 
-    # Preferred icon extensions per target platform. Earlier entries win.
-    # .png is a universal fallback supported by flutter_launcher_icons on
-    # every platform, while .icns is macOS-only and .ico is Windows-only.
-    _PLATFORM_IMAGE_PREFERENCE: dict[str, list[str]] = {
-        "windows": [".ico", ".png", ".jpg", ".jpeg", ".bmp"],
-        "macos": [".icns", ".png", ".jpg", ".jpeg"],
-        "linux": [".png", ".jpg", ".jpeg", ".bmp"],
-        "web": [".png", ".jpg", ".jpeg", ".svg"],
-        "apk": [".png", ".jpg", ".jpeg"],
-        "aab": [".png", ".jpg", ".jpeg"],
-        "ipa": [".png", ".jpg", ".jpeg"],
-        "ios-simulator": [".png", ".jpg", ".jpeg"],
+    # Extensions incompatible with each target platform.
+    # .icns is macOS-only and .ico is Windows-only; other platforms
+    # exclude both so flutter_launcher_icons always gets a decodable format.
+    _PLATFORM_EXCLUDED_EXTENSIONS: dict[str, list[str]] = {
+        "windows": [".icns"],
+        "macos": [".ico"],
+        "linux": [".icns", ".ico"],
+        "web": [".icns", ".ico"],
+        "apk": [".icns", ".ico"],
+        "aab": [".icns", ".ico"],
+        "ipa": [".icns", ".ico"],
+        "ios-simulator": [".icns"],
     }
 
     def find_platform_image(
@@ -2289,10 +2289,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         Find the best matching image file for the current target platform.
 
         When multiple files share the same base name (e.g. `icon.icns`,
-        `icon.ico`, `icon.png`), the method picks the one whose extension
-        is most appropriate for the build target.  For example, `.icns` is
-        skipped on Windows builds because `flutter_launcher_icons` cannot
-        decode it.
+        `icon.ico`, `icon.png`), the method filters out formats that are
+        incompatible with the build target before selecting the first match.
+        For example, `.icns` is skipped on Windows builds because
+        `flutter_launcher_icons` cannot decode it.
 
         Args:
             src_path: Source assets directory.
@@ -2309,18 +2309,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not images:
             return None
 
-        preferred = self._PLATFORM_IMAGE_PREFERENCE.get(
-            self.target_platform, [".png"]
+        excluded = self._PLATFORM_EXCLUDED_EXTENSIONS.get(
+            self.target_platform, []
         )
+        if excluded:
+            images = [p for p in images if Path(p).suffix.lower() not in excluded]
 
-        def _sort_key(path: str) -> int:
-            ext = Path(path).suffix.lower()
-            try:
-                return preferred.index(ext)
-            except ValueError:
-                return len(preferred)
-
-        images.sort(key=_sort_key)
+        if not images:
+            return None
 
         best = images[0]
         if self.verbose > 0:
