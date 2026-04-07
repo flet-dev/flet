@@ -263,6 +263,18 @@ class Video(ft.LayoutControl):
         )
         self.playlist.pop(media_index)
 
+    async def playlist_update(self, playlist: list[VideoMedia], autoplay: bool = False):
+        """
+        Updates the :attr:`playlist` with the provided `playlist`.
+        Optionally automatically starts playing depending on `autoplay`.
+        """
+        await self._invoke_method(
+            method_name="playlist_update",
+            arguments={"playlist": playlist, "autoplay": autoplay},
+        )
+        self.playlist = playlist
+        self.autoplay = autoplay
+
     async def is_playing(self) -> bool:
         """
         Returns:
