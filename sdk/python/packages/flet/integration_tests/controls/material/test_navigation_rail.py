@@ -82,3 +82,53 @@ async def test_no_selected_icon(flet_app: ftt.FletTestApp, request):
             ),
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_scrollable_with_pinned_leading_and_trailing(
+    flet_app: ftt.FletTestApp, request
+):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.NavigationRail(
+            height=280,
+            width=140,
+            selected_index=0,
+            label_type=ft.NavigationRailLabelType.ALL,
+            min_width=100,
+            min_extended_width=180,
+            scrollable=True,
+            pin_leading_to_top=True,
+            pin_trailing_to_bottom=True,
+            leading=ft.IconButton(icon=ft.Icons.MENU, tooltip="Menu"),
+            trailing=ft.IconButton(icon=ft.Icons.SETTINGS, tooltip="Settings"),
+            destinations=[
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_ONE,
+                    label="One",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_TWO,
+                    label="Two",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_3,
+                    label="Three",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_4,
+                    label="Four",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_5,
+                    label="Five",
+                ),
+                ft.NavigationRailDestination(
+                    icon=ft.Icons.LOOKS_6,
+                    label="Six",
+                ),
+            ],
+        ),
+    )
