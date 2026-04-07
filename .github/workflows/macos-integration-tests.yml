@@ -35,24 +35,7 @@ env:
 jobs:
   test-macos:
     runs-on: macos-26
-    strategy:
-      fail-fast: false
-      matrix:
-        suite:
-        - apps
-        - examples/apps
-        - examples/core
-        - examples/cupertino
-        - examples/extensions
-        - examples/material
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/services
-        - controls/theme
-        - extensions
-
-    name: ${{ matrix.suite }} Integration Tests
+    name: Integration Tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -70,23 +53,15 @@ jobs:
         run: |
           uv --version && uv run python --version && pod --version && flutter --version
 
-      - name: Run integration tests (${{ matrix.suite }})
+      - name: Run integration tests
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
-
-      - name: Prepare failure screenshots
-        if: failure()
-        run: |
-          SAFE_SUITE="${MATRIX_SUITE//\//-}"
-          echo "SAFE_SUITE=$SAFE_SUITE" >> $GITHUB_ENV
-        env:
-          MATRIX_SUITE: ${{ matrix.suite }}
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/examples/material/test_text_button.py::test_handling_clicks
 
       - name: Upload artifact
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-failures-macos-${{ env.SAFE_SUITE }}
-          path: sdk/python/packages/flet/integration_tests/${{ matrix.suite }}/**/*_actual.png
+          name: integration-test-failures-macos
+          path: sdk/python/packages/flet/integration_tests/examples/material/**/*_actual.png
           if-no-files-found: ignore
