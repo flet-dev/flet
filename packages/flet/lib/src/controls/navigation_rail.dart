@@ -83,7 +83,11 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           backgroundColor: widget.control.getColor("bgcolor", context),
           indicatorColor: widget.control.getColor("indicator_color", context),
           leading: widget.control.buildWidget("leading"),
+          leadingAtTop: widget.control.getBool("pin_leading_to_top", true)!,
           trailing: widget.control.buildWidget("trailing"),
+          trailingAtBottom:
+              widget.control.getBool("pin_trailing_to_bottom", false)!,
+          scrollable: widget.control.getBool("scrollable", false)!,
           selectedIndex: _selectedIndex,
           useIndicator: widget.control.getBool("use_indicator"),
           onDestinationSelected: _destinationChanged,
