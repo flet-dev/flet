@@ -815,8 +815,6 @@ jobs:
             dist/**/*.whl
             dist/**/*.tar.gz
             dist/**/*.zip
-            dist/**/flet-build-template.zip
-            dist/**/flet-app-templates.zip
 
   # ===============
   # Python publish
