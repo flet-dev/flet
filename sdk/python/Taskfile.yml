@@ -69,7 +69,8 @@ tasks:
     aliases:
       - docs
     cmds:
-      - cd ../../website && yarn start
+      - cd ../../website && UV_CACHE_DIR=../.uv-cache yarn install --immutable
+      - cd ../../website && UV_CACHE_DIR=../.uv-cache yarn start
 
   docs-coverage:
     desc: "Run docstring coverage report for all SDK Python packages."

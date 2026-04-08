@@ -2,6 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.navigation_drawer.adaptive_navigation.main import (
+    main as adaptive_navigation,
+)
 from examples.controls.navigation_drawer.position_end.main import main as position_end
 from examples.controls.navigation_drawer.position_start.main import (
     main as position_start,
@@ -190,4 +193,52 @@ async def test_theming(flet_app_function: ftt.FletTestApp):
         ["theming1", "theming2", "theming3"],
         "theming",
         duration=1600,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": adaptive_navigation}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_adaptive_navigation(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+
+    # narrow layout
+    flet_app_function.resize_page(400, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "adaptive_navigation1",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    # wide layout
+    flet_app_function.resize_page(600, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text_containing("Open Drawer")
+    )
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "adaptive_navigation2",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    flet_app_function.create_gif(
+        ["adaptive_navigation1", "adaptive_navigation2"],
+        "adaptive_navigation",
+        duration=1800,
     )
