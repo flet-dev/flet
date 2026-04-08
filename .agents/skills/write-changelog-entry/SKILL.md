@@ -7,13 +7,30 @@ description: Use when asked to add, revise, or review a changelog or release-not
 
 Write a single changelog entry that matches the surrounding section's style and reflects the actual shipped change.
 
-Use [`prepare-flet-release`](../prepare-flet-release/SKILL.md) for full release preparation across versions and files.
-
 ## Inputs
 
 * Target changelog file, usually `/CHANGELOG.md` or `packages/flet/CHANGELOG.md`.
 * Release version or section if the user specifies one.
 * Relevant PR number, issue number, commit(s), or branch context.
+
+## Target file selection
+
+Choose the narrowest correct changelog file before writing the item.
+
+* Use `/CHANGELOG.md` for repo-level or broadly user-facing Flet changes.
+* Use `packages/flet/CHANGELOG.md` for Flutter package, runtime, or framework-side
+  changes.
+* Use `sdk/python/packages/<package>/CHANGELOG.md` for changes scoped to a specific
+  Python package.
+* For extension (ex: flet-audio) changelogs under
+  `sdk/python/packages/<package>/CHANGELOG.md`, write
+  entries from the published Python user's perspective. Do not surface internal Flutter
+  implementation changes unless they materially change the Python-facing feature,
+  behavior, or API.
+* If one change clearly belongs in more than one published surface, update each relevant
+  changelog file.
+* Do not default everything to `/CHANGELOG.md` when a package-specific changelog is the
+  better fit.
 
 ## Workflow
 
@@ -36,8 +53,15 @@ Use [`prepare-flet-release`](../prepare-flet-release/SKILL.md) for full release 
    * Prefer concrete nouns and verbs over implementation detail.
    * Keep the sentence focused on what users gained or what was fixed.
 5. Add links and attribution in repo style.
-   * Put issue links before PR links when both exist.
+    * Include both related issue link(s) and PR link(s) when available, with issue links
+      first.
+    * If no issue exists, include PR link(s) only.
+    * Include issue-only direct-commit items when a shipped change has no PR.
    * Use plain-text author attribution at the end: `by @login.`
+    * Use the PR author login for PR-based items.
+    * For issue-only direct-commit items, use the commit author login if available.
+    * If one item groups multiple PRs by different authors, attribute all relevant
+      authors: `by @user1, @user2.`
 
 ## Repo-specific guidance
 
@@ -47,6 +71,10 @@ Use [`prepare-flet-release`](../prepare-flet-release/SKILL.md) for full release 
 * If a PR includes one main feature plus supporting docs/tests, write only the main feature.
 * If a PR title is too narrow or too broad, use the PR description and diff to calibrate the final wording.
 * If an item touches multiple controls, only group them when the change is one coherent feature.
+* Do not add chore, trivial, or duplicate items to user-facing release notes.
+* For extension package changelogs, prefer Python-facing API, behavior, packaging, and
+  usability changes over Flutter implementation details that are not directly published
+  to users.
 
 ## Good patterns
 
@@ -60,5 +88,5 @@ Before finishing, verify:
 * The item sits under the right release and section.
 * The wording matches neighboring entries in length and tone.
 * The sentence describes the primary user-facing change.
-* Issue and PR links are present when available.
+* Issue and PR links follow repo style, including issue-only direct-commit cases.
 * Attribution is plain text and placed last.

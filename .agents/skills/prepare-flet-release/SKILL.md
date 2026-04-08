@@ -15,6 +15,9 @@ Use [`flet-deprecation`](../flet-deprecation/SKILL.md) when release prep include
 - removing APIs whose `delete_version` equals this release version,
 - auditing changelog entries that mention deprecations/removals.
 
+Use [`write-changelog-entry`](../write-changelog-entry/SKILL.md) for drafting or refining individual changelog items.
+That skill is the source of truth for item wording, scope selection, and what should or should not be mentioned in a single entry.
+
 ## Steps
 
 * Take latest Flet release version from the repo and
@@ -23,24 +26,13 @@ Use [`flet-deprecation`](../flet-deprecation/SKILL.md) when release prep include
 * Pull the latest `main` and create a new branch named `prepare-release-{new_version}` from `main`.
 * Set new version in packages/flet/pubspec.yaml.
 * Run pub get in /client dir to refresh pubspec.lock with new version.
-* Add a new entry into packages/flet/CHANGELOG.md from a git log since the last release. Go through all commits and collect all mentioned issues and pull requests. There could be several issues done in a single PR (commit) - group them by creating a single descriptive change/fix/feature item and put all issues and PR links in `[#<issue_number>](<issue_url>)` format in braces next to it. Do not add chore/trivial/duplicate items.
-  Every changelog item must include both related issue link(s) and PR link(s) when available (issue first, PR second). If no issue exists, include PR link(s) only.
-  Also include issue-only items when a change was done via direct commit without PR (for example, an issue referenced in commit context but no PR exists).
-  Every changelog item must include author attribution as plain text, not a Markdown link: `by @<github_login>`.
-  Place attribution at the end of each item after links, for example:
-  `* Added feature X ([#123](...), [#456](...)) by @contributor.`
-  Use PR author login for PR-based items. For issue-only direct-commit items, use the commit author GitHub login if available.
-  If one item groups multiple PRs by different authors, attribute all relevant authors:
-  `by @user1, @user2`.
-  Ensure that all inferred PRs and issues in the changelog have `{version}` milestone attached on GitHub.
-  If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog; do not omit issue links just because milestone metadata is missing.
-  As it's a Flutter package prefer items having changes on Flutter side.
-* Add a new entry into /CHANGELOG.md. Do not add chore/trivial/duplicate items, add "worth while" items with related issue or PR.
-  Every changelog item must include both related issue link(s) and PR link(s) when available (issue first, PR second). If no issue exists, include PR link(s) only.
-  Also include issue-only items when a change was done via direct commit without PR (for example, an issue referenced in commit context but no PR exists).
-  Every changelog item must include author attribution as plain text, not a Markdown link: `by @<github_login>`.
-  Use PR author login for PR-based items. For issue-only direct-commit items, use the commit author GitHub login if available.
-  If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog; do not omit issue links just because milestone metadata is missing.
+* Add new entries into `packages/flet/CHANGELOG.md` and `/CHANGELOG.md` from the git log since the last release.
+  * Use [`write-changelog-entry`](../write-changelog-entry/SKILL.md) for every individual item.
+  * Build the candidate set from relevant commits, PRs, and issues since the last release.
+  * Ensure that all inferred PRs and issues in the changelog have the `{version}` milestone attached on GitHub.
+  * If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog.
+  * When selecting candidates for `packages/flet/CHANGELOG.md`, prefer items with meaningful Flutter-side impact.
+  * When selecting candidates for `sdk/python/packages/*/CHANGELOG.md`, prefer published Python-facing changes; do not include extension-internal Flutter implementation work unless it materially changes user-visible Python behavior.
 * Scan all changelogs for `Unreleased` sections, not only the root ones:
   * `/CHANGELOG.md`
   * `packages/flet/CHANGELOG.md`
