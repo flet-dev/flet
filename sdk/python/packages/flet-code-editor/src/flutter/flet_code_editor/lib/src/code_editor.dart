@@ -198,21 +198,41 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       _controller.popupController.hide();
     }
 
-    Widget editor = SingleChildScrollView(
+    Widget buildEditor({double? minHeight}) {
+      Widget editor = SingleChildScrollView(
+          child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: minHeight ?? 0),
         child: fce.CodeField(
-      controller: _controller,
-      focusNode: _focusNode,
-      readOnly: widget.control.getBool("read_only", false)!,
-      textStyle: widget.control.getTextStyle("text_style", Theme.of(context)),
-      gutterStyle: gutterStyle,
-      padding: widget.control.getEdgeInsets("padding", EdgeInsets.zero)!,
-      enabled: !widget.control.disabled,
-    ));
+          controller: _controller,
+          focusNode: _focusNode,
+          readOnly: widget.control.getBool("read_only", false)!,
+          textStyle:
+              widget.control.getTextStyle("text_style", Theme.of(context)),
+          gutterStyle: gutterStyle,
+          padding: widget.control.getEdgeInsets("padding", EdgeInsets.zero)!,
+          enabled: !widget.control.disabled,
+        ),
+      ));
 
-    if (themeData != null) {
-      editor = fce.CodeTheme(data: themeData, child: editor);
+      if (themeData != null) {
+        editor = fce.CodeTheme(data: themeData, child: editor);
+      }
+
+      return editor;
     }
 
-    return LayoutControl(control: widget.control, child: editor);
+    final isExpanded = widget.control.getExpand("expand") != null;
+
+    Widget child;
+    if (isExpanded) {
+      child = LayoutBuilder(
+        builder: (context, constraints) =>
+            buildEditor(minHeight: constraints.maxHeight),
+      );
+    } else {
+      child = buildEditor();
+    }
+
+    return LayoutControl(control: widget.control, child: child);
   }
 }
