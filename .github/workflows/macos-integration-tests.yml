@@ -35,7 +35,15 @@ env:
 jobs:
   test-macos:
     runs-on: macos-26
-    name: Integration Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        alert_test:
+        - test_image_for_docs
+        - test_basic
+        - test_use_dialog_dismiss_fires_after_animation
+
+    name: "alert_dialog::${{ matrix.alert_test }} + test_button"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,12 +64,12 @@ jobs:
       - name: Run integration tests
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/examples/material/test_alert_dialog.py packages/flet/integration_tests/examples/material/test_button.py
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/examples/material/test_alert_dialog.py::${{ matrix.alert_test }} packages/flet/integration_tests/examples/material/test_button.py::test_handling_clicks
 
       - name: Upload artifact
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-failures-macos
+          name: integration-test-failures-macos-${{ matrix.alert_test }}
           path: sdk/python/packages/flet/integration_tests/examples/material/**/*_actual.png
           if-no-files-found: ignore
