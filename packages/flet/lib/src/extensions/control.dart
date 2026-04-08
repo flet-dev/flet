@@ -38,11 +38,15 @@ extension WidgetFromControl on Control {
     return ControlWidget(key: key, control: c);
   }
 
-  Widget? buildIconOrWidget(String propertyName,
-      {bool visibleOnly = true,
-      bool notifyParent = false,
-      Key? key,
-      Color? color}) {
+  Widget? buildIconOrWidget(
+    String propertyName, {
+    bool visibleOnly = true,
+    bool notifyParent = false,
+    Key? key,
+    Color? color,
+    bool required = false,
+    Widget? errorWidget,
+  }) {
     var icon = get(propertyName);
     if (icon is Control) {
       Control? c;
@@ -54,6 +58,13 @@ extension WidgetFromControl on Control {
       // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
       return Icon(getIconData(propertyName), color: color);
     }
+
+    if (required) {
+      return errorWidget ??
+          ErrorControl("Error displaying $type",
+              description: "$propertyName must be specified");
+    }
+
     return null;
   }
 

@@ -6,11 +6,12 @@ from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
-from flet.controls.padding import PaddingValue
+from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
     IconDataOrControl,
     Number,
+    StrOrControl,
 )
 
 __all__ = [
@@ -22,53 +23,51 @@ __all__ = [
 @control("NavigationDrawerDestination")
 class NavigationDrawerDestination(Control):
     """
-    Displays an icon with a label, for use in NavigationDrawer destinations.
+    A :class:`~NavigationDrawer` destination.
     """
 
-    label: Optional[str] = None
+    label: StrOrControl
     """
-    The text label that appears below the icon of this `NavigationDrawerDestination`.
+    The label that appears below the :attr:`icon` of this destination.
     """
 
-    icon: Optional[IconDataOrControl] = None
+    icon: IconDataOrControl
     """
-    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
-    destination.
+    An icon name (or `Control`) that's displayed for this destination.
 
-    Example with icon name:
-    ```
-    icon=ft.Icons.BOOKMARK
-    ```
-    Example with Control:
-    ```
-    icon=ft.Icon(ft.Icons.BOOKMARK)
-    ```
+    If :attr:`selected_icon` is provided, `icon` will only be displayed when this
+    destination is not selected.
 
-    If `selected_icon` is provided, this will only be displayed when the destination is
-    not selected.
+    The icon will use :attr:`flet.NavigationDrawerTheme.icon_theme`. If this is
+    `None`, the default :class:`~flet.IconTheme` would use a size of `24.0` and
+    :attr:`flet.ColorScheme.on_surface_variant`.
     """
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://flet.dev/docs/types/icons) of alternative icon or `Control` \
-    displayed when this destination is selected.
+    An icon name (or `Control`) that's displayed for this destination when selected.
 
-    Example with icon name:
-    ```
-    selected_icon=ft.Icons.BOOKMARK
-    ```
-    Example with Control:
-    ```
-    selected_icon=ft.Icon(ft.Icons.BOOKMARK)
-    ```
+    If provided, this destination will fade from :attr:`icon` to `selected_icon`
+    when this destination goes from unselected to selected state.
 
-    If this icon is not provided, the NavigationDrawer will display `icon` in either
-    state.
+    If not provided, :attr:`icon` will be displayed for both
+    selected and unselected states.
+
+    The icon will use :attr:`flet.NavigationDrawerTheme.icon_theme` with
+    :attr:`flet.ControlState.SELECTED`. If this is `None`, the default
+    :class:`~flet.IconTheme` would use a size of `24.0` and
+    :attr:`flet.ColorScheme.on_secondary_container`.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    The color of this destination.
+    The background color of the whole rectangular area behind this drawer destination.
+
+    To customize only the indicator color consider using
+    :attr:`flet.NavigationDrawer.indicator_color`.
+
+    If it is `None`, no background color is set for this destination and
+    :class:`~flet.NavigationDrawer.bgcolor` will be visible.
     """
 
 
@@ -77,28 +76,28 @@ class NavigationDrawer(AdaptiveControl):
     """
     Material Design Navigation Drawer component.
 
-    Navigation Drawer is a panel slides in horizontally from the left or right edge of
-    a page to show primary destinations in an app.
+    Navigation Drawer is a panel that slides in horizontally from the left or right
+    edge of the view to show primary destinations in an app.
 
+    Example:
     ```python
     ft.NavigationDrawer(
+        tile_padding=ft.Padding(top=10),
         controls=[
             ft.NavigationDrawerDestination(label="Item 1"),
             ft.NavigationDrawerDestination(label="Item 2"),
             ft.NavigationDrawerDestination(label="Item 3"),
         ],
-        tile_padding=ft.Padding(top=10),
     )
     ```
-
     """
 
     controls: list[Control] = field(default_factory=list)
     """
     Defines the appearance of the items within the navigation drawer.
 
-    The list contains `NavigationDrawerDestination` items and/or other controls such as
-    headlines and dividers.
+    The list contains :class:`~flet.NavigationDrawerDestination` items and/or other
+    controls such as headlines and dividers.
     """
 
     selected_index: int = 0
@@ -113,12 +112,12 @@ class NavigationDrawer(AdaptiveControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    The color of the navigation drawer itself.
+    The color of this navigation drawer.
     """
 
     elevation: Optional[Number] = None
     """
-    The elevation of the navigation drawer itself.
+    The elevation of this navigation drawer.
     """
 
     indicator_color: Optional[ColorValue] = None
@@ -133,20 +132,22 @@ class NavigationDrawer(AdaptiveControl):
 
     shadow_color: Optional[ColorValue] = None
     """
-    The color used for the drop shadow to indicate `elevation`.
+    The color used for the drop shadow to indicate :attr:`elevation`.
     """
 
-    tile_padding: Optional[PaddingValue] = None
+    tile_padding: PaddingValue = field(
+        default_factory=lambda: Padding.symmetric(horizontal=12)
+    )
     """
-    Defines the padding for `destination` controls.
+    Defines the padding for :attr:`destination` controls.
     """
 
     on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None
     """
-    Called when selected destination changed.
+    Called when the selected destination changed.
     """
 
     on_dismiss: Optional[ControlEventHandler["NavigationDrawer"]] = None
     """
-    Called when the drawer is dismissed.
+    Called when this drawer is dismissed.
     """
