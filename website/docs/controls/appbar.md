@@ -24,4 +24,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/theme_mode_toggle_flow.gif'} alt="theme-and-material-mode-toggles" width="55%" />
+
 <ClassMembers name={frontMatter.class_name} />

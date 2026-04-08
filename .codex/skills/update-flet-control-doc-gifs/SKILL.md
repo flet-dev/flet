@@ -10,11 +10,12 @@ Use this skill after the integration test structure is already in place and the 
 ## Workflow
 
 1. Locate the example-backed integration test under `sdk/python/packages/flet/integration_tests/examples`.
-2. Prefer extending an existing `test_basic` or similar interaction test instead of creating a second flow test.
+2. Prefer extending an existing interaction test instead of creating a second flow test.
 3. Build the visual sequence with deterministic states:
 - set `page.enable_screenshots = True`
 - set `theme_mode` when visuals matter
 - set fixed page size before screenshots
+- prefer finding controls by visible text or other stable user-facing content; add a `key` only when there is no reliable human-facing locator
 - call `pump_and_settle()` after each interaction
 4. Capture only states that are visually meaningful:
 - before interaction
@@ -32,11 +33,13 @@ Use this skill after the integration test structure is already in place and the 
 - Use short screenshot names that describe visible states, for example `before_click`, `hover_popup`, `popup_open`, `checked_item_reopened`.
 - Use one flow GIF name per control/example, for example `app_bar_flow`.
 - Use descriptive static screenshot names when the asset is docs-facing, for example `image_for_docs`, `popup_open`, or `checked_item_reopened`.
+- Give the integration test a behavior-based name such as `test_actions_and_popup_menu`; avoid placeholder names like `test_basic` when the test covers a specific flow.
 - Keep screenshot names stable because they become golden filenames.
 
 ## Docs Update Rules
 
 - Control docs usually point to generated assets through `frontMatter.example_images`.
+- When a docs page has multiple example sections, add the generated screenshot or GIF directly under the matching `CodeExample` block so each visual stays paired with the example it demonstrates.
 - If a docs page still uses `frontMatter.example_media + '/old.png'` or `frontMatter.example_media + '/old.gif'`, replace it with `frontMatter.example_images + '/<asset>'` when the generated integration-test asset is the new source of truth.
 - Generated screenshots and GIFs from integration tests are commonly stored at `sdk/python/packages/flet/integration_tests/examples/.../golden/macos/<control>/`.
 - Copy the final screenshot or GIF to `website/static/docs/test-images/examples/<bucket>/golden/macos/<control>/` when it is not already present there.

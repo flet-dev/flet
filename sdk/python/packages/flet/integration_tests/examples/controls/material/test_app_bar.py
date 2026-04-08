@@ -33,7 +33,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
-async def test_basic(flet_app_function: ftt.FletTestApp):
+async def test_actions_and_popup_menu(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(450, 300)
     flet_app_function.page.update()
