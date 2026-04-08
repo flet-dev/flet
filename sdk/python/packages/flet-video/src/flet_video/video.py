@@ -61,6 +61,11 @@ class Video(ft.LayoutControl):
     Whether to show the video player controls.
     """
 
+    content: Optional[ft.Control] = None
+    """
+    The custom content of the video control.
+    """
+
     fullscreen: bool = False
     """
     Whether the video player is presented in fullscreen mode.
