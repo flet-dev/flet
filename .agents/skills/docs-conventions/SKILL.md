@@ -20,9 +20,9 @@ Use reST roles in Python docstrings. CrocoDocs renders them as links in the API 
 If a parent is a :class:`~flet.ResponsiveRow`, this property determines
 how many virtual columns the control spans.
 
-See :attr:`value` for the current selection.
+See :attr:`value` or :attr:`flet.Text.size` for the current selection.
 
-Calls :meth:`~flet.Page.update` after modifying controls.
+Calls :meth:`flet.Page.update` after modifying controls.
 """
 ```
 
