@@ -1,7 +1,7 @@
 ---
 class_name: "flet_ads.banner_ad.BannerAd"
-examples: "controls/core/ads"
-example_images: "examples/controls/core/ads/media"
+examples: "controls/extensions/ads"
+example_images: "examples/controls/extensions/ads/media"
 title: "BannerAd"
 ---
 

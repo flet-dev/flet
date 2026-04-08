@@ -39,4 +39,4 @@ To install the `flet-color-pickers` package and add it to your project dependenc
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/core/color_pickers).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/extensions/color_pickers).

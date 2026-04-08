@@ -31,4 +31,4 @@ To install the `flet-code-editor` package and add it to your project dependencie
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/core/code_editor).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/extensions/code_editor).

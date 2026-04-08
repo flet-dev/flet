@@ -53,4 +53,4 @@ To install the `flet-video` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/core/video).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/extensions/video).

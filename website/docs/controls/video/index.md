@@ -1,6 +1,6 @@
 ---
 class_name: "flet_video.Video"
-examples: "controls/core/video"
+examples: "controls/extensions/video"
 title: "Video"
 ---
 

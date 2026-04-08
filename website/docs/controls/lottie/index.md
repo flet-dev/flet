@@ -1,6 +1,6 @@
 ---
 class_name: "flet_lottie.Lottie"
-examples: "controls/core/lottie"
+examples: "controls/extensions/lottie"
 title: "Lottie"
 ---
 

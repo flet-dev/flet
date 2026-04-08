@@ -1,6 +1,6 @@
 ---
 class_name: "flet_charts.candlestick_chart.CandlestickChart"
-examples: "controls/core/charts/candlestick_chart"
+examples: "controls/extensions/charts/candlestick_chart"
 example_images: "test-images-charts/examples/golden/macos/candlestick_chart"
 title: "CandlestickChart"
 ---
