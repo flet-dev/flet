@@ -96,6 +96,7 @@ class AlertDialogControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? dialogRoute;
         showDialog(
             barrierDismissible: !modal,
             // Render the barrier in the dialog widget so it updates live.
@@ -103,11 +104,19 @@ class AlertDialogControl extends StatelessWidget {
             useSafeArea: false,
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createAlertDialog(context)).then((value) {
-          debugPrint("Dismissing AlertDialog(${control.id})");
-          control.updateProperties({"_open": false}, python: false);
-          control.updateProperties({"open": false});
-          control.triggerEvent("dismiss");
+            builder: (context) {
+              dialogRoute ??= ModalRoute.of(context);
+              return _createAlertDialog(context);
+            }).then((value) {
+          // showDialog future completes on pop() — before the exit animation
+          // finishes.  Wait for the route's transition to fully complete so
+          // the dismiss event fires after the closing animation ends.
+          (dialogRoute?.completed ?? Future.value()).then((_) {
+            debugPrint("Dismissing AlertDialog(${control.id})");
+            control.updateProperties({"_open": false}, python: false);
+            control.updateProperties({"open": false});
+            control.triggerEvent("dismiss");
+          });
         });
       });
     } else if (!open && lastOpen) {
