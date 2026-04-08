@@ -9,7 +9,7 @@ When building mobile apps with Flet, you may need to interact directly with plat
 
 You can now integrate both Pyjnius and Pyobjus into your Flet apps! 🚀
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Pyjnius for Android
 
@@ -94,7 +94,7 @@ activity_host = autoclass(activity_host_class)
 activity = activity_host.mActivity
 ```
 
-Heck, you can basically call any Android API using Pyjnius - endless posibilities!
+Heck, you can basically call any Android API using Pyjnius - endless possibilities!
 
 Check complete [Flet Pyjnius example](https://github.com/flet-dev/python-package-tests/tree/main/pyjnius).
 

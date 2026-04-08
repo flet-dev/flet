@@ -8,7 +8,7 @@ The number of options for `flet build` command grew substantially over the time 
 
 Today, we are excited to announce another Flet pre-release which now allows configuring app build settings in `pyproject.toml`!
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Installing pre-release
 

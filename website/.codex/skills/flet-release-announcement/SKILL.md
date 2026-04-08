@@ -30,7 +30,7 @@ If inputs are missing, infer from open files and recent release posts.
 
 1. Inspect prior release posts for structure
 - Read 2-3 recent release posts in `/blog`.
-- Reuse conventions: frontmatter, short intro, highlights bullets, `<!-- truncate -->`, upgrade section, major feature sections, improvements, other changes, conclusion.
+- Reuse conventions: frontmatter, short intro, highlights bullets, `{/* truncate */}`, upgrade section, major feature sections, improvements, other changes, conclusion.
 
 2. Ground facts in changelog
 - Use the exact release section from `CHANGELOG.md` or the release branch/tag anchor.

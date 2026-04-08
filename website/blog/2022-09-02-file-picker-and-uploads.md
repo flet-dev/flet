@@ -21,7 +21,7 @@ File picker allows opening three dialogs:
 * **Save file** - choose directory and file name.
 * **Get directory** - select directory.
 
-<!-- truncate -->
+{/* truncate */}
 
 When running Flet app in a browser only "Pick files" option is available and it's used for uploads only as it, obviously, doesn't return a full path to a selected file.
 
