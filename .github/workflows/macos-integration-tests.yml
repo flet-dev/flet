@@ -56,7 +56,7 @@ jobs:
       - name: Run integration tests
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/examples/material/test_text_button.py
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/examples/material/test_button.py
 
       - name: Upload artifact
         if: failure()
