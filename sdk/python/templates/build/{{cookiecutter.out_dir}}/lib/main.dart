@@ -193,8 +193,8 @@ Future prepareApp() async {
     outLogFilename = path.join(appTempPath, "console.log");
     environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
 
-    environmentVariables.putIfAbsent("FLET_PLATFORM",
-        () => defaultTargetPlatform.name.toLowerCase());
+    environmentVariables.putIfAbsent(
+        "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // use TCP on Windows
