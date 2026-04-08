@@ -1,6 +1,6 @@
 ---
 class_name: "flet_color_pickers.ColorPicker"
-examples: "controls/extensions/color_pickers"
+examples: "extensions/color_pickers"
 example_images: "test-images/examples/extensions/color_pickers/golden/macos/color_pickers"
 title: "ColorPicker"
 ---

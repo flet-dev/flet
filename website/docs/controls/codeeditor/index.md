@@ -1,6 +1,6 @@
 ---
 class_name: "flet_code_editor.CodeEditor"
-examples: "controls/extensions/code_editor"
+examples: "extensions/code_editor"
 example_images: "test-images/examples/extensions/code_editor/golden/macos/code_editor"
 title: "CodeEditor"
 ---

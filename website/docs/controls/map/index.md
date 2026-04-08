@@ -1,5 +1,5 @@
 ---
-examples: "controls/extensions/map"
+examples: "extensions/map"
 title: "Overview"
 ---
 

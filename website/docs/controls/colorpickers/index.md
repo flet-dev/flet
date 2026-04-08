@@ -1,5 +1,5 @@
 ---
-examples: "controls/extensions/color_pickers"
+examples: "extensions/color_pickers"
 title: "Color pickers"
 ---
 

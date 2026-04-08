@@ -1,8 +1,8 @@
 ---
 class_name: "flet_charts.matplotlib_chart.MatplotlibChart"
-examples: "controls/extensions/charts/matplotlib_chart"
+examples: "extensions/charts/matplotlib_chart"
 example_images: "test-images-charts/examples/golden/macos/matplotlib_chart"
-example_media: "examples/controls/extensions/charts/matplotlib_chart/media"
+example_media: "examples/extensions/charts/matplotlib_chart/media"
 title: "MatplotlibChart"
 ---
 

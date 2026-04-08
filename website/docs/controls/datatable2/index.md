@@ -1,6 +1,6 @@
 ---
-examples: "controls/extensions/datatable2"
-example_media: "examples/controls/extensions/datatable2/media"
+examples: "extensions/datatable2"
+example_media: "examples/extensions/datatable2/media"
 title: "Overview"
 ---
 

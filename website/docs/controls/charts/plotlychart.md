@@ -1,6 +1,6 @@
 ---
 class_name: "flet_charts.plotly_chart.PlotlyChart"
-examples: "controls/extensions/charts/plotly_chart"
+examples: "extensions/charts/plotly_chart"
 example_images: "test-images-charts/examples/golden/macos/plotly_chart"
 title: "PlotlyChart"
 ---
