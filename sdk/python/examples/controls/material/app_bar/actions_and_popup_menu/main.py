@@ -17,6 +17,7 @@ def main(page: ft.Page):
             ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED),
             ft.IconButton(ft.Icons.FILTER_3),
             ft.PopupMenuButton(
+                key="popup",
                 items=[
                     ft.PopupMenuItem(content="Item 1"),
                     ft.PopupMenuItem(),  # divider
@@ -25,7 +26,7 @@ def main(page: ft.Page):
                         checked=False,
                         on_click=handle_checked_item_click,
                     ),
-                ]
+                ],
             ),
         ],
     )
