@@ -2263,20 +2263,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                     style=verbose1_style,
                 )
 
-    # Extensions incompatible with each target platform.
-    # .icns is macOS-only and .ico is Windows-only; other platforms
-    # exclude both so flutter_launcher_icons always gets a decodable format.
-    _PLATFORM_EXCLUDED_EXTENSIONS: dict[str, list[str]] = {
-        "windows": [".icns"],
-        "macos": [".ico"],
-        "linux": [".icns", ".ico"],
-        "web": [".icns", ".ico"],
-        "apk": [".icns", ".ico"],
-        "aab": [".icns", ".ico"],
-        "ipa": [".icns", ".ico"],
-        "ios-simulator": [".icns"],
-    }
-
     def find_platform_image(
         self,
         src_path: Path,
@@ -2305,24 +2291,26 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
-        if not images:
-            return None
-
-        excluded = self._PLATFORM_EXCLUDED_EXTENSIONS.get(
-            self.target_platform, []
+        # .icns is macOS-only and .ico is Windows-only; filter out
+        # incompatible formats so flutter_launcher_icons gets a decodable file.
+        images = list(
+            filter(
+                lambda p: not (
+                    (ext := Path(p).suffix.lower()) == ".icns"
+                    and self.target_platform != "macos"
+                    or ext == ".ico"
+                    and self.target_platform != "windows"
+                ),
+                glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
+            )
         )
-        if excluded:
-            images = [p for p in images if Path(p).suffix.lower() not in excluded]
 
         if not images:
             return None
 
         best = images[0]
         if self.verbose > 0:
-            console.log(
-                f'Found "{image_name}" image at {best}', style=verbose1_style
-            )
+            console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
         copy_ops.append((best, dest_path))
         hash.update(best)
         hash.update(Path(best).stat().st_mtime)
