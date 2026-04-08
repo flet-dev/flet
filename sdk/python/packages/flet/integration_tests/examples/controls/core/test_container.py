@@ -1,8 +1,8 @@
-import examples.controls.container.nested_themes_1.main as nested_themes_1
-import examples.controls.container.nested_themes_2.main as nested_themes_2
-import examples.controls.container.size_aware.main as size_aware
 import pytest
 
+import examples.controls.core.container.nested_themes_1.main as nested_themes_1
+import examples.controls.core.container.nested_themes_2.main as nested_themes_2
+import examples.controls.core.container.size_aware.main as size_aware
 import flet.testing as ftt
 
 

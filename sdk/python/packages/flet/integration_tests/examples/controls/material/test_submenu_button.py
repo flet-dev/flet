@@ -1,6 +1,6 @@
-import examples.controls.submenu_button.basic.main as basic
 import pytest
 
+import examples.controls.material.submenu_button.basic.main as basic
 import flet as ft
 import flet.testing as ftt
 

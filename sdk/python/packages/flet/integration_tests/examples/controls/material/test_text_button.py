@@ -1,9 +1,9 @@
-import examples.controls.text_button.basic.main as basic
-import examples.controls.text_button.custom_content.main as custom_content
-import examples.controls.text_button.handling_clicks.main as handling_clicks
-import examples.controls.text_button.icons.main as icons
 import pytest
 
+import examples.controls.material.text_button.basic.main as basic
+import examples.controls.material.text_button.custom_content.main as custom_content
+import examples.controls.material.text_button.handling_clicks.main as handling_clicks
+import examples.controls.material.text_button.icons.main as icons
 import flet as ft
 import flet.testing as ftt
 

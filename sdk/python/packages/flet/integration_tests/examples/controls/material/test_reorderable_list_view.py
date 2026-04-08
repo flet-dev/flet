@@ -1,10 +1,10 @@
 import pytest
-from examples.controls.reorderable_list_view.horizontal_and_vertical import (
-    main as horizontal_and_vertical,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.reorderable_list_view.horizontal_and_vertical import (
+    main as horizontal_and_vertical,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

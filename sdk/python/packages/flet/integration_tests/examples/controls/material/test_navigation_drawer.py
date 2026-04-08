@@ -1,11 +1,13 @@
 import pytest
-from examples.controls.navigation_drawer.position_end.main import main as position_end
-from examples.controls.navigation_drawer.position_start.main import (
-    main as position_start,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.navigation_drawer.position_end.main import (
+    main as position_end,
+)
+from examples.controls.material.navigation_drawer.position_start.main import (
+    main as position_start,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

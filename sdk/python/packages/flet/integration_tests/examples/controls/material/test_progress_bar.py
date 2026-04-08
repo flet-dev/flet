@@ -1,10 +1,10 @@
 import pytest
-from examples.controls.progress_bar.determinate_and_indeterminate.main import (
-    main as determinate_and_indeterminate,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.progress_bar.determinate_and_indeterminate.main import (
+    main as determinate_and_indeterminate,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

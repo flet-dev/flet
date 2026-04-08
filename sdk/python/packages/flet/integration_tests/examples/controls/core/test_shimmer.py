@@ -1,7 +1,7 @@
-import examples.controls.shimmer.basic_placeholder.main as basic_placeholder
-import examples.controls.shimmer.custom_gradient.main as custom_gradient
 import pytest
 
+import examples.controls.core.shimmer.basic_placeholder.main as basic_placeholder
+import examples.controls.core.shimmer.custom_gradient.main as custom_gradient
 import flet as ft
 import flet.testing as ftt
 

@@ -1,6 +1,6 @@
-import examples.controls.cupertino_timer_picker.basic.main as basic
 import pytest
 
+import examples.controls.cupertino.cupertino_timer_picker.basic.main as basic
 import flet as ft
 import flet.testing as ftt
 

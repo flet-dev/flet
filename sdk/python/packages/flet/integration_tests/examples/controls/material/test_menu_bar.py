@@ -1,8 +1,8 @@
 import pytest
-from examples.controls.menu_bar.nested_submenus import main as nested_submenus
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.menu_bar.nested_submenus import main as nested_submenus
 
 
 @pytest.mark.asyncio(loop_scope="function")

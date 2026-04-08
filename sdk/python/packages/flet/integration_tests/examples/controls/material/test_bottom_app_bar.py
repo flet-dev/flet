@@ -1,7 +1,7 @@
-import examples.controls.bottom_app_bar.border_radius.main as border_radius
-import examples.controls.bottom_app_bar.notched_fab.main as notched_fab
 import pytest
 
+import examples.controls.material.bottom_app_bar.border_radius.main as border_radius
+import examples.controls.material.bottom_app_bar.notched_fab.main as notched_fab
 import flet as ft
 import flet.testing as ftt
 

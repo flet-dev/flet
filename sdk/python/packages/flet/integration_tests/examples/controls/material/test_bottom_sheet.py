@@ -1,7 +1,7 @@
-import examples.controls.bottom_sheet.basic.main as basic
-import examples.controls.bottom_sheet.fullscreen.main as fullscreen
 import pytest
 
+import examples.controls.material.bottom_sheet.basic.main as basic
+import examples.controls.material.bottom_sheet.fullscreen.main as fullscreen
 import flet as ft
 import flet.testing as ftt
 

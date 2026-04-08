@@ -1,8 +1,8 @@
 import pytest
-from examples.controls.popup_menu_button.basic.main import main as basic
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.popup_menu_button.basic.main import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

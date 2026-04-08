@@ -1,7 +1,7 @@
 import pytest
-from examples.controls.rotated_box.basic.main import main as basic
 
 import flet.testing as ftt
+from examples.controls.core.rotated_box.basic.main import main as basic
 
 
 @pytest.mark.parametrize(

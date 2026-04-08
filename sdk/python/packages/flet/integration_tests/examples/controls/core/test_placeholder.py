@@ -1,8 +1,8 @@
 import pytest
-from examples.controls.placeholder.basic.main import main as basic
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.core.placeholder.basic.main import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

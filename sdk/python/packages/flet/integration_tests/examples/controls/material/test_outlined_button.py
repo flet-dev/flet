@@ -1,13 +1,15 @@
 import pytest
-from examples.controls.outlined_button.basic.main import main as basic
-from examples.controls.outlined_button.custom_content.main import main as custom_content
-from examples.controls.outlined_button.handling_clicks.main import (
-    main as handling_clicks,
-)
-from examples.controls.outlined_button.icons.main import main as icons
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.outlined_button.basic.main import main as basic
+from examples.controls.material.outlined_button.custom_content.main import (
+    main as custom_content,
+)
+from examples.controls.material.outlined_button.handling_clicks.main import (
+    main as handling_clicks,
+)
+from examples.controls.material.outlined_button.icons.main import main as icons
 
 
 @pytest.mark.asyncio(loop_scope="function")

@@ -1,6 +1,6 @@
-import examples.controls.selection_area.basic.main as basic
 import pytest
 
+import examples.controls.material.selection_area.basic.main as basic
 import flet as ft
 import flet.testing as ftt
 

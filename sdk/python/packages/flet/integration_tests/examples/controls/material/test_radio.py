@@ -1,11 +1,11 @@
 import pytest
-from examples.controls.radio.basic.main import main as basic
-from examples.controls.radio.handling_selection_changes.main import (
-    main as handling_selection_changes,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.radio.basic.main import main as basic
+from examples.controls.material.radio.handling_selection_changes.main import (
+    main as handling_selection_changes,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

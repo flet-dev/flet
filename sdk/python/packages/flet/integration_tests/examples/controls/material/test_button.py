@@ -1,12 +1,12 @@
-import examples.controls.button.animate_on_hover.main as animate_on_hover
-import examples.controls.button.basic.main as basic
-import examples.controls.button.button_shapes.main as button_shapes
-import examples.controls.button.custom_content.main as custom_content
-import examples.controls.button.handling_clicks.main as handling_clicks
-import examples.controls.button.icons.main as icons
-import examples.controls.button.styling.main as styling
 import pytest
 
+import examples.controls.material.button.animate_on_hover.main as animate_on_hover
+import examples.controls.material.button.basic.main as basic
+import examples.controls.material.button.button_shapes.main as button_shapes
+import examples.controls.material.button.custom_content.main as custom_content
+import examples.controls.material.button.handling_clicks.main as handling_clicks
+import examples.controls.material.button.icons.main as icons
+import examples.controls.material.button.styling.main as styling
 import flet as ft
 import flet.testing as ftt
 

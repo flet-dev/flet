@@ -1,7 +1,7 @@
-import examples.controls.stack.absolute_positioning.main as absolute_positioning
-import examples.controls.stack.online_avatar.main as online_avatar
 import pytest
 
+import examples.controls.core.stack.absolute_positioning.main as absolute_positioning
+import examples.controls.core.stack.online_avatar.main as online_avatar
 import flet as ft
 import flet.testing as ftt
 

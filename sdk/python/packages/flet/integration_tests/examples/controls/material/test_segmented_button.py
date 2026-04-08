@@ -1,6 +1,6 @@
-import examples.controls.segmented_button.single_multiple_selection.main as sms
 import pytest
 
+import examples.controls.material.segmented_button.single_multiple_selection.main as sms
 import flet as ft
 import flet.testing as ftt
 

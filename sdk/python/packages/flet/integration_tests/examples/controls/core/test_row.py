@@ -1,9 +1,9 @@
-import examples.controls.row.alignment.main as alignment
-import examples.controls.row.spacing.main as spacing
-import examples.controls.row.vertical_alignment.main as vertical_alignment
-import examples.controls.row.wrap.main as wrap
 import pytest
 
+import examples.controls.core.row.alignment.main as alignment
+import examples.controls.core.row.spacing.main as spacing
+import examples.controls.core.row.vertical_alignment.main as vertical_alignment
+import examples.controls.core.row.wrap.main as wrap
 import flet as ft
 import flet.testing as ftt
 

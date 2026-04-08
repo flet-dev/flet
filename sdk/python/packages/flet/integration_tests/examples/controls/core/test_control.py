@@ -1,18 +1,18 @@
 import pytest
-from examples.controls.control.expand_loose_chat_messages import (
-    main as expand_loose_chat_messages_main,
-)
-from examples.controls.control.expand_row_equal_split import (
-    main as expand_row_equal_split_main,
-)
-from examples.controls.control.expand_row_proportional_1_3_1 import (
-    main as expand_row_proportional_1_3_1_main,
-)
-from examples.controls.control.expand_textfield_in_row import (
-    main as expand_textfield_in_row_main,
-)
 
 import flet.testing as ftt
+from examples.controls.core.control.expand_loose_chat_messages import (
+    main as expand_loose_chat_messages_main,
+)
+from examples.controls.core.control.expand_row_equal_split import (
+    main as expand_row_equal_split_main,
+)
+from examples.controls.core.control.expand_row_proportional_1_3_1 import (
+    main as expand_row_proportional_1_3_1_main,
+)
+from examples.controls.core.control.expand_textfield_in_row import (
+    main as expand_textfield_in_row_main,
+)
 
 
 @pytest.mark.parametrize(

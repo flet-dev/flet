@@ -1,8 +1,10 @@
 import pytest
-from examples.controls.layout_control.flip import main as flip
-from examples.controls.layout_control.matrix4_transform import main as matrix4_transform
 
 import flet.testing as ftt
+from examples.controls.core.layout_control.flip import main as flip
+from examples.controls.core.layout_control.matrix4_transform import (
+    main as matrix4_transform,
+)
 
 
 @pytest.mark.parametrize(

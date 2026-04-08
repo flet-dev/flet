@@ -1,8 +1,8 @@
 import pytest
-from examples.controls.expansion_tile.basic import main as basic
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.expansion_tile.basic import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

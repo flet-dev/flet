@@ -1,12 +1,16 @@
-import examples.controls.shader_mask.fade_out_image_bottom.main as fade_out_image_bottom
-import examples.controls.shader_mask.pink_radial_glow.main as pink_radial_glow
 import pytest
-from examples.controls.shader_mask.linear_and_radial_gradients import (
-    main as linear_gradients,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.core.shader_mask.fade_out_image_bottom import (
+    main as fade_out_image_bottom,
+)
+from examples.controls.core.shader_mask.linear_and_radial_gradients import (
+    main as linear_gradients,
+)
+from examples.controls.core.shader_mask.pink_radial_glow import (
+    main as pink_radial_glow,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

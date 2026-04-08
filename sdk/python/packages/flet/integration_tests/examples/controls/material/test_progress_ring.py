@@ -1,13 +1,13 @@
 import pytest
-from examples.controls.progress_ring.determinate_and_indeterminate.main import (
-    main as determinate_and_indeterminate,
-)
-from examples.controls.progress_ring.gauge_with_progress.main import (
-    main as gauge_with_progress,
-)
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.progress_ring.determinate_and_indeterminate import (
+    main as determinate_and_indeterminate,
+)
+from examples.controls.material.progress_ring.gauge_with_progress import (
+    main as gauge_with_progress,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

@@ -1,8 +1,8 @@
 import pytest
-from examples.controls.hero.basic import main as basic
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.core.hero.basic import main as basic
 
 
 @pytest.mark.parametrize(

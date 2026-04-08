@@ -1,9 +1,9 @@
 from datetime import time
 
-import examples.controls.time_picker.basic.main as basic
-import examples.controls.time_picker.hour_formats.main as hour_formats
 import pytest
 
+import examples.controls.material.time_picker.basic.main as basic
+import examples.controls.material.time_picker.hour_formats.main as hour_formats
 import flet as ft
 import flet.testing as ftt
 

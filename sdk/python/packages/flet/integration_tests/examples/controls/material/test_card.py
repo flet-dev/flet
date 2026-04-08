@@ -1,6 +1,6 @@
-import examples.controls.card.music_info.main as music_info
 import pytest
 
+import examples.controls.material.card.music_info.main as music_info
 import flet as ft
 import flet.testing as ftt
 

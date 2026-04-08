@@ -1,8 +1,8 @@
-import examples.controls.checkbox.basic.main as basic
-import examples.controls.checkbox.handling_events.main as handling_events
-import examples.controls.checkbox.styled.main as styled
 import pytest
 
+import examples.controls.material.checkbox.basic.main as basic
+import examples.controls.material.checkbox.handling_events.main as handling_events
+import examples.controls.material.checkbox.styled.main as styled
 import flet as ft
 import flet.testing as ftt
 
