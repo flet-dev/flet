@@ -148,20 +148,25 @@ After - a structured project directory:
 
 ```
 sdk/python/examples/controls/
-├── button/
-│   ├── basic/
-│   │   ├── main.py
-│   │   └── pyproject.toml
-│   ├── icons/
-│   │   ├── main.py
-│   │   └── pyproject.toml
-│   └── styling/
-│       ├── main.py
-│       └── pyproject.toml
-├── canvas/
-│   ├── bezier_curves/
-│   ├── brush/
-│   └── ...
+├── material/
+│   └── button/
+│       ├── basic/
+│       │   ├── main.py
+│       │   └── pyproject.toml
+│       ├── icons/
+│       │   ├── main.py
+│       │   └── pyproject.toml
+│       └── styling/
+│           ├── main.py
+│           └── pyproject.toml
+├── core/
+│   └── canvas/
+│       ├── bezier_curves/
+│       ├── brush/
+│       └── ...
+└── cupertino/
+    └── cupertino_button/
+        └── basic/
 ```
 
 Each `pyproject.toml` includes Gallery and MCP metadata:

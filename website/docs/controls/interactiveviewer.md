@@ -1,6 +1,6 @@
 ---
 class_name: "flet.InteractiveViewer"
-examples: "controls/interactive_viewer"
+examples: "controls/core/interactive_viewer"
 title: "InteractiveViewer"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet_camera.Camera"
-examples: "controls/camera"
+examples: "controls/core/camera"
 title: "Camera"
 ---
 

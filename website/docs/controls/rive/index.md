@@ -1,6 +1,6 @@
 ---
 class_name: "flet_rive.Rive"
-examples: "controls/rive"
+examples: "controls/core/rive"
 title: "Rive"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BottomSheet"
-examples: "controls/bottom_sheet"
+examples: "controls/material/bottom_sheet"
 example_images: "test-images/examples/material/golden/macos/bottom_sheet"
 title: "BottomSheet"
 ---

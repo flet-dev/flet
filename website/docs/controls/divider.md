@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Divider"
-examples: "controls/divider"
+examples: "controls/material/divider"
 example_images: "test-images/examples/material/golden/macos/divider"
-example_media: "examples/controls/divider/media"
+example_media: "examples/controls/material/divider/media"
 title: "Divider"
 ---
 

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoTimerPicker"
-examples: "controls/cupertino_timer_picker"
-example_media: "examples/controls/cupertino_timer_picker/media"
+examples: "controls/cupertino/cupertino_timer_picker"
+example_media: "examples/controls/cupertino/cupertino_timer_picker/media"
 example_images: "test-images/examples/cupertino/golden/macos/cupertino_timer_picker"
 title: "CupertinoTimerPicker"
 ---

@@ -42,4 +42,4 @@ To install the `flet-datatable2` package and add it to your project dependencies
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/controls/datatable2).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/material/datatable2).

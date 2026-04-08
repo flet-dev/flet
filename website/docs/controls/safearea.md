@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SafeArea"
-examples: "controls/safe_area"
+examples: "controls/core/safe_area"
 title: "SafeArea"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.LaunchMode"
-examples: "controls/types/launch_mode"
+examples: "controls/core/types/launch_mode"
 title: "LaunchMode"
 ---
 

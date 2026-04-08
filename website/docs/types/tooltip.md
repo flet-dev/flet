@@ -12,4 +12,4 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 <CodeExample path="controls/types/tooltip/with_decoration/main.py" language="python" />
 
-<Image src="examples/controls/types/tooltip/media/with_decoration.gif" alt="with-decoration" width="55%" />
+<Image src="examples/controls/core/types/tooltip/media/with_decoration.gif" alt="with-decoration" width="55%" />

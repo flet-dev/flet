@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ReorderableListView"
-examples: "controls/reorderable_list_view"
+examples: "controls/material/reorderable_list_view"
 example_images: "test-images/examples/material/golden/macos/reorderable_list_view"
 title: "ReorderableListView"
 ---

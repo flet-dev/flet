@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Dismissible"
-examples: "controls/dismissible"
-example_images: "examples/controls/dismissible/media"
+examples: "controls/core/dismissible"
+example_images: "examples/controls/core/dismissible/media"
 title: "Dismissible"
 ---
 

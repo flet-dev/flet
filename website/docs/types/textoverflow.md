@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TextOverflow"
-examples: "controls/types/text_overflow"
+examples: "controls/core/types/text_overflow"
 title: "TextOverflow"
 ---
 

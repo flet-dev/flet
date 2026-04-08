@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Tabs"
-examples: "controls/tabs"
-example_images: "examples/controls/tabs/media"
+examples: "controls/material/tabs"
+example_images: "examples/controls/material/tabs/media"
 title: "Tabs"
 ---
 

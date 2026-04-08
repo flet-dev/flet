@@ -1,8 +1,8 @@
 ---
 class_name: "flet.ExpansionPanelList"
-examples: "controls/expansion_panel_list"
+examples: "controls/material/expansion_panel_list"
 example_images: "test-images/examples/material/golden/macos/expansion_panel_list"
-example_media: "examples/controls/expansion_panel_list/media"
+example_media: "examples/controls/material/expansion_panel_list/media"
 title: "ExpansionPanelList"
 ---
 

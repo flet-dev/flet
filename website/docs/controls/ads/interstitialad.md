@@ -1,7 +1,7 @@
 ---
 class_name: "flet_ads.interstitial_ad.InterstitialAd"
-examples: "controls/ads"
-example_images: "examples/controls/ads/media"
+examples: "controls/core/ads"
+example_images: "examples/controls/core/ads/media"
 title: "InterstitialAd"
 ---
 

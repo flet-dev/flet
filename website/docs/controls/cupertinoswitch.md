@@ -1,8 +1,8 @@
 ---
 class_name: "flet.CupertinoSwitch"
-examples: "controls/cupertino_switch"
+examples: "controls/cupertino/cupertino_switch"
 example_images: "test-images/examples/cupertino/golden/macos/cupertino_switch"
-example_media: "examples/controls/cupertino_switch/media"
+example_media: "examples/controls/cupertino/cupertino_switch/media"
 title: "CupertinoSwitch"
 ---
 

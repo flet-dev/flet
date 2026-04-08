@@ -1,8 +1,8 @@
 ---
 class_name: "flet.CupertinoCheckbox"
-examples: "controls/cupertino_checkbox"
+examples: "controls/cupertino/cupertino_checkbox"
 example_images: "test-images/examples/cupertino/golden/macos/cupertino_checkbox"
-example_media: "examples/controls/cupertino_checkbox/media"
+example_media: "examples/controls/cupertino/cupertino_checkbox/media"
 title: "CupertinoCheckbox"
 ---
 

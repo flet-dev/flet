@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CardVariant"
-examples: "controls/types/card_variant"
+examples: "controls/core/types/card_variant"
 title: "CardVariant"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ContextMenu"
-examples: "controls/context_menu"
+examples: "controls/material/context_menu"
 example_images: "test-images/examples/material/golden/macos/context_menu"
 title: "ContextMenu"
 ---

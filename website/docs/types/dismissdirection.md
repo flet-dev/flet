@@ -1,6 +1,6 @@
 ---
 class_name: "flet.DismissDirection"
-examples: "controls/types/dismiss_direction"
+examples: "controls/core/types/dismiss_direction"
 title: "DismissDirection"
 ---
 

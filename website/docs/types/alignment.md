@@ -1,6 +1,6 @@
 ---
-examples: "controls/types/alignment"
-example_media: "examples/controls/types/alignment/media"
+examples: "controls/core/types/alignment"
+example_media: "examples/controls/core/types/alignment/media"
 title: "Alignment"
 ---
 

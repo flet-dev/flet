@@ -1,6 +1,6 @@
 ---
 title: "Expanding Controls"
-examples: "controls/control"
+examples: "controls/core/control"
 example_images: "test-images/examples/core/golden/macos/control"
 ---
 

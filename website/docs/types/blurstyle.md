@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BlurStyle"
-examples: "controls/types/blur_style"
+examples: "controls/core/types/blur_style"
 title: "BlurStyle"
 ---
 

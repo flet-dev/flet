@@ -1,7 +1,7 @@
 ---
 class_name: "flet.GestureDetector"
-examples: "controls/gesture_detector"
-example_images: "examples/controls/gesture_detector/media"
+examples: "controls/core/gesture_detector"
+example_images: "examples/controls/core/gesture_detector/media"
 title: "GestureDetector"
 ---
 

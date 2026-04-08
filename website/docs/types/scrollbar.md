@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Scrollbar"
-examples: "controls/types/scroll_bar"
+examples: "controls/core/types/scroll_bar"
 title: "Scrollbar"
 ---
 

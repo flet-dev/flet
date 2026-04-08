@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TileAffinity"
-examples: "controls/types/tile_affinity"
+examples: "controls/core/types/tile_affinity"
 title: "TileAffinity"
 ---
 

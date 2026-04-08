@@ -1,7 +1,7 @@
 ---
 class_name: "flet.ProgressBar"
-examples: "controls/progress_bar"
-example_media: "examples/controls/progress_bar/media"
+examples: "controls/material/progress_bar"
+example_media: "examples/controls/material/progress_bar/media"
 example_images: "test-images/examples/material/golden/macos/progress_bar"
 title: "ProgressBar"
 ---

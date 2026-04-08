@@ -39,4 +39,4 @@ To install the `flet-ads` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/ads).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/core/ads).

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.PopupMenuButton"
-examples: "controls/popup_menu_button"
-example_media: "examples/controls/popup_menu_button/media"
+examples: "controls/material/popup_menu_button"
+example_media: "examples/controls/material/popup_menu_button/media"
 example_images: "test-images/examples/material/golden/macos/popup_menu_button"
 popup_menu_item_class_name: "flet.PopupMenuItem"
 title: "PopupMenuButton"
