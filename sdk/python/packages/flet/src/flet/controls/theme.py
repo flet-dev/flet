@@ -3054,7 +3054,7 @@ class NavigationDrawerTheme:
     icon_theme: Optional[ControlStateValue["IconTheme"]] = None
     """
     The theme to merge with the default icon theme for \
-    :class:`~flet.NavigationDestination` icons.
+    :class:`~flet.NavigationDrawerDestination` icons.
 
     Can be used to specify a different icon theme when the icon is selected.
     """

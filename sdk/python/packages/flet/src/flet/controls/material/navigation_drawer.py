@@ -28,7 +28,7 @@ class NavigationDrawerDestination(Control):
 
     label: StrOrControl
     """
-    The label that appears below the :attr:`icon` of this destination.
+    The label that appears alongside the :attr:`icon` of this destination.
     """
 
     icon: IconDataOrControl
@@ -84,9 +84,18 @@ class NavigationDrawer(AdaptiveControl):
     ft.NavigationDrawer(
         tile_padding=ft.Padding(top=10),
         controls=[
-            ft.NavigationDrawerDestination(label="Item 1"),
-            ft.NavigationDrawerDestination(label="Item 2"),
-            ft.NavigationDrawerDestination(label="Item 3"),
+            ft.NavigationDrawerDestination(
+                icon=ft.Icons.HOME_OUTLINED,
+                label="Item 1",
+            ),
+            ft.NavigationDrawerDestination(
+                icon=ft.Icons.MAIL_OUTLINED,
+                label="Item 2",
+            ),
+            ft.NavigationDrawerDestination(
+                icon=ft.Icons.SETTINGS_OUTLINED,
+                label="Item 3",
+            ),
         ],
     )
     ```
@@ -97,17 +106,16 @@ class NavigationDrawer(AdaptiveControl):
     Defines the appearance of the items within the navigation drawer.
 
     The list contains :class:`~flet.NavigationDrawerDestination` items and/or other
-    controls such as headlines and dividers.
+    controls such as headlines, padding containers, and dividers.
     """
 
     selected_index: int = 0
     """
-    The index for the current selected `NavigationDrawerDestination` or null if no \
-    destination is selected.
+    The index for the currently selected :class:`~flet.NavigationDrawerDestination`.
 
-    A valid selected_index is an integer between 0 and number of destinations - `1`. For
-    an invalid `selected_index`, for example, `-1`, all destinations will appear
-    unselected.
+    A valid ``selected_index`` is an integer between ``0`` and the number of
+    destinations minus ``1``. For an invalid value, for example ``-1``, all
+    destinations will appear unselected.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -139,7 +147,7 @@ class NavigationDrawer(AdaptiveControl):
         default_factory=lambda: Padding.symmetric(horizontal=12)
     )
     """
-    Defines the padding for :attr:`destination` controls.
+    Defines the padding around destination tiles inside the drawer.
     """
 
     on_change: Optional[ControlEventHandler["NavigationDrawer"]] = None

@@ -36,7 +36,7 @@ def main(page: ft.Page):
     page.drawer = ft.NavigationDrawer(
         controls=[
             ft.Container(
-                padding=ft.padding.only(left=28, top=20, bottom=12),
+                padding=ft.Padding.only(left=28, top=20, bottom=12),
                 content=ft.Text(
                     "Workspace", theme_style=ft.TextThemeStyle.TITLE_MEDIUM
                 ),
