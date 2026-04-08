@@ -217,11 +217,10 @@ class ViewPopEvent(Event["Page"]):
 @dataclass
 class ViewsPopUntilEvent(Event["Page"]):
     """
-    Event payload delivered when [`Page.pop_views_until`]\
-    [flet.Page.pop_views_until] completes navigation.
+    Event payload delivered when :meth:`~flet.Page.pop_views_until` completes \
+    navigation.
 
-    Carries the result value back to the destination view, analogous to
-    Flutter's `Navigator.popUntilWithResult`.
+    Carries the result value back to the destination view.
     """
 
     route: str
@@ -232,12 +231,12 @@ class ViewsPopUntilEvent(Event["Page"]):
     result: Any = None
     """
     The result value passed from the caller of
-    [`pop_views_until`][flet.Page.pop_views_until].
+    :meth:`~flet.Page.pop_views_until`.
     """
 
     view: Optional[View] = None
     """
-    Matched [`View`][flet.View] instance for `route`, if found on the page.
+    Matched :class:`~flet.View` instance for `route`, if found on the page.
     """
 
 
@@ -535,8 +534,7 @@ class Page(BasePage):
 
     on_views_pop_until: Optional[EventHandler[ViewsPopUntilEvent]] = None
     """
-    Called when [`pop_views_until`][flet.Page.pop_views_until] reaches
-    the destination view.
+    Called when :meth:`pop_views_until` reaches the destination view.
 
     The event carries the result value passed by the caller.
     """
@@ -936,9 +934,7 @@ class Page(BasePage):
         """
         Pops views from the navigation stack until a view with the given
         `route` is found, then delivers `result` via the
-        [`on_views_pop_until`][flet.Page.on_views_pop_until] event.
-
-        This is the Flet equivalent of Flutter's `Navigator.popUntilWithResult`.
+        :attr:`on_views_pop_until` event.
 
         Example:
             ```python
@@ -958,15 +954,13 @@ class Page(BasePage):
 
         Args:
             route: Target route to navigate back to. Must match the `route`
-                of an existing [`View`][flet.View] in
-                [`page.views`][flet.Page.views].
+                of an existing :class:`~flet.View` in :attr:`~flet.Page.views`.
             result: Optional value delivered to
-                [`on_views_pop_until`][flet.Page.on_views_pop_until] on the
-                destination view.
+                :attr:`on_views_pop_until` on the destination view.
 
         Raises:
             ValueError: If no view with the given `route` exists in
-                [`page.views`][flet.Page.views].
+                :attr:`~flet.Page.views`.
         """
         views = unwrap_component(self.views)
 
