@@ -27,6 +27,7 @@ def main(page: ft.Page):
         )
 
     theme_mode_toggle = ft.IconButton(
+        key="theme_mode_toggle",
         icon=(
             ft.Icons.WB_SUNNY_OUTLINED
             if page.theme_mode == ft.ThemeMode.LIGHT
