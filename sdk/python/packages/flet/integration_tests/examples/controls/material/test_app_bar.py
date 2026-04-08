@@ -32,7 +32,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(350, 300)
+    flet_app_function.resize_page(450, 300)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
@@ -43,17 +43,52 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     )
 
     button = await flet_app_function.tester.find_by_key("popup")
+    await flet_app_function.tester.mouse_hover(button)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "hover_popup",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
     await flet_app_function.tester.tap(button)
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "after_click",
+        "popup_open",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    checked_item = await flet_app_function.tester.find_by_text("Checked item")
+    await flet_app_function.tester.mouse_hover(checked_item)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "hover_checked_item",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+    await flet_app_function.tester.tap(checked_item)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(button)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "checked_item_reopened",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
 
     flet_app_function.create_gif(
-        ["before_click", "after_click"],
+        [
+            "before_click",
+            "hover_popup",
+            "popup_open",
+            "hover_checked_item",
+            "checked_item_reopened",
+        ],
         "app_bar_flow",
-        duration=2000,
+        duration=1000,
     )
