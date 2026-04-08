@@ -209,7 +209,7 @@ Future prepareApp() async {
   }
 
   if (!kIsWeb && assetsDir.isNotEmpty) {
-  environmentVariables.putIfAbsent("FLET_ASSETS_DIR", () => assetsDir);
+    environmentVariables.putIfAbsent("FLET_ASSETS_DIR", () => assetsDir);
   }
 
   return "";
