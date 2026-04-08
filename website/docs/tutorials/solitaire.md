@@ -73,13 +73,13 @@ The card will then be added to the list of the [`Stack.controls`](../controls/st
 import flet as ft
 
 def main(page: ft.Page):
-   card = ft.GestureDetector(
-       left=0,
-       top=0,
-       content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
-   )
+    card = ft.GestureDetector(
+        left=0,
+        top=0,
+        content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
+    )
 
-   page.add(ft.Stack(controls=[card], width=1000, height=500))
+    page.add(ft.Stack(controls=[card], width=1000, height=500))
 
 ft.run(main)
 ```
@@ -103,21 +103,21 @@ import flet as ft
 # Absolute positioning of controls within stack
 
 def main(page: ft.Page):
-   def drag(e: ft.DragUpdateEvent):
-       e.control.top = max(0, e.control.top + e.local_delta.y)
-       e.control.left = max(0, e.control.left + e.local_delta.x)
-       e.control.update()
+    def drag(e: ft.DragUpdateEvent):
+        e.control.top = max(0, e.control.top + e.local_delta.y)
+        e.control.left = max(0, e.control.left + e.local_delta.x)
+        e.control.update()
 
-   card = ft.GestureDetector(
-       mouse_cursor=ft.MouseCursor.MOVE,
-       drag_interval=5,
-       on_pan_update=drag,
-       left=0,
-       top=0,
-       content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
-   )
+    card = ft.GestureDetector(
+        mouse_cursor=ft.MouseCursor.MOVE,
+        drag_interval=5,
+        on_pan_update=drag,
+        left=0,
+        top=0,
+        content=ft.Container(bgcolor=ft.Colors.GREEN, width=70, height=100),
+    )
 
-   page.add(ft.Stack(controls=[card], width=1000, height=500))
+    page.add(ft.Stack(controls=[card], width=1000, height=500))
 
 ft.run(main)
 ```
@@ -140,12 +140,12 @@ Let’s create a [`Container`](../controls/container.md) control that will repre
 
 ```python
 slot = ft.Container(
-        width=70,
-        height=100,
-        left=200,
-        top=0,
-        border=ft.border.all(1)
-    )
+    width=70,
+    height=100,
+    left=200,
+    top=0,
+    border=ft.border.all(1)
+)
 page.add(ft.Stack(controls = [slot, card], width=1000, height=500))
 ```
 
@@ -190,9 +190,9 @@ the card when [`on_pan_start`](../controls/gesturedetector.md#flet.GestureDetect
 
 ```python
 class Solitaire:
-   def __init__(self):
-       self.start_top = 0
-       self.start_left = 0
+    def __init__(self):
+        self.start_top = 0
+        self.start_left = 0
 
 solitaire = Solitaire()
 
@@ -216,7 +216,6 @@ def drop(e: ft.DragEndEvent):
         and abs(e.control.left - slot.left) < 20
     ):
         place(e.control, slot)
-
     else:
         bounce_back(solitaire, e.control)
 
@@ -231,19 +230,19 @@ Eventually, we’ll need 52 cards to play the game. For our proof of concept, le
 
 ```python
 
-   card2 = ft.GestureDetector(
-       mouse_cursor=ft.MouseCursor.MOVE,
-       drag_interval=5,
-       on_pan_start=start_drag,
-       on_pan_update=drag,
-       on_pan_end=drop,
-       left=100,
-       top=0,
-       content=ft.Container(bgcolor=ft.Colors.YELLOW, width=70, height=100),
-   )
+    card2 = ft.GestureDetector(
+        mouse_cursor=ft.MouseCursor.MOVE,
+        drag_interval=5,
+        on_pan_start=start_drag,
+        on_pan_update=drag,
+        on_pan_end=drop,
+        left=100,
+        top=0,
+        content=ft.Container(bgcolor=ft.Colors.YELLOW, width=70, height=100),
+    )
 
-   controls = [slot, card1, card2]
-   page.add(ft.Stack(controls=controls, width=1000, height=500))
+    controls = [slot, card1, card2]
+    page.add(ft.Stack(controls=controls, width=1000, height=500))
 ```
 
 Now, if you run the app with the two cards, you will notice that when you move the cards around, the
@@ -361,14 +360,14 @@ SLOT_HEIGHT = 100
 import flet as ft
 
 class Slot(ft.Container):
-   def __init__(self, top, left):
-       super().__init__()
-       self.pile=[]
-       self.width=SLOT_WIDTH
-       self.height=SLOT_HEIGHT
-       self.left=left
-       self.top=top
-       self.border=ft.border.all(1)
+    def __init__(self, top, left):
+        super().__init__()
+        self.pile=[]
+        self.width=SLOT_WIDTH
+        self.height=SLOT_HEIGHT
+        self.left=left
+        self.top=top
+        self.border=ft.border.all(1)
 ```
 
 Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides.
@@ -381,58 +380,58 @@ DROP_PROXIMITY = 20
 import flet as ft
 
 class Card(ft.GestureDetector):
-   def __init__(self, solitaire, color):
-       super().__init__()
-       self.slot = None
-       self.mouse_cursor=ft.MouseCursor.MOVE
-       self.drag_interval=5
-       self.on_pan_start=self.start_drag
-       self.on_pan_update=self.drag
-       self.on_pan_end=self.drop
-       self.left=None
-       self.top=None
-       self.solitaire = solitaire
-       self.color = color
-       self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGHT)
+    def __init__(self, solitaire, color):
+        super().__init__()
+        self.slot = None
+        self.mouse_cursor=ft.MouseCursor.MOVE
+        self.drag_interval=5
+        self.on_pan_start=self.start_drag
+        self.on_pan_update=self.drag
+        self.on_pan_end=self.drop
+        self.left=None
+        self.top=None
+        self.solitaire = solitaire
+        self.color = color
+        self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGHT)
 
-   def move_on_top(self):
-       """Moves draggable card to the top of the stack"""
-       self.solitaire.controls.remove(self)
-       self.solitaire.controls.append(self)
-       self.solitaire.update()
+    def move_on_top(self):
+        """Moves draggable card to the top of the stack"""
+        self.solitaire.controls.remove(self)
+        self.solitaire.controls.append(self)
+        self.solitaire.update()
 
-   def bounce_back(self):
-       """Returns card to its original position"""
-       self.top = self.slot.top
-       self.left = self.slot.left
-       self.update()
+    def bounce_back(self):
+        """Returns card to its original position"""
+        self.top = self.slot.top
+        self.left = self.slot.left
+        self.update()
 
-   def place(self, slot):
-       """Place card to the slot"""
-       self.top = slot.top
-       self.left = slot.left
+    def place(self, slot):
+        """Place card to the slot"""
+        self.top = slot.top
+        self.left = slot.left
 
-   def start_drag(self, e: ft.DragStartEvent):
-       self.move_on_top()
-       self.update()
+    def start_drag(self, e: ft.DragStartEvent):
+        self.move_on_top()
+        self.update()
 
-   def drag(self, e: ft.DragUpdateEvent):
-       self.top = max(0, self.top + e.local_delta.y)
-       self.left = max(0, self.left + e.local_delta.x)
-       self.update()
+    def drag(self, e: ft.DragUpdateEvent):
+        self.top = max(0, self.top + e.local_delta.y)
+        self.left = max(0, self.left + e.local_delta.x)
+        self.update()
 
-   def drop(self, e: ft.DragEndEvent):
-       for slot in self.solitaire.slots:
-           if (
-               abs(self.top - slot.top) < DROP_PROXIMITY
-           and abs(self.left - slot.left) < DROP_PROXIMITY
-         ):
-               self.place(slot)
-               self.update()
-               return
+    def drop(self, e: ft.DragEndEvent):
+        for slot in self.solitaire.slots:
+            if (
+                abs(self.top - slot.top) < DROP_PROXIMITY
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
+                self.place(slot)
+                self.update()
+                return
 
-       self.bounce_back()
-       self.update()
+        self.bounce_back()
+        self.update()
 ```
 
 :::note[Note]
@@ -451,36 +450,36 @@ from slot import Slot
 from card import Card
 
 class Solitaire(ft.Stack):
-   def __init__(self):
-       super().__init__()
-       self.controls = []
-       self.slots = []
-       self.cards = []
-       self.width = SOLITAIRE_WIDTH
-       self.height = SOLITAIRE_HEIGHT
+    def __init__(self):
+        super().__init__()
+        self.controls = []
+        self.slots = []
+        self.cards = []
+        self.width = SOLITAIRE_WIDTH
+        self.height = SOLITAIRE_HEIGHT
 
-   def did_mount(self):
-       self.create_card_deck()
-       self.create_slots()
-       self.deal_cards()
+    def did_mount(self):
+        self.create_card_deck()
+        self.create_slots()
+        self.deal_cards()
 
-   def create_card_deck(self):
-       card1 = Card(self, color="GREEN")
-       card2 = Card(self, color="YELLOW")
-       self.cards = [card1, card2]
+    def create_card_deck(self):
+        card1 = Card(self, color="GREEN")
+        card2 = Card(self, color="YELLOW")
+        self.cards = [card1, card2]
 
-   def create_slots(self):
-       self.slots.append(Slot(top=0, left=0))
-       self.slots.append(Slot(top=0, left=200))
-       self.slots.append(Slot(top=0, left=300))
-       self.controls.extend(self.slots)
-       self.update()
+    def create_slots(self):
+        self.slots.append(Slot(top=0, left=0))
+        self.slots.append(Slot(top=0, left=200))
+        self.slots.append(Slot(top=0, left=300))
+        self.controls.extend(self.slots)
+        self.update()
 
-   def deal_cards(self):
-       self.controls.extend(self.cards)
-       for card in self.cards:
-           card.place(self.slots[0])
-       self.update()
+    def deal_cards(self):
+        self.controls.extend(self.cards)
+        for card in self.cards:
+            card.place(self.slots[0])
+        self.update()
 ```
 
 :::note[Note]
@@ -497,9 +496,9 @@ from solitaire import Solitaire
 
 def main(page: ft.Page):
 
-   solitaire = Solitaire()
+    solitaire = Solitaire()
 
-   page.add(solitaire)
+    page.add(solitaire)
 
 ft.run(main)
 ```
@@ -903,16 +902,16 @@ def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.tableau:
             if (
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ):
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
                 self.place(slot)
                 return
 
         for slot in self.solitaire.foundations:
             if (
-                    abs(self.top - slot.top) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ):
+                abs(self.top - slot.top) < DROP_PROXIMITY
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
                 self.place(slot)
                 return
 
@@ -943,7 +942,7 @@ def drop(self, e: ft.DragEndEvent):
     for slot in self.solitaire.tableau:
         if (
             abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
-        and abs(self.left - slot.left) < DROP_PROXIMITY
+            and abs(self.left - slot.left) < DROP_PROXIMITY
         ):
             self.place(slot)
             return
@@ -952,8 +951,8 @@ def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.foundations:
             if (
                 abs(self.top - slot.top) < DROP_PROXIMITY
-        and abs(self.left - slot.left) < DROP_PROXIMITY
-        ):
+            and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
                 self.place(slot)
                 return
 
@@ -983,8 +982,8 @@ def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.tableau:
             if (
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ):
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
                 self.place(slot)
                 return
 
@@ -992,8 +991,8 @@ def drop(self, e: ft.DragEndEvent):
             for slot in self.solitaire.foundations:
                 if (
                     abs(self.top - slot.top) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ) and self.solitaire.check_foundations_rules(self, slot):
+                    and abs(self.left - slot.left) < DROP_PROXIMITY
+                ) and self.solitaire.check_foundations_rules(self, slot):
                     self.place(slot)
                     return
 
@@ -1038,8 +1037,8 @@ def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.tableau:
             if (
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ) and self.solitaire.check_tableau_rules(self, slot):
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ) and self.solitaire.check_tableau_rules(self, slot):
                 self.place(slot)
                 return
 
@@ -1047,8 +1046,8 @@ def drop(self, e: ft.DragEndEvent):
             for slot in self.solitaire.foundations:
                 if (
                     abs(self.top - slot.top) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-        ) and self.solitaire.check_foundations_rules(self, slot):
+                    and abs(self.left - slot.left) < DROP_PROXIMITY
+                ) and self.solitaire.check_foundations_rules(self, slot):
                     self.place(slot)
                     return
 
