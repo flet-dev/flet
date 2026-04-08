@@ -3036,6 +3036,8 @@ class NavigationDrawerTheme:
     """
     The style to merge with the default text style for \
     :class:`~flet.NavigationDrawerDestination` labels.
+
+    Can be used to specify a different style when the label is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -3049,17 +3051,25 @@ class NavigationDrawerTheme:
     indicator.
     """
 
+    icon_theme: Optional[ControlStateValue["IconTheme"]] = None
+    """
+    The theme to merge with the default icon theme for \
+    :class:`~flet.NavigationDestination` icons.
+
+    Can be used to specify a different icon theme when the icon is selected.
+    """
+
 
 @value
 class NavigationBarTheme:
     """
     Customizes the appearance of :class:`~flet.NavigationBar`
-    controls across the
-    app.
+    controls across the app.
     """
 
     bgcolor: Optional[ColorValue] = None
-    """Overrides the default value for :attr:`flet.NavigationBar.bgcolor`.
+    """
+    Overrides the default value for :attr:`flet.NavigationBar.bgcolor`.
     """
 
     shadow_color: Optional[ColorValue] = None
@@ -3084,7 +3094,7 @@ class NavigationBarTheme:
 
     height: Optional[Number] = None
     """
-    Overrides the default value for NavigationBar height.
+    Overrides the default value for :class:`~flet.NavigationBar` height.
     """
 
     label_text_style: Optional[ControlStateValue[TextStyle]] = None
