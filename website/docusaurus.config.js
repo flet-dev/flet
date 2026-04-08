@@ -6,7 +6,7 @@ const { themes } = require('prism-react-renderer');
 module.exports = {
   future: {
     v4: true, // opt-in for Docusaurus v4 planned changes
-    faster: true, // turns Docusaurus Faster on globally
+    faster: false, // turns Docusaurus Faster on globally
   },
   title: 'Flet',
   tagline: 'Build multi-platform apps in Python',
