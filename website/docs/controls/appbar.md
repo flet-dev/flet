@@ -18,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/actions_and_popup_menu/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/actions_and_popup_menu.gif'} alt="actions-and-popup-menu" width="55%" />
+<Image src={frontMatter.example_images + '/app_bar_flow.gif'} alt="actions-and-popup-menu" width="55%" />
 
 ### Theme and Material Mode Toggles
 
