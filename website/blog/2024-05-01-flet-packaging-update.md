@@ -14,7 +14,7 @@ If your program uses only Python standard library then packaging process is rela
 
 However, problems may arise when your Flet program uses third-party packages, with thousands of them published on PyPI or Conda.
 
-<!-- truncate -->
+{/* truncate */}
 
 There are two kinds of third-party packages:
 

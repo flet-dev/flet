@@ -109,7 +109,7 @@ def render_flet_cli_as_markdown(
         """Markdown heading helper."""
         heading = f"{'#' * level} {text}"
         if anchor_id:
-            heading += f" {{#{anchor_id}}}"
+            heading += f" {{/* #{anchor_id} */}}"
         return heading
 
     def _ensure_blank(lines: list[str]) -> None:
