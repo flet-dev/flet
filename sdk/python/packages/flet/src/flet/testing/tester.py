@@ -122,6 +122,17 @@ class Tester(Service):
             "tap", {"finder_id": finder.id, "finder_index": finder.index}
         )
 
+    async def mouse_click(self, finder: Finder):
+        """
+        Dispatch a primary mouse click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "mouse_click", {"finder_id": finder.id, "finder_index": finder.index}
+        )
+
     async def tap_at(self, offset: Offset):
         """
         Dispatch a pointer down / pointer up sequence at the given offset.
@@ -130,6 +141,15 @@ class Tester(Service):
             offset: Offset value at which tap will occur.
         """
         await self._invoke_method("tap_at", {"offset": offset})
+
+    async def mouse_click_at(self, offset: Offset):
+        """
+        Dispatch a primary mouse click at the given offset.
+
+        Args:
+            offset: Offset value at which the click will occur.
+        """
+        await self._invoke_method("mouse_click_at", {"offset": offset})
 
     async def long_press(self, finder: Finder):
         """

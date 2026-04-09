@@ -33,6 +33,7 @@ async def main(page: ft.Page):
                 on_dismiss=lambda e: print("Menu dismissed"),
                 expand=True,
                 content=ft.Container(
+                    key="context_menu_trigger_area",
                     expand=True,
                     bgcolor=ft.Colors.BLUE,
                     alignment=ft.Alignment.CENTER,

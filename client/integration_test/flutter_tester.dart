@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flet/flet.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,8 +77,19 @@ class FlutterWidgetTester implements Tester {
       _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
 
   @override
+  Future<void> mouseClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseClickAt(center);
+  }
+
+  @override
   Future<void> tapAt(Offset offset) =>
       _tester.tapAt(offset);
+
+  @override
+  Future<void> mouseClickAt(Offset offset) => _mouseClickAt(offset);
 
   @override
   Future<void> longPress(TestFinder finder, int finderIndex) =>
@@ -103,6 +113,19 @@ class FlutterWidgetTester implements Tester {
     _gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
     await _gesture?.addPointer();
     await _gesture?.moveTo(center);
+  }
+
+  Future<void> _mouseClickAt(Offset offset) async {
+    await _mouseExit();
+    _gesture = await _tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      buttons: kPrimaryButton,
+    );
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(offset);
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _mouseExit();
   }
 
   @override
