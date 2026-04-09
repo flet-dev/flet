@@ -595,7 +595,7 @@ function preprocessRestCrossReferenceMarkdown(text, context) {
     if (roleMatch) {
       const resolved = resolveRestCrossReference(roleMatch[1], roleMatch[2], context);
       if (resolved) {
-        output += `[${resolved.label}](${resolved.href})`;
+        output += `[\`${resolved.label}\`](${resolved.href})`;
       } else {
         output += roleMatch[0];
       }
