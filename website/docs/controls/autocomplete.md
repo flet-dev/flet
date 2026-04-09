@@ -1,11 +1,11 @@
 ---
 class_name: "flet.AutoComplete"
 examples: "controls/material/auto_complete"
-example_images: "examples/controls/material/auto_complete/media"
+example_images: "test-images/examples/material/golden/macos/auto_complete"
 title: "AutoComplete"
 ---
 
-import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
 <ClassSummary name={frontMatter.class_name} />
 
@@ -16,5 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 ### Basic example
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/auto_complete_basic_flow.gif'} alt="auto-complete-basic-example" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

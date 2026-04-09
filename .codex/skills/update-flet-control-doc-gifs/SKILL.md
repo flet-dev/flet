@@ -39,6 +39,7 @@ Use this skill after the integration test structure is already in place and the 
 ## Docs Update Rules
 
 - Control docs usually point to generated assets through `frontMatter.example_images`.
+- If a docs page still has `example_images` pointing at example media instead of generated test images, update that front matter first so the page has a single source of truth for screenshots and GIFs.
 - When a docs page has multiple example sections, add the generated screenshot or GIF directly under the matching `CodeExample` block so each visual stays paired with the example it demonstrates.
 - If a docs page still uses `frontMatter.example_media + '/old.png'` or `frontMatter.example_media + '/old.gif'`, replace it with `frontMatter.example_images + '/<asset>'` when the generated integration-test asset is the new source of truth.
 - Generated screenshots and GIFs from integration tests are commonly stored at `sdk/python/packages/flet/integration_tests/examples/.../golden/macos/<control>/`.
@@ -49,6 +50,7 @@ Use this skill after the integration test structure is already in place and the 
 - The interaction test still reflects the example behavior.
 - Every screenshot included in a GIF is visibly different and useful.
 - The GIF duration is intentional; prefer shorter loops for hover/click flows unless the interaction needs more time.
+- The docs front matter points to the generated test-images location rather than stale example media paths.
 - The docs page references the new screenshot or GIF path.
 - The referenced screenshot or GIF actually exists under `website/static/docs/test-images/...`.
 - Remove or stop referencing obsolete media screenshots or GIFs only when the new generated asset fully replaces them.
