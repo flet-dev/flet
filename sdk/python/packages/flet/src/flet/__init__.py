@@ -5,6 +5,7 @@ from flet.components.component import Component
 from flet.components.component_decorator import component
 from flet.components.hooks.use_callback import use_callback
 from flet.components.hooks.use_context import create_context, use_context
+from flet.components.hooks.use_dialog import use_dialog
 from flet.components.hooks.use_effect import (
     on_mounted,
     on_unmounted,
@@ -1111,6 +1112,7 @@ __all__ = [
     "unwrap_component",
     "use_callback",
     "use_context",
+    "use_dialog",
     "use_effect",
     "use_memo",
     "use_ref",

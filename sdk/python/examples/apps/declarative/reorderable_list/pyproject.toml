@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-reorderable-list"
+version = "1.0.0"
+description = "Adds, removes, and reorders list items declaratively with stable item identity."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "reorderable list", "list state", "drag and drop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Reorderable list"
+controls = ["SafeArea", "Column", "FilledButton", "ReorderableListView", "ListTile", "ReorderableDragHandle"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["drag and drop", "reordering", "list state updates", "add/remove items"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
