@@ -1,6 +1,6 @@
 ---
 name: update-flet-control-doc-gifs
-description: Create or update Flet control screenshots and GIFs that are generated from integration tests and shown in docs. Use when working on `sdk/python/packages/flet/integration_tests/examples`, refreshing static or interactive golden screenshots, replacing old example media images or GIFs with generated test assets, or copying rendered screenshot and GIF assets into `website/static/docs/test-images`.
+description: Create or update Flet control screenshots and GIFs that are generated from integration tests and shown in docs. Use when working on `sdk/python/packages/flet/integration_tests/examples`, refreshing static or interactive golden screenshots, or replacing old example media images or GIFs with generated test assets.
 ---
 
 # Update Flet Control Doc Gifs
@@ -26,7 +26,7 @@ Use this skill after the integration test structure is already in place and the 
 - do not keep screenshots taken after a click if the UI closes and the state is not visible
 5. Use `assert_screenshot(...)` for regular golden screenshots and `create_gif([...], "<flow_name>", duration=...)` only when the docs benefit from an animated flow.
 6. Update docs to use the generated screenshot or GIF, not an old media asset from `examples/.../media`, when the integration-test asset is now the better docs artifact.
-7. Ensure the generated screenshot or GIF is available under `website/static/docs/test-images/...` so the docs page can render it.
+7. Update docs references to point at the intended generated screenshot or GIF path, but do not copy generated assets into `website/static/docs/test-images/...` as part of this workflow.
 
 ## Naming
 
@@ -43,7 +43,7 @@ Use this skill after the integration test structure is already in place and the 
 - When a docs page has multiple example sections, add the generated screenshot or GIF directly under the matching `CodeExample` block so each visual stays paired with the example it demonstrates.
 - If a docs page still uses `frontMatter.example_media + '/old.png'` or `frontMatter.example_media + '/old.gif'`, replace it with `frontMatter.example_images + '/<asset>'` when the generated integration-test asset is the new source of truth.
 - Generated screenshots and GIFs from integration tests are commonly stored at `sdk/python/packages/flet/integration_tests/examples/.../golden/macos/<control>/`.
-- Copy every generated docs-facing PNG or GIF that the docs page references to `website/static/docs/test-images/examples/<bucket>/golden/macos/<control>/` when it is not already present there.
+- Do not copy generated screenshots or GIFs into `website/static/docs/test-images/...` as part of this skill. Keep the work limited to tests and docs references unless the user explicitly asks for a copy.
 
 ## Verification Checklist
 
@@ -52,8 +52,7 @@ Use this skill after the integration test structure is already in place and the 
 - The GIF duration is intentional; prefer shorter loops for hover/click flows unless the interaction needs more time.
 - The docs front matter points to the generated test-images location rather than stale example media paths.
 - The docs page references the new screenshot or GIF path.
-- Every PNG or GIF referenced by the docs page exists under `website/static/docs/test-images/...`, not just in the integration-test golden directory.
-- The referenced screenshot or GIF actually exists under `website/static/docs/test-images/...`.
+- The generated screenshot or GIF exists in the integration-test golden directory at the path implied by the test names.
 - Remove or stop referencing obsolete media screenshots or GIFs only when the new generated asset fully replaces them.
 
 ## References
@@ -62,4 +61,3 @@ Use this skill after the integration test structure is already in place and the 
 - `sdk/python/packages/flet/integration_tests/examples/controls/material/test_alert_dialog.py`
 - `sdk/python/packages/flet/integration_tests/examples/controls/material/test_app_bar.py`
 - `website/docs/controls`
-- `website/static/docs/test-images`
