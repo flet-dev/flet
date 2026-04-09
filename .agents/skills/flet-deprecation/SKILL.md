@@ -50,6 +50,29 @@ Removal phase:
 - Example: deprecated in `0.82.0` -> remove in `0.85.0`.
 - Use that policy to set `delete_version` unless there is an approved exception.
 
+## Target Release Audit
+
+When working on a release for `{new_version}`, treat deprecations with
+`delete_version == {new_version}` as mandatory audit items.
+
+- Scan Python packages for `@deprecated(...)`, `@deprecated_class(...)`,
+  and `V.deprecated(...)` entries whose `delete_version` equals `{new_version}`.
+- Recommended check command:
+  `rg -n 'delete_version\\s*=\\s*"{new_version}"|delete_version\\s*=\\s*\\x27{new_version}\\x27' -S sdk/python/packages`
+- Treat every match as release-relevant work, not informational output.
+- If matches are found, summarize the findings first and ask the human for approval
+  before editing files or making removals.
+- For each match, decide whether the deprecated API must be removed now,
+  whether a prior removal was missed, or whether the deprecation timeline is incorrect.
+- If removal is due, make the code, docs, and changelog updates in the same change.
+- After the cleanup edits are ready, summarize the resulting diff and ask the human
+  for approval before creating a commit.
+- Once commit approval is received, batch all confirmed `{new_version}` cleanup
+  edits into one grouped commit instead of splitting them across multiple commits.
+  Use commit message format: `release: remove deprecated APIs for {new_version}`
+- Do not consider the release prep complete while unresolved `{new_version}` removals
+  remain.
+
 ## Authoring Rules
 
 1. Always set `version`.
@@ -71,7 +94,7 @@ old_prop: Annotated[
         version="0.17.0",
         delete_version="0.18.0",
         reason="Use new_prop instead.",
-        docs_reason="Use [`new_prop`][(c).] instead.",
+        docs_reason="Use :attr:`new_prop` or [`new_prop`][(c).] instead.",
     ),
 ] = None
 ```
@@ -83,11 +106,27 @@ from flet.utils.deprecated import deprecated
 
 @deprecated(
     reason="Use new_func instead.",
-    docs_reason="Use [`new_func()`][(m).new_func] instead.",
+    docs_reason="Use :attr:`new_prop` or [`new_func()`][flet.Control.new_func] instead.",
     version="0.17.0",
     delete_version="0.18.0",
 )
 def old_func():
+    ...
+```
+
+### Property Getter Pattern
+
+```python
+from flet.utils.deprecated import deprecated
+
+@property
+@deprecated(
+    reason="Use some_prop instead.",
+    docs_reason="Use :attr:`some_prop` or [`new_prop`][flet.Control.some_prop] instead.",
+    version="0.17.0",
+    delete_version="0.18.0",
+)
+def old_prop(self):
     ...
 ```
 
@@ -98,7 +137,7 @@ from flet.utils.deprecated import deprecated_class
 
 @deprecated_class(
     reason="Use NewControl instead.",
-    docs_reason="Use [`NewControl`][flet.] instead.",
+    docs_reason="Use [`NewControl`][flet.NewControl] instead.",
     version="0.17.0",
     delete_version="0.18.0",
 )
