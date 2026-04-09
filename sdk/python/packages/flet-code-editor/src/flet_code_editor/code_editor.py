@@ -1,7 +1,13 @@
 from typing import Optional, Union
 
 import flet as ft
-from flet_code_editor.types import CodeLanguage, CodeTheme, CustomCodeTheme, GutterStyle
+from flet_code_editor.types import (
+    CodeLanguage,
+    CodeTheme,
+    CustomCodeTheme,
+    GutterStyle,
+    Issue,
+)
 
 __all__ = ["CodeEditor"]
 
@@ -45,6 +51,9 @@ class CodeEditor(ft.LayoutControl):
 
     autocomplete_words: Optional[list[str]] = None
     """Words offered by autocomplete."""
+
+    issues: Optional[list[Issue]] = None
+    """List of code analysis issues to display in the editor gutter."""
 
     read_only: Optional[bool] = False
     """Whether the editor is read-only."""

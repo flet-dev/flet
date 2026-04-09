@@ -198,6 +198,30 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       _controller.popupController.hide();
     }
 
+    // Apply issues from Python side
+    final issuesList = widget.control.get("issues");
+    final List<fce.Issue> parsedIssues;
+    if (issuesList is List) {
+      parsedIssues = issuesList
+          .whereType<Map>()
+          .map((item) => fce.Issue(
+                line: parseInt(item["line"]) ?? 0,
+                message: item["message"]?.toString() ?? "",
+                type: parseEnum(fce.IssueType.values, item["type"]?.toString(), fce.IssueType.error)!,
+                suggestion: item["suggestion"]?.toString(),
+                url: item["url"]?.toString(),
+              ))
+          .toList();
+    } else {
+      parsedIssues = const [];
+    }
+    final prevIssueCount = _controller.analysisResult.issues.length;
+    if (parsedIssues.length != prevIssueCount || parsedIssues.isNotEmpty) {
+      _controller.removeListener(_handleControllerChange);
+      _controller.setIssues(fce.AnalysisResult(issues: parsedIssues));
+      _controller.addListener(_handleControllerChange);
+    }
+
     Widget buildEditor({double? minHeight}) {
       Widget editor = SingleChildScrollView(
           child: ConstrainedBox(
