@@ -15,14 +15,14 @@ __all__ = ["AuthorizationService"]
 
 class AuthorizationService(Authorization):
     """
-    OAuth authorization implementation used by [`Page.login()`][flet.Page.login].
+    OAuth authorization implementation used by :meth:`flet.Page.login`.
 
     The service coordinates authorization URL generation, token exchange,
     token refresh, and optional user/group resolution using the configured
-    [`OAuthProvider`][(p).oauth_provider.].
+    :class:`~flet.auth.OAuthProvider`.
 
     Args:
-        provider: Configured [`OAuthProvider`][(p).oauth_provider.]
+        provider: Configured :class:`~flet.auth.OAuthProvider`
             describing OAuth endpoints, credentials, and optional user/group APIs.
         fetch_user: Whether to request provider user profile information.
         fetch_groups: Whether to request user groups/roles.
@@ -65,7 +65,7 @@ class AuthorizationService(Authorization):
 
         Args:
             saved_token: JSON-serialized token data produced by
-                [`OAuthToken.to_json()`][(p).oauth_token.OAuthToken.to_json].
+                :meth:`flet.auth.oauth_token.OAuthToken.to_json`.
         """
 
         self.__token = OAuthToken.from_json(saved_token)
@@ -77,7 +77,7 @@ class AuthorizationService(Authorization):
         Return current token after applying refresh logic when required.
 
         Returns:
-            Current [`OAuthToken`][(p).oauth_token.], or `None`
+            Current :class:`~flet.auth.OAuthToken`, or `None`
                 if no token is available yet.
         """
 
@@ -165,9 +165,9 @@ class AuthorizationService(Authorization):
                     self.__token.access_token
                 )
 
-    def __convert_token(self, t: Mapping[str, Any]):
+    def __convert_token(self, t: Mapping[str, Any]) -> OAuthToken:
         """
-        Convert oauthlib token mapping to [`OAuthToken`][(p).oauth_token.].
+        Convert oauthlib token mapping to :class:`~flet.auth.OAuthToken`.
 
         Args:
             t: Token dictionary returned by oauthlib client parsing.
@@ -231,12 +231,12 @@ class AuthorizationService(Authorization):
                     t["refresh_token"] = self.__token.refresh_token
                 self.__token = self.__convert_token(t)
 
-    async def __get_user(self):
+    async def __get_user(self) -> User:
         """
         Fetch user profile from provider `user_endpoint`.
 
         Returns:
-            A [`User`][(p).user.] built from response payload and
+            A :class:`~flet.auth.User` built from response payload and
                 `provider.user_id_fn`.
 
         Raises:
@@ -256,7 +256,7 @@ class AuthorizationService(Authorization):
             uj = json.loads(user_resp.text)
             return User(uj, str(self.provider.user_id_fn(uj)))
 
-    def __get_default_headers(self):
+    def __get_default_headers(self) -> dict[str, str]:
         """
         Build default HTTP headers for OAuth-related requests.
 

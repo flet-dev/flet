@@ -1,17 +1,23 @@
 import pytest
 
 import flet.testing as ftt
-from examples.controls.control import (
-    expand_loose_chat_messages,
-    expand_row_equal_split,
-    expand_row_proportional_1_3_1,
-    expand_textfield_in_row,
+from examples.controls.control.expand_loose_chat_messages import (
+    main as expand_loose_chat_messages_main,
+)
+from examples.controls.control.expand_row_equal_split import (
+    main as expand_row_equal_split_main,
+)
+from examples.controls.control.expand_row_proportional_1_3_1 import (
+    main as expand_row_proportional_1_3_1_main,
+)
+from examples.controls.control.expand_textfield_in_row import (
+    main as expand_textfield_in_row_main,
 )
 
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": expand_textfield_in_row.main}],
+    [{"flet_app_main": expand_textfield_in_row_main.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -24,7 +30,7 @@ async def test_expand_textfield_in_row(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": expand_row_proportional_1_3_1.main}],
+    [{"flet_app_main": expand_row_proportional_1_3_1_main.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -37,7 +43,7 @@ async def test_expand_row_proportional_1_3_1(flet_app_function: ftt.FletTestApp)
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": expand_row_equal_split.main}],
+    [{"flet_app_main": expand_row_equal_split_main.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")
@@ -50,7 +56,7 @@ async def test_expand_row_equal_split(flet_app_function: ftt.FletTestApp):
 
 @pytest.mark.parametrize(
     "flet_app_function",
-    [{"flet_app_main": expand_loose_chat_messages.main}],
+    [{"flet_app_main": expand_loose_chat_messages_main.main}],
     indirect=True,
 )
 @pytest.mark.asyncio(loop_scope="function")

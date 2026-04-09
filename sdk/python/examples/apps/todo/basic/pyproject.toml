@@ -1,0 +1,26 @@
+[project]
+name = "apps-todo-basic"
+version = "1.0.0"
+description = "Classic to-do app with add, edit, delete, and filter interactions inspired by TodoMVC."
+requires-python = ">=3.10"
+keywords = ["apps", "todo", "tasks", "tabs", "forms"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Productivity"]
+
+[tool.flet.metadata]
+title = "Basic to-do"
+controls = ["SafeArea", "Column", "Row", "TextField", "Tabs", "TabBar", "Checkbox", "IconButton", "FloatingActionButton", "OutlinedButton", "Text"]
+layout_pattern = "form"
+complexity = "intermediate"
+features = ["task editing", "task filtering", "list state updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

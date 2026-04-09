@@ -1,0 +1,26 @@
+[project]
+name = "webview-example-1"
+version = "1.0.0"
+description = "Displays a web page in a WebView and logs page lifecycle events."
+requires-python = ">=3.10"
+keywords = ["webview", "browser", "web", "events", "embedded"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-webview"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/WebView"]
+
+[tool.flet.metadata]
+title = "WebView example 1"
+controls = ["SafeArea", "WebView"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["page lifecycle events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

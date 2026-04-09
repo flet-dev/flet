@@ -1,7 +1,7 @@
 # Flet CLI
 
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-cli)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-cli.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-cli.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-cli.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-cli.svg)
 
 Flet CLI is a command-line interface tool for Flet, a framework for building interactive multi-platform applications using Python.
 

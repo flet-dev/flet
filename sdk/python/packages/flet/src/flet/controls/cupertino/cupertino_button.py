@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -17,13 +17,14 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 
 
 class CupertinoButtonSize(Enum):
     """
-    Preset size style for [`CupertinoButton`][flet.].
+    Preset size style for :class:`~flet.CupertinoButton`.
 
     Influences defaults such as minimum size, padding, border radius, and text style.
     """
@@ -67,7 +68,7 @@ class CupertinoButton(LayoutControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    The foreground color of the [`icon`][(c).].
+    The foreground color of the :attr:`icon`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -85,15 +86,17 @@ class CupertinoButton(LayoutControl):
     The background color of this button when disabled.
     """
 
-    opacity_on_click: Number = 0.4
+    opacity_on_click: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 0.4
     """
     Defines the opacity of the button when it is clicked.
 
     When not pressed, the button has an opacity of `1.0`.
 
     Raises:
-        ValueError: If [`opacity_on_click`][(c).] is not between `0.0`
-            and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     min_size: Optional[Size] = None
@@ -132,7 +135,7 @@ class CupertinoButton(LayoutControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is
+    Additionally, if :attr:`on_click` event callback is
     provided, it is fired after that.
     """
 
@@ -146,9 +149,9 @@ class CupertinoButton(LayoutControl):
     """
     The color to use for the focus highlight for keyboard interactions.
 
-    Defaults to a slightly transparent [`bgcolor`][(c).].
+    Defaults to a slightly transparent :attr:`bgcolor`.
     If `bgcolor` is `None`, defaults to a slightly transparent
-    [`CupertinoColors.ACTIVE_BLUE`][flet.].
+    :attr:`flet.CupertinoColors.ACTIVE_BLUE`.
     'Slightly transparent' in this context means the color is used with an opacity
     of `0.80`, a brightness of `0.69` and a saturation of `0.835`.
     """
@@ -177,14 +180,6 @@ class CupertinoButton(LayoutControl):
     """
     Called when this button loses focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0 <= self.opacity_on_click <= 1):
-            raise ValueError(
-                "opacity_on_click must be between 0 and 1 inclusive, "
-                f"got {self.opacity_on_click}"
-            )
 
     async def focus(self):
         """Requests focus for this control."""

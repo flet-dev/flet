@@ -1,0 +1,26 @@
+[project]
+name = "interactive-viewer-transformations"
+version = "1.0.0"
+description = "Applies InteractiveViewer programmatic zoom, pan, save/restore state, and reset actions."
+requires-python = ">=3.10"
+keywords = ["interactive viewer", "transformations", "zoom", "pan", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/InteractiveViewer"]
+
+[tool.flet.metadata]
+title = "Programmatic transformations"
+controls = ["SafeArea", "Column", "Row", "InteractiveViewer", "Image", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["programmatic zoom", "programmatic pan", "save and restore state", "animated reset"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

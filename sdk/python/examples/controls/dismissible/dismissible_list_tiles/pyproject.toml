@@ -1,0 +1,26 @@
+[project]
+name = "dismissible-list-tiles"
+version = "1.0.0"
+description = "Demonstrates dismissible ListTile items with per-direction backgrounds and confirm-dismiss dialog."
+requires-python = ">=3.10"
+keywords = ["dismissible", "list", "swipe", "confirmation", "dialog"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Dismissible"]
+
+[tool.flet.metadata]
+title = "Dismissible ListTiles"
+controls = ["SafeArea", "ListView", "Dismissible", "ListTile", "AlertDialog", "TextButton", "Container", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["swipe to dismiss", "confirm dismiss callback", "dismiss progress callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

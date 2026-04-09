@@ -1,0 +1,26 @@
+[project]
+name = "column-infinite-scrolling"
+version = "1.0.0"
+description = "Infinite scrolling in a column by appending items on scroll."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "infinite scrolling", "on_scroll", "lazy loading"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column infinite scrolling"
+controls = ["Container", "Column", "Text"]
+layout_pattern = "infinite-list"
+complexity = "basic"
+features = ["on_scroll handling", "dynamic item appending", "semaphore guard"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

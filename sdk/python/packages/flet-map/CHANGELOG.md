@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Added configuration helpers for cameras, interaction flags, and stroke patterns.
 - Introduced attribution controls and additional layer types for circles, polygons, and polylines.
-- Published hosted documentation: https://docs.flet.dev/map/
+- Published hosted documentation: https://flet.dev/docs/map/
 
 ## 0.1.0
 

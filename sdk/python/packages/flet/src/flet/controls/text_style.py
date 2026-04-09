@@ -61,7 +61,7 @@ class TextThemeStyle(Enum):
     """
     Predefined Material text style roles from the active theme.
 
-    Use these values with properties such as [`Text.theme_style`][flet.]
+    Use these values with properties such as :attr:`flet.Text.theme_style`
     to reference semantic typography slots (display, headline, title, body, label)
     instead of hard-coding font metrics in each control.
     """
@@ -77,7 +77,7 @@ class TextThemeStyle(Enum):
     """
     Medium display style.
 
-    Intended for high-impact short text when [`DISPLAY_LARGE`][(c).] is too dominant.
+    Intended for high-impact short text when :attr:`DISPLAY_LARGE` is too dominant.
     """
 
     DISPLAY_SMALL = "displaySmall"
@@ -264,7 +264,7 @@ class TextStyle:
     """
     The typeface thickness to use when painting the text (e.g., bold).
 
-    Defaults to [`FontWeight.NORMAL`][flet.].
+    Defaults to :attr:`flet.FontWeight.NORMAL`.
     """
 
     italic: bool = False
@@ -297,23 +297,23 @@ class TextStyle:
 
     font_family: Optional[str] = None
     """
-    See https://docs.flet.dev/controls/text#font_family.
+    See https://flet.dev/docs/controls/text#font_family.
     """
 
     font_family_fallback: Optional[list[str]] = None
     """
     Ordered fallback font families to use when glyphs are not available in
-    [`font_family`][(c).].
+    :attr:`font_family`.
     """
 
     color: Optional[ColorValue] = None
     """
-    Text foreground https://docs.flet.dev/types/colors.
+    Text foreground https://flet.dev/docs/types/colors.
     """
 
     bgcolor: Optional[ColorValue] = None
     """
-    Text background https://docs.flet.dev/types/colors.
+    Text background https://flet.dev/docs/types/colors.
     """
 
     shadow: Optional[BoxShadowValue] = None
@@ -423,7 +423,7 @@ class StrutStyle:
 
     height: Optional[Number] = None
     """
-    The minimum height of the strut, as a multiple of [`size`][(c).].
+    The minimum height of the strut, as a multiple of :attr:`size`.
 
     See detailed explanation here:
     https://api.flutter.dev/flutter/painting/StrutStyle/height.html
@@ -433,7 +433,7 @@ class StrutStyle:
     """
     The typeface thickness to use when calculating the strut.
 
-    Defaults to [`FontWeight.W_400`][flet.].
+    Defaults to :attr:`flet.FontWeight.W_400`.
     """
 
     italic: bool = False
@@ -443,7 +443,7 @@ class StrutStyle:
 
     font_family: Optional[str] = None
     """
-    See [`Text.font_family`][flet.].
+    See :attr:`flet.Text.font_family`.
     """
 
     leading: Optional[Number] = None

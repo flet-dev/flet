@@ -1,0 +1,26 @@
+[project]
+name = "types-gradient-linear-gradient-container"
+version = "1.0.0"
+description = "Demonstrates how Linear Gradient values change container presentation and layout."
+requires-python = ">=3.10"
+keywords = ["gradient", "linear gradient", "container"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Linear Gradient"
+controls = ["SafeArea", "Column", "Container", "BorderRadius"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["linear gradient preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

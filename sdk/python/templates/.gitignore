@@ -1,0 +1,3 @@
+# Un-ignore files that parent .gitignore excludes
+!lib/
+!*.manifest

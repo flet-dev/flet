@@ -1,0 +1,134 @@
+name: '{{ cookiecutter.project_name }}'
+description: '{{ cookiecutter.project_description }}'
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.5 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  flet:
+    path: ../../../../../packages/flet
+  serious_python: 0.9.11
+
+  package_info_plus: ^9.0.0
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  window_manager: ^0.5.1
+
+# {% if 'flet_geolocator' in cookiecutter.flutter.dependencies %}
+#  geolocator: ^12.0.0
+#  geolocator_android: ^4.6.0
+# {% endif %}
+
+dependency_overrides:
+  flet:
+    path: ../../../../../packages/flet
+  device_info_plus: 12.3.0 # remove that in May, 2026 once CI moved to macOS 26
+  connectivity_plus: 7.0.0 # remove that in May, 2026 once CI moved to macOS 26
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - app/app.zip
+    - app/app.zip.hash
+
+# dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "images/icon.png"
+
+  android: true
+  image_path_android: "images/icon.png"
+  adaptive_icon_background: '#ffffff'
+  adaptive_icon_foreground: images/icon.png
+
+  ios: true
+  image_path_ios: "images/icon.png"
+  remove_alpha_ios: true
+
+  web:
+    generate: true
+    image_path: "images/icon.png"
+  windows:
+    generate: true
+    image_path: "images/icon.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "images/icon.png"
+
+# dart run flutter_native_splash:create
+flutter_native_splash:
+  # color or background_image is the only required parameter.  Use color to set the background
+  # of your splash screen to a solid color.  Use background_image to set the background of your
+  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
+  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
+  color: "#ffffff"
+
+  # The image parameter allows you to specify an image used in the splash screen.  It must be a
+  # png file and should be sized for 4x pixel density.
+  image: "images/icon.png"
+
+  # The color_dark, background_image_dark, image_dark, branding_dark are parameters that set the background
+  # and image when the device is in dark mode. If they are not specified, the app will use the
+  # parameters from above. If the image_dark parameter is specified, color_dark or
+  # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
+  # set.
+  color_dark: "#222222"
+  #background_image_dark: "assets/dark-background.png"
+  image_dark: "images/icon.png"
+  #branding_dark: assets/dart_dark.png
+
+  # Android 12 handles the splash screen differently than previous versions.  Please visit
+  # https://developer.android.com/guide/topics/ui/splash-screen
+  # Following are Android 12 specific parameter.
+  android_12:
+    # The image parameter sets the splash screen icon image.  If this parameter is not specified,
+    # the app's launcher icon will be used instead.
+    # Please note that the splash screen will be clipped to a circle on the center of the screen.
+    # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
+    # 640 pixels in diameter.
+    # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
+    # 768 pixels in diameter.
+    image: "images/icon.png"
+
+    # The image_dark, color_dark, icon_background_color_dark, and branding_dark set values that
+    # apply when the device is in dark mode. If they are not specified, the app will use the
+    # parameters from above.
+    image_dark: "images/icon.png"
+
+  # The android, ios and web parameters can be used to disable generating a splash screen on a given
+  # platform.
+  android: true
+  ios: true
+  web: true
+
+  # Platform specific images can be specified with the following parameters, which will override
+  # the respective parameter.  You may specify all, selected, or none of these parameters:
+  #color_android: "#42a5f5"
+  #color_dark_android: "#042a49"
+  #color_ios: "#42a5f5"
+  #color_dark_ios: "#042a49"
+  #color_web: "#42a5f5"
+  #color_dark_web: "#042a49"
+  image_android: "images/icon.png"
+  image_dark_android: "images/icon.png"
+  image_ios: "images/icon.png"
+  image_dark_ios: "images/icon.png"
+  image_web: "images/icon.png"
+  image_dark_web: "images/icon.png"

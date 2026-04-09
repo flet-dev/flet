@@ -1,0 +1,26 @@
+[project]
+name = "submenu-button-basic"
+version = "1.0.0"
+description = "Changes background color and text alignment from nested SubmenuButton menu actions."
+requires-python = ">=3.10"
+keywords = ["submenu button", "menu", "nested", "alignment", "color"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/SubmenuButton"]
+
+[tool.flet.metadata]
+title = "SubmenuButton basic"
+controls = ["SafeArea", "Column", "Row", "MenuBar", "SubmenuButton", "MenuItemButton", "Container", "Text", "Icon"]
+layout_pattern = "toolbar-content"
+complexity = "basic"
+features = ["nested menus", "live style updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

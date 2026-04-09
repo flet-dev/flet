@@ -41,7 +41,7 @@ class PointMode(Enum):
 @control("Points")
 class Points(Shape):
     """
-    Draws a sequence of points according to the given [`point_mode`][(c).].
+    Draws a sequence of points according to the given :attr:`point_mode`.
     """
 
     points: Optional[list[OffsetValue]] = None

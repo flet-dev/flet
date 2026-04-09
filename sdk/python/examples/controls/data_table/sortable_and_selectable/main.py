@@ -1,0 +1,116 @@
+import flet as ft
+
+
+def main(page: ft.Page):
+    inventory_items = [
+        {"id": 1, "name": "Alpha", "qty": 4},
+        {"id": 2, "name": "Bravo", "qty": 9},
+        {"id": 3, "name": "Charlie", "qty": 2},
+        {"id": 4, "name": "Delta", "qty": 6},
+        {"id": 5, "name": "Echo", "qty": 3},
+        {"id": 6, "name": "Foxtrot", "qty": 8},
+        {"id": 7, "name": "Golf", "qty": 1},
+        {"id": 8, "name": "Hotel", "qty": 7},
+        {"id": 9, "name": "India", "qty": 5},
+        {"id": 10, "name": "Juliet", "qty": 10},
+    ]
+    displayed_items = list(inventory_items)
+    selected_item_ids: set[int] = {1, 3, 5}
+
+    sort_key_for_column = {
+        0: lambda item: str(item["name"]).lower(),
+        1: lambda item: int(item["qty"]),
+    }
+
+    def build_rows(items: list[dict[str, int | str]]) -> list[ft.DataRow]:
+        return [
+            ft.DataRow(
+                selected=item["id"] in selected_item_ids,
+                on_select_change=handle_row_selection_change,
+                data=item["id"],
+                cells=[
+                    ft.DataCell(ft.Text(item["name"])),
+                    ft.DataCell(ft.Text(str(item["qty"]))),
+                ],
+            )
+            for item in items
+        ]
+
+    def refresh_table_rows() -> None:
+        table.rows = build_rows(displayed_items)
+        table.update()
+
+    def handle_row_selection_change(e: ft.Event[ft.DataRow]) -> None:
+        row = e.control
+        item_id = row.data
+        is_selected = e.data
+
+        if is_selected:
+            selected_item_ids.add(item_id)
+        else:
+            selected_item_ids.discard(item_id)
+
+        row.selected = is_selected
+        row.update()
+
+    def handle_select_all(e: ft.Event[ft.DataTable]) -> None:
+        if e.data:
+            selected_item_ids.update(int(item["id"]) for item in displayed_items)
+        else:
+            selected_item_ids.clear()
+
+        refresh_table_rows()
+
+    def handle_column_sort(e: ft.DataColumnSortEvent) -> None:
+        displayed_items.sort(
+            key=sort_key_for_column[e.column_index],
+            reverse=not e.ascending,
+        )
+
+        table.sort_column_index = e.column_index
+        table.sort_ascending = e.ascending
+        refresh_table_rows()
+
+    table = ft.DataTable(
+        width=700,
+        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+        border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(1, ft.Colors.OUTLINE_VARIANT),
+        horizontal_lines=ft.border.BorderSide(1, ft.Colors.OUTLINE_VARIANT),
+        sort_column_index=0,
+        sort_ascending=True,
+        heading_row_color=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+        heading_row_height=100,
+        data_row_color={
+            ft.ControlState.HOVERED: ft.Colors.with_opacity(0.08, ft.Colors.PRIMARY),
+            ft.ControlState.SELECTED: ft.Colors.with_opacity(0.14, ft.Colors.PRIMARY),
+        },
+        show_checkbox_column=True,
+        on_select_all=handle_select_all,
+        divider_thickness=1,
+        column_spacing=200,
+        columns=[
+            ft.DataColumn(
+                label=ft.Text("Item"),
+                on_sort=handle_column_sort,
+            ),
+            ft.DataColumn(
+                label=ft.Text("Quantity"),
+                tooltip="Numeric quantity",
+                numeric=True,
+                on_sort=handle_column_sort,
+            ),
+        ],
+        rows=build_rows(displayed_items),
+    )
+
+    page.add(
+        ft.SafeArea(
+            content=table,
+        )
+    )
+
+
+if __name__ == "__main__":
+    ft.run(main)

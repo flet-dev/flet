@@ -3,7 +3,6 @@ import os
 import platform
 from pathlib import Path
 
-from packaging import version
 from rich.console import Console
 from rich.style import Style
 
@@ -13,6 +12,11 @@ from flet_cli.commands.base import BaseCommand
 
 error_style = Style(color="red1", bold=True)
 console = Console(log_path=False)
+
+DEFAULT_APP_TEMPLATE_URL = (
+    "https://github.com/flet-dev/flet/releases/download/"
+    "v{version}/flet-app-templates.zip"
+)
 
 
 class Command(BaseCommand):
@@ -99,7 +103,16 @@ class Command(BaseCommand):
 
         template_ref = options.template_ref
         if not template_ref:
-            template_ref = version.Version(flet.version.flet_version).base_version
+            template_ref = flet.version.flet_version
+
+        # Resolve template source: local dev, or zip from GitHub release
+        local_tpl = Path(__file__).resolve().parents[5] / "templates" / "app"
+        if local_tpl.is_dir():
+            template_url = str(local_tpl)
+            checkout = None
+        else:
+            template_url = DEFAULT_APP_TEMPLATE_URL.format(version=template_ref)
+            checkout = None
 
         out_dir = Path(options.output_directory).resolve()
         template_data["out_dir"] = out_dir.name
@@ -115,8 +128,8 @@ class Command(BaseCommand):
         # print("Template data:", template_data)
         try:
             cookiecutter(
-                "gh:flet-dev/flet-app-templates",
-                checkout=template_ref,
+                template_url,
+                checkout=checkout,
                 directory=options.template,
                 output_dir=str(out_dir.parent),
                 no_input=True,

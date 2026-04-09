@@ -2,9 +2,10 @@ from datetime import time
 
 import pytest
 
+import examples.controls.time_picker.basic.main as basic
+import examples.controls.time_picker.hour_formats.main as hour_formats
 import flet as ft
 import flet.testing as ftt
-from examples.controls.time_picker import basic, hour_formats
 
 # Note: CI macOS runner uses a 12-hour (AM / PM) time format by default.
 

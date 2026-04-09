@@ -151,11 +151,11 @@ class Command(BaseCommand):
 
         This method prepares the script/module path, selects transport
         configuration (port or UDS), resolves assets and ignore directories,
-        starts the child app process through [`Handler`][(m).], and keeps the
+        starts the child app process through `Handler`, and keeps the
         observer running until termination.
 
         Args:
-            options: Parsed command options produced by [`add_arguments`][(c).].
+            options: Parsed command options produced by :meth:`add_arguments`.
         """
 
         from flet.utils.pip import (
@@ -397,7 +397,10 @@ class Handler(FileSystemEventHandler):
             line = line.rstrip("\r\n")
             if line.startswith(self.page_url_prefix):
                 if not self.page_url:
-                    self.page_url = line[len(self.page_url_prefix) + 1 :]
+                    parts = line[len(self.page_url_prefix) + 1 :].split(" ", 1)
+                    self.page_url = parts[0]
+                    if len(parts) > 1 and parts[1] == "flet_app_hidden":
+                        self.hidden = True
                     if (
                         self.page_url.startswith("http")
                         and not self.ios

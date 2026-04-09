@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import StrOrControl
+from flet.utils.validation import V
 
 __all__ = ["CupertinoDialogAction"]
 
@@ -14,15 +15,18 @@ class CupertinoDialogAction(Control):
     """
     A dialog action button.
 
-    Typically used as a child of [`CupertinoAlertDialog.actions`][flet.].
+    Typically used as a child of :attr:`flet.CupertinoAlertDialog.actions`.
     """
 
-    content: StrOrControl
+    content: Annotated[
+        StrOrControl,
+        V.str_or_visible_control(),
+    ]
     """
     The content of this action button.
 
     Raises:
-        ValueError: If [`content`][(c).] is neither a string nor a visible Control.
+        ValueError: If it is neither a string nor a visible `Control`.
     """
 
     default: bool = False
@@ -32,7 +36,7 @@ class CupertinoDialogAction(Control):
 
     Info:
         Multiple actions can have this property set to `True`
-        in a [`CupertinoAlertDialog`][flet.].
+        in a :class:`~flet.CupertinoAlertDialog`.
     """
 
     destructive: bool = False
@@ -47,15 +51,10 @@ class CupertinoDialogAction(Control):
     """
     The text style to use for text in this button.
 
-    Can be useful when [`content`][(c).] is a string.
+    Can be useful when :attr:`content` is a string.
     """
 
     on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
     """
     Called when a user clicks this button.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (isinstance(self.content, str) or self.content.visible):
-            raise ValueError("content must be a string or a visible Control")

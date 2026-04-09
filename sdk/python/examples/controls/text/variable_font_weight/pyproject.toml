@@ -1,0 +1,26 @@
+[project]
+name = "text-variable-font-weight"
+version = "1.0.0"
+description = "Adjusts a variable font weight interactively with a slider."
+requires-python = ">=3.10"
+keywords = ["text", "font", "variable", "weight", "slider"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Display/Text"]
+
+[tool.flet.metadata]
+title = "Variable font weight"
+controls = ["SafeArea", "Column", "Text", "Slider"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["interactive font weight control"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

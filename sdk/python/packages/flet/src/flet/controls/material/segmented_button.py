@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
 from flet.controls.base_control import control
@@ -13,6 +13,7 @@ from flet.controls.types import (
     IconDataOrControl,
     StrOrControl,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Segment", "SegmentedButton"]
 
@@ -20,36 +21,47 @@ __all__ = ["Segment", "SegmentedButton"]
 @control("Segment")
 class Segment(Control):
     """
-    A segment for a [`SegmentedButton`][flet.].
+    A segment for a :class:`~flet.SegmentedButton`.
     """
 
     value: str
     """
-    Used to identify the `Segment`.
+    Used to identify this segment.
     """
 
     icon: Optional[IconDataOrControl] = None
     """
-    The icon (typically an [`Icon`][flet.]) to be displayed in the segment.
+    The icon to be displayed in the segment.
+
+    Typically an :class:`~flet.Icon`.
+
+    Raises:
+        ValueError: If neither it nor :attr:`label` is set and visible.
     """
 
     label: Optional[StrOrControl] = None
     """
-    The label (usually a [`Text`][flet.]) to be displayed in the segment.
+    The label (usually a :class:`~flet.Text`) to be displayed in the segment.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`label`][(c).] is set.
+        ValueError: If neither it nor :attr:`icon` is set and visible.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            (isinstance(self.icon, IconData))
-            or (isinstance(self.icon, Control) and self.icon.visible)
-            or (isinstance(self.label, str))
-            or (isinstance(self.label, Control) and self.label.visible)
-        ):
-            raise ValueError("one of icon or label must be set and visible")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.label, str)
+                    or (isinstance(ctrl.label, Control) and ctrl.label.visible)
+                )
+            ),
+            message="at least icon or label must be set and visible",
+        ),
+    )
 
 
 @control("SegmentedButton")
@@ -58,13 +70,15 @@ class SegmentedButton(LayoutControl):
     A segmented button control.
     """
 
-    segments: list[Segment]
+    segments: Annotated[
+        list[Segment],
+        V.visible_controls(min_count=1),
+    ]
     """
     The segments of this button.
 
     Raises:
-        ValueError: If [`segments`][(c).] is empty or does not have at least one
-            visible `Segment`.
+        ValueError: If it does not contain at least one visible `Segment`.
     """
 
     style: Optional[ButtonStyle] = None
@@ -84,8 +98,8 @@ class SegmentedButton(LayoutControl):
     not be called.
 
     Raises:
-        ValueError: If [`selected`][(c).] is empty while
-            [`allow_empty_selection`][(c).] is `False`.
+        ValueError: If :attr:`selected` is empty while
+            :attr:`allow_empty_selection` is `False`.
     """
 
     allow_multiple_selection: bool = False
@@ -100,8 +114,8 @@ class SegmentedButton(LayoutControl):
     is selected, any previously selected segment will be unselected.
 
     Raises:
-        ValueError: If [`selected`][(c).] has more than one item while
-            [`allow_multiple_selection`][(c).] is `False`.
+        ValueError: If :attr:`selected` has more than one item while
+            :attr:`allow_multiple_selection` is `False`.
     """
 
     selected: list[str] = field(default_factory=list)
@@ -110,9 +124,9 @@ class SegmentedButton(LayoutControl):
     when the user (un)selects a segment.
 
     Raises:
-        ValueError: If [`selected`][(c).] violates the constraints defined by
-            [`allow_empty_selection`][(c).] or
-            [`allow_multiple_selection`][(c).].
+        ValueError: If :attr:`selected` violates the constraints defined by
+            :attr:`allow_empty_selection` or
+            :attr:`allow_multiple_selection`.
     """
 
     selected_icon: Optional[IconDataOrControl] = None
@@ -157,20 +171,20 @@ class SegmentedButton(LayoutControl):
     """
     Called when the selection changes.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains a list of strings identifying the selected segments.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not any(segment.visible for segment in self.segments):
-            raise ValueError("segments must have at minimum one visible Segment")
-        if len(self.selected) == 0 and not self.allow_empty_selection:
-            raise ValueError(
-                "allow_empty_selection must be True for selected to be empty"
-            )
-        if len(self.selected) >= 2 and not self.allow_multiple_selection:
-            raise ValueError(
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: len(ctrl.selected) > 0 or ctrl.allow_empty_selection,
+            message="allow_empty_selection must be True for selected to be empty",
+        ),
+        V.ensure(
+            lambda ctrl: len(ctrl.selected) < 2 or ctrl.allow_multiple_selection,
+            message=(
                 "allow_multiple_selection must be True for selected to "
                 "have more than one item"
-            )
+            ),
+        ),
+    )

@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -8,13 +8,14 @@ from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
+from flet.utils.validation import V
 
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
 
 class CupertinoTimerPickerMode(Enum):
     """
-    Different modes of [`CupertinoTimerPicker`][flet.].
+    Different modes of :class:`~flet.CupertinoTimerPicker`.
     """
 
     HOUR_MINUTE = "hm"
@@ -61,9 +62,10 @@ class CupertinoTimerPicker(LayoutControl):
     If specified as an integer, it will be assumed to be in seconds.
 
     Raises:
-        ValueError: If [`value`][(c).] is negative or 24 hours or more.
-        ValueError: If [`value`][(c).] is not a multiple
-            of [`minute_interval`][(c).] or [`second_interval`][(c).].
+        ValueError: If it is not greater than or equal to `0`.
+        ValueError: If it is not strictly less than `24` hours.
+        ValueError: If it is not a multiple of :attr:`minute_interval`.
+        ValueError: If it is not a multiple of :attr:`second_interval`.
     """
 
     alignment: Alignment = field(default_factory=lambda: Alignment.CENTER)
@@ -71,28 +73,30 @@ class CupertinoTimerPicker(LayoutControl):
     Defines how this picker should be positioned within its parent.
     """
 
-    second_interval: int = 1
+    second_interval: Annotated[
+        int,
+        V.gt(0),
+        V.factor_of(60),
+    ] = 1
     """
     The granularity of the second spinner.
 
-    Note:
-        Must be a positive integer factor of `60`.
-
     Raises:
-        ValueError: If [`second_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not a factor of `60`.
     """
 
-    minute_interval: int = 1
+    minute_interval: Annotated[
+        int,
+        V.gt(0),
+        V.factor_of(60),
+    ] = 1
     """
     The granularity of the minute spinner.
 
-    Note:
-        Must be a positive integer factor of `60`.
-
     Raises:
-        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not a factor of `60`.
     """
 
     mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
@@ -110,16 +114,16 @@ class CupertinoTimerPicker(LayoutControl):
     The uniform height of all children.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoTimerPicker"]] = None
     """
     Called when the timer's duration changes.
 
-    The [`data`][flet.Event.] property of the event
+    The :attr:`~flet.Event.data` property of the event
     handler contains the new duration value.
-    Its type matches [`value`][(c).]: if `value` is a `Duration`,
+    Its type matches :attr:`value`: if `value` is a `Duration`,
     then `data` is also a `Duration`; otherwise, it is an `int` (seconds).
     """
 
@@ -137,22 +141,12 @@ class CupertinoTimerPicker(LayoutControl):
             raise ValueError(
                 f"value must be strictly less than 24 hours, got {value.in_hours} hours"
             )
-        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
-            raise ValueError(
-                f"minute_interval ({self.minute_interval}) must be a positive "
-                "integer factor of 60"
-            )
-        if not (self.second_interval > 0 and 60 % self.second_interval == 0):
-            raise ValueError(
-                f"second_interval ({self.second_interval}) must be a positive "
-                "integer factor of 60"
-            )
-        if value.in_minutes % self.minute_interval != 0:
+        if self.minute_interval > 0 and value.in_minutes % self.minute_interval != 0:
             raise ValueError(
                 f"value ({value.in_minutes} minutes) must be a multiple "
                 f"of minute_interval ({self.minute_interval})"
             )
-        if value.in_seconds % self.second_interval != 0:
+        if self.second_interval > 0 and value.in_seconds % self.second_interval != 0:
             raise ValueError(
                 f"value ({value.in_seconds} seconds) must be a multiple "
                 f"of second_interval ({self.second_interval})"

@@ -1,0 +1,26 @@
+[project]
+name = "data-table-adaptive-row-heights"
+version = "1.0.0"
+description = "Demonstrates adaptive DataTable row heights for multi-line cell content using infinite max row height."
+requires-python = ">=3.10"
+keywords = ["data table", "adaptive row height", "multiline", "cells"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable"]
+
+[tool.flet.metadata]
+title = "Adaptive row heights"
+controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell"]
+layout_pattern = "table-view"
+complexity = "basic"
+features = ["adaptive row height", "multiline cell content"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

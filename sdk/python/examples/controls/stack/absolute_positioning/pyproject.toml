@@ -1,0 +1,26 @@
+[project]
+name = "stack-absolute-positioning"
+version = "1.0.0"
+description = "Places colored containers at fixed corners and center positions inside a Stack."
+requires-python = ">=3.10"
+keywords = ["stack", "layout", "positioning", "absolute", "container"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Stack"]
+
+[tool.flet.metadata]
+title = "Absolute positioning"
+controls = ["SafeArea", "Container", "Stack", "Column"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["absolute positioning"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

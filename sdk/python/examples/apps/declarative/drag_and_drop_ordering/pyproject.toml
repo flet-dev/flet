@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-drag-and-drop-ordering"
+version = "1.0.0"
+description = "Reorders groups and items declaratively with nested drag-and-drop targets."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "drag and drop", "reordering", "kanban"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Drag and drop ordering"
+controls = ["SafeArea", "Row", "Column", "Draggable", "DragTarget", "TextField", "TextButton"]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = ["drag and drop", "reordering", "nested state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

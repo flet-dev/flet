@@ -12,9 +12,9 @@ __all__ = ["Oval"]
 class Oval(Shape):
     """
     Draws an axis-aligned oval that fills the given axis-aligned rectangle with the \
-    given [`paint`][(c).].
+    given :attr:`paint`.
 
-    The [`style`][flet.Paint.] property of [`paint`][(c).] indicates
+    The :attr:`~flet.Paint.style` property of :attr:`paint` indicates
     whether this oval is filled, stroked, or both.
     """
 

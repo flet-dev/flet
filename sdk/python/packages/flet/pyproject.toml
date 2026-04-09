@@ -19,7 +19,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
-Documentation = "https://docs.flet.dev/"
+Documentation = "https://flet.dev/docs/"
 
 [project.optional-dependencies]
 all = [
@@ -76,27 +76,6 @@ docs-coverage = [
     "docstr-coverage >=2.3.2",
 ]
 docs = [
-    "mkdocs >=1.6.1,<2.0.0",
-    "mkdocs-material >=9.6.20",
-    "mkdocstrings-python >=1.18.2",
-    "mkdocstrings-python-xref >=1.16.4",
-    "mike >=2.1.3",
-    "markdown >=3.9",
-    "pymdown-extensions >=10.16.1",
-    "mkdocs-exclude >=1.0.2",
-    "mkdocs-glightbox >=0.5.1",
-    "mkdocs-open-in-new-tab >=1.0.8",
-    "mkdocs-section-index >=0.3.10",
-    "griffe-warnings-deprecated >=1.1.0",
-    "pygments >=2.16",
-    "markdown-exec[ansi] >=1.11.0",
-    "pydocstyle >=6.3.0",
-    "linkcheckmd >=1.4.0",
-    "mkdocs-external-images",
-    "mkdocs-macros-plugin>=1.5.0",
-    "packaging >=23.0",
-    "flet-cli",
-    "flet-web",
     { include-group = 'extensions' },
     { include-group = 'docs-coverage' },
 ]
@@ -116,6 +95,3 @@ flet = [
     "controls/cupertino/cupertino_icons.json",
     "controls/cupertino/cupertino_icons.pyi",
 ]
-
-[tool.uv.sources]
-mkdocs-external-images = { git = "https://github.com/flet-dev/mkdocs-external-images", tag = "v0.2.0" }

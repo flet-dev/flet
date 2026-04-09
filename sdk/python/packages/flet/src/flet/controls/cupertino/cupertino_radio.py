@@ -41,7 +41,7 @@ class CupertinoRadio(LayoutControl):
 
     value: str = ""
     """
-    The value to set to [`RadioGroup`][flet.] ancestor/parent when this radio is \
+    The value to set to :class:`~flet.RadioGroup` ancestor/parent when this radio is \
     selected.
     """
 

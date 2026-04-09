@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -14,6 +14,7 @@ from flet.controls.events import (
 from flet.controls.layout_control import LayoutControl
 from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
+from flet.utils.validation import V
 
 __all__ = ["InteractiveViewer"]
 
@@ -21,17 +22,18 @@ __all__ = ["InteractiveViewer"]
 @control("InteractiveViewer")
 class InteractiveViewer(LayoutControl):
     """
-    Allows you to pan, zoom, and rotate its [`content`][(c).].
+    Allows you to pan, zoom, and rotate its :attr:`content`.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The `Control` to be transformed.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     pan_enabled: bool = True
@@ -52,7 +54,7 @@ class InteractiveViewer(LayoutControl):
     constrained: bool = True
     """
     Whether the normal size constraints at this point in the control tree are applied \
-    to the [`content`][(c).].
+    to the :attr:`content`.
 
     If set to `False`, then the content will be given infinite constraints. This
     is often useful when a content should be bigger than this `InteractiveViewer`.
@@ -67,35 +69,47 @@ class InteractiveViewer(LayoutControl):
     is sized properly.
     """
 
-    max_scale: Number = 2.5
+    max_scale: Annotated[
+        Number,
+        V.gt(0),
+        V.ge_field("min_scale"),
+    ] = 2.5
     """
     The maximum allowed scale.
 
     Raises:
-        ValueError: If it is not greater than `0` or is less than
-            [`min_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to :attr:`min_scale`.
     """
 
-    min_scale: Number = 0.8
+    min_scale: Annotated[
+        Number,
+        V.gt(0),
+        V.le_field("max_scale"),
+    ] = 0.8
     """
     The minimum allowed scale.
 
-    The effective scale is limited by the value of [`boundary_margin`][(c).].
+    The effective scale is limited by the value of :attr:`boundary_margin`.
     If scaling would cause the content to be displayed outside the defined boundary,
     it is prevented. By default, `boundary_margin` is set to `Margin.all(0)`,
     so scaling below `1.0` is typically not possible unless you increase the
     `boundary_margin` value.
 
     Raises:
-        ValueError: If it is not greater than `0` or less than [`max_scale`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to :attr:`max_scale`.
     """
 
-    interaction_end_friction_coefficient: Number = 0.0000135
+    interaction_end_friction_coefficient: Annotated[
+        Number,
+        V.gt(0),
+    ] = 0.0000135
     """
     Changes the deceleration behavior after a gesture.
 
     Raises:
-        ValueError: If it is less than or equal to `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     scale_factor: Number = 200
@@ -111,22 +125,22 @@ class InteractiveViewer(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    Defines how to clip the [`content`][(c).].
+    Defines how to clip the :attr:`content`.
 
-    If set to [`ClipBehavior.NONE`][flet.], the [`content`][(c).] can visually overflow
+    If set to :attr:`flet.ClipBehavior.NONE`, the :attr:`content` can visually overflow
     the bounds of this `InteractiveViewer`, but gesture events (such as pan or zoom)
     will only be recognized within the viewer's area. Ensure this `InteractiveViewer`
-    is sized appropriately when using [`ClipBehavior.NONE`][flet.].
+    is sized appropriately when using :attr:`flet.ClipBehavior.NONE`.
     """
 
     alignment: Optional[Alignment] = None
     """
-    The alignment of the [`content`][(c).] within this viewer.
+    The alignment of the :attr:`content` within this viewer.
     """
 
     boundary_margin: MarginValue = field(default_factory=lambda: Margin.all(0))
     """
-    A margin for the visible boundaries of the [`content`][(c).].
+    A margin for the visible boundaries of the :attr:`content`.
 
     Any transformation that results in the viewport being able to view outside
     of the boundaries will be stopped at the boundary. The boundaries do not
@@ -136,13 +150,13 @@ class InteractiveViewer(LayoutControl):
     To produce no boundaries at all, pass an infinite value.
 
     Defaults to `Margin.all(0)`, which results in boundaries that are the
-    exact same size and position as the [`content`][(c).].
+    exact same size and position as the :attr:`content`.
     """
 
     interaction_update_interval: int = 200
     """
-    The interval (in milliseconds) at which the [`on_interaction_update`][(c).] event \
-    is fired.
+    The interval (in milliseconds) at which the :attr:`on_interaction_update` event is \
+    fired.
     """
 
     on_interaction_start: Optional[
@@ -166,25 +180,6 @@ class InteractiveViewer(LayoutControl):
     Called when the user ends a pan or scale gesture.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
-        if self.min_scale <= 0:
-            raise ValueError(f"min_scale must be greater than 0, got {self.min_scale}")
-        if self.max_scale <= 0:
-            raise ValueError(f"max_scale must be greater than 0, got {self.max_scale}")
-        if self.max_scale < self.min_scale:
-            raise ValueError(
-                "max_scale must be greater than or equal to min_scale, "
-                f"got max_scale={self.max_scale}, min_scale={self.min_scale}"
-            )
-        if self.interaction_end_friction_coefficient <= 0:
-            raise ValueError(
-                "interaction_end_friction_coefficient must be greater than 0, "
-                f"got {self.interaction_end_friction_coefficient}"
-            )
-
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """
         Resets the current transform matrix to identity.
@@ -206,7 +201,7 @@ class InteractiveViewer(LayoutControl):
         Saves a snapshot of the current transform matrix.
 
         The saved state can later be restored using
-        [`restore_state()`][(c).restore_state]. Calling this method again
+        :meth:`restore_state`. Calling this method again
         overwrites the previously saved snapshot.
         """
         await self._invoke_method("save_state")
@@ -214,7 +209,7 @@ class InteractiveViewer(LayoutControl):
     async def restore_state(self):
         """
         Restores the transform matrix previously captured by
-        [`save_state()`][(c).save_state].
+        :meth:`save_state`.
 
         If no state has been saved yet, this method has no effect.
         """
@@ -230,9 +225,9 @@ class InteractiveViewer(LayoutControl):
                 zoom out.
 
         Note:
-            The resulting scale is clamped to [`min_scale`][(c).] and
-            [`max_scale`][(c).]. Additional boundary clamping is applied so the
-            visible viewport remains within [`boundary_margin`][(c).] limits.
+            The resulting scale is clamped to :attr:`min_scale` and
+            :attr:`max_scale`. Additional boundary clamping is applied so the
+            visible viewport remains within :attr:`boundary_margin` limits.
         """
         await self._invoke_method("zoom", arguments={"factor": factor})
 

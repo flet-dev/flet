@@ -10,7 +10,7 @@ It is based on the [flutter_code_editor](https://pub.dev/packages/flutter_code_e
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/codeeditor/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/codeeditor/).
 
 ## Usage
 

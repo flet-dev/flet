@@ -1,0 +1,27 @@
+[project]
+name = "apps-authentication-github-login-same-page"
+version = "1.0.0"
+description = "Runs GitHub OAuth in the same browser tab and displays the authenticated user ID."
+requires-python = ">=3.10"
+keywords = ["apps", "authentication", "github", "oauth", "redirect", "web", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Authentication"]
+
+[tool.flet.metadata]
+title = "GitHub login in same page"
+controls = ["SafeArea", "Column", "Button", "Text", "GitHubOAuthProvider", "UrlLauncher"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["oauth login", "same-tab redirect"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["web"]

@@ -52,6 +52,17 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Prefer `parse`-prefixed helper names when converting input to Flutter structures.
 - Avoid single-use local variables.
 
+### Default Value Matching (Critical)
+
+Properties with default values on the Python side are **not sent to Flutter** when unchanged from the default. Every Dart property read **must provide the same default** as its Python counterpart:
+
+- `control.getDouble("size", 100.0)!` when Python has `size: float = 100.0`
+- `control.getBool("animate", true)!` when Python has `animate: bool = True`
+- `parseDuration(value["dur"], const Duration(milliseconds: 500))!` when Python has `dur: DurationValue = field(default_factory=lambda: Duration(milliseconds=500))`
+- `control.get<List>("items")?.map(...).toList() ?? const []` when Python has `items: list[str] = field(default_factory=list)`
+
+Without matching defaults, Dart receives `null` and either crashes or silently uses the wrong value. This applies to all property types: bools, numbers, strings, enums, durations, collections, and nested `@ft.value` types.
+
 ## Integration Checklist
 
 - Add dependency and registration to Flet client app.
@@ -65,8 +76,8 @@ Implement a Flet extension around an external Flutter package using existing `fl
 
 ## Docs, Examples, Tests
 
-- Add control/service docs under `sdk/python/packages/flet/docs/<name>`.
-- Add all custom enums/types docs and update `sdk/python/packages/flet/mkdocs.yml` navigation.
+- Add control/service docs under `website/docs/controls/<name>` for controls and `website/docs/services/<name>` for services.
+- Add all custom enums/types docs and update `website/sidebars.yml` navigation.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
 - Add examples under `sdk/python/examples` in the appropriate category for control vs service.
 - Add integration tests under `packages/flet/integration_tests` in the appropriate category for control vs service.

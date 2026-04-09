@@ -1,0 +1,26 @@
+[project]
+name = "container-clickable"
+version = "1.0.0"
+description = "Container clickability showcase with non-clickable, clickable, and ink-enabled variants."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Clickable"
+controls = ["SafeArea", "Row", "Container", "Text"]
+layout_pattern = "row-showcase"
+complexity = "basic"
+features = ["click handling", "ink effect"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

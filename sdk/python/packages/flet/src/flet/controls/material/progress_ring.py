@@ -57,7 +57,7 @@ class ProgressRing(LayoutControl):
 
     A value of 0 (center stroke) will center the border on the edge of the control.
 
-    If [`ProgressRing.year_2023`][flet.] is `True`, then the
+    If :attr:`flet.ProgressRing.year_2023` is `True`, then the
     default value is `0`. Otherwise, the default value is `-1`.
     """
 
@@ -81,13 +81,13 @@ class ProgressRing(LayoutControl):
     """
     The gap between the active indicator and the background track.
 
-    If [`year_2023`][(c).] is `True` or `Theme.use_material3` is
+    If :attr:`year_2023` is `True` or `Theme.use_material3` is
     `False`, then no track gap will be drawn.
 
     Set `track_gap` to `0` to hide this track gap.
 
     If `None`,
-    [`ProgressIndicatorTheme.track_gap`][flet.] is used.
+    :attr:`flet.ProgressIndicatorTheme.track_gap` is used.
 
     If that's is also `None`, defaults to `4.0`.
     """
@@ -97,7 +97,7 @@ class ProgressRing(LayoutControl):
     Defines the minimum and maximum size of the progress indicator.
 
     If `None`,
-    [`ProgressIndicatorTheme.size_constraints`][flet.]
+    :attr:`flet.ProgressIndicatorTheme.size_constraints`
     is used.
 
     If that's is also `None`, defaults to a minimum width and height of `36`.
@@ -108,10 +108,10 @@ class ProgressRing(LayoutControl):
     The padding around the indicator track.
 
     If `None`,
-    [`ProgressIndicatorTheme.circular_track_padding`][flet.]
+    :attr:`flet.ProgressIndicatorTheme.circular_track_padding`
     is used.
 
-    If that's is also `None` and [`year_2023`][(c).] is `False`,
+    If that's is also `None` and :attr:`year_2023` is `False`,
     defaults to `Padding.all(4.0)`.
 
     Otherwise, defaults to `Padding.all(0.0)`.
@@ -125,9 +125,9 @@ class ProgressRing(LayoutControl):
     When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
 
     If not set, then the
-    [`ProgressIndicatorTheme.year_2023`][flet.] will be
+    :attr:`flet.ProgressIndicatorTheme.year_2023` will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.] is `False`, then this property
+    If :attr:`flet.Theme.use_material3` is `False`, then this property
     is ignored.
     """

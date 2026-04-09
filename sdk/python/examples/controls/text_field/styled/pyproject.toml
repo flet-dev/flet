@@ -1,0 +1,26 @@
+[project]
+name = "text-field-styled"
+version = "1.0.0"
+description = "Customizes TextField colors, cursor, borders, capitalization, and focus behavior."
+requires-python = ">=3.10"
+keywords = ["text field", "styling", "focus", "async", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Styled TextField"
+controls = ["SafeArea", "TextField"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom field styling", "programmatic focus"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
@@ -17,6 +17,7 @@ from flet.controls.types import (
     Url,
     VisualDensity,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "FilledIconButton",
@@ -47,12 +48,12 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    The foreground color of the [`icon`][flet.IconButton.].
+    The foreground color of the :attr:`~flet.IconButton.icon`.
     """
 
     icon_size: Optional[Number] = None
     """
-    The [`icon`][flet.IconButton.]'s size in virtual pixels.
+    The :attr:`~flet.IconButton.icon`'s size in virtual pixels.
 
     Defaults to `24`.
     """
@@ -62,8 +63,8 @@ class IconButton(LayoutControl, AdaptiveControl):
     The optional selection state of this button.
 
     If this property is not set, the button will behave as a normal push button,
-    otherwise, the button will toggle between showing [`icon`][flet.IconButton.]
-    (when `False`), and [`selected_icon`][flet.IconButton.] (when `True`).
+    otherwise, the button will toggle between showing :attr:`~flet.IconButton.icon`
+    (when `False`), and :attr:`~flet.IconButton.selected_icon` (when `True`).
     """
 
     selected_icon: Optional[IconDataOrControl] = None
@@ -92,14 +93,16 @@ class IconButton(LayoutControl, AdaptiveControl):
     Customizes this button's appearance.
 
     Note:
-        - Only honoured in Material 3 design ([`Theme.use_material3`][flet.] is `True`).
-        - If [`Theme.use_material3`][flet.] is `True`,
+        - Only honoured in Material 3 design (:attr:`flet.Theme.use_material3` is \
+        `True`).
+        - If :attr:`flet.Theme.use_material3` is `True`,
             any parameters defined in style will be overridden by the
             corresponding parameters in this button.
-            For example, if icon button [`visual_density`][flet.IconButton.]
-            is set to [`VisualDensity.STANDARD`][flet.] and
-            style's [`visual_density`][flet.ButtonStyle.] is
-            set to [`VisualDensity.COMPACT`][flet.], [`VisualDensity.STANDARD`][flet.]
+            For example, if icon button :attr:`~flet.IconButton.visual_density`
+            is set to :attr:`flet.VisualDensity.STANDARD` and
+            style's :attr:`~flet.ButtonStyle.visual_density` is
+            set to :attr:`flet.VisualDensity.COMPACT`, \
+            :attr:`flet.VisualDensity.STANDARD`
             will be used.
     """
 
@@ -130,23 +133,26 @@ class IconButton(LayoutControl, AdaptiveControl):
     The primary color of this button when it is in the pressed state.
     """
 
-    splash_radius: Optional[Number] = None
+    splash_radius: Annotated[
+        Optional[Number],
+        V.gt(0),
+    ] = None
     """
     The splash radius.
 
     Note:
         This value is honoured only when in Material 2
-        ([`Theme.use_material3`][flet.] is `False`).
+        (:attr:`flet.Theme.use_material3` is `False`).
 
     Raises:
-        ValueError: If [`splash_radius`][(c).] is not greater than `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     alignment: Optional[Alignment] = None
     """
     Defines how the icon is positioned within this button.
 
-    Defaults to [`Alignment.CENTER`][flet.].
+    Defaults to :attr:`flet.Alignment.CENTER`.
     """
 
     padding: Optional[PaddingValue] = None
@@ -168,7 +174,7 @@ class IconButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][flet.IconButton.] event callback is provided,
+    Additionally, if :attr:`~flet.IconButton.on_click` event callback is provided,
     it is fired after that.
     """
 
@@ -217,10 +223,6 @@ class IconButton(LayoutControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.splash_radius is not None and self.splash_radius <= 0:
-            raise ValueError(
-                f"splash_radius must be greater than 0, got {self.splash_radius}"
-            )
         if (
             self.style is not None
             or self.bgcolor is not None
@@ -245,7 +247,7 @@ class IconButton(LayoutControl, AdaptiveControl):
 @control("FilledIconButton")
 class FilledIconButton(IconButton):
     """
-    A filled variant of [`IconButton`][flet.].
+    A filled variant of :class:`~flet.IconButton`.
 
     Filled icon buttons have higher visual impact and should be used for high emphasis
     actions, such as turning off a microphone or camera.
@@ -259,7 +261,7 @@ class FilledIconButton(IconButton):
 @control("FilledTonalIconButton")
 class FilledTonalIconButton(IconButton):
     """
-    A filled tonal variant of [`IconButton`][flet.].
+    A filled tonal variant of :class:`~flet.IconButton`.
 
     Filled tonal icon buttons are a middle ground between filled and
     outlined icon buttons. They're useful in contexts where the button requires
@@ -275,7 +277,7 @@ class FilledTonalIconButton(IconButton):
 @control("OutlinedIconButton")
 class OutlinedIconButton(IconButton):
     """
-    An outlined variant of [`IconButton`][flet.].
+    An outlined variant of :class:`~flet.IconButton`.
 
     Outlined icon buttons are medium-emphasis buttons.
     They're useful when an icon button needs more emphasis than a

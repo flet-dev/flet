@@ -1,0 +1,26 @@
+[project]
+name = "column-scroll"
+version = "1.0.0"
+description = "Interactive column scrolling with dynamic controls and scroll mode switching."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "scroll mode", "dynamic controls", "text field"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column scrolling"
+controls = ["Row", "Column", "Container", "Button", "Text", "TextField"]
+layout_pattern = "split-panel"
+complexity = "basic"
+features = ["dynamic add/remove", "scroll mode cycling", "interactive control panel"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

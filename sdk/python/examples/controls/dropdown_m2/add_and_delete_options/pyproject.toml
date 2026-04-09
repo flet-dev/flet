@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-m2-add-and-delete-options"
+version = "1.0.0"
+description = "Adds and removes DropdownM2 options dynamically based on text input and current selection."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "dynamic options", "add option", "delete option", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/DropdownM2"]
+
+[tool.flet.metadata]
+title = "Add and delete options"
+controls = ["SafeArea", "Column", "Row", "DropdownM2", "TextField", "Button", "OutlinedButton"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["dynamic option insertion", "delete selected option"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

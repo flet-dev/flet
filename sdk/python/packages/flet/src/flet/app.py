@@ -35,7 +35,7 @@ AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
 
 Represents a callable (synchronous or asynchronous) that accepts a single argument of
-type [`Page`][flet.]. The return value is ignored.
+type :class:`~flet.Page`. The return value is ignored.
 
 Used for both `main` and `before_main` handlers.
 """
@@ -77,7 +77,7 @@ def run(
 
     Args:
         main: Application entry point. Handler (function or coroutine) must
-            have 1 parameter of instance [`Page`][flet.Page].
+            have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
         name: Page/app name used in web URL path when applicable.
         host: Host/IP to bind the web server to.
@@ -158,7 +158,7 @@ async def run_async(
 
     Args:
         main: Application entry point. Handler (function or coroutine) must
-            have 1 parameter of instance [`Page`][flet.Page].
+            have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
         name: Page/app name used in web URL path when applicable.
         host: Host/IP to bind the web server to.
@@ -219,7 +219,10 @@ async def run_async(
         """
 
         if url_prefix is not None:
-            print(url_prefix, page_url)
+            parts = [url_prefix, page_url]
+            if view is not None:
+                parts.append(view.value)
+            print(*parts)
         else:
             logger.info("App URL: %s", page_url)
 

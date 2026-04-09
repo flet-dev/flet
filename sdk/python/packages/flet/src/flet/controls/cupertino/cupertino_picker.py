@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -10,6 +10,7 @@ from flet.controls.types import (
     ColorValue,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoPicker"]
 
@@ -25,17 +26,20 @@ class CupertinoPicker(LayoutControl):
     A list of controls representing items in this picker.
     """
 
-    item_extent: Number = 32.0
+    item_extent: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 32.0
     """
-    The uniform height of all [`controls`][(c).].
+    The uniform height of all :attr:`controls`.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     selected_index: int = 0
     """
-    The index (starting from `0`) of the selected item in the [`controls`][(c).] list.
+    The index (starting from `0`) of the selected item in the :attr:`controls` list.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -53,7 +57,10 @@ class CupertinoPicker(LayoutControl):
     If `True`, children on a wheel can be scrolled in a loop.
     """
 
-    magnification: Number = 1.0
+    magnification: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 1.0
     """
     The zoomed-in or magnification rate of the magnifier.
 
@@ -62,18 +69,21 @@ class CupertinoPicker(LayoutControl):
     list. The item will be zoomed-out if magnification is less than `1.0`.
 
     Note:
-        Has effect only if [`use_magnifier`][(c).] is `True`.
+        Has effect only if :attr:`use_magnifier` is `True`.
 
     Raises:
-        ValueError: If [`magnification`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
-    squeeze: Number = 1.45
+    squeeze: Annotated[
+        Number,
+        V.gt(0.0),
+    ] = 1.45
     """
     The angular compactness of the children on the wheel.
 
     Raises:
-        ValueError: If [`squeeze`][(c).] is not strictly greater than `0.0`.
+        ValueError: If it is not strictly greater than `0.0`.
     """
 
     diameter_ratio: Number = 1.07
@@ -94,31 +104,15 @@ class CupertinoPicker(LayoutControl):
     matching the height of the center row.
 
     Defaults to a rounded rectangle in iOS 14 style with
-    [`default_selection_overlay_bgcolor`][(c).] as background color.
+    :attr:`default_selection_overlay_bgcolor` as background color.
     """
 
     default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     """
-    The default background color of the [`selection_overlay`][(c).].
+    The default background color of the :attr:`selection_overlay`.
     """
 
     on_change: Optional[ControlEventHandler["CupertinoPicker"]] = None
     """
     Called when the selection changes.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.squeeze <= 0.0:
-            raise ValueError(
-                f"squeeze must be strictly greater than 0.0, got {self.squeeze}"
-            )
-        if self.magnification <= 0.0:
-            raise ValueError(
-                f"magnification must be strictly greater than 0.0, "
-                f"got {self.magnification}"
-            )
-        if self.item_extent <= 0.0:
-            raise ValueError(
-                f"item_extent must be strictly greater than 0.0, got {self.item_extent}"
-            )

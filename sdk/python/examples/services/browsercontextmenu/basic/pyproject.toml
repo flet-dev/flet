@@ -1,0 +1,27 @@
+[project]
+name = "services-browsercontextmenu-basic"
+version = "1.0.0"
+description = "Enables and disables the browser context menu from a simple web control panel."
+requires-python = ">=3.10"
+keywords = ["browsercontextmenu", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/BrowserContextMenu"]
+
+[tool.flet.metadata]
+title = "Basic browser context menu"
+controls = ["SafeArea", "Column", "Page", "BrowserContextMenu", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["web context menu toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["web"]

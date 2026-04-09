@@ -1,0 +1,26 @@
+[project]
+name = "page-device-orientation"
+version = "1.0.0"
+description = "Shows how to handle device orientation and lock allowed orientations at runtime."
+requires-python = ">=3.10"
+keywords = ["page", "orientation", "media", "checkbox", "mobile"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Device orientation"
+controls = ["SafeArea", "AppBar", "Text", "Column", "Checkbox", "Page"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["media change handling", "orientation locking"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

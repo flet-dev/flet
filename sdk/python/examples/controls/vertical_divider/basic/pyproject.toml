@@ -1,0 +1,26 @@
+[project]
+name = "vertical-divider-basic"
+version = "1.0.0"
+description = "Separates colored containers in a row using VerticalDivider variants."
+requires-python = ">=3.10"
+keywords = ["vertical divider", "layout", "row", "spacing", "divider"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/VerticalDivider"]
+
+[tool.flet.metadata]
+title = "VerticalDivider basic"
+controls = ["SafeArea", "Row", "VerticalDivider", "Container"]
+layout_pattern = "single-row"
+complexity = "basic"
+features = ["divider width and thickness variants"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

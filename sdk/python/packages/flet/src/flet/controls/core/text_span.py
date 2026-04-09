@@ -5,6 +5,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import Url
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["TextSpan"]
 
@@ -14,10 +15,10 @@ class TextSpan(Control):
     """
     A text span.
 
-    Usage Example: As a child of [`Text.spans`][flet.].
+    Usage Example: As a child of :attr:`flet.Text.spans`.
 
-    For the object to be useful, at least one of [`text`][(c).] or
-    [`spans`][(c).] should be set.
+    For the object to be useful, at least one of :attr:`text` or
+    :attr:`spans` should be set.
     """
 
     text: Optional[str] = None
@@ -25,7 +26,7 @@ class TextSpan(Control):
     The text contained in this span.
 
     Note:
-        If both `text` and [`spans`][(c).] are defined,
+        If both `text` and :attr:`spans` are defined,
         the `text` takes precedence.
     """
 
@@ -39,7 +40,7 @@ class TextSpan(Control):
     Additional spans to include as children.
 
     Note:
-        If both `spans` and [`text`][(c).] are defined,
+        If both `spans` and :attr:`text` are defined,
         the `text` takes precedence.
     """
 
@@ -47,7 +48,7 @@ class TextSpan(Control):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is provided,
+    Additionally, if :attr:`on_click` event callback is provided,
     it is fired after that.
     """
 
@@ -59,7 +60,7 @@ class TextSpan(Control):
     actual text.
 
     Raises:
-        ValueError: If [`semantics_label`][(c).] is set when [`text`][(c).] is `None`.
+        ValueError: If it is set when :attr:`text` is `None`.
     """
 
     spell_out: Optional[bool] = None
@@ -95,7 +96,9 @@ class TextSpan(Control):
     Called when a mouse pointer has exited this span.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.text is None and self.semantics_label is not None:
-            raise ValueError("semantics_label can be set only when text is not None")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.text is not None or ctrl.semantics_label is None,
+            message="semantics_label can be set only when text is not None",
+        ),
+    )

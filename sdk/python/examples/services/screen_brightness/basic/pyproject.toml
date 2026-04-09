@@ -1,0 +1,27 @@
+[project]
+name = "services-screen-brightness-basic"
+version = "1.0.0"
+description = "Reads and adjusts system and application brightness with live change notifications."
+requires-python = ">=3.10"
+keywords = ["screen brightness", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/ScreenBrightness"]
+
+[tool.flet.metadata]
+title = "Basic screen brightness"
+controls = ["SafeArea", "Column", "Page", "ScreenBrightness", "Text", "Slider", "Switch", "Row"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["brightness control", "change events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios"]

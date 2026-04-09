@@ -23,35 +23,35 @@ __all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 class ListTileTitleAlignment(Enum):
     """
-    Defines how [`ListTile`][flet.] aligns [`leading`][flet.ListTile.]
-    and [`trailing`][flet.ListTile.] relative to the tile's title area.
+    Defines how :class:`~flet.ListTile` aligns :attr:`~flet.ListTile.leading`
+    and :attr:`~flet.ListTile.trailing` relative to the tile's title area.
 
     The alignment is computed against the text block formed by
-    [`title`][flet.ListTile.] and [`subtitle`][flet.ListTile.].
+    :attr:`~flet.ListTile.title` and :attr:`~flet.ListTile.subtitle`.
     Use this to tune the visual balance between icon/avatar controls and text,
     especially when tiles switch between one-line, two-line, and three-line layouts.
     """
 
     TOP = "top"
     """
-    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    Aligns :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
     toward the top of the title area.
 
-    Top placement respects [`ListTile.min_vertical_padding`][flet.].
+    Top placement respects :attr:`flet.ListTile.min_vertical_padding`.
     """
 
     CENTER = "center"
     """
-    Centers [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    Centers :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
     relative to the title/subtitle block.
     """
 
     BOTTOM = "bottom"
     """
-    Aligns [`leading`][flet.ListTile.] and [`trailing`][flet.ListTile.]
+    Aligns :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
     toward the bottom of the title area.
 
-    Bottom placement respects [`ListTile.min_vertical_padding`][flet.].
+    Bottom placement respects :attr:`flet.ListTile.min_vertical_padding`.
     """
 
     THREE_LINE = "threeLine"
@@ -71,8 +71,8 @@ class ListTileTitleAlignment(Enum):
 
 class ListTileStyle(Enum):
     """
-    Defines the title font used for [`ListTile`][flet.]
-    descendants of a [`ListTileTheme`][flet.].
+    Defines the title font used for :class:`~flet.ListTile`
+    descendants of a :class:`~flet.ListTileTheme`.
 
     List tiles that appear in a Drawer use the theme's TextTheme.body_large text style,
     which is a little smaller than the theme's TextTheme.title_medium text style, which
@@ -106,21 +106,21 @@ class ListTile(LayoutControl, AdaptiveControl):
     """
     A control to display as primary content of the list tile.
 
-    Typically a [`Text`][flet.] control. This should not
-    wrap. To enforce the single line limit, use [`Text.max_lines`][flet.].
+    Typically a :class:`~flet.Text` control. This should not
+    wrap. To enforce the single line limit, use :attr:`flet.Text.max_lines`.
     """
 
     subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title.
 
-    If [`is_three_line`][(c).] is `False`, this should not wrap.
+    If :attr:`is_three_line` is `False`, this should not wrap.
     If `is_three_line` is `True`, this should be configured to take a maximum of two
     lines.
-    For example, you can use [`Text.max_lines`][flet.] to enforce the
+    For example, you can use :attr:`flet.Text.max_lines` to enforce the
     number of lines.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     is_three_line: Optional[bool] = None
@@ -134,19 +134,19 @@ class ListTile(LayoutControl, AdaptiveControl):
     treated as having two lines if the subtitle is non-null.
 
     When using a Text control for title and subtitle, you can enforce line limits
-    using [`Text.max_lines`][flet.].
+    using :attr:`flet.Text.max_lines`.
     """
 
     leading: Optional[IconDataOrControl] = None
     """
-    A control to display before the [`title`][(c).].
+    A control to display before the :attr:`title`.
     """
 
     trailing: Optional[IconDataOrControl] = None
     """
-    A control to display after the [`title`][(c).].
+    A control to display after the :attr:`title`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -168,8 +168,8 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     hover_color: Optional[ColorValue] = None
     """
-    The tile's color when hovered. Only takes effect if [`toggle_inputs`][(c).] is \
-    True or if [`on_click`][(c).] is provided.
+    The tile's color when hovered. Only takes effect if :attr:`toggle_inputs` is True \
+    or if :attr:`on_click` is provided.
     """
 
     selected: bool = False
@@ -194,8 +194,8 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     toggle_inputs: bool = False
     """
-    Whether clicking on a list tile should toggle the state of [`Radio`][flet.], \
-    [`Checkbox`][flet.] or [`Switch`][flet.] inside this tile.
+    Whether clicking on a list tile should toggle the state of :class:`~flet.Radio`, \
+    :class:`~flet.Checkbox` or :class:`~flet.Switch` inside this tile.
     """
 
     selected_color: Optional[ColorValue] = None
@@ -224,8 +224,8 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     horizontal_spacing: Optional[Number] = None
     """
-    The horizontal gap between the `title` and the [`leading`][(c).] and \
-    [`trailing`][(c).]
+    The horizontal gap between the `title` and the :attr:`leading` and \
+    :attr:`trailing`
     controls.
     """
 
@@ -243,7 +243,7 @@ class ListTile(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is provided,
+    Additionally, if :attr:`on_click` event callback is provided,
     it is fired after that.
     """
 
@@ -258,14 +258,14 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     icon_color: Optional[ColorValue] = None
     """
-    Defines the default color for the icons present in [`leading`][(c).] and \
-    [`trailing`][(c).].
+    Defines the default color for the icons present in :attr:`leading` and \
+    :attr:`trailing`.
     """
 
     text_color: Optional[ColorValue] = None
     """
-    The color used for texts in [`title`][(c).], [`subtitle`][(c).], \
-    [`leading`][(c).], and [`trailing`][(c).].
+    The color used for texts in :attr:`title`, :attr:`subtitle`, :attr:`leading`, and \
+    :attr:`trailing`.
     """
 
     shape: Optional[OutlinedBorder] = None
@@ -281,24 +281,24 @@ class ListTile(LayoutControl, AdaptiveControl):
     mouse_cursor: Optional[MouseCursor] = None
     """
     The cursor to be displayed when a mouse pointer enters or is hovering over this \
-    control. The value is [`MouseCursor`][flet.]
+    control. The value is :class:`~flet.MouseCursor`
     enum.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] for the [`title`][(c).]
+    The :class:`~flet.TextStyle` for the :attr:`title`
     control.
     """
 
     subtitle_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] for the `subtitle` control.
+    The :class:`~flet.TextStyle` for the `subtitle` control.
     """
 
     leading_and_trailing_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] for the `leading` and `trailing` controls.
+    The :class:`~flet.TextStyle` for the `leading` and `trailing` controls.
     """
 
     min_height: Optional[Number] = None
@@ -307,7 +307,7 @@ class ListTile(LayoutControl, AdaptiveControl):
 
     If `None` or not set, default tile heights are `56.0`, `72.0`, and `88.0` for one,
     two, and three lines of text respectively.
-    If [`dense`][(c).] is `True`, these
+    If :attr:`dense` is `True`, these
     defaults are changed to `48.0`, `64.0`, and `76.0`.
 
     Note that, a visual density value or a large title will also adjust the default

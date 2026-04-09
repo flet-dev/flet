@@ -1,0 +1,26 @@
+[project]
+name = "apps-routing-navigation-building-views-on-route-change"
+version = "1.0.0"
+description = "Builds a navigation stack from the current route and handles nested settings routes."
+requires-python = ">=3.10"
+keywords = ["apps", "routing", "navigation", "views", "route change"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Building views on route change"
+controls = ["View", "SafeArea", "Column", "AppBar", "Button", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["routing", "nested routes", "back navigation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

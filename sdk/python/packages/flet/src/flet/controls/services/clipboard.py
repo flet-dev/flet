@@ -86,7 +86,7 @@ class Clipboard(Service):
 
         Returns:
             A list of file references available in the clipboard.
-            On Android these are typically content URIs.
+                On Android these are typically content URIs.
 
         Raises:
             FletUnsupportedPlatformException: If called on platforms other than the

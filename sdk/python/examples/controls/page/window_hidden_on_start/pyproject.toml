@@ -1,0 +1,27 @@
+[project]
+name = "page-window-hidden-on-start"
+version = "1.0.0"
+description = "Demonstrates initializing window settings before showing a hidden app window."
+requires-python = ">=3.10"
+keywords = ["page", "window", "hidden", "startup", "overlay", "desktop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Pages/Page"]
+
+[tool.flet.metadata]
+title = "Window hidden on start"
+controls = ["SafeArea", "Column", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["hidden startup", "window configuration"]
+
+[tool.flet]
+platforms = ["macos", "windows", "linux"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

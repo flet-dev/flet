@@ -1,7 +1,8 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
+from flet.utils.validation import V
 
 __all__ = ["RadarDataSet", "RadarDataSetEntry"]
 
@@ -9,7 +10,7 @@ __all__ = ["RadarDataSet", "RadarDataSetEntry"]
 @ft.control("RadarDataSetEntry")
 class RadarDataSetEntry(ft.BaseControl):
     """
-    A single data point rendered on a [`RadarChart`][(p).].
+    A single data point rendered on a :class:`~flet_charts.RadarChart`.
     """
 
     value: ft.Number
@@ -21,10 +22,20 @@ class RadarDataSetEntry(ft.BaseControl):
 @ft.control("RadarDataSet")
 class RadarDataSet(ft.BaseControl):
     """
-    A collection of [`RadarDataSetEntry`][(p).] drawn as a filled radar shape.
+    A collection of :class:`~flet_charts.RadarDataSetEntry` drawn as a filled radar \
+    shape.
     """
 
-    entries: list[RadarDataSetEntry] = field(default_factory=list)
+    entries: Annotated[
+        list[RadarDataSetEntry],
+        V.or_(
+            V.length_eq(0),
+            V.length_ge(3),
+            message=lambda _control, _field_name, value: (
+                f"entries can contain either 0 or at least 3 items, got {len(value)}"
+            ),
+        ),
+    ] = field(default_factory=list)
     """
     The data points that compose this set.
     """
@@ -38,7 +49,7 @@ class RadarDataSet(ft.BaseControl):
     """
     The gradient used to fill this dataset.
 
-    Takes precedence over [`fill_color`][..].
+    Takes precedence over :attr:`fill_color`.
     """
 
     border_color: ft.ColorValue = ft.Colors.CYAN
@@ -55,12 +66,3 @@ class RadarDataSet(ft.BaseControl):
     """
     The radius of each entry.
     """
-
-    def init(self):
-        super().init()
-        entries_length = len(self.entries)
-        if entries_length != 0 and entries_length < 3:
-            raise ValueError(
-                f"entries can contain either 0 or at least 3 items, "
-                f"got {entries_length}"
-            )

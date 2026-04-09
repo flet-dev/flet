@@ -1,0 +1,26 @@
+[project]
+name = "video-example-1"
+version = "1.0.0"
+description = "Controls video playback, playlist management, volume, and fullscreen in a Flet video player."
+requires-python = ">=3.10"
+keywords = ["video", "media", "playlist", "fullscreen", "player", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Video example 1"
+controls = ["SafeArea", "Column", "Row", "Button", "Slider", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["playlist controls", "volume control", "playback rate control", "fullscreen"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

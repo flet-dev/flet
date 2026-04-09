@@ -60,8 +60,8 @@ TileDisplay? parseTileDisplay(dynamic value, [TileDisplay? defaultValue]) {
     );
   } else if (type == 'fadein') {
     return TileDisplay.fadeIn(
-      startOpacity: parseDouble(value['start_opacity'], 1.0)!,
-      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 1.0)!,
+      startOpacity: parseDouble(value['start_opacity'], 0.0)!,
+      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 0.0)!,
       duration:
           parseDuration(value['duration'], const Duration(milliseconds: 100))!,
     );
@@ -75,9 +75,7 @@ InteractionOptions? parseInteractionOptions(dynamic value,
   return InteractionOptions(
     enableMultiFingerGestureRace:
         parseBool(value["enable_multi_finger_gesture_race"], false)!,
-    pinchMoveThreshold: parseDouble(
-      value["pinch_move_threshold"],
-    )!,
+    pinchMoveThreshold: parseDouble(value["pinch_move_threshold"], 40.0)!,
     scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
     pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
     rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
@@ -156,9 +154,9 @@ KeyboardOptions? parseKeyboardOptions(dynamic value,
       zoomLeapVelocityMultiplier:
           parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
       performLeapTriggerDuration:
-          parseDuration(value["perform_leap_trigger_duration"]),
+          parseDuration(value["perform_leap_trigger_duration"], const Duration(milliseconds: 100))!,
       animationCurveReverseDuration:
-          parseDuration(value["animation_curve_reverse_duration"]));
+          parseDuration(value["animation_curve_reverse_duration"], const Duration(milliseconds: 600))!);
 }
 
 CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
@@ -173,9 +171,11 @@ CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
       setNorthOnClick: parseBool(value["set_north_on_click"], true)!,
       behaviour: parseCursorRotationBehaviour(
           value["behaviour"], CursorRotationBehaviour.offset)!,
-      isKeyTrigger: (LogicalKeyboardKey key) {
-        return (value["trigger_keys"] as List).contains(key);
-      });
+      isKeyTrigger: value["trigger_keys"] != null
+          ? (LogicalKeyboardKey key) {
+              return (value["trigger_keys"] as List).contains(key);
+            }
+          : null);
 }
 
 // Crs? parseCrs(dynamic value, [Crs? defaultValue]) {
@@ -239,8 +239,8 @@ WMSTileLayerOptions? parseWMSTileLayerOptions(dynamic value,
   if (value == null) return defaultValue;
   return WMSTileLayerOptions(
     baseUrl: value["base_url"],
-    format: value["format"],
-    version: value["version"],
+    format: value["format"] ?? 'image/png',
+    version: value["version"] ?? '1.1.1',
     uppercaseBoolValue: parseBool(value["uppercase_bool_value"], false)!,
     transparent: parseBool(value["transparent"], true)!,
     layers: (value["layers"] as List?)?.map((e) => e.toString()).toList() ??

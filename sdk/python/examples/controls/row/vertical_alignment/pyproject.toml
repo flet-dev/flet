@@ -1,0 +1,26 @@
+[project]
+name = "row-vertical-alignment"
+version = "1.0.0"
+description = "Row cross-axis alignment modes with visual comparison."
+requires-python = ">=3.10"
+keywords = ["row", "layout", "crossaxisalignment", "alignment"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Row"]
+
+[tool.flet.metadata]
+title = "Row vertical alignment"
+controls = ["Column", "Row", "Container", "Text"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["cross axis alignment", "layout comparison"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

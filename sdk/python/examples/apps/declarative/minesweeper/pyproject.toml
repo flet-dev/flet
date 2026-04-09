@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-minesweeper"
+version = "1.0.0"
+description = "Implements a declarative Minesweeper board with timer, flagging, and win-loss state."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "minesweeper", "game", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Games", "Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Minesweeper"
+controls = ["SafeArea", "Container", "Column", "Row", "GestureDetector", "Stack", "Text"]
+layout_pattern = "center-stage"
+complexity = "advanced"
+features = ["game state", "async", "timer", "gesture input"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

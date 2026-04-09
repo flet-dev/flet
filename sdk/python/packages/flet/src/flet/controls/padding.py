@@ -105,5 +105,5 @@ PaddingValue = Union[Number, Padding]
 
 Represents padding as either:
 - a single numeric value applied to all sides,
-- or an explicit [`Padding`][flet.] configuration.
+- or an explicit :class:`~flet.Padding` configuration.
 """

@@ -1,0 +1,26 @@
+[project]
+name = "filled-tonal-button-basic"
+version = "1.0.0"
+description = "Demonstrates FilledTonalButton variants including disabled and icon button states."
+requires-python = ">=3.10"
+keywords = ["filled tonal button", "button states", "icon button", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/FilledTonalButton"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "FilledTonalButton"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["enabled and disabled states", "button with icon"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

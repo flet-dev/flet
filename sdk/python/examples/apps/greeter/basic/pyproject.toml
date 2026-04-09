@@ -1,0 +1,26 @@
+[project]
+name = "apps-greeter-basic"
+version = "1.0.0"
+description = "Prompts for a name and greets the user while validating an empty text field."
+requires-python = ">=3.10"
+keywords = ["apps", "greeter", "form", "text field", "validation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Basic greeter"
+controls = ["SafeArea", "Column", "TextField", "Button", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["form validation", "text updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

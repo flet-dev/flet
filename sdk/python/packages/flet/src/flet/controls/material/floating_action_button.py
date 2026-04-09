@@ -1,9 +1,10 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.icon_data import IconData
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
@@ -14,6 +15,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["FloatingActionButton"]
 
@@ -26,6 +28,7 @@ class FloatingActionButton(LayoutControl):
     to `page.floating_action_button`, but can also be added as a regular control at \
     any place on a page.
 
+    Example:
     ```python
     ft.FloatingActionButton(icon=ft.Icons.ADD)
     ```
@@ -36,7 +39,7 @@ class FloatingActionButton(LayoutControl):
     The content of this button.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor a valid `content`
+        ValueError: If neither :attr:`icon` nor a valid `content`
             (string or visible Control) is provided.
     """
 
@@ -83,57 +86,72 @@ class FloatingActionButton(LayoutControl):
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
-    Defines how the [`content`][(c).] is clipped.
+    Defines how the :attr:`content` is clipped.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button.
 
     Defaults to `6`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    disabled_elevation: Optional[Number] = None
+    disabled_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when disabled.
 
-    Defaults to the same value as `elevation`.
+    Defaults to :attr:`elevation`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    focus_elevation: Optional[Number] = None
+    focus_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when it has input focus.
 
     Defaults to `8`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    highlight_elevation: Optional[Number] = None
+    highlight_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button when it is highlighted.
 
     Defaults to `12`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    hover_elevation: Optional[Number] = None
+    hover_elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation of this button it is enabled and being hovered over.
 
     Defaults to `8`.
 
     Raises:
-        ValueError: If it is less than `0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     hover_color: Optional[ColorValue] = None
@@ -157,7 +175,7 @@ class FloatingActionButton(LayoutControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback
+    Additionally, if :attr:`on_click` event callback
     is provided, it is fired after that.
     """
 
@@ -172,38 +190,21 @@ class FloatingActionButton(LayoutControl):
     Called when a user clicks this button.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError(
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
+            ),
+            message=(
                 "at minimum, icon or a content (string or visible Control) "
                 "must be provided"
-            )
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if self.disabled_elevation is not None and self.disabled_elevation < 0:
-            raise ValueError(
-                "disabled_elevation must be greater than or equal to 0, "
-                f"got {self.disabled_elevation}"
-            )
-        if self.focus_elevation is not None and self.focus_elevation < 0:
-            raise ValueError(
-                "focus_elevation must be greater than or equal to 0, "
-                f"got {self.focus_elevation}"
-            )
-        if self.highlight_elevation is not None and self.highlight_elevation < 0:
-            raise ValueError(
-                "highlight_elevation must be greater than or equal to 0, "
-                f"got {self.highlight_elevation}"
-            )
-        if self.hover_elevation is not None and self.hover_elevation < 0:
-            raise ValueError(
-                "hover_elevation must be greater than or equal to 0, "
-                f"got {self.hover_elevation}"
-            )
+            ),
+        ),
+    )

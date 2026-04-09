@@ -1,0 +1,27 @@
+[project]
+name = "services-permission-handler-example-1"
+version = "1.0.0"
+description = "Requests microphone permission, reads its status, and opens app settings."
+requires-python = ">=3.10"
+keywords = ["permission handler", "example 1", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-permission-handler"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/PermissionHandler"]
+
+[tool.flet.metadata]
+title = "Permission handler example"
+controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "OutlinedButton", "PermissionHandler"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["permission request", "settings shortcut"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["windows", "ios", "android", "web"]

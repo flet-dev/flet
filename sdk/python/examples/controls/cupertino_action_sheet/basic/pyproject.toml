@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-action-sheet-basic"
+version = "1.0.0"
+description = "Opens a CupertinoActionSheet in a CupertinoBottomSheet and logs the selected action."
+requires-python = ">=3.10"
+keywords = ["cupertino", "action sheet", "bottom sheet", "dialog"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/CupertinoActionSheet"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoActionSheet", "CupertinoActionSheetAction", "Text", "Row", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["open dialog", "action callbacks", "destructive action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

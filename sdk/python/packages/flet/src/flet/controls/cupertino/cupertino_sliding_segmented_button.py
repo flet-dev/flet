@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -10,6 +10,7 @@ from flet.controls.padding import Padding, PaddingValue
 from flet.controls.types import (
     ColorValue,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoSlidingSegmentedButton"]
 
@@ -19,6 +20,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     """
     A cupertino sliding segmented button.
 
+    Example:
     ```python
     ft.CupertinoSlidingSegmentedButton(
         selected_index=1,
@@ -31,24 +33,24 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     ```
     """
 
-    controls: list[Control]
+    controls: Annotated[
+        list[Control],
+        V.visible_controls(min_count=2),
+    ]
     """
     The list of segments to be displayed.
 
-    Note:
-        Must contain at least two visible Controls.
-
     Raises:
-        ValueError: If it does not contain at least two visible controls.
+        ValueError: If it does not contain at least two visible `Control`s.
     """
 
     selected_index: int = 0
     """
-    The index (starting from 0) of the selected segment in the [`controls`][(c).] \
-    list.
+    The index (starting from 0) of the selected segment in the :attr:`controls` list.
 
     Raises:
-        IndexError: If it is out of range relative to the visible controls.
+        IndexError: If it is not between `0` and the length of visible
+            :attr:`controls`, inclusive.
     """
 
     bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
@@ -65,7 +67,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
         default_factory=lambda: Padding.symmetric(vertical=2, horizontal=3)
     )
     """
-    The amount of space by which to inset the [`controls`][(c).].
+    The amount of space by which to inset the :attr:`controls`.
     """
 
     proportional_width: bool = False
@@ -84,19 +86,16 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
 
     on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
     """
-    Called when the state of the button is changed - when one of the \
-    [`controls`][(c).] is clicked.
+    Called when the state of the button is changed - when one of the :attr:`controls` \
+    is clicked.
     """
 
     def before_update(self):
         super().before_update()
         visible_controls_count = len([c for c in self.controls if c.visible])
-        if visible_controls_count < 2:
-            raise ValueError(
-                f"controls must contain at minimum two visible Controls, "
-                f"got {visible_controls_count}"
-            )
-        if not (0 <= self.selected_index < visible_controls_count):
+        if visible_controls_count >= 2 and not (
+            0 <= self.selected_index < visible_controls_count
+        ):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
                 f"Expected a value between 0 and {visible_controls_count - 1}, "

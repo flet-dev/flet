@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Added
 
-- Deployed online documentation: https://docs.flet.dev/flashlight/
+- Deployed online documentation: https://flet.dev/docs/flashlight/
 - `Flashlight` control new properties: `on`, `on_error`
 - `Flashlight` control new methods: `is_available`
 - New exception classes:

@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-date-picker-basic"
+version = "1.0.0"
+description = "Shows a CupertinoDatePicker in a bottom sheet and updates text when the value changes."
+requires-python = ">=3.10"
+keywords = ["cupertino", "date picker", "bottom sheet", "events", "datetime"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoDatePicker"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["SafeArea", "Column", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoDatePicker", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["date and time selection", "on_change callback", "bottom sheet presentation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

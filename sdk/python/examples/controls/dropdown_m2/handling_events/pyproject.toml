@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-m2-handling-events"
+version = "1.0.0"
+description = "Updates helper text when DropdownM2 selection changes via on_change event."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "events", "on_change", "selection", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/DropdownM2"]
+
+[tool.flet.metadata]
+title = "Handling events"
+controls = ["SafeArea", "Column", "DropdownM2", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["on_change callback", "live message update"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

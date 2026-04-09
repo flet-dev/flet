@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-slider-handling-events"
+version = "1.0.0"
+description = "Tracks CupertinoSlider start, change, and end events with live status text updates."
+requires-python = ">=3.10"
+keywords = ["cupertino", "slider", "events", "input", "status"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoSlider"]
+
+[tool.flet.metadata]
+title = "Handling events"
+controls = ["SafeArea", "Column", "CupertinoSlider", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["on_change_start", "on_change", "on_change_end", "live value display"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,13 +1,14 @@
 from dataclasses import field
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Locale, Number
+from flet.utils.validation import V
 
 __all__ = [
     "CupertinoDatePicker",
@@ -18,14 +19,14 @@ __all__ = [
 
 class CupertinoDatePickerMode(Enum):
     """
-    Different display modes of [`CupertinoDatePicker`][flet.].
+    Different display modes of :class:`~flet.CupertinoDatePicker`.
     """
 
     TIME = "time"
     """
     Mode that shows the date in hour, minute, and (optional) an AM/PM designation.
     The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
-    format, i.e. if [`use_24h_format`][flet.CupertinoDatePicker.] is `False`.
+    format, i.e. if :attr:`~flet.CupertinoDatePicker.use_24h_format` is `False`.
     Column order is subject to internationalization.
 
     Example: `4 | 14 | PM`
@@ -45,7 +46,7 @@ class CupertinoDatePickerMode(Enum):
     Mode that shows the date as day of the week, month, day of month and
     the time in hour, minute, and (optional) an AM/PM designation.
     The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
-    format, i.e. if [`use_24h_format`][flet.CupertinoDatePicker.] is `False`.
+    format, i.e. if :attr:`~flet.CupertinoDatePicker.use_24h_format` is `False`.
     Column order is subject to internationalization.
 
     Example: `Fri Jul 13 | 4 | 14 | PM`
@@ -64,7 +65,7 @@ class CupertinoDatePickerMode(Enum):
 class CupertinoDatePickerDateOrder(Enum):
     """
     Determines the order of the columns inside
-    [`CupertinoDatePicker`][flet.] in date mode.
+    :class:`~flet.CupertinoDatePicker` in date mode.
     """
 
     DAY_MONTH_YEAR = "dmy"
@@ -106,19 +107,20 @@ class CupertinoDatePicker(LayoutControl):
     """
     The initial date and/or time of the picker.
 
-    It must conform to the intervals set in [`first_date`][(c).], [`last_date`][(c).],
-    [`minimum_year`][(c).], and [`maximum_year`][(c).],
-    else a `ValueError` will be raised.
-
     Defaults to the present date and time.
 
     Raises:
-        ValueError: If [`value`][(c).] is before [`first_date`][(c).] or
-            after [`last_date`][(c).].
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).] or
-            greater than [`maximum_year`][(c).].
-        ValueError: If [`value`][(c).] minute is not divisible by
-            [`minute_interval`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`first_date`, when
+            :attr:`first_date` is set.
+        ValueError: If it is not less than or equal to :attr:`last_date`, when
+            :attr:`last_date` is set.
+        ValueError: If its year is not greater than or equal to
+            :attr:`minimum_year`, when :attr:`date_picker_mode` is
+            :attr:`flet.CupertinoDatePickerMode.DATE` or
+            :attr:`flet.CupertinoDatePickerMode.MONTH_YEAR`.
+        ValueError: If its year is not less than or equal to :attr:`maximum_year`,
+            when :attr:`maximum_year` is set.
+        ValueError: If its minute is not a multiple of :attr:`minute_interval`.
     """
 
     locale: Optional[Locale] = None
@@ -128,8 +130,8 @@ class CupertinoDatePicker(LayoutControl):
 
     Notes:
         - The locale must be supported by Flutter's global localization delegates;
-          otherwise the override is ignored and the control uses the page or system
-          locale.
+            otherwise the override is ignored and the control uses the page or system
+            locale.
         - If `None` (the default), the page or system locale is used.
     """
 
@@ -139,14 +141,14 @@ class CupertinoDatePicker(LayoutControl):
 
     - If set to `None` (the default), there is no lower date limit.
     - When not `None`, one can still scroll the picker to dates earlier than
-        `first_date`, with the exception that the [`on_change`][(c).] will not be
+        `first_date`, with the exception that the :attr:`on_change` will not be
         called. Once let go, the picker will scroll back to `first_date`.
 
     Note:
-        In [`CupertinoDatePickerMode.TIME`][flet.] mode, a time becomes unselectable
+        In :attr:`flet.CupertinoDatePickerMode.TIME` mode, a time becomes unselectable
         if the datetime produced by combining that particular time and the date part of
-        [`value`][(c).] is earlier than `last_date`. So typically, `first_date` needs
-        to be set to a datetime that is on the same date as [`value`][(c).].
+        :attr:`value` is earlier than `last_date`. So typically, `first_date` needs
+        to be set to a datetime that is on the same date as :attr:`value`.
     """
 
     last_date: Optional[DateTimeValue] = None
@@ -155,14 +157,14 @@ class CupertinoDatePicker(LayoutControl):
 
     - If set to `None` (the default), there is no upper date limit.
     - When not `None`, one can still scroll the picker to dates later than
-        `last_date`, with the exception that the [`on_change`][(c).] will not be called.
+        `last_date`, with the exception that the :attr:`on_change` will not be called.
         Once let go, the picker will scroll back to `last_date`.
 
     Note:
-        In [`CupertinoDatePickerMode.TIME`][flet.] mode, a time becomes unselectable
+        In :attr:`flet.CupertinoDatePickerMode.TIME` mode, a time becomes unselectable
         if the datetime produced by combining that particular time and the date part
-        of [`value`][(c).] is later than `last_date`. So typically, `last_date` needs
-        to be set to a datetime that is on the same date as [`value`][(c).].
+        of :attr:`value` is later than `last_date`. So typically, `last_date` needs
+        to be set to a datetime that is on the same date as :attr:`value`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -170,37 +172,38 @@ class CupertinoDatePicker(LayoutControl):
     The background color of this date picker.
     """
 
-    minute_interval: int = 1
+    minute_interval: Annotated[
+        int,
+        V.gt(0),
+        V.factor_of(60),
+    ] = 1
     """
     The granularity of the minutes spinner, if it is shown in the current \
-    [`date_picker_mode`][(c).].
-
-    Note:
-        Must be an integer factor of `60`.
+    :attr:`date_picker_mode`.
 
     Raises:
-        ValueError: If [`minute_interval`][(c).] is not a positive integer factor of
-            `60`.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not a factor of `60`.
     """
 
     minimum_year: int = 1
     """
     Minimum year to which the picker can be scrolled when in \
-    [`CupertinoDatePickerMode.DATE`][flet.] mode.
+    :attr:`flet.CupertinoDatePickerMode.DATE` mode.
 
     Raises:
-        ValueError: If [`value`][(c).] year is less than [`minimum_year`][(c).].
+        ValueError: If it is greater than :attr:`value` year.
     """
 
     maximum_year: Optional[int] = None
     """
     Maximum year to which the picker can be scrolled when in \
-    [`CupertinoDatePickerMode.DATE`][flet.] mode.
+    :attr:`flet.CupertinoDatePickerMode.DATE` mode.
 
     Defaults to `None` - no limit.
 
     Raises:
-        ValueError: If [`value`][(c).] year is greater than [`maximum_year`][(c).].
+        ValueError: If it is less than :attr:`value` year.
     """
 
     item_extent: Number = 32.0
@@ -208,7 +211,7 @@ class CupertinoDatePicker(LayoutControl):
     The uniform height of all children.
 
     Raises:
-        ValueError: If [`item_extent`][(c).] is not strictly greater than `0`.
+        ValueError: If it is not strictly greater than `0`.
     """
 
     use_24h_format: bool = False
@@ -223,9 +226,8 @@ class CupertinoDatePicker(LayoutControl):
     Whether to show day of week alongside day.
 
     Raises:
-        ValueError: If [`show_day_of_week`][(c).] is set when
-            [`date_picker_mode`][(c).] is not
-            [`CupertinoDatePickerMode.DATE`][flet.].
+        ValueError: If it is set when :attr:`date_picker_mode` is not
+            :attr:`flet.CupertinoDatePickerMode.DATE`.
     """
 
     date_picker_mode: CupertinoDatePickerMode = CupertinoDatePickerMode.DATE_AND_TIME
@@ -239,10 +241,10 @@ class CupertinoDatePicker(LayoutControl):
 
     Note:
         The final order in which the columns are displayed is also influenced by
-        the [`date_picker_mode`][(c).]. For example, if `date_picker_mode` is
-        [`CupertinoDatePickerMode.MONTH_YEAR`][flet.]
-        both [`CupertinoDatePickerDateOrder.DAY_MONTH_YEAR`][flet.] and
-        [`CupertinoDatePickerDateOrder.MONTH_DAY_YEAR`][flet.] will result
+        the :attr:`date_picker_mode`. For example, if `date_picker_mode` is
+        :attr:`flet.CupertinoDatePickerMode.MONTH_YEAR`
+        both :attr:`flet.CupertinoDatePickerDateOrder.DAY_MONTH_YEAR` and
+        :attr:`flet.CupertinoDatePickerDateOrder.MONTH_DAY_YEAR` will result
         in the `month|year` order.
     """
 
@@ -251,7 +253,7 @@ class CupertinoDatePicker(LayoutControl):
     Called when the selected date and/or time changes.
 
     Will not be called if the new selected value is not valid,
-    or is not in the range of [`first_date`][(c).] and [`last_date`][(c).].
+    or is not in the range of :attr:`first_date` and :attr:`last_date`.
     """
 
     def before_update(self):
@@ -267,12 +269,6 @@ class CupertinoDatePicker(LayoutControl):
             raise ValueError(
                 f"item_extent must be strictly greater than 0, got {self.item_extent}"
             )
-        if not (self.minute_interval > 0 and 60 % self.minute_interval == 0):
-            raise ValueError(
-                f"minute_interval must be a positive integer factor of 60, "
-                f"got {self.minute_interval}"
-            )
-
         if self.date_picker_mode == CupertinoDatePickerMode.DATE_AND_TIME:
             if self.first_date and value < self.first_date:
                 raise ValueError(
@@ -318,8 +314,8 @@ class CupertinoDatePicker(LayoutControl):
                 "CupertinoDatePickerMode.DATE"
             )
 
-        if value.minute % self.minute_interval != 0:
+        if self.minute_interval > 0 and value.minute % self.minute_interval != 0:
             raise ValueError(
-                f"value.minute ({value.minute}) must be divisible by minute_interval "
+                f"value.minute ({value.minute}) must be a multiple of minute_interval "
                 f"({self.minute_interval})"
             )

@@ -1,0 +1,33 @@
+import asyncio
+
+import flet as ft
+
+
+async def main(page: ft.Page):
+    print("Window is hidden on start. Will show after 3 seconds...")
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Text("Hello!"),
+                ]
+            )
+        )
+    )
+
+    # some configuration that we want to do before showing the window
+    page.window.width = 300
+    page.window.height = 200
+    page.update()
+    await page.window.center()
+
+    # wait for 3 seconds before showing the window
+    await asyncio.sleep(3)
+
+    # show the window
+    page.window.visible = True
+    page.update()
+
+
+if __name__ == "__main__":
+    ft.run(main, view=ft.AppView.FLET_APP_HIDDEN)

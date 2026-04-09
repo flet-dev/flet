@@ -1,8 +1,9 @@
 import pytest
 
+import examples.controls.shimmer.basic_placeholder.main as basic_placeholder
+import examples.controls.shimmer.custom_gradient.main as custom_gradient
 import flet as ft
 import flet.testing as ftt
-from examples.controls.shimmer import basic_placeholder, custom_gradient
 
 
 @pytest.mark.skip(reason="The test is flaky on CI")

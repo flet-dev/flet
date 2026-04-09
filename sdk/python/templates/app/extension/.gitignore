@@ -1,0 +1,14 @@
+*.egg-info/
+develop-eggs/
+.DS_store
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv

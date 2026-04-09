@@ -12,6 +12,7 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["DropdownM2", "Option"]
 
@@ -19,18 +20,27 @@ __all__ = ["DropdownM2", "Option"]
 @control("Option")
 class Option(Control):
     """
-    Represents an item in a dropdown. Either `key` or `text` must be specified, else a \
-    `ValueError` will be raised.
+    Represents an item in a dropdown.
     """
 
     key: Optional[str] = None
     """
-    Option's key. If not specified `text` will be used as fallback.
+    Option's key.
+
+    If not specified :attr:`text` will be used as fallback.
+
+    Raises:
+        ValueError: If neither `key` nor :attr:`text` is provided.
     """
 
     text: Optional[str] = None
     """
-    Option's display text. If not specified `key` will be used as fallback.
+    Option's display text.
+
+    If not specified :attr:`key` will be used as fallback.
+
+    Raises:
+        ValueError: If neither :attr:`key` nor `text` is provided.
     """
 
     content: Optional[Control] = None
@@ -56,10 +66,12 @@ class Option(Control):
     Called when this option is clicked.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.key is None and self.text is None:
-            raise ValueError("key or text must be specified")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.key is not None or ctrl.text is not None,
+            message="key or text must be specified",
+        ),
+    )
 
 
 @control("DropdownM2")
@@ -69,6 +81,7 @@ class DropdownM2(FormFieldControl):
     currently selected item as well as an arrow that opens a menu for selecting \
     another item.
 
+    Example:
     ```python
     ft.DropdownM2(
         width=220,
@@ -111,7 +124,7 @@ class DropdownM2(FormFieldControl):
 
     select_icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` to use \
+    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` to use \
     for the drop-down select button's icon.
 
     Defaults to `Icon(ft.Icons.ARROW_DROP_DOWN)`.

@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import BaseControl
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
 from flet.controls.types import Number, ResponsiveNumber
+from flet.utils.validation import V
 
 __all__ = ["Control"]
 
@@ -17,21 +18,24 @@ class Control(BaseControl):
     Not meant to be used directly.
     """
 
-    expand: Optional[Union[bool, int]] = None
+    expand: Annotated[
+        Optional[Union[bool, int]],
+        V.instance_of((bool, int)),
+    ] = None
     """
     Specifies whether/how this control should expand to fill available space in its \
     parent layout.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand).
 
     Note:
         Has effect only if the direct parent of this control is one of the following
-        controls, or their subclasses: [`Column`][flet.], [`Row`][flet.],
-        [`View`][flet.], [`Page`][flet.].
+        controls, or their subclasses: :class:`~flet.Column`, :class:`~flet.Row`,
+        :class:`~flet.View`, :class:`~flet.Page`.
 
     Raises:
-        ValueError: If [`expand`][(c).] is not `None` and not of type `bool` or `int`.
+        ValueError: If it is not of type `bool` or `int`.
     """
 
     expand_loose: bool = False
@@ -40,30 +44,28 @@ class Control(BaseControl):
     not require it to fill all available space.
 
     More information
-    [here](https://docs.flet.dev/cookbook/expanding-controls/#expand_loose).
+    [here](https://flet.dev/docs/cookbook/expanding-controls/#expand_loose).
 
     Note:
         If `expand_loose` is `True`, it will have effect only if:
 
         - `expand` is not `None` and
         - the direct parent of this control is one of the following controls, or their
-            subclasses: [`Column`][flet.], [`Row`][flet.], [`View`][flet.],
-            [`Page`][flet.].
+            subclasses: :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.View`,
+            :class:`~flet.Page`.
     """
 
     # todo: if dict, validate keys with those in parent (ResponsiveRow.breakpoints)
     col: ResponsiveNumber = 12
     """
-    If a parent of this control is a [`ResponsiveRow`][flet.], this property is used \
-    to determine how many virtual columns of a screen this control will span.
+    If a parent of this control is a :class:`~flet.ResponsiveRow`, this property is \
+    used to determine how many virtual columns of a screen this control will span.
 
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
 
-    This control spans the 12 virtual columns by default.
+    This control spans the 12 virtual columns by default:
 
-    /// details | Dimensions
-        type: info
     | Breakpoint | Dimension |
     |---|---|
     | xs | <576px |
@@ -72,10 +74,12 @@ class Control(BaseControl):
     | lg | ≥992px |
     | xl | ≥1200px |
     | xxl | ≥1400px |
-    ///
     """
 
-    opacity: Number = 1.0
+    opacity: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 1.0
     """
     Defines the transparency of the control.
 
@@ -83,7 +87,7 @@ class Control(BaseControl):
     without any transparency).
 
     Raises:
-        ValueError: If [`opacity`][(c).] is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     tooltip: Optional[TooltipValue] = None
@@ -114,35 +118,22 @@ class Control(BaseControl):
         The value of this property will be propagated down to all children controls
         recursively.
 
-    /// details | Example
-        type: example
-    For example, if you have a form with multiple entry controls you can disable them
-    all together by disabling container:
+    Example:
+        For example, if you have a form with multiple entry controls you can
+        disable them all together by disabling container:
 
-    ```python
-    ft.Column(
-        disabled = True,
-        controls=[
-            ft.TextField(),
-            ft.TextField()
-        ]
-    )
-    ```
-    ///
+        ```python
+        ft.Column(
+            disabled = True,
+            controls=[
+                ft.TextField(),
+                ft.TextField()
+            ]
+        )
+        ```
     """
 
     rtl: bool = False
     """
     Whether the text direction of the control should be right-to-left (RTL).
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0.0 <= self.opacity <= 1.0):
-            raise ValueError(
-                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-            )
-        if self.expand is not None and not isinstance(self.expand, (bool, int)):
-            raise ValueError(
-                f"expand must be of type bool or int, got {type(self.expand)}"
-            )

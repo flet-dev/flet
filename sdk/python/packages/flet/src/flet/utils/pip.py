@@ -91,7 +91,7 @@ def ensure_flet_desktop_package_installed():
 
     If `flet-desktop` is missing or its version differs from the current Flet SDK
     version, this function installs the expected package via
-    [`install_flet_package()`][(m).install_flet_package].
+    `install_flet_package()`.
     """
     try:
         import flet_desktop.version
@@ -111,7 +111,7 @@ def ensure_flet_web_package_installed():
 
     If `flet-web` is missing or its version differs from the current Flet SDK
     version, this function installs it via
-    [`install_flet_package()`][(m).install_flet_package].
+    `install_flet_package()`.
     """
     try:
         import flet_web.version
@@ -131,7 +131,7 @@ def ensure_flet_cli_package_installed():
 
     If `flet-cli` is missing or its version differs from the current Flet SDK
     version, this function installs it via
-    [`install_flet_package()`][(m).install_flet_package].
+    `install_flet_package()`.
     """
     try:
         import flet_cli.version

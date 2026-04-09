@@ -1,0 +1,26 @@
+[project]
+name = "types-mouse-cursor-showcase"
+version = "1.0.0"
+description = "Compares Mouse Cursor values by applying them to a live control preview."
+requires-python = ">=3.10"
+keywords = ["mouse cursor", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types", "Layout/Container"]
+
+[tool.flet.metadata]
+title = "Mouse Cursor showcase"
+controls = ["SafeArea", "Column", "GestureDetector", "Container", "Text", "AppBar", "Row"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["enum comparison", "live preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

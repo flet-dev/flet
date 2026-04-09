@@ -119,7 +119,7 @@ from flet.controls.core.draggable import Draggable
 from flet.controls.core.flet_app import FletApp
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
-from flet.controls.core.hero import Hero, HeroTag
+from flet.controls.core.hero import Hero
 from flet.controls.core.icon import Icon
 from flet.controls.core.image import Image
 from flet.controls.core.interactive_viewer import InteractiveViewer
@@ -830,7 +830,6 @@ __all__ = [
     "GyroscopeReadingEvent",
     "HapticFeedback",
     "Hero",
-    "HeroTag",
     "HoverEvent",
     "Icon",
     "IconButton",

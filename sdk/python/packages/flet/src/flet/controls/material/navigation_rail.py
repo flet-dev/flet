@@ -1,6 +1,6 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -15,16 +15,17 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelType"]
 
 
 class NavigationRailLabelType(Enum):
     """
-    Defines how destination labels are shown in a [`NavigationRail`][flet.].
+    Defines how destination labels are shown in a :class:`~flet.NavigationRail`.
 
     This setting affects the non-extended rail layout
-    ([`extended`][flet.NavigationRail.]). When the rail is
+    (:attr:`~flet.NavigationRail.extended`). When the rail is
     extended, labels are shown next to icons regardless of this value.
     """
 
@@ -57,20 +58,20 @@ class NavigationRailDestination(Control):
 
     icon: Optional[IconDataOrControl] = None
     """
-    The [name of the icon](https://docs.flet.dev/types/icons) or `Control` of the \
+    The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
     If `selected_icon` is provided, this will only be displayed when the destination is
     not selected.
 
     To make the NavigationRail more accessible, consider choosing an icon with a stroked
-    and filled version, such as `ft.Icons.CLOUD` and `ft.Icons.CLOUD_QUEUE`. The icon
+    and filled version, such as `Icons.CLOUD` and `Icons.CLOUD_QUEUE`. The icon
     should be set to the stroked version and `selected_icon` to the filled version.
     """
 
     selected_icon: Optional[IconDataOrControl] = None
     """
-    The [name](https://docs.flet.dev/types/icons) of alternative icon or `Control` \
+    The [name](https://flet.dev/docs/types/icons) of alternative icon or `Control` \
     displayed when this destination is selected.
 
     If this icon is not provided, the NavigationRail will display `icon` in either
@@ -89,7 +90,7 @@ class NavigationRailDestination(Control):
 
     indicator_color: Optional[ColorValue] = None
     """
-    The color of the [`indicator_shape`][(c).] when this destination is selected.
+    The color of the :attr:`indicator_shape` when this destination is selected.
     """
 
     indicator_shape: Optional[OutlinedBorder] = None
@@ -107,13 +108,13 @@ class NavigationRail(LayoutControl):
     ```python
     ft.NavigationRail(
         selected_index=0,
+        height=200,
+        width=100,
         destinations=[
             ft.NavigationRailDestination(icon=ft.Icons.STAR, label="Star"),
             ft.NavigationRailDestination(icon=ft.Icon(ft.Icons.ADD),label="Add"),
             ft.NavigationRailDestination(icon=ft.Icons.DELETE, label=ft.Text("Delete")
         ],
-        height=200,
-        width=100,
     )
     ```
 
@@ -127,14 +128,17 @@ class NavigationRail(LayoutControl):
     The value must be a list of two or more `NavigationRailDestination` instances.
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     Controls the size of the shadow below the NavigationRail.
 
     Defaults to `0.0`.
 
     Raises:
-        ValueError: If [`elevation`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     selected_index: Optional[int] = None
@@ -153,8 +157,8 @@ class NavigationRail(LayoutControl):
 
     The rail will implicitly animate between the extended and normal state.
 
-    If the rail is going to be in the extended state, then the `label_type` must be set
-    to `none`.
+    If the rail is going to be in the extended state, then
+    :attr:`label_type` should be set to :attr:`flet.NavigationRailLabelType.NONE`
     """
 
     label_type: Optional[NavigationRailLabelType] = None
@@ -169,7 +173,7 @@ class NavigationRail(LayoutControl):
 
     bgcolor: Optional[ColorValue] = None
     """
-    Sets the color of the Container that holds all of the NavigationRail's contents.
+    Sets the color of the Container that holds all of this NavigationRail's contents.
     """
 
     indicator_color: Optional[ColorValue] = None
@@ -181,7 +185,7 @@ class NavigationRail(LayoutControl):
     """
     The shape of the navigation rail's indicator.
 
-    Defaults to `StadiumBorder()`.
+    Defaults to :class:`~flet.StadiumBorder`.
     """
 
     leading: Optional[Control] = None
@@ -190,7 +194,7 @@ class NavigationRail(LayoutControl):
 
     Its location is not affected by `group_alignment`.
 
-    Typically a [`FloatingActionButton`][flet.], but
+    Typically a :class:`~flet.FloatingActionButton`, but
     may also be a non-button, such as a logo.
     """
 
@@ -204,7 +208,10 @@ class NavigationRail(LayoutControl):
     rendered when `extended=True`.
     """
 
-    min_width: Optional[Number] = None
+    min_width: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The smallest possible width for the rail regardless of the destination's icon or \
     label size.
@@ -213,20 +220,24 @@ class NavigationRail(LayoutControl):
 
     This value also defines the min width and min height of the destinations.
 
-    To make a compact rail, set this to `56` and use `label_type='none'`.
+    To make a compact rail, set this to `56` and set
+    :attr:`label_type` to :attr:`flet.NavigationRailLabelType.NONE`
 
     Raises:
-        ValueError: If [`min_width`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    min_extended_width: Optional[Number] = None
+    min_extended_width: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The final width when the animation is complete for setting `extended` to `True`.
 
     Defaults to `256`.
 
     Raises:
-        ValueError: If [`min_extended_width`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     group_alignment: Optional[Number] = None
@@ -247,7 +258,7 @@ class NavigationRail(LayoutControl):
 
     selected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a destination's label when it is selected.
+    The :class:`~flet.TextStyle` of a destination's label when it is selected.
 
     When a destination is not selected, `unselected_label_text_style` will instead be
     used.
@@ -255,37 +266,27 @@ class NavigationRail(LayoutControl):
 
     unselected_label_text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] of a destination's label when it is not selected.
+    The :class:`~flet.TextStyle` of a destination's label when it is not selected.
 
     When a destination is selected, `selected_label_text_style` will instead be used.
     """
 
     use_indicator: Optional[bool] = None
     """
-    Whether to add a rounded navigation indicator behind the selected destination's \
-    icon.
+    Whether to add a rounded navigation indicator behind the selected destination's     icon.
 
-    The indicator's shape will be circular if [`label_type`][(c).]
-    is [`NavigationRailLabelType.NONE`][flet.], or a
-    [`StadiumBorder`][flet.] if [`label_type`][(c).]
-    is [`NavigationRailLabelType.ALL`][flet.] or
-    [`NavigationRailLabelType.SELECTED`][flet.].
+    The indicator's shape will be circular if :attr:`label_type`
+    is :attr:`flet.NavigationRailLabelType.NONE`, or a
+    :class:`~flet.StadiumBorder` if :attr:`label_type`
+    is :attr:`flet.NavigationRailLabelType.ALL` or
+    :attr:`flet.NavigationRailLabelType.SELECTED`.
 
     If `None`, defaults to
-    [`NavigationRailTheme.use_indicator`][flet.].
-    If that is also `None`, defaults to [`Theme.use_material3`][flet.].
+    :attr:`flet.NavigationRailTheme.use_indicator`.
+    If that is also `None`, defaults to :attr:`flet.Theme.use_material3`.
     """  # noqa: E501
 
     on_change: Optional[ControlEventHandler["NavigationRail"]] = None
     """
     Called when selected destination changed.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError("elevation cannot be negative")
-        if self.min_width is not None and self.min_width < 0:
-            raise ValueError("min_width cannot be negative")
-        if self.min_extended_width is not None and self.min_extended_width < 0:
-            raise ValueError("min_extended_width cannot be negative")

@@ -59,14 +59,14 @@ class MenuItemButton(LayoutControl):
     """
     An optional control to display before the `content`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     trailing: Optional[Control] = None
     """
     An optional control to display after the `content`.
 
-    Typically an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE

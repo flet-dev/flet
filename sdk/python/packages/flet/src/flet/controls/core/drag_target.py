@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
-from typing import Optional, cast
+from typing import Annotated, Optional, cast
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
+from flet.utils.validation import V
 
 __all__ = [
     "DragTarget",
@@ -28,7 +29,7 @@ class DragEventBase(Event["DragTarget"]):
 
     src: Draggable = field(init=False)
     """
-    Source draggable control resolved from [`src_id`][(c).].
+    Source draggable control resolved from :attr:`src_id`.
     """
 
     def __post_init__(self):
@@ -39,7 +40,7 @@ class DragEventBase(Event["DragTarget"]):
 @dataclass
 class DragWillAcceptEvent(DragEventBase):
     """
-    Event payload for [`DragTarget.on_will_accept`][flet.].
+    Event payload for :attr:`flet.DragTarget.on_will_accept`.
     """
 
     accept: bool
@@ -67,7 +68,7 @@ class DragTargetEvent(DragEventBase):
     @property
     def offset(self) -> Offset:
         """
-        Pointer position as an [`Offset`][flet.].
+        Pointer position as an :class:`~flet.Offset`.
         """
 
         return Offset(self.x, self.y)
@@ -76,7 +77,7 @@ class DragTargetEvent(DragEventBase):
 @dataclass
 class DragTargetLeaveEvent(DragEventBase):
     """
-    Event payload for [`DragTarget.on_leave`][flet.].
+    Event payload for :attr:`flet.DragTarget.on_leave`.
     """
 
     pass
@@ -85,7 +86,7 @@ class DragTargetLeaveEvent(DragEventBase):
 @control("DragTarget")
 class DragTarget(Control):
     """
-    A control that completes drag operation when a [`Draggable`][flet.] control is \
+    A control that completes drag operation when a :class:`~flet.Draggable` control is \
     dropped.
 
     When a `Draggable` is dragged on top of a `DragTarget`, the `DragTarget` is asked
@@ -96,14 +97,15 @@ class DragTarget(Control):
     asked to accept the `Draggable`'s data.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this control.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     group: str = "default"
@@ -111,7 +113,7 @@ class DragTarget(Control):
     The group this target belongs to.
 
     Note:
-        For a `DragTarget` to accept an incoming drop from a [`Draggable`][flet.],
+        For a `DragTarget` to accept an incoming drop from a :class:`~flet.Draggable`,
         they must both be in the same `group`.
     """
 
@@ -122,7 +124,7 @@ class DragTarget(Control):
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same [`group`][(c).]) draggable on \
+    Called when the user does drop an acceptable (same :attr:`group`) draggable on \
     this target.
 
     Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
@@ -137,8 +139,3 @@ class DragTarget(Control):
     """
     Called when a draggable moves within this target.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

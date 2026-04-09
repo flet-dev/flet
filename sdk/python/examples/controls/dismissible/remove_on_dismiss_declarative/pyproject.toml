@@ -1,0 +1,26 @@
+[project]
+name = "dismissible-remove-on-dismiss-declarative"
+version = "1.0.0"
+description = "Shows declarative Dismissible list updates by removing items from component state on dismiss."
+requires-python = ">=3.10"
+keywords = ["dismissible", "declarative", "component", "state", "list"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Dismissible"]
+
+[tool.flet.metadata]
+title = "Remove on dismiss declarative"
+controls = ["SafeArea", "ListView", "Dismissible", "ListTile"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["declarative state updates", "swipe to dismiss", "stable dismissible keys"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import ColorValue, Number
+from flet.utils.validation import V
 
 __all__ = ["CupertinoActivityIndicator"]
 
@@ -20,7 +21,10 @@ class CupertinoActivityIndicator(LayoutControl):
     ```
     """
 
-    radius: Number = 10
+    radius: Annotated[
+        Number,
+        V.gt(0),
+    ] = 10
     """
     The radius of this indicator.
 
@@ -38,10 +42,13 @@ class CupertinoActivityIndicator(LayoutControl):
     Whether this indicator is running its animation.
 
     Note:
-        Has no effect if [`progress`][(c).] is not `None`.
+        Has no effect if :attr:`progress` is not `None`.
     """
 
-    progress: Optional[Number] = None
+    progress: Annotated[
+        Optional[Number],
+        V.between(0.0, 1.0),
+    ] = None
     """
     Determines the percentage of spinner ticks that will be shown.
 
@@ -50,19 +57,8 @@ class CupertinoActivityIndicator(LayoutControl):
     a time as the user continues to drag down.
 
     Note:
-        If not `None`, then [`animating`][(c).] will be ignored.
+        If not `None`, then :attr:`animating` will be ignored.
 
     Raises:
         ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.radius <= 0.0:
-            raise ValueError(
-                f"radius must be strictly greater than 0.0, got {self.radius}"
-            )
-        if self.progress is not None and not 0.0 <= self.progress <= 1.0:
-            raise ValueError(
-                f"progress must be between 0.0 and 1.0 inclusive, got {self.progress}"
-            )

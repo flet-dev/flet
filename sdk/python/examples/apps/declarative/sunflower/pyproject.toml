@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-sunflower"
+version = "1.0.0"
+description = "Animates a sunflower seed pattern with a slider that recomputes declarative layout."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "animation", "slider", "visualization"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative", "Apps/Visualization"]
+
+[tool.flet.metadata]
+title = "Sunflower"
+controls = ["View", "SafeArea", "Column", "Stack", "Slider", "Text", "AppBar"]
+layout_pattern = "center-stage"
+complexity = "intermediate"
+features = ["animation", "data visualization"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

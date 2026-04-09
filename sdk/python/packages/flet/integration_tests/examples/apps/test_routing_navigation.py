@@ -2,12 +2,12 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.apps.routing_navigation import (
-    drawer_navigation,
-    home_store,
-    initial_route,
-    pop_view_confirm,
-    route_change_event,
+from examples.apps.routing_navigation.drawer_navigation import main as drawer_navigation
+from examples.apps.routing_navigation.home_store import main as home_store
+from examples.apps.routing_navigation.initial_route import main as initial_route
+from examples.apps.routing_navigation.pop_view_confirm import main as pop_view_confirm
+from examples.apps.routing_navigation.route_change_event import (
+    main as route_change_event,
 )
 
 

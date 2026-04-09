@@ -11,6 +11,7 @@ from flet.controls.ref import Ref
 from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count
+from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -95,7 +96,7 @@ def control(
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving like \
-    [`@dataclass`][dataclasses.dataclass].
+    `dataclasses.dataclass`.
 
     Parameters:
         dart_widget_name: The name of widget on Dart side.
@@ -327,6 +328,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
+        validate(self, suppress_repeated_errors=True)
 
         if frozen is not None:
             self._frozen = frozen

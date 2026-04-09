@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
@@ -24,6 +24,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "Tab",
@@ -40,30 +41,30 @@ __all__ = [
 
 class TabAlignment(Enum):
     """
-    Defines how tabs are aligned horizontally in a [`Tabs`][flet.].
+    Defines how tabs are aligned horizontally in a :class:`~flet.Tabs`.
     """
 
     START = "start"
     """
-    If [`TabBar.scrollable`][flet.] is `True`, tabs are aligned to the start of the \
-    [`TabBar`][flet.].
+    If :attr:`flet.TabBar.scrollable` is `True`, tabs are aligned to the start of the \
+    :class:`~flet.TabBar`.
     """
 
     START_OFFSET = "startOffset"
     """
-    If [`TabBar.scrollable`][flet.] is `True`, tabs are aligned to the start of the \
-    [`TabBar`][flet.] with an offset of `52.0` pixels.
+    If :attr:`flet.TabBar.scrollable` is `True`, tabs are aligned to the start of the \
+    :class:`~flet.TabBar` with an offset of `52.0` pixels.
     """
 
     FILL = "fill"
     """
-    If [`TabBar.scrollable`][flet.] is `False`, tabs are stretched to fill the \
-    [`TabBar`][flet.].
+    If :attr:`flet.TabBar.scrollable` is `False`, tabs are stretched to fill the \
+    :class:`~flet.TabBar`.
     """
 
     CENTER = "center"
     """
-    Tabs are aligned to the center of the [`TabBar`][flet.].
+    Tabs are aligned to the center of the :class:`~flet.TabBar`.
     """
 
 
@@ -106,18 +107,18 @@ class TabBarIndicatorSize(Enum):
 @dataclass
 class TabBarHoverEvent(Event["TabBar"]):
     """
-    Represents a hover-state change for a tab in a [`TabBar`][flet.].
+    Represents a hover-state change for a tab in a :class:`~flet.TabBar`.
 
-    This event is emitted by [`TabBar.on_hover`][flet.TabBar.on_hover] when a pointer
+    This event is emitted by :attr:`flet.TabBar.on_hover` when a pointer
     enters or exits a tab item. When moving directly from one tab to another, the
-    handler is typically called twice: first with [`hovering`][(c).] set to `False`
-    for the previous tab, then with [`hovering`][(c).] set to `True` for the next tab.
+    handler is typically called twice: first with :attr:`hovering` set to `False`
+    for the previous tab, then with :attr:`hovering` set to `True` for the next tab.
     """
 
     hovering: bool
     """
     Whether a pointer has entered (`True`) or exited (`False`) the tab bar at \
-    [`index`][(c).].
+    :attr:`index`.
     """
 
     index: int
@@ -139,10 +140,10 @@ class UnderlineTabIndicator:
     """
     Locates the selected tab's underline relative to the tab's boundary.
 
-    The [`TabBar.indicator_size`][flet.] property can be used
+    The :attr:`flet.TabBar.indicator_size` property can be used
     to define the tab indicator's bounds in terms of its (centered) tab control with
-    [`TabBarIndicatorSize.LABEL`][flet.], or the entire tab
-    with [`TabBarIndicatorSize.TAB`][flet.].
+    :attr:`flet.TabBarIndicatorSize.LABEL`, or the entire tab
+    with :attr:`flet.TabBarIndicatorSize.TAB`.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -167,19 +168,22 @@ class Tabs(LayoutControl, AdaptiveControl):
     The content to display.
     """
 
-    length: int
+    length: Annotated[
+        int,
+        V.ge(0),
+    ]
     """
     The total number of tabs.
 
     Typically greater than one.
 
     Note:
-        Must match the length of both [`TabBar.tabs`][flet.]
-        and [`TabBarView.controls`][flet.]. Don't forget to update
+        Must match the length of both :attr:`flet.TabBar.tabs`
+        and :attr:`flet.TabBarView.controls`. Don't forget to update
         it when adding/removing tabs.
 
     Raises:
-        ValueError: If it is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     selected_index: int = 0
@@ -192,10 +196,10 @@ class Tabs(LayoutControl, AdaptiveControl):
     Note:
         - Must be in range `[-length, length - 1]`.
         - Changing the value of this property will internally trigger
-            [`move_to`][(c).] with [`animation_duration`][(c).] and
-            [`AnimationCurve.EASE`][flet.] animation curve. To specify
+            :meth:`move_to` with :attr:`animation_duration` and
+            :attr:`flet.AnimationCurve.EASE` animation curve. To specify
             a different animation curve or duration for this particular change,
-            use [`move_to`][(c).] directly.
+            use :meth:`move_to` directly.
 
     Raises:
         IndexError: If it is not in the range `[-length, length - 1]`.
@@ -211,19 +215,15 @@ class Tabs(LayoutControl, AdaptiveControl):
 
     on_change: Optional[ControlEventHandler["Tabs"]] = None
     """
-    Called when [`selected_index`][(c).] changes.
+    Called when :attr:`selected_index` changes.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains the index of the selected tab.
     """
 
     def before_update(self):
         super().before_update()
-        if self.length < 0:
-            raise ValueError(
-                f"length must be greater than or equal to 0, got {self.length}"
-            )
-        if not (-self.length <= self.selected_index < self.length):
+        if self.length >= 0 and not (-self.length <= self.selected_index < self.length):
             raise IndexError(
                 f"selected_index out of range: got {self.selected_index}, "
                 f"expected in range [-{self.length}, {self.length - 1}]"
@@ -238,8 +238,8 @@ class Tabs(LayoutControl, AdaptiveControl):
         """
         Selects the tab at the given `index`.
 
-        Additionally, it triggers [`on_change`][(c).] event and updates
-        [`selected_index`][(c).].
+        Additionally, it triggers :attr:`on_change` event and updates
+        :attr:`selected_index`.
 
         Note:
             If `index` is negative, it is interpreted as a Python-style negative index
@@ -251,7 +251,7 @@ class Tabs(LayoutControl, AdaptiveControl):
                 `[-length, length - 1]`.
             animation_curve: The curve to apply to the animation.
             animation_duration: The duration of the animation. If `None` (the default),
-                [`Tabs.animation_duration`][flet.] will be used.
+                :attr:`flet.Tabs.animation_duration` will be used.
 
         Raises:
             IndexError: If the `index` is outside the range `[-length, length - 1]`.
@@ -287,24 +287,24 @@ class TabBarView(LayoutControl, AdaptiveControl):
     A page view with one child per tab.
 
     Note:
-        The length of [`controls`][(c).] must be the same as the
-        [`length`][flet.Tabs.] property of the ancestor [`Tabs`][flet.].
+        The length of :attr:`controls` must be the same as the
+        :attr:`~flet.Tabs.length` property of the ancestor :class:`~flet.Tabs`.
     """
 
     controls: list[Control]
     """
     A list of controls, where each control represents the content of a corresponding \
-    tab. So, a control at index `i` in this list is displayed when the [`Tab`][flet.] \
-    at index `i` is selected.
+    tab. So, a control at index `i` in this list is displayed when the \
+    :class:`~flet.Tab` at index `i` is selected.
 
     Note:
         The length of this list must be equal to the number of tabs specified in an
-        ancestor [`Tabs`][flet.] control.
+        ancestor :class:`~flet.Tabs` control.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    Defines how the [`controls`][(c).] will be clipped.
+    Defines how the :attr:`controls` will be clipped.
     """
 
     viewport_fraction: Number = 1.0
@@ -328,7 +328,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     """
     A list of controls.
 
-    Typically [`Tab`][flet.]s.
+    Typically :class:`~flet.Tab`s.
     """
 
     scrollable: bool = True
@@ -345,29 +345,29 @@ class TabBar(LayoutControl, AdaptiveControl):
     Specifies the horizontal alignment of the tabs within this tab bar.
 
     If this is `None`, then the value of
-    [`TabBarTheme.tab_alignment`][flet.] is used.
-    If [`TabBarTheme.tab_alignment`][flet.] is `None` and
-    [`Theme.use_material3`][flet.] is `True`,
-    then [TabAlignment.START_OFFSET][flet.TabAlignment.START_OFFSET] is used if
-    [`scrollable`][(c).] is `True`,
-    otherwise [`TabAlignment.FILL`][flet.] is used.
+    :attr:`flet.TabBarTheme.tab_alignment` is used.
+    If :attr:`flet.TabBarTheme.tab_alignment` is `None` and
+    :attr:`flet.Theme.use_material3` is `True`,
+    then :attr:`flet.TabAlignment.START_OFFSET` is used if
+    :attr:`scrollable` is `True`,
+    otherwise :attr:`flet.TabAlignment.FILL` is used.
 
-    If [`TabBarTheme.tab_alignment`][flet.] is `None`
-    and [`Theme.use_material3`][flet.] is `False`,
-    then [`TabAlignment.CENTER`][flet.] is used if
-    [`scrollable`][(c).] is `True`,
-    otherwise [`TabAlignment.FILL`][flet.] is used.
+    If :attr:`flet.TabBarTheme.tab_alignment` is `None`
+    and :attr:`flet.Theme.use_material3` is `False`,
+    then :attr:`flet.TabAlignment.CENTER` is used if
+    :attr:`scrollable` is `True`,
+    otherwise :attr:`flet.TabAlignment.FILL` is used.
 
     Note:
-        - If [`scrollable`][(c).] is `False`, then [`tab_alignment`][(c).] must be
-            either [`TabAlignment.FILL`][flet.] or [`TabAlignment.CENTER`][flet.].
-        - If [`scrollable`][(c).] is `True`, then [`tab_alignment`][(c).] must be
-            [`TabAlignment.START`][flet.], [`TabAlignment.START_OFFSET`][flet.]
-            or [`TabAlignment.CENTER`][flet.].
+        - If :attr:`scrollable` is `False`, then :attr:`tab_alignment` must be
+            either :attr:`flet.TabAlignment.FILL` or :attr:`flet.TabAlignment.CENTER`.
+        - If :attr:`scrollable` is `True`, then :attr:`tab_alignment` must be
+            :attr:`flet.TabAlignment.START`, :attr:`flet.TabAlignment.START_OFFSET`
+            or :attr:`flet.TabAlignment.CENTER`.
 
     Raises:
         ValueError: If it is not valid for the current
-            [`scrollable`][(c).] configuration.
+            :attr:`scrollable` configuration.
     """
 
     divider_color: Optional[ColorValue] = None
@@ -380,24 +380,24 @@ class TabBar(LayoutControl, AdaptiveControl):
     The color of the indicator(line that appears below the selected tab).
 
     Note:
-        Will be ignored if [`indicator`][(c).] or
-        [`TabBarTheme.indicator`][flet.] is not `None`.
+        Will be ignored if :attr:`indicator` or
+        :attr:`flet.TabBarTheme.indicator` is not `None`.
     """
 
     indicator: Optional[UnderlineTabIndicator] = None
     """
     Defines the appearance of the selected tab indicator.
 
-    If this or [`TabBarTheme.indicator`][flet.] is not `None`,
-    [`indicator_color`][(c).] and
-    [`indicator_thickness`][(c).] properties are ignored.
+    If this or :attr:`flet.TabBarTheme.indicator` is not `None`,
+    :attr:`indicator_color` and
+    :attr:`indicator_thickness` properties are ignored.
 
     The indicator's size is based on the tab's bounds. If
-    [`indicator_size`][(c).]
-    is [`TabBarIndicatorSize.TAB`][flet.],
+    :attr:`indicator_size`
+    is :attr:`flet.TabBarIndicatorSize.TAB`,
     the tab's bounds are as wide as the space occupied by the tab in the tab bar.
-    If [`indicator_size`][(c).] is
-    [`TabBarIndicatorSize.LABEL`][flet.],
+    If :attr:`indicator_size` is
+    :attr:`flet.TabBarIndicatorSize.LABEL`,
     then the tab's bounds are only as wide as the tab control itself.
     """
 
@@ -407,14 +407,14 @@ class TabBar(LayoutControl, AdaptiveControl):
 
     The size of the selected tab indicator is defined relative to the
     tab's overall bounds if `indicator_size` is
-    [`TabBarIndicatorSize.TAB`][flet.]
+    :attr:`flet.TabBarIndicatorSize.TAB`
     (the default) or relative to the bounds of the tab's control if
-    `indicator_size` is [`TabBarIndicatorSize.LABEL`][flet.].
+    `indicator_size` is :attr:`flet.TabBarIndicatorSize.LABEL`.
 
     The selected tab's location appearance can be refined further with
-    the [`indicator_color`][(c).],
-    [`indicator_thickness`][(c).],
-    and [`indicator`][(c).] properties.
+    the :attr:`indicator_color`,
+    :attr:`indicator_thickness`,
+    and :attr:`indicator` properties.
     """
 
     indicator_animation: Optional[TabIndicatorAnimation] = None
@@ -422,12 +422,12 @@ class TabBar(LayoutControl, AdaptiveControl):
     Specifies the animation behavior of the tab indicator.
 
     If this is `None`, then the value of
-    [`TabBarTheme.indicator_animation`][flet.] is used.
+    :attr:`flet.TabBarTheme.indicator_animation` is used.
     If that is also `None`, then the tab indicator will animate linearly if the
-    [`indicator_size`][(c).] is
-    [`TabBarIndicatorSize.TAB`][flet.], otherwise it will animate
-    with an elastic effect if the [`indicator_size`][(c).] is
-    [`TabBarIndicatorSize.LABEL`][flet.].
+    :attr:`indicator_size` is
+    :attr:`flet.TabBarIndicatorSize.TAB`, otherwise it will animate
+    with an elastic effect if the :attr:`indicator_size` is
+    :attr:`flet.TabBarIndicatorSize.LABEL`.
     """
 
     secondary: bool = False
@@ -466,7 +466,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the ink response focus, hover, and splash colors in various \
-    [`ControlState`][flet.] states.
+    :class:`~flet.ControlState` states.
 
     The following states are supported: `ControlState.PRESSED`,
     `ControlState.HOVERED` and
@@ -478,7 +478,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     The height of the divider.
 
     If `None`, defaults to
-    [`TabBarTheme.divider_height`][flet.]. If this is also
+    :attr:`flet.TabBarTheme.divider_height`. If this is also
     `None`, `1.0` will be used.
     """
 
@@ -487,12 +487,12 @@ class TabBar(LayoutControl, AdaptiveControl):
     The thickness of the indicator. Value must be greater than zero.
 
     Note:
-        Will be ignored if [`indicator`][(c).] or
-        [`TabBarTheme.indicator`][flet.] is not `None`.
+        Will be ignored if :attr:`indicator` or
+        :attr:`flet.TabBarTheme.indicator` is not `None`.
 
     Raises:
-        ValueError: If [`indicator`][(c).] is `None` and
-            [`indicator_thickness`][(c).] is not strictly greater than `0`.
+        ValueError: If :attr:`indicator` is `None` and
+            :attr:`indicator_thickness` is not strictly greater than `0`.
     """
 
     enable_feedback: Optional[bool] = None
@@ -525,13 +525,13 @@ class TabBar(LayoutControl, AdaptiveControl):
     """
     Called when a tab is clicked.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains the index of the clicked tab.
     """
 
     on_hover: Optional[EventHandler[TabBarHoverEvent]] = None
     """
-    Called when a tab's (from [`tabs`][(c).]) hover state in the tab bar changes.
+    Called when a tab's (from :attr:`tabs`) hover state in the tab bar changes.
 
     When hover is moved from one tab directly to another, this will be called
     twice. First to represent hover exiting the initial tab, and then second
@@ -567,7 +567,7 @@ class TabBar(LayoutControl, AdaptiveControl):
 @control("Tab")
 class Tab(AdaptiveControl):
     """
-    A Material Design [`TabBar`][flet.] tab.
+    A Material Design :class:`~flet.TabBar` tab.
     """
 
     label: Optional[StrOrControl] = None
@@ -575,7 +575,7 @@ class Tab(AdaptiveControl):
     The tab's name. Can be either a string or a control.
 
     Raises:
-        ValueError: If both [`label`][(c).] and [`icon`][(c).] are not set.
+        ValueError: If both :attr:`label` and :attr:`icon` are not set.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -588,7 +588,7 @@ class Tab(AdaptiveControl):
     The height of the tab.
 
     If `None`, it will be calculated based on the content of the Tab. When
-    [`icon`][(c).] is not `None` along with [`label`][(c).],
+    :attr:`icon` is not `None` along with :attr:`label`,
     the default `height` is `72.0` pixels. Without an `icon`,
     the `height` is 46.0 pixels.
 
@@ -599,11 +599,11 @@ class Tab(AdaptiveControl):
     """
     The margin added around the tab's icon.
 
-    Only useful when used in combination with [`icon`][(c).],
-    and [`label`][(c).] is not `None`.
+    Only useful when used in combination with :attr:`icon`,
+    and :attr:`label` is not `None`.
 
     Defaults to `2` pixels of bottom margin.
-    If [`Theme.use_material3`][flet.] is `False`,
+    If :attr:`flet.Theme.use_material3` is `False`,
     then defaults to `10` pixels of bottom margin.
     """
 

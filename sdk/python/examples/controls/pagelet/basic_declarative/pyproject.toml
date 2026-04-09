@@ -1,0 +1,46 @@
+[project]
+name = "pagelet-basic-declarative"
+version = "1.0.0"
+description = "Demonstrates a declarative Pagelet with drawers and an app shell."
+requires-python = ">=3.10"
+keywords = [
+  "pagelet",
+  "declarative",
+  "navigation drawer",
+  "component",
+  "material",
+  "async",
+]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Pagelet"]
+
+[tool.flet.metadata]
+title = "Basic Declarative"
+controls = [
+  "Pagelet",
+  "SafeArea",
+  "AppBar",
+  "BottomAppBar",
+  "NavigationDrawer",
+  "NavigationDrawerDestination",
+  "FloatingActionButton",
+  "Button",
+  "Text",
+  "Row",
+  "IconButton",
+  "Container",
+]
+layout_pattern = "app-shell"
+complexity = "basic"
+features = ["declarative UI composition", "drawer navigation", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

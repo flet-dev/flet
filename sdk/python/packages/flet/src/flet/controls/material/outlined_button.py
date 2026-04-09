@@ -5,6 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.icon_data import IconData
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
@@ -13,6 +14,7 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["OutlinedButton"]
 
@@ -24,10 +26,10 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     important, but aren't the primary action in an app. Outlined buttons pair well \
     with filled buttons to indicate an alternative, secondary action.
 
+    Example:
     ```python
     ft.OutlinedButton(content="Outlined button")
     ```
-
     """
 
     content: Optional[StrOrControl] = None
@@ -35,7 +37,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     A Control representing custom button content.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).] is provided.
+        ValueError: If neither :attr:`icon` nor `content` is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
@@ -69,7 +71,7 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is
+    Additionally, if :attr:`on_click` event callback is
     provided, it is fired after that.
     """
 
@@ -101,14 +103,22 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
     Called when this button has lost focus.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError("at minimum, icon or a visible content must be provided")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
+            ),
+            message="at minimum, icon or content (string or visible Control) "
+            "must be provided",
+        ),
+    )
 
     async def focus(self):
         """Requests focus for this control."""

@@ -1,0 +1,26 @@
+[project]
+name = "apps-autocomplete-searcher-basic"
+version = "1.0.0"
+description = "Filters a list of names as the user types into an autocomplete-style search field."
+requires-python = ">=3.10"
+keywords = ["apps", "autocomplete", "search", "list filtering", "text field"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Search"]
+
+[tool.flet.metadata]
+title = "Autocomplete searcher"
+controls = ["SafeArea", "Column", "TextField", "ListView", "ListTile", "Text", "Icon"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["live filtering", "search suggestions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -15,6 +15,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 __all__ = ["Switch"]
 
@@ -40,12 +41,12 @@ class Switch(LayoutControl, AdaptiveControl):
 
     label_position: LabelPosition = LabelPosition.RIGHT
     """
-    The position of the [`label`][(c).], if provided.
+    The position of the :attr:`label`, if provided.
     """
 
     label_text_style: Optional[TextStyle] = None
     """
-    The [`label`][(c).]'s text style, when it is a string.
+    The :attr:`label`'s text style, when it is a string.
     """
 
     value: bool = False
@@ -69,7 +70,7 @@ class Switch(LayoutControl, AdaptiveControl):
     """
     The color to use on the track when this switch is on.
 
-    If [`track_color`][(c).] returns a non-none color in
+    If :attr:`track_color` returns a non-none color in
     the `ControlState.SELECTED` state, it will
     be used instead of this color.
     """
@@ -86,7 +87,7 @@ class Switch(LayoutControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If [`thumb_color`][(c).] returns a non-none color
+    If :attr:`thumb_color` returns a non-none color
     in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
@@ -98,14 +99,14 @@ class Switch(LayoutControl, AdaptiveControl):
     Defaults to colors defined in the
     [material design specification](https://m3.material.io/components/switch/specs).
 
-    If [`track_color`][(c).] returns a non-none color
+    If :attr:`track_color` returns a non-none color
     in the `ControlState.DEFAULT` state, it will be
     used instead of this color.
     """
 
     thumb_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color of this switch's thumb in various [`ControlState`][flet.]
+    The color of this switch's thumb in various :class:`~flet.ControlState`
     states.
 
     The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
@@ -115,7 +116,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     thumb_icon: Optional[ControlStateValue[IconData]] = None
     """
-    The icon of this Switch's thumb in various [`ControlState`][flet.] states.
+    The icon of this Switch's thumb in various :class:`~flet.ControlState` states.
 
     The following states are supported: `ControlState.SELECTED`, `ControlState.HOVERED`,
     `ControlState.DISABLED`, `ControlState.FOCUSED` and
@@ -124,7 +125,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     track_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color of this switch's track in various [`ControlState`][flet.] states.
+    The color of this switch's track in various :class:`~flet.ControlState` states.
 
     The following states are supported: `ControlState.SELECTED`,
     `ControlState.HOVERED`, `ControlState.DISABLED`, `ControlState.FOCUSED` and
@@ -135,13 +136,13 @@ class Switch(LayoutControl, AdaptiveControl):
     """
     Whether an adaptive Switch should be created based on the target platform.
 
-    On iOS and macOS, a [`CupertinoSwitch`][flet.] is created,
+    On iOS and macOS, a :class:`~flet.CupertinoSwitch` is created,
     which has matching functionality and presentation as `Switch`,
     and the graphics as expected on iOS. On other platforms,
     a Material Switch is created.
 
     Defaults to `False`. See the example of usage
-    [here](https://docs.flet.dev/controls/cupertinoswitch/#cupertino-material-and-adaptive-switches).
+    [here](https://flet.dev/docs/controls/cupertinoswitch/#cupertino-material-and-adaptive-switches).
     """  # noqa: E501
 
     hover_color: Optional[ColorValue] = None
@@ -149,17 +150,20 @@ class Switch(LayoutControl, AdaptiveControl):
     The color to be used when it is being hovered over by the mouse pointer.
     """
 
-    splash_radius: Optional[Number] = None
+    splash_radius: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The radius of the splash effect when the switch is pressed.
 
     Raises:
-        ValueError: If [`splash_radius`][(c).] is negative.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The color for the switch's Material in various [`ControlState`][flet.] states.
+    The color for the switch's Material in various :class:`~flet.ControlState` states.
 
     The following states are supported: `ControlState.PRESSED`,
     `ControlState.SELECTED`, `ControlState.HOVERED`, `ControlState.FOCUSED` and
@@ -168,7 +172,7 @@ class Switch(LayoutControl, AdaptiveControl):
 
     track_outline_color: Optional[ControlStateValue[ColorValue]] = None
     """
-    The outline color of this switch's track in various [`ControlState`][flet.]
+    The outline color of this switch's track in various :class:`~flet.ControlState`
     states.
 
     The following states are supported: `ControlState.SELECTED`, `
@@ -179,7 +183,7 @@ class Switch(LayoutControl, AdaptiveControl):
     track_outline_width: Optional[ControlStateValue[Optional[Number]]] = None
     """
     The outline width of this switch's track in all or specific \
-    [`ControlState`][flet.] states.
+    :class:`~flet.ControlState` states.
 
     The following states are supported: `ControlState.SELECTED`,
     `ControlState.HOVERED`, `ControlState.DISABLED`,
@@ -197,7 +201,7 @@ class Switch(LayoutControl, AdaptiveControl):
     The amount of space to surround the child inside the bounds of the Switch.
 
     Defaults to horizontal padding of 4 pixels. If
-    [`Theme.use_material3`][flet.] is false, then there is no
+    :attr:`flet.Theme.use_material3` is false, then there is no
     padding by default.
     """
 
@@ -215,11 +219,3 @@ class Switch(LayoutControl, AdaptiveControl):
     """
     Called when the control has lost focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.splash_radius is not None and self.splash_radius < 0:
-            raise ValueError(
-                "splash_radius must be greater than or equal to 0, "
-                f"got {self.splash_radius}"
-            )

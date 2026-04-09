@@ -1,0 +1,26 @@
+[project]
+name = "text-button-basic"
+version = "1.0.0"
+description = "Shows enabled and disabled TextButton controls with the default appearance."
+requires-python = ">=3.10"
+keywords = ["text button", "button", "disabled", "basic", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/TextButton"]
+
+[tool.flet.metadata]
+title = "TextButton basic"
+controls = ["SafeArea", "Column", "TextButton"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["enabled and disabled states"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

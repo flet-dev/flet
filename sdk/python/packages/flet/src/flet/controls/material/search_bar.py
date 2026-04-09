@@ -36,8 +36,8 @@ class SearchBar(LayoutControl):
     """
     The list of controls to be displayed below the search bar when in search view.
 
-    Typically [`ListTile`][flet.]s and will be displayed
-    in a [`ListView`][flet.].
+    Typically :class:`~flet.ListTile`s and will be displayed
+    in a :class:`~flet.ListView`.
     """
 
     value: str = ""
@@ -49,7 +49,7 @@ class SearchBar(LayoutControl):
     """
     A control to display before the text input field when the search view is close.
 
-    Typically an [`Icon`][flet.] or an [`IconButton`][flet.].
+    Typically an :class:`~flet.Icon` or an :class:`~flet.IconButton`.
     """
 
     bar_trailing: Optional[list[Control]] = None
@@ -72,14 +72,14 @@ class SearchBar(LayoutControl):
     bar_bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the background color of the search bar in all or specific \
-    [`ControlState`][flet.] states.
+    :class:`~flet.ControlState` states.
     """
 
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the highlight color that's typically used to indicate that the search bar \
-    is in [`FOCUSED`][flet.ControlState.], [`HOVERED`][flet.ControlState.], or \
-    [`PRESSED`][flet.ControlState.] states.
+    is in :attr:`~flet.ControlState.FOCUSED`, :attr:`~flet.ControlState.HOVERED`, or \
+    :attr:`~flet.ControlState.PRESSED` states.
     """
 
     bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None
@@ -96,7 +96,7 @@ class SearchBar(LayoutControl):
     """
     The color and weight of the search bar's outline.
 
-    This value is combined with [`bar_shape`][(c).] to
+    This value is combined with :attr:`bar_shape` to
     create a shape decorated with an outline.
     """
 
@@ -104,7 +104,7 @@ class SearchBar(LayoutControl):
     """
     The shape of the search bar.
 
-    This shape is combined with [`bar_border_side`][(c).] to create a shape
+    This shape is combined with :attr:`bar_border_side` to create a shape
     decorated with an outline.
     """
 
@@ -115,7 +115,7 @@ class SearchBar(LayoutControl):
 
     bar_hint_text_style: Optional[ControlStateValue[TextStyle]] = None
     """
-    The style to use for the [`SearchBar.bar_hint_text`][flet.].
+    The style to use for the :attr:`flet.SearchBar.bar_hint_text`.
     """
 
     bar_padding: Optional[ControlStateValue[PaddingValue]] = None
@@ -141,7 +141,7 @@ class SearchBar(LayoutControl):
     """
     A `Control` to display before the text input field when the search view is open.
 
-    Typically an [`Icon`][flet.] or an [`IconButton`][flet.].
+    Typically an :class:`~flet.Icon` or an :class:`~flet.IconButton`.
 
     Defaults to a back button which closes/pops the search view.
     """
@@ -186,7 +186,7 @@ class SearchBar(LayoutControl):
 
     view_hint_text_style: Optional[TextStyle] = None
     """
-    Defines the text style of [`view_hint_text`][(c).].
+    Defines the text style of :attr:`view_hint_text`.
     """
 
     view_size_constraints: Optional[BoxConstraints] = None
@@ -300,7 +300,7 @@ class SearchBar(LayoutControl):
 
         Args:
             text: The text to set in the search bar when closing the view. If not
-                provided, the current [`value`][(c).] of the search bar will be used.
+                provided, the current :attr:`value` of the search bar will be used.
         """
         await self._invoke_method(
             "close_view", {"text": text if text is not None else self.value}

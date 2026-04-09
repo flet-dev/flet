@@ -1,0 +1,26 @@
+[project]
+name = "color-pickers-example-5"
+version = "1.0.0"
+description = "BlockPicker dialog example with curated color palette and icon-triggered modal launch."
+requires-python = ">=3.10"
+keywords = ["color picker", "block picker", "dialog", "palette", "modal"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-color-pickers"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/ColorPickers"]
+
+[tool.flet.metadata]
+title = "BlockPicker"
+controls = ["SafeArea", "IconButton", "AlertDialog", "TextButton", "BlockPicker"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["dialog picker", "color change callback", "custom color palette"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

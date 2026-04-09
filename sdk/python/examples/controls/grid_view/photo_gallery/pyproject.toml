@@ -1,0 +1,26 @@
+[project]
+name = "grid-view-photo-gallery"
+version = "1.0.0"
+description = "Renders a responsive GridView photo gallery with remote images and spacing configuration."
+requires-python = ">=3.10"
+keywords = ["grid view", "photo gallery", "images", "responsive layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/GridView"]
+
+[tool.flet.metadata]
+title = "Photo gallery"
+controls = ["SafeArea", "GridView", "Image"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["remote image grid", "responsive runs and extent", "rounded thumbnails"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

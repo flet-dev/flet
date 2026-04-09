@@ -1,0 +1,26 @@
+[project]
+name = "code-editor-example-1"
+version = "1.0.0"
+description = "Basic CodeEditor setup with Python syntax highlighting and change callbacks."
+requires-python = ">=3.10"
+keywords = ["code editor", "syntax highlighting", "python", "editor"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-code-editor"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utilities/CodeEditor"]
+
+[tool.flet.metadata]
+title = "Basic example"
+controls = ["SafeArea", "CodeEditor"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["syntax highlighting", "change events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

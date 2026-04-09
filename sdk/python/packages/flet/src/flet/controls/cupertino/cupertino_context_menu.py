@@ -1,6 +1,9 @@
+from typing import Annotated
+
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
+from flet.utils.validation import V
 
 __all__ = ["CupertinoContextMenu"]
 
@@ -8,11 +11,13 @@ __all__ = ["CupertinoContextMenu"]
 @control("CupertinoContextMenu")
 class CupertinoContextMenu(AdaptiveControl):
     """
-    A full-screen modal route that opens up when the [`content`][(c).] is \
-    long-pressed.
+    A full-screen modal route that opens up when the :attr:`content` is long-pressed.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The content of this context menu.
 
@@ -22,30 +27,23 @@ class CupertinoContextMenu(AdaptiveControl):
         to resize to fit in its place in the new route, if it doesn't size itself.
 
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
-    actions: list[Control]
+    actions: Annotated[
+        list[Control],
+        V.visible_controls(min_count=1),
+    ]
     """
     A list of action buttons to be shown in the menu.
 
-    Typically [`CupertinoContextMenuAction`][flet.]s.
-
-    Note:
-        This list must have at least one visible action.
+    Typically :class:`~flet.CupertinoContextMenuAction`s.
 
     Raises:
-        ValueError: If [`actions`][(c).] does not contain at least one visible action.
+        ValueError: If it does not contain at least one visible `Control`.
     """
 
     enable_haptic_feedback: bool = True
     """
-    Whether a click on the [`actions`][(c).] should produce haptic feedback.
+    Whether a click on the :attr:`actions` should produce haptic feedback.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")
-        if not any(a.visible for a in self.actions):
-            raise ValueError("at least one action must be visible")

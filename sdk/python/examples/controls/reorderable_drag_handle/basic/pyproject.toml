@@ -1,0 +1,26 @@
+[project]
+name = "reorderable-drag-handle-basic"
+version = "1.0.0"
+description = "Shows a ReorderableListView with custom drag handles."
+requires-python = ">=3.10"
+keywords = ["reorderable drag handle", "drag handle", "reorderable list"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Reorderable"]
+
+[tool.flet.metadata]
+title = "Basic"
+controls = ["ReorderableListView", "ReorderableDragHandle", "ListTile", "SafeArea"]
+layout_pattern = "draggable-list"
+complexity = "basic"
+features = ["custom drag handles", "reorderable list items"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

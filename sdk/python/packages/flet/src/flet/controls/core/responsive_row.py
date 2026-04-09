@@ -22,9 +22,9 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     Allows aligning child controls to virtual columns.
 
     By default, a virtual grid has 12 columns, but that can be customized with
-    [`columns`][(c).] property.
+    :attr:`columns` property.
 
-    Similar to `expand` property, every control has [`col`][flet.Control.]
+    Similar to `expand` property, every control has :attr:`~flet.Control.col`
     property which allows specifying how many columns a control should span.
 
     Example:
@@ -59,12 +59,12 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed horizontally.
+    Defines how the child :attr:`controls` should be placed horizontally.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed vertically.
+    Defines how the child :attr:`controls` should be placed vertically.
     """
 
     spacing: ResponsiveNumber = 10
@@ -72,9 +72,9 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     The spacing between controls in a row in virtual pixels.
 
     Note:
-        Has effect only when [`alignment`][(c).] is set to
-        [`MainAxisAlignment.START`][flet.], [`MainAxisAlignment.END`][flet.],
-        or [`MainAxisAlignment.CENTER`][flet.].
+        Has effect only when :attr:`alignment` is set to
+        :attr:`flet.MainAxisAlignment.START`, :attr:`flet.MainAxisAlignment.END`,
+        or :attr:`flet.MainAxisAlignment.CENTER`.
     """
 
     run_spacing: ResponsiveNumber = 10
@@ -94,10 +94,10 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     )
     """
     Defines the minimum widths (in px) for each breakpoint key used by responsive \
-    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.], and \
-    [`run_spacing`][flet.ResponsiveRow.].
+    properties such as :attr:`~flet.Control.col`, :attr:`~flet.ResponsiveRow.spacing`, \
+    and :attr:`~flet.ResponsiveRow.run_spacing`.
 
-    Keys can be [`ResponsiveRowBreakpoint`][flet.] values or custom strings.
+    Keys can be :class:`~flet.ResponsiveRowBreakpoint` values or custom strings.
     Breakpoint names in responsive values must match the names used here.
 
     The default mirrors Bootstrap breakpoints.
