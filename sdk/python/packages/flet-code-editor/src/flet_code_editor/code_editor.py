@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Optional, Union
 
 import flet as ft
@@ -52,7 +53,7 @@ class CodeEditor(ft.LayoutControl):
     autocomplete_words: Optional[list[str]] = None
     """Words offered by autocomplete."""
 
-    issues: Optional[list[Issue]] = None
+    issues: list[Issue] = field(default_factory=list)
     """List of code analysis issues to display in the editor gutter."""
 
     read_only: Optional[bool] = False
