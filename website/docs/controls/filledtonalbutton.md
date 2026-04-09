@@ -1,7 +1,7 @@
 ---
 class_name: "flet.FilledTonalButton"
 examples: "controls/material/filled_tonal_button"
-example_images: "test-images/examples/material/golden/macos/filled_tonal_button"
+example_images: "test-images/examples/controls/material/golden/macos/filled_tonal_button"
 example_media: "examples/controls/material/filled_tonal_button/media"
 title: "FilledTonalButton"
 ---

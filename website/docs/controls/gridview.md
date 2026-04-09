@@ -1,7 +1,7 @@
 ---
 class_name: "flet.GridView"
 examples: "controls/core/grid_view"
-example_images: "test-images/examples/core/golden/macos/grid_view"
+example_images: "test-images/examples/controls/core/golden/macos/grid_view"
 example_media: "examples/controls/core/grid_view/media"
 title: "GridView"
 ---

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoSlidingSegmentedButton"
 examples: "controls/cupertino/cupertino_sliding_segmented_button"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_sliding_segmented_button"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_sliding_segmented_button"
 example_media: "examples/controls/cupertino/cupertino_sliding_segmented_button/media"
 title: "CupertinoSlidingSegmentedButton"
 ---

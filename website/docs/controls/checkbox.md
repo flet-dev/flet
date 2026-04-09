@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Checkbox"
 examples: "controls/material/checkbox"
-example_images: "test-images/examples/material/golden/macos/checkbox"
+example_images: "test-images/examples/controls/material/golden/macos/checkbox"
 title: "Checkbox"
 ---
 

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.ProgressRing"
 examples: "controls/material/progress_ring"
-example_images: "test-images/examples/material/golden/macos/progress_ring"
+example_images: "test-images/examples/controls/material/golden/macos/progress_ring"
 example_media: "examples/controls/material/progress_ring/media"
 title: "ProgressRing"
 ---

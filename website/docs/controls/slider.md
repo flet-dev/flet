@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Slider"
 examples: "controls/material/slider"
-example_images: "test-images/examples/material/golden/macos/slider"
+example_images: "test-images/examples/controls/material/golden/macos/slider"
 title: "Slider"
 ---
 

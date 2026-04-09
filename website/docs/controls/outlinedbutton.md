@@ -2,7 +2,7 @@
 class_name: "flet.OutlinedButton"
 examples: "controls/material/outlined_button"
 example_media: "examples/controls/material/outlined_button/media"
-example_images: "test-images/examples/material/golden/macos/outlined_button"
+example_images: "test-images/examples/controls/material/golden/macos/outlined_button"
 title: "OutlinedButton"
 ---
 

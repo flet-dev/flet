@@ -1,7 +1,7 @@
 ---
 class_name: "flet.BottomAppBar"
 examples: "controls/material/bottom_app_bar"
-example_images: "test-images/examples/material/golden/macos/bottom_app_bar"
+example_images: "test-images/examples/controls/material/golden/macos/bottom_app_bar"
 title: "BottomAppBar"
 ---
 

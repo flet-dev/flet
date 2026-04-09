@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CircleAvatar"
 examples: "controls/material/circle_avatar"
-example_images: "test-images/examples/material/golden/macos/circle_avatar"
+example_images: "test-images/examples/controls/material/golden/macos/circle_avatar"
 example_media: "examples/controls/material/circle_avatar/media"
 title: "CircleAvatar"
 ---

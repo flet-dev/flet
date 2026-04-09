@@ -1,7 +1,7 @@
 ---
 class_name: "flet.AlertDialog"
 examples: "controls/material/alert_dialog"
-example_images: "test-images/examples/material/golden/macos/alert_dialog"
+example_images: "test-images/examples/controls/material/golden/macos/alert_dialog"
 title: "AlertDialog"
 ---
 

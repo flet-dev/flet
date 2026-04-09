@@ -1,7 +1,7 @@
 ---
 class_name: "flet.VerticalDivider"
 examples: "controls/core/vertical_divider"
-example_images: "test-images/examples/core/golden/macos/vertical_divider"
+example_images: "test-images/examples/controls/core/golden/macos/vertical_divider"
 title: "VerticalDivider"
 ---
 

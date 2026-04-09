@@ -1,7 +1,7 @@
 ---
 class_name: "flet.AppBar"
 examples: "controls/material/app_bar"
-example_images: "test-images/examples/material/golden/macos/app_bar"
+example_images: "test-images/examples/controls/material/golden/macos/app_bar"
 example_media: "examples/controls/material/app_bar/media"
 title: "AppBar"
 ---

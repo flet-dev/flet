@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Radio"
 examples: "controls/material/radio"
-example_images: "test-images/examples/material/golden/macos/radio"
+example_images: "test-images/examples/controls/material/golden/macos/radio"
 title: "Radio"
 ---
 

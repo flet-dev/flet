@@ -1,6 +1,6 @@
 ---
 class_name: "flet.FilledIconButton"
-example_images: "test-images/examples/material/golden/macos/filled_icon_button"
+example_images: "test-images/examples/controls/material/golden/macos/filled_icon_button"
 title: "FilledIconButton"
 ---
 

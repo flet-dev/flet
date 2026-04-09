@@ -1,7 +1,7 @@
 ---
 class_name: "flet.BottomSheet"
 examples: "controls/material/bottom_sheet"
-example_images: "test-images/examples/material/golden/macos/bottom_sheet"
+example_images: "test-images/examples/controls/material/golden/macos/bottom_sheet"
 title: "BottomSheet"
 ---
 

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Pagelet"
 examples: "controls/core/pagelet"
-example_images: "test-images/examples/core/golden/macos/pagelet"
+example_images: "test-images/examples/controls/core/golden/macos/pagelet"
 title: "Pagelet"
 ---
 

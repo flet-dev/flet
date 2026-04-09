@@ -1,7 +1,7 @@
 ---
 class_name: "flet.SegmentedButton"
 examples: "controls/material/segmented_button"
-example_images: "test-images/examples/material/golden/macos/segmented_button"
+example_images: "test-images/examples/controls/material/golden/macos/segmented_button"
 title: "SegmentedButton"
 ---
 

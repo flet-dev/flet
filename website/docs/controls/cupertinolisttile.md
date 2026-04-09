@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoListTile"
 examples: "controls/cupertino/cupertino_list_tile"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_list_tile"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_list_tile"
 example_media: "examples/controls/cupertino/cupertino_list_tile/media"
 title: "CupertinoListTile"
 ---

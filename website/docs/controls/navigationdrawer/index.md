@@ -1,7 +1,7 @@
 ---
 class_name: "flet.NavigationDrawer"
 examples: "controls/material/navigation_drawer"
-example_images: "test-images/examples/material/golden/macos/navigation_drawer"
+example_images: "test-images/examples/controls/material/golden/macos/navigation_drawer"
 title: "NavigationDrawer"
 ---
 

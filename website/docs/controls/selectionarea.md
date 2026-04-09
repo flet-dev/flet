@@ -1,7 +1,7 @@
 ---
 class_name: "flet.SelectionArea"
 examples: "controls/material/selection_area"
-example_images: "test-images/examples/material/golden/macos/selection_area"
+example_images: "test-images/examples/controls/material/golden/macos/selection_area"
 example_media: "examples/controls/material/selection_area/media"
 title: "SelectionArea"
 ---

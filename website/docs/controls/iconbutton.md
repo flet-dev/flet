@@ -1,7 +1,7 @@
 ---
 class_name: "flet.IconButton"
 examples: "controls/material/icon_button"
-example_images: "test-images/examples/material/golden/macos/icon_button"
+example_images: "test-images/examples/controls/material/golden/macos/icon_button"
 example_media: "examples/controls/material/icon_button/media"
 title: "IconButton"
 ---

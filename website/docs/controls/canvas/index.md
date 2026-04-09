@@ -1,7 +1,7 @@
 ---
 class_name: "flet.canvas.Canvas"
 examples: "controls/core/canvas"
-example_images: "test-images/examples/core/golden/macos/canvas"
+example_images: "test-images/examples/controls/core/golden/macos/canvas"
 example_media: "examples/controls/core/canvas/media"
 title: "Canvas"
 ---

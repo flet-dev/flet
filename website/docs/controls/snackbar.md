@@ -1,7 +1,7 @@
 ---
 class_name: "flet.SnackBar"
 examples: "controls/material/snack_bar"
-example_images: "test-images/examples/material/golden/macos/snack_bar"
+example_images: "test-images/examples/controls/material/golden/macos/snack_bar"
 snack_bar_action_class_name: "flet.SnackBarAction"
 title: "SnackBar"
 ---

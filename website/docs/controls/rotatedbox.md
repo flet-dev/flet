@@ -1,7 +1,7 @@
 ---
 class_name: "flet.RotatedBox"
 examples: "controls/core/rotated_box"
-example_images: "test-images/examples/core/golden/macos/rotated_box"
+example_images: "test-images/examples/controls/core/golden/macos/rotated_box"
 title: "RotatedBox"
 ---
 

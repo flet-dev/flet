@@ -1,7 +1,7 @@
 ---
 class_name: "flet.TextButton"
 examples: "controls/material/text_button"
-example_images: "test-images/examples/material/golden/macos/text_button"
+example_images: "test-images/examples/controls/material/golden/macos/text_button"
 title: "TextButton"
 ---
 

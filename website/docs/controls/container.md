@@ -2,7 +2,7 @@
 class_name: "flet.Container"
 examples: "controls/core/container"
 example_media: "examples/controls/core/container/media"
-example_images: "test-images/examples/core/golden/macos/container"
+example_images: "test-images/examples/controls/core/golden/macos/container"
 title: "Container"
 ---
 

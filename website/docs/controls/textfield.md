@@ -1,7 +1,7 @@
 ---
 class_name: "flet.TextField"
 examples: "controls/material/text_field"
-example_images: "test-images/examples/material/golden/macos/textfield"
+example_images: "test-images/examples/controls/material/golden/macos/textfield"
 example_media: "examples/controls/material/text_field/media"
 title: "TextField"
 ---

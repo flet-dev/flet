@@ -1,7 +1,7 @@
 ---
 class_name: "flet.AutoComplete"
 examples: "controls/material/auto_complete"
-example_images: "test-images/examples/material/golden/macos/auto_complete"
+example_images: "test-images/examples/controls/material/golden/macos/auto_complete"
 title: "AutoComplete"
 ---
 

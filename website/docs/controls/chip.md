@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Chip"
 examples: "controls/material/chip"
-example_images: "test-images/examples/material/golden/macos/chip"
+example_images: "test-images/examples/controls/material/golden/macos/chip"
 example_media: "examples/controls/material/chip/media"
 title: "Chip"
 ---

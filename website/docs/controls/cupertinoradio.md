@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoRadio"
 examples: "controls/cupertino/cupertino_radio"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_radio"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_radio"
 example_media: "examples/controls/cupertino/cupertino_radio/media"
 title: "CupertinoRadio"
 ---

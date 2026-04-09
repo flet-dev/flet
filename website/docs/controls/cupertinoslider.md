@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoSlider"
 examples: "controls/cupertino/cupertino_slider"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_slider"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_slider"
 example_media: "examples/controls/cupertino/cupertino_slider/media"
 title: "CupertinoSlider"
 ---

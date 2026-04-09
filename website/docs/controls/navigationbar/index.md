@@ -1,7 +1,7 @@
 ---
 class_name: "flet.NavigationBar"
 examples: "controls/material/navigation_bar"
-example_images: "test-images/examples/material/golden/macos/navigation_bar"
+example_images: "test-images/examples/controls/material/golden/macos/navigation_bar"
 title: "NavigationBar"
 ---
 
