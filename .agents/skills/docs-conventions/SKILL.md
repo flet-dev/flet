@@ -9,9 +9,12 @@ description: Use when writing or reviewing Flet documentation, including Python 
 
 Use **Google style** docstrings with sections: `Args:`, `Returns:`, `Raises:`, `Note:`, `Example:`, `Warning:`.
 
-### Cross-references (reST roles)
+### Cross-references
 
-Use reST roles in Python docstrings. CrocoDocs renders them as links in the API docs.
+#### reST roles
+
+Prefer these in docstrings. CrocoDocs renders them as links in
+the API docs and they keep authoring terse when the auto-derived label is acceptable.
 
 **Supported roles:** `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`
 
@@ -38,6 +41,35 @@ Calls :meth:`flet.Page.update` after modifying controls.
 - Custom labels like `:class:`my label <flet.Page>`` — the label is always auto-derived from the target
 - Roles for symbols not in CrocoDocs API data degrade to inline code
 
+#### CrocoDocs xrefs
+
+Use the xref syntax when the displayed text must differ from the symbol target or when
+explicitly required by user. This is especially useful in docs-only strings such as the
+`docs_reason` parameter of `@deprecated`, extracted validation messages, or short admonition text
+where you want:
+
+- inline-code labels with punctuation, such as ``new_func()`` or `local_position.x`,
+- plain-language labels that do not match the target exactly,
+- explicit full targets in the link destination for clarity.
+
+Syntax:
+
+```python
+"""
+Use [`Page.update()`][flet.Page.update] after mutating controls.
+Use [`local_position.x`][flet.DragTargetEvent.local_position] instead.
+See [the move callback][flet.DragTarget.on_move] for continuous updates.
+"""
+```
+
+Rules:
+
+- In `docs_reason`, prefer using CrocoDocs xrefs over reST roles.
+- Always use full symbol targets in the second `[]`, for example `flet.IconButton` or `flet.DragTargetEvent.local_position`.
+- Put the exact display text you want in the first `[]`.
+- For methods, include `()` in the label when desired, but not in the target: ``[`Page.update()`][flet.Page.update]``.
+- Use xrefs when reST role labels are too rigid; otherwise prefer reST roles in regular docstrings.
+
 ### Admonitions in docstrings
 
 Google-style section headers render as Docusaurus admonitions:
@@ -56,7 +88,9 @@ Example:
 """
 ```
 
-Supported kinds: `Note`, `Warning`, `Danger`, `Tip`, `Info`. Unsupported kinds (e.g. `Limitation`, `Example`) are normalized to `note`. Empty admonitions are skipped.
+Supported kinds: `Note`, `Warning`, `Danger`, `Tip`, `Info`.
+Unsupported kinds (e.g. `Limitation`, `Example`) are normalized to `note`.
+Empty admonitions are skipped.
 
 ## Markdown Docs
 

@@ -16,12 +16,9 @@ Do not use this skill for non-deprecation validation logic; use
 
 ## Source Of Truth
 
-- Runtime decorators and warning helpers:
-  `sdk/python/packages/flet/src/flet/utils/deprecated.py`
-- Field-level deprecation rule:
-  `sdk/python/packages/flet/src/flet/utils/validation.py` (`V.deprecated`)
-- Docs extraction/labeling extension:
-  `sdk/python/packages/flet/src/flet/utils/griffe_deprecations.py`
+- Runtime decorators and warning helpers: `sdk/python/packages/flet/src/flet/utils/deprecated.py`
+- Field-level deprecation rule: `sdk/python/packages/flet/src/flet/utils/validation.py` (`V.deprecated`)
+- Docs extraction/labeling extension: `sdk/python/packages/flet/src/flet/utils/griffe_deprecations.py`
 
 ## Deprecation Decision Order
 
@@ -78,8 +75,9 @@ When working on a release for `{new_version}`, treat deprecations with
 1. Always set `version`.
 2. Set `delete_version` using the 3-minor policy by default.
 3. Keep `reason` plain text for runtime warnings.
-4. Use `docs_reason` for docs-only markdown/xref text.
+4. Use `docs_reason` for docs-only markdown text and always write cross-references there as CrocoDocs xrefs.
 5. Prefer explicit replacement names in reasons.
+6. Use `@property` + `@deprecated(...)` for deprecated properties.
 
 ### Field Pattern
 
@@ -87,16 +85,17 @@ When working on a release for `{new_version}`, treat deprecations with
 from typing import Annotated, Optional
 from flet.utils.validation import V
 
-old_prop: Annotated[
-    Optional[str],
-    V.deprecated(
-        "new_prop",
-        version="0.17.0",
-        delete_version="0.18.0",
-        reason="Use new_prop instead.",
-        docs_reason="Use :attr:`new_prop` or [`new_prop`][(c).] instead.",
-    ),
-] = None
+class ExampleControl:
+    old_prop: Annotated[
+        Optional[str],
+        V.deprecated(
+            "new_prop",
+            version="0.17.0",
+            delete_version="0.18.0",
+            reason="Use new_prop instead.",
+            docs_reason="Use [`new_prop`][flet.ExampleControl.new_prop] instead.",
+        ),
+    ] = None
 ```
 
 ### Function/Method Pattern
@@ -106,27 +105,11 @@ from flet.utils.deprecated import deprecated
 
 @deprecated(
     reason="Use new_func instead.",
-    docs_reason="Use :attr:`new_prop` or [`new_func()`][flet.Control.new_func] instead.",
+    docs_reason="Use [`new_func()`][flet.ExampleControl.new_func] instead.",
     version="0.17.0",
     delete_version="0.18.0",
 )
 def old_func():
-    ...
-```
-
-### Property Getter Pattern
-
-```python
-from flet.utils.deprecated import deprecated
-
-@property
-@deprecated(
-    reason="Use some_prop instead.",
-    docs_reason="Use :attr:`some_prop` or [`new_prop`][flet.Control.some_prop] instead.",
-    version="0.17.0",
-    delete_version="0.18.0",
-)
-def old_prop(self):
     ...
 ```
 
@@ -145,14 +128,46 @@ class OldControl:
     ...
 ```
 
+### Deprecated Property Pattern
+
+```python
+from flet.utils.deprecated import deprecated
+
+@property
+@deprecated(
+    reason="Use new_value instead.",
+    docs_reason="Use [`new_value`][flet.ExampleControl.new_value] instead.",
+    version="0.85.0",
+    delete_version="0.88.0",
+)
+def value(self) -> int:
+    ...
+```
+
 ## `reason` vs `docs_reason`
 
 - Runtime warnings always use `reason`.
 - Docs admonitions prefer `docs_reason`; fallback is `reason`.
 - Keep markdown/xref out of `reason` to avoid noisy runtime output.
 
-For cross-reference shape rules, follow:
-[`docs-cross-referencing`](../docs-cross-referencing/SKILL.md)
+### Cross-reference Rule Inside `docs_reason`
+
+Always use CrocoDocs xrefs in `docs_reason`, unless the user explicitly asks for a
+different format, e.g. reST.
+
+Reason:
+
+- `docs_reason` often needs custom labels such as ``new_func()``, `local_position.x` or plain text.
+- xrefs keep the display text fully under author control.
+- full targets in the second `[]` make the intended destination explicit.
+
+Examples:
+
+- custom-label xref: ``Use [`local_position.x`][flet.DragTargetEvent.local_position] for target-relative coordinates instead.``
+- method xref: ``Call [`Page.update()`][flet.Page.update] after mutating controls.``
+- plain-text label xref: ``See [the move callback][flet.DragTarget.on_move] for continuous updates.``
+
+For cross-reference syntax rules, follow: [`docs-conventions`](../docs-conventions/SKILL.md)
 
 ## Docs Behavior Expectations
 
@@ -168,8 +183,7 @@ is a special case not covered by the extension.
 When adding/changing deprecations, include tests for:
 - runtime warning text (`reason`, versions, optional delete version),
 - docs-only preference (`docs_reason` overrides `reason` in docs),
-- docs rendering extraction for the used pattern (`V.deprecated`,
-  `@deprecated`, `@deprecated_class`),
+- docs rendering extraction for the used pattern (`V.deprecated`, `@deprecated`, `@deprecated_class`, deprecated properties),
 - label presence (`deprecated`) in docs extraction tests.
 
 Prefer:
@@ -183,4 +197,5 @@ Prefer:
 - Forgetting `delete_version` when a removal target is already known.
 - Adding old/new value-copy logic in Python for rename migrations.
 - Duplicating deprecation warnings in multiple lifecycle hooks manually.
-- Broken crossref targets in `docs_reason` (for example malformed `[(c).]` links).
+- Broken crossref targets in `docs_reason`.
+- Using shorthand targets in new `docs_reason` examples instead of explicit full targets.
