@@ -64,6 +64,10 @@ class Route:
         loader: Optional data loader function. Called with the matched
             params dict when the route matches. Result is available via
             [`use_route_loader_data()`][flet.use_route_loader_data].
+        outlet: When ``True`` and ``manage_views=True``, this route acts
+            as a layout that wraps its matched child via
+            [`use_route_outlet()`][flet.use_route_outlet] within a single
+            View, instead of each child becoming a separate View.
     """
 
     path: str | None = None
@@ -71,6 +75,7 @@ class Route:
     component: Callable | None = None
     children: list[Route] | None = field(default=None)
     loader: Callable[..., Any] | None = None
+    outlet: bool = False
 
 
 @dataclass
@@ -191,7 +196,7 @@ def _try_match(
                 ] + child_result
 
         # No children matched — if this route has a component, try exact match
-        if route.component and route_path:
+        if route.component:
             exact_pattern = repath.pattern(full_path)
             exact_m = re.match(exact_pattern, pathname)
             if exact_m:
@@ -373,12 +378,105 @@ def _build_outlet_chain(
 
 
 # ---------------------------------------------------------------------------
+# View-stack builder (manage_views=True)
+# ---------------------------------------------------------------------------
+
+
+def _split_chain_into_view_levels(
+    chain: list[_RouteMatch],
+) -> tuple[list[_RouteMatch], list[tuple[_RouteMatch, str]]]:
+    """
+    Split matched chain into layout wrappers and view entries.
+
+    Only **pathless** routes (no ``path``, not ``index``) with a component
+    are treated as layouts that wrap every View.  All other routes with
+    a component become their own View in the stack.
+
+    Returns:
+        A tuple of (layouts, view_entries) where:
+        - layouts: pathless routes with components that wrap every View
+        - view_entries: path-bearing routes, each becoming its own View.
+          Each entry is ``(match, accumulated_path)``.
+    """
+    layouts: list[_RouteMatch] = []
+    view_entries: list[tuple[_RouteMatch, str]] = []
+
+    for i, match in enumerate(chain):
+        route = match.route
+        if route.component is None:
+            continue
+
+        is_last = i == len(chain) - 1
+
+        if not is_last and route.outlet:
+            # Explicit outlet layout — wraps child views
+            layouts.append(match)
+        else:
+            view_entries.append((match, match.full_path))
+
+    return layouts, view_entries
+
+
+def _build_view_level(
+    layouts: list[_RouteMatch],
+    leaf_match: _RouteMatch,
+    loader_results: dict[int, Any],
+    chain: list[_RouteMatch],
+):
+    """
+    Build the component tree for a single View level.
+
+    Wraps the leaf component in layout outlets and optional loader data.
+    """
+    leaf_route = leaf_match.route
+    leaf_index = chain.index(leaf_match)
+    leaf_loader_data = loader_results.get(leaf_index)
+
+    def render_leaf():
+        if leaf_loader_data is not None:
+            return _loader_data_context(leaf_loader_data, leaf_route.component)
+        return leaf_route.component()
+
+    if not layouts:
+        return render_leaf()
+
+    # Wrap the leaf in layout outlets from innermost to outermost.
+    # The innermost layout gets the leaf as its outlet; each outer layout
+    # gets the next inner layout as its outlet.
+    current_render = render_leaf
+    for layout_match in reversed(layouts):
+        layout_route = layout_match.route
+        layout_index = chain.index(layout_match)
+        layout_loader_data = loader_results.get(layout_index)
+        # Capture loop variables
+        _lr = layout_route
+        _lld = layout_loader_data
+        _cr = current_render
+
+        def make_render(_lr=_lr, _lld=_lld, _cr=_cr):
+            def render_layout():
+                if _lld is not None:
+                    return _loader_data_context(_lld, _lr.component)
+                return _lr.component()
+
+            return lambda: _outlet_context(_cr(), render_layout)
+
+        current_render = make_render()
+
+    return current_render()
+
+
+# ---------------------------------------------------------------------------
 # Router component
 # ---------------------------------------------------------------------------
 
 
 @component
-def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
+def Router(
+    routes: list[Route],
+    not_found: Callable | None = None,
+    manage_views: bool = False,
+) -> Control:
     """
     Top-level router component that matches the current page route against
     a tree of [`Route`][flet.Route] definitions and renders the matched
@@ -389,9 +487,17 @@ def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
 
     Navigation is done via the existing [`page.push_route()`][flet.Page.push_route].
 
+    When ``manage_views`` is ``True``, the Router manages
+    [`page.views`][flet.Page.views] directly — each path level in the matched
+    chain becomes a separate [`View`][flet.View].  This enables swipe-back
+    gestures, system back button, and AppBar implicit back button on mobile.
+    Must be used with [`page.render_views()`][flet.Page.render_views].
+
     Args:
         routes: List of top-level route definitions.
         not_found: Optional component to render when no route matches (404).
+        manage_views: When ``True``, produce a list of Views (one per path
+            level) instead of a single component tree.
 
     Example:
         ```python
@@ -402,27 +508,45 @@ def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
                     ft.Route(index=True, component=Home),
                     ft.Route(path="about", component=About),
                     ft.Route(path="products/:pid", component=ProductDetails),
-                ]
+                ],
+                manage_views=True,
             )
         ```
     """
     page = context.page
     location, set_location = use_state(page.route or "/")
-    prev_handler_ref = use_ref(None)
+    prev_route_handler_ref = use_ref(None)
+    prev_pop_handler_ref = use_ref(None)
 
     # Subscribe to route changes on mount
-    def setup_route_listener():
-        prev_handler_ref.current = page.on_route_change
+    def setup_listeners():
+        prev_route_handler_ref.current = page.on_route_change
 
         def on_route_change(e):
             set_location(e.route)
 
         page.on_route_change = on_route_change
 
-    def teardown_route_listener():
-        page.on_route_change = prev_handler_ref.current
+        if manage_views:
+            prev_pop_handler_ref.current = page.on_view_pop
 
-    use_effect(setup_route_listener, dependencies=[], cleanup=teardown_route_listener)
+            def on_view_pop(e):
+                from flet.components.public_utils import unwrap_component
+
+                views_list = unwrap_component(page.views)
+                if isinstance(views_list, list) and len(views_list) > 1:
+                    prev_view = unwrap_component(views_list[-2])
+                    if prev_view is not None:
+                        page.navigate(prev_view.route)
+
+            page.on_view_pop = on_view_pop
+
+    def teardown_listeners():
+        page.on_route_change = prev_route_handler_ref.current
+        if manage_views:
+            page.on_view_pop = prev_pop_handler_ref.current
+
+    use_effect(setup_listeners, dependencies=[], cleanup=teardown_listeners)
 
     # Parse location
     parsed = urlparse(location)
@@ -435,6 +559,10 @@ def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
 
     if chain is None:
         if not_found is not None:
+            if manage_views:
+                from flet.controls.core.view import View
+
+                return [View(route=pathname, controls=[not_found()])]
             return not_found()
         return None
 
@@ -452,10 +580,51 @@ def Router(routes: list[Route], not_found: Callable | None = None) -> Control:
     # Build location info
     loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
 
-    # Wrap outlet chain in location + params contexts
-    return _location_context(
-        loc,
-        lambda: _params_context(
-            all_params, lambda: _build_outlet_chain(chain, loader_results)
-        ),
-    )
+    if not manage_views:
+        # Single-view mode (existing behavior)
+        return _location_context(
+            loc,
+            lambda: _params_context(
+                all_params, lambda: _build_outlet_chain(chain, loader_results)
+            ),
+        )
+
+    # Multi-view mode: return a list of route component results.
+    # Each route component should return a View (with appbar, controls,
+    # route, etc.).  The Router sets route and can_pop on each View
+    # after the component body executes (via the patch walk).
+    # Used with page.render_views(App).
+    layouts, view_entries = _split_chain_into_view_levels(chain)
+
+    results = []
+    for match, view_path in view_entries:
+        # Params accumulated up to this view level
+        level_params: dict[str, str] = {}
+        for m in chain:
+            level_params.update(m.params)
+            if m is match:
+                break
+
+        level_loc = LocationInfo(pathname=view_path, search=search, hash=hash_val)
+        _match = match
+        # Only apply layouts that appear before this view entry in the chain
+        match_idx = chain.index(match)
+        _layouts = [lm for lm in layouts if chain.index(lm) < match_idx]
+
+        def build_view_content(
+            _match=_match,
+            _layouts=_layouts,
+            _level_params=level_params,
+            _level_loc=level_loc,
+        ):
+            return _location_context(
+                _level_loc,
+                lambda: _params_context(
+                    _level_params,
+                    lambda: _build_view_level(_layouts, _match, loader_results, chain),
+                ),
+            )
+
+        results.append(build_view_content())
+
+    return results
