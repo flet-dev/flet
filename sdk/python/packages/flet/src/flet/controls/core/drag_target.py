@@ -6,6 +6,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
+from flet.utils.deprecated import deprecated
 from flet.utils.validation import V
 
 __all__ = [
@@ -55,35 +56,65 @@ class DragTargetEvent(DragEventBase):
     Event payload for drag move and accepted-drop callbacks.
     """
 
-    x: float
-    """
-    Horizontal pointer position in the global coordinate space.
-    """
-
-    y: float
-    """
-    Vertical pointer position in the global coordinate space.
-    """
-
-    local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
+    local_position: Offset = field(metadata={"data_field": "l"})
     """
     Pointer position relative to the target bounds.
     """
 
-    global_position: Optional[Offset] = field(
-        default=None, metadata={"data_field": "g"}
-    )
+    global_position: Offset = field(metadata={"data_field": "g"})
     """
     Pointer position in the global coordinate space.
     """
 
     @property
-    def offset(self) -> Offset:
+    @deprecated(
+        reason="Use `local_position.x` for target-relative coordinates or "
+        "`global_position.x` for global coordinates instead.",
+        docs_reason="Use [`local_position.x`][(c).local_position] for "
+        "target-relative coordinates or [`global_position.x`][(c).global_position] "
+        "for global coordinates instead.",
+        version="0.85.0",
+        delete_version="0.88.0",
+    )
+    def x(self) -> float:
         """
-        Legacy pointer position as an :class:`~flet.Offset` in global coordinates.
+        Horizontal pointer position in the global coordinate space.
         """
 
-        return Offset(self.x, self.y)
+        return self.global_position.x
+
+    @property
+    @deprecated(
+        reason="Use `local_position.y` for target-relative coordinates or "
+        "`global_position.y` for global coordinates instead.",
+        docs_reason="Use [`local_position.y`][(c).local_position] for "
+        "target-relative coordinates or [`global_position.y`][(c).global_position] "
+        "for global coordinates instead.",
+        version="0.85.0",
+        delete_version="0.88.0",
+    )
+    def y(self) -> float:
+        """
+        Vertical pointer position in the global coordinate space.
+        """
+
+        return self.global_position.y
+
+    @property
+    @deprecated(
+        reason="Use `local_position` for target-relative coordinates or "
+        "`global_position` for global coordinates instead.",
+        docs_reason="Use [`local_position`][(c).] for target-relative coordinates or "
+        "[`global_position`][(c).] for global coordinates instead.",
+        version="0.85.0",
+        delete_version="0.88.0",
+    )
+    def offset(self) -> Offset:
+        """
+        Pointer position in global coordinates.
+        """
+
+        return self.global_position
 
 
 @dataclass

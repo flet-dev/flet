@@ -8,23 +8,17 @@ import 'draggable.dart';
 
 class DragTargetEvent {
   final int srcId;
-  final double x;
-  final double y;
   final Offset localPosition;
   final Offset globalPosition;
 
   DragTargetEvent({
     required this.srcId,
-    required this.x,
-    required this.y,
     required this.localPosition,
     required this.globalPosition,
   });
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'src_id': srcId,
-        'x': x,
-        'y': y,
         'l': {'x': localPosition.dx, 'y': localPosition.dy},
         'g': {'x': globalPosition.dx, 'y': globalPosition.dy},
       };
@@ -64,12 +58,10 @@ class DragTargetControl extends StatelessWidget {
         control.triggerEvent(
             "move",
             DragTargetEvent(
-                    srcId: details.data.id,
-                    x: globalPosition.dx,
-                    y: globalPosition.dy,
-                    localPosition: localPosition,
-                    globalPosition: globalPosition)
-                .toMap());
+              srcId: details.data.id,
+              localPosition: localPosition,
+              globalPosition: globalPosition,
+            ).toMap());
       },
       onWillAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
         var groupMatch = details.data.group == group;
@@ -84,12 +76,10 @@ class DragTargetControl extends StatelessWidget {
         control.triggerEvent(
             "accept",
             DragTargetEvent(
-                    srcId: details.data.id,
-                    x: globalPosition.dx,
-                    y: globalPosition.dy,
-                    localPosition: localPosition,
-                    globalPosition: globalPosition)
-                .toMap());
+              srcId: details.data.id,
+              localPosition: localPosition,
+              globalPosition: globalPosition,
+            ).toMap());
       },
       onLeave: (DraggableData? data) {
         control.triggerEvent("leave", {"src_id", data?.id});
