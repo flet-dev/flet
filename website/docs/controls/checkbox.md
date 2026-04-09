@@ -29,6 +29,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/styled_checkboxes_flow.gif'} alt="Styled checkboxes" width="35%" />
+<Image src={frontMatter.example_images + '/styled_checkboxes_selected.png'} alt="Styled checkboxes" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />
