@@ -1,17 +1,30 @@
-"""Nested routes — parent/child route hierarchy."""
+"""Nested routes with view stack — swipe-back and AppBar back button."""
 
 import flet as ft
 
 
 @ft.component
 def Home():
-    return ft.Text("Home", size=24)
+    return ft.View(
+        route="/",
+        can_pop=False,
+        appbar=ft.AppBar(title=ft.Text("Home")),
+        controls=[
+            ft.Text("Home", size=24),
+            ft.Button(
+                "Go to Products",
+                on_click=lambda: ft.context.page.navigate("/products"),
+            ),
+        ],
+    )
 
 
 @ft.component
 def ProductsList():
-    return ft.Column(
-        [
+    return ft.View(
+        route="/products",
+        appbar=ft.AppBar(title=ft.Text("Products")),
+        controls=[
             ft.Text("All Products", size=24),
             ft.Button(
                 "View Product #1",
@@ -21,57 +34,42 @@ def ProductsList():
                 "View Product #2",
                 on_click=lambda: ft.context.page.navigate("/products/2"),
             ),
-        ]
+        ],
     )
 
 
 @ft.component
 def ProductDetails():
     params = ft.use_route_params()
-    return ft.Column(
-        [
-            ft.Text(f"Product #{params['pid']}", size=24),
-            ft.Button(
-                "Back to Products",
-                on_click=lambda: ft.context.page.navigate("/products"),
-            ),
-        ]
+    return ft.View(
+        route=f"/products/{params['pid']}",
+        appbar=ft.AppBar(title=ft.Text(f"Product #{params['pid']}")),
+        controls=[
+            ft.Text(f"Details for product #{params['pid']}", size=24),
+        ],
     )
 
 
 @ft.component
 def App():
-    return ft.SafeArea(
-        content=ft.Column(
-            [
-                ft.Row(
-                    [
-                        ft.Button(
-                            "Home",
-                            on_click=lambda: ft.context.page.navigate("/"),
-                        ),
-                        ft.Button(
-                            "Products",
-                            on_click=lambda: ft.context.page.navigate("/products"),
-                        ),
-                    ]
-                ),
-                ft.Router(
-                    [
-                        ft.Route(index=True, component=Home),
-                        ft.Route(
-                            path="products",
-                            children=[
-                                ft.Route(index=True, component=ProductsList),
-                                ft.Route(path=":pid", component=ProductDetails),
-                            ],
-                        ),
-                    ]
-                ),
-            ]
-        )
+    return ft.Router(
+        [
+            ft.Route(
+                component=Home,
+                children=[
+                    ft.Route(
+                        path="products",
+                        component=ProductsList,
+                        children=[
+                            ft.Route(path=":pid", component=ProductDetails),
+                        ],
+                    ),
+                ],
+            ),
+        ],
+        manage_views=True,
     )
 
 
 if __name__ == "__main__":
-    ft.run(lambda page: page.render(App))
+    ft.run(lambda page: page.render_views(App))
