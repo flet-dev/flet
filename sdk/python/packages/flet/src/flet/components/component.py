@@ -80,6 +80,8 @@ class Component(BaseControl):
     memoized: bool = field(default=False, metadata={"skip": True})
     _stale: bool = field(default=False, metadata={"skip": True})
 
+    visible: bool = True
+
     _b: Any = None  # body
 
     def _migrate_state(self, other: BaseControl):
