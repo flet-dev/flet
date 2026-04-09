@@ -43,7 +43,7 @@ Use this skill after the integration test structure is already in place and the 
 - When a docs page has multiple example sections, add the generated screenshot or GIF directly under the matching `CodeExample` block so each visual stays paired with the example it demonstrates.
 - If a docs page still uses `frontMatter.example_media + '/old.png'` or `frontMatter.example_media + '/old.gif'`, replace it with `frontMatter.example_images + '/<asset>'` when the generated integration-test asset is the new source of truth.
 - Generated screenshots and GIFs from integration tests are commonly stored at `sdk/python/packages/flet/integration_tests/examples/.../golden/macos/<control>/`.
-- Copy the final screenshot or GIF to `website/static/docs/test-images/examples/<bucket>/golden/macos/<control>/` when it is not already present there.
+- Copy every generated docs-facing PNG or GIF that the docs page references to `website/static/docs/test-images/examples/<bucket>/golden/macos/<control>/` when it is not already present there.
 
 ## Verification Checklist
 
@@ -52,6 +52,7 @@ Use this skill after the integration test structure is already in place and the 
 - The GIF duration is intentional; prefer shorter loops for hover/click flows unless the interaction needs more time.
 - The docs front matter points to the generated test-images location rather than stale example media paths.
 - The docs page references the new screenshot or GIF path.
+- Every PNG or GIF referenced by the docs page exists under `website/static/docs/test-images/...`, not just in the integration-test golden directory.
 - The referenced screenshot or GIF actually exists under `website/static/docs/test-images/...`.
 - Remove or stop referencing obsolete media screenshots or GIFs only when the new generated asset fully replaces them.
 

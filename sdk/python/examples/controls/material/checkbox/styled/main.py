@@ -12,13 +12,18 @@ def main(page: ft.Page):
                         fill_color=ft.Colors.RED,
                         check_color=ft.Colors.YELLOW,
                     ),
-                    ft.Checkbox(
-                        label="Checkbox with dynamic fill color",
-                        fill_color={
-                            ft.ControlState.HOVERED: ft.Colors.BLUE,
-                            ft.ControlState.SELECTED: ft.Colors.GREEN,
-                            ft.ControlState.DEFAULT: ft.Colors.RED,
-                        },
+                    ft.Row(
+                        controls=[
+                            ft.Checkbox(
+                                key="dynamic_fill_checkbox",
+                                fill_color={
+                                    ft.ControlState.HOVERED: ft.Colors.BLUE,
+                                    ft.ControlState.SELECTED: ft.Colors.GREEN,
+                                    ft.ControlState.DEFAULT: ft.Colors.RED,
+                                },
+                            ),
+                            ft.Text("Checkbox with dynamic fill color"),
+                        ],
                     ),
                 ]
             )

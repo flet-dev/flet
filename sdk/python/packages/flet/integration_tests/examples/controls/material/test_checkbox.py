@@ -69,7 +69,33 @@ async def test_handling_events(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_styled(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+    scr = await flet_app_function.wrap_page_controls_in_screenshot()
     flet_app_function.assert_screenshot(
         "styled_checkboxes",
-        await flet_app_function.take_page_controls_screenshot(),
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
+    )
+    checkbox = await flet_app_function.tester.find_by_key("dynamic_fill_checkbox")
+    await flet_app_function.tester.mouse_hover(checkbox)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "styled_checkboxes_hovered",
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
+    )
+    await flet_app_function.tester.tap(checkbox)
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "styled_checkboxes_selected",
+        await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),
+    )
+    flet_app_function.create_gif(
+        [
+            "styled_checkboxes",
+            "styled_checkboxes_hovered",
+            "styled_checkboxes_selected",
+        ],
+        "styled_checkboxes_flow",
+        duration=1000,
     )
