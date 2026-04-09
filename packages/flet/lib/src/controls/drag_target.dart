@@ -10,15 +10,24 @@ class DragTargetEvent {
   final int srcId;
   final double x;
   final double y;
+  final Offset localPosition;
+  final Offset globalPosition;
 
   DragTargetEvent({
     required this.srcId,
     required this.x,
     required this.y,
+    required this.localPosition,
+    required this.globalPosition,
   });
 
-  Map<String, dynamic> toMap() =>
-      <String, dynamic>{'src_id': srcId, 'x': x, 'y': y};
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'src_id': srcId,
+        'x': x,
+        'y': y,
+        'l': {'x': localPosition.dx, 'y': localPosition.dy},
+        'g': {'x': globalPosition.dx, 'y': globalPosition.dy},
+      };
 }
 
 class DragTargetControl extends StatelessWidget {
@@ -37,21 +46,29 @@ class DragTargetControl extends StatelessWidget {
       return const ErrorControl("DragTarget.content must be visible");
     }
 
+    BuildContext? dragTargetContext;
+
     return DragTarget<DraggableData>(
       builder: (
         BuildContext context,
         List<dynamic> accepted,
         List<dynamic> rejected,
       ) {
+        dragTargetContext = context;
         return content;
       },
       onMove: (DragTargetDetails<DraggableData> details) {
+        final globalPosition = details.offset;
+        final localPosition =
+            _getLocalPosition(dragTargetContext, globalPosition);
         control.triggerEvent(
             "move",
             DragTargetEvent(
                     srcId: details.data.id,
-                    x: details.offset.dx,
-                    y: details.offset.dy)
+                    x: globalPosition.dx,
+                    y: globalPosition.dy,
+                    localPosition: localPosition,
+                    globalPosition: globalPosition)
                 .toMap());
       },
       onWillAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
@@ -61,17 +78,30 @@ class DragTargetControl extends StatelessWidget {
         return groupMatch;
       },
       onAcceptWithDetails: (DragTargetDetails<DraggableData> details) {
+        final globalPosition = details.offset;
+        final localPosition =
+            _getLocalPosition(dragTargetContext, globalPosition);
         control.triggerEvent(
             "accept",
             DragTargetEvent(
                     srcId: details.data.id,
-                    x: details.offset.dx,
-                    y: details.offset.dy)
+                    x: globalPosition.dx,
+                    y: globalPosition.dy,
+                    localPosition: localPosition,
+                    globalPosition: globalPosition)
                 .toMap());
       },
       onLeave: (DraggableData? data) {
         control.triggerEvent("leave", {"src_id", data?.id});
       },
     );
+  }
+
+  Offset _getLocalPosition(BuildContext? context, Offset globalPosition) {
+    final renderObject = context?.findRenderObject();
+    if (renderObject is! RenderBox || !renderObject.hasSize) {
+      return globalPosition;
+    }
+    return renderObject.globalToLocal(globalPosition);
   }
 }

@@ -57,18 +57,30 @@ class DragTargetEvent(DragEventBase):
 
     x: float
     """
-    Horizontal pointer position relative to target bounds.
+    Horizontal pointer position in the global coordinate space.
     """
 
     y: float
     """
-    Vertical pointer position relative to target bounds.
+    Vertical pointer position in the global coordinate space.
+    """
+
+    local_position: Optional[Offset] = field(default=None, metadata={"data_field": "l"})
+    """
+    Pointer position relative to the target bounds.
+    """
+
+    global_position: Optional[Offset] = field(
+        default=None, metadata={"data_field": "g"}
+    )
+    """
+    Pointer position in the global coordinate space.
     """
 
     @property
     def offset(self) -> Offset:
         """
-        Pointer position as an :class:`~flet.Offset`.
+        Legacy pointer position as an :class:`~flet.Offset` in global coordinates.
         """
 
         return Offset(self.x, self.y)
