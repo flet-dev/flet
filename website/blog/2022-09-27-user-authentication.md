@@ -17,7 +17,7 @@ Traditionally, this release is not just about authentication, but it adds a ton 
 
 <TOCInline toc={toc} maxHeadingLevel={2} />
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Authentication
 

@@ -32,7 +32,7 @@ Check the docs for Matplotlib and Plotly charting controls:
 
 Explore [Flet chart examples](https://github.com/flet-dev/examples/tree/main/python/controls/charts).
 
-<!-- truncate -->
+{/* truncate */}
 
 Learn Python libraries by examples:
 
