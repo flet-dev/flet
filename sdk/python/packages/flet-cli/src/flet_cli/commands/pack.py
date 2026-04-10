@@ -2,11 +2,14 @@ import argparse
 import os
 import shutil
 import sys
+import tarfile
+import zipfile
 from pathlib import Path
 
 import flet_cli.__pyinstaller.config as hook_config
-from flet.utils import is_macos, is_windows
+from flet.utils import is_linux, is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
+from flet_desktop import get_artifact_filename
 
 
 class Command(BaseCommand):
@@ -152,6 +155,31 @@ class Command(BaseCommand):
             help="Enable non-interactive mode. All prompts will be skipped",
         )
 
+    def compress_flet_client_dir(self, temp_bin_dir: str, archive_name: str) -> None:
+        """Compress the flet/ directory into an archive and remove the original.
+
+        Args:
+            temp_bin_dir: Path to the temporary directory containing the flet/
+                subdirectory with client binaries.
+            archive_name: Target archive filename. Uses zip for `.zip`
+                extensions and gzipped tar for everything else.
+        """
+        flet_dir = os.path.join(temp_bin_dir, "flet")
+        if not os.path.isdir(flet_dir):
+            return
+        archive_path = os.path.join(temp_bin_dir, archive_name)
+        if archive_name.endswith(".zip"):  # windows
+            with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as zf:
+                for root, _dirs, files in os.walk(flet_dir):
+                    for f in files:
+                        full = os.path.join(root, f)
+                        arcname = os.path.relpath(full, temp_bin_dir)
+                        zf.write(full, arcname)
+        else:
+            with tarfile.open(archive_path, "w:gz") as tar:
+                tar.add(flet_dir, arcname="flet")
+        shutil.rmtree(flet_dir)
+
     def handle(self, options: argparse.Namespace) -> None:
         """
         Package the app into a standalone desktop artifact.
@@ -293,6 +321,12 @@ class Command(BaseCommand):
 
                         pyi_args.extend(["--version-file", version_info_path])
 
+                    # Compress the patched flet/ directory into flet-windows.zip
+                    # so ensure_client_cached() finds it at runtime.
+                    self.compress_flet_client_dir(
+                        hook_config.temp_bin_dir, "flet-windows.zip"
+                    )
+
                 elif is_macos():
                     from flet_cli.__pyinstaller.macos_utils import (
                         assemble_app_bundle,
@@ -341,12 +375,12 @@ class Command(BaseCommand):
                         copyright=options.copyright,
                     )
 
-                    # assemble
+                    # Compress the patched .app bundle back into flet-macos.tar.gz so
+                    # ensure_client_cached() finds it at runtime.
                     assemble_app_bundle(app_path, tar_path)
 
-                    # Remove everything except the tar.gz so
-                    # PyInstaller doesn't try to process loose
-                    # framework binaries.
+                    # Remove everything except the tar.gz so PyInstaller doesn't try
+                    # to process loose framework binaries.
                     for entry in os.listdir(hook_config.temp_bin_dir):
                         entry_path = os.path.join(hook_config.temp_bin_dir, entry)
                         if entry_path == tar_path:
@@ -356,7 +390,14 @@ class Command(BaseCommand):
                         else:
                             os.remove(entry_path)
 
-            # run PyInstaller!
+                elif is_linux():
+                    # Compress the flet/ directory into a tar.gz
+                    # so ensure_client_cached() finds it at runtime.
+                    self.compress_flet_client_dir(
+                        hook_config.temp_bin_dir, get_artifact_filename()
+                    )
+
+            # run PyInstaller
             print("Running PyInstaller:", pyi_args)
             PyInstaller.__main__.run(pyi_args)
 
