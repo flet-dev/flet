@@ -82,7 +82,7 @@ class DragTargetControl extends StatelessWidget {
             ).toMap());
       },
       onLeave: (DraggableData? data) {
-        control.triggerEvent("leave", {"src_id", data?.id});
+        control.triggerEvent("leave", {"src_id": data?.id});
       },
     );
   }
