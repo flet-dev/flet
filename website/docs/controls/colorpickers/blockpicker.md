@@ -9,7 +9,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 # BlockPicker
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/block_picker.png'} imageCaption="Basic BlockPicker" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/block_picker.png'} imageCaption="Basic BlockPicker" imageWidth="35%"/>
 
 ## Example
 

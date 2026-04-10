@@ -62,56 +62,56 @@ export const GalleryCard = ({title, liveUrl, sourcesUrl, description, imageUrl})
       imageUrl="chat.gif"
       description="Multi-user realtime chat."
       liveUrl="https://flet-chat.fly.dev"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/chat/main.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/tutorials/chat/main.py"
       />
-    <!-- <GalleryCard
+    <GalleryCard
       title="Trolli"
       imageUrl="trolli.png"
       description="A clone of Trello."
       liveUrl="https://examples.flet.dev/trolli/"
-      sourcesUrl="https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/trolli" 
-      /> -->
+      sourcesUrl="https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/declarative/trolli"
+      />
     <GalleryCard
       title="Flet animation"
       imageUrl="flet-animation.png"
       description="Implicit animations in Flet."
       liveUrl="https://examples.flet.dev/flet_animation/"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/flet_animation/main.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/flet_animation/main.py"
       />
     <GalleryCard
       title="Counter"
       imageUrl="counter.png"
       description="Counter with button click event handlers."
       liveUrl="https://examples.flet.dev/counter/"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/counter/counter.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/counter/counter.py"
       />
     <GalleryCard
       title="Routing"
       imageUrl="routing.gif"
       description="URL routing between views."
       liveUrl="https://examples.flet.dev/simple_routing/"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing_navigation/home_store.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/routing_navigation/home_store.py"
       />
     <GalleryCard
       title="Hello, world!"
       imageUrl="hello-world.png"
       description="All examples start with that!"
       liveUrl="https://examples.flet.dev/hello_world/"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/hello_world/hello.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/hello_world/hello.py"
       />
     <GalleryCard
       title="Greeter"
       imageUrl="greeter.png"
       description="Interactive form in Flet."
       liveUrl="https://examples.flet.dev/greeter/"
-      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/greeter/greeter.py" 
+      sourcesUrl="https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/greeter/greeter.py"
       />
     <GalleryCard
       title="Emoji Enigma"
       imageUrl="emoji-enigma.png"
       description="Guess 20 words using the emote icons as clues"
       liveUrl="https://ee.lshss.app/"
-      sourcesUrl="https://github.com/vihutuo/emoji_riddles" 
+      sourcesUrl="https://github.com/vihutuo/emoji_riddles"
       />
 
     <GalleryCard
@@ -119,7 +119,7 @@ export const GalleryCard = ({title, liveUrl, sourcesUrl, description, imageUrl})
       imageUrl="seven-spell.png"
       description="Create as many 3+ letter words as you can using the same letters given to all users"
       liveUrl="https://ss.lshss.app/"
-      sourcesUrl="https://github.com/vihutuo/seven_spell" 
+      sourcesUrl="https://github.com/vihutuo/seven_spell"
       />
 
   </section>
