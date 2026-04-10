@@ -4,12 +4,14 @@
 
 * Add `ft.use_dialog()` hook for declarative dialog management from within `@ft.component` functions, with frozen-diff reactive updates and automatic open/close lifecycle ([#6335](https://github.com/flet-dev/flet/pull/6335)) by @FeodorFitsner.
 * Add `scrollable`, `pin_leading_to_top`, and `pin_trailing_to_bottom` properties to `NavigationRail` for scrollable content with optional pinned leading/trailing controls ([#1923](https://github.com/flet-dev/flet/issues/1923), [#6356](https://github.com/flet-dev/flet/pull/6356)) by @ndonkoHenri.
+* Add `issues` property to `CodeEditor` (along with `Issue` and `IssueType` types) for displaying code analysis error markers in the gutter, with analysis performed on the Python side ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
 
 ### Improvements
 
 ### Bug fixes
 
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
+* Fix `CodeEditor` background not filling the entire area when `expand=True` ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
 
 ### Other changes
 
