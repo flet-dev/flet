@@ -55,7 +55,7 @@ Leaf components return regular controls; the layout provides the View.
 
 ### Managed views — full app with NavigationRail
 
-Complete app with [NavigationRail](../controls/navigationrail.md), stacked project views,
+Complete app with [NavigationRail](../controls/navigationrail), stacked project views,
 and tabbed settings — all using `manage_views=True`.
 
 <CodeExample path={frontMatter.examples + '/featured_views/main.py'} language="python" />
