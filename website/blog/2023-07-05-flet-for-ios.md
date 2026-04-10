@@ -17,7 +17,7 @@ But it's more than just testing Flet apps on the phone! Flet mobile app itself i
 
 I would like to thank [Kivy project](https://kivy.org/) for making a [toolchain for iOS](https://github.com/kivy/kivy-ios) which we used to compile Python interpreter and dependencies for iOS devices. We published [serious_python](https://pub.dev/packages/serious_python) package for adding Python runtime to any Flutter app.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## FAQ
 

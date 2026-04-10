@@ -17,7 +17,7 @@ With that evolution came technical debt, architectural misfits, and increasing c
 
 After nearly five months of work, **today we’re releasing the Flet 1.0 Alpha — a technical preview of what’s coming.**
 
-<!-- truncate -->
+{/* truncate */}
 
 ## What’s new
 
@@ -121,7 +121,7 @@ Service instances must be added to `page.services` list to work.
 
 ### WebAssembly support
 
-Flet 1.0 web apps use WebAssembly (WASM) by default on [selected browsers](https://docs.flutter.dev/platform-integration/web/wasm#learn-more-about-browser-compatibility). 
+Flet 1.0 web apps use WebAssembly (WASM) by default on [selected browsers](https://docs.flutter.dev/platform-integration/web/wasm#learn-more-about-browser-compatibility).
 
 Built-in Flet web client and Flet apps built with `flet build web` are now include both Dart2JS (with CanvasKit as a renderer) and WebAssembly (with SKWASM renderer) targets.
 
@@ -158,7 +158,7 @@ It's also possible to render multiple views of the same app in different HTML el
 
 ### Enhanced Extensions API
 
-The new extensions API allows exporting from your Flutter package of both control and service widgets. Technically, an extension is a class now rather than a method which will allow us to add more hooks into it like custom spash and loading screens.
+The new extensions API allows exporting from your Flutter package of both control and service widgets. Technically, an extension is a class now rather than a method which will allow us to add more hooks into it like custom splash and loading screens.
 
 For example, `flet-ads` extension before has just one `createControl` method:
 
@@ -301,7 +301,7 @@ It receives an instance of `ControlEvent` as parameter and should return either 
                 return False
             self.query()
         return super().before_event(e)
-``` 
+```
 
 #### `ft.context.page` works everywhere
 
@@ -407,7 +407,7 @@ Use `NavigationDrawer.position` property and then `page.show_dialog()` to displa
 
 FilePicker is now a service and must be added to `page.services` list to work.
 
-API re-worked to provide async methods immediatly returning dialog results without using "result" event handlers.
+API re-worked to provide async methods immediately returning dialog results without using "result" event handlers.
 
 ```py
 files: list[FilePickerFile] = await file_picker.pick_files_async(allow_multiple=True)

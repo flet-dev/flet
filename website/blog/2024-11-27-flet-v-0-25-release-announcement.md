@@ -11,7 +11,7 @@ The biggest news? No more Kivy for iOS and Android packaging. No more dealing wi
 
 Let’s dive into all the cool stuff Flet 0.25.0 has to offer! 🚀
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 
