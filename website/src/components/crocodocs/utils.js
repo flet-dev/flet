@@ -352,8 +352,23 @@ function shortenQualifiedDisplay(target) {
 }
 
 /**
+ * Strip the leading public Flet module alias from a display label while preserving
+ * the remaining qualified path (e.g. 'flet.Page.route' -> 'Page.route').
+ */
+function stripFletDisplayPrefix(target) {
+  if (target.startsWith("ft.")) {
+    return target.slice(3);
+  }
+  if (target.startsWith("flet.")) {
+    return target.slice(5);
+  }
+  return target;
+}
+
+/**
  * Format the display label for a reStructuredText cross-reference target.
  * A leading '~' causes the label to be shortened to just the last component.
+ * Otherwise, leading 'flet.'/'ft.' is stripped from the rendered label.
  * A trailing '()' is preserved on the display label.
  */
 function formatRestXrefLabel(target) {
@@ -361,7 +376,9 @@ function formatRestXrefLabel(target) {
   const normalized = shortened ? target.slice(1) : target;
   const hasCall = normalized.endsWith("()");
   const base = hasCall ? normalized.slice(0, -2) : normalized;
-  const display = shortened ? shortenQualifiedDisplay(base) : base;
+  const display = shortened
+    ? shortenQualifiedDisplay(base)
+    : stripFletDisplayPrefix(base);
   return hasCall ? `${display}()` : display;
 }
 

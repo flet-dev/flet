@@ -195,7 +195,11 @@ Python docstrings use reST-style cross-references:
 
 Supported roles: `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`, `:obj:`
 
-The `~` prefix shortens the display to the last component (e.g. `Page` instead of `flet.Page`).
+The website strips a leading `flet.` or `ft.` from rendered labels automatically
+and renders reST API cross-references as inline code links
+(for example, `:attr:`flet.Control.visible`` displays as ``Control.visible``).
+The `~` prefix still shortens the display to the last component
+(for example, `:attr:`~flet.Control.visible`` displays as ``visible``).
 
 ### Cross-references in Markdown
 
