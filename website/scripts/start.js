@@ -11,10 +11,17 @@ const requiredArtifacts = [
   path.join(websiteRoot, "sidebars.js"),
 ];
 
+const ALLOWED_COMMANDS = new Set(["uv", "node", "docusaurus"]);
+
 function run(command, args, options = {}) {
+  if (!ALLOWED_COMMANDS.has(command)) {
+    throw new Error(`Command not allowed: ${command}`);
+  }
   const result = spawnSync(command, args, {
     stdio: "inherit",
-    shell: true,
+    // shell: true is intentionally avoided to prevent command injection.
+    // On Windows, .cmd wrappers in node_modules/.bin require a shell.
+    shell: process.platform === "win32",
     ...options,
   });
   return typeof result.status === "number" ? result.status : 1;
