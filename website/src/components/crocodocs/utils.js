@@ -568,7 +568,7 @@ function preprocessCrossReferenceMarkdown(text, context) {
 
 /**
  * Replace reStructuredText :role:`target` cross-references in markdown text with
- * [label](href) links before the text is fed to the Markdown parser.
+ * [`label`](href) links before the text is fed to the Markdown parser.
  * Skips fenced code blocks and inline code spans.
  */
 function preprocessRestCrossReferenceMarkdown(text, context) {
@@ -595,7 +595,7 @@ function preprocessRestCrossReferenceMarkdown(text, context) {
     if (roleMatch) {
       const resolved = resolveRestCrossReference(roleMatch[1], roleMatch[2], context);
       if (resolved) {
-        output += `[${resolved.label}](${resolved.href})`;
+        output += `[\`${resolved.label}\`](${resolved.href})`;
       } else {
         output += roleMatch[0];
       }
