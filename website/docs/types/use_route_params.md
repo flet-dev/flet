@@ -1,3 +1,7 @@
-# use_route_params
+---
+title: "use_route_params"
+---
 
-{{ class_all_options("flet.use_route_params") }}
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.use_route_params" />

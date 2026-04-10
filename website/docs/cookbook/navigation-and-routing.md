@@ -123,6 +123,12 @@ For declarative apps using `@component`, Flet provides a
 nested routes, layout routes with outlets, dynamic segments, data loaders,
 and active link detection — all without manual route matching.
 
+With `manage_views=True`, Router can also manage the view stack directly,
+enabling swipe-back gestures and AppBar back buttons on mobile. Route
+components return [`View`](../controls/view.md) objects with their own
+[`AppBar`](../controls/appbar.md), and navigating deeper pushes views
+onto the stack.
+
 See the [Router cookbook](router.md) for a complete guide.
 
 ## Practical recommendations

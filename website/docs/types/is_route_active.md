@@ -1,3 +1,7 @@
-# is_route_active
+---
+title: "is_route_active"
+---
 
-{{ class_all_options("flet.is_route_active") }}
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.is_route_active" />

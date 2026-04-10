@@ -1,3 +1,7 @@
-# use_route_location
+---
+title: "use_route_location"
+---
 
-{{ class_all_options("flet.use_route_location") }}
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.use_route_location" />

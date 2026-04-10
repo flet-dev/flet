@@ -1,1 +1,7 @@
-{{ class_all_options("flet.Route") }}
+---
+title: "Route"
+---
+
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.Route" />
