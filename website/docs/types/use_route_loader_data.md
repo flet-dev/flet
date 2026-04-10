@@ -1,3 +1,7 @@
-# use_route_loader_data
+---
+title: "use_route_loader_data"
+---
 
-{{ class_all_options("flet.use_route_loader_data") }}
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.use_route_loader_data" />

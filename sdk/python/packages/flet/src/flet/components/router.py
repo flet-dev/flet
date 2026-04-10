@@ -2,7 +2,8 @@
 Router — React Router-like declarative routing for Flet components.
 
 Provides nested route matching, layout routes with outlets, dynamic segments,
-optional segments, splats, data loaders, and navigation hooks.
+optional segments, splats, data loaders, navigation hooks, and view-stack
+navigation with swipe-back gesture support.
 """
 
 from __future__ import annotations
@@ -45,15 +46,15 @@ class Route:
     """
     Defines a single route in the route tree.
 
-    Routes can be nested via `children` to create layout hierarchies.
-    A route with `component` and `children` acts as a layout route — its
-    component should call [`use_route_outlet()`][flet.use_route_outlet] to render the
+    Routes can be nested via ``children`` to create layout hierarchies.
+    A route with ``component`` and ``children`` acts as a layout route — its
+    component should call :func:`~flet.use_route_outlet` to render the
     matched child.
 
     Args:
-        path: Relative path segment. Supports dynamic segments (`:name`),
-            optional segments (`:name?`), splats (`:name*`), and custom
-            regex constraints (`:name(\\\\d+)`). ``None`` for pathless
+        path: Relative path segment. Supports dynamic segments (``:name``),
+            optional segments (``:name?``), splats (``:name*``), and custom
+            regex constraints (``:name(\\\\d+)``). ``None`` for pathless
             layout routes.
         index: When ``True``, this route matches when the parent path
             matches exactly (no further segments). Index routes must not
@@ -63,11 +64,12 @@ class Route:
         children: Nested child routes.
         loader: Optional data loader function. Called with the matched
             params dict when the route matches. Result is available via
-            [`use_route_loader_data()`][flet.use_route_loader_data].
+            :func:`~flet.use_route_loader_data`.
         outlet: When ``True`` and ``manage_views=True``, this route acts
             as a layout that wraps its matched child via
-            [`use_route_outlet()`][flet.use_route_outlet] within a single
-            View, instead of each child becoming a separate View.
+            :func:`~flet.use_route_outlet` within a single
+            :class:`~flet.View`, instead of each child becoming a separate
+            :class:`~flet.View`.
     """
 
     path: str | None = None
@@ -245,7 +247,7 @@ def use_route_params() -> dict[str, str]:
     """
     Returns all dynamic segment parameters from the current matched route chain.
 
-    Must be called inside a component rendered by a [`Router`][flet.Router].
+    Must be called inside a component rendered by a :class:`~flet.Router`.
     Returns an empty dict if called outside a Router tree (e.g. during a
     stale observable re-render).
 
@@ -262,7 +264,7 @@ def use_route_location() -> str:
     """
     Returns the current location pathname.
 
-    Must be called inside a component rendered by a [`Router`][flet.Router].
+    Must be called inside a component rendered by a :class:`~flet.Router`.
     Returns an empty string if called outside a Router tree.
 
     Returns:
@@ -279,7 +281,7 @@ def use_route_outlet() -> Control:
     Returns the matched child route's rendered component.
 
     Used inside layout route components to render the active child route.
-    Must be called inside a component rendered by a [`Router`][flet.Router].
+    Must be called inside a component rendered by a :class:`~flet.Router`.
     Returns ``None`` if called outside a Router tree.
 
     Returns:
@@ -479,25 +481,29 @@ def Router(
 ) -> Control:
     """
     Top-level router component that matches the current page route against
-    a tree of [`Route`][flet.Route] definitions and renders the matched
+    a tree of :class:`~flet.Route` definitions and renders the matched
     component chain.
 
-    The Router subscribes to [`page.on_route_change`][flet.Page.on_route_change]
+    The Router subscribes to :attr:`~flet.Page.on_route_change`
     and re-renders automatically when the route changes.
 
-    Navigation is done via the existing [`page.push_route()`][flet.Page.push_route].
+    Navigation is done via :meth:`~flet.Page.push_route` or
+    :meth:`~flet.Page.navigate`.
 
-    When ``manage_views`` is ``True``, the Router manages
-    [`page.views`][flet.Page.views] directly — each path level in the matched
-    chain becomes a separate [`View`][flet.View].  This enables swipe-back
-    gestures, system back button, and AppBar implicit back button on mobile.
-    Must be used with [`page.render_views()`][flet.Page.render_views].
+    When ``manage_views`` is ``True``, the Router returns a list of
+    :class:`~flet.View` objects (one per path level) instead of a single
+    component tree. This enables swipe-back gestures, system back button,
+    and :class:`~flet.AppBar` implicit back button on mobile.
+    Must be used with :meth:`~flet.Page.render_views`.
 
     Args:
-        routes: List of top-level route definitions.
+        routes: List of top-level :class:`~flet.Route` definitions.
         not_found: Optional component to render when no route matches (404).
-        manage_views: When ``True``, produce a list of Views (one per path
-            level) instead of a single component tree.
+        manage_views: When ``True``, produce a list of
+            :class:`~flet.View` objects (one per path level) instead of a
+            single component tree. Route components should return
+            :class:`~flet.View` instances with ``route`` and ``appbar``
+            set. Use with :meth:`~flet.Page.render_views`.
 
     Example:
         ```python
