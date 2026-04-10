@@ -25,6 +25,7 @@ docs:
     Large Lists: cookbook/large-lists.md
     Accessibility: cookbook/accessibility.md
     Navigation and Routing: cookbook/navigation-and-routing.md
+    Router: cookbook/router.md
     Control Refs: cookbook/control-refs.md
     Custom Controls: cookbook/custom-controls.md
     Declarative vs Imperative CRUD app: cookbook/declarative-vs-imperative-crud-app.md
@@ -242,6 +243,7 @@ docs:
       ReorderableListView: controls/reorderablelistview.md
       ResponsiveRow: controls/responsiverow.md
       RotatedBox: controls/rotatedbox.md
+      Router: controls/router.md
       Row: controls/row.md
       Rive: controls/rive/index.md
       SafeArea: controls/safearea.md
@@ -457,6 +459,7 @@ docs:
           ValueKey: types/valuekey.md
       - types/locale.md
       - types/localeconfiguration.md
+      - types/locationinfo.md
       - Map:
         - controls/map/types/attributionalignment.md
         - controls/map/types/camera.md
@@ -671,6 +674,7 @@ docs:
       - types/pointerdevicetype.md
       - types/pointmode.md
       - types/popupmenuposition.md
+      - types/route.md
       - types/routeurlstrategy.md
       - types/scrollbar.md
       - types/scrollbarorientation.md
@@ -790,6 +794,7 @@ docs:
       - fastapi/fletupload.md
       Methods:
       - types/createcontext.md
+      - types/is_route_active.md
       - types/memo.md
       - types/onmounted.md
       - types/onunmounted.md
@@ -799,6 +804,10 @@ docs:
       - types/useeffect.md
       - types/usememo.md
       - types/useref.md
+      - types/use_route_loader_data.md
+      - types/use_route_location.md
+      - types/use_route_outlet.md
+      - types/use_route_params.md
       - types/usestate.md
     CLI:
       _index: cli/index.md
