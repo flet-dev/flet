@@ -17,7 +17,7 @@ Highlights in this release:
 * Platform locale info and locale change events.
 * New `LayoutControl.on_size_change` event for size-aware UI.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 

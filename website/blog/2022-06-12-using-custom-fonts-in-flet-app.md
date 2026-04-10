@@ -15,7 +15,7 @@ The following font formats are supported:
 
 Use [`page.fonts`](https://flet.dev/docs/controls/page/#flet.Page.fonts) property to import fonts.
 
-<!-- truncate -->
+{/* truncate */}
 
 Set `page.fonts` property to a dictionary where key is the font family name to refer that font and the value is the URL of the font file to import:
 

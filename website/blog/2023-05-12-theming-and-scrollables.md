@@ -14,7 +14,7 @@ The release also introduces theming improvements:
 * [Scrollbar theming](#scrollbar-theme)
 * [Tabs theming](#tabs-theming)
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Controlling scroll position
 
