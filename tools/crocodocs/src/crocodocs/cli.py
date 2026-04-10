@@ -17,14 +17,56 @@ from .watch import run_watch
 
 def _add_shared_generate_arguments(parser: argparse.ArgumentParser) -> None:
     """Register CLI options that both ``generate`` and ``watch`` understand."""
-    parser.add_argument("--docs-path")
-    parser.add_argument("--manifest-output")
-    parser.add_argument("--output")
-    parser.add_argument("--sidebars-source")
-    parser.add_argument("--sidebars-output")
-    parser.add_argument("--base-url")
-    parser.add_argument("--package", action="append")
-    parser.add_argument("--extensions", action="append")
+    parser.add_argument(
+        "--docs-path",
+        metavar="PATH",
+        help="Path to the docs directory containing .md/.mdx files. "
+        "Overrides 'docs_path' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--manifest-output",
+        metavar="PATH",
+        help="Where to write the docs-manifest JSON file. "
+        "Overrides 'manifest_output' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--output",
+        metavar="PATH",
+        help="Where to write the api-data JSON file. "
+        "Overrides 'api_output' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--sidebars-source",
+        metavar="PATH",
+        help="Path to the sidebars YAML source file. "
+        "Overrides 'sidebars_source' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--sidebars-output",
+        metavar="PATH",
+        help="Where to write the generated sidebars.js file. "
+        "Overrides 'sidebars_output' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--base-url",
+        metavar="URL",
+        help="Base URL prefix for generated doc routes (e.g. '/docs'). "
+        "Overrides 'base_url' from pyproject.toml.",
+    )
+    parser.add_argument(
+        "--package",
+        action="append",
+        metavar="NAME:PATH",
+        help="Add or override a Python package source root for API extraction. "
+        "Can be specified multiple times. Example: --package flet:../../sdk/python/packages/flet/src",
+    )
+    parser.add_argument(
+        "--extensions",
+        action="append",
+        metavar="MODULE",
+        help="Griffe extension module to load during API extraction. "
+        "Can be specified multiple times.",
+    )
 
 
 def _apply_shared_generate_overrides(config, args: argparse.Namespace) -> None:
@@ -42,34 +84,62 @@ def _apply_shared_generate_overrides(config, args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     """Build and return the top-level argument parser with all subcommands registered."""
-    parser = argparse.ArgumentParser(prog="crocodocs")
+    parser = argparse.ArgumentParser(
+        prog="crocodocs",
+        description="CrocoDocs — documentation artifact generator for the Flet project. "
+        "Reads configuration from [tool.crocodocs] in pyproject.toml. "
+        "All path options are resolved relative to the working directory.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    generate = subparsers.add_parser("generate")
+    generate = subparsers.add_parser(
+        "generate",
+        help="Run a one-shot generation of all documentation artifacts.",
+        description="Generate all documentation artifacts: sidebars, docs manifest, "
+        "MDX partials, code examples, API data (via Griffe), and asset copies. "
+        "Defaults are loaded from [tool.crocodocs] in pyproject.toml; "
+        "CLI flags override individual settings.",
+    )
     _add_shared_generate_arguments(generate)
 
-    watch = subparsers.add_parser("watch")
+    watch = subparsers.add_parser(
+        "watch",
+        help="Watch source files and regenerate on changes, optionally running a child process.",
+        description="Run an initial generation, then poll source files for changes and "
+        "regenerate automatically. Optionally starts a child process (e.g. Docusaurus "
+        "dev server) that runs alongside the watcher. The watcher stops when the child "
+        "exits or when interrupted with Ctrl+C.",
+    )
     _add_shared_generate_arguments(watch)
     watch.add_argument(
         "--interval",
         type=float,
         default=0.75,
-        help="Polling interval in seconds between filesystem scans.",
+        metavar="SECS",
+        help="Polling interval in seconds between filesystem scans (default: %(default)s).",
     )
     watch.add_argument(
         "--debounce",
         type=float,
         default=0.5,
-        help="Quiet period in seconds before a detected change triggers regeneration.",
+        metavar="SECS",
+        help="Quiet period in seconds after the last detected change before "
+        "triggering regeneration. Prevents redundant rebuilds during multi-file "
+        "saves (default: %(default)s).",
     )
     watch.add_argument(
         "--child-cwd",
-        help="Working directory for the optional child command started after initial generation.",
+        metavar="PATH",
+        help="Working directory for the child command. "
+        "Resolved relative to the current working directory.",
     )
     watch.add_argument(
         "watch_command",
         nargs=argparse.REMAINDER,
-        help="Optional command to run alongside the watcher. Prefix with -- to separate it from CrocoDocs options.",
+        metavar="COMMAND",
+        help="Command to run alongside the watcher (e.g. a dev server). "
+        "Use -- before the command to separate it from CrocoDocs options. "
+        "Example: crocodocs watch -- yarn exec docusaurus start",
     )
 
     return parser
