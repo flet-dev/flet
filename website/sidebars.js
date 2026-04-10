@@ -125,6 +125,11 @@ module.exports = {
         },
         {
           "type": "doc",
+          "id": "cookbook/router",
+          "label": "Router"
+        },
+        {
+          "type": "doc",
           "id": "cookbook/control-refs",
           "label": "Control Refs"
         },
@@ -1198,6 +1203,11 @@ module.exports = {
             },
             {
               "type": "doc",
+              "id": "controls/router",
+              "label": "Router"
+            },
+            {
+              "type": "doc",
               "id": "controls/row",
               "label": "Row"
             },
@@ -2166,6 +2176,10 @@ module.exports = {
                   "id": "types/localeconfiguration"
                 },
                 {
+                  "type": "doc",
+                  "id": "types/locationinfo"
+                },
+                {
                   "type": "category",
                   "label": "Map",
                   "collapsed": true,
@@ -3118,6 +3132,10 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/route"
+                },
+                {
+                  "type": "doc",
                   "id": "types/routeurlstrategy"
                 },
                 {
@@ -3612,6 +3630,10 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/is_route_active"
+                },
+                {
+                  "type": "doc",
                   "id": "types/memo"
                 },
                 {
@@ -3645,6 +3667,22 @@ module.exports = {
                 {
                   "type": "doc",
                   "id": "types/useref"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_loader_data"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_location"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_outlet"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_params"
                 },
                 {
                   "type": "doc",
