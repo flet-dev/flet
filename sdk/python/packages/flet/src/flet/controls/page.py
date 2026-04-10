@@ -215,6 +215,32 @@ class ViewPopEvent(Event["Page"]):
 
 
 @dataclass
+class ViewsPopUntilEvent(Event["Page"]):
+    """
+    Event payload delivered when :meth:`~flet.Page.pop_views_until` completes \
+    navigation.
+
+    Carries the result value back to the destination view.
+    """
+
+    route: str
+    """
+    Route of the destination view that remained on the stack.
+    """
+
+    result: Any = None
+    """
+    The result value passed from the caller of
+    :meth:`~flet.Page.pop_views_until`.
+    """
+
+    view: Optional[View] = None
+    """
+    Matched :class:`~flet.View` instance for `route`, if found on the page.
+    """
+
+
+@dataclass
 class KeyboardEvent(Event["Page"]):
     """
     Event payload for keyboard key-down notifications.
@@ -506,6 +532,13 @@ class Page(BasePage):
     control.
     """
 
+    on_views_pop_until: Optional[EventHandler[ViewsPopUntilEvent]] = None
+    """
+    Called when :meth:`pop_views_until` reaches the destination view.
+
+    The event carries the result value passed by the caller.
+    """
+
     on_keyboard_event: Optional[EventHandler[KeyboardEvent]] = None
     """
     Called when a keyboard key is pressed.
@@ -707,7 +740,7 @@ class Page(BasePage):
             self.__last_route = e.route
             self.query()
 
-        elif isinstance(e, ViewPopEvent):
+        elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
             for v in unwrap_component(self.views):
                 v = unwrap_component(v)
                 if v.route == e.route:
@@ -910,6 +943,71 @@ class Page(BasePage):
             **kwargs: Additional query string parameters to be added to the route.
         """
         asyncio.create_task(self.push_route(route, **kwargs))
+
+    async def pop_views_until(self, route: str, result: Any = None) -> None:
+        """
+        Pops views from the navigation stack until a view with the given
+        `route` is found, then delivers `result` via the
+        :attr:`on_views_pop_until` event.
+
+        Example:
+            ```python
+            import flet as ft
+
+
+            def main(page: ft.Page):
+                def on_pop_result(e: ft.ViewsPopUntilEvent):
+                    page.show_dialog(ft.SnackBar(ft.Text(f"Result: {e.result}")))
+
+                page.on_views_pop_until = on_pop_result
+
+                # ... later, from a deeply nested view:
+                async def go_back(ev):
+                    await page.pop_views_until("/", result="Done!")
+            ```
+
+        Args:
+            route: Target route to navigate back to. Must match the `route`
+                of an existing :class:`~flet.View` in :attr:`~flet.Page.views`.
+            result: Optional value delivered to
+                :attr:`on_views_pop_until` on the destination view.
+
+        Raises:
+            ValueError: If no view with the given `route` exists in
+                :attr:`~flet.Page.views`.
+        """
+        views = unwrap_component(self.views)
+
+        # Find the target view (first match from bottom of the stack)
+        target_idx = None
+        for i, v in enumerate(views):
+            v = unwrap_component(v)
+            if v.route == route:
+                target_idx = i
+                break
+
+        if target_idx is None:
+            raise ValueError(f"No view found with route '{route}' in page.views")
+
+        # Remove views above the target
+        del self.views[target_idx + 1 :]
+
+        # Update browser URL
+        await self.push_route(route)
+
+        # Fire on_views_pop_until for the destination view
+        if self.on_views_pop_until:
+            target_view = unwrap_component(views[target_idx])
+            e = ViewsPopUntilEvent(
+                name="views_pop_until",
+                control=self,
+                route=route,
+                result=result,
+                view=target_view,
+            )
+            await self._trigger_event("views_pop_until", event_data=None, e=e)
+
+        self.update()
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """

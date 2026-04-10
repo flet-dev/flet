@@ -9,7 +9,7 @@ Last year we introduced support for [Matplotlib and Plotly charts](/blog/matplot
 
 Today we are releasing [Flet 0.5.2](https://pypi.org/project/flet/) with built-in charts 📊 based on the awesome [fl_chart](https://pub.dev/packages/fl_chart) library!
 
-<!-- truncate -->
+{/* truncate */}
 
 Three new chart controls have been introduced:
 

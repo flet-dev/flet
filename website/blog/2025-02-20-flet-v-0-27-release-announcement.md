@@ -13,7 +13,7 @@ Flet 0.27.0 is now released with exciting new features and improvements!
 * **Enhanced Dropdown control** – improved functionality and user experience.
 * **Bug fixes & stability improvements** – various fixes to enhance overall performance and reliability.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 
