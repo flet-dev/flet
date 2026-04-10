@@ -90,6 +90,13 @@ class TesterService extends FletService {
           await control.backend.tester!.mouseClick(finder, args["finder_index"]);
         }
 
+      case "mouse_double_click":
+        var finder = _finders[args["finder_id"]];
+        if (finder != null) {
+          await control.backend.tester!
+              .mouseDoubleClick(finder, args["finder_index"]);
+        }
+
       case "right_mouse_click":
         var finder = _finders[args["finder_id"]];
         if (finder != null) {
@@ -107,6 +114,12 @@ class TesterService extends FletService {
         var offset = parseOffset(args["offset"]);
         if (offset != null) {
           await control.backend.tester!.mouseClickAt(offset);
+        }
+
+      case "mouse_double_click_at":
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.mouseDoubleClickAt(offset);
         }
 
       case "right_mouse_click_at":

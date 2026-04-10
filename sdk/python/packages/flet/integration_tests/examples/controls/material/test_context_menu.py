@@ -2,6 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.context_menu.custom_trigger import (
+    main as custom_trigger,
+)
 from examples.controls.material.context_menu.programmatic_open import (
     main as programmatic_open,
 )
@@ -83,6 +86,45 @@ async def test_triggers(flet_app_function: ftt.FletTestApp):
     flet_app_function.create_gif(
         ["before_click", "left_click_open", "right_click_open"],
         "triggers_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": custom_trigger.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_custom_trigger(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(300, 300)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "before_double_click",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    trigger_area = await flet_app_function.tester.find_by_key(
+        "context_menu_custom_trigger_area"
+    )
+    await flet_app_function.tester.mouse_double_click(trigger_area)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "after_double_click",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    flet_app_function.create_gif(
+        ["before_double_click", "after_double_click"],
+        "custom_trigger_flow",
         duration=1000,
     )
 

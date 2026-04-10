@@ -28,6 +28,7 @@ def main(page: ft.Page):
             expand=True,
             on_double_tap_down=open_menu,
             content=ft.Container(
+                key="context_menu_custom_trigger_area",
                 bgcolor=ft.Colors.BLUE,
                 alignment=ft.Alignment.CENTER,
                 content=ft.Text("Double-click to open the context menu."),

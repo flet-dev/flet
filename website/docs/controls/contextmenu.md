@@ -15,6 +15,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/triggers/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/triggers_flow.gif'} width="30%" />
+
 ### Programmatic open
 
 <CodeExample path={frontMatter.examples + '/programmatic_open/main.py'} language="python" />
@@ -24,5 +26,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 ### Programmatic open with custom trigger
 
 <CodeExample path={frontMatter.examples + '/custom_trigger/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/custom_trigger_flow.gif'} width="30%" />
 
 <ClassMembers name={frontMatter.class_name} />

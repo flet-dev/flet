@@ -17,6 +17,8 @@ abstract class Tester {
   Future<void> tap(TestFinder finder, int finderIndex);
   Future<void> mouseClickAt(Offset offset);
   Future<void> mouseClick(TestFinder finder, int finderIndex);
+  Future<void> mouseDoubleClickAt(Offset offset);
+  Future<void> mouseDoubleClick(TestFinder finder, int finderIndex);
   Future<void> rightMouseClickAt(Offset offset);
   Future<void> rightMouseClick(TestFinder finder, int finderIndex);
   Future<void> longPress(TestFinder finder, int finderIndex);

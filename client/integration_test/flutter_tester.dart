@@ -85,6 +85,14 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
+  Future<void> mouseDoubleClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseDoubleClickAt(center);
+  }
+
+  @override
   Future<void> rightMouseClick(TestFinder finder, int finderIndex) async {
     final center = _tester.getCenter(
       (finder as FlutterTestFinder).raw.at(finderIndex),
@@ -98,6 +106,9 @@ class FlutterWidgetTester implements Tester {
 
   @override
   Future<void> mouseClickAt(Offset offset) => _mouseClickAt(offset, kPrimaryButton);
+
+  @override
+  Future<void> mouseDoubleClickAt(Offset offset) => _mouseDoubleClickAt(offset);
 
   @override
   Future<void> rightMouseClickAt(Offset offset) =>
@@ -135,6 +146,22 @@ class FlutterWidgetTester implements Tester {
     );
     await _gesture?.addPointer();
     await _gesture?.moveTo(offset);
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _mouseExit();
+  }
+
+  Future<void> _mouseDoubleClickAt(Offset offset) async {
+    await _mouseExit();
+    _gesture = await _tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      buttons: kPrimaryButton,
+    );
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(offset);
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _tester.pump(const Duration(milliseconds: 50));
     await _gesture?.down(offset);
     await _gesture?.up();
     await _mouseExit();
