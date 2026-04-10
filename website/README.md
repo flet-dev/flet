@@ -16,7 +16,16 @@ $ yarn
 $ yarn start
 ```
 
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+This command runs CrocoDocs generation and starts a local development server.
+If CrocoDocs generation fails (for example while offline), `yarn start` reuses existing generated files from previous successful runs.
+
+If this is the very first run, keep an internet connection and run:
+
+```
+$ yarn crocodocs:generate
+```
+
+Most changes are reflected live without having to restart the server.
 
 ### Build
 
