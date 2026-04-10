@@ -67,8 +67,7 @@ When working on a release for `{new_version}`, treat deprecations with
 - Once commit approval is received, batch all confirmed `{new_version}` cleanup
   edits into one grouped commit instead of splitting them across multiple commits.
   Use commit message format: `release: remove deprecated APIs for {new_version}`
-- Do not consider the release prep complete while unresolved `{new_version}` removals
-  remain.
+- Do not consider the release prep complete while unresolved `{new_version}` removals remain.
 
 ## Authoring Rules
 
@@ -76,8 +75,7 @@ When working on a release for `{new_version}`, treat deprecations with
 2. Set `delete_version` using the 3-minor policy by default.
 3. Keep `reason` plain text for runtime warnings.
 4. Use `docs_reason` for docs-only markdown text and always write cross-references there as CrocoDocs xrefs.
-5. Prefer explicit replacement names in reasons.
-6. Use `@property` + `@deprecated(...)` for deprecated properties.
+5. When a replacement exists, name that replacement API explicitly in `reason` and `docs_reason`.
 
 ### Field Pattern
 
@@ -91,9 +89,9 @@ class ExampleControl:
         V.deprecated(
             "new_prop",
             version="0.17.0",
-            delete_version="0.18.0",
+            delete_version="0.20.0",
             reason="Use new_prop instead.",
-            docs_reason="Use [`new_prop`][flet.ExampleControl.new_prop] instead.",
+            docs_reason="Use [`new_prop`][(c).] or [`new_prop`][flet.ExampleControl.new_prop] or :attr:`new_prop` or instead.",
         ),
     ] = None
 ```
@@ -103,14 +101,15 @@ class ExampleControl:
 ```python
 from flet.utils.deprecated import deprecated
 
-@deprecated(
-    reason="Use new_func instead.",
-    docs_reason="Use [`new_func()`][flet.ExampleControl.new_func] instead.",
-    version="0.17.0",
-    delete_version="0.18.0",
-)
-def old_func():
-    ...
+class ExampleControl:
+    @deprecated(
+        reason="Use new_func instead.",
+        docs_reason="Use [`new_func()`][(c).new_func] or :meth:`new_func` instead.",
+        version="0.17.0",
+        delete_version="0.20.0",
+    )
+    def old_func(self):
+        ...
 ```
 
 ### Class/Control Pattern
@@ -120,9 +119,9 @@ from flet.utils.deprecated import deprecated_class
 
 @deprecated_class(
     reason="Use NewControl instead.",
-    docs_reason="Use [`NewControl`][flet.NewControl] instead.",
+    docs_reason="Use [`NewControl`][flet.NewControl] or :class:`~flet.NewControl` instead.",
     version="0.17.0",
-    delete_version="0.18.0",
+    delete_version="0.20.0",
 )
 class OldControl:
     ...
@@ -133,15 +132,16 @@ class OldControl:
 ```python
 from flet.utils.deprecated import deprecated
 
-@property
-@deprecated(
-    reason="Use new_value instead.",
-    docs_reason="Use [`new_value`][flet.ExampleControl.new_value] instead.",
-    version="0.85.0",
-    delete_version="0.88.0",
-)
-def value(self) -> int:
-    ...
+class ExampleControl:
+    @property
+    @deprecated(
+        reason="Use new_value instead.",
+        docs_reason="Use [`new_value`][(c).] or :attr:`new_value` instead.",
+        version="0.17.0",
+        delete_version="0.20.0",
+    )
+    def value(self):
+        ...
 ```
 
 ## `reason` vs `docs_reason`
@@ -159,11 +159,13 @@ Reason:
 
 - `docs_reason` often needs custom labels such as ``new_func()``, `local_position.x` or plain text.
 - xrefs keep the display text fully under author control.
-- full targets in the second `[]` make the intended destination explicit.
+- same-class shorthands keep current-class references short and readable.
+- full targets remain useful for cross-class destinations.
 
 Examples:
 
-- custom-label xref: ``Use [`local_position.x`][flet.DragTargetEvent.local_position] for target-relative coordinates instead.``
+- same-class member: ``Use [`new_value`][(c).] instead.``
+- same-class custom label: ``Use [`local_position.x`][(c).local_position] for target-relative coordinates instead.``
 - method xref: ``Call [`Page.update()`][flet.Page.update] after mutating controls.``
 - plain-text label xref: ``See [the move callback][flet.DragTarget.on_move] for continuous updates.``
 
@@ -198,4 +200,4 @@ Prefer:
 - Adding old/new value-copy logic in Python for rename migrations.
 - Duplicating deprecation warnings in multiple lifecycle hooks manually.
 - Broken crossref targets in `docs_reason`.
-- Using shorthand targets in new `docs_reason` examples instead of explicit full targets.
+- Using a full target for a same-class replacement when `(c)` shorthand would be clearer.

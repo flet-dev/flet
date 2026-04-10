@@ -65,10 +65,23 @@ See [the move callback][flet.DragTarget.on_move] for continuous updates.
 Rules:
 
 - In `docs_reason`, prefer using CrocoDocs xrefs over reST roles.
-- Always use full symbol targets in the second `[]`, for example `flet.IconButton` or `flet.DragTargetEvent.local_position`.
+- For same-class targets, prefer the current-class shorthands:
+  `[(c)]` for the current class, `[(c).]` for a member whose name matches the label,
+  and `[(c).member_name]` for an explicit same-class member target.
+- Use full symbol targets for symbols outside the current class, for example `flet.IconButton` or `flet.Page.update`.
 - Put the exact display text you want in the first `[]`.
 - For methods, include `()` in the label when desired, but not in the target: ``[`Page.update()`][flet.Page.update]``.
 - Use xrefs when reST role labels are too rigid; otherwise prefer reST roles in regular docstrings.
+
+Same-class examples:
+
+```python
+"""
+Use [`value`][(c).] instead.
+Use [`value.y`][(c).value] for target-relative coordinates instead.
+See [`ExampleControl`][(c)] for the replacement API.
+"""
+```
 
 ### Admonitions in docstrings
 
