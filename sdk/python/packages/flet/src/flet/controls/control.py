@@ -64,7 +64,10 @@ class Control(BaseControl):
     Can be a number or a dictionary configured to have a different value for specific
     breakpoints, for example `col={"sm": 6}`.
 
-    This control spans the 12 virtual columns by default:
+    A value of `0` hides the control for that breakpoint, so it does not occupy any
+    columns in the parent :class:`~flet.ResponsiveRow`.
+
+    This control spans the 12 virtual columns by default.
 
     | Breakpoint | Dimension |
     |---|---|

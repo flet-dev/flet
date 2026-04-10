@@ -25,7 +25,17 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
     return withPageSize((context, view) {
       var result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        // breakpoints
+        if (!constraints.hasBoundedWidth) {
+          return const ErrorControl(
+            "Error displaying ResponsiveRow: width is unbounded.",
+            description:
+                "Set a fixed width, a non-zero expand, or place it inside a control with bounded width.",
+          );
+        }
+
+        // Resolve the active breakpoint map once per layout pass. Responsive
+        // properties such as `columns`, `spacing`, and child `col` values are
+        // all interpreted against this map.
         final rawBreakpoints =
             control.get<Map>("breakpoints", view.breakpoints)!;
         final breakpoints = <String, double>{};
@@ -45,12 +55,27 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         for (var ctrl in control.children("controls")) {
           final col = ctrl.getResponsiveNumber("col", 12)!;
           var bpCol = getBreakpointNumber(col, view.size.width, breakpoints);
+
+          // `col=0` means "do not occupy any columns" for the current
+          // breakpoint, so the child should not participate in layout.
+          if (bpCol <= 0) {
+            continue;
+          }
+
           totalCols += bpCol;
 
-          // calculate child width
+          // Convert virtual columns into a fixed pixel width for this child.
+          // We first remove the total horizontal gaps from the available width,
+          // then divide the remaining width across the configured columns.
           var colWidth =
               (constraints.maxWidth - bpSpacing * (bpColumns - 1)) / bpColumns;
           var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
+
+          // Guard against tiny/invalid available widths so Flutter never sees
+          // negative box constraints.
+          if (childWidth < 0) {
+            childWidth = 0;
+          }
 
           controls.add(ConstrainedBox(
             constraints:
@@ -62,6 +87,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         var wrap = (totalCols > bpColumns);
 
         try {
+          // Keep a single row when everything fits; otherwise switch to Wrap so
+          // children can continue on the next line.
           return wrap
               ? Wrap(
                   direction: Axis.horizontal,
