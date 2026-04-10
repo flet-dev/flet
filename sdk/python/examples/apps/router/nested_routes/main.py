@@ -1,5 +1,3 @@
-"""Nested routes with view stack — swipe-back and AppBar back button."""
-
 import flet as ft
 
 

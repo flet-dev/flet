@@ -1,10 +1,3 @@
-"""Nested routes with shared layout and view stack.
-
-ProductsLayout wraps both ProductsList and ProductDetails via outlet.
-Each is its own View with the shared layout, and ProductDetails stacks
-on top of ProductsList, so AppBar back works: Details → List → Home.
-"""
-
 import flet as ft
 
 
