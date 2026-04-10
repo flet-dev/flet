@@ -18,9 +18,9 @@ __all__ = [
 
 
 @dataclass
-class DragEventBase(Event["DragTarget"]):
+class DragWillAcceptEvent(Event["DragTarget"]):
     """
-    Base payload for drag-target events that carry draggable source information.
+    Event payload for :attr:`flet.DragTarget.on_will_accept`.
     """
 
     src_id: Optional[int]
@@ -33,27 +33,30 @@ class DragEventBase(Event["DragTarget"]):
     Source draggable control resolved from :attr:`src_id`.
     """
 
+    accept: bool
+    """
+    Whether this target will accept the dragged source.
+    """
+
     def __post_init__(self):
         if self.src_id is not None:
             self.src = cast(Draggable, self.page.get_control(self.src_id))
 
 
 @dataclass
-class DragWillAcceptEvent(DragEventBase):
-    """
-    Event payload for :attr:`flet.DragTarget.on_will_accept`.
-    """
-
-    accept: bool
-    """
-    Whether this target will accept the dragged source.
-    """
-
-
-@dataclass
-class DragTargetEvent(DragEventBase):
+class DragTargetEvent(Event["DragTarget"]):
     """
     Event payload for drag move and accepted-drop callbacks.
+    """
+
+    src_id: Optional[int]
+    """
+    ID of the draggable source control, if available.
+    """
+
+    src: Draggable = field(init=False)
+    """
+    Source draggable control resolved from :attr:`src_id`.
     """
 
     local_position: Offset = field(metadata={"data_field": "l"})
@@ -65,6 +68,10 @@ class DragTargetEvent(DragEventBase):
     """
     Pointer position in the global coordinate space.
     """
+
+    def __post_init__(self):
+        if self.src_id is not None:
+            self.src = cast(Draggable, self.page.get_control(self.src_id))
 
     @property
     @deprecated(
@@ -118,12 +125,24 @@ class DragTargetEvent(DragEventBase):
 
 
 @dataclass
-class DragTargetLeaveEvent(DragEventBase):
+class DragTargetLeaveEvent(Event["DragTarget"]):
     """
     Event payload for :attr:`flet.DragTarget.on_leave`.
     """
 
-    pass
+    src_id: Optional[int]
+    """
+    ID of the draggable source control, if available.
+    """
+
+    src: Draggable = field(init=False)
+    """
+    Source draggable control resolved from :attr:`src_id`.
+    """
+
+    def __post_init__(self):
+        if self.src_id is not None:
+            self.src = cast(Draggable, self.page.get_control(self.src_id))
 
 
 @control("DragTarget")
