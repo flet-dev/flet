@@ -61,14 +61,27 @@ async def test_triggers(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
 
     flet_app_function.assert_screenshot(
-        "after_tap",
+        "left_click_open",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap_at(ft.Offset(20, 20))
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.right_mouse_click(trigger_area)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "right_click_open",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
 
     flet_app_function.create_gif(
-        ["before_click", "after_tap"],
+        ["before_click", "left_click_open", "right_click_open"],
         "triggers_flow",
         duration=1000,
     )

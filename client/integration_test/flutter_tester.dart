@@ -81,7 +81,15 @@ class FlutterWidgetTester implements Tester {
     final center = _tester.getCenter(
       (finder as FlutterTestFinder).raw.at(finderIndex),
     );
-    await _mouseClickAt(center);
+    await _mouseClickAt(center, kPrimaryButton);
+  }
+
+  @override
+  Future<void> rightMouseClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseClickAt(center, kSecondaryButton);
   }
 
   @override
@@ -89,7 +97,11 @@ class FlutterWidgetTester implements Tester {
       _tester.tapAt(offset);
 
   @override
-  Future<void> mouseClickAt(Offset offset) => _mouseClickAt(offset);
+  Future<void> mouseClickAt(Offset offset) => _mouseClickAt(offset, kPrimaryButton);
+
+  @override
+  Future<void> rightMouseClickAt(Offset offset) =>
+      _mouseClickAt(offset, kSecondaryButton);
 
   @override
   Future<void> longPress(TestFinder finder, int finderIndex) =>
@@ -115,11 +127,11 @@ class FlutterWidgetTester implements Tester {
     await _gesture?.moveTo(center);
   }
 
-  Future<void> _mouseClickAt(Offset offset) async {
+  Future<void> _mouseClickAt(Offset offset, int buttons) async {
     await _mouseExit();
     _gesture = await _tester.createGesture(
       kind: PointerDeviceKind.mouse,
-      buttons: kPrimaryButton,
+      buttons: buttons,
     );
     await _gesture?.addPointer();
     await _gesture?.moveTo(offset);
