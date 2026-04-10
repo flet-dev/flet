@@ -37,6 +37,8 @@ respective content, instead of all rows having the same height.
 
 <CodeExample path={frontMatter.examples + '/adaptive_row_heights/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/adaptive_row_heights.png'} width="55%" />
+
 ### Sortable columns and selectable rows
 
 This example demonstrates row selection (including select-all),
@@ -49,5 +51,7 @@ sortable string and numeric columns, and stable selection across sorts and refre
 ### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/handling_events_flow.gif'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />
