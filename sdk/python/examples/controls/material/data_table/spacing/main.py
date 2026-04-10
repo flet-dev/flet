@@ -35,6 +35,7 @@ def main(page: ft.Page):
         update_spacing()
 
     horizontal_margin_slider = ft.Slider(
+        key="horizontal_margin_slider",
         min=0,
         max=40,
         divisions=40,
@@ -43,6 +44,7 @@ def main(page: ft.Page):
         on_change=handle_spacing_change,
     )
     column_spacing_slider = ft.Slider(
+        key="column_spacing_slider",
         min=0,
         max=40,
         divisions=40,

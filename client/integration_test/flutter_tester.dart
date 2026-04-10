@@ -115,6 +115,17 @@ class FlutterWidgetTester implements Tester {
       _mouseClickAt(offset, kSecondaryButton);
 
   @override
+  Future<void> drag(TestFinder finder, int finderIndex, Offset offset) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _dragFrom(center, offset);
+  }
+
+  @override
+  Future<void> dragFrom(Offset start, Offset offset) => _dragFrom(start, offset);
+
+  @override
   Future<void> longPress(TestFinder finder, int finderIndex) =>
       _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
 
@@ -165,6 +176,11 @@ class FlutterWidgetTester implements Tester {
     await _gesture?.down(offset);
     await _gesture?.up();
     await _mouseExit();
+  }
+
+  Future<void> _dragFrom(Offset start, Offset offset) async {
+    await _mouseExit();
+    await _tester.dragFrom(start, offset);
   }
 
   @override

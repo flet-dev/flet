@@ -128,6 +128,21 @@ class TesterService extends FletService {
           await control.backend.tester!.rightMouseClickAt(offset);
         }
 
+      case "drag":
+        var finder = _finders[args["finder_id"]];
+        var offset = parseOffset(args["offset"]);
+        if (finder != null && offset != null) {
+          await control.backend.tester!
+              .drag(finder, args["finder_index"], offset);
+        }
+
+      case "drag_from":
+        var start = parseOffset(args["start"]);
+        var offset = parseOffset(args["offset"]);
+        if (start != null && offset != null) {
+          await control.backend.tester!.dragFrom(start, offset);
+        }
+
       case "long_press":
         var finder = _finders[args["finder_id"]];
         if (finder != null) {

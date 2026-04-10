@@ -12,6 +12,7 @@ from examples.controls.material.data_table.handling_events import (
 from examples.controls.material.data_table.sortable_and_selectable import (
     main as sortable_and_selectable,
 )
+from examples.controls.material.data_table.spacing import main as spacing
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -170,5 +171,136 @@ async def test_handling_events(flet_app_function: ftt.FletTestApp):
             "handling_events_click_column_1",
         ],
         "handling_events_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": spacing.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_spacing(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(700, 500)
+    flet_app_function.page.update()
+
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "spacing_initial",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    horizontal_margin_slider = await flet_app_function.tester.find_by_key(
+        "horizontal_margin_slider"
+    )
+    await flet_app_function.tester.drag(
+        horizontal_margin_slider,
+        ft.Offset(120, 0),
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_after_horizontal_margin_drag",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    column_spacing_slider = await flet_app_function.tester.find_by_key(
+        "column_spacing_slider"
+    )
+    await flet_app_function.tester.drag(
+        column_spacing_slider,
+        ft.Offset(120, 0),
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_after_column_spacing_drag",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    compact_preset = await flet_app_function.tester.find_by_text("Compact preset")
+    await flet_app_function.tester.mouse_hover(compact_preset)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_hover_compact_preset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap(compact_preset)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_compact_preset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    spacious_preset = await flet_app_function.tester.find_by_text("Spacious preset")
+    await flet_app_function.tester.mouse_hover(spacious_preset)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_hover_spacious_preset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap(spacious_preset)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_spacious_preset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    reset_button = await flet_app_function.tester.find_by_text("Reset")
+    await flet_app_function.tester.mouse_hover(reset_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_hover_reset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap(reset_button)
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "spacing_reset",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    flet_app_function.create_gif(
+        [
+            "spacing_initial",
+            "spacing_after_horizontal_margin_drag",
+            "spacing_after_column_spacing_drag",
+            "spacing_hover_compact_preset",
+            "spacing_compact_preset",
+            "spacing_hover_spacious_preset",
+            "spacing_spacious_preset",
+            "spacing_hover_reset",
+            "spacing_reset",
+        ],
+        "spacing_flow",
         duration=1000,
     )

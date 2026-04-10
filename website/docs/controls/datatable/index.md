@@ -29,6 +29,8 @@ Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacin
 
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/spacing_flow.gif'} width="55%" />
+
 ### Adaptive row heights
 
 Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')`

@@ -193,6 +193,29 @@ class Tester(Service):
         """
         await self._invoke_method("mouse_double_click_at", {"offset": offset})
 
+    async def drag(self, finder: Finder, offset: Offset):
+        """
+        Drag from the center of the given control by the provided offset.
+
+        Args:
+            finder: Finder to search for a control.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method(
+            "drag",
+            {"finder_id": finder.id, "finder_index": finder.index, "offset": offset},
+        )
+
+    async def drag_from(self, start: Offset, offset: Offset):
+        """
+        Drag from the given start offset by the provided offset delta.
+
+        Args:
+            start: Initial pointer location.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method("drag_from", {"start": start, "offset": offset})
+
     async def long_press(self, finder: Finder):
         """
         Dispatch a pointer down / pointer up sequence (with a delay of 600 ms between \

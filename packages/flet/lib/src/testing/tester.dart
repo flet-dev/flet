@@ -21,6 +21,8 @@ abstract class Tester {
   Future<void> mouseDoubleClick(TestFinder finder, int finderIndex);
   Future<void> rightMouseClickAt(Offset offset);
   Future<void> rightMouseClick(TestFinder finder, int finderIndex);
+  Future<void> drag(TestFinder finder, int finderIndex, Offset offset);
+  Future<void> dragFrom(Offset start, Offset offset);
   Future<void> longPress(TestFinder finder, int finderIndex);
   Future<void> enterText(TestFinder finder, int finderIndex, String text);
   Future<void> mouseHover(TestFinder finder, int finderIndex);
