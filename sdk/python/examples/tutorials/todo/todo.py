@@ -1,4 +1,5 @@
 from dataclasses import field
+from pickle import ADDITEMS
 from typing import Callable
 
 import flet as ft
@@ -6,7 +7,7 @@ import flet as ft
 
 @ft.control
 class Task(ft.Column):
-    task_name: str = ""
+    task_name: str = "gc7"
     on_status_change: Callable[[], None] = field(default=lambda: None)
     on_delete: Callable[["Task"], None] = field(default=lambda task: None)
 
@@ -27,11 +28,13 @@ class Task(ft.Column):
                     controls=[
                         ft.IconButton(
                             icon=ft.Icons.CREATE_OUTLINED,
+                            icon_color=ft.Colors.GREEN_ACCENT_400,
                             tooltip="Edit To-Do",
                             on_click=self.edit_clicked,
                         ),
                         ft.IconButton(
-                            ft.Icons.DELETE_OUTLINE,
+                            icon=ft.Icons.DELETE_OUTLINE,
+                            icon_color=ft.Colors.RED_ACCENT_200,
                             tooltip="Delete To-Do",
                             on_click=self.delete_clicked,
                         ),
@@ -57,7 +60,7 @@ class Task(ft.Column):
         self.controls = [self.display_view, self.edit_view]
 
     def edit_clicked(self, e):
-        self.edit_name.value = self.display_task.label
+        self.edit_name.value = self.display_task.label  # type: ignore
         self.display_view.visible = False
         self.edit_view.visible = True
         self.update()
@@ -80,7 +83,11 @@ class Task(ft.Column):
 class TodoApp(ft.Column):
     # application's root control is a Column containing all other controls
     def init(self):
-        self.new_task = ft.TextField(hint_text="Whats needs to be done?", expand=True)
+        self.new_task = ft.TextField(
+            hint_text="Whats needs to be done?",
+            expand=True,
+            on_change=self.task_changed,
+        )
         self.tasks = ft.Column()
 
         self.filter = ft.TabBar(
@@ -100,14 +107,32 @@ class TodoApp(ft.Column):
         )
 
         self.width = 600
+        self.items_left = ft.Text("")
+
+        self.btn = ft.FloatingActionButton(
+            width=50,
+            height=50,
+            mouse_cursor=ft.MouseCursor.BASIC,
+            icon=ft.Icons.ADD,
+            on_click=self.add_clicked,
+            disabled=True,
+            visible=False,
+        )
+
         self.controls = [
             ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER,
                 controls=[
-                    self.new_task,
-                    ft.FloatingActionButton(
-                        icon=ft.Icons.ADD, on_click=self.add_clicked
-                    ),
+                    ft.Text(
+                        "Todos",
+                        size=24,
+                        color=ft.Colors.GREY_500,
+                        weight=ft.FontWeight.NORMAL,
+                    )
                 ],
+            ),
+            ft.Row(
+                controls=[self.new_task, self.btn],
             ),
             ft.Column(
                 spacing=25,
@@ -116,9 +141,24 @@ class TodoApp(ft.Column):
                     self.tasks,
                 ],
             ),
+            ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    self.items_left,
+                    ft.OutlinedButton(
+                        content="Clear completed",
+                        on_click=self.clear_completed,
+                        style=ft.ButtonStyle(mouse_cursor=ft.MouseCursor.CLICK),
+                    ),
+                ],
+            ),
         ]
 
     def add_clicked(self, e):
+        if not self.new_task.value:
+            return
+
         task = Task(
             task_name=self.new_task.value,
             on_status_change=self.task_status_change,
@@ -126,19 +166,43 @@ class TodoApp(ft.Column):
         )
         self.tasks.controls.append(task)
         self.new_task.value = ""
+        self.task_changed(None)
         self.update()
 
     def task_status_change(self):
         self.update()
 
+    def task_changed(self, e):
+        has_text = bool((self.new_task.value or "").strip())
+        self.btn.icon = ft.Icons.ADD
+        self.btn.content = None
+        self.btn.visible = has_text
+        self.btn.mouse_cursor = (
+            ft.MouseCursor.CLICK if has_text else ft.MouseCursor.BASIC
+        )
+        self.btn.disabled = not has_text
+        self.btn.update()
+
     def task_delete(self, task):
         self.tasks.controls.remove(task)
         self.update()
 
+    def get_tasks(self) -> list[Task]:
+        return [task for task in self.tasks.controls if isinstance(task, Task)]
+
+    def clear_completed(self):
+        self.tasks.controls = [task for task in self.get_tasks() if not task.completed]
+        self.update()
+
     def before_update(self):
-        status = self.filter.tabs[self.filter_tabs.selected_index].label
-        for task in self.tasks.controls:
-            task.visible = (
+        tasks = self.get_tasks()
+        active_count = sum(1 for t in tasks if not t.completed)
+        self.items_left.value = (
+            f"{active_count} active item{'s' if active_count != 1 else ''} left"
+        )
+        status = self.filter.tabs[self.filter_tabs.selected_index].label  # type: ignore
+        for task in tasks:
+            task.visible = (  # type: ignore
                 status == "all"
                 or (status == "active" and not task.completed)
                 or (status == "completed" and task.completed)
@@ -149,7 +213,7 @@ class TodoApp(ft.Column):
 
 
 def main(page: ft.Page):
-    page.title = "To-Do App"
+    page.title = "ToDo App"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.update()
 
@@ -160,4 +224,5 @@ def main(page: ft.Page):
     page.add(app)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
