@@ -23,11 +23,14 @@ def main(page: ft.Page):
     def handle_dismissal(_: ft.Event[ft.DialogControl]):
         messages.controls.append(ft.Text("DateRangePicker dismissed"))
 
-    today = datetime.datetime.now()
+    today = datetime.datetime(year=2025, month=4, day=15)
 
     picker = ft.DateRangePicker(
         start_value=datetime.datetime(year=today.year, month=today.month, day=1),
         end_value=datetime.datetime(year=today.year, month=today.month, day=15),
+        first_date=datetime.datetime(year=2024, month=1, day=1),
+        last_date=datetime.datetime(year=2026, month=12, day=31),
+        current_date=today,
         on_change=handle_change,
         on_dismiss=handle_dismissal,
     )
