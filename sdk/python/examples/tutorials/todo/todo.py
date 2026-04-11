@@ -7,7 +7,7 @@ import flet as ft
 
 @ft.control
 class Task(ft.Column):
-    task_name: str = "gc7"
+    task_name: str = ""
     on_status_change: Callable[[], None] = field(default=lambda: None)
     on_delete: Callable[["Task"], None] = field(default=lambda task: None)
 
