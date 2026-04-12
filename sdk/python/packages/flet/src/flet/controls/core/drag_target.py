@@ -25,12 +25,12 @@ class DragWillAcceptEvent(Event["DragTarget"]):
 
     src_id: Optional[int]
     """
-    ID of the draggable source control, if available.
+    ID of the :class:`~flet.Draggable` source control, if available.
     """
 
     src: Draggable = field(init=False)
     """
-    Source draggable control resolved from :attr:`src_id`.
+    Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
     """
 
     accept: bool
@@ -51,12 +51,12 @@ class DragTargetEvent(Event["DragTarget"]):
 
     src_id: Optional[int]
     """
-    ID of the draggable source control, if available.
+    ID of the :class:`~flet.Draggable` source control, if available.
     """
 
     src: Draggable = field(init=False)
     """
-    Source draggable control resolved from :attr:`src_id`.
+    Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
     """
 
     local_position: Offset = field(metadata={"data_field": "l"})
@@ -77,9 +77,8 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position.x` for target-relative coordinates or "
         "`global_position.x` for global coordinates instead.",
-        docs_reason="Use [`local_position.x`][(c).local_position] for "
-        "target-relative coordinates or [`global_position.x`][(c).global_position] "
-        "for global coordinates instead.",
+        docs_reason="Use [`local_position.x`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
+        "[`global_position.x`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
         version="0.85.0",
         delete_version="0.88.0",
     )
@@ -94,9 +93,8 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position.y` for target-relative coordinates or "
         "`global_position.y` for global coordinates instead.",
-        docs_reason="Use [`local_position.y`][(c).local_position] for "
-        "target-relative coordinates or [`global_position.y`][(c).global_position] "
-        "for global coordinates instead.",
+        docs_reason="Use [`local_position.y`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
+        "[`global_position.y`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
         version="0.85.0",
         delete_version="0.88.0",
     )
@@ -111,8 +109,8 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position` for target-relative coordinates or "
         "`global_position` for global coordinates instead.",
-        docs_reason="Use [`local_position`][(c).] for target-relative coordinates or "
-        "[`global_position`][(c).] for global coordinates instead.",
+        docs_reason="Use [`local_position`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
+        "[`global_position`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
         version="0.85.0",
         delete_version="0.88.0",
     )
@@ -132,12 +130,12 @@ class DragTargetLeaveEvent(Event["DragTarget"]):
 
     src_id: Optional[int]
     """
-    ID of the draggable source control, if available.
+    ID of the :class:`~flet.Draggable` source control, if available.
     """
 
     src: Draggable = field(init=False)
     """
-    Source draggable control resolved from :attr:`src_id`.
+    Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
     """
 
     def __post_init__(self):
@@ -181,23 +179,21 @@ class DragTarget(Control):
 
     on_will_accept: Optional[EventHandler[DragWillAcceptEvent]] = None
     """
-    Called when a draggable is dragged on this target.
+    Called when a :class:`~flet.Draggable` is dragged on this target.
     """
 
     on_accept: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when the user does drop an acceptable (same :attr:`group`) draggable on \
-    this target.
-
-    Use `page.get_control(e.src_id)` to retrieve Control reference by its ID.
+    Called when the user does drop an acceptable (same :attr:`group`) \
+    :class:`~flet.Draggable` on this target.
     """
 
     on_leave: Optional[EventHandler[DragTargetLeaveEvent]] = None
     """
-    Called when a draggable leaves this target.
+    Called when a :class:`~flet.Draggable` leaves this target.
     """
 
     on_move: Optional[EventHandler[DragTargetEvent]] = None
     """
-    Called when a draggable moves within this target.
+    Called when a :class:`~flet.Draggable` moves within this target.
     """
