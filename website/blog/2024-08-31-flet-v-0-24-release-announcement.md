@@ -8,7 +8,7 @@ tags: [releases]
 I am very happy to announce the release of Flet version 0.24.0!
 It comes with a very long list of bug fixes, several enhancements and new features.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## New Controls
 

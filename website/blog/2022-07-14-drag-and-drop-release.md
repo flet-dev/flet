@@ -17,7 +17,7 @@ Take a look at [Drag-and-Drop example](https://github.com/flet-dev/examples/blob
 
 Explore [`Draggable`](https://flet.dev/docs/controls/draggable/) and [`DragTarget`](https://flet.dev/docs/controls/dragtarget/) controls, their properties and events.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Absolute positioning inside Stack
 
