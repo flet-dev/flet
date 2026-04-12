@@ -103,18 +103,18 @@ class NavigationDrawer(AdaptiveControl):
 
     controls: list[Control] = field(default_factory=list)
     """
-    Defines the appearance of the items within the navigation drawer.
+    The list of items to display in this drawer.
 
-    The list contains :class:`~flet.NavigationDrawerDestination` items and/or other
-    controls such as headlines, padding containers, and dividers.
+    The list typically contains :class:`~flet.NavigationDrawerDestination`
+    items and/or other controls such as headlines, padding containers, and dividers.
     """
 
     selected_index: int = 0
     """
     The index for the currently selected :class:`~flet.NavigationDrawerDestination`.
 
-    A valid ``selected_index`` is an integer between ``0`` and the number of
-    destinations minus ``1``. For an invalid value, for example ``-1``, all
+    A valid `selected_index` is an integer between `0` and the number of
+    destinations minus `1`. For an invalid value, for example `-1`, all
     destinations will appear unselected.
     """
 
