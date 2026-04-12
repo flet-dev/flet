@@ -93,7 +93,9 @@ def main(page: ft.Page):
         if message.message_type == "chat_message":
             m = ChatMessage(message)
         elif message.message_type == "login_message":
-            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
+            m = ft.Text(
+                message.text, italic=True, color=ft.Colors.ON_SURFACE_VARIANT, size=12
+            )
         chat.controls.append(m)
         page.update()
 
