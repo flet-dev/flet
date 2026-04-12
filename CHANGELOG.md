@@ -13,6 +13,7 @@
 
 ### Other changes
 
+* Add `crocodocs watch` command for hot-reload docs development with file-watching, debounced regeneration, and optional child process management ([#6402](https://github.com/flet-dev/flet/pull/6402)) by @ndonkoHenri.
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
 
 ## 0.84.0
