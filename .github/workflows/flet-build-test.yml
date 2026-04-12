@@ -46,7 +46,7 @@ env:
   FLET_CLI_NO_RICH_OUTPUT: 1
 
   # Extra args passed via workflow_dispatch (empty for push/PR)
-  FLET_BUILD_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_args || '' }}
+  FLET_BUILD_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
   FLET_PACK_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_pack_args || '' }}
 
 jobs:
