@@ -11,7 +11,7 @@ In summary, a Flet extension is now a single Python package that bundles both Py
 
 Built-in Flet extensions, such as `Audio`, `Video`, and `Map`, have been moved to their own repositories. You’re welcome to fork these extensions to create your own or contribute to Flet! These extensions have been published to PyPI, making them easy to include in your Flet app. To use them, simply add the desired extensions to the `dependencies` section of your `pyproject.toml` file.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 

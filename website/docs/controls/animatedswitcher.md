@@ -17,7 +17,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/scale_effect/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/scale_effect.gif'} alt="scale-effect" width="55%" />
+<Image src={frontMatter.example_images + '/scale_effect.gif'} alt="scale-effect" width="25%" />
 
 ### Animate Image switch
 

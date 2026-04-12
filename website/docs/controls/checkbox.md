@@ -7,7 +7,7 @@ title: "Checkbox"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic checkboxes" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic checkboxes" imageWidth="12%"/>
 
 ## Examples
 
@@ -23,12 +23,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/handling_events.png'} alt="handling-events" width="50%" caption="After three clicks" />
+<Image src={frontMatter.example_images + '/handling_events.png'} alt="handling-events" width="35%" caption="After three clicks" />
 
 ### Styled checkboxes
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/styled_checkboxes.png'} alt="Styled checkboxes" width="50%" />
+<Image src={frontMatter.example_images + '/styled_checkboxes.png'} alt="Styled checkboxes" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />

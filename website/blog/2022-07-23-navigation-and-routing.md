@@ -21,7 +21,7 @@ Well, it took [more efforts](https://github.com/flet-dev/flet/pull/95/files) tha
 
 Explore [source code](https://github.com/flet-dev/examples/blob/main/python/apps/routing-navigation/building-views-on-route-change.py) of the example above.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Page route
 

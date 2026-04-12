@@ -8,7 +8,7 @@ title: "Text"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Text control" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Text control" imageWidth="30%"/>
 
 ## Examples
 
@@ -18,19 +18,19 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/custom_styles/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/custom_styles.gif'} width="55%" />
+<Image src={frontMatter.example_media + '/custom_styles.gif'} width="40%" />
 
 ### Pre-defined theme text styles
 
 <CodeExample path={frontMatter.examples + '/text_theme_styles/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/text_theme_styles.png'} width="55%" />
+<Image src={frontMatter.example_media + '/text_theme_styles.png'} width="40%" />
 
 ### Font with variable weight
 
 <CodeExample path={frontMatter.examples + '/variable_font_weight/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/variable_font_weight.gif'} width="55%" />
+<Image src={frontMatter.example_media + '/variable_font_weight.gif'} width="40%" />
 
 ### Basic rich text example
 

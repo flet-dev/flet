@@ -13,7 +13,7 @@ Highlights in this release:
 * Meet CrocoDocs, our new tool that bridges Python docstrings and Docusaurus.
 * All 466 Flet examples migrated to standalone projects with rich metadata for Gallery and AI discovery.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 

@@ -54,7 +54,15 @@ class Container(LayoutControl, AdaptiveControl):
 
     alignment: Optional[Alignment] = None
     """
-    Defines the alignment of the :attr:`content` inside the container.
+    Defines the alignment of the :attr:`content` inside this container.
+
+    Note:
+        If `alignment` is non-`None`, this container may expand to fill the
+        available space from its parent (before positioning its :attr:`content`
+        within itself according to the given `alignment`) instead of shrinking to its
+        :attr:`content`. If you need this container to keep a fixed size, give it
+        container an explicit `width` and/or `height` values, or constrain it via
+        its parent.
     """
 
     bgcolor: Optional[ColorValue] = None

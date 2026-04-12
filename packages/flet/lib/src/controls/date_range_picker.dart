@@ -86,14 +86,20 @@ class DateRangePickerControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? dialogRoute;
         showDialog<DateTimeRange<DateTime>>(
             barrierDismissible: !control.getBool("modal", false)!,
             barrierColor: control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,
-            builder: (context) => createSelectDateDialog()).then((result) {
-          debugPrint("pickDate() completed");
-          onClosed(result);
+            builder: (context) {
+              dialogRoute ??= ModalRoute.of(context);
+              return createSelectDateDialog();
+            }).then((result) {
+          (dialogRoute?.completed ?? Future.value()).then((_) {
+            debugPrint("pickDate() completed");
+            onClosed(result);
+          });
         });
       });
     }

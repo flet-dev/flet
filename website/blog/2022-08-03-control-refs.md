@@ -50,7 +50,7 @@ When more and mode controls and event handlers added it becomes challenging to k
 
 Is `first_name` a TextField, does it have autofocus set? Is greetings a `Row` or a `Column`?
 
-<!-- truncate -->
+{/* truncate */}
 
 ## `Ref` class
 

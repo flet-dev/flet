@@ -77,4 +77,3 @@ If a dialog mutates existing controls and calls `page.update()`, convert it to:
   - `raw = getattr(troute, "id", None)` then `isinstance(raw, str)` before `int(raw)`.
 - **`controls=[*[...], ...]` can confuse type checkers** with components:
   - build lists in two steps and annotate/cast, or return raw controls from non-component factories.
-

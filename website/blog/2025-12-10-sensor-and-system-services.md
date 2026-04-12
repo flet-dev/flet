@@ -26,7 +26,7 @@ We've just merged a [pull request](https://github.com/flet-dev/flet/pull/5846) i
 
 <img src="/img/blog/sensors/flet-sensor-services.png" alt="Flet sensor and system services" className="screenshot screenshot-70" />
 
-<!-- truncate -->
+{/* truncate */}
 
 Sensor services mostly work on iOS and Android devices. Using them in a web app is also possible to some extent, but only under specific browser and hardware conditions.
 

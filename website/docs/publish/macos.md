@@ -233,7 +233,7 @@ Its value is determined in the following order of precedence:
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
 4. Defaults:
 
-   ```toml
+    ```toml
     [tool.flet.macos.entitlement]
     "com.apple.security.app-sandbox" = false
     "com.apple.security.cs.allow-jit" = true

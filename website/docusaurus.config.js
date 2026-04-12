@@ -4,6 +4,10 @@ const TwitterSvg =
 const { themes } = require('prism-react-renderer');
 
 module.exports = {
+  future: {
+    v4: true, // opt-in for Docusaurus v4 planned changes
+    faster: false, // turns Docusaurus Faster on globally
+  },
   title: 'Flet',
   tagline: 'Build multi-platform apps in Python',
   url: 'https://flet.dev',
@@ -28,11 +32,11 @@ module.exports = {
       appId: 'ESNSJEY7OD',
       apiKey: '4b060907ba79d92e8869e9d1ff80bce7',
       indexName: 'flet',
-      askAi: {
-        assistantId: '48c9b8c8-278a-48b3-aa3e-ed18efad6fdd',
-        agentStudio: true,
-        sidePanel: true,
-      },
+    //   askAi: {
+    //     assistantId: '48c9b8c8-278a-48b3-aa3e-ed18efad6fdd',
+    //     agentStudio: true,
+    //     sidePanel: true,
+    //   },
       contextualSearch: true,
     },
     // github codeblock theme configuration
