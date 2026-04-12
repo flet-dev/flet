@@ -74,7 +74,7 @@ When working on a release for `{new_version}`, treat deprecations with
 1. Always set `version`.
 2. Set `delete_version` using the 3-minor policy by default.
 3. Keep `reason` plain text for runtime warnings.
-4. Use `docs_reason` for docs-only markdown text and always write cross-references there as CrocoDocs xrefs.
+4. Use `docs_reason` for docs-only markdown text.
 5. When a replacement exists, name that replacement API explicitly in `reason` and `docs_reason`.
 
 ### Field Pattern
@@ -91,7 +91,7 @@ class ExampleControl:
             version="0.17.0",
             delete_version="0.20.0",
             reason="Use new_prop instead.",
-            docs_reason="Use [`new_prop`][(c).] or [`new_prop`][flet.ExampleControl.new_prop] or :attr:`new_prop` or instead.",
+            docs_reason="Use :attr:`new_prop` or [`new_prop`](../controls/examplecontrol.md#flet.ExampleControl.new_prop) instead.",
         ),
     ] = None
 ```
@@ -104,7 +104,7 @@ from flet.utils.deprecated import deprecated
 class ExampleControl:
     @deprecated(
         reason="Use new_func instead.",
-        docs_reason="Use [`new_func()`][(c).new_func] or :meth:`new_func` instead.",
+        docs_reason="Use :meth:`new_func` or [`new_func()`](../controls/examplecontrol.md#flet.ExampleControl.new_func) instead.",
         version="0.17.0",
         delete_version="0.20.0",
     )
@@ -119,7 +119,7 @@ from flet.utils.deprecated import deprecated_class
 
 @deprecated_class(
     reason="Use NewControl instead.",
-    docs_reason="Use [`NewControl`][flet.NewControl] or :class:`~flet.NewControl` instead.",
+    docs_reason="Use :class:`~flet.NewControl` or [`NewControl`](../controls/newcontrol.md)  instead.",
     version="0.17.0",
     delete_version="0.20.0",
 )
@@ -136,7 +136,7 @@ class ExampleControl:
     @property
     @deprecated(
         reason="Use new_value instead.",
-        docs_reason="Use [`new_value`][(c).] or :attr:`new_value` instead.",
+        docs_reason="Use :attr:`new_value` or [`new_value`](../controls/examplecontrol.md#flet.ExampleControl.new_value) instead.",
         version="0.17.0",
         delete_version="0.20.0",
     )
@@ -148,28 +148,14 @@ class ExampleControl:
 
 - Runtime warnings always use `reason`.
 - Docs admonitions prefer `docs_reason`; fallback is `reason`.
-- Keep markdown/xref out of `reason` to avoid noisy runtime output.
+- Keep markdown/cross-refs out of `reason` to avoid noisy runtime output.
 
 ### Cross-reference Rule Inside `docs_reason`
 
-Always use CrocoDocs xrefs in `docs_reason`, unless the user explicitly asks for a
-different format, e.g. reST.
+In `docs_reason`, use reST roles for simple references when the auto-derived label is
+sufficient, and use Markdown links when you need more control over the displayed text.
 
-Reason:
-
-- `docs_reason` often needs custom labels such as ``new_func()``, `local_position.x` or plain text.
-- xrefs keep the display text fully under author control.
-- same-class shorthands keep current-class references short and readable.
-- full targets remain useful for cross-class destinations.
-
-Examples:
-
-- same-class member: ``Use [`new_value`][(c).] instead.``
-- same-class custom label: ``Use [`local_position.x`][(c).local_position] for target-relative coordinates instead.``
-- method xref: ``Call [`Page.update()`][flet.Page.update] after mutating controls.``
-- plain-text label xref: ``See [the move callback][flet.DragTarget.on_move] for continuous updates.``
-
-For cross-reference syntax rules, follow: [`docs-conventions`](../docs-conventions/SKILL.md)
+See [`docs-conventions`](../docs-conventions/SKILL.md) for details on supported cross-ref patterns and their syntax.
 
 ## Docs Behavior Expectations
 
@@ -185,7 +171,7 @@ is a special case not covered by the extension.
 When adding/changing deprecations, include tests for:
 - runtime warning text (`reason`, versions, optional delete version),
 - docs-only preference (`docs_reason` overrides `reason` in docs),
-- docs rendering extraction for the used pattern (`V.deprecated`, `@deprecated`, `@deprecated_class`, deprecated properties),
+- docs rendering extraction for the used pattern (`V.deprecated`, `@deprecated`, `@deprecated_class`),
 - label presence (`deprecated`) in docs extraction tests.
 
 Prefer:
@@ -195,9 +181,8 @@ Prefer:
 
 ## Common Pitfalls
 
-- Putting markdown/xref into runtime `reason`.
+- Putting markdown/cross-refs into runtime `reason`.
 - Forgetting `delete_version` when a removal target is already known.
 - Adding old/new value-copy logic in Python for rename migrations.
 - Duplicating deprecation warnings in multiple lifecycle hooks manually.
-- Broken crossref targets in `docs_reason`.
-- Using a full target for a same-class replacement when `(c)` shorthand would be clearer.
+- Broken cross-refs targets in `docs_reason`.

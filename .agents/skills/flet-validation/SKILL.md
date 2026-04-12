@@ -160,8 +160,8 @@ When a property has validation, document it in that property’s docstring (goog
 
 ## Cross-Referencing Conventions
 
-Follow the dedicated cross-reference guidance in:
-[`docs-cross-referencing` skill](../docs-cross-referencing/SKILL.md).
+Follow the cross-reference guidance in:
+[`docs-conventions`](../docs-conventions/SKILL.md).
 
 Most common pattern to use in control property docstrings:
 - same-class properties: `[\`prop\`][(c).]`
