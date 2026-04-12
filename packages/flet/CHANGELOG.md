@@ -6,6 +6,8 @@
 
 ### Bug fixes
 
+* Handle unbounded width in `ResponsiveRow` with an explicit error and treat child controls with `col=0` as hidden at the current breakpoint ([#1951](https://github.com/flet-dev/flet/issues/1951), [#3805](https://github.com/flet-dev/flet/issues/3805), [#6354](https://github.com/flet-dev/flet/pull/6354)) by @ndonkoHenri.
+
 ### Other changes
 
 ## 0.84.0

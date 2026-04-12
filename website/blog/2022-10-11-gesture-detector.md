@@ -13,7 +13,7 @@ Here is a simple example of an app which allows you to drag containers inside a 
 
 <img src="/img/blog/gesture-detector/gesture-detector-demo.gif" className="screenshot-50" />
 
-<!-- truncate -->
+{/* truncate */}
 
 ```python
 import flet as ft

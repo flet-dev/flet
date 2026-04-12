@@ -11,7 +11,7 @@ Flet 0.21.0 further improves web apps development experience as well as using as
 
 Here's what's new in Flet 0.21.0:
 
-<!-- truncate -->
+{/* truncate */}
 
 ## FastAPI with Uvicorn replaces built-in web server
 
