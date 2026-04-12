@@ -78,7 +78,7 @@ uv --directory ./tools/crocodocs run crocodocs watch
 Watch and run a child process, using `--` to separate the child command:
 
 ```bash
-uv --directory ./tools/crocodocs run crocodocs watch --child-cwd ./website -- yarn exec docusaurus start
+uv --directory ./tools/crocodocs run crocodocs watch --child-cwd ../../website -- yarn exec docusaurus start
 ```
 
 ## Configuration

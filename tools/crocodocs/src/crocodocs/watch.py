@@ -10,6 +10,7 @@ developer workflow portable and avoids requiring every contributor to install
 platform-specific tools like `fswatch` or `watchexec`.
 """
 
+import os
 import signal
 import subprocess
 import time
@@ -114,14 +115,16 @@ def iter_target_files(target: WatchTarget) -> Iterable[Path]:
             yield path
         return
 
-    iterator = path.rglob("*") if target.recursive else path.glob("*")
-    for child in sorted(iterator):
-        if child.is_dir():
-            continue
-        if _should_skip_path(path, child):
-            continue
-        if _matches_suffixes(child, target.suffixes):
-            yield child
+    if target.recursive:
+        yield from _walk_directory(path, target.suffixes)
+    else:
+        for child in sorted(path.glob("*")):
+            if child.is_dir():
+                continue
+            if _should_skip_path(path, child):
+                continue
+            if _matches_suffixes(child, target.suffixes):
+                yield child
 
 
 def snapshot_targets(targets: Iterable[WatchTarget]) -> dict[Path, FileState]:
@@ -129,7 +132,12 @@ def snapshot_targets(targets: Iterable[WatchTarget]) -> dict[Path, FileState]:
     snapshot: dict[Path, FileState] = {}
     for target in targets:
         for file_path in iter_target_files(target):
-            stat_result = file_path.stat()
+            try:
+                stat_result = file_path.stat()
+            except (FileNotFoundError, OSError):
+                # The file may have been deleted or renamed between iteration
+                # and stat — skip it for this snapshot cycle.
+                continue
             snapshot[file_path] = FileState(
                 mtime_ns=stat_result.st_mtime_ns,
                 size=stat_result.st_size,
@@ -287,6 +295,29 @@ def _format_change_message(changed_paths: list[Path]) -> str:
     if len(changed_paths) > 4:
         preview += f", +{len(changed_paths) - 4} more"
     return f"Detected changes in {len(changed_paths)} file(s): {preview}"
+
+
+def _walk_directory(root: Path, suffixes: Optional[frozenset[str]]) -> Iterable[Path]:
+    """Walk root recursively, pruning ignored/hidden directories in-place.
+
+    Unlike `Path.rglob`, `os.walk` lets us remove entries from *dirs* so the
+    OS never descends into heavy trees like `node_modules` or `.venv`.
+    """
+    for dirpath, dirs, filenames in os.walk(root):
+        # Prune in-place so os.walk skips these subtrees entirely.
+        dirs[:] = sorted(
+            d
+            for d in dirs
+            if d not in IGNORED_DIRECTORY_NAMES
+            and not (d.startswith(".") and d not in {".env"})
+        )
+
+        for filename in sorted(filenames):
+            if filename.startswith(".") and filename not in {".env"}:
+                continue
+            file_path = Path(dirpath) / filename
+            if _matches_suffixes(file_path, suffixes):
+                yield file_path
 
 
 def _matches_suffixes(path: Path, suffixes: Optional[frozenset[str]]) -> bool:
