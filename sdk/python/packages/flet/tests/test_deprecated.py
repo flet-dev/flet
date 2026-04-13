@@ -8,6 +8,7 @@ from types import ModuleType
 
 import pytest
 
+import flet as ft
 from flet.utils.deprecated import deprecated, deprecated_class, deprecated_warning
 
 
@@ -160,3 +161,14 @@ def test_deprecated_warning_points_to_user_code_through_flet_frames():
     warning = captured[0]
     assert warning.filename == __file__
     assert warning.lineno == expected_line
+
+
+def test_dropdownm2_warns_with_removal_version():
+    with pytest.warns(
+        DeprecationWarning,
+        match=re.escape(
+            "DropdownM2 is deprecated since version 0.84.0 and will be removed in "
+            "version 1.0. Use Dropdown instead."
+        ),
+    ):
+        ft.DropdownM2()
