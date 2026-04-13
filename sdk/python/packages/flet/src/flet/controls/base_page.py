@@ -7,6 +7,7 @@ from typing import (
     Union,
 )
 
+from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import BaseControl, control
@@ -263,6 +264,12 @@ class BasePage(AdaptiveControl):
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
+    def __resolved_views(self) -> list[View]:
+        views = unwrap_component(self.views)
+        if isinstance(views, View):
+            return [views]
+        return [unwrap_component(v) for v in views]
+
     def __root_view(self) -> View:
         """
         Return the root view of this page container.
@@ -274,9 +281,10 @@ class BasePage(AdaptiveControl):
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[0]
+        return views[0]
 
     def __top_view(self) -> View:
         """
@@ -289,9 +297,10 @@ class BasePage(AdaptiveControl):
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[-1]
+        return views[-1]
 
     def update(self, *controls: Control) -> None:
         """

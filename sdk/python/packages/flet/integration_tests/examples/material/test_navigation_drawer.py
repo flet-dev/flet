@@ -2,32 +2,37 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.navigation_drawer.adaptive_navigation.main import (
+    main as adaptive_navigation,
+)
 from examples.controls.navigation_drawer.position_end.main import main as position_end
 from examples.controls.navigation_drawer.position_start.main import (
     main as position_start,
 )
+from examples.controls.navigation_drawer.theming.main import main as theming
 
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    nvd = ft.NavigationDrawer(
-        controls=[
-            ft.NavigationDrawerDestination(label="Item 1"),
-            ft.NavigationDrawerDestination(label="Item 2"),
-            ft.NavigationDrawerDestination(label="Item 3"),
-        ],
-        tile_padding=ft.Padding(top=10),
-    )
     flet_app_function.resize_page(400, 400)
-    flet_app_function.page.drawer = nvd
+    flet_app_function.page.drawer = ft.NavigationDrawer(
+        tile_padding=ft.Padding(top=10),
+        controls=[
+            ft.NavigationDrawerDestination(icon=ft.Icons.HOME_OUTLINED, label="Item 1"),
+            ft.NavigationDrawerDestination(icon=ft.Icons.MAIL_OUTLINED, label="Item 2"),
+            ft.NavigationDrawerDestination(
+                icon=ft.Icons.SETTINGS_OUTLINED, label="Item 3"
+            ),
+        ],
+    )
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle(
         duration=ft.Duration(milliseconds=800)
     )
+
     await flet_app_function.page.show_drawer()
-    flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle(
         duration=ft.Duration(milliseconds=800)
     )
@@ -106,6 +111,7 @@ async def test_position_start(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
+
     btn = await flet_app_function.tester.find_by_text_containing("Show")
     await flet_app_function.tester.mouse_hover(btn)
     await flet_app_function.tester.pump_and_settle(
@@ -117,6 +123,7 @@ async def test_position_start(flet_app_function: ftt.FletTestApp):
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
     )
+
     await flet_app_function.tester.tap(btn)
     await flet_app_function.tester.pump_and_settle(
         duration=ft.Duration(milliseconds=500)
@@ -132,4 +139,106 @@ async def test_position_start(flet_app_function: ftt.FletTestApp):
         ["position_start1", "position_start2", "position_start3"],
         "position_start",
         duration=1600,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": theming}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_theming(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(400, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+
+    flet_app_function.assert_screenshot(
+        "theming1",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text_containing("Show")
+    )
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "theming2",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text_containing("Notifications")
+    )
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "theming3",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    flet_app_function.create_gif(
+        ["theming1", "theming2", "theming3"],
+        "theming",
+        duration=1600,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": adaptive_navigation}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_adaptive_navigation(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+
+    # narrow layout
+    flet_app_function.resize_page(400, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "adaptive_navigation1",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    # wide layout
+    flet_app_function.resize_page(600, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text_containing("Open Drawer")
+    )
+    await flet_app_function.tester.pump_and_settle(
+        duration=ft.Duration(milliseconds=500)
+    )
+    flet_app_function.assert_screenshot(
+        "adaptive_navigation2",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+    flet_app_function.create_gif(
+        ["adaptive_navigation1", "adaptive_navigation2"],
+        "adaptive_navigation",
+        duration=1800,
     )
