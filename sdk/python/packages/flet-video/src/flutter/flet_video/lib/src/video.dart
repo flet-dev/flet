@@ -246,7 +246,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [content!]
+            children: [content]
           );
         }
         return AdaptiveVideoControls(state);
