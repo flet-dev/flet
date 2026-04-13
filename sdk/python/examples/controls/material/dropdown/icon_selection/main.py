@@ -17,6 +17,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Dropdown(
+                key="icon_dropdown",
                 border=ft.InputBorder.UNDERLINE,
                 enable_filter=True,
                 editable=True,

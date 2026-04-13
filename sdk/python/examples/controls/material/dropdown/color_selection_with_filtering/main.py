@@ -26,6 +26,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Dropdown(
+                key="color_dropdown",
                 editable=True,
                 label="Color",
                 options=get_options(),

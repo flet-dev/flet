@@ -20,13 +20,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/color_selection_with_filtering/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/color_selection_with_filtering.gif'} alt="color-selection-with-filtering" width="25%" />
+<Image src={frontMatter.example_images + '/color_selection_with_filtering_flow.gif'} alt="color-selection-with-filtering" width="35%" />
 
 ### Icon selection
 
 <CodeExample path={frontMatter.examples + '/icon_selection/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/icon_selection.png'} alt="icon-selection" width="25%" />
+<Image src={frontMatter.example_images + '/icon_selection_flow.gif'} alt="icon-selection" width="35%" />
 
 ### Styled dropdowns
 
