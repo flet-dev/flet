@@ -64,7 +64,7 @@ def main(page: ft.Page):
         ),
         show_line_numbers=True,
         show_folding_handles=True,
-        width=80,
+        width=60,
     )
 
     def handle_selection_change(e: ft.TextSelectionChangeEvent[fce.CodeEditor]):
@@ -91,12 +91,14 @@ def main(page: ft.Page):
         await editor.focus()
         editor.selection = ft.TextSelection(base_offset=0, extent_offset=0)
 
+    page.padding = 0
+    page.spacing = 0
     page.add(
         ft.SafeArea(
             expand=True,
             content=ft.Column(
-                expand=True,
                 spacing=10,
+                expand=True,
                 controls=[
                     editor := fce.CodeEditor(
                         language=fce.CodeLanguage.PYTHON,
@@ -116,16 +118,20 @@ def main(page: ft.Page):
                         on_selection_change=handle_selection_change,
                         expand=True,
                     ),
-                    selection := ft.Text("Select some text from the editor."),
-                    selection_details := ft.Text(),
-                    caret := ft.Text("Caret position: -"),
-                    ft.Row(
-                        spacing=10,
+                    ft.Column(
+                        margin=10,
                         controls=[
-                            ft.Button("Select all text", on_click=select_all),
-                            ft.Button(
-                                "Move caret to start",
-                                on_click=move_caret_to_start,
+                            selection := ft.Text("Select some text from the editor."),
+                            selection_details := ft.Text(),
+                            caret := ft.Text("Caret position: -"),
+                            ft.Row(
+                                controls=[
+                                    ft.Button("Select all text", on_click=select_all),
+                                    ft.Button(
+                                        "Move caret to start",
+                                        on_click=move_caret_to_start,
+                                    ),
+                                ],
                             ),
                         ],
                     ),

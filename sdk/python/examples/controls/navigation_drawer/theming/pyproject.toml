@@ -1,0 +1,26 @@
+[project]
+name = "navigation-drawer-theming"
+version = "1.0.0"
+description = "Demonstrates NavigationDrawer theming with custom background, icons, labels, and indicator styles."
+requires-python = ">=3.10"
+keywords = ["navigation drawer", "drawer", "navigation", "theming", "theme"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/NavigationDrawer"]
+
+[tool.flet.metadata]
+title = "Theming"
+controls = ["NavigationDrawer", "NavigationDrawerDestination", "Button", "SafeArea", "Container", "Text", "Page"]
+layout_pattern = "drawer-navigation"
+complexity = "basic"
+features = ["navigation drawer theme", "state-based icon theme", "state-based label styles", "selection indicator styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
