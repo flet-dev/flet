@@ -186,6 +186,10 @@ class Video(ft.LayoutControl):
     the index of the new track.
     """
 
+    def init(self):
+        super().init()
+        self._internals["host_expanded"] = True
+
     def before_update(self):
         super().before_update()
         if not (0 <= self.volume <= 100):

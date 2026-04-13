@@ -241,7 +241,16 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
       controls: showControls
-      ? (state) => content ?? AdaptiveVideoControls(state)
+      ? (state) {
+        if (content != null) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [content!]
+          );
+        }
+        return AdaptiveVideoControls(state);
+      }
       : null,
       pauseUponEnteringBackgroundMode:
           widget.control.getBool("pause_upon_entering_background_mode", true)!,
