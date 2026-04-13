@@ -26,4 +26,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/scrollable.png'} width="40%" />
+
 <ClassMembers name={frontMatter.class_name} />
