@@ -27,6 +27,7 @@ def App():
                     ft.Column(
                         controls=[
                             ft.Dropdown(
+                                key="declarative_dropdown",
                                 editable=True,
                                 label="Color",
                                 value=form.color,

@@ -40,6 +40,7 @@ def main(page: ft.Page):
                     display_value,
                     display_text,
                     ft.Dropdown(
+                        key="select_change_dropdown",
                         editable=True,
                         label="Color",
                         width=float("inf"),

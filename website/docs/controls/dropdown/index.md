@@ -28,8 +28,22 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/icon_selection_flow.gif'} alt="icon-selection" width="35%" />
 
+### Declarative dropdown
+
+<CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/declarative_flow.gif'} alt="declarative-dropdown" width="35%" />
+
+### Select and change events
+
+<CodeExample path={frontMatter.examples + '/select_and_change_events/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/select_and_change_events_flow.gif'} alt="select-and-change-events" width="35%" />
+
 ### Styled dropdowns
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/styled_flow.gif'} alt="styled-dropdowns" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />
