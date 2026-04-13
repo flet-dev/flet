@@ -18,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} width="40%" />
+<Image src={frontMatter.example_images + '/basic_flow.gif'} width="40%" />
 
 ### Scrolling
 
