@@ -97,8 +97,7 @@ class _ScrollableControlState extends State<ScrollableControl>
     final scrollConfiguration =
         widget.control.getScrollbarConfiguration("scroll");
 
-    if (widget.control.getBool("auto_scroll", false)! &&
-        scrollConfiguration != null) {
+    if (widget.control.getBool("auto_scroll", false)!) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.animateTo(
           _controller.position.maxScrollExtent,
