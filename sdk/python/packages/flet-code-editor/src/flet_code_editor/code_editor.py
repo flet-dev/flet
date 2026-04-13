@@ -1,9 +1,48 @@
-from typing import Optional, Union
+from dataclasses import dataclass
+from typing import Optional, TypeVar, Union
 
 import flet as ft
 from flet_code_editor.types import CodeLanguage, CodeTheme, CustomCodeTheme, GutterStyle
 
-__all__ = ["CodeEditor"]
+__all__ = ["CodeEditor", "CodeEditorAnalyzeEvent", "CodeEditorIssue"]
+
+EventControlType = TypeVar("EventControlType")
+
+
+@dataclass
+class CodeEditorIssue:
+    # ISSUE-6312: Python-side analyzer output rendered in the Flutter gutter.
+    """Analysis issue rendered in the editor gutter."""
+
+    line: int
+    """Zero-based line number highlighted in the gutter."""
+
+    message: str
+    """Human-readable issue description."""
+
+    type: str = "error"
+    """Issue severity: ``error``, ``warning`` or ``info``."""
+
+    suggestion: Optional[str] = None
+    """Optional quick-fix suggestion shown in tooltips when supported."""
+
+    url: Optional[str] = None
+    """Optional URL with extra issue details."""
+
+
+@dataclass
+class CodeEditorAnalyzeEvent(ft.Event[EventControlType]):
+    # ISSUE-6312: Generic analysis callback requested by maintainer review.
+    """Payload emitted by :attr:`CodeEditor.on_analyze`."""
+
+    value: str
+    """Current editor contents to analyze."""
+
+    language: Optional[str] = None
+    """Active editor language identifier."""
+
+    selection: Optional[ft.TextSelection] = None
+    """Current editor selection when available."""
 
 
 @ft.control("CodeEditor")
@@ -52,8 +91,14 @@ class CodeEditor(ft.LayoutControl):
     autofocus: Optional[bool] = False
     """Whether this editor should focus itself if nothing else is focused."""
 
+    issues: Optional[list[CodeEditorIssue]] = None
+    """Issues rendered in the gutter, typically set from :attr:`on_analyze`."""
+
     on_change: Optional[ft.ControlEventHandler["CodeEditor"]] = None
     """Called when the editor text changes."""
+
+    on_analyze: Optional[ft.EventHandler[CodeEditorAnalyzeEvent["CodeEditor"]]] = None
+    """Called when the editor requests analysis from Python code."""
 
     on_selection_change: Optional[
         ft.EventHandler[ft.TextSelectionChangeEvent["CodeEditor"]]

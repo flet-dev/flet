@@ -1,23 +1,54 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart' as fce;
-import 'package:highlight/languages/json.dart';
-
-import 'json_analyzer.dart';
 
 class FletCodeController extends fce.CodeController {
-  // ISSUE-6312: Use a dedicated analyzer for JSON so invalid JSON can surface
-  // gutter markers instead of falling back to the default fold-only analyzer.
-  FletCodeController({super.text, super.language})
-    : super(analyzer: _analyzerForLanguage(language));
+  FletCodeController({
+    super.text,
+    super.language,
+    this.externalAnalysisEnabled = false,
+    fce.AbstractAnalyzer? analyzer,
+  }) : super(analyzer: analyzer ?? const fce.DefaultLocalAnalyzer());
 
   bool autocompletionEnabled = false;
+  final bool externalAnalysisEnabled;
 
-  static fce.AbstractAnalyzer _analyzerForLanguage(dynamic language) {
-    // ISSUE-6312: Keep existing behavior for other languages and only switch
-    // JSON to the custom analyzer added for this bug fix.
-    return language != json
-        ? const fce.DefaultLocalAnalyzer()
-        : const JsonLocalAnalyzer();
+  // ISSUE-6312: Allow Python-side analyzers to push issues back into the
+  // controller instead of requiring a Dart-side analyzer per language.
+  void setIssues(List<fce.Issue> issues) {
+    if (_sameIssues(analysisResult.issues, issues)) {
+      return;
+    }
+    analysisResult = fce.AnalysisResult(issues: issues);
+    notifyListeners();
+  }
+
+  @override
+  Future<void> analyzeCode() async {
+    if (externalAnalysisEnabled) {
+      return;
+    }
+    return super.analyzeCode();
+  }
+
+  bool _sameIssues(List<fce.Issue> left, List<fce.Issue> right) {
+    if (identical(left, right)) {
+      return true;
+    }
+    if (left.length != right.length) {
+      return false;
+    }
+    for (var index = 0; index < left.length; index++) {
+      final a = left[index];
+      final b = right[index];
+      if (a.line != b.line ||
+          a.message != b.message ||
+          a.type != b.type ||
+          a.suggestion != b.suggestion ||
+          a.url != b.url) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @override

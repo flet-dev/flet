@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart' as fce;
@@ -22,6 +24,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
   TextSelection? _selection;
   String _value = "";
   String? _languageName;
+  Timer? _analyzeDebounce;
 
   @override
   void initState() {
@@ -33,10 +36,12 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     _selection = _controller.selection;
     _controller.addListener(_handleControllerChange);
     widget.control.addInvokeMethodListener(_invokeMethod);
+    _scheduleAnalyzeEvent(immediate: true);
   }
 
   @override
   void dispose() {
+    _analyzeDebounce?.cancel();
     _controller.removeListener(_handleControllerChange);
     _controller.dispose();
     _focusNode.removeListener(_onFocusChange);
@@ -77,6 +82,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     return FletCodeController(
       text: _initialValueFromControl(),
       language: allLanguages[_languageName!.toLowerCase()],
+      externalAnalysisEnabled: _usesExternalAnalysis(),
     );
   }
 
@@ -95,6 +101,86 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
 
   void _setValue(String value) {
     _controller.fullText = value;
+  }
+
+  bool _usesExternalAnalysis() {
+    return widget.control.getBool("on_analyze", false)!;
+  }
+
+  List<fce.Issue> _readIssues() {
+    final rawIssues = widget.control.get("issues");
+    if (rawIssues is! List) {
+      return const [];
+    }
+
+    return rawIssues
+        .whereType<Map>()
+        .map(_parseIssue)
+        .whereType<fce.Issue>()
+        .toList(growable: false);
+  }
+
+  fce.Issue? _parseIssue(Map<dynamic, dynamic> rawIssue) {
+    final line = parseInt(rawIssue["line"]);
+    final message = rawIssue["message"]?.toString();
+
+    if (line == null || message == null || message.isEmpty) {
+      return null;
+    }
+
+    return fce.Issue(
+      line: line,
+      message: message,
+      type: _parseIssueType(rawIssue["type"]),
+      suggestion: rawIssue["suggestion"]?.toString(),
+      url: rawIssue["url"]?.toString(),
+    );
+  }
+
+  fce.IssueType _parseIssueType(dynamic rawType) {
+    switch (rawType?.toString()) {
+      case "info":
+        return fce.IssueType.info;
+      case "warning":
+        return fce.IssueType.warning;
+      default:
+        return fce.IssueType.error;
+    }
+  }
+
+  void _scheduleAnalyzeEvent({bool immediate = false}) {
+    if (!_usesExternalAnalysis()) {
+      return;
+    }
+
+    // ISSUE-6312: Delegate code analysis to Python when on_analyze is wired.
+    _analyzeDebounce?.cancel();
+    if (!immediate) {
+      _controller.setIssues(const []);
+    }
+
+    void triggerAnalyze() {
+      if (!mounted || !_usesExternalAnalysis()) {
+        return;
+      }
+
+      widget.control.triggerEvent("analyze", {
+        "value": _readValue(),
+        "language": _languageName,
+        if (_controller.selection.isValid)
+          "selection": _controller.selection.toMap(),
+      });
+    }
+
+    if (immediate) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => triggerAnalyze());
+      return;
+    }
+
+    _analyzeDebounce = Timer(
+      const Duration(milliseconds: 500),
+      triggerAnalyze,
+    );
   }
 
   void _handleControllerChange() {
@@ -132,6 +218,10 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       widget.control.triggerEvent("change", value);
     }
 
+    if (valueChanged) {
+      _scheduleAnalyzeEvent();
+    }
+
     if (selectionChanged && selection.isValid) {
       final visibleText = _controller.text;
       widget.control.triggerEvent("selection_change", {
@@ -146,7 +236,9 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
     debugPrint("CodeEditor build: ${widget.control.id}");
 
     final languageName = widget.control.get("language", "")!;
-    if (languageName != _languageName) {
+    final usesExternalAnalysis = _usesExternalAnalysis();
+    if (languageName != _languageName ||
+        usesExternalAnalysis != _controller.externalAnalysisEnabled) {
       final previousSelection = _controller.selection;
       _controller.removeListener(_handleControllerChange);
       _controller.dispose();
@@ -156,6 +248,7 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
       if (previousSelection.isValid) {
         _controller.selection = previousSelection;
       }
+      _scheduleAnalyzeEvent(immediate: true);
     }
 
     final value = widget.control.getString("value");
@@ -174,6 +267,8 @@ class _CodeEditorControlState extends State<CodeEditorControl> {
         explicitSelection != _controller.selection) {
       _controller.selection = explicitSelection;
     }
+
+    _controller.setIssues(_readIssues());
 
     final autofocus = widget.control.getBool("autofocus", false)!;
     if (!_didAutoFocus && autofocus) {
