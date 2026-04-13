@@ -1,10 +1,10 @@
+import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -36,7 +36,6 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     debugPrint("NavigationDrawerControl build: ${widget.control.id}");
 
     var selectedIndex = widget.control.getInt("selected_index", 0)!;
-
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
     }
@@ -49,31 +48,18 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
       backgroundColor: widget.control.getColor("bgcolor", context),
       selectedIndex: _selectedIndex,
       shadowColor: widget.control.getColor("shadow_color", context),
-      tilePadding: parseEdgeInsets(widget.control.get("tile_padding"),
-          const EdgeInsets.symmetric(horizontal: 12.0))!,
+      tilePadding: widget.control.getEdgeInsets(
+          "tile_padding", const EdgeInsets.symmetric(horizontal: 12.0))!,
       onDestinationSelected: _destinationChanged,
       children: widget.control.children("controls").map((dest) {
         dest.notifyParent = true;
         if (dest.type == "NavigationDrawerDestination") {
-          var icon = dest.get("icon");
-          var selectedIcon = dest.get("selected_icon");
-
           return NavigationDrawerDestination(
             enabled: !dest.disabled,
+            label: dest.buildTextOrWidget("label") ?? const Text(""),
             backgroundColor: dest.getColor("bgcolor", context),
-            icon: icon is Control
-                ? ControlWidget(
-                    control: icon,
-                  )
-                : Icon(parseIconData(icon, widget.control.backend)),
-            label: Text(dest.getString("label", "")!),
-            selectedIcon: selectedIcon is Control
-                ? ControlWidget(
-                    control: selectedIcon,
-                  )
-                : selectedIcon is int
-                    ? Icon(parseIconData(selectedIcon, widget.control.backend))
-                    : null,
+            icon: dest.buildIconOrWidget("icon", required: true)!,
+            selectedIcon: dest.buildIconOrWidget("selected_icon"),
           );
         } else {
           return ControlWidget(control: dest);

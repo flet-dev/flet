@@ -69,6 +69,7 @@ tasks:
     aliases:
       - docs
     cmds:
+      - cd ../../website && yarn install --immutable
       - cd ../../website && yarn start
 
   docs-coverage:
