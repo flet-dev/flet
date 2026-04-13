@@ -170,7 +170,7 @@ docs:
       Dropdown:
         _index: controls/dropdown/index.md
         DropdownOption: controls/dropdownoption.md
-      DropdownM2: controls/dropdownm2.md
+      #DropdownM2: controls/dropdownm2.md
       ExpansionPanel: controls/expansionpanel.md
       ExpansionPanelList: controls/expansionpanellist.md
       ExpansionTile: controls/expansiontile.md

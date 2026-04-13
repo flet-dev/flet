@@ -843,11 +843,6 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/dropdownm2",
-              "label": "DropdownM2"
-            },
-            {
-              "type": "doc",
               "id": "controls/expansionpanel",
               "label": "ExpansionPanel"
             },
