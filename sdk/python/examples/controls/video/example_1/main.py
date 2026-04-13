@@ -68,6 +68,10 @@ def main(page: ft.Page):
         r = random.randint(0, len(video.playlist) - 1)
         await video.playlist_remove(r)
 
+    async def handle_update_playlist(e: ft.Event[ft.Button]):
+        rl = random.sample(sample_media, 3)
+        await video.playlist_update(rl, video.autoplay)
+
     async def handle_jump(e: ft.Event[ft.Button]):
         await video.jump_to(0)
 
@@ -109,6 +113,10 @@ def main(page: ft.Page):
                             ft.Button("Add Random Media", on_click=handle_add_media),
                             ft.Button(
                                 "Remove Random Media", on_click=handle_remove_media
+                            ),
+                            ft.Button(
+                                "Prepare random playlist and update",
+                                on_click=handle_update_playlist
                             ),
                             ft.Button("Enter Fullscreen", on_click=handle_fullscreen),
                         ],
