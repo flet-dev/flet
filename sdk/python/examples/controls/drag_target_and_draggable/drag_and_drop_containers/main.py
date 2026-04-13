@@ -10,8 +10,7 @@ def main(page: ft.Page):
         e.control.update()
 
     def handle_drag_accept(e: ft.DragTargetEvent):
-        src = page.get_control(e.src_id)
-        e.control.content.bgcolor = src.content.bgcolor
+        e.control.content.bgcolor = e.src.content.bgcolor
         e.control.content.border = None
         e.control.update()
 

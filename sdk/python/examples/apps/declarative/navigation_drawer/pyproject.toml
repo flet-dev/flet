@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-navigation-drawer"
+version = "1.0.0"
+description = "Declarative app with a NavigationDrawer whose selected destination drives the page content."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "navigation drawer", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Declarative navigation drawer"
+controls = ["View", "AppBar", "NavigationDrawer", "NavigationDrawerDestination", "SafeArea", "Text", "IconButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["drawer navigation", "state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
