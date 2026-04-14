@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Reduce Linux memory retention when repeatedly removing `Video` controls by linking `media_kit` video apps against mimalloc in Flet run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164)).
+- Reduce Linux memory retention when repeatedly removing `Video` controls by linking `media_kit` video apps against mimalloc in Flet run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)).
 
 ## 0.80.0
 
