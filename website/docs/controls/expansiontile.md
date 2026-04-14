@@ -19,11 +19,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/basic.png'} width="30%" />
 
-## Programmatic expansion/collapse
+### Programmatic expansion/collapse
 
 <CodeExample path={frontMatter.examples + '/programmatic_expansion/main.py'} language="python" />
 
-## Custom animations
+### Custom animations
 
 <CodeExample path={frontMatter.examples + '/custom_animations/main.py'} language="python" />
 
@@ -34,5 +34,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 ### Borders
 
 <CodeExample path={frontMatter.examples + '/borders/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/borders_flow.gif'} width="50%" />
 
 <ClassMembers name={frontMatter.class_name} />
