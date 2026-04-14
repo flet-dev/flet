@@ -23,28 +23,30 @@ def AppLayout():
     outlet = ft.use_route_outlet()
     return ft.Column(
         [
-            ft.AppBar(
-                title=ft.Text("My App"),
+            ft.Container(
+                content=ft.Row(
+                    [
+                        ft.Text("My App", size=20, weight=ft.FontWeight.BOLD),
+                        ft.Button(
+                            "Home",
+                            on_click=lambda: ft.context.page.navigate("/"),
+                        ),
+                        ft.Button(
+                            "About",
+                            on_click=lambda: ft.context.page.navigate("/about"),
+                        ),
+                        ft.Button(
+                            "Contact",
+                            on_click=lambda: ft.context.page.navigate("/contact"),
+                        ),
+                    ]
+                ),
                 bgcolor=ft.Colors.SURFACE_BRIGHT,
-                actions=[
-                    ft.Button(
-                        "Home",
-                        on_click=lambda: ft.context.page.navigate("/"),
-                    ),
-                    ft.Button(
-                        "About",
-                        on_click=lambda: ft.context.page.navigate("/about"),
-                    ),
-                    ft.Button(
-                        "Contact",
-                        on_click=lambda: ft.context.page.navigate("/contact"),
-                    ),
-                ],
+                padding=10,
             ),
-            ft.Container(content=outlet, padding=20, expand=True),
+            ft.Container(content=outlet, padding=20),
             ft.Text("Footer - (c) 2026", text_align=ft.TextAlign.CENTER),
         ],
-        expand=True,
     )
 
 

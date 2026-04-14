@@ -78,22 +78,18 @@ def LoginPage():
         auth.login(username_ref.current.value or "admin", admin=True)
         ft.context.page.navigate("/")
 
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text("Sign In", size=28),
-                ft.TextField(label="Username", value="admin", ref=username_ref),
-                ft.Row(
-                    [
-                        ft.Button("Login", on_click=handle_login),
-                        ft.Button("Login as Admin", on_click=handle_admin_login),
-                    ]
-                ),
-            ],
-            width=300,
-        ),
-        alignment=ft.Alignment(0, 0),
-        expand=True,
+    return ft.Column(
+        [
+            ft.Text("Sign In", size=28),
+            ft.TextField(label="Username", value="admin", ref=username_ref),
+            ft.Row(
+                [
+                    ft.Button("Login", on_click=handle_login),
+                    ft.Button("Login as Admin", on_click=handle_admin_login),
+                ]
+            ),
+        ],
+        width=300,
     )
 
 
@@ -145,36 +141,26 @@ def AppLayout():
                 content=ft.Row(
                     [
                         ft.Text("Router Demo", size=20, weight=ft.FontWeight.BOLD),
-                        ft.Row(
-                            [
-                                NavLink("Home", "/"),
-                                NavLink("Projects", "/projects"),
-                                NavLink("Settings", "/settings"),
-                            ]
-                        ),
-                        ft.Row(
-                            [
-                                ft.Text(f"Hi, {auth.username}"),
-                                ft.IconButton(
-                                    ft.Icons.LOGOUT,
-                                    on_click=lambda: (
-                                        auth.logout(),
-                                        ft.context.page.navigate("/login"),
-                                    ),
-                                ),
-                            ]
+                        NavLink("Home", "/"),
+                        NavLink("Projects", "/projects"),
+                        NavLink("Settings", "/settings"),
+                        ft.Text(f"Hi, {auth.username}"),
+                        ft.IconButton(
+                            ft.Icons.LOGOUT,
+                            on_click=lambda: (
+                                auth.logout(),
+                                ft.context.page.navigate("/login"),
+                            ),
                         ),
                     ],
-                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                 ),
                 padding=10,
                 bgcolor=ft.Colors.SURFACE_BRIGHT,
             ),
             ft.Divider(height=1),
             # Content
-            ft.Container(content=outlet, padding=20, expand=True),
+            ft.Container(content=outlet, padding=20),
         ],
-        expand=True,
     )
 
 
