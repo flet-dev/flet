@@ -16,12 +16,9 @@ Do not use this skill for non-deprecation validation logic; use
 
 ## Source Of Truth
 
-- Runtime decorators and warning helpers:
-  `sdk/python/packages/flet/src/flet/utils/deprecated.py`
-- Field-level deprecation rule:
-  `sdk/python/packages/flet/src/flet/utils/validation.py` (`V.deprecated`)
-- Docs extraction/labeling extension:
-  `sdk/python/packages/flet/src/flet/utils/griffe_deprecations.py`
+- Runtime decorators and warning helpers: `sdk/python/packages/flet/src/flet/utils/deprecated.py`
+- Field-level deprecation rule: `sdk/python/packages/flet/src/flet/utils/validation.py` (`V.deprecated`)
+- Docs extraction/labeling extension: `sdk/python/packages/flet/src/flet/utils/griffe_deprecations.py`
 
 ## Deprecation Decision Order
 
@@ -50,13 +47,35 @@ Removal phase:
 - Example: deprecated in `0.82.0` -> remove in `0.85.0`.
 - Use that policy to set `delete_version` unless there is an approved exception.
 
+## Target Release Audit
+
+When working on a release for `{new_version}`, treat deprecations with
+`delete_version == {new_version}` as mandatory audit items.
+
+- Scan Python packages for `@deprecated(...)`, `@deprecated_class(...)`,
+  and `V.deprecated(...)` entries whose `delete_version` equals `{new_version}`.
+- Recommended check command:
+  `rg -n 'delete_version\\s*=\\s*"{new_version}"|delete_version\\s*=\\s*\\x27{new_version}\\x27' -S sdk/python/packages`
+- Treat every match as release-relevant work, not informational output.
+- If matches are found, summarize the findings first and ask the human for approval
+  before editing files or making removals.
+- For each match, decide whether the deprecated API must be removed now,
+  whether a prior removal was missed, or whether the deprecation timeline is incorrect.
+- If removal is due, make the code, docs, and changelog updates in the same change.
+- After the cleanup edits are ready, summarize the resulting diff and ask the human
+  for approval before creating a commit.
+- Once commit approval is received, batch all confirmed `{new_version}` cleanup
+  edits into one grouped commit instead of splitting them across multiple commits.
+  Use commit message format: `release: remove deprecated APIs for {new_version}`
+- Do not consider the release prep complete while unresolved `{new_version}` removals remain.
+
 ## Authoring Rules
 
 1. Always set `version`.
 2. Set `delete_version` using the 3-minor policy by default.
 3. Keep `reason` plain text for runtime warnings.
-4. Use `docs_reason` for docs-only markdown/xref text.
-5. Prefer explicit replacement names in reasons.
+4. Use `docs_reason` for docs-only markdown text.
+5. When a replacement exists, name that replacement API explicitly in `reason` and `docs_reason`.
 
 ### Field Pattern
 
@@ -64,16 +83,17 @@ Removal phase:
 from typing import Annotated, Optional
 from flet.utils.validation import V
 
-old_prop: Annotated[
-    Optional[str],
-    V.deprecated(
-        "new_prop",
-        version="0.17.0",
-        delete_version="0.18.0",
-        reason="Use new_prop instead.",
-        docs_reason="Use [`new_prop`][(c).] instead.",
-    ),
-] = None
+class ExampleControl:
+    old_prop: Annotated[
+        Optional[str],
+        V.deprecated(
+            "new_prop",
+            version="0.17.0",
+            delete_version="0.20.0",
+            reason="Use new_prop instead.",
+            docs_reason="Use :attr:`new_prop` or [`new_prop`](../controls/examplecontrol.md#flet.ExampleControl.new_prop) instead.",
+        ),
+    ] = None
 ```
 
 ### Function/Method Pattern
@@ -81,14 +101,15 @@ old_prop: Annotated[
 ```python
 from flet.utils.deprecated import deprecated
 
-@deprecated(
-    reason="Use new_func instead.",
-    docs_reason="Use [`new_func()`][(m).new_func] instead.",
-    version="0.17.0",
-    delete_version="0.18.0",
-)
-def old_func():
-    ...
+class ExampleControl:
+    @deprecated(
+        reason="Use new_func instead.",
+        docs_reason="Use :meth:`new_func` or [`new_func()`](../controls/examplecontrol.md#flet.ExampleControl.new_func) instead.",
+        version="0.17.0",
+        delete_version="0.20.0",
+    )
+    def old_func(self):
+        ...
 ```
 
 ### Class/Control Pattern
@@ -98,22 +119,43 @@ from flet.utils.deprecated import deprecated_class
 
 @deprecated_class(
     reason="Use NewControl instead.",
-    docs_reason="Use [`NewControl`][flet.] instead.",
+    docs_reason="Use :class:`~flet.NewControl` or [`NewControl`](../controls/newcontrol.md)  instead.",
     version="0.17.0",
-    delete_version="0.18.0",
+    delete_version="0.20.0",
 )
 class OldControl:
     ...
+```
+
+### Deprecated Property Pattern
+
+```python
+from flet.utils.deprecated import deprecated
+
+class ExampleControl:
+    @property
+    @deprecated(
+        reason="Use new_value instead.",
+        docs_reason="Use :attr:`new_value` or [`new_value`](../controls/examplecontrol.md#flet.ExampleControl.new_value) instead.",
+        version="0.17.0",
+        delete_version="0.20.0",
+    )
+    def value(self):
+        ...
 ```
 
 ## `reason` vs `docs_reason`
 
 - Runtime warnings always use `reason`.
 - Docs admonitions prefer `docs_reason`; fallback is `reason`.
-- Keep markdown/xref out of `reason` to avoid noisy runtime output.
+- Keep markdown/cross-refs out of `reason` to avoid noisy runtime output.
 
-For cross-reference shape rules, follow:
-[`docs-cross-referencing`](../docs-cross-referencing/SKILL.md)
+### Cross-reference Rule Inside `docs_reason`
+
+In `docs_reason`, use reST roles for simple references when the auto-derived label is
+sufficient, and use Markdown links when you need more control over the displayed text.
+
+See [`docs-conventions`](../docs-conventions/SKILL.md) for details on supported cross-ref patterns and their syntax.
 
 ## Docs Behavior Expectations
 
@@ -129,8 +171,7 @@ is a special case not covered by the extension.
 When adding/changing deprecations, include tests for:
 - runtime warning text (`reason`, versions, optional delete version),
 - docs-only preference (`docs_reason` overrides `reason` in docs),
-- docs rendering extraction for the used pattern (`V.deprecated`,
-  `@deprecated`, `@deprecated_class`),
+- docs rendering extraction for the used pattern (`V.deprecated`, `@deprecated`, `@deprecated_class`),
 - label presence (`deprecated`) in docs extraction tests.
 
 Prefer:
@@ -140,8 +181,8 @@ Prefer:
 
 ## Common Pitfalls
 
-- Putting markdown/xref into runtime `reason`.
+- Putting markdown/cross-refs into runtime `reason`.
 - Forgetting `delete_version` when a removal target is already known.
 - Adding old/new value-copy logic in Python for rename migrations.
 - Duplicating deprecation warnings in multiple lifecycle hooks manually.
-- Broken crossref targets in `docs_reason` (for example malformed `[(c).]` links).
+- Broken cross-refs targets in `docs_reason`.

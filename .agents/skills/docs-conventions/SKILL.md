@@ -5,13 +5,18 @@ description: Use when writing or reviewing Flet documentation, including Python 
 
 # Documentation Conventions
 
+Docs live in `website/docs/`. Docusaurus renders them as the website.
+
 ## Python Docstrings
 
 Use **Google style** docstrings with sections: `Args:`, `Returns:`, `Raises:`, `Note:`, `Example:`, `Warning:`.
 
-### Cross-references (reST roles)
+## Cross-references
 
-Use reST roles in Python docstrings. CrocoDocs renders them as links in the API docs.
+### reST roles
+
+Prefer these in Python docstrings. CrocoDocs renders them as links in
+the API docs and they keep authoring terse when the auto-derived label is acceptable.
 
 **Supported roles:** `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`
 
@@ -20,9 +25,9 @@ Use reST roles in Python docstrings. CrocoDocs renders them as links in the API 
 If a parent is a :class:`~flet.ResponsiveRow`, this property determines
 how many virtual columns the control spans.
 
-See :attr:`value` for the current selection.
+See :attr:`value` or :attr:`flet.Text.size` for the current selection.
 
-Calls :meth:`~flet.Page.update` after modifying controls.
+Calls :meth:`flet.Page.update` after modifying controls.
 """
 ```
 
@@ -38,7 +43,29 @@ Calls :meth:`~flet.Page.update` after modifying controls.
 - Custom labels like `:class:`my label <flet.Page>`` — the label is always auto-derived from the target
 - Roles for symbols not in CrocoDocs API data degrade to inline code
 
-### Admonitions in docstrings
+### Markdown links
+
+Use this syntax when the displayed text must differ from the symbol target or when
+explicitly required by user. This is especially useful in docs-only strings such as the
+`docs_reason` parameter of `@deprecated`, extracted validation messages, or short admonition text
+where you want:
+
+- inline-code labels with punctuation, such as `new_func()` or `local_position.x`,
+- plain-language labels that do not match the target exactly,
+- explicit full targets in the link destination for clarity.
+
+Use relative `.md` paths with dot-format anchors.
+
+Examples:
+
+```markdown
+Control: [`Page`](../controls/page.md)
+Type: [`DragTargetEvent.global_position`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position)
+Plain text: [route](../controls/page.md#flet.Page.route)
+Method: [`Page.update()`](../controls/page.md#flet.Page.update)
+```
+
+## Admonitions in docstrings
 
 Google-style section headers render as Docusaurus admonitions:
 
@@ -56,25 +83,11 @@ Example:
 """
 ```
 
-Supported kinds: `Note`, `Warning`, `Danger`, `Tip`, `Info`. Unsupported kinds (e.g. `Limitation`, `Example`) are normalized to `note`. Empty admonitions are skipped.
+Supported kinds: `Note`, `Warning`, `Danger`, `Tip`, `Info`.
+Unsupported kinds (e.g. `Limitation`, `Example`) are normalized to `note`.
+Empty admonitions are skipped.
 
-## Markdown Docs
-
-Docs live in `website/docs/`. Docusaurus renders them as the website.
-
-### Cross-references
-
-Use relative `.md` paths with dot-format anchors:
-
-```markdown
-See [Page](../controls/page.md) for details.
-
-The [route](../controls/page.md#flet.Page.route) property controls navigation.
-```
-
-Anchor format: `#flet.ClassName.member_name` (dots, not hyphens).
-
-### Admonitions
+## Admonitions
 
 ```markdown
 :::note
@@ -88,7 +101,7 @@ Warning with a custom title.
 
 Supported types: `note`, `info`, `tip`, `warning`, `danger`.
 
-### Front matter
+## Front matter
 
 ```yaml
 ---
@@ -103,7 +116,7 @@ title: "Container"
 - `examples` — root-relative path under `sdk/python/examples/`
 - `example_images` / `example_media` — root-relative under `website/static/docs/`
 
-### Images
+## Images
 
 Use the CrocoDocs `Image` component. Paths without `../` are resolved against `/docs/`:
 
@@ -119,7 +132,7 @@ For absolute paths (one-off assets in `static/`):
 <Image src="/docs/assets/controls/charts/bar-chart-diagram.svg" width="65%" />
 ```
 
-### Code examples
+## Code examples
 
 ```jsx
 import {CodeExample} from '@site/src/components/crocodocs';
