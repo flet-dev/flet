@@ -25,4 +25,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/custom_breakpoint.gif'} width="70%" />
 
+### Scrollable content
+
+<CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
+
 <ClassMembers name={frontMatter.class_name} />
