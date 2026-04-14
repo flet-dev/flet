@@ -9,7 +9,6 @@ from pathlib import Path
 import flet_cli.__pyinstaller.config as hook_config
 from flet.utils import is_linux, is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
-from flet_desktop import get_artifact_filename
 
 
 class Command(BaseCommand):
@@ -391,6 +390,8 @@ class Command(BaseCommand):
                             os.remove(entry_path)
 
                 elif is_linux():
+                    from flet_desktop import get_artifact_filename
+
                     # Compress the flet/ directory into a tar.gz
                     # so ensure_client_cached() finds it at runtime.
                     self.compress_flet_client_dir(
