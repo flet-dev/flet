@@ -34,6 +34,7 @@ __all__ = [
     "use_route_location",
     "use_route_outlet",
     "use_route_params",
+    "use_view_path",
 ]
 
 # ---------------------------------------------------------------------------
@@ -108,6 +109,7 @@ class _RouteMatch:
     route: Route
     params: dict[str, str]
     full_path: str
+    resolved_path: str = ""
 
 
 def _join_paths(parent: str, child: str) -> str:
@@ -162,13 +164,25 @@ def _try_match(
         pattern = repath.pattern(full_path)
         m = re.match(pattern, pathname)
         if m:
-            return [_RouteMatch(route=route, params=m.groupdict(), full_path=full_path)]
+            return [
+                _RouteMatch(
+                    route=route,
+                    params=m.groupdict(),
+                    full_path=full_path,
+                    resolved_path=m.group(0),
+                )
+            ]
         # Also try with trailing slash stripped from pathname
         if pathname.endswith("/") and pathname != "/":
             m = re.match(pattern, pathname.rstrip("/"))
             if m:
                 return [
-                    _RouteMatch(route=route, params=m.groupdict(), full_path=full_path)
+                    _RouteMatch(
+                        route=route,
+                        params=m.groupdict(),
+                        full_path=full_path,
+                        resolved_path=m.group(0),
+                    )
                 ]
         return None
 
@@ -181,6 +195,7 @@ def _try_match(
     if route.children:
         # Parent route — try prefix match to extract params, then match children
         parent_params: dict[str, str] = {}
+        parent_resolved = full_path
         if route_path:
             # Only do prefix match if route has a path segment
             prefix_pattern = repath.pattern(full_path, end=False)
@@ -188,13 +203,19 @@ def _try_match(
             if not prefix_m:
                 return None
             parent_params = prefix_m.groupdict()
+            parent_resolved = prefix_m.group(0)
 
         # Try matching children
         for child in route.children:
             child_result = _try_match(child, pathname, full_path)
             if child_result is not None:
                 return [
-                    _RouteMatch(route=route, params=parent_params, full_path=full_path)
+                    _RouteMatch(
+                        route=route,
+                        params=parent_params,
+                        full_path=full_path,
+                        resolved_path=parent_resolved,
+                    )
                 ] + child_result
 
         # No children matched — if this route has a component, try exact match
@@ -207,6 +228,7 @@ def _try_match(
                         route=route,
                         params=exact_m.groupdict(),
                         full_path=full_path,
+                        resolved_path=exact_m.group(0),
                     )
                 ]
 
@@ -216,7 +238,14 @@ def _try_match(
     leaf_pattern = repath.pattern(full_path)
     m = re.match(leaf_pattern, pathname)
     if m:
-        return [_RouteMatch(route=route, params=m.groupdict(), full_path=full_path)]
+        return [
+            _RouteMatch(
+                route=route,
+                params=m.groupdict(),
+                full_path=full_path,
+                resolved_path=m.group(0),
+            )
+        ]
 
     return None
 
@@ -231,6 +260,7 @@ _location_context = create_context(_MISSING)
 _params_context = create_context(_MISSING)
 _outlet_context = create_context(_MISSING)
 _loader_data_context = create_context(_MISSING)
+_view_path_context = create_context(_MISSING)
 
 
 def _is_inside_router(value: Any) -> bool:
@@ -274,6 +304,29 @@ def use_route_location() -> str:
     if not _is_inside_router(loc):
         return ""
     return loc.pathname
+
+
+def use_view_path() -> str:
+    """
+    Returns the resolved URL for the current view level.
+
+    This differs from :func:`use_route_location` which returns the full
+    current URL.  ``use_view_path`` returns the URL up to the current
+    view level (the leaf route of the view in ``manage_views=True`` mode).
+
+    Useful as the ``route`` value for :class:`~flet.View` to produce a
+    unique Navigator key per view in the stack.
+
+    Must be called inside a component rendered by a :class:`~flet.Router`.
+    Returns an empty string if called outside a Router tree.
+
+    Returns:
+        The resolved URL for this view level (e.g. ``"/products/42"``).
+    """
+    value = use_context(_view_path_context)
+    if not _is_inside_router(value):
+        return ""
+    return str(value)
 
 
 def use_route_outlet() -> Control:
@@ -603,7 +656,7 @@ def Router(
     layouts, view_entries = _split_chain_into_view_levels(chain)
 
     results = []
-    for match, view_path in view_entries:
+    for match, _ in view_entries:
         # Params accumulated up to this view level
         level_params: dict[str, str] = {}
         for m in chain:
@@ -611,7 +664,11 @@ def Router(
             if m is match:
                 break
 
-        level_loc = LocationInfo(pathname=view_path, search=search, hash=hash_val)
+        # LocationInfo.pathname is the actual URL (not the route template),
+        # so is_route_active() and use_route_location() work consistently.
+        level_loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
+        # Per-view resolved URL — unique per view level for Navigator keying.
+        level_view_path = match.resolved_path or match.full_path or "/"
         _match = match
         # Only apply layouts that appear before this view entry in the chain
         match_idx = chain.index(match)
@@ -622,12 +679,18 @@ def Router(
             _layouts=_layouts,
             _level_params=level_params,
             _level_loc=level_loc,
+            _level_view_path=level_view_path,
         ):
-            return _location_context(
-                _level_loc,
-                lambda: _params_context(
-                    _level_params,
-                    lambda: _build_view_level(_layouts, _match, loader_results, chain),
+            return _view_path_context(
+                _level_view_path,
+                lambda: _location_context(
+                    _level_loc,
+                    lambda: _params_context(
+                        _level_params,
+                        lambda: _build_view_level(
+                            _layouts, _match, loader_results, chain
+                        ),
+                    ),
                 ),
             )
 

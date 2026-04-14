@@ -31,6 +31,7 @@ from flet.components.router import (
     use_route_location,
     use_route_outlet,
     use_route_params,
+    use_view_path,
 )
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
@@ -1142,6 +1143,7 @@ __all__ = [
     "use_route_outlet",
     "use_route_params",
     "use_state",
+    "use_view_path",
     "value",
 ]
 

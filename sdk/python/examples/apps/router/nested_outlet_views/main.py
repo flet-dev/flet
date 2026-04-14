@@ -46,9 +46,11 @@ def ProductDetails():
 def ProductsLayout():
     """Shared layout — wraps each child route in a View with AppBar + footer."""
     outlet = ft.use_route_outlet()
-    location = ft.use_route_location()
     return ft.View(
-        route=location,
+        # use_view_path() returns the per-view resolved URL (unique per level)
+        # — required for Flutter Navigator keying when the layout wraps
+        # multiple child routes.
+        route=ft.use_view_path(),
         appbar=ft.AppBar(
             title=ft.Text("Products"),
             bgcolor=ft.Colors.SURFACE_BRIGHT,
