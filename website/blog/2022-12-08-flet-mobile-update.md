@@ -11,7 +11,7 @@ Our original approach to Flet running on a mobile device was Server-Driven UI. T
 
 I've been thinking on how to make Python runtime embedded into Flutter iOS or Android app to run user Python program. No doubt, it's technically possible as Kivy and BeeWare projects do that already.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Current Flet architecture
 

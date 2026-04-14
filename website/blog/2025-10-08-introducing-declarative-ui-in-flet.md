@@ -33,7 +33,7 @@ ft.run(lambda page: page.render(App))
 
 Keep reading to see how it works and how you can start using it today.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## What is imperative UI
 

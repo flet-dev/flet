@@ -15,7 +15,7 @@ Highlights in this release:
 * Desktop binaries and build templates moved from PyPI to GitHub Releases - smaller installs, pinned versions.
 * Better release traceability with milestones and pre-releases on GitHub.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## How to upgrade
 

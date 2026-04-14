@@ -14,7 +14,7 @@ In the latest Flet v1 pre-release we have introduced three new Flet CLI commands
 - [`flet devices`](https://flet.dev/docs/cli/flet-devices/) - to list connected devices.
 - [`flet emulators`](https://flet.dev/docs/cli/flet-emulators/) - to list iOS/Android emulators and manage Android emulators.
 
-<!-- truncate -->
+{/* truncate */}
 
 This is a screenshot of a simple Flet app running on my iPhone:
 

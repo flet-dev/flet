@@ -18,10 +18,8 @@ def main(page: ft.Page):
     page.title = "Drag and Drop example"
 
     def drag_accept(e):
-        # get draggable (source) control by its ID
-        src = page.get_control(e.src_id)
-        # update text inside draggable control
-        src.content.content.value = "0"
+        # update text inside draggable (source) control
+        e.src.content.content.value = "0"
         # update text inside drag target control
         e.control.content.content.value = "1"
         page.update()
@@ -113,12 +111,10 @@ def main(page: ft.Page):
     page.title = "Drag and Drop example 2"
 
     def drag_accept(e):
-        # get draggable (source) control by its ID
-        src = page.get_control(e.src_id)
-        # update text inside draggable control
-        src.content.content.value = "0"
+        # update text inside draggable (source) control
+        e.src.content.content.value = "0"
         # reset source group, so it cannot be dropped to a target anymore
-        src.group = ""
+        e.src.group = ""
         # update text inside drag target control
         e.control.content.content.value = "1"
         # reset border

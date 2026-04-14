@@ -12,6 +12,7 @@ from flet.controls.types import (
     ResponsiveNumber,
     ResponsiveRowBreakpoint,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["ResponsiveNumber", "ResponsiveRow", "ResponsiveRowBreakpoint"]
 
@@ -44,7 +45,6 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
         ],
     )
     ```
-
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -52,9 +52,24 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     A list of Controls to display.
     """
 
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                ctrl.columns > 0
+                if isinstance(ctrl.columns, (int, float))
+                else all(v > 0 for v in ctrl.columns.values())
+            ),
+            message="columns must be greater than 0 for all breakpoints",
+        ),
+    )
+
     columns: ResponsiveNumber = 12
     """
     The number of virtual columns to layout children.
+
+    Raises:
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If any breakpoint-specific value is not strictly greater than `0`.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START

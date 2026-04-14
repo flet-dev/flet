@@ -13,7 +13,7 @@ From now on we'll be breaking releases into multiple pull requests with one feat
 
 Every PR merged into `main` branch will be publishing pre-release (developmental release) package to [pypi.org](https://pypi.org/project/flet/) having version format of `X.Y.Z.devN`.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Installing pre-releases
 

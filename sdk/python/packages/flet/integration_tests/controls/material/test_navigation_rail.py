@@ -132,3 +132,32 @@ async def test_scrollable_with_pinned_leading_and_trailing(
             ],
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_unbounded_height(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            controls=[
+                ft.NavigationRail(
+                    selected_index=0,
+                    label_type=ft.NavigationRailLabelType.ALL,
+                    min_width=100,
+                    destinations=[
+                        ft.NavigationRailDestination(
+                            icon=ft.Icons.FAVORITE_BORDER,
+                            selected_icon=ft.Icons.FAVORITE,
+                            label="First",
+                        ),
+                        ft.NavigationRailDestination(
+                            icon=ft.Icons.SETTINGS_OUTLINED,
+                            selected_icon=ft.Icon(ft.Icons.SETTINGS),
+                            label=ft.Text("Settings"),
+                        ),
+                    ],
+                )
+            ]
+        ),
+    )
