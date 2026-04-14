@@ -4,7 +4,7 @@ import logging
 import os
 import platform
 import tempfile
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
@@ -500,29 +500,43 @@ class FletTestApp:
 
     def create_gif(
         self,
-        image_names: Iterable[str],
-        output_name: str,
+        image_names: Optional[Iterable[str]] = None,
+        output_name: str = "",
         *,
-        duration: int = 1000,
+        frames: Optional[Iterable[bytes]] = None,
+        duration: Union[int, Sequence[int]] = 1000,
         loop: int = 0,
         disposal: DisposalMode = DisposalMode.DEFAULT,
     ) -> Path:
-        """Create an animated GIF from a sequence of image files.
+        """Create an animated GIF from a sequence of PNG frames.
+
+        Exactly one of ``image_names`` or ``frames`` must be provided.
 
         Args:
             image_names: Iterable of file name stems (without ``.png``) in the
-                order they should appear in the animation.
+                order they should appear in the animation. Frames are read from
+                disk under the test's golden directory.
             output_name: Base name for the resulting animation. The ``.gif``
                 extension is added automatically and the file is stored in the
-                same directory as the provided frames.
-            duration: Frame duration in milliseconds. Defaults to ``300``.
+                same directory as the source frames.
+            frames: Iterable of PNG-encoded frame bytes to use directly, in the
+                order they should appear in the animation. Typically paired
+                with :meth:`Page.take_animation`.
+            duration: Frame duration in milliseconds. Either a single ``int``
+                applied to every frame, or a sequence of ``int`` with one
+                entry per frame. Pass the same list used for
+                ``take_animation(frame_delays_ms=...)`` to have the GIF play
+                at the same pace it was captured.
             loop: Number of times the GIF should repeat (``0`` means infinite).
+            disposal: Frame disposal mode.
 
         Returns:
             Path to the generated GIF file.
 
         Raises:
-            ValueError: If ``image_names`` is empty.
+            ValueError: If neither or both of ``image_names`` / ``frames`` are
+                given, the input is empty, or a ``duration`` sequence has a
+                different length than the frame count.
             FileNotFoundError: If any referenced image file does not exist.
         """
 
@@ -530,52 +544,178 @@ class FletTestApp:
             raise ValueError("test_path must be set to create GIF animations")
         if not self.test_platform:
             raise ValueError("test_platform must be set to create GIF animations")
+        if (image_names is None) == (frames is None):
+            raise ValueError("Exactly one of image_names or frames must be provided")
 
-        names = list(image_names)
-        if not names:
-            raise ValueError("image_names must contain at least one entry")
+        golden_dir = self._golden_dir()
+        output = golden_dir / f"{output_name}.gif"
+        output.parent.mkdir(parents=True, exist_ok=True)
 
-        stem = output_name
-        golden_dir = (
+        if image_names is not None:
+            names = list(image_names)
+            if not names:
+                raise ValueError("image_names must contain at least one entry")
+            frame_bytes_list: list[bytes] = []
+            for name in names:
+                path = golden_dir / f"{name}.png"
+                if not path.exists():
+                    raise FileNotFoundError(path)
+                frame_bytes_list.append(path.read_bytes())
+        else:
+            frame_bytes_list = list(frames or ())
+
+        gif_bytes = self._frames_to_gif_bytes(
+            frame_bytes_list, duration, loop, disposal
+        )
+        output.write_bytes(gif_bytes)
+        return output
+
+    def _golden_dir(self) -> Path:
+        return (
             Path(self.__test_path).parent
             / "golden"
             / self.test_platform
             / Path(self.__test_path).stem.removeprefix("test_")
         )
-        output = golden_dir / f"{stem}.gif"
-        output.parent.mkdir(parents=True, exist_ok=True)
 
-        frames: list[Image.Image] = []
+    def _frames_to_gif_bytes(
+        self,
+        frames: list[bytes],
+        duration: Union[int, Sequence[int]],
+        loop: int,
+        disposal: DisposalMode,
+    ) -> bytes:
+        if not frames:
+            raise ValueError("frames must contain at least one entry")
+        gif_frames: list[Image.Image] = []
         try:
-            for name in names:
-                path = golden_dir / f"{name}.png"
-                if not path.exists():
-                    raise FileNotFoundError(path)
-
-                frames.append(
-                    Image.open(path)
-                    .convert("RGB")
-                    .convert(
-                        "P",
-                        palette=Image.ADAPTIVE,
-                        colors=256,
+            for frame_bytes in frames:
+                with Image.open(BytesIO(frame_bytes)) as img:
+                    gif_frames.append(
+                        img.convert("RGB").convert(
+                            "P", palette=Image.ADAPTIVE, colors=256
+                        )
                     )
-                )
 
-            first, *rest = frames
+            if isinstance(duration, int):
+                save_duration: Union[int, list[int]] = duration
+            else:
+                save_duration = list(duration)
+                if len(save_duration) != len(gif_frames):
+                    raise ValueError(
+                        f"duration sequence length ({len(save_duration)}) must "
+                        f"match frame count ({len(gif_frames)})"
+                    )
+
+            first, *rest = gif_frames
+            out = BytesIO()
             first.save(
-                output,
+                out,
+                format="GIF",
                 save_all=True,
                 append_images=rest,
-                duration=duration,
+                duration=save_duration,
                 loop=loop,
                 optimize=True,
                 disposal=disposal.value,
             )
+            return out.getvalue()
         finally:
-            for frame in frames:
+            for frame in gif_frames:
                 frame.close()
 
-        return output
+    def assert_gif(
+        self,
+        name: str,
+        frames: Iterable[bytes],
+        *,
+        duration: Union[int, Sequence[int]] = 1000,
+        loop: int = 0,
+        disposal: DisposalMode = DisposalMode.DEFAULT,
+        similarity_threshold: float = 0,
+    ):
+        """Compare an animated GIF built from `frames` against a golden GIF.
+
+        Builds the GIF in memory from the provided frames. If the
+        `FLET_TEST_GOLDEN=1` environment variable is set, writes the GIF as
+        the golden reference. Otherwise loads the existing golden GIF from
+        disk and compares frame-by-frame via structural similarity, saving
+        an `<name>_actual.gif` next to the golden on mismatch.
+
+        Args:
+            name: GIF name - will be used as a base for the GIF file name.
+            frames: Iterable of PNG-encoded frame bytes. Typically the result
+                of `Page.take_animation(...)`.
+            duration: Frame duration in milliseconds. Either a single `int`
+                or a per-frame sequence matching the number of frames.
+            loop: Number of times the GIF should repeat (`0` means infinite).
+            disposal: Frame disposal mode.
+            similarity_threshold: Minimum acceptable per-frame SSIM (%). Uses
+                `screenshots_similarity_threshold` when `0`.
+        """
+        if not self.test_platform:
+            raise RuntimeError(
+                "FLET_TEST_PLATFORM environment variable must be set to test with GIFs"
+            )
+        if not self.__test_path:
+            raise RuntimeError("test_path must be set to test with GIFs")
+
+        gif_bytes = self._frames_to_gif_bytes(list(frames), duration, loop, disposal)
+
+        golden_gif_path = self._golden_dir() / f"{name.removeprefix('test_')}.gif"
+
+        if self.__golden:
+            golden_gif_path.parent.mkdir(parents=True, exist_ok=True)
+            golden_gif_path.write_bytes(gif_bytes)
+            return
+
+        if not golden_gif_path.exists():
+            raise RuntimeError(f"Golden GIF for {name} not found: {golden_gif_path}")
+
+        similarity, frame_count_mismatch = self._compare_gifs(
+            golden_gif_path, gif_bytes
+        )
+        print(f"Similarity for {name}: {similarity}%")
+        if similarity_threshold == 0:
+            similarity_threshold = self.screenshots_similarity_threshold
+
+        if frame_count_mismatch or similarity <= similarity_threshold:
+            actual_gif_path = (
+                golden_gif_path.parent
+                / f"{golden_gif_path.parent.stem}_{golden_gif_path.stem}_actual.gif"  # noqa: E501
+            )
+            actual_gif_path.write_bytes(gif_bytes)
+
+        if frame_count_mismatch:
+            raise AssertionError(frame_count_mismatch)
+        assert similarity > similarity_threshold, (
+            f"{name} GIFs are not identical "
+            f"(similarity: {similarity}% <= {similarity_threshold}%)"
+        )
+
+    def _compare_gifs(
+        self, golden_path: Path, current_bytes: bytes
+    ) -> tuple[float, Optional[str]]:
+        """Returns (min-per-frame similarity, frame-count-mismatch message)."""
+        with (
+            Image.open(golden_path) as golden,
+            Image.open(BytesIO(current_bytes)) as current,
+        ):
+            if golden.n_frames != current.n_frames:
+                return (
+                    0.0,
+                    f"GIF frame count mismatch: "
+                    f"golden={golden.n_frames}, current={current.n_frames}",
+                )
+            similarities: list[float] = []
+            for i in range(golden.n_frames):
+                golden.seek(i)
+                current.seek(i)
+                similarities.append(
+                    self._compare_images_rgb(
+                        golden.convert("RGB"), current.convert("RGB")
+                    )
+                )
+            return min(similarities), None
 
     __pump_and_settle_timeout = 10.0

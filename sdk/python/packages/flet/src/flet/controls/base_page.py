@@ -489,6 +489,41 @@ class BasePage(AdaptiveControl):
             "take_screenshot", arguments={"pixel_ratio": pixel_ratio, "delay": delay}
         )
 
+    async def take_animation(
+        self,
+        name: str,
+        frame_delays_ms: list[int],
+        pixel_ratio: Optional[Number] = None,
+    ) -> list[bytes]:
+        """
+        Captures an animated sequence of page screenshots in a single
+        round-trip. Each entry in `frame_delays_ms` is the delay in
+        milliseconds to wait before capturing that frame. The wait and
+        capture loop runs entirely on the Flutter side, so animation
+        timing isn't distorted by Python-Flutter RPC latency the way it
+        is with a Python-driven `take_screenshot` loop.
+
+        Requires `enable_screenshots` = `True`.
+
+        Args:
+            name: Name prefix for the captured frames (for debugging).
+            frame_delays_ms: Per-frame delays in milliseconds. The list
+                length determines the number of frames captured.
+            pixel_ratio: A pixel ratio of the captured frames.
+                If `None`, device-specific pixel ratio will be used.
+
+        Returns:
+            List of PNG-encoded frames, one per entry in `frame_delays_ms`.
+        """
+        return await self._invoke_method(
+            "take_animation",
+            arguments={
+                "name": name,
+                "frame_delays_ms": frame_delays_ms,
+                "pixel_ratio": pixel_ratio,
+            },
+        )
+
     # overlay
     @property
     def overlay(self) -> list[BaseControl]:
