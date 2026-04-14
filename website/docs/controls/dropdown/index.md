@@ -2,7 +2,6 @@
 class_name: "flet.Dropdown"
 examples: "controls/material/dropdown"
 example_images: "test-images/examples/controls/material/golden/macos/dropdown"
-example_media: "examples/controls/material/dropdown/media"
 title: "Dropdown"
 ---
 

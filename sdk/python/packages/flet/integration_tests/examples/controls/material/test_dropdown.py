@@ -103,41 +103,34 @@ async def test_icon_selection(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
-    flet_app_function.assert_screenshot(
-        "icon_selection_closed_dropdown",
+    frames: list[bytes] = [
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
-    )
+        )
+    ]
 
     dropdown = await flet_app_function.tester.find_by_key("icon_dropdown")
     await flet_app_function.tester.tap(dropdown)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "icon_selection_opened_dropdown",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     heart_options = await flet_app_function.tester.find_by_icon(ft.Icons.FAVORITE)
     assert heart_options.count >= 1
     await flet_app_function.tester.tap(heart_options.last)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "icon_selection_selected_icon",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     flet_app_function.create_gif(
-        [
-            "icon_selection_closed_dropdown",
-            "icon_selection_opened_dropdown",
-            "icon_selection_selected_icon",
-        ],
-        "icon_selection_flow",
+        frames=frames,
+        output_name="icon_selection_flow",
         duration=1000,
     )
 
@@ -155,41 +148,34 @@ async def test_declarative(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
-    flet_app_function.assert_screenshot(
-        "declarative_closed_dropdown",
+    frames: list[bytes] = [
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
-    )
+        )
+    ]
 
     dropdown = await flet_app_function.tester.find_by_key("declarative_dropdown")
     await flet_app_function.tester.tap(dropdown)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "declarative_opened_dropdown",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     green_option = await flet_app_function.tester.find_by_text("Green")
     assert green_option.count >= 1
     await flet_app_function.tester.tap(green_option.last)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "declarative_selected_green",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     flet_app_function.create_gif(
-        [
-            "declarative_closed_dropdown",
-            "declarative_opened_dropdown",
-            "declarative_selected_green",
-        ],
-        "declarative_flow",
+        frames=frames,
+        output_name="declarative_flow",
         duration=1000,
     )
 
@@ -207,54 +193,46 @@ async def test_select_and_change_events(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
+    frames: list[bytes] = []
     dropdown = await flet_app_function.tester.find_by_key("select_change_dropdown")
     await flet_app_function.tester.tap(dropdown)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "select_and_change_events_opened_dropdown",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     red_option = await flet_app_function.tester.find_by_text("red")
     assert red_option.count >= 1
     await flet_app_function.tester.mouse_hover(red_option.last)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "select_and_change_events_hovered_red",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
     await flet_app_function.tester.tap(red_option.last)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "select_and_change_events_selected_red",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     await flet_app_function.tester.enter_text(dropdown, "deep_red")
     await flet_app_function.tester.pump_and_settle()
     await flet_app_function.tester.tap_at(ft.Offset(10, 10))
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "select_and_change_events_typed_deep_red",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     flet_app_function.create_gif(
-        [
-            "select_and_change_events_opened_dropdown",
-            "select_and_change_events_hovered_red",
-            "select_and_change_events_selected_red",
-            "select_and_change_events_typed_deep_red",
-        ],
-        "select_and_change_events_flow",
+        frames=frames,
+        output_name="select_and_change_events_flow",
         duration=1000,
     )
 
@@ -272,13 +250,11 @@ async def test_styled(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
-    frame_names = ["styled_dropdowns_closed"]
-    flet_app_function.assert_screenshot(
-        "styled_dropdowns_closed",
+    frames = [
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
-    )
+        )
+    ]
 
     for index in range(1, 6):
         dropdown = await flet_app_function.tester.find_by_key(
@@ -287,13 +263,10 @@ async def test_styled(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.tap(dropdown)
         await flet_app_function.tester.pump_and_settle()
 
-        open_frame_name = f"styled_dropdown_{index}_open"
-        frame_names.append(open_frame_name)
-        flet_app_function.assert_screenshot(
-            open_frame_name,
+        frames.append(
             await flet_app_function.page.take_screenshot(
                 pixel_ratio=flet_app_function.screenshots_pixel_ratio
-            ),
+            )
         )
 
         selected_option = await flet_app_function.tester.find_by_text(f"Style {index}B")
@@ -301,17 +274,14 @@ async def test_styled(flet_app_function: ftt.FletTestApp):
         await flet_app_function.tester.tap(selected_option.last)
         await flet_app_function.tester.pump_and_settle()
 
-        selected_frame_name = f"styled_dropdown_{index}_selected"
-        frame_names.append(selected_frame_name)
-        flet_app_function.assert_screenshot(
-            selected_frame_name,
+        frames.append(
             await flet_app_function.page.take_screenshot(
                 pixel_ratio=flet_app_function.screenshots_pixel_ratio
-            ),
+            )
         )
 
     flet_app_function.create_gif(
-        frame_names,
-        "styled_flow",
+        frames=frames,
+        output_name="styled_flow",
         duration=1000,
     )

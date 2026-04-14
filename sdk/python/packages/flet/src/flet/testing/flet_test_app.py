@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageSequence
 from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
@@ -567,7 +567,13 @@ class FletTestApp:
         gif_bytes = self._frames_to_gif_bytes(
             frame_bytes_list, duration, loop, disposal
         )
-        output.write_bytes(gif_bytes)
+        if self.__golden:
+            output.write_bytes(gif_bytes)
+        else:
+            if not output.exists():
+                raise RuntimeError(f"Golden GIF for {output_name} not found: {output}")
+            golden_gif_bytes = output.read_bytes()
+            self._assert_gif_bytes(output_name, golden_gif_bytes, gif_bytes)
         return output
 
     def _golden_dir(self) -> Path:
@@ -622,6 +628,43 @@ class FletTestApp:
             return out.getvalue()
         finally:
             for frame in gif_frames:
+                frame.close()
+
+    def _gif_frames_from_bytes(self, data: bytes) -> list[Image.Image]:
+        frames: list[Image.Image] = []
+        with Image.open(BytesIO(data)) as gif:
+            for frame in ImageSequence.Iterator(gif):
+                frames.append(frame.convert("RGBA"))
+        return frames
+
+    def _assert_gif_bytes(
+        self, name: str, golden_gif_bytes: bytes, actual_gif_bytes: bytes
+    ) -> None:
+        golden_frames = self._gif_frames_from_bytes(golden_gif_bytes)
+        actual_frames = self._gif_frames_from_bytes(actual_gif_bytes)
+        try:
+            assert len(golden_frames) == len(actual_frames), (
+                f"{name} GIF frame count differs "
+                f"({len(actual_frames)} != {len(golden_frames)})"
+            )
+            for index, (golden_frame, actual_frame) in enumerate(
+                zip(golden_frames, actual_frames, strict=True)
+            ):
+                similarity = self._compare_images_rgb(golden_frame, actual_frame)
+                print(f"GIF similarity for {name} frame {index}: {similarity}%")
+                assert similarity > self.screenshots_similarity_threshold, (
+                    f"{name} GIF frame {index} differs "
+                    f"(similarity: {similarity}% <= "
+                    f"{self.screenshots_similarity_threshold}%)"
+                )
+        except AssertionError:
+            actual_gif_path = self._golden_dir() / f"{name}_actual.gif"
+            actual_gif_path.write_bytes(actual_gif_bytes)
+            raise
+        finally:
+            for frame in golden_frames:
+                frame.close()
+            for frame in actual_frames:
                 frame.close()
 
     def assert_gif(
