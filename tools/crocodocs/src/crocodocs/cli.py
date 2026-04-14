@@ -16,7 +16,7 @@ from .watch import run_watch
 
 
 def _add_shared_generate_arguments(parser: argparse.ArgumentParser) -> None:
-    """Register CLI options that both ``generate`` and ``watch`` understand."""
+    """Register CLI options that both `generate` and `watch` understand."""
     parser.add_argument(
         "--docs-path",
         metavar="PATH",
@@ -105,7 +105,7 @@ def build_parser() -> argparse.ArgumentParser:
     watch = subparsers.add_parser(
         "watch",
         help="Watch source files and regenerate on changes, optionally running a child process.",
-        description="Run an initial generation, then poll source files for changes and "
+        description="Run an initial generation, then watch source files for changes and "
         "regenerate automatically. Optionally starts a child process (e.g. Docusaurus "
         "dev server) that runs alongside the watcher. The watcher stops when the child "
         "exits or when interrupted with Ctrl+C.",
@@ -116,7 +116,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.75,
         metavar="SECS",
-        help="Polling interval in seconds between filesystem scans (default: %(default)s).",
+        help="Maximum idle wait in seconds between child/debounce checks "
+        "(default: %(default)s).",
     )
     watch.add_argument(
         "--debounce",
