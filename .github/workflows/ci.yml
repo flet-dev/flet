@@ -483,7 +483,7 @@ jobs:
             sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
           apt-get update --allow-releaseinfo-change
-          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'import flet.utils; print(flet.utils.linux_client_dependencies_apt)')"
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
           apt-get install -y $LINUX_DEPS
 
       - name: Build Flutter Linux clients

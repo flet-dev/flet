@@ -14,12 +14,6 @@ from flet.utils.files import (
 from flet.utils.from_dict import from_dict
 from flet.utils.hashing import calculate_file_hash, sha1
 from flet.utils.json_utils import to_json
-from flet.utils.linux_deps import (
-    linux_build_dependencies,
-    linux_build_dependencies_apt,
-    linux_client_dependencies,
-    linux_client_dependencies_apt,
-)
 from flet.utils.network import get_free_tcp_port, get_local_ip
 from flet.utils.object_model import get_param_count, patch_dataclass
 from flet.utils.once import Once
@@ -72,10 +66,6 @@ __all__ = [
     "is_pyodide",
     "is_windows",
     "is_within_directory",
-    "linux_build_dependencies",
-    "linux_build_dependencies_apt",
-    "linux_client_dependencies",
-    "linux_client_dependencies_apt",
     "open_in_browser",
     "patch_dataclass",
     "random_string",
