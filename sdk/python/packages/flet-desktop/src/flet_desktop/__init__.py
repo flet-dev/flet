@@ -458,11 +458,4 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
 
-    # On Windows, set AppUserModelID so the taskbar associates the Flet client window
-    # with the parent executable (e.g. a PyInstaller bundle) rather than the cached
-    # flet.exe. This ensures taskbar pins and shortcuts point to the correct executable.
-    if is_windows() and "FLET_APP_USER_MODEL_ID" not in flet_env:
-        exe = os.path.abspath(sys.executable)
-        flet_env["FLET_APP_USER_MODEL_ID"] = exe
-
     return args, flet_env, pid_file
