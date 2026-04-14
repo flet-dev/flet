@@ -5,22 +5,22 @@ description: Use when asked to add, revise, or review a changelog or release-not
 
 ## Purpose
 
-Write a single changelog entry that matches the surrounding section's style and reflects the actual shipped change.
+Write changelog entries that match the surrounding section's style and reflect the actual shipped change for the intended audience.
 
 ## Inputs
 
-* Target changelog file, usually `/CHANGELOG.md` or `packages/flet/CHANGELOG.md`.
+* Target changelog file, if specified; otherwise infer it from the changed package
+  and audience.
 * Release version or section if the user specifies one.
 * Relevant PR number, issue number, commit(s), or branch context.
 
 ## Target file selection
 
-Choose the narrowest correct changelog file before writing the item.
+Choose the narrowest correct changelog file before writing entries.
 
 * Use `/CHANGELOG.md` for repo-level or broadly user-facing Flet changes.
 * Use `packages/flet/CHANGELOG.md` only for changes relevant to Flutter package
-  consumers and extension developers. Do not mirror `/CHANGELOG.md` entries there
-  just because a user-facing feature required Flutter-side implementation.
+  consumers and extension developers. See the dedicated section below.
 * Use `sdk/python/packages/<package>/CHANGELOG.md` for changes scoped to a specific
   Python package.
 * For extension (ex: flet-audio) changelogs under
@@ -33,6 +33,27 @@ Choose the narrowest correct changelog file before writing the item.
 * Do not default everything to `/CHANGELOG.md` when a package-specific changelog is the
   better fit.
 
+## Root vs Flutter package changelog
+
+`/CHANGELOG.md` and `packages/flet/CHANGELOG.md` have different audiences.
+
+* `/CHANGELOG.md` is the broad Flet product changelog. Write entries from the app
+  developer's perspective, usually summarizing the shipped feature or fix at about
+  PR-title specificity.
+* `packages/flet/CHANGELOG.md` is for Flutter package consumers and extension
+  developers. Write entries only when they need to know a specific Dart-side API,
+  utility, parser, serializer, runtime contract, dependency, or compatibility change.
+* Do not repeat a root changelog entry in `packages/flet/CHANGELOG.md` merely because
+  the implementation touched Dart files.
+* If both audiences are affected, update both changelogs, but phrase them differently:
+  the root entry should describe the user-facing outcome, while the Flutter package
+  entry should describe the precise Dart/extension-facing change.
+
+Example split:
+
+* Root: `Add support for text-or-control labels in \`NavigationDestination\`s.`
+* Flutter package, only if applicable: `Extend \`Control\` with \`.buildTextOrWidget()\` to parse properties that accept either plain text or child controls.`
+
 ## Workflow
 
 1. Inspect the target changelog section before editing.
@@ -42,27 +63,27 @@ Choose the narrowest correct changelog file before writing the item.
      * `### Improvements`
      * `### Bug fixes`
      * `### Other changes`
-2. Inspect the source of truth for scope.
+2. Inspect the source of truth for scope and audience.
    * Prefer PR title and PR description/summary over commit noise.
    * Use linked issues to understand user-facing intent.
    * Use commits only to confirm details or fill gaps.
 3. Extract the primary shipped change.
    * Lead with the API, control, command, or behavior that changed.
-   * Mention docs, examples, tests, refactors, or chores only when they are the main outcome the user would care about.
-4. Write one concise item.
+   * Mention docs, examples, tests, refactors, or chores only when they are the main outcome the changelog audience would care about.
+4. Write concise item(s) for the selected changelog(s).
    * Avoid laundry lists unless the PR truly shipped multiple peer-level features.
    * Prefer concrete nouns and verbs over implementation detail.
-   * Keep the sentence focused on what users gained or what was fixed.
+   * Keep each sentence focused on what that changelog's audience gained or must know.
 5. Add links and attribution in repo style.
-    * Include both related issue link(s) and PR link(s) when available, with issue links
-      first.
-    * If no issue exists, include PR link(s) only.
-    * Include issue-only direct-commit items when a shipped change has no PR.
+   * Include both related issue link(s) and PR link(s) when available, with issue links
+     first.
+   * If no issue exists, include PR link(s) only.
+   * Include issue-only direct-commit items when a shipped change has no PR.
    * Use plain-text author attribution at the end: `by @login.`
-    * Use the PR author login for PR-based items.
-    * For issue-only direct-commit items, use the commit author login if available.
-    * If one item groups multiple PRs by different authors, attribute all relevant
-      authors: `by @user1, @user2.`
+   * Use the PR author login for PR-based items.
+   * For issue-only direct-commit items, use the commit author login if available.
+   * If one item groups multiple PRs by different authors, attribute all relevant
+     authors: `by @user1, @user2.`
 
 ## Repo-specific guidance
 
@@ -76,14 +97,20 @@ Choose the narrowest correct changelog file before writing the item.
 * For extension package changelogs, prefer Python-facing API, behavior, packaging, and
   usability changes over Flutter implementation details that are not directly published
   to users.
-* Add `packages/flet/CHANGELOG.md` entries for public Dart APIs, extension authoring
-  contracts, shared Dart utility behavior, serialization/parsing contracts that custom
-  controls rely on, or Flutter dependency/compatibility changes.
 
 ## Good patterns
 
+Root changelog:
+
 * `* Add \`scrollable\` to \`NavigationRail\` for overflowed destinations ([#1923](...), [#6356](...)) by @login.`
 * `* Make \`NavigationDrawerDestination.label\` accept custom controls and add \`NavigationDrawerTheme.icon_theme\` ([#6379](...), [#6395](...)) by @login.`
+
+Flutter package changelog:
+
+* `* Improve \`parseBool()\` to accept string and numeric payload values ([#1234](...)) by @login.`
+* `* Extend \`Control\` with \`.buildTextOrWidget()\` to parse properties that accept either strings or child controls ([#1234](...)) by @login.`
+* `* Improve extension asset resolution to avoid package path collisions ([#1234](...)) by @login.`
+* `* Add \`parseEnum()\` utility for consistent enum parsing ([#1234](...)) by @login.`
 
 ## Checks
 
@@ -91,6 +118,8 @@ Before finishing, verify:
 
 * The item sits under the right release and section.
 * The wording matches neighboring entries in length and tone.
-* The sentence describes the primary user-facing change.
+* The sentence describes the primary change for that changelog's audience.
+* `packages/flet/CHANGELOG.md` entries are specific to Dart/Flutter package or
+  extension-facing behavior and are not bare repeats of root changelog entries.
 * Issue and PR links follow repo style, including issue-only direct-commit cases.
 * Attribution is plain text and placed last.
