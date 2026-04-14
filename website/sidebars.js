@@ -3686,6 +3686,10 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/use_view_path"
+                },
+                {
+                  "type": "doc",
                   "id": "types/usestate"
                 }
               ]

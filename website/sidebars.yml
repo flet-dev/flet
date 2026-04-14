@@ -808,6 +808,7 @@ docs:
       - types/use_route_location.md
       - types/use_route_outlet.md
       - types/use_route_params.md
+      - types/use_view_path.md
       - types/usestate.md
     CLI:
       _index: cli/index.md

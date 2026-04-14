@@ -324,15 +324,18 @@ See [full example](../controls/router.md#managed-views--nested-routes).
 
 Set `outlet=True` on a route to make it a layout that wraps child routes
 via [use_route_outlet()](../types/use_route_outlet.md). The layout returns a
-[View](../controls/view.md); child components return regular controls:
+[View](../controls/view.md); child components return regular controls.
+
+Use [use_view_path()](../types/use_view_path.md) for `View.route` — it returns
+the resolved URL for each child view level, so Flutter's Navigator gets a
+unique key per view in the stack:
 
 ```python
 @ft.component
 def ProductsLayout():
     outlet = ft.use_route_outlet()
-    location = ft.use_route_location()
     return ft.View(
-        route=location,
+        route=ft.use_view_path(),
         appbar=ft.AppBar(title=ft.Text("Products")),
         controls=[
             ft.Container(content=outlet, expand=True),
@@ -346,6 +349,13 @@ ft.Route(path="products", component=ProductsLayout, outlet=True, children=[
     ]),
 ])
 ```
+
+:::note[`use_route_location()` vs `use_view_path()`]
+`use_route_location()` always returns the full current URL. `use_view_path()`
+returns the URL for the *current view level only* — essential as `View.route`
+when a single layout component wraps multiple child views, so the Flutter
+Navigator can distinguish them.
+:::
 
 The layout's shared UI appears on every child route's View, and each child
 is still a separate View in the stack — back navigation works between them.
@@ -380,6 +390,7 @@ See [full example](../controls/router.md#managed-views--full-app-with-navigation
 |------|---------|-------------|
 | [use_route_params()](../types/use_route_params.md) | `dict[str, str]` | All dynamic segment values from the matched route chain |
 | [use_route_location()](../types/use_route_location.md) | `str` | Current URL pathname |
+| [use_view_path()](../types/use_view_path.md) | `str` | Resolved URL for the current view level (unique per view in `manage_views` mode) |
 | [use_route_outlet()](../types/use_route_outlet.md) | component | Matched child route component (for layout routes) |
 | [use_route_loader_data()](../types/use_route_loader_data.md) | `Any` | Return value of the current route's `loader` |
 | [is_route_active(path)](../types/is_route_active.md) | `bool` | Whether `path` matches the current location |
