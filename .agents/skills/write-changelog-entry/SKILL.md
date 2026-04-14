@@ -18,8 +18,9 @@ Write a single changelog entry that matches the surrounding section's style and 
 Choose the narrowest correct changelog file before writing the item.
 
 * Use `/CHANGELOG.md` for repo-level or broadly user-facing Flet changes.
-* Use `packages/flet/CHANGELOG.md` for Flutter package, runtime, or framework-side
-  changes.
+* Use `packages/flet/CHANGELOG.md` only for changes relevant to Flutter package
+  consumers and extension developers. Do not mirror `/CHANGELOG.md` entries there
+  just because a user-facing feature required Flutter-side implementation.
 * Use `sdk/python/packages/<package>/CHANGELOG.md` for changes scoped to a specific
   Python package.
 * For extension (ex: flet-audio) changelogs under
@@ -75,6 +76,9 @@ Choose the narrowest correct changelog file before writing the item.
 * For extension package changelogs, prefer Python-facing API, behavior, packaging, and
   usability changes over Flutter implementation details that are not directly published
   to users.
+* Add `packages/flet/CHANGELOG.md` entries for public Dart APIs, extension authoring
+  contracts, shared Dart utility behavior, serialization/parsing contracts that custom
+  controls rely on, or Flutter dependency/compatibility changes.
 
 ## Good patterns
 
