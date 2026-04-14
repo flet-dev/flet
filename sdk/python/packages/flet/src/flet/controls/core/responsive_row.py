@@ -5,6 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
+from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
@@ -18,7 +19,7 @@ __all__ = ["ResponsiveNumber", "ResponsiveRow", "ResponsiveRowBreakpoint"]
 
 
 @control("ResponsiveRow")
-class ResponsiveRow(LayoutControl, AdaptiveControl):
+class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Allows aligning child controls to virtual columns.
 
@@ -27,6 +28,9 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
 
     Similar to `expand` property, every control has :attr:`~flet.Control.col`
     property which allows specifying how many columns a control should span.
+
+    Use :attr:`~flet.ScrollableControl.scroll` to enable vertical scrolling when
+    the responsive content is taller than the available height.
 
     Example:
     ```python
