@@ -1,0 +1,26 @@
+[project]
+name = "router-app-drawer"
+version = "1.0.0"
+description = "Apps list, app details, and a deep-linkable settings NavigationDrawer driven by nested routes."
+requires-python = ">=3.10"
+keywords = ["router", "drawer", "navigation", "outlet", "manage_views", "tabs"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "App settings drawer"
+controls = ["View", "AppBar", "NavigationDrawer", "Column", "Row", "Container", "Button", "TextField", "Switch", "Text", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["manage_views", "outlet", "nested routes", "NavigationDrawer", "deep linking", "is_route_active"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
