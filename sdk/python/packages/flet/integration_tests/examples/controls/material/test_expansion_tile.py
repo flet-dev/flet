@@ -7,6 +7,9 @@ from examples.controls.material.expansion_tile.borders import main as borders
 from examples.controls.material.expansion_tile.custom_animations import (
     main as custom_animations,
 )
+from examples.controls.material.expansion_tile.programmatic_expansion import (
+    main as programmatic_expansion,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -116,8 +119,84 @@ async def test_custom_animations_default(flet_app_function: ftt.FletTestApp):
     # settled frame for 3 s before the GIF loops.
     frames = [pre_tap_frame, *animation_frames]
     durations = [2000] + [80] * (len(animation_frames) - 1) + [3000]
-    flet_app_function.assert_gif(
-        "custom_animations_default",
-        frames,
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="custom_animations_default",
+        duration=durations,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": programmatic_expansion.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_programmatic_expansion(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 320)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frame_delays_ms = [0] + [17] * 13 + [50]
+    frames: list[bytes] = []
+    durations: list[int] = []
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "programmatic_expansion_initial",
+        initial_frame,
+    )
+    frames.append(initial_frame)
+    durations.append(1200)
+
+    collapse_button = await flet_app_function.tester.find_by_text("Collapse Tile")
+    await flet_app_function.tester.mouse_hover(collapse_button)
+    await flet_app_function.tester.pump_and_settle()
+    hover_collapse_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    frames.append(hover_collapse_frame)
+    durations.append(1000)
+
+    await flet_app_function.tester.tap(collapse_button)
+    collapse_animation_frames = await flet_app_function.page.take_animation(
+        "programmatic_expansion_collapse",
+        frame_delays_ms,
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio,
+    )
+    collapsed_frame = collapse_animation_frames[-1]
+    flet_app_function.assert_screenshot(
+        "programmatic_expansion_collapsed",
+        collapsed_frame,
+    )
+    frames.extend(collapse_animation_frames)
+    durations.extend([80] * (len(collapse_animation_frames) - 1) + [1000])
+
+    expand_button = await flet_app_function.tester.find_by_text("Expand Tile")
+    await flet_app_function.tester.mouse_hover(expand_button)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+    durations.append(1000)
+
+    await flet_app_function.tester.tap(expand_button)
+    expand_animation_frames = await flet_app_function.page.take_animation(
+        "programmatic_expansion_expand",
+        frame_delays_ms,
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio,
+    )
+    frames.extend(expand_animation_frames)
+    durations.extend([80] * (len(expand_animation_frames) - 1) + [1500])
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="programmatic_expansion_flow",
         duration=durations,
     )

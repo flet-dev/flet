@@ -23,9 +23,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/programmatic_expansion/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/programmatic_expansion_flow.gif'} width="50%" />
+
 ### Custom animations
 
 <CodeExample path={frontMatter.examples + '/custom_animations/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/custom_animations_default.gif'} width="50%" />
 
 ### Theme mode toggle
 

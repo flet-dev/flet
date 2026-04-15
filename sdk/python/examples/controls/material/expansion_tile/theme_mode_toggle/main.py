@@ -4,15 +4,16 @@ import flet as ft
 def main(page: ft.Page):
     page.spacing = 0
     page.padding = 0
+    page.theme_mode = ft.ThemeMode.LIGHT
 
-    def handle_switch_change(_: ft.Event[ft.Switch]):
-        if page.theme_mode == ft.ThemeMode.DARK:
-            page.theme_mode = ft.ThemeMode.LIGHT
-            switch.thumb_icon = ft.Icons.LIGHT_MODE
-        else:
-            switch.thumb_icon = ft.Icons.DARK_MODE
-            page.theme_mode = ft.ThemeMode.DARK
-        switch.update()
+    def handle_switch_change(e: ft.Event[ft.Switch]):
+        page.theme_mode = ft.ThemeMode.DARK if e.control.value else ft.ThemeMode.LIGHT
+        e.control.thumb_icon = (
+            ft.Icons.DARK_MODE
+            if page.theme_mode == ft.ThemeMode.DARK
+            else ft.Icons.LIGHT_MODE
+        )
+        page.update()
 
     def handle_expansion_tile_change(e: ft.Event[ft.ExpansionTile]):
         page.show_dialog(
@@ -34,7 +35,10 @@ def main(page: ft.Page):
             )
             e.control.trailing.update()
 
-    switch = ft.Switch(thumb_icon=ft.Icons.DARK_MODE, on_change=handle_switch_change)
+    switch = ft.Switch(
+        thumb_icon=ft.Icons.DARK_MODE,
+        on_change=handle_switch_change,
+    )
 
     page.add(
         ft.SafeArea(
@@ -81,17 +85,10 @@ def main(page: ft.Page):
                             ft.ListTile(title=ft.Text("This is sub-tile number 5")),
                         ],
                     ),
-                    ft.Row(
-                        expand=True,
-                        alignment=ft.MainAxisAlignment.END,
-                        controls=[
-                            ft.Container(
-                                padding=ft.Padding.only(bottom=50),
-                                alignment=ft.Alignment.BOTTOM_RIGHT,
-                                expand=True,
-                                content=switch,
-                            ),
-                        ],
+                    ft.Container(
+                        padding=ft.Padding.only(right=16, bottom=32),
+                        alignment=ft.Alignment.center_right,
+                        content=switch,
                     ),
                 ],
             ),
