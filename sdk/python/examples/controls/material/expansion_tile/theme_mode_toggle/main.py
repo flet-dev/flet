@@ -46,6 +46,7 @@ def main(page: ft.Page):
                 spacing=0,
                 controls=[
                     ft.ExpansionTile(
+                        key="theme_mode_toggle_top_panel",
                         title=ft.Text("ExpansionTile 1"),
                         subtitle=ft.Text("Trailing expansion arrow icon"),
                         bgcolor=ft.Colors.BLUE_GREY_200,
@@ -85,10 +86,17 @@ def main(page: ft.Page):
                             ft.ListTile(title=ft.Text("This is sub-tile number 5")),
                         ],
                     ),
-                    ft.Container(
-                        padding=ft.Padding.only(right=16, bottom=32),
-                        alignment=ft.Alignment.center_right,
-                        content=switch,
+                    ft.Row(
+                        expand=True,
+                        alignment=ft.MainAxisAlignment.END,
+                        controls=[
+                            ft.Container(
+                                padding=ft.Padding.only(bottom=50),
+                                alignment=ft.Alignment.BOTTOM_RIGHT,
+                                expand=True,
+                                content=switch,
+                            ),
+                        ],
                     ),
                 ],
             ),

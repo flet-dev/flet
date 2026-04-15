@@ -10,6 +10,9 @@ from examples.controls.material.expansion_tile.custom_animations import (
 from examples.controls.material.expansion_tile.programmatic_expansion import (
     main as programmatic_expansion,
 )
+from examples.controls.material.expansion_tile.theme_mode_toggle import (
+    main as theme_mode_toggle,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -199,4 +202,38 @@ async def test_programmatic_expansion(flet_app_function: ftt.FletTestApp):
         frames=frames,
         output_name="programmatic_expansion_flow",
         duration=durations,
+    )
+
+
+@pytest.mark.skip(reason="Will fix it later")
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": theme_mode_toggle.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_theme_mode_toggle_top_panel(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(500, 700)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+
+    top_panel = await flet_app_function.tester.find_by_key(
+        "theme_mode_toggle_top_panel"
+    )
+    await flet_app_function.tester.tap(top_panel)
+    await flet_app_function.tester.pump_and_settle()
+    expanded_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio,
+    )
+
+    flet_app_function.create_gif(
+        frames=[initial_frame, expanded_frame],
+        output_name="theme_mode_toggle_top_panel_flow",
+        duration=[1200, 1500],
     )
