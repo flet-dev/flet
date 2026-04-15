@@ -1,9 +1,9 @@
 [project]
-name = "datatable2-example-1"
+name = "datatable2-column-widths"
 version = "1.0.0"
-description = "Shows an empty DataTable2 state with configured columns and placeholder content."
+description = "Demonstrates DataTable2 column widths (fixed pixels and relative S/M/L) with ellipsis truncation for overflowing cell text."
 requires-python = ">=3.10"
-keywords = ["datatable2", "data table", "empty state", "extension"]
+keywords = ["datatable2", "column width", "ellipsis", "overflow", "extension"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet", "flet-datatable2"]
 
@@ -14,11 +14,11 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/DataTable2"]
 
 [tool.flet.metadata]
-title = "Example 1"
-controls = ["SafeArea", "DataTable2", "DataColumn2", "Text"]
+title = "Column widths"
+controls = ["SafeArea", "DataTable2", "DataColumn2", "DataCell", "Text"]
 layout_pattern = "table-view"
 complexity = "basic"
-features = ["empty table state", "DataTable2 columns"]
+features = ["fixed column width", "relative column size", "text ellipsis overflow"]
 
 [tool.flet]
 org = "dev.flet"
