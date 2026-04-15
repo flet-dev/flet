@@ -171,7 +171,6 @@ async def test_declarative(flet_app_function: ftt.FletTestApp):
     )
 
 
-@pytest.mark.skip(reason="Will fix it later")
 @pytest.mark.parametrize(
     "flet_app_function",
     [{"flet_app_main": select_and_change_events.main}],

@@ -510,7 +510,9 @@ class FletTestApp:
     ) -> Path:
         """Create an animated GIF from a sequence of PNG frames.
 
-        Exactly one of ``image_names`` or ``frames`` must be provided.
+        Exactly one of ``image_names`` or ``frames`` must be provided. Unlike
+        :meth:`assert_gif`, this method only writes the GIF and returns its
+        path; it does not compare against a golden file.
 
         Args:
             image_names: Iterable of file name stems (without ``.png``) in the
@@ -567,13 +569,7 @@ class FletTestApp:
         gif_bytes = self._frames_to_gif_bytes(
             frame_bytes_list, duration, loop, disposal
         )
-        if self.__golden:
-            output.write_bytes(gif_bytes)
-        else:
-            if not output.exists():
-                raise RuntimeError(f"Golden GIF for {output_name} not found: {output}")
-            golden_gif_bytes = output.read_bytes()
-            self._assert_gif_bytes(output_name, golden_gif_bytes, gif_bytes)
+        output.write_bytes(gif_bytes)
         return output
 
     def _golden_dir(self) -> Path:
