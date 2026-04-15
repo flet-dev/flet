@@ -1,0 +1,26 @@
+[project]
+name = "map-overlay-images"
+version = "1.0.0"
+description = "Places rectangular and rotated image overlays on top of an interactive map."
+requires-python = ">=3.10"
+keywords = ["map", "overlay", "image", "rotated overlay"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Overlay Images"
+controls = ["SafeArea", "Map", "TileLayer", "OverlayImageLayer", "OverlayImage", "RotatedOverlayImage", "MarkerLayer", "Marker", "Container", "Text", "AppBar"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["rectangular image overlay", "rotated image overlay", "corner markers"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

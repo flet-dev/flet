@@ -65,11 +65,15 @@ More details [here](tilelayer.md).
 
 <CodeExample path={frontMatter.examples + '/multi_layers/main.py'} language="python" />
 
+### Overlay Images
+
+<CodeExample path={frontMatter.examples + '/overlay_images/main.py'} language="python" />
+
 ## Reference
 
 - [`Map`](mapcontrol.md)
-- Layers: [`TileLayer`](tilelayer.md), [`MarkerLayer`](markerlayer.md), [`CircleLayer`](circlelayer.md), [`PolygonLayer`](polygonlayer.md), [`PolylineLayer`](polylinelayer.md)
-- Markers and overlays: [`Marker`](marker.md), [`CircleMarker`](circlemarker.md), [`PolygonMarker`](polygonmarker.md), [`PolylineMarker`](polylinemarker.md)
+- Layers: [`TileLayer`](tilelayer.md), [`MarkerLayer`](markerlayer.md), [`OverlayImageLayer`](overlayimagelayer.md), [`CircleLayer`](circlelayer.md), [`PolygonLayer`](polygonlayer.md), [`PolylineLayer`](polylinelayer.md)
+- Markers and overlays: [`Marker`](marker.md), [`CircleMarker`](circlemarker.md), [`PolygonMarker`](polygonmarker.md), [`PolylineMarker`](polylinemarker.md), [`OverlayImage`](overlayimage.md), [`RotatedOverlayImage`](rotatedoverlayimage.md)
 - Attributions: [`SimpleAttribution`](simpleattribution.md), [`RichAttribution`](richattribution.md), [`SourceAttribution`](sourceattribution.md)
 
 See the [types](types/attributionalignment.md) section for additional configuration helpers.

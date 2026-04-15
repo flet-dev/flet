@@ -975,6 +975,10 @@ module.exports = {
                     },
                     {
                       "type": "doc",
+                      "id": "controls/map/overlayimagelayer"
+                    },
+                    {
+                      "type": "doc",
                       "id": "controls/map/circlelayer"
                     },
                     {
@@ -1007,6 +1011,25 @@ module.exports = {
                     {
                       "type": "doc",
                       "id": "controls/map/polylinemarker"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Overlays",
+                  "collapsed": true,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "controls/map/baseoverlayimage"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/map/overlayimage"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/map/rotatedoverlayimage"
                     }
                   ]
                 },
