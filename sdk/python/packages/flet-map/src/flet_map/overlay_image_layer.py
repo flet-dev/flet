@@ -1,6 +1,7 @@
-from typing import Union
+from typing import Annotated, Union
 
 import flet as ft
+from flet.utils.validation import V
 from flet_map.map_layer import MapLayer
 from flet_map.types import MapLatitudeLongitude, MapLatitudeLongitudeBounds
 
@@ -34,12 +35,15 @@ class BaseOverlayImage(ft.BaseControl):
     - Raw bytes.
     """
 
-    opacity: ft.Number = 1.0
+    opacity: Annotated[
+        ft.Number,
+        V.between(0.0, 1.0),
+    ] = 1.0
     """
     The opacity used to paint the image.
 
     Raises:
-        ValueError: If its value is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     gapless_playback: bool = False
@@ -52,13 +56,6 @@ class BaseOverlayImage(ft.BaseControl):
     """
     The rendering quality of the image.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not (0.0 <= self.opacity <= 1.0):
-            raise ValueError(
-                f"opacity must be between 0.0 and 1.0 inclusive, got {self.opacity}"
-            )
 
 
 @ft.control("OverlayImage", kw_only=True)
@@ -103,7 +100,7 @@ class OverlayImageLayer(MapLayer):
     """
     A layer to display image overlays.
 
-    Note:
+    Tip:
         Place this layer after every non-translucent layer that should appear
         below it. Layers rendered after this one may cover its overlay images.
     """
