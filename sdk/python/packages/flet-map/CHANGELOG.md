@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ### Added
 
-- Added `OverlayImageLayer`, `OverlayImage`, and `RotatedOverlayImage`.
+- Added image overlay support for maps with `OverlayImageLayer`, `OverlayImage`, and `RotatedOverlayImage` ([#6319](https://github.com/flet-dev/flet/issues/6319)) by @ndonkoHenri.
 
 ## 0.81.1
 

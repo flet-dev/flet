@@ -15,10 +15,10 @@ categories = ["Extensions/Map"]
 
 [tool.flet.metadata]
 title = "Overlay Images"
-controls = ["SafeArea", "Map", "TileLayer", "OverlayImageLayer", "OverlayImage", "RotatedOverlayImage", "MarkerLayer", "Marker", "Container", "Text", "AppBar"]
+controls = ["SafeArea", "Map", "TileLayer", "OverlayImageLayer", "OverlayImage", "RotatedOverlayImage"]
 layout_pattern = "single-panel"
 complexity = "basic"
-features = ["rectangular image overlay", "rotated image overlay", "corner markers"]
+features = ["rectangular image overlay", "rotated image overlay"]
 
 [tool.flet]
 org = "dev.flet"

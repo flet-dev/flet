@@ -20,7 +20,7 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
         .map((circle) {
       circle.notifyParent = true;
       return CircleMarker(
-          point: parseLatLng(circle.get("coordinates"))!,
+          point: circle.getLatLng("coordinates")!,
           color: circle.getColor("color", context, const Color(0xFF00FF00))!,
           borderColor: circle.getColor(
               "border_color", context, const Color(0xFFFFFF00))!,

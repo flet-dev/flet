@@ -53,9 +53,8 @@ class _RichAttributionControlState extends State<RichAttributionControl>
               "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
           showFlutterMapAttribution:
               widget.control.getBool("show_flutter_map_attribution", true)!,
-          alignment: parseAttributionAlignment(
-              widget.control.getString("alignment"),
-              AttributionAlignment.bottomRight)!,
+          alignment: widget.control.getAttributionAlignment(
+              "alignment", AttributionAlignment.bottomRight)!,
           popupBorderRadius:
               widget.control.getBorderRadius("popup_border_radius"),
           popupInitialDisplayDuration: widget.control

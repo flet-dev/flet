@@ -17,30 +17,20 @@ class OverlayImageLayerControl extends StatelessWidget {
         .children("overlay_images")
         .map((overlayImage) {
           overlayImage.notifyParent = true;
-          final imageProvider = parseImageProvider(
-            overlayImage.get("src"),
-            context,
-          );
-          if (imageProvider == null) {
-            return null;
-          }
+
+          final imageProvider = overlayImage.getImageProvider("src", context);
+          if (imageProvider == null) return null;
 
           final opacity = overlayImage.getDouble("opacity", 1.0)!;
-          final gaplessPlayback = overlayImage.getBool(
-            "gapless_playback",
-            false,
-          )!;
+          final gaplessPlayback =
+              overlayImage.getBool("gapless_playback", false)!;
           final filterQuality = overlayImage.getFilterQuality(
-            "filter_quality",
-            FilterQuality.medium,
-          )!;
+              "filter_quality", FilterQuality.medium)!;
 
           switch (overlayImage.type) {
             case "OverlayImage":
-              final bounds = parseLatLngBounds(overlayImage.get("bounds"));
-              if (bounds == null) {
-                return null;
-              }
+              final bounds = overlayImage.getLatLngBounds("bounds");
+              if (bounds == null) return null;
               return OverlayImage(
                 imageProvider: imageProvider,
                 bounds: bounds,
@@ -49,15 +39,11 @@ class OverlayImageLayerControl extends StatelessWidget {
                 filterQuality: filterQuality,
               );
             case "RotatedOverlayImage":
-              final topLeftCorner = parseLatLng(
-                overlayImage.get("top_left_corner"),
-              );
-              final bottomLeftCorner = parseLatLng(
-                overlayImage.get("bottom_left_corner"),
-              );
-              final bottomRightCorner = parseLatLng(
-                overlayImage.get("bottom_right_corner"),
-              );
+              final topLeftCorner = overlayImage.getLatLng("top_left_corner");
+              final bottomLeftCorner =
+                  overlayImage.getLatLng("bottom_left_corner");
+              final bottomRightCorner =
+                  overlayImage.getLatLng("bottom_right_corner");
               if (topLeftCorner == null ||
                   bottomLeftCorner == null ||
                   bottomRightCorner == null) {

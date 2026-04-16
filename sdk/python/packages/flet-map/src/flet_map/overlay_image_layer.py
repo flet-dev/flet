@@ -40,7 +40,7 @@ class BaseOverlayImage(ft.BaseControl):
         V.between(0.0, 1.0),
     ] = 1.0
     """
-    The opacity used to paint the image.
+    The opacity in which the image should get rendered on the map.
 
     Raises:
         ValueError: If it is not between `0.0` and `1.0`, inclusive.
