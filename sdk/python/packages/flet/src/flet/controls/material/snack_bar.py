@@ -157,10 +157,10 @@ class SnackBar(DialogControl):
     A lightweight message with an optional action which briefly displays at the bottom \
     of the screen.
 
+    Example:
     ```python
     page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
     ```
-
     """
 
     content: Annotated[

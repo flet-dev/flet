@@ -9,9 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added streaming recordings with `AudioRecorder.on_stream`.
-- Added direct streaming uploads with `AudioRecorderUploadSettings` and `AudioRecorder.on_upload`.
-- Added AudioRecorder streaming and upload examples.
+- Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858)) by @ndonkoHenri.
 
 ## 0.80.0
 

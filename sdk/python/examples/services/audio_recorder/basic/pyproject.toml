@@ -1,9 +1,9 @@
 [project]
-name = "services-audio-recorder-example-1"
+name = "services-audio-recorder-basic"
 version = "1.0.0"
 description = "Records audio, lists input devices, and checks recorder permissions from one screen."
 requires-python = ">=3.10"
-keywords = ["audio recorder", "example 1", "services", "async"]
+keywords = ["audio recorder", "basic", "services", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet", "flet-audio-recorder"]
 
@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Services/AudioRecorder"]
 
 [tool.flet.metadata]
-title = "Audio recorder example"
+title = "Audio recorder basic"
 controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "Button", "AudioRecorder"]
 layout_pattern = "inline-actions"
 complexity = "basic"

@@ -41,7 +41,7 @@ class AudioRecorderStateChangeEvent(ft.Event["AudioRecorder"]):
     """
     Event payload for recorder state transitions.
 
-    Emitted by `AudioRecorder` when recording state changes.
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_state_change`.
     """
 
     state: AudioRecorderState
@@ -52,18 +52,21 @@ class AudioRecorderStateChangeEvent(ft.Event["AudioRecorder"]):
 class AudioRecorderUploadEvent(ft.Event["AudioRecorder"]):
     """
     Event payload for streaming recording uploads.
+
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_upload` for
+    uploads started with :meth:`flet_audio_recorder.AudioRecorder.start_recording`.
     """
 
     file_name: Optional[str] = None
-    """Name associated with the current upload."""
+    """Name provided by :attr:`AudioRecorderUploadSettings.file_name`."""
 
     progress: Optional[float] = None
     """
     Upload progress from `0.0` to `1.0`.
 
     Streaming uploads do not know their total size until recording stops, so
-    :attr:`bytes_uploaded` is usually the best progress indicator while
-    recording is active.
+    :attr:`bytes_uploaded` is usually the best progress indicator while recording is
+    active.
     """
 
     bytes_uploaded: Optional[int] = None
@@ -77,16 +80,21 @@ class AudioRecorderUploadEvent(ft.Event["AudioRecorder"]):
 class AudioRecorderStreamEvent(ft.Event["AudioRecorder"]):
     """
     Event payload for raw recording stream chunks.
+
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_stream`.
     """
 
     chunk: bytes
-    """Raw PCM16 audio bytes emitted by the recorder."""
+    """
+    Raw :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` audio bytes emitted by \
+    :class:`~flet_audio_recorder.AudioRecorder`.
+    """
 
     sequence: int
     """Incremental chunk number."""
 
     bytes_streamed: int
-    """Total number of bytes streamed so far."""
+    """Total number of bytes delivered through :attr:`chunk` so far."""
 
 
 class AudioEncoder(Enum):
@@ -407,6 +415,11 @@ class AudioRecorderConfiguration:
 class AudioRecorderUploadSettings:
     """
     Upload settings for streaming recordings.
+
+    Note:
+        Uploads started by :meth:`flet_audio_recorder.AudioRecorder.start_recording`
+        send raw :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` bytes. They do
+        not add a playable audio container such as WAV.
     """
 
     upload_url: str
@@ -421,7 +434,7 @@ class AudioRecorderUploadSettings:
 
     headers: Optional[dict[str, str]] = None
     """
-    Optional HTTP headers sent with the upload request.
+    HTTP headers sent with the upload request.
     """
 
     file_name: Optional[str] = None

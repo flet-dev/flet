@@ -11,13 +11,11 @@ OUTPUT_FILE = "streamed-recording.wav"
 
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.appbar = ft.AppBar(title=ft.Text("Audio Recorder Stream"), center_title=True)
 
     buffer = bytearray()
-    status = ft.Text("Waiting to record...")
 
     def show_snackbar(message: str):
-        page.show_dialog(ft.SnackBar(content=ft.Text(message)))
+        page.show_dialog(ft.SnackBar(content=message, duration=ft.Duration(seconds=5)))
 
     def handle_stream(e: far.AudioRecorderStreamEvent):
         buffer.extend(e.chunk)
@@ -55,23 +53,17 @@ def main(page: ft.Page):
         status.value = f"Saved {len(buffer)} bytes to {OUTPUT_FILE}."
         show_snackbar(status.value)
 
-    recorder = far.AudioRecorder(
-        configuration=far.AudioRecorderConfiguration(
-            encoder=far.AudioEncoder.PCM16BITS,
-            sample_rate=SAMPLE_RATE,
-            channels=CHANNELS,
-        ),
-        on_stream=handle_stream,
-    )
+    recorder = far.AudioRecorder(on_stream=handle_stream)
 
     page.add(
         ft.SafeArea(
             content=ft.Column(
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
                     ft.Text("Record PCM16 audio chunks and save them as a WAV file."),
                     ft.Button("Start streaming", on_click=handle_recording_start),
                     ft.Button("Stop and save", on_click=handle_recording_stop),
-                    status,
+                    status := ft.Text(),
                 ],
             ),
         )

@@ -21,9 +21,8 @@ class AudioRecorder(ft.Service):
     """
     A control that allows you to record audio from your device.
 
-    This control can record audio using different
-    audio encoders and also allows configuration
-    of various audio recording parameters such as
+    This control can record audio using different audio encoders and also allows
+    configuration of various audio recording parameters such as
     noise suppression, echo cancellation, and more.
     """
 
@@ -36,17 +35,18 @@ class AudioRecorder(ft.Service):
 
     on_state_change: Optional[ft.EventHandler[AudioRecorderStateChangeEvent]] = None
     """
-    Event handler that is called when the state of the audio recorder changes.
+    Called when recording state changes.
     """
 
     on_upload: Optional[ft.EventHandler[AudioRecorderUploadEvent]] = None
     """
-    Event handler that is called when a streaming upload reports progress or errors.
+    Called when streaming upload progress or errors are available.
     """
 
     on_stream: Optional[ft.EventHandler[AudioRecorderStreamEvent]] = None
     """
-    Event handler that is called with raw PCM16 chunks while recording streams.
+    Called when a raw :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` \
+    recording chunk is available.
     """
 
     async def start_recording(
@@ -58,18 +58,21 @@ class AudioRecorder(ft.Service):
         """
         Starts recording audio and saves it to a file or streams it.
 
-        If neither :attr:`on_stream` nor `upload` is used, `output_path` must be
+        If neither `upload` nor :attr:`on_stream` is used, `output_path` must be
         provided on platforms other than web.
 
-        Streaming mode uses :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS`.
-        The emitted or uploaded chunks contain raw PCM16 data, not a WAV container.
+        When streaming, use :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` as
+        encoder, in which case, then emitted or uploaded
+        :attr:`~flet_audio_recorder.AudioRecorderStreamEvent.chunk`s contain raw PCM16
+        data. In some usecases, these chunks could be wrapped in a container such as
+        WAV if the output must be directly playable as an audio file.
 
         Args:
             output_path: The file path where the audio will be saved.
                 It must be specified if not on web.
-            configuration: The configuration for the audio recorder.
-                If `None`, the `AudioRecorder.configuration` will be used.
-            upload: Optional upload settings to stream recording bytes directly
+            configuration: The configuration for the audio recorder. If `None`, the
+                :attr:`flet_audio_recorder.AudioRecorder.configuration` will be used.
+            upload: Upload settings to stream recording bytes directly
                 to a destination, for example a URL returned by
                 :meth:`flet.Page.get_upload_url`.
 
@@ -83,6 +86,7 @@ class AudioRecorder(ft.Service):
         is_streaming = upload is not None or self.on_stream is not None
         if not is_streaming and not (self.page.web or output_path):
             raise ValueError("output_path must be provided on platforms other than web")
+
         return await self._invoke_method(
             method_name="start_recording",
             arguments={
@@ -108,7 +112,8 @@ class AudioRecorder(ft.Service):
         Stops the audio recording and optionally returns the path to the saved file.
 
         Returns:
-            The file path where the audio was saved or `None` when streaming.
+            The file path where the audio was saved or `None` when
+                streaming (i.e. when `upload` or :attr:`on_stream` is set).
         """
         return await self._invoke_method("stop_recording")
 
