@@ -14,6 +14,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.IconButton(
+                key="selected_icon_button",
                 icon=ft.Icons.BATTERY_1_BAR,
                 selected_icon=ft.Icons.BATTERY_FULL,
                 scale=5,

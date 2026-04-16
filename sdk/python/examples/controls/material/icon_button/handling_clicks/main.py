@@ -14,6 +14,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     button := ft.IconButton(
+                        key="handling_clicks_icon_button",
                         icon=ft.Icons.PLAY_CIRCLE_FILL_OUTLINED,
                         data=0,
                         on_click=button_clicked,
