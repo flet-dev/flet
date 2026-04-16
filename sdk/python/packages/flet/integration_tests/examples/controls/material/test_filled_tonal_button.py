@@ -2,6 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
+from examples.controls.material.filled_tonal_button.basic import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -10,4 +11,18 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         ft.FilledTonalButton(content="Tap me"),
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": basic.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_basic(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.assert_screenshot(
+        "basic",
+        await flet_app_function.take_page_controls_screenshot(),
     )
