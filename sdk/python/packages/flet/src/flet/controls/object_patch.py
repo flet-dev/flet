@@ -1209,14 +1209,26 @@ class DiffBuilder:
                 "\n_compare_values:dataclasses (Frozen: %s) %s %s", frozen, src, dst
             )
 
+            # Component controls (type "C") must only be diffed/migrated when
+            # their underlying component function is the same. Otherwise we
+            # need a replace to force remount and fresh hook state.
+            same_component_fn = True
+            if getattr(src, "_c", None) == "C" and getattr(dst, "_c", None) == "C":
+                same_component_fn = getattr(src, "fn", None) is getattr(dst, "fn", None)
+
             if (not frozen and src is dst) or (
-                frozen and src is not dst and type(src) is type(dst)
+                frozen
+                and src is not dst
+                and type(src) is type(dst)
+                and same_component_fn
             ):
                 self._compare_dataclasses(
                     parent, _path_join(path, key), src, dst, frozen
                 )
-            elif (not frozen and src is not dst) or (
-                frozen and type(src) is not type(dst)
+            elif (
+                (not frozen and src is not dst)
+                or (frozen and type(src) is not type(dst))
+                or (frozen and not same_component_fn)
             ):
                 self._item_replaced(path, key, dst)
                 self._dataclass_removed(src)

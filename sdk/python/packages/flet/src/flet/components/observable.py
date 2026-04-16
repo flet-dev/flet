@@ -151,7 +151,6 @@ class Observable:
             """
             Remove the subscribed listener from this observable.
             """
-
             with contextlib.suppress(KeyError):
                 self.__listeners.remove(fn)
 

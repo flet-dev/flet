@@ -106,6 +106,14 @@ class Component(BaseControl):
             logger.debug("%s.update(): skipping (stale)", self)
             return
 
+        # Don't re-render unmounted components.  A stale observable listener
+        # (or queued pending update) can fire after `will_unmount` — running
+        # the component body here would create a new render tree that is
+        # never attached, leaking fresh subscriptions and zombie children.
+        if not self._state.mounted:
+            logger.debug("%s.update(): skipping (unmounted)", self)
+            return
+
         logger.debug(
             "%s.update(), memoized: %s",
             self,
@@ -184,6 +192,12 @@ class Component(BaseControl):
         """
         Mark component dirty and enqueue a session update.
         """
+
+        # Skip updates for unmounted components.  Stale observable listeners
+        # that fire after will_unmount must not resurrect a zombie control.
+        if not self._state.mounted:
+            logger.debug("%s.schedule_update(): skipping (unmounted)", self)
+            return
 
         logger.debug("%s.schedule_update()", self)
         self._state.is_dirty = True

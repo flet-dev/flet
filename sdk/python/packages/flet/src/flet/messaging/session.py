@@ -560,7 +560,10 @@ class Session:
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
         if self.__conn is None and self.__expires_at is not None:
             return
-        self.__pending_effects.append((weakref.ref(hook), is_cleanup))
+        # Hold a strong reference to the hook until it runs.  A weakref would
+        # get cleared when the owning component unmounts and clears
+        # `_state.hooks` — dropping queued cleanup effects on the floor.
+        self.__pending_effects.append((hook, is_cleanup))
         self.__updates_ready.set()
 
     def start_updates_scheduler(self):
@@ -598,7 +601,7 @@ class Session:
 
                 for effect in pending_effects:
                     try:
-                        hook = effect[0]()
+                        hook = effect[0]
                         is_cleanup = effect[1]
                         # print(f"**** Running effect: {hook} {is_cleanup}")
                         if hook and hook.setup and not is_cleanup:
