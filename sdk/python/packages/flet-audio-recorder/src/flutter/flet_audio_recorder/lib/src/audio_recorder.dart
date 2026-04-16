@@ -13,7 +13,14 @@ class AudioRecorderService extends FletService {
 
   AudioRecorder? recorder;
   StreamSubscription<RecordState>? _onStateChangedSubscription;
+
+  // Subscription to the raw PCM audio stream produced by `recorder.startStream`.
+  // Only active while a streaming recording (upload and/or Python-side stream)
+  // is in progress; `null` for regular file-based recordings.
   StreamSubscription<Uint8List>? _recordStreamSubscription;
+
+  // Holds the state of the current streaming recording (upload request,
+  // bytes counter, completion signal). `null` when no streaming is active.
   _StreamingSession? _streamSession;
 
   @override
@@ -46,6 +53,8 @@ class AudioRecorderService extends FletService {
         final upload = args["upload"];
         final stream = control.hasEventHandler("stream");
         if (config != null && await recorder!.hasPermission()) {
+          // If either upload or stream is requested, switch to the
+          // streaming code path (PCM chunks instead of file output).
           if (upload != null || stream) {
             return await _startStreamingRecording(config, upload, stream);
           }
@@ -61,6 +70,9 @@ class AudioRecorderService extends FletService {
         }
         return false;
       case "stop_recording":
+        // For streaming recordings there is no output file to return; instead
+        // we stop the recorder and wait for the audio stream's `onDone` handler
+        // (`_finishStreamingRecording`) to flush and close the upload request.
         if (_streamSession != null) {
           await recorder!.stop();
           await _streamSession?.completed.future;
@@ -68,6 +80,8 @@ class AudioRecorderService extends FletService {
         }
         return await recorder!.stop();
       case "cancel_recording":
+        // Tear down any in-flight streaming session before cancelling the
+        // recorder so partial uploads are aborted and listeners are notified.
         if (_streamSession != null) {
           await _cancelStreamingRecording("Recording cancelled");
         }
@@ -112,11 +126,23 @@ class AudioRecorderService extends FletService {
     super.dispose();
   }
 
+  /// Starts a streaming recording.
+  ///
+  /// Depending on the arguments, the raw PCM chunks produced by the recorder
+  /// are either:
+  ///   * forwarded to a remote HTTP endpoint via a chunked `StreamedRequest`
+  ///     (when [uploadArgs] is provided), and/or
+  ///   * pushed to Python as "stream" events (when [stream] is `true`).
+  ///
+  /// Both sinks can be active at the same time. Returns `true` if the
+  /// recorder successfully started streaming, `false` otherwise.
   Future<bool> _startStreamingRecording(
     RecordConfig config,
     Map<dynamic, dynamic>? uploadArgs,
     bool stream,
   ) async {
+    // The `record` package only exposes a raw byte stream for PCM16; other
+    // encoders don't have a portable streaming path, so we fail fast here.
     if (config.encoder != AudioEncoder.pcm16bits) {
       _sendUploadEvent(
         error: "Streaming recordings require PCM16BITS encoder.",
@@ -124,6 +150,8 @@ class AudioRecorderService extends FletService {
       return false;
     }
 
+    // Defensive cleanup: ensure no previous streaming session is lingering
+    // before we start a new one (e.g. if the user restarts without stopping).
     await _recordStreamSubscription?.cancel();
     await _streamSession?.dispose();
     _recordStreamSubscription = null;
@@ -133,12 +161,12 @@ class AudioRecorderService extends FletService {
         ? _UploadConfig.fromMap(Map<String, dynamic>.from(uploadArgs))
         : null;
 
+    // Build a chunked HTTP request up front. We don't call `.send()` yet — that
+    // happens after the audio subscription is wired up so the first chunks are not lost.
     http.StreamedRequest? request;
     if (uploadConfig != null) {
-      final uploadUrl = _getFullUploadUrl(
-        control.backend.pageUri,
-        uploadConfig.url,
-      );
+      final uploadUrl =
+          _getFullUploadUrl(control.backend.pageUri, uploadConfig.url);
       request = http.StreamedRequest(uploadConfig.method, Uri.parse(uploadUrl));
       if (uploadConfig.headers != null) {
         request.headers.addAll(uploadConfig.headers!);
@@ -146,25 +174,24 @@ class AudioRecorderService extends FletService {
     }
 
     final session = _StreamingSession(
-      stream: stream,
-      uploadConfig: uploadConfig,
-      request: request,
-    );
+        stream: stream, uploadConfig: uploadConfig, request: request);
     _streamSession = session;
 
     try {
       final audioStream = await recorder!.startStream(config);
 
+      // Emit an initial 0% progress event so listeners can show an upload
+      // started state before any bytes are produced by the microphone.
       if (uploadConfig != null) {
         _sendUploadEvent(
-          fileName: uploadConfig.fileName,
-          progress: 0.0,
-          bytesUploaded: 0,
-        );
+            fileName: uploadConfig.fileName, progress: 0.0, bytesUploaded: 0);
       }
 
       _recordStreamSubscription = audioStream.listen(
         (chunk) {
+          // For every audio chunk produced by the recorder: count it, feed
+          // it to the HTTP upload sink (if any), and forward it to Python
+          // (if a stream handler is subscribed).
           session.bytesSent += chunk.length;
           session.request?.sink.add(chunk);
 
@@ -193,14 +220,18 @@ class AudioRecorderService extends FletService {
           await _cancelStreamingRecording();
         },
         onDone: () async {
+          // The recorder stopped normally — finalize the upload and notify.
           await _finishStreamingRecording();
         },
         cancelOnError: true,
       );
 
+      // Kick off the HTTP request now that the sink will receive chunks.
       session.startUpload();
       return true;
     } catch (error) {
+      // Anything thrown while starting the stream (permissions, network,
+      // recorder errors) is reported and the session is discarded.
       if (uploadConfig != null) {
         _sendUploadEvent(
           fileName: uploadConfig.fileName,
@@ -213,6 +244,11 @@ class AudioRecorderService extends FletService {
     }
   }
 
+  /// Finalizes a streaming recording after the audio stream's `onDone` fires.
+  ///
+  /// Closes the HTTP request sink, awaits the server response, and emits a
+  /// final progress or error event to Python. Always resets the streaming
+  /// state, even on failure, so a new recording can be started afterwards.
   Future<void> _finishStreamingRecording() async {
     final session = _streamSession;
     if (session == null) {
@@ -220,22 +256,26 @@ class AudioRecorderService extends FletService {
     }
 
     try {
+      // Closing the sink signals the end of the chunked request body so the
+      // server can finish processing and return a response.
       await session.request?.sink.close();
       final responseFuture = session.responseFuture;
       if (session.request != null && responseFuture != null) {
         final response = await responseFuture;
-        if (response.statusCode < 200 || response.statusCode > 204) {
+        // successful
+        if (response.statusCode >= 200 && response.statusCode <= 204) {
+          _sendUploadEvent(
+            fileName: session.uploadConfig?.fileName,
+            progress: 1.0,
+            bytesUploaded: session.bytesSent,
+          );
+        } else {
+          // not successful
           final body = await http.Response.fromStream(response);
           _sendUploadEvent(
             fileName: session.uploadConfig?.fileName,
             error:
                 "Upload endpoint returned code ${response.statusCode}: ${body.body}",
-          );
-        } else {
-          _sendUploadEvent(
-            fileName: session.uploadConfig?.fileName,
-            progress: 1.0,
-            bytesUploaded: session.bytesSent,
           );
         }
       }
@@ -247,6 +287,8 @@ class AudioRecorderService extends FletService {
         );
       }
     } finally {
+      // Whatever happened, release the subscription and signal the
+      // `stop_recording` awaiter that the session has fully wound down.
       session.complete();
       await _recordStreamSubscription?.cancel();
       _recordStreamSubscription = null;
@@ -254,6 +296,12 @@ class AudioRecorderService extends FletService {
     }
   }
 
+  /// Aborts the current streaming recording.
+  ///
+  /// Called when the user cancels a recording or the audio stream emits an
+  /// error. Closes the upload sink without waiting for a response, notifies
+  /// Python with [error] (defaulting to "Recording cancelled"), and resets
+  /// the streaming state.
   Future<void> _cancelStreamingRecording([String? error]) async {
     final session = _streamSession;
     if (session == null) {
@@ -276,6 +324,9 @@ class AudioRecorderService extends FletService {
     }
   }
 
+  /// Fires the "upload" event on the Python-side control with the current
+  /// upload progress or an error message. Any field may be null when not
+  /// applicable (e.g. `progress` is null for per-chunk progress pings).
   void _sendUploadEvent({
     String? fileName,
     double? progress,
@@ -290,6 +341,9 @@ class AudioRecorderService extends FletService {
     });
   }
 
+  /// Fires the "stream" event with a single PCM [chunk] and its monotonically
+  /// increasing [sequence] number, allowing the Python side to reassemble the
+  /// audio in order and detect gaps.
   void _sendStreamEvent(
     Uint8List chunk, {
     required int sequence,
@@ -302,6 +356,11 @@ class AudioRecorderService extends FletService {
     });
   }
 
+  /// Resolves a possibly-relative [uploadUrl] against the current [pageUri].
+  ///
+  /// If [uploadUrl] already contains an authority (scheme + host) it is used
+  /// verbatim; otherwise its path/query are combined with the page's
+  /// scheme/host/port so that relative upload endpoints work out of the box.
   String _getFullUploadUrl(Uri pageUri, String uploadUrl) {
     final uploadUri = Uri.parse(uploadUrl);
     if (uploadUri.hasAuthority) {
@@ -317,6 +376,8 @@ class AudioRecorderService extends FletService {
   }
 }
 
+/// Value object describing where/how the streamed recording should be
+/// uploaded. Built from the `upload` dict passed from Python on `start_recording`.
 class _UploadConfig {
   const _UploadConfig({
     required this.url,
@@ -325,6 +386,7 @@ class _UploadConfig {
     this.fileName,
   });
 
+  /// Parses the raw map received from Python.
   factory _UploadConfig.fromMap(Map<String, dynamic> value) {
     final headers = value["headers"];
     return _UploadConfig(
@@ -335,41 +397,77 @@ class _UploadConfig {
     );
   }
 
+  /// Destination URL — may be absolute or relative to the Flet page URI.
   final String url;
+
+  /// HTTP method to use for the upload (e.g. `PUT` or `POST`).
   final String method;
+
+  /// Optional request headers (e.g. auth, content-type).
   final Map<String, String>? headers;
+
+  /// Optional file name echoed back in upload events so Python listeners
+  /// can correlate progress updates with a specific recording.
   final String? fileName;
 }
 
+/// Bundles everything needed to track a single streaming recording:
+///   * whether Python is listening to `stream` events,
+///   * the upload config and HTTP request (if uploading),
+///   * byte/sequence counters, and
+///   * a `Completer` used by `stop_recording` to await clean shutdown.
 class _StreamingSession {
   _StreamingSession({required this.stream, this.uploadConfig, this.request})
-    : completed = Completer<void>();
+      : completed = Completer<void>();
 
+  /// `true` when Python has a handler attached for the "stream" event.
   final bool stream;
+
+  /// Upload target for this session, or `null` when only streaming to Python.
   final _UploadConfig? uploadConfig;
+
+  /// Chunked HTTP request receiving the PCM bytes, or `null` when not uploading.
   final http.StreamedRequest? request;
+
+  /// Resolves once the session has fully torn down (success, error, or
+  /// cancellation). Awaited by `stop_recording` so callers can rely on the
+  /// upload being flushed before the method returns.
   final Completer<void> completed;
+
+  /// Future of the server response to the chunked upload. Populated by
+  /// [startUpload] and awaited by `_finishStreamingRecording`.
   Future<http.StreamedResponse>? responseFuture;
+
+  /// Total number of audio bytes produced so far — used for progress events
+  /// and as the final uploaded-bytes count.
   int bytesSent = 0;
+
+  /// Monotonic counter for stream events, incremented by [nextSequence].
   int _sequence = 0;
 
+  /// Starts sending the chunked request. Must be called after the audio
+  /// subscription has been attached so no chunks are dropped.
   void startUpload() {
     if (request != null) {
       responseFuture = request!.send();
     }
   }
 
+  /// Returns the next sequence number for a "stream" event (starts at 1).
   int nextSequence() {
     _sequence += 1;
     return _sequence;
   }
 
+  /// Marks the session as fully wound down. Safe to call multiple times.
   void complete() {
     if (!completed.isCompleted) {
       completed.complete();
     }
   }
 
+  /// Best-effort cleanup used when the service itself is being disposed
+  /// (e.g. the control is removed from the page mid-recording).
   Future<void> dispose() async {
     try {
       await request?.sink.close();
