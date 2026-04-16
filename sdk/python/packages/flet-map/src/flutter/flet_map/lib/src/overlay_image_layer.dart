@@ -79,6 +79,9 @@ class OverlayImageLayerControl extends StatelessWidget {
         .nonNulls
         .toList();
 
-    return OverlayImageLayer(overlayImages: overlayImages);
+    return BaseControl(
+      control: control,
+      child: OverlayImageLayer(overlayImages: overlayImages),
+    );
   }
 }

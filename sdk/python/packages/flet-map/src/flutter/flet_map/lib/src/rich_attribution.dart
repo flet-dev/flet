@@ -44,19 +44,22 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         .nonNulls
         .toList();
 
-    return RichAttributionWidget(
-        attributions: attributions,
-        permanentHeight: widget.control.getDouble("permanent_height", 24.0)!,
-        popupBackgroundColor: widget.control.getColor(
-            "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
-        showFlutterMapAttribution:
-            widget.control.getBool("show_flutter_map_attribution", true)!,
-        alignment: parseAttributionAlignment(
-            widget.control.getString("alignment"),
-            AttributionAlignment.bottomRight)!,
-        popupBorderRadius:
-            widget.control.getBorderRadius("popup_border_radius"),
-        popupInitialDisplayDuration: widget.control
-            .getDuration("popup_initial_display_duration", Duration.zero)!);
+    return BaseControl(
+      control: widget.control,
+      child: RichAttributionWidget(
+          attributions: attributions,
+          permanentHeight: widget.control.getDouble("permanent_height", 24.0)!,
+          popupBackgroundColor: widget.control.getColor(
+              "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
+          showFlutterMapAttribution:
+              widget.control.getBool("show_flutter_map_attribution", true)!,
+          alignment: parseAttributionAlignment(
+              widget.control.getString("alignment"),
+              AttributionAlignment.bottomRight)!,
+          popupBorderRadius:
+              widget.control.getBorderRadius("popup_border_radius"),
+          popupInitialDisplayDuration: widget.control
+              .getDuration("popup_initial_display_duration", Duration.zero)!),
+    );
   }
 }

@@ -13,7 +13,7 @@ __all__ = [
 
 
 @ft.control("BaseOverlayImage", kw_only=True)
-class BaseOverlayImage(ft.Control):
+class BaseOverlayImage(ft.BaseControl):
     """
     Abstract class for image overlays displayed through
     :class:`~flet_map.OverlayImageLayer`.

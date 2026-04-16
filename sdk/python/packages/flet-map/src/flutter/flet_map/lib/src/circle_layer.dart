@@ -29,6 +29,6 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
           radius: circle.getDouble("radius", 10)!);
     }).toList();
 
-    return CircleLayer(circles: circles);
+    return BaseControl(control: control, child: CircleLayer(circles: circles));
   }
 }

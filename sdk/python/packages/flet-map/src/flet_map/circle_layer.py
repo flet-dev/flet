@@ -8,7 +8,7 @@ __all__ = ["CircleLayer", "CircleMarker"]
 
 
 @ft.control("CircleMarker")
-class CircleMarker(ft.Control):
+class CircleMarker(ft.BaseControl):
     """
     A circular marker displayed on the Map at the specified
     location through the :class:`~flet_map.CircleLayer`.

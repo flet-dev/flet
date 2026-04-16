@@ -36,14 +36,17 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
               .toList());
     }).toList();
 
-    return PolygonLayer(
-      polygons: polygons,
-      polygonCulling: control.getBool("polygon_culling", true)!,
-      polygonLabels: control.getBool("polygon_labels", true)!,
-      drawLabelsLast: control.getBool("draw_labels_last", false)!,
-      simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.3)!,
-      useAltRendering: control.getBool("use_alternative_rendering", false)!,
+    return BaseControl(
+      control: control,
+      child: PolygonLayer(
+        polygons: polygons,
+        polygonCulling: control.getBool("polygon_culling", true)!,
+        polygonLabels: control.getBool("polygon_labels", true)!,
+        drawLabelsLast: control.getBool("draw_labels_last", false)!,
+        simplificationTolerance:
+            control.getDouble("simplification_tolerance", 0.3)!,
+        useAltRendering: control.getBool("use_alternative_rendering", false)!,
+      ),
     );
   }
 }

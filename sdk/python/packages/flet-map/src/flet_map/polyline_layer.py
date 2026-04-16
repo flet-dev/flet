@@ -9,7 +9,7 @@ __all__ = ["PolylineLayer", "PolylineMarker"]
 
 
 @ft.control("PolylineMarker")
-class PolylineMarker(ft.Control):
+class PolylineMarker(ft.BaseControl):
     """
     A marker for the :class:`~flet_map.PolylineLayer`.
     """

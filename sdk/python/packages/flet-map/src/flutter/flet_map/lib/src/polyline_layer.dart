@@ -47,12 +47,15 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
               .toList());
     }).toList();
 
-    return PolylineLayer(
-      polylines: polylines,
-      cullingMargin: control.getDouble("culling_margin", 10.0)!,
-      minimumHitbox: control.getDouble("min_hittable_radius", 10.0)!,
-      simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.3)!,
+    return BaseControl(
+      control: control,
+      child: PolylineLayer(
+        polylines: polylines,
+        cullingMargin: control.getDouble("culling_margin", 10.0)!,
+        minimumHitbox: control.getDouble("min_hittable_radius", 10.0)!,
+        simplificationTolerance:
+            control.getDouble("simplification_tolerance", 0.3)!,
+      ),
     );
   }
 }

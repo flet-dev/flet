@@ -9,7 +9,7 @@ __all__ = ["Marker", "MarkerLayer"]
 
 
 @ft.control("Marker")
-class Marker(ft.Control):
+class Marker(ft.BaseControl):
     """
     A marker displayed on the Map at the specified location
     through the :class:`~flet_map.MarkerLayer`.

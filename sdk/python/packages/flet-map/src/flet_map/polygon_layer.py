@@ -8,7 +8,7 @@ __all__ = ["PolygonLayer", "PolygonMarker"]
 
 
 @ft.control("PolygonMarker")
-class PolygonMarker(ft.Control):
+class PolygonMarker(ft.BaseControl):
     """
     A marker for the :class:`~flet_map.PolygonLayer`.
     """
