@@ -62,9 +62,9 @@ class AudioRecorder(ft.Service):
         provided on platforms other than web.
 
         When streaming, use :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` as
-        encoder, in which case, then emitted or uploaded
+        the encoder. In that case, emitted or uploaded
         :attr:`~flet_audio_recorder.AudioRecorderStreamEvent.chunk`s contain raw PCM16
-        data. In some usecases, these chunks could be wrapped in a container such as
+        data. In some use cases, these chunks can be wrapped in a container such as
         WAV if the output must be directly playable as an audio file.
 
         Args:
@@ -117,11 +117,11 @@ class AudioRecorder(ft.Service):
 
     async def stop_recording(self) -> Optional[str]:
         """
-        Stops the audio recording and optionally returns the path to the saved file.
+        Stops the audio recording and optionally returns the recording location.
 
         Returns:
-            The file path where the audio was saved or `None` when
-                streaming (i.e. when `upload` or :attr:`on_stream` is set).
+            The local file path where the audio was saved, a Blob URL on web, or
+                `None` when streaming (i.e. when `upload` or :attr:`on_stream` is set).
         """
         return await self._invoke_method("stop_recording")
 
