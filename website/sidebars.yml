@@ -349,7 +349,10 @@ docs:
         - services/audiorecorder/types/audioencoder.md
         - services/audiorecorder/types/audiorecorderconfiguration.md
         - services/audiorecorder/types/audiorecorderstatechangeevent.md
+        - services/audiorecorder/types/audiorecorderstreamevent.md
         - services/audiorecorder/types/audiorecorderstate.md
+        - services/audiorecorder/types/audiorecorderuploadevent.md
+        - services/audiorecorder/types/audiorecorderuploadsettings.md
         - services/audiorecorder/types/inputdevice.md
         - services/audiorecorder/types/iosaudiocategoryoption.md
         - services/audiorecorder/types/iosrecorderconfiguration.md

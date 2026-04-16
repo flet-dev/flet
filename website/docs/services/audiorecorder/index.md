@@ -159,9 +159,26 @@ permissions = ["microphone"]
 ```
 </TabItem>
 </Tabs>
-## Example
+## Streaming
+
+On web, `stop_recording()` returns a browser-local Blob URL. Use streaming when
+the Python app needs access to the recorded bytes.
+
+Set `AudioRecorderConfiguration.encoder` to `AudioEncoder.PCM16BITS` and either:
+
+- handle `on_stream` to receive `AudioRecorderStreamEvent.chunk` bytes in Python;
+- pass `AudioRecorderUploadSettings` to `start_recording()` to upload bytes directly.
+
+Streaming emits raw PCM16 bytes. Wrap the data in a container such as WAV in Python
+if the destination needs a playable audio file.
+
+## Examples
 
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/stream/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/upload/main.py'} language="python" />
 
 ## Description
 
