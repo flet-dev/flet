@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.85.0
+
+### Added
+
+- Added streaming recordings with `AudioRecorder.on_stream`.
+- Added direct streaming uploads with `AudioRecorderUploadSettings` and `AudioRecorder.on_upload`.
+- Added AudioRecorder streaming and upload examples.
+
 ## 0.80.0
 
 ### Added
