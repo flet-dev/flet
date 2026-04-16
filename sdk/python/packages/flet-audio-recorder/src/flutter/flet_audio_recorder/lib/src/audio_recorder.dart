@@ -141,15 +141,6 @@ class AudioRecorderService extends FletService {
     Map<dynamic, dynamic>? uploadArgs,
     bool stream,
   ) async {
-    // The `record` package only exposes a raw byte stream for PCM16; other
-    // encoders don't have a portable streaming path, so we fail fast here.
-    if (config.encoder != AudioEncoder.pcm16bits) {
-      _sendUploadEvent(
-        error: "Streaming recordings require PCM16BITS encoder.",
-      );
-      return false;
-    }
-
     // Defensive cleanup: ensure no previous streaming session is lingering
     // before we start a new one (e.g. if the user restarts without stopping).
     await _recordStreamSubscription?.cancel();

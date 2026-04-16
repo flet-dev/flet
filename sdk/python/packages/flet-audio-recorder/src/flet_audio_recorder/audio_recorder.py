@@ -82,18 +82,26 @@ class AudioRecorder(ft.Service):
         Raises:
             ValueError: If `output_path` is not provided on platforms other than web
                 when neither streaming nor uploads are requested.
+            ValueError: If streaming is requested with an encoder other than
+                :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS`.
         """
         is_streaming = upload is not None or self.on_stream is not None
         if not is_streaming and not (self.page.web or output_path):
             raise ValueError("output_path must be provided on platforms other than web")
 
+        effective_configuration = (
+            configuration if configuration is not None else self.configuration
+        )
+        if is_streaming and effective_configuration.encoder != AudioEncoder.PCM16BITS:
+            raise ValueError(
+                "Streaming recordings require AudioEncoder.PCM16BITS as encoder."
+            )
+
         return await self._invoke_method(
             method_name="start_recording",
             arguments={
                 "output_path": output_path,
-                "configuration": configuration
-                if configuration is not None
-                else self.configuration,
+                "configuration": effective_configuration,
                 "upload": upload,
             },
         )
