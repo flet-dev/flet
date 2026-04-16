@@ -27,6 +27,7 @@ def main(page: ft.Page):
         count += 1
 
     page.floating_action_button = ft.FloatingActionButton(
+        key="handling_clicks_fab",
         icon=ft.Icons.ADD,
         on_click=handle_fab_click,
         bgcolor=ft.Colors.LIME_300,
