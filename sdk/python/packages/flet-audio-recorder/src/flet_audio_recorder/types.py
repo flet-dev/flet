@@ -14,6 +14,9 @@ __all__ = [
     "AudioRecorderConfiguration",
     "AudioRecorderState",
     "AudioRecorderStateChangeEvent",
+    "AudioRecorderStreamEvent",
+    "AudioRecorderUploadEvent",
+    "AudioRecorderUploadSettings",
     "InputDevice",
     "IosAudioCategoryOption",
     "IosRecorderConfiguration",
@@ -43,6 +46,47 @@ class AudioRecorderStateChangeEvent(ft.Event["AudioRecorder"]):
 
     state: AudioRecorderState
     """The new state of the audio recorder."""
+
+
+@dataclass
+class AudioRecorderUploadEvent(ft.Event["AudioRecorder"]):
+    """
+    Event payload for streaming recording uploads.
+    """
+
+    file_name: Optional[str] = None
+    """Name associated with the current upload."""
+
+    progress: Optional[float] = None
+    """
+    Upload progress from `0.0` to `1.0`.
+
+    Streaming uploads do not know their total size until recording stops, so
+    :attr:`bytes_uploaded` is usually the best progress indicator while
+    recording is active.
+    """
+
+    bytes_uploaded: Optional[int] = None
+    """Number of bytes uploaded so far."""
+
+    error: Optional[str] = None
+    """Error message if the upload failed."""
+
+
+@dataclass
+class AudioRecorderStreamEvent(ft.Event["AudioRecorder"]):
+    """
+    Event payload for raw recording stream chunks.
+    """
+
+    chunk: bytes
+    """Raw PCM16 audio bytes emitted by the recorder."""
+
+    sequence: int
+    """Incremental chunk number."""
+
+    bytes_streamed: int
+    """Total number of bytes streamed so far."""
 
 
 class AudioEncoder(Enum):
@@ -356,4 +400,31 @@ class AudioRecorderConfiguration:
     )
     """
     iOS specific configuration.
+    """
+
+
+@ft.value
+class AudioRecorderUploadSettings:
+    """
+    Upload settings for streaming recordings.
+    """
+
+    upload_url: str
+    """
+    Destination URL, for example one returned by :meth:`flet.Page.get_upload_url`.
+    """
+
+    method: str = "PUT"
+    """
+    HTTP method to use when uploading the streamed bytes.
+    """
+
+    headers: Optional[dict[str, str]] = None
+    """
+    Optional HTTP headers sent with the upload request.
+    """
+
+    file_name: Optional[str] = None
+    """
+    Friendly name reported in upload events.
     """

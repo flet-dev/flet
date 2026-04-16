@@ -7,6 +7,9 @@ from .types import (
     AudioEncoder,
     AudioRecorderConfiguration,
     AudioRecorderStateChangeEvent,
+    AudioRecorderStreamEvent,
+    AudioRecorderUploadEvent,
+    AudioRecorderUploadSettings,
     InputDevice,
 )
 
@@ -36,29 +39,49 @@ class AudioRecorder(ft.Service):
     Event handler that is called when the state of the audio recorder changes.
     """
 
+    on_upload: Optional[ft.EventHandler[AudioRecorderUploadEvent]] = None
+    """
+    Event handler that is called when a streaming upload reports progress or errors.
+    """
+
+    on_stream: Optional[ft.EventHandler[AudioRecorderStreamEvent]] = None
+    """
+    Event handler that is called with raw PCM16 chunks while recording streams.
+    """
+
     async def start_recording(
         self,
         output_path: Optional[str] = None,
         configuration: Optional[AudioRecorderConfiguration] = None,
+        upload: Optional[AudioRecorderUploadSettings] = None,
     ) -> bool:
         """
-        Starts recording audio and saves it to the specified output path.
+        Starts recording audio and saves it to a file or streams it.
 
-        If not on the web, the `output_path` parameter must be provided.
+        If neither :attr:`on_stream` nor `upload` is used, `output_path` must be
+        provided on platforms other than web.
+
+        Streaming mode uses :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS`.
+        The emitted or uploaded chunks contain raw PCM16 data, not a WAV container.
 
         Args:
             output_path: The file path where the audio will be saved.
                 It must be specified if not on web.
             configuration: The configuration for the audio recorder.
                 If `None`, the `AudioRecorder.configuration` will be used.
+            upload: Optional upload settings to stream recording bytes directly
+                to a destination, for example a URL returned by
+                :meth:`flet.Page.get_upload_url`.
 
         Returns:
             `True` if recording was successfully started, `False` otherwise.
 
         Raises:
-            ValueError: If `output_path` is not provided on platforms other than web.
+            ValueError: If `output_path` is not provided on platforms other than web
+                when neither streaming nor uploads are requested.
         """
-        if not (self.page.web or output_path):
+        is_streaming = upload is not None or self.on_stream is not None
+        if not is_streaming and not (self.page.web or output_path):
             raise ValueError("output_path must be provided on platforms other than web")
         return await self._invoke_method(
             method_name="start_recording",
@@ -67,6 +90,7 @@ class AudioRecorder(ft.Service):
                 "configuration": configuration
                 if configuration is not None
                 else self.configuration,
+                "upload": upload,
             },
         )
 
@@ -84,7 +108,7 @@ class AudioRecorder(ft.Service):
         Stops the audio recording and optionally returns the path to the saved file.
 
         Returns:
-            The file path where the audio was saved or `None` if not applicable.
+            The file path where the audio was saved or `None` when streaming.
         """
         return await self._invoke_method("stop_recording")
 
@@ -141,9 +165,10 @@ class AudioRecorder(ft.Service):
 
     async def has_permission(self) -> bool:
         """
-        Checks if the app has permission to record audio.
+        Checks if the app has permission to record audio, requesting it if needed.
 
         Returns:
-            `True` if the app has permission, `False` otherwise.
+            `True` if permission is already granted or granted after the request;
+                `False` otherwise.
         """
         return await self._invoke_method("has_permission")
