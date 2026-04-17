@@ -5,7 +5,6 @@ from typing import Optional, Union
 from flet.controls.base_control import value
 from flet.controls.colors import Colors
 from flet.controls.types import ColorValue, Number
-from flet.utils import deprecated
 
 __all__ = [
     "Border",
@@ -13,9 +12,6 @@ __all__ = [
     "BorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
     "BorderStyle",
-    "all",
-    "only",
-    "symmetric",
 ]
 
 
@@ -304,44 +300,6 @@ class Border:
             right=right if right is not None else self.right,
             bottom=bottom if bottom is not None else self.bottom,
         )
-
-
-@deprecated(
-    reason="Use Border.all() instead.",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def all(width: Optional[Number] = None, color: Optional[ColorValue] = None) -> Border:
-    bs = BorderSide(width or 1.0, color or Colors.BLACK)
-    return Border(left=bs, top=bs, right=bs, bottom=bs)
-
-
-@deprecated(
-    reason="Use Border.symmetric() instead.",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def symmetric(
-    vertical: Optional[BorderSide] = None, horizontal: Optional[BorderSide] = None
-) -> Border:
-    return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
-
-
-@deprecated(
-    reason="Use Border.only() instead.",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def only(
-    left: Optional[BorderSide] = None,
-    top: Optional[BorderSide] = None,
-    right: Optional[BorderSide] = None,
-    bottom: Optional[BorderSide] = None,
-) -> Border:
-    return Border(left=left, top=top, right=right, bottom=bottom)
 
 
 BorderSideStrokeAlignValue = Union[BorderSideStrokeAlign, Number]
