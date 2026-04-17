@@ -211,6 +211,7 @@ path = "src"
 ```
 </TabItem>
 </Tabs>
+
 ### Entry point
 
 This is the Python module that starts your app and contains the call to
@@ -242,6 +243,7 @@ module = "app.py"
 ```
 </TabItem>
 </Tabs>
+
 ### Project name
 
 The project name is the base identifier for [bundle IDs](#bundle-id) and other internal
@@ -272,6 +274,7 @@ name = "my_app"
 ```
 </TabItem>
 </Tabs>
+
 ### Product name
 
 The display (user-facing) name shown in window titles, launcher labels, and about dialogs.
@@ -304,6 +307,7 @@ product = "My Awesome App"
 ```
 </TabItem>
 </Tabs>
+
 ### Artifact name
 
 The on-disk name for executables and/or app bundles. For example, on Windows it
@@ -339,9 +343,10 @@ artifact = "My Awesome App"
 ```
 </TabItem>
 </Tabs>
+
 ### Organization name
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md), [iOS](ios.md),
 [macOS](macos.md), and [Linux](linux.md) only.
 :::
@@ -374,9 +379,10 @@ org = "com.mycompany"
 ```
 </TabItem>
 </Tabs>
+
 ### Bundle ID
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md), [iOS](ios.md),
 [macOS](macos.md), and [Linux](linux.md) only.
 :::
@@ -409,9 +415,10 @@ bundle_id = "com.mycompany.my_app"
 ```
 </TabItem>
 </Tabs>
+
 ### Company Name
 
-:::note[Note]
+:::note[Platform support]
 [Windows](windows.md) and [macOS](macos.md) only.
 :::
 
@@ -440,9 +447,10 @@ company = "My Company Inc."
 ```
 </TabItem>
 </Tabs>
+
 ### Copyright
 
-:::note[Note]
+:::note[Platform support]
 [Windows](windows.md) and [macOS](macos.md) only.
 :::
 
@@ -471,6 +479,7 @@ copyright = "Copyright © 2026 My Company Inc."
 ```
 </TabItem>
 </Tabs>
+
 ### Versioning
 
 #### Build Number
@@ -504,6 +513,7 @@ build_number = 1
 ```
 </TabItem>
 </Tabs>
+
 #### Build Version
 
 A user‑facing version string in `x.y.z` format.
@@ -534,6 +544,7 @@ version = "1.0.0"
 ```
 </TabItem>
 </Tabs>
+
 ### Output directory
 
 The directory where the build output is saved.
@@ -557,6 +568,7 @@ flet build <target_platform> --output <path-to-output-dir>
 ```
 </TabItem>
 </Tabs>
+
 ### App dependencies
 
 These are the Python packages that your Flet app depends on to function correctly.
@@ -600,23 +612,25 @@ dependencies = [
 ```
 </TabItem>
 </Tabs>
+
 ### Source packages
 
-:::note[Note]
-[Android](android.md) and [iOS](ios.md) only.
+:::note[Platform support]
+[Android](android.md), [iOS](ios.md), and [Web](web/static-website/index.md#flet-build-web) only.
 :::
 
 By default, packaging for mobile and web only installs binary wheels. Use source packages
 to allow specific dependencies to be installed from [source distributions (sdists)](https://pydevtools.com/handbook/reference/sdist/).
 
 This can be useful for installing - pure Python - dependencies that do not have pre-built wheels for the
-target mobile platform or an all-platform wheel (`*-py3-none-any.whl`), but instead provide a source distribution (`*.tar.gz`).
+target platform or an all-platform wheel (`*-py3-none-any.whl`), but instead provide a source distribution (`*.tar.gz`).
 
 For more information on pure vs non-pure Python packages, see our
 [blog post](https://flet.dev/blog/flet-packaging-update#pure-python-packages) on the topic.
 
-On desktop targets, source installs are already allowed, so this setting is mainly/only for
-[Android](android.md) and [iOS](ios.md) builds.
+On desktop targets, source installs are already allowed, so this setting is mainly useful for
+[Android](android.md), [iOS](ios.md), and [Web](web/static-website/index.md#flet-build-web)
+(`flet build web` only — [not `flet publish`](web/static-website/index.md#sdist-only-dependencies)).
 
 #### Resolution order
 
@@ -641,9 +655,10 @@ source_packages = ["package1", "package2"]
 ```
 </TabItem>
 </Tabs>
+
 ### Icons
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md), [iOS](ios.md), [macOS](macos.md), [Windows](windows.md)
 and [Web](web/static-website/index.md#flet-build-web) only.
 :::
@@ -665,7 +680,7 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 
 ### Splash screen
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md), [iOS](ios.md),
 and [Web](web/static-website/index.md#flet-build-web) only.
 :::
@@ -719,6 +734,7 @@ dark_color = "#333333"
 ```
 </TabItem>
 </Tabs>
+
 #### Disabling Splash Screens
 
 Splash screens are enabled by default but can be disabled.
@@ -757,9 +773,10 @@ web = false
 ```
 </TabItem>
 </Tabs>
+
 ### Boot screen
 
-:::note[Note]
+:::note[Platform support]
 [Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
 [Android](android.md), and [iOS](ios.md) only.
 :::
@@ -782,9 +799,10 @@ message = "Preparing the app for its first launch…"
 ```
 </TabItem>
 </Tabs>
+
 ### Startup screen
 
-:::note[Note]
+:::note[Platform support]
 [Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
 [Android](android.md), and [iOS](ios.md) only.
 :::
@@ -806,9 +824,10 @@ message = "Starting up the app…"
 ```
 </TabItem>
 </Tabs>
+
 ### Hidden app window on startup
 
-:::note[Note]
+:::note[Platform support]
 [Windows](windows.md), [macOS](macos.md), and [Linux](linux.md) only.
 :::
 
@@ -836,9 +855,10 @@ hide_window_on_start = true
 ```
 </TabItem>
 </Tabs>
+
 ### Deep linking
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md) and [iOS](ios.md) only.
 :::
 
@@ -887,6 +907,7 @@ host = "mydomain.com"
 ```
 </TabItem>
 </Tabs>
+
 <details>
 <summary>Template translation</summary>
 
@@ -927,8 +948,8 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ### Target Architecture
 
-:::note[Note]
-For [Android](android.md) and [macOS](macos.md) only.
+:::note[Platform support]
+[Android](android.md) and [macOS](macos.md) only.
 :::
 
 A target platform can have different CPU architectures,
@@ -965,6 +986,7 @@ target_arch = ["arm64", "x86_64"]
 ```
 </TabItem>
 </Tabs>
+
 ### Excluding files and directories
 
 Files and/or directories can be excluded from the build process.
@@ -1001,6 +1023,7 @@ exclude = [".git", ".venv"]
 ```
 </TabItem>
 </Tabs>
+
 ### Compilation and cleanup
 
 Flet can compile your app's `.py` files and/or installed packages' `.py` files into
@@ -1070,9 +1093,10 @@ package_files = ["**/*.pyi"]
 ```
 </TabItem>
 </Tabs>
+
 ### Permissions
 
-:::note[Note]
+:::note[Platform support]
 [Android](android.md), [iOS](ios.md), and [macOS](macos.md) only.
 :::
 
@@ -1120,6 +1144,7 @@ permissions = ["location", "microphone"]
 ```
 </TabItem>
 </Tabs>
+
 ### Build template
 
 `flet build` creates (and reuses) a Flutter project under `<app_root>/build/flutter` using a
@@ -1164,6 +1189,7 @@ url = "gh:my-org/my-custom-template"
 ```
 </TabItem>
 </Tabs>
+
 #### Template Reference
 
 Defines the branch, tag, or commit to check out from the [template source](#template-source).
@@ -1191,6 +1217,7 @@ ref = "main"
 ```
 </TabItem>
 </Tabs>
+
 #### Template Directory
 
 Defines the relative path to the cookiecutter template.
@@ -1221,6 +1248,7 @@ dir = "sub/directory"
 ```
 </TabItem>
 </Tabs>
+
 ### Additional `flutter build` Arguments
 
 During the `flet build` process, `flutter build` command gets called internally to
@@ -1266,6 +1294,7 @@ build_args = [
 ```
 </TabItem>
 </Tabs>
+
 ### Flutter dependencies
 
 When you run `flet build`, Flet generates a Flutter shell project and then
@@ -1320,6 +1349,7 @@ flutter_test = { sdk = "flutter" }
 ```
 </TabItem>
 </Tabs>
+
 ### Verbose logging
 
 The [`-v`](../cli/flet-build.md#--verbose) (or `--verbose`) and `-vv` flags
