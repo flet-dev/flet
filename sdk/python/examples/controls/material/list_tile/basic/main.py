@@ -25,7 +25,7 @@ def main(page: ft.Page):
                             ),
                             ft.ListTile(
                                 leading=ft.Image(
-                                    src="/icons/icon-192.png",
+                                    src="assets/icon-192.png",
                                     fit=ft.BoxFit.CONTAIN,
                                 ),
                                 title=ft.Text("One-line with leading control"),
