@@ -52,11 +52,11 @@ def main(page: ft.Page):
         bounce_back(solitaire, e.control)
         e.control.update()
 
-    slot0 = ft.Container(width=70, height=100, left=0, top=0, border=ft.border.all(1))
+    slot0 = ft.Container(width=70, height=100, left=0, top=0, border=ft.Border.all(1))
 
-    slot1 = ft.Container(width=70, height=100, left=200, top=0, border=ft.border.all(1))
+    slot1 = ft.Container(width=70, height=100, left=200, top=0, border=ft.Border.all(1))
 
-    slot2 = ft.Container(width=70, height=100, left=300, top=0, border=ft.border.all(1))
+    slot2 = ft.Container(width=70, height=100, left=300, top=0, border=ft.Border.all(1))
 
     slots = [slot0, slot1, slot2]
 

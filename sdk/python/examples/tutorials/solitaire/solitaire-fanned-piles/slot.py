@@ -1,7 +1,7 @@
+import flet as ft
+
 SLOT_WIDTH = 70
 SLOT_HEIGHT = 100
-
-import flet as ft
 
 
 class Slot(ft.Container):
@@ -12,4 +12,4 @@ class Slot(ft.Container):
         self.height = SLOT_HEIGHT
         self.left = left
         self.top = top
-        self.border = ft.border.all(1)
+        self.border = ft.Border.all(1)

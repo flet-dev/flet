@@ -52,7 +52,7 @@ def main(page: ft.Page):
         cl.controls.append(ft.Text(f"Text line {i}", key=str(i)))
 
     page.add(
-        ft.Container(cl, border=ft.border.all(1)),
+        ft.Container(cl, border=ft.Border.all(1)),
     )
 
 ft.run(main)

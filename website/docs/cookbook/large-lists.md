@@ -78,10 +78,10 @@ def main(page: ft.Page):
                 ft.Text(f"Item {i}"),
                 width=100,
                 height=100,
-                alignment=ft.alignment.center,
+                alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.AMBER_100,
-                border=ft.border.all(1, ft.Colors.AMBER_400),
-                border_radius=ft.border_radius.all(5),
+                border=ft.Border.all(1, ft.Colors.AMBER_400),
+                border_radius=ft.BorderRadius.all(5),
             )
         )
     page.update()
@@ -115,10 +115,10 @@ def main(page: ft.Page):
         gv.controls.append(
             ft.Container(
                 ft.Text(f"Item {i}"),
-                alignment=ft.alignment.center,
+                alignment=ft.Alignment.CENTER,
                 bgcolor=ft.Colors.AMBER_100,
-                border=ft.border.all(1, ft.Colors.AMBER_400),
-                border_radius=ft.border_radius.all(5),
+                border=ft.Border.all(1, ft.Colors.AMBER_400),
+                border_radius=ft.BorderRadius.all(5),
             )
         )
     page.update()

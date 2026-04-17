@@ -162,7 +162,7 @@ class Container(LayoutControl, AdaptiveControl):
                     width=50,
                     height=50,
                     bgcolor="#44CCCCCC",
-                    border=ft.border.all(2, ft.Colors.BLACK),
+                    border=ft.Border.all(2, ft.Colors.BLACK),
                 ),
             ]
         )

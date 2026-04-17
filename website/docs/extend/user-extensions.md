@@ -73,7 +73,7 @@ def main(page: ft.Page):
         ft.Container(
             height=150,
             width=300,
-            alignment=ft.alignment.center,
+            alignment=ft.Alignment.CENTER,
             bgcolor=ft.Colors.PINK_200,
             content=FletSpinkit(
                 tooltip="My new PINK FletSpinkit Control tooltip",
