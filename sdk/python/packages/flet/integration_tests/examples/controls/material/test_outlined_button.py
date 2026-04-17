@@ -73,34 +73,54 @@ async def test_handling_clicks(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(300, 150)
     flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
     ob = await flet_app_function.tester.find_by_text_containing("event")
-    await flet_app_function.tester.tap(ob)
-    await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "handling_clicks1",
-        await flet_app_function.page.take_screenshot(
-            pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
     )
-    await flet_app_function.tester.tap(ob)
-    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
-        "handling_clicks2",
-        await flet_app_function.page.take_screenshot(
-            pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        "handling_clicks_initial",
+        initial_frame,
     )
-    await flet_app_function.tester.tap(ob)
+    frames: list[bytes] = [initial_frame]
+
+    await flet_app_function.tester.mouse_hover(ob)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "handling_clicks3",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
+    await flet_app_function.tester.tap(ob)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(ob)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(ob)
+    await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "handling_clicks_final",
+        final_frame,
+    )
+    frames.append(final_frame)
+
     flet_app_function.create_gif(
-        ["handling_clicks1", "handling_clicks2", "handling_clicks3"],
-        "handling_clicks",
+        frames=frames,
+        output_name="handling_clicks",
         duration=1600,
     )
