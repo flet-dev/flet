@@ -25,6 +25,7 @@ Use this skill after the integration test structure is already in place and the 
 - single static screenshots when one frame is enough for docs
 - do not keep screenshots taken after a click if the UI closes and the state is not visible
 5. Use `assert_screenshot(...)` for regular golden screenshots and `create_gif([...], "<flow_name>", duration=...)` only when the docs benefit from an animated flow.
+ - Prefer storing only asserted or docs-facing states as named screenshots; keep intermediate hover/click frames in memory and pass them directly to `create_gif(...)` when they do not need standalone golden files.
 6. Update docs to use the generated screenshot or GIF, not an old media asset from `examples/.../media`, when the integration-test asset is now the better docs artifact.
 7. Update docs references to point at the intended generated screenshot or GIF path, but do not copy generated assets into `website/static/docs/test-images/...` as part of this workflow.
 

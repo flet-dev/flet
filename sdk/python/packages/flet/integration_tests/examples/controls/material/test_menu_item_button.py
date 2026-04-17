@@ -47,33 +47,50 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle(
         duration=ft.Duration(milliseconds=500)
     )
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "basic1",
+        "basic_initial",
+        initial_frame,
+    )
+    frames: list[bytes] = [initial_frame]
+    btn = await flet_app_function.tester.find_by_text("BgColors")
+    await flet_app_function.tester.mouse_hover(btn)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
-    btn = await flet_app_function.tester.find_by_text("BgColors")
     await flet_app_function.tester.tap(btn)
     await flet_app_function.tester.pump_and_settle()
+    open_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "basic2",
+        "basic_open",
+        open_frame,
+    )
+    frames.append(open_frame)
+    mib = await flet_app_function.tester.find_by_text("Green")
+    await flet_app_function.tester.mouse_hover(mib)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
-    mib = await flet_app_function.tester.find_by_text("Green")
     await flet_app_function.tester.tap(mib)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "basic3",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     flet_app_function.create_gif(
-        ["basic1", "basic2", "basic3"],
-        "basic",
+        frames=frames,
+        output_name="basic",
         duration=1600,
     )
