@@ -105,17 +105,24 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
             );
           }
 
+          final crossAxisAlignment = control.getCrossAxisAlignment(
+              "vertical_alignment", CrossAxisAlignment.start)!;
+
           Widget row = Row(
             spacing: bpSpacing - 0.1,
             mainAxisAlignment: control.getMainAxisAlignment(
                 "alignment", MainAxisAlignment.start)!,
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: control.getCrossAxisAlignment(
-                "vertical_alignment", CrossAxisAlignment.start)!,
+            crossAxisAlignment: crossAxisAlignment,
             children: controls,
           );
 
-          if (control.get("scroll") != null) {
+          // `IntrinsicHeight` is only needed when the row is both vertically
+          // scrollable (unbounded height) and asked to stretch children
+          // cross-axis — otherwise the row sizes to its children naturally,
+          // so we avoid the extra intrinsic-sizing pass.
+          if (control.get("scroll") != null &&
+              crossAxisAlignment == CrossAxisAlignment.stretch) {
             row = IntrinsicHeight(child: row);
           }
 
