@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fix `Lottie` failing to load local asset files on Windows desktop (and unreliably on other desktop platforms), so animations referenced by `src="file.json"` from the app's `assets/` directory now display correctly ([#6386](https://github.com/flet-dev/flet/issues/6386)) by @ndonkoHenri.
+- Fix `Lottie` failing to load local asset files on Windows desktop (and unreliably on other desktop platforms), so animations referenced by `src="file.json"` from the app's `assets/` directory now display correctly ([#6386](https://github.com/flet-dev/flet/issues/6386), [#6426](https://github.com/flet-dev/flet/pull/6426)) by @ndonkoHenri.
 
 ## 0.80.0
 
