@@ -26,4 +26,10 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/selected_icon.gif'} alt="selected-icon" width="20%" />
 
+### Variants
+
+<CodeExample path={frontMatter.examples + '/variants/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/variants.png'} alt="variants" width="30%" />
+
 <ClassMembers name={frontMatter.class_name} />
