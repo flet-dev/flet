@@ -91,19 +91,29 @@ class FletStaticFiles(StaticFiles):
         await super().__call__(scope, receive, send)
 
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
-        """Returns the index file when no match is found.
+        """Resolve a static file path, with SPA fallback for client-side routes.
+
+        Route-like paths (no extension, or `.html`) that don't match a file
+        fall back to `index.html` so the Flutter client can handle routing.
+        Asset-like paths (any other extension) resolve to a real `404`.
 
         Args:
-            path (str): Resource path.
+            path: Requested path, relative to the mounted static root
+                (e.g. `"about"`, `"sample.json"`).
 
         Returns:
-            [tuple[str, os.stat_result]]: Always returns a full path and stat result.
+            A `(full_path, stat_result)` tuple. When `stat_result` is
+                `None`, Starlette responds with `404`.
         """
         logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)
 
-        # if a file cannot be found
-        if stat_result is None:
+        if stat_result is not None:
+            return full_path, stat_result
+
+        # Not found: SPA fallback only for route-like paths.
+        ext = os.path.splitext(path)[1].lower()
+        if ext == "" or ext == ".html":
             return super().lookup_path(self.index[0])
 
         return full_path, stat_result
