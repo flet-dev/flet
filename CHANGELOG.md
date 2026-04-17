@@ -23,6 +23,7 @@
 ### Other changes
 
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
+* Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helpers (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
 
 ## 0.84.0
 
