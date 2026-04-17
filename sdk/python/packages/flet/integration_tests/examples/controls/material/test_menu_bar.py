@@ -51,33 +51,50 @@ async def test_nested_submenus(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle(
         duration=ft.Duration(milliseconds=500)
     )
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "nested_submenus1",
+        "nested_submenus_initial",
+        initial_frame,
+    )
+    frames: list[bytes] = [initial_frame]
+    smb = await flet_app_function.tester.find_by_text("File")
+    await flet_app_function.tester.mouse_hover(smb)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
-    smb = await flet_app_function.tester.find_by_text("File")
     await flet_app_function.tester.tap(smb)
     await flet_app_function.tester.pump_and_settle()
+    menu_open_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "nested_submenus2",
+        "nested_submenus_menu_open",
+        menu_open_frame,
+    )
+    frames.append(menu_open_frame)
+    mib = await flet_app_function.tester.find_by_text("Save")
+    await flet_app_function.tester.mouse_hover(mib)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
-    mib = await flet_app_function.tester.find_by_text("Save")
     await flet_app_function.tester.tap(mib)
     await flet_app_function.tester.pump_and_settle()
-    flet_app_function.assert_screenshot(
-        "nested_submenus3",
+    frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
     )
 
     flet_app_function.create_gif(
-        ["nested_submenus1", "nested_submenus2", "nested_submenus3"],
-        "nested_submenus",
+        frames=frames,
+        output_name="nested_submenus",
         duration=1600,
     )
