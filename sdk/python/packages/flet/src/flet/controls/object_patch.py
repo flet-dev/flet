@@ -997,6 +997,24 @@ class DiffBuilder:
                     if orig_frozen is not None:
                         object.__setattr__(dst, "_frozen", orig_frozen)
                     object.__setattr__(dst, "_initialized", True)
+                # Reconciled controls are fresh Python objects that take over
+                # the logical identity (_i) of their predecessor.  Two things
+                # must be stamped on the new instance so the framework keeps
+                # working for it:
+                #   1. `_parent` — unset at creation, so `.page` would raise
+                #      "Control must be added to the page first" otherwise.
+                #   2. `__index` on the session — the new instance must
+                #      replace the old one so click events dispatched to
+                #      `_i` reach the instance that lives in the current
+                #      render tree. We queue the pair (old, new) so
+                #      session.patch_control() reindexes without firing
+                #      did_mount/will_unmount (the logical control wasn't
+                #      added or removed, only reconciled).
+                if parent is not None and parent is not dst and src is not dst:
+                    dst._parent = weakref.ref(parent)
+                    # Queue both sides so session dedupes lifecycle hooks.
+                    self._dataclass_added(dst, parent, frozen)
+                    self._dataclass_removed(src)
             dst._before_update_safe()
 
         if not frozen:
