@@ -1260,51 +1260,70 @@ class Page(BasePage):
         return self.session.pubsub_client
 
     @property
-    @deprecated("Use UrlLauncher() instead.", version="0.80.0", delete_version="0.90.0")
+    @deprecated(
+        reason="Use UrlLauncher() instead.",
+        docs_reason="Use :class:`~flet.UrlLauncher` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+    )
     def url_launcher(self) -> UrlLauncher:
         """
-        DEPRECATED: The UrlLauncher service for the current page.
+        The UrlLauncher service for the current page.
         """
         return UrlLauncher()
 
     @property
     @deprecated(
-        "Use BrowserContextMenu() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use BrowserContextMenu() instead.",
+        docs_reason="Use :class:`~flet.BrowserContextMenu` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def browser_context_menu(self):
         """
-        DEPRECATED: The BrowserContextMenu service for the current page.
+        The BrowserContextMenu service for the current page.
         """
 
         return BrowserContextMenu()
 
     @property
     @deprecated(
-        "Use SharedPreferences() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use SharedPreferences() instead.",
+        docs_reason="Use :class:`~flet.SharedPreferences` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def shared_preferences(self):
         """
-        DEPRECATED: The SharedPreferences service for the current page.
+        The SharedPreferences service for the current page.
         """
 
         return SharedPreferences()
 
     @property
-    @deprecated("Use Clipboard() instead.", version="0.80.0", delete_version="0.90.0")
+    @deprecated(
+        reason="Use Clipboard() instead.",
+        docs_reason="Use :class:`~flet.Clipboard` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+    )
     def clipboard(self):
         """
-        DEPRECATED: The Clipboard service for the current page.
+        The Clipboard service for the current page.
         """
 
         return Clipboard()
 
     @property
     @deprecated(
-        "Use StoragePaths() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use StoragePaths() instead.",
+        docs_reason="Use :class:`~flet.StoragePaths` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def storage_paths(self):
         """
-        DEPRECATED: The StoragePaths service for the current page.
+        The StoragePaths service for the current page.
         """
 
         return StoragePaths()
