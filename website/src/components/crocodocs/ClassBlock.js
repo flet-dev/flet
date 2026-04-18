@@ -46,7 +46,7 @@ function HeadingLink({level: Tag, id, children}) {
   );
 }
 
-/** Renders a small badge label (e.g. "classmethod", "deprecated") next to a member heading. */
+/** Renders a small metadata badge label (e.g. "classmethod", "deprecated"). */
 function Badge({children, title}) {
   return (
     <span className="crocodocs-member-badge" title={title}>
@@ -288,6 +288,11 @@ function renderMethod(item, classSymbol, docId) {
   );
 }
 
+/**
+ * Build the compact member data used by ClassSummary lists.
+ * Carries labels/deprecation metadata so summary rows can show important badges
+ * without requiring readers to scroll to the full member documentation.
+ */
 function memberSummary(item, kind) {
   return {
     name: item.name,
@@ -298,6 +303,11 @@ function memberSummary(item, kind) {
   };
 }
 
+/**
+ * Return labels that should be visible in compact summary rows.
+ * Keep this intentionally narrower than full member headings to avoid duplicating
+ * section context such as "property" or "method".
+ */
 function summaryLabels(item) {
   return (item.labels ?? []).filter((label) => label === "deprecated");
 }

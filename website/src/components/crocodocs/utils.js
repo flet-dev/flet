@@ -503,8 +503,9 @@ function renderAutolinkedText(text, context, code = false) {
 }
 
 /**
- * Render a text string by resolving [label][target] cross-references to anchor elements
- * and auto-linking any remaining bare API symbols.
+ * Render a text string by resolving explicit [label][target] cross-references.
+ * Bare API symbols in prose are not auto-linked; use reST roles or CrocoDocs
+ * Markdown cross-references when a link is intended.
  */
 function renderTextWithCrossReferences(text, context, keyPrefix) {
   const nodes = [];
@@ -513,11 +514,7 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
 
   for (const match of text.matchAll(XREF_TEXT_RE)) {
     if (match.index > lastIndex) {
-      nodes.push(
-        ...[].concat(
-          renderAutolinkedText(text.slice(lastIndex, match.index), context)
-        )
-      );
+      nodes.push(text.slice(lastIndex, match.index));
     }
 
     const href = resolveCrossReference(match[2], match[1], context);
@@ -535,9 +532,7 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
   }
 
   if (lastIndex < text.length) {
-    nodes.push(
-      ...[].concat(renderAutolinkedText(text.slice(lastIndex), context))
-    );
+    nodes.push(text.slice(lastIndex));
   }
 
   return nodes.length ? nodes : text;
