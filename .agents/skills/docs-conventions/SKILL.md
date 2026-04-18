@@ -142,6 +142,12 @@ import {CodeExample} from '@site/src/components/crocodocs';
 
 Paths are relative to the configured `examples_root` (`sdk/python/examples/`).
 
+## Inline HTML
+
+Use `<kbd>...</kbd>` in Python docstrings for keyboard keys, for example
+`<kbd>Enter</kbd>` or `<kbd>Shift</kbd>`. CrocoDocs preserves this tag in API
+docs.
+
 ## Sidebar Navigation
 
 Edit `website/sidebars.yml` to change navigation structure:

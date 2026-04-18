@@ -21,6 +21,12 @@ const MARKDOWN_PARSER = unified()
   .use(remarkDirective)
   .use(remarkMdx);
 
+/**
+ * Inline HTML-like elements that are safe to preserve from docstrings.
+ * Keep this list narrow: unknown MDX elements are intentionally dropped.
+ */
+const SAFE_INLINE_MDX_ELEMENTS = new Set(["kbd"]);
+
 /** Return the bundled api-data.json object. */
 export function getApiData() {
   return apiData;
@@ -1029,6 +1035,15 @@ function renderMarkdownNode(node, context, key, inline = false) {
           .map((attr) => `${attr.name}="${attr.value}"`)
           .join(" ")} />`;
         return renderHtmlImage(raw, context, key, extractImageWidth(node));
+      }
+
+      // Preserve safe semantic inline tags from Python docstrings.
+      if (inline && SAFE_INLINE_MDX_ELEMENTS.has(node.name)) {
+        return React.createElement(
+          node.name,
+          {key},
+          renderInlineNodes(node.children ?? [], context, key)
+        );
       }
       return [];
     case "html":
