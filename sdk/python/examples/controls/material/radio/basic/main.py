@@ -13,13 +13,19 @@ def main(page: ft.Page):
                     group := ft.RadioGroup(
                         content=ft.Column(
                             controls=[
-                                ft.Radio(value="red", label="Red"),
+                                ft.Radio(
+                                    key="basic_radio_red", value="red", label="Red"
+                                ),
                                 ft.Radio(value="green", label="Green"),
                                 ft.Radio(value="blue", label="Blue"),
                             ]
                         )
                     ),
-                    ft.Button(content="Submit", on_click=handle_button_click),
+                    ft.Button(
+                        key="basic_submit_button",
+                        content="Submit",
+                        on_click=handle_button_click,
+                    ),
                     message := ft.Text(),
                 ]
             )

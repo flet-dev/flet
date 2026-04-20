@@ -33,16 +33,60 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(420, 280)
     flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "basic_initial",
+        initial_frame,
+    )
+    frames: list[bytes] = [initial_frame]
+
     red = await flet_app_function.tester.find_by_text("Red")
+    await flet_app_function.tester.mouse_hover(red)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
     await flet_app_function.tester.tap(red)
     await flet_app_function.tester.pump_and_settle()
-    submit = await flet_app_function.tester.find_by_text("Submit")
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    submit = await flet_app_function.tester.find_by_key("basic_submit_button")
+    await flet_app_function.tester.mouse_hover(submit)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
     await flet_app_function.tester.tap(submit)
     await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "basic",
-        await flet_app_function.take_page_controls_screenshot(),
+        "basic_final",
+        final_frame,
+    )
+    frames.append(final_frame)
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="basic",
+        duration=1000,
     )
 
 
