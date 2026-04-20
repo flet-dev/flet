@@ -99,13 +99,75 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.resize_page(420, 250)
     flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "handling_selection_changes_initial",
+        initial_frame,
+    )
+    frames: list[bytes] = [initial_frame]
+
+    red = await flet_app_function.tester.find_by_text("Red")
+    await flet_app_function.tester.mouse_hover(red)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(red)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    green = await flet_app_function.tester.find_by_text("Green")
+    await flet_app_function.tester.mouse_hover(green)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(green)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
     blue = await flet_app_function.tester.find_by_text("Blue")
+    await flet_app_function.tester.mouse_hover(blue)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
     await flet_app_function.tester.tap(blue)
     await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
     flet_app_function.assert_screenshot(
-        "handling_selection_changes",
-        await flet_app_function.take_page_controls_screenshot(
-            pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        "handling_selection_changes_final",
+        final_frame,
+    )
+    frames.append(final_frame)
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="handling_selection_changes",
+        duration=1000,
     )

@@ -23,7 +23,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_selection_changes/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/handling_selection_changes.png'} alt="handling-selection-changes" width="25%" />
+<Image src={frontMatter.example_images + '/handling_selection_changes.gif'} alt="handling-selection-changes" width="40%" />
 
 ### Styled radio buttons
 
