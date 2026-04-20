@@ -74,10 +74,14 @@ def from_git() -> Optional[str]:
 
 
 def find_repo_root(start_path: Path) -> Optional[Path]:
-    """Find the root directory of the Git repository containing the start path."""
+    """Find the root directory of the Git repository containing the start path.
+
+    Accepts both a regular clone (where `.git` is a directory) and a
+    worktree (where `.git` is a file containing `gitdir: ...`).
+    """
     current_path = start_path.resolve()
     while current_path != current_path.parent:
-        if (current_path / ".git").is_dir():
+        if (current_path / ".git").exists():
             return current_path
         current_path = current_path.parent
     return None
