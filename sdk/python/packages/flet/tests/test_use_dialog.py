@@ -115,11 +115,13 @@ async def test_use_dialog_waits_for_dismiss_before_removing_dialog():
 
     assert page._dialogs.controls == [dialog]
     assert dialog.open is False
-    # Dismiss now routes through `_dialogs.update()` rather than an eager
-    # `patch_control(prev)` — this coalesces with sibling `use_dialog` hosts
-    # that may simultaneously add a new dialog in the same tick.
-    assert session.patch_calls == []
-    assert session.scheduled_updates == [page._dialogs]
+    # Dismiss patches the dialog directly — `open=False` is a single op on
+    # the dialog's own `_i`, which both (a) avoids a list-diff on
+    # `_dialogs.controls` (whose `__prev_lists` snapshot may be out of
+    # sync after an intervening frozen-diff `_i` migration), and (b) gives
+    # Flutter an unambiguous "this dialog is closing" signal.
+    assert len(session.patch_calls) == 1
+    assert session.patch_calls[0] == (dialog, {})
 
     await dialog.on_dismiss(ControlEvent(control=dialog, name="dismiss", data=None))
 
@@ -155,9 +157,10 @@ async def test_use_dialog_unmount_keeps_dialog_until_dismiss_event():
 
     assert page._dialogs.controls == [dialog]
     assert dialog.open is False
-    # Unmount cleanup also coalesces through `_dialogs.update()`.
-    assert session.patch_calls == []
-    assert session.scheduled_updates == [page._dialogs]
+    # Unmount cleanup patches the dialog directly — same approach as the
+    # regular dismiss path, for the same reason.
+    assert len(session.patch_calls) == 1
+    assert session.patch_calls[0] == (dialog, {})
 
     await dialog.on_dismiss(ControlEvent(control=dialog, name="dismiss", data=None))
 
@@ -189,12 +192,15 @@ async def test_show_dialog_still_removes_dialog_on_dismiss():
 
 
 @pytest.mark.asyncio
-async def test_use_dialog_dismiss_and_show_in_same_tick_batch_through_dialogs():
+async def test_use_dialog_dismiss_and_show_in_same_tick_each_emit_their_own_patch():
     """Regression: two sibling `use_dialog` hosts rendering in the same tick —
-    one dismissing, one showing — must coalesce their patches through
-    `_dialogs.update()` instead of racing a direct `patch_control(prev)`
-    against a deferred `_dialogs` update.  Otherwise the Flutter overlay
-    rebuilds mid-dismiss and the AlertDialog stays stuck open.
+    one dismissing, one showing — each emit their own patch:
+    - The dismissing host patches its dialog directly with `open=False`.
+    - The showing host appends to `_dialogs.controls` and schedules a
+      `_dialogs` update to flush the new entry to Flutter.
+
+    These are non-conflicting writers (disjoint `_i`s on the Dart side),
+    so landing them as separate messages is safe.
     """
     page, session = create_page()
     alert_open = True
@@ -233,12 +239,11 @@ async def test_use_dialog_dismiss_and_show_in_same_tick_batch_through_dialogs():
     snackbar = page._dialogs.controls[1]
     assert snackbar.open is True
 
-    # No direct `patch_control(prev)` from the dismiss path — everything
-    # flows through `_dialogs.update()`.
-    assert session.patch_calls == []
-    # Both hosts scheduled an update on the same `_dialogs` container — the
-    # scheduler deduplicates them so only one patch is sent to Flutter.
-    assert session.scheduled_updates == [page._dialogs, page._dialogs]
+    # Dismiss patches the alert directly with open=False.
+    assert session.patch_calls == [(alert_dialog, {})]
+    # Show schedules the `_dialogs` list for update so the new snackbar
+    # entry is flushed to Flutter.
+    assert session.scheduled_updates == [page._dialogs]
 
 
 def test_use_dialog_reopen_while_dismissing_appends_fresh_dialog():
@@ -289,14 +294,13 @@ def test_use_dialog_reopen_while_dismissing_appends_fresh_dialog():
     assert second_dialog.open is True
 
 
-def test_use_dialog_sibling_rerender_keeps_prev_dialog_instance():
-    """Regression: when sibling hosts share an observable, flipping an
-    unrelated field on that observable re-renders every subscriber —
-    including the one hosting an already-open dialog.  The hook must
-    treat that re-render as a no-op (keep `prev`) instead of creating a
-    new Python dialog and migrating `_i` onto it.  Otherwise enough
-    churn desyncs Flutter's `_dialogRoute` and the next dismiss never
-    reaches `Navigator.removeRoute`.
+def test_use_dialog_sibling_rerender_emits_frozen_diff():
+    """Regression: when a component re-renders with a fresh dialog instance
+    that has the same content, the hook must emit a *frozen* diff against
+    the previous dialog. The frozen path migrates `_i` from the previous
+    instance onto the new one (via `_migrate_state`), so Flutter sees the
+    same Control on both sides — preserving the dialog route, TextField
+    cursor, animation state, etc.
     """
     page, session = create_page()
 
@@ -307,29 +311,37 @@ def test_use_dialog_sibling_rerender_keeps_prev_dialog_instance():
     render_component(component, page)
 
     first_dialog = page._dialogs.controls[0]
-    first_i = first_dialog._i
     session.patch_calls.clear()
     session.scheduled_updates.clear()
 
     # Sibling re-render: same component body, fresh dialog instance.
     render_component(component, page)
 
+    # Overlay list still has exactly one dialog at the same index.
     assert len(page._dialogs.controls) == 1
-    assert page._dialogs.controls[0] is first_dialog
-    assert page._dialogs.controls[0]._i == first_i
-    # No immediate patch, no scheduled update — re-render is a no-op.
-    assert session.patch_calls == []
+    # Exactly one frozen diff call — against the previous dialog — so
+    # `_migrate_state` takes the `_i` off `first_dialog` onto the new
+    # instance. No separate `schedule_update` (the frozen patch is the
+    # only message).
+    assert len(session.patch_calls) == 1
+    patched, kwargs = session.patch_calls[0]
+    assert patched is page._dialogs.controls[0]
+    assert kwargs.get("prev_control") is first_dialog
+    assert kwargs.get("frozen") is True
     assert session.scheduled_updates == []
 
 
 def test_use_dialog_open_rerender_updates_live_dialog_content():
-    """Regression: keep the mounted dialog instance, but still refresh its
-    render-time props and closures while it remains open.
+    """Regression: re-rendering with updated props/closures while the
+    dialog is open must propagate to the mounted overlay entry so the
+    live dialog sees the latest `disabled`, `on_click` closure, etc.
 
-    This covers the stale `disabled`/closure problem from the report's
-    Candidate A workaround.
+    The frozen diff both emits the field deltas (Dart side) and updates
+    the Python list entry to point at the fresh dialog (whose `_i` has
+    been migrated from the previous instance), so subsequent event
+    dispatch reaches the live closures.
     """
-    page, session = create_page()
+    page, _session = create_page()
     comment = ""
     submitted: list[str] = []
 
@@ -351,25 +363,66 @@ def test_use_dialog_open_rerender_updates_live_dialog_content():
 
     render_component(component, page)
 
-    dialog = page._dialogs.controls[0]
-    dialog_id = dialog._i
-    assert dialog.actions[0].disabled is True
-    session.patch_calls.clear()
-    session.scheduled_updates.clear()
+    first_dialog = page._dialogs.controls[0]
+    assert first_dialog.actions[0].disabled is True
 
     comment = "Ship it"
     render_component(component, page)
 
+    # Overlay still has exactly one dialog. The entry now points at the
+    # fresh instance whose closures reflect the latest render.
     assert len(page._dialogs.controls) == 1
-    assert page._dialogs.controls[0] is dialog
-    assert dialog._i == dialog_id
-    assert dialog.actions[0].disabled is False
-
-    dialog.actions[0].on_click()
+    mounted = page._dialogs.controls[0]
+    assert mounted.actions[0].disabled is False
+    mounted.actions[0].on_click()
     assert submitted == ["Ship it"]
 
-    assert session.patch_calls == []
-    assert session.scheduled_updates == [dialog]
+
+def test_use_dialog_rerender_preserves_dialogs_prev_lists_snapshot():
+    """Regression: after a frozen-patch re-render swaps the dialog instance
+    in `_dialogs.controls[idx]`, `_dialogs.__prev_lists['controls']` must
+    keep pointing at the live list contents — not at the now-discarded
+    previous Python object.
+
+    If it falls out of sync, a later `_dialogs.update()` triggered by an
+    unrelated caller (e.g. `page.show_dialog(SnackBar)` from a toast)
+    diffs the fresh list against the stale snapshot, sees different
+    `id()` for the same logical dialog, and emits a full REPLACE. On
+    Dart that creates a new Control with `_open` unset, the next build
+    re-enters the show branch and pushes a second DialogRoute on top of
+    the existing one, and subsequent `open=False` patches only close
+    the first — leaving the dialog stuck open with a double-dim barrier.
+    """
+    page, _ = create_page()
+
+    counter = 0
+
+    def body():
+        ft.use_dialog(ft.AlertDialog(title=ft.Text(f"dialog #{counter}")))
+
+    component = Component(fn=body, args=(), kwargs={})
+
+    render_component(component, page)
+    mounted = page._dialogs.controls[0]
+
+    # Simulate the MsgPack encoder having serialized `_dialogs` once, which
+    # is what populates `__prev_lists` on the real protocol path. Without
+    # that, the scenario the regression covers can't arise.
+    object.__setattr__(
+        page._dialogs, "__prev_lists", {"controls": page._dialogs.controls[:]}
+    )
+
+    # Frozen-patch re-render → the hook swaps in a fresh AlertDialog.
+    counter += 1
+    render_component(component, page)
+
+    swapped = page._dialogs.controls[0]
+    assert swapped is not mounted  # instance was replaced
+
+    prev_snapshot = getattr(page._dialogs, "__prev_lists")["controls"]
+    # The snapshot must track the live list. If it still holds the old
+    # Python object, a later `_dialogs.update()` will diff incorrectly.
+    assert prev_snapshot[0] is swapped
 
 
 @pytest.mark.asyncio

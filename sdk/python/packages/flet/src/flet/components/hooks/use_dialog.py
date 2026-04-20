@@ -35,56 +35,6 @@ def _bind_dialog_subtree(value, parent):
             _bind_dialog_subtree(item, parent)
 
 
-def _sync_open_dialog(page, prev: DialogControl, dialog: DialogControl) -> bool:
-    """
-    Copy the latest rendered dialog fields onto the mounted dialog instance.
-
-    Keeping `prev` alive preserves its `_i`, `_parent`, wrapped dismiss handler,
-    and the Flutter widget state (including the live route that was pushed by
-    `showDialog`). The fresh `dialog` instance is treated as render-time input
-    only and discarded after its state is copied over.
-    """
-
-    dialog.open = True
-    ui_changed = False
-
-    for field in dataclasses.fields(dialog):
-        name = field.name
-
-        if name.startswith("_") or name == "open":
-            continue
-
-        if field.metadata.get("skip", False):
-            if name == "data" and prev.data != dialog.data:
-                prev.data = dialog.data
-            continue
-
-        if name == "on_dismiss":
-            continue
-
-        next_value = getattr(dialog, name)
-        if getattr(prev, name) == next_value:
-            continue
-
-        setattr(prev, name, next_value)
-        ui_changed = True
-
-    if not prev.open:
-        prev.open = True
-        ui_changed = True
-
-    if prev.parent is not page._dialogs:
-        page._set_dialog_parent(prev)
-
-    _bind_dialog_subtree(prev, page._dialogs)
-
-    if page._get_original_dialog_on_dismiss(prev) is not dialog.on_dismiss:
-        prev.on_dismiss = dialog.on_dismiss
-        page._wrap_dialog_on_dismiss(prev)
-
-    return ui_changed
-
-
 def use_dialog(dialog: DialogControl | None = None):
     """
     Portal a :class:`~flet.DialogControl` to the page's dialog overlay.
@@ -118,14 +68,35 @@ def use_dialog(dialog: DialogControl | None = None):
             and prev.open
             and type(prev) is type(dialog)
         ):
-            # Preserve the mounted dialog instance so Flutter keeps the same
-            # route/state object, but refresh its latest render-time fields so
-            # props and closures remain live while the dialog stays open.
-            # Queue the patch through the normal scheduler so component
-            # reconciliation finishes before dialog children are reindexed.
-            if _sync_open_dialog(page, prev, dialog):
-                page.session.schedule_update(prev)
-            ref.current = prev
+            # Frozen diff: compares prev and dialog field-by-field, migrates
+            # `_i` onto the new instance via `_migrate_state`, and emits only
+            # actual field deltas. This is what preserves Flutter widget
+            # identity for nested controls — notably the TextField inside an
+            # AlertDialog keeps its cursor/focus across re-renders.
+            dialog.open = True
+            page._prepare_dialog(dialog)
+            page.session.patch_control(control=dialog, prev_control=prev, frozen=True)
+            # Strip the `_frozen` marker set by _dataclass_added during the
+            # frozen diff so we can later set open=False for dismissal.
+            if hasattr(dialog, "_frozen"):
+                del dialog._frozen
+            # Replace the old instance with the new one in the overlay list
+            # — at the SAME index, so sibling hosts' entries aren't disturbed.
+            _bind_dialog_subtree(dialog, page._dialogs)
+            page._dialogs.controls[prev_idx] = dialog
+            # Keep `_dialogs.__prev_lists['controls']` aligned with the new
+            # instance. Without this, a later `_dialogs.update()` triggered
+            # by an unrelated operation (e.g. `page.show_dialog(SnackBar)`)
+            # would diff the fresh `controls` list against a snapshot
+            # pointing at the old Python object — different `id()`, so the
+            # diff emits a full REPLACE of the dialog. On Dart, REPLACE
+            # creates a new Control with `_open` unset, and the next build
+            # re-enters the show branch and pushes a second DialogRoute on
+            # top of the existing one. The dialog then refuses to close.
+            prev_lists = getattr(page._dialogs, "__prev_lists", None)
+            if prev_lists is not None and "controls" in prev_lists:
+                prev_lists["controls"][prev_idx] = dialog
+            ref.current = dialog
         else:
             dialog.open = True
             page._prepare_dialog(dialog)
@@ -144,15 +115,15 @@ def use_dialog(dialog: DialogControl | None = None):
             ref.current = dialog
             page.session.schedule_update(page._dialogs)
     elif prev is not None and prev.open:
-        # Dismiss: flip open=False and coalesce the patch through the
-        # parent `_dialogs` control.  An immediate `patch_control(prev)`
-        # here would race with a sibling host's `schedule_update(_dialogs)`
-        # — both patches land on Flutter in separate messages and the
-        # overlay rebuild can disrupt an in-flight dismiss animation.
-        # Routing both dismiss and show paths through `_dialogs.update()`
-        # emits a single batched patch per scheduler tick.
+        # Dismiss: flip open=False and patch the dialog directly.  The
+        # frozen-patch path above swaps the dialog instance in
+        # `_dialogs.controls`, which desyncs `_dialogs.__prev_lists`
+        # — so a `schedule_update(_dialogs)` here would miss the
+        # `open=False` delta entirely. Patching `prev` directly is both
+        # cheaper (one op vs a full list diff) and unaffected by the
+        # list-snapshot state.
         prev.open = False
-        page.session.schedule_update(page._dialogs)
+        page.session.patch_control(prev)
 
     def _cleanup():
         d = ref.current
@@ -160,6 +131,6 @@ def use_dialog(dialog: DialogControl | None = None):
             ref.current = None
             if d.open:
                 d.open = False
-                page.session.schedule_update(page._dialogs)
+                page.session.patch_control(d)
 
     use_effect(lambda: None, dependencies=[], cleanup=_cleanup)

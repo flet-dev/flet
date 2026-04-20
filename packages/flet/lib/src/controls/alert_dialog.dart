@@ -145,18 +145,22 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         final route = _dialogRoute;
-        // Pop THIS widget's specific route via `removeRoute` rather than
-        // `Navigator.pop()`. Pop targets the topmost route, which can be a
-        // newer dialog pushed by a sibling `use_dialog` host; `removeRoute`
-        // targets our own route so dismissal stays correct regardless of
-        // what sits above us.
-        if (route != null && route.isActive) {
-          debugPrint(
-              "AlertDialog(${control.id}): Closing dialog managed by this widget.");
-          navigator.removeRoute(route);
-        } else {
+        if (route == null || !route.isActive) {
           debugPrint(
               "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
+          return;
+        }
+        debugPrint(
+            "AlertDialog(${control.id}): Closing dialog managed by this widget.");
+        if (route.isCurrent) {
+          // Topmost → animated pop. This is the common case.
+          navigator.pop();
+        } else {
+          // A sibling `use_dialog` host pushed a newer dialog above ours.
+          // `Navigator.pop()` would target that one, so fall back to
+          // `removeRoute` (no exit animation, but keeps dismissal targeted
+          // at THIS widget's route).
+          navigator.removeRoute(route);
         }
       });
     }

@@ -85,3 +85,57 @@ def test_diff_migrates_same_component_fn_when_args_differ():
 
     # Migration: same fn → _i copied from old to new.
     assert new_root.content._i == old_content_i
+
+
+def test_diff_key_change_on_scalar_field_forces_remount():
+    """A `key` change on a single-child dataclass field (e.g.
+    `Container.content`) must force a remove + add, the same way list
+    reconciliation does for keyed list items. Without this, patterns like
+    `ft.Container(content=ft.FletApp(key=str(reload_key)))` silently
+    ignore key changes — the Control's `key` property flips on Dart but
+    the Flutter Element/State is kept, so the widget never actually
+    remounts.
+    """
+    from flet.components.component import Renderer
+
+    with Renderer().with_context():
+        old_root = ft.Container(content=ft.Text("hello", key="0"))
+    with Renderer().with_context():
+        new_root = ft.Container(content=ft.Text("hello", key="1"))
+
+    old_content_i = old_root.content._i
+    new_content_i_before = new_root.content._i
+
+    _patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old_root, new_root, control_cls=BaseControl, frozen=True
+    )
+
+    added_ids = {c._i for c in added_controls}
+    removed_ids = {c._i for c in removed_controls}
+
+    # Different key → old Text must be unmounted, new Text mounted with its
+    # own (not migrated) _i.
+    assert new_root.content._i == new_content_i_before, (
+        "Keyed child must NOT migrate _i from the old instance"
+    )
+    assert old_content_i in removed_ids
+    assert new_root.content._i in added_ids
+    assert new_root.content._i != old_content_i
+
+
+def test_diff_same_key_on_scalar_field_reconciles_in_place():
+    """Sanity check: when the `key` matches across renders, the child is
+    reconciled in place (same as no key at all).
+    """
+    from flet.components.component import Renderer
+
+    with Renderer().with_context():
+        old_root = ft.Container(content=ft.Text("first", key="same"))
+    with Renderer().with_context():
+        new_root = ft.Container(content=ft.Text("second", key="same"))
+
+    old_content_i = old_root.content._i
+
+    ObjectPatch.from_diff(old_root, new_root, control_cls=BaseControl, frozen=True)
+
+    assert new_root.content._i == old_content_i

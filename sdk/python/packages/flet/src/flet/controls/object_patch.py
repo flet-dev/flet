@@ -1234,11 +1234,21 @@ class DiffBuilder:
             if getattr(src, "_c", None) == "C" and getattr(dst, "_c", None) == "C":
                 same_component_fn = getattr(src, "fn", None) is getattr(dst, "fn", None)
 
+            # Respect explicit `key` on single-child dataclass fields the
+            # same way list reconciliation does: a changed key signals
+            # "logically different element" and forces remount (remove +
+            # add) instead of in-place reconciliation. Without this,
+            # `ft.Container(content=Child(key=..))` silently ignores key
+            # changes because single-child fields don't go through the
+            # keyed list path.
+            keys_match = get_control_key(src) == get_control_key(dst)
+
             if (not frozen and src is dst) or (
                 frozen
                 and src is not dst
                 and type(src) is type(dst)
                 and same_component_fn
+                and keys_match
             ):
                 self._compare_dataclasses(
                     parent, _path_join(path, key), src, dst, frozen
@@ -1247,6 +1257,7 @@ class DiffBuilder:
                 (not frozen and src is not dst)
                 or (frozen and type(src) is not type(dst))
                 or (frozen and not same_component_fn)
+                or (frozen and not keys_match)
             ):
                 self._item_replaced(path, key, dst)
                 self._dataclass_removed(src)
