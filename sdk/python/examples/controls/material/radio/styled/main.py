@@ -7,13 +7,19 @@ def main(page: ft.Page):
             content=ft.RadioGroup(
                 ft.Column(
                     controls=[
-                        ft.Radio(label="Radio with default style", value="1"),
                         ft.Radio(
+                            key="styled_radio_default",
+                            label="Radio with default style",
+                            value="1",
+                        ),
+                        ft.Radio(
+                            key="styled_radio_constant",
                             label="Radio with constant fill color",
                             value="2",
                             fill_color=ft.Colors.RED,
                         ),
                         ft.Radio(
+                            key="styled_radio_dynamic",
                             label="Radio with dynamic fill color",
                             value="3",
                             fill_color={
