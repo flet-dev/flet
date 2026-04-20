@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-use-dialog-multiple"
+version = "1.0.0"
+description = "Per-item rename and delete AlertDialogs on a file list, each driven by its own `use_dialog` hook."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "dialog", "use_dialog", "multiple"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Use dialog multiple"
+controls = ["Column", "Row", "Card", "Container", "Text", "Icon", "IconButton", "TextField", "Button", "TextButton", "FilledButton", "AlertDialog"]
+layout_pattern = "list"
+complexity = "intermediate"
+features = ["dialog management", "use_dialog", "multiple dialogs", "async", "list item actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
