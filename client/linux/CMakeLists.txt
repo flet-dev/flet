@@ -91,6 +91,12 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Link mimalloc when media_kit_libs_linux exposes it. This must happen after
+# generated plugins are included so MIMALLOC_LIB is initialized.
+if(MIMALLOC_LIB)
+  target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB})
+endif()
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
