@@ -16,6 +16,7 @@ def main(page: ft.Page):
                     ft.ListTile(
                         title=ft.Text(f"Draggable Item {i}", color=ft.Colors.BLACK),
                         leading=ft.ReorderableDragHandle(
+                            key=f"drag_handle_{i}",
                             content=ft.Icon(
                                 ft.Icons.DRAG_INDICATOR, color=ft.Colors.RED
                             ),
