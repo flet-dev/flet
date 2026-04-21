@@ -13,6 +13,14 @@ const IMAGE_LINE_RE = /^!\[([^\]]*)\]\(([^)]+)\)(\{[^}]*\})?$/;
 const WIDTH_RE = /width="([^"]+)"/;
 const XREF_TEXT_RE = /\[([^\]]+)\]\[((?:[^\]]|\](?=[^.]))+?)\]/g;
 const REST_XREF_RE = /^:(?:py:)?(class|attr|meth|func|data|mod|obj):`([^`\n]+)`/;
+// Qualified references like `flet.Page` or `ft.Control.visible`. Safe to auto-link
+// anywhere — the `flet.`/`ft.` prefix unambiguously marks this as an API reference.
+const API_QUALIFIED_SYMBOL_RE =
+  /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
+// Qualified OR bare capitalized identifiers (`Page`, `Control.visible`). Only safe
+// inside code expressions (signature boxes, type annotations) where every capitalized
+// token is an identifier. In prose, bare words like "Event", "Text", or "When" would
+// be false positives — use API_QUALIFIED_SYMBOL_RE there instead.
 const API_SYMBOL_RE =
   /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b|\b[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
 const MARKDOWN_PARSER = unified()
@@ -484,6 +492,8 @@ function resolveCrossReference(target, label, context) {
 /**
  * Scan text for API symbol patterns and wrap each resolved symbol in an anchor element.
  * When code=true, uses formatApiSymbolLabel for the link label and adds a code-link class.
+ * In prose (code=false), only qualified `flet.X`/`ft.X` references are matched — bare
+ * capitalized words are skipped to avoid linking common English words like "Event".
  * Returns the original text string when no symbols resolve.
  */
 function renderAutolinkedText(text, context, code = false) {
@@ -491,7 +501,8 @@ function renderAutolinkedText(text, context, code = false) {
   let lastIndex = 0;
   let key = 0;
 
-  for (const match of text.matchAll(API_SYMBOL_RE)) {
+  const pattern = code ? API_SYMBOL_RE : API_QUALIFIED_SYMBOL_RE;
+  for (const match of text.matchAll(pattern)) {
     const matchText = match[0];
     const href = resolveApiSymbolHref(matchText, context);
     if (!href) {
