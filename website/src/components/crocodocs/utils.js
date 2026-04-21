@@ -29,6 +29,12 @@ const MARKDOWN_PARSER = unified()
   .use(remarkDirective)
   .use(remarkMdx);
 
+/**
+ * Inline HTML-like elements that are safe to preserve from docstrings.
+ * Keep this list narrow: unknown MDX elements are intentionally dropped.
+ */
+const SAFE_INLINE_MDX_ELEMENTS = new Set(["kbd"]);
+
 /** Return the bundled api-data.json object. */
 export function getApiData() {
   return apiData;
@@ -531,8 +537,9 @@ function renderAutolinkedText(text, context, code = false) {
 }
 
 /**
- * Render a text string by resolving [label][target] cross-references to anchor elements
- * and auto-linking any remaining bare API symbols.
+ * Render a text string by resolving explicit [label][target] cross-references.
+ * Bare API symbols in prose are not auto-linked; use reST roles or CrocoDocs
+ * Markdown cross-references when a link is intended.
  */
 function renderTextWithCrossReferences(text, context, keyPrefix) {
   const nodes = [];
@@ -541,11 +548,7 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
 
   for (const match of text.matchAll(XREF_TEXT_RE)) {
     if (match.index > lastIndex) {
-      nodes.push(
-        ...[].concat(
-          renderAutolinkedText(text.slice(lastIndex, match.index), context)
-        )
-      );
+      nodes.push(text.slice(lastIndex, match.index));
     }
 
     const href = resolveCrossReference(match[2], match[1], context);
@@ -563,9 +566,7 @@ function renderTextWithCrossReferences(text, context, keyPrefix) {
   }
 
   if (lastIndex < text.length) {
-    nodes.push(
-      ...[].concat(renderAutolinkedText(text.slice(lastIndex), context))
-    );
+    nodes.push(text.slice(lastIndex));
   }
 
   return nodes.length ? nodes : text;
@@ -1062,6 +1063,15 @@ function renderMarkdownNode(node, context, key, inline = false) {
           .map((attr) => `${attr.name}="${attr.value}"`)
           .join(" ")} />`;
         return renderHtmlImage(raw, context, key, extractImageWidth(node));
+      }
+
+      // Preserve safe semantic inline tags from Python docstrings.
+      if (inline && SAFE_INLINE_MDX_ELEMENTS.has(node.name)) {
+        return React.createElement(
+          node.name,
+          {key},
+          renderInlineNodes(node.children ?? [], context, key)
+        );
       }
       return [];
     case "html":

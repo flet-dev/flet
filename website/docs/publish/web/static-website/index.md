@@ -42,17 +42,43 @@ if sys.platform == "emscripten":
 ```
 :::
 
-There are two ways to publish a static website:
+## Differences
 
-- [`flet build web`](#flet-build-web) - recommended; uses Flutter and packages dependencies into the output.
-- [`flet publish`](#flet-publish) - no Flutter required; installs dependencies at runtime with micropip.
+There are two ways to publish a static website: [`flet build web`](#flet-build-web) and [`flet publish`](#flet-publish).
+Both produce a static site that runs in the browser via Pyodide. They
+differ mainly in how and when Python dependencies are installed:
+
+|                               | [`flet publish`](#flet-publish)                       | [`flet build web`](#flet-build-web)                                                  |
+|-------------------------------|-------------------------------------------------------|--------------------------------------------------------------------------------------|
+| Flutter required              | No                                                    | Yes                                                                                  |
+| Dependency install            | At runtime, in the browser (`micropip`)               | At build time, on your machine (`pip`)                                               |
+| Build time                    | Faster — no Flutter compilation, no local pip install | Slower — Flutter build + local dependency install                                    |
+| Initial load time             | Slower — wheels are fetched from PyPI on page load    | Faster — dependencies are already bundled                                            |
+| Pure-Python wheels            | ✅                                                     | ✅                                                                                    |
+| Pyodide-built binary wheels   | ✅ (from Pyodide CDN)                                  | ✅ (auto-detected from Pyodide registry)                                              |
+| Source distributions (sdists) | ❌ `micropip` can't build sdists in the browser        | ✅ pure-Python sdists, opt in via [`source_packages`](../../index.md#source-packages) |
+
+### Sdist-only dependencies
+
+A common failure mode with `flet publish` is a (transitive) dependency that ships only a
+source distribution (`.tar.gz`, no wheel) — for example,
+[`docopt`](https://pypi.org/project/docopt/#files). `micropip` cannot build
+sdists, so load fails with:
+
+```
+ValueError: Can't find a pure Python 3 wheel for '<package>'
+```
+
+In such cases, we suggest switching to [`flet build web`](#flet-build-web) and
+adding the package to [`source_packages`](../../index.md#source-packages).
+**Note** that `source_packages` only works for **pure-Python** sdists. Sdists with C/Rust
+extensions (e.g. `numpy`, `cryptography`) cannot be built for Pyodide — use Pyodide's
+[built-in packages](https://pyodide.org/en/stable/usage/packages-in-pyodide.html) instead.
 
 ## `flet publish`
 
-[`flet publish`](../../../cli/flet-publish.md) is alternative to
-[`flet build web`](#flet-build-web) that does not require Flutter. It packages
-your app and installs dependencies in the browser at runtime via [micropip](https://pypi.org/project/micropip/).
-Initial load time is usually higher than `flet build web`.
+Does not require Flutter. It packages your app and installs dependencies in the
+browser at runtime via [micropip](https://pypi.org/project/micropip/).
 
 To publish an app, run:
 
@@ -80,7 +106,8 @@ folder. Assets are not packaged inside the `app.tar.gz`.
 
 ## `flet build web`
 
-Publish a static website using Flutter and Pyodide.
+Uses [Flutter](https://flutter.dev/) and [Pyodide](https://pyodide.org/en/stable/index.html).
+Dependencies are resolved and installed locally at build time (via `pip`), then bundled into the output archive.
 
 :::tip[Note]
 Complementary and more general information is available [here](../../index.md).

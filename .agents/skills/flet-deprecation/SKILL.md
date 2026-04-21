@@ -166,15 +166,22 @@ For supported patterns, docs should auto-render:
 Do not duplicate with manual deprecation admonitions in docstrings unless there
 is a special case not covered by the extension.
 
-## Required Test Matrix
+## Testing Guidance
 
-When adding/changing deprecations, include tests for:
-- runtime warning text (`reason`, versions, optional delete version),
-- docs-only preference (`docs_reason` overrides `reason` in docs),
-- docs rendering extraction for the used pattern (`V.deprecated`, `@deprecated`, `@deprecated_class`),
-- label presence (`deprecated`) in docs extraction tests.
+Do not add one-off tests for every API that gets deprecated when it uses an
+existing, already-tested pattern (`V.deprecated`, `@deprecated`, or
+`@deprecated_class`). For routine deprecation metadata updates, rely on the
+shared helper and docs extraction tests.
 
-Prefer:
+Add or update tests only when the change affects deprecation infrastructure or
+introduces meaningful new behavior, for example:
+- changing runtime warning formatting or stacklevel behavior,
+- changing docs extraction/labeling behavior,
+- adding a new deprecation pattern,
+- adding custom compatibility behavior outside the standard helper,
+- fixing a regression where an existing test would not have failed.
+
+Prefer these locations for infrastructure tests:
 - `sdk/python/packages/flet/tests/test_deprecated.py`
 - `sdk/python/packages/flet/tests/test_griffe_deprecations.py`
 - `sdk/python/packages/flet/tests/test_validation.py` (for `V.deprecated`)
