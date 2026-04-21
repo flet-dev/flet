@@ -26,7 +26,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.Row(
-            [
+            controls=[
                 ft.Draggable(
                     group="number",
                     content=ft.Container(
@@ -35,7 +35,7 @@ def main(page: ft.Page):
                         bgcolor=ft.Colors.CYAN_200,
                         border_radius=5,
                         content=ft.Text("1", size=20),
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.CENTER,
                     ),
                 ),
                 ft.Container(width=100),
@@ -47,7 +47,7 @@ def main(page: ft.Page):
                         bgcolor=ft.Colors.PINK_200,
                         border_radius=5,
                         content=ft.Text("0", size=20),
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.CENTER,
                     ),
                     on_accept=drag_accept,
                 ),
@@ -123,7 +123,7 @@ def main(page: ft.Page):
 
     def drag_will_accept(e):
         # black border when it's allowed to drop and red when it's not
-        e.control.content.border = ft.border.all(
+        e.control.content.border = ft.Border.all(
             2, ft.Colors.BLACK_45 if e.data == "true" else ft.Colors.RED
         )
         e.control.update()
@@ -134,7 +134,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.Row(
-            [
+            controls=[
                 ft.Draggable(
                     group="number",
                     content=ft.Container(
@@ -143,7 +143,7 @@ def main(page: ft.Page):
                         bgcolor=ft.Colors.CYAN_200,
                         border_radius=5,
                         content=ft.Text("1", size=20),
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.CENTER,
                     ),
                     content_when_dragging=ft.Container(
                         width=50,
@@ -162,7 +162,7 @@ def main(page: ft.Page):
                         bgcolor=ft.Colors.PINK_200,
                         border_radius=5,
                         content=ft.Text("0", size=20),
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.CENTER,
                     ),
                     on_accept=drag_accept,
                     on_will_accept=drag_will_accept,

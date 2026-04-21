@@ -46,13 +46,44 @@ nvm use 20
 cd website
 yarn install
 yarn build        # runs crocodocs generate + docusaurus build
-yarn start        # runs crocodocs generate + docusaurus dev server
+yarn start        # runs crocodocs watch + docusaurus dev server
 ```
 
 ### Running CrocoDocs directly
 
 ```bash
 uv --directory ./tools/crocodocs run crocodocs generate
+```
+
+`yarn start` runs the Docusaurus dev server through `crocodocs watch`, which:
+
+- performs an initial `generate`
+- watches CrocoDocs inputs for changes
+- regenerates API data, sidebars, partials, manifests, and synced assets after saves
+
+Watched inputs include:
+
+- `website/sidebars.yml`
+- `sdk/python/packages/*/src`
+- `sdk/python/examples`
+- configured CrocoDocs asset source directories
+
+`website/docs/**/*.{md,mdx}` is intentionally excluded: Docusaurus hot-reloads
+those directly, so regenerating on every prose edit would be redundant. If you
+add a new `<ClassAll symbol="…">` (or similar structural change) to a markdown
+file, run `crocodocs generate` manually or restart the watcher so the manifest
+is refreshed.
+
+Watch and regenerate without starting Docusaurus:
+
+```bash
+uv --directory ./tools/crocodocs run crocodocs watch
+```
+
+Watch and run a child process, using `--` to separate the child command:
+
+```bash
+uv --directory ./tools/crocodocs run crocodocs watch --child-cwd ../../website -- yarn exec docusaurus start
 ```
 
 ## Configuration
@@ -63,17 +94,17 @@ CrocoDocs is configured in [tools/crocodocs/pyproject.toml](./pyproject.toml).
 
 Core paths and settings:
 
-| Key | Purpose |
-|-----|---------|
-| `docs_path` | Path to `website/docs` |
-| `api_output` | Where to write `api-data.json` |
-| `manifest_output` | Where to write `docs-manifest.json` |
+| Key                   | Purpose                                  |
+|-----------------------|------------------------------------------|
+| `docs_path`           | Path to `website/docs`                   |
+| `api_output`          | Where to write `api-data.json`           |
+| `manifest_output`     | Where to write `docs-manifest.json`      |
 | `partials_output_dir` | Where to write generated `.mdx` partials |
-| `sidebars_source` | Path to `sidebars.yml` |
-| `sidebars_output` | Path to generated `sidebars.js` |
-| `base_url` | Base URL for docs routes (e.g. `/docs`) |
-| `examples_root` | Path to code examples directory |
-| `extensions` | Griffe extensions to load |
+| `sidebars_source`     | Path to `sidebars.yml`                   |
+| `sidebars_output`     | Path to generated `sidebars.js`          |
+| `base_url`            | Base URL for docs routes (e.g. `/docs`)  |
+| `examples_root`       | Path to code examples directory          |
+| `extensions`          | Griffe extensions to load                |
 
 ### `[tool.crocodocs.packages]`
 
@@ -83,11 +114,11 @@ Maps Python import names to source roots. These packages are scanned during API 
 
 Defines directories to bulk-copy into `website/static/docs/` during generate. Each mapping has:
 
-| Key | Purpose |
-|-----|---------|
-| `source_path` | Source directory to copy from |
-| `static_subpath` | Destination under `website/static/` |
-| `include_exts` | File extensions to copy (e.g. `[".png", ".gif", ".svg"]`) |
+| Key              | Purpose                                                   |
+|------------------|-----------------------------------------------------------|
+| `source_path`    | Source directory to copy from                             |
+| `static_subpath` | Destination under `website/static/`                       |
+| `include_exts`   | File extensions to copy (e.g. `[".png", ".gif", ".svg"]`) |
 
 Current mappings:
 
@@ -101,7 +132,8 @@ Controls which class members are hidden from API output (e.g. `init`, `before_up
 
 ## `sidebars.yml` Format
 
-[website/sidebars.yml](../../website/sidebars.yml) is the hand-authored sidebar source. CrocoDocs generates [website/sidebars.js](../../website/sidebars.js) from it during `crocodocs generate`.
+[website/sidebars.yml](../../website/sidebars.yml) is the hand-authored sidebar source.
+CrocoDocs generates [website/sidebars.js](../../website/sidebars.js) from it during `crocodocs generate`.
 
 ### Rules
 
@@ -168,7 +200,11 @@ Python docstrings use reST-style cross-references:
 
 Supported roles: `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`, `:obj:`
 
-The `~` prefix shortens the display to the last component (e.g. `Page` instead of `flet.Page`).
+The website strips a leading `flet.` or `ft.` from rendered labels automatically
+and renders reST API cross-references as inline code links
+(for example, `:attr:`flet.Control.visible`` displays as ``Control.visible``).
+The `~` prefix still shortens the display to the last component
+(for example, `:attr:`~flet.Control.visible`` displays as ``visible``).
 
 ### Cross-references in Markdown
 
@@ -202,15 +238,15 @@ CrocoDocs generates data; the Docusaurus website renders it.
 
 Website components in [website/src/components/crocodocs/](../../website/src/components/crocodocs/):
 
-| Component | Purpose |
-|-----------|---------|
-| `ClassAll.js` | Full class page (summary + members) |
-| `ClassSummary.js` | Class header with signature, image, inherits |
-| `ClassMembers.js` | Properties, events, and methods listing |
-| `ClassBlock.js` | Individual member rendering |
-| `CodeExample.js` | Inline code example with syntax highlighting |
-| `Image.js` | Doc image with `/docs/` prefix for root-relative paths |
-| `utils.js` | Markdown rendering, xref resolution, admonition support |
+| Component         | Purpose                                                 |
+|-------------------|---------------------------------------------------------|
+| `ClassAll.js`     | Full class page (summary + members)                     |
+| `ClassSummary.js` | Class header with signature, image, inherits            |
+| `ClassMembers.js` | Properties, events, and methods listing                 |
+| `ClassBlock.js`   | Individual member rendering                             |
+| `CodeExample.js`  | Inline code example with syntax highlighting            |
+| `Image.js`        | Doc image with `/docs/` prefix for root-relative paths  |
+| `utils.js`        | Markdown rendering, xref resolution, admonition support |
 
 ### Key rendering features
 

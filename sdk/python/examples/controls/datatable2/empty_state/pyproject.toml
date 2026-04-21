@@ -1,9 +1,9 @@
 [project]
-name = "datatable2-example-2"
+name = "datatable2-empty-state"
 version = "1.0.0"
-description = "Builds an interactive DataTable2 with sortable nutrition columns and selectable rows."
+description = "Shows an empty DataTable2 state with configured columns and placeholder content."
 requires-python = ">=3.10"
-keywords = ["datatable2", "sorting", "selection", "rows", "extension"]
+keywords = ["datatable2", "data table", "empty state", "extension"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet", "flet-datatable2"]
 
@@ -14,11 +14,11 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/DataTable2"]
 
 [tool.flet.metadata]
-title = "Example 2"
-controls = ["SafeArea", "DataTable2", "DataColumn2", "DataRow2", "DataCell", "Text"]
+title = "Empty state"
+controls = ["SafeArea", "DataTable2", "DataColumn2", "Text"]
 layout_pattern = "table-view"
 complexity = "basic"
-features = ["column sorting", "row selection", "select-all callback"]
+features = ["empty table state", "DataTable2 columns"]
 
 [tool.flet]
 org = "dev.flet"

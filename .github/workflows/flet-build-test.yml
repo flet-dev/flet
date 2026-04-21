@@ -10,7 +10,7 @@ on:
       - 'client/**'
       - 'sdk/python/packages/**'
       - 'packages/flet/**'
-      - 'sdk/python/examples/apps/flet_build_test'
+      - 'sdk/python/examples/apps/flet_build_test/**'
   pull_request:
     paths:
       - '.github/workflows/flet-build-test.yml'
@@ -18,11 +18,16 @@ on:
       - 'client/**'
       - 'sdk/python/packages/**'
       - 'packages/flet/**'
-      - 'sdk/python/examples/apps/flet_build_test'
+      - 'sdk/python/examples/apps/flet_build_test/**'
   workflow_dispatch:
     inputs:
-      extra_args:
-        description: "Extra CLI args appended to `flet build ...` command (ex: --template-ref 0.1.0)"
+      extra_build_args:
+        description: "Extra CLI args appended to `flet build` command (ex: --template-ref 0.1.0)"
+        required: false
+        default: ""
+
+      extra_pack_args:
+        description: "Extra CLI args appended to `flet pack` command (ex: --icon path/to/icon)"
         required: false
         default: ""
 
@@ -31,6 +36,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  ROOT: "${{ github.workspace }}"
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
@@ -38,7 +46,8 @@ env:
   FLET_CLI_NO_RICH_OUTPUT: 1
 
   # Extra args passed via workflow_dispatch (empty for push/PR)
-  FLET_BUILD_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_args || '' }}
+  FLET_BUILD_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
+  FLET_PACK_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_pack_args || '' }}
 
 jobs:
   build:
@@ -160,36 +169,20 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
       - name: Install Linux dependencies
         if: matrix.needs_linux_deps
         shell: bash
         run: |
           sudo apt update --allow-releaseinfo-change
-          sudo apt-get install -y --no-install-recommends \
-            clang \
-            ninja-build \
-            libgtk-3-dev \
-            libasound2-dev \
-            libmpv-dev \
-            mpv \
-            libgstreamer1.0-dev \
-            libgstreamer-plugins-base1.0-dev \
-            libgstreamer-plugins-bad1.0-dev \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good \
-            gstreamer1.0-plugins-bad \
-            gstreamer1.0-plugins-ugly \
-            gstreamer1.0-libav \
-            gstreamer1.0-tools \
-            gstreamer1.0-x \
-            gstreamer1.0-alsa \
-            gstreamer1.0-gl \
-            gstreamer1.0-gtk3 \
-            gstreamer1.0-qt5 \
-            gstreamer1.0-pulseaudio \
-            pkg-config \
-            libsecret-1-0 \
-            libsecret-1-dev
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          sudo apt-get install -y --no-install-recommends $LINUX_DEPS
           sudo apt-get clean
 
       - name: Setup Flutter
@@ -210,5 +203,106 @@ jobs:
         with:
           name: ${{ matrix.artifact_name }}
           path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
+          if-no-files-found: error
+          overwrite: false
+
+  pack:
+    name: Pack (${{ matrix.name }})
+    runs-on: ${{ matrix.runner }}
+    env:
+      FLET_DESKTOP_FLAVOR: full
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux
+            runner: ubuntu-latest
+
+          - name: macos
+            runner: macos-latest
+
+          - name: windows
+            runner: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Install Linux dependencies
+        if: matrix.name == 'linux'
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          sudo apt-get install -y --no-install-recommends $LINUX_DEPS
+          sudo apt-get clean
+
+      - name: Prepare local desktop client archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP_DIR="${SDK_PYTHON}/packages/flet-desktop/src/flet_desktop/app"
+          mkdir -p "${APP_DIR}"
+          rm -rf "${APP_DIR:?}"/*
+
+          pushd client
+          case "${{ matrix.name }}" in
+            linux)
+              flutter build linux --build-name="$PKG_VER" --build-number="$BUILD_NUM"
+              rm -rf build/linux/x64/release/flet
+              mv build/linux/x64/release/bundle build/linux/x64/release/flet
+              tar -czvf "${APP_DIR}/flet-linux-ubuntu24.04-amd64.tar.gz" -C build/linux/x64/release flet
+              ;;
+            macos)
+              flutter build macos --build-name="$PKG_VER" --build-number="$BUILD_NUM"
+              tar -czvf "${APP_DIR}/flet-macos.tar.gz" -C build/macos/Build/Products/Release Flet.app
+              ;;
+            windows)
+              flutter build windows --build-name="$PKG_VER" --build-number="$BUILD_NUM"
+              RUNNER_DIR="${ROOT}/client/build/windows/x64/runner"
+              RELEASE_DIR="${RUNNER_DIR}/Release"
+              cp "${WINDIR}/system32/msvcp140.dll" "$RELEASE_DIR"
+              cp "${WINDIR}/system32/vcruntime140.dll" "$RELEASE_DIR"
+              cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
+              rm -rf "${RUNNER_DIR}/flet"
+              mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
+              pushd "${RUNNER_DIR}"
+              7z a "${APP_DIR}/flet-windows.zip" "flet"
+              popd
+              ;;
+          esac
+          popd
+
+      - name: Pack app
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          echo "FLET_PACK_EXTRA_ARGS='${FLET_PACK_EXTRA_ARGS}'"
+          uv run --with pyinstaller flet pack src/main.py --yes --name flet-pack-test --distpath dist $FLET_PACK_EXTRA_ARGS
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: ${{ matrix.name }}-pack-artifact
+          path: sdk/python/examples/apps/flet_build_test/dist
           if-no-files-found: error
           overwrite: false

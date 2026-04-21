@@ -342,7 +342,7 @@ Here is how you can implement this layout:
     page.add(
         ft.Container(
             content=chat,
-            border=ft.border.all(1, ft.Colors.OUTLINE),
+            border=ft.Border.all(1, ft.Colors.OUTLINE),
             border_radius=5,
             padding=10,
             expand=True,
