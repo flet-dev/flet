@@ -23,6 +23,14 @@ It is already pre-created and its location depends on the platform the app is ru
 A directory for the storage of temporary application files, i.e. cache.
 It is already pre-created and its location depends on the platform the app is running on.
 
+### `FLET_APP_USER_MODEL_ID`
+
+Windows [AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/appids)
+used by the desktop client process for taskbar grouping and pinning.
+
+For apps packaged with [`flet pack`](../cli/flet-pack.md), this value is set automatically
+so taskbar pins point to the packaged app executable instead of the cached Flet client executable.
+
 ### `FLET_ASSETS_DIR`
 
 Absolute path to the app's assets directory.
