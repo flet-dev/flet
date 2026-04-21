@@ -9,5 +9,5 @@ import {ClassAll} from '@site/src/components/crocodocs';
 ## Usage example
 
 ```python
-container_1.border_radius= ft.border_radius.all(30)
+container_1.border_radius= ft.BorderRadius.all(30)
 ```
