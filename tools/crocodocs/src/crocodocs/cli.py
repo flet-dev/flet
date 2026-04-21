@@ -112,14 +112,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_shared_generate_arguments(watch)
     watch.add_argument(
-        "--interval",
-        type=float,
-        default=0.75,
-        metavar="SECS",
-        help="Maximum idle wait in seconds between child/debounce checks "
-        "(default: %(default)s).",
-    )
-    watch.add_argument(
         "--debounce",
         type=float,
         default=0.5,
@@ -154,8 +146,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    project_root = Path.cwd()
-    config = load_config(project_root)
+    # Resolved relative to the CrocoDocs tool directory (Path.cwd() when invoked
+    # via `uv --directory ./tools/crocodocs`), NOT the repo root. All relative
+    # paths in pyproject.toml and CLI flags are interpreted from here.
+    crocodocs_root = Path.cwd()
+    config = load_config(crocodocs_root)
 
     if args.command == "generate":
         _apply_shared_generate_overrides(config, args)
@@ -174,11 +169,10 @@ def main(argv: list[str] | None = None) -> int:
         if command and command[0] == "--":
             command = command[1:]
         child_cwd = (
-            (project_root / args.child_cwd).resolve() if args.child_cwd else None
+            (crocodocs_root / args.child_cwd).resolve() if args.child_cwd else None
         )
         return run_watch(
             config,
-            interval=args.interval,
             debounce=args.debounce,
             command=command or None,
             command_cwd=child_cwd,

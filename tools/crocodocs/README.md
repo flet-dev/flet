@@ -63,11 +63,16 @@ uv --directory ./tools/crocodocs run crocodocs generate
 
 Watched inputs include:
 
-- `website/docs`
 - `website/sidebars.yml`
 - `sdk/python/packages/*/src`
 - `sdk/python/examples`
 - configured CrocoDocs asset source directories
+
+`website/docs/**/*.{md,mdx}` is intentionally excluded: Docusaurus hot-reloads
+those directly, so regenerating on every prose edit would be redundant. If you
+add a new `<ClassAll symbol="…">` (or similar structural change) to a markdown
+file, run `crocodocs generate` manually or restart the watcher so the manifest
+is refreshed.
 
 Watch and regenerate without starting Docusaurus:
 

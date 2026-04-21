@@ -9,10 +9,9 @@ explicitly. This module owns that refresh loop.
 import signal
 import subprocess
 import threading
-import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Callable, Iterable, Optional
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -49,9 +48,6 @@ class WatchTarget:
     A value of `None` means "watch every file beneath this directory".
     """
 
-    recursive: bool = True
-    """Whether directory traversal should recurse into subdirectories."""
-
     is_file: bool = False
     """Whether `path` should be treated as an individual file target."""
 
@@ -64,7 +60,9 @@ class WatchEventHandler(FileSystemEventHandler):
         self._targets = targets
         self._lock = threading.Lock()
         self._pending_changes: set[Path] = set()
-        self._last_change_at: Optional[float] = None
+        # Set whenever a matching change arrives. Also used by `wake()` to unblock
+        # the main loop during shutdown.
+        self._change_event = threading.Event()
 
     def on_any_event(self, event) -> None:
         """Track create/modify/delete/move events for configured watch targets."""
@@ -86,34 +84,53 @@ class WatchEventHandler(FileSystemEventHandler):
 
         with self._lock:
             self._pending_changes.update(changed_paths)
-            self._last_change_at = time.monotonic()
+        self._change_event.set()
 
-    def consume_ready_changes(self, debounce: float) -> list[Path]:
-        """Return pending changes after the watcher has been quiet long enough."""
+    def has_pending(self) -> bool:
+        """Return True if there are buffered changes waiting to be drained."""
         with self._lock:
-            if not self._pending_changes or self._last_change_at is None:
-                return []
+            return bool(self._pending_changes)
 
-            if time.monotonic() - self._last_change_at < debounce:
-                return []
+    def wait_for_change(self) -> None:
+        """Block until a change arrives or `wake()` is called."""
+        self._change_event.wait()
+        self._change_event.clear()
 
-            ready_changes = sorted(self._pending_changes)
+    def wait_for_quiet_period(
+        self, debounce: float, should_abort: Callable[[], bool]
+    ) -> None:
+        """Block until `debounce` seconds elapse without new changes."""
+        while self._change_event.wait(timeout=debounce):
+            self._change_event.clear()
+            if should_abort():
+                return
+
+    def wake(self) -> None:
+        """Unblock any in-progress wait so the main loop can re-check shutdown flags."""
+        self._change_event.set()
+
+    def drain_pending(self) -> list[Path]:
+        """Return and clear the buffered change set."""
+        with self._lock:
+            ready = sorted(self._pending_changes)
             self._pending_changes.clear()
-            self._last_change_at = None
-            return ready_changes
+        return ready
 
 
 def build_watch_targets(config: CrocoDocsConfig) -> list[WatchTarget]:
     """Return the concrete files and directories that should trigger regeneration.
 
-    The watch list mirrors CrocoDocs inputs:
-    - hand-authored docs and sidebars
-    - Python package sources used by Griffe
-    - examples and copied asset roots
+    The watch list covers only inputs whose changes produce new files under the
+    generated artifact roots (`.crocodocs`, `sidebars.js`, static assets) —
+    Python package sources, examples, sidebar YAML, and asset mappings.
+    Hand-authored `.md`/`.mdx` under `docs_path` are intentionally NOT watched:
+    Docusaurus hot-reloads those natively, so regenerating on every prose edit
+    would only trigger redundant rebuilds. If a structural edit requires a fresh
+    manifest (e.g. adding a new symbol-block import), run `crocodocs generate`
+    manually or restart the watcher.
     """
     targets: list[WatchTarget] = [
-        WatchTarget(config.docs_path, frozenset({".md", ".mdx"})),
-        WatchTarget(config.sidebars_source, recursive=False, is_file=True),
+        WatchTarget(config.sidebars_source, is_file=True),
         WatchTarget(config.examples_root, frozenset({".py", ".png", ".gif", ".svg"})),
     ]
 
@@ -132,9 +149,9 @@ def build_watch_targets(config: CrocoDocsConfig) -> list[WatchTarget]:
     # examples_root and the examples asset mapping). Deduplicate to avoid repeated
     # scans while preserving a deterministic order for debug output.
     unique_targets: list[WatchTarget] = []
-    seen: set[tuple[Path, Optional[frozenset[str]], bool, bool]] = set()
+    seen: set[tuple[Path, Optional[frozenset[str]], bool]] = set()
     for target in targets:
-        key = (target.path, target.suffixes, target.recursive, target.is_file)
+        key = (target.path, target.suffixes, target.is_file)
         if key in seen:
             continue
         seen.add(key)
@@ -145,7 +162,6 @@ def build_watch_targets(config: CrocoDocsConfig) -> list[WatchTarget]:
 def run_watch(
     config: CrocoDocsConfig,
     *,
-    interval: float,
     debounce: float,
     command: Optional[list[str]] = None,
     command_cwd: Optional[Path] = None,
@@ -162,6 +178,7 @@ def run_watch(
     observer = Observer()
     observer_started = False
     child: Optional[subprocess.Popen[str]] = None
+    child_exit_code: Optional[int] = None
 
     stop_requested = False
 
@@ -169,6 +186,10 @@ def run_watch(
         nonlocal stop_requested
         stop_requested = True
         reporter.info(f"Received signal {signum}; stopping watcher.")
+        event_handler.wake()
+
+    def should_abort() -> bool:
+        return stop_requested or child_exit_code is not None
 
     original_handlers = {
         sig: signal.getsignal(sig) for sig in (signal.SIGINT, signal.SIGTERM)
@@ -178,28 +199,42 @@ def run_watch(
 
     try:
         _run_generate_cycle(config, reporter)
-        _schedule_targets(observer, event_handler, targets)
+        _schedule_targets(observer, event_handler, targets, reporter)
         observer.start()
         observer_started = True
         child = _start_child(command, command_cwd, reporter)
 
-        while not stop_requested:
-            if child is not None:
-                child_returncode = child.poll()
-                if child_returncode is not None:
-                    reporter.info(
-                        f"Child process exited with code {child_returncode}; stopping watcher."
-                    )
-                    return child_returncode
+        if child is not None:
 
-            ready_changes = event_handler.consume_ready_changes(debounce)
+            def _monitor_child() -> None:
+                nonlocal child_exit_code
+                assert child is not None
+                child_exit_code = child.wait()
+                reporter.info(
+                    f"Child process exited with code {child_exit_code}; stopping watcher."
+                )
+                event_handler.wake()
+
+            threading.Thread(target=_monitor_child, daemon=True).start()
+
+        while not should_abort():
+            event_handler.wait_for_change()
+            if should_abort():
+                break
+            if not event_handler.has_pending():
+                # Spurious wake (e.g. `wake()` called for shutdown check); re-evaluate.
+                continue
+
+            event_handler.wait_for_quiet_period(debounce, should_abort)
+            if should_abort():
+                break
+
+            ready_changes = event_handler.drain_pending()
             if ready_changes:
                 reporter.info(_format_change_message(ready_changes))
                 _run_generate_cycle(config, reporter)
 
-            time.sleep(interval)
-
-        return 0
+        return child_exit_code if child_exit_code is not None else 0
     finally:
         for sig, handler in original_handlers.items():
             signal.signal(sig, handler)
@@ -273,27 +308,35 @@ def _schedule_targets(
     observer: Observer,
     event_handler: WatchEventHandler,
     targets: Iterable[WatchTarget],
+    reporter: ProgressReporter,
 ) -> None:
     """Register the minimum set of observer roots needed for all watch targets."""
     scheduled_roots: dict[Path, bool] = {}
     for target in targets:
-        root, recursive = _watch_root(target)
+        resolved = _watch_root(target, reporter)
+        if resolved is None:
+            continue
+        root, recursive = resolved
         scheduled_roots[root] = scheduled_roots.get(root, False) or recursive
 
     for root, recursive in sorted(scheduled_roots.items()):
         observer.schedule(event_handler, str(root), recursive=recursive)
 
 
-def _watch_root(target: WatchTarget) -> tuple[Path, bool]:
-    """Return the concrete observer root for a watch target."""
+def _watch_root(
+    target: WatchTarget, reporter: ProgressReporter
+) -> Optional[tuple[Path, bool]]:
+    """Return the concrete observer root for a watch target, or None if it is missing.
+
+    Missing targets are skipped with a warning instead of walking up to an existing
+    ancestor — a silent walk-up can expand the watch scope to the entire repo when a
+    configured path has a typo or points at an un-checked-out package.
+    """
     root = target.path.parent if target.is_file else target.path
-    recursive = False if target.is_file else target.recursive
-
-    while not root.exists() and root != root.parent:
-        root = root.parent
-        recursive = True
-
-    return root, recursive
+    if not root.exists():
+        reporter.info(f"Skipping watch target {target.path} — path does not exist.")
+        return None
+    return root, not target.is_file
 
 
 def _event_paths(event) -> list[Path]:
@@ -321,9 +364,6 @@ def _matches_target(path: Path, target: WatchTarget) -> bool:
         return False
 
     if not relative_path.parts:
-        return False
-
-    if not target.recursive and len(relative_path.parts) != 1:
         return False
 
     if _should_skip_parts(relative_path.parts):
