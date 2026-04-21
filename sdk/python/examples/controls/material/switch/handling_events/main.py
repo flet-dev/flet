@@ -13,7 +13,11 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.add(
         ft.SafeArea(
-            content=ft.Switch(label="Light ThemeMode", on_change=handle_switch_change)
+            content=ft.Switch(
+                key="theme_mode_switch",
+                label="Light ThemeMode",
+                on_change=handle_switch_change,
+            )
         )
     )
 
