@@ -135,34 +135,24 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         });
       });
     } else if (!open && lastOpen) {
-      // Flip `_open` synchronously so repeat builds don't re-enter this
-      // branch, then defer the actual Navigator mutation — calling
-      // `removeRoute` during build triggers Navigator's own `setState` and
-      // can be dropped mid-build if a sibling `_dialogs` patch is being
-      // applied in the same frame (snackbar show + dialog dismiss case).
+      // Synchronous pop during build — Flutter schedules it for the end of
+      // the frame internally. Using `removeRoute` in a postFrame callback
+      // (the earlier sibling-host fix) raced with `View`'s on_confirm_pop
+      // path, which ALSO schedules a post-frame `Navigator.pop(context,
+      // true)`. Both callbacks fired in the same tick, and the view-pop
+      // callback ended up popping our just-finished-dismissing dialog
+      // instead of the target view — breaking the
+      // `test_pop_view_confirm` integration test.
       control.updateProperties({"_open": false}, python: false);
-      final navigator = Navigator.of(context);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        final route = _dialogRoute;
-        if (route == null || !route.isActive) {
-          debugPrint(
-              "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
-          return;
-        }
+      final route = _dialogRoute;
+      if (route != null && route.isActive) {
         debugPrint(
             "AlertDialog(${control.id}): Closing dialog managed by this widget.");
-        if (route.isCurrent) {
-          // Topmost → animated pop. This is the common case.
-          navigator.pop();
-        } else {
-          // A sibling `use_dialog` host pushed a newer dialog above ours.
-          // `Navigator.pop()` would target that one, so fall back to
-          // `removeRoute` (no exit animation, but keeps dismissal targeted
-          // at THIS widget's route).
-          navigator.removeRoute(route);
-        }
-      });
+        Navigator.of(context).pop();
+      } else {
+        debugPrint(
+            "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
+      }
     }
     return const SizedBox.shrink();
   }
