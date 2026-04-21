@@ -25,6 +25,7 @@
 
 ### Other changes
 
+* Add `crocodocs watch` command for hot-reload docs development with file-watching, debounced regeneration, and optional child process management ([#6402](https://github.com/flet-dev/flet/pull/6402)) by @ndonkoHenri.
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity ([#6374](https://github.com/flet-dev/flet/pull/6374)) by @FeodorFitsner.
 * Centralize Linux apt dependencies in `flet.utils.linux_deps` and update CI workflows and publish docs to consume them dynamically ([#6357](https://github.com/flet-dev/flet/issues/6357), [#6383](https://github.com/flet-dev/flet/pull/6383)) by @ndonkoHenri.
 

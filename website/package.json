@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
-    "start": "yarn crocodocs:generate && docusaurus start",
+    "start": "cd .. && uv --directory ./tools/crocodocs run crocodocs watch --child-cwd ../../website -- yarn exec docusaurus start",
     "build": "yarn crocodocs:generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy"
