@@ -7,6 +7,8 @@ title: "SegmentedButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
+# SegmentedButton
+
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic segmented button" />
 
 ## Examples

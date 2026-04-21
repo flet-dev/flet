@@ -1218,13 +1218,14 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/segmentedbutton"
-                },
-                {
-                  "type": "doc",
-                  "id": "controls/segment"
+                  "id": "controls/segment",
+                  "label": "Segment"
                 }
-              ]
+              ],
+              "link": {
+                "type": "doc",
+                "id": "controls/segmentedbutton/index"
+              }
             },
             {
               "type": "doc",

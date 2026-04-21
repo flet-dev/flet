@@ -247,8 +247,8 @@ docs:
       SafeArea: controls/safearea.md
       SearchBar: controls/searchbar.md
       SegmentedButton:
-      - controls/segmentedbutton.md
-      - controls/segment.md
+        _index: controls/segmentedbutton/index.md
+        Segment: controls/segment.md
       SelectionArea: controls/selectionarea.md
       Semantics: controls/semantics.md
       Screenshot: controls/screenshot.md
