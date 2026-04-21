@@ -30,6 +30,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/selection_change/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/selection_change.gif'} alt="selection-change" width="55%" />
+
 ### Password with reveal button
 
 <CodeExample path={frontMatter.examples + '/password/main.py'} language="python" />
