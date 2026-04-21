@@ -41,7 +41,12 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(ft.SafeArea(content=ft.Row(controls=[smb])))
+    page.add(
+        ft.SafeArea(
+            # expand=True,
+            content=ft.Row(controls=[smb]),
+        )
+    )
 
 
 if __name__ == "__main__":

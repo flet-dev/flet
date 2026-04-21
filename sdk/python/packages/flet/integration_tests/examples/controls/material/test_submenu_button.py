@@ -1,6 +1,7 @@
 import pytest
 
 import examples.controls.material.submenu_button.basic.main as basic
+import examples.controls.material.submenu_button.standalone.main as standalone
 import flet as ft
 import flet.testing as ftt
 
@@ -80,6 +81,25 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "basic",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": standalone.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_standalone_initial(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(300, 260)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "standalone_initial",
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
         ),
