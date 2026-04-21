@@ -5,10 +5,10 @@ example_media: "examples/controls"
 
 import {Image} from '@site/src/components/crocodocs';
 
-Flet framework allows you to develop adaptive apps which means having a single codebase that
-will deliver different look depending on the device's platform.
+Flet framework allows you to develop adaptive apps, which means having a single codebase that
+will deliver a different look depending on the device's platform.
 
-Below is the example of a very simple app that has a different look on iOS and Android platforms:
+Below is an example of a very simple app that has a different look on iOS and Android platforms:
 
 ```python
 import flet as ft
@@ -63,7 +63,7 @@ def main(page):
 ft.run(main)
 ```
 
-By setting just `page.adaptive = True` you can make you app looking awesome on both iOS and Android devices:
+By setting just `page.adaptive = True` you can make your app look awesome on both iOS and Android devices:
 
 | iPhone | Android |
 |:---:|:---:|
