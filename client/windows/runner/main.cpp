@@ -1,5 +1,6 @@
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
+#include <shobjidl.h>
 #include <windows.h>
 
 #include "flutter_window.h"
@@ -16,6 +17,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+
+  // Set AppUserModelID so that Windows associates this window with the
+  // parent application (e.g. a PyInstaller-packaged exe) rather than
+  // this flet.exe binary. This ensures taskbar pins and shortcuts
+  // point to the correct executable.
+  wchar_t *aumid = nullptr;
+  size_t aumid_len = 0;
+  if (_wdupenv_s(&aumid, &aumid_len, L"FLET_APP_USER_MODEL_ID") == 0 &&
+      aumid != nullptr && aumid[0] != L'\0') {
+    ::SetCurrentProcessExplicitAppUserModelID(aumid);
+  }
+  free(aumid);
 
   flutter::DartProject project(L"data");
 

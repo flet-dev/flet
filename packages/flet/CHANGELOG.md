@@ -8,6 +8,7 @@
 
 * Handle unbounded width in `ResponsiveRow` with an explicit error and treat child controls with `col=0` as hidden at the current breakpoint ([#1951](https://github.com/flet-dev/flet/issues/1951), [#3805](https://github.com/flet-dev/flet/issues/3805), [#6354](https://github.com/flet-dev/flet/pull/6354)) by @ndonkoHenri.
 * Fix `page.window.destroy()` taking several seconds to close Windows desktop apps when `prevent_close` is enabled ([#5459](https://github.com/flet-dev/flet/issues/5459), [#6428](https://github.com/flet-dev/flet/pull/6428)) by @ndonkoHenri.
+* Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
 
 ### Other changes
 

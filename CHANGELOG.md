@@ -13,6 +13,7 @@
 
 ### Bug fixes
 
+* Reduce Linux memory retention when repeatedly removing `flet_video.Video` controls by linking `media_kit` video apps against mimalloc in run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)) by @ndonkoHenri.
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
 * Fix `CodeEditor` background not filling the entire area when `expand=True` ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
 * Handle unbounded width in `ResponsiveRow` with an explicit error, treat child controls with `col=0` as hidden, and clarify `Container` expansion behavior when `alignment` is set ([#1951](https://github.com/flet-dev/flet/issues/1951), [#3805](https://github.com/flet-dev/flet/issues/3805), [#5209](https://github.com/flet-dev/flet/issues/5209), [#6354](https://github.com/flet-dev/flet/pull/6354)) by @ndonkoHenri.
@@ -20,10 +21,14 @@
 * Fix `page.window.destroy()` taking several seconds to close Windows desktop apps when `prevent_close` is enabled ([#5459](https://github.com/flet-dev/flet/issues/5459), [#6428](https://github.com/flet-dev/flet/pull/6428)) by @ndonkoHenri.
 * Fix `Page.show_drawer()`, `close_drawer()`, and root/top view accessors (`appbar`, `drawer`, `navigation_bar`, `controls`, ...) failing with `TypeError` under `Page.render_views()` by unwrapping component-wrapped views and normalizing single-view returns ([#6413](https://github.com/flet-dev/flet/issues/6413), [#6414](https://github.com/flet-dev/flet/pull/6414)) by @FeodorFitsner.
 * Fix `auto_scroll` on scrollable controls silently doing nothing unless `scroll` was also explicitly set ([#6397](https://github.com/flet-dev/flet/issues/6397), [#6404](https://github.com/flet-dev/flet/pull/6404)) by @ndonkoHenri.
+* Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
+* Fix environment variable priority in `flet build` template: inherit from `Platform.environment` and use `putIfAbsent` for FLET_* variables so pre-set system env vars are not overwritten ([#6394](https://github.com/flet-dev/flet/pull/6394)) by @Bahtya.
 
 ### Other changes
 
-* Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity.
+* Add `crocodocs watch` command for hot-reload docs development with file-watching, debounced regeneration, and optional child process management ([#6402](https://github.com/flet-dev/flet/pull/6402)) by @ndonkoHenri.
+* Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity ([#6374](https://github.com/flet-dev/flet/pull/6374)) by @FeodorFitsner.
+* Centralize Linux apt dependencies in `flet.utils.linux_deps` and update CI workflows and publish docs to consume them dynamically ([#6357](https://github.com/flet-dev/flet/issues/6357), [#6383](https://github.com/flet-dev/flet/pull/6383)) by @ndonkoHenri.
 
 ## 0.84.0
 
