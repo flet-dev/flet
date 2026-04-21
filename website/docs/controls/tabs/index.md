@@ -1,7 +1,8 @@
 ---
 class_name: "flet.Tabs"
 examples: "controls/material/tabs"
-example_images: "examples/controls/material/tabs/media"
+example_images: "test-images/examples/controls/material/golden/macos/tabs"
+example_media: "examples/controls/material/tabs/media"
 title: "Tabs"
 ---
 
@@ -9,7 +10,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # Tabs
 
-<ClassSummary name={frontMatter.class_name} />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic tabs" imageWidth="70%"/>
 
 ## Examples
 
@@ -19,7 +20,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
+<Image src={frontMatter.example_media + '/basic.gif'} width="55%" />
 
 ### Nesting tabs
 
