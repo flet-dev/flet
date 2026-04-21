@@ -10,6 +10,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     ft.TextField(
+                        key="handling_change_textfield",
                         label="Textbox with 'change' event:",
                         on_change=handle_field_change,
                     ),

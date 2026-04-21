@@ -24,7 +24,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_change_events/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/handling_change_events.gif'} alt="handling-change-events" width="55%" />
+<Image src={frontMatter.example_images + '/handling_change_events.gif'} alt="handling-change-events" width="55%" />
 
 ### Handling selection changes
 
