@@ -19,6 +19,7 @@
 * Fix `find_platform_image` selecting incompatible icon formats (e.g. `.icns` on Windows) by ranking glob results per target platform ([#6381](https://github.com/flet-dev/flet/pull/6381)) by @HG-ha.
 * Fix `Page.show_drawer()`, `close_drawer()`, and root/top view accessors (`appbar`, `drawer`, `navigation_bar`, `controls`, ...) failing with `TypeError` under `Page.render_views()` by unwrapping component-wrapped views and normalizing single-view returns ([#6413](https://github.com/flet-dev/flet/issues/6413), [#6414](https://github.com/flet-dev/flet/pull/6414)) by @FeodorFitsner.
 * Fix `auto_scroll` on scrollable controls silently doing nothing unless `scroll` was also explicitly set ([#6397](https://github.com/flet-dev/flet/issues/6397), [#6404](https://github.com/flet-dev/flet/pull/6404)) by @ndonkoHenri.
+* Fix `Lottie` failing to load local asset files on Windows desktop (and unreliably on other desktop platforms), so animations referenced by `src="file.json"` from the app's `assets/` directory now display correctly ([#6386](https://github.com/flet-dev/flet/issues/6386), [#6426](https://github.com/flet-dev/flet/pull/6426)) by @ndonkoHenri.
 
 ### Other changes
 
