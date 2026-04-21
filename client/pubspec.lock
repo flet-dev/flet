@@ -895,10 +895,10 @@ packages:
     dependency: transitive
     description:
       name: lottie
-      sha256: "8ae0be46dbd9e19641791dc12ee480d34e1fd3f84c749adc05f3ad9342b71b95"
+      sha256: "8b6359a7422167014aa73ce763fa133fb832065dcc0ac4d1dec1f603a5cef7d0"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.2"
+    version: "3.3.3"
   markdown:
     dependency: transitive
     description:
