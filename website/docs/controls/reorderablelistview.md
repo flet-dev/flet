@@ -2,6 +2,7 @@
 class_name: "flet.ReorderableListView"
 examples: "controls/material/reorderable_list_view"
 example_images: "test-images/examples/controls/material/golden/macos/reorderable_list_view"
+example_media: "examples/controls/material/reorderable_list_view/media"
 title: "ReorderableListView"
 ---
 
@@ -17,7 +18,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/horizontal_and_vertical.png'} alt="horizontal-and-vertical" width="65%" />
+<Image src={frontMatter.example_media + '/horizontal_and_vertical1.gif'} alt="horizontal-and-vertical" width="65%" />
 
 ### Custom drag handle
 
