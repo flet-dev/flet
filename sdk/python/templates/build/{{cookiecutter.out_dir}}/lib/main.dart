@@ -65,7 +65,7 @@ List<String> _args = [];
 String pageUrl = "";
 String assetsDir = "";
 String appDir = "";
-Map<String, String> environmentVariables = {};
+Map<String, String> environmentVariables = Map.from(Platform.environment);
 
 void main(List<String> args) async {
 
@@ -187,29 +187,29 @@ Future prepareApp() async {
       }
     }
 
-    environmentVariables["FLET_APP_STORAGE_DATA"] = appDataPath;
-    environmentVariables["FLET_APP_STORAGE_TEMP"] = appTempPath;
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDataPath);
+    environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appTempPath);
 
     outLogFilename = path.join(appTempPath, "console.log");
-    environmentVariables["FLET_APP_CONSOLE"] = outLogFilename;
+    environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
 
-    environmentVariables["FLET_PLATFORM"] =
-        defaultTargetPlatform.name.toLowerCase();
+    environmentVariables.putIfAbsent(
+        "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // use TCP on Windows
       var tcpPort = await getUnusedPort();
       pageUrl = "tcp://localhost:$tcpPort";
-      environmentVariables["FLET_SERVER_PORT"] = tcpPort.toString();
+      environmentVariables.putIfAbsent("FLET_SERVER_PORT", () => tcpPort.toString());
     } else {
       // use UDS on other platforms
       pageUrl = "flet_$pid.sock";
-      environmentVariables["FLET_SERVER_UDS_PATH"] = pageUrl;
+      environmentVariables.putIfAbsent("FLET_SERVER_UDS_PATH", () => pageUrl);
     }
   }
 
   if (!kIsWeb && assetsDir.isNotEmpty) {
-    environmentVariables["FLET_ASSETS_DIR"] = assetsDir;
+    environmentVariables.putIfAbsent("FLET_ASSETS_DIR", () => assetsDir);
   }
 
   return "";
@@ -245,7 +245,7 @@ Future<String?> runPythonApp(List<String> args) async {
     debugPrint('Python output Socket Server is listening on $socketAddr');
   }
 
-  environmentVariables["FLET_PYTHON_CALLBACK_SOCKET_ADDR"] = socketAddr;
+  environmentVariables.putIfAbsent("FLET_PYTHON_CALLBACK_SOCKET_ADDR", () => socketAddr);
 
   void closeOutServer() async {
     outSocketServer.close();
