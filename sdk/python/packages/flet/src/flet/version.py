@@ -2,6 +2,7 @@
 
 import json
 import subprocess as sp
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -66,9 +67,9 @@ def from_git() -> Optional[str]:
 
     except sp.CalledProcessError as e:
         # Git is present but no tags / not a valid repo state
-        print(f"Error getting Git version: {e}")
+        print(f"Error getting Git version: {e}", file=sys.stderr)
     except OSError as e:
-        print(f"Error running Git: {e}")
+        print(f"Error running Git: {e}", file=sys.stderr)
 
     return None
 
@@ -127,7 +128,7 @@ def get_flutter_version() -> str:
                     raise ValueError("Empty or missing 'flutter' value")
                 return v
             except Exception as e:
-                print(f"Error parsing {fvmrc_path!r}: {e}")
+                print(f"Error parsing {fvmrc_path!r}: {e}", file=sys.stderr)
 
     # If 'flutter_version' is still empty after the above (e.g., in a built package
     # where CI didn't replace it), fall back to the below default.

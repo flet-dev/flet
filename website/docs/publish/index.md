@@ -1466,12 +1466,8 @@ jobs:
         shell: bash
         run: |
             sudo apt update --allow-releaseinfo-change
-            sudo apt-get install -y --no-install-recommends \
-              clang ninja-build libgtk-3-dev libasound2-dev libmpv-dev mpv \
-              libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
-              gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
-              gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
-              gstreamer1.0-qt5 gstreamer1.0-pulseaudio pkg-config libsecret-1-0 libsecret-1-dev
+            LINUX_DEPS="$(uv run python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+            sudo apt-get install -y --no-install-recommends $LINUX_DEPS
             sudo apt-get clean
 
       - name: Build app # (15)!
