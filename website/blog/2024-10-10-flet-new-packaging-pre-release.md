@@ -8,9 +8,9 @@ Flet packaging for iOS and Android has been relying on Kivy and it was super ann
 
 Kivy no more! We've just published Flet 0.25.0.dev3519 pre-release with the improved `flet build` command which does not use Kivy! Flet is now using its own Python runtime "meticulously crafted in-house".
 
-Flet packaging implementation for iOS and Androind adheres to strict specifications defined in [PEP 730](https://peps.python.org/pep-0730/) (iOS) and [PEP 738](https://peps.python.org/pep-0738/) (Android) which were implemented and released in Python 3.13 (and back-ported to Python 3.12). When pypi.org supports wheel tags for iOS and Android and 3rd-party Python package maintainers start uploading their mobile packages Flet will be compatible with them and you'll be able to use them in your Flet app.
+Flet packaging implementation for iOS and Android adheres to strict specifications defined in [PEP 730](https://peps.python.org/pep-0730/) (iOS) and [PEP 738](https://peps.python.org/pep-0738/) (Android) which were implemented and released in Python 3.13 (and back-ported to Python 3.12). When pypi.org supports wheel tags for iOS and Android and 3rd-party Python package maintainers start uploading their mobile packages Flet will be compatible with them and you'll be able to use them in your Flet app.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Installing pre-release
 
@@ -63,15 +63,15 @@ New Flet packages:
 * `flet` - required for minimal Flet setup, app entry point for various platforms. Installed on all platforms.
 * `flet-core` - required for minimal Flet setup, core logic and controls. Installed on all platforms.
 * `flet-cli` - contains Flet CLI commands. Installed on desktop only.
-* `flet-desktop` - contains pre-built Flet "client" app binary for macOS, Windows and Linux. By default installed on macOS and Windows desktops only. 
-* `flet-desktop-light` - contains a light-weight version (without Audio and Video controls) of Flet "client" for Linux. By default installed on Linux desktops only. 
+* `flet-desktop` - contains pre-built Flet "client" app binary for macOS, Windows and Linux. By default installed on macOS and Windows desktops only.
+* `flet-desktop-light` - contains a light-weight version (without Audio and Video controls) of Flet "client" for Linux. By default installed on Linux desktops only.
 * `flet-web` - contains Flet web "client" and FastAPI integration. Installed on desktop only.
 
 Other words, packaged Flet app contains only `flet` and `flet-core` packages.
 
 ### "Light" client for Linux
 
-A light-weight desktop client, without Audio and Video controls, is not installed on Linux by default. It improves initial user experience as user doesn't need to immediately deal with gstreamer (audio) and mpv (video) dependencies right away and Flet "just works".  
+A light-weight desktop client, without Audio and Video controls, is not installed on Linux by default. It improves initial user experience as user doesn't need to immediately deal with gstreamer (audio) and mpv (video) dependencies right away and Flet "just works".
 
 Once user got some Flet experience and wants to use Video and Audio controls in their application they can install gstreamer and/or mpv and replace Flet desktop with a full version.
 
@@ -267,7 +267,7 @@ data_dir = os.getenv("FLET_APP_STORAGE_DATA")
 
 ## Deep linking configuration
 
-There is a new `--deep-linking-url` option to configure deep linking for iOS and Android builds. The value must be in the format `<sheme>://<host>`.
+There is a new `--deep-linking-url` option to configure deep linking for iOS and Android builds. The value must be in the format `<scheme>://<host>`.
 
 ## Faster re-builds
 
@@ -298,5 +298,3 @@ We will add an option to `flet build` and run packaged app on a real device or s
 ### Installing Flutter
 
 `flet build` will download and configure Flutter for you if there is no suitable installation available on your machine.
-
-

@@ -141,6 +141,8 @@ When a property has validation, document it in that property’s docstring (goog
      `sdk/python/packages/flet/src/flet/utils/validation.py`.
    - Each `V.*` helper includes `Property docstring Raises wording`.
    - Keep property `Raises` entries as negations of the annotation rule.
+   - For strict inequalities, say `"strictly"`.
+     For example: `V.gt(x)` -> `ValueError: If it is not strictly greater than \`x\`.`
    - For sign-neutral divisibility helpers (`factor_of`, `multiple_of`), add
      explicit sign rules (`V.gt(0)` or `V.lt(0)`) when direction matters, and
      include separate `Raises` entries for those sign rules.
@@ -160,8 +162,8 @@ When a property has validation, document it in that property’s docstring (goog
 
 ## Cross-Referencing Conventions
 
-Follow the dedicated cross-reference guidance in:
-[`docs-cross-referencing` skill](../docs-cross-referencing/SKILL.md).
+Follow the cross-reference guidance in:
+[`docs-conventions`](../docs-conventions/SKILL.md).
 
 Most common pattern to use in control property docstrings:
 - same-class properties: `[\`prop\`][(c).]`
