@@ -6,6 +6,7 @@ import flet.testing as ftt
 from examples.controls.material.text_field.handling_change_events.main import (
     main as handling_change_events,
 )
+from examples.controls.material.text_field.password.main import main as password
 from examples.controls.material.text_field.selection_change.main import (
     main as selection_change,
 )
@@ -143,3 +144,52 @@ async def test_selection_change(flet_app_function: ftt.FletTestApp):
     flet_app_function.create_gif(
         frames=frames, output_name="selection_change", duration=1000
     )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": password}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_password(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(420, 180)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    textfield = await flet_app_function.tester.find_by_key("password_textfield")
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("password_initial", initial_frame)
+    frames = [initial_frame]
+
+    await flet_app_function.tester.tap(textfield)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.enter_text(textfield, "password")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    reveal = await flet_app_function.tester.find_by_icon(ft.Icons.VISIBILITY)
+    await flet_app_function.tester.tap(reveal.first)
+    await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("password_final", final_frame)
+    frames.append(final_frame)
+
+    flet_app_function.create_gif(frames=frames, output_name="password", duration=1000)
