@@ -6,6 +6,7 @@ import flet.testing as ftt
 from examples.controls.material.text_field.handling_change_events.main import (
     main as handling_change_events,
 )
+from examples.controls.material.text_field.multiline.main import main as multiline
 from examples.controls.material.text_field.password.main import main as password
 from examples.controls.material.text_field.selection_change.main import (
     main as selection_change,
@@ -193,3 +194,75 @@ async def test_password(flet_app_function: ftt.FletTestApp):
     frames.append(final_frame)
 
     flet_app_function.create_gif(frames=frames, output_name="password", duration=1000)
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": multiline}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_multiline(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 420)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    standard = await flet_app_function.tester.find_by_key("multiline_standard")
+    auto_height = await flet_app_function.tester.find_by_key("multiline_auto_height")
+
+    frames = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
+
+    await flet_app_function.tester.tap(standard)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+    await flet_app_function.tester.enter_text(standard, "flet")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(auto_height)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    for value in [
+        "line1",
+        "line1\nline2",
+        "line1\nline2\nline3",
+        "line1\nline2\nline3\nline4",
+        "line1\nline2\nline3\nline4\nline5",
+    ]:
+        await flet_app_function.tester.enter_text(auto_height, value)
+        await flet_app_function.tester.pump_and_settle()
+        frames.append(
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            )
+        )
+
+        if value != "line1\nline2\nline3\nline4\nline5":
+            await flet_app_function.tester.enter_text(auto_height, f"{value}\n")
+            await flet_app_function.tester.pump_and_settle()
+            frames.append(
+                await flet_app_function.page.take_screenshot(
+                    pixel_ratio=flet_app_function.screenshots_pixel_ratio
+                )
+            )
+
+    flet_app_function.create_gif(frames=frames, output_name="multiline", duration=1000)

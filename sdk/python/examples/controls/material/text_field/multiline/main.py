@@ -7,6 +7,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     ft.TextField(
+                        key="multiline_standard",
                         label="Standard",
                         multiline=True,
                     ),
@@ -17,6 +18,7 @@ def main(page: ft.Page):
                         value="line1\nline2\nline3\nline4\nline5",
                     ),
                     ft.TextField(
+                        key="multiline_auto_height",
                         label="Auto adjusted height with max lines",
                         multiline=True,
                         min_lines=1,
