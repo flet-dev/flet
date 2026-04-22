@@ -16,20 +16,24 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     prefix_field := ft.TextField(
+                        key="prefix_field",
                         label="With prefix",
                         prefix="https://",
                     ),
                     suffix_field := ft.TextField(
+                        key="suffix_field",
                         label="With suffix",
                         suffix=".com",
                     ),
                     prefix_suffix_field := ft.TextField(
+                        key="prefix_suffix_field",
                         label="With prefix and suffix",
                         prefix="https://",
                         suffix=".com",
                         enable_interactive_selection=True,
                     ),
                     color_field := ft.TextField(
+                        key="color_field",
                         label="My favorite color",
                         icon=ft.Icons.FORMAT_SIZE,
                         hint_text="Type your favorite color",
@@ -39,7 +43,11 @@ def main(page: ft.Page):
                         suffix="...is your color",
                         max_length=20,
                     ),
-                    ft.Button(content="Submit", on_click=handle_button_click),
+                    ft.Button(
+                        key="submit_button",
+                        content="Submit",
+                        on_click=handle_button_click,
+                    ),
                     message := ft.Text(),
                 ],
             ),

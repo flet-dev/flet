@@ -54,7 +54,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/prefix_and_suffix/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/prefix_and_suffix.gif'} alt="prefix-and-suffix" width="55%" />
+<Image src={frontMatter.example_images + '/prefix_and_suffix.gif'} alt="prefix-and-suffix" width="55%" />
 
 ### Styled TextField
 

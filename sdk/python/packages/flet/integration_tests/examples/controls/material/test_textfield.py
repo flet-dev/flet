@@ -8,6 +8,9 @@ from examples.controls.material.text_field.handling_change_events.main import (
 )
 from examples.controls.material.text_field.multiline.main import main as multiline
 from examples.controls.material.text_field.password.main import main as password
+from examples.controls.material.text_field.prefix_and_suffix.main import (
+    main as prefix_and_suffix,
+)
 from examples.controls.material.text_field.selection_change.main import (
     main as selection_change,
 )
@@ -345,4 +348,90 @@ async def test_underlined_and_borderless(flet_app_function: ftt.FletTestApp):
 
     flet_app_function.create_gif(
         frames=frames, output_name="underlined_and_borderless", duration=1000
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": prefix_and_suffix}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 520)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    prefix = await flet_app_function.tester.find_by_key("prefix_field")
+    suffix = await flet_app_function.tester.find_by_key("suffix_field")
+    prefix_suffix = await flet_app_function.tester.find_by_key("prefix_suffix_field")
+    color = await flet_app_function.tester.find_by_key("color_field")
+    submit = await flet_app_function.tester.find_by_key("submit_button")
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("prefix_and_suffix_initial", initial_frame)
+    frames = [initial_frame]
+
+    await flet_app_function.tester.tap(prefix)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(prefix, "google.com")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(suffix)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(suffix, "github")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(prefix_suffix)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(prefix_suffix, "github")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(color)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(color, "red")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.mouse_hover(submit)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(submit)
+    await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("prefix_and_suffix_final", final_frame)
+    frames.append(final_frame)
+
+    flet_app_function.create_gif(
+        frames=frames, output_name="prefix_and_suffix", duration=1000
     )
