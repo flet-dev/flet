@@ -66,4 +66,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/label_hint_helper_counter/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/label_hint_helper_counter.gif'} alt="label-hint-helper-counter" width="55%" />
+
 <ClassMembers name={frontMatter.class_name} />

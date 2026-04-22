@@ -12,6 +12,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     ft.TextField(
+                        key="label_hint_helper_counter_textfield",
                         on_change=handle_field_change,
                         text_style=ft.TextStyle(
                             size=15,

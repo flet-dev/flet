@@ -6,6 +6,9 @@ import flet.testing as ftt
 from examples.controls.material.text_field.handling_change_events.main import (
     main as handling_change_events,
 )
+from examples.controls.material.text_field.label_hint_helper_counter.main import (
+    main as label_hint_helper_counter,
+)
 from examples.controls.material.text_field.multiline.main import main as multiline
 from examples.controls.material.text_field.password.main import main as password
 from examples.controls.material.text_field.prefix_and_suffix.main import (
@@ -483,3 +486,56 @@ async def test_styled(flet_app_function: ftt.FletTestApp):
     final_frame = frames[-1]
     flet_app_function.assert_screenshot("styled_final", final_frame)
     flet_app_function.create_gif(frames=frames, output_name="styled", duration=1000)
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": label_hint_helper_counter}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_label_hint_helper_counter(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 260)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    textfield = await flet_app_function.tester.find_by_key(
+        "label_hint_helper_counter_textfield"
+    )
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "label_hint_helper_counter_initial", initial_frame
+    )
+    frames = [initial_frame]
+
+    await flet_app_function.tester.tap(textfield)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    for value in [
+        "first",
+        "first name",
+        "first name last",
+        "first name last name",
+    ]:
+        await flet_app_function.tester.enter_text(textfield, value)
+        await flet_app_function.tester.pump_and_settle()
+        frames.append(
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            )
+        )
+
+    final_frame = frames[-1]
+    flet_app_function.assert_screenshot("label_hint_helper_counter_final", final_frame)
+    flet_app_function.create_gif(
+        frames=frames, output_name="label_hint_helper_counter", duration=1000
+    )
