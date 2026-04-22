@@ -42,7 +42,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/multiline/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/multiline.gif'} alt="multiline" width="55%" />
+<Image src={frontMatter.example_images + '/multiline.gif'} alt="multiline" width="55%" />
 
 ### Underlined and borderless TextFields
 

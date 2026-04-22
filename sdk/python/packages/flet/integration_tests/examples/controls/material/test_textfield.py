@@ -212,11 +212,11 @@ async def test_multiline(flet_app_function: ftt.FletTestApp):
     standard = await flet_app_function.tester.find_by_key("multiline_standard")
     auto_height = await flet_app_function.tester.find_by_key("multiline_auto_height")
 
-    frames = [
-        await flet_app_function.page.take_screenshot(
-            pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        )
-    ]
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("multiline_initial", initial_frame)
+    frames = [initial_frame]
 
     await flet_app_function.tester.tap(standard)
     await flet_app_function.tester.pump_and_settle()
@@ -265,4 +265,6 @@ async def test_multiline(flet_app_function: ftt.FletTestApp):
                 )
             )
 
+    final_frame = frames[-1]
+    flet_app_function.assert_screenshot("multiline_final", final_frame)
     flet_app_function.create_gif(frames=frames, output_name="multiline", duration=1000)
