@@ -122,9 +122,6 @@ jobs:
           yarn install
           yarn build
 
-      - name: Check for broken images and unresolved xrefs
-        run: bash .github/scripts/check_docs.sh website/build
-
   # ===========================
   # Build Flet Flutter package
   # ===========================

@@ -71,7 +71,7 @@ def test_extension_prefers_docs_reason_for_v_deprecated():
                     "new_prop",
                     version="0.81.0",
                     reason="Use plain text.",
-                    docs_reason="Use [`new_prop`][(c).] instead.",
+                    docs_reason="Use :attr:`new_prop` instead.",
                 ),
             ] = None
         """
@@ -83,7 +83,7 @@ def test_extension_prefers_docs_reason_for_v_deprecated():
         admonition = _first_deprecation_admonition(attr)
         assert admonition is not None
         text = _admonition_text(admonition)
-        assert "Use [`new_prop`][(c).] instead." in text
+        assert "Use :attr:`new_prop` instead." in text
         assert "Use plain text." not in text
 
 
@@ -123,7 +123,7 @@ def test_extension_prefers_docs_reason_for_flet_decorator():
 
         @deprecated(
             reason="Use plain text.",
-            docs_reason="Use [`new_func()`][(m).new_func] instead.",
+            docs_reason="Use :func:`new_func` instead.",
             version="0.80.0",
             delete_version="0.90.0",
         )
@@ -138,7 +138,7 @@ def test_extension_prefers_docs_reason_for_flet_decorator():
         admonition = _first_deprecation_admonition(func)
         assert admonition is not None
         text = _admonition_text(admonition)
-        assert "Use [`new_func()`][(m).new_func] instead." in text
+        assert "Use :func:`new_func` instead." in text
         assert "Use plain text." not in text
 
 
@@ -178,7 +178,7 @@ def test_extension_prefers_docs_reason_for_deprecated_class():
 
         @deprecated_class(
             reason="Use plain text.",
-            docs_reason="Use [`NewControl`][(m).NewControl] instead.",
+            docs_reason="Use :class:`NewControl` instead.",
             version="0.80.0",
             delete_version="0.90.0",
         )
@@ -193,7 +193,7 @@ def test_extension_prefers_docs_reason_for_deprecated_class():
         admonition = _first_deprecation_admonition(cls)
         assert admonition is not None
         text = _admonition_text(admonition)
-        assert "Use [`NewControl`][(m).NewControl] instead." in text
+        assert "Use :class:`NewControl` instead." in text
         assert "Use plain text." not in text
 
 

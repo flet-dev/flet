@@ -77,8 +77,12 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position.x` for target-relative coordinates or "
         "`global_position.x` for global coordinates instead.",
-        docs_reason="Use [`local_position.x`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
-        "[`global_position.x`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
+        docs_reason=(
+            "Use :attr:`~flet.DragTargetEvent.local_position`.x for "
+            "target-relative coordinates or "
+            ":attr:`~flet.DragTargetEvent.global_position`.x for global "
+            "coordinates instead."
+        ),
         version="0.85.0",
         delete_version="0.88.0",
     )
@@ -93,8 +97,12 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position.y` for target-relative coordinates or "
         "`global_position.y` for global coordinates instead.",
-        docs_reason="Use [`local_position.y`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
-        "[`global_position.y`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
+        docs_reason=(
+            "Use :attr:`~flet.DragTargetEvent.local_position`.y for "
+            "target-relative coordinates or "
+            ":attr:`~flet.DragTargetEvent.global_position`.y for global "
+            "coordinates instead."
+        ),
         version="0.85.0",
         delete_version="0.88.0",
     )
@@ -109,8 +117,12 @@ class DragTargetEvent(Event["DragTarget"]):
     @deprecated(
         reason="Use `local_position` for target-relative coordinates or "
         "`global_position` for global coordinates instead.",
-        docs_reason="Use [`local_position`](../types/dragtargetevent.md#flet.DragTargetEvent.local_position) for target-relative coordinates or "  # noqa: E501
-        "[`global_position`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position) for global coordinates instead.",  # noqa: E501
+        docs_reason=(
+            "Use :attr:`~flet.DragTargetEvent.local_position` for "
+            "target-relative coordinates or "
+            ":attr:`~flet.DragTargetEvent.global_position` for global "
+            "coordinates instead."
+        ),
         version="0.85.0",
         delete_version="0.88.0",
     )

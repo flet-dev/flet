@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "crocodocs:generate": "cd .. && uv --directory ./tools/crocodocs run crocodocs generate",
+    "docs:check": "cd .. && bash .github/scripts/check_docs.sh website/build",
     "start": "cd .. && uv --directory ./tools/crocodocs run crocodocs watch --child-cwd ../../website -- yarn exec docusaurus start",
-    "build": "yarn crocodocs:generate && docusaurus build",
+    "build": "yarn crocodocs:generate && docusaurus build && yarn docs:check",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy"
   },

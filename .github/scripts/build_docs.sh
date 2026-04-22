@@ -17,11 +17,8 @@ for pkg in packages/*; do
 done
 cd -
 
-# build website
+# build website (includes verification checks via `yarn build`)
 cd website
 yarn install
 yarn build
 cd -
-
-# run verification checks
-bash .github/scripts/check_docs.sh website/build

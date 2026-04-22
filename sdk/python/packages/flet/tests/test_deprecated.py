@@ -54,7 +54,7 @@ def test_deprecated_decorator_uses_runtime_reason_not_docs_reason():
 
     @deprecated(
         reason="Runtime guidance only.",
-        docs_reason="Use [`new_function`][(m).new_function] instead.",
+        docs_reason="Use :func:`new_function` instead.",
         version="1.0.0",
     )
     def old_function() -> None:
@@ -73,7 +73,7 @@ def test_deprecated_class_warns_on_init_and_post_init():
 
     @deprecated_class(
         reason="Use NewClass instead.",
-        docs_reason="Use [`NewClass`][(m).NewClass] instead.",
+        docs_reason="Use :class:`NewClass` instead.",
         version="1.0.0",
         delete_version="2.0.0",
     )
@@ -96,7 +96,7 @@ def test_deprecated_class_warns_on_init_and_post_init():
         assert "OldClass is deprecated since version 1.0.0" in warning_text
         assert "Use NewClass instead." in warning_text
         assert "NewClass" in warning_text
-        assert "[`NewClass`]" not in warning_text
+        assert ":class:`NewClass`" not in warning_text
 
 
 def test_deprecated_warning_formats_message_with_and_without_delete_version():

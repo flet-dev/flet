@@ -6,6 +6,7 @@ import {
   firstSentenceFromDocstring,
   getApiData,
   memberAnchor,
+  plainifyForTooltip,
   renderCodeExpression,
   renderDocstring,
   renderDocstringSections,
@@ -339,7 +340,7 @@ function SummarySection({title, items, classSymbol}) {
                     {labels.map((label) => (
                       <Badge
                         key={label}
-                        title={label === "deprecated" ? item.deprecation : undefined}
+                        title={label === "deprecated" ? plainifyForTooltip(item.deprecation) : undefined}
                       >
                         {label}
                       </Badge>
