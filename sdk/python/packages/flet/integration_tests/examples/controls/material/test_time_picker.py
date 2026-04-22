@@ -147,75 +147,123 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_hour_formats(flet_app_function: ftt.FletTestApp):
-    counter = 0
-    images = []
-
-    async def _snap():
-        nonlocal counter
-        counter += 1
-        name = f"hour_formats_{counter}"
-        images.append(name)
-        flet_app_function.assert_screenshot(
-            name,
-            await flet_app_function.page.take_screenshot(
-                pixel_ratio=flet_app_function.screenshots_pixel_ratio
-            ),
-        )
-
     async def _settle():
         await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
-
-    async def _open_picker():
-        await flet_app_function.tester.tap(
-            await flet_app_function.tester.find_by_icon(ft.Icons.SCHEDULE)
-        )
-        await _settle()
-        await _snap()
-
-    async def _close_picker():
-        await flet_app_function.tester.tap(
-            await flet_app_function.tester.find_by_text("OK")
-        )
-        await _settle()
-        await _snap()
-
-    async def _select_clock(label: str):
-        dd = await flet_app_function.tester.find_by_key("dd")
-        await flet_app_function.tester.tap(dd)
-        await _settle()
-        await flet_app_function.tester.tap(
-            (await flet_app_function.tester.find_by_text(label)).last
-        )
-        await _settle()
-        await flet_app_function.tester.tap(dd)
-        await _settle()
-        await _snap()
-        await flet_app_function.tester.tap(dd)
-        await _settle()
-        await _snap()
 
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(600, 450)
     flet_app_function.page.update()
     await _settle()
 
-    # initial state
-    await _snap()
+    open_picker = await flet_app_function.tester.find_by_text("Open TimePicker")
+    dropdown = await flet_app_function.tester.find_by_key("dd")
 
-    # picker open/close on default
-    await _open_picker()
-    await _close_picker()
+    frames = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
 
-    # switch to 12h, then open/close
-    await _select_clock("12-hour clock")
-    await _open_picker()
-    await _close_picker()
+    await flet_app_function.tester.mouse_hover(open_picker.first)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
 
-    # switch to 24h, then open/close
-    await _select_clock("24-hour clock")
-    await _open_picker()
-    await _close_picker()
+    await flet_app_function.tester.tap(dropdown)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    clock_12h = await flet_app_function.tester.find_by_text("12-hour clock")
+    await flet_app_function.tester.mouse_hover(clock_12h.last)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(clock_12h.last)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.mouse_hover(open_picker.first)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(open_picker.first)
+    await _settle()
+    opened_12h_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("hour_formats_opened_12h", opened_12h_frame)
+    frames.append(opened_12h_frame)
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Cancel")
+    )
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(dropdown)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    clock_24h = await flet_app_function.tester.find_by_text("24-hour clock")
+    await flet_app_function.tester.mouse_hover(clock_24h.last)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(clock_24h.last)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.mouse_hover(open_picker.first)
+    await _settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(open_picker.first)
+    await _settle()
+    opened_24h_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("hour_formats_opened_24h", opened_24h_frame)
+    frames.append(opened_24h_frame)
 
     flet_app_function.create_gif(
-        image_names=images, output_name="hour_formats", duration=2000
+        frames=frames, output_name="hour_formats", duration=1000
     )
