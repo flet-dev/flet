@@ -33,6 +33,7 @@ def main(page: ft.Page):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
                     ft.Button(
+                        key="pick_time_button",
                         content="Pick time",
                         icon=ft.Icons.TIME_TO_LEAVE,
                         on_click=lambda: page.show_dialog(time_picker),

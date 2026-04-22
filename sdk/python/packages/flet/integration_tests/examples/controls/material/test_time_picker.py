@@ -43,19 +43,103 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(600, 400)
     flet_app_function.page.update()
-
-    # open picker
-    await flet_app_function.tester.tap(
-        await flet_app_function.tester.find_by_icon(ft.Icons.TIME_TO_LEAVE)
-    )
     await flet_app_function.tester.pump_and_settle()
 
-    flet_app_function.assert_screenshot(
-        "basic",
+    pick_time = await flet_app_function.tester.find_by_key("pick_time_button")
+    frames = [
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
-        ),
+        )
+    ]
+
+    await flet_app_function.tester.mouse_hover(pick_time)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
     )
+
+    await flet_app_function.tester.tap(pick_time)
+    await flet_app_function.tester.pump_and_settle()
+    opened_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("basic_opened", opened_frame)
+    frames.append(opened_frame)
+
+    switch_to_text_input = await flet_app_function.tester.find_by_tooltip(
+        "Switch to text input mode"
+    )
+    await flet_app_function.tester.mouse_hover(switch_to_text_input.first)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(switch_to_text_input.first)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    am = await flet_app_function.tester.find_by_text("AM")
+    await flet_app_function.tester.mouse_hover(am.first)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(am.first)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    hour_field = await flet_app_function.tester.find_by_text("7")
+    await flet_app_function.tester.enter_text(hour_field.first, "11")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    minute_field = await flet_app_function.tester.find_by_text("30")
+    await flet_app_function.tester.enter_text(minute_field.first, "45")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    confirm = await flet_app_function.tester.find_by_text("Confirm")
+    await flet_app_function.tester.mouse_hover(confirm.first)
+    await flet_app_function.tester.pump_and_settle()
+    confirm_hover_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("basic_confirm_hover", confirm_hover_frame)
+    frames.append(confirm_hover_frame)
+
+    await flet_app_function.tester.tap(confirm.first)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    flet_app_function.create_gif(frames=frames, output_name="basic", duration=1000)
 
 
 @pytest.mark.parametrize(
