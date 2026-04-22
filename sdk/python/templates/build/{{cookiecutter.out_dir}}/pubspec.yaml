@@ -19,7 +19,7 @@ dependencies:
     path: ../../../../../packages/flet
   serious_python: 0.9.11
 
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.0.0
   path_provider: ^2.1.4
   path: ^1.9.0
   window_manager: ^0.5.1

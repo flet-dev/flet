@@ -14,7 +14,7 @@ dependencies:
 
   collection: ^1.16.0
   equatable: ^2.0.3
-  fl_chart: 1.1.1
+  fl_chart: ^1.2.0
 
   flet:
     path: ../../../../../../../packages/flet
