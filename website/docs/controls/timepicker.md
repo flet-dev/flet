@@ -25,4 +25,10 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/hour_formats.gif'} width="55%" />
 
+### Custom Locale
+
+<CodeExample path={frontMatter.examples + '/custom_locale/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/custom_locale.png'} width="55%" />
+
 <ClassMembers name={frontMatter.class_name} />

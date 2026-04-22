@@ -3,6 +3,7 @@ from datetime import time
 import pytest
 
 import examples.controls.material.time_picker.basic.main as basic
+import examples.controls.material.time_picker.custom_locale.main as custom_locale
 import examples.controls.material.time_picker.hour_formats.main as hour_formats
 import flet as ft
 import flet.testing as ftt
@@ -266,4 +267,27 @@ async def test_hour_formats(flet_app_function: ftt.FletTestApp):
 
     flet_app_function.create_gif(
         frames=frames, output_name="hour_formats", duration=1000
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function", [{"flet_app_main": custom_locale.main}], indirect=True
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_custom_locale(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(600, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_key("custom_locale_button")
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    flet_app_function.assert_screenshot(
+        "custom_locale",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )

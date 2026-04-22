@@ -1,3 +1,5 @@
+from datetime import time
+
 import flet as ft
 
 
@@ -7,10 +9,14 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Button(
+                key="custom_locale_button",
                 content="Pick time (zh_Hans locale)",
                 icon=ft.Icons.CALENDAR_MONTH,
                 on_click=lambda e: page.show_dialog(
-                    ft.TimePicker(locale=ft.Locale("zh", "Hans"))
+                    ft.TimePicker(
+                        value=time(hour=19, minute=30),
+                        locale=ft.Locale("zh", "Hans"),
+                    )
                 ),
             ),
         )
