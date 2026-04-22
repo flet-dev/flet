@@ -14,6 +14,7 @@ from examples.controls.material.text_field.prefix_and_suffix.main import (
 from examples.controls.material.text_field.selection_change.main import (
     main as selection_change,
 )
+from examples.controls.material.text_field.styled.main import main as styled
 from examples.controls.material.text_field.underlined_and_borderless.main import (
     main as underlined_and_borderless,
 )
@@ -435,3 +436,50 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     flet_app_function.create_gif(
         frames=frames, output_name="prefix_and_suffix", duration=1000
     )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": styled}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_styled(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 260)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    textfield = await flet_app_function.tester.find_by_key("styled_textfield")
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("styled_initial", initial_frame)
+    frames = [initial_frame]
+
+    await flet_app_function.tester.tap(textfield)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    for value in [
+        "hello",
+        "hello flet",
+        "hello flet hello",
+        "hello flet hello flet",
+    ]:
+        await flet_app_function.tester.enter_text(textfield, value)
+        await flet_app_function.tester.pump_and_settle()
+        frames.append(
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            )
+        )
+
+    final_frame = frames[-1]
+    flet_app_function.assert_screenshot("styled_final", final_frame)
+    flet_app_function.create_gif(frames=frames, output_name="styled", duration=1000)

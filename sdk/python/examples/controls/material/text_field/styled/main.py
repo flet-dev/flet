@@ -5,6 +5,7 @@ async def main(page: ft.Page):
     page.padding = 50
 
     tf = ft.TextField(
+        key="styled_textfield",
         text_size=30,
         cursor_color=ft.Colors.RED,
         selection_color=ft.Colors.YELLOW,
@@ -25,7 +26,6 @@ async def main(page: ft.Page):
             content=tf,
         )
     )
-    await tf.focus()
 
 
 if __name__ == "__main__":

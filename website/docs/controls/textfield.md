@@ -60,6 +60,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/styled.gif'} alt="styled" width="45%" />
+
 ### Custom label, hint, helper, and counter texts and styles
 
 <CodeExample path={frontMatter.examples + '/label_hint_helper_counter/main.py'} language="python" />
