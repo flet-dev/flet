@@ -48,7 +48,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/underlined_and_borderless/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="55%" />
+<Image src={frontMatter.example_images + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="55%" />
 
 ### Setting prefixes and suffixes
 

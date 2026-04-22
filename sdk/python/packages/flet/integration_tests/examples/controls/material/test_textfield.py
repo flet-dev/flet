@@ -11,6 +11,9 @@ from examples.controls.material.text_field.password.main import main as password
 from examples.controls.material.text_field.selection_change.main import (
     main as selection_change,
 )
+from examples.controls.material.text_field.underlined_and_borderless.main import (
+    main as underlined_and_borderless,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -268,3 +271,78 @@ async def test_multiline(flet_app_function: ftt.FletTestApp):
     final_frame = frames[-1]
     flet_app_function.assert_screenshot("multiline_final", final_frame)
     flet_app_function.create_gif(frames=frames, output_name="multiline", duration=1000)
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": underlined_and_borderless}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_underlined_and_borderless(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(520, 360)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    underlined = await flet_app_function.tester.find_by_key("underlined_field")
+    underlined_filled = await flet_app_function.tester.find_by_key(
+        "underlined_filled_field"
+    )
+    borderless = await flet_app_function.tester.find_by_key("borderless_field")
+    borderless_filled = await flet_app_function.tester.find_by_key(
+        "borderless_filled_field"
+    )
+
+    initial_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot(
+        "underlined_and_borderless_initial", initial_frame
+    )
+    frames = [initial_frame]
+
+    await flet_app_function.tester.tap(underlined)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(underlined, "eat")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(underlined_filled)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(underlined_filled, "code")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(borderless)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(borderless, "eat again")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.tap(borderless_filled)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.enter_text(borderless_filled, "code again")
+    await flet_app_function.tester.pump_and_settle()
+    final_frame = await flet_app_function.page.take_screenshot(
+        pixel_ratio=flet_app_function.screenshots_pixel_ratio
+    )
+    flet_app_function.assert_screenshot("underlined_and_borderless_final", final_frame)
+    frames.append(final_frame)
+
+    flet_app_function.create_gif(
+        frames=frames, output_name="underlined_and_borderless", duration=1000
+    )
