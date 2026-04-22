@@ -66,7 +66,7 @@ jobs:
             needs_linux_deps: true
 
           - name: macos
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build macos"
             artifact_name: macos-build-artifact
             artifact_path: build/macos
@@ -88,7 +88,7 @@ jobs:
             needs_linux_deps: false
 
           - name: aab-macos
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build aab"
             artifact_name: aab-build-macos-artifact
             artifact_path: build/aab
@@ -109,7 +109,7 @@ jobs:
             needs_linux_deps: false
 
           - name: apk-macos
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build apk"
             artifact_name: apk-build-macos-artifact
             artifact_path: build/apk
@@ -124,14 +124,14 @@ jobs:
 
           # -------- iOS --------
           - name: ipa
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build ipa"
             artifact_name: ipa-build-artifact
             artifact_path: build/ipa
             needs_linux_deps: false
 
           - name: ios-simulator
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build ios-simulator"
             artifact_name: ios-simulator-build-artifact
             artifact_path: build/ios-simulator
@@ -146,7 +146,7 @@ jobs:
             needs_linux_deps: false
 
           - name: web-macos
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build web"
             artifact_name: web-build-macos-artifact
             artifact_path: build/web
@@ -219,7 +219,7 @@ jobs:
             runner: ubuntu-latest
 
           - name: macos
-            runner: macos-latest
+            runner: macos-26
 
           - name: windows
             runner: windows-latest
