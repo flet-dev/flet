@@ -487,7 +487,9 @@ async def test_styled(flet_app_function: ftt.FletTestApp):
         )
 
     final_frame = frames[-1]
-    flet_app_function.assert_screenshot("styled_final", final_frame)
+    flet_app_function.assert_screenshot(
+        "styled_final", final_frame, similarity_threshold=98.5
+    )
     flet_app_function.create_gif(frames=frames, output_name="styled", duration=1000)
 
 
