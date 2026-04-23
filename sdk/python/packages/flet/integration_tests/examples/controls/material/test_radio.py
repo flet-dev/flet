@@ -32,11 +32,14 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_basic(flet_app_function: ftt.FletTestApp):
+    async def _settle():
+        await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
+
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(420, 280)
     flet_app_function.page.update()
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
 
     initial_frame = await flet_app_function.page.take_screenshot(
         pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -50,7 +53,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     red = await flet_app_function.tester.find_by_text("Red")
     # Hover over radio doesn't show on screenshot
     await flet_app_function.tester.mouse_hover(red)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -58,7 +61,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(red)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -67,7 +70,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 
     submit = await flet_app_function.tester.find_by_key("basic_submit_button")
     await flet_app_function.tester.mouse_hover(submit)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -75,7 +78,7 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(submit)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     final_frame = await flet_app_function.page.take_screenshot(
         pixel_ratio=flet_app_function.screenshots_pixel_ratio
     )
@@ -99,11 +102,14 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
+    async def _settle():
+        await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
+
     flet_app_function.page.enable_screenshots = True
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.resize_page(420, 250)
     flet_app_function.page.update()
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
 
     initial_frame = await flet_app_function.page.take_screenshot(
         pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -117,7 +123,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
     red = await flet_app_function.tester.find_by_text("Red")
     # Hover over radio doesn't show on screenshot
     await flet_app_function.tester.mouse_hover(red)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -125,7 +131,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(red)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -134,7 +140,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
 
     green = await flet_app_function.tester.find_by_text("Green")
     await flet_app_function.tester.mouse_hover(green)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -142,7 +148,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(green)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -151,7 +157,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
 
     blue = await flet_app_function.tester.find_by_text("Blue")
     await flet_app_function.tester.mouse_hover(blue)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -159,7 +165,7 @@ async def test_handling_selection_changes(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(blue)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     final_frame = await flet_app_function.page.take_screenshot(
         pixel_ratio=flet_app_function.screenshots_pixel_ratio
     )

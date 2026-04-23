@@ -362,11 +362,14 @@ async def test_underlined_and_borderless(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
+    async def _settle():
+        await flet_app_function.tester.pump_and_settle(ft.Duration(milliseconds=500))
+
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
     flet_app_function.resize_page(520, 520)
     flet_app_function.page.update()
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
 
     prefix = await flet_app_function.tester.find_by_key("prefix_field")
     suffix = await flet_app_function.tester.find_by_key("suffix_field")
@@ -381,9 +384,9 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     frames = [initial_frame]
 
     await flet_app_function.tester.tap(prefix)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     await flet_app_function.tester.enter_text(prefix, "google.com")
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -391,9 +394,9 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(suffix)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     await flet_app_function.tester.enter_text(suffix, "github")
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -401,9 +404,9 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(prefix_suffix)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     await flet_app_function.tester.enter_text(prefix_suffix, "github")
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -411,9 +414,9 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(color)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     await flet_app_function.tester.enter_text(color, "red")
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -421,7 +424,7 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.mouse_hover(submit)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     frames.append(
         await flet_app_function.page.take_screenshot(
             pixel_ratio=flet_app_function.screenshots_pixel_ratio
@@ -429,7 +432,7 @@ async def test_prefix_and_suffix(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(submit)
-    await flet_app_function.tester.pump_and_settle()
+    await _settle()
     final_frame = await flet_app_function.page.take_screenshot(
         pixel_ratio=flet_app_function.screenshots_pixel_ratio
     )
