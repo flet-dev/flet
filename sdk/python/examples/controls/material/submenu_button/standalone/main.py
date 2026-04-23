@@ -5,6 +5,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
 
     smb = ft.SubmenuButton(
+        expand=True,
         content=ft.Text("Text Styles"),
         key="smbutton",
         menu_style=ft.MenuStyle(
@@ -43,7 +44,6 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
-            # expand=True,
             content=ft.Row(controls=[smb]),
         )
     )
