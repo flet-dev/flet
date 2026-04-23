@@ -215,37 +215,38 @@ uv run flet run -w -p 8550 playground/<your-main.py>
 ### Branching strategy
 
 * **`main`** — always contains the latest stable release. Protected branch.
-* **`release/vX.Y`** — integration branch for the next major or minor release. Created from `main` at the start of a release cycle.
+* **`release/v{version}`** — integration branch for the next release, for example `release/v0.85.0`. Created from `main` at the start of a release cycle.
 * **`feature/*`**, **`fix/*`** — short-lived branches created from the release branch and merged back into it via PR.
 
 ### Contributor guidelines
 
-* Target your PRs to the active `release/vX.Y` branch (not `main`).
-* Add a changelog entry to the root `CHANGELOG.md` in your PR.
+* Target your PRs to the active `release/v{version}` branch (not `main`).
+* Add a new changelog record to the active release section in the root `CHANGELOG.md` in every PR targeting `release/v{version}`.
 * Assign the release milestone to all related issues and PRs.
 
 ### Starting a release cycle
 
-1. Create a new GitHub milestone for the version (e.g., `0.84.0`).
-2. Create a `release/vX.Y` branch from `main`.
+1. Create a new GitHub milestone for the version (e.g., `0.85.0`).
+2. Create a `release/v{version}` branch from `main`.
 3. Update package version to `{version}` in `packages/flet/pubspec.yaml`.
-3. Add `# {version}` into `CHANGELOG.md`.
+4. Add `## {version}` into `CHANGELOG.md` and `packages/flet/CHANGELOG.md`.
+5. Require every PR targeting `release/v{version}` to append a new record to the active root changelog section.
 
 ### Publishing a pre-release
 
-1. On the release branch, create and push a tag with the format `vX.Y.Z.devN` (start from `dev0`, e.g., `v0.84.0.dev0`).
+1. On the release branch, create and push a tag with the format `vX.Y.Z.devN` (start from `dev0`, e.g., `v0.85.0.dev0`).
 2. CI builds and runs all tests. If everything passes, it creates a pre-release GitHub Release and publishes pre-release packages to PyPI. Pre-releases are **not** published to pub.dev.
 3. Increment `N` for each subsequent pre-release (`dev1`, `dev2`, ...).
 
 ### Publishing a stable release
 
 1. Prepare the release on the release branch (see [Release preparation steps](#release-preparation-steps) below).
-2. Create `Flet {version}` PR from `release/vX.Y` into `main`.
+2. Create `Flet {version}` PR from `release/v{version}` into `main`.
 3. Merge into `main` using a **regular merge** (not squash).
-4. Create and push a `v{version}` tag on `main` (e.g., `v0.84.0`).
+4. Create and push a `v{version}` tag on `main` (e.g., `v0.85.0`).
 5. CI publishes to PyPI, pub.dev, and creates a GitHub Release.
 6. Close the milestone — mark remaining issues as fixed.
-7. Delete the `release/vX.Y` branch.
+7. Delete the `release/v{version}` branch.
 8. Clean up pre-release GitHub Releases and pre-release versions on PyPI.
 
 ### Hotfixes
@@ -254,7 +255,8 @@ For patches to the current stable release, branch directly from `main`, fix, ope
 
 ### Release preparation steps
 
-* Copy `# {version}` section from the root `CHANGELOG.md` to `packages/flet/CHANGELOG.md`.
+* Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
+* Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
 * Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
 * Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
 

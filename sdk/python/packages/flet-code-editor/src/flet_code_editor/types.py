@@ -4,7 +4,14 @@ from typing import Optional
 import flet as ft
 from flet.controls.core.markdown import MarkdownCodeTheme, MarkdownCustomCodeTheme
 
-__all__ = ["CodeLanguage", "CodeTheme", "CustomCodeTheme", "GutterStyle"]
+__all__ = [
+    "CodeLanguage",
+    "CodeTheme",
+    "CustomCodeTheme",
+    "GutterStyle",
+    "Issue",
+    "IssueType",
+]
 
 
 class CodeLanguage(Enum):
@@ -846,3 +853,36 @@ class GutterStyle:
 
     show_line_numbers: bool = True
     """Whether to show line numbers in the gutter."""
+
+
+class IssueType(Enum):
+    """Severity level of a code analysis issue."""
+
+    ERROR = "error"
+    """Error severity."""
+
+    WARNING = "warning"
+    """Warning severity."""
+
+    INFO = "info"
+    """Informational severity."""
+
+
+@ft.value
+class Issue:
+    """A code analysis issue displayed in the editor gutter."""
+
+    line: int = 0
+    """0-indexed line number where the issue occurs."""
+
+    message: str = ""
+    """Description of the issue."""
+
+    type: Optional[IssueType] = None
+    """Severity level: error, warning, or info."""
+
+    suggestion: Optional[str] = None
+    """Optional suggested fix."""
+
+    url: Optional[str] = None
+    """Optional URL for more information."""

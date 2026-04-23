@@ -73,7 +73,6 @@ apply_standard_settings(${BINARY_NAME})
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
 target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
-target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB})
 
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
@@ -92,6 +91,15 @@ set_target_properties(${BINARY_NAME}
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
+
+# Link mimalloc when media_kit_libs_linux exposes it. This must happen after
+# generated plugins are included so MIMALLOC_LIB is initialized.
+# mimalloc.o references pthread_*, so pair it with Threads::Threads — modern
+# ld --as-needed won't pull libpthread in transitively through other DSOs.
+if(MIMALLOC_LIB)
+  find_package(Threads REQUIRED)
+  target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB} Threads::Threads)
+endif()
 
 
 # === Installation ===

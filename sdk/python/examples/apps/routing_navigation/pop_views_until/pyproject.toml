@@ -1,0 +1,26 @@
+[project]
+name = "apps-routing-navigation-pop-views-until"
+version = "1.0.0"
+description = "Pops multiple views from the navigation stack and returns a result to the destination view."
+requires-python = ">=3.10"
+keywords = ["apps", "routing", "navigation", "pop", "views", "result", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Navigation"]
+
+[tool.flet.metadata]
+title = "Pop views until"
+controls = ["View", "AppBar", "Button", "Text", "SnackBar"]
+layout_pattern = "multi-step-flow"
+complexity = "intermediate"
+features = ["routing", "view stack", "pop views until", "result passing", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

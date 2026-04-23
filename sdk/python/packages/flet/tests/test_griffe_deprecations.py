@@ -13,7 +13,7 @@ from griffe import (  # noqa: E402
 
 
 def _first_deprecation_admonition(obj):
-    """Return first `Deprecated` admonition section from an object docstring."""
+    """Return the first `Deprecated` admonition section from an object docstring."""
     if not obj.docstring:
         return None
     for section in obj.docstring.parsed:
@@ -31,6 +31,7 @@ def _admonition_text(admonition):
 
 
 def test_extension_adds_attribute_admonition_for_v_deprecated():
+    """Ensure that `V.deprecated` attributes get a Deprecated admonition."""
     code = dedent(
         """
         from typing import Annotated, Optional
@@ -57,6 +58,7 @@ def test_extension_adds_attribute_admonition_for_v_deprecated():
 
 
 def test_extension_prefers_docs_reason_for_v_deprecated():
+    """Ensure that `docs_reason` overrides `reason` for `V.deprecated` attributes."""
     code = dedent(
         """
         from typing import Annotated, Optional
@@ -86,6 +88,7 @@ def test_extension_prefers_docs_reason_for_v_deprecated():
 
 
 def test_extension_adds_function_admonition_for_flet_decorator():
+    """Ensure that `@deprecated` functions get a Deprecated admonition."""
     code = dedent(
         """
         from flet.utils.deprecated import deprecated
@@ -113,6 +116,7 @@ def test_extension_adds_function_admonition_for_flet_decorator():
 
 
 def test_extension_prefers_docs_reason_for_flet_decorator():
+    """Ensure that `docs_reason` overrides `reason` for `@deprecated` functions."""
     code = dedent(
         """
         from flet.utils.deprecated import deprecated
@@ -139,6 +143,7 @@ def test_extension_prefers_docs_reason_for_flet_decorator():
 
 
 def test_extension_adds_class_admonition_for_deprecated_class():
+    """Ensure that `@deprecated_class` classes get a Deprecated admonition."""
     code = dedent(
         """
         from flet.utils.deprecated import deprecated_class
@@ -166,6 +171,7 @@ def test_extension_adds_class_admonition_for_deprecated_class():
 
 
 def test_extension_prefers_docs_reason_for_deprecated_class():
+    """Ensure that `docs_reason` overrides `reason` for `@deprecated_class` classes."""
     code = dedent(
         """
         from flet.utils.deprecated import deprecated_class
@@ -191,7 +197,44 @@ def test_extension_prefers_docs_reason_for_deprecated_class():
         assert "Use plain text." not in text
 
 
+def test_extension_adds_attribute_admonition_for_property_getter_deprecated():
+    """Ensure that deprecated property getters get a Deprecated admonition."""
+    code = dedent(
+        """
+        from flet.utils.deprecated import deprecated
+
+        class Control:
+            @property
+            @deprecated(
+                reason="Use plain text.",
+                docs_reason="Use :attr:`new_prop` instead.",
+                version="0.80.0",
+                delete_version="0.90.0",
+            )
+            def old_prop(self) -> int:
+                \"\"\"Deprecated property getter.\"\"\"
+                return 1
+        """
+    )
+    with temporary_visited_module(
+        code, extensions=load_extensions("flet.utils.griffe_deprecations")
+    ) as module:
+        attr = module["Control"]["old_prop"]
+        admonition = _first_deprecation_admonition(attr)
+        assert admonition is not None
+        text = _admonition_text(admonition)
+        assert "Deprecated since version `0.80.0`" in text
+        assert "removal in `0.90.0`" in text
+        assert "Use :attr:`new_prop` instead." in text
+        assert "Use plain text." not in text
+        assert "deprecated" in attr.labels
+        assert "property" in attr.labels
+
+
 def test_extension_adds_function_admonition_for_typing_extensions_deprecated():
+    """
+    Ensure that `typing_extensions.deprecated` functions get a Deprecated admonition.
+    """
     code = dedent(
         """
         from typing_extensions import deprecated

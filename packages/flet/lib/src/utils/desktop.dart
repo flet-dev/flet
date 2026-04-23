@@ -272,6 +272,15 @@ Future blurWindow() async {
 Future destroyWindow() async {
   if (isDesktopPlatform()) {
     debugPrint("destroyWindow()");
+    if (isWindowsDesktop()) {
+      // Work around window_manager.destroy() stalling on Windows:
+      // https://github.com/leanflutter/window_manager/issues/478#issuecomment-2423413104
+      if (await windowManager.isPreventClose()) {
+        await windowManager.setPreventClose(false);
+      }
+      await windowManager.close();
+      return;
+    }
     await windowManager.destroy();
   }
 }

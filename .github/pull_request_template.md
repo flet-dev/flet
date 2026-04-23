@@ -24,12 +24,13 @@
 - [ ] I signed the CLA.
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
+- [ ] If this PR targets a `release/*` branch, I added a new record to the active root `CHANGELOG.md` section
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] My changes generate no new warnings
 - [ ] New and existing tests pass locally with my changes
 - [ ] I have made corresponding changes to the [documentation](https://github.com/flet-dev/website) (if applicable)
 
-## Screenshots 
+## Screenshots
 
 <!-- Add screenshots here if applicable. -->
 

@@ -271,3 +271,35 @@ async def test_disabled_tabs(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
     assert tabs.selected_index == 1
     assert clicked_indexes == [1]
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_unbounded_tabbarview_height(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        name=request.node.name,
+        control=ft.Column(
+            controls=[
+                ft.Tabs(
+                    length=1,
+                    content=ft.Column(
+                        controls=[
+                            ft.TabBar(
+                                tabs=[
+                                    ft.Tab(label="Tab 1"),
+                                ]
+                            ),
+                            ft.TabBarView(
+                                controls=[
+                                    ft.Container(
+                                        content=ft.Text("Tab 1 content"),
+                                        alignment=ft.Alignment.CENTER,
+                                    )
+                                ],
+                            ),
+                        ],
+                    ),
+                )
+            ]
+        ),
+    )

@@ -33,9 +33,11 @@ class BottomSheetControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? sheetRoute;
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
+                  sheetRoute ??= ModalRoute.of(context);
                   var content = control.buildWidget("content");
 
                   if (content == null) {
@@ -73,9 +75,11 @@ class BottomSheetControl extends StatelessWidget {
                 shape: control.getOutlinedBorder("shape", Theme.of(context)),
                 useSafeArea: control.getBool("use_safe_area", true)!)
             .then((value) {
-          control.updateProperties({"_open": false}, python: false);
-          control.updateProperties({"open": false});
-          control.triggerEvent("dismiss");
+          (sheetRoute?.completed ?? Future.value()).then((_) {
+            control.updateProperties({"_open": false}, python: false);
+            control.updateProperties({"open": false});
+            control.triggerEvent("dismiss");
+          });
         });
       });
     } else if (open != lastOpen && lastOpen) {

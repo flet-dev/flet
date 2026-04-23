@@ -101,6 +101,12 @@ class Context:
         """
         self.__components_mode = True
 
+    def disable_components_mode(self):
+        """
+        Disables components mode in the current context.
+        """
+        self.__components_mode = False
+
     def is_components_mode(self) -> bool:
         """
         Returns whether the current context is in components mode.

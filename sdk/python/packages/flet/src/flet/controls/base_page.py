@@ -1,4 +1,5 @@
 import logging
+import weakref
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
@@ -6,6 +7,7 @@ from typing import (
     Union,
 )
 
+from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import BaseControl, control
@@ -43,6 +45,9 @@ from flet.controls.types import (
 )
 
 logger = logging.getLogger("flet")
+
+_MANAGED_DIALOG_DISMISS_ORIGINAL = "_managed_dialog_dismiss_original"
+_MANAGED_DIALOG_DISMISS_WRAPPER = "_managed_dialog_dismiss_wrapper"
 
 if TYPE_CHECKING:
     from flet.controls.theme import Theme
@@ -259,6 +264,12 @@ class BasePage(AdaptiveControl):
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
+    def __resolved_views(self) -> list[View]:
+        views = unwrap_component(self.views)
+        if isinstance(views, View):
+            return [views]
+        return [unwrap_component(v) for v in views]
+
     def __root_view(self) -> View:
         """
         Return the root view of this page container.
@@ -270,9 +281,10 @@ class BasePage(AdaptiveControl):
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[0]
+        return views[0]
 
     def __top_view(self) -> View:
         """
@@ -285,9 +297,10 @@ class BasePage(AdaptiveControl):
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[-1]
+        return views[-1]
 
     def update(self, *controls: Control) -> None:
         """
@@ -390,30 +403,8 @@ class BasePage(AdaptiveControl):
         if dialog in self._dialogs.controls:
             raise RuntimeError("Dialog is already opened")
 
-        original_on_dismiss = dialog.on_dismiss
-
-        async def wrapped_on_dismiss(*args):
-            """
-            Remove dialog from stack and forward dismiss event to original handler.
-
-            Args:
-                *args: Dismiss event arguments passed by the framework.
-            """
-
-            if dialog in self._dialogs.controls:
-                self._dialogs.controls.remove(dialog)
-                self._dialogs.update()
-            dialog.on_dismiss = original_on_dismiss
-            e = args[0]
-            if (
-                original_on_dismiss and (e.data is None or e.data)  # e.data == True for
-                # TimePicker and DatePicker if they were dismissed without
-                # changing the value
-            ):
-                await dialog._trigger_event("dismiss", e)
-
         dialog.open = True
-        dialog.on_dismiss = wrapped_on_dismiss
+        self._prepare_dialog(dialog)
 
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
@@ -437,6 +428,52 @@ class BasePage(AdaptiveControl):
         dialog.open = False
         dialog.update()
         return dialog
+
+    def _prepare_dialog(self, dialog: DialogControl) -> None:
+        self._set_dialog_parent(dialog)
+        self._wrap_dialog_on_dismiss(dialog)
+
+    def _set_dialog_parent(self, dialog: DialogControl) -> None:
+        dialog._parent = weakref.ref(self._dialogs)
+
+    def _get_original_dialog_on_dismiss(self, dialog: DialogControl):
+        wrapper = getattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER, None)
+        if wrapper is not None and dialog.on_dismiss is wrapper:
+            return getattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, None)
+        return dialog.on_dismiss
+
+    def _wrap_dialog_on_dismiss(self, dialog: DialogControl) -> None:
+        original_on_dismiss = self._get_original_dialog_on_dismiss(dialog)
+
+        async def wrapped_on_dismiss(*args):
+            # Keep the dialog mounted until Flutter reports dismiss. Removing it
+            # earlier can drop the post-animation dismiss callback entirely.
+            self._restore_dialog_on_dismiss(dialog)
+            self._remove_dialog(dialog)
+            e = args[0]
+            if (
+                original_on_dismiss and (e.data is None or e.data)
+                # e.data == True for TimePicker and DatePicker if they were
+                # dismissed without changing the value
+            ):
+                await dialog._trigger_event("dismiss", e)
+
+        setattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, original_on_dismiss)
+        setattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER, wrapped_on_dismiss)
+        dialog.on_dismiss = wrapped_on_dismiss
+
+    def _restore_dialog_on_dismiss(self, dialog: DialogControl) -> None:
+        original_on_dismiss = getattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, None)
+        if hasattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL):
+            delattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL)
+        if hasattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER):
+            delattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER)
+        dialog.on_dismiss = original_on_dismiss
+
+    def _remove_dialog(self, dialog: DialogControl) -> None:
+        if dialog in self._dialogs.controls:
+            self._dialogs.controls.remove(dialog)
+            self._dialogs.update()
 
     async def show_drawer(self):
         """

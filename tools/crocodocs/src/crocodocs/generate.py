@@ -182,7 +182,10 @@ def run_generate(
         if blocks:
             relative = path.relative_to(docs_path).as_posix()
             doc_id = relative.removesuffix(".md").removesuffix(".mdx")
-            pages.append({"route": f"{base_url}/{doc_id}", "symbol_blocks": blocks})
+            route_path = (
+                doc_id.removesuffix("/index") if doc_id.endswith("/index") else doc_id
+            )
+            pages.append({"route": f"{base_url}/{route_path}", "symbol_blocks": blocks})
         partial_filenames.update(IMPORT_PARTIAL_RE.findall(content))
 
     reporter.stage("Writing manifest")

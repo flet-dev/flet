@@ -1,5 +1,12 @@
 from flet_code_editor.code_editor import CodeEditor
-from flet_code_editor.types import CodeLanguage, CodeTheme, CustomCodeTheme, GutterStyle
+from flet_code_editor.types import (
+    CodeLanguage,
+    CodeTheme,
+    CustomCodeTheme,
+    GutterStyle,
+    Issue,
+    IssueType,
+)
 
 __all__ = [
     "CodeEditor",
@@ -7,4 +14,6 @@ __all__ = [
     "CodeTheme",
     "CustomCodeTheme",
     "GutterStyle",
+    "Issue",
+    "IssueType",
 ]

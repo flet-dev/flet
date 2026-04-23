@@ -46,4 +46,5 @@ async def flet_app_function(request):
         yield flet_app
     finally:
         _context_page.reset(token)  # restore previous context to avoid leakage
+        context.disable_components_mode()
         await flet_app.teardown()

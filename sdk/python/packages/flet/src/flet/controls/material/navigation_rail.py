@@ -56,13 +56,13 @@ class NavigationRailDestination(Control):
     Represents a destination in a `NavigationRail`.
     """
 
-    icon: Optional[IconDataOrControl] = None
+    icon: IconDataOrControl
     """
     The [name of the icon](https://flet.dev/docs/types/icons) or `Control` of the \
     destination.
 
-    If `selected_icon` is provided, this will only be displayed when the destination is
-    not selected.
+    If :attr:`selected_icon` is provided, this will only be displayed when the
+    destination is not selected.
 
     To make the NavigationRail more accessible, consider choosing an icon with a stroked
     and filled version, such as `Icons.CLOUD` and `Icons.CLOUD_QUEUE`. The icon
@@ -105,6 +105,7 @@ class NavigationRail(LayoutControl):
     A material widget that is meant to be displayed at the left or right of an app to \
     navigate between a small number of views, typically between three and five.
 
+    Example:
     ```python
     ft.NavigationRail(
         selected_index=0,
@@ -206,6 +207,31 @@ class NavigationRail(LayoutControl):
 
     This is commonly a list of additional options or destinations that is usually only
     rendered when `extended=True`.
+    """
+
+    pin_leading_to_top: bool = True
+    """
+    Whether to pin the :attr:`leading` control to the top of the rail.
+
+    If `False`, the leading control becomes part of the main group together with the
+    destinations and participates in scrolling/alignment.
+    """
+
+    pin_trailing_to_bottom: bool = False
+    """
+    Whether to pin the :attr:`trailing` control to the bottom of the rail.
+
+    If `False`, the trailing control becomes part of the main group together with the
+    destinations and participates in scrolling/alignment.
+    """
+
+    scrollable: bool = False
+    """
+    Whether the main group of :attr:`destinations` should become scrollable when \
+    vertical space is insufficient.
+
+    When :attr:`pin_leading_to_top` or :attr:`pin_trailing_to_bottom` are
+    `False`, the respective controls also become part of the scrollable group.
     """
 
     min_width: Annotated[

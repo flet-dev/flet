@@ -72,6 +72,15 @@ and confirm manually with [`View.can_pop`](../controls/view.md#flet.View.can_pop
 
 <CodeExample path="apps/routing_navigation/pop_view_confirm/main.py" language="python" />
 
+## Pop multiple views with a result
+
+When a multi-step flow finishes deep in the view stack, use
+[`page.pop_views_until()`](../controls/page.md#flet.Page.pop_views_until)
+to jump back to a target route and deliver a result to the destination view
+via [`page.on_views_pop_until`](../controls/page.md#flet.Page.on_views_pop_until).
+
+<CodeExample path="apps/routing_navigation/pop_views_until/main.py" language="python" />
+
 ## Navigation UI patterns
 
 Routing composes well with navigation controls such as drawer, rail, and tabs.
