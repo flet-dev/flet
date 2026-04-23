@@ -10,6 +10,6 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 ### Example 1
 
-<CodeExample path="controls/types/padding/container/main.py" language="python" />
+<CodeExample path="controls/core/types/padding/container/main.py" language="python" />
 
 <Image src="examples/controls/core/types/padding/media/container.png" alt="container" width="55%" />

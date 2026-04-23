@@ -26,7 +26,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### RotatedBox
 
-<CodeExample path="controls/rotated_box/basic/main.py" language="python" />
+<CodeExample path="controls/core/rotated_box/basic/main.py" language="python" />
 
 <Image src="test-images/controls/core/golden/macos/rotated_box/rotated_box.png" width="55%" />
 

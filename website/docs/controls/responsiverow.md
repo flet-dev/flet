@@ -27,6 +27,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Scrollable content
 
-<CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
+<CodeExample path="controls/responsive_row/scrollable/main.py" language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
