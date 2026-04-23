@@ -40,6 +40,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
       _selectedIndex = selectedIndex;
     }
 
+    final width = widget.control.getDouble("width");
+
     var drawer = NavigationDrawer(
       elevation: widget.control.getDouble("elevation"),
       indicatorColor: widget.control.getColor("indicator_color", context),
@@ -67,6 +69,10 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
       }).toList(),
     );
 
-    return BaseControl(control: widget.control, child: drawer);
+    Widget drawerWidget = drawer;
+    if (width != null) {
+      drawerWidget = SizedBox(width: width, child: drawer);
+    }
+    return BaseControl(control: widget.control, child: drawerWidget);
   }
 }
