@@ -1,6 +1,6 @@
 """Tests for skipping auto-update when .update() was already called."""
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -135,3 +135,50 @@ def test_page_update_marks_flag():
         page.update()
 
     assert context.was_update_called() is True
+
+
+# --- Service (un)registration does not flip the user's update-called flag ---
+#
+# Services like FilePicker register themselves via an internal `self.update()`
+# during `__post_init__`. Before this fix, that flipped the update-called flag,
+# which made auto-update think the user had manually called `.update()` and
+# suppressed the post-handler auto-update.
+
+
+def _fake_service():
+    svc = MagicMock()
+    svc._c = "FakeService"
+    svc._i = 999
+    return svc
+
+
+def test_register_service_preserves_unset_flag():
+    session = _make_session()
+    registry = session.page._services
+
+    with patch.object(registry, "update"):
+        assert context.was_update_called() is False
+        registry.register_service(_fake_service())
+        assert context.was_update_called() is False
+
+
+def test_register_service_preserves_set_flag():
+    session = _make_session()
+    registry = session.page._services
+
+    with patch.object(registry, "update"):
+        context.mark_update_called()
+        registry.register_service(_fake_service())
+        assert context.was_update_called() is True
+
+
+def test_unregister_services_preserves_unset_flag():
+    session = _make_session()
+    registry = session.page._services
+    # Seed with a service whose refcount is low enough to be filtered out.
+    registry._services.append(_fake_service())
+
+    with patch.object(registry, "update"):
+        assert context.was_update_called() is False
+        registry.unregister_services()
+        assert context.was_update_called() is False
