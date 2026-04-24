@@ -412,7 +412,11 @@ function renderAttribute(item, classSymbol, docId) {
  */
 function renderMethod(item, classSymbol, docId) {
   const signatureText = stripImplicitSelf(item.signature ?? item.name);
-  const displaySignatureText = formatMethodSignatureForDisplay(signatureText);
+  const typedSignatureText =
+    item.return_type && !signatureText.includes("->")
+      ? `${signatureText} -> ${item.return_type}`
+      : signatureText;
+  const displaySignatureText = formatMethodSignatureForDisplay(typedSignatureText);
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
