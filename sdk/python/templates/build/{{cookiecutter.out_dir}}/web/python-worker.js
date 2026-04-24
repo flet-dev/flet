@@ -24,9 +24,6 @@ self.initPyodide = async function () {
         if "app_package_url" in py_args:
             app_package_url = py_args["app_package_url"]
 
-        if app_package_url is None:
-            app_package_url = "assets/app/app.zip"
-
         if "python_module_name" in py_args:
             python_module_name = py_args["python_module_name"]
 
@@ -45,7 +42,22 @@ self.initPyodide = async function () {
         if "script" not in py_args:
             print("Downloading app archive")
             response = await pyfetch(app_package_url)
-            await response.unpack_archive()
+            # Pick format from the URL's path extension. Pyodide's
+            # filename-based sniff trips over query strings like
+            # ?v=42. We only support zip and tar.gz (matching what
+            # our server and "flet publish" emit).
+            from urllib.parse import urlparse
+            _archive_path = urlparse(app_package_url).path.lower()
+            if _archive_path.endswith(".zip"):
+                _archive_format = "zip"
+            elif _archive_path.endswith((".tar.gz", ".tgz")):
+                _archive_format = "gztar"
+            else:
+                raise ValueError(
+                    f"Unsupported app package URL: {app_package_url} "
+                    "(expected .zip or .tar.gz)"
+                )
+            await response.unpack_archive(format=_archive_format)
         else:
             print("Saving script to a file")
             with open(f"{python_module_name}.py", "w") as f:
@@ -76,6 +88,29 @@ self.initPyodide = async function () {
                     micropip = await ensure_micropip()
                     print("Loading requirements.txt:", deps)
                     await micropip.install(deps, pre=micropip_include_pre)
+
+        if os.path.exists("pyproject.toml"):
+            import tomllib
+            with open("pyproject.toml", "rb") as f:
+                pyproject = tomllib.load(f)
+            project_deps = list(
+                pyproject.get("project", {}).get("dependencies", []) or []
+            )
+            web_deps = list(
+                pyproject.get("tool", {})
+                .get("flet", {})
+                .get("web", {})
+                .get("dependencies", [])
+                or []
+            )
+            # [tool.flet.web].dependencies overrides [project].dependencies
+            # by package name — install in order so the web-specific specs
+            # win through micropip's last-writer-wins dedupe.
+            pyproject_deps = project_deps + web_deps
+            if pyproject_deps:
+                micropip = await ensure_micropip()
+                print("Loading pyproject.toml deps:", pyproject_deps)
+                await micropip.install(pyproject_deps, pre=micropip_include_pre)
 
         if "dependencies" in py_args:
             micropip = await ensure_micropip()
