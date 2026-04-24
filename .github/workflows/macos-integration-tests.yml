@@ -41,10 +41,10 @@ jobs:
         suite:
         - apps
         - examples/apps
-        - examples/core
-        - examples/cupertino
+        - examples/controls/core
+        - examples/controls/cupertino
+        - examples/controls/material
         - examples/extensions
-        - examples/material
         - controls/core
         - controls/cupertino
         - controls/material

@@ -1,8 +1,8 @@
 ---
 class_name: "flet.FilledButton"
-examples: "controls/filled_button"
-example_images: "test-images/examples/material/golden/macos/filled_button"
-example_media: "examples/controls/filled_button/media"
+examples: "controls/material/filled_button"
+example_images: "test-images/examples/controls/material/golden/macos/filled_button"
+example_media: "examples/controls/material/filled_button/media"
 title: "FilledButton"
 ---
 
@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="25%" />
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="25%" />
 
 <ClassMembers name={frontMatter.class_name} />

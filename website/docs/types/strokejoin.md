@@ -1,6 +1,6 @@
 ---
 class_name: "flet.StrokeJoin"
-examples: "controls/types/stroke_join"
+examples: "controls/core/types/stroke_join"
 title: "StrokeJoin"
 ---
 

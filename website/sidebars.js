@@ -848,11 +848,6 @@ module.exports = {
             },
             {
               "type": "doc",
-              "id": "controls/dropdownm2",
-              "label": "DropdownM2"
-            },
-            {
-              "type": "doc",
               "id": "controls/expansionpanel",
               "label": "ExpansionPanel"
             },
@@ -1233,13 +1228,14 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "controls/segmentedbutton"
-                },
-                {
-                  "type": "doc",
-                  "id": "controls/segment"
+                  "id": "controls/segment",
+                  "label": "Segment"
                 }
-              ]
+              ],
+              "link": {
+                "type": "doc",
+                "id": "controls/segmentedbutton/index"
+              }
             },
             {
               "type": "doc",

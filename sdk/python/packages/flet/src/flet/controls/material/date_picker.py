@@ -86,6 +86,16 @@ class DatePicker(DialogControl):
 
     Depending on the :attr:`entry_mode`, it will show either a Calendar
     or an Input (TextField) for picking a date.
+
+    ```python
+    picker = ft.DatePicker()
+
+    ft.Button(
+        "Pick date",
+        icon=ft.Icons.CALENDAR_MONTH,
+        on_click=lambda _: page.show_dialog(picker),
+    )
+    ```
     """
 
     value: Optional[DateTimeValue] = None

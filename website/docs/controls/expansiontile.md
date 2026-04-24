@@ -1,7 +1,7 @@
 ---
 class_name: "flet.ExpansionTile"
-examples: "controls/expansion_tile"
-example_images: "test-images/examples/material/golden/macos/expansion_tile"
+examples: "controls/material/expansion_tile"
+example_images: "test-images/examples/controls/material/golden/macos/expansion_tile"
 title: "ExpansionTile"
 ---
 
@@ -19,13 +19,17 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/basic.png'} width="30%" />
 
-## Programmatic expansion/collapse
+### Programmatic expansion/collapse
 
 <CodeExample path={frontMatter.examples + '/programmatic_expansion/main.py'} language="python" />
 
-## Custom animations
+<Image src={frontMatter.example_images + '/programmatic_expansion_flow.gif'} width="50%" />
+
+### Custom animations
 
 <CodeExample path={frontMatter.examples + '/custom_animations/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/custom_animations_default.gif'} width="50%" />
 
 ### Theme mode toggle
 
@@ -34,5 +38,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 ### Borders
 
 <CodeExample path={frontMatter.examples + '/borders/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/borders_flow.gif'} width="50%" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Semantics"
-examples: "controls/semantics"
+examples: "controls/core/semantics"
 title: "Semantics"
 ---
 

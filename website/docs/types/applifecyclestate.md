@@ -1,6 +1,6 @@
 ---
 class_name: "flet.AppLifecycleState"
-examples: "controls/types/app_lifecycle_state"
+examples: "controls/core/types/app_lifecycle_state"
 title: "AppLifecycleState"
 ---
 

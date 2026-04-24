@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BoxShape"
-examples: "controls/types/box_shape"
+examples: "controls/core/types/box_shape"
 title: "BoxShape"
 ---
 

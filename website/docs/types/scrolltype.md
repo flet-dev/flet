@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ScrollType"
-examples: "controls/types/scroll_type"
+examples: "controls/core/types/scroll_type"
 title: "ScrollType"
 ---
 

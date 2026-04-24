@@ -1,6 +1,6 @@
 ---
 class_name: "flet.UrlTarget"
-examples: "controls/types/url_target"
+examples: "controls/core/types/url_target"
 title: "UrlTarget"
 ---
 
