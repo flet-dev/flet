@@ -57,6 +57,11 @@ class BaseOverlayImage(ft.BaseControl):
     The rendering quality of the image.
     """
 
+    visible: bool = True
+    """
+    Whether this overlay image is rendered on the map.
+    """
+
 
 @ft.control("OverlayImage", kw_only=True)
 class OverlayImage(BaseOverlayImage):

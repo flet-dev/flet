@@ -68,6 +68,11 @@ class Marker(ft.BaseControl):
     Defaults to the value of the parent :attr:`flet_map.MarkerLayer.alignment`.
     """
 
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
+    """
+
     def before_update(self):
         super().before_update()
         if not self.content.visible:

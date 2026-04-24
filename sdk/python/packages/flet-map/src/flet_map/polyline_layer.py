@@ -76,6 +76,11 @@ class PolylineMarker(ft.BaseControl):
     Style to use for line segment joins.
     """
 
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
+    """
+
     def before_update(self):
         super().before_update()
         if self.border_stroke_width < 0:
