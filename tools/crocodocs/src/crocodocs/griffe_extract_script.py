@@ -97,7 +97,106 @@ def _annotation_to_text(value: Any) -> str | None:
     """Convert a Griffe annotation object to its string representation, or None."""
     if value is None:
         return None
-    return str(value)
+    return _modernize_annotation_text(str(value))
+
+
+def _split_top_level_commas(text: str) -> list[str]:
+    """Split comma-separated annotation parts while preserving nested expressions."""
+    parts: list[str] = []
+    start = 0
+    depth = 0
+    quote: str | None = None
+
+    for index, char in enumerate(text):
+        previous = text[index - 1] if index > 0 else ""
+        if quote:
+            if char == quote and previous != "\\":
+                quote = None
+            continue
+        if char in {"'", '"'}:
+            quote = char
+            continue
+        if char in "([{":
+            depth += 1
+            continue
+        if char in ")]}":
+            depth = max(0, depth - 1)
+            continue
+        if char == "," and depth == 0:
+            parts.append(text[start:index].strip())
+            start = index + 1
+
+    tail = text[start:].strip()
+    if tail:
+        parts.append(tail)
+    return parts
+
+
+def _matching_bracket_index(text: str, open_index: int) -> int:
+    """Return the index of the closing bracket matching text[open_index]."""
+    pairs = {"[": "]", "(": ")", "{": "}"}
+    open_char = text[open_index]
+    close_char = pairs[open_char]
+    depth = 0
+    quote: str | None = None
+
+    for index in range(open_index, len(text)):
+        char = text[index]
+        previous = text[index - 1] if index > 0 else ""
+        if quote:
+            if char == quote and previous != "\\":
+                quote = None
+            continue
+        if char in {"'", '"'}:
+            quote = char
+            continue
+        if char == open_char:
+            depth += 1
+            continue
+        if char == close_char:
+            depth -= 1
+            if depth == 0:
+                return index
+    return -1
+
+
+def _modernize_annotation_text(text: str) -> str:
+    """Render annotations in docs-friendly modern Python syntax."""
+    result: list[str] = []
+    index = 0
+
+    while index < len(text):
+        if text[index].isidentifier() or text[index] == ".":
+            start = index
+            while index < len(text) and (text[index].isalnum() or text[index] in "_."):
+                index += 1
+            name = text[start:index]
+            if index < len(text) and text[index] == "[":
+                close_index = _matching_bracket_index(text, index)
+                if close_index != -1:
+                    inner = text[index + 1 : close_index]
+                    inner_parts = [
+                        _modernize_annotation_text(part)
+                        for part in _split_top_level_commas(inner)
+                    ]
+                    short_name = name.rsplit(".", 1)[-1]
+                    if short_name == "Annotated" and inner_parts:
+                        result.append(inner_parts[0])
+                    elif short_name == "Optional" and len(inner_parts) == 1:
+                        result.append(f"{inner_parts[0]} | None")
+                    elif short_name == "Union" and inner_parts:
+                        result.append(" | ".join(inner_parts))
+                    else:
+                        result.append(f"{name}[{', '.join(inner_parts)}]")
+                    index = close_index + 1
+                    continue
+            result.append(name)
+            continue
+
+        result.append(text[index])
+        index += 1
+
+    return "".join(result)
 
 
 def _parameter_lookup(obj: Any) -> dict[str, Any]:
@@ -262,7 +361,7 @@ def _annotation_text(obj: Any) -> str | None:
     annotation = getattr(target, "annotation", None)
     if annotation is None:
         return None
-    return str(annotation)
+    return _annotation_to_text(annotation)
 
 
 def _value_text(obj: Any) -> str | None:
@@ -300,7 +399,7 @@ def _parameter_text(parameter: Any) -> str:
 
     text = prefix + parameter.name
     if getattr(parameter, "annotation", None) is not None:
-        text += f": {parameter.annotation}"
+        text += f": {_annotation_to_text(parameter.annotation)}"
     if getattr(parameter, "default", None) is not None:
         text += f" = {parameter.default}"
     return text
@@ -373,7 +472,7 @@ def _formatted_function_signature(obj: Any) -> str:
         getattr(target, "parameters", []), strip_implicit_self=True
     )
     returns = getattr(target, "returns", None)
-    return_suffix = f" -> {returns}" if returns is not None else ""
+    return_suffix = f" -> {_annotation_to_text(returns)}" if returns is not None else ""
     formatted = _format_python_statement(
         f"def {obj.name}({parameters}){return_suffix}: pass"
     )
@@ -453,6 +552,7 @@ def _function_entry(obj: Any) -> dict[str, Any]:
             "lineno": None,
         }
     returns = getattr(target, "returns", None)
+    return_type = _annotation_to_text(returns)
     return {
         "name": obj.name,
         "qualname": getattr(obj, "path", None),
@@ -464,7 +564,7 @@ def _function_entry(obj: Any) -> dict[str, Any]:
         "parameters": [
             parameter.name for parameter in getattr(target, "parameters", [])
         ],
-        "return_type": str(returns) if returns is not None else None,
+        "return_type": return_type,
         "deprecation": _deprecation_value(obj),
         "labels": _labels(obj),
         "lineno": getattr(target, "lineno", None),
@@ -538,13 +638,16 @@ def _alias_entry(obj: Any) -> dict[str, Any]:
     """Serialize a Griffe alias object to a JSON-ready dict with target kind and path info."""
     target = _unwrap(obj)
     target_kind = target.__class__.__name__ if target is not None else None
+    value = _value_text(obj)
+    if value is not None:
+        value = _modernize_annotation_text(value)
     return {
         "name": obj.name,
         "qualname": getattr(obj, "path", None),
         "canonical_path": getattr(target, "path", None) if target else None,
         "docstring": _docstring_value(obj),
         "docstring_sections": _docstring_sections(obj),
-        "value": _value_text(obj),
+        "value": value,
         "target_kind": target_kind,
         "deprecation": _deprecation_value(obj),
         "labels": _labels(obj),

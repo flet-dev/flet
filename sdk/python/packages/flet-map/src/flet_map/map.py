@@ -224,9 +224,8 @@ class Map(ft.LayoutControl):
         Args:
             animation_curve: The curve of the animation. If None (the default),
                 :attr:`flet_map.Map.animation_curve` will be used.
-            animation_duration: The duration of the animation.
-                If None (the default), :attr:`flet_map.Map.animation_duration` will be \
-                used.
+            animation_duration: The duration of the animation. If None (the default),
+                :attr:`flet_map.Map.animation_duration` will be used.
             cancel_ongoing_animations: Whether to cancel/stop all
                 ongoing map-animations before starting this new one.
         """
