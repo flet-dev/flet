@@ -192,6 +192,11 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         final mediaIndex = parseInt(args["media_index"]);
         if (mediaIndex != null) await _player.remove(mediaIndex);
         break;
+      case "playlist_update":
+        final playlist = Playlist(parseVideoMedias(args["playlist"], [])!);
+        final autoplay = parseBool(args["autoplay"], false)!;
+        await _player.open(playlist, play: autoplay);
+        break;
       case "is_playing":
         return _player.state.playing;
       case "is_completed":
