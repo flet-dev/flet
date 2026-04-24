@@ -1700,7 +1700,19 @@ module.exports = {
                     },
                     {
                       "type": "doc",
+                      "id": "services/audiorecorder/types/audiorecorderstreamevent"
+                    },
+                    {
+                      "type": "doc",
                       "id": "services/audiorecorder/types/audiorecorderstate"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "services/audiorecorder/types/audiorecorderuploadevent"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "services/audiorecorder/types/audiorecorderuploadsettings"
                     },
                     {
                       "type": "doc",

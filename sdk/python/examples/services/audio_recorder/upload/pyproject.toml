@@ -1,0 +1,26 @@
+[project]
+name = "services-audio-recorder-upload"
+version = "1.0.0"
+description = "Records PCM16 audio and uploads the streamed bytes to Flet upload storage."
+requires-python = ">=3.10"
+keywords = ["audio recorder", "upload", "streaming", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-audio-recorder"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/AudioRecorder"]
+
+[tool.flet.metadata]
+title = "Audio recorder upload"
+controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "Button", "AudioRecorder"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["audio recording", "streaming upload", "upload progress", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

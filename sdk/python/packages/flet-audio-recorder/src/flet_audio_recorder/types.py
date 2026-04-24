@@ -14,6 +14,9 @@ __all__ = [
     "AudioRecorderConfiguration",
     "AudioRecorderState",
     "AudioRecorderStateChangeEvent",
+    "AudioRecorderStreamEvent",
+    "AudioRecorderUploadEvent",
+    "AudioRecorderUploadSettings",
     "InputDevice",
     "IosAudioCategoryOption",
     "IosRecorderConfiguration",
@@ -38,11 +41,60 @@ class AudioRecorderStateChangeEvent(ft.Event["AudioRecorder"]):
     """
     Event payload for recorder state transitions.
 
-    Emitted by `AudioRecorder` when recording state changes.
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_state_change`.
     """
 
     state: AudioRecorderState
     """The new state of the audio recorder."""
+
+
+@dataclass
+class AudioRecorderUploadEvent(ft.Event["AudioRecorder"]):
+    """
+    Event payload for streaming recording uploads.
+
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_upload` for
+    uploads started with :meth:`flet_audio_recorder.AudioRecorder.start_recording`.
+    """
+
+    file_name: Optional[str] = None
+    """Name provided by :attr:`AudioRecorderUploadSettings.file_name`."""
+
+    progress: Optional[float] = None
+    """
+    Upload progress from `0.0` to `1.0`.
+
+    Streaming uploads do not know their total size until recording stops, so
+    :attr:`bytes_uploaded` is usually the best progress indicator while recording is
+    active.
+    """
+
+    bytes_uploaded: Optional[int] = None
+    """Number of bytes uploaded so far."""
+
+    error: Optional[str] = None
+    """Error message if the upload failed."""
+
+
+@dataclass
+class AudioRecorderStreamEvent(ft.Event["AudioRecorder"]):
+    """
+    Event payload for raw recording stream chunks.
+
+    Delivered by :attr:`flet_audio_recorder.AudioRecorder.on_stream`.
+    """
+
+    chunk: bytes
+    """
+    Raw :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` audio bytes emitted by \
+    :class:`~flet_audio_recorder.AudioRecorder`.
+    """
+
+    sequence: int
+    """Incremental chunk number."""
+
+    bytes_streamed: int
+    """Total number of bytes delivered through :attr:`chunk` so far."""
 
 
 class AudioEncoder(Enum):
@@ -356,4 +408,36 @@ class AudioRecorderConfiguration:
     )
     """
     iOS specific configuration.
+    """
+
+
+@ft.value
+class AudioRecorderUploadSettings:
+    """
+    Upload settings for streaming recordings.
+
+    Note:
+        Uploads started by :meth:`flet_audio_recorder.AudioRecorder.start_recording`
+        send raw :attr:`~flet_audio_recorder.AudioEncoder.PCM16BITS` bytes. They do
+        not add a playable audio container such as WAV.
+    """
+
+    upload_url: str
+    """
+    Destination URL, for example one returned by :meth:`flet.Page.get_upload_url`.
+    """
+
+    method: str = "PUT"
+    """
+    HTTP method to use when uploading the streamed bytes.
+    """
+
+    headers: Optional[dict[str, str]] = None
+    """
+    HTTP headers sent with the upload request.
+    """
+
+    file_name: Optional[str] = None
+    """
+    Friendly name reported in upload events.
     """

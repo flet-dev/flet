@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.85.0
+
+### Added
+
+- Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858)) by @ndonkoHenri.
+
 ## 0.80.0
 
 ### Added
