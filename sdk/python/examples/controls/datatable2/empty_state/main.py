@@ -5,7 +5,9 @@ import flet_datatable2 as fdt
 def main(page: ft.Page):
     page.add(
         ft.SafeArea(
+            expand=True,
             content=fdt.DataTable2(
+                expand=True,
                 empty=ft.Text("This table is empty."),
                 columns=[
                     fdt.DataColumn2(label=ft.Text("First name")),

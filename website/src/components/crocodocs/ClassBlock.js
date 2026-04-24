@@ -186,9 +186,13 @@ function HeadingLink({level: Tag, id, children}) {
   );
 }
 
-/** Renders a small badge label (e.g. "classmethod", "deprecated") next to a member heading. */
-function Badge({children}) {
-  return <span className="crocodocs-member-badge">{children}</span>;
+/** Renders a small metadata badge label (e.g. "classmethod", "deprecated"). */
+function Badge({children, title}) {
+  return (
+    <span className="crocodocs-member-badge" title={title}>
+      {children}
+    </span>
+  );
 }
 
 /**
@@ -430,6 +434,30 @@ function renderMethod(item, classSymbol, docId) {
 }
 
 /**
+ * Build the compact member data used by ClassSummary lists.
+ * Carries labels/deprecation metadata so summary rows can show important badges
+ * without requiring readers to scroll to the full member documentation.
+ */
+function memberSummary(item, kind) {
+  return {
+    name: item.name,
+    kind,
+    deprecation: item.deprecation,
+    labels: item.labels ?? [],
+    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  };
+}
+
+/**
+ * Return labels that should be visible in compact summary rows.
+ * Keep this intentionally narrower than full member headings to avoid duplicating
+ * section context such as "property" or "method".
+ */
+function summaryLabels(item) {
+  return (item.labels ?? []).filter((label) => label === "deprecated");
+}
+
+/**
  * Renders a compact summary list of member names with their first-sentence descriptions,
  * each linking to the corresponding detail anchor. Returns null when items is empty.
  */
@@ -442,19 +470,37 @@ function SummarySection({title, items, classSymbol}) {
     <section>
       <Heading as="h4">{title}</Heading>
       <ul>
-        {items.map((item) => (
-          <li key={item.name}>
-            <a href={`#${memberAnchor(classSymbol, item.name)}`}>
-              <code>{item.name}</code>
-            </a>
-            {item.summary ? (
-              <>
-                {" "}{"-"}{" "}
-                {renderInlineMarkdown(item.summary, {classSymbol})}
-              </>
-            ) : null}
-          </li>
-        ))}
+        {items.map((item) => {
+          const labels = summaryLabels(item);
+          return (
+            <li key={item.name}>
+              <a href={`#${memberAnchor(classSymbol, item.name)}`}>
+                <code>{item.name}</code>
+              </a>
+              {labels.length ? (
+                <>
+                  {" "}
+                  <span className="crocodocs-member-badges crocodocs-summary-badges">
+                    {labels.map((label) => (
+                      <Badge
+                        key={label}
+                        title={label === "deprecated" ? item.deprecation : undefined}
+                      >
+                        {label}
+                      </Badge>
+                    ))}
+                  </span>
+                </>
+              ) : null}
+              {item.summary ? (
+                <>
+                  {" "}{"-"}{" "}
+                  {renderInlineMarkdown(item.summary, {classSymbol})}
+                </>
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
@@ -530,21 +576,9 @@ export default function ClassBlock({
   const properties = entry.properties ?? [];
   const events = entry.events ?? [];
   const methods = entry.methods ?? [];
-  const propertySummaries = properties.map((item) => ({
-    name: item.name,
-    kind: "property",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
-  const eventSummaries = events.map((item) => ({
-    name: item.name,
-    kind: "event",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
-  const methodSummaries = methods.map((item) => ({
-    name: item.name,
-    kind: "method",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
+  const propertySummaries = properties.map((item) => memberSummary(item, "property"));
+  const eventSummaries = events.map((item) => memberSummary(item, "event"));
+  const methodSummaries = methods.map((item) => memberSummary(item, "method"));
 
   const propertiesWithSectionId = properties.map((item) => ({
     ...item,
