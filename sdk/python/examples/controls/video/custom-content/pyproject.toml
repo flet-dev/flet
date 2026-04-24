@@ -1,0 +1,26 @@
+[project]
+name = "video-custom-content-example"
+version = "1.0.0"
+description = "Custom content in a Flet video player."
+requires-python = ">=3.10"
+keywords = ["video", "media", "playlist", "player", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Video custom content example"
+controls = ["Container", "Column", "Row", "Button", "Text", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["custom content"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

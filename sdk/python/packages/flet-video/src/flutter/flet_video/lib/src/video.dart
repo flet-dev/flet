@@ -208,6 +208,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
+    var content = widget.control.buildWidget("content");
 
     var subtitleConfiguration = parseSubtitleConfiguration(
         widget.control.get("subtitle_configuration"),
@@ -239,7 +240,18 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       key: _videoKey,
       controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
-      controls: showControls ? AdaptiveVideoControls : null,
+      controls: showControls
+      ? (state) {
+        if (content != null) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [content]
+          );
+        }
+        return AdaptiveVideoControls(state);
+      }
+      : null,
       pauseUponEnteringBackgroundMode:
           widget.control.getBool("pause_upon_entering_background_mode", true)!,
       resumeUponEnteringForegroundMode: widget.control

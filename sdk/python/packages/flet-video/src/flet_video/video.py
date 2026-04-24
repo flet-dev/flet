@@ -61,6 +61,11 @@ class Video(ft.LayoutControl):
     Whether to show the video player controls.
     """
 
+    content: Optional[ft.Control] = None
+    """
+    The custom content of the video control.
+    """
+
     fullscreen: bool = False
     """
     Whether the video player is presented in fullscreen mode.
@@ -180,6 +185,10 @@ class Video(ft.LayoutControl):
     Event handler argument's :attr:`~flet.Event.data` property contains
     the index of the new track.
     """
+
+    def init(self):
+        super().init()
+        self._internals["host_expanded"] = True
 
     def before_update(self):
         super().before_update()
