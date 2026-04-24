@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CupertinoTintedButton"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_tinted_button"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_tinted_button"
 title: "CupertinoTintedButton"
 ---
 

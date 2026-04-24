@@ -1,8 +1,8 @@
 ---
 class_name: "flet.LayoutControl"
-examples: "controls/layout_control"
+examples: "controls/core/layout_control"
 example_images: "test-images/controls/core/golden/macos/layout_control"
-example_images_examples: "../test-images/examples/core/golden/macos/layout_control"
+example_images_examples: "../test-images/examples/controls/core/golden/macos/layout_control"
 title: "LayoutControl"
 ---
 
@@ -26,7 +26,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### RotatedBox
 
-<CodeExample path="controls/rotated_box/basic/main.py" language="python" />
+<CodeExample path="controls/core/rotated_box/basic/main.py" language="python" />
 
 <Image src="test-images/controls/core/golden/macos/rotated_box/rotated_box.png" width="55%" />
 

@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Page"
-examples: "controls/page"
-example_images: "examples/controls/page/media"
+examples: "controls/core/page"
+example_images: "examples/controls/core/page/media"
 title: "Page"
 ---
 

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BoxFit"
-examples: "controls/types/box_fit"
+examples: "controls/core/types/box_fit"
 title: "BoxFit"
 ---
 

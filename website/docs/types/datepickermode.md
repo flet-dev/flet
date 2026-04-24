@@ -1,6 +1,6 @@
 ---
 class_name: "flet.DatePickerMode"
-examples: "controls/types/date_picker_mode"
+examples: "controls/core/types/date_picker_mode"
 title: "DatePickerMode"
 ---
 

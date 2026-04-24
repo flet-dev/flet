@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ContextMenuTrigger"
-examples: "controls/types/context_menu_trigger"
+examples: "controls/core/types/context_menu_trigger"
 title: "ContextMenuTrigger"
 ---
 

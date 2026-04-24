@@ -1,8 +1,8 @@
 ---
 class_name: "flet.AppBar"
-examples: "controls/app_bar"
-example_images: "test-images/examples/material/golden/macos/app_bar"
-example_media: "examples/controls/app_bar/media"
+examples: "controls/material/app_bar"
+example_images: "test-images/examples/controls/material/golden/macos/app_bar"
+example_media: "examples/controls/material/app_bar/media"
 title: "AppBar"
 ---
 
@@ -18,10 +18,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/actions_and_popup_menu/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/actions_and_popup_menu.gif'} alt="actions-and-popup-menu" width="55%" />
+<Image src={frontMatter.example_images + '/app_bar_flow.gif'} alt="actions-and-popup-menu" width="55%" />
 
 ### Theme and Material Mode Toggles
 
 <CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/theme_mode_toggle_flow.gif'} alt="theme-and-material-mode-toggles" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TabIndicatorAnimation"
-examples: "controls/types/tab_indicator_animation"
+examples: "controls/core/types/tab_indicator_animation"
 title: "TabIndicatorAnimation"
 ---
 

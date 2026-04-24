@@ -161,6 +161,38 @@ class Tabs(LayoutControl, AdaptiveControl):
     Used for navigating frequently accessed, distinct content categories. Tabs allow \
     for navigation between two or more content views and relies on text headers to \
     articulate the different sections of content.
+
+    Example:
+    ```python
+    ft.Tabs(
+        length=2,
+        expand=True,
+        content=ft.Column(
+            expand=True,
+            controls=[
+                ft.TabBar(
+                    tabs=[
+                        ft.Tab(label="Overview"),
+                        ft.Tab(label="Settings", icon=ft.Icons.SETTINGS),
+                    ]
+                ),
+                ft.TabBarView(
+                    expand=True,
+                    controls=[
+                        ft.Container(
+                            alignment=ft.Alignment.CENTER,
+                            content=ft.Text("Overview content"),
+                        ),
+                        ft.Container(
+                            alignment=ft.Alignment.CENTER,
+                            content=ft.Text("Settings content"),
+                        ),
+                    ],
+                ),
+            ],
+        ),
+    )
+    ```
     """
 
     content: Control

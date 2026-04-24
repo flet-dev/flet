@@ -1,7 +1,7 @@
 ---
 class_name: "flet.CupertinoBottomSheet"
-examples: "controls/cupertino_action_sheet"
-example_images: "examples/controls/cupertino_action_sheet/media"
+examples: "controls/cupertino/cupertino_action_sheet"
+example_images: "examples/controls/cupertino/cupertino_action_sheet/media"
 title: "CupertinoBottomSheet"
 ---
 

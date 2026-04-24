@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Axis"
-examples: "controls/types/axis"
+examples: "controls/core/types/axis"
 title: "Axis"
 ---
 
