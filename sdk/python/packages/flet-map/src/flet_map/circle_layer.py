@@ -8,7 +8,7 @@ __all__ = ["CircleLayer", "CircleMarker"]
 
 
 @ft.control("CircleMarker")
-class CircleMarker(ft.Control):
+class CircleMarker(ft.BaseControl):
     """
     A circular marker displayed on the Map at the specified
     location through the :class:`~flet_map.CircleLayer`.
@@ -43,6 +43,11 @@ class CircleMarker(ft.Control):
     use_radius_in_meter: bool = False
     """
     Whether the :attr:`radius` should use the unit meters.
+    """
+
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
     """
 
     def before_update(self):

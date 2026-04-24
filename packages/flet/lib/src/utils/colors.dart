@@ -253,12 +253,20 @@ extension HexColor on Color {
     return null;
   }
 
-  /// String is in the format "aabbcc" or "ffaabbcc" with an optional leading "#".
-  static Color _fromHex(String hexString) {
+  /// String is in CSS hex format: "rgb", "argb", "rrggbb" or "aarrggbb"
+  /// (the leading "#" or "0x" is stripped by the caller).
+  /// Shorthand 3/4-digit forms are expanded by doubling each character
+  /// (e.g. "c00" -> "cc0000", "fc00" -> "ffcc0000").
+  static Color? _fromHex(String hexString) {
+    if (hexString.length == 3 || hexString.length == 4) {
+      hexString = hexString.split('').map((c) => '$c$c').join('');
+    }
+    if (hexString.length != 6 && hexString.length != 8) return null;
     final buffer = StringBuffer();
     if (hexString.length == 6) buffer.write('ff');
     buffer.write(hexString);
-    return Color(int.parse(buffer.toString(), radix: 16));
+    final value = int.tryParse(buffer.toString(), radix: 16);
+    return value == null ? null : Color(value);
   }
 
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).

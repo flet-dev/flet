@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'circle_layer.dart';
 import 'map.dart';
 import 'marker_layer.dart';
+import 'overlay_image_layer.dart';
 import 'polygon_layer.dart';
 import 'polyline_layer.dart';
 import 'rich_attribution.dart';
@@ -24,6 +25,8 @@ class Extension extends FletExtension {
         return TileLayerControl(key: key, control: control);
       case "MarkerLayer":
         return MarkerLayerControl(key: key, control: control);
+      case "OverlayImageLayer":
+        return OverlayImageLayerControl(key: key, control: control);
       case "CircleLayer":
         return CircleLayerControl(key: key, control: control);
       case "PolygonLayer":

@@ -12,6 +12,7 @@ class MapLayer(ft.Control):
 
     - :class:`~flet_map.CircleLayer`
     - :class:`~flet_map.MarkerLayer`
+    - :class:`~flet_map.OverlayImageLayer`
     - :class:`~flet_map.PolygonLayer`
     - :class:`~flet_map.PolylineLayer`
     - :class:`~flet_map.RichAttribution`

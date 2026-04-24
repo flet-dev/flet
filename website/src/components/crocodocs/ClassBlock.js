@@ -290,14 +290,13 @@ function renderMethod(item, classSymbol, docId) {
 
 /**
  * Build the compact member data used by ClassSummary lists.
- * Carries labels/deprecation metadata so summary rows can show important badges
- * without requiring readers to scroll to the full member documentation.
+ * Carries labels so summary rows can show important badges without requiring
+ * readers to scroll to the full member documentation.
  */
 function memberSummary(item, kind) {
   return {
     name: item.name,
     kind,
-    deprecation: item.deprecation,
     labels: item.labels ?? [],
     summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
   };
@@ -337,12 +336,7 @@ function SummarySection({title, items, classSymbol}) {
                   {" "}
                   <span className="crocodocs-member-badges crocodocs-summary-badges">
                     {labels.map((label) => (
-                      <Badge
-                        key={label}
-                        title={label === "deprecated" ? item.deprecation : undefined}
-                      >
-                        {label}
-                      </Badge>
+                      <Badge key={label}>{label}</Badge>
                     ))}
                   </span>
                 </>

@@ -198,6 +198,7 @@ docs:
         - controls/map/maplayer.md
         - controls/map/tilelayer.md
         - controls/map/markerlayer.md
+        - controls/map/overlayimagelayer.md
         - controls/map/circlelayer.md
         - controls/map/polygonlayer.md
         - controls/map/polylinelayer.md
@@ -206,6 +207,10 @@ docs:
         - controls/map/circlemarker.md
         - controls/map/polygonmarker.md
         - controls/map/polylinemarker.md
+        Overlays:
+        - controls/map/baseoverlayimage.md
+        - controls/map/overlayimage.md
+        - controls/map/rotatedoverlayimage.md
         Attributions:
         - controls/map/sourceattribution.md
         - controls/map/simpleattribution.md

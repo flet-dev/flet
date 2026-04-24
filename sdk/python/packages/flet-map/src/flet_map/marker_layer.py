@@ -9,7 +9,7 @@ __all__ = ["Marker", "MarkerLayer"]
 
 
 @ft.control("Marker")
-class Marker(ft.Control):
+class Marker(ft.BaseControl):
     """
     A marker displayed on the Map at the specified location
     through the :class:`~flet_map.MarkerLayer`.
@@ -66,6 +66,11 @@ class Marker(ft.Control):
     Alignment of the marker relative to the normal center at :attr:`coordinates`.
 
     Defaults to the value of the parent :attr:`flet_map.MarkerLayer.alignment`.
+    """
+
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
     """
 
     def before_update(self):

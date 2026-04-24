@@ -29,21 +29,20 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
               "label_text_style", Theme.of(context), const TextStyle())!,
           strokeCap: polygon.getStrokeCap("stroke_cap", StrokeCap.round)!,
           strokeJoin: polygon.getStrokeJoin("stroke_join", StrokeJoin.round)!,
-          points: polygon
-              .get("coordinates", [])!
-              .map((c) => parseLatLng(c))
-              .nonNulls
-              .toList());
+          points: polygon.getLatLngList("coordinates"));
     }).toList();
 
-    return PolygonLayer(
-      polygons: polygons,
-      polygonCulling: control.getBool("polygon_culling", true)!,
-      polygonLabels: control.getBool("polygon_labels", true)!,
-      drawLabelsLast: control.getBool("draw_labels_last", false)!,
-      simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.3)!,
-      useAltRendering: control.getBool("use_alternative_rendering", false)!,
+    return BaseControl(
+      control: control,
+      child: PolygonLayer(
+        polygons: polygons,
+        polygonCulling: control.getBool("polygon_culling", true)!,
+        polygonLabels: control.getBool("polygon_labels", true)!,
+        drawLabelsLast: control.getBool("draw_labels_last", false)!,
+        simplificationTolerance:
+            control.getDouble("simplification_tolerance", 0.3)!,
+        useAltRendering: control.getBool("use_alternative_rendering", false)!,
+      ),
     );
   }
 }

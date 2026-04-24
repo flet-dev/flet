@@ -45,7 +45,8 @@ class Map(ft.LayoutControl):
     initial_zoom: ft.Number = 13.0
     """
     The zoom when the map is first loaded.
-    If initial_camera_fit is defined this has no effect.
+
+    If :attr:`initial_camera_fit` is non-`None` this has no effect.
     """
 
     interaction_configuration: InteractionConfiguration = field(
@@ -379,7 +380,7 @@ class Map(ft.LayoutControl):
         Gets the current camera snapshot of the map.
 
         Returns:
-            Current :class:`~flet_map.Camera` state.
+            The current camera state.
         """
         camera = await self._invoke_method("get_camera")
         return from_dict(Camera, camera)

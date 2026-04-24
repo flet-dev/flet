@@ -19,7 +19,7 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
         .map((marker) {
       marker.notifyParent = true;
       return AnimatedMarker(
-          point: parseLatLng(marker.get("coordinates"))!,
+          point: marker.getLatLng("coordinates")!,
           rotate: marker.getBool("rotate"),
           height: marker.getDouble("height", 30.0)!,
           width: marker.getDouble("width", 30.0)!,
@@ -30,10 +30,13 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
           });
     }).toList();
 
-    return AnimatedMarkerLayer(
-      markers: markers,
-      rotate: control.getBool("rotate", false)!,
-      alignment: control.getAlignment("alignment", Alignment.center)!,
+    return BaseControl(
+      control: control,
+      child: AnimatedMarkerLayer(
+        markers: markers,
+        rotate: control.getBool("rotate", false)!,
+        alignment: control.getAlignment("alignment", Alignment.center)!,
+      ),
     );
   }
 }
