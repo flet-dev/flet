@@ -36,146 +36,6 @@ function stripImplicitSelf(signatureText) {
 }
 
 /**
- * Split a comma-separated list while respecting nested (), [], {}, and quoted strings.
- */
-function splitTopLevelCommaList(text) {
-  const items = [];
-  let start = 0;
-  let parenDepth = 0;
-  let bracketDepth = 0;
-  let braceDepth = 0;
-  let quote = null;
-
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    const previous = index > 0 ? text[index - 1] : "";
-
-    if (quote) {
-      if (char === quote && previous !== "\\") {
-        quote = null;
-      }
-      continue;
-    }
-
-    if (char === "'" || char === '"') {
-      quote = char;
-      continue;
-    }
-
-    if (char === "(") {
-      parenDepth += 1;
-      continue;
-    }
-    if (char === ")") {
-      parenDepth = Math.max(0, parenDepth - 1);
-      continue;
-    }
-    if (char === "[") {
-      bracketDepth += 1;
-      continue;
-    }
-    if (char === "]") {
-      bracketDepth = Math.max(0, bracketDepth - 1);
-      continue;
-    }
-    if (char === "{") {
-      braceDepth += 1;
-      continue;
-    }
-    if (char === "}") {
-      braceDepth = Math.max(0, braceDepth - 1);
-      continue;
-    }
-
-    // Only split on commas that belong to the outer parameter list.
-    if (
-      char === "," &&
-      parenDepth === 0 &&
-      bracketDepth === 0 &&
-      braceDepth === 0
-    ) {
-      items.push(text.slice(start, index).trim());
-      start = index + 1;
-    }
-  }
-
-  const tail = text.slice(start).trim();
-  if (tail) {
-    items.push(tail);
-  }
-
-  return items;
-}
-
-/**
- * Format long call signatures into a stacked parameter layout for readability.
- * This changes display only; the copied signature text remains unchanged.
- */
-function formatMethodSignatureForDisplay(signatureText) {
-  if (!signatureText) {
-    return signatureText;
-  }
-
-  const openIndex = signatureText.indexOf("(");
-  if (openIndex === -1) {
-    return signatureText;
-  }
-
-  let closeIndex = -1;
-  let depth = 0;
-  let quote = null;
-
-  // Find the closing parenthesis that matches the outer call signature.
-  for (let index = openIndex; index < signatureText.length; index += 1) {
-    const char = signatureText[index];
-    const previous = index > 0 ? signatureText[index - 1] : "";
-
-    if (quote) {
-      if (char === quote && previous !== "\\") {
-        quote = null;
-      }
-      continue;
-    }
-
-    if (char === "'" || char === '"') {
-      quote = char;
-      continue;
-    }
-
-    if (char === "(") {
-      depth += 1;
-      continue;
-    }
-    if (char === ")") {
-      depth -= 1;
-      if (depth === 0) {
-        closeIndex = index;
-        break;
-      }
-    }
-  }
-
-  if (closeIndex === -1) {
-    return signatureText;
-  }
-
-  const prefix = signatureText.slice(0, openIndex);
-  const paramsText = signatureText.slice(openIndex + 1, closeIndex).trim();
-  const suffix = signatureText.slice(closeIndex + 1);
-
-  if (!paramsText) {
-    return signatureText;
-  }
-
-  const params = splitTopLevelCommaList(paramsText);
-  if (params.length < 3 && signatureText.length < 88) {
-    return signatureText;
-  }
-
-  return `${prefix}(\n  ${params.join(",\n  ")}\n)${suffix}`;
-}
-
-/**
  * Renders a Docusaurus-aware heading element at the given level with an anchor id.
  */
 function HeadingLink({level: Tag, id, children}) {
@@ -416,16 +276,11 @@ function renderAttribute(item, classSymbol, docId) {
  */
 function renderMethod(item, classSymbol, docId) {
   const signatureText = stripImplicitSelf(item.signature ?? item.name);
-  const typedSignatureText =
-    item.return_type && !signatureText.includes("->")
-      ? `${signatureText} -> ${item.return_type}`
-      : signatureText;
-  const displaySignatureText = formatMethodSignatureForDisplay(typedSignatureText);
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
-      <SignatureBox text={displaySignatureText}>
-        {renderCodeExpression(displaySignatureText, {classSymbol, docId})}
+      <SignatureBox text={signatureText}>
+        {renderCodeExpression(signatureText, {classSymbol, docId})}
       </SignatureBox>
       {renderDocstringSections(item.docstring_sections, {classSymbol, docId}) ??
         renderDocstring(item.docstring, {classSymbol, docId})}
