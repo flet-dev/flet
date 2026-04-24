@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import ast
 import json
+import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+
+SIGNATURE_LINE_LENGTH = 60
 
 
 def _normalize_path(value: str | None) -> str | None:
@@ -300,14 +306,98 @@ def _parameter_text(parameter: Any) -> str:
     return text
 
 
+def _parameters_text(parameters: Any, *, strip_implicit_self: bool = False) -> str:
+    """Format Griffe parameters as comma-separated Python parameter text."""
+    rendered_parameters = list(parameters)
+    if (
+        strip_implicit_self
+        and rendered_parameters
+        and rendered_parameters[0].name in {"self", "cls"}
+    ):
+        rendered_parameters = rendered_parameters[1:]
+    return ", ".join(_parameter_text(parameter) for parameter in rendered_parameters)
+
+
 def _signature_text(obj: Any) -> str:
     """Format the full function/method signature as 'name(param, ...)' text."""
     target = _unwrap(obj)
     if target is None:
         return obj.name
-    parameters = getattr(target, "parameters", [])
-    rendered = ", ".join(_parameter_text(parameter) for parameter in parameters)
+    rendered = _parameters_text(getattr(target, "parameters", []))
     return f"{obj.name}({rendered})"
+
+
+def _normalize_python_statement(code: str) -> str:
+    """Normalize a synthetic Python statement before sending it to Ruff."""
+    try:
+        return ast.unparse(ast.parse(code)).strip()
+    except SyntaxError:
+        return code.strip()
+
+
+@lru_cache(maxsize=2048)
+def _format_python_statement(code: str) -> str:
+    """Format a synthetic Python statement with Ruff, falling back to normalized code."""
+    normalized = _normalize_python_statement(code)
+    if len(normalized) < SIGNATURE_LINE_LENGTH:
+        return normalized
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "ruff",
+            "format",
+            "--config",
+            f"line-length={SIGNATURE_LINE_LENGTH}",
+            "--stdin-filename",
+            "signature.py",
+            "-",
+        ],
+        input=f"{normalized}\n",
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return normalized
+    return result.stdout.strip()
+
+
+def _formatted_function_signature(obj: Any) -> str:
+    """Return a Ruff-formatted function/method signature without the leading 'def'."""
+    target = _unwrap(obj)
+    if target is None:
+        return obj.name
+
+    parameters = _parameters_text(
+        getattr(target, "parameters", []), strip_implicit_self=True
+    )
+    returns = getattr(target, "returns", None)
+    return_suffix = f" -> {returns}" if returns is not None else ""
+    formatted = _format_python_statement(
+        f"def {obj.name}({parameters}){return_suffix}: pass"
+    )
+
+    if formatted.startswith("def "):
+        formatted = formatted[4:]
+    for suffix in (":\n    pass", ": pass"):
+        if formatted.endswith(suffix):
+            formatted = formatted[: -len(suffix)]
+            break
+    return formatted.strip()
+
+
+def _formatted_attribute_signature(obj: Any) -> str | None:
+    """Return a Ruff-formatted attribute signature, or None when no type is known."""
+    annotation = _annotation_text(obj)
+    if annotation is None:
+        return None
+
+    default = _value_text(obj)
+    signature = f"{obj.name}: {annotation}"
+    if default is not None:
+        signature += f" = {default}"
+    return _format_python_statement(signature)
 
 
 def _attribute_entry(obj: Any) -> dict[str, Any]:
@@ -320,6 +410,7 @@ def _attribute_entry(obj: Any) -> dict[str, Any]:
             "canonical_path": None,
             "type": None,
             "default": None,
+            "formatted_signature": None,
             "docstring": _docstring_value(obj),
             "docstring_sections": _docstring_sections(obj),
             "deprecation": _deprecation_value(obj),
@@ -333,6 +424,7 @@ def _attribute_entry(obj: Any) -> dict[str, Any]:
         "canonical_path": getattr(target, "path", None),
         "type": _annotation_text(obj),
         "default": _value_text(obj),
+        "formatted_signature": _formatted_attribute_signature(obj),
         "docstring": _docstring_value(obj),
         "docstring_sections": _docstring_sections(obj),
         "deprecation": _deprecation_value(obj),
@@ -351,6 +443,7 @@ def _function_entry(obj: Any) -> dict[str, Any]:
             "qualname": getattr(obj, "path", None),
             "canonical_path": None,
             "signature": obj.name,
+            "formatted_signature": obj.name,
             "docstring": _docstring_value(obj),
             "docstring_sections": _docstring_sections(obj),
             "parameters": [],
@@ -365,6 +458,7 @@ def _function_entry(obj: Any) -> dict[str, Any]:
         "qualname": getattr(obj, "path", None),
         "canonical_path": getattr(target, "path", None),
         "signature": _signature_text(obj),
+        "formatted_signature": _formatted_function_signature(obj),
         "docstring": _docstring_value(obj),
         "docstring_sections": _docstring_sections(obj),
         "parameters": [
