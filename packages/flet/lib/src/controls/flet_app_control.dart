@@ -25,6 +25,13 @@ class _FletAppControlState extends State<FletAppControl> {
     debugPrint("FletApp build: ${widget.control.id}");
 
     var url = widget.control.getString("url", "")!;
+    // Multiple embedded FletApps on the same page (e.g. a Preview inside
+    // another Flet app) each leave `url` empty, which collides in the
+    // JS-side worker registry keyed on `address`. Synthesize a unique
+    // address from the control id so each backend channel is its own.
+    if (url.isEmpty) {
+      url = "embedded:${widget.control.id}";
+    }
     var reconnectIntervalMs = widget.control.getInt("reconnect_interval_ms");
     var reconnectTimeoutMs = widget.control.getInt("reconnect_timeout_ms");
     var showAppStartupScreen =
