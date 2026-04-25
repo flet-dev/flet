@@ -34,12 +34,14 @@ Calls :meth:`flet.Page.update` after modifying controls.
 **Rules:**
 
 - **Qualified reference:** `:attr:`flet.Page.route`` — links to the member, displays inline code `Page.route`
+- **Extension reference:** `:attr:`flet_map.Map.animation_curve`` — links to the extension member, displays inline code `Map.animation_curve`
 - **Short display with `~`:** `:attr:`~flet.Page.route`` — links to the member, displays inline code `route`
 - **Local member (same class):** `:attr:`value`` — no qualifier needed
 - **Method with parens:** `:meth:`update`` — do NOT include `()` in the target
 
-For plain class references like `:class:`flet.Page``, the website strips the leading `flet.`
-automatically, so both `:class:`flet.Page`` and `:class:`~flet.Page`` display as inline code `Page`.
+For plain class references like `:class:`flet.Page`` and extension references like
+`:class:`flet_map.Map``, the website strips leading public package aliases automatically,
+so they display as inline code `Page` and `Map`.
 
 **Not supported:**
 

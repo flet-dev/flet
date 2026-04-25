@@ -62,6 +62,7 @@ Example split:
      * `### New features`
      * `### Improvements`
      * `### Bug fixes`
+     * `### Documentation`
      * `### Other changes`
 2. Inspect the source of truth for scope and audience.
    * Prefer PR title and PR description/summary over commit noise.
@@ -88,7 +89,9 @@ Example split:
 ## Repo-specific guidance
 
 * Do not mention tests in changelog items unless the change itself is test infrastructure.
-* Do not mention docs/examples unless documentation is the primary deliverable.
+* Use `### Documentation` for docs website, CrocoDocs, generated API reference, examples,
+  guides, or docs tooling changes when documentation is the primary deliverable.
+* Do not mention docs/examples in other sections unless documentation is the primary deliverable.
 * Avoid words like `refactor`, `cleanup`, or `coverage` unless the section is `Other changes` and that is truly the point.
 * If a PR includes one main feature plus supporting docs/tests, write only the main feature.
 * If a PR title is too narrow or too broad, use the PR description and diff to calibrate the final wording.

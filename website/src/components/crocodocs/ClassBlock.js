@@ -254,7 +254,8 @@ function renderMemberHeading(item, classSymbol, kind) {
  * including its type signature box and docstring.
  */
 function renderAttribute(item, classSymbol, docId) {
-  const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const fallbackSignatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const signatureText = item.formatted_signature ?? fallbackSignatureText;
   const kind = item.name.startsWith("on_") ? "event" : "property";
   return (
     <div key={item.name}>
@@ -275,7 +276,12 @@ function renderAttribute(item, classSymbol, docId) {
  * including its signature box (with `self` stripped) and docstring.
  */
 function renderMethod(item, classSymbol, docId) {
-  const signatureText = stripImplicitSelf(item.signature ?? item.name);
+  const fallbackSignatureText = stripImplicitSelf(item.signature ?? item.name);
+  const typedSignatureText =
+    item.return_type && !fallbackSignatureText.includes("->")
+      ? `${fallbackSignatureText} -> ${item.return_type}`
+      : fallbackSignatureText;
+  const signatureText = item.formatted_signature ?? typedSignatureText;
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
