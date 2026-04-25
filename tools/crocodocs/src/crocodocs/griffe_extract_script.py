@@ -426,37 +426,42 @@ def _signature_text(obj: Any) -> str:
     return f"{obj.name}({rendered})"
 
 
-def _normalize_python_statement(code: str) -> str:
+def _normalize_python_statement(code: str) -> tuple[str, bool]:
     """Normalize a synthetic Python statement before sending it to Ruff."""
     try:
-        return ast.unparse(ast.parse(code)).strip()
+        return ast.unparse(ast.parse(code)).strip(), True
     except SyntaxError:
-        return code.strip()
+        return code.strip(), False
 
 
 @lru_cache(maxsize=2048)
 def _format_python_statement(code: str) -> str:
     """Format a synthetic Python statement with Ruff, falling back to normalized code."""
-    normalized = _normalize_python_statement(code)
-    if len(normalized) < SIGNATURE_LINE_LENGTH:
+    normalized, is_valid_python = _normalize_python_statement(code)
+    if len(normalized) < SIGNATURE_LINE_LENGTH or not is_valid_python:
         return normalized
 
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "ruff",
-            "format",
-            "--config",
-            f"line-length={SIGNATURE_LINE_LENGTH}",
-            "--stdin-filename",
-            "signature.py",
-            "-",
-        ],
-        input=f"{normalized}\n",
-        text=True,
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "ruff",
+                "format",
+                "--line-length",
+                str(SIGNATURE_LINE_LENGTH),
+                "--stdin-filename",
+                "signature.py",
+                "-",
+            ],
+            input=f"{normalized}\n",
+            text=True,
+            capture_output=True,
+            timeout=5,
+        )
+    except subprocess.TimeoutExpired:
+        return normalized
+
     if result.returncode != 0:
         return normalized
     return result.stdout.strip()
