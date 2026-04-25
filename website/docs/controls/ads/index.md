@@ -1,6 +1,6 @@
 ---
-examples: "controls/ads"
-example_images: "examples/controls/ads/media"
+examples: "extensions/ads"
+example_images: "examples/extensions/ads/media"
 title: "Ads"
 ---
 

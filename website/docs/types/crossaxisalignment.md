@@ -1,6 +1,6 @@
 ---
 class_name: "flet.CrossAxisAlignment"
-examples: "controls/types/cross_axis_alignment"
+examples: "controls/core/types/cross_axis_alignment"
 title: "CrossAxisAlignment"
 ---
 

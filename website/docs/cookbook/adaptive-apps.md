@@ -1,6 +1,5 @@
 ---
 title: "Adaptive apps"
-example_media: "examples/controls"
 ---
 
 import {Image} from '@site/src/components/crocodocs';
@@ -102,33 +101,33 @@ Below is the list of adaptive Material controls and their matching Cupertino con
 | Material | Cupertino |
 |:---:|:---:|
 | [`AlertDialog`](../controls/alertdialog.md) | [`CupertinoAlertDialog`](../controls/cupertinoalertdialog.md) |
-| <Image src={frontMatter.example_media + '/alert_dialog/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_alert_dialog/media/adaptive.png'} width="55%" /> |
+| <Image src="examples/controls/material/alert_dialog/media/index.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_alert_dialog/media/adaptive.png" width="55%" /> |
 | [`Dialog actions`](../controls/button.md) | [`CupertinoDialogAction`](../controls/cupertinodialogaction.md) |
-| <Image src={frontMatter.example_media + '/alert_dialog/media/adaptive_dialog_action.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_alert_dialog/media/adaptive_dialog_action.png'} width="55%" /> |
+| <Image src="examples/controls/material/alert_dialog/media/adaptive_dialog_action.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_alert_dialog/media/adaptive_dialog_action.png" width="55%" /> |
 | [`AppBar`](../controls/appbar.md) | [`CupertinoAppBar`](../controls/cupertinoappbar.md) |
-| <Image src={frontMatter.example_media + '/app_bar/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_app_bar/media/index.png'} width="55%" /> |
+| <Image src="examples/controls/material/app_bar/media/index.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_app_bar/media/index.png" width="55%" /> |
 | [`NavigationBar`](../controls/navigationbar/index.md) | [`CupertinoNavigationBar`](../controls/cupertinonavigationbar.md) |
-| <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_navigation_bar/media/adaptive.png'} width="55%" /> |
+| <Image src="examples/controls/material/navigation_bar/media/adaptive.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_navigation_bar/media/adaptive.png" width="55%" /> |
 | [`ListTile`](../controls/listtile.md) | [`CupertinoListTile`](../controls/cupertinolisttile.md) |
-| <Image src={frontMatter.example_media + '/list_tile/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_list_tile/media/index.png'} width="55%" /> |
+| <Image src="examples/controls/material/list_tile/media/index.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_list_tile/media/index.png" width="55%" /> |
 | [`TextField`](../controls/textfield.md) | [`CupertinoTextField`](../controls/cupertinotextfield.md) |
-| <Image src={frontMatter.example_media + '/text_field/media/index.png'} width="55%" /> | <Image src={frontMatter.example_media + '/cupertino_text_field/media/index.png'} width="55%" /> |
+| <Image src="examples/controls/material/text_field/media/index.png" width="55%" /> | <Image src="examples/controls/cupertino/cupertino_text_field/media/index.png" width="55%" /> |
 | [`Checkbox`](../controls/checkbox.md) | [`CupertinoCheckbox`](../controls/cupertinocheckbox.md) |
-| <Image src={frontMatter.example_media + '/checkbox/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_checkbox/media/index.png'} width="45%" /> |
+| <Image src="examples/controls/material/checkbox/media/index.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_checkbox/media/index.png" width="45%" /> |
 | [`Slider`](../controls/slider.md) | [`CupertinoSlider`](../controls/cupertinoslider.md) |
-| <Image src="/docs/test-images/examples/material/golden/macos/slider/image_for_docs.png" width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_slider/media/index.png'} width="45%" /> |
+| <Image src="/docs/test-images/examples/controls/material/golden/macos/slider/image_for_docs.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_slider/media/index.png" width="45%" /> |
 | [`Switch`](../controls/switch.md) | [`CupertinoSwitch`](../controls/cupertinoswitch.md) |
-| <Image src={frontMatter.example_media + '/switch/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_switch/media/index.png'} width="45%" /> |
+| <Image src="examples/controls/material/switch/media/index.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_switch/media/index.png" width="45%" /> |
 | [`Radio`](../controls/radio.md) | [`CupertinoRadio`](../controls/cupertinoradio.md) |
-| <Image src={frontMatter.example_media + '/radio/media/index.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_radio/media/index.png'} width="45%" /> |
+| <Image src="examples/controls/material/radio/media/index.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_radio/media/index.png" width="45%" /> |
 | [`FilledButton`](../controls/filledbutton.md) | [`CupertinoFilledButton`](../controls/cupertinofilledbutton.md) |
-| <Image src={frontMatter.example_media + '/filled_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_filled_button/media/adaptive.png'} width="45%" /> |
+| <Image src="examples/controls/material/filled_button/media/adaptive.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_filled_button/media/adaptive.png" width="45%" /> |
 | [`FilledTonalButton`](../controls/filledtonalbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
-| <Image src={frontMatter.example_media + '/filled_tonal_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive_tonal_button.png'} width="45%" /> |
+| <Image src="examples/controls/material/filled_tonal_button/media/adaptive.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_button/media/adaptive_tonal_button.png" width="45%" /> |
 | [`IconButton`](../controls/iconbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
-| <Image src={frontMatter.example_media + '/icon_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive_icon_button.png'} width="45%" /> |
+| <Image src="examples/controls/material/icon_button/media/adaptive.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_button/media/adaptive_icon_button.png" width="45%" /> |
 | [`Button`](../controls/button.md) / [`OutlinedButton`](../controls/outlinedbutton.md) / [`TextButton`](../controls/textbutton.md) | [`CupertinoButton`](../controls/cupertinobutton.md) |
-| <Image src={frontMatter.example_media + '/button/media/adaptive.png'} width="45%" /> <Image src={frontMatter.example_media + '/outlined_button/media/adaptive.png'} width="45%" /> <Image src={frontMatter.example_media + '/text_button/media/adaptive.png'} width="45%" /> | <Image src={frontMatter.example_media + '/cupertino_button/media/adaptive.png'} width="45%" /> |
+| <Image src="examples/controls/material/button/media/adaptive.png" width="45%" /> <Image src="examples/controls/material/outlined_button/media/adaptive.png" width="45%" /> <Image src="examples/controls/material/text_button/media/adaptive.png" width="45%" /> | <Image src="examples/controls/cupertino/cupertino_button/media/adaptive.png" width="45%" /> |
 
 </details>
 
@@ -199,7 +198,7 @@ Now the `NavigationBar` and icons within it will look like different on Android 
 
 | iOS | Android |
 |:---:|:---:|
-| <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="60%" /> | <Image src={frontMatter.example_media + '/navigation_bar/media/adaptive.png'} width="60%" /> |
+| <Image src="examples/controls/material/navigation_bar/media/adaptive.png" width="60%" /> | <Image src="examples/controls/material/navigation_bar/media/adaptive.png" width="60%" /> |
 
 :::note[Note]
 You may utilise [reusable controls approach](../cookbook/custom-controls.md) to

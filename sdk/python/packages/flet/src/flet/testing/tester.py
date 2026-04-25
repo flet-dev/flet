@@ -122,6 +122,41 @@ class Tester(Service):
             "tap", {"finder_id": finder.id, "finder_index": finder.index}
         )
 
+    async def mouse_click(self, finder: Finder):
+        """
+        Dispatch a primary mouse click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "mouse_click", {"finder_id": finder.id, "finder_index": finder.index}
+        )
+
+    async def right_mouse_click(self, finder: Finder):
+        """
+        Dispatch a secondary mouse click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "right_mouse_click",
+            {"finder_id": finder.id, "finder_index": finder.index},
+        )
+
+    async def mouse_double_click(self, finder: Finder):
+        """
+        Dispatch a primary mouse double click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "mouse_double_click",
+            {"finder_id": finder.id, "finder_index": finder.index},
+        )
+
     async def tap_at(self, offset: Offset):
         """
         Dispatch a pointer down / pointer up sequence at the given offset.
@@ -130,6 +165,56 @@ class Tester(Service):
             offset: Offset value at which tap will occur.
         """
         await self._invoke_method("tap_at", {"offset": offset})
+
+    async def mouse_click_at(self, offset: Offset):
+        """
+        Dispatch a primary mouse click at the given offset.
+
+        Args:
+            offset: Offset value at which the click will occur.
+        """
+        await self._invoke_method("mouse_click_at", {"offset": offset})
+
+    async def right_mouse_click_at(self, offset: Offset):
+        """
+        Dispatch a secondary mouse click at the given offset.
+
+        Args:
+            offset: Offset value at which the click will occur.
+        """
+        await self._invoke_method("right_mouse_click_at", {"offset": offset})
+
+    async def mouse_double_click_at(self, offset: Offset):
+        """
+        Dispatch a primary mouse double click at the given offset.
+
+        Args:
+            offset: Offset value at which the double click will occur.
+        """
+        await self._invoke_method("mouse_double_click_at", {"offset": offset})
+
+    async def drag(self, finder: Finder, offset: Offset):
+        """
+        Drag from the center of the given control by the provided offset.
+
+        Args:
+            finder: Finder to search for a control.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method(
+            "drag",
+            {"finder_id": finder.id, "finder_index": finder.index, "offset": offset},
+        )
+
+    async def drag_from(self, start: Offset, offset: Offset):
+        """
+        Drag from the given start offset by the provided offset delta.
+
+        Args:
+            start: Initial pointer location.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method("drag_from", {"start": start, "offset": offset})
 
     async def long_press(self, finder: Finder):
         """

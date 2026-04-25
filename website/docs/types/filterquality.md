@@ -1,6 +1,6 @@
 ---
 class_name: "flet.FilterQuality"
-examples: "controls/types/filter_quality"
+examples: "controls/core/types/filter_quality"
 title: "FilterQuality"
 ---
 

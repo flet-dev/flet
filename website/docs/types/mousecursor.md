@@ -1,6 +1,6 @@
 ---
 class_name: "flet.MouseCursor"
-examples: "controls/types/mouse_cursor"
+examples: "controls/core/types/mouse_cursor"
 title: "MouseCursor"
 ---
 

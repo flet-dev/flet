@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ScrollDirection"
-examples: "controls/types/scroll_direction"
+examples: "controls/core/types/scroll_direction"
 title: "ScrollDirection"
 ---
 

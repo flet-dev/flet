@@ -1,8 +1,8 @@
 ---
 class_name: "flet.IconButton"
-examples: "controls/icon_button"
-example_images: "test-images/examples/material/golden/macos/icon_button"
-example_media: "examples/controls/icon_button/media"
+examples: "controls/material/icon_button"
+example_images: "test-images/examples/controls/material/golden/macos/icon_button"
+example_media: "examples/controls/material/icon_button/media"
 title: "IconButton"
 ---
 
@@ -18,10 +18,18 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/handling_clicks.gif'} alt="handling-clicks" width="45%" />
+<Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="40%" />
 
 ### Selected icon
 
 <CodeExample path={frontMatter.examples + '/selected_icon/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/selected_icon.gif'} alt="selected-icon" width="20%" />
+
+### Variants
+
+<CodeExample path={frontMatter.examples + '/variants/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/variants.png'} alt="variants" width="30%" />
 
 <ClassMembers name={frontMatter.class_name} />

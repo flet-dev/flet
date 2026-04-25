@@ -1,7 +1,7 @@
 ---
 class_name: "flet.ResponsiveRow"
-examples: "controls/responsive_row"
-example_images: "test-images/examples/core/golden/macos/responsive_row"
+examples: "controls/core/responsive_row"
+example_images: "test-images/examples/controls/core/golden/macos/responsive_row"
 title: "ResponsiveRow"
 ---
 
@@ -27,6 +27,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ### Scrollable content
 
-<CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
+<CodeExample path="controls/core/responsive_row/scrollable/main.py" language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

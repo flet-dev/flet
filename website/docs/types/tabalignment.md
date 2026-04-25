@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TabAlignment"
-examples: "controls/types/tab_alignment"
+examples: "controls/core/types/tab_alignment"
 title: "TabAlignment"
 ---
 
