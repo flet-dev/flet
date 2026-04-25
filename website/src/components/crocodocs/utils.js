@@ -397,20 +397,6 @@ function formatRestXrefLabel(target) {
 }
 
 /**
- * Flatten reST xrefs and inline backticks to plain text for use in HTML `title`
- * attributes (tooltips), which don't render Markdown or reST.
- */
-export function plainifyForTooltip(text) {
-  if (!text) {
-    return text;
-  }
-  const roleRe = /:(?:py:)?(?:class|attr|meth|func|data|mod|obj):`([^`\n]+)`/g;
-  return text
-    .replace(roleRe, (_, target) => formatRestXrefLabel(target))
-    .replace(/`([^`\n]+)`/g, "$1");
-}
-
-/**
  * Resolve a reStructuredText cross-reference (:py:class:`Foo`, :attr:`bar`, etc.) to a href and label.
  * Tries local member resolution, then class context, then full symbol lookup, then base class walking.
  * Returns null when no href can be found.
