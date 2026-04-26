@@ -1,0 +1,26 @@
+[project]
+name = "router-auth-dialog"
+version = "1.0.0"
+description = "Route protection with a modal AlertDialog login prompt instead of a redirect."
+requires-python = ">=3.10"
+keywords = ["router", "auth", "dialog", "modal", "guard"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Auth dialog"
+controls = ["SafeArea", "Column", "Button", "Text", "TextField", "AlertDialog", "TextButton", "ProgressRing", "Router", "Route"]
+layout_pattern = "auth-guard"
+complexity = "intermediate"
+features = ["auth guard", "modal dialog", "context", "observable state", "use_effect"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

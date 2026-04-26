@@ -1,0 +1,26 @@
+[project]
+name = "apps-dialogs-multi-host"
+version = "1.0.0"
+description = "Repro for use_dialog multi-host race: AlertDialog and SnackBar hosted by sibling components dismiss/show in the same tick."
+requires-python = ">=3.10"
+keywords = ["apps", "dialog", "snackbar", "use_dialog", "regression"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Dialog"]
+
+[tool.flet.metadata]
+title = "Multi-host dialog race"
+controls = ["AlertDialog", "SnackBar", "AppBar", "FilledButton"]
+layout_pattern = "center-stage"
+complexity = "advanced"
+features = ["use_dialog", "observable state", "context"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

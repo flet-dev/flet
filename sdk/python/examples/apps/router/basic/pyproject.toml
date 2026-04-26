@@ -1,0 +1,26 @@
+[project]
+name = "router-basic"
+version = "1.0.0"
+description = "Simplest Router example with two flat routes and navigation buttons."
+requires-python = ">=3.10"
+keywords = ["router", "routes", "navigation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Basic routing"
+controls = ["SafeArea", "Column", "Row", "Button", "Text", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "basic"
+features = ["flat routes", "navigation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

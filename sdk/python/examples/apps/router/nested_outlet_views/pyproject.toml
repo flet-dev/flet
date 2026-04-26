@@ -1,0 +1,26 @@
+[project]
+name = "router-nested-outlet-views"
+version = "1.0.0"
+description = "Nested routes with outlet layout wrapping child routes in a shared View with back navigation."
+requires-python = ">=3.10"
+keywords = ["router", "nested", "outlet", "views", "manage_views"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Nested outlet views"
+controls = ["View", "AppBar", "Column", "Container", "Button", "Text", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["nested routes", "outlet", "manage_views", "view stack", "back navigation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "router-active-links"
+version = "1.0.0"
+description = "Navigation link highlighting using is_route_active() with bold text and background color."
+requires-python = ">=3.10"
+keywords = ["router", "active", "navigation", "links", "highlight"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Active links"
+controls = ["SafeArea", "Column", "Row", "Container", "Text", "Divider", "Router", "Route"]
+layout_pattern = "app-shell"
+complexity = "basic"
+features = ["is_route_active", "active link styling", "use_route_outlet"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

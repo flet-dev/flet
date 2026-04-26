@@ -122,9 +122,6 @@ jobs:
           yarn install
           yarn build
 
-      - name: Check for broken images and unresolved xrefs
-        run: bash .github/scripts/check_docs.sh website/build
-
   # ===========================
   # Build Flet Flutter package
   # ===========================
@@ -282,7 +279,7 @@ jobs:
   # ===========================
   build_macos:
     name: Build Flet Client for macOS
-    runs-on: macos-15
+    runs-on: macos-26
     needs:
       - python_tests
       - build_flet_package

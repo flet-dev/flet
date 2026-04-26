@@ -1,0 +1,26 @@
+[project]
+name = "router-featured"
+version = "1.0.0"
+description = "Full-featured Router app combining layout, nav, nested routes, params, loaders, and auth."
+requires-python = ">=3.10"
+keywords = ["router", "layout", "auth", "loaders", "nested", "params", "featured"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router", "Apps/Featured"]
+
+[tool.flet.metadata]
+title = "Featured router app"
+controls = ["SafeArea", "Column", "Row", "Container", "Button", "Text", "TextField", "IconButton", "ListTile", "Divider", "ProgressRing", "Router", "Route"]
+layout_pattern = "app-shell"
+complexity = "advanced"
+features = ["nested routes", "layout outlet", "auth guard", "route loaders", "active links", "dynamic segments", "context", "observable state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

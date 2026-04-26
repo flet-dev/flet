@@ -1,0 +1,26 @@
+[project]
+name = "router-splats"
+version = "1.0.0"
+description = "Catch-all (splat) routes using :path* to capture remaining URL segments."
+requires-python = ">=3.10"
+keywords = ["router", "splat", "catch-all", "wildcard"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Splat routes"
+controls = ["SafeArea", "Column", "Button", "Text", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "basic"
+features = ["catch-all routes", "splat segments", "use_route_params"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -13,10 +13,24 @@ import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
-class AlertDialogControl extends StatelessWidget {
+class AlertDialogControl extends StatefulWidget {
   final Control control;
 
   const AlertDialogControl({super.key, required this.control});
+
+  @override
+  State<AlertDialogControl> createState() => _AlertDialogControlState();
+}
+
+class _AlertDialogControlState extends State<AlertDialogControl> {
+  // Route this widget pushed via `showDialog`.  Kept as state so the
+  // dismiss path can pop *this* dialog specifically (via removeRoute)
+  // instead of relying on `Navigator.pop()` which targets the topmost
+  // route — that breaks when a sibling `use_dialog` host has already
+  // appended a newer dialog above ours.
+  ModalRoute? _dialogRoute;
+
+  Control get control => widget.control;
 
   Widget _createAlertDialog(BuildContext context) {
     return ControlInheritedNotifier(
@@ -96,7 +110,6 @@ class AlertDialogControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ModalRoute? dialogRoute;
         showDialog(
             barrierDismissible: !modal,
             // Render the barrier in the dialog widget so it updates live.
@@ -105,13 +118,15 @@ class AlertDialogControl extends StatelessWidget {
             useRootNavigator: false,
             context: context,
             builder: (context) {
-              dialogRoute ??= ModalRoute.of(context);
+              _dialogRoute ??= ModalRoute.of(context);
               return _createAlertDialog(context);
             }).then((value) {
+          final route = _dialogRoute;
+          _dialogRoute = null;
           // showDialog future completes on pop() — before the exit animation
           // finishes.  Wait for the route's transition to fully complete so
           // the dismiss event fires after the closing animation ends.
-          (dialogRoute?.completed ?? Future.value()).then((_) {
+          (route?.completed ?? Future.value()).then((_) {
             debugPrint("Dismissing AlertDialog(${control.id})");
             control.updateProperties({"_open": false}, python: false);
             control.updateProperties({"open": false});
@@ -120,11 +135,20 @@ class AlertDialogControl extends StatelessWidget {
         });
       });
     } else if (!open && lastOpen) {
-      if (Navigator.of(context).canPop() == true) {
+      // Synchronous pop during build — Flutter schedules it for the end of
+      // the frame internally. Using `removeRoute` in a postFrame callback
+      // (the earlier sibling-host fix) raced with `View`'s on_confirm_pop
+      // path, which ALSO schedules a post-frame `Navigator.pop(context,
+      // true)`. Both callbacks fired in the same tick, and the view-pop
+      // callback ended up popping our just-finished-dismissing dialog
+      // instead of the target view — breaking the
+      // `test_pop_view_confirm` integration test.
+      control.updateProperties({"_open": false}, python: false);
+      final route = _dialogRoute;
+      if (route != null && route.isActive) {
         debugPrint(
             "AlertDialog(${control.id}): Closing dialog managed by this widget.");
         Navigator.of(context).pop();
-        control.updateProperties({"_open": false}, python: false);
       } else {
         debugPrint(
             "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");

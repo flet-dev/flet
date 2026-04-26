@@ -1,0 +1,26 @@
+[project]
+name = "apps-declarative-use-dialog-chained"
+version = "1.0.0"
+description = "Chains two declarative AlertDialogs — opens a success dialog after the confirm dialog dismisses."
+requires-python = ">=3.10"
+keywords = ["apps", "declarative", "dialog", "use_dialog", "chained"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Declarative"]
+
+[tool.flet.metadata]
+title = "Use dialog chained"
+controls = ["Column", "Text", "Button", "TextButton", "FilledButton", "AlertDialog"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["dialog management", "use_dialog", "chained dialogs", "use_ref", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

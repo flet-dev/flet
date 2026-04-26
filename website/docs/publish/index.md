@@ -1440,7 +1440,7 @@ jobs:
             needs_linux_deps: true
 
           - name: macos
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build macos"
             artifact_path: build/macos
             needs_linux_deps: false
@@ -1466,13 +1466,13 @@ jobs:
 
           # -------- iOS --------
           - name: ipa
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build ipa"
             artifact_path: build/ipa
             needs_linux_deps: false
 
           - name: ios-simulator
-            runner: macos-latest
+            runner: macos-26
             build_cmd: "flet build ios-simulator"
             artifact_path: build/ios-simulator
             needs_linux_deps: false

@@ -4,7 +4,11 @@ from flet.app import AppCallable, app, app_async, run, run_async
 from flet.components.component import Component
 from flet.components.component_decorator import component
 from flet.components.hooks.use_callback import use_callback
-from flet.components.hooks.use_context import create_context, use_context
+from flet.components.hooks.use_context import (
+    ContextProvider,
+    create_context,
+    use_context,
+)
 from flet.components.hooks.use_dialog import use_dialog
 from flet.components.hooks.use_effect import (
     on_mounted,
@@ -18,6 +22,17 @@ from flet.components.hooks.use_state import use_state
 from flet.components.memo import memo
 from flet.components.observable import Observable, observable
 from flet.components.public_utils import unwrap_component
+from flet.components.router import (
+    LocationInfo,
+    Route,
+    Router,
+    is_route_active,
+    use_route_loader_data,
+    use_route_location,
+    use_route_outlet,
+    use_route_params,
+    use_view_path,
+)
 from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis
@@ -701,6 +716,7 @@ __all__ = [
     "ContextMenuDismissEvent",
     "ContextMenuSelectEvent",
     "ContextMenuTrigger",
+    "ContextProvider",
     "ContinuousRectangleBorder",
     "Control",
     "ControlEvent",
@@ -855,6 +871,7 @@ __all__ = [
     "Locale",
     "LocaleChangeEvent",
     "LocaleConfiguration",
+    "LocationInfo",
     "LoginEvent",
     "LongPressDownEvent",
     "LongPressEndEvent",
@@ -952,8 +969,10 @@ __all__ = [
     "RotateValue",
     "RotatedBox",
     "RoundedRectangleBorder",
+    "Route",
     "RouteChangeEvent",
     "RouteUrlStrategy",
+    "Router",
     "Row",
     "SafeArea",
     "Scale",
@@ -1102,6 +1121,7 @@ __all__ = [
     "dropdown",
     "dropdownm2",
     "icons",
+    "is_route_active",
     "margin",
     "memo",
     "observable",
@@ -1118,7 +1138,12 @@ __all__ = [
     "use_effect",
     "use_memo",
     "use_ref",
+    "use_route_loader_data",
+    "use_route_location",
+    "use_route_outlet",
+    "use_route_params",
     "use_state",
+    "use_view_path",
     "value",
 ]
 

@@ -165,10 +165,15 @@ class _ViewControlState extends State<ViewControl> {
 
     if (overlayControls != null && dialogControls != null) {
       if (control.id == pageViews.last.id) {
-        overlayWidgets
-            .addAll(overlayControls.map((c) => ControlWidget(control: c)));
-        overlayWidgets
-            .addAll(dialogControls.map((c) => ControlWidget(control: c)));
+        // Key each ControlWidget by id so Flutter preserves Element identity
+        // when the list length changes.  Without keys, adding or removing an
+        // entry can reconstruct the AlertDialogControl Element mid-dismiss
+        // and the `!open && lastOpen` branch that calls Navigator.pop()
+        // never matches, leaving the dialog stuck open.
+        overlayWidgets.addAll(overlayControls
+            .map((c) => ControlWidget(control: c, key: ValueKey(c.id))));
+        overlayWidgets.addAll(dialogControls
+            .map((c) => ControlWidget(control: c, key: ValueKey(c.id))));
         overlayWidgets.add(PageMedia(view: widget.control.parent));
       }
     }

@@ -128,6 +128,12 @@ class NavigationDrawer(AdaptiveControl):
     The elevation of this navigation drawer.
     """
 
+    width: Optional[Number] = None
+    """
+    Width of the drawer in logical pixels. When `None`, falls back to the
+    Material default (~304dp).
+    """
+
     indicator_color: Optional[ColorValue] = None
     """
     The color of the selected destination indicator.
