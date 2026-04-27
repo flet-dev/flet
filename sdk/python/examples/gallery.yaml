@@ -1,0 +1,251 @@
+# Curated catalog for the Flet gallery.
+#
+# Top-level `categories:` is a map of name -> entry. An entry is either
+# `null` (bare name, no metadata, no children) or a map. Inside an
+# entry, `_`-prefixed keys are metadata (`_icon`, `_description`); all
+# other keys are child categories with the same recursive shape.
+#
+# Insertion order = display order. Slugs are derived from names.
+# Examples whose `[tool.flet.gallery].categories` reference a path not
+# in this file will be skipped at scan time.
+
+categories:
+  Apps:
+    _icon: apps
+    _description: Complete sample apps
+    Basic:
+    Authentication:
+    Animation:
+    Canvas:
+    Custom controls:
+    Declarative:
+    Games:
+    Navigation:
+    Productivity:
+    Search:
+    Time:
+    Visualization:
+    Accessibility:
+
+  Layout:
+    _icon: dashboard
+    _description: Layout primitives and containers
+    Card:
+    Column:
+    Container:
+    Control:
+    CupertinoListTile:
+    DataTable:
+    DataTable2:
+    Dismissible:
+    Divider:
+    ExpansionPanelList:
+    ExpansionTile:
+    GridView:
+    LayoutControl:
+    ListTile:
+    ListView:
+    Pagelet:
+    PageView:
+    Placeholder:
+    ResponsiveRow:
+    RotatedBox:
+    Row:
+    SafeArea:
+    Stack:
+    Tabs:
+    VerticalDivider:
+    WindowDragArea:
+
+  Buttons:
+    _icon: smart_button
+    _description: Material and Cupertino buttons
+    Button:
+    FilledButton:
+    FilledTonalButton:
+    OutlinedButton:
+    TextButton:
+    IconButton:
+    FloatingActionButton:
+    MenuItemButton:
+    PopupMenuButton:
+    CupertinoButton:
+    CupertinoFilledButton:
+    CupertinoSegmentedButton:
+    CupertinoSlidingSegmentedButton:
+
+  Input:
+    _icon: input
+    _description: Form controls and pickers
+    AutoComplete:
+    AutofillGroup:
+    Checkbox:
+    Chip:
+    ContextMenu:
+    Dropdown:
+    DropdownM2:
+    Radio:
+    RangeSlider:
+    Reorderable:
+    SearchBar:
+    SegmentedButton:
+    Slider:
+    Switch:
+    TextField:
+    TransparentPointer:
+    CupertinoCheckbox:
+    CupertinoContextMenu:
+    CupertinoDatePicker:
+    CupertinoPicker:
+    CupertinoRadio:
+    CupertinoSlider:
+    CupertinoSwitch:
+    CupertinoTextField:
+    CupertinoTimerPicker:
+
+  Display:
+    _icon: visibility
+    _description: Read-only displays
+    Text:
+    WebView:
+
+  Displays:
+    _icon: image
+    _description: Visual indicators and media displays
+    Badge:
+    Canvas:
+    CircleAvatar:
+    CupertinoActivityIndicator:
+    Icon:
+    Image:
+    Markdown:
+    ProgressBar:
+    ProgressRing:
+    Tooltip:
+
+  Dialogs:
+    _icon: chat_bubble_outline
+    _description: Modals, sheets, and notifications
+    AlertDialog:
+    Banner:
+    BottomSheet:
+    DatePicker:
+    DateRangePicker:
+    SnackBar:
+    TimePicker:
+    CupertinoActionSheet:
+    CupertinoAlertDialog:
+
+  Navigation:
+    _icon: navigation
+    _description: AppBars, drawers, and routing
+    AppBar:
+    BottomAppBar:
+    Hero:
+    MenuBar:
+    NavigationBar:
+    NavigationDrawer:
+    NavigationRail:
+    SubmenuButton:
+    Tabs:
+    CupertinoAppBar:
+    CupertinoNavigationBar:
+
+  Charts:
+    _icon: bar_chart
+    _description: Plotting and data viz
+    BarChart:
+    CandlestickChart:
+    LineChart:
+    MatplotlibChart:
+    PieChart:
+    PlotlyChart:
+    RadarChart:
+    ScatterChart:
+
+  Canvas:
+    _icon: brush
+    _description: 2D drawing primitives
+    Shapes:
+
+  Animations:
+    _icon: animation
+    _description: Animation controls
+    AnimatedSwitcher:
+
+  Effects:
+    _icon: auto_awesome
+    _description: Visual effects and shaders
+    ShaderMask:
+    Shimmer:
+
+  Media:
+    _icon: movie
+    _description: Audio, video, Lottie, Rive
+    Lottie:
+    Rive:
+    Video:
+
+  Pages:
+    _icon: pages
+    _description: Page-level controls
+    Page:
+
+  Utility:
+    _icon: build
+    _description: Gestures, drag/drop, screenshots
+    Draggable:
+    GestureDetector:
+    InteractiveViewer:
+    KeyboardListener:
+    Screenshot:
+    SelectionArea:
+    Semantics:
+    Types:
+
+  Utilities:
+    _icon: handyman
+    _description: Editor and developer utilities
+    CodeEditor:
+
+  Services:
+    _icon: settings
+    _description: Platform services and integrations
+    Accelerometer:
+    Ads:
+    Audio:
+    AudioRecorder:
+    Barometer:
+    Battery:
+    BrowserContextMenu:
+    Camera:
+    Clipboard:
+    Connectivity:
+    FilePicker:
+    Flashlight:
+    Geolocator:
+    Gyroscope:
+    HapticFeedback:
+    Magnetometer:
+    PermissionHandler:
+    ScreenBrightness:
+    SecureStorage:
+    SemanticsService:
+    ShakeDetector:
+    Share:
+    SharedPreferences:
+    Storagepaths:
+    UrlLauncher:
+    UserAccelerometer:
+    Wakelock:
+
+  Extensions:
+    _icon: extension
+    _description: Third-party Flet extensions
+    ColorPickers:
+    Map:
+
+  Community:
+    _icon: people
+    _description: Community-contributed examples
+    Productivity:
