@@ -45,7 +45,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         widget.control.getBool("ignore_up_down_keys", false)! &&
         (event.logicalKey == LogicalKeyboardKey.arrowUp ||
             event.logicalKey == LogicalKeyboardKey.arrowDown)) {
-      return KeyEventResult.handled;
+      return KeyEventResult.ignored;
     }
 
     // submit on Enter if flag is set and shift is not pressed
