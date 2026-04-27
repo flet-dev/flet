@@ -50,7 +50,7 @@ class _FletAppControlState extends State<FletAppControl> {
         appStartupScreenMessage: appStartupScreenMessage,
         appErrorMessage: appErrorMessage,
         pageUrl: url,
-        assetsDir: "",
+        assetsDir: widget.control.getString("assets_dir") ?? "",
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         args: widget.control.get("args") != null

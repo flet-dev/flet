@@ -23,6 +23,13 @@ class FletApp(LayoutControl):
     Optional dictionary of arguments to pass to the Flet app.
     """
 
+    assets_dir: Optional[str] = None
+    """
+    Base location for assets referenced by the embedded app. On web this
+    is a URL prefix joined with relative `src` values (e.g. on
+    `Image`/`Lottie`/`Markdown`); on desktop it is a filesystem path.
+    """
+
     force_pyodide: bool = False
     """
     Whether to force the use of Pyodide.
