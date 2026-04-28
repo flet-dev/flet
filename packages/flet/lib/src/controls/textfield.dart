@@ -42,10 +42,17 @@ class _TextFieldControlState extends State<TextFieldControl> {
       {required bool submitOnEnter}) {
     // ignore up/down arrow keys if flag is set
     if ((event is KeyDownEvent || event is KeyRepeatEvent) &&
-        widget.control.getBool("ignore_up_down_keys", false)! &&
-        (event.logicalKey == LogicalKeyboardKey.arrowUp ||
-            event.logicalKey == LogicalKeyboardKey.arrowDown)) {
-      return KeyEventResult.handled;
+        widget.control.getBool("ignore_up_down_keys", false)!) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        FocusTraversalGroup.of(_focusNode.context!)
+            .inDirection(_focusNode, TraversalDirection.down);
+        return KeyEventResult.handled;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        FocusTraversalGroup.of(_focusNode.context!)
+            .inDirection(_focusNode, TraversalDirection.up);
+        return KeyEventResult.handled;
+      }
     }
 
     // submit on Enter if flag is set and shift is not pressed
