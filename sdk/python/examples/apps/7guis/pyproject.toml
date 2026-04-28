@@ -1,0 +1,78 @@
+[project]
+name = "apps-7guis"
+version = "1.0.0"
+description = "Suite of 7GUIs benchmark apps covering counters, converters, booking forms, timers, CRUD, drawing, and cells."
+requires-python = ">=3.10"
+keywords = [
+    "apps",
+    "7guis",
+    "counter",
+    "temperature converter",
+    "flight booker",
+    "timer",
+    "crud",
+    "circle drawer",
+    "cells",
+]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = [
+    "Apps/7GUIs",
+    "Apps/Basic",
+    "Apps/Forms",
+    "Apps/Productivity",
+    "Apps/Time",
+    "Apps/Canvas",
+]
+
+[tool.flet.metadata]
+title = "7GUIs"
+controls = [
+    "SafeArea",
+    "Container",
+    "Column",
+    "Row",
+    "Text",
+    "TextField",
+    "FilledButton",
+    "OutlinedButton",
+    "TextButton",
+    "IconButton",
+    "Dropdown",
+    "DatePicker",
+    "SnackBar",
+    "ProgressBar",
+    "Slider",
+    "ListView",
+    "DataTable",
+    "Stack",
+    "GestureDetector",
+    "AlertDialog",
+]
+layout_pattern = "multi-example-suite"
+complexity = "intermediate"
+features = [
+    "counter updates",
+    "live conversion",
+    "date picking",
+    "form validation",
+    "async",
+    "timer progress",
+    "live filtering",
+    "record editing",
+    "tap handling",
+    "undo",
+    "redo",
+    "formula editing",
+    "live recalculation",
+]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
