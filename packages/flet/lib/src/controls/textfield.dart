@@ -44,13 +44,13 @@ class _TextFieldControlState extends State<TextFieldControl> {
     if ((event is KeyDownEvent || event is KeyRepeatEvent) &&
         widget.control.getBool("ignore_up_down_keys", false)!) {
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        FocusScope.of(_focusNode.context!)
-            .focusInDirection(TraversalDirection.down);
+        FocusTraversalGroup.of(_focusNode.context!)
+            .inDirection(_focusNode, TraversalDirection.down);
         return KeyEventResult.handled;
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        FocusScope.of(_focusNode.context!)
-            .focusInDirection(TraversalDirection.up);
+        FocusTraversalGroup.of(_focusNode.context!)
+            .inDirection(_focusNode, TraversalDirection.up);
         return KeyEventResult.handled;
       }
     }
