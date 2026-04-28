@@ -14,7 +14,7 @@
 
 ### Bug fixes
 
-* Fix `Page` and `View` vertical centering when scrolling is enabled, including hidden scrollbars, so short content remains centered in the viewport by @ndonkoHenri.
+* Fix `Page` and `View` vertical centering when scrolling is enabled, including hidden scrollbars, so short content remains centered in the viewport ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
 * Reduce Linux memory retention when repeatedly removing `flet_video.Video` controls by linking `media_kit` video apps against mimalloc in run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)) by @ndonkoHenri.
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
 * Fix `CodeEditor` background not filling the entire area when `expand=True` ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
