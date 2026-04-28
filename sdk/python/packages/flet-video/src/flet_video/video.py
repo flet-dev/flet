@@ -244,10 +244,6 @@ class Video(ft.LayoutControl):
         """Appends/Adds the provided `media` to the `playlist`."""
         if not media.resource:
             raise ValueError("media has no resource")
-        await self._invoke_method(
-            method_name="playlist_add",
-            arguments={"media": media},
-        )
         self.playlist.append(media)
 
     async def playlist_remove(self, media_index: int):
@@ -257,10 +253,6 @@ class Video(ft.LayoutControl):
             raise IndexError("media_index is out of range")
         if media_index < 0:
             media_index = playlist_length + media_index
-        await self._invoke_method(
-            method_name="playlist_remove",
-            arguments={"media_index": media_index},
-        )
         self.playlist.pop(media_index)
 
     async def is_playing(self) -> bool:
