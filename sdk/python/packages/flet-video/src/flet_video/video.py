@@ -6,6 +6,7 @@ from dataclasses import field
 from typing import Optional
 
 import flet as ft
+from flet.utils.deprecated import deprecated
 from flet_video.types import (
     PlaylistMode,
     VideoConfiguration,
@@ -240,12 +241,26 @@ class Video(ft.LayoutControl):
             arguments={"media_index": media_index},
         )
 
+    @deprecated(
+        reason="Use playlist.append(media) instead.",
+        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.append(media)`.",  # noqa: E501
+        version="0.85.0",
+        delete_version="0.88.0",
+        show_parentheses=True,
+    )
     async def playlist_add(self, media: VideoMedia):
         """Appends/Adds the provided `media` to the `playlist`."""
         if not media.resource:
             raise ValueError("media has no resource")
         self.playlist.append(media)
 
+    @deprecated(
+        reason="Use playlist.pop(media_index) instead.",
+        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.pop(media_index)`.",  # noqa: E501
+        version="0.85.0",
+        delete_version="0.88.0",
+        show_parentheses=True,
+    )
     async def playlist_remove(self, media_index: int):
         """Removes the provided `media` from the `playlist`."""
         playlist_length = len(self.playlist)
