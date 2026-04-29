@@ -6,10 +6,43 @@ self.documentUrl = null;
 self.initialized = false;
 self.flet_js = {}; // namespace for Python global functions
 
+// Flipped to true right before `runpy.run_module` runs the user app.
+// Until then, stdout/stderr is bootstrap diagnostics ("Downloading app
+// archive", micropip install logs, etc.) — those go to the dev console
+// rather than the user-visible Console pane.
+self.userAppRunning = false;
+self.flet_js.userAppStarting = function () {
+    self.userAppRunning = true;
+};
+self.sendPythonOutput = function (text, isStderr) {
+    // No bridge yet, or not in user-code mode — surface in dev console.
+    // The boot script registers `flet_js.send_python_output` after the
+    // user-app deps are installed (msgpack typically rides in via flet);
+    // if msgpack isn't available it stays unset and prints fall through
+    // to the dev console silently.
+    if (!self.userAppRunning || !(self.flet_js && self.flet_js.send_python_output)) {
+        if (isStderr) {
+            console.error(text);
+        } else {
+            console.log(text);
+        }
+        return;
+    }
+    // Pyodide invokes stdout/stderr hooks with the GIL released, so
+    // calling back into Python synchronously throws NoGilError. Defer
+    // to a microtask — by the time it runs, the GIL state is normal.
+    queueMicrotask(function () {
+        self.flet_js.send_python_output(text, isStderr);
+    });
+};
+
 self.initPyodide = async function () {
     try {
         importScripts(self.pyodideUrl);
-        self.pyodide = await loadPyodide();
+        self.pyodide = await loadPyodide({
+            stdout: (text) => self.sendPythonOutput(text, false),
+            stderr: (text) => self.sendPythonOutput(text, true),
+        });
         self.pyodide.registerJsModule("flet_js", flet_js);
         self.pyodide.globals.set("app_package_url", self.appPackageUrl);
         self.pyodide.globals.set("python_module_name", self.pythonModuleName);
@@ -116,6 +149,28 @@ self.initPyodide = async function () {
             micropip = await ensure_micropip()
             await micropip.install(py_args["dependencies"], pre=micropip_include_pre)
 
+        # Install the python_output bridge using msgpack from the
+        # already-loaded user deps (typically pulled in via flet). If
+        # msgpack isn't around — apps that don't depend on flet — skip
+        # silently; stdout/stderr just stays in the dev console.
+        try:
+            import msgpack as _msgpack
+
+            def _send_python_output(text, is_stderr):
+                flet_js.receive_callback(
+                    _msgpack.packb(
+                        [7, {"text": text, "is_stderr": bool(is_stderr)}]
+                    )
+                )
+
+            flet_js.send_python_output = _send_python_output
+        except ImportError:
+            pass
+
+        # Flip the worker into "user code" mode so stdout/stderr starts
+        # flowing to the host page's Console pane instead of dev console.
+        flet_js.userAppStarting()
+
         # Execute app
         runpy.run_module(python_module_name, run_name="__main__")
       `);
@@ -129,6 +184,9 @@ self.initPyodide = async function () {
 self.receiveCallback = (message) => {
     self.postMessage(message.toJs());
 }
+// Same channel as `receiveCallback`, exposed under `flet_js` so the
+// Python python_output shim can post pre-encoded msgpack frames.
+self.flet_js.receive_callback = self.receiveCallback;
 
 self.onmessage = async (event) => {
     // run only once

@@ -118,7 +118,7 @@ from flet.controls.core.drag_target import (
     DragWillAcceptEvent,
 )
 from flet.controls.core.draggable import Draggable
-from flet.controls.core.flet_app import FletApp
+from flet.controls.core.flet_app import FletApp, FletAppOutputEvent
 from flet.controls.core.gesture_detector import GestureDetector
 from flet.controls.core.grid_view import GridView
 from flet.controls.core.hero import Hero
@@ -814,6 +814,7 @@ __all__ = [
     "FilledTonalIconButton",
     "FilterQuality",
     "FletApp",
+    "FletAppOutputEvent",
     "FletException",
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
