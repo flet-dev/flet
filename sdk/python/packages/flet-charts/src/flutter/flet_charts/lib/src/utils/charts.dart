@@ -156,8 +156,10 @@ AxisTitles parseAxisTitles(Control? control) {
         getTitlesWidget: labels.isEmpty
             ? defaultGetTitle
             : (double value, TitleMeta meta) {
-                var label = labels
-                    .firstWhereOrNull((l) => l.getDouble("value") == value);
+                var label = labels.firstWhereOrNull(
+                  // (l) => l.getDouble("value") == value
+                  (l) => (l.getDouble("value")! - value).abs() < 0.001, //floating-point precision errors
+                  );
                 return label?.buildTextOrWidget("label") ??
                     const SizedBox.shrink();
               },
