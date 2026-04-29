@@ -174,6 +174,19 @@ self.initPyodide = async function () {
         # Execute app
         runpy.run_module(python_module_name, run_name="__main__")
       `);
+        // `start_connection` is registered by `PyodideConnection.__init__`,
+        // which only runs when the user app calls `ft.run(...)`. If the
+        // script finished without it (e.g. a print-only test program),
+        // surface a friendly message instead of a cryptic TypeError.
+        // The `__flet_no_ui__:` sentinel lets host pages render a
+        // neutral message rather than a Script error panel.
+        if (typeof self.flet_js.start_connection !== "function") {
+            self.postMessage(
+                "__flet_no_ui__:Script finished without starting a Flet UI.\n" +
+                "Add ft.run(main) at the end of your script to display the app."
+            );
+            return;
+        }
         await self.flet_js.start_connection(self.receiveCallback);
         self.postMessage("initialized");
     } catch (error) {
