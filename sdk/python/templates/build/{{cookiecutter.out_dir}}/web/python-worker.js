@@ -171,8 +171,15 @@ self.initPyodide = async function () {
         # flowing to the host page's Console pane instead of dev console.
         flet_js.userAppStarting()
 
-        # Execute app
-        runpy.run_module(python_module_name, run_name="__main__")
+        # Execute app. Treat a clean SystemExit (exit() / exit(0)) as
+        # normal termination so the no-UI path below kicks in instead
+        # of surfacing a Pyodide traceback. Non-zero codes propagate as
+        # Script errors.
+        try:
+            runpy.run_module(python_module_name, run_name="__main__")
+        except SystemExit as _exit:
+            if _exit.code not in (None, 0):
+                raise
       `);
         // `start_connection` is registered by `PyodideConnection.__init__`,
         // which only runs when the user app calls `ft.run(...)`. If the
