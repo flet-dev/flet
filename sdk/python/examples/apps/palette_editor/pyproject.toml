@@ -1,0 +1,26 @@
+[project]
+name = "apps-palette-editor"
+version = "1.0.0"
+description = "Tool for editing theme colors."
+requires-python = ">=3.10"
+keywords = ["apps", "color scheme", "theme"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Palette Editor"
+controls = ["SafeArea", "Column", "Row", "IconButton", "TextField"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
