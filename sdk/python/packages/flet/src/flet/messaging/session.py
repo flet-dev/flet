@@ -1,4 +1,5 @@
 import asyncio
+import dataclasses
 import inspect
 import logging
 import traceback
@@ -306,6 +307,87 @@ class Session:
         # <operation> := [<type>, <tree_node_index>, <property|index>, <value>]
         return patch[1][3]  # [1] - 1st operation -> [3] - Page
 
+    def __is_mounted_control(self, control: BaseControl) -> bool:
+        try:
+            return control.page is self.__page
+        except RuntimeError:
+            return False
+
+    def __find_live_control(
+        self,
+        value: Any,
+        control_id: int,
+        parent: Optional[BaseControl] = None,
+        visited: Optional[set[int]] = None,
+    ) -> Optional[BaseControl]:
+        if value is None:
+            return None
+
+        if visited is None:
+            visited = set()
+
+        value_id = id(value)
+        if value_id in visited:
+            return None
+
+        current_parent = parent
+        if isinstance(value, BaseControl):
+            visited.add(value_id)
+            if parent is not None and parent is not value:
+                value._parent = weakref.ref(parent)
+            if value._i == control_id:
+                return value
+            current_parent = value
+        elif dataclasses.is_dataclass(value) or isinstance(value, (list, tuple, dict)):
+            visited.add(value_id)
+
+        if dataclasses.is_dataclass(value):
+            for field in dataclasses.fields(value):
+                if field.metadata.get("skip", False) or field.name == "_parent":
+                    continue
+                found = self.__find_live_control(
+                    getattr(value, field.name, None),
+                    control_id,
+                    current_parent,
+                    visited,
+                )
+                if found is not None:
+                    return found
+        elif isinstance(value, dict):
+            for item in value.values():
+                found = self.__find_live_control(
+                    item, control_id, current_parent, visited
+                )
+                if found is not None:
+                    return found
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                found = self.__find_live_control(
+                    item, control_id, current_parent, visited
+                )
+                if found is not None:
+                    return found
+
+        return None
+
+    def __resolve_event_control(self, control_id: int) -> Optional[BaseControl]:
+        control = self.__index.get(control_id)
+        if control is not None and self.__is_mounted_control(control):
+            return control
+
+        live_control = self.__find_live_control(self.__page, control_id)
+        if live_control is not None:
+            if control is not None and control is not live_control:
+                logger.debug(
+                    "Recovered stale control %s -> %s for event dispatch",
+                    control,
+                    live_control,
+                )
+            self.__index[control_id] = live_control
+            return live_control
+
+        return control
+
     # optimizations:
     # - disable auto-update
     # - auto-update to skip already updated items
@@ -326,7 +408,7 @@ class Session:
             event_name: Event name without the `on_` prefix.
             event_data: Raw event payload.
         """
-        control = self.__index.get(control_id)
+        control = self.__resolve_event_control(control_id)
         if not control:
             logger.debug("Control with ID %s not found.", control_id)
             return
@@ -560,7 +642,10 @@ class Session:
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
         if self.__conn is None and self.__expires_at is not None:
             return
-        self.__pending_effects.append((weakref.ref(hook), is_cleanup))
+        # Hold a strong reference to the hook until it runs.  A weakref would
+        # get cleared when the owning component unmounts and clears
+        # `_state.hooks` — dropping queued cleanup effects on the floor.
+        self.__pending_effects.append((hook, is_cleanup))
         self.__updates_ready.set()
 
     def start_updates_scheduler(self):
@@ -598,7 +683,7 @@ class Session:
 
                 for effect in pending_effects:
                     try:
-                        hook = effect[0]()
+                        hook = effect[0]
                         is_cleanup = effect[1]
                         # print(f"**** Running effect: {hook} {is_cleanup}")
                         if hook and hook.setup and not is_cleanup:
