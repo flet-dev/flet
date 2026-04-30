@@ -43,6 +43,22 @@ def color_group(
     )
 
 
+def showcase_section(title: str, *controls: ft.Control) -> ft.Container:
+    return ft.Container(
+        margin=ft.Margin.only(bottom=16),
+        content=ft.Column(
+            spacing=8,
+            controls=[
+                ft.Text(
+                    title,
+                    # style=ft.TextThemeStyle.TITLE_MEDIUM,
+                ),
+                *controls,
+            ],
+        ),
+    )
+
+
 def main(page: ft.Page):
     page.title = "Palette Editor"
     page.bgcolor = ft.Colors.SURFACE
@@ -51,6 +67,11 @@ def main(page: ft.Page):
     # page.window.height = 460
     swatch_width = 250
     swatch_height = 40
+    preview_heading = "Palette preview"
+    preview_body = (
+        "Controls on this side use the current theme so you can compare "
+        "tokens with real UI."
+    )
 
     page.add(
         ft.SafeArea(
@@ -129,15 +150,146 @@ def main(page: ft.Page):
                         ),
                         ft.Container(
                             expand=True,
-                            content=ft.Column(
+                            padding=ft.Padding.only(left=4),
+                            content=ft.Container(
                                 expand=True,
-                                scroll=ft.ScrollMode.AUTO,
-                                controls=[
-                                    ft.Container(
-                                        height=1200,
-                                        bgcolor=ft.Colors.GREY_300,
-                                    )
-                                ],
+                                bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+                                padding=16,
+                                content=ft.Column(
+                                    expand=True,
+                                    scroll=ft.ScrollMode.AUTO,
+                                    spacing=0,
+                                    controls=[
+                                        ft.Text(
+                                            "Example",
+                                            # style=ft.TextThemeStyle.HEADLINE_SMALL,
+                                        ),
+                                        ft.Container(height=16),
+                                        showcase_section(
+                                            "Buttons",
+                                            ft.Row(
+                                                wrap=True,
+                                                spacing=12,
+                                                run_spacing=12,
+                                                controls=[
+                                                    ft.FilledButton("Filled button"),
+                                                    ft.OutlinedButton(
+                                                        "Outlined button"
+                                                    ),
+                                                    ft.TextButton("Text button"),
+                                                    ft.Button("Button"),
+                                                ],
+                                            ),
+                                        ),
+                                        showcase_section(
+                                            "Inputs",
+                                            ft.TextField(
+                                                label="Theme name",
+                                                hint_text="Material 3 palette",
+                                                value="Sample scheme",
+                                            ),
+                                            ft.TextField(
+                                                label="Description",
+                                                multiline=True,
+                                                min_lines=3,
+                                                max_lines=5,
+                                                value=(
+                                                    "This preview shows controls "
+                                                    "using the app theme colors."
+                                                ),
+                                            ),
+                                        ),
+                                        showcase_section(
+                                            "Selection",
+                                            ft.Row(
+                                                wrap=True,
+                                                spacing=16,
+                                                run_spacing=12,
+                                                controls=[
+                                                    ft.Switch(
+                                                        label="Use dark mode",
+                                                        value=True,
+                                                    ),
+                                                    ft.Checkbox(
+                                                        label="Enable accents",
+                                                        value=True,
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.RadioGroup(
+                                                content=ft.Column(
+                                                    spacing=8,
+                                                    controls=[
+                                                        ft.Radio(
+                                                            value="system",
+                                                            label="System",
+                                                        ),
+                                                        ft.Radio(
+                                                            value="light",
+                                                            label="Light",
+                                                        ),
+                                                        ft.Radio(
+                                                            value="dark",
+                                                            label="Dark",
+                                                        ),
+                                                    ],
+                                                ),
+                                                value="system",
+                                            ),
+                                            ft.Slider(value=70, min=0, max=100),
+                                        ),
+                                        showcase_section(
+                                            "Progress",
+                                            ft.ProgressBar(value=0.65),
+                                            ft.Row(
+                                                spacing=16,
+                                                controls=[
+                                                    ft.ProgressRing(value=0.75),
+                                                    ft.FloatingActionButton(
+                                                        icon=ft.Icons.PALETTE
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                        showcase_section(
+                                            "Card",
+                                            ft.Card(
+                                                content=ft.Container(
+                                                    padding=16,
+                                                    content=ft.Column(
+                                                        spacing=12,
+                                                        controls=[
+                                                            ft.Row(
+                                                                spacing=12,
+                                                                controls=[
+                                                                    ft.Icon(
+                                                                        ft.Icons.COLOR_LENS
+                                                                    ),
+                                                                    ft.Text(
+                                                                        preview_heading,
+                                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                            ft.Text(preview_body),
+                                                            ft.Row(
+                                                                spacing=12,
+                                                                controls=[
+                                                                    ft.FilledButton(
+                                                                        "Apply"
+                                                                    ),
+                                                                    ft.TextButton(
+                                                                        "Reset"
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                        ],
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ],
+                                ),
                             ),
                         ),
                     ],
