@@ -10,6 +10,7 @@ def color_band(
     *,
     width: int,
     height: int,
+    on_click=None,
 ) -> ft.Container:
     return ft.Container(
         width=width,
@@ -17,6 +18,8 @@ def color_band(
         bgcolor=background,
         padding=ft.Padding.symmetric(horizontal=12),
         alignment=ft.Alignment.CENTER_LEFT,
+        ink=True,
+        on_click=on_click,
         content=ft.Text(
             label,
             color=foreground,
@@ -29,6 +32,9 @@ def color_group(
     *,
     width: int,
     height: int,
+    title: str | None = None,
+    hint: str | None = None,
+    on_color_click=None,
 ) -> ft.Container:
     return ft.Container(
         border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
@@ -36,8 +42,48 @@ def color_group(
             spacing=4,
             horizontal_alignment=ft.CrossAxisAlignment.START,
             controls=[
-                color_band(label, background, foreground, width=width, height=height)
-                for label, background, foreground in items
+                ft.Container(
+                    visible=title is not None or hint is not None,
+                    height=25,
+                    padding=ft.Padding.only(left=8, right=2),
+                    content=ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text(title or "", weight=ft.FontWeight.W_600),
+                            ft.Container(
+                                visible=hint is not None,
+                                content=ft.IconButton(
+                                    icon=ft.Icons.INFO_OUTLINE,
+                                    icon_size=14,
+                                    tooltip=ft.Tooltip(
+                                        message=hint or "",
+                                        bgcolor=ft.Colors.SURFACE_BRIGHT,
+                                        padding=ft.Padding.symmetric(
+                                            horizontal=12, vertical=8
+                                        ),
+                                        prefer_below=False,
+                                        vertical_offset=8,
+                                        text_style=ft.TextStyle(
+                                            color=ft.Colors.ON_SURFACE,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ],
+                    ),
+                ),
+                *[
+                    color_band(
+                        label,
+                        background,
+                        foreground,
+                        width=width,
+                        height=height,
+                        on_click=on_color_click(label) if on_color_click else None,
+                    )
+                    for label, background, foreground in items
+                ],
             ],
         ),
     )
@@ -72,6 +118,12 @@ def main(page: ft.Page):
         "Controls on this side use the current theme so you can compare "
         "tokens with real UI."
     )
+
+    def on_color_click(label: str):
+        def handler(_):
+            print(f"{label} color changed!")
+
+        return handler
 
     page.add(
         ft.SafeArea(
@@ -115,6 +167,14 @@ def main(page: ft.Page):
                                         ],
                                         width=swatch_width,
                                         height=swatch_height,
+                                        title="Primary roles",
+                                        hint=(
+                                            "Use primary roles for the most\n"
+                                            "prominent components across the UI,\n"
+                                            "such as the FAB,\n"
+                                            "high-emphasis buttons, and active states."
+                                        ),
+                                        on_color_click=on_color_click,
                                     ),
                                     color_group(
                                         [
@@ -141,6 +201,12 @@ def main(page: ft.Page):
                                         ],
                                         width=swatch_width,
                                         height=swatch_height,
+                                        title="Secondary roles",
+                                        hint=(
+                                            "Use secondary roles for less prominent\n"
+                                            "components in the UI such as filter chips."
+                                        ),
+                                        on_color_click=on_color_click,
                                     ),
                                 ],
                             ),
