@@ -5,3 +5,10 @@ AttributionAlignment? parseAttributionAlignment(String? value,
     [AttributionAlignment? defaultValue]) {
   return parseEnum(AttributionAlignment.values, value, defaultValue);
 }
+
+extension AttributionAlignmentControlExtension on Control {
+  AttributionAlignment? getAttributionAlignment(String propertyName,
+      [AttributionAlignment? defaultValue]) {
+    return parseAttributionAlignment(getString(propertyName), defaultValue);
+  }
+}
