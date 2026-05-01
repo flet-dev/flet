@@ -23,8 +23,8 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
           borderColor:
               polyline.getColor("border_color", context, Colors.yellow)!,
           color: polyline.getColor("color", context, Colors.yellow)!,
-          pattern: parseStrokePattern(
-              polyline.get("stroke_pattern"), const StrokePattern.solid())!,
+          pattern: polyline.getStrokePattern(
+              "stroke_pattern", const StrokePattern.solid())!,
           strokeCap: polyline.getStrokeCap("stroke_cap", StrokeCap.round)!,
           strokeJoin: polyline.getStrokeJoin("stroke_join", StrokeJoin.round)!,
           strokeWidth: polyline.getDouble("stroke_width", 1.0)!,
@@ -40,19 +40,18 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
               .map((e) => parseColor(e, Theme.of(context)))
               .nonNulls
               .toList(),
-          points: polyline
-              .get("coordinates", [])!
-              .map((c) => parseLatLng(c))
-              .nonNulls
-              .toList());
+          points: polyline.getLatLngList("coordinates"));
     }).toList();
 
-    return PolylineLayer(
-      polylines: polylines,
-      cullingMargin: control.getDouble("culling_margin", 10.0)!,
-      minimumHitbox: control.getDouble("min_hittable_radius", 10.0)!,
-      simplificationTolerance:
-          control.getDouble("simplification_tolerance", 0.3)!,
+    return BaseControl(
+      control: control,
+      child: PolylineLayer(
+        polylines: polylines,
+        cullingMargin: control.getDouble("culling_margin", 10.0)!,
+        minimumHitbox: control.getDouble("min_hittable_radius", 10.0)!,
+        simplificationTolerance:
+            control.getDouble("simplification_tolerance", 0.3)!,
+      ),
     );
   }
 }

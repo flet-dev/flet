@@ -2,6 +2,7 @@
 
 ### New features
 
+* Add declarative `ft.Router` component for `@ft.component` apps with nested routes, layout routes with outlets, dynamic segments, optional segments, splats, custom regex constraints, data loaders, active link detection, authentication patterns, and `manage_views=True` mode for view-stack navigation with swipe-back gestures and `AppBar` back button on mobile ([#6406](https://github.com/flet-dev/flet/pull/6406)) by @FeodorFitsner.
 * Add `ft.use_dialog()` hook for declarative dialog management from within `@ft.component` functions, with frozen-diff reactive updates and automatic open/close lifecycle ([#6335](https://github.com/flet-dev/flet/pull/6335)) by @FeodorFitsner.
 * Add `scrollable`, `pin_leading_to_top`, and `pin_trailing_to_bottom` properties to `NavigationRail` for scrollable content with optional pinned leading/trailing controls ([#1923](https://github.com/flet-dev/flet/issues/1923), [#6356](https://github.com/flet-dev/flet/pull/6356)) by @ndonkoHenri.
 * Add scroll support to `ResponsiveRow` for responsive layouts whose content exceeds the available height ([#2590](https://github.com/flet-dev/flet/issues/2590), [#6417](https://github.com/flet-dev/flet/pull/6417)) by @ndonkoHenri.
@@ -26,6 +27,8 @@
 * Fix `Lottie` failing to load local asset files on Windows desktop (and unreliably on other desktop platforms), so animations referenced by `src="file.json"` from the app's `assets/` directory now display correctly ([#6386](https://github.com/flet-dev/flet/issues/6386), [#6426](https://github.com/flet-dev/flet/pull/6426)) by @ndonkoHenri.
 * Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
 * Fix environment variable priority in `flet build` template: inherit from `Platform.environment` and use `putIfAbsent` for FLET_* variables so pre-set system env vars are not overwritten ([#6394](https://github.com/flet-dev/flet/pull/6394)) by @Bahtya.
+* Fix 3- and 4-digit hex color shorthand (e.g. `#c00`, `#fc00`) rendering as invisible by expanding them to their full 6/8-digit forms ([#6419](https://github.com/flet-dev/flet/issues/6419), [#6421](https://github.com/flet-dev/flet/pull/6421)) by @ndonkoHenri.
+* Fix `LineChart` (and other charts) silently dropping custom `ChartAxisLabel` entries whose `value` matched a tick only after floating-point rounding (e.g. `0.1`, `0.2`, `0.3`) by switching label lookup to a tolerance-based comparison scaled to the axis interval ([#6445](https://github.com/flet-dev/flet/issues/6445), [#6459](https://github.com/flet-dev/flet/pull/6459)) by @KangZhaoKui.
 
 ### Documentation
 

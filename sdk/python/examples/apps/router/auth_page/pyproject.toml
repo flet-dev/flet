@@ -1,0 +1,26 @@
+[project]
+name = "router-auth-page"
+version = "1.0.0"
+description = "Route protection using a dedicated login page that redirects unauthenticated users."
+requires-python = ">=3.10"
+keywords = ["router", "auth", "login", "redirect", "guard"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Auth page redirect"
+controls = ["SafeArea", "Column", "Button", "Text", "TextField", "ProgressRing", "Router", "Route"]
+layout_pattern = "auth-guard"
+complexity = "intermediate"
+features = ["auth guard", "route redirect", "context", "observable state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

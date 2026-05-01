@@ -125,7 +125,7 @@ class ServiceRegistry(Service):
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
             )
             self._services.append(service)
-            self.update()
+            self.__internal_update()
 
     def unregister_services(self):
         """
@@ -146,7 +146,20 @@ class ServiceRegistry(Service):
             removed_count = original_len - len(self._services)
             if removed_count > 0:
                 logger.debug("Removed %s services from the registry", removed_count)
-                self.update()
+                self.__internal_update()
+
+    def __internal_update(self):
+        """
+        Push an update without marking the handler's update-called flag.
+
+        Why: service (un)registration is internal bookkeeping, not a user-driven
+        `.update()`. Leaving the flag untouched keeps the auto-update behavior
+        based solely on whether the user called `.update()` themselves.
+        """
+        was_called = context.was_update_called()
+        self.update()
+        if not was_called:
+            context.reset_update_called()
 
 
 @dataclass
@@ -623,7 +636,7 @@ class Page(BasePage):
 
     def render(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -646,7 +659,7 @@ class Page(BasePage):
 
     def render_views(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -929,6 +942,20 @@ class Page(BasePage):
             "push_route",
             arguments={"route": new_route},
         )
+
+    def navigate(self, route: str, **kwargs: Any) -> None:
+        """
+        Navigate to a new route (sync convenience wrapper).
+
+        Equivalent to ``asyncio.create_task(page.push_route(route, **kwargs))``.
+        Use this in synchronous callbacks (e.g. ``on_click``) where awaiting
+        is not possible.
+
+        Args:
+            route: New navigation route.
+            **kwargs: Additional query string parameters to be added to the route.
+        """
+        asyncio.create_task(self.push_route(route, **kwargs))
 
     async def pop_views_until(self, route: str, result: Any = None) -> None:
         """
