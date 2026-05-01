@@ -109,6 +109,8 @@ def main(page: ft.Page):
     page.title = "Palette Editor"
     page.bgcolor = ft.Colors.SURFACE
     page.padding = 14
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.theme = ft.Theme(color_scheme=ft.ColorScheme())
     # page.window.width = 420
     # page.window.height = 460
     swatch_width = 250
@@ -118,10 +120,62 @@ def main(page: ft.Page):
         "Controls on this side use the current theme so you can compare "
         "tokens with real UI."
     )
+    selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
+    selected_color_text = ft.Text("Choose a color role to edit.")
+
+    def close_color_editor(_):
+        color_editor_pane.visible = False
+        page.update()
+
+    color_editor_pane = ft.Container(
+        visible=False,
+        width=swatch_width,
+        padding=ft.Padding.only(left=8, right=8),
+        content=ft.Container(
+            expand=True,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+            padding=16,
+            content=ft.Column(
+                scroll=ft.ScrollMode.AUTO,
+                spacing=12,
+                controls=[
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            selected_color_heading,
+                            ft.IconButton(
+                                icon=ft.Icons.CLOSE,
+                                icon_size=16,
+                                tooltip="Close color editor",
+                                on_click=close_color_editor,
+                            ),
+                        ],
+                    ),
+                    selected_color_text,
+                ],
+            ),
+        ),
+    )
+    color_role_by_label = {
+        "PRIMARY": "primary",
+        "ON_PRIMARY": "on_primary",
+        "PRIMARY_CONTAINER": "primary_container",
+        "ON_PRIMARY_CONTAINER": "on_primary_container",
+        "SECONDARY": "secondary",
+        "ON_SECONDARY": "on_secondary",
+        "SECONDARY_CONTAINER": "secondary_container",
+        "ON_SECONDARY_CONTAINER": "on_secondary_container",
+    }
 
     def on_color_click(label: str):
         def handler(_):
-            print(f"{label} color changed!")
+            color_role = color_role_by_label[label]
+            setattr(page.theme.color_scheme, color_role, ft.Colors.GREEN)
+            selected_color_heading.value = f"{label} editor"
+            selected_color_text.value = f"{label} color changed to GREEN."
+            color_editor_pane.visible = True
+            page.update()
 
         return handler
 
@@ -211,6 +265,7 @@ def main(page: ft.Page):
                                 ],
                             ),
                         ),
+                        color_editor_pane,
                         ft.VerticalDivider(
                             width=24, thickness=1, color=ft.Colors.OUTLINE_VARIANT
                         ),
