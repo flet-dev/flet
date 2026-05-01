@@ -1,8 +1,8 @@
 import pytest
 
 import flet.testing as ftt
-from examples.controls.datatable2.column_widths import main as column_widths
-from examples.controls.datatable2.empty_state import main as empty_state
+from examples.extensions.datatable2.column_widths import main as column_widths
+from examples.extensions.datatable2.empty_state import main as empty_state
 
 
 @pytest.mark.parametrize(

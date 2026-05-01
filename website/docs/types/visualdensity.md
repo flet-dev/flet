@@ -1,6 +1,6 @@
 ---
 class_name: "flet.VisualDensity"
-examples: "controls/types/visual_density"
+examples: "controls/core/types/visual_density"
 title: "VisualDensity"
 ---
 

@@ -1,6 +1,6 @@
 ---
-examples: "controls/datatable2"
-example_media: "examples/controls/datatable2/media"
+examples: "extensions/datatable2"
+example_media: "examples/extensions/datatable2/media"
 example_images: "test-images/examples/extensions/datatable2/golden/macos/datatable2"
 title: "Overview"
 ---

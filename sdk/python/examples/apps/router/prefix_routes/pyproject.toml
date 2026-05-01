@@ -1,0 +1,26 @@
+[project]
+name = "router-prefix-routes"
+version = "1.0.0"
+description = "Pathless layout routes and path-only grouping for URL prefix organization."
+requires-python = ">=3.10"
+keywords = ["router", "prefix", "pathless", "layout", "grouping"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Prefix routes"
+controls = ["SafeArea", "Column", "Row", "Button", "Text", "Container", "Divider", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "basic"
+features = ["pathless layouts", "path-only grouping", "use_route_outlet"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

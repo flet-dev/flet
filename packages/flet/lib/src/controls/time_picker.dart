@@ -30,7 +30,7 @@ class TimePickerControl extends StatelessWidget {
 
     void onClosed(TimeOfDay? timeValue) {
       control.updateProperties({"_open": false}, python: false);
-      control.updateProperties({"value": timeValue, "open": false});
+      control.updateProperties({"value": timeValue ?? value, "open": false});
       if (timeValue != null) {
         control.triggerEvent("change", timeValue);
       }

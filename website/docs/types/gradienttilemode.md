@@ -1,6 +1,6 @@
 ---
 class_name: "flet.GradientTileMode"
-examples: "controls/types/gradient_tile_mode"
+examples: "controls/core/types/gradient_tile_mode"
 title: "GradientTileMode"
 ---
 

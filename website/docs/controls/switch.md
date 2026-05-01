@@ -1,8 +1,7 @@
 ---
 class_name: "flet.Switch"
-examples: "controls/switch"
-example_images: "test-images/examples/material/golden/macos/switch"
-example_media: "examples/controls/switch/media"
+examples: "controls/material/switch"
+example_images: "test-images/examples/controls/material/golden/macos/switch"
 title: "Switch"
 ---
 
@@ -24,6 +23,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/handling_events.gif'} alt="handling-events" width="40%" />
+<Image src={frontMatter.example_images + '/handling_events.gif'} alt="handling-events" width="40%" />
 
 <ClassMembers name={frontMatter.class_name} />

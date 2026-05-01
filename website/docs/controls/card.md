@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Card"
-examples: "controls/card"
-example_images: "test-images/examples/material/golden/macos/card"
+examples: "controls/material/card"
+example_images: "test-images/examples/controls/material/golden/macos/card"
 title: "Card"
 ---
 
