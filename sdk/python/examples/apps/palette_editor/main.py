@@ -105,6 +105,21 @@ def showcase_section(title: str, *controls: ft.Control) -> ft.Container:
     )
 
 
+def material_color_circle(
+    color: ft.ColorValue, label: str, *, on_click=None
+) -> ft.Container:
+    return ft.Container(
+        width=28,
+        height=28,
+        border_radius=14,
+        bgcolor=color,
+        border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
+        tooltip=label,
+        ink=True,
+        on_click=on_click,
+    )
+
+
 def main(page: ft.Page):
     page.title = "Palette Editor"
     page.bgcolor = ft.Colors.SURFACE
@@ -122,10 +137,47 @@ def main(page: ft.Page):
     )
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
+    selected_role = {"label": None, "attr": None}
+    material_colors = [
+        ("AMBER", ft.Colors.AMBER),
+        ("BLACK", ft.Colors.BLACK),
+        ("BLUE", ft.Colors.BLUE),
+        ("BLUE_GREY", ft.Colors.BLUE_GREY),
+        ("BROWN", ft.Colors.BROWN),
+        ("CYAN", ft.Colors.CYAN),
+        ("DEEP_ORANGE", ft.Colors.DEEP_ORANGE),
+        ("DEEP_PURPLE", ft.Colors.DEEP_PURPLE),
+        ("GREEN", ft.Colors.GREEN),
+        ("GREY", ft.Colors.GREY),
+        ("INDIGO", ft.Colors.INDIGO),
+        ("LIGHT_BLUE", ft.Colors.LIGHT_BLUE),
+        ("LIGHT_GREEN", ft.Colors.LIGHT_GREEN),
+        ("LIME", ft.Colors.LIME),
+        ("ORANGE", ft.Colors.ORANGE),
+        ("PINK", ft.Colors.PINK),
+        ("PURPLE", ft.Colors.PURPLE),
+        ("RED", ft.Colors.RED),
+        ("TEAL", ft.Colors.TEAL),
+        ("TRANSPARENT", ft.Colors.TRANSPARENT),
+        ("WHITE", ft.Colors.WHITE),
+        ("YELLOW", ft.Colors.YELLOW),
+    ]
 
     def close_color_editor(_):
         color_editor_pane.visible = False
         page.update()
+
+    def on_material_color_click(color_label: str, color_value: ft.ColorValue):
+        def handler(_):
+            if selected_role["attr"] is None or selected_role["label"] is None:
+                return
+            setattr(page.theme.color_scheme, selected_role["attr"], color_value)
+            selected_color_text.value = (
+                f"{selected_role['label']} color changed to {color_label}."
+            )
+            page.update()
+
+        return handler
 
     color_editor_pane = ft.Container(
         visible=False,
@@ -153,6 +205,19 @@ def main(page: ft.Page):
                         ],
                     ),
                     selected_color_text,
+                    ft.Row(
+                        wrap=True,
+                        spacing=8,
+                        run_spacing=8,
+                        controls=[
+                            material_color_circle(
+                                color,
+                                label,
+                                on_click=on_material_color_click(label, color),
+                            )
+                            for label, color in material_colors
+                        ],
+                    ),
                 ],
             ),
         ),
@@ -170,10 +235,10 @@ def main(page: ft.Page):
 
     def on_color_click(label: str):
         def handler(_):
-            color_role = color_role_by_label[label]
-            setattr(page.theme.color_scheme, color_role, ft.Colors.GREEN)
+            selected_role["label"] = label
+            selected_role["attr"] = color_role_by_label[label]
             selected_color_heading.value = f"{label} editor"
-            selected_color_text.value = f"{label} color changed to GREEN."
+            selected_color_text.value = f"Choose a material color for {label}."
             color_editor_pane.visible = True
             page.update()
 
