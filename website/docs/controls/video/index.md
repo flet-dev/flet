@@ -121,6 +121,14 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
 
 <CodeExample path={frontMatter.examples + '/subtitles/main.py'} language="python" />
 
+### Controls
+
+<CodeExample path={frontMatter.examples + '/controls/main.py'} language="python" />
+
+### Button Bars
+
+<CodeExample path={frontMatter.examples + '/button_bars/main.py'} language="python" />
+
 ## Description
 
 <ClassAll name={frontMatter.class_name} />

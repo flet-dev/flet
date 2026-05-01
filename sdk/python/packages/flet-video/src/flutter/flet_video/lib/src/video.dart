@@ -315,7 +315,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     var playbackRate = widget.control.getDouble("playback_rate");
     var playlist = widget.control.get("playlist");
     var shufflePlaylist = widget.control.getBool("shuffle_playlist");
-    var showControls = widget.control.getBool("show_controls", true)!;
+    var controls = widget.control.getBool("show_controls", true)!
+        ? widget.control.get("controls")
+        : null;
     var playlistMode =
         parsePlaylistMode(widget.control.getString("playlist_mode"));
     var fullscreen = widget.control.getBool("fullscreen", false)!;
@@ -334,7 +336,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       key: _videoKey,
       controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
-      controls: showControls ? AdaptiveVideoControls : null,
+      controls: parseVideoControls(widget.control, controls),
       pauseUponEnteringBackgroundMode:
           widget.control.getBool("pause_upon_entering_background_mode", true)!,
       resumeUponEnteringForegroundMode: widget.control
@@ -348,6 +350,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       onEnterFullscreen: _handleEnterFullscreen,
       onExitFullscreen: _handleExitFullscreen,
     );
+
+    final themedVideo =
+        wrapVideoControlsTheme(video, controls, Theme.of(context));
 
     () async {
       // volume
@@ -419,6 +424,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       }
     }();
 
-    return LayoutControl(control: widget.control, child: video);
+    return LayoutControl(control: widget.control, child: themedVideo);
   }
 }

@@ -3,13 +3,16 @@ Video control definition for the flet-video package.
 """
 
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional, Union
 
 import flet as ft
 from flet.utils.deprecated import deprecated
+from flet.utils.validation import V
 from flet_video.types import (
+    AdaptiveVideoControls,
     PlaylistMode,
     VideoConfiguration,
+    VideoControls,
     VideoMedia,
     VideoSubtitleConfiguration,
     VideoSubtitleTrack,
@@ -57,9 +60,32 @@ class Video(ft.LayoutControl):
     Whether the video should start playing automatically.
     """
 
-    show_controls: bool = True
+    show_controls: Annotated[
+        Optional[bool],
+        V.deprecated(
+            version="0.85.0",
+            delete_version="0.88.0",
+            reason="Use controls=None to hide controls.",
+            docs_reason="To hide controls, instead set :attr:`controls` to `None`.",
+        ),
+    ] = None
     """
-    Whether to show the video player controls.
+    Whether to show the video player :attr:`controls`.
+    """
+
+    controls: Optional[Union[VideoControls, ft.Control]] = field(
+        default_factory=lambda: AdaptiveVideoControls()
+    )
+    """
+    Controls displayed over the video.
+
+    Set to a :class:`VideoControls` object to use built-in controls, a
+    :class:`flet.Control` object to use custom Flet controls, or `None` to hide
+    controls.
+
+    Note:
+        During the :attr:`show_controls` deprecation period, `show_controls=False`
+        hides controls even when this property is set.
     """
 
     fullscreen: bool = False
