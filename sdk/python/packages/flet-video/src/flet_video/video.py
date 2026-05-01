@@ -298,3 +298,39 @@ class Video(ft.LayoutControl):
             The current position of the currently playing media.
         """
         return await self._invoke_method("get_current_position")
+
+    async def take_screenshot(
+        self,
+        format: Optional[str] = "image/png",
+        include_libass_subtitles: bool = False,
+    ) -> Optional[bytes]:
+        """
+        Captures a screenshot of the current video frame.
+
+        Args:
+            format: The image format to return. Supported values are `"image/png"`
+                (PNG encoded image), `"image/jpeg"` (JPEG encoded image),
+                and `None` (raw BGRA pixel buffer on native backends).
+            include_libass_subtitles: Whether to include libass subtitles in the
+                screenshot on native backends. This requires libass support in the
+                underlying player and is ignored on the web backend.
+
+        Returns:
+            Encoded image bytes, or `None` if the current backend cannot capture a
+                video frame.
+
+        Raises:
+            ValueError: If `format` is not supported.
+        """
+        supported_formats = ("image/png", "image/jpeg", None)
+        if format not in supported_formats:
+            raise ValueError(
+                f"format must be one of {supported_formats}, got {format!r}"
+            )
+        return await self._invoke_method(
+            "take_screenshot",
+            arguments={
+                "format": format,
+                "include_libass_subtitles": include_libass_subtitles,
+            },
+        )

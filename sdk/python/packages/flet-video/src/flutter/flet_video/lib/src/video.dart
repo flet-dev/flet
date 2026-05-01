@@ -285,6 +285,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         return _player.state.duration;
       case "get_current_position":
         return _player.state.position;
+      case "take_screenshot":
+        await _openFuture;
+        if (!_initialized) return null;
+        final format =
+            args.containsKey("format") ? args["format"] : "image/png";
+        return await _player.screenshot(
+          format: format,
+          includeLibassSubtitles: args["include_libass_subtitles"] == true,
+        );
       default:
         throw Exception("Unknown Video method: $name");
     }
