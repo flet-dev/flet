@@ -1235,8 +1235,11 @@ class DiffBuilder:
                     self._item_replaced(path, field_name, new)
                 changes.clear()
 
+            processed_structural_fields = set()
+
             # compare lists
             for field_name, old in list(prev_lists.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not isinstance(new, list):
                     del prev_lists[field_name]
@@ -1246,6 +1249,7 @@ class DiffBuilder:
 
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not isinstance(new, dict):
                     del prev_dicts[field_name]
@@ -1255,12 +1259,37 @@ class DiffBuilder:
 
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not dataclasses.is_dataclass(new):
                     del prev_classes[field_name]
                 else:
                     prev_classes[field_name] = new
                 self._compare_values(dst, path, field_name, old, new, frozen)
+
+            # Structural fields can become untracked after a transition to
+            # None. Detect a later transition back to a dataclass/list/dict so
+            # optional structural values can be restored.
+            structural_fields = getattr(type(dst), "_structural_fields", frozenset())
+            for field_name in structural_fields:
+                if (
+                    field_name in processed_structural_fields
+                    or (dirty and field_name in dirty)
+                    or field_name in prev_lists
+                    or field_name in prev_dicts
+                    or field_name in prev_classes
+                ):
+                    continue
+                new = getattr(dst, field_name)
+                if isinstance(new, list) and len(new) > 0:
+                    self._compare_values(dst, path, field_name, None, new, frozen)
+                    self._update_list_snapshot(prev_lists, field_name, new)
+                elif isinstance(new, dict) and len(new) > 0:
+                    self._compare_values(dst, path, field_name, None, new, frozen)
+                    self._update_dict_snapshot(prev_dicts, field_name, new)
+                elif dataclasses.is_dataclass(new):
+                    self._compare_values(dst, path, field_name, None, new, frozen)
+                    prev_classes[field_name] = new
         else:
             # frozen comparison
             logger.debug(

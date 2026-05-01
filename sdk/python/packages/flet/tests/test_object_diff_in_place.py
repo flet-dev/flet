@@ -30,6 +30,7 @@ from .common import (
     LineChartData,
     LineChartDataPoint,
     MyText,
+    b_pack,
     b_unpack,
     cmp_ops,
     make_diff,
@@ -76,26 +77,31 @@ class Div(Control):
 
 
 def test_control_type():
+    """Ensure a built-in control keeps its expected protocol type."""
     btn = Button("some button")
     assert btn._c == "Button"
 
 
 def test_control_id():
+    """Ensure controls receive runtime protocol IDs."""
     btn = Button("some button")
     assert btn._i > 0
 
 
 def test_inherited_control_has_the_same_type():
+    """Ensure inherited controls keep the base type when none is overridden."""
     btn = SuperButton(prop_2="2")
     assert btn._c == "Button"
 
 
 def test_inherited_control_with_overridden_type():
+    """Ensure inherited controls can override their protocol type."""
     btn = MyButton(prop_1="1")
     assert btn._c == "MyButton"
 
 
 def test_control_ref():
+    """Ensure control refs are populated during control initialization."""
     page_ref = Ref[Page]()
     conn = Connection()
     conn.pubsubhub = PubSubHub()
@@ -104,7 +110,37 @@ def test_control_ref():
     assert page_ref.current == page
 
 
+def test_optional_structural_value_restored_after_none():
+    """Ensure optional structural values emit patches when restored after None."""
+
+    @ft.value
+    class OptionalConfig:
+        value: str = "default"
+
+    @control("OptionalConfigHost")
+    class OptionalConfigHost(Control):
+        config: Optional[OptionalConfig] = field(
+            default_factory=lambda: OptionalConfig()
+        )
+
+    host = OptionalConfigHost()
+    b_pack(host)
+
+    host.config = None
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert patch == [{"op": "replace", "path": ["config"], "value": None}]
+
+    host.config = OptionalConfig(value="restored")
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert len(patch) == 1
+    assert patch[0]["op"] == "replace"
+    assert patch[0]["path"] == ["config"]
+    assert isinstance(patch[0]["value"], OptionalConfig)
+    assert patch[0]["value"].value == "restored"
+
+
 def test_simple_page():
+    """Exercise initial page serialization and several in-place page updates."""
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     page = Page(sess=Session(conn))
@@ -307,6 +343,7 @@ def test_simple_page():
 
 
 def test_floating_action_button():
+    """Ensure floating action button and page controls produce expected patches."""
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     page = Page(sess=Session(conn))
@@ -354,6 +391,7 @@ def test_floating_action_button():
 
 
 def test_changes_tracking():
+    """Ensure scalar, dataclass, and list mutations are tracked in-place."""
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     page = Page(sess=Session(conn))
@@ -402,6 +440,7 @@ def test_changes_tracking():
 
 
 def test_large_updates():
+    """Exercise patch generation for large nested canvas updates."""
     import flet.canvas as cv
 
     conn = Connection()
@@ -460,6 +499,7 @@ def test_large_updates():
 
 
 def test_add_remove_lists():
+    """Ensure list item removals and additions produce minimal operations."""
     data = [[(0, 1), (1, 2), (2, 3)]]
     chart = LineChart(
         data_series=[
@@ -490,6 +530,7 @@ def test_add_remove_lists():
 
 
 def test_reverse_list():
+    """Ensure reversing a list is represented as move operations."""
     col = ft.Column([ft.Text("Line 1"), ft.Text("Line 2"), ft.Text("Line 3")])
     _, patch, _, _, _ = make_msg(col, {})
 
@@ -509,6 +550,7 @@ def test_reverse_list():
 
 
 def test_overriding_controls_with_component():
+    """Ensure replacing a controls list with a component is patched correctly."""
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     page = Page(sess=Session(conn))
@@ -547,6 +589,7 @@ def test_overriding_controls_with_component():
 
 
 def test_list_insertions():
+    """Ensure list replacement and insertion patterns produce stable patches."""
     col = ft.Column(
         [
             ft.Text("Line 2"),
@@ -619,6 +662,7 @@ def test_list_insertions():
 
 
 def test_list_move_1_no_keys():
+    """Ensure lists without keys still produce valid move/add/remove patches."""
     line_1 = MyText("Line 1")
     line_2 = MyText("Line 2")
     line_3 = MyText("Line 3")
@@ -655,6 +699,7 @@ def test_list_move_1_no_keys():
 
 
 def test_fields_start_with_on():
+    """Ensure event-like fields and theme fields serialize and update correctly."""
     conn = Connection()
     conn.pubsubhub = PubSubHub()
     page = Page(sess=Session(conn))
@@ -689,6 +734,7 @@ def test_fields_start_with_on():
 
 
 def test_list_with_keys_can_be_updated():
+    """Ensure keyed list children can receive appended controls."""
     col = ft.Column(
         [
             ft.Text("Line 1", key=ft.ScrollKey(1)),
@@ -716,6 +762,7 @@ def test_list_with_keys_can_be_updated():
 
 
 def test_list_without_keys_children_must_be_updated():
+    """Ensure unkeyed moved children emit the needed child value updates."""
     col = ft.Column(
         [
             ft.Text("Line 1"),
