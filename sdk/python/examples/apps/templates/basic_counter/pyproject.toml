@@ -1,0 +1,29 @@
+[project]
+name = "flet-app"
+version = "1.0.0"
+description = "A simple counter with increment button."
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+    "flet"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
+
+[tool.flet.metadata]
+title = "Basic Counter"
+
+[tool.flet.gallery]
+categories = ["Apps/Templates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
