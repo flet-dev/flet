@@ -2,6 +2,8 @@
 
 ### New features
 
+* Add `parseControlWidget()` and `parseControlWidgets()` utilities for converting Flet controls in protocol values to Flutter widgets by @ndonkoHenri.
+
 ### Improvements
 
 ### Bug fixes
