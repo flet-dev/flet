@@ -1,36 +1,25 @@
 import flet as ft
 
-ft.context.disable_auto_update()
-
 
 def main(page: ft.Page):
-    page.title = "Counter"
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+    counter = ft.Text("0", size=50, data=0)
 
-    def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
-        page.update()
+    def increment_click(e):
+        counter.data += 1
+        counter.value = str(counter.data)
 
-    def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
-        page.update()
-
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.Icons.ADD, on_click=increment_click
+    )
     page.add(
         ft.SafeArea(
-            content=ft.Column(
-                controls=[
-                    ft.Row(
-                        controls=[
-                            ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
-                            txt_number,
-                            ft.IconButton(ft.Icons.ADD, on_click=plus_click),
-                        ]
-                    )
-                ]
-            )
+            expand=True,
+            content=ft.Container(
+                content=counter,
+                alignment=ft.Alignment.CENTER,
+            ),
         )
     )
 
 
-if __name__ == "__main__":
-    ft.run(main)
+ft.run(main)
