@@ -254,7 +254,8 @@ function renderMemberHeading(item, classSymbol, kind) {
  * including its type signature box and docstring.
  */
 function renderAttribute(item, classSymbol, docId) {
-  const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const fallbackSignatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const signatureText = item.formatted_signature ?? fallbackSignatureText;
   const kind = item.name.startsWith("on_") ? "event" : "property";
   return (
     <div key={item.name}>
@@ -275,7 +276,12 @@ function renderAttribute(item, classSymbol, docId) {
  * including its signature box (with `self` stripped) and docstring.
  */
 function renderMethod(item, classSymbol, docId) {
-  const signatureText = stripImplicitSelf(item.signature ?? item.name);
+  const fallbackSignatureText = stripImplicitSelf(item.signature ?? item.name);
+  const typedSignatureText =
+    item.return_type && !fallbackSignatureText.includes("->")
+      ? `${fallbackSignatureText} -> ${item.return_type}`
+      : fallbackSignatureText;
+  const signatureText = item.formatted_signature ?? typedSignatureText;
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
@@ -290,14 +296,13 @@ function renderMethod(item, classSymbol, docId) {
 
 /**
  * Build the compact member data used by ClassSummary lists.
- * Carries labels/deprecation metadata so summary rows can show important badges
- * without requiring readers to scroll to the full member documentation.
+ * Carries labels so summary rows can show important badges without requiring
+ * readers to scroll to the full member documentation.
  */
 function memberSummary(item, kind) {
   return {
     name: item.name,
     kind,
-    deprecation: item.deprecation,
     labels: item.labels ?? [],
     summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
   };
@@ -337,12 +342,7 @@ function SummarySection({title, items, classSymbol}) {
                   {" "}
                   <span className="crocodocs-member-badges crocodocs-summary-badges">
                     {labels.map((label) => (
-                      <Badge
-                        key={label}
-                        title={label === "deprecated" ? item.deprecation : undefined}
-                      >
-                        {label}
-                      </Badge>
+                      <Badge key={label}>{label}</Badge>
                     ))}
                   </span>
                 </>

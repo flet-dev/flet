@@ -8,6 +8,7 @@ dependencies = [
     "griffe>=2.0.0",
     "packaging>=23.0",
     "PyYAML>=6.0",
+    "ruff>=0.13.1",
     "tomli >=2.0.1; python_version < '3.11'",
     "watchdog >=4.0.0",
 ]

@@ -1,6 +1,6 @@
 ---
 name: flet-validation
-description: Use when adding or changing validation for Python controls (dataclasses) in sdk/python/packages/, including Annotated/V rules, __validation_rules__, and property Raises docstrings.
+description: Use whenever editing validation for Python controls in sdk/python/packages/: adding/changing constrained properties, `Raises: ValueError` docstrings, `before_update()` checks, `raise ValueError`, Annotated/V rules, or __validation_rules__.
 ---
 
 ## When To Use
