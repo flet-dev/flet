@@ -188,7 +188,8 @@ def main(page: ft.Page):
                     controls=[
                         ft.Text("Cells", size=28, weight=ft.FontWeight.W_700),
                         ft.Text(
-                            "A small spreadsheet with cell references and live recalculation.",
+                            "A small spreadsheet with cell references and live "
+                            "recalculation.",
                             color=ft.Colors.BLUE_GREY_700,
                         ),
                         ft.Row(

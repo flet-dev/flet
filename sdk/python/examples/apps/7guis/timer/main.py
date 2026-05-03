@@ -57,7 +57,8 @@ def main(page: ft.Page):
                     controls=[
                         ft.Text("Timer", size=28, weight=ft.FontWeight.W_700),
                         ft.Text(
-                            "The timer starts immediately, fills the bar, and can be reset or resized.",
+                            "The timer starts immediately, fills the bar, and can be "
+                            "reset or resized.",
                             color=ft.Colors.BLUE_GREY_700,
                         ),
                         elapsed_label := ft.Text(size=34, weight=ft.FontWeight.W_600),

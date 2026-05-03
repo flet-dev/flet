@@ -16,7 +16,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
-            ft.Container(
+            content=ft.Container(
                 width=420,
                 padding=28,
                 border_radius=24,

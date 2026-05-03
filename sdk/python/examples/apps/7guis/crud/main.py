@@ -151,7 +151,8 @@ def main(page: ft.Page):
                     controls=[
                         ft.Text("CRUD", size=28, weight=ft.FontWeight.W_700),
                         ft.Text(
-                            "Filter by surname, select a person, then create, update, or remove records.",
+                            "Filter by surname, select a person, then create, update, "
+                            "or remove records.",
                             color=ft.Colors.BLUE_GREY_700,
                         ),
                         ft.Row(
