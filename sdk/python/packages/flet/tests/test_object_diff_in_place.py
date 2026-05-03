@@ -124,6 +124,9 @@ def test_optional_structural_value_restored_after_none():
         )
 
     host = OptionalConfigHost()
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert patch == []
+
     b_pack(host)
 
     host.config = None

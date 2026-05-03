@@ -12,6 +12,12 @@ def main(page: ft.Page):
     def handle_track_change(e: ft.Event[ftv.Video]):
         print(f"Track changed to index {e.data}")
 
+    def handle_position_change(e: ft.Event[ftv.Video]):
+        print(f"Position: {e.data.in_milliseconds / 1000:.3f}s")
+
+    def handle_duration_change(e: ft.Event[ftv.Video]):
+        print(f"Duration changed: {e.data.in_seconds}s")
+
     def handle_error(e: ft.Event[ftv.Video]):
         print(f"Error: {e.data}")
 
@@ -33,6 +39,8 @@ def main(page: ft.Page):
                         on_load=handle_load,
                         on_complete=handle_complete,
                         on_track_change=handle_track_change,
+                        on_position_change=handle_position_change,
+                        on_duration_change=handle_duration_change,
                         on_error=handle_error,
                         on_enter_fullscreen=handle_enter_fullscreen,
                         on_exit_fullscreen=handle_exit_fullscreen,

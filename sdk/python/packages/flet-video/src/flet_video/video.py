@@ -13,6 +13,7 @@ from flet_video.types import (
     PlaylistMode,
     VideoConfiguration,
     VideoControls,
+    VideoControlsMode,
     VideoMedia,
     VideoSubtitleConfiguration,
     VideoSubtitleTrack,
@@ -73,15 +74,28 @@ class Video(ft.LayoutControl):
     Whether to show the video player :attr:`controls`.
     """
 
-    controls: Optional[Union[VideoControls, ft.Control]] = field(
-        default_factory=lambda: AdaptiveVideoControls()
-    )
+    controls: Optional[
+        Union[
+            VideoControls,
+            ft.Control,
+            dict[VideoControlsMode, Optional[Union[VideoControls, ft.Control]]],
+        ]
+    ] = field(default_factory=lambda: AdaptiveVideoControls())
     """
     Controls displayed over the video.
 
     Set to a :class:`VideoControls` object to use built-in controls, a
     :class:`flet.Control` object to use custom Flet controls, or `None` to hide
     controls.
+
+    To use different controls outside and inside fullscreen, set this property
+    to a dictionary keyed by :class:`VideoControlsMode`. The
+    :attr:`VideoControlsMode.DEFAULT` value is used when
+    :attr:`VideoControlsMode.NORMAL` controls are not provided. If
+    :attr:`VideoControlsMode.FULLSCREEN` controls are not provided,
+    :attr:`VideoControlsMode.NORMAL` controls are reused before falling back to
+    :attr:`VideoControlsMode.DEFAULT`. A mode value of
+    `None` hides controls for that mode only.
 
     Note:
         During the :attr:`show_controls` deprecation period, `show_controls=False`
@@ -206,6 +220,22 @@ class Video(ft.LayoutControl):
 
     Event handler argument's :attr:`~flet.Event.data` property contains
     the index of the new track.
+    """
+
+    on_position_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current playback position changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current position as a :class:`flet.Duration`.
+    """
+
+    on_duration_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current media duration changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current duration as a :class:`flet.Duration`.
     """
 
     def before_update(self):

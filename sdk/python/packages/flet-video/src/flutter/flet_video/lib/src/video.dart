@@ -22,6 +22,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   StreamSubscription<String?>? _errorSub;
   StreamSubscription<bool>? _completedSub;
   StreamSubscription<Playlist>? _playlistSub;
+  StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<Duration>? _durationSub;
   late Player _player;
   late VideoController _controller;
   bool _initialized = false;
@@ -175,6 +177,18 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       });
     }
 
+    if (control.hasEventHandler("position_change")) {
+      _positionSub = _player.stream.position.listen((position) {
+        control.triggerEvent("position_change", position);
+      });
+    }
+
+    if (control.hasEventHandler("duration_change")) {
+      _durationSub = _player.stream.duration.listen((duration) {
+        control.triggerEvent("duration_change", duration);
+      });
+    }
+
     final playlist = Playlist(parseVideoMedias(control.get("playlist"), [])!);
     final autoplay = control.getBool("autoplay", false)!;
     _playlist = _copyPlaylist(control.get("playlist"));
@@ -198,6 +212,10 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     _completedSub = null;
     _playlistSub?.cancel();
     _playlistSub = null;
+    _positionSub?.cancel();
+    _positionSub = null;
+    _durationSub?.cancel();
+    _durationSub = null;
 
     _player.dispose();
     _openFuture = null;
@@ -336,7 +354,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       key: _videoKey,
       controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
-      controls: parseVideoControls(widget.control, controls),
+      controls: parseVideoControls(controls),
       pauseUponEnteringBackgroundMode:
           widget.control.getBool("pause_upon_entering_background_mode", true)!,
       resumeUponEnteringForegroundMode: widget.control

@@ -412,11 +412,41 @@ MaterialDesktopVideoControlsThemeData
   );
 }
 
+bool _isVideoControlsModeMap(dynamic value) {
+  if (value is! Map) return false;
+  if (value.containsKey("_type")) return false;
+  return value.keys.every(
+      (key) => key == "normal" || key == "fullscreen" || key == "default");
+}
+
+dynamic _resolveVideoControlsMode(dynamic value, bool fullscreen) {
+  if (!_isVideoControlsModeMap(value)) return value;
+
+  if (fullscreen) {
+    if (value.containsKey("fullscreen")) return value["fullscreen"];
+  }
+  if (value.containsKey("normal")) return value["normal"];
+  if (value.containsKey("default")) return value["default"];
+  return null;
+}
+
+Widget Function(VideoState) _customVideoControls(dynamic value) {
+  return (_) => parseControlWidget(value) ?? const SizedBox.shrink();
+}
+
 /// Selects the controls builder requested by the serialized controls value.
-Widget Function(VideoState)? parseVideoControls(
-    Control control, dynamic value) {
+Widget Function(VideoState)? parseVideoControls(dynamic value) {
+  if (_isVideoControlsModeMap(value)) {
+    return (state) {
+      final modeValue =
+          _resolveVideoControlsMode(value, isFullscreen(state.context));
+      final controls = parseVideoControls(modeValue);
+      return controls?.call(state) ?? const SizedBox.shrink();
+    };
+  }
+
   if (value is Control) {
-    return (_) => control.buildWidget("controls") ?? const SizedBox.shrink();
+    return _customVideoControls(value);
   }
 
   if (value == null) return _noVideoControls;
@@ -436,6 +466,24 @@ Widget Function(VideoState)? parseVideoControls(
 /// Wraps the video with the theme provider required by the selected built-in
 /// controls implementation.
 Widget wrapVideoControlsTheme(Widget child, dynamic value, ThemeData theme) {
+  if (_isVideoControlsModeMap(value)) {
+    final normal = _resolveVideoControlsMode(value, false);
+    final fullscreen = _resolveVideoControlsMode(value, true);
+    return MaterialVideoControlsTheme(
+      normal: parseMaterialVideoControlsThemeData(
+          _materialVideoControlsThemeValue(normal), theme),
+      fullscreen: parseMaterialVideoControlsThemeData(
+          _materialVideoControlsThemeValue(fullscreen), theme),
+      child: MaterialDesktopVideoControlsTheme(
+        normal: parseMaterialDesktopVideoControlsThemeData(
+            _materialDesktopVideoControlsThemeValue(normal), theme),
+        fullscreen: parseMaterialDesktopVideoControlsThemeData(
+            _materialDesktopVideoControlsThemeValue(fullscreen), theme),
+        child: child,
+      ),
+    );
+  }
+
   if (value == null || value is Control) return child;
 
   switch (value["_type"]) {
@@ -468,6 +516,20 @@ Widget wrapVideoControlsTheme(Widget child, dynamic value, ThemeData theme) {
     default:
       return child;
   }
+}
+
+dynamic _materialVideoControlsThemeValue(dynamic value) {
+  if (value is! Map) return null;
+  if (value["_type"] == "material") return value;
+  if (value["_type"] == "adaptive") return value["material"];
+  return null;
+}
+
+dynamic _materialDesktopVideoControlsThemeValue(dynamic value) {
+  if (value is! Map) return null;
+  if (value["_type"] == "materialDesktop") return value;
+  if (value["_type"] == "adaptive") return value["material_desktop"];
+  return null;
 }
 
 PlaylistMode? parsePlaylistMode(String? value, [PlaylistMode? defaultValue]) {

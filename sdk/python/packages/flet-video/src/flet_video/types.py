@@ -16,6 +16,7 @@ __all__ = [
     "VideoBarItem",
     "VideoConfiguration",
     "VideoControls",
+    "VideoControlsMode",
     "VideoFullscreenButton",
     "VideoMedia",
     "VideoPlayOrPauseButton",
@@ -40,6 +41,19 @@ class PlaylistMode(Enum):
 
     LOOP = "loop"
     """Loop over the playlist & restart it from beginning once end is reached."""
+
+
+class VideoControlsMode(Enum):
+    """Modes that can receive different :attr:`Video.controls` values."""
+
+    NORMAL = "normal"
+    """Controls used when the video is not fullscreen."""
+
+    FULLSCREEN = "fullscreen"
+    """Controls used when the video is fullscreen."""
+
+    DEFAULT = "default"
+    """Fallback controls used when no applicable mode-specific value is provided."""
 
 
 @ft.value
