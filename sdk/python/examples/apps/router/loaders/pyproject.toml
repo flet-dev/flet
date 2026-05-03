@@ -1,0 +1,26 @@
+[project]
+name = "router-loaders"
+version = "1.0.0"
+description = "Route loaders that pre-fetch data for routes, accessed via use_route_loader_data() hook."
+requires-python = ">=3.10"
+keywords = ["router", "loader", "data", "prefetch"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Route loaders"
+controls = ["SafeArea", "Column", "Row", "Button", "Text", "ListTile", "Router", "Route"]
+layout_pattern = "list-detail"
+complexity = "intermediate"
+features = ["route loaders", "use_route_loader_data", "use_route_params"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -125,6 +125,11 @@ module.exports = {
         },
         {
           "type": "doc",
+          "id": "cookbook/router",
+          "label": "Router"
+        },
+        {
+          "type": "doc",
           "id": "cookbook/control-refs",
           "label": "Control Refs"
         },
@@ -970,6 +975,10 @@ module.exports = {
                     },
                     {
                       "type": "doc",
+                      "id": "controls/map/overlayimagelayer"
+                    },
+                    {
+                      "type": "doc",
                       "id": "controls/map/circlelayer"
                     },
                     {
@@ -1002,6 +1011,25 @@ module.exports = {
                     {
                       "type": "doc",
                       "id": "controls/map/polylinemarker"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "Overlays",
+                  "collapsed": true,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "controls/map/baseoverlayimage"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/map/overlayimage"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/map/rotatedoverlayimage"
                     }
                   ]
                 },
@@ -1190,6 +1218,11 @@ module.exports = {
               "type": "doc",
               "id": "controls/rotatedbox",
               "label": "RotatedBox"
+            },
+            {
+              "type": "doc",
+              "id": "controls/router",
+              "label": "Router"
             },
             {
               "type": "doc",
@@ -2160,6 +2193,10 @@ module.exports = {
                 {
                   "type": "doc",
                   "id": "types/localeconfiguration"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/locationinfo"
                 },
                 {
                   "type": "category",
@@ -3162,6 +3199,10 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/route"
+                },
+                {
+                  "type": "doc",
                   "id": "types/routeurlstrategy"
                 },
                 {
@@ -3656,6 +3697,10 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/is_route_active"
+                },
+                {
+                  "type": "doc",
                   "id": "types/memo"
                 },
                 {
@@ -3689,6 +3734,26 @@ module.exports = {
                 {
                   "type": "doc",
                   "id": "types/useref"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_loader_data"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_location"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_outlet"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_route_params"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/use_view_path"
                 },
                 {
                   "type": "doc",

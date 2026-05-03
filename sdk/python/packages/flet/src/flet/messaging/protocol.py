@@ -260,6 +260,13 @@ class ClientAction(Enum):
     Server-to-client fatal session error notification.
     """
 
+    PYTHON_OUTPUT = 7
+    """
+    Worker-to-Dart stdout/stderr line from an embedded Pyodide app
+    (only emitted when the host wires `loadPyodide({stdout, stderr})`).
+    Body shape: `{text: str, is_stderr: bool}`.
+    """
+
 
 @dataclass
 class ClientMessage:

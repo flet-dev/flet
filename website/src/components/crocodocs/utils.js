@@ -23,6 +23,9 @@ const API_QUALIFIED_SYMBOL_RE =
 // be false positives — use API_QUALIFIED_SYMBOL_RE there instead.
 const API_SYMBOL_RE =
   /\b(?:ft|flet(?:_[a-z0-9_]+)?)\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b|\b[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*\b/g;
+// Public API labels should hide the import package while preserving class/member names.
+// This covers core aliases (`ft.`, `flet.`) and extension packages (`flet_map.`, etc.).
+const FLET_DISPLAY_PREFIX_RE = /^(?:ft|flet(?:_[a-z0-9_]+)?)\./;
 const MARKDOWN_PARSER = unified()
   .use(remarkParse)
   .use(remarkGfm)
@@ -106,15 +109,7 @@ function cleanApiSymbol(symbol) {
  */
 function formatApiSymbolLabel(symbol) {
   const cleanSymbol = cleanApiSymbol(symbol);
-  if (
-    cleanSymbol.startsWith("ft.") ||
-    cleanSymbol.startsWith("flet.") ||
-    cleanSymbol.startsWith("flet_")
-  ) {
-    const parts = cleanSymbol.split(".");
-    return parts.length > 1 ? parts.slice(1).join(".") : parts[0];
-  }
-  return cleanSymbol;
+  return cleanSymbol.replace(FLET_DISPLAY_PREFIX_RE, "");
 }
 
 /** Look up a symbol in classes, functions, or aliases and return the first match, or null. */
@@ -367,22 +362,17 @@ function shortenQualifiedDisplay(target) {
 
 /**
  * Strip the leading public Flet module alias from a display label while preserving
- * the remaining qualified path (e.g. 'flet.Page.route' -> 'Page.route').
+ * the remaining qualified path (e.g. 'flet.Page.route' -> 'Page.route',
+ * 'flet_map.Map.animation_curve' -> 'Map.animation_curve').
  */
 function stripFletDisplayPrefix(target) {
-  if (target.startsWith("ft.")) {
-    return target.slice(3);
-  }
-  if (target.startsWith("flet.")) {
-    return target.slice(5);
-  }
-  return target;
+  return target.replace(FLET_DISPLAY_PREFIX_RE, "");
 }
 
 /**
  * Format the display label for a reStructuredText cross-reference target.
  * A leading '~' causes the label to be shortened to just the last component.
- * Otherwise, leading 'flet.'/'ft.' is stripped from the rendered label.
+ * Otherwise, leading Flet package aliases are stripped from the rendered label.
  * A trailing '()' is preserved on the display label.
  */
 function formatRestXrefLabel(target) {
