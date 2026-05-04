@@ -792,6 +792,25 @@ def main(page: ft.Page):
                                             ft.FloatingActionButton(
                                                 icon=ft.Icons.PALETTE
                                             ),
+                                            ft.SegmentedButton(
+                                                selected=["grid"],
+                                                segments=[
+                                                    ft.Segment(
+                                                        value="list",
+                                                        icon=ft.Icon(
+                                                            ft.Icons.VIEW_LIST
+                                                        ),
+                                                        label=ft.Text("List"),
+                                                    ),
+                                                    ft.Segment(
+                                                        value="grid",
+                                                        icon=ft.Icon(
+                                                            ft.Icons.GRID_VIEW
+                                                        ),
+                                                        label=ft.Text("Grid"),
+                                                    ),
+                                                ],
+                                            ),
                                         ),
                                         showcase_section(
                                             "Chips",
@@ -815,6 +834,34 @@ def main(page: ft.Page):
                                                         label=ft.Text("Selected"),
                                                         selected=True,
                                                         on_select=lambda e: None,
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                        showcase_section(
+                                            "Secondary roles",
+                                            ft.Row(
+                                                wrap=True,
+                                                spacing=12,
+                                                run_spacing=12,
+                                                controls=[
+                                                    ft.Container(
+                                                        bgcolor=ft.Colors.SECONDARY,
+                                                        padding=12,
+                                                        border_radius=12,
+                                                        content=ft.Text(
+                                                            "SECONDARY",
+                                                            color=ft.Colors.ON_SECONDARY,
+                                                        ),
+                                                    ),
+                                                    ft.Container(
+                                                        bgcolor=ft.Colors.SECONDARY_CONTAINER,
+                                                        padding=12,
+                                                        border_radius=12,
+                                                        content=ft.Text(
+                                                            "SECONDARY_CONTAINER",
+                                                            color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                        ),
                                                     ),
                                                 ],
                                             ),
