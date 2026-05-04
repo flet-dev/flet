@@ -1,3 +1,5 @@
+import ast
+
 import flet as ft
 from flet_color_pickers import HueRingPicker
 
@@ -303,6 +305,11 @@ def main(page: ft.Page):
                         tooltip="Export",
                         on_click=export_theme,
                     ),
+                    ft.IconButton(
+                        icon=ft.Icons.UPLOAD,
+                        tooltip="Import",
+                        on_click=open_import_dialog,
+                    ),
                 ],
             ),
             color_group(
@@ -496,6 +503,15 @@ def main(page: ft.Page):
         "ON_SECONDARY_CONTAINER": "on_secondary_container",
     }
     color_role_export_order = list(dict.fromkeys(color_role_by_label.values()))
+    import_format_hint = (
+        "Use this format:\n"
+        "ft.Theme(\n"
+        "  color_scheme=ft.ColorScheme(\n"
+        "      primary='#ff87581b',\n"
+        "      on_primary=ft.Colors.WHITE,\n"
+        "  )\n"
+        ")"
+    )
 
     def format_color_value(color_value: ft.ColorValue) -> str:
         if hasattr(color_value, "name"):
@@ -547,10 +563,70 @@ def main(page: ft.Page):
         lines.append(")")
         return "\n".join(lines)
 
+    def get_attribute_path(node: ast.AST) -> list[str] | None:
+        parts: list[str] = []
+        current = node
+        while isinstance(current, ast.Attribute):
+            parts.append(current.attr)
+            current = current.value
+        if isinstance(current, ast.Name):
+            parts.append(current.id)
+            return list(reversed(parts))
+        return None
+
+    def parse_import_color_value(node: ast.AST) -> ft.ColorValue:
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        attr_path = get_attribute_path(node)
+        if attr_path and len(attr_path) == 3 and attr_path[:2] == ["ft", "Colors"]:
+            color_name = attr_path[2]
+            if hasattr(ft.Colors, color_name):
+                return getattr(ft.Colors, color_name)
+        raise ValueError
+
+    def parse_import_theme_code(code: str) -> dict[str, ft.ColorValue]:
+        try:
+            tree = ast.parse(code)
+        except SyntaxError as exc:
+            raise ValueError from exc
+
+        if len(tree.body) != 1 or not isinstance(tree.body[0], ast.Expr):
+            raise ValueError
+
+        theme_call = tree.body[0].value
+        if not isinstance(theme_call, ast.Call):
+            raise ValueError
+
+        theme_path = get_attribute_path(theme_call.func)
+        if theme_path != ["ft", "Theme"]:
+            raise ValueError
+
+        color_scheme_call: ast.Call | None = None
+        for keyword in theme_call.keywords:
+            if keyword.arg == "color_scheme" and isinstance(keyword.value, ast.Call):
+                color_scheme_call = keyword.value
+                break
+        if color_scheme_call is None:
+            raise ValueError
+
+        color_scheme_path = get_attribute_path(color_scheme_call.func)
+        if color_scheme_path != ["ft", "ColorScheme"]:
+            raise ValueError
+
+        parsed_overrides: dict[str, ft.ColorValue] = {}
+        for keyword in color_scheme_call.keywords:
+            if keyword.arg not in color_role_export_order:
+                raise ValueError
+            parsed_overrides[keyword.arg] = parse_import_color_value(keyword.value)
+
+        return parsed_overrides
+
     async def copy_export_theme(_):
         export_code = build_export_code()
         print(export_code)
         await ft.Clipboard().set(export_code)
+        export_copy_button.icon = ft.Icons.CHECK
+        page.update()
 
     export_code_text = ft.TextField(
         multiline=True,
@@ -558,6 +634,11 @@ def main(page: ft.Page):
         max_lines=16,
         read_only=True,
         value="",
+    )
+    export_copy_button = ft.IconButton(
+        icon=ft.Icons.CONTENT_COPY,
+        tooltip="Copy to clipboard",
+        on_click=copy_export_theme,
     )
     export_dialog = ft.AlertDialog(
         modal=True,
@@ -567,19 +648,89 @@ def main(page: ft.Page):
             content=export_code_text,
         ),
         actions=[
-            ft.IconButton(
-                icon=ft.Icons.CONTENT_COPY,
-                tooltip="Copy to clipboard",
-                on_click=copy_export_theme,
-            ),
+            export_copy_button,
             ft.TextButton("Close", on_click=lambda _: page.pop_dialog()),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    import_code_text = ft.TextField(
+        multiline=True,
+        min_lines=12,
+        max_lines=16,
+        value="",
+        hint_text=import_format_hint,
+    )
+    import_error_text = ft.Text(
+        "",
+        color=ft.Colors.ERROR,
+        visible=False,
+    )
+
+    def close_import_dialog(_):
+        page.pop_dialog()
+        page.update()
+
+    def import_theme(_):
+        try:
+            parsed_overrides = parse_import_theme_code(import_code_text.value or "")
+        except ValueError:
+            import_error_text.value = (
+                f"Couldn't parse theme code.\n\n{import_format_hint}"
+            )
+            import_error_text.visible = True
+            page.update()
+            return
+
+        theme_color_overrides.clear()
+        theme_color_overrides.update(parsed_overrides)
+        rebuild_theme()
+        if selected_role["attr"] is not None:
+            set_selected_material_from_value(
+                theme_color_overrides.get(selected_role["attr"])
+            )
+        else:
+            selected_material_color["label"] = None
+            selected_material_color["value"] = None
+            selected_shade["label"] = None
+            selected_shade["value"] = None
+            update_hex_picker(None)
+        rebuild_left_pane_controls()
+        rebuild_material_color_controls()
+        rebuild_shade_controls()
+        import_error_text.visible = False
+        page.pop_dialog()
+        page.update()
+
+    import_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Import palette"),
+        content=ft.Container(
+            width=520,
+            content=ft.Column(
+                tight=True,
+                spacing=12,
+                controls=[import_code_text, import_error_text],
+            ),
+        ),
+        actions=[
+            ft.TextButton("Import", on_click=import_theme),
+            ft.TextButton("Close", on_click=close_import_dialog),
         ],
         actions_alignment=ft.MainAxisAlignment.END,
     )
 
     def export_theme(_):
         export_code_text.value = build_export_code()
+        export_copy_button.icon = ft.Icons.CONTENT_COPY
         page.show_dialog(export_dialog)
+        page.update()
+
+    def open_import_dialog(_):
+        import_code_text.value = ""
+        import_error_text.value = ""
+        import_error_text.visible = False
+        page.show_dialog(import_dialog)
         page.update()
 
     rebuild_left_pane_controls()
@@ -634,6 +785,9 @@ def main(page: ft.Page):
                                                     ft.TextButton("Text button"),
                                                     ft.Button("Button"),
                                                 ],
+                                            ),
+                                            ft.FloatingActionButton(
+                                                icon=ft.Icons.PALETTE
                                             ),
                                         ),
                                         showcase_section(
