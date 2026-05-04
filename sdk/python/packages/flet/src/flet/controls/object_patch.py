@@ -1467,9 +1467,11 @@ class DiffBuilder:
             self._dataclass_added(dst, parent, frozen)
 
             if not frozen:
-                prev_lists = getattr(dst, "__prev_lists", {})
-                prev_dicts = getattr(dst, "__prev_dicts", {})
-                prev_classes = getattr(dst, "__prev_classes", {})
+                # Snapshots live on the parent (which owns `key`), not on
+                # dst (the field's new value).
+                prev_lists = getattr(parent, "__prev_lists", {})
+                prev_dicts = getattr(parent, "__prev_dicts", {})
+                prev_classes = getattr(parent, "__prev_classes", {})
 
                 if isinstance(src, list) and key in prev_lists:
                     del prev_lists[key]

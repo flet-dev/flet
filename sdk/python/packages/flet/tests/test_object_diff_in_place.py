@@ -142,6 +142,55 @@ def test_optional_structural_value_restored_after_none():
     assert patch[0]["value"].value == "restored"
 
 
+def test_list_to_dataclass_change_does_not_re_emit():
+    """When a structural field changes type (list ↔ dataclass), the diff emits
+    exactly one replace for the change and zero ops on the next round.
+
+    The parent's snapshot maps must follow the field across the type
+    transition — moving from `__prev_lists` to `__prev_classes`` (or back)
+    so a subsequent diff sees the field as still tracked.
+    """
+
+    @ft.value
+    class Holder:
+        items: list[int] = field(default_factory=list)
+
+    @ft.value
+    class ReplacementHolder:
+        name: str = "x"
+
+    @control("ListOrDataclassHost")
+    class ListOrDataclassHost(Control):
+        slot: Any = field(default_factory=Holder)
+
+    host = ListOrDataclassHost()
+    b_pack(host)  # prime snapshots — slot starts as Holder (dataclass)
+
+    # dataclass → list
+    host.slot = [1, 2, 3]
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert len(patch) == 1
+    assert patch[0]["op"] == "replace"
+    assert patch[0]["path"] == ["slot"]
+    assert patch[0]["value"] == [1, 2, 3]
+
+    # No further mutation — must produce zero ops.
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert patch == []
+
+    # list → dataclass
+    host.slot = ReplacementHolder(name="restored")
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert len(patch) == 1
+    assert patch[0]["op"] == "replace"
+    assert patch[0]["path"] == ["slot"]
+    assert isinstance(patch[0]["value"], ReplacementHolder)
+
+    # No further mutation — must produce zero ops.
+    patch, _, _, _ = make_diff(host, show_details=False)
+    assert patch == []
+
+
 def test_simple_page():
     """Exercise initial page serialization and several in-place page updates."""
     conn = Connection()
