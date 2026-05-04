@@ -344,6 +344,12 @@ def main(page: ft.Page):
         "SECONDARY_CONTAINER": "secondary_container",
         "ON_SECONDARY_CONTAINER": "on_secondary_container",
     }
+    color_role_export_order = list(dict.fromkeys(color_role_by_label.values()))
+
+    def format_color_value(color_value: ft.ColorValue) -> str:
+        if hasattr(color_value, "name"):
+            return f"ft.Colors.{color_value.name}"
+        return repr(color_value)
 
     def on_color_click(label: str):
         def handler(_):
@@ -372,6 +378,30 @@ def main(page: ft.Page):
         rebuild_theme()
         page.update()
 
+    def export_theme(_):
+        lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
+        for color_role in color_role_export_order:
+            color_value = theme_color_overrides.get(color_role)
+            if color_value is None:
+                continue
+            lines.append(f"      {color_role}={format_color_value(color_value)},")
+        lines.append("  )")
+        lines.append(")")
+        print("\n".join(lines))
+
+    async def copy_export_theme(_):
+        lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
+        for color_role in color_role_export_order:
+            color_value = theme_color_overrides.get(color_role)
+            if color_value is None:
+                continue
+            lines.append(f"      {color_role}={format_color_value(color_value)},")
+        lines.append("  )")
+        lines.append(")")
+        export_code = "\n".join(lines)
+        print(export_code)
+        await ft.Clipboard().set(export_code)
+
     page.add(
         ft.SafeArea(
             expand=True,
@@ -396,7 +426,12 @@ def main(page: ft.Page):
                                                 icon=ft.Icons.PALETTE,
                                                 tooltip="Reset from seed",
                                                 on_click=reset_from_seed,
-                                            )
+                                            ),
+                                            ft.IconButton(
+                                                icon=ft.Icons.DOWNLOAD,
+                                                tooltip="Export",
+                                                on_click=copy_export_theme,
+                                            ),
                                         ],
                                     ),
                                     color_group(
