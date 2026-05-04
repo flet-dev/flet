@@ -108,17 +108,45 @@ def showcase_section(title: str, *controls: ft.Control) -> ft.Container:
 
 
 def material_color_circle(
-    color: ft.ColorValue, label: str, *, on_click=None
+    color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
 ) -> ft.Container:
     return ft.Container(
         width=28,
         height=28,
         border_radius=14,
         bgcolor=color,
-        border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
+        border=ft.Border.all(
+            2 if selected else 1,
+            ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
+        ),
         tooltip=label,
         ink=True,
         on_click=on_click,
+    )
+
+
+def material_shade_swatch(
+    color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
+) -> ft.Container:
+    return ft.Container(
+        width=44,
+        height=56,
+        border_radius=8,
+        bgcolor=color,
+        border=ft.Border.all(
+            2 if selected else 1,
+            ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
+        ),
+        alignment=ft.Alignment.TOP_CENTER,
+        padding=ft.Padding.only(top=6),
+        tooltip=label,
+        ink=True,
+        on_click=on_click,
+        content=ft.Text(
+            label,
+            size=11,
+            color=ft.Colors.BLACK if label in {"50", "100", "200"} else ft.Colors.WHITE,
+        ),
     )
 
 
@@ -140,7 +168,8 @@ def main(page: ft.Page):
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
     selected_role = {"label": None, "attr": None}
-    selected_material_color = {"label": "BLUE", "value": ft.Colors.BLUE}
+    selected_material_color = {"label": None, "value": None}
+    selected_shade = {"label": None, "value": None}
     theme_color_overrides: dict[str, ft.ColorValue] = {}
     material_colors = [
         ("AMBER", ft.Colors.AMBER),
@@ -177,10 +206,63 @@ def main(page: ft.Page):
             color_scheme=ft.ColorScheme(**theme_color_overrides),
         )
 
+    def get_shades(color_label: str | None) -> list[tuple[str, ft.ColorValue]]:
+        if color_label is None or color_label in {"BLACK", "WHITE", "TRANSPARENT"}:
+            return []
+        shades: list[tuple[str, ft.ColorValue]] = []
+        for shade in [
+            "50",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500",
+            "600",
+            "700",
+            "800",
+            "900",
+        ]:
+            shades.append((shade, getattr(ft.Colors, f"{color_label}_{shade}")))
+        accent_name = f"{color_label}_ACCENT"
+        if hasattr(ft.Colors, accent_name):
+            for shade in ["100", "200", "400", "700"]:
+                shades.append(
+                    (f"A{shade}", getattr(ft.Colors, f"{accent_name}_{shade}"))
+                )
+        return shades
+
+    def rebuild_material_color_controls():
+        material_color_row.controls = [
+            material_color_circle(
+                color,
+                label,
+                selected=selected_material_color["label"] == label,
+                on_click=on_material_color_click(label, color),
+            )
+            for label, color in material_colors
+        ]
+
+    def rebuild_shade_controls():
+        shades = get_shades(selected_material_color["label"])
+        shade_row.visible = len(shades) > 0
+        shade_row.controls = [
+            material_shade_swatch(
+                color,
+                label,
+                selected=selected_shade["label"] == label,
+                on_click=on_shade_click(label, color),
+            )
+            for label, color in shades
+        ]
+
     def on_material_color_click(color_label: str, color_value: ft.ColorValue):
         def handler(_):
             selected_material_color["label"] = color_label
             selected_material_color["value"] = color_value
+            selected_shade["label"] = None
+            selected_shade["value"] = None
+            rebuild_material_color_controls()
+            rebuild_shade_controls()
             if selected_role["attr"] is None or selected_role["label"] is None:
                 return
             theme_color_overrides[selected_role["attr"]] = color_value
@@ -191,6 +273,38 @@ def main(page: ft.Page):
             page.update()
 
         return handler
+
+    def on_shade_click(shade_label: str, shade_value: ft.ColorValue):
+        def handler(_):
+            selected_shade["label"] = shade_label
+            selected_shade["value"] = shade_value
+            rebuild_shade_controls()
+            if selected_role["attr"] is None or selected_role["label"] is None:
+                return
+            theme_color_overrides[selected_role["attr"]] = shade_value
+            rebuild_theme()
+            selected_color_text.value = (
+                f"{selected_role['label']} color changed to "
+                f"{selected_material_color['label']} {shade_label}."
+            )
+            page.update()
+
+        return handler
+
+    material_color_row = ft.Row(
+        wrap=True,
+        spacing=8,
+        run_spacing=8,
+        controls=[],
+    )
+    shade_row = ft.Row(
+        visible=False,
+        scroll=ft.ScrollMode.AUTO,
+        spacing=4,
+        controls=[],
+    )
+    rebuild_material_color_controls()
+    rebuild_shade_controls()
 
     color_editor_pane = ft.Container(
         visible=False,
@@ -218,19 +332,8 @@ def main(page: ft.Page):
                         ],
                     ),
                     selected_color_text,
-                    ft.Row(
-                        wrap=True,
-                        spacing=8,
-                        run_spacing=8,
-                        controls=[
-                            material_color_circle(
-                                color,
-                                label,
-                                on_click=on_material_color_click(label, color),
-                            )
-                            for label, color in material_colors
-                        ],
-                    ),
+                    material_color_row,
+                    shade_row,
                 ],
             ),
         ),
@@ -250,15 +353,8 @@ def main(page: ft.Page):
         def handler(_):
             selected_role["label"] = label
             selected_role["attr"] = color_role_by_label[label]
-            theme_color_overrides[selected_role["attr"]] = selected_material_color[
-                "value"
-            ]
-            rebuild_theme()
             selected_color_heading.value = f"{label} editor"
-            selected_color_text.value = (
-                f"Choose a material color for {label}. Current color: "
-                f"{selected_material_color['label']}."
-            )
+            selected_color_text.value = f"Choose a material color for {label}."
             color_editor_pane.visible = True
             page.update()
 
@@ -268,11 +364,15 @@ def main(page: ft.Page):
         theme_color_overrides.clear()
         selected_role["label"] = None
         selected_role["attr"] = None
-        selected_material_color["label"] = "BLUE"
-        selected_material_color["value"] = ft.Colors.BLUE
+        selected_material_color["label"] = None
+        selected_material_color["value"] = None
+        selected_shade["label"] = None
+        selected_shade["value"] = None
         selected_color_heading.value = "Color editor"
         selected_color_text.value = "Choose a color role to edit."
         color_editor_pane.visible = False
+        rebuild_material_color_controls()
+        rebuild_shade_controls()
         rebuild_theme()
         page.update()
 
