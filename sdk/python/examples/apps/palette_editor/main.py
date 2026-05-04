@@ -12,12 +12,17 @@ def color_band(
     *,
     width: int,
     height: int,
+    selected: bool = False,
     on_click=None,
 ) -> ft.Container:
     return ft.Container(
         width=width,
         height=height,
         bgcolor=background,
+        border=ft.Border.all(
+            2 if selected else 0,
+            ft.Colors.BLACK if selected else ft.Colors.TRANSPARENT,
+        ),
         padding=ft.Padding.symmetric(horizontal=12),
         alignment=ft.Alignment.CENTER_LEFT,
         ink=True,
@@ -36,6 +41,7 @@ def color_group(
     height: int,
     title: str | None = None,
     hint: str | None = None,
+    selected_label: str | None = None,
     on_color_click=None,
 ) -> ft.Container:
     return ft.Container(
@@ -82,6 +88,7 @@ def color_group(
                         foreground,
                         width=width,
                         height=height,
+                        selected=selected_label == label,
                         on_click=on_color_click(label) if on_color_click else None,
                     )
                     for label, background, foreground in items
@@ -238,6 +245,77 @@ def main(page: ft.Page):
             for label, color in material_colors
         ]
 
+    def rebuild_left_pane_controls():
+        left_pane_controls.controls = [
+            ft.Row(
+                spacing=8,
+                controls=[
+                    ft.IconButton(
+                        icon=ft.Icons.PALETTE,
+                        tooltip="Reset from seed",
+                        on_click=reset_from_seed,
+                    ),
+                    ft.IconButton(
+                        icon=ft.Icons.DOWNLOAD,
+                        tooltip="Export",
+                        on_click=export_theme,
+                    ),
+                ],
+            ),
+            color_group(
+                [
+                    ("PRIMARY", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
+                    ("ON_PRIMARY", ft.Colors.ON_PRIMARY, ft.Colors.PRIMARY),
+                    (
+                        "PRIMARY_CONTAINER",
+                        ft.Colors.PRIMARY_CONTAINER,
+                        ft.Colors.ON_PRIMARY_CONTAINER,
+                    ),
+                    (
+                        "ON_PRIMARY_CONTAINER",
+                        ft.Colors.ON_PRIMARY_CONTAINER,
+                        ft.Colors.PRIMARY_CONTAINER,
+                    ),
+                ],
+                width=swatch_width,
+                height=swatch_height,
+                title="Primary roles",
+                hint=(
+                    "Use primary roles for the most\n"
+                    "prominent components across the UI,\n"
+                    "such as the FAB,\n"
+                    "high-emphasis buttons, and active states."
+                ),
+                selected_label=selected_role["label"],
+                on_color_click=on_color_click,
+            ),
+            color_group(
+                [
+                    ("SECONDARY", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
+                    ("ON_SECONDARY", ft.Colors.ON_SECONDARY, ft.Colors.SECONDARY),
+                    (
+                        "SECONDARY_CONTAINER",
+                        ft.Colors.SECONDARY_CONTAINER,
+                        ft.Colors.ON_SECONDARY_CONTAINER,
+                    ),
+                    (
+                        "ON_SECONDARY_CONTAINER",
+                        ft.Colors.ON_SECONDARY_CONTAINER,
+                        ft.Colors.SECONDARY_CONTAINER,
+                    ),
+                ],
+                width=swatch_width,
+                height=swatch_height,
+                title="Secondary roles",
+                hint=(
+                    "Use secondary roles for less prominent\n"
+                    "components in the UI such as filter chips."
+                ),
+                selected_label=selected_role["label"],
+                on_color_click=on_color_click,
+            ),
+        ]
+
     def rebuild_shade_controls():
         shades = get_shades(selected_material_color["label"])
         shade_row.visible = len(shades) > 0
@@ -299,6 +377,12 @@ def main(page: ft.Page):
         spacing=0,
         controls=[],
     )
+    left_pane_controls = ft.Column(
+        scroll=ft.ScrollMode.AUTO,
+        spacing=8,
+        horizontal_alignment=ft.CrossAxisAlignment.START,
+        controls=[],
+    )
     rebuild_material_color_controls()
     rebuild_shade_controls()
 
@@ -358,6 +442,7 @@ def main(page: ft.Page):
             selected_color_heading.value = f"{label} editor"
             selected_color_text.value = f"Choose a material color for {label}."
             color_editor_pane.visible = True
+            rebuild_left_pane_controls()
             page.update()
 
         return handler
@@ -373,6 +458,7 @@ def main(page: ft.Page):
         selected_color_heading.value = "Color editor"
         selected_color_text.value = "Choose a color role to edit."
         color_editor_pane.visible = False
+        rebuild_left_pane_controls()
         rebuild_material_color_controls()
         rebuild_shade_controls()
         rebuild_theme()
@@ -424,6 +510,8 @@ def main(page: ft.Page):
         page.show_dialog(export_dialog)
         page.update()
 
+    rebuild_left_pane_controls()
+
     page.add(
         ft.SafeArea(
             expand=True,
@@ -436,94 +524,7 @@ def main(page: ft.Page):
                         ft.Container(
                             width=swatch_width,
                             alignment=ft.Alignment.TOP_LEFT,
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=8,
-                                horizontal_alignment=ft.CrossAxisAlignment.START,
-                                controls=[
-                                    ft.Row(
-                                        spacing=8,
-                                        controls=[
-                                            ft.IconButton(
-                                                icon=ft.Icons.PALETTE,
-                                                tooltip="Reset from seed",
-                                                on_click=reset_from_seed,
-                                            ),
-                                            ft.IconButton(
-                                                icon=ft.Icons.DOWNLOAD,
-                                                tooltip="Export",
-                                                on_click=export_theme,
-                                            ),
-                                        ],
-                                    ),
-                                    color_group(
-                                        [
-                                            (
-                                                "PRIMARY",
-                                                ft.Colors.PRIMARY,
-                                                ft.Colors.ON_PRIMARY,
-                                            ),
-                                            (
-                                                "ON_PRIMARY",
-                                                ft.Colors.ON_PRIMARY,
-                                                ft.Colors.PRIMARY,
-                                            ),
-                                            (
-                                                "PRIMARY_CONTAINER",
-                                                ft.Colors.PRIMARY_CONTAINER,
-                                                ft.Colors.ON_PRIMARY_CONTAINER,
-                                            ),
-                                            (
-                                                "ON_PRIMARY_CONTAINER",
-                                                ft.Colors.ON_PRIMARY_CONTAINER,
-                                                ft.Colors.PRIMARY_CONTAINER,
-                                            ),
-                                        ],
-                                        width=swatch_width,
-                                        height=swatch_height,
-                                        title="Primary roles",
-                                        hint=(
-                                            "Use primary roles for the most\n"
-                                            "prominent components across the UI,\n"
-                                            "such as the FAB,\n"
-                                            "high-emphasis buttons, and active states."
-                                        ),
-                                        on_color_click=on_color_click,
-                                    ),
-                                    color_group(
-                                        [
-                                            (
-                                                "SECONDARY",
-                                                ft.Colors.SECONDARY,
-                                                ft.Colors.ON_SECONDARY,
-                                            ),
-                                            (
-                                                "ON_SECONDARY",
-                                                ft.Colors.ON_SECONDARY,
-                                                ft.Colors.SECONDARY,
-                                            ),
-                                            (
-                                                "SECONDARY_CONTAINER",
-                                                ft.Colors.SECONDARY_CONTAINER,
-                                                ft.Colors.ON_SECONDARY_CONTAINER,
-                                            ),
-                                            (
-                                                "ON_SECONDARY_CONTAINER",
-                                                ft.Colors.ON_SECONDARY_CONTAINER,
-                                                ft.Colors.SECONDARY_CONTAINER,
-                                            ),
-                                        ],
-                                        width=swatch_width,
-                                        height=swatch_height,
-                                        title="Secondary roles",
-                                        hint=(
-                                            "Use secondary roles for less prominent\n"
-                                            "components in the UI such as filter chips."
-                                        ),
-                                        on_color_click=on_color_click,
-                                    ),
-                                ],
-                            ),
+                            content=left_pane_controls,
                         ),
                         color_editor_pane,
                         ft.VerticalDivider(
