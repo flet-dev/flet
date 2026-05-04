@@ -209,6 +209,36 @@ def main(page: ft.Page):
             color_scheme=ft.ColorScheme(**theme_color_overrides),
         )
 
+    def set_selected_material_from_value(color_value: ft.ColorValue | None):
+        if color_value is None:
+            selected_material_color["label"] = None
+            selected_material_color["value"] = None
+            selected_shade["label"] = None
+            selected_shade["value"] = None
+            return
+
+        for label, value in material_colors:
+            if value == color_value:
+                selected_material_color["label"] = label
+                selected_material_color["value"] = value
+                selected_shade["label"] = None
+                selected_shade["value"] = None
+                return
+
+        for material_label, material_value in material_colors:
+            for shade_label, shade_value in get_shades(material_label):
+                if shade_value == color_value:
+                    selected_material_color["label"] = material_label
+                    selected_material_color["value"] = material_value
+                    selected_shade["label"] = shade_label
+                    selected_shade["value"] = shade_value
+                    return
+
+        selected_material_color["label"] = None
+        selected_material_color["value"] = None
+        selected_shade["label"] = None
+        selected_shade["value"] = None
+
     def get_shades(color_label: str | None) -> list[tuple[str, ft.ColorValue]]:
         if color_label is None or color_label in {"BLACK", "WHITE", "TRANSPARENT"}:
             return []
@@ -439,10 +469,15 @@ def main(page: ft.Page):
         def handler(_):
             selected_role["label"] = label
             selected_role["attr"] = color_role_by_label[label]
+            set_selected_material_from_value(
+                theme_color_overrides.get(selected_role["attr"])
+            )
             selected_color_heading.value = f"{label} editor"
             selected_color_text.value = f"Choose a material color for {label}."
             color_editor_pane.visible = True
             rebuild_left_pane_controls()
+            rebuild_material_color_controls()
+            rebuild_shade_controls()
             page.update()
 
         return handler
