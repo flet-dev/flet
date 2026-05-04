@@ -610,6 +610,7 @@ docs:
         - controls/video/types/videobaritem.md
         - controls/video/types/videoconfiguration.md
         - controls/video/types/videocontrols.md
+        - controls/video/types/videocontrolsmode.md
         - controls/video/types/videofullscreenbutton.md
         - controls/video/types/videomedia.md
         - controls/video/types/videoplayorpausebutton.md

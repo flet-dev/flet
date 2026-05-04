@@ -2858,6 +2858,10 @@ module.exports = {
                     },
                     {
                       "type": "doc",
+                      "id": "controls/video/types/videocontrolsmode"
+                    },
+                    {
+                      "type": "doc",
                       "id": "controls/video/types/videofullscreenbutton"
                     },
                     {

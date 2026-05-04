@@ -93,8 +93,8 @@ class Video(ft.LayoutControl):
     :attr:`VideoControlsMode.DEFAULT` value is used when
     :attr:`VideoControlsMode.NORMAL` controls are not provided. If
     :attr:`VideoControlsMode.FULLSCREEN` controls are not provided,
-    :attr:`VideoControlsMode.NORMAL` controls are reused before falling back to
-    :attr:`VideoControlsMode.DEFAULT`. A mode value of
+    :attr:`VideoControlsMode.NORMAL` controls are reused before
+    falling back to :attr:`VideoControlsMode.DEFAULT`. A mode value of
     `None` hides controls for that mode only.
 
     Note:
