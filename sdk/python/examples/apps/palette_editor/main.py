@@ -779,6 +779,9 @@ def main(page: ft.Page):
                                                 run_spacing=12,
                                                 controls=[
                                                     ft.FilledButton("Filled button"),
+                                                    ft.FilledTonalButton(
+                                                        "Filled tonal button"
+                                                    ),
                                                     ft.OutlinedButton(
                                                         "Outlined button"
                                                     ),
@@ -791,21 +794,29 @@ def main(page: ft.Page):
                                             ),
                                         ),
                                         showcase_section(
-                                            "Inputs",
-                                            ft.TextField(
-                                                label="Theme name",
-                                                hint_text="Material 3 palette",
-                                                value="Sample scheme",
-                                            ),
-                                            ft.TextField(
-                                                label="Description",
-                                                multiline=True,
-                                                min_lines=3,
-                                                max_lines=5,
-                                                value=(
-                                                    "This preview shows controls "
-                                                    "using the app theme colors."
-                                                ),
+                                            "Chips",
+                                            ft.Row(
+                                                wrap=True,
+                                                spacing=12,
+                                                run_spacing=12,
+                                                controls=[
+                                                    ft.Chip(
+                                                        label=ft.Text("Filter chip"),
+                                                        on_select=lambda e: None,
+                                                    ),
+                                                    ft.Chip(
+                                                        label=ft.Text("Assist chip"),
+                                                        leading=ft.Icon(
+                                                            ft.Icons.MAP_SHARP
+                                                        ),
+                                                        on_click=lambda e: None,
+                                                    ),
+                                                    ft.Chip(
+                                                        label=ft.Text("Selected"),
+                                                        selected=True,
+                                                        on_select=lambda e: None,
+                                                    ),
+                                                ],
                                             ),
                                         ),
                                         showcase_section(
