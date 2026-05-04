@@ -8,6 +8,8 @@ import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
+import 'scroll_notification_control.dart';
+import 'scrollable_control.dart';
 
 class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
   final Control control;
@@ -23,7 +25,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
     final runSpacing = control.getResponsiveNumber("run_spacing", 10)!;
 
     return withPageSize((context, view) {
-      var result = LayoutBuilder(
+      Widget result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         if (!constraints.hasBoundedWidth) {
           return const ErrorControl(
@@ -89,32 +91,57 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         try {
           // Keep a single row when everything fits; otherwise switch to Wrap so
           // children can continue on the next line.
-          return wrap
-              ? Wrap(
-                  direction: Axis.horizontal,
-                  spacing: bpSpacing - 0.1,
-                  runSpacing: getBreakpointNumber(
-                      runSpacing, view.size.width, view.breakpoints),
-                  alignment: control.getWrapAlignment(
-                      "alignment", WrapAlignment.start)!,
-                  crossAxisAlignment: control.getWrapCrossAlignment(
-                      "vertical_alignment", WrapCrossAlignment.start)!,
-                  children: controls,
-                )
-              : Row(
-                  spacing: bpSpacing - 0.1,
-                  mainAxisAlignment: control.getMainAxisAlignment(
-                      "alignment", MainAxisAlignment.start)!,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: control.getCrossAxisAlignment(
-                      "vertical_alignment", CrossAxisAlignment.start)!,
-                  children: controls,
-                );
+          if (wrap) {
+            return Wrap(
+              direction: Axis.horizontal,
+              spacing: bpSpacing - 0.1,
+              runSpacing: getBreakpointNumber(
+                  runSpacing, view.size.width, breakpoints),
+              alignment:
+                  control.getWrapAlignment("alignment", WrapAlignment.start)!,
+              crossAxisAlignment: control.getWrapCrossAlignment(
+                  "vertical_alignment", WrapCrossAlignment.start)!,
+              children: controls,
+            );
+          }
+
+          final crossAxisAlignment = control.getCrossAxisAlignment(
+              "vertical_alignment", CrossAxisAlignment.start)!;
+
+          Widget row = Row(
+            spacing: bpSpacing - 0.1,
+            mainAxisAlignment: control.getMainAxisAlignment(
+                "alignment", MainAxisAlignment.start)!,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: crossAxisAlignment,
+            children: controls,
+          );
+
+          // `IntrinsicHeight` is only needed when the row is both vertically
+          // scrollable (unbounded height) and asked to stretch children
+          // cross-axis — otherwise the row sizes to its children naturally,
+          // so we avoid the extra intrinsic-sizing pass.
+          if (control.get("scroll") != null &&
+              crossAxisAlignment == CrossAxisAlignment.stretch) {
+            row = IntrinsicHeight(child: row);
+          }
+
+          return row;
         } catch (e) {
           return ErrorControl("Error displaying ResponsiveRow",
               description: e.toString());
         }
       });
+
+      result = ScrollableControl(
+          control: control,
+          scrollDirection: Axis.vertical,
+          wrapIntoScrollableView: true,
+          child: result);
+
+      if (control.hasEventHandler("scroll")) {
+        result = ScrollNotificationControl(control: control, child: result);
+      }
 
       return LayoutControl(control: control, child: result);
     });

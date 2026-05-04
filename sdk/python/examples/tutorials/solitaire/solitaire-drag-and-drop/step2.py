@@ -41,7 +41,7 @@ def main(page: ft.Page):
 
         e.control.update()
 
-    slot = ft.Container(width=70, height=100, left=200, top=0, border=ft.border.all(1))
+    slot = ft.Container(width=70, height=100, left=200, top=0, border=ft.Border.all(1))
 
     card = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,

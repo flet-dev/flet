@@ -1,7 +1,7 @@
 ---
 class_name: "flet.Checkbox"
-examples: "controls/checkbox"
-example_images: "test-images/examples/material/golden/macos/checkbox"
+examples: "controls/material/checkbox"
+example_images: "test-images/examples/controls/material/golden/macos/checkbox"
 title: "Checkbox"
 ---
 
@@ -29,6 +29,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/styled_checkboxes.png'} alt="Styled checkboxes" width="35%" />
+<Image src={frontMatter.example_images + '/styled_checkboxes_selected.png'} alt="Styled checkboxes" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -1,6 +1,6 @@
 ---
 class_name: "flet.TextCapitalization"
-examples: "controls/types/text_capitalization"
+examples: "controls/core/types/text_capitalization"
 title: "TextCapitalization"
 ---
 

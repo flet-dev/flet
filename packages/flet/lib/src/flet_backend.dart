@@ -18,6 +18,7 @@ import 'protocol/invoke_method_response_body.dart';
 import 'protocol/message.dart';
 import 'protocol/page_media_data.dart';
 import 'protocol/patch_control_request_body.dart';
+import 'protocol/python_output_body.dart';
 import 'protocol/register_client_request_body.dart';
 import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
@@ -423,7 +424,38 @@ class FletBackend extends ChangeNotifier {
       case MessageAction.invokeControlMethod:
         _onInvokeMethod(InvokeMethodRequestBody.fromJson(message.payload));
         break;
+      case MessageAction.pythonOutput:
+        _onPythonOutput(PythonOutputBody.fromJson(message.payload));
+        break;
       default:
+    }
+  }
+
+  void _onPythonOutput(PythonOutputBody body) {
+    // Nested FletApp: bubble the line to the outer backend so the
+    // host page can render it (same shape as errorsHandler bubbling
+    // at lines 135-148). Root FletApp: nothing to bubble to, so fall
+    // back to the browser console — preserves Pyodide's default
+    // visibility now that we've taken over its stdout/stderr hooks.
+    if (controlId != null && _parentFletBackend != null) {
+      _parentFletBackend?.target?.triggerControlEventById(
+        controlId!,
+        "python_output",
+        {"text": body.text, "is_stderr": body.isStderr},
+      );
+    } else {
+      // Use `print` rather than `debugPrint` — main.dart silences
+      // debugPrint in release builds, which would swallow this fallback.
+      final line = body.text.endsWith('\n')
+          ? body.text.substring(0, body.text.length - 1)
+          : body.text;
+      if (body.isStderr) {
+        // ignore: avoid_print
+        print("[stderr] $line");
+      } else {
+        // ignore: avoid_print
+        print(line);
+      }
     }
   }
 

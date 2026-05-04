@@ -2,6 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
+import 'file_lottie.dart';
+
 class LottieControl extends StatefulWidget {
   final Control control;
 
@@ -91,7 +93,7 @@ class _LottieControlState extends State<LottieControl> {
       var assetSrc = widget.control.backend.getAssetSource(resolvedSrc.uri!);
       // Local File
       if (assetSrc.isFile) {
-        lottie = Lottie.asset(
+        lottie = fileLottie(
           assetSrc.path,
           repeat: repeat,
           reverse: reverse,

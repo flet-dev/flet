@@ -65,7 +65,7 @@ class SettingsDialog(ft.AlertDialog):
                     width=70,
                     height=100,
                     content=ft.Image(src=f"/images/card_back{i}.png"),
-                    border_radius=ft.border_radius.all(6),
+                    border_radius=ft.BorderRadius.all(6),
                     on_click=self.choose_card_design,
                     data=i,
                 )
@@ -76,7 +76,7 @@ class SettingsDialog(ft.AlertDialog):
         for card in self.card_backs:
             if card.data != e.control.data:
                 card.border = None
-        e.control.border = ft.border.all(3)
+        e.control.border = ft.Border.all(3)
         self.selected_card = e.control
         self.update()
 

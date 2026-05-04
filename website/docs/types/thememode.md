@@ -1,6 +1,6 @@
 ---
 class_name: "flet.ThemeMode"
-examples: "controls/types/theme_mode"
+examples: "controls/core/types/theme_mode"
 title: "ThemeMode"
 ---
 

@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Markdown"
-examples: "controls/markdown"
-example_images: "test-images/examples/core/golden/macos/markdown"
-example_media: "examples/controls/markdown/media"
+examples: "controls/core/markdown"
+example_images: "test-images/examples/controls/core/golden/macos/markdown"
+example_media: "examples/controls/core/markdown/media"
 title: "Markdown"
 ---
 

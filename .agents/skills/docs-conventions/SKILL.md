@@ -33,10 +33,15 @@ Calls :meth:`flet.Page.update` after modifying controls.
 
 **Rules:**
 
-- **Qualified reference:** `:class:`flet.Page`` — links to Page, displays `flet.Page`
-- **Short display with `~`:** `:class:`~flet.Page`` — links to Page, displays just `Page`
+- **Qualified reference:** `:attr:`flet.Page.route`` — links to the member, displays inline code `Page.route`
+- **Extension reference:** `:attr:`flet_map.Map.animation_curve`` — links to the extension member, displays inline code `Map.animation_curve`
+- **Short display with `~`:** `:attr:`~flet.Page.route`` — links to the member, displays inline code `route`
 - **Local member (same class):** `:attr:`value`` — no qualifier needed
 - **Method with parens:** `:meth:`update`` — do NOT include `()` in the target
+
+For plain class references like `:class:`flet.Page`` and extension references like
+`:class:`flet_map.Map``, the website strips leading public package aliases automatically,
+so they display as inline code `Page` and `Map`.
 
 **Not supported:**
 
@@ -141,6 +146,12 @@ import {CodeExample} from '@site/src/components/crocodocs';
 ```
 
 Paths are relative to the configured `examples_root` (`sdk/python/examples/`).
+
+## Inline HTML
+
+Use `<kbd>...</kbd>` in Python docstrings for keyboard keys, for example
+`<kbd>Enter</kbd>` or `<kbd>Shift</kbd>`. CrocoDocs preserves this tag in API
+docs.
 
 ## Sidebar Navigation
 

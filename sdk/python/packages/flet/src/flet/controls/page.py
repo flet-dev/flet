@@ -125,7 +125,7 @@ class ServiceRegistry(Service):
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
             )
             self._services.append(service)
-            self.update()
+            self.__internal_update()
 
     def unregister_services(self):
         """
@@ -146,7 +146,20 @@ class ServiceRegistry(Service):
             removed_count = original_len - len(self._services)
             if removed_count > 0:
                 logger.debug("Removed %s services from the registry", removed_count)
-                self.update()
+                self.__internal_update()
+
+    def __internal_update(self):
+        """
+        Push an update without marking the handler's update-called flag.
+
+        Why: service (un)registration is internal bookkeeping, not a user-driven
+        `.update()`. Leaving the flag untouched keeps the auto-update behavior
+        based solely on whether the user called `.update()` themselves.
+        """
+        was_called = context.was_update_called()
+        self.update()
+        if not was_called:
+            context.reset_update_called()
 
 
 @dataclass
@@ -623,7 +636,7 @@ class Page(BasePage):
 
     def render(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -646,7 +659,7 @@ class Page(BasePage):
 
     def render_views(
         self,
-        component: Callable[..., Union[list[View], View, list[Control], Control]],
+        component: Callable[..., Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -929,6 +942,20 @@ class Page(BasePage):
             "push_route",
             arguments={"route": new_route},
         )
+
+    def navigate(self, route: str, **kwargs: Any) -> None:
+        """
+        Navigate to a new route (sync convenience wrapper).
+
+        Equivalent to ``asyncio.create_task(page.push_route(route, **kwargs))``.
+        Use this in synchronous callbacks (e.g. ``on_click``) where awaiting
+        is not possible.
+
+        Args:
+            route: New navigation route.
+            **kwargs: Additional query string parameters to be added to the route.
+        """
+        asyncio.create_task(self.push_route(route, **kwargs))
 
     async def pop_views_until(self, route: str, result: Any = None) -> None:
         """
@@ -1260,51 +1287,70 @@ class Page(BasePage):
         return self.session.pubsub_client
 
     @property
-    @deprecated("Use UrlLauncher() instead.", version="0.80.0", delete_version="0.90.0")
+    @deprecated(
+        reason="Use UrlLauncher() instead.",
+        docs_reason="Use :class:`~flet.UrlLauncher` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+    )
     def url_launcher(self) -> UrlLauncher:
         """
-        DEPRECATED: The UrlLauncher service for the current page.
+        The UrlLauncher service for the current page.
         """
         return UrlLauncher()
 
     @property
     @deprecated(
-        "Use BrowserContextMenu() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use BrowserContextMenu() instead.",
+        docs_reason="Use :class:`~flet.BrowserContextMenu` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def browser_context_menu(self):
         """
-        DEPRECATED: The BrowserContextMenu service for the current page.
+        The BrowserContextMenu service for the current page.
         """
 
         return BrowserContextMenu()
 
     @property
     @deprecated(
-        "Use SharedPreferences() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use SharedPreferences() instead.",
+        docs_reason="Use :class:`~flet.SharedPreferences` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def shared_preferences(self):
         """
-        DEPRECATED: The SharedPreferences service for the current page.
+        The SharedPreferences service for the current page.
         """
 
         return SharedPreferences()
 
     @property
-    @deprecated("Use Clipboard() instead.", version="0.80.0", delete_version="0.90.0")
+    @deprecated(
+        reason="Use Clipboard() instead.",
+        docs_reason="Use :class:`~flet.Clipboard` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
+    )
     def clipboard(self):
         """
-        DEPRECATED: The Clipboard service for the current page.
+        The Clipboard service for the current page.
         """
 
         return Clipboard()
 
     @property
     @deprecated(
-        "Use StoragePaths() instead.", version="0.80.0", delete_version="0.90.0"
+        reason="Use StoragePaths() instead.",
+        docs_reason="Use :class:`~flet.StoragePaths` instead.",
+        version="0.80.0",
+        delete_version="0.90.0",
     )
     def storage_paths(self):
         """
-        DEPRECATED: The StoragePaths service for the current page.
+        The StoragePaths service for the current page.
         """
 
         return StoragePaths()

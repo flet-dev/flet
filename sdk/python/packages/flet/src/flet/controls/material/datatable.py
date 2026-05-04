@@ -315,6 +315,12 @@ class DataTable(LayoutControl):
         ],
     )
     ```
+
+    Tip:
+        Outgrown this table? Its beefier cousin, `DataTable2` (from the
+        `flet-datatable2` extension package), adds sticky headers, fixed
+        rows/columns, per-column widths (fixed or relative `S`/`M`/`L`),
+        and a few other goodies — handy for large or wide datasets.
     """
 
     columns: list[DataColumn]

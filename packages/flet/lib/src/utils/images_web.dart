@@ -15,8 +15,15 @@ SvgPicture getSvgPictureFromFile(
 }
 
 AssetSource getAssetSrc(String src, Uri pageUri, String assetsDir) {
-  return AssetSource(
-      path: src.startsWith("/") ? src.substring(1) : src, isFile: false);
+  if (src.startsWith("http://") || src.startsWith("https://")) {
+    return AssetSource(path: src, isFile: false);
+  }
+  final cleaned = src.startsWith("/") ? src.substring(1) : src;
+  if (assetsDir.isNotEmpty) {
+    final base = assetsDir.endsWith("/") ? assetsDir : "$assetsDir/";
+    return AssetSource(path: "$base$cleaned", isFile: false);
+  }
+  return AssetSource(path: cleaned, isFile: false);
 }
 
 ImageProvider getFileImageProvider(String path) {

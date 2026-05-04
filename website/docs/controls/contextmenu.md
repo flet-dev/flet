@@ -1,7 +1,7 @@
 ---
 class_name: "flet.ContextMenu"
-examples: "controls/context_menu"
-example_images: "test-images/examples/material/golden/macos/context_menu"
+examples: "controls/material/context_menu"
+example_images: "test-images/examples/controls/material/golden/macos/context_menu"
 title: "ContextMenu"
 ---
 
@@ -15,14 +15,18 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/triggers/main.py'} language="python" />
 
-## Programmatic open
+<Image src={frontMatter.example_images + '/triggers_flow.gif'} width="30%" />
+
+### Programmatic open
 
 <CodeExample path={frontMatter.examples + '/programmatic_open/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/programmatic_open.png'} width="30%" />
 
-## Programmatic open with custom trigger
+### Programmatic open with custom trigger
 
 <CodeExample path={frontMatter.examples + '/custom_trigger/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/custom_trigger_flow.gif'} width="30%" />
 
 <ClassMembers name={frontMatter.class_name} />

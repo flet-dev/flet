@@ -1,8 +1,8 @@
 ---
 class_name: "flet.CupertinoActivityIndicator"
-examples: "controls/cupertino_activity_indicator"
-example_images: "test-images/examples/cupertino/golden/macos/cupertino_activity_indicator"
-example_media: "examples/controls/cupertino_activity_indicator/media"
+examples: "controls/cupertino/cupertino_activity_indicator"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_activity_indicator"
+example_media: "examples/controls/cupertino/cupertino_activity_indicator/media"
 title: "CupertinoActivityIndicator"
 ---
 

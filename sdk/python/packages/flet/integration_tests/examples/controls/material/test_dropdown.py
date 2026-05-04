@@ -1,0 +1,278 @@
+import pytest
+
+import flet as ft
+import flet.testing as ftt
+from examples.controls.material.dropdown.color_selection_with_filtering import (
+    main as color_selection_with_filtering,
+)
+from examples.controls.material.dropdown.declarative import main as declarative
+from examples.controls.material.dropdown.icon_selection import main as icon_selection
+from examples.controls.material.dropdown.select_and_change_events import (
+    main as select_and_change_events,
+)
+from examples.controls.material.dropdown.styled import main as styled
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app_function.assert_control_screenshot(
+        request.node.name,
+        ft.Dropdown(
+            width=220,
+            value="alice",
+            options=[
+                ft.dropdown.Option(key="alice", text="Alice"),
+                ft.dropdown.Option(key="bob", text="Bob"),
+            ],
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": color_selection_with_filtering.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_color_selection_with_filtering(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(350, 300)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frames: list[bytes] = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
+
+    dropdown = await flet_app_function.tester.find_by_key("color_dropdown")
+    await flet_app_function.tester.tap(dropdown)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.enter_text(dropdown, "re")
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    red_options = await flet_app_function.tester.find_by_text("red")
+    assert red_options.count >= 1
+    await flet_app_function.tester.tap(red_options.last)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="color_selection_with_filtering_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": icon_selection.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_icon_selection(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(350, 300)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frames: list[bytes] = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
+
+    dropdown = await flet_app_function.tester.find_by_key("icon_dropdown")
+    await flet_app_function.tester.tap(dropdown)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    heart_options = await flet_app_function.tester.find_by_icon(ft.Icons.FAVORITE)
+    assert heart_options.count >= 1
+    await flet_app_function.tester.tap(heart_options.last)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="icon_selection_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": declarative.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_declarative(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(360, 260)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frames: list[bytes] = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
+
+    dropdown = await flet_app_function.tester.find_by_key("declarative_dropdown")
+    await flet_app_function.tester.tap(dropdown)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    green_option = await flet_app_function.tester.find_by_text("Green")
+    assert green_option.count >= 1
+    await flet_app_function.tester.tap(green_option.last)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="declarative_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": select_and_change_events.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_select_and_change_events(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(380, 400)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frames: list[bytes] = []
+    dropdown = await flet_app_function.tester.find_by_key("select_change_dropdown")
+    await flet_app_function.tester.tap(dropdown)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    red_option = await flet_app_function.tester.find_by_text("red")
+    assert red_option.count >= 1
+    await flet_app_function.tester.mouse_hover(red_option.last)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+    await flet_app_function.tester.tap(red_option.last)
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    await flet_app_function.tester.enter_text(dropdown, "deep_red")
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.tap_at(ft.Offset(10, 10))
+    await flet_app_function.tester.pump_and_settle()
+    frames.append(
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    )
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="select_and_change_events_flow",
+        duration=1000,
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": styled.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_styled(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(420, 600)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    frames = [
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        )
+    ]
+
+    for index in range(1, 6):
+        dropdown = await flet_app_function.tester.find_by_key(
+            f"styled_dropdown_{index}"
+        )
+        await flet_app_function.tester.tap(dropdown)
+        await flet_app_function.tester.pump_and_settle()
+
+        frames.append(
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            )
+        )
+
+        selected_option = await flet_app_function.tester.find_by_text(f"Style {index}B")
+        assert selected_option.count >= 1
+        await flet_app_function.tester.tap(selected_option.last)
+        await flet_app_function.tester.pump_and_settle()
+
+        frames.append(
+            await flet_app_function.page.take_screenshot(
+                pixel_ratio=flet_app_function.screenshots_pixel_ratio
+            )
+        )
+
+    flet_app_function.create_gif(
+        frames=frames,
+        output_name="styled_flow",
+        duration=1000,
+    )

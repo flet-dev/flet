@@ -1,6 +1,6 @@
 ---
 class_name: "flet.Assertiveness"
-examples: "controls/types/assertiveness"
+examples: "controls/core/types/assertiveness"
 title: "Assertiveness"
 ---
 

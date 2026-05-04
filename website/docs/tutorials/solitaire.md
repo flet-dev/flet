@@ -144,7 +144,7 @@ slot = ft.Container(
         height=100,
         left=200,
         top=0,
-        border=ft.border.all(1)
+        border=ft.Border.all(1)
     )
 page.add(ft.Stack(controls = [slot, card], width=1000, height=500))
 ```
@@ -278,15 +278,15 @@ The full code for this step can be found [here](https://github.com/flet-dev/flet
 As a final step for the proof of concept app, let’s create two more slots:
 ```python
 slot0 = ft.Container(
-    width=70, height=100, left=0, top=0, border=ft.border.all(1)
+    width=70, height=100, left=0, top=0, border=ft.Border.all(1)
 )
 
 slot1 = ft.Container(
-    width=70, height=100, left=200, top=0, border=ft.border.all(1)
+    width=70, height=100, left=200, top=0, border=ft.Border.all(1)
 )
 
 slot2 = ft.Container(
-    width=70, height=100, left=300, top=0, border=ft.border.all(1)
+    width=70, height=100, left=300, top=0, border=ft.Border.all(1)
 )
 
 slots = [slot0, slot1, slot2]
@@ -368,7 +368,7 @@ class Slot(ft.Container):
        self.height=SLOT_HEIGHT
        self.left=left
        self.top=top
-       self.border=ft.border.all(1)
+       self.border=ft.Border.all(1)
 ```
 
 Similarly to `Slot` class, let’s create a new `Card` class with `slot` property to remember in which slot it resides.
@@ -678,7 +678,7 @@ class Card(ft.GestureDetector):
         self.content=ft.Container(
             width=CARD_WIDTH,
             height=CARD_HEIGHT,
-            border_radius = ft.border_radius.all(6),
+            border_radius = ft.BorderRadius.all(6),
             content=ft.Image(src="card_back.png"))
 ```
 All the images for the face up cards, as well as card back are stored in the “images” folder in the same directory as main.py.
@@ -732,13 +732,13 @@ Let’s create all those slots in `solitaire.create_slots()`:
 ```python
 def create_slots(self):
 
-    self.stock = Slot(top=0, left=0, border=ft.border.all(1))
+    self.stock = Slot(top=0, left=0, border=ft.Border.all(1))
     self.waste = Slot(top=0, left=100, border=None)
 
     self.foundations = []
     x = 300
     for i in range(4):
-        self.foundations.append(Slot(top=0, left=x, border=ft.border.all(1, "outline")))
+        self.foundations.append(Slot(top=0, left=x, border=ft.Border.all(1, "outline")))
         x += 100
 
     self.tableau = []
@@ -1086,7 +1086,7 @@ class Slot(ft.Container):
        self.on_click=self.click
        self.solitaire=solitaire
        self.border=border
-       self.border_radius = ft.border_radius.all(6)
+       self.border_radius = ft.BorderRadius.all(6)
 
    def click(self, e):
        if self == self.solitaire.stock:

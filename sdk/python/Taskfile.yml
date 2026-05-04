@@ -65,7 +65,7 @@ tasks:
       - uv run --group test pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests
 
   serve-docs:
-    desc: "Start Docusaurus dev server for the documentation website."
+    desc: "Start Docusaurus dev server for the documentation website with hot reload."
     aliases:
       - docs
     cmds:

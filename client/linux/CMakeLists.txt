@@ -91,6 +91,15 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Link mimalloc when media_kit_libs_linux exposes it. This must happen after
+# generated plugins are included so MIMALLOC_LIB is initialized.
+# mimalloc.o references pthread_*, so pair it with Threads::Threads — modern
+# ld --as-needed won't pull libpthread in transitively through other DSOs.
+if(MIMALLOC_LIB)
+  find_package(Threads REQUIRED)
+  target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB} Threads::Threads)
+endif()
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build

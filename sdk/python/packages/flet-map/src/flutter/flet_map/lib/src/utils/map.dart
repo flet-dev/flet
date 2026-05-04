@@ -153,10 +153,12 @@ KeyboardOptions? parseKeyboardOptions(dynamic value,
           parseDouble(value["rotate_leap_velocity_multiplier"], 3)!,
       zoomLeapVelocityMultiplier:
           parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
-      performLeapTriggerDuration:
-          parseDuration(value["perform_leap_trigger_duration"], const Duration(milliseconds: 100))!,
-      animationCurveReverseDuration:
-          parseDuration(value["animation_curve_reverse_duration"], const Duration(milliseconds: 600))!);
+      performLeapTriggerDuration: parseDuration(
+          value["perform_leap_trigger_duration"],
+          const Duration(milliseconds: 100))!,
+      animationCurveReverseDuration: parseDuration(
+          value["animation_curve_reverse_duration"],
+          const Duration(milliseconds: 600))!);
 }
 
 CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
@@ -257,16 +259,16 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
     [MapOptions? defaultValue]) {
   return MapOptions(
     initialCenter:
-        parseLatLng(control.get("initial_center"), const LatLng(50.5, 30.51))!,
-    interactionOptions: parseInteractionOptions(
-        control.get("interaction_configuration"), const InteractionOptions())!,
+        control.getLatLng("initial_center", const LatLng(50.5, 30.51))!,
+    interactionOptions: control.getInteractionOptions(
+        "interaction_configuration", const InteractionOptions())!,
     backgroundColor: control.getColor("bgcolor", context, Colors.grey[300])!,
     initialRotation: control.getDouble("initial_rotation", 0.0)!,
     initialZoom: control.getDouble("initial_zoom", 13.0)!,
     keepAlive: control.getBool("keep_alive", false)!,
     maxZoom: control.getDouble("max_zoom"),
     minZoom: control.getDouble("min_zoom"),
-    initialCameraFit: parseCameraFit(control.get("initial_camera_fit")),
+    initialCameraFit: control.getCameraFit("initial_camera_fit"),
     onPointerHover: control.hasEventHandler("hover")
         ? (PointerHoverEvent e, LatLng latlng) {
             control.triggerEvent("hover", {
@@ -391,5 +393,65 @@ extension MapEventExtension on MapEvent {
       "coordinates": getMapEventCoordinates(this)?.toMap(),
       "id": getMapEventId(this),
     };
+  }
+}
+
+extension MapParsersControlExtension on Control {
+  LatLng? getLatLng(String propertyName, [LatLng? defaultValue]) {
+    return parseLatLng(get(propertyName), defaultValue);
+  }
+
+  LatLngBounds? getLatLngBounds(String propertyName,
+      [LatLngBounds? defaultValue]) {
+    return parseLatLngBounds(get(propertyName), defaultValue);
+  }
+
+  List<LatLng> getLatLngList(String propertyName,
+      [List<LatLng> defaultValue = const []]) {
+    return get<List>(propertyName)
+            ?.map((c) => parseLatLng(c))
+            .nonNulls
+            .toList() ??
+        defaultValue;
+  }
+
+  StrokePattern? getStrokePattern(String propertyName,
+      [StrokePattern? defaultValue]) {
+    return parseStrokePattern(get(propertyName), defaultValue);
+  }
+
+  TileDisplay? getTileDisplay(String propertyName,
+      [TileDisplay? defaultValue]) {
+    return parseTileDisplay(get(propertyName), defaultValue);
+  }
+
+  InteractionOptions? getInteractionOptions(String propertyName,
+      [InteractionOptions? defaultValue]) {
+    return parseInteractionOptions(get(propertyName), defaultValue);
+  }
+
+  CameraFit? getCameraFit(String propertyName, [CameraFit? defaultValue]) {
+    return parseCameraFit(get(propertyName), defaultValue);
+  }
+
+  KeyboardOptions? getKeyboardOptions(String propertyName,
+      [KeyboardOptions? defaultValue]) {
+    return parseKeyboardOptions(get(propertyName), defaultValue);
+  }
+
+  CursorKeyboardRotationOptions? getCursorKeyboardRotationOptions(
+      String propertyName,
+      [CursorKeyboardRotationOptions? defaultValue]) {
+    return parseCursorKeyboardRotationOptions(get(propertyName), defaultValue);
+  }
+
+  EvictErrorTileStrategy? getEvictErrorTileStrategy(String propertyName,
+      [EvictErrorTileStrategy? defaultValue]) {
+    return parseEvictErrorTileStrategy(getString(propertyName), defaultValue);
+  }
+
+  WMSTileLayerOptions? getWMSTileLayerOptions(String propertyName,
+      [WMSTileLayerOptions? defaultValue]) {
+    return parseWMSTileLayerOptions(get(propertyName), defaultValue);
   }
 }

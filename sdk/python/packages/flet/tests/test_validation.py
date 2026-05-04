@@ -157,7 +157,7 @@ def test_deprecated_ignores_docs_reason_for_runtime_warning():
                 "new_value",
                 version="0.80.0",
                 reason="Use plain runtime guidance.",
-                docs_reason="Use [`new_value`][(c).] instead.",
+                docs_reason="Use :attr:`new_value` instead.",
             ),
         ] = None
 

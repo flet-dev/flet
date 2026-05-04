@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  flutter_map: 8.2.2
+  flutter_map: ^8.3.0
   flutter_map_animations: 0.9.0
   latlong2: 0.9.1
 
