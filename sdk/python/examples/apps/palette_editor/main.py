@@ -129,16 +129,12 @@ def material_shade_swatch(
     color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
 ) -> ft.Container:
     return ft.Container(
-        width=44,
-        height=56,
-        border_radius=8,
+        width=32,
+        height=44,
+        border_radius=22 if selected else 0,
         bgcolor=color,
-        border=ft.Border.all(
-            2 if selected else 1,
-            ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
-        ),
         alignment=ft.Alignment.TOP_CENTER,
-        padding=ft.Padding.only(top=6),
+        padding=ft.Padding.only(top=5),
         tooltip=label,
         ink=True,
         on_click=on_click,
@@ -300,7 +296,7 @@ def main(page: ft.Page):
     shade_row = ft.Row(
         visible=False,
         scroll=ft.ScrollMode.AUTO,
-        spacing=4,
+        spacing=0,
         controls=[],
     )
     rebuild_material_color_controls()
