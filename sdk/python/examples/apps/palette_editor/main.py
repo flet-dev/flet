@@ -2,6 +2,8 @@ import flet as ft
 
 ft.context.disable_auto_update()
 
+LIGHT_SEED_COLOR = ft.Colors.BLUE
+
 
 def color_band(
     label: str,
@@ -125,7 +127,7 @@ def main(page: ft.Page):
     page.bgcolor = ft.Colors.SURFACE
     page.padding = 14
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.theme = ft.Theme(color_scheme=ft.ColorScheme())
+    page.theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
     # page.window.width = 420
     # page.window.height = 460
     swatch_width = 250
@@ -138,6 +140,8 @@ def main(page: ft.Page):
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
     selected_role = {"label": None, "attr": None}
+    selected_material_color = {"label": "BLUE", "value": ft.Colors.BLUE}
+    theme_color_overrides: dict[str, ft.ColorValue] = {}
     material_colors = [
         ("AMBER", ft.Colors.AMBER),
         ("BLACK", ft.Colors.BLACK),
@@ -167,11 +171,20 @@ def main(page: ft.Page):
         color_editor_pane.visible = False
         page.update()
 
+    def rebuild_theme():
+        page.theme = ft.Theme(
+            color_scheme_seed=LIGHT_SEED_COLOR,
+            color_scheme=ft.ColorScheme(**theme_color_overrides),
+        )
+
     def on_material_color_click(color_label: str, color_value: ft.ColorValue):
         def handler(_):
+            selected_material_color["label"] = color_label
+            selected_material_color["value"] = color_value
             if selected_role["attr"] is None or selected_role["label"] is None:
                 return
-            setattr(page.theme.color_scheme, selected_role["attr"], color_value)
+            theme_color_overrides[selected_role["attr"]] = color_value
+            rebuild_theme()
             selected_color_text.value = (
                 f"{selected_role['label']} color changed to {color_label}."
             )
@@ -237,15 +250,31 @@ def main(page: ft.Page):
         def handler(_):
             selected_role["label"] = label
             selected_role["attr"] = color_role_by_label[label]
+            theme_color_overrides[selected_role["attr"]] = selected_material_color[
+                "value"
+            ]
+            rebuild_theme()
             selected_color_heading.value = f"{label} editor"
-            selected_color_text.value = f"Choose a material color for {label}."
+            selected_color_text.value = (
+                f"Choose a material color for {label}. Current color: "
+                f"{selected_material_color['label']}."
+            )
             color_editor_pane.visible = True
             page.update()
 
         return handler
 
     def reset_from_seed(_):
-        pass
+        theme_color_overrides.clear()
+        selected_role["label"] = None
+        selected_role["attr"] = None
+        selected_material_color["label"] = "BLUE"
+        selected_material_color["value"] = ft.Colors.BLUE
+        selected_color_heading.value = "Color editor"
+        selected_color_text.value = "Choose a color role to edit."
+        color_editor_pane.visible = False
+        rebuild_theme()
+        page.update()
 
     page.add(
         ft.SafeArea(
