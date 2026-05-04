@@ -72,6 +72,16 @@ tasks:
       - cd ../../website && yarn install --immutable
       - cd ../../website && yarn start
 
+  serve-docs-fast:
+    desc: "Same as serve-docs, but skips Ruff signature formatting (FLET_DOCS_FAST=1) for faster iteration."
+    aliases:
+      - docs-fast
+    env:
+      FLET_DOCS_FAST: "1"
+    cmds:
+      - cd ../../website && yarn install --immutable
+      - cd ../../website && yarn start
+
   docs-coverage:
     desc: "Run docstring coverage report for all SDK Python packages."
     cmds:
