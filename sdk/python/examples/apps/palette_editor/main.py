@@ -378,7 +378,7 @@ def main(page: ft.Page):
         rebuild_theme()
         page.update()
 
-    def export_theme(_):
+    def build_export_code() -> str:
         lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
         for color_role in color_role_export_order:
             color_value = theme_color_overrides.get(color_role)
@@ -387,20 +387,42 @@ def main(page: ft.Page):
             lines.append(f"      {color_role}={format_color_value(color_value)},")
         lines.append("  )")
         lines.append(")")
-        print("\n".join(lines))
+        return "\n".join(lines)
 
     async def copy_export_theme(_):
-        lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
-        for color_role in color_role_export_order:
-            color_value = theme_color_overrides.get(color_role)
-            if color_value is None:
-                continue
-            lines.append(f"      {color_role}={format_color_value(color_value)},")
-        lines.append("  )")
-        lines.append(")")
-        export_code = "\n".join(lines)
+        export_code = build_export_code()
         print(export_code)
         await ft.Clipboard().set(export_code)
+
+    export_code_text = ft.TextField(
+        multiline=True,
+        min_lines=12,
+        max_lines=16,
+        read_only=True,
+        value="",
+    )
+    export_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Export palette"),
+        content=ft.Container(
+            width=520,
+            content=export_code_text,
+        ),
+        actions=[
+            ft.IconButton(
+                icon=ft.Icons.CONTENT_COPY,
+                tooltip="Copy to clipboard",
+                on_click=copy_export_theme,
+            ),
+            ft.TextButton("Close", on_click=lambda _: page.pop_dialog()),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    def export_theme(_):
+        export_code_text.value = build_export_code()
+        page.show_dialog(export_dialog)
+        page.update()
 
     page.add(
         ft.SafeArea(
@@ -430,7 +452,7 @@ def main(page: ft.Page):
                                             ft.IconButton(
                                                 icon=ft.Icons.DOWNLOAD,
                                                 tooltip="Export",
-                                                on_click=copy_export_theme,
+                                                on_click=export_theme,
                                             ),
                                         ],
                                     ),
