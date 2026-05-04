@@ -1,3 +1,5 @@
+import io
+import time
 import wave
 
 import flet as ft
@@ -6,7 +8,16 @@ import flet_audio_recorder as far
 SAMPLE_RATE = 44100
 CHANNELS = 1
 BYTES_PER_SAMPLE = 2
-OUTPUT_FILE = "streamed-recording.wav"
+
+
+def pcm_to_wav_bytes(pcm_data: bytes) -> bytes:
+    wav_buffer = io.BytesIO()
+    with wave.open(wav_buffer, "wb") as wav:
+        wav.setnchannels(CHANNELS)
+        wav.setsampwidth(BYTES_PER_SAMPLE)
+        wav.setframerate(SAMPLE_RATE)
+        wav.writeframes(pcm_data)
+    return wav_buffer.getvalue()
 
 
 def main(page: ft.Page):
@@ -44,13 +55,23 @@ def main(page: ft.Page):
             show_snackbar("Nothing was recorded.")
             return
 
-        with wave.open(OUTPUT_FILE, "wb") as wav:
-            wav.setnchannels(CHANNELS)
-            wav.setsampwidth(BYTES_PER_SAMPLE)
-            wav.setframerate(SAMPLE_RATE)
-            wav.writeframes(buffer)
+        wav_bytes = pcm_to_wav_bytes(bytes(buffer))
+        file_name = f"recording-{int(time.time())}.wav"
+        file_path = await ft.FilePicker().save_file(
+            file_name=file_name,
+            file_type=ft.FilePickerFileType.CUSTOM,
+            allowed_extensions=["wav"],
+            src_bytes=wav_bytes,
+        )
 
-        status.value = f"Saved {len(buffer)} bytes to {OUTPUT_FILE}."
+        if file_path and not (page.web or page.platform.is_mobile()):
+            with open(file_path, "wb") as output:
+                output.write(wav_bytes)
+
+        if page.web:
+            status.value = f"Downloaded {file_name} ({len(wav_bytes)} bytes)."
+        else:
+            status.value = f"Saved to: {file_path}" if file_path else "Save cancelled."
         show_snackbar(status.value)
 
     recorder = far.AudioRecorder(on_stream=handle_stream)
@@ -60,8 +81,11 @@ def main(page: ft.Page):
             content=ft.Column(
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
-                    ft.Text("Record PCM16 audio chunks and save them as a WAV file."),
-                    ft.Button("Start streaming", on_click=handle_recording_start),
+                    ft.Text(
+                        "Stream PCM16 audio chunks and save or download "
+                        "them as a WAV file."
+                    ),
+                    ft.Button("Start recording", on_click=handle_recording_start),
                     ft.Button("Stop and save", on_click=handle_recording_stop),
                     status := ft.Text(),
                 ],

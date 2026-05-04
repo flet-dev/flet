@@ -1,6 +1,6 @@
 ---
 class_name: "flet_audio_recorder.AudioRecorder"
-examples: "services/audio_recorder"
+examples: "extensions/audio_recorder"
 title: "AudioRecorder"
 ---
 
@@ -166,37 +166,41 @@ permissions = ["microphone"]
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-### Streaming chunks
+### Stream chunks and save/download {#stream-chunks-and-save-download}
 
-On web, [`AudioRecorder.stop_recording()`](index.md#flet_audio_recorder.AudioRecorder.stop_recording)
+On web, [`AudioRecorder.stop_recording()`][flet_audio_recorder.AudioRecorder.stop_recording]
 returns a browser-local Blob URL. Use streaming when your app needs access to the recorded bytes.
 
-Set [`AudioRecorderConfiguration.encoder`](types/audiorecorderconfiguration.md#flet_audio_recorder.AudioRecorderConfiguration.encoder)
-to [`AudioEncoder.PCM16BITS`](types/audioencoder.md#flet_audio_recorder.AudioEncoder.PCM16BITS)
-and handle [`AudioRecorder.on_stream`](index.md#flet_audio_recorder.AudioRecorder.on_stream)
-to receive [`AudioRecorderStreamEvent.chunk`](types/audiorecorderstreamevent.md#flet_audio_recorder.AudioRecorderStreamEvent.chunk)
+Set [`AudioRecorderConfiguration.encoder`][flet_audio_recorder.AudioRecorderConfiguration.encoder]
+to [`AudioEncoder.PCM16BITS`][flet_audio_recorder.AudioEncoder.PCM16BITS]
+and handle [`AudioRecorder.on_stream`][flet_audio_recorder.AudioRecorder.on_stream]
+to receive [`AudioRecorderStreamEvent.chunk`][flet_audio_recorder.AudioRecorderStreamEvent.chunk]
 bytes in Python.
 
-[`AudioEncoder.PCM16BITS`](types/audioencoder.md#flet_audio_recorder.AudioEncoder.PCM16BITS)
+[`AudioEncoder.PCM16BITS`][flet_audio_recorder.AudioEncoder.PCM16BITS]
 encoded streams are supported on all platforms. Stream chunks are raw PCM16 bytes and are not directly
 playable as an audio file. Wrap the bytes in a container such as WAV in Python when
 the destination needs a directly playable recording.
 
-<CodeExample path={frontMatter.examples + '/stream/main.py'} language="python" />
+The example below collects the streamed chunks, wraps the PCM16 bytes in a WAV container,
+and passes the resulting bytes to [`FilePicker.save_file()`][flet.FilePicker.save_file]
+so users can save or download the recording.
+
+<CodeExample path={frontMatter.examples + '/stream_and_download/main.py'} language="python" />
 
 ### Streaming upload
 
-Pass [`AudioRecorderUploadSettings`](types/audiorecorderuploadsettings.md) to
-[`AudioRecorder.start_recording()`](index.md#flet_audio_recorder.AudioRecorder.start_recording)
-to upload [`AudioEncoder.PCM16BITS`](types/audioencoder.md#flet_audio_recorder.AudioEncoder.PCM16BITS)
+Pass [`AudioRecorderUploadSettings`][flet_audio_recorder.AudioRecorderUploadSettings] to
+[`AudioRecorder.start_recording()`][flet_audio_recorder.AudioRecorder.start_recording]
+to upload [`AudioEncoder.PCM16BITS`][flet_audio_recorder.AudioEncoder.PCM16BITS]
 recording bytes directly while recording.
 
 The uploaded file contains raw PCM16 bytes, so a `.pcm` extension is intentional.
-See the [streaming chunks example](#streaming-chunks) for inspiration,
-if you need to create a playable WAV file.
+See the [stream chunks and save/download example](#stream-chunks-and-save-download)
+for inspiration, if you need to create a playable WAV file.
 
 :::note
-Built-in upload URLs from [`Page.get_upload_url()`](../../controls/page.md#flet.Page.get_upload_url)
+Built-in upload URLs from [`Page.get_upload_url()`][flet.Page.get_upload_url]
 require upload storage and a signing key. Run with `upload_dir` and set
 [`FLET_SECRET_KEY`](../../reference/environment-variables.md#flet_secret_key).
 :::
