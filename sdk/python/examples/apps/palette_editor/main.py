@@ -244,6 +244,9 @@ def main(page: ft.Page):
 
         return handler
 
+    def reset_from_seed(_):
+        pass
+
     page.add(
         ft.SafeArea(
             expand=True,
@@ -261,6 +264,16 @@ def main(page: ft.Page):
                                 spacing=8,
                                 horizontal_alignment=ft.CrossAxisAlignment.START,
                                 controls=[
+                                    ft.Row(
+                                        spacing=8,
+                                        controls=[
+                                            ft.IconButton(
+                                                icon=ft.Icons.PALETTE,
+                                                tooltip="Reset from seed",
+                                                on_click=reset_from_seed,
+                                            )
+                                        ],
+                                    ),
                                     color_group(
                                         [
                                             (
