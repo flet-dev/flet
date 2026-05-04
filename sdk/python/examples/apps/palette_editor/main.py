@@ -118,6 +118,11 @@ def showcase_section(title: str, *controls: ft.Control) -> ft.Container:
 def material_color_circle(
     color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
 ) -> ft.Container:
+    selected_border_color = (
+        getattr(ft.Colors, f"{label}_900")
+        if hasattr(ft.Colors, f"{label}_900")
+        else ft.Colors.BLACK
+    )
     return ft.Container(
         width=28,
         height=28,
@@ -125,7 +130,7 @@ def material_color_circle(
         bgcolor=color,
         border=ft.Border.all(
             2 if selected else 1,
-            ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
+            selected_border_color if selected else ft.Colors.OUTLINE_VARIANT,
         ),
         tooltip=label,
         ink=True,
@@ -587,6 +592,7 @@ def main(page: ft.Page):
                 content=ft.Row(
                     expand=True,
                     spacing=0,
+                    vertical_alignment=ft.CrossAxisAlignment.START,
                     controls=[
                         ft.Container(
                             width=swatch_width,
