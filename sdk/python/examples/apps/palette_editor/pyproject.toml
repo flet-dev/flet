@@ -5,7 +5,7 @@ description = "Tool for editing theme colors."
 requires-python = ">=3.10"
 keywords = ["apps", "color scheme", "theme"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
-dependencies = ["flet"]
+dependencies = ["flet", "flet-color-pickers"]
 
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]

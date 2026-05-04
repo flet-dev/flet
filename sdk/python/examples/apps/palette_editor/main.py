@@ -1,4 +1,5 @@
 import flet as ft
+from flet_color_pickers import HueRingPicker
 
 ft.context.disable_auto_update()
 
@@ -209,12 +210,16 @@ def main(page: ft.Page):
             color_scheme=ft.ColorScheme(**theme_color_overrides),
         )
 
+    def update_hex_picker(color_value: ft.ColorValue | None):
+        hex_color_picker.color = color_value
+
     def set_selected_material_from_value(color_value: ft.ColorValue | None):
         if color_value is None:
             selected_material_color["label"] = None
             selected_material_color["value"] = None
             selected_shade["label"] = None
             selected_shade["value"] = None
+            update_hex_picker(None)
             return
 
         for label, value in material_colors:
@@ -223,6 +228,7 @@ def main(page: ft.Page):
                 selected_material_color["value"] = value
                 selected_shade["label"] = None
                 selected_shade["value"] = None
+                update_hex_picker(color_value)
                 return
 
         for material_label, material_value in material_colors:
@@ -232,12 +238,14 @@ def main(page: ft.Page):
                     selected_material_color["value"] = material_value
                     selected_shade["label"] = shade_label
                     selected_shade["value"] = shade_value
+                    update_hex_picker(color_value)
                     return
 
         selected_material_color["label"] = None
         selected_material_color["value"] = None
         selected_shade["label"] = None
         selected_shade["value"] = None
+        update_hex_picker(color_value)
 
     def get_shades(color_label: str | None) -> list[tuple[str, ft.ColorValue]]:
         if color_label is None or color_label in {"BLACK", "WHITE", "TRANSPARENT"}:
@@ -365,6 +373,7 @@ def main(page: ft.Page):
             selected_material_color["value"] = color_value
             selected_shade["label"] = None
             selected_shade["value"] = None
+            update_hex_picker(color_value)
             rebuild_material_color_controls()
             rebuild_shade_controls()
             if selected_role["attr"] is None or selected_role["label"] is None:
@@ -382,6 +391,7 @@ def main(page: ft.Page):
         def handler(_):
             selected_shade["label"] = shade_label
             selected_shade["value"] = shade_value
+            update_hex_picker(shade_value)
             rebuild_shade_controls()
             if selected_role["attr"] is None or selected_role["label"] is None:
                 return
@@ -394,6 +404,19 @@ def main(page: ft.Page):
             page.update()
 
         return handler
+
+    def on_hex_color_change(e: ft.ControlEvent):
+        if selected_role["attr"] is None or selected_role["label"] is None:
+            return
+        theme_color_overrides[selected_role["attr"]] = e.data
+        set_selected_material_from_value(e.data)
+        rebuild_material_color_controls()
+        rebuild_shade_controls()
+        rebuild_theme()
+        selected_color_text.value = (
+            f"{selected_role['label']} color changed to {e.data}."
+        )
+        page.update()
 
     material_color_row = ft.Row(
         wrap=True,
@@ -413,12 +436,20 @@ def main(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.START,
         controls=[],
     )
+    hex_color_picker = HueRingPicker(
+        color=None,
+        on_color_change=on_hex_color_change,
+        color_picker_height=220,
+        enable_alpha=False,
+        hue_ring_stroke_width=18,
+        picker_area_border_radius=ft.BorderRadius.all(12),
+    )
     rebuild_material_color_controls()
     rebuild_shade_controls()
 
     color_editor_pane = ft.Container(
         visible=False,
-        width=swatch_width,
+        width=swatch_width * 2,
         padding=ft.Padding.only(left=8, right=8),
         content=ft.Container(
             expand=True,
@@ -444,6 +475,7 @@ def main(page: ft.Page):
                     selected_color_text,
                     material_color_row,
                     shade_row,
+                    hex_color_picker,
                 ],
             ),
         ),
