@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Accelerometer"]
+categories = ["Sensors/Accelerometer"]
 
 [tool.flet.metadata]
 title = "Basic accelerometer"

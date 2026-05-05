@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Battery"]
+categories = ["Sensors/Battery"]
 
 [tool.flet.metadata]
 title = "Basic battery"

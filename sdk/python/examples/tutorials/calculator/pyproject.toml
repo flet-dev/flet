@@ -1,0 +1,26 @@
+[project]
+name = "tutorials-calculator"
+version = "1.0.0"
+description = "Builds an iOS-style calculator app with custom button controls and arithmetic operations."
+requires-python = ">=3.10"
+keywords = ["tutorials", "calculator", "productivity", "custom controls"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/Productivity", "Getting Started", "Featured", "Tools"]
+
+[tool.flet.metadata]
+title = "Calculator"
+controls = ["Container", "Column", "Row", "Text", "Button"]
+layout_pattern = "center-stage"
+complexity = "beginner"
+features = ["custom controls", "arithmetic", "state management"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

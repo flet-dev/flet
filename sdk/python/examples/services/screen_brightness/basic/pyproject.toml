@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/ScreenBrightness"]
+categories = ["Utility/ScreenBrightness"]
 
 [tool.flet.metadata]
 title = "Basic screen brightness"

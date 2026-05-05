@@ -184,6 +184,10 @@ categories:
     RadarChart:
     ScatterChart:
 
+  Games:
+    _icon: sports_esports
+    _description: Game examples and demos
+
   Animations:
     _icon: animation
     _description: Animation controls
@@ -198,63 +202,66 @@ categories:
   Media:
     _icon: movie
     _description: Audio, video, Lottie, Rive
+    Audio: # download audio to assets - CORS preventing from github
+    AudioRecorder:
     Lottie:
     Rive:
     Video:
+    Camera:
 
   Pages:
     _icon: pages
     _description: Page-level controls
     Page:
 
+  Accessibility:
+    _icon: accessibility
+    _description: Accessibility features and examples
+
   Utility:
     _icon: build
     _description: Gestures, drag/drop, screenshots
+    BrowserContextMenu:
+    Clipboard: # Clipboard files gives 404 on https://flet.app/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
     Color pickers:
+    Connectivity:
     Draggable:
+    FilePicker:
+    Flashlight:
     GestureDetector:
     InteractiveViewer:
     KeyboardListener:
+    PermissionHandler:
+    SecureStorage:
+    ScreenBrightness:
     Screenshot:
     SelectionArea:
-    Semantics:
-    Types:
-
-  Services:
-    _icon: settings
-    _description: Platform services and integrations
-    #Accelerometer:
-    #Ads:
-    Audio: # download audio to assets - CORS preventing from github
-    AudioRecorder:
-    #Barometer:
-    #Battery:
-    BrowserContextMenu:
-    Camera:
-    Clipboard: # Clipboard files gives 404 on https://flet.app/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
-    Connectivity:
-    FilePicker:
-    #Flashlight:
-    Geolocator: # Geolocator.request_permission() got an unexpected keyword argument 'timeout'
-    #Gyroscope:
-    #HapticFeedback:
-    #Magnetometer:
-    PermissionHandler:
-    #ScreenBrightness:
-    #SecureStorage:
-    SemanticsService:
-    #ShakeDetector:
     Share:
     SharedPreferences:
-    #Storagepaths:
+    Storagepaths:
+    Types:
     UrlLauncher:
-    #UserAccelerometer:
     Wakelock:
+
+  Sensors:
+    _icon: sensors
+    _description: Device sensors and hardware features
+    Accelerometer:
+    Barometer:
+    Battery:
+    Geolocator: # Geolocator.request_permission() got an unexpected keyword argument 'timeout'
+    Gyroscope:
+    HapticFeedback:
+    Magnetometer:
+    ShakeDetector:
+    UserAccelerometer:
+
+  Marketing:
+    _icon: campaign
+    _description: Examples of marketing and monetization features
+    Ads:
+    InAppPurchase:
 
   Tools:
     _icon: handyman
     _description: Development tools and utilities
-
-  Games:
-    _icon: sports_esports
-    _description: Game examples and demos

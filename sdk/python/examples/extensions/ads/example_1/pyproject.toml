@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-ads"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Ads"]
+categories = ["Marketing/Ads"]
 
 [tool.flet.metadata]
 title = "BannerAd and InterstitialAd"

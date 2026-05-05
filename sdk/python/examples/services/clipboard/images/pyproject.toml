@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Clipboard"]
+categories = ["Utility/Clipboard"]
 
 [tool.flet.metadata]
 title = "Clipboard images"

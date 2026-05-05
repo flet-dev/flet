@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-permission-handler"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/PermissionHandler"]
+categories = ["Utility/PermissionHandler"]
 
 [tool.flet.metadata]
 title = "Permission handler example"
