@@ -364,6 +364,27 @@ def main(page: ft.Page):
                 selected_label=selected_role["label"],
                 on_color_click=on_color_click,
             ),
+            color_group(
+                [
+                    ("TERTIARY", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
+                    ("ON_TERTIARY", ft.Colors.ON_TERTIARY, ft.Colors.TERTIARY),
+                    (
+                        "TERTIARY_CONTAINER",
+                        ft.Colors.TERTIARY_CONTAINER,
+                        ft.Colors.ON_TERTIARY_CONTAINER,
+                    ),
+                    (
+                        "ON_TERTIARY_CONTAINER",
+                        ft.Colors.ON_TERTIARY_CONTAINER,
+                        ft.Colors.TERTIARY_CONTAINER,
+                    ),
+                ],
+                width=swatch_width,
+                height=swatch_height,
+                title="Tertiary roles",
+                selected_label=selected_role["label"],
+                on_color_click=on_color_click,
+            ),
         ]
 
     def rebuild_shade_controls():
@@ -501,6 +522,10 @@ def main(page: ft.Page):
         "ON_SECONDARY": "on_secondary",
         "SECONDARY_CONTAINER": "secondary_container",
         "ON_SECONDARY_CONTAINER": "on_secondary_container",
+        "TERTIARY": "tertiary",
+        "ON_TERTIARY": "on_tertiary",
+        "TERTIARY_CONTAINER": "tertiary_container",
+        "ON_TERTIARY_CONTAINER": "on_tertiary_container",
     }
     color_role_export_order = list(dict.fromkeys(color_role_by_label.values()))
     import_format_hint = (
