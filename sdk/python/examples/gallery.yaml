@@ -10,6 +10,18 @@
 # in this file will be skipped at scan time.
 
 categories:
+  Featured:
+    _icon: star
+    _description: Featured examples and demos
+    7GUIs:
+
+  Getting Started:
+    _icon: rocket_launch
+    _description: Quick-start examples and tutorials
+    Counter:
+    Hello World:
+    # Some layout examples
+
   Apps:
     _icon: apps
     _description: Complete sample apps
@@ -238,3 +250,11 @@ categories:
     UrlLauncher:
     #UserAccelerometer:
     Wakelock:
+
+  Tools:
+    _icon: handyman
+    _description: Development tools and utilities
+
+  Games:
+    _icon: sports_esports
+    _description: Game examples and demos
