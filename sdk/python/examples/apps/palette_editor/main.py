@@ -221,6 +221,17 @@ def main(page: ft.Page):
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
 
+    def get_current_role_color_value(role_attr: str | None) -> ft.ColorValue | None:
+        if role_attr is None:
+            return None
+        override = theme_color_overrides.get(role_attr)
+        if override is not None:
+            return override
+        token_name = role_attr.upper()
+        if hasattr(ft.Colors, token_name):
+            return getattr(ft.Colors, token_name)
+        return None
+
     def set_selected_material_from_value(color_value: ft.ColorValue | None):
         if color_value is None:
             selected_material_color["label"] = None
@@ -571,7 +582,7 @@ def main(page: ft.Page):
             selected_role["label"] = label
             selected_role["attr"] = color_role_by_label[label]
             set_selected_material_from_value(
-                theme_color_overrides.get(selected_role["attr"])
+                get_current_role_color_value(selected_role["attr"])
             )
             selected_color_heading.value = f"{label} editor"
             selected_color_text.value = f"Choose a material color for {label}."
@@ -735,7 +746,7 @@ def main(page: ft.Page):
         rebuild_theme()
         if selected_role["attr"] is not None:
             set_selected_material_from_value(
-                theme_color_overrides.get(selected_role["attr"])
+                get_current_role_color_value(selected_role["attr"])
             )
         else:
             selected_material_color["label"] = None
