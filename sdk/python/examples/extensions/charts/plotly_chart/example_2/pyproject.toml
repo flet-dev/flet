@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["chart visualization"]
 
 [tool.flet]
+platforms = ["ios", "android", "macos", "windows", "linux"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

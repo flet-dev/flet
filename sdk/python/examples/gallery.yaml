@@ -56,7 +56,7 @@ categories:
     Stack:
     Tabs:
     VerticalDivider:
-    WindowDragArea:
+    #WindowDragArea:
 
   Buttons:
     _icon: smart_button
@@ -82,6 +82,7 @@ categories:
     AutofillGroup:
     Checkbox:
     Chip:
+    CodeEditor:
     ContextMenu:
     Dropdown:
     DropdownM2:
@@ -103,12 +104,6 @@ categories:
     CupertinoSwitch:
     CupertinoTextField:
     CupertinoTimerPicker:
-
-  Display:
-    _icon: visibility
-    _description: Read-only displays
-    Text:
-    WebView:
 
   Displays:
     _icon: image
@@ -152,6 +147,17 @@ categories:
     CupertinoAppBar:
     CupertinoNavigationBar:
 
+  Typography:
+    _icon: visibility
+    _description: Text, styles and fonts
+    Text:
+    #WebView:
+
+  Theming:
+    _icon: palette
+    _description: Themes, colors, and styles
+    Color pickers:
+
   Charts:
     _icon: bar_chart
     _description: Plotting and data viz
@@ -163,11 +169,6 @@ categories:
     PlotlyChart:
     RadarChart:
     ScatterChart:
-
-  Canvas:
-    _icon: brush
-    _description: 2D drawing primitives
-    Shapes:
 
   Animations:
     _icon: animation
@@ -195,6 +196,7 @@ categories:
   Utility:
     _icon: build
     _description: Gestures, drag/drop, screenshots
+    Color pickers:
     Draggable:
     GestureDetector:
     InteractiveViewer:
@@ -204,49 +206,33 @@ categories:
     Semantics:
     Types:
 
-  Utilities:
-    _icon: handyman
-    _description: Editor and developer utilities
-    CodeEditor:
-
   Services:
     _icon: settings
     _description: Platform services and integrations
-    Accelerometer:
-    Ads:
-    Audio:
+    #Accelerometer:
+    #Ads:
+    Audio: # download audio to assets - CORS preventing from github
     AudioRecorder:
-    Barometer:
-    Battery:
+    #Barometer:
+    #Battery:
     BrowserContextMenu:
     Camera:
-    Clipboard:
+    Clipboard: # Clipboard files gives 404 on https://flet.app/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
     Connectivity:
     FilePicker:
-    Flashlight:
-    Geolocator:
-    Gyroscope:
-    HapticFeedback:
-    Magnetometer:
+    #Flashlight:
+    Geolocator: # Geolocator.request_permission() got an unexpected keyword argument 'timeout'
+    #Gyroscope:
+    #HapticFeedback:
+    #Magnetometer:
     PermissionHandler:
-    ScreenBrightness:
-    SecureStorage:
+    #ScreenBrightness:
+    #SecureStorage:
     SemanticsService:
-    ShakeDetector:
+    #ShakeDetector:
     Share:
     SharedPreferences:
-    Storagepaths:
+    #Storagepaths:
     UrlLauncher:
-    UserAccelerometer:
+    #UserAccelerometer:
     Wakelock:
-
-  Extensions:
-    _icon: extension
-    _description: Third-party Flet extensions
-    ColorPickers:
-    Map:
-
-  Community:
-    _icon: people
-    _description: Community-contributed examples
-    Productivity:

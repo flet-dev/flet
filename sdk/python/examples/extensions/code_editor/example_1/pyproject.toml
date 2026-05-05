@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-code-editor"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Utilities/CodeEditor"]
+categories = ["Input/CodeEditor"]
 
 [tool.flet.metadata]
 title = "Basic example"

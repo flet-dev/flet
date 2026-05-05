@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Utility/Types", "Canvas/Shapes"]
+categories = ["Displays/Shapes"]
 
 [tool.flet.metadata]
 title = "Paint Radial Gradient"
