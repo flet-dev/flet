@@ -11,12 +11,14 @@
 * Add `Page.pop_views_until()` to pop multiple views and return a result to the destination view ([#6326](https://github.com/flet-dev/flet/issues/6326), [#6347](https://github.com/flet-dev/flet/pull/6347)) by @brunobrown.
 * Make `NavigationDrawerDestination.label` accept custom controls and add `NavigationDrawerTheme.icon_theme` ([#6379](https://github.com/flet-dev/flet/issues/6379), [#6395](https://github.com/flet-dev/flet/pull/6395)) by @ndonkoHenri.
 * Add `local_position` and `global_position` to `DragTargetEvent`, deprecating `x`, `y`, and `offset` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
+* Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
 
 ### Improvements
 
 ### Bug fixes
 
 * Fix control diffing for controls nested inside `@value` dataclass objects so they keep the nearest control parent/page context, and restore optional structured properties that are cleared to `None` and later set again ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+* Fix `Page` and `View` vertical centering when scrolling is enabled, including hidden scrollbars, so short content remains centered in the viewport ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
 * Reduce Linux memory retention when repeatedly removing `flet_video.Video` controls by linking `media_kit` video apps against mimalloc in run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)) by @ndonkoHenri.
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
 * Fix `CodeEditor` background not filling the entire area when `expand=True` ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
@@ -27,10 +29,12 @@
 * Fix `auto_scroll` on scrollable controls silently doing nothing unless `scroll` was also explicitly set ([#6397](https://github.com/flet-dev/flet/issues/6397), [#6404](https://github.com/flet-dev/flet/pull/6404)) by @ndonkoHenri.
 * Fix Flet web returning `index.html` with a `200 OK` for missing asset files; requests for paths with a file extension other than `.html` now return a proper `404`, while route-like paths still fall back to `index.html` for SPA routing ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
 * Fix `Lottie` failing to load local asset files on Windows desktop (and unreliably on other desktop platforms), so animations referenced by `src="file.json"` from the app's `assets/` directory now display correctly ([#6386](https://github.com/flet-dev/flet/issues/6386), [#6426](https://github.com/flet-dev/flet/pull/6426)) by @ndonkoHenri.
+* Fix `Page.on_resize` and `Page.on_media_change` not firing after mobile orientation changes ([#6457](https://github.com/flet-dev/flet/issues/6457), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
 * Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
 * Fix environment variable priority in `flet build` template: inherit from `Platform.environment` and use `putIfAbsent` for FLET_* variables so pre-set system env vars are not overwritten ([#6394](https://github.com/flet-dev/flet/pull/6394)) by @Bahtya.
 * Fix 3- and 4-digit hex color shorthand (e.g. `#c00`, `#fc00`) rendering as invisible by expanding them to their full 6/8-digit forms ([#6419](https://github.com/flet-dev/flet/issues/6419), [#6421](https://github.com/flet-dev/flet/pull/6421)) by @ndonkoHenri.
 * Fix `LineChart` (and other charts) silently dropping custom `ChartAxisLabel` entries whose `value` matched a tick only after floating-point rounding (e.g. `0.1`, `0.2`, `0.3`) by switching label lookup to a tolerance-based comparison scaled to the axis interval ([#6445](https://github.com/flet-dev/flet/issues/6445), [#6459](https://github.com/flet-dev/flet/pull/6459)) by @KangZhaoKui.
+* Fix absolute-path `src` (e.g. `Image(src="/images/foo.svg")`) breaking on web when the app is mounted at a non-root URL, pass `data:`/`blob:` URIs through the asset resolver unchanged, preserve origin-relative semantics when `assets_dir` is unset, and add a `window.flet.assetsDir` JS-interop bridge so embedding hosts can supply `assets_dir` to the top-level `FletApp` ([#6470](https://github.com/flet-dev/flet/pull/6470)) by @FeodorFitsner.
 
 ### Documentation
 
@@ -42,6 +46,7 @@
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity ([#6374](https://github.com/flet-dev/flet/pull/6374)) by @FeodorFitsner.
 * Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helpers (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
 * Centralize Linux apt dependencies in `flet.utils.linux_deps` and update CI workflows and publish docs to consume them dynamically ([#6357](https://github.com/flet-dev/flet/issues/6357), [#6383](https://github.com/flet-dev/flet/pull/6383)) by @ndonkoHenri.
+* Bump `serious_python` to `0.9.12` in the `flet build` template ([#6461](https://github.com/flet-dev/flet/pull/6461)) by @FeodorFitsner.
 
 ## 0.84.0
 

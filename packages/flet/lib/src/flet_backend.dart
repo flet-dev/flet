@@ -332,7 +332,12 @@ class FletBackend extends ChangeNotifier {
     var newProps = {"width": newSize.width, "height": newSize.height};
     var ctrl = view ?? page;
     updateControl(ctrl.id, newProps);
-    triggerControlEvent(ctrl, "resize", newProps);
+
+    // Initial page sizing should only hydrate Python state. Later size changes
+    // must reach Python even if no explicit "on_resize" handler is set.
+    if (pageSizeUpdated.isCompleted) {
+      triggerControlEventById(ctrl.id, "resize", newProps);
+    }
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
@@ -362,7 +367,11 @@ class FletBackend extends ChangeNotifier {
     media = newMedia;
     var ctrl = view ?? page;
     updateControl(ctrl.id, {"media": newMedia.toMap()});
-    triggerControlEvent(ctrl, "media_change", newMedia.toMap());
+    // Initial page media should only hydrate Python state. Later media changes
+    // must reach Python even if no explicit "on_media_change" handler is set.
+    if (pageSizeUpdated.isCompleted) {
+      triggerControlEventById(ctrl.id, "media_change", newMedia.toMap());
+    }
     notifyListeners();
   }
 

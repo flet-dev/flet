@@ -1,0 +1,26 @@
+[project]
+name = "services-audio-recorder-stream-and-download"
+version = "1.0.0"
+description = "Streams PCM16 audio chunks and saves or downloads them as a WAV file from bytes."
+requires-python = ">=3.10"
+keywords = ["audio recorder", "streaming", "download", "services", "async", "save to file"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-audio-recorder"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Services/AudioRecorder"]
+
+[tool.flet.metadata]
+title = "Audio recorder stream and download"
+controls = ["SafeArea", "Column", "Page", "Text", "Button", "FilePicker", "AudioRecorder"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["audio recording", "streaming chunks", "download from bytes", "save to file", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

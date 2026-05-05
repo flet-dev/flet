@@ -16,6 +16,10 @@ String getFletRouteUrlStrategy() {
   return "";
 }
 
+String getAssetsDir() {
+  return "";
+}
+
 bool isPyodideMode() {
   return false;
 }

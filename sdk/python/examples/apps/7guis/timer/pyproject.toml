@@ -1,0 +1,26 @@
+[project]
+name = "apps-7guis-timer"
+version = "1.0.0"
+description = "7GUIs timer app with automatic progress updates, duration control, and reset handling."
+requires-python = ">=3.10"
+keywords = ["apps", "7guis", "timer", "progress", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/7GUIs", "Apps/Time"]
+
+[tool.flet.metadata]
+title = "Timer"
+controls = ["SafeArea", "Container", "Column", "Row", "Text", "ProgressBar", "Slider", "TextButton"]
+layout_pattern = "center-stage"
+complexity = "basic"
+features = ["async", "timer progress", "slider input", "reset handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
