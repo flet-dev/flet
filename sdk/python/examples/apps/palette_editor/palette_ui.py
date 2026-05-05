@@ -148,8 +148,10 @@ def build_left_pane_controls(
     swatch_width: int,
     swatch_height: int,
     theme_mode: ft.ThemeMode,
+    seed_color_options: list[tuple[str, ft.ColorValue]],
+    selected_seed_color: ft.ColorValue,
     on_color_click,
-    on_reset,
+    on_select_seed,
     on_export,
     on_import,
     on_toggle_theme,
@@ -161,10 +163,27 @@ def build_left_pane_controls(
                 ft.Row(
                     spacing=8,
                     controls=[
-                        ft.IconButton(
+                        ft.PopupMenuButton(
                             icon=ft.Icons.PALETTE,
-                            tooltip="Reset from seed",
-                            on_click=on_reset,
+                            tooltip="Rebuild from seed",
+                            menu_position=ft.PopupMenuPosition.UNDER,
+                            items=[
+                                ft.PopupMenuItem(
+                                    checked=color == selected_seed_color,
+                                    content=ft.Row(
+                                        spacing=12,
+                                        controls=[
+                                            ft.Icon(
+                                                ft.Icons.PALETTE_OUTLINED,
+                                                color=color,
+                                            ),
+                                            ft.Text(label),
+                                        ],
+                                    ),
+                                    on_click=on_select_seed(color),
+                                )
+                                for label, color in seed_color_options
+                            ],
                         ),
                         ft.IconButton(
                             icon=ft.Icons.DOWNLOAD,

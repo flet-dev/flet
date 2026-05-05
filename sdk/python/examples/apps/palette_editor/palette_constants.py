@@ -43,3 +43,15 @@ COLOR_ROLE_BY_LABEL = {
 }
 
 COLOR_ROLE_EXPORT_ORDER = list(dict.fromkeys(COLOR_ROLE_BY_LABEL.values()))
+
+SEED_COLOR_OPTIONS = [
+    ("Deep purple", ft.Colors.DEEP_PURPLE),
+    ("Indigo", ft.Colors.INDIGO),
+    ("Blue (default)", ft.Colors.BLUE),
+    ("Teal", ft.Colors.TEAL),
+    ("Green", ft.Colors.GREEN),
+    ("Yellow", ft.Colors.YELLOW),
+    ("Orange", ft.Colors.ORANGE),
+    ("Deep orange", ft.Colors.DEEP_ORANGE),
+    ("Pink", ft.Colors.PINK),
+]

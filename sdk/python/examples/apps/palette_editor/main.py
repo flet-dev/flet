@@ -4,6 +4,7 @@ from palette_constants import (
     COLOR_ROLE_BY_LABEL,
     LIGHT_SEED_COLOR,
     MATERIAL_COLORS,
+    SEED_COLOR_OPTIONS,
 )
 from palette_theme_io import build_export_code, parse_import_theme_code
 from palette_ui import (
@@ -42,6 +43,10 @@ def main(page: ft.Page):
     selected_shade = {"label": None, "value": None}
     light_theme_color_overrides: dict[str, ft.ColorValue] = {}
     dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
+    theme_seed_colors = {
+        ft.ThemeMode.LIGHT: LIGHT_SEED_COLOR,
+        ft.ThemeMode.DARK: LIGHT_SEED_COLOR,
+    }
 
     def close_color_editor(_):
         color_editor_pane.visible = False
@@ -49,11 +54,11 @@ def main(page: ft.Page):
 
     def rebuild_theme():
         page.theme = ft.Theme(
-            color_scheme_seed=LIGHT_SEED_COLOR,
+            color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
             color_scheme=ft.ColorScheme(**light_theme_color_overrides),
         )
         page.dark_theme = ft.Theme(
-            color_scheme_seed=LIGHT_SEED_COLOR,
+            color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
             color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
         )
 
@@ -63,6 +68,9 @@ def main(page: ft.Page):
             if page.theme_mode == ft.ThemeMode.LIGHT
             else dark_theme_color_overrides
         )
+
+    def current_seed_color() -> ft.ColorValue:
+        return theme_seed_colors[page.theme_mode]
 
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
@@ -154,8 +162,10 @@ def main(page: ft.Page):
             swatch_width=swatch_width,
             swatch_height=swatch_height,
             theme_mode=page.theme_mode,
+            seed_color_options=SEED_COLOR_OPTIONS,
+            selected_seed_color=current_seed_color(),
             on_color_click=on_color_click,
-            on_reset=reset_from_seed,
+            on_select_seed=select_seed_color,
             on_export=export_theme,
             on_import=open_import_dialog,
             on_toggle_theme=toggle_theme_mode,
@@ -330,7 +340,7 @@ def main(page: ft.Page):
 
         return handler
 
-    def reset_from_seed(_):
+    def clear_editor_selection():
         current_theme_color_overrides().clear()
         selected_role["label"] = None
         selected_role["attr"] = None
@@ -341,11 +351,57 @@ def main(page: ft.Page):
         selected_color_heading.value = "Color editor"
         selected_color_text.value = "Choose a color role to edit."
         color_editor_pane.visible = False
+
+    pending_seed_selection = {"color": None, "label": None}
+
+    def close_seed_confirm_dialog(_):
+        page.pop_dialog()
+        page.update()
+
+    def apply_seed_selection(_):
+        seed_color = pending_seed_selection["color"]
+        if seed_color is None:
+            page.pop_dialog()
+            page.update()
+            return
+        theme_seed_colors[page.theme_mode] = seed_color
+        current_theme_color_overrides().clear()
+        clear_editor_selection()
         rebuild_left_pane_controls()
         rebuild_material_color_controls()
         rebuild_shade_controls()
         rebuild_theme()
+        page.pop_dialog()
         page.update()
+
+    seed_confirm_text = ft.Text("")
+    seed_confirm_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Rebuild from seed"),
+        content=seed_confirm_text,
+        actions=[
+            ft.TextButton("Cancel", on_click=close_seed_confirm_dialog),
+            ft.TextButton("Rebuild", on_click=apply_seed_selection),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    def select_seed_color(seed_color: ft.ColorValue):
+        def handler(_):
+            seed_label = next(
+                (label for label, color in SEED_COLOR_OPTIONS if color == seed_color),
+                "selected seed",
+            )
+            pending_seed_selection["color"] = seed_color
+            pending_seed_selection["label"] = seed_label
+            seed_confirm_text.value = (
+                f"Rebuild the current {page.theme_mode.value} theme "
+                f"from {seed_label} and clear its overrides?"
+            )
+            page.show_dialog(seed_confirm_dialog)
+            page.update()
+
+        return handler
 
     async def copy_export_theme(_):
         export_code = build_export_code(current_theme_color_overrides())
