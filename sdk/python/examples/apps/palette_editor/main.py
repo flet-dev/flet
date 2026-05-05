@@ -40,19 +40,29 @@ def main(page: ft.Page):
     selected_role = {"label": None, "attr": None}
     selected_material_color = {"label": None, "value": None}
     selected_shade = {"label": None, "value": None}
-    theme_color_overrides: dict[str, ft.ColorValue] = {}
+    light_theme_color_overrides: dict[str, ft.ColorValue] = {}
+    dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
 
     def close_color_editor(_):
         color_editor_pane.visible = False
         page.update()
 
     def rebuild_theme():
-        theme = ft.Theme(
+        page.theme = ft.Theme(
             color_scheme_seed=LIGHT_SEED_COLOR,
-            color_scheme=ft.ColorScheme(**theme_color_overrides),
+            color_scheme=ft.ColorScheme(**light_theme_color_overrides),
         )
-        page.theme = theme
-        page.dark_theme = theme
+        page.dark_theme = ft.Theme(
+            color_scheme_seed=LIGHT_SEED_COLOR,
+            color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
+        )
+
+    def current_theme_color_overrides() -> dict[str, ft.ColorValue]:
+        return (
+            light_theme_color_overrides
+            if page.theme_mode == ft.ThemeMode.LIGHT
+            else dark_theme_color_overrides
+        )
 
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
@@ -60,7 +70,7 @@ def main(page: ft.Page):
     def get_current_role_color_value(role_attr: str | None) -> ft.ColorValue | None:
         if role_attr is None:
             return None
-        override = theme_color_overrides.get(role_attr)
+        override = current_theme_color_overrides().get(role_attr)
         if override is not None:
             return override
         token_name = role_attr.upper()
@@ -175,7 +185,7 @@ def main(page: ft.Page):
             rebuild_shade_controls()
             if selected_role["attr"] is None or selected_role["label"] is None:
                 return
-            theme_color_overrides[selected_role["attr"]] = color_value
+            current_theme_color_overrides()[selected_role["attr"]] = color_value
             rebuild_theme()
             selected_color_text.value = (
                 f"{selected_role['label']} color changed to {color_label}."
@@ -192,7 +202,7 @@ def main(page: ft.Page):
             rebuild_shade_controls()
             if selected_role["attr"] is None or selected_role["label"] is None:
                 return
-            theme_color_overrides[selected_role["attr"]] = shade_value
+            current_theme_color_overrides()[selected_role["attr"]] = shade_value
             rebuild_theme()
             selected_color_text.value = (
                 f"{selected_role['label']} color changed to "
@@ -205,7 +215,7 @@ def main(page: ft.Page):
     def on_hex_color_change(e: ft.ControlEvent):
         if selected_role["attr"] is None or selected_role["label"] is None:
             return
-        theme_color_overrides[selected_role["attr"]] = e.data
+        current_theme_color_overrides()[selected_role["attr"]] = e.data
         set_selected_material_from_value(e.data)
         rebuild_material_color_controls()
         rebuild_shade_controls()
@@ -321,7 +331,7 @@ def main(page: ft.Page):
         return handler
 
     def reset_from_seed(_):
-        theme_color_overrides.clear()
+        current_theme_color_overrides().clear()
         selected_role["label"] = None
         selected_role["attr"] = None
         selected_material_color["label"] = None
@@ -338,7 +348,7 @@ def main(page: ft.Page):
         page.update()
 
     async def copy_export_theme(_):
-        export_code = build_export_code(theme_color_overrides)
+        export_code = build_export_code(current_theme_color_overrides())
         print(export_code)
         await ft.Clipboard().set(export_code)
         export_copy_button.icon = ft.Icons.CHECK
@@ -398,8 +408,9 @@ def main(page: ft.Page):
             page.update()
             return
 
-        theme_color_overrides.clear()
-        theme_color_overrides.update(parsed_overrides)
+        current_overrides = current_theme_color_overrides()
+        current_overrides.clear()
+        current_overrides.update(parsed_overrides)
         rebuild_theme()
         if selected_role["attr"] is not None:
             set_selected_material_from_value(
@@ -437,7 +448,7 @@ def main(page: ft.Page):
     )
 
     def export_theme(_):
-        export_code_text.value = build_export_code(theme_color_overrides)
+        export_code_text.value = build_export_code(current_theme_color_overrides())
         export_copy_button.icon = ft.Icons.CONTENT_COPY
         page.show_dialog(export_dialog)
         page.update()
@@ -459,6 +470,12 @@ def main(page: ft.Page):
             if page.theme_mode == ft.ThemeMode.LIGHT
             else ft.ThemeMode.LIGHT
         )
+        if selected_role["attr"] is not None:
+            set_selected_material_from_value(
+                get_current_role_color_value(selected_role["attr"])
+            )
+            rebuild_material_color_controls()
+            rebuild_shade_controls()
         rebuild_left_pane_controls()
         page.update()
 

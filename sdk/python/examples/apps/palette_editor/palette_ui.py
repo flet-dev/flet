@@ -156,8 +156,28 @@ def build_left_pane_controls(
 ) -> list[ft.Control]:
     return [
         ft.Row(
-            spacing=8,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             controls=[
+                ft.Row(
+                    spacing=8,
+                    controls=[
+                        ft.IconButton(
+                            icon=ft.Icons.PALETTE,
+                            tooltip="Reset from seed",
+                            on_click=on_reset,
+                        ),
+                        ft.IconButton(
+                            icon=ft.Icons.DOWNLOAD,
+                            tooltip="Export",
+                            on_click=on_export,
+                        ),
+                        ft.IconButton(
+                            icon=ft.Icons.UPLOAD,
+                            tooltip="Import",
+                            on_click=on_import,
+                        ),
+                    ],
+                ),
                 ft.IconButton(
                     icon=(
                         ft.Icons.DARK_MODE
@@ -170,21 +190,6 @@ def build_left_pane_controls(
                         else "Switch to light mode"
                     ),
                     on_click=on_toggle_theme,
-                ),
-                ft.IconButton(
-                    icon=ft.Icons.PALETTE,
-                    tooltip="Reset from seed",
-                    on_click=on_reset,
-                ),
-                ft.IconButton(
-                    icon=ft.Icons.DOWNLOAD,
-                    tooltip="Export",
-                    on_click=on_export,
-                ),
-                ft.IconButton(
-                    icon=ft.Icons.UPLOAD,
-                    tooltip="Import",
-                    on_click=on_import,
                 ),
             ],
         ),
