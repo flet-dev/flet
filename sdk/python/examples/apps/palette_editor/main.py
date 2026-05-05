@@ -1,642 +1,22 @@
-import ast
 from datetime import time
+
+from palette_constants import (
+    COLOR_ROLE_BY_LABEL,
+    LIGHT_SEED_COLOR,
+    MATERIAL_COLORS,
+)
+from palette_theme_io import build_export_code, parse_import_theme_code
+from palette_ui import (
+    build_left_pane_controls,
+    build_preview_tabs,
+    material_color_circle,
+    material_shade_swatch,
+)
 
 import flet as ft
 from flet_color_pickers import HueRingPicker
 
 ft.context.disable_auto_update()
-
-LIGHT_SEED_COLOR = ft.Colors.BLUE
-
-MATERIAL_COLORS = [
-    ("AMBER", ft.Colors.AMBER),
-    ("BLACK", ft.Colors.BLACK),
-    ("BLUE", ft.Colors.BLUE),
-    ("BLUE_GREY", ft.Colors.BLUE_GREY),
-    ("BROWN", ft.Colors.BROWN),
-    ("CYAN", ft.Colors.CYAN),
-    ("DEEP_ORANGE", ft.Colors.DEEP_ORANGE),
-    ("DEEP_PURPLE", ft.Colors.DEEP_PURPLE),
-    ("GREEN", ft.Colors.GREEN),
-    ("GREY", ft.Colors.GREY),
-    ("INDIGO", ft.Colors.INDIGO),
-    ("LIGHT_BLUE", ft.Colors.LIGHT_BLUE),
-    ("LIGHT_GREEN", ft.Colors.LIGHT_GREEN),
-    ("LIME", ft.Colors.LIME),
-    ("ORANGE", ft.Colors.ORANGE),
-    ("PINK", ft.Colors.PINK),
-    ("PURPLE", ft.Colors.PURPLE),
-    ("RED", ft.Colors.RED),
-    ("TEAL", ft.Colors.TEAL),
-    ("TRANSPARENT", ft.Colors.TRANSPARENT),
-    ("WHITE", ft.Colors.WHITE),
-    ("YELLOW", ft.Colors.YELLOW),
-]
-
-COLOR_ROLE_BY_LABEL = {
-    "PRIMARY": "primary",
-    "ON_PRIMARY": "on_primary",
-    "PRIMARY_CONTAINER": "primary_container",
-    "ON_PRIMARY_CONTAINER": "on_primary_container",
-    "SECONDARY": "secondary",
-    "ON_SECONDARY": "on_secondary",
-    "SECONDARY_CONTAINER": "secondary_container",
-    "ON_SECONDARY_CONTAINER": "on_secondary_container",
-    "TERTIARY": "tertiary",
-    "ON_TERTIARY": "on_tertiary",
-    "TERTIARY_CONTAINER": "tertiary_container",
-    "ON_TERTIARY_CONTAINER": "on_tertiary_container",
-}
-
-COLOR_ROLE_EXPORT_ORDER = list(dict.fromkeys(COLOR_ROLE_BY_LABEL.values()))
-
-
-def color_band(
-    label: str,
-    background: ft.ColorValue,
-    foreground: ft.ColorValue,
-    *,
-    width: int,
-    height: int,
-    selected: bool = False,
-    on_click=None,
-) -> ft.Container:
-    return ft.Container(
-        width=width,
-        height=height,
-        bgcolor=background,
-        border=ft.Border.all(
-            2 if selected else 0,
-            ft.Colors.BLACK if selected else ft.Colors.TRANSPARENT,
-        ),
-        padding=ft.Padding.symmetric(horizontal=12),
-        alignment=ft.Alignment.CENTER_LEFT,
-        ink=True,
-        on_click=on_click,
-        content=ft.Text(
-            label,
-            color=foreground,
-        ),
-    )
-
-
-def color_group(
-    items: list[tuple[str, ft.ColorValue, ft.ColorValue]],
-    *,
-    width: int,
-    height: int,
-    title: str | None = None,
-    hint: str | None = None,
-    selected_label: str | None = None,
-    on_color_click=None,
-) -> ft.Container:
-    return ft.Container(
-        border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
-        content=ft.Column(
-            spacing=4,
-            horizontal_alignment=ft.CrossAxisAlignment.START,
-            controls=[
-                ft.Container(
-                    visible=title is not None or hint is not None,
-                    height=25,
-                    padding=ft.Padding.only(left=8, right=2),
-                    content=ft.Row(
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                        controls=[
-                            ft.Text(title or "", weight=ft.FontWeight.W_600),
-                            ft.Container(
-                                visible=hint is not None,
-                                content=ft.IconButton(
-                                    icon=ft.Icons.INFO_OUTLINE,
-                                    icon_size=14,
-                                    tooltip=ft.Tooltip(
-                                        message=hint or "",
-                                        bgcolor=ft.Colors.SURFACE_BRIGHT,
-                                        padding=ft.Padding.symmetric(
-                                            horizontal=12, vertical=8
-                                        ),
-                                        prefer_below=False,
-                                        vertical_offset=8,
-                                        text_style=ft.TextStyle(
-                                            color=ft.Colors.ON_SURFACE,
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ],
-                    ),
-                ),
-                *[
-                    color_band(
-                        label,
-                        background,
-                        foreground,
-                        width=width,
-                        height=height,
-                        selected=selected_label == label,
-                        on_click=on_color_click(label) if on_color_click else None,
-                    )
-                    for label, background, foreground in items
-                ],
-            ],
-        ),
-    )
-
-
-def showcase_section(title: str, *controls: ft.Control) -> ft.Container:
-    return ft.Container(
-        margin=ft.Margin.only(bottom=16),
-        content=ft.Column(
-            spacing=8,
-            controls=[
-                ft.Text(
-                    title,
-                    # style=ft.TextThemeStyle.TITLE_MEDIUM,
-                ),
-                *controls,
-            ],
-        ),
-    )
-
-
-def material_color_circle(
-    color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
-) -> ft.Container:
-    selected_border_color = (
-        getattr(ft.Colors, f"{label}_900")
-        if hasattr(ft.Colors, f"{label}_900")
-        else ft.Colors.BLACK
-    )
-    return ft.Container(
-        width=28,
-        height=28,
-        border_radius=14,
-        bgcolor=color,
-        border=ft.Border.all(
-            2 if selected else 1,
-            selected_border_color if selected else ft.Colors.OUTLINE_VARIANT,
-        ),
-        tooltip=label,
-        ink=True,
-        on_click=on_click,
-    )
-
-
-def material_shade_swatch(
-    color: ft.ColorValue, label: str, *, selected: bool = False, on_click=None
-) -> ft.Container:
-    return ft.Container(
-        width=32,
-        height=44,
-        border_radius=22 if selected else 0,
-        bgcolor=color,
-        alignment=ft.Alignment.TOP_CENTER,
-        padding=ft.Padding.only(top=5),
-        tooltip=label,
-        ink=True,
-        on_click=on_click,
-        content=ft.Text(
-            label,
-            size=11,
-            color=ft.Colors.BLACK if label in {"50", "100", "200"} else ft.Colors.WHITE,
-        ),
-    )
-
-
-def build_left_pane_controls(
-    *,
-    selected_label: str | None,
-    swatch_width: int,
-    swatch_height: int,
-    on_color_click,
-    on_reset,
-    on_export,
-    on_import,
-) -> list[ft.Control]:
-    return [
-        ft.Row(
-            spacing=8,
-            controls=[
-                ft.IconButton(
-                    icon=ft.Icons.PALETTE,
-                    tooltip="Reset from seed",
-                    on_click=on_reset,
-                ),
-                ft.IconButton(
-                    icon=ft.Icons.DOWNLOAD,
-                    tooltip="Export",
-                    on_click=on_export,
-                ),
-                ft.IconButton(
-                    icon=ft.Icons.UPLOAD,
-                    tooltip="Import",
-                    on_click=on_import,
-                ),
-            ],
-        ),
-        color_group(
-            [
-                ("PRIMARY", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
-                ("ON_PRIMARY", ft.Colors.ON_PRIMARY, ft.Colors.PRIMARY),
-                (
-                    "PRIMARY_CONTAINER",
-                    ft.Colors.PRIMARY_CONTAINER,
-                    ft.Colors.ON_PRIMARY_CONTAINER,
-                ),
-                (
-                    "ON_PRIMARY_CONTAINER",
-                    ft.Colors.ON_PRIMARY_CONTAINER,
-                    ft.Colors.PRIMARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Primary roles",
-            hint=(
-                "Use primary roles for the most\n"
-                "prominent components across the UI,\n"
-                "such as the FAB,\n"
-                "high-emphasis buttons, and active states."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
-        color_group(
-            [
-                ("SECONDARY", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
-                ("ON_SECONDARY", ft.Colors.ON_SECONDARY, ft.Colors.SECONDARY),
-                (
-                    "SECONDARY_CONTAINER",
-                    ft.Colors.SECONDARY_CONTAINER,
-                    ft.Colors.ON_SECONDARY_CONTAINER,
-                ),
-                (
-                    "ON_SECONDARY_CONTAINER",
-                    ft.Colors.ON_SECONDARY_CONTAINER,
-                    ft.Colors.SECONDARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Secondary roles",
-            hint=(
-                "Use secondary roles for less prominent\n"
-                "components in the UI such as filter chips."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
-        color_group(
-            [
-                ("TERTIARY", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
-                ("ON_TERTIARY", ft.Colors.ON_TERTIARY, ft.Colors.TERTIARY),
-                (
-                    "TERTIARY_CONTAINER",
-                    ft.Colors.TERTIARY_CONTAINER,
-                    ft.Colors.ON_TERTIARY_CONTAINER,
-                ),
-                (
-                    "ON_TERTIARY_CONTAINER",
-                    ft.Colors.ON_TERTIARY_CONTAINER,
-                    ft.Colors.TERTIARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Tertiary roles",
-            hint=(
-                "Use tertiary roles for contrasting accents\n"
-                "that balance primary and secondary colors\n"
-                "or bring heightened attention to an element\n"
-                "such as an input field."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
-    ]
-
-
-def preview_role_block(
-    label: str, background: ft.ColorValue, foreground: ft.ColorValue
-) -> ft.Container:
-    return ft.Container(
-        bgcolor=background,
-        padding=12,
-        border_radius=12,
-        content=ft.Text(label, color=foreground),
-    )
-
-
-def noop(_):
-    return None
-
-
-def build_preview_chip_row() -> ft.Row:
-    return ft.Row(
-        wrap=True,
-        spacing=12,
-        run_spacing=12,
-        controls=[
-            ft.Chip(label=ft.Text("Filter chip"), on_select=noop),
-            ft.Chip(
-                label=ft.Text("Assist chip"),
-                leading=ft.Icon(ft.Icons.MAP_SHARP),
-                on_click=noop,
-            ),
-            ft.Chip(label=ft.Text("Selected"), selected=True, on_select=noop),
-        ],
-    )
-
-
-def build_selected_chip_row() -> ft.Row:
-    return ft.Row(
-        wrap=True,
-        spacing=12,
-        run_spacing=12,
-        controls=[
-            ft.Chip(label=ft.Text("Filter chip"), on_select=noop),
-            ft.Chip(label=ft.Text("Selected"), selected=True, on_select=noop),
-        ],
-    )
-
-
-def build_primary_button_row() -> ft.Row:
-    return ft.Row(
-        wrap=True,
-        spacing=12,
-        run_spacing=12,
-        controls=[
-            ft.FilledButton("Filled button"),
-            ft.OutlinedButton("Outlined button"),
-            ft.TextButton("Text button"),
-            ft.Button("Button"),
-        ],
-    )
-
-
-def build_segmented_button() -> ft.SegmentedButton:
-    return ft.SegmentedButton(
-        selected=["grid"],
-        segments=[
-            ft.Segment(
-                value="list",
-                icon=ft.Icon(ft.Icons.VIEW_LIST),
-                label=ft.Text("List"),
-            ),
-            ft.Segment(
-                value="grid",
-                icon=ft.Icon(ft.Icons.GRID_VIEW),
-                label=ft.Text("Grid"),
-            ),
-        ],
-    )
-
-
-def build_tonal_button() -> ft.FilledTonalButton:
-    return ft.FilledTonalButton("Filled tonal button")
-
-
-def build_selection_row() -> ft.Row:
-    return ft.Row(
-        wrap=True,
-        spacing=16,
-        run_spacing=12,
-        controls=[
-            ft.Switch(label="Use dark mode", value=True),
-            ft.Checkbox(label="Enable accents", value=True),
-        ],
-    )
-
-
-def build_time_picker_row(
-    open_preview_time_picker, preview_time_text: ft.Text
-) -> ft.Row:
-    return ft.Row(
-        spacing=12,
-        controls=[
-            ft.Button(
-                "Pick time",
-                icon=ft.Icons.SCHEDULE,
-                on_click=open_preview_time_picker,
-            ),
-            preview_time_text,
-        ],
-    )
-
-
-def build_preview_tabs(
-    *,
-    preview_heading: str,
-    preview_body: str,
-    preview_time_text: ft.Text,
-    open_preview_time_picker,
-) -> ft.Tabs:
-    return ft.Tabs(
-        selected_index=0,
-        length=4,
-        expand=True,
-        content=ft.Column(
-            expand=True,
-            spacing=12,
-            controls=[
-                ft.Text("Example"),
-                ft.TabBar(
-                    tabs=[
-                        ft.Tab(label="All"),
-                        ft.Tab(label="Primary"),
-                        ft.Tab(label="Secondary"),
-                        ft.Tab(label="Tertiary"),
-                    ]
-                ),
-                ft.TabBarView(
-                    expand=True,
-                    controls=[
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
-                                    showcase_section(
-                                        "Palette together",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "PRIMARY",
-                                                    ft.Colors.PRIMARY,
-                                                    ft.Colors.ON_PRIMARY,
-                                                ),
-                                                preview_role_block(
-                                                    "SECONDARY",
-                                                    ft.Colors.SECONDARY,
-                                                    ft.Colors.ON_SECONDARY,
-                                                ),
-                                                preview_role_block(
-                                                    "TERTIARY",
-                                                    ft.Colors.TERTIARY,
-                                                    ft.Colors.ON_TERTIARY,
-                                                ),
-                                            ],
-                                        ),
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                ft.FilledButton("Apply"),
-                                                ft.FilledTonalButton("Tonal"),
-                                                ft.OutlinedButton("Outline"),
-                                            ],
-                                        ),
-                                        build_selected_chip_row(),
-                                    ),
-                                    showcase_section(
-                                        "Selection",
-                                        build_selection_row(),
-                                        ft.Slider(value=70, min=0, max=100),
-                                    ),
-                                    showcase_section(
-                                        "Card",
-                                        ft.Card(
-                                            content=ft.Container(
-                                                padding=16,
-                                                content=ft.Column(
-                                                    spacing=12,
-                                                    controls=[
-                                                        ft.Row(
-                                                            spacing=12,
-                                                            controls=[
-                                                                ft.Icon(
-                                                                    ft.Icons.COLOR_LENS
-                                                                ),
-                                                                ft.Text(
-                                                                    preview_heading,
-                                                                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                                                                ),
-                                                            ],
-                                                        ),
-                                                        ft.Text(preview_body),
-                                                        ft.Row(
-                                                            spacing=12,
-                                                            controls=[
-                                                                ft.FilledButton(
-                                                                    "Apply"
-                                                                ),
-                                                                ft.TextButton("Reset"),
-                                                            ],
-                                                        ),
-                                                    ],
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
-                                    showcase_section(
-                                        "Primary roles",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "PRIMARY",
-                                                    ft.Colors.PRIMARY,
-                                                    ft.Colors.ON_PRIMARY,
-                                                ),
-                                                preview_role_block(
-                                                    "PRIMARY_CONTAINER",
-                                                    ft.Colors.PRIMARY_CONTAINER,
-                                                    ft.Colors.ON_PRIMARY_CONTAINER,
-                                                ),
-                                            ],
-                                        ),
-                                        build_primary_button_row(),
-                                        ft.FloatingActionButton(icon=ft.Icons.PALETTE),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
-                                    showcase_section(
-                                        "Secondary roles",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "SECONDARY",
-                                                    ft.Colors.SECONDARY,
-                                                    ft.Colors.ON_SECONDARY,
-                                                ),
-                                                preview_role_block(
-                                                    "SECONDARY_CONTAINER",
-                                                    ft.Colors.SECONDARY_CONTAINER,
-                                                    ft.Colors.ON_SECONDARY_CONTAINER,
-                                                ),
-                                            ],
-                                        ),
-                                        build_tonal_button(),
-                                        build_preview_chip_row(),
-                                        build_segmented_button(),
-                                    ),
-                                ],
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
-                                    showcase_section(
-                                        "Tertiary roles",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "TERTIARY",
-                                                    ft.Colors.TERTIARY,
-                                                    ft.Colors.ON_TERTIARY,
-                                                ),
-                                                preview_role_block(
-                                                    "TERTIARY_CONTAINER",
-                                                    ft.Colors.TERTIARY_CONTAINER,
-                                                    ft.Colors.ON_TERTIARY_CONTAINER,
-                                                ),
-                                            ],
-                                        ),
-                                        build_time_picker_row(
-                                            open_preview_time_picker, preview_time_text
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ),
-                    ],
-                ),
-            ],
-        ),
-    )
 
 
 def main(page: ft.Page):
@@ -645,6 +25,7 @@ def main(page: ft.Page):
     page.padding = 14
     page.theme_mode = ft.ThemeMode.LIGHT
     page.theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
+    page.dark_theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
     # page.window.width = 420
     # page.window.height = 460
     swatch_width = 250
@@ -666,10 +47,12 @@ def main(page: ft.Page):
         page.update()
 
     def rebuild_theme():
-        page.theme = ft.Theme(
+        theme = ft.Theme(
             color_scheme_seed=LIGHT_SEED_COLOR,
             color_scheme=ft.ColorScheme(**theme_color_overrides),
         )
+        page.theme = theme
+        page.dark_theme = theme
 
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
@@ -760,10 +143,12 @@ def main(page: ft.Page):
             selected_label=selected_role["label"],
             swatch_width=swatch_width,
             swatch_height=swatch_height,
+            theme_mode=page.theme_mode,
             on_color_click=on_color_click,
             on_reset=reset_from_seed,
             on_export=export_theme,
             on_import=open_import_dialog,
+            on_toggle_theme=toggle_theme_mode,
         )
 
     def rebuild_shade_controls():
@@ -918,11 +303,6 @@ def main(page: ft.Page):
         ")"
     )
 
-    def format_color_value(color_value: ft.ColorValue) -> str:
-        if hasattr(color_value, "name"):
-            return f"ft.Colors.{color_value.name}"
-        return repr(color_value)
-
     def on_color_click(label: str):
         def handler(_):
             selected_role["label"] = label
@@ -957,77 +337,8 @@ def main(page: ft.Page):
         rebuild_theme()
         page.update()
 
-    def build_export_code() -> str:
-        lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
-        for color_role in COLOR_ROLE_EXPORT_ORDER:
-            color_value = theme_color_overrides.get(color_role)
-            if color_value is None:
-                continue
-            lines.append(f"      {color_role}={format_color_value(color_value)},")
-        lines.append("  )")
-        lines.append(")")
-        return "\n".join(lines)
-
-    def get_attribute_path(node: ast.AST) -> list[str] | None:
-        parts: list[str] = []
-        current = node
-        while isinstance(current, ast.Attribute):
-            parts.append(current.attr)
-            current = current.value
-        if isinstance(current, ast.Name):
-            parts.append(current.id)
-            return list(reversed(parts))
-        return None
-
-    def parse_import_color_value(node: ast.AST) -> ft.ColorValue:
-        if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            return node.value
-        attr_path = get_attribute_path(node)
-        if attr_path and len(attr_path) == 3 and attr_path[:2] == ["ft", "Colors"]:
-            color_name = attr_path[2]
-            if hasattr(ft.Colors, color_name):
-                return getattr(ft.Colors, color_name)
-        raise ValueError
-
-    def parse_import_theme_code(code: str) -> dict[str, ft.ColorValue]:
-        try:
-            tree = ast.parse(code)
-        except SyntaxError as exc:
-            raise ValueError from exc
-
-        if len(tree.body) != 1 or not isinstance(tree.body[0], ast.Expr):
-            raise ValueError
-
-        theme_call = tree.body[0].value
-        if not isinstance(theme_call, ast.Call):
-            raise ValueError
-
-        theme_path = get_attribute_path(theme_call.func)
-        if theme_path != ["ft", "Theme"]:
-            raise ValueError
-
-        color_scheme_call: ast.Call | None = None
-        for keyword in theme_call.keywords:
-            if keyword.arg == "color_scheme" and isinstance(keyword.value, ast.Call):
-                color_scheme_call = keyword.value
-                break
-        if color_scheme_call is None:
-            raise ValueError
-
-        color_scheme_path = get_attribute_path(color_scheme_call.func)
-        if color_scheme_path != ["ft", "ColorScheme"]:
-            raise ValueError
-
-        parsed_overrides: dict[str, ft.ColorValue] = {}
-        for keyword in color_scheme_call.keywords:
-            if keyword.arg not in COLOR_ROLE_EXPORT_ORDER:
-                raise ValueError
-            parsed_overrides[keyword.arg] = parse_import_color_value(keyword.value)
-
-        return parsed_overrides
-
     async def copy_export_theme(_):
-        export_code = build_export_code()
+        export_code = build_export_code(theme_color_overrides)
         print(export_code)
         await ft.Clipboard().set(export_code)
         export_copy_button.icon = ft.Icons.CHECK
@@ -1126,7 +437,7 @@ def main(page: ft.Page):
     )
 
     def export_theme(_):
-        export_code_text.value = build_export_code()
+        export_code_text.value = build_export_code(theme_color_overrides)
         export_copy_button.icon = ft.Icons.CONTENT_COPY
         page.show_dialog(export_dialog)
         page.update()
@@ -1140,6 +451,15 @@ def main(page: ft.Page):
 
     def open_preview_time_picker(_):
         page.show_dialog(preview_time_picker)
+        page.update()
+
+    def toggle_theme_mode(_):
+        page.theme_mode = (
+            ft.ThemeMode.DARK
+            if page.theme_mode == ft.ThemeMode.LIGHT
+            else ft.ThemeMode.LIGHT
+        )
+        rebuild_left_pane_controls()
         page.update()
 
     rebuild_left_pane_controls()
