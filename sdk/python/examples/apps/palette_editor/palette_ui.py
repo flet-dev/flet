@@ -1,6 +1,10 @@
 import flet as ft
 
 
+def resolve_theme_token(token_name: str) -> ft.ColorValue:
+    return getattr(ft.Colors, token_name)
+
+
 def color_band(
     label: str,
     background: ft.ColorValue,
@@ -148,14 +152,18 @@ def build_left_pane_controls(
     swatch_width: int,
     swatch_height: int,
     theme_mode: ft.ThemeMode,
+    role_tabs: list[dict],
+    selected_tab_index: int,
     seed_color_options: list[tuple[str, ft.ColorValue]],
     selected_seed_color: ft.ColorValue,
     on_color_click,
+    on_tab_change,
     on_select_seed,
     on_export,
     on_import,
     on_toggle_theme,
 ) -> list[ft.Control]:
+    active_tab = role_tabs[selected_tab_index]
     return [
         ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -212,111 +220,35 @@ def build_left_pane_controls(
                 ),
             ],
         ),
-        color_group(
-            [
-                ("PRIMARY", ft.Colors.PRIMARY, ft.Colors.ON_PRIMARY),
-                ("ON_PRIMARY", ft.Colors.ON_PRIMARY, ft.Colors.PRIMARY),
-                (
-                    "PRIMARY_CONTAINER",
-                    ft.Colors.PRIMARY_CONTAINER,
-                    ft.Colors.ON_PRIMARY_CONTAINER,
-                ),
-                (
-                    "ON_PRIMARY_CONTAINER",
-                    ft.Colors.ON_PRIMARY_CONTAINER,
-                    ft.Colors.PRIMARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Primary roles",
-            hint=(
-                "Use primary roles for the most\n"
-                "prominent components across the UI,\n"
-                "such as the FAB,\n"
-                "high-emphasis buttons, and active states."
+        ft.Tabs(
+            length=len(role_tabs),
+            selected_index=selected_tab_index,
+            on_change=on_tab_change,
+            content=ft.TabBar(
+                tab_alignment=ft.TabAlignment.START,
+                scrollable=True,
+                tabs=[ft.Tab(label=tab["label"]) for tab in role_tabs],
             ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
         ),
-        color_group(
-            [
-                ("SECONDARY", ft.Colors.SECONDARY, ft.Colors.ON_SECONDARY),
-                ("ON_SECONDARY", ft.Colors.ON_SECONDARY, ft.Colors.SECONDARY),
-                (
-                    "SECONDARY_CONTAINER",
-                    ft.Colors.SECONDARY_CONTAINER,
-                    ft.Colors.ON_SECONDARY_CONTAINER,
-                ),
-                (
-                    "ON_SECONDARY_CONTAINER",
-                    ft.Colors.ON_SECONDARY_CONTAINER,
-                    ft.Colors.SECONDARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Secondary roles",
-            hint=(
-                "Use secondary roles for less prominent\n"
-                "components in the UI such as filter chips."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
-        color_group(
-            [
-                ("TERTIARY", ft.Colors.TERTIARY, ft.Colors.ON_TERTIARY),
-                ("ON_TERTIARY", ft.Colors.ON_TERTIARY, ft.Colors.TERTIARY),
-                (
-                    "TERTIARY_CONTAINER",
-                    ft.Colors.TERTIARY_CONTAINER,
-                    ft.Colors.ON_TERTIARY_CONTAINER,
-                ),
-                (
-                    "ON_TERTIARY_CONTAINER",
-                    ft.Colors.ON_TERTIARY_CONTAINER,
-                    ft.Colors.TERTIARY_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Tertiary roles",
-            hint=(
-                "Use tertiary roles for contrasting accents\n"
-                "that balance primary and secondary colors\n"
-                "or bring heightened attention to an element\n"
-                "such as an input field."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
-        color_group(
-            [
-                ("ERROR", ft.Colors.ERROR, ft.Colors.ON_ERROR),
-                ("ON_ERROR", ft.Colors.ON_ERROR, ft.Colors.ERROR),
-                (
-                    "ERROR_CONTAINER",
-                    ft.Colors.ERROR_CONTAINER,
-                    ft.Colors.ON_ERROR_CONTAINER,
-                ),
-                (
-                    "ON_ERROR_CONTAINER",
-                    ft.Colors.ON_ERROR_CONTAINER,
-                    ft.Colors.ERROR_CONTAINER,
-                ),
-            ],
-            width=swatch_width,
-            height=swatch_height,
-            title="Error roles",
-            hint=(
-                "Use error roles to communicate error states,\n"
-                "such as an incorrect password entered\n"
-                "into a text field."
-            ),
-            selected_label=selected_label,
-            on_color_click=on_color_click,
-        ),
+        *[
+            color_group(
+                [
+                    (
+                        label,
+                        resolve_theme_token(background_token),
+                        resolve_theme_token(foreground_token),
+                    )
+                    for label, background_token, foreground_token in group["items"]
+                ],
+                width=swatch_width,
+                height=swatch_height,
+                title=group.get("title"),
+                hint=group.get("hint"),
+                selected_label=selected_label,
+                on_color_click=on_color_click,
+            )
+            for group in active_tab["groups"]
+        ],
     ]
 
 

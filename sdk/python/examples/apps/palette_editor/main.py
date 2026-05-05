@@ -2,6 +2,7 @@ from datetime import time
 
 from palette_constants import (
     COLOR_ROLE_BY_LABEL,
+    LEFT_PANE_ROLE_TABS,
     LIGHT_SEED_COLOR,
     MATERIAL_COLORS,
     SEED_COLOR_OPTIONS,
@@ -29,6 +30,7 @@ def main(page: ft.Page):
     page.dark_theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
     # page.window.width = 420
     # page.window.height = 460
+    left_pane_width = 250
     swatch_width = 250
     swatch_height = 40
     preview_heading = "Palette preview"
@@ -41,6 +43,7 @@ def main(page: ft.Page):
     selected_role = {"label": None, "attr": None}
     selected_material_color = {"label": None, "value": None}
     selected_shade = {"label": None, "value": None}
+    selected_left_tab_index = {"value": 0}
     light_theme_color_overrides: dict[str, ft.ColorValue] = {}
     dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
     theme_seed_colors = {
@@ -162,9 +165,12 @@ def main(page: ft.Page):
             swatch_width=swatch_width,
             swatch_height=swatch_height,
             theme_mode=page.theme_mode,
+            role_tabs=LEFT_PANE_ROLE_TABS,
+            selected_tab_index=selected_left_tab_index["value"],
             seed_color_options=SEED_COLOR_OPTIONS,
             selected_seed_color=current_seed_color(),
             on_color_click=on_color_click,
+            on_tab_change=on_left_tab_change,
             on_select_seed=select_seed_color,
             on_export=export_theme,
             on_import=open_import_dialog,
@@ -535,6 +541,11 @@ def main(page: ft.Page):
         rebuild_left_pane_controls()
         page.update()
 
+    def on_left_tab_change(e: ft.ControlEvent):
+        selected_left_tab_index["value"] = e.control.selected_index
+        rebuild_left_pane_controls()
+        page.update()
+
     rebuild_left_pane_controls()
 
     page.add(
@@ -548,7 +559,7 @@ def main(page: ft.Page):
                     vertical_alignment=ft.CrossAxisAlignment.START,
                     controls=[
                         ft.Container(
-                            width=swatch_width,
+                            width=left_pane_width,
                             alignment=ft.Alignment.TOP_LEFT,
                             content=left_pane_controls,
                         ),
