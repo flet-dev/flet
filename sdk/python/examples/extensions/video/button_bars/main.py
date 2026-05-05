@@ -15,9 +15,7 @@ def main(page: ft.Page):
             content=ftv.Video(
                 expand=True,
                 playlist=[
-                    ftv.VideoMedia(
-                        "https://user-images.githubusercontent.com/28951144/229373720-14d69157-1a56-4a78-a2f4-d7a134d7c3e9.mp4"
-                    ),
+                    ftv.VideoMedia("video-sample.mp4"),
                 ],
                 controls=ftv.MaterialDesktopVideoControls(
                     visible_on_mount=True,
