@@ -90,6 +90,7 @@ void main([List<String>? args]) async {
     if (routeUrlStrategy == "path") {
       usePathUrlStrategy();
     }
+    assetsDir = getAssetsDir();
   } else {
     if (args!.isNotEmpty) {
       pageUrl = args[0];
