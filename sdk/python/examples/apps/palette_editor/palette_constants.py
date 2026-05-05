@@ -40,6 +40,10 @@ COLOR_ROLE_BY_LABEL = {
     "ON_TERTIARY": "on_tertiary",
     "TERTIARY_CONTAINER": "tertiary_container",
     "ON_TERTIARY_CONTAINER": "on_tertiary_container",
+    "ERROR": "error",
+    "ON_ERROR": "on_error",
+    "ERROR_CONTAINER": "error_container",
+    "ON_ERROR_CONTAINER": "on_error_container",
 }
 
 COLOR_ROLE_EXPORT_ORDER = list(dict.fromkeys(COLOR_ROLE_BY_LABEL.values()))

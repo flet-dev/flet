@@ -291,6 +291,32 @@ def build_left_pane_controls(
             selected_label=selected_label,
             on_color_click=on_color_click,
         ),
+        color_group(
+            [
+                ("ERROR", ft.Colors.ERROR, ft.Colors.ON_ERROR),
+                ("ON_ERROR", ft.Colors.ON_ERROR, ft.Colors.ERROR),
+                (
+                    "ERROR_CONTAINER",
+                    ft.Colors.ERROR_CONTAINER,
+                    ft.Colors.ON_ERROR_CONTAINER,
+                ),
+                (
+                    "ON_ERROR_CONTAINER",
+                    ft.Colors.ON_ERROR_CONTAINER,
+                    ft.Colors.ERROR_CONTAINER,
+                ),
+            ],
+            width=swatch_width,
+            height=swatch_height,
+            title="Error roles",
+            hint=(
+                "Use error roles to communicate error states,\n"
+                "such as an incorrect password entered\n"
+                "into a text field."
+            ),
+            selected_label=selected_label,
+            on_color_click=on_color_click,
+        ),
     ]
 
 
@@ -402,6 +428,20 @@ def build_time_picker_row(
     )
 
 
+def build_error_examples() -> list[ft.Control]:
+    password_field = ft.TextField(
+        label="Password",
+        password=True,
+        can_reveal_password=True,
+        value="hunter2",
+    )
+    password_field.error_text = "Incorrect password"
+    return [
+        password_field,
+        ft.Text("Please correct the highlighted fields.", color=ft.Colors.ERROR),
+    ]
+
+
 def build_preview_tabs(
     *,
     preview_heading: str,
@@ -411,7 +451,7 @@ def build_preview_tabs(
 ) -> ft.Tabs:
     return ft.Tabs(
         selected_index=0,
-        length=4,
+        length=5,
         expand=True,
         content=ft.Column(
             expand=True,
@@ -424,6 +464,7 @@ def build_preview_tabs(
                         ft.Tab(label="Primary"),
                         ft.Tab(label="Secondary"),
                         ft.Tab(label="Tertiary"),
+                        ft.Tab(label="Error"),
                     ]
                 ),
                 ft.TabBarView(
@@ -457,6 +498,11 @@ def build_preview_tabs(
                                                     ft.Colors.TERTIARY,
                                                     ft.Colors.ON_TERTIARY,
                                                 ),
+                                                preview_role_block(
+                                                    "ERROR",
+                                                    ft.Colors.ERROR,
+                                                    ft.Colors.ON_ERROR,
+                                                ),
                                             ],
                                         ),
                                         ft.Row(
@@ -470,6 +516,22 @@ def build_preview_tabs(
                                             ],
                                         ),
                                         build_selected_chip_row(),
+                                    ),
+                                    showcase_section(
+                                        "Error states",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "ERROR_CONTAINER",
+                                                    ft.Colors.ERROR_CONTAINER,
+                                                    ft.Colors.ON_ERROR_CONTAINER,
+                                                )
+                                            ],
+                                        ),
+                                        *build_error_examples(),
                                     ),
                                     showcase_section(
                                         "Selection",
@@ -605,6 +667,36 @@ def build_preview_tabs(
                                         build_time_picker_row(
                                             open_preview_time_picker, preview_time_text
                                         ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.Padding.only(top=4),
+                            content=ft.Column(
+                                scroll=ft.ScrollMode.AUTO,
+                                spacing=0,
+                                controls=[
+                                    showcase_section(
+                                        "Error roles",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "ERROR",
+                                                    ft.Colors.ERROR,
+                                                    ft.Colors.ON_ERROR,
+                                                ),
+                                                preview_role_block(
+                                                    "ERROR_CONTAINER",
+                                                    ft.Colors.ERROR_CONTAINER,
+                                                    ft.Colors.ON_ERROR_CONTAINER,
+                                                ),
+                                            ],
+                                        ),
+                                        *build_error_examples(),
                                     ),
                                 ],
                             ),
