@@ -43,4 +43,4 @@ To install the `flet-audio-recorder` package and add it to your project dependen
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/services/audio_recorder).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/audio_recorder).

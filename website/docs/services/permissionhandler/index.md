@@ -1,6 +1,6 @@
 ---
 class_name: "flet_permission_handler.PermissionHandler"
-examples: "services/permission_handler"
+examples: "extensions/permission_handler"
 title: "PermissionHandler"
 ---
 
