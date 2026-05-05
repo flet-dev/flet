@@ -166,7 +166,7 @@ permissions = ["microphone"]
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-### Stream chunks and save/download {#stream-chunks-and-save-download}
+### Stream chunks and save/download \{#stream-chunks-and-save-download}
 
 On web, [`AudioRecorder.stop_recording()`][flet_audio_recorder.AudioRecorder.stop_recording]
 returns a browser-local Blob URL. Use streaming when your app needs access to the recorded bytes.
