@@ -1,4 +1,5 @@
 import ast
+from datetime import time
 
 import flet as ft
 from flet_color_pickers import HueRingPicker
@@ -382,6 +383,12 @@ def main(page: ft.Page):
                 width=swatch_width,
                 height=swatch_height,
                 title="Tertiary roles",
+                hint=(
+                    "Use tertiary roles for contrasting accents\n"
+                    "that balance primary and secondary colors\n"
+                    "or bring heightened attention to an element\n"
+                    "such as an input field."
+                ),
                 selected_label=selected_role["label"],
                 on_color_click=on_color_click,
             ),
@@ -512,6 +519,22 @@ def main(page: ft.Page):
                 ],
             ),
         ),
+    )
+    preview_time_text = ft.Text(
+        value="19:30",
+    )
+
+    def handle_preview_time_change(e: ft.Event[ft.TimePicker]):
+        preview_time_text.value = str(preview_time_picker.value.strftime("%H:%M"))
+        page.update()
+
+    preview_time_picker = ft.TimePicker(
+        value=time(hour=19, minute=30),
+        confirm_text="Confirm",
+        error_invalid_text="Time out of range",
+        help_text="Pick your time slot",
+        entry_mode=ft.TimePickerEntryMode.DIAL,
+        on_change=handle_preview_time_change,
     )
     color_role_by_label = {
         "PRIMARY": "primary",
@@ -758,6 +781,107 @@ def main(page: ft.Page):
         page.show_dialog(import_dialog)
         page.update()
 
+    def open_preview_time_picker(_):
+        page.show_dialog(preview_time_picker)
+        page.update()
+
+    def preview_role_block(
+        label: str, background: ft.ColorValue, foreground: ft.ColorValue
+    ) -> ft.Container:
+        return ft.Container(
+            bgcolor=background,
+            padding=12,
+            border_radius=12,
+            content=ft.Text(label, color=foreground),
+        )
+
+    def noop(_):
+        return None
+
+    def build_preview_chip_row() -> ft.Row:
+        return ft.Row(
+            wrap=True,
+            spacing=12,
+            run_spacing=12,
+            controls=[
+                ft.Chip(label=ft.Text("Filter chip"), on_select=noop),
+                ft.Chip(
+                    label=ft.Text("Assist chip"),
+                    leading=ft.Icon(ft.Icons.MAP_SHARP),
+                    on_click=noop,
+                ),
+                ft.Chip(label=ft.Text("Selected"), selected=True, on_select=noop),
+            ],
+        )
+
+    def build_selected_chip_row() -> ft.Row:
+        return ft.Row(
+            wrap=True,
+            spacing=12,
+            run_spacing=12,
+            controls=[
+                ft.Chip(label=ft.Text("Filter chip"), on_select=noop),
+                ft.Chip(label=ft.Text("Selected"), selected=True, on_select=noop),
+            ],
+        )
+
+    def build_primary_button_row() -> ft.Row:
+        return ft.Row(
+            wrap=True,
+            spacing=12,
+            run_spacing=12,
+            controls=[
+                ft.FilledButton("Filled button"),
+                ft.OutlinedButton("Outlined button"),
+                ft.TextButton("Text button"),
+                ft.Button("Button"),
+            ],
+        )
+
+    def build_segmented_button() -> ft.SegmentedButton:
+        return ft.SegmentedButton(
+            selected=["grid"],
+            segments=[
+                ft.Segment(
+                    value="list",
+                    icon=ft.Icon(ft.Icons.VIEW_LIST),
+                    label=ft.Text("List"),
+                ),
+                ft.Segment(
+                    value="grid",
+                    icon=ft.Icon(ft.Icons.GRID_VIEW),
+                    label=ft.Text("Grid"),
+                ),
+            ],
+        )
+
+    def build_tonal_button() -> ft.FilledTonalButton:
+        return ft.FilledTonalButton("Filled tonal button")
+
+    def build_selection_row() -> ft.Row:
+        return ft.Row(
+            wrap=True,
+            spacing=16,
+            run_spacing=12,
+            controls=[
+                ft.Switch(label="Use dark mode", value=True),
+                ft.Checkbox(label="Enable accents", value=True),
+            ],
+        )
+
+    def build_time_picker_row() -> ft.Row:
+        return ft.Row(
+            spacing=12,
+            controls=[
+                ft.Button(
+                    "Pick time",
+                    icon=ft.Icons.SCHEDULE,
+                    on_click=open_preview_time_picker,
+                ),
+                preview_time_text,
+            ],
+        )
+
     rebuild_left_pane_controls()
 
     page.add(
@@ -786,201 +910,224 @@ def main(page: ft.Page):
                                 expand=True,
                                 bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
                                 padding=16,
-                                content=ft.Column(
+                                content=ft.Tabs(
+                                    selected_index=0,
+                                    length=4,
                                     expand=True,
-                                    scroll=ft.ScrollMode.AUTO,
-                                    spacing=0,
-                                    controls=[
-                                        ft.Text(
-                                            "Example",
-                                            # style=ft.TextThemeStyle.HEADLINE_SMALL,
-                                        ),
-                                        ft.Container(height=16),
-                                        showcase_section(
-                                            "Buttons",
-                                            ft.Row(
-                                                wrap=True,
-                                                spacing=12,
-                                                run_spacing=12,
-                                                controls=[
-                                                    ft.FilledButton("Filled button"),
-                                                    ft.FilledTonalButton(
-                                                        "Filled tonal button"
-                                                    ),
-                                                    ft.OutlinedButton(
-                                                        "Outlined button"
-                                                    ),
-                                                    ft.TextButton("Text button"),
-                                                    ft.Button("Button"),
-                                                ],
+                                    content=ft.Column(
+                                        expand=True,
+                                        spacing=12,
+                                        controls=[
+                                            ft.Text("Example"),
+                                            ft.TabBar(
+                                                tabs=[
+                                                    ft.Tab(label="All"),
+                                                    ft.Tab(label="Primary"),
+                                                    ft.Tab(label="Secondary"),
+                                                    ft.Tab(label="Tertiary"),
+                                                ]
                                             ),
-                                            ft.FloatingActionButton(
-                                                icon=ft.Icons.PALETTE
-                                            ),
-                                            ft.SegmentedButton(
-                                                selected=["grid"],
-                                                segments=[
-                                                    ft.Segment(
-                                                        value="list",
-                                                        icon=ft.Icon(
-                                                            ft.Icons.VIEW_LIST
-                                                        ),
-                                                        label=ft.Text("List"),
-                                                    ),
-                                                    ft.Segment(
-                                                        value="grid",
-                                                        icon=ft.Icon(
-                                                            ft.Icons.GRID_VIEW
-                                                        ),
-                                                        label=ft.Text("Grid"),
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        showcase_section(
-                                            "Chips",
-                                            ft.Row(
-                                                wrap=True,
-                                                spacing=12,
-                                                run_spacing=12,
-                                                controls=[
-                                                    ft.Chip(
-                                                        label=ft.Text("Filter chip"),
-                                                        on_select=lambda e: None,
-                                                    ),
-                                                    ft.Chip(
-                                                        label=ft.Text("Assist chip"),
-                                                        leading=ft.Icon(
-                                                            ft.Icons.MAP_SHARP
-                                                        ),
-                                                        on_click=lambda e: None,
-                                                    ),
-                                                    ft.Chip(
-                                                        label=ft.Text("Selected"),
-                                                        selected=True,
-                                                        on_select=lambda e: None,
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        showcase_section(
-                                            "Secondary roles",
-                                            ft.Row(
-                                                wrap=True,
-                                                spacing=12,
-                                                run_spacing=12,
+                                            ft.TabBarView(
+                                                expand=True,
                                                 controls=[
                                                     ft.Container(
-                                                        bgcolor=ft.Colors.SECONDARY,
-                                                        padding=12,
-                                                        border_radius=12,
-                                                        content=ft.Text(
-                                                            "SECONDARY",
-                                                            color=ft.Colors.ON_SECONDARY,
+                                                        padding=ft.Padding.only(top=4),
+                                                        content=ft.Column(
+                                                            scroll=ft.ScrollMode.AUTO,
+                                                            spacing=0,
+                                                            controls=[
+                                                                showcase_section(
+                                                                    "Palette together",
+                                                                    ft.Row(
+                                                                        wrap=True,
+                                                                        spacing=12,
+                                                                        run_spacing=12,
+                                                                        controls=[
+                                                                            preview_role_block(
+                                                                                "PRIMARY",
+                                                                                ft.Colors.PRIMARY,
+                                                                                ft.Colors.ON_PRIMARY,
+                                                                            ),
+                                                                            preview_role_block(
+                                                                                "SECONDARY",
+                                                                                ft.Colors.SECONDARY,
+                                                                                ft.Colors.ON_SECONDARY,
+                                                                            ),
+                                                                            preview_role_block(
+                                                                                "TERTIARY",
+                                                                                ft.Colors.TERTIARY,
+                                                                                ft.Colors.ON_TERTIARY,
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                    ft.Row(
+                                                                        wrap=True,
+                                                                        spacing=12,
+                                                                        run_spacing=12,
+                                                                        controls=[
+                                                                            ft.FilledButton(
+                                                                                "Apply"
+                                                                            ),
+                                                                            ft.FilledTonalButton(
+                                                                                "Tonal"
+                                                                            ),
+                                                                            ft.OutlinedButton(
+                                                                                "Outline"
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                    build_selected_chip_row(),
+                                                                ),
+                                                                showcase_section(
+                                                                    "Selection",
+                                                                    build_selection_row(),
+                                                                    ft.Slider(
+                                                                        value=70,
+                                                                        min=0,
+                                                                        max=100,
+                                                                    ),
+                                                                ),
+                                                                showcase_section(
+                                                                    "Card",
+                                                                    ft.Card(
+                                                                        content=ft.Container(
+                                                                            padding=16,
+                                                                            content=ft.Column(
+                                                                                spacing=12,
+                                                                                controls=[
+                                                                                    ft.Row(
+                                                                                        spacing=12,
+                                                                                        controls=[
+                                                                                            ft.Icon(
+                                                                                                ft.Icons.COLOR_LENS
+                                                                                            ),
+                                                                                            ft.Text(
+                                                                                                preview_heading,
+                                                                                                theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                                                            ),
+                                                                                        ],
+                                                                                    ),
+                                                                                    ft.Text(
+                                                                                        preview_body
+                                                                                    ),
+                                                                                    ft.Row(
+                                                                                        spacing=12,
+                                                                                        controls=[
+                                                                                            ft.FilledButton(
+                                                                                                "Apply"
+                                                                                            ),
+                                                                                            ft.TextButton(
+                                                                                                "Reset"
+                                                                                            ),
+                                                                                        ],
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                    ),
+                                                                ),
+                                                            ],
                                                         ),
                                                     ),
                                                     ft.Container(
-                                                        bgcolor=ft.Colors.SECONDARY_CONTAINER,
-                                                        padding=12,
-                                                        border_radius=12,
-                                                        content=ft.Text(
-                                                            "SECONDARY_CONTAINER",
-                                                            color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                        padding=ft.Padding.only(top=4),
+                                                        content=ft.Column(
+                                                            scroll=ft.ScrollMode.AUTO,
+                                                            spacing=0,
+                                                            controls=[
+                                                                showcase_section(
+                                                                    "Primary roles",
+                                                                    ft.Row(
+                                                                        wrap=True,
+                                                                        spacing=12,
+                                                                        run_spacing=12,
+                                                                        controls=[
+                                                                            preview_role_block(
+                                                                                "PRIMARY",
+                                                                                ft.Colors.PRIMARY,
+                                                                                ft.Colors.ON_PRIMARY,
+                                                                            ),
+                                                                            preview_role_block(
+                                                                                "PRIMARY_CONTAINER",
+                                                                                ft.Colors.PRIMARY_CONTAINER,
+                                                                                ft.Colors.ON_PRIMARY_CONTAINER,
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                    build_primary_button_row(),
+                                                                    ft.FloatingActionButton(
+                                                                        icon=ft.Icons.PALETTE
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                    ft.Container(
+                                                        padding=ft.Padding.only(top=4),
+                                                        content=ft.Column(
+                                                            scroll=ft.ScrollMode.AUTO,
+                                                            spacing=0,
+                                                            controls=[
+                                                                showcase_section(
+                                                                    "Secondary roles",
+                                                                    ft.Row(
+                                                                        wrap=True,
+                                                                        spacing=12,
+                                                                        run_spacing=12,
+                                                                        controls=[
+                                                                            preview_role_block(
+                                                                                "SECONDARY",
+                                                                                ft.Colors.SECONDARY,
+                                                                                ft.Colors.ON_SECONDARY,
+                                                                            ),
+                                                                            preview_role_block(
+                                                                                "SECONDARY_CONTAINER",
+                                                                                ft.Colors.SECONDARY_CONTAINER,
+                                                                                ft.Colors.ON_SECONDARY_CONTAINER,
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                    build_tonal_button(),
+                                                                    build_preview_chip_row(),
+                                                                    build_segmented_button(),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                    ft.Container(
+                                                        padding=ft.Padding.only(top=4),
+                                                        content=ft.Column(
+                                                            scroll=ft.ScrollMode.AUTO,
+                                                            spacing=0,
+                                                            controls=[
+                                                                showcase_section(
+                                                                    "Tertiary roles",
+                                                                    ft.Row(
+                                                                        wrap=True,
+                                                                        spacing=12,
+                                                                        run_spacing=12,
+                                                                        controls=[
+                                                                            preview_role_block(
+                                                                                "TERTIARY",
+                                                                                ft.Colors.TERTIARY,
+                                                                                ft.Colors.ON_TERTIARY,
+                                                                            ),
+                                                                            preview_role_block(
+                                                                                "TERTIARY_CONTAINER",
+                                                                                ft.Colors.TERTIARY_CONTAINER,
+                                                                                ft.Colors.ON_TERTIARY_CONTAINER,
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                    build_time_picker_row(),
+                                                                ),
+                                                            ],
                                                         ),
                                                     ),
                                                 ],
                                             ),
-                                        ),
-                                        showcase_section(
-                                            "Selection",
-                                            ft.Row(
-                                                wrap=True,
-                                                spacing=16,
-                                                run_spacing=12,
-                                                controls=[
-                                                    ft.Switch(
-                                                        label="Use dark mode",
-                                                        value=True,
-                                                    ),
-                                                    ft.Checkbox(
-                                                        label="Enable accents",
-                                                        value=True,
-                                                    ),
-                                                ],
-                                            ),
-                                            ft.RadioGroup(
-                                                content=ft.Column(
-                                                    spacing=8,
-                                                    controls=[
-                                                        ft.Radio(
-                                                            value="system",
-                                                            label="System",
-                                                        ),
-                                                        ft.Radio(
-                                                            value="light",
-                                                            label="Light",
-                                                        ),
-                                                        ft.Radio(
-                                                            value="dark",
-                                                            label="Dark",
-                                                        ),
-                                                    ],
-                                                ),
-                                                value="system",
-                                            ),
-                                            ft.Slider(value=70, min=0, max=100),
-                                        ),
-                                        showcase_section(
-                                            "Progress",
-                                            ft.ProgressBar(value=0.65),
-                                            ft.Row(
-                                                spacing=16,
-                                                controls=[
-                                                    ft.ProgressRing(value=0.75),
-                                                    ft.FloatingActionButton(
-                                                        icon=ft.Icons.PALETTE
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        showcase_section(
-                                            "Card",
-                                            ft.Card(
-                                                content=ft.Container(
-                                                    padding=16,
-                                                    content=ft.Column(
-                                                        spacing=12,
-                                                        controls=[
-                                                            ft.Row(
-                                                                spacing=12,
-                                                                controls=[
-                                                                    ft.Icon(
-                                                                        ft.Icons.COLOR_LENS
-                                                                    ),
-                                                                    ft.Text(
-                                                                        preview_heading,
-                                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                            ft.Text(preview_body),
-                                                            ft.Row(
-                                                                spacing=12,
-                                                                controls=[
-                                                                    ft.FilledButton(
-                                                                        "Apply"
-                                                                    ),
-                                                                    ft.TextButton(
-                                                                        "Reset"
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ],
+                                        ],
+                                    ),
                                 ),
                             ),
                         ),
