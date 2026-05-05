@@ -98,7 +98,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       // add
       final addedMedia = _appendedPlaylistMedia(previousPlaylist, playlist);
       if (addedMedia != null) {
-        final media = parseVideoMedia(addedMedia);
+        final media = parseVideoMedia(addedMedia, widget.control.backend);
         if (media != null) {
           await _player.add(media);
           return;
@@ -115,7 +115,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
     final play =
         widget.control.getBool("autoplay", false)! || _player.state.playing;
-    await _player.open(Playlist(parseVideoMedias(playlist, [])!), play: play);
+    await _player.open(
+        Playlist(parseVideoMedias(playlist, widget.control.backend, [])!),
+        play: play);
   }
 
   Future<void> _applyMpvProperties(Control control) async {
@@ -189,7 +191,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       });
     }
 
-    final playlist = Playlist(parseVideoMedias(control.get("playlist"), [])!);
+    final playlist =
+        Playlist(parseVideoMedias(control.get("playlist"), control.backend, [])!);
     final autoplay = control.getBool("autoplay", false)!;
     _playlist = _copyPlaylist(control.get("playlist"));
 
@@ -278,7 +281,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       case "stop":
         await _player.stop();
         _player.open(
-            Playlist(parseVideoMedias(widget.control.get("playlist"), [])!),
+            Playlist(parseVideoMedias(
+                widget.control.get("playlist"), widget.control.backend, [])!),
             play: false);
         break;
       case "seek":

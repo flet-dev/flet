@@ -24,7 +24,8 @@ Widget _adaptiveVideoControls(VideoState state) {
   }
 }
 
-Media? parseVideoMedia(dynamic value, [Media? defaultValue]) {
+Media? parseVideoMedia(dynamic value, FletBackend backend,
+    [Media? defaultValue]) {
   if (value == null || value["resource"] == null) return defaultValue;
 
   final extras = (value["extras"] as Map?)?.map(
@@ -35,17 +36,24 @@ Media? parseVideoMedia(dynamic value, [Media? defaultValue]) {
     (key, val) => MapEntry(key.toString(), val.toString()),
   );
 
-  return Media(value["resource"], extras: extras, httpHeaders: httpHeaders);
+  // Resolve relative paths against assets_dir / page URI, matching how
+  // every other Flet media control handles `src`. media_kit's Media()
+  // accepts both URLs and absolute filesystem paths, so a single
+  // resolved string works for both web and native backends.
+  final resource = backend.getAssetSource(value["resource"] as String).path;
+
+  return Media(resource, extras: extras, httpHeaders: httpHeaders);
 }
 
-List<Media>? parseVideoMedias(dynamic value, [List<Media>? defaultValue]) {
+List<Media>? parseVideoMedias(dynamic value, FletBackend backend,
+    [List<Media>? defaultValue]) {
   if (value == null) return defaultValue;
 
   if (value is List) {
-    return value.map((e) => parseVideoMedia(e)).nonNulls.toList();
+    return value.map((e) => parseVideoMedia(e, backend)).nonNulls.toList();
   }
 
-  final media = parseVideoMedia(value);
+  final media = parseVideoMedia(value, backend);
   return media != null ? [media] : defaultValue;
 }
 
