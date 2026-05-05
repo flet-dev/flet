@@ -118,6 +118,7 @@ categories:
     ProgressBar:
     ProgressRing:
     Tooltip:
+    WebView:
 
   Dialogs:
     _icon: chat_bubble_outline
@@ -142,17 +143,17 @@ categories:
     NavigationBar:
     NavigationDrawer:
     NavigationRail:
+    Router:
+    Routing:
     SubmenuButton:
     Tabs:
     CupertinoAppBar:
     CupertinoNavigationBar:
-    # Routing?
 
   Typography:
     _icon: visibility
     _description: Text, styles and fonts
     Text:
-    #WebView:
 
   Theming:
     _icon: palette
