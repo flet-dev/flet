@@ -1,0 +1,26 @@
+[project]
+name = "apps-7guis-crud"
+version = "1.0.0"
+description = "7GUIs CRUD app for filtering, selecting, creating, editing, and deleting records."
+requires-python = ">=3.10"
+keywords = ["apps", "7guis", "crud", "forms", "filtering", "records"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/7GUIs", "Apps/Productivity", "Apps/Forms"]
+
+[tool.flet.metadata]
+title = "CRUD"
+controls = ["SafeArea", "Container", "Column", "Row", "Text", "TextField", "IconButton", "ListView", "Divider", "Icon"]
+layout_pattern = "list-detail"
+complexity = "intermediate"
+features = ["live filtering", "record selection", "record editing", "create update delete"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

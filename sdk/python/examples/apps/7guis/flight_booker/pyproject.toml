@@ -1,0 +1,26 @@
+[project]
+name = "apps-7guis-flight-booker"
+version = "1.0.0"
+description = "7GUIs flight booking form with trip mode selection, date picking, and booking validation."
+requires-python = ">=3.10"
+keywords = ["apps", "7guis", "flight booker", "forms", "date picker", "validation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/7GUIs", "Apps/Forms"]
+
+[tool.flet.metadata]
+title = "Flight booker"
+controls = ["SafeArea", "Container", "Column", "Row", "Text", "Dropdown", "OutlinedButton", "FilledButton", "DatePicker", "SnackBar"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["date picking", "form validation", "dialog feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
