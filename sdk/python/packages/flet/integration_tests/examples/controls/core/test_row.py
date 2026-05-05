@@ -14,6 +14,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         ft.Row(
+            width=445,
             scroll=ft.ScrollMode.AUTO,
             controls=[
                 ft.Card(
