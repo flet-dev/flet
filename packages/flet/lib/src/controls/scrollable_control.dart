@@ -109,6 +109,35 @@ class _ScrollableControlState extends State<ScrollableControl>
 
     if (scrollConfiguration == null) return widget.child;
 
+    Widget child = widget.child;
+    if (widget.wrapIntoScrollableView) {
+      child = LayoutBuilder(builder: (context, constraints) {
+        final minWidth = widget.scrollDirection == Axis.horizontal &&
+                constraints.hasBoundedWidth
+            ? constraints.maxWidth
+            : 0.0;
+        final minHeight = widget.scrollDirection == Axis.vertical &&
+                constraints.hasBoundedHeight
+            ? constraints.maxHeight
+            : 0.0;
+
+        Widget scrollViewChild = widget.child;
+        if (minWidth > 0 || minHeight > 0) {
+          scrollViewChild = ConstrainedBox(
+            constraints:
+                BoxConstraints(minWidth: minWidth, minHeight: minHeight),
+            child: scrollViewChild,
+          );
+        }
+
+        return SingleChildScrollView(
+          controller: _controller,
+          scrollDirection: widget.scrollDirection,
+          child: scrollViewChild,
+        );
+      });
+    }
+
     return Scrollbar(
         thumbVisibility: scrollConfiguration.thumbVisibility,
         trackVisibility: scrollConfiguration.trackVisibility,
@@ -119,13 +148,7 @@ class _ScrollableControlState extends State<ScrollableControl>
         controller: _controller,
         child: ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: widget.wrapIntoScrollableView
-              ? SingleChildScrollView(
-                  controller: _controller,
-                  scrollDirection: widget.scrollDirection,
-                  child: widget.child,
-                )
-              : widget.child,
+          child: child,
         ));
   }
 }
