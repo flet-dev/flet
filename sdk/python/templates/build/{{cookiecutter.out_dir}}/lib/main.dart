@@ -146,6 +146,7 @@ Future prepareApp() async {
     if (routeUrlStrategy == "path") {
       usePathUrlStrategy();
     }
+    assetsDir = getAssetsDir();
   } else if (_args.isNotEmpty && isDesktopPlatform()) {
     // developer mode
     debugPrint("Flet app is running in Developer mode");
