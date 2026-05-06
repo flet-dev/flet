@@ -185,6 +185,11 @@ LEFT_PANE_ROLE_TABS = [
         "groups": [
             {
                 "title": "Surface roles",
+                "hint": (
+                    "Use surface roles for more neutral\n"
+                    "backgrounds, and container colors for\n"
+                    "components like cards, sheets, and dialogs."
+                ),
                 "items": [
                     ("SURFACE", "SURFACE", "ON_SURFACE"),
                     ("ON_SURFACE", "ON_SURFACE", "SURFACE"),
@@ -196,6 +201,10 @@ LEFT_PANE_ROLE_TABS = [
             },
             {
                 "title": "Surface containers",
+                "hint": (
+                    "Five surface container roles are named\n"
+                    "based on their level of emphasis."
+                ),
                 "items": [
                     ("SURFACE_CONTAINER", "SURFACE_CONTAINER", "ON_SURFACE"),
                     ("SURFACE_CONTAINER_LOW", "SURFACE_CONTAINER_LOW", "ON_SURFACE"),
