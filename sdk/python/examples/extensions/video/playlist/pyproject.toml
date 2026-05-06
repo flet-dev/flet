@@ -1,0 +1,26 @@
+[project]
+name = "video-playlist"
+version = "1.0.0"
+description = "Manage a video playlist: add, remove, replace, and navigate between tracks."
+requires-python = ">=3.10"
+keywords = ["video", "playlist", "media", "loop", "navigation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Playlist"
+controls = ["SafeArea", "Column", "Row", "Button", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["playlist mutation", "loop mode", "next/previous/jump"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

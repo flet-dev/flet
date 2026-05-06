@@ -1,0 +1,26 @@
+[project]
+name = "video-playback"
+version = "1.0.0"
+description = "Control video playback: play, pause, stop, seek, and inspect status."
+requires-python = ">=3.10"
+keywords = ["video", "playback", "play", "pause", "seek"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Playback Controls"
+controls = ["SafeArea", "Column", "Row", "Button", "Text", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["play/pause/stop", "seek", "status inspection"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

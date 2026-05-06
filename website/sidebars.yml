@@ -606,11 +606,24 @@ docs:
         - controls/codeeditor/types/customcodetheme.md
         - controls/codeeditor/types/gutterstyle.md
       - Video:
+        - controls/video/types/adaptivevideocontrols.md
+        - controls/video/types/materialdesktopvideocontrols.md
+        - controls/video/types/materialvideocontrols.md
         - controls/video/types/playlistmode.md
+        - controls/video/types/videobaritem.md
         - controls/video/types/videoconfiguration.md
+        - controls/video/types/videocontrols.md
+        - controls/video/types/videocontrolsmode.md
+        - controls/video/types/videofullscreenbutton.md
         - controls/video/types/videomedia.md
+        - controls/video/types/videoplayorpausebutton.md
+        - controls/video/types/videopositionindicator.md
+        - controls/video/types/videoskipnextbutton.md
+        - controls/video/types/videoskippreviousbutton.md
+        - controls/video/types/videospacer.md
         - controls/video/types/videosubtitleconfiguration.md
         - controls/video/types/videosubtitletrack.md
+        - controls/video/types/videovolumebutton.md
       - WebView:
         - controls/webview/types/requestmethod.md
         - controls/webview/types/loglevelseverity.md

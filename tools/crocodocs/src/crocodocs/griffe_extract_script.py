@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import subprocess
 import sys
 from functools import lru_cache
@@ -12,6 +13,8 @@ from typing import Any
 
 
 SIGNATURE_LINE_LENGTH = 60
+# Skips time consuming tasks (ex: Ruff signature formatting) when set.
+FAST_MODE = bool(os.environ.get("FLET_DOCS_FAST"))
 
 
 def _normalize_path(value: str | None) -> str | None:
@@ -439,6 +442,9 @@ def _format_python_statement(code: str) -> str:
     """Format a synthetic Python statement with Ruff, falling back to normalized code."""
     normalized, is_valid_python = _normalize_python_statement(code)
     if len(normalized) < SIGNATURE_LINE_LENGTH or not is_valid_python:
+        return normalized
+
+    if FAST_MODE:
         return normalized
 
     try:
