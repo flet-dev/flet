@@ -26,8 +26,6 @@ def main(page: ft.Page):
     page.bgcolor = ft.Colors.SURFACE
     page.padding = 14
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
-    page.dark_theme = ft.Theme(color_scheme_seed=LIGHT_SEED_COLOR)
     # page.window.width = 420
     # page.window.height = 460
     left_pane_width = 250
@@ -44,36 +42,52 @@ def main(page: ft.Page):
     selected_material_color = {"label": None, "value": None}
     selected_shade = {"label": None, "value": None}
     selected_left_tab_index = {"value": 0}
+    preview_theme_mode = {"value": ft.ThemeMode.LIGHT}
     light_theme_color_overrides: dict[str, ft.ColorValue] = {}
     dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
     theme_seed_colors = {
         ft.ThemeMode.LIGHT: LIGHT_SEED_COLOR,
         ft.ThemeMode.DARK: LIGHT_SEED_COLOR,
     }
+    preview_pane_host = ft.Container(expand=True)
 
     def close_color_editor(_):
         color_editor_pane.visible = False
         page.update()
 
     def rebuild_theme():
-        page.theme = ft.Theme(
-            color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
-            color_scheme=ft.ColorScheme(**light_theme_color_overrides),
+        preview_pane_host.content = ft.Container(
+            expand=True,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+            padding=16,
+            theme=ft.Theme(
+                color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
+                color_scheme=ft.ColorScheme(**light_theme_color_overrides),
+            ),
+            dark_theme=ft.Theme(
+                color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
+                color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
+            ),
+            theme_mode=preview_theme_mode["value"],
+            content=build_preview_tabs(
+                preview_heading=preview_heading,
+                preview_body=preview_body,
+                preview_time_text=preview_time_text,
+                open_preview_time_picker=open_preview_time_picker,
+            ),
         )
-        page.dark_theme = ft.Theme(
-            color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
-            color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
-        )
+        if preview_pane_host.page is not None:
+            preview_pane_host.update()
 
     def current_theme_color_overrides() -> dict[str, ft.ColorValue]:
         return (
             light_theme_color_overrides
-            if page.theme_mode == ft.ThemeMode.LIGHT
+            if preview_theme_mode["value"] == ft.ThemeMode.LIGHT
             else dark_theme_color_overrides
         )
 
     def current_seed_color() -> ft.ColorValue:
-        return theme_seed_colors[page.theme_mode]
+        return theme_seed_colors[preview_theme_mode["value"]]
 
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
@@ -164,7 +178,7 @@ def main(page: ft.Page):
             selected_label=selected_role["label"],
             swatch_width=swatch_width,
             swatch_height=swatch_height,
-            theme_mode=page.theme_mode,
+            theme_mode=preview_theme_mode["value"],
             role_tabs=LEFT_PANE_ROLE_TABS,
             selected_tab_index=selected_left_tab_index["value"],
             seed_color_options=SEED_COLOR_OPTIONS,
@@ -370,7 +384,7 @@ def main(page: ft.Page):
             page.pop_dialog()
             page.update()
             return
-        theme_seed_colors[page.theme_mode] = seed_color
+        theme_seed_colors[preview_theme_mode["value"]] = seed_color
         current_theme_color_overrides().clear()
         clear_editor_selection()
         rebuild_left_pane_controls()
@@ -401,7 +415,7 @@ def main(page: ft.Page):
             pending_seed_selection["color"] = seed_color
             pending_seed_selection["label"] = seed_label
             seed_confirm_text.value = (
-                f"Rebuild the current {page.theme_mode.value} theme "
+                f"Rebuild the current {preview_theme_mode['value'].value} theme "
                 f"from {seed_label} and clear its overrides?"
             )
             page.show_dialog(seed_confirm_dialog)
@@ -527,11 +541,12 @@ def main(page: ft.Page):
         page.update()
 
     def toggle_theme_mode(_):
-        page.theme_mode = (
+        preview_theme_mode["value"] = (
             ft.ThemeMode.DARK
-            if page.theme_mode == ft.ThemeMode.LIGHT
+            if preview_theme_mode["value"] == ft.ThemeMode.LIGHT
             else ft.ThemeMode.LIGHT
         )
+        rebuild_theme()
         if selected_role["attr"] is not None:
             set_selected_material_from_value(
                 get_current_role_color_value(selected_role["attr"])
@@ -570,23 +585,14 @@ def main(page: ft.Page):
                         ft.Container(
                             expand=True,
                             padding=ft.Padding.only(left=4),
-                            content=ft.Container(
-                                expand=True,
-                                bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
-                                padding=16,
-                                content=build_preview_tabs(
-                                    preview_heading=preview_heading,
-                                    preview_body=preview_body,
-                                    preview_time_text=preview_time_text,
-                                    open_preview_time_picker=open_preview_time_picker,
-                                ),
-                            ),
+                            content=preview_pane_host,
                         ),
                     ],
                 ),
             ),
         )
     )
+    rebuild_theme()
 
 
 if __name__ == "__main__":
