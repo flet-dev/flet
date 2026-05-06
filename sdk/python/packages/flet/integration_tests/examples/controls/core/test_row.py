@@ -39,6 +39,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_alignment(flet_app_function: ftt.FletTestApp):
+    # Pin viewport so paint workload is independent of the runner's display size.
+    flet_app_function.resize_page(800, 1000)
+    flet_app_function.page.update()
     flet_app_function.assert_screenshot(
         "alignment",
         await flet_app_function.take_page_controls_screenshot(),
@@ -52,6 +55,8 @@ async def test_alignment(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_vertical_alignment(flet_app_function: ftt.FletTestApp):
+    flet_app_function.resize_page(800, 1000)
+    flet_app_function.page.update()
     flet_app_function.assert_screenshot(
         "vertical_alignment",
         await flet_app_function.take_page_controls_screenshot(),

@@ -29,9 +29,6 @@ class _InteractiveViewerControlState extends State<ScreenshotControl> {
     debugPrint("Screenshot.$name($args)");
     switch (name) {
       case "capture":
-        // Ensure the RepaintBoundary has finished painting before toImage()
-        // is called, otherwise Flutter trips the `!debugNeedsPaint` assertion.
-        await WidgetsBinding.instance.endOfFrame;
         return await _screenshotController.capture(
             pixelRatio: args["pixel_ratio"],
             delay: parseDuration(
