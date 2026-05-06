@@ -351,12 +351,8 @@ class FletTestApp:
         scr = await self.wrap_page_controls_in_screenshot(
             pump_times=pump_times, pump_duration=pump_duration
         )
-        # 200ms headroom — the screenshot package's 20ms default isn't enough
-        # on busy runners to ride out a frame scheduled by the capture
-        # invocation itself, which trips `!debugNeedsPaint` in toImage().
         return await scr.capture(
-            pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio,
-            delay=ft.Duration(milliseconds=200),
+            pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
         )
 
     async def assert_control_screenshot(
@@ -389,10 +385,7 @@ class FletTestApp:
             await self.tester.pump(duration=pump_duration)
         self.assert_screenshot(
             name,
-            await screenshot.capture(
-                pixel_ratio=self.screenshots_pixel_ratio,
-                delay=ft.Duration(milliseconds=200),
-            ),
+            await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
             similarity_threshold=similarity_threshold,
         )
 
