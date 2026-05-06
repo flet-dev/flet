@@ -16,19 +16,30 @@ def color_band(
     selected: bool = False,
     on_click=None,
 ) -> ft.Container:
+    swatch_size = max(24, height - 8)
     return ft.Container(
         width=width,
         height=height,
-        bgcolor=background,
-        border=ft.Border.all(
-            2 if selected else 0,
-            ft.Colors.BLACK if selected else ft.Colors.TRANSPARENT,
-        ),
-        padding=ft.Padding.symmetric(horizontal=12),
-        alignment=ft.Alignment.CENTER_LEFT,
+        padding=ft.Padding.symmetric(horizontal=8),
         ink=True,
         on_click=on_click,
-        content=ft.Text(display_label, color=foreground),
+        content=ft.Row(
+            spacing=10,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Container(
+                    width=swatch_size,
+                    height=swatch_size,
+                    bgcolor=background,
+                    border_radius=8,
+                    border=ft.Border.all(
+                        2 if selected else 1,
+                        ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
+                    ),
+                ),
+                ft.Text(display_label, size=12, color=ft.Colors.BLACK),
+            ],
+        ),
     )
 
 
