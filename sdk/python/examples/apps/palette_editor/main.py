@@ -489,9 +489,10 @@ def main(page: ft.Page):
         tooltip="Copy to clipboard",
         on_click=copy_export_theme,
     )
+    export_dialog_title = ft.Text("Export palette")
     export_dialog = ft.AlertDialog(
         modal=True,
-        title=ft.Text("Export palette"),
+        title=export_dialog_title,
         content=ft.Container(
             width=520,
             content=export_code_text,
@@ -552,9 +553,10 @@ def main(page: ft.Page):
         page.pop_dialog()
         page.update()
 
+    import_dialog_title = ft.Text("Import palette")
     import_dialog = ft.AlertDialog(
         modal=True,
-        title=ft.Text("Import palette"),
+        title=import_dialog_title,
         content=ft.Container(
             width=520,
             content=ft.Column(
@@ -571,12 +573,24 @@ def main(page: ft.Page):
     )
 
     def export_theme(_):
+        mode_label = (
+            "dark theme"
+            if preview_theme_mode["value"] == ft.ThemeMode.DARK
+            else "light theme"
+        )
+        export_dialog_title.value = f"Export palette for {mode_label}"
         export_code_text.value = build_export_code(current_theme_color_overrides())
         export_copy_button.icon = ft.Icons.CONTENT_COPY
         page.show_dialog(export_dialog)
         page.update()
 
     def open_import_dialog(_):
+        mode_label = (
+            "dark theme"
+            if preview_theme_mode["value"] == ft.ThemeMode.DARK
+            else "light theme"
+        )
+        import_dialog_title.value = f"Import palette for {mode_label}"
         import_code_text.value = ""
         import_error_text.value = ""
         import_error_text.visible = False
