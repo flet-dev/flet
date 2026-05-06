@@ -36,7 +36,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                scroll=ft.ScrollMode.AUTO,
+                # scroll=ft.ScrollMode.AUTO,
                 controls=[
                     RowWithAlignment(alignment=ft.MainAxisAlignment.START),
                     RowWithAlignment(alignment=ft.MainAxisAlignment.CENTER),
