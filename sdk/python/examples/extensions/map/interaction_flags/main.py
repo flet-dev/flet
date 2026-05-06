@@ -56,18 +56,15 @@ def main(page: ft.Page):
         ),
         layers=[
             ftm.TileLayer(
-                url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png",
+                url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                user_agent_package_name="flet-map-examples/1.0",
                 on_image_error=lambda e: print(f"TileLayer Error: {e.data}"),
             ),
-            ftm.RichAttribution(
-                attributions=[
-                    ftm.TextSourceAttribution(
-                        text="OpenStreetMap contributors",
-                        on_click=lambda e: e.page.launch_url(
-                            "https://www.openstreetmap.org/copyright"
-                        ),
-                    )
-                ]
+            ftm.SimpleAttribution(
+                text="OpenStreetMap contributors",
+                on_click=lambda e: e.page.launch_url(
+                    "https://www.openstreetmap.org/copyright"
+                ),
             ),
         ],
     )

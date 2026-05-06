@@ -15,7 +15,7 @@ categories = ["Extensions/Map"]
 
 [tool.flet.metadata]
 title = "Basic"
-controls = ["SafeArea", "Map", "TileLayer"]
+controls = ["SafeArea", "Map", "TileLayer", "SimpleAttribution"]
 layout_pattern = "single-panel"
 complexity = "basic"
 features = ["map tile rendering", "tile load error callback"]

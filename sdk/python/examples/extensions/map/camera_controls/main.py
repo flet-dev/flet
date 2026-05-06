@@ -76,7 +76,8 @@ def main(page: ft.Page):
                         initial_zoom=5,
                         layers=[
                             ftm.TileLayer(
-                                url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png"
+                                url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                user_agent_package_name="flet-map-examples/1.0",
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
