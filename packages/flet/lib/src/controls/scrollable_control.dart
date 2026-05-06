@@ -161,9 +161,14 @@ class _ScrollableControlState extends State<ScrollableControl>
 
 /// Carries box constraints from [_OuterConstraintsReader] (outside the scroll
 /// view) to [_InnerConstraintsEnforcer] (inside it) within a single layout
-/// pass.
+/// pass. Holds a reference to the inner enforcer so the outer reader can
+/// mark it dirty when its incoming constraints change — without that, the
+/// inner enforcer would skip re-layout on window resize because the
+/// constraints it sees from SingleChildScrollView (unbounded in scroll axis)
+/// don't change.
 class _ConstraintsHolder {
   BoxConstraints? value;
+  RenderObject? listener;
 }
 
 class _OuterConstraintsReader extends SingleChildRenderObjectWidget {
@@ -187,7 +192,16 @@ class _RenderOuterConstraintsReader extends RenderProxyBox {
 
   @override
   void performLayout() {
+    final changed = holder.value != constraints;
     holder.value = constraints;
+    if (changed && holder.listener != null) {
+      // Force the inner enforcer to re-run performLayout in this layout pass.
+      // invokeLayoutCallback enables mutations during layout — without it,
+      // markNeedsLayout asserts.
+      invokeLayoutCallback<BoxConstraints>((_) {
+        holder.listener?.markNeedsLayout();
+      });
+    }
     super.performLayout();
   }
 }
@@ -218,6 +232,18 @@ class _RenderInnerConstraintsEnforcer extends RenderProxyBox {
   _RenderInnerConstraintsEnforcer(this.holder, this.scrollDirection);
   _ConstraintsHolder holder;
   Axis scrollDirection;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    holder.listener = this;
+  }
+
+  @override
+  void detach() {
+    if (holder.listener == this) holder.listener = null;
+    super.detach();
+  }
 
   @override
   void performLayout() {
