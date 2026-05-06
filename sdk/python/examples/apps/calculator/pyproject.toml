@@ -10,6 +10,9 @@ dependencies = ["flet"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
+[tool.flet.gallery]
+categories = ["Apps/Productivity", "Getting Started", "Featured", "Tools"]
+
 [tool.flet.metadata]
 title = "Calculator"
 controls = ["Container", "Column", "Row", "Text", "Button"]
