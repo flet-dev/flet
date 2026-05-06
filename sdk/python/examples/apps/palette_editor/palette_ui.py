@@ -37,7 +37,16 @@ def color_band(
                         ft.Colors.BLACK if selected else ft.Colors.OUTLINE_VARIANT,
                     ),
                 ),
-                ft.Text(display_label, size=12, color=ft.Colors.BLACK),
+                ft.Container(
+                    theme=ft.Theme(),
+                    dark_theme=ft.Theme(),
+                    theme_mode=ft.ThemeMode.SYSTEM,
+                    content=ft.Text(
+                        display_label,
+                        size=12,
+                        color=ft.Colors.ON_SURFACE_VARIANT,
+                    ),
+                ),
             ],
         ),
     )

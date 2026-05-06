@@ -25,7 +25,7 @@ def main(page: ft.Page):
     page.title = "Palette Editor"
     page.bgcolor = ft.Colors.SURFACE
     page.padding = 14
-    page.theme_mode = ft.ThemeMode.LIGHT
+    page.theme_mode = ft.ThemeMode.SYSTEM
     # page.window.width = 420
     # page.window.height = 460
     left_pane_width = 250
