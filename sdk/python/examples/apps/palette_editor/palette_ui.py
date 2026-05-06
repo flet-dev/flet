@@ -59,6 +59,9 @@ def color_group(
     height: int,
     title: str | None = None,
     hint: str | None = None,
+    swatch_theme: ft.Theme,
+    swatch_dark_theme: ft.Theme,
+    swatch_theme_mode: ft.ThemeMode,
     selected_label: str | None = None,
     on_color_click=None,
 ) -> ft.Container:
@@ -100,16 +103,21 @@ def color_group(
                     ),
                 ),
                 *[
-                    color_band(
-                        role_label,
-                        display_label,
-                        background,
-                        foreground,
-                        width=width,
-                        height=height,
-                        selected=selected_label == role_label,
-                        on_click=(
-                            on_color_click(role_label) if on_color_click else None
+                    ft.Container(
+                        theme=swatch_theme,
+                        dark_theme=swatch_dark_theme,
+                        theme_mode=swatch_theme_mode,
+                        content=color_band(
+                            role_label,
+                            display_label,
+                            background,
+                            foreground,
+                            width=width,
+                            height=height,
+                            selected=selected_label == role_label,
+                            on_click=(
+                                on_color_click(role_label) if on_color_click else None
+                            ),
                         ),
                     )
                     for role_label, display_label, background, foreground in items
@@ -180,9 +188,9 @@ def build_left_pane_controls(
     selected_tab_index: int,
     seed_color_options: list[tuple[str, ft.ColorValue]],
     selected_seed_color: ft.ColorValue,
-    group_theme: ft.Theme,
-    group_dark_theme: ft.Theme,
-    group_theme_mode: ft.ThemeMode,
+    swatch_theme: ft.Theme,
+    swatch_dark_theme: ft.Theme,
+    swatch_theme_mode: ft.ThemeMode,
     get_role_value,
     format_role_value,
     on_color_click,
@@ -241,27 +249,25 @@ def build_left_pane_controls(
             ),
         ),
         *[
-            ft.Container(
-                theme=group_theme,
-                dark_theme=group_dark_theme,
-                theme_mode=group_theme_mode,
-                content=color_group(
-                    [
-                        (
-                            label,
-                            label,
-                            get_role_value(background_token),
-                            get_role_value(foreground_token),
-                        )
-                        for label, background_token, foreground_token in group["items"]
-                    ],
-                    width=swatch_width,
-                    height=swatch_height,
-                    title=group.get("title"),
-                    hint=group.get("hint"),
-                    selected_label=selected_label,
-                    on_color_click=on_color_click,
-                ),
+            color_group(
+                [
+                    (
+                        label,
+                        label,
+                        get_role_value(background_token),
+                        get_role_value(foreground_token),
+                    )
+                    for label, background_token, foreground_token in group["items"]
+                ],
+                width=swatch_width,
+                height=swatch_height,
+                title=group.get("title"),
+                hint=group.get("hint"),
+                swatch_theme=swatch_theme,
+                swatch_dark_theme=swatch_dark_theme,
+                swatch_theme_mode=swatch_theme_mode,
+                selected_label=selected_label,
+                on_color_click=on_color_click,
             )
             for group in active_tab["groups"]
         ],
