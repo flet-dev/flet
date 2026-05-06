@@ -111,31 +111,29 @@ class _ScrollableControlState extends State<ScrollableControl>
 
     Widget child = widget.child;
     if (widget.wrapIntoScrollableView) {
-      child = LayoutBuilder(builder: (context, constraints) {
-        final minWidth = widget.scrollDirection == Axis.horizontal &&
-                constraints.hasBoundedWidth
-            ? constraints.maxWidth
-            : 0.0;
-        final minHeight = widget.scrollDirection == Axis.vertical &&
-                constraints.hasBoundedHeight
-            ? constraints.maxHeight
-            : 0.0;
+      // Use MediaQuery instead of LayoutBuilder so ancestor IntrinsicWidth /
+      // IntrinsicHeight widgets keep working — LayoutBuilder reports 0 for
+      // intrinsic dimensions, which collapses any intrinsic-sized ancestor.
+      final size = MediaQuery.sizeOf(context);
+      final minWidth =
+          widget.scrollDirection == Axis.horizontal ? size.width : 0.0;
+      final minHeight =
+          widget.scrollDirection == Axis.vertical ? size.height : 0.0;
 
-        Widget scrollViewChild = widget.child;
-        if (minWidth > 0 || minHeight > 0) {
-          scrollViewChild = ConstrainedBox(
-            constraints:
-                BoxConstraints(minWidth: minWidth, minHeight: minHeight),
-            child: scrollViewChild,
-          );
-        }
-
-        return SingleChildScrollView(
-          controller: _controller,
-          scrollDirection: widget.scrollDirection,
+      Widget scrollViewChild = widget.child;
+      if (minWidth > 0 || minHeight > 0) {
+        scrollViewChild = ConstrainedBox(
+          constraints:
+              BoxConstraints(minWidth: minWidth, minHeight: minHeight),
           child: scrollViewChild,
         );
-      });
+      }
+
+      child = SingleChildScrollView(
+        controller: _controller,
+        scrollDirection: widget.scrollDirection,
+        child: scrollViewChild,
+      );
     }
 
     return Scrollbar(
