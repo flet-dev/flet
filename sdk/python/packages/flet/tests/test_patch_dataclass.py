@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import msgpack
 
@@ -73,6 +73,81 @@ def test_encode_uses_value_fast_path():
     assert getattr(value, "__prev_lists") == {}
     assert hasattr(value, "__prev_dicts")
     assert getattr(value, "__prev_dicts") == {}
+
+
+def test_encode_preserves_explicit_empty_value_lists_and_dicts():
+    """Explicit empty list/dict values should reach Dart as intentional overrides."""
+
+    @ft.value
+    class TestConfiguration:
+        items: list[int] | None = None
+        options: dict[str, int] | None = None
+
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(TestConfiguration(items=[], options={}))
+
+    assert encoded["items"] == []
+    assert encoded["options"] == {}
+
+
+def test_encode_keeps_default_structural_empty_lists_sparse():
+    """Default structural empty lists should remain omitted from protocol payloads."""
+
+    @ft.value
+    class TestConfiguration:
+        items: list[int] = field(default_factory=list)
+
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(TestConfiguration())
+
+    assert "items" not in encoded
+
+
+def test_encode_serializes_nested_controls_in_value_lists():
+    """Nested controls in value lists should serialize with control metadata."""
+
+    @ft.value
+    class TestConfiguration:
+        controls: list[ft.Control] | None = None
+
+    value = TestConfiguration(controls=[ft.Text("A")])
+    packed = msgpack.packb(
+        value,
+        default=configure_encode_object_for_msgpack(BaseControl),
+        use_bin_type=True,
+    )
+    encoded = msgpack.unpackb(packed, raw=False)
+
+    assert encoded["controls"][0]["_c"] == "Text"
+    assert encoded["controls"][0]["value"] == "A"
+
+
+def test_controls_inside_value_objects_keep_nearest_control_parent():
+    """Controls nested in value objects should still belong to their host control."""
+
+    @ft.value
+    class TestConfiguration:
+        controls: list[ft.Control] | None = None
+
+    @control("HostControl")
+    class HostControl(BaseControl):
+        configuration: TestConfiguration | None = None
+
+    nested = ft.IconButton(icon=ft.Icons.PLAY_ARROW, on_click=lambda _: None)
+    host = HostControl(configuration=TestConfiguration(controls=[nested]))
+
+    ObjectPatch.from_diff(None, host, control_cls=BaseControl)
+
+    assert nested.parent is host
+
+    host = HostControl()
+    ObjectPatch.from_diff(None, host, control_cls=BaseControl)
+    nested = ft.IconButton(icon=ft.Icons.PLAY_ARROW, on_click=lambda _: None)
+    host.configuration = TestConfiguration(controls=[nested])
+
+    ObjectPatch.from_diff(host, host, control_cls=BaseControl)
+
+    assert nested.parent is host
 
 
 def test_page_patch_dataclass():

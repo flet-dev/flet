@@ -2842,7 +2842,23 @@ module.exports = {
                   "items": [
                     {
                       "type": "doc",
+                      "id": "controls/video/types/adaptivevideocontrols"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/materialdesktopvideocontrols"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/materialvideocontrols"
+                    },
+                    {
+                      "type": "doc",
                       "id": "controls/video/types/playlistmode"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videobaritem"
                     },
                     {
                       "type": "doc",
@@ -2850,7 +2866,39 @@ module.exports = {
                     },
                     {
                       "type": "doc",
+                      "id": "controls/video/types/videocontrols"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videocontrolsmode"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videofullscreenbutton"
+                    },
+                    {
+                      "type": "doc",
                       "id": "controls/video/types/videomedia"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videoplayorpausebutton"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videopositionindicator"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videoskipnextbutton"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videoskippreviousbutton"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videospacer"
                     },
                     {
                       "type": "doc",
@@ -2859,6 +2907,10 @@ module.exports = {
                     {
                       "type": "doc",
                       "id": "controls/video/types/videosubtitletrack"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "controls/video/types/videovolumebutton"
                     }
                   ]
                 },

@@ -90,13 +90,16 @@ def configure_encode_object_for_msgpack(control_cls):
                         prev_classes[fname] = v
                     elif isinstance(v, list):
                         v = v[:]
-                        if len(v) > 0:
-                            r[fname] = v
+                        # Values stored in _values were assigned explicitly, so
+                        # an empty list is a meaningful override, not a default
+                        # structural field to omit.
+                        r[fname] = v
                         prev_lists[fname] = v
                     elif isinstance(v, dict):
                         v = v.copy()
-                        if len(v) > 0:
-                            r[fname] = v
+                        # Same reasoning as lists above: preserve explicit empty
+                        # dictionaries while keeping structural defaults sparse.
+                        r[fname] = v
                         prev_dicts[fname] = v
                     else:
                         r[fname] = True if fname in _event_fields else v

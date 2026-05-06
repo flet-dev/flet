@@ -1,0 +1,26 @@
+[project]
+name = "video-controls"
+version = "1.0.0"
+description = "Switch between built-in, custom, and hidden video controls."
+requires-python = ">=3.10"
+keywords = ["video", "controls", "media", "material", "desktop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Controls"
+controls = ["SafeArea", "Column", "Row", "Button", "IconButton", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["controls", "adaptive controls", "material controls", "custom controls"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

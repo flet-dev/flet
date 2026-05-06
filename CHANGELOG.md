@@ -2,6 +2,7 @@
 
 ### New features
 
+* Add configurable built-in, custom, hidden, and normal/fullscreen-specific controls to `flet-video`; `Video.take_screenshot()` for capturing video frames; and `Video.on_position_change`/`Video.on_duration_change` events ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
 * Add declarative `ft.Router` component for `@ft.component` apps with nested routes, layout routes with outlets, dynamic segments, optional segments, splats, custom regex constraints, data loaders, active link detection, authentication patterns, and `manage_views=True` mode for view-stack navigation with swipe-back gestures and `AppBar` back button on mobile ([#6406](https://github.com/flet-dev/flet/pull/6406)) by @FeodorFitsner.
 * Add `ft.use_dialog()` hook for declarative dialog management from within `@ft.component` functions, with frozen-diff reactive updates and automatic open/close lifecycle ([#6335](https://github.com/flet-dev/flet/pull/6335)) by @FeodorFitsner.
 * Add `scrollable`, `pin_leading_to_top`, and `pin_trailing_to_bottom` properties to `NavigationRail` for scrollable content with optional pinned leading/trailing controls ([#1923](https://github.com/flet-dev/flet/issues/1923), [#6356](https://github.com/flet-dev/flet/pull/6356)) by @ndonkoHenri.
@@ -16,6 +17,8 @@
 
 ### Bug fixes
 
+* Fix control diffing for controls nested inside `@value` dataclass objects so they keep the nearest control parent/page context, and restore optional structured properties that are cleared to `None` and later set again ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+* Fix `Page` and `View` vertical centering when scrolling is enabled, including hidden scrollbars, so short content remains centered in the viewport ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
 * Reduce Linux memory retention when repeatedly removing `flet_video.Video` controls by linking `media_kit` video apps against mimalloc in run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)) by @ndonkoHenri.
 * Fix `flet build` and `flet publish` dependency parsing for `project.dependencies` and Poetry constraints with `<`/`<=`, and add coverage for normalized requirement handling ([#6332](https://github.com/flet-dev/flet/issues/6332), [#6340](https://github.com/flet-dev/flet/pull/6340)) by @td3447.
 * Fix `CodeEditor` background not filling the entire area when `expand=True` ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
@@ -33,6 +36,7 @@
 * Fix 3- and 4-digit hex color shorthand (e.g. `#c00`, `#fc00`) rendering as invisible by expanding them to their full 6/8-digit forms ([#6419](https://github.com/flet-dev/flet/issues/6419), [#6421](https://github.com/flet-dev/flet/pull/6421)) by @ndonkoHenri.
 * Fix `LineChartEvent.spots` returning undecoded MessagePack extension values instead of `LineChartEventSpot` objects ([#6443](https://github.com/flet-dev/flet/issues/6443), [#6468](https://github.com/flet-dev/flet/pull/6468)) by @ndonkoHenri.
 * Fix `LineChart` (and other charts) silently dropping custom `ChartAxisLabel` entries whose `value` matched a tick only after floating-point rounding (e.g. `0.1`, `0.2`, `0.3`) by switching label lookup to a tolerance-based comparison scaled to the axis interval ([#6445](https://github.com/flet-dev/flet/issues/6445), [#6459](https://github.com/flet-dev/flet/pull/6459)) by @KangZhaoKui.
+* Fix absolute-path `src` (e.g. `Image(src="/images/foo.svg")`) breaking on web when the app is mounted at a non-root URL, pass `data:`/`blob:` URIs through the asset resolver unchanged, preserve origin-relative semantics when `assets_dir` is unset, and add a `window.flet.assetsDir` JS-interop bridge so embedding hosts can supply `assets_dir` to the top-level `FletApp` ([#6470](https://github.com/flet-dev/flet/pull/6470)) by @FeodorFitsner.
 
 ### Documentation
 

@@ -1,0 +1,26 @@
+[project]
+name = "apps-7guis-cells"
+version = "1.0.0"
+description = "7GUIs spreadsheet app with formula editing, cell references, and live recalculation."
+requires-python = ">=3.10"
+keywords = ["apps", "7guis", "cells", "spreadsheet", "formulas"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/7GUIs", "Apps/Productivity"]
+
+[tool.flet.metadata]
+title = "Cells"
+controls = ["SafeArea", "Container", "Column", "Row", "Text", "TextField", "FilledButton", "DataTable", "DataColumn", "DataRow", "DataCell"]
+layout_pattern = "data-grid"
+complexity = "intermediate"
+features = ["formula editing", "cell references", "live recalculation", "error handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -29,6 +29,7 @@ export 'src/utils/borders.dart';
 export 'src/utils/box.dart';
 export 'src/utils/buttons.dart';
 export 'src/utils/collections.dart';
+export 'src/utils/control.dart';
 export 'src/utils/colors.dart';
 export 'src/utils/dash_path.dart';
 export 'src/utils/debouncer.dart';
