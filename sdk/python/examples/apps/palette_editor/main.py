@@ -6,6 +6,7 @@ from palette_constants import (
     LIGHT_SEED_COLOR,
     MATERIAL_COLORS,
     SEED_COLOR_OPTIONS,
+    THEME_COLOR_ROLE_NAMES,
 )
 from palette_theme_io import build_export_code, parse_import_theme_code
 from palette_ui import (
@@ -42,6 +43,7 @@ def main(page: ft.Page):
     selected_material_color = {"label": None, "value": None}
     selected_shade = {"label": None, "value": None}
     selected_left_tab_index = {"value": 0}
+    selected_preview_tab_index = {"value": 0}
     preview_theme_mode = {"value": ft.ThemeMode.LIGHT}
     light_theme_color_overrides: dict[str, ft.ColorValue] = {}
     dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
@@ -52,16 +54,39 @@ def main(page: ft.Page):
     left_pane_host = ft.Container(expand=True)
     preview_pane_host = ft.Container(expand=True)
 
+    def split_theme_overrides(
+        overrides: dict[str, ft.ColorValue],
+    ) -> tuple[dict[str, ft.ColorValue], dict[str, ft.ColorValue]]:
+        theme_overrides = {
+            key: value
+            for key, value in overrides.items()
+            if key in THEME_COLOR_ROLE_NAMES
+        }
+        color_scheme_overrides = {
+            key: value
+            for key, value in overrides.items()
+            if key not in THEME_COLOR_ROLE_NAMES
+        }
+        return theme_overrides, color_scheme_overrides
+
     def build_light_theme() -> ft.Theme:
+        light_theme_overrides, light_color_scheme_overrides = split_theme_overrides(
+            light_theme_color_overrides
+        )
         return ft.Theme(
             color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
-            color_scheme=ft.ColorScheme(**light_theme_color_overrides),
+            color_scheme=ft.ColorScheme(**light_color_scheme_overrides),
+            **light_theme_overrides,
         )
 
     def build_dark_theme() -> ft.Theme:
+        dark_theme_overrides, dark_color_scheme_overrides = split_theme_overrides(
+            dark_theme_color_overrides
+        )
         return ft.Theme(
             color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
-            color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
+            color_scheme=ft.ColorScheme(**dark_color_scheme_overrides),
+            **dark_theme_overrides,
         )
 
     def close_color_editor(_):
@@ -80,7 +105,11 @@ def main(page: ft.Page):
                 preview_heading=preview_heading,
                 preview_body=preview_body,
                 preview_time_text=preview_time_text,
+                scaffold_bgcolor=get_current_role_color_value("scaffold_bgcolor")
+                or ft.Colors.SURFACE,
+                selected_tab_index=selected_preview_tab_index["value"],
                 theme_mode=preview_theme_mode["value"],
+                on_tab_change=on_preview_tab_change,
                 on_toggle_theme=toggle_theme_mode,
                 open_preview_time_picker=open_preview_time_picker,
             ),
@@ -137,6 +166,8 @@ def main(page: ft.Page):
         override = current_theme_color_overrides().get(role_attr)
         if override is not None:
             return override
+        if role_attr == "scaffold_bgcolor":
+            return ft.Colors.SURFACE
         token_name = role_attr.upper()
         if hasattr(ft.Colors, token_name):
             return getattr(ft.Colors, token_name)
@@ -383,6 +414,7 @@ def main(page: ft.Page):
     import_format_hint = (
         "Use this format:\n"
         "ft.Theme(\n"
+        "  scaffold_bgcolor='#fff8f3ec',\n"
         "  color_scheme=ft.ColorScheme(\n"
         "      primary='#ff87581b',\n"
         "      on_primary=ft.Colors.WHITE,\n"
@@ -623,6 +655,9 @@ def main(page: ft.Page):
         selected_left_tab_index["value"] = e.control.selected_index
         rebuild_left_pane_controls()
         page.update()
+
+    def on_preview_tab_change(e: ft.ControlEvent):
+        selected_preview_tab_index["value"] = e.control.selected_index
 
     rebuild_left_pane_controls()
 

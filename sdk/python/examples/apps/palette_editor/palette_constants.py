@@ -67,6 +67,7 @@ COLOR_ROLE_BY_LABEL = {
     "SURFACE_CONTAINER_LOWEST": "surface_container_lowest",
     "SURFACE_CONTAINER_HIGH": "surface_container_high",
     "SURFACE_CONTAINER_HIGHEST": "surface_container_highest",
+    "SCAFFOLD_BGCOLOR": "scaffold_bgcolor",
     "OUTLINE": "outline",
     "OUTLINE_VARIANT": "outline_variant",
     "SHADOW": "shadow",
@@ -75,6 +76,8 @@ COLOR_ROLE_BY_LABEL = {
     "ON_INVERSE_SURFACE": "on_inverse_surface",
     "INVERSE_PRIMARY": "inverse_primary",
 }
+
+THEME_COLOR_ROLE_NAMES = {"scaffold_bgcolor"}
 
 COLOR_ROLE_EXPORT_ORDER = list(dict.fromkeys(COLOR_ROLE_BY_LABEL.values()))
 
@@ -207,6 +210,12 @@ LEFT_PANE_ROLE_TABS = [
                         "SURFACE_CONTAINER_HIGHEST",
                         "ON_SURFACE",
                     ),
+                ],
+            },
+            {
+                "title": "App shell",
+                "items": [
+                    ("SCAFFOLD_BGCOLOR", "SCAFFOLD_BGCOLOR", "ON_SURFACE"),
                 ],
             },
             {

@@ -1,6 +1,6 @@
 import ast
 
-from palette_constants import COLOR_ROLE_EXPORT_ORDER
+from palette_constants import COLOR_ROLE_EXPORT_ORDER, THEME_COLOR_ROLE_NAMES
 
 import flet as ft
 
@@ -12,13 +12,30 @@ def format_color_value(color_value: ft.ColorValue) -> str:
 
 
 def build_export_code(theme_color_overrides: dict[str, ft.ColorValue]) -> str:
-    lines = ["ft.Theme(", "  color_scheme=ft.ColorScheme("]
+    lines = ["ft.Theme("]
     for color_role in COLOR_ROLE_EXPORT_ORDER:
+        if color_role not in THEME_COLOR_ROLE_NAMES:
+            continue
         color_value = theme_color_overrides.get(color_role)
         if color_value is None:
             continue
-        lines.append(f"      {color_role}={format_color_value(color_value)},")
-    lines.append("  )")
+        lines.append(f"  {color_role}={format_color_value(color_value)},")
+
+    color_scheme_lines: list[str] = []
+    for color_role in COLOR_ROLE_EXPORT_ORDER:
+        if color_role in THEME_COLOR_ROLE_NAMES:
+            continue
+        color_value = theme_color_overrides.get(color_role)
+        if color_value is None:
+            continue
+        color_scheme_lines.append(
+            f"      {color_role}={format_color_value(color_value)},"
+        )
+
+    if color_scheme_lines:
+        lines.append("  color_scheme=ft.ColorScheme(")
+        lines.extend(color_scheme_lines)
+        lines.append("  )")
     lines.append(")")
     return "\n".join(lines)
 
@@ -63,22 +80,25 @@ def parse_import_theme_code(code: str) -> dict[str, ft.ColorValue]:
     if theme_path != ["ft", "Theme"]:
         raise ValueError
 
+    parsed_overrides: dict[str, ft.ColorValue] = {}
     color_scheme_call: ast.Call | None = None
     for keyword in theme_call.keywords:
+        if keyword.arg in THEME_COLOR_ROLE_NAMES:
+            parsed_overrides[keyword.arg] = parse_import_color_value(keyword.value)
+            continue
         if keyword.arg == "color_scheme" and isinstance(keyword.value, ast.Call):
             color_scheme_call = keyword.value
-            break
-    if color_scheme_call is None:
+    if color_scheme_call is None and not parsed_overrides:
         raise ValueError
 
-    color_scheme_path = get_attribute_path(color_scheme_call.func)
-    if color_scheme_path != ["ft", "ColorScheme"]:
-        raise ValueError
-
-    parsed_overrides: dict[str, ft.ColorValue] = {}
-    for keyword in color_scheme_call.keywords:
-        if keyword.arg not in COLOR_ROLE_EXPORT_ORDER:
+    if color_scheme_call is not None:
+        color_scheme_path = get_attribute_path(color_scheme_call.func)
+        if color_scheme_path != ["ft", "ColorScheme"]:
             raise ValueError
-        parsed_overrides[keyword.arg] = parse_import_color_value(keyword.value)
+
+        for keyword in color_scheme_call.keywords:
+            if keyword.arg not in COLOR_ROLE_EXPORT_ORDER:
+                raise ValueError
+            parsed_overrides[keyword.arg] = parse_import_color_value(keyword.value)
 
     return parsed_overrides

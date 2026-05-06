@@ -401,13 +401,17 @@ def build_preview_tabs(
     preview_heading: str,
     preview_body: str,
     preview_time_text: ft.Text,
+    scaffold_bgcolor: ft.ColorValue,
+    selected_tab_index: int,
     theme_mode: ft.ThemeMode,
+    on_tab_change,
     on_toggle_theme,
     open_preview_time_picker,
 ) -> ft.Tabs:
     return ft.Tabs(
-        selected_index=0,
-        length=5,
+        selected_index=selected_tab_index,
+        on_change=on_tab_change,
+        length=6,
         expand=True,
         content=ft.Column(
             expand=True,
@@ -438,6 +442,7 @@ def build_preview_tabs(
                         ft.Tab(label="Primary"),
                         ft.Tab(label="Secondary"),
                         ft.Tab(label="Tertiary"),
+                        ft.Tab(label="Surface"),
                         ft.Tab(label="Error"),
                     ]
                 ),
@@ -640,6 +645,69 @@ def build_preview_tabs(
                                         ),
                                         build_time_picker_row(
                                             open_preview_time_picker, preview_time_text
+                                        ),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        ft.Container(
+                            padding=ft.Padding.only(top=4),
+                            content=ft.Column(
+                                scroll=ft.ScrollMode.AUTO,
+                                spacing=0,
+                                controls=[
+                                    showcase_section(
+                                        "Surface roles",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "SURFACE",
+                                                    ft.Colors.SURFACE,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "SURFACE_CONTAINER",
+                                                    ft.Colors.SURFACE_CONTAINER,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                            ],
+                                        ),
+                                        ft.Container(
+                                            bgcolor=scaffold_bgcolor,
+                                            border_radius=16,
+                                            padding=16,
+                                            content=ft.Column(
+                                                spacing=12,
+                                                controls=[
+                                                    ft.Text(
+                                                        "Scaffold background",
+                                                        color=ft.Colors.ON_SURFACE,
+                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                    ),
+                                                    ft.Text(
+                                                        (
+                                                            "Use this to preview "
+                                                            "Theme.scaffold_bgcolor."
+                                                        ),
+                                                        color=ft.Colors.ON_SURFACE_VARIANT,
+                                                    ),
+                                                    ft.Container(
+                                                        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+                                                        border_radius=12,
+                                                        padding=12,
+                                                        content=ft.Text(
+                                                            (
+                                                                "Surface container "
+                                                                "on scaffold"
+                                                            ),
+                                                            color=ft.Colors.ON_SURFACE,
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
                                         ),
                                     ),
                                 ],
