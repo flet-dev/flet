@@ -222,7 +222,7 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "App shell",
+                "title": "Page background",
                 "items": [
                     ("SCAFFOLD_BGCOLOR", "SCAFFOLD_BGCOLOR", "ON_SURFACE"),
                 ],

@@ -94,9 +94,12 @@ def main(page: ft.Page):
         page.update()
 
     def rebuild_theme():
+        scaffold_bgcolor = (
+            get_current_role_color_value("scaffold_bgcolor") or ft.Colors.SURFACE
+        )
         preview_pane_host.content = ft.Container(
             expand=True,
-            bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+            bgcolor=scaffold_bgcolor,
             padding=16,
             theme=build_light_theme(),
             dark_theme=build_dark_theme(),
@@ -105,8 +108,7 @@ def main(page: ft.Page):
                 preview_heading=preview_heading,
                 preview_body=preview_body,
                 preview_time_text=preview_time_text,
-                scaffold_bgcolor=get_current_role_color_value("scaffold_bgcolor")
-                or ft.Colors.SURFACE,
+                scaffold_bgcolor=scaffold_bgcolor,
                 selected_tab_index=selected_preview_tab_index["value"],
                 theme_mode=preview_theme_mode["value"],
                 on_tab_change=on_preview_tab_change,

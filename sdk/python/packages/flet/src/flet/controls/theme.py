@@ -3396,6 +3396,9 @@ class Theme:
     disabled_color: Optional[ColorValue] = None
     canvas_color: Optional[ColorValue] = None
     scaffold_bgcolor: Optional[ColorValue] = None
+    """
+    Customizes the page background color.
+    """
     card_bgcolor: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
     secondary_header_color: Optional[ColorValue] = None
