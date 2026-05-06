@@ -37,6 +37,9 @@ def main(page: ft.Page):
         "Controls on this side use the current theme so you can compare "
         "tokens with real UI."
     )
+    role_descriptions = {
+        "SCAFFOLD_BGCOLOR": "Customizes the page background color.",
+    }
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
     selected_role = {"label": None, "attr": None}
@@ -145,6 +148,12 @@ def main(page: ft.Page):
     def update_selected_color_text():
         if selected_role["label"] is None:
             selected_color_text.value = "Choose a color role to edit."
+            return
+        description = role_descriptions.get(selected_role["label"])
+        if description is not None:
+            selected_color_text.value = (
+                f"{description}\nChoose a material color for {selected_role['label']}."
+            )
             return
         selected_color_text.value = (
             f"Choose a material color for {selected_role['label']}."
