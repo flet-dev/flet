@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
 import '../utils/animations.dart';
@@ -32,6 +33,7 @@ class _ScrollableControlState extends State<ScrollableControl>
     with FletStoreMixin {
   late final ScrollController _controller;
   late bool _ownController = false;
+  final _ConstraintsHolder _outerConstraints = _ConstraintsHolder();
 
   @override
   void initState() {
@@ -111,32 +113,29 @@ class _ScrollableControlState extends State<ScrollableControl>
 
     Widget child = widget.child;
     if (widget.wrapIntoScrollableView) {
-      // Use MediaQuery instead of LayoutBuilder so ancestor IntrinsicWidth /
-      // IntrinsicHeight widgets keep working — LayoutBuilder reports 0 for
-      // intrinsic dimensions, which collapses any intrinsic-sized ancestor.
-      final size = MediaQuery.sizeOf(context);
-      final minWidth =
-          widget.scrollDirection == Axis.horizontal ? size.width : 0.0;
-      final minHeight =
-          widget.scrollDirection == Axis.vertical ? size.height : 0.0;
-
-      Widget scrollViewChild = widget.child;
-      if (minWidth > 0 || minHeight > 0) {
-        scrollViewChild = ConstrainedBox(
-          constraints:
-              BoxConstraints(minWidth: minWidth, minHeight: minHeight),
-          child: scrollViewChild,
-        );
-      }
-
+      // The pre-#6450 path used a plain SingleChildScrollView. PR #6450 added
+      // a LayoutBuilder + ConstrainedBox(minHeight: parentMaxHeight) wrapper
+      // so vertical alignment works in scrollable Page/View when content is
+      // shorter than the viewport. LayoutBuilder, however, reports 0 for
+      // intrinsic dimensions, which collapses any ancestor IntrinsicWidth /
+      // IntrinsicHeight and leaves the layout perpetually dirty.
+      //
+      // Replicate the behavior with two cooperating RenderProxyBoxes that
+      // forward intrinsic queries to their child. The outer reader captures
+      // the parent's constraints during performLayout; the inner enforcer
+      // reads them back and applies them as a min on the scroll-view child.
       child = SingleChildScrollView(
         controller: _controller,
         scrollDirection: widget.scrollDirection,
-        child: scrollViewChild,
+        child: _InnerConstraintsEnforcer(
+          holder: _outerConstraints,
+          scrollDirection: widget.scrollDirection,
+          child: widget.child,
+        ),
       );
     }
 
-    return Scrollbar(
+    Widget result = Scrollbar(
         thumbVisibility: scrollConfiguration.thumbVisibility,
         trackVisibility: scrollConfiguration.trackVisibility,
         thickness: scrollConfiguration.thickness,
@@ -148,5 +147,96 @@ class _ScrollableControlState extends State<ScrollableControl>
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: child,
         ));
+
+    if (widget.wrapIntoScrollableView) {
+      result = _OuterConstraintsReader(
+        holder: _outerConstraints,
+        child: result,
+      );
+    }
+
+    return result;
+  }
+}
+
+/// Carries box constraints from [_OuterConstraintsReader] (outside the scroll
+/// view) to [_InnerConstraintsEnforcer] (inside it) within a single layout
+/// pass.
+class _ConstraintsHolder {
+  BoxConstraints? value;
+}
+
+class _OuterConstraintsReader extends SingleChildRenderObjectWidget {
+  const _OuterConstraintsReader({required this.holder, super.child});
+  final _ConstraintsHolder holder;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderOuterConstraintsReader(holder);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderOuterConstraintsReader renderObject) {
+    renderObject.holder = holder;
+  }
+}
+
+class _RenderOuterConstraintsReader extends RenderProxyBox {
+  _RenderOuterConstraintsReader(this.holder);
+  _ConstraintsHolder holder;
+
+  @override
+  void performLayout() {
+    holder.value = constraints;
+    super.performLayout();
+  }
+}
+
+class _InnerConstraintsEnforcer extends SingleChildRenderObjectWidget {
+  const _InnerConstraintsEnforcer({
+    required this.holder,
+    required this.scrollDirection,
+    super.child,
+  });
+  final _ConstraintsHolder holder;
+  final Axis scrollDirection;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderInnerConstraintsEnforcer(holder, scrollDirection);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderInnerConstraintsEnforcer renderObject) {
+    renderObject
+      ..holder = holder
+      ..scrollDirection = scrollDirection;
+  }
+}
+
+class _RenderInnerConstraintsEnforcer extends RenderProxyBox {
+  _RenderInnerConstraintsEnforcer(this.holder, this.scrollDirection);
+  _ConstraintsHolder holder;
+  Axis scrollDirection;
+
+  @override
+  void performLayout() {
+    if (child == null) {
+      size = computeSizeForNoChild(constraints);
+      return;
+    }
+    BoxConstraints childConstraints = constraints;
+    final outer = holder.value;
+    if (outer != null) {
+      if (scrollDirection == Axis.vertical && outer.hasBoundedHeight) {
+        childConstraints =
+            childConstraints.copyWith(minHeight: outer.maxHeight);
+      } else if (scrollDirection == Axis.horizontal && outer.hasBoundedWidth) {
+        childConstraints =
+            childConstraints.copyWith(minWidth: outer.maxWidth);
+      }
+    }
+    child!.layout(childConstraints, parentUsesSize: true);
+    size = child!.size;
   }
 }
