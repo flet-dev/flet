@@ -41,7 +41,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
 async def test_alignment(flet_app_function: ftt.FletTestApp):
     flet_app_function.assert_screenshot(
         "alignment",
-        await flet_app_function.take_page_controls_screenshot(),
+        await flet_app_function.take_page_controls_screenshot(
+            pump_times=10,
+            pump_duration=ft.Duration(milliseconds=200),
+        ),
     )
 
 
