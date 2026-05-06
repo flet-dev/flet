@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-color-pickers"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Utility/Color pickers", "Theming/Color pickers"]
+categories = ["Utility/Color pickers"]
 
 [tool.flet.metadata]
 title = "HueRingPicker"

@@ -130,6 +130,7 @@ categories:
     Markdown:
     ProgressBar:
     ProgressRing:
+    Text:
     Tooltip:
     WebView:
 
@@ -163,16 +164,6 @@ categories:
     CupertinoAppBar:
     CupertinoNavigationBar:
 
-  Typography:
-    _icon: visibility
-    _description: Text, styles and fonts
-    Text:
-
-  Theming:
-    _icon: palette
-    _description: Themes, colors, and styles
-    Color pickers:
-
   Charts:
     _icon: bar_chart
     _description: Plotting and data viz
@@ -192,6 +183,7 @@ categories:
   Animations:
     _icon: animation
     _description: Animation controls
+    Apps:
     AnimatedSwitcher:
 
   Effects:
@@ -210,11 +202,6 @@ categories:
     Video:
     Camera:
 
-  Pages:
-    _icon: pages
-    _description: Page-level controls
-    Page:
-
   Accessibility:
     _icon: accessibility
     _description: Accessibility features and examples
@@ -231,7 +218,9 @@ categories:
     Flashlight:
     GestureDetector:
     InteractiveViewer:
-    KeyboardListener:
+    Keyboard:
+    Localization:
+    Page:
     PermissionHandler:
     SecureStorage:
     ScreenBrightness:
@@ -266,3 +255,7 @@ categories:
   Tools:
     _icon: handyman
     _description: Development tools and utilities
+
+  Extensibility:
+    _icon: extension
+    _description: Examples of extending Flet with custom controls and packages

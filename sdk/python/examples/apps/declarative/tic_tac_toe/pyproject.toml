@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Games", "Apps/Declarative"]
+categories = ["Games", "Apps/Declarative", "Featured"]
 
 [tool.flet.metadata]
 title = "Tic tac toe"

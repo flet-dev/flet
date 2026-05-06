@@ -43,9 +43,5 @@ def App():
     )
 
 
-def main(page: ft.Page):
-    page.render_views(App)
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render_views(App))
