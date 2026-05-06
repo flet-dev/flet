@@ -6,7 +6,8 @@ def resolve_theme_token(token_name: str) -> ft.ColorValue:
 
 
 def color_band(
-    label: str,
+    role_label: str,
+    display_label: str,
     background: ft.ColorValue,
     foreground: ft.ColorValue,
     *,
@@ -27,12 +28,12 @@ def color_band(
         alignment=ft.Alignment.CENTER_LEFT,
         ink=True,
         on_click=on_click,
-        content=ft.Text(label, color=foreground),
+        content=ft.Text(display_label, color=foreground),
     )
 
 
 def color_group(
-    items: list[tuple[str, ft.ColorValue, ft.ColorValue]],
+    items: list[tuple[str, str, ft.ColorValue, ft.ColorValue]],
     *,
     width: int,
     height: int,
@@ -80,15 +81,18 @@ def color_group(
                 ),
                 *[
                     color_band(
-                        label,
+                        role_label,
+                        display_label,
                         background,
                         foreground,
                         width=width,
                         height=height,
-                        selected=selected_label == label,
-                        on_click=on_color_click(label) if on_color_click else None,
+                        selected=selected_label == role_label,
+                        on_click=(
+                            on_color_click(role_label) if on_color_click else None
+                        ),
                     )
-                    for label, background, foreground in items
+                    for role_label, display_label, background, foreground in items
                 ],
             ],
         ),
@@ -156,6 +160,11 @@ def build_left_pane_controls(
     selected_tab_index: int,
     seed_color_options: list[tuple[str, ft.ColorValue]],
     selected_seed_color: ft.ColorValue,
+    group_theme: ft.Theme,
+    group_dark_theme: ft.Theme,
+    group_theme_mode: ft.ThemeMode,
+    get_role_value,
+    format_role_value,
     on_color_click,
     on_tab_change,
     on_select_seed,
@@ -231,21 +240,27 @@ def build_left_pane_controls(
             ),
         ),
         *[
-            color_group(
-                [
-                    (
-                        label,
-                        resolve_theme_token(background_token),
-                        resolve_theme_token(foreground_token),
-                    )
-                    for label, background_token, foreground_token in group["items"]
-                ],
-                width=swatch_width,
-                height=swatch_height,
-                title=group.get("title"),
-                hint=group.get("hint"),
-                selected_label=selected_label,
-                on_color_click=on_color_click,
+            ft.Container(
+                theme=group_theme,
+                dark_theme=group_dark_theme,
+                theme_mode=group_theme_mode,
+                content=color_group(
+                    [
+                        (
+                            label,
+                            label,
+                            get_role_value(background_token),
+                            get_role_value(foreground_token),
+                        )
+                        for label, background_token, foreground_token in group["items"]
+                    ],
+                    width=swatch_width,
+                    height=swatch_height,
+                    title=group.get("title"),
+                    hint=group.get("hint"),
+                    selected_label=selected_label,
+                    on_color_click=on_color_click,
+                ),
             )
             for group in active_tab["groups"]
         ],

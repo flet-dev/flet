@@ -49,7 +49,20 @@ def main(page: ft.Page):
         ft.ThemeMode.LIGHT: LIGHT_SEED_COLOR,
         ft.ThemeMode.DARK: LIGHT_SEED_COLOR,
     }
+    left_pane_host = ft.Container(expand=True)
     preview_pane_host = ft.Container(expand=True)
+
+    def build_light_theme() -> ft.Theme:
+        return ft.Theme(
+            color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
+            color_scheme=ft.ColorScheme(**light_theme_color_overrides),
+        )
+
+    def build_dark_theme() -> ft.Theme:
+        return ft.Theme(
+            color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
+            color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
+        )
 
     def close_color_editor(_):
         color_editor_pane.visible = False
@@ -60,14 +73,8 @@ def main(page: ft.Page):
             expand=True,
             bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
             padding=16,
-            theme=ft.Theme(
-                color_scheme_seed=theme_seed_colors[ft.ThemeMode.LIGHT],
-                color_scheme=ft.ColorScheme(**light_theme_color_overrides),
-            ),
-            dark_theme=ft.Theme(
-                color_scheme_seed=theme_seed_colors[ft.ThemeMode.DARK],
-                color_scheme=ft.ColorScheme(**dark_theme_color_overrides),
-            ),
+            theme=build_light_theme(),
+            dark_theme=build_dark_theme(),
             theme_mode=preview_theme_mode["value"],
             content=build_preview_tabs(
                 preview_heading=preview_heading,
@@ -88,6 +95,15 @@ def main(page: ft.Page):
 
     def current_seed_color() -> ft.ColorValue:
         return theme_seed_colors[preview_theme_mode["value"]]
+
+    def get_role_value(role_label: str) -> ft.ColorValue:
+        role_attr = COLOR_ROLE_BY_LABEL[role_label]
+        return get_current_role_color_value(role_attr)
+
+    def format_role_value(color_value: ft.ColorValue) -> str:
+        if hasattr(color_value, "name"):
+            return color_value.name
+        return str(color_value)
 
     def update_hex_picker(color_value: ft.ColorValue | None):
         hex_color_picker.color = color_value
@@ -183,6 +199,11 @@ def main(page: ft.Page):
             selected_tab_index=selected_left_tab_index["value"],
             seed_color_options=SEED_COLOR_OPTIONS,
             selected_seed_color=current_seed_color(),
+            group_theme=build_light_theme(),
+            group_dark_theme=build_dark_theme(),
+            group_theme_mode=preview_theme_mode["value"],
+            get_role_value=get_role_value,
+            format_role_value=format_role_value,
             on_color_click=on_color_click,
             on_tab_change=on_left_tab_change,
             on_select_seed=select_seed_color,
@@ -190,6 +211,7 @@ def main(page: ft.Page):
             on_import=open_import_dialog,
             on_toggle_theme=toggle_theme_mode,
         )
+        left_pane_host.content = left_pane_controls
 
     def rebuild_shade_controls():
         shades = get_shades(selected_material_color["label"])
@@ -217,6 +239,7 @@ def main(page: ft.Page):
                 return
             current_theme_color_overrides()[selected_role["attr"]] = color_value
             rebuild_theme()
+            rebuild_left_pane_controls()
             selected_color_text.value = (
                 f"{selected_role['label']} color changed to {color_label}."
             )
@@ -234,6 +257,7 @@ def main(page: ft.Page):
                 return
             current_theme_color_overrides()[selected_role["attr"]] = shade_value
             rebuild_theme()
+            rebuild_left_pane_controls()
             selected_color_text.value = (
                 f"{selected_role['label']} color changed to "
                 f"{selected_material_color['label']} {shade_label}."
@@ -250,6 +274,7 @@ def main(page: ft.Page):
         rebuild_material_color_controls()
         rebuild_shade_controls()
         rebuild_theme()
+        rebuild_left_pane_controls()
         selected_color_text.value = (
             f"{selected_role['label']} color changed to {e.data}."
         )
@@ -576,7 +601,7 @@ def main(page: ft.Page):
                         ft.Container(
                             width=left_pane_width,
                             alignment=ft.Alignment.TOP_LEFT,
-                            content=left_pane_controls,
+                            content=left_pane_host,
                         ),
                         color_editor_pane,
                         ft.VerticalDivider(
