@@ -80,6 +80,8 @@ def main(page: ft.Page):
                 preview_heading=preview_heading,
                 preview_body=preview_body,
                 preview_time_text=preview_time_text,
+                theme_mode=preview_theme_mode["value"],
+                on_toggle_theme=toggle_theme_mode,
                 open_preview_time_picker=open_preview_time_picker,
             ),
         )
@@ -95,6 +97,27 @@ def main(page: ft.Page):
 
     def current_seed_color() -> ft.ColorValue:
         return theme_seed_colors[preview_theme_mode["value"]]
+
+    def update_selected_color_heading():
+        if selected_role["label"] is None:
+            selected_color_heading.value = "Color editor"
+            return
+        mode_label = (
+            "dark theme"
+            if preview_theme_mode["value"] == ft.ThemeMode.DARK
+            else "light theme"
+        )
+        selected_color_heading.value = (
+            f"{selected_role['label']} editor for {mode_label}"
+        )
+
+    def update_selected_color_text():
+        if selected_role["label"] is None:
+            selected_color_text.value = "Choose a color role to edit."
+            return
+        selected_color_text.value = (
+            f"Choose a material color for {selected_role['label']}."
+        )
 
     def get_role_value(role_label: str) -> ft.ColorValue:
         role_attr = COLOR_ROLE_BY_LABEL[role_label]
@@ -209,7 +232,6 @@ def main(page: ft.Page):
             on_select_seed=select_seed_color,
             on_export=export_theme,
             on_import=open_import_dialog,
-            on_toggle_theme=toggle_theme_mode,
         )
         left_pane_host.content = left_pane_controls
 
@@ -375,8 +397,8 @@ def main(page: ft.Page):
             set_selected_material_from_value(
                 get_current_role_color_value(selected_role["attr"])
             )
-            selected_color_heading.value = f"{label} editor"
-            selected_color_text.value = f"Choose a material color for {label}."
+            update_selected_color_heading()
+            update_selected_color_text()
             color_editor_pane.visible = True
             rebuild_left_pane_controls()
             rebuild_material_color_controls()
@@ -393,8 +415,8 @@ def main(page: ft.Page):
         selected_material_color["value"] = None
         selected_shade["label"] = None
         selected_shade["value"] = None
-        selected_color_heading.value = "Color editor"
-        selected_color_text.value = "Choose a color role to edit."
+        update_selected_color_heading()
+        update_selected_color_text()
         color_editor_pane.visible = False
 
     pending_seed_selection = {"color": None, "label": None}
@@ -576,6 +598,8 @@ def main(page: ft.Page):
             set_selected_material_from_value(
                 get_current_role_color_value(selected_role["attr"])
             )
+            update_selected_color_heading()
+            update_selected_color_text()
             rebuild_material_color_controls()
             rebuild_shade_controls()
         rebuild_left_pane_controls()

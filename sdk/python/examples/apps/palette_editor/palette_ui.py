@@ -170,62 +170,43 @@ def build_left_pane_controls(
     on_select_seed,
     on_export,
     on_import,
-    on_toggle_theme,
 ) -> list[ft.Control]:
     active_tab = role_tabs[selected_tab_index]
     return [
         ft.Row(
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            spacing=8,
             controls=[
-                ft.Row(
-                    spacing=8,
-                    controls=[
-                        ft.PopupMenuButton(
-                            icon=ft.Icons.PALETTE,
-                            tooltip="Rebuild from seed",
-                            menu_position=ft.PopupMenuPosition.UNDER,
-                            items=[
-                                ft.PopupMenuItem(
-                                    checked=color == selected_seed_color,
-                                    content=ft.Row(
-                                        spacing=12,
-                                        controls=[
-                                            ft.Icon(
-                                                ft.Icons.PALETTE_OUTLINED,
-                                                color=color,
-                                            ),
-                                            ft.Text(label),
-                                        ],
+                ft.PopupMenuButton(
+                    icon=ft.Icons.PALETTE,
+                    tooltip="Rebuild from seed",
+                    menu_position=ft.PopupMenuPosition.UNDER,
+                    items=[
+                        ft.PopupMenuItem(
+                            checked=color == selected_seed_color,
+                            content=ft.Row(
+                                spacing=12,
+                                controls=[
+                                    ft.Icon(
+                                        ft.Icons.PALETTE_OUTLINED,
+                                        color=color,
                                     ),
-                                    on_click=on_select_seed(color),
-                                )
-                                for label, color in seed_color_options
-                            ],
-                        ),
-                        ft.IconButton(
-                            icon=ft.Icons.DOWNLOAD,
-                            tooltip="Export",
-                            on_click=on_export,
-                        ),
-                        ft.IconButton(
-                            icon=ft.Icons.UPLOAD,
-                            tooltip="Import",
-                            on_click=on_import,
-                        ),
+                                    ft.Text(label),
+                                ],
+                            ),
+                            on_click=on_select_seed(color),
+                        )
+                        for label, color in seed_color_options
                     ],
                 ),
                 ft.IconButton(
-                    icon=(
-                        ft.Icons.DARK_MODE
-                        if theme_mode == ft.ThemeMode.LIGHT
-                        else ft.Icons.LIGHT_MODE
-                    ),
-                    tooltip=(
-                        "Switch to dark mode"
-                        if theme_mode == ft.ThemeMode.LIGHT
-                        else "Switch to light mode"
-                    ),
-                    on_click=on_toggle_theme,
+                    icon=ft.Icons.DOWNLOAD,
+                    tooltip="Export",
+                    on_click=on_export,
+                ),
+                ft.IconButton(
+                    icon=ft.Icons.UPLOAD,
+                    tooltip="Import",
+                    on_click=on_import,
                 ),
             ],
         ),
@@ -394,6 +375,8 @@ def build_preview_tabs(
     preview_heading: str,
     preview_body: str,
     preview_time_text: ft.Text,
+    theme_mode: ft.ThemeMode,
+    on_toggle_theme,
     open_preview_time_picker,
 ) -> ft.Tabs:
     return ft.Tabs(
@@ -404,7 +387,25 @@ def build_preview_tabs(
             expand=True,
             spacing=12,
             controls=[
-                ft.Text("Example"),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    controls=[
+                        ft.Text("Example", color=ft.Colors.ON_SURFACE),
+                        ft.IconButton(
+                            icon=(
+                                ft.Icons.DARK_MODE
+                                if theme_mode == ft.ThemeMode.LIGHT
+                                else ft.Icons.LIGHT_MODE
+                            ),
+                            tooltip=(
+                                "Switch to dark mode"
+                                if theme_mode == ft.ThemeMode.LIGHT
+                                else "Switch to light mode"
+                            ),
+                            on_click=on_toggle_theme,
+                        ),
+                    ],
+                ),
                 ft.TabBar(
                     tabs=[
                         ft.Tab(label="All"),
