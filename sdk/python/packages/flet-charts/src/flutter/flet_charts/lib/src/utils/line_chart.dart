@@ -25,7 +25,7 @@ class LineChartEventData extends Equatable {
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'type': eventType,
-        'spots': barSpots,
+        'spots': barSpots.map((spot) => spot.toMap()).toList(),
       };
 
   @override

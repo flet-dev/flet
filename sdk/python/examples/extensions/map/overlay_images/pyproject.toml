@@ -15,7 +15,7 @@ categories = ["Extensions/Map"]
 
 [tool.flet.metadata]
 title = "Overlay Images"
-controls = ["SafeArea", "Map", "TileLayer", "OverlayImageLayer", "OverlayImage", "RotatedOverlayImage"]
+controls = ["SafeArea", "Map", "TileLayer", "OverlayImageLayer", "OverlayImage", "RotatedOverlayImage", "SimpleAttribution"]
 layout_pattern = "single-panel"
 complexity = "basic"
 features = ["rectangular image overlay", "rotated image overlay"]
