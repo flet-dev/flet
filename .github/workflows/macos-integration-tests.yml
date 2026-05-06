@@ -38,19 +38,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TEMP: narrowed to validate screenshot race fix; revert before merge.
         suite:
-        - apps
-        - examples/apps
         - examples/controls/core
-        - examples/controls/cupertino
-        - examples/controls/material
-        - examples/extensions
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/services
-        - controls/theme
-        - extensions
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
@@ -73,7 +63,8 @@ jobs:
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
+          # TEMP: scoped to test_row.py to validate screenshot race fix; revert before merge.
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}/test_row.py
 
       - name: Prepare failure screenshots
         if: failure()
