@@ -63,8 +63,8 @@ jobs:
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          # TEMP: scoped to test_row.py to validate screenshot race fix; revert before merge.
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}/test_row.py
+          # TEMP: scoped to test_row.py + DEBUG log level to validate screenshot race fix; revert before merge.
+          uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG packages/flet/integration_tests/${{ matrix.suite }}/test_row.py
 
       - name: Prepare failure screenshots
         if: failure()
