@@ -3,16 +3,24 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 /// Display widget for matplotlib WebAgg-style image streams.
 ///
-/// Receives full and incremental "diff" PNG frames via control method calls
-/// and composites them in CPU memory. Holds at most one [ui.Image] for
-/// display at a time, replacing it on each apply. This avoids the per-frame
-/// `Picture.toImage` allocations that the generic Canvas+capture path uses,
-/// which on Flutter web (CanvasKit/WASM) accumulate and are not promptly
-/// reclaimed by the JS GC during animations.
+/// Two rendering strategies, picked at runtime by platform:
+///
+/// - **GPU + flatten** (native): keeps an `_backdrop` plus a list of pending
+///   diff `ui.Image`s, paints all of them per frame, and bakes them into a
+///   fresh backdrop via `Picture.toImage` every [_GpuMatplotlibChartCanvasState._flattenInterval]
+///   diffs. Fast (no GPU↔CPU readback) and memory-stable on native runtimes
+///   where Dart GC is aggressive enough to reclaim layer-held SkImage refs.
+///
+/// - **CPU composite** (web): decodes each PNG to RGBA bytes, composites
+///   onto a single backbuffer in Dart, and uploads ONE fresh `ui.Image` per
+///   frame. Slower per frame, but holds at most one `ui.Image` at a time so
+///   layer-ref accumulation stays bounded under Flutter web (CanvasKit/WASM)
+///   where Dart GC doesn't promptly reclaim native SkImage refs.
 class MatplotlibChartCanvasControl extends StatefulWidget {
   final Control control;
 
@@ -20,18 +28,33 @@ class MatplotlibChartCanvasControl extends StatefulWidget {
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
-  State<MatplotlibChartCanvasControl> createState() =>
-      _MatplotlibChartCanvasState();
+  // ignore: no_logic_in_create_state
+  State<MatplotlibChartCanvasControl> createState() => kIsWeb
+      ? _CpuMatplotlibChartCanvasState()
+      : _GpuMatplotlibChartCanvasState();
 }
 
-class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
-  ui.Image? _displayImage;
-  Uint8List? _backbuffer;
-  int _bbWidth = 0;
-  int _bbHeight = 0;
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
 
-  // Serialize concurrent apply_full / apply_diff calls. Each invocation
-  // awaits the previous one so the backbuffer mutations happen in order.
+Uint8List _extractBytes(dynamic args) {
+  final v = args is Map ? args["bytes"] : args;
+  if (v is Uint8List) return v;
+  if (v is ByteData) {
+    return v.buffer.asUint8List(v.offsetInBytes, v.lengthInBytes);
+  }
+  if (v is List<int>) return Uint8List.fromList(v);
+  if (v is List && v.every((e) => e is int)) {
+    return Uint8List.fromList(v.cast<int>());
+  }
+  throw ArgumentError("Expected bytes for image data, got ${v.runtimeType}");
+}
+
+abstract class _MatplotlibChartCanvasStateBase
+    extends State<MatplotlibChartCanvasControl> {
+  // Serialize concurrent apply_full / apply_diff calls so backdrop mutations
+  // happen in arrival order.
   Future<void>? _applyChain;
 
   Size _lastSize = Size.zero;
@@ -46,50 +69,34 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
   @override
   void dispose() {
     widget.control.removeInvokeMethodListener(_invokeMethod);
-    _displayImage?.dispose();
-    _displayImage = null;
-    _backbuffer = null;
+    disposeResources();
     super.dispose();
   }
+
+  /// Subclass hook — release any held `ui.Image`s / backbuffers.
+  void disposeResources();
+
+  Future<void> applyFull(Uint8List bytes);
+  Future<void> applyDiff(Uint8List bytes);
+  Future<void> clearAll();
+  CustomPainter buildPainter();
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     switch (name) {
       case "apply_full":
-        await _enqueue(() => _applyFull(_extractBytes(args)));
+        await _enqueue(() => applyFull(_extractBytes(args)));
         return;
       case "apply_diff":
-        await _enqueue(() => _applyDiff(_extractBytes(args)));
+        await _enqueue(() => applyDiff(_extractBytes(args)));
         return;
       case "clear":
-        await _enqueue(() async {
-          _disposeDisplay();
-          _backbuffer = null;
-          _bbWidth = 0;
-          _bbHeight = 0;
-          if (mounted) setState(() {});
-        });
+        await _enqueue(clearAll);
         return;
       default:
         throw Exception("Unknown MatplotlibChartCanvas method: $name");
     }
   }
 
-  Uint8List _extractBytes(dynamic args) {
-    final v = args is Map ? args["bytes"] : args;
-    if (v is Uint8List) return v;
-    if (v is ByteData) {
-      return v.buffer.asUint8List(v.offsetInBytes, v.lengthInBytes);
-    }
-    if (v is List<int>) return Uint8List.fromList(v);
-    if (v is List && v.every((e) => e is int)) {
-      return Uint8List.fromList(v.cast<int>());
-    }
-    throw ArgumentError("Expected bytes for image data, got ${v.runtimeType}");
-  }
-
-  // Chains apply operations so they run sequentially. Without this,
-  // overlapping awaits could let a later diff be composited before an
-  // earlier full frame finished decoding, producing tearing.
   Future<void> _enqueue(Future<void> Function() task) {
     final prev = _applyChain ?? Future.value();
     final next = prev.then((_) => task());
@@ -97,7 +104,221 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
     return next;
   }
 
-  Future<void> _applyFull(Uint8List bytes) async {
+  void _maybeReportResize(Size size) {
+    final resizeInterval = widget.control.getInt("resize_interval", 10)!;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if ((now - _lastResize > resizeInterval && _lastSize != size) ||
+        _lastSize.isEmpty) {
+      _lastSize = size;
+      _lastResize = now;
+      widget.control
+          .triggerEvent("resize", {"w": size.width, "h": size.height});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          _maybeReportResize(constraints.biggest);
+        });
+        return CustomPaint(
+          size: constraints.biggest,
+          painter: buildPainter(),
+        );
+      },
+    );
+  }
+}
+
+/// Decodes PNG bytes to a [ui.Image], staying GPU-resident.
+Future<ui.Image?> _decodeImage(Uint8List bytes) async {
+  if (bytes.isEmpty) {
+    debugPrint("MatplotlibChartCanvas: skipping empty image bytes");
+    return null;
+  }
+  // Defensive copy; Safari's WASM runtime can free underlying buffers across
+  // async boundaries and trigger "EncodingError: Loading error.".
+  final owned = Uint8List.fromList(bytes);
+  ui.Codec? codec;
+  try {
+    codec = await ui.instantiateImageCodec(owned, allowUpscaling: false);
+    final frame = await codec.getNextFrame();
+    return frame.image;
+  } catch (e) {
+    debugPrint(
+        "MatplotlibChartCanvas: decode failed (${owned.length} bytes): $e");
+    rethrow;
+  } finally {
+    codec?.dispose();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GPU + flatten strategy (native runtimes)
+// ---------------------------------------------------------------------------
+
+class _GpuMatplotlibChartCanvasState
+    extends _MatplotlibChartCanvasStateBase {
+  // Number of diffs to accumulate before flattening into a fresh backdrop.
+  // Larger = fewer Picture.toImage calls; smaller = lower transient memory.
+  static const int _flattenInterval = 10;
+
+  ui.Image? _backdrop;
+  final List<ui.Image> _diffs = [];
+
+  @override
+  void disposeResources() {
+    _backdrop?.dispose();
+    _backdrop = null;
+    for (final img in _diffs) {
+      img.dispose();
+    }
+    _diffs.clear();
+  }
+
+  @override
+  Future<void> applyFull(Uint8List bytes) async {
+    final image = await _decodeImage(bytes);
+    if (image == null) return;
+    _replaceBackdrop(image);
+    _disposeDiffs();
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Future<void> applyDiff(Uint8List bytes) async {
+    if (_backdrop == null) {
+      // No baseline yet — first frame must be a full.
+      await applyFull(bytes);
+      return;
+    }
+    final image = await _decodeImage(bytes);
+    if (image == null) return;
+    _diffs.add(image);
+    if (_diffs.length >= _flattenInterval) {
+      await _flatten();
+    }
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Future<void> clearAll() async {
+    _replaceBackdrop(null);
+    _disposeDiffs();
+    if (mounted) setState(() {});
+  }
+
+  /// Bakes [_backdrop] + pending [_diffs] into a single new backdrop via
+  /// `Picture.toImage`, replaces [_backdrop], and drops the diffs.
+  Future<void> _flatten() async {
+    final backdrop = _backdrop;
+    if (backdrop == null || _diffs.isEmpty) return;
+
+    final w = backdrop.width;
+    final h = backdrop.height;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paint = Paint();
+    canvas.drawImage(backdrop, Offset.zero, paint);
+    for (final diff in _diffs) {
+      canvas.drawImage(diff, Offset.zero, paint);
+    }
+
+    final picture = recorder.endRecording();
+    final ui.Image newBackdrop;
+    try {
+      newBackdrop = await picture.toImage(w, h);
+    } finally {
+      picture.dispose();
+    }
+
+    _replaceBackdrop(newBackdrop);
+    _disposeDiffs();
+  }
+
+  void _replaceBackdrop(ui.Image? image) {
+    final old = _backdrop;
+    _backdrop = image;
+    if (old != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        old.dispose();
+      });
+    }
+  }
+
+  void _disposeDiffs() {
+    if (_diffs.isEmpty) return;
+    final old = List<ui.Image>.of(_diffs);
+    _diffs.clear();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final img in old) {
+        img.dispose();
+      }
+    });
+  }
+
+  @override
+  CustomPainter buildPainter() => _GpuMatplotlibImagePainter(
+        backdrop: _backdrop,
+        diffs: List<ui.Image>.unmodifiable(_diffs),
+      );
+}
+
+class _GpuMatplotlibImagePainter extends CustomPainter {
+  final ui.Image? backdrop;
+  final List<ui.Image> diffs;
+
+  const _GpuMatplotlibImagePainter({
+    required this.backdrop,
+    required this.diffs,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bg = backdrop;
+    if (bg == null) return;
+    final dst = Rect.fromLTWH(0, 0, size.width, size.height);
+    final paint = Paint();
+    final bgSrc =
+        Rect.fromLTWH(0, 0, bg.width.toDouble(), bg.height.toDouble());
+    canvas.drawImageRect(bg, bgSrc, dst, paint);
+    for (final diff in diffs) {
+      final src =
+          Rect.fromLTWH(0, 0, diff.width.toDouble(), diff.height.toDouble());
+      canvas.drawImageRect(diff, src, dst, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GpuMatplotlibImagePainter old) {
+    return backdrop != old.backdrop || diffs.length != old.diffs.length;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CPU composite strategy (web — CanvasKit/WASM)
+// ---------------------------------------------------------------------------
+
+class _CpuMatplotlibChartCanvasState
+    extends _MatplotlibChartCanvasStateBase {
+  ui.Image? _displayImage;
+  Uint8List? _backbuffer;
+  int _bbWidth = 0;
+  int _bbHeight = 0;
+
+  @override
+  void disposeResources() {
+    _displayImage?.dispose();
+    _displayImage = null;
+    _backbuffer = null;
+  }
+
+  @override
+  Future<void> applyFull(Uint8List bytes) async {
     final decoded = await _decodeRgba(bytes);
     if (decoded == null) return;
 
@@ -109,20 +330,18 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
     _swapDisplay(image);
   }
 
-  Future<void> _applyDiff(Uint8List bytes) async {
+  @override
+  Future<void> applyDiff(Uint8List bytes) async {
     if (_backbuffer == null) {
-      // No baseline yet — treat as full so we don't render a transparent
-      // diff with no underlying frame.
-      await _applyFull(bytes);
+      // No baseline yet — treat as full.
+      await applyFull(bytes);
       return;
     }
 
     final decoded = await _decodeRgba(bytes);
     if (decoded == null) return;
 
-    // Diffs from matplotlib are sized to the figure buffer. If the frame
-    // size has changed since the last full frame (e.g. resize race),
-    // promote to a full replace.
+    // Promote to a full replace if the frame size changed.
     if (decoded.width != _bbWidth ||
         decoded.height != _bbHeight ||
         decoded.bytes.length != _backbuffer!.length) {
@@ -150,22 +369,25 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
     _swapDisplay(image);
   }
 
-  Future<_DecodedRgba?> _decodeRgba(Uint8List bytes) async {
-    if (bytes.isEmpty) {
-      debugPrint("MatplotlibChartCanvas: skipping empty image bytes");
-      return null;
+  @override
+  Future<void> clearAll() async {
+    final old = _displayImage;
+    _displayImage = null;
+    _backbuffer = null;
+    _bbWidth = 0;
+    _bbHeight = 0;
+    if (old != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        old.dispose();
+      });
     }
-    // Take a defensive copy. msgpack_dart sometimes hands us a Uint8List
-    // backed by a buffer that's reused/freed by Safari's WASM runtime,
-    // causing CanvasKit's async decoder to throw "EncodingError: Loading
-    // error." after the original buffer is gone.
-    final owned = Uint8List.fromList(bytes);
-    ui.Codec? codec;
-    ui.Image? img;
+    if (mounted) setState(() {});
+  }
+
+  Future<_DecodedRgba?> _decodeRgba(Uint8List bytes) async {
+    final img = await _decodeImage(bytes);
+    if (img == null) return null;
     try {
-      codec = await ui.instantiateImageCodec(owned, allowUpscaling: false);
-      final frame = await codec.getNextFrame();
-      img = frame.image;
       final byteData =
           await img.toByteData(format: ui.ImageByteFormat.rawRgba);
       if (byteData == null) return null;
@@ -174,13 +396,8 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
         width: img.width,
         height: img.height,
       );
-    } catch (e) {
-      debugPrint(
-          "MatplotlibChartCanvas: decode failed (${owned.length} bytes): $e");
-      rethrow;
     } finally {
-      img?.dispose();
-      codec?.dispose();
+      img.dispose();
     }
   }
 
@@ -201,65 +418,29 @@ class _MatplotlibChartCanvasState extends State<MatplotlibChartCanvasControl> {
     _displayImage = newImage;
     if (mounted) setState(() {});
     if (old != null) {
-      // Defer disposal to the next frame so any in-flight paint that still
-      // references the old image completes first.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         old.dispose();
       });
-    }
-  }
-
-  void _disposeDisplay() {
-    final old = _displayImage;
-    _displayImage = null;
-    if (old != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        old.dispose();
-      });
-    }
-  }
-
-  void _maybeReportResize(Size size) {
-    final resizeInterval = widget.control.getInt("resize_interval", 10)!;
-    final now = DateTime.now().millisecondsSinceEpoch;
-    if ((now - _lastResize > resizeInterval && _lastSize != size) ||
-        _lastSize.isEmpty) {
-      _lastSize = size;
-      _lastResize = now;
-      widget.control.triggerEvent("resize", {"w": size.width, "h": size.height});
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Fire on_resize on layout. matplotlib uses this to know the target
-        // figure size.
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          _maybeReportResize(constraints.biggest);
-        });
-        return CustomPaint(
-          size: constraints.biggest,
-          painter: _MatplotlibImagePainter(_displayImage),
-        );
-      },
-    );
-  }
+  CustomPainter buildPainter() =>
+      _CpuMatplotlibImagePainter(image: _displayImage);
 }
 
 class _DecodedRgba {
   final Uint8List bytes;
   final int width;
   final int height;
-  _DecodedRgba({required this.bytes, required this.width, required this.height});
+  _DecodedRgba(
+      {required this.bytes, required this.width, required this.height});
 }
 
-class _MatplotlibImagePainter extends CustomPainter {
+class _CpuMatplotlibImagePainter extends CustomPainter {
   final ui.Image? image;
 
-  _MatplotlibImagePainter(this.image);
+  const _CpuMatplotlibImagePainter({required this.image});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -272,5 +453,5 @@ class _MatplotlibImagePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_MatplotlibImagePainter old) => old.image != image;
+  bool shouldRepaint(_CpuMatplotlibImagePainter old) => old.image != image;
 }
