@@ -644,6 +644,7 @@ def main(page: ft.Page):
         max_lines=16,
         value="",
         hint_text=import_format_hint,
+        autofocus=True,
     )
     import_error_text = ft.Text(
         "",
