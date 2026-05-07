@@ -168,6 +168,8 @@ ROLE_DESCRIPTION_BY_ATTR = {
         "Decorative elements, such as dividers, and when other elements "
         "provide 4.5:1 contrast."
     ),
+    "shadow": "Color used for drop shadows of elevated components.",
+    "scrim": "Color used for the scrim around modal components.",
     "scaffold_bgcolor": "Customizes the page background color.",
 }
 
@@ -416,7 +418,12 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Utility",
+                "title": "Effects",
+                "hint": (
+                    "Colors used for elevation and modal\n"
+                    "layering effects, such as shadows and\n"
+                    "scrims."
+                ),
                 "items": [
                     ("SHADOW", "SHADOW", "SURFACE"),
                     ("SCRIM", "SCRIM", "SURFACE"),
