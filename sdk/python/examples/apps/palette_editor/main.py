@@ -73,11 +73,49 @@ def main(page: ft.Page):
             "Lower-emphasis color for text and icons against any surface "
             "or surface container color."
         ),
+        "SURFACE_DIM": "Dimmest surface color in light and dark themes.",
+        "SURFACE_BRIGHT": "Brightest surface color in light and dark themes.",
         "SURFACE_CONTAINER_LOWEST": "Lowest-emphasis container color.",
         "SURFACE_CONTAINER_LOW": "Low-emphasis container color.",
         "SURFACE_CONTAINER": "Default container color.",
         "SURFACE_CONTAINER_HIGH": "High-emphasis container color.",
         "SURFACE_CONTAINER_HIGHEST": "Highest-emphasis container color.",
+        "PRIMARY_FIXED": (
+            "Fill color used against surface that maintains the same tone "
+            "in light and dark themes."
+        ),
+        "PRIMARY_FIXED_DIM": (
+            "A stronger, more emphasized tone than primary fixed with the "
+            "same fixed behavior."
+        ),
+        "ON_PRIMARY_FIXED": "Text and icons against primary fixed.",
+        "ON_PRIMARY_FIXED_VARIANT": (
+            "Lower-emphasis text and icons against primary fixed."
+        ),
+        "SECONDARY_FIXED": (
+            "Fill color used against surface that maintains the same tone "
+            "in light and dark themes."
+        ),
+        "SECONDARY_FIXED_DIM": (
+            "A stronger, more emphasized tone than secondary fixed with the "
+            "same fixed behavior."
+        ),
+        "ON_SECONDARY_FIXED": "Text and icons against secondary fixed.",
+        "ON_SECONDARY_FIXED_VARIANT": (
+            "Lower-emphasis text and icons against secondary fixed."
+        ),
+        "TERTIARY_FIXED": (
+            "Fill color used against surface that maintains the same tone "
+            "in light and dark themes."
+        ),
+        "TERTIARY_FIXED_DIM": (
+            "A stronger, more emphasized tone than tertiary fixed with the "
+            "same fixed behavior."
+        ),
+        "ON_TERTIARY_FIXED": "Text and icons against tertiary fixed.",
+        "ON_TERTIARY_FIXED_VARIANT": (
+            "Lower-emphasis text and icons against tertiary fixed."
+        ),
         "INVERSE_SURFACE": (
             "Background fills for elements which contrast against surface."
         ),

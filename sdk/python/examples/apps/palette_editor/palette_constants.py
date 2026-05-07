@@ -98,7 +98,7 @@ LEFT_PANE_ROLE_TABS = [
         "label": "Accent",
         "groups": [
             {
-                "title": "Primary roles",
+                "title": "Primary",
                 "hint": (
                     "Use primary roles for the most\n"
                     "prominent components across the UI,\n"
@@ -121,7 +121,7 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Secondary roles",
+                "title": "Secondary",
                 "hint": (
                     "Use secondary roles for less prominent\n"
                     "components in the UI such as filter chips."
@@ -142,7 +142,7 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Tertiary roles",
+                "title": "Tertiary",
                 "hint": (
                     "Use tertiary roles for contrasting accents\n"
                     "that balance primary and secondary colors\n"
@@ -165,7 +165,7 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Error roles",
+                "title": "Error",
                 "hint": (
                     "Use error roles to communicate error states,\n"
                     "such as an incorrect password entered\n"
@@ -184,7 +184,7 @@ LEFT_PANE_ROLE_TABS = [
         "label": "Surface",
         "groups": [
             {
-                "title": "Surface roles",
+                "title": "Surface",
                 "hint": (
                     "Use surface roles for more neutral\n"
                     "backgrounds, and container colors for\n"
@@ -229,11 +229,25 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Outline roles",
+                "title": "Outline",
                 "hint": "Outline colors to be used against a surface.",
                 "items": [
                     ("OUTLINE", "OUTLINE", "SURFACE"),
                     ("OUTLINE_VARIANT", "OUTLINE_VARIANT", "ON_SURFACE"),
+                ],
+            },
+            {
+                "title": "Inverse colors",
+                "hint": (
+                    "Inverse roles are applied selectively to\n"
+                    "components to achieve colors that are the\n"
+                    "reverse of those in the surrounding UI,\n"
+                    "creating a contrasting effect."
+                ),
+                "items": [
+                    ("INVERSE_SURFACE", "INVERSE_SURFACE", "ON_INVERSE_SURFACE"),
+                    ("ON_INVERSE_SURFACE", "ON_INVERSE_SURFACE", "INVERSE_SURFACE"),
+                    ("INVERSE_PRIMARY", "INVERSE_PRIMARY", "ON_PRIMARY"),
                 ],
             },
         ],
@@ -242,7 +256,14 @@ LEFT_PANE_ROLE_TABS = [
         "label": "Add-on",
         "groups": [
             {
-                "title": "Primary fixed roles",
+                "title": "Primary fixed",
+                "hint": (
+                    "Most products won't need add-on roles.\n"
+                    "Fixed colors maintain the same tone in\n"
+                    "light and dark themes and may be used\n"
+                    "instead of container roles when fixed\n"
+                    "behavior is desired."
+                ),
                 "items": [
                     ("PRIMARY_FIXED", "PRIMARY_FIXED", "ON_PRIMARY_FIXED"),
                     ("PRIMARY_FIXED_DIM", "PRIMARY_FIXED_DIM", "ON_PRIMARY_FIXED"),
@@ -255,7 +276,14 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Secondary fixed roles",
+                "title": "Secondary fixed",
+                "hint": (
+                    "Most products won't need add-on roles.\n"
+                    "Fixed colors maintain the same tone in\n"
+                    "light and dark themes and may be used\n"
+                    "instead of container roles when fixed\n"
+                    "behavior is desired."
+                ),
                 "items": [
                     ("SECONDARY_FIXED", "SECONDARY_FIXED", "ON_SECONDARY_FIXED"),
                     (
@@ -272,7 +300,14 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Tertiary fixed roles",
+                "title": "Tertiary fixed",
+                "hint": (
+                    "Most products won't need add-on roles.\n"
+                    "Fixed colors maintain the same tone in\n"
+                    "light and dark themes and may be used\n"
+                    "instead of container roles when fixed\n"
+                    "behavior is desired."
+                ),
                 "items": [
                     ("TERTIARY_FIXED", "TERTIARY_FIXED", "ON_TERTIARY_FIXED"),
                     (
@@ -289,13 +324,10 @@ LEFT_PANE_ROLE_TABS = [
                 ],
             },
             {
-                "title": "Utility roles",
+                "title": "Utility",
                 "items": [
                     ("SHADOW", "SHADOW", "SURFACE"),
                     ("SCRIM", "SCRIM", "SURFACE"),
-                    ("INVERSE_SURFACE", "INVERSE_SURFACE", "ON_INVERSE_SURFACE"),
-                    ("ON_INVERSE_SURFACE", "ON_INVERSE_SURFACE", "INVERSE_SURFACE"),
-                    ("INVERSE_PRIMARY", "INVERSE_PRIMARY", "ON_PRIMARY"),
                 ],
             },
         ],
