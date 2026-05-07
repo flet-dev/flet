@@ -10,12 +10,15 @@ class SimpleAttributionControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("SimpleAttributionControl build: ${control.id}");
-    var text = control.buildTextOrWidget("text");
+    final text = control.getString("text");
 
     return BaseControl(
       control: control,
       child: SimpleAttributionWidget(
-        source: text is Text ? text : const Text("Placeholder Text"),
+        source: Text(
+          text ?? "Attribution",
+          style: control.getTextStyle("text_style", Theme.of(context)),
+        ),
         onTap: () => control.triggerEvent("click"),
         backgroundColor: control.getColor(
             "bgcolor", context, Theme.of(context).colorScheme.surface)!,
