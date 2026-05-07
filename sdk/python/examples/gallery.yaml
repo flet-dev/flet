@@ -256,6 +256,6 @@ categories:
     _icon: handyman
     _description: Development tools and utilities
 
-  Extensibility:
-    _icon: extension
-    _description: Examples of extending Flet with custom controls and packages
+  Cookbook:
+    _icon: interests
+    _description: Recipes and patterns for common app features

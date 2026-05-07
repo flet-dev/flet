@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Utility/Types", "Layout/Container"]
+categories = ["Layout/Container"]
 
 [tool.flet.metadata]
 title = "Label Position showcase"
