@@ -223,6 +223,7 @@ LEFT_PANE_ROLE_TABS = [
             },
             {
                 "title": "Page background",
+                "hint": "Customizes the page background color.",
                 "items": [
                     ("SCAFFOLD_BGCOLOR", "SCAFFOLD_BGCOLOR", "ON_SURFACE"),
                 ],
