@@ -12,6 +12,7 @@
 * Make `NavigationDrawerDestination.label` accept custom controls and add `NavigationDrawerTheme.icon_theme` ([#6379](https://github.com/flet-dev/flet/issues/6379), [#6395](https://github.com/flet-dev/flet/pull/6395)) by @ndonkoHenri.
 * Add `local_position` and `global_position` to `DragTargetEvent`, deprecating `x`, `y`, and `offset` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
 * Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
+* Add `Page.theme_animation_style` for customizing the duration and curve of the theme cross-fade between `theme` and `dark_theme` (or disabling it with `AnimationStyle.no_animation()`), exposing Flutter's `MaterialApp.themeAnimationStyle` ([#6476](https://github.com/flet-dev/flet/pull/6476)) by @FeodorFitsner.
 
 ### Improvements
 
