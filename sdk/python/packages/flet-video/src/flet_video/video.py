@@ -3,12 +3,17 @@ Video control definition for the flet-video package.
 """
 
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional, Union
 
 import flet as ft
+from flet.utils.deprecated import deprecated
+from flet.utils.validation import V
 from flet_video.types import (
+    AdaptiveVideoControls,
     PlaylistMode,
     VideoConfiguration,
+    VideoControls,
+    VideoControlsMode,
     VideoMedia,
     VideoSubtitleConfiguration,
     VideoSubtitleTrack,
@@ -56,9 +61,45 @@ class Video(ft.LayoutControl):
     Whether the video should start playing automatically.
     """
 
-    show_controls: bool = True
+    show_controls: Annotated[
+        Optional[bool],
+        V.deprecated(
+            version="0.85.0",
+            delete_version="0.88.0",
+            reason="Use controls=None to hide controls.",
+            docs_reason="To hide controls, instead set :attr:`controls` to `None`.",
+        ),
+    ] = None
     """
-    Whether to show the video player controls.
+    Whether to show the video player :attr:`controls`.
+    """
+
+    controls: Optional[
+        Union[
+            VideoControls,
+            ft.Control,
+            dict[VideoControlsMode, Optional[Union[VideoControls, ft.Control]]],
+        ]
+    ] = field(default_factory=lambda: AdaptiveVideoControls())
+    """
+    Controls displayed over the video.
+
+    Set to a :class:`VideoControls` object to use built-in controls, a
+    :class:`flet.Control` object to use custom Flet controls, or `None` to hide
+    controls.
+
+    To use different controls outside and inside fullscreen, set this property
+    to a dictionary keyed by :class:`VideoControlsMode`. The
+    :attr:`VideoControlsMode.DEFAULT` value is used when
+    :attr:`VideoControlsMode.NORMAL` controls are not provided. If
+    :attr:`VideoControlsMode.FULLSCREEN` controls are not provided,
+    :attr:`VideoControlsMode.NORMAL` controls are reused before
+    falling back to :attr:`VideoControlsMode.DEFAULT`. A mode value of
+    `None` hides controls for that mode only.
+
+    Note:
+        During the :attr:`show_controls` deprecation period, `show_controls=False`
+        hides controls even when this property is set.
     """
 
     fullscreen: bool = False
@@ -181,6 +222,22 @@ class Video(ft.LayoutControl):
     the index of the new track.
     """
 
+    on_position_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current playback position changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current position as a :class:`flet.Duration`.
+    """
+
+    on_duration_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current media duration changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current duration as a :class:`flet.Duration`.
+    """
+
     def before_update(self):
         super().before_update()
         if not (0 <= self.volume <= 100):
@@ -240,16 +297,26 @@ class Video(ft.LayoutControl):
             arguments={"media_index": media_index},
         )
 
+    @deprecated(
+        reason="Use playlist.append(media) instead.",
+        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.append(media)`.",  # noqa: E501
+        version="0.85.0",
+        delete_version="0.88.0",
+        show_parentheses=True,
+    )
     async def playlist_add(self, media: VideoMedia):
         """Appends/Adds the provided `media` to the `playlist`."""
         if not media.resource:
             raise ValueError("media has no resource")
-        await self._invoke_method(
-            method_name="playlist_add",
-            arguments={"media": media},
-        )
         self.playlist.append(media)
 
+    @deprecated(
+        reason="Use playlist.pop(media_index) instead.",
+        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.pop(media_index)`.",  # noqa: E501
+        version="0.85.0",
+        delete_version="0.88.0",
+        show_parentheses=True,
+    )
     async def playlist_remove(self, media_index: int):
         """Removes the provided `media` from the `playlist`."""
         playlist_length = len(self.playlist)
@@ -257,10 +324,6 @@ class Video(ft.LayoutControl):
             raise IndexError("media_index is out of range")
         if media_index < 0:
             media_index = playlist_length + media_index
-        await self._invoke_method(
-            method_name="playlist_remove",
-            arguments={"media_index": media_index},
-        )
         self.playlist.pop(media_index)
 
     async def is_playing(self) -> bool:
@@ -291,3 +354,39 @@ class Video(ft.LayoutControl):
             The current position of the currently playing media.
         """
         return await self._invoke_method("get_current_position")
+
+    async def take_screenshot(
+        self,
+        format: Optional[str] = "image/png",
+        include_libass_subtitles: bool = False,
+    ) -> Optional[bytes]:
+        """
+        Captures a screenshot of the current video frame.
+
+        Args:
+            format: The image format to return. Supported values are `"image/png"`
+                (PNG encoded image), `"image/jpeg"` (JPEG encoded image),
+                and `None` (raw BGRA pixel buffer on native backends).
+            include_libass_subtitles: Whether to include libass subtitles in the
+                screenshot on native backends. This requires libass support in the
+                underlying player and is ignored on the web backend.
+
+        Returns:
+            Encoded image bytes, or `None` if the current backend cannot capture a
+                video frame.
+
+        Raises:
+            ValueError: If `format` is not supported.
+        """
+        supported_formats = ("image/png", "image/jpeg", None)
+        if format not in supported_formats:
+            raise ValueError(
+                f"format must be one of {supported_formats}, got {format!r}"
+            )
+        return await self._invoke_method(
+            "take_screenshot",
+            arguments={
+                "format": format,
+                "include_libass_subtitles": include_libass_subtitles,
+            },
+        )

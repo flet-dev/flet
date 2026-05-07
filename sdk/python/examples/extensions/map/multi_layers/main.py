@@ -50,29 +50,15 @@ def main(page: ft.Page):
                         on_event=print,
                         layers=[
                             ftm.TileLayer(
-                                url_template="https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png",
+                                url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                user_agent_package_name="flet-map-examples/1.0",
                                 on_image_error=lambda e: print("TileLayer Error"),
                             ),
-                            ftm.RichAttribution(
-                                attributions=[
-                                    ftm.TextSourceAttribution(
-                                        text="OpenStreetMap Contributors",
-                                        on_click=lambda e: e.page.launch_url(
-                                            "https://www.openstreetmap.org/copyright"
-                                        ),
-                                    ),
-                                    ftm.TextSourceAttribution(
-                                        text="Flet",
-                                        on_click=lambda e: e.page.launch_url(
-                                            "https://flet.dev"
-                                        ),
-                                    ),
-                                ]
-                            ),
                             ftm.SimpleAttribution(
-                                text="Flet",
-                                alignment=ft.Alignment.TOP_RIGHT,
-                                on_click=lambda e: print("Clicked SimpleAttribution"),
+                                text="OpenStreetMap contributors",
+                                on_click=lambda e: e.page.launch_url(
+                                    "https://www.openstreetmap.org/copyright"
+                                ),
                             ),
                             marker_layer := ftm.MarkerLayer(
                                 markers=[

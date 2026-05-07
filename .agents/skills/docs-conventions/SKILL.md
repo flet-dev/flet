@@ -48,16 +48,44 @@ so they display as inline code `Page` and `Map`.
 - Custom labels like `:class:`my label <flet.Page>`` — the label is always auto-derived from the target
 - Roles for symbols not in CrocoDocs API data degrade to inline code
 
+### Xrefs
+
+Reference-style Markdown links of the form `[label][key]`, where `key` is the
+fully-qualified dotted symbol path (same form as reST role targets).
+
+Use as the default form for linking to API symbols from Markdown docs
+(`.md` / `.mdx`).
+
+Examples:
+
+```markdown
+Class: [`Page`][flet.Page]
+Attribute: [`route`][flet.Page.route]
+Method: [`Page.update()`][flet.Page.update]
+Extension: [`Video.controls`][flet_video.Video.controls]
+Plain text: [the route attribute][flet.Page.route]
+```
+
+**When to prefer over the other forms:**
+
+- **Flexible labels** — the first `[ ]` accepts any text or inline code, unlike reST roles whose label is always auto-derived from the target
+- **Path-independent** — keys are dotted symbol paths, so links don't break when source files are moved, renamed, or restructured (unlike Markdown link paths with `../` and `#flet.X.y` anchors)
+- **Terser** than Markdown links to the same symbol — no relative path or anchor to maintain
+- **Greppable** — searching for the dotted key finds every reference to that symbol across all docs
+
+**Rules:**
+
+- The label (inside the first `[ ]`) is the rendered text — inline code or plain text
+- The key (inside the second `[ ]`) is the fully-qualified dotted path; do NOT include `()` for methods
+- Unresolved keys render as broken reference-style links (silent fallback) — verify with a build or `yarn crocodocs:generate`
+
 ### Markdown links
 
-Use this syntax when the displayed text must differ from the symbol target or when
-explicitly required by user. This is especially useful in docs-only strings such as the
-`docs_reason` parameter of `@deprecated`, extracted validation messages, or short admonition text
-where you want:
+Fallback for cases xrefs cannot cover:
 
-- inline-code labels with punctuation, such as `new_func()` or `local_position.x`,
-- plain-language labels that do not match the target exactly,
-- explicit full targets in the link destination for clarity.
+- docs-only Python strings — the `docs_reason` parameter of `@deprecated`, extracted validation messages, or short admonition text
+- links to non-API content (other doc pages, external URLs, anchors that aren't API symbols)
+- when the xref entry is missing and you need a working link before regenerating
 
 Use relative `.md` paths with dot-format anchors.
 

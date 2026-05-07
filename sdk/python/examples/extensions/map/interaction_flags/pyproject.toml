@@ -15,10 +15,10 @@ categories = ["Displays/Map"]
 
 [tool.flet.metadata]
 title = "Interaction Flags"
-controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "Checkbox", "Map", "TileLayer", "RichAttribution", "TextSourceAttribution", "Text", "AppBar"]
+controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "Checkbox", "Map", "TileLayer", "SimpleAttribution", "Text", "AppBar"]
 layout_pattern = "single-panel"
 complexity = "basic"
-features = ["runtime interaction toggles", "map event logging", "custom attributions"]
+features = ["runtime interaction toggles", "map event logging", "tile attribution"]
 
 [tool.flet]
 org = "dev.flet"

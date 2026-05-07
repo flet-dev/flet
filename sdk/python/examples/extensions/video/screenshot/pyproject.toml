@@ -1,0 +1,26 @@
+[project]
+name = "video-screenshot"
+version = "1.0.0"
+description = "Capture the current video frame and display it as an image."
+requires-python = ">=3.10"
+keywords = ["video", "screenshot", "frame", "capture"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Video Screenshot"
+controls = ["SafeArea", "Column", "Row", "Button", "Container", "Image", "Text", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["frame capture", "image preview"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
