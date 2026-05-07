@@ -425,7 +425,7 @@ def build_preview_tabs(
     return ft.Tabs(
         selected_index=selected_tab_index,
         on_change=on_tab_change,
-        length=6,
+        length=4,
         expand=True,
         content=ft.Column(
             expand=True,
@@ -440,11 +440,9 @@ def build_preview_tabs(
                 ft.TabBar(
                     tabs=[
                         ft.Tab(label="All"),
-                        ft.Tab(label="Primary"),
-                        ft.Tab(label="Secondary"),
-                        ft.Tab(label="Tertiary"),
+                        ft.Tab(label="Accent"),
                         ft.Tab(label="Surface"),
-                        ft.Tab(label="Error"),
+                        ft.Tab(label="Add-on"),
                     ]
                 ),
                 ft.TabBarView(
@@ -563,7 +561,7 @@ def build_preview_tabs(
                                 spacing=0,
                                 controls=[
                                     showcase_section(
-                                        "Primary roles",
+                                        "Primary",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
@@ -584,17 +582,8 @@ def build_preview_tabs(
                                         build_primary_button_row(),
                                         ft.FloatingActionButton(icon=ft.Icons.PALETTE),
                                     ),
-                                ],
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
                                     showcase_section(
-                                        "Secondary roles",
+                                        "Secondary",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
@@ -616,17 +605,8 @@ def build_preview_tabs(
                                         build_preview_chip_row(),
                                         build_segmented_button(),
                                     ),
-                                ],
-                            ),
-                        ),
-                        ft.Container(
-                            padding=ft.Padding.only(top=4),
-                            content=ft.Column(
-                                scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
-                                controls=[
                                     showcase_section(
-                                        "Tertiary roles",
+                                        "Tertiary",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
@@ -648,6 +628,27 @@ def build_preview_tabs(
                                             open_preview_time_picker, preview_time_text
                                         ),
                                     ),
+                                    showcase_section(
+                                        "Error",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "ERROR",
+                                                    ft.Colors.ERROR,
+                                                    ft.Colors.ON_ERROR,
+                                                ),
+                                                preview_role_block(
+                                                    "ERROR_CONTAINER",
+                                                    ft.Colors.ERROR_CONTAINER,
+                                                    ft.Colors.ON_ERROR_CONTAINER,
+                                                ),
+                                            ],
+                                        ),
+                                        *build_error_examples(),
+                                    ),
                                 ],
                             ),
                         ),
@@ -658,7 +659,7 @@ def build_preview_tabs(
                                 spacing=0,
                                 controls=[
                                     showcase_section(
-                                        "Surface roles",
+                                        "Surface",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
@@ -711,6 +712,61 @@ def build_preview_tabs(
                                             ),
                                         ),
                                     ),
+                                    showcase_section(
+                                        "Outline",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "OUTLINE",
+                                                    ft.Colors.OUTLINE,
+                                                    ft.Colors.SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "OUTLINE_VARIANT",
+                                                    ft.Colors.OUTLINE_VARIANT,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    showcase_section(
+                                        "Inverse colors",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "INVERSE_SURFACE",
+                                                    ft.Colors.INVERSE_SURFACE,
+                                                    ft.Colors.ON_INVERSE_SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "INVERSE_PRIMARY",
+                                                    ft.Colors.INVERSE_PRIMARY,
+                                                    ft.Colors.ON_PRIMARY,
+                                                ),
+                                            ],
+                                        ),
+                                        ft.Container(
+                                            bgcolor=ft.Colors.INVERSE_SURFACE,
+                                            border_radius=12,
+                                            padding=12,
+                                            content=ft.Row(
+                                                spacing=12,
+                                                controls=[
+                                                    ft.TextButton("Text button"),
+                                                    ft.Text(
+                                                        "Inverse surface sample",
+                                                        color=ft.Colors.ON_INVERSE_SURFACE,
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    ),
                                 ],
                             ),
                         ),
@@ -721,25 +777,109 @@ def build_preview_tabs(
                                 spacing=0,
                                 controls=[
                                     showcase_section(
-                                        "Error roles",
+                                        "Primary fixed",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
                                                 preview_role_block(
-                                                    "ERROR",
-                                                    ft.Colors.ERROR,
-                                                    ft.Colors.ON_ERROR,
+                                                    "PRIMARY_FIXED",
+                                                    ft.Colors.PRIMARY_FIXED,
+                                                    ft.Colors.ON_PRIMARY_FIXED,
                                                 ),
                                                 preview_role_block(
-                                                    "ERROR_CONTAINER",
-                                                    ft.Colors.ERROR_CONTAINER,
-                                                    ft.Colors.ON_ERROR_CONTAINER,
+                                                    "PRIMARY_FIXED_DIM",
+                                                    ft.Colors.PRIMARY_FIXED_DIM,
+                                                    ft.Colors.ON_PRIMARY_FIXED,
+                                                ),
+                                                preview_role_block(
+                                                    "ON_PRIMARY_FIXED_VARIANT",
+                                                    ft.Colors.PRIMARY_FIXED,
+                                                    ft.Colors.ON_PRIMARY_FIXED_VARIANT,
                                                 ),
                                             ],
                                         ),
-                                        *build_error_examples(),
+                                    ),
+                                    showcase_section(
+                                        "Secondary fixed",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "SECONDARY_FIXED",
+                                                    ft.Colors.SECONDARY_FIXED,
+                                                    ft.Colors.ON_SECONDARY_FIXED,
+                                                ),
+                                                preview_role_block(
+                                                    "SECONDARY_FIXED_DIM",
+                                                    ft.Colors.SECONDARY_FIXED_DIM,
+                                                    ft.Colors.ON_SECONDARY_FIXED,
+                                                ),
+                                                preview_role_block(
+                                                    "ON_SECONDARY_FIXED_VARIANT",
+                                                    ft.Colors.SECONDARY_FIXED,
+                                                    ft.Colors.ON_SECONDARY_FIXED_VARIANT,
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    showcase_section(
+                                        "Tertiary fixed",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "TERTIARY_FIXED",
+                                                    ft.Colors.TERTIARY_FIXED,
+                                                    ft.Colors.ON_TERTIARY_FIXED,
+                                                ),
+                                                preview_role_block(
+                                                    "TERTIARY_FIXED_DIM",
+                                                    ft.Colors.TERTIARY_FIXED_DIM,
+                                                    ft.Colors.ON_TERTIARY_FIXED,
+                                                ),
+                                                preview_role_block(
+                                                    "ON_TERTIARY_FIXED_VARIANT",
+                                                    ft.Colors.TERTIARY_FIXED,
+                                                    ft.Colors.ON_TERTIARY_FIXED_VARIANT,
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    showcase_section(
+                                        "Effects",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                preview_role_block(
+                                                    "SURFACE_DIM",
+                                                    ft.Colors.SURFACE_DIM,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "SURFACE_BRIGHT",
+                                                    ft.Colors.SURFACE_BRIGHT,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "SHADOW",
+                                                    ft.Colors.SHADOW,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                                preview_role_block(
+                                                    "SCRIM",
+                                                    ft.Colors.SCRIM,
+                                                    ft.Colors.ON_SURFACE,
+                                                ),
+                                            ],
+                                        ),
                                     ),
                                 ],
                             ),
