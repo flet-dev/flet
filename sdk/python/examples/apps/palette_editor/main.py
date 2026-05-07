@@ -5,6 +5,7 @@ from palette_constants import (
     LEFT_PANE_ROLE_TABS,
     LIGHT_SEED_COLOR,
     MATERIAL_COLORS,
+    ROLE_DESCRIPTION_BY_ATTR,
     SEED_COLOR_OPTIONS,
     THEME_COLOR_ROLE_NAMES,
 )
@@ -37,99 +38,6 @@ def main(page: ft.Page):
         "Controls on this side use the current theme so you can compare "
         "tokens with real UI."
     )
-    role_descriptions = {
-        "PRIMARY": "High-emphasis fills, texts, and icons against surface.",
-        "ON_PRIMARY": "Text and icons against primary.",
-        "PRIMARY_CONTAINER": (
-            "Standout fill color against surface, for key components like FAB."
-        ),
-        "ON_PRIMARY_CONTAINER": "Text and icons against primary container.",
-        "SECONDARY": "Less prominent fills, text, and icons against surface.",
-        "ON_SECONDARY": "Text and icons against secondary.",
-        "SECONDARY_CONTAINER": (
-            "Less prominent fill color against surface, for recessive "
-            "components like tonal buttons."
-        ),
-        "ON_SECONDARY_CONTAINER": "Text and icons against secondary container.",
-        "TERTIARY": "Complementary fills, text, and icons against surface.",
-        "ON_TERTIARY": "Text and icons against tertiary.",
-        "TERTIARY_CONTAINER": (
-            "Complementary container color against surface, for components "
-            "like input fields."
-        ),
-        "ON_TERTIARY_CONTAINER": "Text and icons against tertiary container.",
-        "ERROR": (
-            "Attention-grabbing color against surface for fills, icons, and "
-            "text, indicating urgency."
-        ),
-        "ON_ERROR": "Text and icons against error.",
-        "ERROR_CONTAINER": "Attention-grabbing fill color against surface.",
-        "ON_ERROR_CONTAINER": "Text and icons against error container.",
-        "SURFACE": "Default color for backgrounds.",
-        "ON_SURFACE": (
-            "Text and icons against any surface or surface container color."
-        ),
-        "ON_SURFACE_VARIANT": (
-            "Lower-emphasis color for text and icons against any surface "
-            "or surface container color."
-        ),
-        "SURFACE_DIM": "Dimmest surface color in light and dark themes.",
-        "SURFACE_BRIGHT": "Brightest surface color in light and dark themes.",
-        "SURFACE_CONTAINER_LOWEST": "Lowest-emphasis container color.",
-        "SURFACE_CONTAINER_LOW": "Low-emphasis container color.",
-        "SURFACE_CONTAINER": "Default container color.",
-        "SURFACE_CONTAINER_HIGH": "High-emphasis container color.",
-        "SURFACE_CONTAINER_HIGHEST": "Highest-emphasis container color.",
-        "PRIMARY_FIXED": (
-            "Fill color used against surface that maintains the same tone "
-            "in light and dark themes."
-        ),
-        "PRIMARY_FIXED_DIM": (
-            "A stronger, more emphasized tone than primary fixed with the "
-            "same fixed behavior."
-        ),
-        "ON_PRIMARY_FIXED": "Text and icons against primary fixed.",
-        "ON_PRIMARY_FIXED_VARIANT": (
-            "Lower-emphasis text and icons against primary fixed."
-        ),
-        "SECONDARY_FIXED": (
-            "Fill color used against surface that maintains the same tone "
-            "in light and dark themes."
-        ),
-        "SECONDARY_FIXED_DIM": (
-            "A stronger, more emphasized tone than secondary fixed with the "
-            "same fixed behavior."
-        ),
-        "ON_SECONDARY_FIXED": "Text and icons against secondary fixed.",
-        "ON_SECONDARY_FIXED_VARIANT": (
-            "Lower-emphasis text and icons against secondary fixed."
-        ),
-        "TERTIARY_FIXED": (
-            "Fill color used against surface that maintains the same tone "
-            "in light and dark themes."
-        ),
-        "TERTIARY_FIXED_DIM": (
-            "A stronger, more emphasized tone than tertiary fixed with the "
-            "same fixed behavior."
-        ),
-        "ON_TERTIARY_FIXED": "Text and icons against tertiary fixed.",
-        "ON_TERTIARY_FIXED_VARIANT": (
-            "Lower-emphasis text and icons against tertiary fixed."
-        ),
-        "INVERSE_SURFACE": (
-            "Background fills for elements which contrast against surface."
-        ),
-        "ON_INVERSE_SURFACE": "Text and icons against inverse surface.",
-        "INVERSE_PRIMARY": (
-            "Actionable elements, such as text buttons, against inverse surface."
-        ),
-        "OUTLINE": "Important boundaries, such as a text field outline.",
-        "OUTLINE_VARIANT": (
-            "Decorative elements, such as dividers, and when other elements "
-            "provide 4.5:1 contrast."
-        ),
-        "SCAFFOLD_BGCOLOR": "Customizes the page background color.",
-    }
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
     selected_color_status = ft.Text("", size=12, color=ft.Colors.ON_SURFACE_VARIANT)
@@ -241,7 +149,7 @@ def main(page: ft.Page):
             selected_color_text.value = "Choose a color role to edit."
             selected_color_status.value = ""
             return
-        description = role_descriptions.get(selected_role["label"])
+        description = ROLE_DESCRIPTION_BY_ATTR.get(selected_role["attr"])
         if description is not None:
             selected_color_text.value = description
             selected_color_status.value = ""

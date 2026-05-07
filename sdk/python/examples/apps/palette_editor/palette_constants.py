@@ -79,6 +79,98 @@ COLOR_ROLE_BY_LABEL = {
 
 THEME_COLOR_ROLE_NAMES = {"scaffold_bgcolor"}
 
+ROLE_DESCRIPTION_BY_ATTR = {
+    "primary": "High-emphasis fills, texts, and icons against surface.",
+    "on_primary": "Text and icons against primary.",
+    "primary_container": (
+        "Standout fill color against surface, for key components like FAB."
+    ),
+    "on_primary_container": "Text and icons against primary container.",
+    "secondary": "Less prominent fills, text, and icons against surface.",
+    "on_secondary": "Text and icons against secondary.",
+    "secondary_container": (
+        "Less prominent fill color against surface, for recessive "
+        "components like tonal buttons."
+    ),
+    "on_secondary_container": "Text and icons against secondary container.",
+    "tertiary": "Complementary fills, text, and icons against surface.",
+    "on_tertiary": "Text and icons against tertiary.",
+    "tertiary_container": (
+        "Complementary container color against surface, for components "
+        "like input fields."
+    ),
+    "on_tertiary_container": "Text and icons against tertiary container.",
+    "error": (
+        "Attention-grabbing color against surface for fills, icons, and "
+        "text, indicating urgency."
+    ),
+    "on_error": "Text and icons against error.",
+    "error_container": "Attention-grabbing fill color against surface.",
+    "on_error_container": "Text and icons against error container.",
+    "surface": "Default color for backgrounds.",
+    "on_surface": "Text and icons against any surface or surface container color.",
+    "on_surface_variant": (
+        "Lower-emphasis color for text and icons against any surface "
+        "or surface container color."
+    ),
+    "surface_dim": "Dimmest surface color in light and dark themes.",
+    "surface_bright": "Brightest surface color in light and dark themes.",
+    "surface_container_lowest": "Lowest-emphasis container color.",
+    "surface_container_low": "Low-emphasis container color.",
+    "surface_container": "Default container color.",
+    "surface_container_high": "High-emphasis container color.",
+    "surface_container_highest": "Highest-emphasis container color.",
+    "primary_fixed": (
+        "Fill color used against surface that maintains the same tone "
+        "in light and dark themes."
+    ),
+    "primary_fixed_dim": (
+        "A stronger, more emphasized tone than primary fixed with the "
+        "same fixed behavior."
+    ),
+    "on_primary_fixed": "Text and icons against primary fixed.",
+    "on_primary_fixed_variant": (
+        "Lower-emphasis text and icons against primary fixed."
+    ),
+    "secondary_fixed": (
+        "Fill color used against surface that maintains the same tone "
+        "in light and dark themes."
+    ),
+    "secondary_fixed_dim": (
+        "A stronger, more emphasized tone than secondary fixed with the "
+        "same fixed behavior."
+    ),
+    "on_secondary_fixed": "Text and icons against secondary fixed.",
+    "on_secondary_fixed_variant": (
+        "Lower-emphasis text and icons against secondary fixed."
+    ),
+    "tertiary_fixed": (
+        "Fill color used against surface that maintains the same tone "
+        "in light and dark themes."
+    ),
+    "tertiary_fixed_dim": (
+        "A stronger, more emphasized tone than tertiary fixed with the "
+        "same fixed behavior."
+    ),
+    "on_tertiary_fixed": "Text and icons against tertiary fixed.",
+    "on_tertiary_fixed_variant": (
+        "Lower-emphasis text and icons against tertiary fixed."
+    ),
+    "inverse_surface": (
+        "Background fills for elements which contrast against surface."
+    ),
+    "on_inverse_surface": "Text and icons against inverse surface.",
+    "inverse_primary": (
+        "Actionable elements, such as text buttons, against inverse surface."
+    ),
+    "outline": "Important boundaries, such as a text field outline.",
+    "outline_variant": (
+        "Decorative elements, such as dividers, and when other elements "
+        "provide 4.5:1 contrast."
+    ),
+    "scaffold_bgcolor": "Customizes the page background color.",
+}
+
 COLOR_ROLE_EXPORT_ORDER = list(dict.fromkeys(COLOR_ROLE_BY_LABEL.values()))
 
 SEED_COLOR_OPTIONS = [
