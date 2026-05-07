@@ -38,10 +38,63 @@ def main(page: ft.Page):
         "tokens with real UI."
     )
     role_descriptions = {
+        "PRIMARY": "High-emphasis fills, texts, and icons against surface.",
+        "ON_PRIMARY": "Text and icons against primary.",
+        "PRIMARY_CONTAINER": (
+            "Standout fill color against surface, for key components like FAB."
+        ),
+        "ON_PRIMARY_CONTAINER": "Text and icons against primary container.",
+        "SECONDARY": "Less prominent fills, text, and icons against surface.",
+        "ON_SECONDARY": "Text and icons against secondary.",
+        "SECONDARY_CONTAINER": (
+            "Less prominent fill color against surface, for recessive "
+            "components like tonal buttons."
+        ),
+        "ON_SECONDARY_CONTAINER": "Text and icons against secondary container.",
+        "TERTIARY": "Complementary fills, text, and icons against surface.",
+        "ON_TERTIARY": "Text and icons against tertiary.",
+        "TERTIARY_CONTAINER": (
+            "Complementary container color against surface, for components "
+            "like input fields."
+        ),
+        "ON_TERTIARY_CONTAINER": "Text and icons against tertiary container.",
+        "ERROR": (
+            "Attention-grabbing color against surface for fills, icons, and "
+            "text, indicating urgency."
+        ),
+        "ON_ERROR": "Text and icons against error.",
+        "ERROR_CONTAINER": "Attention-grabbing fill color against surface.",
+        "ON_ERROR_CONTAINER": "Text and icons against error container.",
+        "SURFACE": "Default color for backgrounds.",
+        "ON_SURFACE": (
+            "Text and icons against any surface or surface container color."
+        ),
+        "ON_SURFACE_VARIANT": (
+            "Lower-emphasis color for text and icons against any surface "
+            "or surface container color."
+        ),
+        "SURFACE_CONTAINER_LOWEST": "Lowest-emphasis container color.",
+        "SURFACE_CONTAINER_LOW": "Low-emphasis container color.",
+        "SURFACE_CONTAINER": "Default container color.",
+        "SURFACE_CONTAINER_HIGH": "High-emphasis container color.",
+        "SURFACE_CONTAINER_HIGHEST": "Highest-emphasis container color.",
+        "INVERSE_SURFACE": (
+            "Background fills for elements which contrast against surface."
+        ),
+        "ON_INVERSE_SURFACE": "Text and icons against inverse surface.",
+        "INVERSE_PRIMARY": (
+            "Actionable elements, such as text buttons, against inverse surface."
+        ),
+        "OUTLINE": "Important boundaries, such as a text field outline.",
+        "OUTLINE_VARIANT": (
+            "Decorative elements, such as dividers, and when other elements "
+            "provide 4.5:1 contrast."
+        ),
         "SCAFFOLD_BGCOLOR": "Customizes the page background color.",
     }
     selected_color_heading = ft.Text("Color editor", weight=ft.FontWeight.W_600)
     selected_color_text = ft.Text("Choose a color role to edit.")
+    selected_color_status = ft.Text("", size=12, color=ft.Colors.ON_SURFACE_VARIANT)
     selected_role = {"label": None, "attr": None}
     selected_material_color = {"label": None, "value": None}
     selected_shade = {"label": None, "value": None}
@@ -148,16 +201,15 @@ def main(page: ft.Page):
     def update_selected_color_text():
         if selected_role["label"] is None:
             selected_color_text.value = "Choose a color role to edit."
+            selected_color_status.value = ""
             return
         description = role_descriptions.get(selected_role["label"])
         if description is not None:
-            selected_color_text.value = (
-                f"{description}\nChoose a material color for {selected_role['label']}."
-            )
+            selected_color_text.value = description
+            selected_color_status.value = ""
             return
-        selected_color_text.value = (
-            f"Choose a material color for {selected_role['label']}."
-        )
+        selected_color_text.value = ""
+        selected_color_status.value = ""
 
     def get_role_value(role_label: str) -> ft.ColorValue:
         role_attr = COLOR_ROLE_BY_LABEL[role_label]
@@ -304,7 +356,7 @@ def main(page: ft.Page):
             current_theme_color_overrides()[selected_role["attr"]] = color_value
             rebuild_theme()
             rebuild_left_pane_controls()
-            selected_color_text.value = (
+            selected_color_status.value = (
                 f"{selected_role['label']} color changed to {color_label}."
             )
             page.update()
@@ -322,7 +374,7 @@ def main(page: ft.Page):
             current_theme_color_overrides()[selected_role["attr"]] = shade_value
             rebuild_theme()
             rebuild_left_pane_controls()
-            selected_color_text.value = (
+            selected_color_status.value = (
                 f"{selected_role['label']} color changed to "
                 f"{selected_material_color['label']} {shade_label}."
             )
@@ -339,7 +391,7 @@ def main(page: ft.Page):
         rebuild_shade_controls()
         rebuild_theme()
         rebuild_left_pane_controls()
-        selected_color_text.value = (
+        selected_color_status.value = (
             f"{selected_role['label']} color changed to {e.data}."
         )
         page.update()
@@ -399,6 +451,7 @@ def main(page: ft.Page):
                         ],
                     ),
                     selected_color_text,
+                    selected_color_status,
                     material_color_row,
                     shade_row,
                     hex_color_picker,

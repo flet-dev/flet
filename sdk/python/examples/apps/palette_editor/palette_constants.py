@@ -230,6 +230,7 @@ LEFT_PANE_ROLE_TABS = [
             },
             {
                 "title": "Outline roles",
+                "hint": "Outline colors to be used against a surface.",
                 "items": [
                     ("OUTLINE", "OUTLINE", "SURFACE"),
                     ("OUTLINE_VARIANT", "OUTLINE_VARIANT", "ON_SURFACE"),
