@@ -1,11 +1,21 @@
 import asyncio
 import logging
+import sys
+import threading
 from dataclasses import dataclass, field
 from io import BytesIO
 from typing import Any, Optional
 
 import flet as ft
-import flet.canvas as fc
+from flet_charts.matplotlib_chart_canvas import (
+    MatplotlibChartCanvas,
+    MatplotlibChartCanvasResizeEvent,
+)
+
+# Pyodide / WASM has no real threads — `asyncio.to_thread` runs synchronously
+# on the same thread there, providing no benefit. Fall back to a same-loop
+# render path on those platforms.
+_HAS_THREADS = sys.platform != "emscripten"
 
 _MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
 
@@ -124,13 +134,21 @@ class MatplotlibChart(ft.GestureDetector):
         logger.debug(f"DPR: {self.__dpr}")
         self.__image_mode = "full"
 
-        self.canvas = fc.Canvas(
-            # resize_interval=10,
+        self.mpl_canvas = MatplotlibChartCanvas(
             on_resize=self._on_canvas_resize,
             expand=True,
         )
+        # Rubberband (zoom selection) overlay drawn on top of the chart image.
+        self._rubberband = ft.Container(
+            visible=False,
+            border=ft.Border.all(1, ft.Colors.with_opacity(0.6, ft.Colors.GREY)),
+        )
+        self._stack = ft.Stack(
+            controls=[self.mpl_canvas, self._rubberband],
+            expand=True,
+        )
         self.keyboard_listener = ft.KeyboardListener(
-            self.canvas,
+            self._stack,
             autofocus=True,
             on_key_down=self._on_key_down,
             on_key_up=self._on_key_up,
@@ -151,6 +169,12 @@ class MatplotlibChart(ft.GestureDetector):
         self._width = 0
         self._height = 0
         self._waiting = False
+        # Serializes worker-thread renders against main-thread matplotlib
+        # operations like `figure.savefig()` (download). matplotlib's
+        # print_figure temporarily nulls `canvas.manager` while saving, which
+        # would crash an in-flight `canvas.draw()` running in our render
+        # thread.
+        self._mpl_lock = threading.Lock()
 
     def _on_key_down(self, e: ft.KeyboardEvent) -> None:
         """
@@ -405,7 +429,8 @@ class MatplotlibChart(ft.GestureDetector):
         """
         logger.debug(f"Download in format: {format}")
         buff = BytesIO()
-        self.figure.savefig(buff, format=format, dpi=self.figure.dpi * self.__dpr)
+        with self._mpl_lock:
+            self.figure.savefig(buff, format=format, dpi=self.figure.dpi * self.__dpr)
         return buff.getvalue()
 
     async def _receive_loop(self):
@@ -419,23 +444,41 @@ class MatplotlibChart(ft.GestureDetector):
 
         while True:
             is_binary, content = await self._receive_queue.get()
-            if is_binary:
-                logger.debug(f"receive_binary({len(content)})")
-                if self.__image_mode == "full":
-                    await self.canvas.clear_capture()
 
-                self.canvas.shapes = [
-                    fc.Image(
-                        src=content,
-                        x=0,
-                        y=0,
-                        width=self.figure.bbox.size[0] / self.__dpr,
-                        height=self.figure.bbox.size[1] / self.__dpr,
-                    )
-                ]
-                ft.context.disable_auto_update()
-                self.canvas.update()
-                await self.canvas.capture()
+            # Coalesce stale items so interaction stays snappy:
+            # - Drop a binary frame if a newer one is queued behind it.
+            # - Drop a "draw" request if another is queued — the latest one
+            #   will trigger the render with the most up-to-date state.
+            # Without this, every pointer event during pan/zoom triggers its
+            # own render and the chart visibly "plays back" buffered motion
+            # after the user releases the mouse.
+            if is_binary:
+                if any(it[0] for it in self._receive_queue._queue):
+                    continue
+            elif (
+                isinstance(content, dict)
+                and content.get("type") == "draw"
+                and any(
+                    not it[0]
+                    and isinstance(it[1], dict)
+                    and it[1].get("type") == "draw"
+                    for it in self._receive_queue._queue
+                )
+            ):
+                continue
+
+            if is_binary:
+                assert isinstance(content, (bytes, bytearray))
+                logger.debug(f"receive_binary({len(content)})")
+                is_full = self.__image_mode == "full"
+                # Hand the frame to the client widget — full PNG replaces the
+                # backbuffer, diff PNG composites onto it. Awaiting naturally
+                # rate-limits this loop to the client's processing speed and
+                # yields the asyncio loop for incoming events.
+                if is_full:
+                    await self.mpl_canvas.apply_full(bytes(content))
+                else:
+                    await self.mpl_canvas.apply_diff(bytes(content))
                 self.img_count += 1
                 self._waiting = False
             else:
@@ -447,10 +490,23 @@ class MatplotlibChart(ft.GestureDetector):
                     self.update()
                 elif content["type"] == "draw" and not self._waiting:
                     self._waiting = True
-                    self.send_message({"type": "draw"})
+                    if _HAS_THREADS:
+                        # Native runtime: render in a worker thread so the
+                        # asyncio loop stays free for input events. handle_draw
+                        # ends up in Agg/PIL C code that releases the GIL, so
+                        # threading is effective. _waiting + the queue-dedupe
+                        # above ensure only one render is ever in flight.
+                        # The lock prevents overlap with main-thread savefig.
+                        asyncio.create_task(asyncio.to_thread(self._draw_locked))
+                    else:
+                        # Pyodide / WASM: no real threads available. Render
+                        # synchronously on the loop. Yield first so any
+                        # backed-up pointer events can update matplotlib state
+                        # before the (blocking) render runs.
+                        for _ in range(10):
+                            await asyncio.sleep(0)
+                        self.send_message({"type": "draw"})
                 elif content["type"] == "rubberband":
-                    if len(self.canvas.shapes) == 2:
-                        self.canvas.shapes.pop()
                     if (
                         content["x0"] != -1
                         and content["y0"] != -1
@@ -461,18 +517,14 @@ class MatplotlibChart(ft.GestureDetector):
                         y0 = self._height - content["y0"] / self.__dpr
                         x1 = content["x1"] / self.__dpr
                         y1 = self._height - content["y1"] / self.__dpr
-                        self.canvas.shapes.append(
-                            fc.Rect(
-                                x=x0,
-                                y=y0,
-                                width=x1 - x0,
-                                height=y1 - y0,
-                                paint=ft.Paint(
-                                    stroke_width=1, style=ft.PaintingStyle.STROKE
-                                ),
-                            )
-                        )
-                    self.canvas.update()
+                        self._rubberband.left = min(x0, x1)
+                        self._rubberband.top = min(y0, y1)
+                        self._rubberband.width = abs(x1 - x0)
+                        self._rubberband.height = abs(y1 - y0)
+                        self._rubberband.visible = True
+                    else:
+                        self._rubberband.visible = False
+                    self._rubberband.update()
                 elif content["type"] == "resize":
                     self.send_message({"type": "refresh"})
                 elif content["type"] == "message":
@@ -495,6 +547,16 @@ class MatplotlibChart(ft.GestureDetector):
         if manager is not None:
             manager.handle_json(message)
 
+    def _draw_locked(self):
+        """Worker-thread entry point for triggering a render.
+
+        Holds `_mpl_lock` for the duration of the synchronous draw so it
+        can't overlap with main-thread `figure.savefig()`, which temporarily
+        nulls `canvas.manager` and would crash an in-flight render.
+        """
+        with self._mpl_lock:
+            self.send_message({"type": "draw"})
+
     def send_json(self, content):
         """Sends a JSON message to the front end."""
         logger.debug(f"send_json: {content}")
@@ -508,7 +570,7 @@ class MatplotlibChart(ft.GestureDetector):
             lambda: self._receive_queue.put_nowait((True, blob))
         )
 
-    async def _on_canvas_resize(self, e: fc.CanvasResizeEvent):
+    async def _on_canvas_resize(self, e: MatplotlibChartCanvasResizeEvent):
         """
         Handle canvas resize and initialize backend session on first resize.
 
