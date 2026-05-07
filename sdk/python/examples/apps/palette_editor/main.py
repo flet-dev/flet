@@ -27,7 +27,7 @@ def main(page: ft.Page):
     page.title = "Palette Editor"
     page.bgcolor = ft.Colors.SURFACE
     page.padding = 14
-    page.theme_mode = ft.ThemeMode.SYSTEM
+    page.theme_mode = ft.ThemeMode.LIGHT
     # page.window.width = 420
     # page.window.height = 460
     left_pane_width = 250
@@ -112,9 +112,7 @@ def main(page: ft.Page):
                 preview_time_text=preview_time_text,
                 scaffold_bgcolor=scaffold_bgcolor,
                 selected_tab_index=selected_preview_tab_index["value"],
-                theme_mode=preview_theme_mode["value"],
                 on_tab_change=on_preview_tab_change,
-                on_toggle_theme=toggle_theme_mode,
                 open_preview_time_picker=open_preview_time_picker,
             ),
         )
@@ -270,6 +268,7 @@ def main(page: ft.Page):
             on_color_click=on_color_click,
             on_tab_change=on_left_tab_change,
             on_select_seed=select_seed_color,
+            on_toggle_theme=toggle_theme_mode,
             on_export=export_theme,
             on_import=open_import_dialog,
         )
@@ -650,6 +649,7 @@ def main(page: ft.Page):
             if preview_theme_mode["value"] == ft.ThemeMode.LIGHT
             else ft.ThemeMode.LIGHT
         )
+        page.theme_mode = preview_theme_mode["value"]
         rebuild_theme()
         if selected_role["attr"] is not None:
             set_selected_material_from_value(
