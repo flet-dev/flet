@@ -1,10 +1,6 @@
-from dataclasses import field
 from typing import Optional, Union
 
 from flet.controls.base_control import value
-from flet.controls.border_radius import (
-    BorderRadius,
-)
 from flet.controls.box import BoxConstraints, BoxDecoration
 from flet.controls.duration import DurationValue
 from flet.controls.margin import MarginValue
@@ -44,20 +40,40 @@ class TooltipTriggerMode:
 @value
 class Tooltip:
     """
-    Provide text labels which help explain the function of a button or other user \
-    interface action.
+    Provide text labels which help explain the function of a button
+    or other user interface action.
     """
 
     message: str
     """
-    The text to display in the tooltip.
+    The text to display in this tooltip.
     """
 
-    decoration: Optional[BoxDecoration] = field(
-        default_factory=lambda: BoxDecoration(border_radius=BorderRadius.all(4.0))
-    )
+    decoration: Optional[BoxDecoration] = None
     """
-    The tooltip's background decoration.
+    The background decoration of this tooltip.
+
+    If `None`, :attr:`flet.TooltipTheme.decoration` is used.
+    If that is also `None`, a default decoration will be picked based
+    on the current theme mode:
+
+    In light theme mode:
+
+    ```python
+    ft.BoxDecoration(
+        border_radius=ft.BorderRadius.all(4.0),
+        bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.GREY_700),
+    )
+    ```
+
+    In dark theme mode:
+
+    ```python
+    ft.BoxDecoration(
+        border_radius=ft.BorderRadius.all(4.0),
+        bgcolor=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
+    )
+    ```
     """
 
     enable_feedback: Optional[bool] = None
