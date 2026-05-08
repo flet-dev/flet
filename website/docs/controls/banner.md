@@ -1,8 +1,8 @@
 ---
 class_name: "flet.Banner"
-examples: "controls/banner"
-example_images: "test-images/examples/material/golden/macos/banner"
-example_media: "examples/controls/banner/media"
+examples: "controls/material/banner"
+example_images: "test-images/examples/controls/material/golden/macos/banner"
+example_media: "examples/controls/material/banner/media"
 title: "Banner"
 ---
 
@@ -18,6 +18,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="50%" />
+<Image src={frontMatter.example_images + '/banner_flow.gif'} alt="basic" width="50%" />
 
 <ClassMembers name={frontMatter.class_name} />

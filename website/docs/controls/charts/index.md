@@ -1,5 +1,5 @@
 ---
-examples: "controls/charts"
+examples: "extensions/charts"
 title: "Overview"
 ---
 

@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  record: 6.1.2
+  http: ^1.2.2
+  record: ^6.2.0
 
   flet:
     path: ../../../../../../../packages/flet

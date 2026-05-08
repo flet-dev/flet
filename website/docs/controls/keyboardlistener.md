@@ -1,6 +1,6 @@
 ---
 class_name: "flet.KeyboardListener"
-examples: "controls/keyboard_listener"
+examples: "controls/core/keyboard_listener"
 title: "KeyboardListener"
 ---
 

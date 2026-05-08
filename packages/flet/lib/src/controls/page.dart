@@ -24,6 +24,7 @@ import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
+import '../utils/animations.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
@@ -258,6 +259,39 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           final image = await boundary.toImage(pixelRatio: pixelRatio);
           final data = await image.toByteData(format: ui.ImageByteFormat.png);
           return data?.buffer.asUint8List();
+        }
+
+      case "take_animation":
+        {
+          final frameDelaysMs =
+              List<int>.from(args["frame_delays_ms"] ?? const []);
+          final frames = <Uint8List>[];
+          // In integration tests the scheduler doesn't advance animations on
+          // its own during Future.delayed — WidgetTester.pump is what drives
+          // the clock. Use it when available so in-flight animations progress
+          // between captures; fall back to Future.delayed outside test mode.
+          final tester = FletBackend.of(context).tester;
+          for (final delayMs in frameDelaysMs) {
+            final delay = Duration(milliseconds: delayMs);
+            if (tester != null) {
+              await tester.pump(duration: delay);
+            } else {
+              await Future.delayed(delay);
+            }
+            final ctx = _rootKey.currentContext;
+            if (ctx == null || !ctx.mounted) return frames;
+            final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
+            if (boundary == null) return frames;
+            final pixelRatio = parseDouble(
+                args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
+            final image = await boundary.toImage(pixelRatio: pixelRatio);
+            final data =
+                await image.toByteData(format: ui.ImageByteFormat.png);
+            image.dispose();
+            if (data == null) return frames;
+            frames.add(data.buffer.asUint8List());
+          }
+          return frames;
         }
 
       case "push_route":
@@ -500,6 +534,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var themeMode = control.getThemeMode("theme_mode") ??
         PageContext.of(context)?.themeMode;
 
+    var themeAnimationStyle =
+        control.getAnimationStyle("theme_animation_style");
+
     var localeConfiguration =
         control.getLocaleConfiguration("locale_configuration");
 
@@ -588,6 +625,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -603,6 +641,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,

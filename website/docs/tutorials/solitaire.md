@@ -522,7 +522,7 @@ When the card is being placed to a slot in the `card.place()` method, we need to
 def place(self, slot):
     self.top = slot.top
     self.left = slot.left
-    
+
     # remove card from it's original slot, if exists
     if self.slot is not None:
         self.slot.pile.remove(self)
@@ -715,7 +715,7 @@ All the [images](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/
 for the face up cards, as well as card back are stored in the “assets/images” folder in the same directory as main.py.
 
 :::note
-You could specify the assets folder, see [Assets](../cookbook/assets.md) guide for more information and examples. 
+You could specify the assets folder, see [Assets](../cookbook/assets.md) guide for more information and examples.
 :::
 Finally, in `solitaire.create_card_deck()` we'll create lists of suites and ranks and then the 52-card deck:
 ```python
@@ -913,7 +913,7 @@ Finally, reveal the topmost cards at the end of `solitaire.deal_cards()`:
 def deal_cards(self):
     ...
     self.update()
-    
+
     for slot in self.tableau:
         slot.get_top_card().turn_face_up()
 
@@ -985,7 +985,7 @@ class Card(ft.GestureDetector):
         ...
 
     ...
-    
+
     def click(self, e):
         if self.slot in self.solitaire.tableau:
             if not self.face_up and self == self.slot.get_top_card():

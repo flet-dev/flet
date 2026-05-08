@@ -30,6 +30,16 @@ class DateRangePicker(DialogControl):
 
     Depending on the :attr:`entry_mode`, it will show either a Calendar
     or an Input (text field) for picking a date range.
+
+    ```python
+    picker = ft.DateRangePicker()
+
+    ft.Button(
+        "Pick date range",
+        icon=ft.Icons.DATE_RANGE,
+        on_click=lambda _: page.show_dialog(picker),
+    )
+    ```
     """
 
     start_value: Optional[DateTimeValue] = None

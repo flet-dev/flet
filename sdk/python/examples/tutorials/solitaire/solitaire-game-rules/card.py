@@ -26,7 +26,7 @@ class Card(ft.GestureDetector):
         self.content = ft.Container(
             width=CARD_WIDTH,
             height=CARD_HEIGHT,
-            border_radius=ft.border_radius.all(6),
+            border_radius=ft.BorderRadius.all(6),
             content=ft.Image(src="/images/card_back.png"),
         )
         self.draggable_pile = [self]
@@ -84,7 +84,10 @@ class Card(ft.GestureDetector):
         self.solitaire.update()
 
     def get_draggable_pile(self):
-        """returns list of cards that will be dragged together, starting with the current card"""
+        """
+        Returns a list of cards that will be dragged together,
+        starting with the current card.
+        """
 
         if (
             self.slot is not None
@@ -92,7 +95,9 @@ class Card(ft.GestureDetector):
             and self.slot != self.solitaire.waste
         ):
             self.draggable_pile = self.slot.pile[self.slot.pile.index(self) :]
-        else:  # slot == None when the cards are dealt and need to be place in slot for the first time
+        else:
+            # slot == None when the cards are dealt and
+            # need to be place in slot for the first time
             self.draggable_pile = [self]
 
     def start_drag(self, e: ft.DragStartEvent):

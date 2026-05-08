@@ -2,7 +2,85 @@
 
 # Based on: https://pypi.org/project/toml-to-requirements/
 
+import re
 from typing import Any, Optional
+
+from packaging.requirements import Requirement
+
+
+def _windows_safe(req_str: str) -> str:
+    """Insert a space before bare `<` or `>` so Windows cmd.exe does not
+    interpret them as shell redirection when the string is passed via `-r`
+    to a `.BAT` subprocess."""
+    return re.sub(r"(?<=[^ ])([<>])", r" \1", req_str)
+
+
+def _poetry_version_to_pep440(version: str) -> str:
+    """Convert a Poetry version constraint to PEP 440 syntax.
+
+    - `^1.2.3` → `>=1.2.3`
+    - `~1.2.3` → `~=1.2.3`  (`~=` passes through unchanged)
+    - `*`      → `""` (no constraint)
+    - `1.2.3` (bare version) → `==1.2.3`
+    - Anything else is returned as-is (already PEP 440).
+    """
+    version = version.replace(" ", "")
+    if not version or version == "*":
+        return ""
+    if version.startswith("^"):
+        return f">={version[1:]}"
+    if version.startswith("~") and not version.startswith("~="):
+        return f"~={version[1:]}"
+    # Bare version number → pin with ==
+    if version[0].isdigit():
+        return f"=={version}"
+    return version
+
+
+def _poetry_dep_to_pep508(name: str, value: Any) -> str:
+    """Convert a single Poetry dependency entry to a PEP 508 requirement string."""
+    suffix = ""
+
+    if isinstance(value, dict):
+        version = value.get("version")
+        if version:
+            specifier = _poetry_version_to_pep440(version)
+            markers = value.get("markers")
+            if markers is not None:
+                suffix = f"; {markers}"
+            if specifier:
+                return f"{name}{specifier}{suffix}"
+            return f"{name}{suffix}"
+
+        git_url = value.get("git")
+        if git_url:
+            url = f"git+{git_url}" if not git_url.startswith("git@") else git_url
+            rev = value.get("branch") or value.get("rev") or value.get("tag")
+            if rev:
+                url = f"{url}@{rev}"
+            subdirectory = value.get("subdirectory")
+            if subdirectory:
+                url = f"{url}#subdirectory={subdirectory}"
+            markers = value.get("markers")
+            if markers is not None:
+                suffix = f"; {markers}"
+            return f"{name} @ {url}{suffix}"
+
+        path = value.get("path")
+        if path:
+            return path
+
+        url = value.get("url")
+        if url:
+            return url
+
+        raise ValueError(f"Unsupported dependency specification: {name} = {value}")
+
+    # String value
+    specifier = _poetry_version_to_pep440(value)
+    if specifier:
+        return f"{name}{specifier}"
+    return name
 
 
 def get_poetry_dependencies(
@@ -17,103 +95,20 @@ def get_poetry_dependencies(
     Returns:
         Sorted requirement strings or `None` when `poetry_dependencies` is `None`.
     """
-
     if poetry_dependencies is None:
         return None
 
-    def format_dependency_version(dependency_name: str, dependency_value: Any):
-        """
-        Format a single Poetry dependency entry as a requirement specifier.
-
-        Supports version constraints, git dependencies (including branch/rev/tag
-        and subdirectory), path/url dependencies, and optional environment markers.
-
-        Args:
-            dependency_name: Dependency key in Poetry configuration.
-            dependency_value: String or mapping that describes the dependency.
-
-        Returns:
-            A requirement string consumable by pip-style tooling.
-
-        Raises:
-            ValueError: If the dependency mapping uses an unsupported shape.
-        """
-
-        sep = "@"
-        value = ""
-        suffix = ""
-
-        if isinstance(dependency_value, dict):
-            version = dependency_value.get("version")
-            if version:
-                sep = "=="
-                value = version
-            else:
-                git_url = dependency_value.get("git")
-                if git_url:
-                    value = (
-                        f"git+{git_url}" if not git_url.startswith("git@") else git_url
-                    )
-                    rev = (
-                        dependency_value.get("branch")
-                        or dependency_value.get("rev")
-                        or dependency_value.get("tag")
-                    )
-                    if rev:
-                        value = f"{value}@{rev}"
-                    subdirectory = dependency_value.get("subdirectory")
-                    if subdirectory:
-                        value = f"{value}#subdirectory={subdirectory}"
-                else:
-                    path = dependency_value.get("path")
-                    if path:
-                        value = path
-                        dependency_name = ""
-                        sep = ""
-                    else:
-                        url = dependency_value.get("url")
-                        if url:
-                            value = url
-                            dependency_name = ""
-                            sep = ""
-                        else:
-                            raise ValueError(
-                                "Unsupported dependency specification: "
-                                f"{dependency_name} = {dependency_value}"
-                            )
-
-            # markers - common for all
-            markers = dependency_value.get("markers")
-            if markers is not None:
-                suffix = f";{markers}"
-        else:
-            value = dependency_value
-            sep = "=="
-
-        if value.startswith("^"):
-            sep = ">="
-            value = value[1:]
-        elif value.startswith("~"):
-            sep = "~="
-            value = value[1:]
-            return f"{dependency_name}~={value[1:]}"
-        elif "<" in value or ">" in value:
-            sep = ""
-            value = value.replace(" ", "")
-
-        return f"{dependency_name}{sep}{value}{suffix}"
-
     dependencies: set[str] = {
-        format_dependency_version(dependency, version)
-        for dependency, version in poetry_dependencies.items()
-        if dependency != "python"
+        _windows_safe(_poetry_dep_to_pep508(dep, ver))
+        for dep, ver in poetry_dependencies.items()
+        if dep != "python"
     }
 
     return sorted(dependencies)
 
 
 def get_project_dependencies(
-    project_dependencies: Optional[dict[str, Any]] = None,
+    project_dependencies: Optional[list[str]] = None,
 ) -> Optional[list[str]]:
     """
     Normalize PEP 621 `project.dependencies` into a sorted unique list.
@@ -124,10 +119,15 @@ def get_project_dependencies(
     Returns:
         Sorted dependency strings, or `None` when input is `None`.
     """
-
     if project_dependencies is None:
         return None
 
-    dependencies = set(project_dependencies)
+    dependencies: set[str] = set()
+    for dep in project_dependencies:
+        try:
+            req = Requirement(dep)
+            dependencies.add(_windows_safe(str(req)))
+        except Exception:
+            dependencies.add(_windows_safe(dep))
 
     return sorted(dependencies)

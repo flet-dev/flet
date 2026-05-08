@@ -385,18 +385,14 @@ TabBarThemeData? parseTabBarTheme(Map<dynamic, dynamic>? value, ThemeData theme,
 
 VisualDensity? parseVisualDensity(String? density,
     [VisualDensity? defaultValue]) {
-  switch (density?.toLowerCase()) {
-    case "adaptiveplatformdensity":
-      return VisualDensity.adaptivePlatformDensity;
-    case "comfortable":
-      return VisualDensity.comfortable;
-    case "compact":
-      return VisualDensity.compact;
-    case "standard":
-      return VisualDensity.standard;
-    default:
-      return defaultValue;
-  }
+  final visualDensityMap = <String, VisualDensity>{
+    "adaptiveplatformdensity": VisualDensity.adaptivePlatformDensity,
+    "comfortable": VisualDensity.comfortable,
+    "compact": VisualDensity.compact,
+    "standard": VisualDensity.standard,
+  };
+
+  return visualDensityMap[density?.toLowerCase()] ?? defaultValue;
 }
 
 PageTransitionsTheme? parsePageTransitions(Map<dynamic, dynamic>? value,
@@ -1042,6 +1038,8 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     tileHeight: parseDouble(value["tile_height"]),
     labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
     indicatorShape: parseShape(value["indicator_shape"], theme),
+    iconTheme: getWidgetStateProperty<IconThemeData?>(
+        value["icon_theme"], (jv) => parseIconTheme(jv, theme)),
   );
 }
 

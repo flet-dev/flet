@@ -7,23 +7,68 @@ You may need to enable detailed logging to troubleshoot Flet library or when sub
 
 ## Python
 
-Flet Python modules expose named loggers: `flet_core` and `flet`.
+Flet Python uses the following named loggers:
 
-To enable detailed/verbose Flet logging in your program add this code before calling `ft.run()`:
+- `flet` - general framework and transport logging.
+- `flet_object_patch` - detailed control tree diff/patch logging.
+- `flet_components` - declarative component lifecycle logging.
+
+For normal use, configure logging before calling `ft.run()`:
 
 ```python
 import logging
+
+logging.basicConfig(level=logging.INFO)
+```
+
+This gives you the usual `flet` logs without too much noise.
+
+To see more detail from the main `flet` logger, either raise the root logging level:
+
+```python
+import logging
+
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-This will enable loggers across all Flet modules (`flet_core` and `flet`).
-
-To reduce verbosity you may suppress logging messages from `flet_core` module, but adding:
+or set the `flet` logger explicitly:
 
 ```python
-logging.getLogger("flet_core").setLevel(logging.INFO)
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("flet").setLevel(logging.DEBUG)
 ```
 
-Debug logging is usually needed for troubleshooting purposes, when submitting a new Flet issue.
+`flet_object_patch` and `flet_components` set their own level to `INFO`, so
+they do not inherit the root `DEBUG` level unless you enable them explicitly.
 
-In the most cases you should be fine with `INFO` logging level.
+To enable the most verbose diagnostics, set the corresponding loggers to `DEBUG`:
+
+```python
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("flet_object_patch").setLevel(logging.DEBUG)
+logging.getLogger("flet_components").setLevel(logging.DEBUG)
+```
+
+Use this level mostly for troubleshooting and issue reports.
+
+## Built-in Web Server
+
+When running a web app, Flet starts its built-in web transport on top of
+FastAPI and Uvicorn.
+
+The effective level of the `flet` Python logger is passed to the built-in web
+server, so configure `flet` logging before starting the app:
+
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("flet").setLevel(logging.DEBUG)
+```
+
+If you host a Flet ASGI app with your own server process, such as `uvicorn` or
+`gunicorn`, configure that server's logging separately using its own options.

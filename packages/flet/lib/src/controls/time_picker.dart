@@ -30,7 +30,7 @@ class TimePickerControl extends StatelessWidget {
 
     void onClosed(TimeOfDay? timeValue) {
       control.updateProperties({"_open": false}, python: false);
-      control.updateProperties({"value": timeValue, "open": false});
+      control.updateProperties({"value": timeValue ?? value, "open": false});
       if (timeValue != null) {
         control.triggerEvent("change", timeValue);
       }
@@ -76,13 +76,19 @@ class TimePickerControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? dialogRoute;
         showDialog<TimeOfDay>(
             barrierColor: control.getColor("barrier_color", context),
             barrierDismissible: !control.getBool("modal", false)!,
             useRootNavigator: false,
             context: context,
-            builder: (context) => createSelectTimeDialog()).then((result) {
-          onClosed(result);
+            builder: (context) {
+              dialogRoute ??= ModalRoute.of(context);
+              return createSelectTimeDialog();
+            }).then((result) {
+          (dialogRoute?.completed ?? Future.value()).then((_) {
+            onClosed(result);
+          });
         });
       });
     }

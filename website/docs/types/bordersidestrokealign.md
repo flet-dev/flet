@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BorderSideStrokeAlign"
-examples: "controls/types/border_side_stroke_align"
+examples: "controls/core/types/border_side_stroke_align"
 title: "BorderSideStrokeAlign"
 ---
 

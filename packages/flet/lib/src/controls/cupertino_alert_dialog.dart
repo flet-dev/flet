@@ -75,6 +75,7 @@ class CupertinoAlertDialogControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? dialogRoute;
         showDialog(
             barrierDismissible: !modal,
             // Render the barrier in the dialog widget so it updates live.
@@ -82,11 +83,16 @@ class CupertinoAlertDialogControl extends StatelessWidget {
             useSafeArea: false,
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createCupertinoAlertDialog()).then((value) {
-          debugPrint("Dismissing CupertinoAlertDialog(${control.id})");
-          control.updateProperties({"_open": false}, python: false);
-          control.updateProperties({"open": false});
-          control.triggerEvent("dismiss");
+            builder: (context) {
+              dialogRoute ??= ModalRoute.of(context);
+              return _createCupertinoAlertDialog();
+            }).then((value) {
+          (dialogRoute?.completed ?? Future.value()).then((_) {
+            debugPrint("Dismissing CupertinoAlertDialog(${control.id})");
+            control.updateProperties({"_open": false}, python: false);
+            control.updateProperties({"open": false});
+            control.triggerEvent("dismiss");
+          });
         });
       });
     } else if (!open && lastOpen) {

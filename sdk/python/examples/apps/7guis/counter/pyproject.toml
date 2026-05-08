@@ -1,0 +1,26 @@
+[project]
+name = "apps-7guis-counter"
+version = "1.0.0"
+description = "7GUIs counter app with a read-only value and one increment action."
+requires-python = ">=3.10"
+keywords = ["apps", "7guis", "counter", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Apps/7GUIs", "Apps/Basic"]
+
+[tool.flet.metadata]
+title = "Counter"
+controls = ["SafeArea", "Container", "Column", "Row", "Text", "TextField", "FilledButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["counter updates", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

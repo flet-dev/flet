@@ -1,6 +1,6 @@
 ---
 class_name: "flet.NavigationBarLabelBehavior"
-examples: "controls/types/navigation_bar_label_behavior"
+examples: "controls/core/types/navigation_bar_label_behavior"
 title: "NavigationBarLabelBehavior"
 ---
 

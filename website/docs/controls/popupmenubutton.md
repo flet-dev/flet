@@ -1,8 +1,8 @@
 ---
 class_name: "flet.PopupMenuButton"
-examples: "controls/popup_menu_button"
-example_media: "examples/controls/popup_menu_button/media"
-example_images: "test-images/examples/material/golden/macos/popup_menu_button"
+examples: "controls/material/popup_menu_button"
+example_media: "examples/controls/material/popup_menu_button/media"
+example_images: "test-images/examples/controls/material/golden/macos/popup_menu_button"
 popup_menu_item_class_name: "flet.PopupMenuItem"
 title: "PopupMenuButton"
 ---
@@ -19,7 +19,7 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="35%" />
+<Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="35%" />
 
 <ClassMembers name={frontMatter.class_name} />
 

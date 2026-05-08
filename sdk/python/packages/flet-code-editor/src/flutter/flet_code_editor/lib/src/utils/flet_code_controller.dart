@@ -10,6 +10,16 @@ class FletCodeController extends fce.CodeController {
   bool autocompletionEnabled = false;
 
   @override
+  Future<void> analyzeCode() async {
+    // Analysis is handled by the Python side via the issues property.
+  }
+
+  void setIssues(fce.AnalysisResult result) {
+    analysisResult = result;
+    notifyListeners();
+  }
+
+  @override
   Future<void> generateSuggestions() async {
     if (!autocompletionEnabled) {
       popupController.hide();

@@ -1,0 +1,26 @@
+[project]
+name = "router-featured-views"
+version = "1.0.0"
+description = "Full app with managed views: Home, Projects (list/details), Settings (tabs) with shared layouts and back navigation."
+requires-python = ">=3.10"
+keywords = ["router", "views", "manage_views", "outlet", "layout", "navigation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Featured views"
+controls = ["View", "AppBar", "Column", "Row", "Container", "Button", "Switch", "TextField", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["manage_views", "outlet", "nested routes", "view stack", "back navigation", "tabs", "is_route_active"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

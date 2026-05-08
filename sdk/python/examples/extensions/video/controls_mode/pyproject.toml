@@ -1,0 +1,26 @@
+[project]
+name = "video-controls-mode"
+version = "1.0.0"
+description = "Show different video controls in normal and fullscreen modes."
+requires-python = ">=3.10"
+keywords = ["video", "controls", "media", "fullscreen"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Mode-specific controls"
+controls = ["SafeArea", "Container", "Text", "Video"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["controls", "mode-specific controls", "fullscreen controls"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

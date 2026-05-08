@@ -1,6 +1,6 @@
 ---
 class_name: "flet_video.Video"
-examples: "controls/video"
+examples: "extensions/video"
 title: "Video"
 ---
 
@@ -97,9 +97,67 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
 
 ## Examples
 
-### Basic example
+### Basic
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+
+### Playback
+
+Drive playback programmatically with methods like
+[`play()`][flet_video.Video.play], [`pause()`][flet_video.Video.pause], [`stop()`][flet_video.Video.stop], [`seek()`][flet_video.Video.seek], [`next()`][flet_video.Video.next], and [`previous()`][flet_video.Video.previous],
+and inspect status with methods like [`is_playing()`][flet_video.Video.is_playing], [`get_current_position()`][flet_video.Video.get_current_position], and [`get_duration()`][flet_video.Video.get_duration].
+
+<CodeExample path={frontMatter.examples + '/playback/main.py'} language="python" />
+
+### Screenshot
+
+Shows how to capture the current video frame with
+[`take_screenshot()`][flet_video.Video.take_screenshot] and display it as an image.
+
+<CodeExample path={frontMatter.examples + '/screenshot/main.py'} language="python" />
+
+### Playlist
+
+Mutate [`playlist`][flet_video.Video.playlist] directly to add,
+remove, or replace items, and navigate between tracks.
+
+<CodeExample path={frontMatter.examples + '/playlist/main.py'} language="python" />
+
+### Events
+
+Listen for player [events](#flet_video.Video-events) like
+[`on_load`][flet_video.Video.on_load], [`on_complete`][flet_video.Video.on_complete], [`on_track_change`][flet_video.Video.on_track_change], etc.
+
+<CodeExample path={frontMatter.examples + '/events/main.py'} language="python" />
+
+### Subtitles
+
+Attach a [`VideoSubtitleTrack`][flet_video.VideoSubtitleTrack] (here, raw VTT text)
+and customize its appearance with [`VideoSubtitleConfiguration`][flet_video.VideoSubtitleConfiguration].
+
+<CodeExample path={frontMatter.examples + '/subtitles/main.py'} language="python" />
+
+### Controls
+
+Switch between [`AdaptiveVideoControls`][flet_video.AdaptiveVideoControls], [`MaterialVideoControls`][flet_video.MaterialVideoControls], [`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls], custom, and hidden control sets at runtime.
+
+<CodeExample path={frontMatter.examples + '/controls/main.py'} language="python" />
+
+### Mode-specific Controls
+
+Show different controls in normal vs. fullscreen mode by mapping each
+[`VideoControlsMode`][flet_video.VideoControlsMode] to its own [`controls`][flet_video.Video.controls] value.
+
+<CodeExample path={frontMatter.examples + '/controls_mode/main.py'} language="python" />
+
+### Button Bars
+
+Customize the [`primary_button_bar`][flet_video.MaterialDesktopVideoControls.primary_button_bar],
+[`top_button_bar`][flet_video.MaterialDesktopVideoControls.top_button_bar], and
+[`bottom_button_bar`][flet_video.MaterialDesktopVideoControls.bottom_button_bar] of
+[`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls] with built-in and custom items.
+
+<CodeExample path={frontMatter.examples + '/button_bars/main.py'} language="python" />
 
 ## Description
 

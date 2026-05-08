@@ -46,9 +46,13 @@ function HeadingLink({level: Tag, id, children}) {
   );
 }
 
-/** Renders a small badge label (e.g. "classmethod", "deprecated") next to a member heading. */
-function Badge({children}) {
-  return <span className="crocodocs-member-badge">{children}</span>;
+/** Renders a small metadata badge label (e.g. "classmethod", "deprecated"). */
+function Badge({children, title}) {
+  return (
+    <span className="crocodocs-member-badge" title={title}>
+      {children}
+    </span>
+  );
 }
 
 /**
@@ -250,7 +254,8 @@ function renderMemberHeading(item, classSymbol, kind) {
  * including its type signature box and docstring.
  */
 function renderAttribute(item, classSymbol, docId) {
-  const signatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const fallbackSignatureText = `${item.name}: ${item.type}${item.default != null ? ` = ${item.default}` : ""}`;
+  const signatureText = item.formatted_signature ?? fallbackSignatureText;
   const kind = item.name.startsWith("on_") ? "event" : "property";
   return (
     <div key={item.name}>
@@ -271,7 +276,12 @@ function renderAttribute(item, classSymbol, docId) {
  * including its signature box (with `self` stripped) and docstring.
  */
 function renderMethod(item, classSymbol, docId) {
-  const signatureText = stripImplicitSelf(item.signature ?? item.name);
+  const fallbackSignatureText = stripImplicitSelf(item.signature ?? item.name);
+  const typedSignatureText =
+    item.return_type && !fallbackSignatureText.includes("->")
+      ? `${fallbackSignatureText} -> ${item.return_type}`
+      : fallbackSignatureText;
+  const signatureText = item.formatted_signature ?? typedSignatureText;
   return (
     <div key={item.name}>
       {renderMemberHeading(item, classSymbol, "method")}
@@ -282,6 +292,29 @@ function renderMethod(item, classSymbol, docId) {
         renderDocstring(item.docstring, {classSymbol, docId})}
     </div>
   );
+}
+
+/**
+ * Build the compact member data used by ClassSummary lists.
+ * Carries labels so summary rows can show important badges without requiring
+ * readers to scroll to the full member documentation.
+ */
+function memberSummary(item, kind) {
+  return {
+    name: item.name,
+    kind,
+    labels: item.labels ?? [],
+    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
+  };
+}
+
+/**
+ * Return labels that should be visible in compact summary rows.
+ * Keep this intentionally narrower than full member headings to avoid duplicating
+ * section context such as "property" or "method".
+ */
+function summaryLabels(item) {
+  return (item.labels ?? []).filter((label) => label === "deprecated");
 }
 
 /**
@@ -297,19 +330,32 @@ function SummarySection({title, items, classSymbol}) {
     <section>
       <Heading as="h4">{title}</Heading>
       <ul>
-        {items.map((item) => (
-          <li key={item.name}>
-            <a href={`#${memberAnchor(classSymbol, item.name)}`}>
-              <code>{item.name}</code>
-            </a>
-            {item.summary ? (
-              <>
-                {" "}{"-"}{" "}
-                {renderInlineMarkdown(item.summary, {classSymbol})}
-              </>
-            ) : null}
-          </li>
-        ))}
+        {items.map((item) => {
+          const labels = summaryLabels(item);
+          return (
+            <li key={item.name}>
+              <a href={`#${memberAnchor(classSymbol, item.name)}`}>
+                <code>{item.name}</code>
+              </a>
+              {labels.length ? (
+                <>
+                  {" "}
+                  <span className="crocodocs-member-badges crocodocs-summary-badges">
+                    {labels.map((label) => (
+                      <Badge key={label}>{label}</Badge>
+                    ))}
+                  </span>
+                </>
+              ) : null}
+              {item.summary ? (
+                <>
+                  {" "}{"-"}{" "}
+                  {renderInlineMarkdown(item.summary, {classSymbol})}
+                </>
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
@@ -385,21 +431,9 @@ export default function ClassBlock({
   const properties = entry.properties ?? [];
   const events = entry.events ?? [];
   const methods = entry.methods ?? [];
-  const propertySummaries = properties.map((item) => ({
-    name: item.name,
-    kind: "property",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
-  const eventSummaries = events.map((item) => ({
-    name: item.name,
-    kind: "event",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
-  const methodSummaries = methods.map((item) => ({
-    name: item.name,
-    kind: "method",
-    summary: firstSentenceFromDocstring(item.docstring, item.docstring_sections),
-  }));
+  const propertySummaries = properties.map((item) => memberSummary(item, "property"));
+  const eventSummaries = events.map((item) => memberSummary(item, "event"));
+  const methodSummaries = methods.map((item) => memberSummary(item, "method"));
 
   const propertiesWithSectionId = properties.map((item) => ({
     ...item,

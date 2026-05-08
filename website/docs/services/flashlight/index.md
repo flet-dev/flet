@@ -1,6 +1,6 @@
 ---
 class_name: "flet_flashlight.Flashlight"
-examples: "services/flashlight"
+examples: "extensions/flashlight"
 title: "Flashlight"
 ---
 

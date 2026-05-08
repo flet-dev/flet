@@ -1,7 +1,7 @@
 ---
 class_name: "flet.DataTable"
-examples: "controls/data_table"
-example_images: "test-images/examples/material/golden/macos/datatable"
+examples: "controls/material/data_table"
+example_images: "test-images/examples/controls/material/golden/macos/datatable"
 title: "DataTable"
 ---
 
@@ -29,6 +29,8 @@ Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacin
 
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
+<Image src={frontMatter.example_images + '/spacing_flow.gif'} width="55%" />
+
 ### Adaptive row heights
 
 Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')`
@@ -36,6 +38,8 @@ Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to 
 respective content, instead of all rows having the same height.
 
 <CodeExample path={frontMatter.examples + '/adaptive_row_heights/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/adaptive_row_heights.png'} width="55%" />
 
 ### Sortable columns and selectable rows
 
@@ -49,5 +53,7 @@ sortable string and numeric columns, and stable selection across sorts and refre
 ### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/handling_events_flow.gif'} width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

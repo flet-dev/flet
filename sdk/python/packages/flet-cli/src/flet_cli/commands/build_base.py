@@ -2272,7 +2272,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash: HashStamp,
     ):
         """
-        Find first matching image file by base name and queue it for copy.
+        Find the best matching image file for the current target platform.
+
+        When multiple files share the same base name (e.g. `icon.icns`,
+        `icon.ico`, `icon.png`), the method filters out formats that are
+        incompatible with the build target before selecting the first match.
+        For example, `.icns` is skipped on Windows builds because
+        `flutter_launcher_icons` cannot decode it.
 
         Args:
             src_path: Source assets directory.
@@ -2285,17 +2291,30 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
-        if len(images) > 0:
-            if self.verbose > 0:
-                console.log(
-                    f'Found "{image_name}" image at {images[0]}', style=verbose1_style
-                )
-            copy_ops.append((images[0], dest_path))
-            hash.update(images[0])
-            hash.update(Path(images[0]).stat().st_mtime)
-            return Path(images[0]).name
-        return None
+        # .icns is macOS-only and .ico is Windows-only; filter out
+        # incompatible formats so flutter_launcher_icons gets a decodable file.
+        images = list(
+            filter(
+                lambda p: not (
+                    (ext := Path(p).suffix.lower()) == ".icns"
+                    and self.target_platform != "macos"
+                    or ext == ".ico"
+                    and self.target_platform != "windows"
+                ),
+                glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
+            )
+        )
+
+        if not images:
+            return None
+
+        best = images[0]
+        if self.verbose > 0:
+            console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
+        copy_ops.append((best, dest_path))
+        hash.update(best)
+        hash.update(Path(best).stat().st_mtime)
+        return Path(best).name
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
         """

@@ -1,0 +1,26 @@
+[project]
+name = "responsive-row-scrollable"
+version = "1.0.0"
+description = "Keeps header content fixed while a tall ResponsiveRow of cards scrolls vertically."
+requires-python = ">=3.10"
+keywords = ["responsive row", "scroll", "layout", "cards", "adaptive columns"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ResponsiveRow"]
+
+[tool.flet.metadata]
+title = "Scrollable"
+controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "Text"]
+layout_pattern = "responsive-grid"
+complexity = "basic"
+features = ["scrollable content", "responsive columns", "fixed header"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -64,14 +64,20 @@ class CupertinoBottomSheetControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ModalRoute? popupRoute;
         showCupertinoModalPopup(
             barrierDismissible: !control.getBool("modal", false)!,
             useRootNavigator: false,
             context: context,
-            builder: (context) => dialog).then((value) {
-          control.updateProperties({"_open": false}, python: false);
-          control.updateProperties({"open": false});
-          control.triggerEvent("dismiss");
+            builder: (context) {
+              popupRoute ??= ModalRoute.of(context);
+              return dialog;
+            }).then((value) {
+          (popupRoute?.completed ?? Future.value()).then((_) {
+            control.updateProperties({"_open": false}, python: false);
+            control.updateProperties({"open": false});
+            control.triggerEvent("dismiss");
+          });
         });
       });
     } else if (open != lastOpen && lastOpen && Navigator.of(context).canPop()) {

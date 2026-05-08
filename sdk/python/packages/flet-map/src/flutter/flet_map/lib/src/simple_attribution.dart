@@ -12,12 +12,15 @@ class SimpleAttributionControl extends StatelessWidget {
     debugPrint("SimpleAttributionControl build: ${control.id}");
     var text = control.buildTextOrWidget("text");
 
-    return SimpleAttributionWidget(
-      source: text is Text ? text : const Text("Placeholder Text"),
-      onTap: () => control.triggerEvent("click"),
-      backgroundColor: control.getColor(
-          "bgcolor", context, Theme.of(context).colorScheme.surface)!,
-      alignment: control.getAlignment("alignment", Alignment.bottomRight)!,
+    return BaseControl(
+      control: control,
+      child: SimpleAttributionWidget(
+        source: text is Text ? text : const Text("Placeholder Text"),
+        onTap: () => control.triggerEvent("click"),
+        backgroundColor: control.getColor(
+            "bgcolor", context, Theme.of(context).colorScheme.surface)!,
+        alignment: control.getAlignment("alignment", Alignment.bottomRight)!,
+      ),
     );
   }
 }

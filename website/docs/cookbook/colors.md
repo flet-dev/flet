@@ -166,7 +166,7 @@ def main(page: ft.Page):
         ft.Container(
             width=200,
             height=200,
-            border=ft.border.all(1, ft.Colors.BLACK),
+            border=ft.Border.all(1, ft.Colors.BLACK),
             content=ft.FilledButton("Primary color"),
             theme=ft.Theme(color_scheme=ft.ColorScheme(primary=ft.Colors.YELLOW))
         )

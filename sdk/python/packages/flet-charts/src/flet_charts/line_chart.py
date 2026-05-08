@@ -59,6 +59,10 @@ class LineChartEvent(ft.Event["LineChart"]):
     spots: list[LineChartEventSpot]
     """
     Spots on which the event occurred.
+
+    Note:
+        This list is empty when the event does not target a concrete point, for
+        example when the pointer hovers over or taps empty chart space.
     """
 
 

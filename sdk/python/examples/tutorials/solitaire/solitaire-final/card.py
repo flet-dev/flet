@@ -20,7 +20,7 @@ class Card(ft.GestureDetector):
         self.content = ft.Container(
             width=70,
             height=100,
-            border_radius=ft.border_radius.all(6),
+            border_radius=ft.BorderRadius.all(6),
             # content=ft.Image(src=f"/images/card_back.svg"),
             content=ft.Image(src=self.solitaire.settings.card_back),
         )
@@ -166,7 +166,10 @@ class Card(ft.GestureDetector):
         self.solitaire.update()
 
     def get_cards_to_move(self):
-        """returns list of cards that will be dragged together, starting with the current card"""
+        """
+        Returns a list of cards that will be dragged together,
+        starting with the current card.
+        """
         if self.slot is not None:
             return self.slot.pile[self.slot.pile.index(self) :]
 

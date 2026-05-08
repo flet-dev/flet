@@ -16,15 +16,16 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.NavigationBar(
+            selected_index=2,
             destinations=[
                 ft.NavigationBarDestination(icon=ft.Icons.EXPLORE, label="Explore"),
                 ft.NavigationBarDestination(icon=ft.Icons.COMMUTE, label="Commute"),
                 ft.NavigationBarDestination(
                     icon=ft.Icons.BOOKMARK_BORDER,
-                    selected_icon=ft.Icons.BOOKMARK,
+                    selected_icon=ft.Icon(ft.Icons.BOOKMARK),
                     label="Favorites",
                 ),
-            ]
+            ],
         ),
     )
 

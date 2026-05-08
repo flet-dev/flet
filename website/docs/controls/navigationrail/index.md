@@ -1,7 +1,7 @@
 ---
 class_name: "flet.NavigationRail"
-examples: "controls/navigation_rail"
-example_images: "test-images/examples/material/golden/macos/navigation_rail"
+examples: "controls/material/navigation_rail"
+example_images: "test-images/examples/controls/material/golden/macos/navigation_rail"
 title: "NavigationRail"
 ---
 
@@ -20,5 +20,15 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="45%" />
+
+### Adaptive navigation
+
+This example switches between a [`NavigationBar`](../navigationbar/index.md)
+on narrow layouts and a `NavigationRail` with an
+end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts.
+
+<CodeExample path={'controls/material/navigation_drawer/adaptive_navigation/main.py'} language="python" />
+
+<Image src={'test-images/examples/controls/material/golden/macos/navigation_drawer/adaptive_navigation.gif'} alt="Adaptive navigation example switching between a navigation bar and a navigation rail with an end drawer" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

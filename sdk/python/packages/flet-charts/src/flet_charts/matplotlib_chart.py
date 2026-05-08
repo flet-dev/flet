@@ -5,7 +5,10 @@ from io import BytesIO
 from typing import Any, Optional
 
 import flet as ft
-import flet.canvas as fc
+from flet_charts.matplotlib_chart_canvas import (
+    MatplotlibChartCanvas,
+    MatplotlibChartCanvasResizeEvent,
+)
 
 _MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
 
@@ -124,13 +127,21 @@ class MatplotlibChart(ft.GestureDetector):
         logger.debug(f"DPR: {self.__dpr}")
         self.__image_mode = "full"
 
-        self.canvas = fc.Canvas(
-            # resize_interval=10,
+        self.mpl_canvas = MatplotlibChartCanvas(
             on_resize=self._on_canvas_resize,
             expand=True,
         )
+        # Rubberband (zoom selection) overlay drawn on top of the chart image.
+        self._rubberband = ft.Container(
+            visible=False,
+            border=ft.Border.all(1, ft.Colors.with_opacity(0.6, ft.Colors.GREY)),
+        )
+        self._stack = ft.Stack(
+            controls=[self.mpl_canvas, self._rubberband],
+            expand=True,
+        )
         self.keyboard_listener = ft.KeyboardListener(
-            self.canvas,
+            self._stack,
             autofocus=True,
             on_key_down=self._on_key_down,
             on_key_up=self._on_key_up,
@@ -419,23 +430,18 @@ class MatplotlibChart(ft.GestureDetector):
 
         while True:
             is_binary, content = await self._receive_queue.get()
-            if is_binary:
-                logger.debug(f"receive_binary({len(content)})")
-                if self.__image_mode == "full":
-                    await self.canvas.clear_capture()
 
-                self.canvas.shapes = [
-                    fc.Image(
-                        src=content,
-                        x=0,
-                        y=0,
-                        width=self.figure.bbox.size[0] / self.__dpr,
-                        height=self.figure.bbox.size[1] / self.__dpr,
-                    )
-                ]
-                ft.context.disable_auto_update()
-                self.canvas.update()
-                await self.canvas.capture()
+            if is_binary:
+                assert isinstance(content, (bytes, bytearray))
+                logger.debug(f"receive_binary({len(content)})")
+                # Hand the frame to the client widget — full PNG replaces the
+                # backbuffer, diff PNG composites onto it. Awaiting naturally
+                # rate-limits this loop to the client's processing speed and
+                # yields the asyncio loop for incoming events.
+                if self.__image_mode == "full":
+                    await self.mpl_canvas.apply_full(bytes(content))
+                else:
+                    await self.mpl_canvas.apply_diff(bytes(content))
                 self.img_count += 1
                 self._waiting = False
             else:
@@ -449,8 +455,6 @@ class MatplotlibChart(ft.GestureDetector):
                     self._waiting = True
                     self.send_message({"type": "draw"})
                 elif content["type"] == "rubberband":
-                    if len(self.canvas.shapes) == 2:
-                        self.canvas.shapes.pop()
                     if (
                         content["x0"] != -1
                         and content["y0"] != -1
@@ -461,18 +465,14 @@ class MatplotlibChart(ft.GestureDetector):
                         y0 = self._height - content["y0"] / self.__dpr
                         x1 = content["x1"] / self.__dpr
                         y1 = self._height - content["y1"] / self.__dpr
-                        self.canvas.shapes.append(
-                            fc.Rect(
-                                x=x0,
-                                y=y0,
-                                width=x1 - x0,
-                                height=y1 - y0,
-                                paint=ft.Paint(
-                                    stroke_width=1, style=ft.PaintingStyle.STROKE
-                                ),
-                            )
-                        )
-                    self.canvas.update()
+                        self._rubberband.left = min(x0, x1)
+                        self._rubberband.top = min(y0, y1)
+                        self._rubberband.width = abs(x1 - x0)
+                        self._rubberband.height = abs(y1 - y0)
+                        self._rubberband.visible = True
+                    else:
+                        self._rubberband.visible = False
+                    self._rubberband.update()
                 elif content["type"] == "resize":
                     self.send_message({"type": "refresh"})
                 elif content["type"] == "message":
@@ -508,7 +508,7 @@ class MatplotlibChart(ft.GestureDetector):
             lambda: self._receive_queue.put_nowait((True, blob))
         )
 
-    async def _on_canvas_resize(self, e: fc.CanvasResizeEvent):
+    async def _on_canvas_resize(self, e: MatplotlibChartCanvasResizeEvent):
         """
         Handle canvas resize and initialize backend session on first resize.
 

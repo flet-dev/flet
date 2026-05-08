@@ -33,6 +33,7 @@ import dataclasses
 import itertools
 import logging
 import weakref
+from collections.abc import Iterator
 from enum import Enum
 from typing import Any, Optional
 
@@ -63,38 +64,49 @@ class InvalidObjectPatch(ObjectPatchException):
 class PatchOperation:
     """A single operation inside an Object Patch."""
 
-    def __init__(self, operation):
+    def __init__(self, operation: dict[str, Any]) -> None:
+        """Initialize an operation wrapper.
+
+        Args:
+            operation: Patch operation dictionary containing a `path` member.
+        """
         if not operation.__contains__("path"):
             raise InvalidObjectPatch("Operation must have a 'path' member")
 
         self.location = operation["path"]
         self.operation = operation
 
-    def __hash__(self):
+    def __hash__(self) -> int:
+        """Return a hash based on the wrapped operation."""
         return hash(frozenset(self.operation.items()))
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
+        """Return whether another operation wrapper has the same operation."""
         if not isinstance(other, PatchOperation):
             return False
         return self.operation == other.operation
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
+        """Return whether another operation wrapper differs from this one."""
         return not (self == other)
 
     @property
-    def path(self):
+    def path(self) -> list[Any]:
+        """Path to the containing object or list."""
         return self.location[:-1]
 
     @property
-    def key(self):
+    def key(self) -> Any:
+        """Final path segment affected by this operation."""
         return self.location[-1]
 
     @key.setter
-    def key(self, value):
+    def key(self, value: Any) -> None:
+        """Update the final path segment affected by this operation."""
         self.location[-1] = value
         self.operation["path"] = self.location
 
-    def walk(self, doc, part):
+    def walk(self, doc: Any, part: Any) -> Any:
         """Walks one step in doc and returns the referenced part"""
 
         if isinstance(doc, list):
@@ -115,7 +127,7 @@ class PatchOperation:
         except KeyError:
             raise ObjectPatchException(f"member '{part}' not found in {doc}") from None
 
-    def to_last(self, doc):
+    def to_last(self, doc: Any) -> Any:
         """Resolves ptr until the last step, returns (sub-doc, last-step)"""
 
         if not self.location:
@@ -127,7 +139,14 @@ class PatchOperation:
         return doc
 
 
-def _control_setattr(obj, name, value):
+def _control_setattr(obj: Any, name: str, value: Any) -> None:
+    """Track plain dataclass mutations for later object diffing.
+
+    Args:
+        obj: Dataclass instance receiving the assignment.
+        name: Field name being assigned.
+        value: New field value.
+    """
     # For plain dataclasses (no Prop tracking), this hook records the old
     # value in __changes so _compare_dataclasses can detect the change.
     # Prop-managed fields (on @control/@value types) are fully handled by
@@ -161,7 +180,8 @@ def _control_setattr(obj, name, value):
 class RemoveOperation(PatchOperation):
     """Removes an object property or an array element."""
 
-    def _on_undo_remove(self, path, key):
+    def _on_undo_remove(self, path: list[Any], key: Any) -> Any:
+        """Adjust this remove after undoing an earlier remove at the same path."""
         if self.path == path:
             if self.key >= key:
                 self.key += 1
@@ -169,7 +189,8 @@ class RemoveOperation(PatchOperation):
                 key -= 1
         return key
 
-    def _on_undo_add(self, path, key):
+    def _on_undo_add(self, path: list[Any], key: Any) -> Any:
+        """Adjust this remove after undoing an earlier add at the same path."""
         if self.path == path:
             if self.key > key:
                 self.key -= 1
@@ -181,7 +202,8 @@ class RemoveOperation(PatchOperation):
 class AddOperation(PatchOperation):
     """Adds an object property or an array element."""
 
-    def _on_undo_remove(self, path, key):
+    def _on_undo_remove(self, path: list[Any], key: Any) -> Any:
+        """Adjust this add after undoing an earlier remove at the same path."""
         if self.path == path:
             if self.key > key:
                 self.key += 1
@@ -189,7 +211,8 @@ class AddOperation(PatchOperation):
                 key += 1
         return key
 
-    def _on_undo_add(self, path, key):
+    def _on_undo_add(self, path: list[Any], key: Any) -> Any:
+        """Adjust this add after undoing an earlier add at the same path."""
         if self.path == path:
             if self.key > key:
                 self.key -= 1
@@ -201,10 +224,12 @@ class AddOperation(PatchOperation):
 class ReplaceOperation(PatchOperation):
     """Replaces an object property or an array element by a new value."""
 
-    def _on_undo_remove(self, path, key):
+    def _on_undo_remove(self, path: list[Any], key: Any) -> Any:
+        """Keep this replace stable when a remove is undone."""
         return key
 
-    def _on_undo_add(self, path, key):
+    def _on_undo_add(self, path: list[Any], key: Any) -> Any:
+        """Keep this replace stable when an add is undone."""
         return key
 
 
@@ -212,18 +237,22 @@ class MoveOperation(PatchOperation):
     """Moves an object property or an array element to a new location."""
 
     @property
-    def from_path(self):
+    def from_path(self) -> list[Any]:
+        """Source path containing the item before the move."""
         return self.operation["from"][:-1]
 
     @property
-    def from_key(self):
+    def from_key(self) -> Any:
+        """Final source path segment for the moved item."""
         return self.operation["from"][-1]
 
     @from_key.setter
-    def from_key(self, value):
+    def from_key(self, value: Any) -> None:
+        """Update the final source path segment for the moved item."""
         self.operation["from"][-1] = value
 
-    def _on_undo_remove(self, path, key):
+    def _on_undo_remove(self, path: list[Any], key: Any) -> Any:
+        """Adjust this move after undoing an earlier remove at the same path."""
         if self.from_path == path:
             if self.from_key >= key:
                 self.from_key += 1
@@ -236,7 +265,8 @@ class MoveOperation(PatchOperation):
                 key += 1
         return key
 
-    def _on_undo_add(self, path, key):
+    def _on_undo_add(self, path: list[Any], key: Any) -> Any:
+        """Adjust this move after undoing an earlier add at the same path."""
         if self.from_path == path:
             if self.from_key > key:
                 self.from_key -= 1
@@ -253,22 +283,41 @@ class MoveOperation(PatchOperation):
 class ObjectPatch:
     """An Object Patch is a list of Patch Operations."""
 
-    def __init__(self, patch):
+    def __init__(self, patch: list[dict[str, Any]]) -> None:
+        """Initialize an object patch.
+
+        Args:
+            patch: Ordered list of patch operation dictionaries.
+        """
         self.patch = patch
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Return the patch operations as a string."""
         return str(self.patch)
 
     @classmethod
     def from_diff(
         cls,
-        src,
-        dst,
-        control_cls,
+        src: Any,
+        dst: Any,
+        control_cls: type[Any],
         parent: Any = None,
         path: Optional[list[Any]] = None,
         frozen: bool = False,
-    ):
+    ) -> tuple["ObjectPatch", list[Any], list[Any]]:
+        """Create a patch from a source and destination object tree.
+
+        Args:
+            src: Previous object tree.
+            dst: New object tree.
+            control_cls: Base control class used to detect controls.
+            parent: Parent control for the compared object tree.
+            path: Initial patch path.
+            frozen: Whether the comparison should treat objects as immutable.
+
+        Returns:
+            A tuple containing the patch, added controls, and removed controls.
+        """
         builder = DiffBuilder(
             src,
             dst,
@@ -284,12 +333,14 @@ class ObjectPatch:
 
         return cls(ops), added, removed
 
-    def to_message(self):
+    def to_message(self) -> list[Any]:
+        """Encode patch operations into the compact protocol message format."""
         state = {"i": 0}
         paths = [state["i"]]
         state["i"] += 1
 
-        def encode_path(path):
+        def encode_path(path: list[Any]) -> list[Any]:
+            """Encode a patch path into shared path-table coordinates."""
             node = paths
             parent = paths
             parts = path
@@ -351,10 +402,17 @@ class ObjectPatch:
 class DiffBuilder:
     def __init__(
         self,
-        src_doc,
-        dst_doc,
-        control_cls=None,
-    ):
+        src_doc: Any,
+        dst_doc: Any,
+        control_cls: Optional[type[Any]] = None,
+    ) -> None:
+        """Initialize state used while building a diff.
+
+        Args:
+            src_doc: Previous object tree.
+            dst_doc: New object tree.
+            control_cls: Base control class used to detect controls.
+        """
         self.control_cls = control_cls
         self._added_dataclasses = {}
         self._removed_dataclasses = {}
@@ -369,6 +427,7 @@ class DiffBuilder:
     def _update_list_snapshot(
         snapshots: dict[Any, list[Any]], key: Any, value: list[Any]
     ) -> None:
+        """Store or refresh a shallow snapshot of a list field."""
         snap = snapshots.get(key)
         if snap is None:
             snapshots[key] = value[:]
@@ -379,6 +438,7 @@ class DiffBuilder:
     def _update_dict_snapshot(
         snapshots: dict[Any, dict[Any, Any]], key: Any, value: dict[Any, Any]
     ) -> None:
+        """Store or refresh a shallow snapshot of a dictionary field."""
         snap = snapshots.get(key)
         if snap is None:
             snapshots[key] = value.copy()
@@ -386,7 +446,7 @@ class DiffBuilder:
         snap.clear()
         snap.update(value)
 
-    def teardown(self):
+    def teardown(self) -> None:
         """Break cycles and release strong references to allow GC."""
         # clear indexes
         self.index_storage = [{}, {}]
@@ -403,19 +463,22 @@ class DiffBuilder:
         self.src_doc = None
         self.dst_doc = None
 
-    def get_added_controls(self):
+    def get_added_controls(self) -> Iterator[Any]:
+        """Yield controls that were added while building the diff."""
         for key, dc in self._added_dataclasses.items():
             configure_setattr_only = key in self._removed_dataclasses
             yield from self._configure_dataclass(
                 dc, None, False, configure_setattr_only
             )
 
-    def get_removed_controls(self):
+    def get_removed_controls(self) -> Iterator[Any]:
+        """Yield controls that were removed while building the diff."""
         for key, dc in self._removed_dataclasses.items():
             recurse = key not in self._added_dataclasses
             yield from self._removed_controls(dc, recurse)
 
-    def store_index(self, value, index, st):
+    def store_index(self, value: Any, index: list[Any], st: int) -> None:
+        """Store an operation index for later add/remove pairing."""
         value_type = type(value)
         try:
             storage = self.index_storage[st]
@@ -432,7 +495,8 @@ class DiffBuilder:
         except TypeError:
             self.index_storage2[st].append([value_type, value, index])
 
-    def take_index(self, value, st):
+    def take_index(self, value: Any, st: int) -> Optional[list[Any]]:
+        """Take the latest stored operation index matching a value."""
         value_type = type(value)
         try:
             typed_storage = self.index_storage[st].get(value_type)
@@ -450,33 +514,38 @@ class DiffBuilder:
                     storage.pop(i)
                     return item_index
 
-    def insert(self, op):
+    def insert(self, op: PatchOperation) -> list[Any]:
+        """Insert an operation into the internal operation chain."""
         root = self.__root
         last = root[0]
         last[1] = root[0] = [last, root, op]
         return root[0]
 
-    def remove(self, index):
+    def remove(self, index: list[Any]) -> None:
+        """Remove an operation node from the internal operation chain."""
         link_prev, link_next, _ = index
         link_prev[1] = link_next
         link_next[0] = link_prev
         index[:] = []
 
-    def iter_from(self, start):
+    def iter_from(self, start: list[Any]) -> Iterator[PatchOperation]:
+        """Yield operations after a given operation node."""
         root = self.__root
         curr = start[1]
         while curr is not root:
             yield curr[2]
             curr = curr[1]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[PatchOperation]:
+        """Yield operation nodes in insertion order."""
         root = self.__root
         curr = root[1]
         while curr is not root:
             yield curr[2]
             curr = curr[1]
 
-    def execute(self):
+    def execute(self) -> Iterator[dict[str, Any]]:
+        """Yield final patch operations, folding remove/add pairs into replace ops."""
         root = self.__root
         curr = root[1]
         while curr is not root:
@@ -499,13 +568,15 @@ class DiffBuilder:
             yield curr[2].operation
             curr = curr[1]
 
-    def _index_key(self, item, item_key, path):
+    def _index_key(self, item: Any, item_key: Any, path: list[Any]) -> Any:
         """
         Return the composite key used to pair add/remove (by control key if present).
         """
         return item_key if item_key is not None else item
 
-    def _maybe_compare_dataclasses(self, parent, path, src, dst, frozen):
+    def _maybe_compare_dataclasses(
+        self, parent: Any, path: list[Any], src: Any, dst: Any, frozen: bool
+    ) -> None:
         """
         Compare dataclasses only when both are dataclasses and identity/"frozen" rules \
         allow it.
@@ -527,7 +598,7 @@ class DiffBuilder:
             if frozen or same_explicit_key:
                 self._compare_dataclasses(parent, path, src, dst, True)
 
-    def _affected_is_list(self, op):
+    def _affected_is_list(self, op: PatchOperation) -> bool:
         """
         Return True if the item the op affects lives in a list in the destination doc.
         We must not rely on op.key’s type because PatchOperation coerces to int.
@@ -535,11 +606,29 @@ class DiffBuilder:
         container = op.to_last(self.dst_doc)
         return isinstance(container, list)
 
-    def _emit_move(self, from_loc, to_loc):
+    def _emit_move(self, from_loc: list[Any], to_loc: list[Any]) -> None:
         """Create and insert a move operation."""
         self.insert(MoveOperation({"op": "move", "from": from_loc, "path": to_loc}))
 
-    def _item_added(self, parent, path, key, item, item_key=None, frozen=False):
+    def _item_added(
+        self,
+        parent: Any,
+        path: list[Any],
+        key: Any,
+        item: Any,
+        item_key: Any = None,
+        frozen: bool = False,
+    ) -> None:
+        """Record an added item or pair it with a previous remove as a move.
+
+        Args:
+            parent: Parent control for dataclasses nested in the added item.
+            path: Path to the containing object or list.
+            key: Final path segment for the added item.
+            item: Added value.
+            item_key: Optional reconciliation key for move detection.
+            frozen: Whether nested dataclasses should be diffed as immutable.
+        """
         logger.debug(
             f"_item_added: path={path} key={key} item={item} item_key={item_key}"
         )
@@ -590,7 +679,23 @@ class DiffBuilder:
         self.store_index(index_key, add_idx, _ST_ADD)
         self._dataclass_added(item, parent, frozen)
 
-    def _item_removed(self, path, key, item, item_key=None, frozen=False):
+    def _item_removed(
+        self,
+        path: list[Any],
+        key: Any,
+        item: Any,
+        item_key: Any = None,
+        frozen: bool = False,
+    ) -> None:
+        """Record a removed item or pair it with a previous add as a move.
+
+        Args:
+            path: Path to the containing object or list.
+            key: Final path segment for the removed item.
+            item: Removed value.
+            item_key: Optional reconciliation key for move detection.
+            frozen: Whether nested dataclasses should be diffed as immutable.
+        """
         logger.debug(
             f"_item_removed: path={path} key={key} item={item} item_key={item_key}"
         )
@@ -655,7 +760,8 @@ class DiffBuilder:
         self.store_index(index_key, rem_idx, _ST_REMOVE)
         self._dataclass_removed(item)
 
-    def _item_replaced(self, path, key, item):
+    def _item_replaced(self, path: list[Any], key: Any, item: Any) -> None:
+        """Record a replacement operation for a value at a path segment."""
         logger.debug("_item_replaced: %s %s %s:", path, key, item)
         self.insert(
             ReplaceOperation(
@@ -667,7 +773,15 @@ class DiffBuilder:
             )
         )
 
-    def _compare_dicts(self, parent, path, src, dst, frozen):
+    def _compare_dicts(
+        self,
+        parent: Any,
+        path: list[Any],
+        src: dict[Any, Any],
+        dst: dict[Any, Any],
+        frozen: bool,
+    ) -> None:
+        """Compare two dictionaries and emit operations for changed entries."""
         logger.debug("\n_compare_dicts: %s %s %s", path, src, dst)
 
         src_keys = set(src.keys())
@@ -684,7 +798,15 @@ class DiffBuilder:
         for key in src_keys & dst_keys:
             self._compare_values(parent, path, key, src[key], dst[key], frozen)
 
-    def _compare_lists(self, parent, path, src, dst, frozen):
+    def _compare_lists(
+        self,
+        parent: Any,
+        path: list[Any],
+        src: list[Any],
+        dst: list[Any],
+        frozen: bool,
+    ) -> None:
+        """Compare two lists using positional or keyed reconciliation."""
         logger.debug("\n_compare_lists: %s %s %s", path, src, dst)
 
         # Decide algorithm based on whether any dataclasses are present.
@@ -738,7 +860,8 @@ class DiffBuilder:
         #
         # Using tuple-namespaced keys prevents collisions between the four classes.
 
-        def build_keys(items):
+        def build_keys(items: list[Any]) -> list[tuple[str, Any]]:
+            """Build reconciliation keys for list items."""
             keys = []
             unkeyed_pos = 0
             prim_pos = 0
@@ -763,7 +886,8 @@ class DiffBuilder:
         # Helper: determine effective frozen flag for a matched (old, new) pair.
         # A non-frozen pair matched by explicit key (different Python objects) must
         # be diffed like a frozen pair since the new object has no __changes log.
-        def _effective_frozen(old_item, new_item):
+        def _effective_frozen(old_item: Any, new_item: Any) -> bool:
+            """Return whether a matched pair must be compared as frozen."""
             if frozen:
                 return True
             if old_item is not new_item:
@@ -814,10 +938,12 @@ class DiffBuilder:
         new_keys_set = set(new_index_by_key.keys())
 
         def _reindex(start_idx: int) -> None:
+            """Refresh current key positions after a work-list mutation."""
             for j in range(start_idx, len(work_keys)):
                 pos[work_keys[j]] = j
 
-        def _remove_from_work(idx: int):
+        def _remove_from_work(idx: int) -> tuple[Any, Any]:
+            """Remove and return an item/key pair from the working list."""
             removed_item = work.pop(idx)
             removed_key = work_keys.pop(idx)
             pos.pop(removed_key, None)
@@ -825,14 +951,16 @@ class DiffBuilder:
                 _reindex(idx)
             return removed_item, removed_key
 
-        def _insert_into_work(idx: int, item, key):
+        def _insert_into_work(idx: int, item: Any, key: Any) -> None:
+            """Insert an item/key pair into the working list."""
             work.insert(idx, item)
             work_keys.insert(idx, key)
             pos[key] = idx
             if idx + 1 <= len(work_keys):
                 _reindex(idx + 1)
 
-        def emit_replace_at(idx, old_item, new_item):
+        def emit_replace_at(idx: int, old_item: Any, new_item: Any) -> None:
+            """Emit updates or replacement for the item currently at an index."""
             # Keying by identity means old_item is often new_item, so we explicitly run
             # the dataclass diff even when the instance pointer matches to surface
             # property mutations captured by __changes.
@@ -847,7 +975,8 @@ class DiffBuilder:
                 old_control_key = get_control_key(old_item)
                 new_control_key = get_control_key(new_item)
 
-                def _keys_match():
+                def _keys_match() -> bool:
+                    """Return whether optional explicit control keys are compatible."""
                     return (
                         old_control_key is None
                         or new_control_key is None
@@ -975,7 +1104,19 @@ class DiffBuilder:
                 _remove_from_work(j)
             j -= 1
 
-    def _compare_dataclasses(self, parent, path, src, dst, frozen):
+    def _compare_dataclasses(
+        self, parent: Any, path: list[Any], src: Any, dst: Any, frozen: bool
+    ) -> None:
+        """Compare two dataclass instances and emit field-level operations.
+
+        Args:
+            parent: Parent control for nested dataclasses.
+            path: Path to the dataclass being compared.
+            src: Previous dataclass instance.
+            dst: New dataclass instance.
+            frozen: Whether the comparison should scan immutable values instead
+                of relying on dirty/change tracking.
+        """
         logger.debug("\n_compare_dataclasses: %s\n\n%s\n%s\n", path, src, dst)
 
         if (
@@ -997,6 +1138,24 @@ class DiffBuilder:
                     if orig_frozen is not None:
                         object.__setattr__(dst, "_frozen", orig_frozen)
                     object.__setattr__(dst, "_initialized", True)
+                # Reconciled controls are fresh Python objects that take over
+                # the logical identity (_i) of their predecessor.  Two things
+                # must be stamped on the new instance so the framework keeps
+                # working for it:
+                #   1. `_parent` — unset at creation, so `.page` would raise
+                #      "Control must be added to the page first" otherwise.
+                #   2. `__index` on the session — the new instance must
+                #      replace the old one so click events dispatched to
+                #      `_i` reach the instance that lives in the current
+                #      render tree. We queue the pair (old, new) so
+                #      session.patch_control() reindexes without firing
+                #      did_mount/will_unmount (the logical control wasn't
+                #      added or removed, only reconciled).
+                if parent is not None and parent is not dst and src is not dst:
+                    dst._parent = weakref.ref(parent)
+                    # Queue both sides so session dedupes lifecycle hooks.
+                    self._dataclass_added(dst, parent, frozen)
+                    self._dataclass_removed(src)
             dst._before_update_safe()
 
         if not frozen:
@@ -1094,8 +1253,11 @@ class DiffBuilder:
                     self._item_replaced(path, field_name, new)
                 changes.clear()
 
+            processed_structural_fields = set()
+
             # compare lists
             for field_name, old in list(prev_lists.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not isinstance(new, list):
                     del prev_lists[field_name]
@@ -1105,6 +1267,7 @@ class DiffBuilder:
 
             # compare dicts
             for field_name, old in list(prev_dicts.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not isinstance(new, dict):
                     del prev_dicts[field_name]
@@ -1114,12 +1277,48 @@ class DiffBuilder:
 
             # compare dataclasses
             for field_name, old in list(prev_classes.items()):
+                processed_structural_fields.add(field_name)
                 new = getattr(dst, field_name)
                 if not dataclasses.is_dataclass(new):
                     del prev_classes[field_name]
                 else:
                     prev_classes[field_name] = new
                 self._compare_values(dst, path, field_name, old, new, frozen)
+
+            # A structural field is removed from __prev_* when it becomes None.
+            # After the object has been serialized at least once, a later
+            # non-empty list/dict or dataclass value in that untracked field means
+            # a real None -> value restoration and must be patched. Before the
+            # first serialization there are no snapshots, so the same values are
+            # just initial state and must not trigger an incremental page update.
+            has_structural_snapshots = (
+                hasattr(dst, "__prev_lists")
+                or hasattr(dst, "__prev_dicts")
+                or hasattr(dst, "__prev_classes")
+            )
+            if has_structural_snapshots:
+                structural_fields = getattr(
+                    type(dst), "_structural_fields", frozenset()
+                )
+                for field_name in structural_fields:
+                    if (
+                        field_name in processed_structural_fields
+                        or (dirty and field_name in dirty)
+                        or field_name in prev_lists
+                        or field_name in prev_dicts
+                        or field_name in prev_classes
+                    ):
+                        continue
+                    new = getattr(dst, field_name)
+                    if isinstance(new, list) and len(new) > 0:
+                        self._compare_values(dst, path, field_name, None, new, frozen)
+                        self._update_list_snapshot(prev_lists, field_name, new)
+                    elif isinstance(new, dict) and len(new) > 0:
+                        self._compare_values(dst, path, field_name, None, new, frozen)
+                        self._update_dict_snapshot(prev_dicts, field_name, new)
+                    elif dataclasses.is_dataclass(new):
+                        self._compare_values(dst, path, field_name, None, new, frozen)
+                        prev_classes[field_name] = new
         else:
             # frozen comparison
             logger.debug(
@@ -1172,7 +1371,16 @@ class DiffBuilder:
             self._dataclass_removed(src)
             self._dataclass_added(dst, parent, frozen)
 
-    def _compare_values(self, parent, path, key, src, dst, frozen):
+    def _compare_values(
+        self,
+        parent: Any,
+        path: list[Any],
+        key: Any,
+        src: Any,
+        dst: Any,
+        frozen: bool,
+    ) -> None:
+        """Compare two values and dispatch to the correct specialized comparer."""
         logger.debug(
             "\n_compare_values: %s %s (Frozen: %s)\n\n%s\n%s\n",
             path,
@@ -1209,14 +1417,37 @@ class DiffBuilder:
                 "\n_compare_values:dataclasses (Frozen: %s) %s %s", frozen, src, dst
             )
 
+            # Component controls (type "C") must only be diffed/migrated when
+            # their underlying component function is the same. Otherwise we
+            # need a replace to force remount and fresh hook state.
+            same_component_fn = True
+            if getattr(src, "_c", None) == "C" and getattr(dst, "_c", None) == "C":
+                same_component_fn = getattr(src, "fn", None) is getattr(dst, "fn", None)
+
+            # Respect explicit `key` on single-child dataclass fields the
+            # same way list reconciliation does: a changed key signals
+            # "logically different element" and forces remount (remove +
+            # add) instead of in-place reconciliation. Without this,
+            # `ft.Container(content=Child(key=..))` silently ignores key
+            # changes because single-child fields don't go through the
+            # keyed list path.
+            keys_match = get_control_key(src) == get_control_key(dst)
+
             if (not frozen and src is dst) or (
-                frozen and src is not dst and type(src) is type(dst)
+                frozen
+                and src is not dst
+                and type(src) is type(dst)
+                and same_component_fn
+                and keys_match
             ):
                 self._compare_dataclasses(
                     parent, _path_join(path, key), src, dst, frozen
                 )
-            elif (not frozen and src is not dst) or (
-                frozen and type(src) is not type(dst)
+            elif (
+                (not frozen and src is not dst)
+                or (frozen and type(src) is not type(dst))
+                or (frozen and not same_component_fn)
+                or (frozen and not keys_match)
             ):
                 self._item_replaced(path, key, dst)
                 self._dataclass_removed(src)
@@ -1236,9 +1467,11 @@ class DiffBuilder:
             self._dataclass_added(dst, parent, frozen)
 
             if not frozen:
-                prev_lists = getattr(dst, "__prev_lists", {})
-                prev_dicts = getattr(dst, "__prev_dicts", {})
-                prev_classes = getattr(dst, "__prev_classes", {})
+                # Snapshots live on the parent (which owns `key`), not on
+                # dst (the field's new value).
+                prev_lists = getattr(parent, "__prev_lists", {})
+                prev_dicts = getattr(parent, "__prev_dicts", {})
+                prev_classes = getattr(parent, "__prev_classes", {})
 
                 if isinstance(src, list) and key in prev_lists:
                     del prev_lists[key]
@@ -1253,7 +1486,8 @@ class DiffBuilder:
                 if dataclasses.is_dataclass(dst) and key is not None:
                     prev_classes[key] = dst
 
-    def _dataclass_added(self, item, parent, frozen):
+    def _dataclass_added(self, item: Any, parent: Any, frozen: bool) -> None:
+        """Register dataclasses contained in a newly added value."""
         logger.debug("\n\nDataclass added: %s %s %s", item, parent, frozen)
         if dataclasses.is_dataclass(item):
             if parent:
@@ -1277,10 +1511,12 @@ class DiffBuilder:
             for v in item:
                 self._dataclass_added(v, parent, frozen)
 
-    def _undo_dataclass_added(self, item):
+    def _undo_dataclass_added(self, item: Any) -> None:
+        """Undo added-dataclass bookkeeping after an add pairs with a remove."""
         self._added_dataclasses.pop(self._get_dataclass_key(item), None)
 
-    def _dataclass_removed(self, item):
+    def _dataclass_removed(self, item: Any) -> None:
+        """Register dataclasses contained in a removed value."""
         logger.debug("\n\nDataclass removed: %s", item)
         if dataclasses.is_dataclass(item):
             self._removed_dataclasses[self._get_dataclass_key(item)] = item
@@ -1293,22 +1529,53 @@ class DiffBuilder:
             for v in item:
                 self._dataclass_removed(v)
 
-    def _undo_dataclass_removed(self, item):
+    def _undo_dataclass_removed(self, item: Any) -> None:
+        """Undo removed-dataclass bookkeeping after a remove pairs with an add."""
         if dataclasses.is_dataclass(item):
             self._removed_dataclasses.pop(self._get_dataclass_key(item), None)
 
-    def _get_dataclass_key(self, item):
+    def _get_dataclass_key(self, item: Any) -> Any:
+        """Return the registry key used for added/removed dataclass tracking."""
         return (
             item._i
             if self.control_cls and isinstance(item, self.control_cls)
             else str(id(item))
         )
 
-    def _configure_dataclass(self, item, parent, frozen, configure_setattr_only=False):
+    def _configure_dataclass(
+        self,
+        item: Any,
+        parent: Any,
+        frozen: bool,
+        configure_setattr_only: bool = False,
+    ) -> Iterator[Any]:
+        """Prepare a dataclass subtree for diffing.
+
+        Assigns parent/frozen metadata, builds real controls, and keeps controls
+        nested inside value objects attached to the nearest actual control parent.
+
+        Args:
+            item: Object to configure. Non-dataclass values are ignored.
+            parent: Nearest control parent for `item`, if already known.
+            frozen: Whether configured dataclasses should be marked as frozen.
+            configure_setattr_only: Whether to only refresh metadata used by
+                generated `__setattr__` handlers, without building controls or
+                recursing through fields.
+
+        Yields:
+            Controls discovered while walking the dataclass subtree.
+        """
         if dataclasses.is_dataclass(item):
             logger.debug(
                 "\n_configure_dataclass: %s %s %s", item, frozen, configure_setattr_only
             )
+
+            # In-place updates can re-enter configuration from an object that
+            # already belongs to a control tree. Reuse that existing parent so
+            # newly nested children inherit the correct control/page context.
+            if parent is None:
+                parent_ref = getattr(item, "_parent", None)
+                parent = parent_ref() if parent_ref else None
 
             if parent:
                 if parent is item:
@@ -1333,10 +1600,18 @@ class DiffBuilder:
 
             # recurse through fields
             if not configure_setattr_only:
+                # Value objects can contain controls, but they are not controls
+                # themselves. Keep nested controls attached to the nearest
+                # actual control parent so event dispatch can resolve page.
+                child_parent = (
+                    item
+                    if self.control_cls and isinstance(item, self.control_cls)
+                    else parent
+                )
                 for field in dataclasses.fields(item):
                     if not field.metadata.get("skip", False):
                         yield from self._configure_dataclass(
-                            getattr(item, field.name), item, frozen
+                            getattr(item, field.name), child_parent, frozen
                         )
 
             if not frozen:
@@ -1361,7 +1636,17 @@ class DiffBuilder:
             for v in item:
                 yield from self._configure_dataclass(v, parent, frozen)
 
-    def _removed_controls(self, item, recurse):
+    def _removed_controls(self, item: Any, recurse: bool) -> Iterator[Any]:
+        """Yield removed controls contained in a value.
+
+        Args:
+            item: Value that may contain controls.
+            recurse: Whether to scan dataclass fields when snapshot metadata is
+                unavailable.
+
+        Yields:
+            Removed controls discovered in `item`.
+        """
         if self.control_cls and isinstance(item, self.control_cls):
             if hasattr(item, "__prev_lists"):
                 # recurse through list props
@@ -1395,14 +1680,16 @@ class DiffBuilder:
                 yield from self._removed_controls(v, recurse)
 
 
-def get_control_key(obj):
+def get_control_key(obj: Any) -> Any:
+    """Return the explicit control key for an object, if any."""
     # Fast path: read from _values directly to avoid Prop.__get__ overhead.
     _values = getattr(obj, "_values", None)
     key = _values.get("key") if _values is not None else getattr(obj, "key", None)
     return key.value if isinstance(key, Key) else key
 
 
-def _path_join(path, key):
+def _path_join(path: list[Any], key: Any) -> list[Any]:
+    """Return a child path by appending `key` when present."""
     if key is None:
         return path
     return path + [key]

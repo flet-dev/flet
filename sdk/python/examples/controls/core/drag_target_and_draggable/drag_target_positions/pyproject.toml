@@ -1,0 +1,26 @@
+[project]
+name = "drag-target-positions"
+version = "1.0.0"
+description = "Shows DragTarget local_position and global_position values updating live while a draggable moves inside the target."
+requires-python = ">=3.10"
+keywords = ["draggable", "drag target", "drag position", "local position", "global position"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Draggable"]
+
+[tool.flet.metadata]
+title = "DragTarget positions"
+controls = ["SafeArea", "Column", "Row", "Draggable", "DragTarget", "Container", "Text", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["live drag coordinates", "local_position", "global_position", "drop target feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

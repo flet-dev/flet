@@ -1,0 +1,26 @@
+[project]
+name = "code-editor-example-5"
+version = "1.0.0"
+description = "CodeEditor with Python-side syntax analysis and gutter error markers."
+requires-python = ">=3.10"
+keywords = ["code editor", "python", "analyzer", "error markers", "gutter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-code-editor"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utilities/CodeEditor"]
+
+[tool.flet.metadata]
+title = "Python analyzer"
+controls = ["SafeArea", "CodeEditor"]
+layout_pattern = "single-panel"
+complexity = "intermediate"
+features = ["python validation", "error markers", "debounced analysis"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

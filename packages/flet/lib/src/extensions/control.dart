@@ -38,22 +38,36 @@ extension WidgetFromControl on Control {
     return ControlWidget(key: key, control: c);
   }
 
-  Widget? buildIconOrWidget(String propertyName,
-      {bool visibleOnly = true,
-      bool notifyParent = false,
-      Key? key,
-      Color? color}) {
+  Widget? buildIconOrWidget(
+    String propertyName, {
+    bool visibleOnly = true,
+    bool notifyParent = false,
+    Key? key,
+    Color? color,
+    bool required = false,
+    Widget? errorWidget,
+  }) {
     var icon = get(propertyName);
+
     if (icon is Control) {
-      Control? c;
-      c = child(propertyName, visibleOnly: visibleOnly);
-      if (c == null) return null;
-      c.notifyParent = notifyParent;
-      return ControlWidget(key: key, control: c);
+      final widget = buildWidget(
+        propertyName,
+        visibleOnly: visibleOnly,
+        notifyParent: notifyParent,
+        key: key,
+      );
+      if (widget != null) return widget;
     } else if (icon is int) {
       // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
       return Icon(getIconData(propertyName), color: color);
     }
+
+    if (required) {
+      return errorWidget ??
+          ErrorControl("Error displaying $type",
+              description: "$propertyName must be specified");
+    }
+
     return null;
   }
 
@@ -69,11 +83,13 @@ extension WidgetFromControl on Control {
     var content = get(propertyName);
 
     if (content is Control) {
-      return buildWidget(propertyName,
-          visibleOnly: visibleOnly, notifyParent: notifyParent, key: key);
-    }
-
-    if (content is String) {
+      return buildWidget(
+        propertyName,
+        visibleOnly: visibleOnly,
+        notifyParent: notifyParent,
+        key: key,
+      );
+    } else if (content is String) {
       return Text(content, style: textStyle);
     }
 
