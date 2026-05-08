@@ -301,6 +301,79 @@ def preview_role_block(
     )
 
 
+def surface_sample_card(
+    label: str,
+    background: ft.ColorValue,
+    foreground: ft.ColorValue,
+    *,
+    outline_label: str,
+    outline_color: ft.ColorValue,
+    text_label: str,
+) -> ft.Container:
+    return ft.Container(
+        width=300,
+        height=132,
+        bgcolor=background,
+        border_radius=16,
+        border=ft.Border.all(2, outline_color),
+        padding=16,
+        content=ft.Column(
+            spacing=8,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
+            controls=[
+                ft.Text(
+                    label,
+                    color=foreground,
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                ),
+                ft.Text(
+                    f"{outline_label}, {text_label}",
+                    color=foreground,
+                    size=13,
+                ),
+            ],
+        ),
+    )
+
+
+def inverse_surface_card() -> ft.Container:
+    return ft.Container(
+        width=300,
+        height=132,
+        bgcolor=ft.Colors.INVERSE_SURFACE,
+        border_radius=16,
+        padding=16,
+        content=ft.Column(
+            spacing=12,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
+            controls=[
+                ft.Text(
+                    "INVERSE_SURFACE",
+                    color=ft.Colors.ON_INVERSE_SURFACE,
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                ),
+                ft.Text(
+                    "On inverse surface, Inverse primary",
+                    color=ft.Colors.ON_INVERSE_SURFACE,
+                    size=13,
+                ),
+                ft.Container(
+                    bgcolor=ft.Colors.INVERSE_PRIMARY,
+                    border_radius=999,
+                    padding=ft.Padding.symmetric(horizontal=16, vertical=8),
+                    content=ft.Text(
+                        "OK",
+                        color=ft.Colors.ON_PRIMARY,
+                        weight=ft.FontWeight.W_600,
+                    ),
+                ),
+            ],
+        ),
+    )
+
+
 def noop(_):
     return None
 
@@ -656,116 +729,113 @@ def build_preview_tabs(
                             padding=ft.Padding.only(top=4),
                             content=ft.Column(
                                 scroll=ft.ScrollMode.AUTO,
-                                spacing=0,
+                                spacing=12,
                                 controls=[
-                                    showcase_section(
-                                        "Surface",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "SURFACE",
-                                                    ft.Colors.SURFACE,
-                                                    ft.Colors.ON_SURFACE,
+                                    ft.Row(
+                                        wrap=True,
+                                        spacing=12,
+                                        run_spacing=12,
+                                        controls=[
+                                            surface_sample_card(
+                                                "SURFACE",
+                                                ft.Colors.SURFACE,
+                                                ft.Colors.ON_SURFACE,
+                                                outline_label="Outline",
+                                                outline_color=ft.Colors.OUTLINE,
+                                                text_label="On surface",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_BRIGHT",
+                                                ft.Colors.SURFACE_BRIGHT,
+                                                ft.Colors.ON_SURFACE_VARIANT,
+                                                outline_label="Outline variant",
+                                                outline_color=ft.Colors.OUTLINE_VARIANT,
+                                                text_label="On surface variant",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_DIM",
+                                                ft.Colors.SURFACE_DIM,
+                                                ft.Colors.ON_SURFACE,
+                                                outline_label="Outline",
+                                                outline_color=ft.Colors.OUTLINE,
+                                                text_label="On surface",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_CONTAINER",
+                                                ft.Colors.SURFACE_CONTAINER,
+                                                ft.Colors.ON_SURFACE_VARIANT,
+                                                outline_label="Outline variant",
+                                                outline_color=ft.Colors.OUTLINE_VARIANT,
+                                                text_label="On surface variant",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_CONTAINER_LOW",
+                                                ft.Colors.SURFACE_CONTAINER_LOW,
+                                                ft.Colors.ON_SURFACE,
+                                                outline_label="Outline",
+                                                outline_color=ft.Colors.OUTLINE,
+                                                text_label="On surface",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_CONTAINER_LOWEST",
+                                                ft.Colors.SURFACE_CONTAINER_LOWEST,
+                                                ft.Colors.ON_SURFACE_VARIANT,
+                                                outline_label="Outline variant",
+                                                outline_color=ft.Colors.OUTLINE_VARIANT,
+                                                text_label="On surface variant",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_CONTAINER_HIGH",
+                                                ft.Colors.SURFACE_CONTAINER_HIGH,
+                                                ft.Colors.ON_SURFACE,
+                                                outline_label="Outline",
+                                                outline_color=ft.Colors.OUTLINE,
+                                                text_label="On surface",
+                                            ),
+                                            surface_sample_card(
+                                                "SURFACE_CONTAINER_HIGHEST",
+                                                ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                                                ft.Colors.ON_SURFACE_VARIANT,
+                                                outline_label="Outline variant",
+                                                outline_color=ft.Colors.OUTLINE_VARIANT,
+                                                text_label="On surface variant",
+                                            ),
+                                        ],
+                                    ),
+                                    ft.Row(
+                                        wrap=True,
+                                        spacing=12,
+                                        run_spacing=12,
+                                        controls=[
+                                            ft.Container(
+                                                width=300,
+                                                height=132,
+                                                bgcolor=scaffold_bgcolor,
+                                                border_radius=16,
+                                                border=ft.Border.all(
+                                                    2, ft.Colors.OUTLINE_VARIANT
                                                 ),
-                                                preview_role_block(
-                                                    "SURFACE_CONTAINER",
-                                                    ft.Colors.SURFACE_CONTAINER,
-                                                    ft.Colors.ON_SURFACE,
-                                                ),
-                                            ],
-                                        ),
-                                        ft.Container(
-                                            bgcolor=scaffold_bgcolor,
-                                            border_radius=16,
-                                            padding=16,
-                                            content=ft.Column(
-                                                spacing=12,
-                                                controls=[
-                                                    ft.Text(
-                                                        "Scaffold background",
-                                                        color=ft.Colors.ON_SURFACE,
-                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                                                    ),
-                                                    ft.Text(
-                                                        (
-                                                            "Use this to preview "
-                                                            "Theme.scaffold_bgcolor."
-                                                        ),
-                                                        color=ft.Colors.ON_SURFACE_VARIANT,
-                                                    ),
-                                                    ft.Container(
-                                                        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
-                                                        border_radius=12,
-                                                        padding=12,
-                                                        content=ft.Text(
-                                                            (
-                                                                "Surface container "
-                                                                "on scaffold"
-                                                            ),
+                                                padding=16,
+                                                content=ft.Column(
+                                                    spacing=12,
+                                                    controls=[
+                                                        ft.Text(
+                                                            "SCAFFOLD_BGCOLOR",
                                                             color=ft.Colors.ON_SURFACE,
+                                                            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                                                         ),
-                                                    ),
-                                                ],
+                                                        ft.Text(
+                                                            (
+                                                                "Outline variant, "
+                                                                "On surface variant"
+                                                            ),
+                                                            color=ft.Colors.ON_SURFACE_VARIANT,
+                                                        ),
+                                                    ],
+                                                ),
                                             ),
-                                        ),
-                                    ),
-                                    showcase_section(
-                                        "Outline",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "OUTLINE",
-                                                    ft.Colors.OUTLINE,
-                                                    ft.Colors.SURFACE,
-                                                ),
-                                                preview_role_block(
-                                                    "OUTLINE_VARIANT",
-                                                    ft.Colors.OUTLINE_VARIANT,
-                                                    ft.Colors.ON_SURFACE,
-                                                ),
-                                            ],
-                                        ),
-                                    ),
-                                    showcase_section(
-                                        "Inverse colors",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "INVERSE_SURFACE",
-                                                    ft.Colors.INVERSE_SURFACE,
-                                                    ft.Colors.ON_INVERSE_SURFACE,
-                                                ),
-                                                preview_role_block(
-                                                    "INVERSE_PRIMARY",
-                                                    ft.Colors.INVERSE_PRIMARY,
-                                                    ft.Colors.ON_PRIMARY,
-                                                ),
-                                            ],
-                                        ),
-                                        ft.Container(
-                                            bgcolor=ft.Colors.INVERSE_SURFACE,
-                                            border_radius=12,
-                                            padding=12,
-                                            content=ft.Row(
-                                                spacing=12,
-                                                controls=[
-                                                    ft.TextButton("Text button"),
-                                                    ft.Text(
-                                                        "Inverse surface sample",
-                                                        color=ft.Colors.ON_INVERSE_SURFACE,
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
+                                            inverse_surface_card(),
+                                        ],
                                     ),
                                 ],
                             ),
