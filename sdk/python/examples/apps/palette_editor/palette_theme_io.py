@@ -5,6 +5,33 @@ from palette_constants import COLOR_ROLE_EXPORT_ORDER, THEME_COLOR_ROLE_NAMES
 import flet as ft
 
 
+def normalize_import_theme_code(code: str) -> str:
+    normalized = code.strip()
+    if normalized.startswith("```"):
+        lines = normalized.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        normalized = "\n".join(lines).strip()
+    return normalized
+
+
+def parse_theme_code_ast(code: str) -> ast.Module:
+    normalized = normalize_import_theme_code(code)
+    last_error: SyntaxError | None = None
+    for _ in range(4):
+        try:
+            return ast.parse(normalized)
+        except SyntaxError as exc:
+            last_error = exc
+            if not normalized.endswith(")"):
+                break
+            normalized = normalized[:-1].rstrip()
+    assert last_error is not None
+    raise ValueError from last_error
+
+
 def format_color_value(color_value: ft.ColorValue) -> str:
     if hasattr(color_value, "name"):
         return f"ft.Colors.{color_value.name}"
@@ -64,10 +91,7 @@ def parse_import_color_value(node: ast.AST) -> ft.ColorValue:
 
 
 def parse_import_theme_code(code: str) -> dict[str, ft.ColorValue]:
-    try:
-        tree = ast.parse(code)
-    except SyntaxError as exc:
-        raise ValueError from exc
+    tree = parse_theme_code_ast(code)
 
     if len(tree.body) != 1 or not isinstance(tree.body[0], ast.Expr):
         raise ValueError
