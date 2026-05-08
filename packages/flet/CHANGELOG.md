@@ -13,6 +13,7 @@
 * Fix `page.window.destroy()` taking several seconds to close Windows desktop apps when `prevent_close` is enabled ([#5459](https://github.com/flet-dev/flet/issues/5459), [#6428](https://github.com/flet-dev/flet/pull/6428)) by @ndonkoHenri.
 * Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
 * Resolve absolute-path `src` (e.g. `Image(src="/images/foo.svg")`) against `assets_dir` on web so embedded apps mounted at non-root URLs load assets correctly, pass `data:`/`blob:` URIs through unchanged, preserve origin-relative semantics when `assets_dir` is unset, and add a `window.flet.assetsDir` JS-interop bridge so embedding hosts can supply `assets_dir` to the top-level `FletApp` ([#6470](https://github.com/flet-dev/flet/pull/6470)) by @FeodorFitsner.
+* Coerce `double` to `int` in `parseInt` so float values passed into `int`-typed protocol fields (e.g. `Duration(seconds: 2.0)`) decode correctly instead of falling back to the default ([#6478](https://github.com/flet-dev/flet/issues/6478), [#6480](https://github.com/flet-dev/flet/pull/6480)) by @FeodorFitsner.
 
 ### Other changes
 
