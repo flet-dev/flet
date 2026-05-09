@@ -151,6 +151,55 @@ permissions = ["location"]
 ```
 </TabItem>
 </Tabs>
+## Web: cached vs. fresh positions
+
+On the web, `Geolocator.get_current_position` accepts a position from the
+browser's cache up to **5 minutes old by default**, otherwise it asks the
+browser for a fresh fix and times out after 30 seconds if none arrives. This
+default exists because desktop browsers' on-demand location pipeline is slow
+and frequently fails on stationary devices.
+
+If you need stricter freshness (or a longer cache window), pass a
+[`GeolocatorWebConfiguration`](./types/geolocatorwebconfiguration.md) with an
+explicit `maximum_age` and/or `time_limit`:
+
+```python
+geo = ftg.Geolocator(
+    configuration=ftg.GeolocatorWebConfiguration(
+        accuracy=ftg.GeolocatorPositionAccuracy.HIGH,
+        maximum_age=ft.Duration(seconds=10),
+        time_limit=ft.Duration(seconds=15),
+    ),
+)
+```
+
+## Troubleshooting
+
+### macOS: web browser returns `POSITION_UNAVAILABLE` or never resolves
+
+When running a Flet app in `--web` mode on macOS, the browser may fail to obtain
+a position even though Location Services is on and the browser is allowed in
+*System Settings → Privacy & Security → Location Services*. Symptoms include:
+
+- `getCurrentPosition` hanging or returning a `Location request timed out.` error.
+- The position stream emitting `Failed to obtain position: Position update is unavailable`
+  (this is the W3C `POSITION_UNAVAILABLE` / error code 2 from the browser).
+
+This is a known issue with macOS' `locationd` daemon getting into a stuck state
+where it reports the browser as authorized but never delivers a fix. Restart it:
+
+```bash
+sudo killall locationd
+```
+
+The daemon respawns automatically. You can verify the browser side independently
+by visiting [browserleaks.com/geo](https://browserleaks.com/geo) — if that page
+also fails to obtain a position, the problem is with the OS, not your Flet app.
+
+The native (non-web) macOS Flet app is unaffected because it uses CoreLocation
+directly through the platform plugin rather than going through the browser's
+Geolocation API.
+
 ## Example
 
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
