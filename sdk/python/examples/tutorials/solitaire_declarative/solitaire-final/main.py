@@ -6,11 +6,14 @@ from typing import Optional
 
 import flet as ft
 
-# Card visual constants
-CARD_W = 70
-CARD_H = 100
-SNAP_THRESHOLD = 25  # px
-OFFSET_Y = 15  # px
+# Constants for layout and styling
+BG_COLOR = "#207F4C"
+
+# Card aspect ratio (height / width)
+CARD_ASPECT = 100 / 70
+COLS = 7
+# gap as a fraction of card width — used for sides, top, and between cards
+GAP_FACTOR = 0.15
 
 
 # ---------- Model ----------
@@ -54,8 +57,10 @@ ranks = [
 @dataclass
 class Slot:
     id: str
-    top: float
-    left: float
+    col: int  # column index (0..6)
+    row: int  # row index (0=top, 1=bottom)
+    top: float = 0
+    left: float = 0
     cards: list["Card"] = field(default_factory=list)
     stacking: bool = False  # whether cards in this slot stack with offset
 
@@ -63,7 +68,6 @@ class Slot:
 @ft.observable
 @dataclass
 class Card:
-    # color: str
     id: str
     suite: Suite
     rank: Rank
@@ -76,6 +80,10 @@ class Card:
 @ft.observable
 @dataclass
 class Game:
+    card_w: float = 70
+    card_h: float = 100
+    offset_y: float = 15
+    snap_threshold: float = 25
     cards: list[Card] = field(
         default_factory=lambda: [
             Card(id=f"{suite.name}_{rank.name}", suite=suite, rank=rank)
@@ -85,19 +93,19 @@ class Game:
     )
     slots: list[Slot] = field(
         default_factory=lambda: [
-            Slot(left=0, top=0, id="deck"),
-            Slot(left=100, top=0, id="waste"),
-            Slot(left=300, top=0, id="foundation1"),
-            Slot(left=400, top=0, id="foundation2"),
-            Slot(left=500, top=0, id="foundation3"),
-            Slot(left=600, top=0, id="foundation4"),
-            Slot(left=0, top=200, id="tableau1", stacking=True),
-            Slot(left=100, top=200, id="tableau2", stacking=True),
-            Slot(left=200, top=200, id="tableau3", stacking=True),
-            Slot(left=300, top=200, id="tableau4", stacking=True),
-            Slot(left=400, top=200, id="tableau5", stacking=True),
-            Slot(left=500, top=200, id="tableau6", stacking=True),
-            Slot(left=600, top=200, id="tableau7", stacking=True),
+            Slot(id="deck", col=0, row=0),
+            Slot(id="waste", col=1, row=0),
+            Slot(id="foundation1", col=3, row=0),
+            Slot(id="foundation2", col=4, row=0),
+            Slot(id="foundation3", col=5, row=0),
+            Slot(id="foundation4", col=6, row=0),
+            Slot(id="tableau1", col=0, row=1, stacking=True),
+            Slot(id="tableau2", col=1, row=1, stacking=True),
+            Slot(id="tableau3", col=2, row=1, stacking=True),
+            Slot(id="tableau4", col=3, row=1, stacking=True),
+            Slot(id="tableau5", col=4, row=1, stacking=True),
+            Slot(id="tableau6", col=5, row=1, stacking=True),
+            Slot(id="tableau7", col=6, row=1, stacking=True),
         ],
     )
 
@@ -125,22 +133,48 @@ class Game:
         for slot in self.slots[6:]:
             slot.cards[-1].face_up = True
 
+    def layout(self, width: float):
+        """Recompute slot positions and card sizes for the given board width."""
+        if width <= 0:
+            return
+        # width = card_w * COLS + gap * (COLS + 1), where gap = card_w * GAP_FACTOR
+        factor = COLS + GAP_FACTOR * (COLS + 1)
+        self.card_w = width / factor
+        self.card_h = self.card_w * CARD_ASPECT
+        gap = self.card_w * GAP_FACTOR
+        self.offset_y = self.card_h * 0.18
+        self.snap_threshold = self.card_w * 0.4
+
+        col_step = self.card_w + gap
+        # Equal gap on top, between rows, and sides
+        row_y = [gap, gap + self.card_h + gap]
+
+        for s in self.slots:
+            s.left = gap + s.col * col_step
+            s.top = row_y[s.row]
+
+        # Snap each card back to its home slot's new coordinates
+        for slot in self.slots:
+            for i, c in enumerate(slot.cards):
+                c.left = slot.left
+                c.top = slot.top + (self.offset_y * i if slot.stacking else 0)
+
     def move_to_top(self, cards: list[Card]):
         for card in cards:
             self.cards.remove(card)
             self.cards.append(card)
 
     def nearest_slot(self, card: Card) -> Optional[Slot]:
-        """Return the nearest slot to the card within SNAP_THRESHOLD, or None."""
+        """Return the nearest slot to the card within snap_threshold, or None."""
         for s in self.slots:
             if s != card.home:
                 offset = (
-                    (len(s.cards) - 1) * OFFSET_Y
+                    (len(s.cards) - 1) * self.offset_y
                     if s.stacking and len(s.cards) > 0
                     else 0
                 )
-                near_x = abs(card.left - s.left) < SNAP_THRESHOLD
-                near_y = abs(card.top - (s.top + offset)) < SNAP_THRESHOLD
+                near_x = abs(card.left - s.left) < self.snap_threshold
+                near_y = abs(card.top - (s.top + offset)) < self.snap_threshold
                 if near_x and near_y:
                     return s
         return None
@@ -148,7 +182,9 @@ class Game:
     def point_in_card_stack(self, x: float, y: float) -> Optional[list[Card]]:
         # Check topmost first so you can grab the card on top
         for c in reversed(self.cards):
-            if (c.left <= x <= c.left + CARD_W) and (c.top <= y <= c.top + CARD_H):
+            if (c.left <= x <= c.left + self.card_w) and (
+                c.top <= y <= c.top + self.card_h
+            ):
                 return [c] + c.home.cards[
                     c.home.cards.index(c) + 1 :
                 ]  # return the card and all cards below it
@@ -162,7 +198,9 @@ class Game:
         slot.cards.append(card)  # Add card to the slot's pile
         card.left = slot.left
         card.top = (
-            slot.top + OFFSET_Y * (len(slot.cards) - 1) if slot.stacking else slot.top
+            slot.top + self.offset_y * (len(slot.cards) - 1)
+            if slot.stacking
+            else slot.top
         )
         if self.check_win():
             ft.context.page.show_dialog(
@@ -244,13 +282,14 @@ class Game:
 
 # ---------- View (pure) ----------
 @ft.component
-def CardView(card: Card, on_card_click, key=None) -> ft.Control:
+def CardView(
+    card: Card, card_w: float, card_h: float, on_card_click, key=None
+) -> ft.Control:
     return ft.Container(
         left=card.left,
         top=card.top,
-        width=CARD_W,
-        height=CARD_H,
-        margin=5,
+        width=card_w,
+        height=card_h,
         border_radius=5,
         content=(
             ft.Image(src=f"/images/{card.rank.name}_{card.suite.name}.svg")
@@ -262,32 +301,39 @@ def CardView(card: Card, on_card_click, key=None) -> ft.Control:
 
 
 @ft.component
-def SlotView(slot: Slot, on_slot_click, key=None) -> ft.Control:
+def SlotView(
+    slot: Slot, card_w: float, card_h: float, on_slot_click, key=None
+) -> ft.Control:
     return ft.Container(
-        margin=5,
         left=slot.left,
         top=slot.top,
-        width=CARD_W,
-        height=CARD_H,
+        width=card_w,
+        height=card_h,
         border=ft.Border.all(1, ft.Colors.BLACK_12),
-        border_radius=5,
+        border_radius=10,
         on_click=lambda _e: on_slot_click(slot),
     )
 
 
 # ---------- App ----------
-BG_COLOR = "#207F4C"
 
 
 @ft.component
 def App():
-    ft.context.page.padding = 0
-    ft.context.page.bgcolor = BG_COLOR
+    page = ft.context.page
+    page.title = "Solitaire"
+    page.padding = 0
+    page.bgcolor = BG_COLOR
 
     game, set_game = ft.use_state(lambda: Game())
+    win_w, set_win_w = ft.use_state(lambda: page.width or 800)
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
+
+    page.on_resize = lambda e: set_win_w(e.width)
+
+    ft.use_effect(lambda: game.layout(win_w), [game, win_w])
 
     def on_pan_start(e: ft.DragStartEvent):
         grabbed = game.point_in_card_stack(e.local_position.x, e.local_position.y)
@@ -322,7 +368,7 @@ def App():
 
         else:  # bounce back to where it was picked up
             for i, c in enumerate(dragging):
-                c.left, c.top = start_x, start_y + i * OFFSET_Y
+                c.left, c.top = start_x, start_y + i * game.offset_y
 
         game.notify()
         set_dragging(None)
@@ -352,14 +398,20 @@ def App():
             controls=[
                 ft.Container(expand=True, bgcolor=BG_COLOR, key="bg")
             ]  # to capture full area
-            + [MemoSlotView(s, cb_reset_deck, key=s.id) for s in game.slots]
-            + [MemoCardView(c, cb_open_card, key=c.id) for c in game.cards],
+            + [
+                MemoSlotView(s, game.card_w, game.card_h, cb_reset_deck, key=s.id)
+                for s in game.slots
+            ]
+            + [
+                MemoCardView(c, game.card_w, game.card_h, cb_open_card, key=c.id)
+                for c in game.cards
+            ],
         ),
     )
 
     bottom_bar = ft.Container(
-        bgcolor=BG_COLOR,
-        padding=ft.Padding.symmetric(horizontal=10, vertical=8),
+        bottom=0,
+        padding=10,
         content=ft.Row(
             controls=[
                 ft.FilledButton("New Game", on_click=lambda _: set_game(Game())),
@@ -375,24 +427,14 @@ def App():
         ),
     )
 
-    return ft.Container(
+    return ft.Stack(
         expand=True,
-        padding=10,
-        bgcolor=BG_COLOR,
-        content=ft.Column(
-            expand=True,
-            spacing=0,
-            controls=[
-                ft.Container(expand=True, content=board),
-                bottom_bar,
-            ],
-        ),
+        controls=[
+            ft.Container(expand=True, content=board),
+            bottom_bar,
+        ],
     )
 
 
-def main(page: ft.Page):
-    page.padding = 0
-    page.render(App)
-
-
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(lambda page: page.render(App))
