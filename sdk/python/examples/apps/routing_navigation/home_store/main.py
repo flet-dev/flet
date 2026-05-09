@@ -71,4 +71,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, route_url_strategy="hash")
+    ft.run(main)

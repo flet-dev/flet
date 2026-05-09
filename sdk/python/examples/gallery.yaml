@@ -18,27 +18,7 @@ categories:
   Getting Started:
     _icon: rocket_launch
     _description: Quick-start examples and tutorials
-    Counter:
-    Hello World:
-    # Some layout examples
-
-  Apps:
-    _icon: apps
-    _description: Complete sample apps
-    Basic:
-    Authentication:
-    Animation:
-    Canvas:
-    Custom controls:
     Declarative:
-    Games:
-    Navigation:
-    Productivity:
-    Search:
-    Time:
-    Visualization:
-    Accessibility:
-    Templates:
 
   Layout:
     _icon: dashboard

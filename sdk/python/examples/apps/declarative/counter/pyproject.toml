@@ -11,10 +11,10 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Declarative"]
+categories = ["Declarative", "Getting Started/Declarative"]
 
 [tool.flet.metadata]
-title = "Declarative counter"
+title = "Counter (declarative)"
 controls = ["View", "SafeArea", "Container", "Text", "FloatingActionButton"]
 layout_pattern = "center-stage"
 complexity = "basic"

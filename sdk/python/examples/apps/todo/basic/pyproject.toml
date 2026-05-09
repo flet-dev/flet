@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured"]
+categories = ["Featured", "Getting Started"]
 
 [tool.flet.metadata]
 title = "Classic To-Do"

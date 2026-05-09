@@ -11,10 +11,10 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Navigation/Routing"]
+categories = ["Navigation/Routing", "Getting Started"]
 
 [tool.flet.metadata]
-title = "Home store"
+title = "Routing with two pages"
 controls = ["View", "SafeArea", "Column", "AppBar", "Button"]
 layout_pattern = "list-detail"
 complexity = "basic"

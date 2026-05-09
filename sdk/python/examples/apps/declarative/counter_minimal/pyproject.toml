@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Declarative"]
 
 [tool.flet.metadata]
-title = "Counter minimal"
+title = "Counter minimal (declarative)"
 controls = ["SafeArea", "Row", "Text", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"
