@@ -21,7 +21,7 @@ dev = [
 title = "Basic Counter"
 
 [tool.flet.gallery]
-categories = ["Apps/Templates"]
+categories = ["Getting Started"]
 
 [tool.flet]
 org = "dev.flet"

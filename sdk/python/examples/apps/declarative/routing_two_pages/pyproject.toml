@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/Declarative", "Navigation/Routing", "Featured"]
+categories = ["Declarative", "Navigation/Routing", "Featured"]
 
 [tool.flet.metadata]
 title = "Routing two pages"

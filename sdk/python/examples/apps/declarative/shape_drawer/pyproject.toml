@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/Declarative", "Displays/Canvas"]
+categories = ["Declarative", "Displays/Canvas"]
 
 [tool.flet.metadata]
 title = "Shape drawer"

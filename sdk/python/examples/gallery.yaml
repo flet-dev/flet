@@ -264,3 +264,7 @@ categories:
   Cookbook:
     _icon: interests
     _description: Recipes and patterns for common app features
+
+  Community:
+    _icon: people
+    _description: Examples contributed by the community
