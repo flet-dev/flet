@@ -269,16 +269,21 @@ def SlotView(slot: Slot, on_slot_click, key=None) -> ft.Control:
         top=slot.top,
         width=CARD_W,
         height=CARD_H,
-        border=ft.Border.all(1, ft.Colors.SECONDARY_CONTAINER),
+        border=ft.Border.all(1, ft.Colors.BLACK_12),
         border_radius=5,
-        content=ft.Text(slot.id, size=10, color=ft.Colors.BLACK45),
         on_click=lambda _e: on_slot_click(slot),
     )
 
 
 # ---------- App ----------
+BG_COLOR = "#207F4C"
+
+
 @ft.component
 def App():
+    ft.context.page.padding = 0
+    ft.context.page.bgcolor = BG_COLOR
+
     game, set_game = ft.use_state(lambda: Game())
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
@@ -343,32 +348,51 @@ def App():
         drag_interval=5,
         mouse_cursor=ft.MouseCursor.MOVE,
         content=ft.Stack(
+            expand=True,
             controls=[
-                ft.Container(expand=True, bgcolor="#207F4C", key="bg")
+                ft.Container(expand=True, bgcolor=BG_COLOR, key="bg")
             ]  # to capture full area
             + [MemoSlotView(s, cb_reset_deck, key=s.id) for s in game.slots]
             + [MemoCardView(c, cb_open_card, key=c.id) for c in game.cards],
-            width=1000,
-            height=500,
         ),
     )
 
-    bottom_bar = ft.Row(
-        controls=[
-            ft.FilledButton("New Game", on_click=lambda _: set_game(Game())),
-            ft.Text(f"Cards in deck: {len(game.slots[0].cards)}"),
-            ft.Text(f"Cards in waste: {len(game.slots[1].cards)}"),
-        ]
+    bottom_bar = ft.Container(
+        bgcolor=BG_COLOR,
+        padding=ft.Padding.symmetric(horizontal=10, vertical=8),
+        content=ft.Row(
+            controls=[
+                ft.FilledButton("New Game", on_click=lambda _: set_game(Game())),
+                ft.Text(
+                    f"Cards in deck: {len(game.slots[0].cards)}",
+                    color=ft.Colors.WHITE,
+                ),
+                ft.Text(
+                    f"Cards in waste: {len(game.slots[1].cards)}",
+                    color=ft.Colors.WHITE,
+                ),
+            ],
+        ),
     )
 
-    return ft.Column(
+    return ft.Container(
         expand=True,
-        spacing=0,
-        controls=[
-            ft.Container(expand=True, content=board),
-            bottom_bar,
-        ],
+        padding=10,
+        bgcolor=BG_COLOR,
+        content=ft.Column(
+            expand=True,
+            spacing=0,
+            controls=[
+                ft.Container(expand=True, content=board),
+                bottom_bar,
+            ],
+        ),
     )
 
 
-ft.run(lambda page: page.render(App))
+def main(page: ft.Page):
+    page.padding = 0
+    page.render(App)
+
+
+ft.run(main)
