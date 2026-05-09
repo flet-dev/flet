@@ -11,10 +11,10 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Navigation/Router", "Apps/Featured"]
+categories = ["Navigation/Router", "Featured"]
 
 [tool.flet.metadata]
-title = "Featured router app"
+title = "Router featured app (declarative)"
 controls = ["SafeArea", "Column", "Row", "Container", "Button", "Text", "TextField", "IconButton", "ListTile", "Divider", "ProgressRing", "Router", "Route"]
 layout_pattern = "app-shell"
 complexity = "advanced"

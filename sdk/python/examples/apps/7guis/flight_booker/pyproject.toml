@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs", "Apps/Forms"]
+categories = ["Featured/7GUIs"]
 
 [tool.flet.metadata]
 title = "Flight booker"

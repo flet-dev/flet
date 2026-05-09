@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Layout/WindowDragArea"]
+categories = ["Layout/Window"]
 
 [tool.flet.metadata]
 title = "No frame window"
@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["frameless window", "custom window dragging"]
 
 [tool.flet]
+platforms = ["windows", "macos", "linux"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

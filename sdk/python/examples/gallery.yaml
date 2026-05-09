@@ -176,6 +176,10 @@ categories:
     RadarChart:
     ScatterChart:
 
+  Declarative:
+    _icon: code
+    _description: Examples of declarative UI style and patterns
+
   Games:
     _icon: sports_esports
     _description: Game examples and demos
@@ -232,6 +236,7 @@ categories:
     Types:
     UrlLauncher:
     Wakelock:
+    Window:
 
   Sensors:
     _icon: sensors
