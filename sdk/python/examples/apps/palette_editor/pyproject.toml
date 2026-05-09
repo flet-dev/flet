@@ -1,9 +1,9 @@
 [project]
 name = "apps-palette-editor"
 version = "1.0.0"
-description = "Tool for editing theme colors."
+description = "Interactive editor for Material theme colors and role previews."
 requires-python = ">=3.10"
-keywords = ["apps", "color scheme", "theme"]
+keywords = ["apps", "theme", "material design", "color scheme", "palette"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet", "flet-color-pickers"]
 
@@ -15,10 +15,27 @@ categories = ["Apps/Basic"]
 
 [tool.flet.metadata]
 title = "Palette Editor"
-controls = ["SafeArea", "Column", "Row", "IconButton", "TextField"]
-layout_pattern = "inline-actions"
-complexity = "basic"
-features = ["colors"]
+controls = [
+    "SafeArea",
+    "Container",
+    "Column",
+    "Row",
+    "Tabs",
+    "TabBar",
+    "IconButton",
+    "PopupMenuButton",
+    "TextField",
+    "AlertDialog",
+    "TimePicker",
+]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = [
+    "theme editing",
+    "color role preview",
+    "light and dark mode",
+    "palette import and export",
+]
 
 [tool.flet]
 org = "dev.flet"
