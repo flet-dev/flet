@@ -24,3 +24,4 @@ features = ["battery state", "battery saver status"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios", "windows", "linux", "macos"]

@@ -24,4 +24,4 @@ features = ["live sensor readings", "sensor error handling"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["android", "ios", "web"]
+platforms = ["android", "ios"]

@@ -24,3 +24,4 @@ features = ["haptic feedback"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["android", "ios"]

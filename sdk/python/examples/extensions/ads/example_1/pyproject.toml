@@ -21,7 +21,7 @@ complexity = "basic"
 features = ["banner ad loading", "interstitial ad loading", "ad lifecycle callbacks", "platform-specific ad units"]
 
 [tool.flet]
-platforms = ["web", "ios", "android"]
+platforms = ["ios", "android"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
