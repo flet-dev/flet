@@ -1,3 +1,9 @@
+## 0.85.1
+
+### Bug fixes
+
+* Fix `flet-geolocator.Geolocator` reliability on web and desktop: `get_last_known_position()` no longer crashes with `TypeError: argument after ** must be a mapping, not NoneType` and now returns `Optional[GeolocatorPosition]`; `get_current_position()` no longer hangs forever on web (Dart-side workaround for the upstream [`geolocator_web` 4.1.3](https://pub.dev/packages/geolocator_web) `inMicroseconds`/`inMilliseconds` timeout typo) and uses sensible web defaults (`time_limit: 30s`, `maximum_age: 5m`); the previously-dropped `configuration` argument now actually reaches `getCurrentPosition` on the Dart side; the position stream is gated behind a registered `on_position_change`/`on_error` handler (with cancel-on-update to prevent leaks); and platform exceptions (`LocationServiceDisabledException`, `PermissionDeniedException`, `PermissionDefinitionsNotFoundException`, `PermissionRequestInProgressException`, `PositionUpdateException`, `TimeoutException`) are now translated into actionable error messages and surfaced to Python as `RuntimeError` without the default `Exception:` prefix by @FeodorFitsner.
+
 ## 0.85.0
 
 ### New features
