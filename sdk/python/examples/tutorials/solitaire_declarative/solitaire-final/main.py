@@ -326,14 +326,12 @@ def App():
     page.bgcolor = BG_COLOR
 
     game, set_game = ft.use_state(lambda: Game())
-    win_w, set_win_w = ft.use_state(lambda: page.width or 800)
+    board_w, set_board_w = ft.use_state(0.0)
     dragging, set_dragging = ft.use_state(None)  # None or list[Card] being dragged
     start_x, set_start_x = ft.use_state(None)  # initial x of the card being dragged
     start_y, set_start_y = ft.use_state(None)  # initial y of the card being dragged
 
-    page.on_resize = lambda e: set_win_w(e.width)
-
-    ft.use_effect(lambda: game.layout(win_w), [game, win_w])
+    ft.use_effect(lambda: game.layout(board_w), [game, board_w])
 
     def on_pan_start(e: ft.DragStartEvent):
         grabbed = game.point_in_card_stack(e.local_position.x, e.local_position.y)
@@ -392,7 +390,7 @@ def App():
         on_pan_update=on_pan_update,
         on_pan_end=on_pan_end,
         drag_interval=5,
-        mouse_cursor=ft.MouseCursor.MOVE,
+        on_size_change=lambda e: set_board_w(e.width),
         content=ft.Stack(
             expand=True,
             controls=[
