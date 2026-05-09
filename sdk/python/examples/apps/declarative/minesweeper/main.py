@@ -206,6 +206,11 @@ def App():
         except asyncio.CancelledError:
             pass
 
+    if ft.context.page.web:
+        ft.on_mounted(
+            lambda: asyncio.create_task(ft.BrowserContextMenu().disable())
+        )  # disable right-click context menu
+
     def ensure_ticker():
         # call with the function, not tick_loop()
         if ticker_task is None or ticker_task.done():
