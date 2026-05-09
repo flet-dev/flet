@@ -9,7 +9,7 @@ from typing import (
 
 from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.animation import AnimationCurve
+from flet.controls.animation import AnimationCurve, AnimationStyle
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
@@ -177,6 +177,17 @@ class BasePage(AdaptiveControl):
     dark_theme: Optional["Theme"] = None
     """
     Customizes the theme of the application when in dark theme mode.
+    """
+
+    theme_animation_style: Optional[AnimationStyle] = None
+    """
+    Overrides the default animation style used when the application's theme
+    is changed (for example, when :attr:`theme_mode` switches between light
+    and dark).
+
+    Tip:
+        Use :meth:`flet.AnimationStyle.no_animation` to disable the theme
+        transition entirely.
     """
 
     locale_configuration: Optional[LocaleConfiguration] = None

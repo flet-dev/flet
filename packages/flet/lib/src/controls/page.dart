@@ -24,6 +24,7 @@ import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
+import '../utils/animations.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
@@ -533,6 +534,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var themeMode = control.getThemeMode("theme_mode") ??
         PageContext.of(context)?.themeMode;
 
+    var themeAnimationStyle =
+        control.getAnimationStyle("theme_animation_style");
+
     var localeConfiguration =
         control.getLocaleConfiguration("locale_configuration");
 
@@ -621,6 +625,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -636,6 +641,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
