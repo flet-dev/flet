@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Pages/Page"]
+categories = ["Utility/Keyboard"]
 
 [tool.flet.metadata]
 title = "Keyboard events"

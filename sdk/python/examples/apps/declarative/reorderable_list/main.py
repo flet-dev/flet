@@ -104,9 +104,5 @@ def App(items: list[Item] | None = None, allow_add_remove: bool = True):
     )
 
 
-def main(page: ft.Page):
-    page.render(App)
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render(App))

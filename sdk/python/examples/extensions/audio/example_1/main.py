@@ -3,7 +3,7 @@ import flet_audio as fta
 
 
 def main(page: ft.Page):
-    url = "https://github.com/mdn/webaudio-examples/blob/main/audio-analyser/viper.mp3?raw=true"
+    url = "viper.mp3"
 
     async def play():
         await audio.play()

@@ -10,9 +10,6 @@ dependencies = ["flet"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
-[tool.flet.gallery]
-categories = ["Apps/Authentication"]
-
 [tool.flet.metadata]
 title = "GitHub login in same page"
 controls = ["SafeArea", "Column", "Button", "Text", "GitHubOAuthProvider", "UrlLauncher"]

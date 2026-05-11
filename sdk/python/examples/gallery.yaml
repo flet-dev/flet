@@ -10,22 +10,15 @@
 # in this file will be skipped at scan time.
 
 categories:
-  Apps:
-    _icon: apps
-    _description: Complete sample apps
-    Basic:
-    Authentication:
-    Animation:
-    Canvas:
-    Custom controls:
+  Featured:
+    _icon: star
+    _description: Featured examples and demos
+    7GUIs:
+
+  Getting Started:
+    _icon: rocket_launch
+    _description: Quick-start examples and tutorials
     Declarative:
-    Games:
-    Navigation:
-    Productivity:
-    Search:
-    Time:
-    Visualization:
-    Accessibility:
 
   Layout:
     _icon: dashboard
@@ -55,7 +48,7 @@ categories:
     Stack:
     Tabs:
     VerticalDivider:
-    WindowDragArea:
+    #WindowDragArea:
 
   Buttons:
     _icon: smart_button
@@ -81,6 +74,7 @@ categories:
     AutofillGroup:
     Checkbox:
     Chip:
+    CodeEditor:
     ContextMenu:
     Dropdown:
     DropdownM2:
@@ -103,12 +97,6 @@ categories:
     CupertinoTextField:
     CupertinoTimerPicker:
 
-  Display:
-    _icon: visibility
-    _description: Read-only displays
-    Text:
-    WebView:
-
   Displays:
     _icon: image
     _description: Visual indicators and media displays
@@ -118,10 +106,13 @@ categories:
     CupertinoActivityIndicator:
     Icon:
     Image:
+    Map:
     Markdown:
     ProgressBar:
     ProgressRing:
+    Text:
     Tooltip:
+    WebView:
 
   Dialogs:
     _icon: chat_bubble_outline
@@ -146,6 +137,8 @@ categories:
     NavigationBar:
     NavigationDrawer:
     NavigationRail:
+    Router:
+    Routing:
     SubmenuButton:
     Tabs:
     CupertinoAppBar:
@@ -163,14 +156,18 @@ categories:
     RadarChart:
     ScatterChart:
 
-  Canvas:
-    _icon: brush
-    _description: 2D drawing primitives
-    Shapes:
+  Declarative:
+    _icon: code
+    _description: Examples of declarative UI style and patterns
+
+  Games:
+    _icon: sports_esports
+    _description: Game examples and demos
 
   Animations:
     _icon: animation
     _description: Animation controls
+    Apps:
     AnimatedSwitcher:
 
   Effects:
@@ -182,70 +179,72 @@ categories:
   Media:
     _icon: movie
     _description: Audio, video, Lottie, Rive
+    Audio: # download audio to assets - CORS preventing from github
+    AudioRecorder:
     Lottie:
     Rive:
     Video:
+    Camera:
 
-  Pages:
-    _icon: pages
-    _description: Page-level controls
-    Page:
+  Accessibility:
+    _icon: accessibility
+    _description: Accessibility features and examples
 
   Utility:
     _icon: build
     _description: Gestures, drag/drop, screenshots
-    Draggable:
-    GestureDetector:
-    InteractiveViewer:
-    KeyboardListener:
-    Screenshot:
-    SelectionArea:
-    Semantics:
-    Types:
-
-  Utilities:
-    _icon: handyman
-    _description: Editor and developer utilities
-    CodeEditor:
-
-  Services:
-    _icon: settings
-    _description: Platform services and integrations
-    Accelerometer:
-    Ads:
-    Audio:
-    AudioRecorder:
-    Barometer:
-    Battery:
     BrowserContextMenu:
-    Camera:
-    Clipboard:
+    Clipboard: # Clipboard files gives 404 on https://flet.app/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
+    Color pickers:
     Connectivity:
+    Draggable:
     FilePicker:
     Flashlight:
-    Geolocator:
-    Gyroscope:
-    HapticFeedback:
-    Magnetometer:
+    GestureDetector:
+    InteractiveViewer:
+    Keyboard:
+    Localization:
+    Page:
     PermissionHandler:
-    ScreenBrightness:
     SecureStorage:
-    SemanticsService:
-    ShakeDetector:
+    ScreenBrightness:
+    Screenshot:
+    SelectionArea:
     Share:
     SharedPreferences:
     Storagepaths:
+    Types:
     UrlLauncher:
-    UserAccelerometer:
     Wakelock:
+    Window:
 
-  Extensions:
-    _icon: extension
-    _description: Third-party Flet extensions
-    ColorPickers:
-    Map:
+  Sensors:
+    _icon: sensors
+    _description: Device sensors and hardware features
+    Accelerometer:
+    Barometer:
+    Battery:
+    Geolocator: # Geolocator.request_permission() got an unexpected keyword argument 'timeout'
+    Gyroscope:
+    HapticFeedback:
+    Magnetometer:
+    ShakeDetector:
+    UserAccelerometer:
+
+  Marketing:
+    _icon: campaign
+    _description: Examples of marketing and monetization features
+    Ads:
+    InAppPurchase:
+
+  Tools:
+    _icon: handyman
+    _description: Development tools and utilities
+
+  Cookbook:
+    _icon: interests
+    _description: Recipes and patterns for common app features
 
   Community:
     _icon: people
-    _description: Community-contributed examples
-    Productivity:
+    _description: Examples contributed by the community

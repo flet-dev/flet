@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-secure-storage"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/SecureStorage"]
+categories = ["Utility/SecureStorage"]
 
 [tool.flet.metadata]
 title = "Basic secure storage"

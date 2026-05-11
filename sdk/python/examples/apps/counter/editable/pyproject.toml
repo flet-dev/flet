@@ -1,5 +1,5 @@
 [project]
-name = "apps-counter-basic"
+name = "flet-app-editable-counter"
 version = "1.0.0"
 description = "Classic counter app with increment and decrement buttons around a numeric text field."
 requires-python = ">=3.10"
@@ -11,10 +11,10 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/Basic"]
+categories = ["Getting Started"]
 
 [tool.flet.metadata]
-title = "Basic counter"
+title = "Editable plus/minus counter"
 controls = ["SafeArea", "Column", "Row", "IconButton", "TextField"]
 layout_pattern = "inline-actions"
 complexity = "basic"

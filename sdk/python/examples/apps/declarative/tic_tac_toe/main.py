@@ -104,9 +104,5 @@ def calculate_winner(squares: list[str]):
     return None
 
 
-def main(page: ft.Page):
-    page.render(Game)
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render(Game))
