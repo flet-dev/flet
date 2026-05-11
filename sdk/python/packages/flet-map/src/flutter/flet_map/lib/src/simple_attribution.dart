@@ -12,11 +12,15 @@ class SimpleAttributionControl extends StatelessWidget {
     debugPrint("SimpleAttributionControl build: ${control.id}");
     final text = control.getString("text");
 
+    if (text == null) {
+      return const ErrorControl("SimpleAttribution.text must be provided");
+    }
+
     return BaseControl(
       control: control,
       child: SimpleAttributionWidget(
         source: Text(
-          text ?? "Attribution",
+          text,
           style: control.getTextStyle("text_style", Theme.of(context)),
         ),
         onTap: () => control.triggerEvent("click"),

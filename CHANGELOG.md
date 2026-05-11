@@ -1,3 +1,9 @@
+## 0.85.1
+
+### Bug fixes
+
+* Fix `TooltipTheme.decoration` so it applies to controls using `ft.Tooltip(...)` when the tooltip does not explicitly set `decoration` or `bgcolor` ([#6432](https://github.com/flet-dev/flet/issues/6432), [#6482](https://github.com/flet-dev/flet/pull/6482)) by @ndonkoHenri.
+
 ## 0.85.0
 
 ### New features
@@ -18,7 +24,6 @@
 
 ### Bug fixes
 
-* Fix `TooltipTheme.decoration` not applying to controls using `ft.Tooltip(...)` unless the tooltip also defined a local decoration ([#6432](https://github.com/flet-dev/flet/issues/6432), [#6482](https://github.com/flet-dev/flet/pull/6482)) by @ndonkoHenri.
 * Fix control diffing for controls nested inside `@value` dataclass objects so they keep the nearest control parent/page context, and restore optional structured properties that are cleared to `None` and later set again ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
 * Fix `Page` and `View` vertical centering when scrolling is enabled, including hidden scrollbars, so short content remains centered in the viewport ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
 * Reduce Linux memory retention when repeatedly removing `flet_video.Video` controls by linking `media_kit` video apps against mimalloc in run and build flows ([#6164](https://github.com/flet-dev/flet/issues/6164), [#6416](https://github.com/flet-dev/flet/pull/6416)) by @ndonkoHenri.
