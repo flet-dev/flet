@@ -15,10 +15,11 @@ SvgPicture getSvgPictureFromFile(
 }
 
 AssetSource getAssetSrc(String src, Uri pageUri, String assetsDir) {
-  if (src.startsWith("http://") ||
-      src.startsWith("https://") ||
-      src.startsWith("data:") ||
-      src.startsWith("blob:")) {
+  // Pass through any value that already carries a URL scheme (http, https,
+  // data, blob, file, rtsp, rtmp, srt, udp, ...). Single-letter schemes are
+  // ignored so Windows-style "C:\..." paths fall into the relative branch.
+  final parsed = Uri.tryParse(src);
+  if (parsed != null && parsed.scheme.length > 1) {
     return AssetSource(path: src, isFile: false);
   }
   if (assetsDir.isNotEmpty) {
