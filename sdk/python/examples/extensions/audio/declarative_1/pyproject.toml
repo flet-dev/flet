@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-audio"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Audio"]
+categories = ["Media/Audio"]
 
 [tool.flet.metadata]
 title = "Declarative audio player"

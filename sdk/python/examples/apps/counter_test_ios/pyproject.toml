@@ -10,9 +10,6 @@ dependencies = ["flet"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
-[tool.flet.gallery]
-categories = ["Apps/Basic"]
-
 [tool.flet.metadata]
 title = "Counter test iOS"
 controls = ["SafeArea", "Container", "Text", "FloatingActionButton"]

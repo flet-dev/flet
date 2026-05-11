@@ -1,5 +1,5 @@
 [project]
-name = "apps-todo-basic"
+name = "apps-todo-classic"
 version = "1.0.0"
 description = "Classic to-do app with add, edit, delete, and filter interactions inspired by TodoMVC."
 requires-python = ">=3.10"
@@ -11,10 +11,10 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/Productivity"]
+categories = ["Featured", "Getting Started"]
 
 [tool.flet.metadata]
-title = "Basic to-do"
+title = "Classic To-Do"
 controls = ["SafeArea", "Column", "Row", "TextField", "Tabs", "TabBar", "Checkbox", "IconButton", "FloatingActionButton", "OutlinedButton", "Text"]
 layout_pattern = "form"
 complexity = "intermediate"

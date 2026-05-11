@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["page lifecycle events"]
 
 [tool.flet]
+platforms = ["macos", "ios", "android"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

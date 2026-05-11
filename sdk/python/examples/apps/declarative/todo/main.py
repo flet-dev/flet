@@ -36,11 +36,13 @@ class TodoAppState:
     def get_tasks(self) -> list[TaskItem]:
         return list(
             filter(
-                lambda task: self.status == "all"
-                or self.status == "active"
-                and not task.completed
-                or self.status == "completed"
-                and task.completed,
+                lambda task: (
+                    self.status == "all"
+                    or self.status == "active"
+                    and not task.completed
+                    or self.status == "completed"
+                    and task.completed
+                ),
                 self.tasks,
             )
         )
@@ -230,9 +232,5 @@ def Footer(active_tasks_number: int, clear_completed):
     )
 
 
-def main(page: ft.Page):
-    page.render_views(TodoAppView)
-
-
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(lambda page: page.render_views(TodoAppView))

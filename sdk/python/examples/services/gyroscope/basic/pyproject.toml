@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Gyroscope"]
+categories = ["Sensors/Gyroscope"]
 
 [tool.flet.metadata]
 title = "Basic gyroscope"
@@ -24,4 +24,4 @@ features = ["live sensor readings", "sensor error handling"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["android", "ios", "web"]
+platforms = ["android", "ios"]

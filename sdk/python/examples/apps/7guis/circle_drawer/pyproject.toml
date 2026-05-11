@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Apps/7GUIs", "Apps/Canvas"]
+categories = ["Featured/7GUIs", "Displays/Canvas"]
 
 [tool.flet.metadata]
 title = "Circle drawer"

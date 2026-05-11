@@ -11,7 +11,7 @@ dependencies = ["flet", "flet-camera"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Services/Camera"]
+categories = ["Media/Camera"]
 
 [tool.flet.metadata]
 title = "Camera playground"

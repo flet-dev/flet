@@ -10,9 +10,6 @@ dependencies = ["flet", "httpx"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
-[tool.flet.gallery]
-categories = ["Apps/Authentication"]
-
 [tool.flet.metadata]
 title = "GitHub repos browser"
 controls = ["SafeArea", "Column", "Row", "Text", "Button", "ListView", "ListTile", "GitHubOAuthProvider"]
