@@ -456,22 +456,6 @@ def build_selection_row() -> ft.Row:
     )
 
 
-def build_time_picker_row(
-    open_preview_time_picker, preview_time_text: ft.Text
-) -> ft.Row:
-    return ft.Row(
-        spacing=12,
-        controls=[
-            ft.Button(
-                "Pick time",
-                icon=ft.Icons.SCHEDULE,
-                on_click=open_preview_time_picker,
-            ),
-            preview_time_text,
-        ],
-    )
-
-
 def build_error_examples() -> list[ft.Control]:
     password_field = ft.TextField(
         label="Password",
@@ -499,6 +483,7 @@ def build_all_preview_pagelet(
         appbar=ft.AppBar(
             leading=ft.Icon(ft.Icons.PALETTE),
             title=ft.Text("Palette preview"),
+            bgcolor=ft.Colors.SURFACE_CONTAINER,
             actions=[
                 ft.IconButton(icon=ft.Icons.SEARCH),
                 ft.IconButton(icon=ft.Icons.MORE_VERT),
@@ -510,6 +495,7 @@ def build_all_preview_pagelet(
             controls=[
                 ft.NavigationRail(
                     selected_index=0,
+                    bgcolor=ft.Colors.SURFACE_CONTAINER,
                     label_type=ft.NavigationRailLabelType.ALL,
                     min_width=76,
                     min_extended_width=132,
@@ -595,9 +581,12 @@ def build_all_preview_pagelet(
                                                 ],
                                             ),
                                             ft.Text(preview_body),
-                                            build_time_picker_row(
-                                                open_preview_time_picker,
-                                                preview_time_text,
+                                            ft.Row(
+                                                spacing=12,
+                                                controls=[
+                                                    ft.FilledButton("Apply"),
+                                                    ft.TextButton("Reset"),
+                                                ],
                                             ),
                                         ],
                                     ),
@@ -640,7 +629,7 @@ def build_all_preview_pagelet(
             )
         ),
         floating_action_button=ft.FloatingActionButton(icon=ft.Icons.ADD),
-        floating_action_button_location=ft.FloatingActionButtonLocation.END_DOCKED,
+        floating_action_button_location=ft.FloatingActionButtonLocation.END_FLOAT,
     )
 
 
@@ -765,9 +754,6 @@ def build_preview_tabs(
                                                 ),
                                             ],
                                         ),
-                                        build_time_picker_row(
-                                            open_preview_time_picker, preview_time_text
-                                        ),
                                     ),
                                     showcase_section(
                                         "Error",
@@ -807,22 +793,6 @@ def build_preview_tabs(
                                             surface_sample_card(
                                                 "SURFACE",
                                                 ft.Colors.SURFACE,
-                                                ft.Colors.ON_SURFACE,
-                                                outline_label="Outline",
-                                                outline_color=ft.Colors.OUTLINE,
-                                                text_label="On surface",
-                                            ),
-                                            surface_sample_card(
-                                                "SURFACE_BRIGHT",
-                                                ft.Colors.SURFACE_BRIGHT,
-                                                ft.Colors.ON_SURFACE_VARIANT,
-                                                outline_label="Outline variant",
-                                                outline_color=ft.Colors.OUTLINE_VARIANT,
-                                                text_label="On surface variant",
-                                            ),
-                                            surface_sample_card(
-                                                "SURFACE_DIM",
-                                                ft.Colors.SURFACE_DIM,
                                                 ft.Colors.ON_SURFACE,
                                                 outline_label="Outline",
                                                 outline_color=ft.Colors.OUTLINE,
@@ -999,22 +969,38 @@ def build_preview_tabs(
                                         ),
                                     ),
                                     showcase_section(
+                                        "Surface add-ons",
+                                        ft.Row(
+                                            wrap=True,
+                                            spacing=12,
+                                            run_spacing=12,
+                                            controls=[
+                                                surface_sample_card(
+                                                    "SURFACE_DIM",
+                                                    ft.Colors.SURFACE_DIM,
+                                                    ft.Colors.ON_SURFACE,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On surface",
+                                                ),
+                                                surface_sample_card(
+                                                    "SURFACE_BRIGHT",
+                                                    ft.Colors.SURFACE_BRIGHT,
+                                                    ft.Colors.ON_SURFACE_VARIANT,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On surface variant",
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    showcase_section(
                                         "Effects",
                                         ft.Row(
                                             wrap=True,
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
-                                                    "SURFACE_DIM",
-                                                    ft.Colors.SURFACE_DIM,
-                                                    ft.Colors.ON_SURFACE,
-                                                ),
-                                                preview_role_block(
-                                                    "SURFACE_BRIGHT",
-                                                    ft.Colors.SURFACE_BRIGHT,
-                                                    ft.Colors.ON_SURFACE,
-                                                ),
                                                 preview_role_block(
                                                     "SHADOW",
                                                     ft.Colors.SHADOW,

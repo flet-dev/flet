@@ -287,8 +287,6 @@ LEFT_PANE_ROLE_TABS = [
                 "items": [
                     ("SURFACE", "SURFACE", "ON_SURFACE"),
                     ("ON_SURFACE", "ON_SURFACE", "SURFACE"),
-                    ("SURFACE_DIM", "SURFACE_DIM", "ON_SURFACE"),
-                    ("SURFACE_BRIGHT", "SURFACE_BRIGHT", "ON_SURFACE"),
                     ("SURFACE_TINT", "SURFACE_TINT", "ON_SURFACE"),
                     ("ON_SURFACE_VARIANT", "ON_SURFACE_VARIANT", "SURFACE"),
                 ],
@@ -415,6 +413,20 @@ LEFT_PANE_ROLE_TABS = [
                         "ON_TERTIARY_FIXED_VARIANT",
                         "TERTIARY_FIXED",
                     ),
+                ],
+            },
+            {
+                "title": "Surface add-ons",
+                "hint": (
+                    "Most products won't need add-on roles.\n"
+                    "Surface bright and surface dim provide\n"
+                    "specialized surface tones that keep their\n"
+                    "relative brightness across light and dark\n"
+                    "themes."
+                ),
+                "items": [
+                    ("SURFACE_DIM", "SURFACE_DIM", "ON_SURFACE"),
+                    ("SURFACE_BRIGHT", "SURFACE_BRIGHT", "ON_SURFACE"),
                 ],
             },
             {
