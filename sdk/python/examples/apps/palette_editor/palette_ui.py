@@ -310,6 +310,7 @@ def surface_sample_card(
     outline_color: ft.ColorValue,
     text_label: str,
 ) -> ft.Container:
+    subtitle = f"{outline_label}, {text_label}" if outline_label else text_label
     return ft.Container(
         width=300,
         height=132,
@@ -328,7 +329,7 @@ def surface_sample_card(
                     theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                 ),
                 ft.Text(
-                    f"{outline_label}, {text_label}",
+                    subtitle,
                     color=foreground,
                     size=13,
                 ),
@@ -485,6 +486,164 @@ def build_error_examples() -> list[ft.Control]:
     ]
 
 
+def build_all_preview_pagelet(
+    *,
+    preview_heading: str,
+    preview_body: str,
+    preview_time_text: ft.Text,
+    open_preview_time_picker,
+) -> ft.Pagelet:
+    return ft.Pagelet(
+        height=760,
+        bgcolor=ft.Colors.SURFACE,
+        appbar=ft.AppBar(
+            leading=ft.Icon(ft.Icons.PALETTE),
+            title=ft.Text("Palette preview"),
+            actions=[
+                ft.IconButton(icon=ft.Icons.SEARCH),
+                ft.IconButton(icon=ft.Icons.MORE_VERT),
+            ],
+        ),
+        content=ft.Row(
+            expand=True,
+            spacing=0,
+            controls=[
+                ft.NavigationRail(
+                    selected_index=0,
+                    label_type=ft.NavigationRailLabelType.ALL,
+                    min_width=76,
+                    min_extended_width=132,
+                    destinations=[
+                        ft.NavigationRailDestination(
+                            icon=ft.Icons.HOME_OUTLINED,
+                            selected_icon=ft.Icons.HOME,
+                            label="Home",
+                        ),
+                        ft.NavigationRailDestination(
+                            icon=ft.Icons.PALETTE_OUTLINED,
+                            selected_icon=ft.Icons.PALETTE,
+                            label="Theme",
+                        ),
+                        ft.NavigationRailDestination(
+                            icon=ft.Icons.SCHEDULE_OUTLINED,
+                            selected_icon=ft.Icons.SCHEDULE,
+                            label="Time",
+                        ),
+                    ],
+                ),
+                ft.VerticalDivider(width=1),
+                ft.Container(
+                    expand=True,
+                    padding=20,
+                    content=ft.Column(
+                        spacing=16,
+                        scroll=ft.ScrollMode.AUTO,
+                        controls=[
+                            ft.Row(
+                                wrap=True,
+                                spacing=12,
+                                run_spacing=12,
+                                controls=[
+                                    preview_role_block(
+                                        "PRIMARY",
+                                        ft.Colors.PRIMARY,
+                                        ft.Colors.ON_PRIMARY,
+                                    ),
+                                    preview_role_block(
+                                        "SECONDARY",
+                                        ft.Colors.SECONDARY,
+                                        ft.Colors.ON_SECONDARY,
+                                    ),
+                                    preview_role_block(
+                                        "TERTIARY",
+                                        ft.Colors.TERTIARY,
+                                        ft.Colors.ON_TERTIARY,
+                                    ),
+                                    preview_role_block(
+                                        "ERROR",
+                                        ft.Colors.ERROR,
+                                        ft.Colors.ON_ERROR,
+                                    ),
+                                ],
+                            ),
+                            ft.Row(
+                                wrap=True,
+                                spacing=12,
+                                run_spacing=12,
+                                controls=[
+                                    ft.FilledButton("Apply"),
+                                    ft.FilledTonalButton("Tonal"),
+                                    ft.OutlinedButton("Outline"),
+                                    ft.TextButton("Reset"),
+                                ],
+                            ),
+                            build_selected_chip_row(),
+                            ft.Card(
+                                content=ft.Container(
+                                    padding=16,
+                                    content=ft.Column(
+                                        spacing=12,
+                                        controls=[
+                                            ft.Row(
+                                                spacing=12,
+                                                controls=[
+                                                    ft.Icon(ft.Icons.COLOR_LENS),
+                                                    ft.Text(
+                                                        preview_heading,
+                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                    ),
+                                                ],
+                                            ),
+                                            ft.Text(preview_body),
+                                            build_time_picker_row(
+                                                open_preview_time_picker,
+                                                preview_time_text,
+                                            ),
+                                        ],
+                                    ),
+                                )
+                            ),
+                            ft.Row(
+                                wrap=True,
+                                spacing=16,
+                                run_spacing=12,
+                                controls=[
+                                    ft.Switch(label="Use dark mode", value=True),
+                                    ft.Checkbox(label="Enable accents", value=True),
+                                ],
+                            ),
+                            *build_error_examples(),
+                        ],
+                    ),
+                ),
+            ],
+        ),
+        bottom_appbar=ft.BottomAppBar(
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.Row(
+                        spacing=4,
+                        controls=[
+                            ft.IconButton(icon=ft.Icons.MENU),
+                            ft.IconButton(icon=ft.Icons.FAVORITE_BORDER),
+                        ],
+                    ),
+                    ft.Row(
+                        spacing=4,
+                        controls=[
+                            ft.IconButton(icon=ft.Icons.SEARCH),
+                            ft.IconButton(icon=ft.Icons.PERSON_OUTLINE),
+                        ],
+                    ),
+                ],
+            )
+        ),
+        floating_action_button=ft.FloatingActionButton(icon=ft.Icons.ADD),
+        floating_action_button_location=ft.FloatingActionButtonLocation.END_DOCKED,
+    )
+
+
 def build_preview_tabs(
     *,
     preview_heading: str,
@@ -527,102 +686,11 @@ def build_preview_tabs(
                                 scroll=ft.ScrollMode.AUTO,
                                 spacing=0,
                                 controls=[
-                                    showcase_section(
-                                        "Palette together",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "PRIMARY",
-                                                    ft.Colors.PRIMARY,
-                                                    ft.Colors.ON_PRIMARY,
-                                                ),
-                                                preview_role_block(
-                                                    "SECONDARY",
-                                                    ft.Colors.SECONDARY,
-                                                    ft.Colors.ON_SECONDARY,
-                                                ),
-                                                preview_role_block(
-                                                    "TERTIARY",
-                                                    ft.Colors.TERTIARY,
-                                                    ft.Colors.ON_TERTIARY,
-                                                ),
-                                                preview_role_block(
-                                                    "ERROR",
-                                                    ft.Colors.ERROR,
-                                                    ft.Colors.ON_ERROR,
-                                                ),
-                                            ],
-                                        ),
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                ft.FilledButton("Apply"),
-                                                ft.FilledTonalButton("Tonal"),
-                                                ft.OutlinedButton("Outline"),
-                                            ],
-                                        ),
-                                        build_selected_chip_row(),
-                                    ),
-                                    showcase_section(
-                                        "Error states",
-                                        ft.Row(
-                                            wrap=True,
-                                            spacing=12,
-                                            run_spacing=12,
-                                            controls=[
-                                                preview_role_block(
-                                                    "ERROR_CONTAINER",
-                                                    ft.Colors.ERROR_CONTAINER,
-                                                    ft.Colors.ON_ERROR_CONTAINER,
-                                                )
-                                            ],
-                                        ),
-                                        *build_error_examples(),
-                                    ),
-                                    showcase_section(
-                                        "Selection",
-                                        build_selection_row(),
-                                        ft.Slider(value=70, min=0, max=100),
-                                    ),
-                                    showcase_section(
-                                        "Card",
-                                        ft.Card(
-                                            content=ft.Container(
-                                                padding=16,
-                                                content=ft.Column(
-                                                    spacing=12,
-                                                    controls=[
-                                                        ft.Row(
-                                                            spacing=12,
-                                                            controls=[
-                                                                ft.Icon(
-                                                                    ft.Icons.COLOR_LENS
-                                                                ),
-                                                                ft.Text(
-                                                                    preview_heading,
-                                                                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                                                                ),
-                                                            ],
-                                                        ),
-                                                        ft.Text(preview_body),
-                                                        ft.Row(
-                                                            spacing=12,
-                                                            controls=[
-                                                                ft.FilledButton(
-                                                                    "Apply"
-                                                                ),
-                                                                ft.TextButton("Reset"),
-                                                            ],
-                                                        ),
-                                                    ],
-                                                ),
-                                            ),
-                                        ),
+                                    build_all_preview_pagelet(
+                                        preview_heading=preview_heading,
+                                        preview_body=preview_body,
+                                        preview_time_text=preview_time_text,
+                                        open_preview_time_picker=open_preview_time_picker,
                                     ),
                                 ],
                             ),
@@ -853,20 +921,23 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "PRIMARY_FIXED",
                                                     ft.Colors.PRIMARY_FIXED,
                                                     ft.Colors.ON_PRIMARY_FIXED,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On primary fixed",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "PRIMARY_FIXED_DIM",
                                                     ft.Colors.PRIMARY_FIXED_DIM,
-                                                    ft.Colors.ON_PRIMARY_FIXED,
-                                                ),
-                                                preview_role_block(
-                                                    "ON_PRIMARY_FIXED_VARIANT",
-                                                    ft.Colors.PRIMARY_FIXED,
                                                     ft.Colors.ON_PRIMARY_FIXED_VARIANT,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label=(
+                                                        "On primary fixed variant"
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -878,20 +949,23 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "SECONDARY_FIXED",
                                                     ft.Colors.SECONDARY_FIXED,
                                                     ft.Colors.ON_SECONDARY_FIXED,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On secondary fixed",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "SECONDARY_FIXED_DIM",
                                                     ft.Colors.SECONDARY_FIXED_DIM,
-                                                    ft.Colors.ON_SECONDARY_FIXED,
-                                                ),
-                                                preview_role_block(
-                                                    "ON_SECONDARY_FIXED_VARIANT",
-                                                    ft.Colors.SECONDARY_FIXED,
                                                     ft.Colors.ON_SECONDARY_FIXED_VARIANT,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label=(
+                                                        "On secondary fixed variant"
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -903,20 +977,23 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "TERTIARY_FIXED",
                                                     ft.Colors.TERTIARY_FIXED,
                                                     ft.Colors.ON_TERTIARY_FIXED,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On tertiary fixed",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "TERTIARY_FIXED_DIM",
                                                     ft.Colors.TERTIARY_FIXED_DIM,
-                                                    ft.Colors.ON_TERTIARY_FIXED,
-                                                ),
-                                                preview_role_block(
-                                                    "ON_TERTIARY_FIXED_VARIANT",
-                                                    ft.Colors.TERTIARY_FIXED,
                                                     ft.Colors.ON_TERTIARY_FIXED_VARIANT,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label=(
+                                                        "On tertiary fixed variant"
+                                                    ),
                                                 ),
                                             ],
                                         ),
