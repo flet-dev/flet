@@ -482,130 +482,353 @@ def build_all_preview_pagelet(
         bgcolor=ft.Colors.SURFACE,
         appbar=ft.AppBar(
             leading=ft.Icon(ft.Icons.PALETTE),
-            title=ft.Text("Palette preview"),
+            title=ft.Row(
+                spacing=16,
+                controls=[
+                    ft.Text("Palette preview"),
+                    ft.Container(
+                        width=280,
+                        height=40,
+                        bgcolor=ft.Colors.SURFACE,
+                        border_radius=999,
+                        padding=ft.Padding.symmetric(horizontal=14),
+                        content=ft.Row(
+                            spacing=10,
+                            controls=[
+                                ft.Icon(
+                                    ft.Icons.SEARCH,
+                                    size=18,
+                                    color=ft.Colors.ON_SURFACE_VARIANT,
+                                ),
+                                ft.Text(
+                                    "Search palettes and roles",
+                                    size=13,
+                                    color=ft.Colors.ON_SURFACE_VARIANT,
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+            ),
             bgcolor=ft.Colors.SURFACE_CONTAINER,
             actions=[
-                ft.IconButton(icon=ft.Icons.SEARCH),
+                ft.IconButton(icon=ft.Icons.HELP_OUTLINE),
+                ft.IconButton(icon=ft.Icons.SETTINGS_OUTLINED),
                 ft.IconButton(icon=ft.Icons.MORE_VERT),
             ],
         ),
-        content=ft.Row(
-            expand=True,
-            spacing=0,
-            controls=[
-                ft.NavigationRail(
-                    selected_index=0,
-                    bgcolor=ft.Colors.SURFACE_CONTAINER,
-                    label_type=ft.NavigationRailLabelType.ALL,
-                    min_width=76,
-                    min_extended_width=132,
-                    destinations=[
-                        ft.NavigationRailDestination(
-                            icon=ft.Icons.HOME_OUTLINED,
-                            selected_icon=ft.Icons.HOME,
-                            label="Home",
-                        ),
-                        ft.NavigationRailDestination(
-                            icon=ft.Icons.PALETTE_OUTLINED,
-                            selected_icon=ft.Icons.PALETTE,
-                            label="Theme",
-                        ),
-                        ft.NavigationRailDestination(
-                            icon=ft.Icons.SCHEDULE_OUTLINED,
-                            selected_icon=ft.Icons.SCHEDULE,
-                            label="Time",
-                        ),
-                    ],
-                ),
-                ft.VerticalDivider(width=1),
-                ft.Container(
-                    expand=True,
-                    padding=20,
-                    content=ft.Column(
-                        spacing=16,
-                        scroll=ft.ScrollMode.AUTO,
-                        controls=[
-                            ft.Row(
-                                wrap=True,
-                                spacing=12,
-                                run_spacing=12,
-                                controls=[
-                                    preview_role_block(
-                                        "PRIMARY",
-                                        ft.Colors.PRIMARY,
-                                        ft.Colors.ON_PRIMARY,
-                                    ),
-                                    preview_role_block(
-                                        "SECONDARY",
-                                        ft.Colors.SECONDARY,
-                                        ft.Colors.ON_SECONDARY,
-                                    ),
-                                    preview_role_block(
-                                        "TERTIARY",
-                                        ft.Colors.TERTIARY,
-                                        ft.Colors.ON_TERTIARY,
-                                    ),
-                                    preview_role_block(
-                                        "ERROR",
-                                        ft.Colors.ERROR,
-                                        ft.Colors.ON_ERROR,
-                                    ),
-                                ],
+        content=ft.Container(
+            padding=ft.Padding.only(top=12, bottom=12),
+            content=ft.Row(
+                expand=True,
+                spacing=12,
+                controls=[
+                    ft.NavigationRail(
+                        selected_index=1,
+                        bgcolor=ft.Colors.SURFACE_CONTAINER,
+                        label_type=ft.NavigationRailLabelType.ALL,
+                        min_width=76,
+                        destinations=[
+                            ft.NavigationRailDestination(
+                                icon=ft.Icons.HOME_OUTLINED,
+                                selected_icon=ft.Icons.HOME,
+                                label="Home",
                             ),
-                            ft.Row(
-                                wrap=True,
-                                spacing=12,
-                                run_spacing=12,
-                                controls=[
-                                    ft.FilledButton("Apply"),
-                                    ft.FilledTonalButton("Tonal"),
-                                    ft.OutlinedButton("Outline"),
-                                    ft.TextButton("Reset"),
-                                ],
+                            ft.NavigationRailDestination(
+                                icon=ft.Icons.PALETTE_OUTLINED,
+                                selected_icon=ft.Icons.PALETTE,
+                                label="Theme",
                             ),
-                            build_selected_chip_row(),
-                            ft.Card(
-                                content=ft.Container(
+                            ft.NavigationRailDestination(
+                                icon=ft.Icons.SCHEDULE_OUTLINED,
+                                selected_icon=ft.Icons.SCHEDULE,
+                                label="Time",
+                            ),
+                        ],
+                    ),
+                    ft.Container(
+                        width=220,
+                        bgcolor=ft.Colors.SURFACE_CONTAINER_LOW,
+                        border_radius=20,
+                        padding=16,
+                        content=ft.Column(
+                            spacing=14,
+                            controls=[
+                                ft.FilledTonalButton("New palette", icon=ft.Icons.ADD),
+                                ft.Text(
+                                    "Recent palettes",
+                                    weight=ft.FontWeight.W_600,
+                                    color=ft.Colors.ON_SURFACE_VARIANT,
+                                ),
+                                ft.Column(
+                                    spacing=8,
+                                    controls=[
+                                        ft.Container(
+                                            bgcolor=ft.Colors.SECONDARY_CONTAINER,
+                                            border_radius=14,
+                                            padding=12,
+                                            content=ft.Row(
+                                                spacing=10,
+                                                controls=[
+                                                    ft.Icon(
+                                                        ft.Icons.PALETTE,
+                                                        color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                    ),
+                                                    ft.Text(
+                                                        "Studio theme",
+                                                        color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                        ft.Row(
+                                            spacing=10,
+                                            controls=[
+                                                ft.CircleAvatar(
+                                                    content=ft.Text("A"),
+                                                    bgcolor=ft.Colors.PRIMARY_CONTAINER,
+                                                    color=ft.Colors.ON_PRIMARY_CONTAINER,
+                                                ),
+                                                ft.Column(
+                                                    spacing=2,
+                                                    controls=[
+                                                        ft.Text("Accent set"),
+                                                        ft.Text(
+                                                            "Primary and secondary",
+                                                            size=12,
+                                                            color=ft.Colors.ON_SURFACE_VARIANT,
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                        ft.Row(
+                                            spacing=10,
+                                            controls=[
+                                                ft.CircleAvatar(
+                                                    content=ft.Text("S"),
+                                                    bgcolor=ft.Colors.TERTIARY_CONTAINER,
+                                                    color=ft.Colors.ON_TERTIARY_CONTAINER,
+                                                ),
+                                                ft.Column(
+                                                    spacing=2,
+                                                    controls=[
+                                                        ft.Text("Surface study"),
+                                                        ft.Text(
+                                                            "Containers and outline",
+                                                            size=12,
+                                                            color=ft.Colors.ON_SURFACE_VARIANT,
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                        ft.Row(
+                                            spacing=10,
+                                            controls=[
+                                                ft.CircleAvatar(
+                                                    content=ft.Text("E"),
+                                                    bgcolor=ft.Colors.ERROR_CONTAINER,
+                                                    color=ft.Colors.ON_ERROR_CONTAINER,
+                                                ),
+                                                ft.Column(
+                                                    spacing=2,
+                                                    controls=[
+                                                        ft.Text("Errors and states"),
+                                                        ft.Text(
+                                                            "Validation colors",
+                                                            size=12,
+                                                            color=ft.Colors.ON_SURFACE_VARIANT,
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ),
+                    ft.Container(
+                        expand=2,
+                        bgcolor=ft.Colors.SURFACE_CONTAINER_LOWEST,
+                        border_radius=20,
+                        padding=18,
+                        content=ft.Column(
+                            spacing=14,
+                            controls=[
+                                ft.Row(
+                                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                    controls=[
+                                        ft.Column(
+                                            spacing=4,
+                                            controls=[
+                                                ft.Text(
+                                                    preview_heading,
+                                                    theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                                                ),
+                                                ft.Text(
+                                                    "Theme collaboration space",
+                                                    size=12,
+                                                    color=ft.Colors.ON_SURFACE_VARIANT,
+                                                ),
+                                            ],
+                                        ),
+                                        build_selected_chip_row(),
+                                    ],
+                                ),
+                                ft.Container(
+                                    bgcolor=ft.Colors.SURFACE,
+                                    border_radius=18,
                                     padding=16,
                                     content=ft.Column(
-                                        spacing=12,
+                                        spacing=14,
                                         controls=[
                                             ft.Row(
-                                                spacing=12,
+                                                spacing=10,
                                                 controls=[
-                                                    ft.Icon(ft.Icons.COLOR_LENS),
-                                                    ft.Text(
-                                                        preview_heading,
-                                                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                    ft.CircleAvatar(
+                                                        content=ft.Text("P"),
+                                                        bgcolor=ft.Colors.PRIMARY,
+                                                        color=ft.Colors.ON_PRIMARY,
+                                                    ),
+                                                    ft.Column(
+                                                        spacing=2,
+                                                        controls=[
+                                                            ft.Text("Palette review"),
+                                                            ft.Text(
+                                                                "22 members",
+                                                                size=12,
+                                                                color=ft.Colors.ON_SURFACE_VARIANT,
+                                                            ),
+                                                        ],
                                                     ),
                                                 ],
                                             ),
                                             ft.Text(preview_body),
+                                            ft.Container(
+                                                bgcolor=ft.Colors.PRIMARY_CONTAINER,
+                                                border_radius=16,
+                                                padding=14,
+                                                content=ft.Column(
+                                                    spacing=6,
+                                                    controls=[
+                                                        ft.Text(
+                                                            "Primary spotlight",
+                                                            color=ft.Colors.ON_PRIMARY_CONTAINER,
+                                                            weight=ft.FontWeight.W_600,
+                                                        ),
+                                                        ft.Text(
+                                                            "Use this space to "
+                                                            "compare strong accents "
+                                                            "against calmer surfaces.",
+                                                            color=ft.Colors.ON_PRIMARY_CONTAINER,
+                                                            size=12,
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
                                             ft.Row(
                                                 spacing=12,
                                                 controls=[
                                                     ft.FilledButton("Apply"),
-                                                    ft.TextButton("Reset"),
+                                                    ft.FilledTonalButton("Share"),
+                                                    ft.OutlinedButton("Inspect"),
                                                 ],
                                             ),
                                         ],
                                     ),
-                                )
-                            ),
-                            ft.Row(
-                                wrap=True,
-                                spacing=16,
-                                run_spacing=12,
-                                controls=[
-                                    ft.Switch(label="Use dark mode", value=True),
-                                    ft.Checkbox(label="Enable accents", value=True),
-                                ],
-                            ),
-                            *build_error_examples(),
-                        ],
+                                ),
+                                ft.Row(
+                                    wrap=True,
+                                    spacing=16,
+                                    run_spacing=12,
+                                    controls=[
+                                        ft.Switch(label="Use dark mode", value=True),
+                                        ft.Checkbox(label="Enable accents", value=True),
+                                    ],
+                                ),
+                                *build_error_examples(),
+                            ],
+                        ),
                     ),
-                ),
-            ],
+                    ft.Container(
+                        width=240,
+                        bgcolor=ft.Colors.SURFACE_CONTAINER,
+                        border_radius=20,
+                        padding=16,
+                        content=ft.Column(
+                            spacing=14,
+                            controls=[
+                                ft.Text(
+                                    "Today",
+                                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                ),
+                                ft.Container(
+                                    bgcolor=ft.Colors.TERTIARY_CONTAINER,
+                                    border_radius=18,
+                                    padding=14,
+                                    content=ft.Column(
+                                        spacing=6,
+                                        controls=[
+                                            ft.Text(
+                                                "Teaching workshop",
+                                                color=ft.Colors.ON_TERTIARY_CONTAINER,
+                                                weight=ft.FontWeight.W_600,
+                                            ),
+                                            ft.Text(
+                                                "9:00 AM - 12:00 PM",
+                                                color=ft.Colors.ON_TERTIARY_CONTAINER,
+                                                size=12,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                ft.Container(
+                                    bgcolor=ft.Colors.SECONDARY_CONTAINER,
+                                    border_radius=18,
+                                    padding=14,
+                                    content=ft.Column(
+                                        spacing=6,
+                                        controls=[
+                                            ft.Text(
+                                                "Lunch",
+                                                color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                weight=ft.FontWeight.W_600,
+                                            ),
+                                            ft.Text(
+                                                "1:00 PM - 2:00 PM",
+                                                color=ft.Colors.ON_SECONDARY_CONTAINER,
+                                                size=12,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                ft.Container(
+                                    bgcolor=ft.Colors.ERROR_CONTAINER,
+                                    border_radius=18,
+                                    padding=14,
+                                    content=ft.Column(
+                                        spacing=6,
+                                        controls=[
+                                            ft.Text(
+                                                "Review alerts",
+                                                color=ft.Colors.ON_ERROR_CONTAINER,
+                                                weight=ft.FontWeight.W_600,
+                                            ),
+                                            ft.Text(
+                                                "2 palette issues need attention",
+                                                color=ft.Colors.ON_ERROR_CONTAINER,
+                                                size=12,
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+            ),
         ),
         bottom_appbar=ft.BottomAppBar(
             content=ft.Row(
@@ -615,13 +838,13 @@ def build_all_preview_pagelet(
                         spacing=4,
                         controls=[
                             ft.IconButton(icon=ft.Icons.MENU),
-                            ft.IconButton(icon=ft.Icons.FAVORITE_BORDER),
+                            ft.IconButton(icon=ft.Icons.TUNE),
                         ],
                     ),
                     ft.Row(
                         spacing=4,
                         controls=[
-                            ft.IconButton(icon=ft.Icons.SEARCH),
+                            ft.IconButton(icon=ft.Icons.CHAT_BUBBLE_OUTLINE),
                             ft.IconButton(icon=ft.Icons.PERSON_OUTLINE),
                         ],
                     ),
