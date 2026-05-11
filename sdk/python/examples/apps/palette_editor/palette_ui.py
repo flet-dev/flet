@@ -920,15 +920,21 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "PRIMARY",
                                                     ft.Colors.PRIMARY,
                                                     ft.Colors.ON_PRIMARY,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On primary",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "PRIMARY_CONTAINER",
                                                     ft.Colors.PRIMARY_CONTAINER,
                                                     ft.Colors.ON_PRIMARY_CONTAINER,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On primary container",
                                                 ),
                                             ],
                                         ),
@@ -942,15 +948,21 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "SECONDARY",
                                                     ft.Colors.SECONDARY,
                                                     ft.Colors.ON_SECONDARY,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On secondary",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "SECONDARY_CONTAINER",
                                                     ft.Colors.SECONDARY_CONTAINER,
                                                     ft.Colors.ON_SECONDARY_CONTAINER,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On secondary container",
                                                 ),
                                             ],
                                         ),
@@ -965,15 +977,21 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "TERTIARY",
                                                     ft.Colors.TERTIARY,
                                                     ft.Colors.ON_TERTIARY,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On tertiary",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "TERTIARY_CONTAINER",
                                                     ft.Colors.TERTIARY_CONTAINER,
                                                     ft.Colors.ON_TERTIARY_CONTAINER,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On tertiary container",
                                                 ),
                                             ],
                                         ),
@@ -985,15 +1003,21 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "ERROR",
                                                     ft.Colors.ERROR,
                                                     ft.Colors.ON_ERROR,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On error",
                                                 ),
-                                                preview_role_block(
+                                                surface_sample_card(
                                                     "ERROR_CONTAINER",
                                                     ft.Colors.ERROR_CONTAINER,
                                                     ft.Colors.ON_ERROR_CONTAINER,
+                                                    outline_label="",
+                                                    outline_color=None,
+                                                    text_label="On error container",
                                                 ),
                                             ],
                                         ),
@@ -1224,15 +1248,60 @@ def build_preview_tabs(
                                             spacing=12,
                                             run_spacing=12,
                                             controls=[
-                                                preview_role_block(
-                                                    "SHADOW",
-                                                    ft.Colors.SHADOW,
-                                                    ft.Colors.ON_SURFACE,
+                                                ft.Container(
+                                                    width=300,
+                                                    height=132,
+                                                    bgcolor=ft.Colors.SURFACE_CONTAINER,
+                                                    border_radius=16,
+                                                    shadow=ft.BoxShadow(
+                                                        spread_radius=4,
+                                                        blur_radius=28,
+                                                        color=ft.Colors.SHADOW,
+                                                        offset=ft.Offset(0, 12),
+                                                    ),
+                                                    padding=16,
+                                                    content=ft.Column(
+                                                        spacing=8,
+                                                        alignment=ft.MainAxisAlignment.CENTER,
+                                                        horizontal_alignment=ft.CrossAxisAlignment.START,
+                                                        controls=[
+                                                            ft.Text(
+                                                                "Container with Shadow",
+                                                                color=ft.Colors.ON_SURFACE,
+                                                                theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                            ),
+                                                            ft.Text(
+                                                                "Surface container, "
+                                                                "Shadow",
+                                                                color=ft.Colors.ON_SURFACE_VARIANT,
+                                                                size=13,
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ),
-                                                preview_role_block(
-                                                    "SCRIM",
-                                                    ft.Colors.SCRIM,
-                                                    ft.Colors.ON_SURFACE,
+                                                ft.Container(
+                                                    width=300,
+                                                    height=132,
+                                                    bgcolor=ft.Colors.SCRIM,
+                                                    border_radius=16,
+                                                    padding=16,
+                                                    content=ft.Column(
+                                                        spacing=8,
+                                                        alignment=ft.MainAxisAlignment.CENTER,
+                                                        horizontal_alignment=ft.CrossAxisAlignment.START,
+                                                        controls=[
+                                                            ft.Text(
+                                                                "SCRIM",
+                                                                color=ft.Colors.ON_INVERSE_SURFACE,
+                                                                theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                                                            ),
+                                                            ft.Text(
+                                                                "On inverse surface",
+                                                                color=ft.Colors.ON_INVERSE_SURFACE,
+                                                                size=13,
+                                                            ),
+                                                        ],
+                                                    ),
                                                 ),
                                             ],
                                         ),
