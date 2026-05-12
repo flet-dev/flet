@@ -95,7 +95,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "can_be_run_on": ["Linux"],
             },
             "web": {
-                "package_platform": "Pyodide",
+                "package_platform": "Emscripten",
                 "config_platform": "web",
                 "flutter_build_command": "web",
                 "status_text": "web app",
@@ -1833,7 +1833,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
 
         # site-packages variable
-        if self.package_platform != "Pyodide":
+        if self.package_platform != "Emscripten":
             package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
@@ -2043,12 +2043,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         build_env = {}
 
         # site-packages variable
-        if self.package_platform != "Pyodide":
+        if self.package_platform != "Emscripten":
             build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
 
-        if self.package_platform == "Pyodide" and not self.template_data["no_wasm"]:
+        if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
             build_args.append("--wasm")
 
         android_signing_key_store = (

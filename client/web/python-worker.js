@@ -149,23 +149,27 @@ self.initPyodide = async function () {
             micropip = await ensure_micropip()
             await micropip.install(py_args["dependencies"], pre=micropip_include_pre)
 
-        # Install the python_output bridge using msgpack from the
-        # already-loaded user deps (typically pulled in via flet). If
-        # msgpack isn't around — apps that don't depend on flet — skip
-        # silently; stdout/stderr just stays in the dev console.
+        # Install the python_output bridge. msgpack normally rides in
+        # with the user's flet dependency, but apps without a flet dep
+        # (or without a pyproject.toml at all) would otherwise leave the
+        # bridge unregistered and their prints stranded in the dev
+        # console. Pyodide ships msgpack as a prebuilt package, so we
+        # load it explicitly when it isn't already importable.
         try:
             import msgpack as _msgpack
-
-            def _send_python_output(text, is_stderr):
-                flet_js.receive_callback(
-                    _msgpack.packb(
-                        [7, {"text": text, "is_stderr": bool(is_stderr)}]
-                    )
-                )
-
-            flet_js.send_python_output = _send_python_output
         except ImportError:
-            pass
+            import pyodide_js
+            await pyodide_js.loadPackage("msgpack")
+            import msgpack as _msgpack
+
+        def _send_python_output(text, is_stderr):
+            flet_js.receive_callback(
+                _msgpack.packb(
+                    [7, {"text": text, "is_stderr": bool(is_stderr)}]
+                )
+            )
+
+        flet_js.send_python_output = _send_python_output
 
         # Flip the worker into "user code" mode so stdout/stderr starts
         # flowing to the host page's Console pane instead of dev console.
