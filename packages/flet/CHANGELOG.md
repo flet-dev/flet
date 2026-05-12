@@ -1,3 +1,7 @@
+## 0.85.1
+
+_No changes in the `flet` Dart package; version bumped for release coordination with `flet-geolocator` fixes on the Python side._
+
 ## 0.85.0
 
 ### New features

@@ -51,9 +51,14 @@ SvgPicture getSvgPictureFromFile(
 }
 
 AssetSource getAssetSrc(String src, Uri pageUri, String assetsDir) {
-  if (src.startsWith("http://") || src.startsWith("https://")) {
+  // Pass through any value that already carries a URL scheme (http, https,
+  // data, blob, rtsp, rtmp, srt, udp, ...). Single-letter schemes are
+  // ignored so Windows-style "C:\..." paths fall into the file branch.
+  final parsed = Uri.tryParse(src);
+  if (parsed != null && parsed.scheme.length > 1) {
     return AssetSource(path: src, isFile: false);
-  } else if (io.File(src).existsSync()) {
+  }
+  if (io.File(src).existsSync()) {
     return AssetSource(path: src, isFile: true);
   } else if (assetsDir != "") {
     var filePath = normalizePath(src);
