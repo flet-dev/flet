@@ -36,7 +36,7 @@ ActivityType? parseActivityType(String? value, [ActivityType? defaultValue]) {
 }
 
 LocationSettings? parseLocationSettings(dynamic value,
-    [LocationSettings? defaultValue]) {
+    {bool forSingleShot = false, LocationSettings? defaultValue}) {
   if (value == null) return defaultValue;
 
   var distanceFilter = parseInt(value["distance_filter"], 0)!;
@@ -47,8 +47,10 @@ LocationSettings? parseLocationSettings(dynamic value,
     return WebSettings(
       accuracy: accuracy,
       distanceFilter: distanceFilter,
-      timeLimit: timeLimit,
-      maximumAge: parseDuration(value["maximum_age"], Duration.zero)!,
+      timeLimit:
+          timeLimit ?? (forSingleShot ? const Duration(seconds: 30) : null),
+      maximumAge: parseDuration(value["maximum_age"],
+          forSingleShot ? const Duration(minutes: 5) : Duration.zero)!,
     );
   } else if (isAndroidMobile()) {
     return AndroidSettings(
