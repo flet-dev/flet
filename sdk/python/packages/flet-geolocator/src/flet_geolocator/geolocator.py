@@ -75,7 +75,7 @@ class Geolocator(ft.Service):
         )
         return GeolocatorPosition(**r)
 
-    async def get_last_known_position(self) -> GeolocatorPosition:
+    async def get_last_known_position(self) -> Optional[GeolocatorPosition]:
         """
         Gets the last known position stored on the user's device.
         The accuracy can be defined using the
@@ -83,7 +83,8 @@ class Geolocator(ft.Service):
 
         Returns:
             The last known position of the device as a \
-            :class:`~flet_geolocator.GeolocatorPosition`.
+            :class:`~flet_geolocator.GeolocatorPosition`,
+            or `None` if no last known position is available.
 
         Raises:
             FletUnsupportedPlatformException: If invoked on a web platform.
@@ -93,7 +94,7 @@ class Geolocator(ft.Service):
                 "get_last_known_position is not supported on web"
             )
         r = await self._invoke_method("get_last_known_position")
-        return GeolocatorPosition(**r)
+        return GeolocatorPosition(**r) if r else None
 
     async def get_permission_status(self) -> GeolocatorPermissionStatus:
         """
