@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Optional
 
 import flet as ft
 from flet_map.map_layer import MapLayer
@@ -13,9 +13,14 @@ class SimpleAttribution(MapLayer):
     A simple attribution layer displayed on the Map.
     """
 
-    text: Union[str, ft.Text]
+    text: str
     """
     The attribution message to be displayed.
+    """
+
+    text_style: Optional[ft.TextStyle] = None
+    """
+    The style to use for :attr:`text`.
     """
 
     alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.BOTTOM_RIGHT)

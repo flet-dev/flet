@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'enums.dart';
 
 import '../models/control.dart';
 import 'box.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
+import 'enums.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
@@ -27,27 +27,33 @@ Tooltip? parseTooltip(dynamic value, BuildContext context, Widget widget) {
 
   var theme = Theme.of(context);
 
-  /// The tooltip shape defaults to a rounded rectangle with a border radius of
-  /// 4.0. Tooltips will also default to an opacity of 90%
-  var defaultDecoration = BoxDecoration(
+  var hasDecoration = value["decoration"] != null || value["bgcolor"] != null;
+  BoxDecoration? finalDecoration;
+  if (hasDecoration) {
+    /// The tooltip has the following defaults: rounded rectangle shape,
+    /// border radius of 4.0, opacity of 90%.
+    var defaultDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(4.0),
       color: parseColor(
           value["bgcolor"],
           theme,
-          theme.brightness == Brightness.light
-              ? Colors.grey[700]
-              : Colors.white));
-  var decoration = parseBoxDecoration(value["decoration"], context);
-  var finalDecoration = defaultDecoration.copyWith(
-    color: decoration?.color,
-    borderRadius: decoration?.borderRadius,
-    border: decoration?.border,
-    boxShadow: decoration?.boxShadow,
-    gradient: decoration?.gradient,
-    image: decoration?.image,
-    shape: decoration?.shape,
-    backgroundBlendMode: decoration?.backgroundBlendMode,
-  );
+          (theme.brightness == Brightness.light
+                  ? Colors.grey[700]!
+                  : Colors.white)
+              .withValues(alpha: 0.9))!,
+    );
+    var decoration = parseBoxDecoration(value["decoration"], context);
+    finalDecoration = defaultDecoration.copyWith(
+      color: decoration?.color,
+      borderRadius: decoration?.borderRadius,
+      border: decoration?.border,
+      boxShadow: decoration?.boxShadow,
+      gradient: decoration?.gradient,
+      image: decoration?.image,
+      shape: decoration?.shape,
+      backgroundBlendMode: decoration?.backgroundBlendMode,
+    );
+  }
   return Tooltip(
     message: value["message"],
     enableFeedback: parseBool(value["enable_feedback"]),

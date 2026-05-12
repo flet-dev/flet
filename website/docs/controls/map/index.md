@@ -49,6 +49,10 @@ More details [here](tilelayer.md).
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
+### Attributions
+
+<CodeExample path={frontMatter.examples + '/attribution/main.py'} language="python" />
+
 ### Camera Controls
 
 <CodeExample path={frontMatter.examples + '/camera_controls/main.py'} language="python" />
