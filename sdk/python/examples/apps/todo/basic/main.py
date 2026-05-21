@@ -73,7 +73,10 @@ class Task(ft.Column):
 class TodoApp(ft.Column):
     def build(self):
         self.new_task = ft.TextField(
-            hint_text="What needs to be done?", on_submit=self.add_clicked, expand=True
+            key="new_task",
+            hint_text="What needs to be done?",
+            on_submit=self.add_clicked,
+            expand=True,
         )
         self.tasks = ft.Column()
 
@@ -105,7 +108,9 @@ class TodoApp(ft.Column):
                 controls=[
                     self.new_task,
                     ft.FloatingActionButton(
-                        icon=ft.Icons.ADD, on_click=self.add_clicked
+                        key="add_task",
+                        icon=ft.Icons.ADD,
+                        on_click=self.add_clicked,
                     ),
                 ],
             ),
