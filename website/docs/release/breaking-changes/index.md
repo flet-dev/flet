@@ -9,9 +9,14 @@ dependency, or configuration updates when you upgrade. Removed APIs are listed
 here as breaking changes. Deprecated APIs still work for now, but they are
 scheduled for removal.
 
-The information in these guides is accurate as of the release that introduced
-the breaking change. Later releases might add new APIs or additional migration
+:::warning[Important]
+These breaking change and deprecation guides are accurate as of the release that
+introduced the change. Later releases might add new APIs or additional migration
 paths.
+
+The [breaking changes and deprecations index](.) lists the guides created for
+each release.
+:::
 
 ## By release
 

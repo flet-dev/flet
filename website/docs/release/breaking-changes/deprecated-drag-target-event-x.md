@@ -4,21 +4,21 @@ title: "DragTargetEvent.x deprecated"
 
 # `DragTargetEvent.x` deprecated
 
-Flet 0.85.0 deprecated [`DragTargetEvent.x`][flet.DragTargetEvent.x]. Use
-[`DragTargetEvent.local_position.x`][flet.DragTargetEvent.local_position] when
-you need coordinates relative to the drop target, or
-[`DragTargetEvent.global_position.x`][flet.DragTargetEvent.global_position] when
-you need page-level coordinates.
+:::warning[Important]
+This guide is accurate as of Flet 0.85.0. Later releases might add new APIs or
+additional migration paths.
 
-The information in this guide is accurate as of Flet 0.85.0.
+The [breaking changes and deprecations index](.) lists the guides created for
+each release.
+:::
 
 ## Summary
 
-Replace `event.x` with the coordinate source that matches your use case:
-
-| Deprecated API | Replacement |
-| --- | --- |
-| `event.x` | `event.local_position.x` or `event.global_position.x` |
+Flet 0.85.0 deprecated [`DragTargetEvent.x`][flet.DragTargetEvent.x].
+Replace `event.x` with [`event.local_position.x`][flet.DragTargetEvent.local_position]
+for target-relative coordinates, or
+[`event.global_position.x`][flet.DragTargetEvent.global_position] for page-level
+coordinates.
 
 ## Context
 
@@ -51,5 +51,6 @@ If your code needs page-level coordinates instead, use `event.global_position.x`
 
 ## References
 
-- [Flet 0.85.0 announcement](/blog/flet-v-0-85-release-announcement)
-- [Full changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850)
+- [Flet 0.85.0 release notes](../release-notes.md#0850)
+- [Issue #6387](https://github.com/flet-dev/flet/issues/6387)
+- [PR #6401](https://github.com/flet-dev/flet/pull/6401)

@@ -48,11 +48,6 @@ module.exports = {
         },
         {
           "type": "doc",
-          "id": "release/deprecations",
-          "label": "Deprecations"
-        },
-        {
-          "type": "doc",
           "id": "release/compatibility-policy",
           "label": "Compatibility policy"
         }

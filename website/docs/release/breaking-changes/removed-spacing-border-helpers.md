@@ -4,14 +4,18 @@ title: "Deprecated spacing and border helper functions removed"
 
 # Deprecated spacing and border helper functions removed
 
-Flet 0.85.0 removed deprecated module-level helper functions from `ft.margin`,
-`ft.padding`, `ft.border`, and `ft.border_radius`. The replacement APIs are the
-corresponding class methods.
+:::warning[Important]
+This guide is accurate as of Flet 0.85.0. Later releases might add new APIs or
+additional migration paths.
 
-The information in this guide is accurate as of Flet 0.85.0.
+The [breaking changes and deprecations index](.) lists the guides created for
+each release.
+:::
 
 ## Summary
 
+Flet 0.85.0 removed deprecated module-level helper functions from `ft.margin`,
+`ft.padding`, `ft.border`, and `ft.border_radius`.
 Replace module-level helper calls with class methods:
 
 | Removed helper | Replacement |
@@ -70,5 +74,5 @@ card = ft.Container(
 
 ## References
 
-- [Flet 0.85.0 announcement](/blog/flet-v-0-85-release-announcement)
-- [Full changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850)
+- [Flet 0.85.0 release notes](../release-notes.md#0850)
+- [PR #6425](https://github.com/flet-dev/flet/pull/6425)

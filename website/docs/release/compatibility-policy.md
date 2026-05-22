@@ -43,6 +43,6 @@ in the related release notes or migration guide.
   changelogs, and migration guides.
 - [Breaking changes and deprecations](breaking-changes/index.md) explain changes
   that require migration.
-- [Deprecations](deprecations.md) lists active deprecations and planned removal
-  versions.
+- [Breaking changes and deprecations](breaking-changes/index.md) lists
+  release-specific breaking changes and deprecation guides.
 - API reference pages show deprecation details next to affected APIs.

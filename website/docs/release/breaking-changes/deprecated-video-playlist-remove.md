@@ -4,19 +4,20 @@ title: "Video.playlist_remove() deprecated"
 
 # `Video.playlist_remove()` deprecated
 
-Flet 0.85.0 deprecated
-[`Video.playlist_remove()`][flet_video.Video.playlist_remove]. Mutate
-[`Video.playlist`][flet_video.Video.playlist] directly instead.
+:::warning[Important]
+This guide is accurate as of Flet 0.85.0. Later releases might add new APIs or
+additional migration paths.
 
-The information in this guide is accurate as of Flet 0.85.0.
+The [breaking changes and deprecations index](.) lists the guides created for
+each release.
+:::
 
 ## Summary
 
-Remove media items directly from `video.playlist`:
-
-| Deprecated API | Replacement |
-| --- | --- |
-| `video.playlist_remove(media_index)` | `video.playlist.pop(media_index)` |
+Flet 0.85.0 deprecated
+[`Video.playlist_remove()`][flet_video.Video.playlist_remove].
+Remove media items directly from [`Video.playlist`][flet_video.Video.playlist]
+with `video.playlist.pop(media_index)`.
 
 ## Context
 
@@ -48,5 +49,5 @@ been added to the page.
 
 ## References
 
-- [Flet 0.85.0 announcement](/blog/flet-v-0-85-release-announcement)
-- [Full changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850)
+- [Flet 0.85.0 release notes](../release-notes.md#0850)
+- [PR #6463](https://github.com/flet-dev/flet/pull/6463)

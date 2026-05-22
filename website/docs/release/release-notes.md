@@ -18,4 +18,3 @@ releases.
 - [Announcement](/blog/flet-v-0-85-release-announcement)
 - [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850)
 - [Breaking changes and deprecations](breaking-changes/index.md#released-in-flet-0850)
-- [Active deprecations](deprecations.md#deprecated-in-flet-0850)

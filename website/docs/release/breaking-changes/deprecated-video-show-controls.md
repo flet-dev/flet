@@ -4,18 +4,20 @@ title: "Video.show_controls deprecated"
 
 # `Video.show_controls` deprecated
 
-Flet 0.85.0 deprecated [`Video.show_controls`][flet_video.Video.show_controls].
-Use [`Video.controls`][flet_video.Video.controls] instead.
+:::warning[Important]
+This guide is accurate as of Flet 0.85.0. Later releases might add new APIs or
+additional migration paths.
 
-The information in this guide is accurate as of Flet 0.85.0.
+The [breaking changes and deprecations index](.) lists the guides created for
+each release.
+:::
 
 ## Summary
 
-Replace the boolean `show_controls` flag with the `controls` configuration:
-
-| Deprecated API | Replacement |
-| --- | --- |
-| `Video.show_controls=False` | `Video.controls=None` |
+Flet 0.85.0 deprecated [`Video.show_controls`][flet_video.Video.show_controls].
+Replace the boolean `show_controls` flag with the
+[`Video.controls`][flet_video.Video.controls] configuration. Set `controls` to
+`None` to hide controls.
 
 ## Context
 
@@ -50,5 +52,5 @@ video = ft.Video(
 
 ## References
 
-- [Flet 0.85.0 announcement](/blog/flet-v-0-85-release-announcement)
-- [Full changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850)
+- [Flet 0.85.0 release notes](../release-notes.md#0850)
+- [PR #6463](https://github.com/flet-dev/flet/pull/6463)

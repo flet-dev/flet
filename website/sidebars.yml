@@ -11,7 +11,6 @@ docs:
     _index: release/index.md
     Release notes: release/release-notes.md
     Breaking changes and deprecations: release/breaking-changes/index.md
-    Deprecations: release/deprecations.md
     Compatibility policy: release/compatibility-policy.md
   Tutorials:
   - Calculator: tutorials/calculator.md
