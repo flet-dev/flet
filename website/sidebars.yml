@@ -7,14 +7,12 @@ docs:
   - getting-started/create-flet-app.md
   - getting-started/running-app.md
   - getting-started/testing-on-mobile.md
-  Releases and migration:
+  Stay up to date:
     _index: release/index.md
-    Upgrade Flet: release/upgrade.md
     Release notes: release/release-notes.md
+    Breaking changes and deprecations: release/breaking-changes/index.md
     Deprecations: release/deprecations.md
-    Breaking changes:
-      _index: release/breaking-changes/index.md
-      0.85: release/breaking-changes/0-85.md
+    Compatibility policy: release/compatibility-policy.md
   Tutorials:
   - Calculator: tutorials/calculator.md
   - ToDo: tutorials/todo.md

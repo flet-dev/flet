@@ -1,16 +1,16 @@
 ---
-title: "Releases and migration"
+title: "Stay up to date"
 ---
 
-# Releases and migration
+# Stay up to date
 
-Use this section when upgrading Flet or checking whether a release requires app
-changes.
+Use this section to track Flet releases, breaking changes, deprecations, and
+compatibility policy.
 
-- [Upgrade Flet](upgrade.md) - install the latest Flet packages with pip or uv.
-- [Release notes](release-notes.md) - user-facing summaries and changelog links
-  for each release.
+- [Release notes](release-notes.md) - release announcements and changelog links.
+- [Breaking changes and deprecations](breaking-changes/index.md) - migration
+  guides for changes that can require code or configuration updates.
 - [Deprecations](deprecations.md) - APIs that still work but are scheduled for
   removal.
-- [Breaking changes](breaking-changes/index.md) - changes that can require code
-  or configuration updates when you upgrade.
+- [Compatibility policy](compatibility-policy.md) - how Flet handles breaking
+  changes and deprecations.

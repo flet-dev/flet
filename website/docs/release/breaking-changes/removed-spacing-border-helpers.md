@@ -1,12 +1,14 @@
 ---
-title: "0.85 breaking changes and migration"
+title: "Deprecated spacing and border helper functions removed"
 ---
 
-# 0.85 breaking changes and migration
+# Deprecated spacing and border helper functions removed
 
 Flet 0.85.0 removed deprecated module-level helper functions from `ft.margin`,
 `ft.padding`, `ft.border`, and `ft.border_radius`. The replacement APIs are the
 corresponding class methods.
+
+The information in this guide is accurate as of Flet 0.85.0.
 
 ## Summary
 
@@ -27,6 +29,13 @@ Replace module-level helper calls with class methods:
 | `ft.border_radius.horizontal(...)` | `ft.BorderRadius.horizontal(...)` |
 | `ft.border_radius.vertical(...)` | `ft.BorderRadius.vertical(...)` |
 | `ft.border_radius.only(...)` | `ft.BorderRadius.only(...)` |
+
+## Background
+
+The helper functions were replaced by class methods to keep the public API
+consistent with the concrete value types they create. For example,
+`ft.Padding.all(...)` now clearly returns a [`Padding`][flet.Padding] value, and
+`ft.BorderRadius.only(...)` returns a [`BorderRadius`][flet.BorderRadius] value.
 
 ## Migration guide
 
@@ -54,24 +63,10 @@ card = ft.Container(
 )
 ```
 
-## Deprecations introduced in 0.85.0
-
-The following APIs still work in 0.85.0, but are scheduled for removal in
-0.88.0:
-
-- [`DragTargetEvent.x`][flet.DragTargetEvent.x],
-  [`DragTargetEvent.y`][flet.DragTargetEvent.y], and
-  [`DragTargetEvent.offset`][flet.DragTargetEvent.offset].
-- [`Video.show_controls`][flet_video.Video.show_controls].
-- [`Video.playlist_add()`][flet_video.Video.playlist_add] and
-  [`Video.playlist_remove()`][flet_video.Video.playlist_remove].
-
-See [Deprecations](../deprecations.md#deprecated-in-0850) for replacements.
-
 ## Timeline
 
 - Removed in: `0.85.0`
-- Deprecated APIs scheduled for removal in: `0.88.0`
+- Stable release: `0.85.0`
 
 ## References
 
