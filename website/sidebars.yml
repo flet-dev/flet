@@ -10,7 +10,12 @@ docs:
   Stay up to date:
     _index: release/index.md
     Release notes: release/release-notes.md
-    Breaking changes and deprecations: release/breaking-changes/index.md
+    Breaking changes and deprecations:
+      _index: release/breaking-changes/index.md
+      v0.85.0:
+        Deprecated spacing and border helper functions removed: release/breaking-changes/removed-spacing-border-helpers.md
+        DragTargetEvent coordinate fields deprecated: release/breaking-changes/deprecated-drag-target-event-coordinates.md
+        Video control APIs deprecated: release/breaking-changes/deprecated-video-apis.md
     Compatibility policy: release/compatibility-policy.md
   Tutorials:
   - Calculator: tutorials/calculator.md

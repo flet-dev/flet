@@ -34,6 +34,13 @@ That skill is the source of truth for item wording, scope selection, and what sh
   * If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog.
   * When selecting candidates for `packages/flet/CHANGELOG.md`, prefer items with meaningful Flutter-side impact.
   * When selecting candidates for `sdk/python/packages/*/CHANGELOG.md`, prefer published Python-facing changes; do not include extension-internal Flutter implementation work unless it materially changes user-visible Python behavior.
+* If the release includes breaking changes, API removals, or deprecations,
+  update `website/docs/release/release-notes.md` and
+  `website/docs/release/breaking-changes/index.md`.
+  * Use [`flet-deprecation`](../flet-deprecation/SKILL.md) for deprecation
+    guide requirements and sidebar placement.
+  * Group related deprecations into one migration guide page where possible,
+    and add guide pages under the release version in `website/sidebars.yml`.
 * Scan all changelogs for `Unreleased` sections, not only the root ones:
   * `/CHANGELOG.md`
   * `packages/flet/CHANGELOG.md`

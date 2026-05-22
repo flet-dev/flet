@@ -166,6 +166,37 @@ For supported patterns, docs should auto-render:
 Do not duplicate with manual deprecation admonitions in docstrings unless there
 is a special case not covered by the extension.
 
+## Release Docs Updates
+
+When adding a user-visible deprecation, also update the release docs in the
+same change. These pages are the canonical upgrade path, not a separate
+`Deprecations` page.
+
+1. Create or update a migration guide under
+   `website/docs/release/breaking-changes/`.
+   - Group closely related deprecations into one page, especially APIs from the
+     same class/control or the same PR. For example, `DragTargetEvent.x`,
+     `DragTargetEvent.y`, and `DragTargetEvent.offset` belong in one
+     coordinate-fields guide.
+   - Use this page shape: title, `:::warning[Important]` accuracy callout,
+     `Summary`, `Context`, `Migration guide`, `Timeline`, and `References`.
+   - Keep one-off replacements in prose. Use a table only when the page maps
+     many removed/deprecated APIs to replacements.
+   - In `References`, link the local release notes entry for that release and
+     the relevant GitHub issue/PR links. Do not duplicate separate announcement
+     and full-changelog links in every guide.
+2. Add the guide to
+   `website/docs/release/breaking-changes/index.md` under the release's
+   `Deprecations` subsection.
+3. Add the guide to `website/sidebars.yml` under:
+   `Stay up to date` -> `Breaking changes and deprecations` -> `Flet X.Y.Z`.
+   This keeps individual guide pages in the docs sidebar while grouping them by
+   release.
+4. Update `website/docs/release/release-notes.md` so the release links to the
+   combined `Breaking changes and deprecations` section.
+5. Run `cd website && FLET_DOCS_FAST=1 yarn crocodocs:generate` after sidebar
+   edits, then run `cd website && FLET_DOCS_FAST=1 yarn build`.
+
 ## Testing Guidance
 
 Do not add one-off tests for every API that gets deprecated when it uses an

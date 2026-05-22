@@ -9,16 +9,18 @@ dependency, or configuration updates when you upgrade. Removed APIs are listed
 here as breaking changes. Deprecated APIs still work for now, but they are
 scheduled for removal.
 
-:::warning[Important]
+:::note
 These breaking change and deprecation guides are accurate as of the release that
 introduced the change. Later releases might add new APIs or additional migration
 paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for
-each release.
+The [breaking changes and deprecations index](.) lists the guides created for each release.
 :::
 
 ## By release
+
+The following guides are available. They're sorted by release, with the most recent release first.
+Each guide explains the change, the reason for it, and how to migrate your code.
 
 ### Released in Flet 0.85.0
 
@@ -28,9 +30,5 @@ each release.
 
 #### Deprecations
 
-- [`DragTargetEvent.x` deprecated](/docs/release/breaking-changes/deprecated-drag-target-event-x)
-- [`DragTargetEvent.y` deprecated](/docs/release/breaking-changes/deprecated-drag-target-event-y)
-- [`DragTargetEvent.offset` deprecated](/docs/release/breaking-changes/deprecated-drag-target-event-offset)
-- [`Video.show_controls` deprecated](/docs/release/breaking-changes/deprecated-video-show-controls)
-- [`Video.playlist_add()` deprecated](/docs/release/breaking-changes/deprecated-video-playlist-add)
-- [`Video.playlist_remove()` deprecated](/docs/release/breaking-changes/deprecated-video-playlist-remove)
+- [`DragTargetEvent` coordinate fields deprecated](/docs/release/breaking-changes/deprecated-drag-target-event-coordinates)
+- [`Video` control APIs deprecated](/docs/release/breaking-changes/deprecated-video-apis)

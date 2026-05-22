@@ -42,9 +42,37 @@ module.exports = {
           "label": "Release notes"
         },
         {
-          "type": "doc",
-          "id": "release/breaking-changes/index",
-          "label": "Breaking changes and deprecations"
+          "type": "category",
+          "label": "Breaking changes and deprecations",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "category",
+              "label": "v0.85.0",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "release/breaking-changes/removed-spacing-border-helpers",
+                  "label": "Deprecated spacing and border helper functions removed"
+                },
+                {
+                  "type": "doc",
+                  "id": "release/breaking-changes/deprecated-drag-target-event-coordinates",
+                  "label": "DragTargetEvent coordinate fields deprecated"
+                },
+                {
+                  "type": "doc",
+                  "id": "release/breaking-changes/deprecated-video-apis",
+                  "label": "Video control APIs deprecated"
+                }
+              ]
+            }
+          ],
+          "link": {
+            "type": "doc",
+            "id": "release/breaking-changes/index"
+          }
         },
         {
           "type": "doc",
