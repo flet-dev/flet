@@ -49,9 +49,14 @@ That skill is the source of truth for item wording, scope selection, and what sh
   `rg -n "^##\\s*\\[?Unreleased\\]?|^##\\s*Unreleased" -S CHANGELOG.md packages/flet/CHANGELOG.md sdk/python/packages/*/CHANGELOG.md`
 * If any changelog has an `Unreleased` section, convert that section into the new release section (`## {new_version}`), preserving and re-sorting its items. Do not leave duplicate release content in both `Unreleased` and `{new_version}`.
   This conversion must be done for every matched changelog from the scan above.
-* Sort items in changelogs as following:
+* Sort items in changelogs as following, omitting empty sections:
   * New features
   * Improvements
+  * Breaking changes
+  * Deprecations
   * Bug fixes
+  * Documentation
   * Other changes (chore, refactor, etc.)
+  Put removals of previously deprecated APIs under `Breaking changes`, and
+  keep newly deprecated-but-still-working APIs under `Deprecations`.
 * Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.

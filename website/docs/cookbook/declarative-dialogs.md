@@ -4,7 +4,7 @@ title: "Declarative dialogs"
 
 [`ft.use_dialog()`](../types/usedialog.md) lets a component show and update dialogs declaratively.
 Instead of imperatively calling [`page.show_dialog()`][flet.BasePage.show_dialog] and later
-remembering to close or remove the dialog, you render a [`DialogControl`](../controls/dialogcontrol.md)
+remembering to close or remove the dialog, you render a [`DialogControl`][flet.DialogControl]
 from component state:
 
 - pass a dialog instance to show it;
@@ -174,7 +174,7 @@ causing another render by itself.
 
 ## `on_dismiss` timing
 
-[`DialogControl.on_dismiss`](../controls/dialogcontrol.md#flet.DialogControl.on_dismiss) fires after the dialog close
+[`DialogControl.on_dismiss`][flet.DialogControl.on_dismiss] fires after the dialog close
 animation completes, not immediately when `open` changes to `False`. This makes it safe to
 start follow-up UI after the dialog has actually finished closing.
 
