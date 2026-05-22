@@ -33,6 +33,48 @@ module.exports = {
     },
     {
       "type": "category",
+      "label": "Releases and migration",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "release/upgrade",
+          "label": "Upgrade Flet"
+        },
+        {
+          "type": "doc",
+          "id": "release/release-notes",
+          "label": "Release notes"
+        },
+        {
+          "type": "doc",
+          "id": "release/deprecations",
+          "label": "Deprecations"
+        },
+        {
+          "type": "category",
+          "label": "Breaking changes",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "doc",
+              "id": "release/breaking-changes/0-85",
+              "label": "0.85"
+            }
+          ],
+          "link": {
+            "type": "doc",
+            "id": "release/breaking-changes/index"
+          }
+        }
+      ],
+      "link": {
+        "type": "doc",
+        "id": "release/index"
+      }
+    },
+    {
+      "type": "category",
       "label": "Tutorials",
       "collapsed": true,
       "items": [

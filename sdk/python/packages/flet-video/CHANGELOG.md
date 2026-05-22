@@ -15,7 +15,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- `Video.playlist` can now be mutated directly for playlist add and remove operations; `playlist_add()` and `playlist_remove()` are deprecated ([#6463](https://github.com/flet-dev/flet/pull/6463)).
+- `Video.playlist` can now be mutated directly for playlist add and remove operations ([#6463](https://github.com/flet-dev/flet/pull/6463)).
+
+### Deprecated
+
+- `Video.playlist_add()` and `Video.playlist_remove()` are deprecated; mutate `Video.playlist` directly with list methods such as `append()` and `pop()` ([#6463](https://github.com/flet-dev/flet/pull/6463)).
 - `Video.show_controls` is deprecated; set `Video.controls` to `None` to hide controls ([#6463](https://github.com/flet-dev/flet/pull/6463)).
 
 ### Fixed

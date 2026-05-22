@@ -3,7 +3,7 @@ title: "Declarative dialogs"
 ---
 
 [`ft.use_dialog()`](../types/usedialog.md) lets a component show and update dialogs declaratively.
-Instead of imperatively calling [`page.show_dialog()`](../controls/page.md#flet.Page.show_dialog) and later
+Instead of imperatively calling [`page.show_dialog()`][flet.BasePage.show_dialog] and later
 remembering to close or remove the dialog, you render a [`DialogControl`](../controls/dialogcontrol.md)
 from component state:
 
@@ -189,7 +189,7 @@ Use `on_dismiss` for logic that should happen after the dialog is fully gone, su
 [`ft.use_dialog()`](../types/usedialog.md) is a better fit inside [`@ft.component`](../types/component.md)
 functions and other declarative flows.
 
-[`page.show_dialog()`](../controls/page.md#flet.Page.show_dialog) is still a good option when:
+[`page.show_dialog()`][flet.BasePage.show_dialog] is still a good option when:
 
 - the app is written imperatively;
 - dialog lifecycle is handled outside the component tree;

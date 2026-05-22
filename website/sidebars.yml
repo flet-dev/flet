@@ -7,6 +7,14 @@ docs:
   - getting-started/create-flet-app.md
   - getting-started/running-app.md
   - getting-started/testing-on-mobile.md
+  Releases and migration:
+    _index: release/index.md
+    Upgrade Flet: release/upgrade.md
+    Release notes: release/release-notes.md
+    Deprecations: release/deprecations.md
+    Breaking changes:
+      _index: release/breaking-changes/index.md
+      0.85: release/breaking-changes/0-85.md
   Tutorials:
   - Calculator: tutorials/calculator.md
   - ToDo: tutorials/todo.md
