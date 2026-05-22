@@ -13,9 +13,11 @@ from examples.apps.router.featured_views import main as featured_views
 from examples.apps.router.index_routes import main as index_routes
 from examples.apps.router.layout_outlet import main as layout_outlet
 from examples.apps.router.loaders import main as loaders
+from examples.apps.router.modal_routes import main as modal_routes
 from examples.apps.router.nested_outlet_views import main as nested_outlet_views
 from examples.apps.router.nested_routes import main as nested_routes
 from examples.apps.router.prefix_routes import main as prefix_routes
+from examples.apps.router.recursive_routes import main as recursive_routes
 from examples.apps.router.runtime_routes import main as runtime_routes
 from examples.apps.router.splats import main as splats
 
@@ -647,3 +649,180 @@ async def test_app_drawer(flet_app_function: ftt.FletTestApp):
         "Require 2FA for admins"
     )
     assert permission_switch.count == 1
+
+
+# ---------------------------------------------------------------------------
+# Modal routes — `modal=True` overlays
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": _make_render_views_main(modal_routes.App)}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_modal_routes(flet_app_function: ftt.FletTestApp):
+    # Start at /, the Home page.
+    welcome = await flet_app_function.tester.find_by_text("Welcome!")
+    assert welcome.count == 1
+
+    # ----- Global modal: open /settings from Home, close back to Home.
+    open_settings = await flet_app_function.tester.find_by_text(
+        "Open Settings (global modal)"
+    )
+    assert open_settings.count >= 1
+    await flet_app_function.tester.tap(open_settings)
+    await flet_app_function.tester.pump_and_settle()
+
+    settings_title = await flet_app_function.tester.find_by_text("Settings")
+    assert settings_title.count >= 1
+    settings_body = await flet_app_function.tester.find_by_text(
+        "Account / System / About would live here."
+    )
+    assert settings_body.count == 1
+
+    # Flutter's auto-inserted close-X uses the "Close" tooltip on a
+    # fullscreen-dialog page.
+    close_btn = await flet_app_function.tester.find_by_tooltip("Close")
+    assert close_btn.count == 1
+    await flet_app_function.tester.tap(close_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Home is back — underlying view was never unmounted.
+    welcome = await flet_app_function.tester.find_by_text("Welcome!")
+    assert welcome.count == 1
+
+    # ----- Navigate Home → Items → Apples → Edit (local modal).
+    open_items = await flet_app_function.tester.find_by_text("Open Items")
+    assert open_items.count == 1
+    await flet_app_function.tester.tap(open_items)
+    await flet_app_function.tester.pump_and_settle()
+
+    apples_btn = await flet_app_function.tester.find_by_text("Apples")
+    assert apples_btn.count == 1
+    await flet_app_function.tester.tap(apples_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    detail = await flet_app_function.tester.find_by_text("Details for item 1: Apples")
+    assert detail.count == 1
+
+    edit_btn = await flet_app_function.tester.find_by_text("Edit (local modal)")
+    assert edit_btn.count == 1
+    await flet_app_function.tester.tap(edit_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    editing = await flet_app_function.tester.find_by_text("Editing item 1")
+    assert editing.count == 1
+
+    # Close the local modal — should land back on Apples detail, not on
+    # the Items list or Home.
+    close_btn = await flet_app_function.tester.find_by_tooltip("Close")
+    assert close_btn.count == 1
+    await flet_app_function.tester.tap(close_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    detail = await flet_app_function.tester.find_by_text("Details for item 1: Apples")
+    assert detail.count == 1
+
+    # ----- Global modal opened from a deep page returns to that page.
+    open_settings = await flet_app_function.tester.find_by_text(
+        "Open Settings (global modal)"
+    )
+    assert open_settings.count >= 1
+    await flet_app_function.tester.tap(open_settings)
+    await flet_app_function.tester.pump_and_settle()
+
+    settings_title = await flet_app_function.tester.find_by_text("Settings")
+    assert settings_title.count >= 1
+
+    close_btn = await flet_app_function.tester.find_by_tooltip("Close")
+    assert close_btn.count == 1
+    await flet_app_function.tester.tap(close_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    # Back on the Apples detail (not Home).
+    detail = await flet_app_function.tester.find_by_text("Details for item 1: Apples")
+    assert detail.count == 1
+
+    # ----- Deep-link straight into the local modal.
+    await flet_app_function.page.push_route("/items/2/edit")
+    await flet_app_function.tester.pump_and_settle()
+
+    editing = await flet_app_function.tester.find_by_text("Editing item 2")
+    assert editing.count == 1
+
+    # Close — back to Bananas detail (URL parent), which exists in the
+    # stack because the local modal's base chain was rebuilt from URL.
+    close_btn = await flet_app_function.tester.find_by_tooltip("Close")
+    assert close_btn.count == 1
+    await flet_app_function.tester.tap(close_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    detail = await flet_app_function.tester.find_by_text("Details for item 2: Bananas")
+    assert detail.count == 1
+
+
+# ---------------------------------------------------------------------------
+# Recursive routes — one View per consumed segment
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": _make_render_views_main(recursive_routes.App)}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_recursive_routes(flet_app_function: ftt.FletTestApp):
+    # Drill /folder → docs → alpha → beta.
+    await flet_app_function.page.push_route("/folder")
+    await flet_app_function.tester.pump_and_settle()
+    folders_heading = await flet_app_function.tester.find_by_text("Top-level folders:")
+    assert folders_heading.count == 1
+
+    docs_btn = await flet_app_function.tester.find_by_text("Open docs")
+    assert docs_btn.count == 1
+    await flet_app_function.tester.tap(docs_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    seg = await flet_app_function.tester.find_by_text("Current segment: docs")
+    assert seg.count == 1
+
+    into_alpha = await flet_app_function.tester.find_by_text("Into alpha")
+    assert into_alpha.count == 1
+    await flet_app_function.tester.tap(into_alpha)
+    await flet_app_function.tester.pump_and_settle()
+
+    seg = await flet_app_function.tester.find_by_text("Current segment: alpha")
+    assert seg.count == 1
+    path = await flet_app_function.tester.find_by_text("Full path: /folder/docs/alpha")
+    assert path.count == 1
+
+    # AppBar back walks ONE segment at a time.
+    back_btn = await flet_app_function.tester.find_by_tooltip("Back")
+    assert back_btn.count == 1
+    await flet_app_function.tester.tap(back_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    seg = await flet_app_function.tester.find_by_text("Current segment: docs")
+    assert seg.count == 1
+
+    # Deep-link to a 4-segment path — stack rebuilds, each level present.
+    await flet_app_function.page.push_route("/folder/projects/p1/v2/draft")
+    await flet_app_function.tester.pump_and_settle()
+    seg = await flet_app_function.tester.find_by_text("Current segment: draft")
+    assert seg.count == 1
+    path = await flet_app_function.tester.find_by_text(
+        "Full path: /folder/projects/p1/v2/draft"
+    )
+    assert path.count == 1
+
+    # Sibling specificity: /folder/docs/search lands on Search, not on a
+    # folder named "search".
+    await flet_app_function.page.push_route("/folder/docs/search")
+    await flet_app_function.tester.pump_and_settle()
+    searching = await flet_app_function.tester.find_by_text(
+        "Searching in: /folder/docs"
+    )
+    assert searching.count == 1
