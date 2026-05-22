@@ -1,3 +1,7 @@
+## 0.85.2
+
+_No changes in the `flet` Dart package; version bumped for release coordination with `flet.Router` enhancements on the Python side (modal/recursive route flags, chain-based default pop)._
+
 ## 0.85.1
 
 _No changes in the `flet` Dart package; version bumped for release coordination with `flet-geolocator` fixes on the Python side._
