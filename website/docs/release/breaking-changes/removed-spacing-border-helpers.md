@@ -74,4 +74,4 @@ card = ft.Container(
 
 - API documentation: [`Border`][flet.Border], [`BorderRadius`][flet.BorderRadius], [`Padding`][flet.Padding]
 - Issues and PRs: [#6425](https://github.com/flet-dev/flet/pull/6425)
-- Release notes: [Flet 0.85.0](../release-notes.md#0850)
+- Release notes: [Flet 0.85.0](../release-notes.md#085x)

@@ -62,4 +62,4 @@ If your code needs page-level coordinates instead, use
 
 - API documentation: [`DragTargetEvent`][flet.DragTargetEvent]
 - Issues and PRs: [#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)
-- Release notes: [Flet 0.85.0](../release-notes.md#0850)
+- Release notes: [Flet 0.85.0](../release-notes.md#085x)

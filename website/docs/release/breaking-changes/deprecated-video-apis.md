@@ -81,4 +81,4 @@ been added to the page.
 
 - API documentation: [`Video`][flet_video.Video]
 - Issues and PRs: [PR #6463](https://github.com/flet-dev/flet/pull/6463)
-- Release notes: [Flet 0.85.0](../release-notes.md#0850)
+- Release notes: [Flet 0.85.0](../release-notes.md#085x)
