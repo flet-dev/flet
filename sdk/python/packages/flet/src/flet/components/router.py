@@ -71,6 +71,31 @@ class Route:
             :func:`~flet.use_route_outlet` within a single
             :class:`~flet.View`, instead of each child becoming a separate
             :class:`~flet.View`.
+        modal: When ``True`` and ``manage_views=True``, the route's View
+            is rendered as a modal overlay on top of the existing stack
+            instead of replacing it. The route's component should set
+            ``fullscreen_dialog=True`` on its returned :class:`~flet.View`
+            so Flutter renders the slide-up presentation and a close (X)
+            icon. Placement controls the base stack:
+
+            * Declared at the **top level**: a *global* modal. The base
+              stack is rebuilt from the last non-modal location the
+              Router saw (defaults to ``"/"`` on first render).
+            * Declared as a **child** of a non-modal route: a *local*
+              modal. The base stack is the chain above the modal in the
+              route tree, so deep-link works from the URL alone.
+
+            On pop, the Router navigates to the resolved URL of the
+            non-modal parent — never to ``views[-2].route`` — so a
+            modal close is always a real navigation back to the
+            base location.
+        recursive: When ``True``, the route can match itself as its own
+            descendant — one matched ``_RouteMatch`` per consumed segment.
+            Useful for tree-shaped URLs with unbounded depth
+            (e.g. ``/folder/a/b/c``) where each segment should become its
+            own stack entry. Non-recursive children are tried before
+            self-recursion at every depth so a more specific sibling
+            (e.g. ``example/:gp*``) wins over the recursive ``:slug``.
     """
 
     path: str | None = None
@@ -79,6 +104,8 @@ class Route:
     children: list[Route] | None = field(default=None)
     loader: Callable[..., Any] | None = None
     outlet: bool = False
+    modal: bool = False
+    recursive: bool = False
 
 
 @dataclass
@@ -191,6 +218,43 @@ def _try_match(
     full_path = _join_paths(parent_path, route_path)
     if not full_path:
         full_path = "/"
+
+    if route.recursive:
+        # Recursive routes consume one matched segment per recursion and
+        # try non-recursive children before self-recursing — so a more
+        # specific sibling (e.g. ``example/:gp*``) wins over the
+        # recursive ``:slug`` at every depth without duplicate
+        # declarations.
+        prefix_pattern = repath.pattern(full_path, end=False)
+        prefix_m = re.match(prefix_pattern, pathname)
+        if not prefix_m:
+            return None
+        consumed = prefix_m.group(0)
+        head = _RouteMatch(
+            route=route,
+            params=prefix_m.groupdict(),
+            full_path=full_path,
+            resolved_path=consumed,
+        )
+        # Fully consumed → this is the leaf. Accept either an exact
+        # match or a trailing "/" remainder (so /folder/a and
+        # /folder/a/ both terminate cleanly).
+        remainder = pathname[len(consumed) :]
+        if not remainder or remainder == "/":
+            return [head]
+        # 1) Try non-recursive children first (more specific match).
+        for child in route.children or []:
+            if child is route:
+                continue
+            child_result = _try_match(child, pathname, consumed)
+            if child_result is not None:
+                return [head] + child_result
+        # 2) Fall back to self-recursion with the consumed prefix as
+        #    the parent path.
+        recurse = _try_match(route, pathname, consumed)
+        if recurse is None:
+            return None
+        return [head] + recurse
 
     if route.children:
         # Parent route — try prefix match to extract params, then match children
@@ -576,6 +640,22 @@ def Router(
     location, set_location = use_state(page.route or "/")
     prev_route_handler_ref = use_ref(None)
     prev_pop_handler_ref = use_ref(None)
+    # Last non-modal location the Router saw. Used as the base for
+    # global modal routes (declared at the top level) — when the user
+    # navigates from /apps/X to /settings (modal=True), the modal is
+    # rendered ON TOP OF the chain matched against /apps/X, so closing
+    # it reveals the original stack instead of rebuilding it.
+    prev_non_modal_location_ref = use_ref(None)
+    # Snapshot of the chain emitted for the current location. Used by
+    # the default pop handler to compute the parent URL structurally
+    # (``chain[-2].resolved_path``), which survives shared ``view.route``
+    # keys (e.g. an app that uses the same route key for two sibling
+    # tab roots to suppress switch animations).
+    current_chain_ref = use_ref(None)
+    # URL to navigate to when popping the topmost view, IF the current
+    # chain ends in a modal route. ``None`` otherwise. Set whenever a
+    # modal route matches.
+    current_modal_pop_to_ref = use_ref(None)
 
     # Subscribe to route changes on mount
     def setup_listeners():
@@ -590,13 +670,36 @@ def Router(
             prev_pop_handler_ref.current = page.on_view_pop
 
             def on_view_pop(e):
-                from flet.components.public_utils import unwrap_component
+                # If the app installed its own `page.on_view_pop` before
+                # the Router mounted, delegate to it. Apps can still
+                # override entirely (e.g. for a stack visualisation or
+                # confirmation flow).
+                prev = prev_pop_handler_ref.current
+                if prev is not None:
+                    prev(e)
+                    return
 
-                views_list = unwrap_component(page.views)
-                if isinstance(views_list, list) and len(views_list) > 1:
-                    prev_view = unwrap_component(views_list[-2])
-                    if prev_view is not None:
-                        page.navigate(prev_view.route)
+                # Modal pop: navigate to the base URL stamped at emit
+                # time. Same logic for global and local modals — the
+                # base URL was resolved when the modal was matched.
+                if current_modal_pop_to_ref.current is not None:
+                    page.navigate(current_modal_pop_to_ref.current)
+                    return
+
+                # Non-modal pop: use the matched chain's parent route
+                # (route-tree-structural) rather than
+                # ``views[-2].route``. This survives shared view keys
+                # like a tab-root layout that emits ``route="/"`` for
+                # multiple sibling sections.
+                chain_now = current_chain_ref.current
+                if chain_now and len(chain_now) > 1:
+                    parent_match = chain_now[-2]
+                    target = parent_match.resolved_path or parent_match.full_path or "/"
+                    page.navigate(target)
+                    return
+
+                # Stack of length 1 — nothing to pop to. (Flutter's
+                # ``Navigator.canPop`` is False here anyway.)
 
             page.on_view_pop = on_view_pop
 
@@ -621,9 +724,65 @@ def Router(
             if manage_views:
                 from flet.controls.core.view import View
 
+                # Reset state so a stale modal pop_to doesn't leak into
+                # a 404'd location.
+                current_chain_ref.current = None
+                current_modal_pop_to_ref.current = None
                 return [View(route=pathname, controls=[not_found()])]
             return not_found()
         return None
+
+    # Detect modal routes in the chain. ``modal_idx`` is the index of
+    # the first route in the chain with ``modal=True``; ``-1`` means
+    # the chain is fully non-modal.
+    modal_idx = -1
+    for i, m in enumerate(chain):
+        if m.route.modal:
+            modal_idx = i
+            break
+
+    # For a *global* modal (``modal_idx == 0`` — the chain starts at a
+    # modal with no non-modal parents) we want the visible stack to be
+    # the chain of the previously visited non-modal location +
+    # the modal's own chain. This way the underlying stack stays mounted
+    # underneath the modal — closing the modal reveals it without a
+    # rebuild.
+    if manage_views and modal_idx == 0:
+        base_location = prev_non_modal_location_ref.current or "/"
+        base_pathname = _normalize_path(urlparse(base_location).path or "/")
+        base_chain = _match_routes(routes, base_pathname) or []
+        # If the base path also resolves to a modal (shouldn't happen
+        # in practice — non-modal navigations are the only ones that
+        # update prev_non_modal_location_ref), fall back to no base.
+        if any(b.route.modal for b in base_chain):
+            base_chain = []
+        # Combine: base lives below, modal sits on top.
+        chain = base_chain + chain
+        # Re-locate the modal index in the combined chain.
+        modal_idx = len(base_chain)
+
+    # Track refs that downstream consumers (default pop handler, etc.)
+    # read. ``current_chain_ref`` always reflects the chain we're
+    # actually emitting. ``current_modal_pop_to_ref`` is set only when
+    # the chain ends in a modal — non-modal navigations clear it.
+    current_chain_ref.current = chain
+    if modal_idx == -1:
+        # Non-modal navigation — remember it as the next base.
+        prev_non_modal_location_ref.current = location
+        current_modal_pop_to_ref.current = None
+    else:
+        # Modal route — the URL to pop to is the resolved URL of the
+        # last non-modal entry in the chain.
+        if modal_idx > 0:
+            parent = chain[modal_idx - 1]
+            current_modal_pop_to_ref.current = (
+                parent.resolved_path or parent.full_path or "/"
+            )
+        else:
+            # No non-modal parent in the chain (rare — would require a
+            # deep-link to a top-level modal with no remembered base
+            # AND an empty default match). Fall back to "/".
+            current_modal_pop_to_ref.current = "/"
 
     # Merge all params from the chain
     all_params: dict[str, str] = {}
@@ -640,7 +799,8 @@ def Router(
     loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
 
     if not manage_views:
-        # Single-view mode (existing behavior)
+        # Single-view mode (existing behavior). ``modal`` is ignored
+        # here — it only affects stack composition in multi-view mode.
         return _location_context(
             loc,
             lambda: _params_context(
@@ -653,47 +813,81 @@ def Router(
     # route, etc.).  The Router sets route and can_pop on each View
     # after the component body executes (via the patch walk).
     # Used with page.render_views(App).
-    layouts, view_entries = _split_chain_into_view_levels(chain)
+    #
+    # If the chain contains a modal route, split into two independent
+    # sub-chains at the modal boundary. Each sub-chain is classified
+    # into layouts vs. view entries SEPARATELY so that an outlet route
+    # that would be a leaf view in its own sub-chain doesn't get
+    # re-classified as a layout just because there's more chain after
+    # the boundary. ``modal_idx`` already points to the modal route in
+    # the (possibly combined) chain.
+    # ``modal_idx <= 0`` covers both the no-modal case (``-1``) and a
+    # degenerate modal chain with no base (``0``) — neither is split.
+    sub_chains = [chain] if modal_idx <= 0 else [chain[:modal_idx], chain[modal_idx:]]
+
+    # Each sub-chain's views see their own URL via the location
+    # context. The base sub-chain (when there's a modal split) sees the
+    # remembered non-modal location it was matched against — so
+    # ``is_route_active("/gallery")`` inside a base view stays True
+    # while a global ``/settings`` modal is open over Gallery.
+    base_sub_loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
+    if modal_idx > 0:
+        base_loc_str = prev_non_modal_location_ref.current or "/"
+        base_parsed = urlparse(base_loc_str)
+        base_sub_loc = LocationInfo(
+            pathname=_normalize_path(base_parsed.path or "/"),
+            search=base_parsed.query or "",
+            hash=base_parsed.fragment or "",
+        )
 
     results = []
-    for match, _ in view_entries:
-        # Params accumulated up to this view level
-        level_params: dict[str, str] = {}
-        for m in chain:
-            level_params.update(m.params)
-            if m is match:
-                break
+    for sub_chain_idx, sub_chain in enumerate(sub_chains):
+        layouts, view_entries = _split_chain_into_view_levels(sub_chain)
+        # The base sub-chain (everything before the modal) is rendered
+        # "as if" the user is at the previous non-modal URL; the modal
+        # sub-chain is rendered at the modal URL.
+        sub_loc = base_sub_loc if (modal_idx > 0 and sub_chain_idx == 0) else loc
+        for match, _ in view_entries:
+            # Params accumulated up to this view level — within the
+            # combined chain so a local modal view still sees its
+            # parents' captures.
+            level_params: dict[str, str] = {}
+            for m in chain:
+                level_params.update(m.params)
+                if m is match:
+                    break
 
-        # LocationInfo.pathname is the actual URL (not the route template),
-        # so is_route_active() and use_route_location() work consistently.
-        level_loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
-        # Per-view resolved URL — unique per view level for Navigator keying.
-        level_view_path = match.resolved_path or match.full_path or "/"
-        _match = match
-        # Only apply layouts that appear before this view entry in the chain
-        match_idx = chain.index(match)
-        _layouts = [lm for lm in layouts if chain.index(lm) < match_idx]
+            # Per-view resolved URL — unique per view level for
+            # Navigator keying.
+            level_view_path = match.resolved_path or match.full_path or "/"
+            _match = match
+            # Only apply layouts that appear before this view entry IN
+            # THE SAME SUB-CHAIN. A modal view never inherits the
+            # base's layouts (and vice versa).
+            match_idx = sub_chain.index(match)
+            _layouts = [lm for lm in layouts if sub_chain.index(lm) < match_idx]
 
-        def build_view_content(
-            _match=_match,
-            _layouts=_layouts,
-            _level_params=level_params,
-            _level_loc=level_loc,
-            _level_view_path=level_view_path,
-        ):
-            return _view_path_context(
-                _level_view_path,
-                lambda: _location_context(
-                    _level_loc,
-                    lambda: _params_context(
-                        _level_params,
-                        lambda: _build_view_level(
-                            _layouts, _match, loader_results, chain
+            def build_view_content(
+                _match=_match,
+                _layouts=_layouts,
+                _level_params=level_params,
+                _level_loc=sub_loc,
+                _level_view_path=level_view_path,
+                _sub_chain=sub_chain,
+            ):
+                return _view_path_context(
+                    _level_view_path,
+                    lambda: _location_context(
+                        _level_loc,
+                        lambda: _params_context(
+                            _level_params,
+                            lambda: _build_view_level(
+                                _layouts, _match, loader_results, _sub_chain
+                            ),
                         ),
                     ),
-                ),
-            )
+                )
 
-        results.append(build_view_content())
+            results.append(build_view_content())
 
     return results
