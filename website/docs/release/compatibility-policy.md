@@ -42,7 +42,5 @@ in the related release notes or migration guide.
 - [Release notes](release-notes.md) list each release and link to announcements,
   changelogs, and migration guides.
 - [Breaking changes and deprecations](breaking-changes/index.md) explain changes
-  that require migration.
-- [Breaking changes and deprecations](breaking-changes/index.md) lists
-  release-specific breaking changes and deprecation guides.
+  that require migration, grouped by release.
 - API reference pages show deprecation details next to affected APIs.

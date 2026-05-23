@@ -14,7 +14,7 @@ These breaking change and deprecation guides are accurate as of the release that
 introduced the change. Later releases might add new APIs or additional migration
 paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+This page lists the guides created for each release.
 :::
 
 ## By release
