@@ -384,6 +384,132 @@ def RootLayout():
 
 See [full example](../controls/router.md#managed-views--full-app-with-navigationrail).
 
+### Back navigation
+
+When the user pops the topmost View (close X on a modal, AppBar back arrow,
+iOS swipe-back, system back button) the Router by default navigates to the
+**parent of the current route in the route tree** — i.e. `chain[-2].resolved_path`
+of the matched chain, not `views[-2].route`. This is robust against shared
+`View.route` values (the "avoid transition animation" trick above) — a
+deep-Gallery pop still goes to `/gallery` even if `RootLayout` emits
+`route="/"` for both the Apps and Gallery tab roots.
+
+If you need fully custom pop behavior, install your own `page.on_view_pop`
+handler **before** `page.render_views(App)`. The Router detects a
+pre-existing handler and delegates to it instead of running the default.
+
+## Modal routes
+
+Set `modal=True` on a route to render its View as a fullscreen-dialog overlay
+that sits on top of the previous (non-modal) location's view stack. Closing
+the modal pops it without rebuilding the underlying stack — the views
+underneath stay mounted, so there's no rebuild flash.
+
+The modal's component still returns a `View` like any other route — set
+`fullscreen_dialog=True` on the View so Flutter renders the slide-up
+presentation and the close (X) leading icon.
+
+### Global modals — reachable from anywhere
+
+Declared at the top level of the route tree. The base stack comes from the
+last non-modal location the Router saw (defaults to `/` on first render):
+
+```python
+ft.Router([
+    ft.Route(component=Home),
+    ft.Route(component=Profile, path="profile"),
+    ft.Route(component=SettingsModal, path="settings", modal=True),
+], manage_views=True)
+```
+
+- `/` → stack `[Home]`
+- `/profile` → stack `[Profile]`
+- Navigate from `/profile` to `/settings` → stack `[Profile, SettingsModal]`
+  (Profile still mounted underneath the modal)
+- Close → back to `/profile`, stack `[Profile]` (Profile not rebuilt)
+- Deep-link `/settings` directly → stack `[Home, SettingsModal]`
+  (base defaults to `/`)
+
+### Local modals — pinned to a specific page
+
+Declared as a child of a non-modal parent. The base stack is the chain above
+the modal in the route tree, so the URL itself encodes which item the modal
+applies to and deep-link works without any state:
+
+```python
+ft.Router([
+    ft.Route(component=ItemList, path="items", children=[
+        ft.Route(component=ItemDetails, path=":id", children=[
+            ft.Route(component=EditModal, path="edit", modal=True),
+        ]),
+    ]),
+], manage_views=True)
+```
+
+- `/items/42` → stack `[ItemList, ItemDetails(42)]`
+- `/items/42/edit` → stack `[ItemList, ItemDetails(42), EditModal]`
+- Close → `/items/42`
+
+See [full example](../controls/router.md#modal-routes).
+
+## Recursive routes
+
+A route marked `recursive=True` can match itself as its own descendant — one
+`View` is emitted per consumed URL segment. Use this for tree-shaped URLs
+with unbounded depth without writing nested duplicates:
+
+```python
+ft.Router([
+    ft.Route(path="folder", component=Folders, children=[
+        ft.Route(
+            path=":name",
+            component=Folder,
+            recursive=True,
+            children=[
+                ft.Route(path="search", component=Search),
+            ],
+        ),
+    ]),
+], manage_views=True)
+```
+
+- `/folder/a/b/c` → stack `[Folders, Folder(a), Folder(a/b), Folder(a/b/c)]`
+- Back-swipe walks one segment at a time
+
+Inside the component, `use_route_params()` returns just the **current segment**
+(e.g. `{"name": "b"}` at depth 2). Use `use_view_path()` for the accumulated
+URL up to this level — useful when the component needs to know the full path.
+
+### Sibling-wins-over-recursion rule
+
+A non-recursive child of the recursive route is tried **before** self-recursion
+at every depth. In the example above, `/folder/x/search` matches as
+`[Folders, Folder(x), Search]` — the `Search` sibling wins over `Folder("search")`,
+so you only need to declare the special child once, not at every depth.
+
+This makes the recursive route ideal for replacing N-level fan-outs like:
+
+```python
+# Without recursive=True — declared N times for max depth N:
+ft.Route(path=":s1", component=Folder, children=[
+    ft.Route(path="search", component=Search),
+    ft.Route(path=":s2", component=Folder, children=[
+        ft.Route(path="search", component=Search),
+        ft.Route(path=":s3", component=Folder, children=[
+            ft.Route(path="search", component=Search),
+            ft.Route(path=":s4", component=Folder, children=[...]),
+        ]),
+    ]),
+]),
+
+# With recursive=True — one declaration, unbounded depth:
+ft.Route(path=":name", component=Folder, recursive=True, children=[
+    ft.Route(path="search", component=Search),
+]),
+```
+
+See [full example](../controls/router.md#recursive-routes).
+
 ## Hooks reference
 
 | Hook | Returns | Description |

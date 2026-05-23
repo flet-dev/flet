@@ -1,0 +1,26 @@
+[project]
+name = "router-modal-routes"
+version = "1.0.0"
+description = "Modal routes (modal=True) rendered as fullscreen-dialog overlays. Demonstrates both global (top-level) and local (nested) modals."
+requires-python = ">=3.10"
+keywords = ["router", "modal", "fullscreen-dialog", "overlay", "nested"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Modal routes"
+controls = ["SafeArea", "Column", "Button", "Text", "TextField", "AppBar", "View", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["modal routes", "fullscreen_dialog", "manage_views", "global modal", "local modal"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

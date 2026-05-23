@@ -1,0 +1,26 @@
+[project]
+name = "router-recursive-routes"
+version = "1.0.0"
+description = "Recursive routes (recursive=True) for tree-shaped URLs of unbounded depth. One View per consumed segment in the navigation stack."
+requires-python = ">=3.10"
+keywords = ["router", "recursive", "tree", "nested", "unbounded"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Router"]
+
+[tool.flet.metadata]
+title = "Recursive routes"
+controls = ["SafeArea", "Column", "Button", "Text", "TextField", "AppBar", "View", "Router", "Route"]
+layout_pattern = "page-navigation"
+complexity = "intermediate"
+features = ["recursive routes", "use_view_path", "manage_views", "tree URLs"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

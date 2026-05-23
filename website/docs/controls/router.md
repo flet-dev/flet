@@ -60,4 +60,22 @@ and tabbed settings — all using `manage_views=True`.
 
 <CodeExample path={frontMatter.examples + '/featured_views/main.py'} language="python" />
 
+### Modal routes
+
+Routes marked `modal=True` are rendered as a fullscreen-dialog overlay on top
+of the previous (non-modal) location's view stack. A *global* modal is declared
+at the top level (the URL works from anywhere); a *local* modal is declared as
+a child of a non-modal parent (the URL embeds the parent's segment, so
+deep-link works without any state).
+
+<CodeExample path={frontMatter.examples + '/modal_routes/main.py'} language="python" />
+
+### Recursive routes
+
+A route marked `recursive=True` can match itself as its own descendant — one
+View is emitted per consumed URL segment. Use this for tree-shaped URLs
+with unbounded depth (e.g. a file browser at `/folder/a/b/c`).
+
+<CodeExample path={frontMatter.examples + '/recursive_routes/main.py'} language="python" />
+
 <ClassMembers name={frontMatter.class_name} />

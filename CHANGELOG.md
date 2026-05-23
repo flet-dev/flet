@@ -1,3 +1,14 @@
+## 0.85.2
+
+### New features
+
+* Add `Route(modal=True)` to `flet.Router` for fullscreen-dialog modal overlays that don't replace the underlying view stack — closing the modal pops it without rebuilding the views underneath. Two flavours by placement: top-level modals are *global* (the base stack is rebuilt from the Router's last non-modal location), nested-child modals are *local* (the base stack is the chain above the modal in the route tree, so deep-link works from URL alone) ([#6516](https://github.com/flet-dev/flet/pull/6516)) by @FeodorFitsner.
+* Add `Route(recursive=True)` to `flet.Router` so a route can match itself as its own descendant — one `View` per consumed URL segment, ideal for tree-shaped URLs of unbounded depth (`/folder/a/b/c` produces a 4-View stack; back-swipe walks one segment at a time). Non-recursive children are tried before self-recursion at every depth, so a specific sibling (e.g. `example/:gp*`) wins over the recursive `:slug` without duplicating it at every level ([#6516](https://github.com/flet-dev/flet/pull/6516)) by @FeodorFitsner.
+
+### Improvements
+
+* `flet.Router`'s default `on_view_pop` now navigates to the matched chain's parent (`chain[-2].resolved_path`) instead of `views[-2].route`, which is robust against apps that share a `View.route` value between sibling tab roots to suppress switch transitions. Apps that install their own `page.on_view_pop` before `page.render_views()` still take precedence. Each sub-chain (base + modal) renders with its own `LocationInfo`, so `is_route_active(...)` inside a base view sees the base URL while a global modal is open over it ([#6516](https://github.com/flet-dev/flet/pull/6516)) by @FeodorFitsner.
+
 ## 0.85.1
 
 ### Bug fixes
