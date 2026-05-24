@@ -7,6 +7,7 @@
 
 ### Improvements
 
+* Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms by @ndonkoHenri.
 * `flet.Router`'s default `on_view_pop` now navigates to the matched chain's parent (`chain[-2].resolved_path`) instead of `views[-2].route`, which is robust against apps that share a `View.route` value between sibling tab roots to suppress switch transitions. Apps that install their own `page.on_view_pop` before `page.render_views()` still take precedence. Each sub-chain (base + modal) renders with its own `LocationInfo`, so `is_route_active(...)` inside a base view sees the base URL while a global modal is open over it ([#6516](https://github.com/flet-dev/flet/pull/6516)) by @FeodorFitsner.
 
 ### Bug fixes

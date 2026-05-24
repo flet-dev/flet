@@ -308,6 +308,7 @@ class FilePicker(Service):
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
         with_data: bool = False,
+        compression_quality: int = 0,
         cancel_upload_on_window_blur: bool = True,
     ) -> list[FilePickerFile]:
         """
@@ -324,6 +325,8 @@ class FilePicker(Service):
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
                 :attr:`~flet.FilePickerFile.bytes`.
+            compression_quality: Image compression quality from `0` to `100`.
+                `0` disables compression.
             cancel_upload_on_window_blur: Web-only. Whether to treat browser
                 window blur as a cancelled selection. Set to `False` to avoid
                 losing valid selections on slow networks or slow machines.
@@ -342,6 +345,7 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
                 "with_data": with_data,
+                "compression_quality": compression_quality,
                 "cancel_upload_on_window_blur": cancel_upload_on_window_blur,
             },
             timeout=3600,

@@ -38,6 +38,7 @@ class FilePickerService extends FletService {
     var withData = parseBool(args["with_data"], false)!;
     var cancelUploadOnWindowBlur =
         parseBool(args["cancel_upload_on_window_blur"], true)!;
+    var compressionQuality = parseInt(args["compression_quality"], 0)!;
     var srcBytes = args["src_bytes"];
 
     if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
@@ -56,6 +57,7 @@ class FilePickerService extends FletService {
                 lockParentWindow: true,
                 type: fileType,
                 allowedExtensions: allowedExtensions,
+                compressionQuality: compressionQuality,
                 allowMultiple: args["allow_multiple"],
                 withData: withData,
                 withReadStream: !withData,
