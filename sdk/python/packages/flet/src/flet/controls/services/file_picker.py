@@ -258,9 +258,9 @@ class FilePicker(Service):
         name to save a file.
 
         Note:
-            - On desktop this method only opens a dialog for the user to select
-                a location and file name, and returns the chosen path. The file
-                itself is not created or saved.
+            - On desktop, this method opens a dialog for the user to select a
+                location and file name. If `src_bytes` is provided, those bytes
+                are written to the selected file.
 
         Args:
             dialog_title: The title of the dialog window.
@@ -270,8 +270,7 @@ class FilePicker(Service):
             src_bytes: The contents of a file. Must be provided in web,
                 iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is
-                :attr:`flet.FilePickerFileType.CUSTOM`.
+                `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Raises:
             ValueError: If `src_bytes` is not provided, when called in web mode,
