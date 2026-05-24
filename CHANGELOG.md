@@ -11,6 +11,7 @@
 
 ### Bug fixes
 
+* Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771)) by @ndonkoHenri.
 * Fix cross-tab session contamination on Flet web: opening the same app URL in a duplicated browser tab no longer steals the original tab's output connection via `sessionStorage`-cloned `_flet_session_id`. `REGISTER_CLIENT` now rejects session reuse when the existing session still has a live `connection`, allocating a fresh session for the second tab while preserving legitimate single-tab reconnect after refresh or network blip (where `connection` is already `None`) ([#6512](https://github.com/flet-dev/flet/issues/6512), [#6513](https://github.com/flet-dev/flet/pull/6513)) by @ihmily.
 
 ## 0.85.1

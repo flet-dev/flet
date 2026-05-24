@@ -308,6 +308,7 @@ class FilePicker(Service):
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
         with_data: bool = False,
+        cancel_upload_on_window_blur: bool = True,
     ) -> list[FilePickerFile]:
         """
         Opens a pick file dialog.
@@ -323,6 +324,9 @@ class FilePicker(Service):
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
                 :attr:`~flet.FilePickerFile.bytes`.
+            cancel_upload_on_window_blur: Web-only. Whether to treat browser
+                window blur as a cancelled selection. Set to `False` to avoid
+                losing valid selections on slow networks or slow machines.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
@@ -338,6 +342,7 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
                 "with_data": with_data,
+                "cancel_upload_on_window_blur": cancel_upload_on_window_blur,
             },
             timeout=3600,
         )
