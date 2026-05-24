@@ -675,30 +675,161 @@ class DeviceOrientation(Enum):
 class FloatingActionButtonLocation(Enum):
     """
     Defines a position for the :class:`~flet.FloatingActionButton`.
-
-    See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
-    from Flutter documentation for placement location examples.
     """  # noqa: E501
 
     CENTER_DOCKED = "centerDocked"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating over a bottom navigation \
+    control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     CENTER_FLOAT = "centerFloat"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Use :attr:`MINI_CENTER_FLOAT` for mini buttons.
+    """
+
     CENTER_TOP = "centerTop"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
+
     END_CONTAINED = "endContained"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button lines up with that control's center.
+
+    Not typically useful for apps with a :class:`~flet.NavigationBar` or a \
+    non-Material 3 :class:`~flet.BottomAppBar`.
+    """
+
     END_DOCKED = "endDocked"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     END_FLOAT = "endFloat"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    This is the default alignment in Material apps. Use :attr:`MINI_END_FLOAT` for \
+    mini buttons.
+    """
+
     END_TOP = "endTop"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
+
     MINI_CENTER_DOCKED = "miniCenterDocked"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_CENTER_FLOAT = "miniCenterFloat"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_CENTER_TOP = "miniCenterTop"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_DOCKED = "miniEndDocked"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_FLOAT = "miniEndFloat"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating at the bottom of \
+    the screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_TOP = "miniEndTop"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating over the \
+    transition between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_DOCKED = "miniStartDocked"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_FLOAT = "miniStartFloat"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating at the bottom \
+    of the screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_TOP = "miniStartTop"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating over the \
+    transition between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     START_DOCKED = "startDocked"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     START_FLOAT = "startFloat"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Use :attr:`MINI_START_FLOAT` for mini buttons.
+    """
+
     START_TOP = "startTop"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
 
 
 class AppLifecycleState(Enum):
