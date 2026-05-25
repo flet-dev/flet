@@ -169,4 +169,5 @@ def main(page: ft.Page):
     page.add(calc)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
