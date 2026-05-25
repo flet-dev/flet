@@ -38,6 +38,7 @@ docs:
     Logging: cookbook/logging.md
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+    Declarative dialogs: cookbook/declarative-dialogs.md
   Publishing Flet app:
     _index: publish/index.md
     Android: publish/android.md
@@ -62,6 +63,16 @@ docs:
   Extending Flet:
   - extend/user-extensions.md
   - extend/built-in-extensions.md
+  Stay up to date:
+    _index: release/index.md
+    Release notes: release/release-notes.md
+    Breaking changes and deprecations:
+      _index: release/breaking-changes/index.md
+      v0.85.0:
+        Deprecated spacing and border helper functions removed: release/breaking-changes/removed-spacing-border-helpers.md
+        DragTargetEvent coordinate fields deprecated: release/breaking-changes/deprecated-drag-target-event-coordinates.md
+        Video control APIs deprecated: release/breaking-changes/deprecated-video-apis.md
+    Compatibility policy: release/compatibility-policy.md
   Reference:
     _index: reference/index.md
     Controls:

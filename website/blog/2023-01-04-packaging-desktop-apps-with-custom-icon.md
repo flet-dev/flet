@@ -9,6 +9,8 @@ Happy New Year! [Flet project](https://github.com/flet-dev/flet) has reached ⭐
 
 We are starting this year with the release of [Flet 0.3.2](https://pypi.org/project/flet/) bringing a long-awaited feature: creating standalone desktop bundles with a custom icon!
 
+{/* truncate */}
+
 `flet` command has been used for running Flet program with [hot reload](https://flet.dev/docs/cli/flet-run/), but we recently re-worked Flet CLI to support multiple actions.
 
 There is a new `flet pack` command that wraps [PyInstaller](https://github.com/pyinstaller/pyinstaller) API to package your Flet Python app into a standalone Windows executable or macOS app bundle which can be run by a user with no Python installed.

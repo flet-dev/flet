@@ -11,6 +11,8 @@ Flet is a framework for building real-time web, desktop and mobile applications 
 
 No more complex architecture with JavaScript frontend, REST API backend, database, cache, etc. With Flet you just write a monolith stateful app in Python only and get multi-user, realtime Single-Page Application (SPA) or a mobile app.
 
+{/* truncate */}
+
 To start developing with Flet, you just need your favorite IDE or text editor. No SDKs, no thousands of dependencies, no complex tooling - Flet has built-in web server with assets hosting and desktop clients.
 
 Flet UI is built with [Flutter](https://flutter.dev), so your app looks professional and can be delivered to any platform. Flet simplifies Flutter model by combining smaller "widgets" into ready-to-use "controls" with imperative programming model.

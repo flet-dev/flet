@@ -506,7 +506,10 @@ def render_pypi_index(
             [
                 "!!! warning",
                 f"    Failed to fetch package index from `{base_url}`.",
+                "    ",
+                "    ```text",
                 f"    {message}",
+                "    ```",
                 "",
             ]
         )

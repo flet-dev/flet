@@ -33,11 +33,19 @@
 * Add `issues` property to `CodeEditor` (along with `Issue` and `IssueType` types) for displaying code analysis error markers in the gutter, with analysis performed on the Python side ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
 * Add `Page.pop_views_until()` to pop multiple views and return a result to the destination view ([#6326](https://github.com/flet-dev/flet/issues/6326), [#6347](https://github.com/flet-dev/flet/pull/6347)) by @brunobrown.
 * Make `NavigationDrawerDestination.label` accept custom controls and add `NavigationDrawerTheme.icon_theme` ([#6379](https://github.com/flet-dev/flet/issues/6379), [#6395](https://github.com/flet-dev/flet/pull/6395)) by @ndonkoHenri.
-* Add `local_position` and `global_position` to `DragTargetEvent`, deprecating `x`, `y`, and `offset` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
+* Add `local_position` and `global_position` to `DragTargetEvent` for target-relative and global pointer coordinates ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
 * Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
 * Add `Page.theme_animation_style` for customizing the duration and curve of the theme cross-fade between `theme` and `dark_theme` (or disabling it with `AnimationStyle.no_animation()`), exposing Flutter's `MaterialApp.themeAnimationStyle` ([#6476](https://github.com/flet-dev/flet/pull/6476)) by @FeodorFitsner.
 
-### Improvements
+### Breaking changes
+
+* Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helper functions (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
+
+### Deprecations
+
+* Deprecate `DragTargetEvent.x`, `DragTargetEvent.y`, and `DragTargetEvent.offset`; use `local_position` for target-relative coordinates or `global_position` for global coordinates instead. These APIs are scheduled for removal in `0.88.0` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
+* Deprecate `Video.show_controls`; set `Video.controls` to `None` to hide controls. This API is scheduled for removal in `0.88.0` ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+* Deprecate `Video.playlist_add()` and `Video.playlist_remove()`; mutate `Video.playlist` directly with list methods such as `append()` and `pop()`. These APIs are scheduled for removal in `0.88.0` ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
 
 ### Bug fixes
 
@@ -72,7 +80,6 @@
 ### Other changes
 
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity ([#6374](https://github.com/flet-dev/flet/pull/6374)) by @FeodorFitsner.
-* Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helpers (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
 * Centralize Linux apt dependencies in `flet.utils.linux_deps` and update CI workflows and publish docs to consume them dynamically ([#6357](https://github.com/flet-dev/flet/issues/6357), [#6383](https://github.com/flet-dev/flet/pull/6383)) by @ndonkoHenri.
 * Bump `serious_python` to `0.9.12` in the `flet build` template ([#6461](https://github.com/flet-dev/flet/pull/6461)) by @FeodorFitsner.
 
