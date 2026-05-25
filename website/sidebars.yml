@@ -38,6 +38,7 @@ docs:
     Logging: cookbook/logging.md
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
+    Declarative dialogs: cookbook/declarative-dialogs.md
   Publishing Flet app:
     _index: publish/index.md
     Android: publish/android.md

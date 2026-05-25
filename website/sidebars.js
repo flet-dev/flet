@@ -187,6 +187,11 @@ module.exports = {
           "type": "doc",
           "id": "cookbook/encrypting-sensitive-data",
           "label": "Encrypting sensitive data"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/declarative-dialogs",
+          "label": "Declarative dialogs"
         }
       ]
     },
