@@ -3925,6 +3925,21 @@ module.exports = {
       "type": "doc",
       "id": "studio/index",
       "label": "Introduction"
+    },
+    {
+      "type": "doc",
+      "id": "studio/whats-new",
+      "label": "What's new"
+    },
+    {
+      "type": "doc",
+      "id": "studio/terms-of-service",
+      "label": "Terms of Service"
+    },
+    {
+      "type": "doc",
+      "id": "studio/privacy-policy",
+      "label": "Privacy Policy"
     }
   ]
 };
