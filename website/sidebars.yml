@@ -856,3 +856,6 @@ docs:
       flet serve: cli/flet-serve.md
     Python packages built in Flet: reference/binary-packages-android-ios.md
     Environment Variables: reference/environment-variables.md
+
+studio:
+  Introduction: studio/index

@@ -72,7 +72,7 @@ module.exports = {
       items: [
         {
           to: 'docs',
-          activeBasePath: 'docs',
+          activeBaseRegex: '^/docs(?!/studio)',
           label: 'Docs',
           position: 'left',
         },
@@ -80,6 +80,12 @@ module.exports = {
           to: 'gallery',
           activeBasePath: 'gallery',
           label: 'Gallery',
+          position: 'left',
+        },
+        {
+          to: 'studio',
+          activeBaseRegex: '^/(studio|docs/studio)',
+          label: 'Studio',
           position: 'left',
         },
         {

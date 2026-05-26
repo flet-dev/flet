@@ -3919,5 +3919,12 @@ module.exports = {
         "id": "reference/index"
       }
     }
+  ],
+  "studio": [
+    {
+      "type": "doc",
+      "id": "studio/index",
+      "label": "Introduction"
+    }
   ]
 };
