@@ -329,7 +329,7 @@ module.exports = {
       "items": [
         {
           "type": "doc",
-          "id": "release/release-notes",
+          "id": "updates/release-notes",
           "label": "Release notes"
         },
         {
@@ -344,17 +344,17 @@ module.exports = {
               "items": [
                 {
                   "type": "doc",
-                  "id": "release/breaking-changes/removed-spacing-border-helpers",
+                  "id": "updates/breaking-changes/removed-spacing-border-helpers",
                   "label": "Deprecated spacing and border helper functions removed"
                 },
                 {
                   "type": "doc",
-                  "id": "release/breaking-changes/deprecated-drag-target-event-coordinates",
+                  "id": "updates/breaking-changes/deprecated-drag-target-event-coordinates",
                   "label": "DragTargetEvent coordinate fields deprecated"
                 },
                 {
                   "type": "doc",
-                  "id": "release/breaking-changes/deprecated-video-apis",
+                  "id": "updates/breaking-changes/deprecated-video-apis",
                   "label": "Video control APIs deprecated"
                 }
               ]
@@ -362,18 +362,18 @@ module.exports = {
           ],
           "link": {
             "type": "doc",
-            "id": "release/breaking-changes/index"
+            "id": "updates/breaking-changes/index"
           }
         },
         {
           "type": "doc",
-          "id": "release/compatibility-policy",
+          "id": "updates/compatibility-policy",
           "label": "Compatibility policy"
         }
       ],
       "link": {
         "type": "doc",
-        "id": "release/index"
+        "id": "updates/index"
       }
     },
     {

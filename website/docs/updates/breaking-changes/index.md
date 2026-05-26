@@ -26,9 +26,9 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 #### Breaking changes
 
-- [Deprecated spacing and border helper functions removed](/docs/release/breaking-changes/removed-spacing-border-helpers)
+- [Deprecated spacing and border helper functions removed](/docs/updates/breaking-changes/removed-spacing-border-helpers)
 
 #### Deprecations
 
-- [`DragTargetEvent` coordinate fields deprecated](/docs/release/breaking-changes/deprecated-drag-target-event-coordinates)
-- [`Video` control APIs deprecated](/docs/release/breaking-changes/deprecated-video-apis)
+- [`DragTargetEvent` coordinate fields deprecated](/docs/updates/breaking-changes/deprecated-drag-target-event-coordinates)
+- [`Video` control APIs deprecated](/docs/updates/breaking-changes/deprecated-video-apis)
