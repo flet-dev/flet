@@ -125,7 +125,11 @@ module.exports = {
             {
               label: 'Reference',
               to: '/docs/reference',
-            }
+            },
+            {
+              label: 'Studio',
+              to: '/studio',
+            },
           ],
         },
         {
