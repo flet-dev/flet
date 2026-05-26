@@ -20,8 +20,6 @@ Hex color values follow either of these formats:
 >>> ft.Container(bgcolor="#ff0000")
 ```
 
-[Live example](https://flet-controls-gallery.fly.dev/colors/controlcolors)
-
 ## Named Color
 
 Flet uses Material Design [theme colors](https://m3.material.io/styles/color-the-color-system/color-roles)
@@ -41,8 +39,6 @@ You can define named colors in two ways:
 ### Theme Colors
 
 <img src="/img/docs/colors/theme_colors.png"className="screenshot-100" />
-
-[Live Example](https://flet-controls-gallery.fly.dev/colors/themecolors)
 
 There are 30 named theme colors in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme) that are generated based on
 the [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme.color_scheme_seed), which defaults to [`Colors.BLUE`](../types/colors.md#flet.Colors.BLUE).
@@ -70,8 +66,6 @@ Theme colors serve as fallback values for most Flet controls.
 ### Color Palettes
 
 <img src="/img/docs/colors/color_palettes_2.png"className="screenshot-100" />
-
-[Live example](https://flet-controls-gallery.fly.dev/colors/colorspalettes)
 
 Originally introduced by Material Design in 2014, **color palettes** are collections of coordinated
 colors designed to work together harmoniously.
@@ -119,8 +113,6 @@ For colors in hex format, you can specify the `aa` channel with values between `
 
 Most Flet controls have default colors defined by the [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme),
 and these can be overridden at various levels.
-
-[Live example](https://flet-controls-gallery.fly.dev/colors/controlcolors)
 
 <img src="/img/docs/colors/colors_fallback.svg"className="screenshot-80" />
 

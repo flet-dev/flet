@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/gesturedetector)
-
 [Solitaire game tutorial](https://flet.dev/docs/tutorials/python-solitaire)
 
 ### Handling events

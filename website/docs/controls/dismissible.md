@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/dismissible)
-
 ### Dismissible `ListTile`s
 
 <CodeExample path={frontMatter.examples + '/dismissible_list_tiles/main.py'} language="python" />

@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Example
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/safearea)
-
 ### Basic Example
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />

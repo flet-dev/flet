@@ -16,10 +16,10 @@ def patch_dataclass(obj: Any, patch: dict):
     Fields starting with `_` are set directly even when they are not declared in type
     hints.
 
-    For ``@control`` / ``@value`` objects (those with ``_values`` and
-    ``_prop_defaults``), Prop fields are written directly into ``_values`` rather
-    than going through ``Prop.__set__``.  This avoids unnecessary dirty-tracking,
-    frozen-checks, and ``_notify`` calls — none of which are needed when applying
+    For `@control` / `@value` objects (those with `_values` and
+    `_prop_defaults`), Prop fields are written directly into `_values` rather
+    than going through `Prop.__set__`.  This avoids unnecessary dirty-tracking,
+    frozen-checks, and `_notify` calls — none of which are needed when applying
     patches that originate *from* Dart rather than from Python code.
 
     Args:

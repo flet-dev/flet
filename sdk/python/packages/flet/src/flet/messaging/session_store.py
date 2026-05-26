@@ -31,13 +31,13 @@ class SessionStore:
         self.__store[key] = value
 
     def get(self, key: str):
-        """Return the value for a key, or ``None`` if missing.
+        """Return the value for a key, or `None` if missing.
 
         Args:
             key: Key to look up.
 
         Returns:
-            The stored value or ``None`` if the key does not exist.
+            The stored value or `None` if the key does not exist.
         """
         return self.__store.get(key)
 
@@ -48,7 +48,7 @@ class SessionStore:
             key: Key to check.
 
         Returns:
-            ``True`` if the key exists, otherwise ``False``.
+            `True` if the key exists, otherwise `False`.
         """
         return key in self.__store
 

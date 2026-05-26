@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinoradio)
-
 ### Cupertino, Material and Adaptive Radios
 
 <CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />

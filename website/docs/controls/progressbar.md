@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/progressbar)
-
 ### Determinate and indeterminate progress bars
 
 <CodeExample path={frontMatter.examples + '/determinate_and_indeterminate/main.py'} language="python" />

@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinoalertdialog)
-
 ### File deletion confirmation
 
 <CodeExample path={frontMatter.examples + '/file_deletion_confirmation/main.py'} language="python" />

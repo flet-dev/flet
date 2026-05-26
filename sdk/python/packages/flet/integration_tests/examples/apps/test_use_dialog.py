@@ -7,9 +7,9 @@ from examples.apps.declarative.use_dialog_basic import main as use_dialog_basic
 from examples.apps.declarative.use_dialog_chained import main as use_dialog_chained
 from examples.apps.declarative.use_dialog_multiple import main as use_dialog_multiple
 
-# ``use_dialog_*`` examples don't define a ``main(page)`` with page.render; they
-# export both ``App`` (component) and ``main`` (wrapper). We use the module's
-# ``main`` directly.
+# `use_dialog_*` examples don't define a `main(page)` with page.render; they
+# export both `App` (component) and `main` (wrapper). We use the module's
+# `main` directly.
 
 
 # ---------------------------------------------------------------------------

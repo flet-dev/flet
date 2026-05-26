@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/menubar)
-
 ### `MenuBar` with Nested Submenus
 
 <CodeExample path={frontMatter.examples + '/nested_submenus/main.py'} language="python" />

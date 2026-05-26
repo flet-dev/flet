@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/shadermask)
-
 ### Pink glow around image edges
 
 <CodeExample path={frontMatter.examples + '/pink_radial_glow/main.py'} language="python" />

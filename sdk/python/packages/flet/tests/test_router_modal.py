@@ -1,14 +1,14 @@
-"""Unit tests for ``Route(modal=True)`` matching.
+"""Unit tests for `Route(modal=True)` matching.
 
-The modal flag itself is not exercised by ``_match_routes`` — it's
-consumed by the ``Router`` component when emitting views. These tests
-cover the matching layer: the ``modal_idx`` location in the chain
+The modal flag itself is not exercised by `_match_routes` — it's
+consumed by the `Router` component when emitting views. These tests
+cover the matching layer: the `modal_idx` location in the chain
 behaves as documented for both global and local modals, and the
 fields the Router reads from each match are populated correctly.
 
 End-to-end behaviour (chain combination with the previous non-modal
-location, ``modal_pop_to`` stamping, no-flash close) is exercised by
-the ``modal_routes`` integration test that drives the example app
+location, `modal_pop_to` stamping, no-flash close) is exercised by
+the `modal_routes` integration test that drives the example app
 through the Flet testing harness.
 """
 
@@ -54,7 +54,7 @@ def test_global_modal_matches_as_first_chain_entry():
 
 
 def test_global_modal_with_subpath_keeps_modal_at_index_0():
-    """``/settings/system`` still has the modal route at index 0; the
+    """`/settings/system` still has the modal route at index 0; the
     deeper match (the System tab) is at index 1 with its own params."""
     settings = Route(
         path="settings",
@@ -80,9 +80,9 @@ def test_global_modal_with_subpath_keeps_modal_at_index_0():
 
 def test_local_modal_index_reflects_nesting_depth():
     """A modal nested under non-modal parents reports its index as the
-    number of non-modal ancestors. ``modal_pop_to`` is derived from
-    ``chain[modal_idx-1].resolved_path``, which here resolves to the
-    parent ``/items/<id>`` URL."""
+    number of non-modal ancestors. `modal_pop_to` is derived from
+    `chain[modal_idx-1].resolved_path`, which here resolves to the
+    parent `/items/<id>` URL."""
     edit = Route(path="edit", component=_dummy, modal=True)
     routes = [
         Route(
@@ -115,9 +115,9 @@ def test_local_modal_index_reflects_nesting_depth():
 def test_local_modal_preserves_parents_params_in_chain():
     """Each match in the chain exposes every dynamic segment captured up
     to and including that match's own path (parents' captures included
-    via the joined regex). So the modal route at ``/items/:id/edit``
-    sees ``{"id": "abc"}`` on its own match — the Router's
-    ``use_route_params()`` consumer would see the same dict whether it
+    via the joined regex). So the modal route at `/items/:id/edit`
+    sees `{"id": "abc"}` on its own match — the Router's
+    `use_route_params()` consumer would see the same dict whether it
     reads from the modal's match alone or the accumulated chain.
     """
     edit = Route(path="edit", component=_dummy, modal=True)
@@ -135,8 +135,8 @@ def test_local_modal_preserves_parents_params_in_chain():
     assert id_match.params == {"id": "abc"}
     edit_match = next(m for m in chain if m.route is edit)
     # The matcher carries parent captures into the leaf's regex too —
-    # ``id`` is still bound for the modal so it can fetch the right
-    # item record via ``use_route_params()``.
+    # `id` is still bound for the modal so it can fetch the right
+    # item record via `use_route_params()`.
     assert edit_match.params == {"id": "abc"}
 
 
@@ -147,8 +147,8 @@ def test_local_modal_preserves_parents_params_in_chain():
 
 def test_non_modal_chain_has_modal_idx_minus_one():
     """When no route in the matched chain is modal, the helper returns
-    ``-1`` — the Router uses this to update
-    ``prev_non_modal_location_ref``."""
+    `-1` — the Router uses this to update
+    `prev_non_modal_location_ref`."""
     routes = [
         Route(
             component=_dummy,

@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinoslider)
-
 ### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />

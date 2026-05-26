@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/stack)
-
 ### Avatar with online status
 
 <CodeExample path={frontMatter.examples + '/online_avatar/main.py'} language="python" />
