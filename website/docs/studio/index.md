@@ -2,7 +2,7 @@
 title: "Introduction"
 ---
 
-# Introduction
+# Flet Studio
 
 [Flet Studio](https://flet.app) is a browser-based editor for writing, running, saving and
 sharing Flet apps. Your Python code runs entirely in the browser via
