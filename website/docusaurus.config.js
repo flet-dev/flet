@@ -126,9 +126,22 @@ module.exports = {
               label: 'Reference',
               to: '/docs/reference',
             },
+          ],
+        },
+        {
+          title: 'Studio',
+          items: [
             {
-              label: 'Studio',
-              to: '/studio',
+              label: 'Flet Studio app',
+              href: 'https://flet.app',
+            },
+            {
+              label: 'Docs',
+              to: '/docs/studio',
+            },
+            {
+              label: "What's new",
+              to: '/docs/studio/whats-new',
             },
           ],
         },
