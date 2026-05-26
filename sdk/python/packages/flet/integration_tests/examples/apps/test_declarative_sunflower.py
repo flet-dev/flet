@@ -18,7 +18,7 @@ def sunflower_main(page: ft.Page):
 async def test_declarative_sunflower(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(500, 700)
+    flet_app_function.resize_page(500, 630)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
