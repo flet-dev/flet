@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/listview)
-
 ### Auto-scrolling and dynamical items addition
 
 <CodeExample path={frontMatter.examples + '/autoscroll_and_dynamic_items/main.py'} language="python" />

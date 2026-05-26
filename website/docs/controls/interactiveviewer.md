@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/interactiveviewer)
-
 ### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />

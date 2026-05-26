@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/navigationdrawer)
-
 ### Start-aligned drawer
 
 <CodeExample path={frontMatter.examples + '/position_start/main.py'} language="python" />

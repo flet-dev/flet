@@ -86,8 +86,6 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/filepicker)
-
 ### Pick, save, and get directory paths
 
 <CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path/main.py'} language="python" />

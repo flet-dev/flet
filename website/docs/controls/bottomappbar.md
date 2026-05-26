@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/bottomappbar)
-
 ### Notched `FloatingActionButton`
 
 <CodeExample path={frontMatter.examples + '/notched_fab/main.py'} language="python" />

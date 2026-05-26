@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/image)
-
 ### Image gallery
 
 <CodeExample path={frontMatter.examples + '/gallery/main.py'} language="python" />

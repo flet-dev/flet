@@ -15,8 +15,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 To browse and visualize all available icons,
 visit our [icons browser](https://examples.flet.dev/icons_browser/)
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/icon)
-
 ### Basic Example
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />

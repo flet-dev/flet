@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/navigation/appbar)
-
 ### Actions and Popup Menu
 
 <CodeExample path={frontMatter.examples + '/actions_and_popup_menu/main.py'} language="python" />

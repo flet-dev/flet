@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/segmentedbutton)
-
 ### Basic Example
 
 <CodeExample path={frontMatter.examples + '/single_multiple_selection/main.py'} language="python" />

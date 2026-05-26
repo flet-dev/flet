@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/text)
-
 ### Custom text styles
 
 <CodeExample path={frontMatter.examples + '/custom_styles/main.py'} language="python" />

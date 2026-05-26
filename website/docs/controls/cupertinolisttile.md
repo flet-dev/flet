@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/cupertinolisttile)
-
 ### Notched and non-notched list tiles
 
 <CodeExample path={frontMatter.examples + '/notched/main.py'} language="python" />
