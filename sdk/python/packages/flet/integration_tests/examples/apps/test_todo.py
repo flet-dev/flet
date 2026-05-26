@@ -39,6 +39,7 @@ async def test_todo_basic(flet_app_function: ftt.FletTestApp):
 
     for name in ["Release new Flet", "Update docs"]:
         task = await flet_app_function.tester.find_by_text(name)
+        assert task.count == 1
         await flet_app_function.tester.tap(task)
         await flet_app_function.tester.pump_and_settle()
 
