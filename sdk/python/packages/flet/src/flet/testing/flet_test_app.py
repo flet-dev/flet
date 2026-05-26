@@ -510,34 +510,34 @@ class FletTestApp:
     ) -> Path:
         """Create an animated GIF from a sequence of PNG frames.
 
-        Exactly one of ``image_names`` or ``frames`` must be provided. Unlike
+        Exactly one of `image_names` or `frames` must be provided. Unlike
         :meth:`assert_gif`, this method only writes the GIF and returns its
         path; it does not compare against a golden file.
 
         Args:
-            image_names: Iterable of file name stems (without ``.png``) in the
+            image_names: Iterable of file name stems (without `.png`) in the
                 order they should appear in the animation. Frames are read from
                 disk under the test's golden directory.
-            output_name: Base name for the resulting animation. The ``.gif``
+            output_name: Base name for the resulting animation. The `.gif`
                 extension is added automatically and the file is stored in the
                 same directory as the source frames.
             frames: Iterable of PNG-encoded frame bytes to use directly, in the
                 order they should appear in the animation. Typically paired
                 with :meth:`Page.take_animation`.
-            duration: Frame duration in milliseconds. Either a single ``int``
-                applied to every frame, or a sequence of ``int`` with one
+            duration: Frame duration in milliseconds. Either a single `int`
+                applied to every frame, or a sequence of `int` with one
                 entry per frame. Pass the same list used for
-                ``take_animation(frame_delays_ms=...)`` to have the GIF play
+                `take_animation(frame_delays_ms=...)` to have the GIF play
                 at the same pace it was captured.
-            loop: Number of times the GIF should repeat (``0`` means infinite).
+            loop: Number of times the GIF should repeat (`0` means infinite).
             disposal: Frame disposal mode.
 
         Returns:
             Path to the generated GIF file.
 
         Raises:
-            ValueError: If neither or both of ``image_names`` / ``frames`` are
-                given, the input is empty, or a ``duration`` sequence has a
+            ValueError: If neither or both of `image_names` / `frames` are
+                given, the input is empty, or a `duration` sequence has a
                 different length than the frame count.
             FileNotFoundError: If any referenced image file does not exist.
         """

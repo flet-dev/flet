@@ -1,15 +1,15 @@
-"""Repro for the ``use_dialog`` multi-host race.
+"""Repro for the `use_dialog` multi-host race.
 
-Two sibling components each own a dialog via ``ft.use_dialog``: an
-``AlertHost`` shows an AlertDialog while a ``ToastHost`` shows a SnackBar.
+Two sibling components each own a dialog via `ft.use_dialog`: an
+`AlertHost` shows an AlertDialog while a `ToastHost` shows a SnackBar.
 A single click handler flips both in the same scheduler tick — the
 AlertDialog is dismissed while the SnackBar is shown.  Before the fix the
 AlertDialog stays stuck open because the two hosts emit conflicting patches
-(an immediate ``patch_control(prev)`` for dismissal and a deferred
-``schedule_update(_dialogs)`` for show) and the Flutter overlay rebuild
+(an immediate `patch_control(prev)` for dismissal and a deferred
+`schedule_update(_dialogs)` for show) and the Flutter overlay rebuild
 recreates the AlertDialog Element mid-dismiss.
 
-Run with ``uv run flet run path/to/multi_host``.
+Run with `uv run flet run path/to/multi_host`.
 """
 
 from __future__ import annotations

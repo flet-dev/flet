@@ -1,24 +1,24 @@
 """Recursive routes — unbounded URL depth, one View per segment.
 
-A route marked ``recursive=True`` can match itself as its own
-descendant. The Router emits one ``_RouteMatch`` per consumed URL
-segment, which (in ``manage_views=True`` mode) turns into one View per
+A route marked `recursive=True` can match itself as its own
+descendant. The Router emits one `_RouteMatch` per consumed URL
+segment, which (in `manage_views=True` mode) turns into one View per
 segment in the navigation stack — so the back gesture walks one level
 at a time.
 
 Sibling-wins-over-recursion: non-recursive children of a recursive
 route are tried BEFORE self-recursion at every depth. Here that means
-``/folder/<anything>/search`` matches the ``Search`` page (not a
-folder named "search"), without needing to declare ``search`` at every
+`/folder/<anything>/search` matches the `Search` page (not a
+folder named "search"), without needing to declare `search` at every
 depth manually.
 
 Try this in the browser bar:
 
-* ``/folder`` → folder root
-* ``/folder/a`` → 1 level deep
-* ``/folder/a/b`` → 2 levels deep
-* ``/folder/a/b/c/d/e`` → 5 levels deep (no fixed limit)
-* ``/folder/a/b/search`` → search page below ``a/b``
+* `/folder` → folder root
+* `/folder/a` → 1 level deep
+* `/folder/a/b` → 2 levels deep
+* `/folder/a/b/c/d/e` → 5 levels deep (no fixed limit)
+* `/folder/a/b/search` → search page below `a/b`
 """
 
 import flet as ft
@@ -39,7 +39,7 @@ def Home():
 
 @ft.component
 def Folders():
-    """Root of the folder tree (``/folder``)."""
+    """Root of the folder tree (`/folder`)."""
     page = ft.context.page
     return ft.View(
         route="/folder",
@@ -65,8 +65,8 @@ def Folders():
 def Folder():
     """A folder at any depth. Re-used by the recursive route at every level.
 
-    ``use_route_params()`` returns just the current segment (e.g.
-    ``{"name": "b"}`` at depth 2). ``use_view_path()`` returns the
+    `use_route_params()` returns just the current segment (e.g.
+    `{"name": "b"}` at depth 2). `use_view_path()` returns the
     accumulated URL up to this view, useful for showing the full path
     and for building child URLs.
     """
@@ -99,7 +99,7 @@ def Folder():
 @ft.component
 def Search():
     """Non-recursive child of the recursive Folder route. Wins over
-    self-recursion at every depth, so ``/folder/<any-segments>/search``
+    self-recursion at every depth, so `/folder/<any-segments>/search`
     always lands here instead of being eaten as another folder named
     "search"."""
     page = ft.context.page
