@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import {useColorMode} from '@docusaurus/theme-common';
 import styles from './studio.module.css';
 
 const FEATURES = [
@@ -51,9 +52,22 @@ function FeatureCard({ icon, title, description, comingSoon }) {
   );
 }
 
-function Studio() {
+function HeroScreenshot() {
+  const {colorMode} = useColorMode();
   const heroImageLight = useBaseUrl('img/pages/studio/flet-studio-light.png');
   const heroImageDark = useBaseUrl('img/pages/studio/flet-studio-dark.png');
+  return (
+    <img
+      className={styles.heroScreenshot}
+      src={colorMode === 'dark' ? heroImageDark : heroImageLight}
+      alt="Flet Studio editor with file browser, code area, and live preview panel"
+      loading="eager"
+      fetchpriority="high"
+    />
+  );
+}
+
+function Studio() {
   return (
     <Layout
       title="Flet Studio — Build cross-platform Python apps in your browser"
@@ -78,20 +92,7 @@ function Studio() {
                 Read the docs
               </Link>
             </div>
-            <img
-              className={`${styles.heroScreenshot} ${styles.heroScreenshotLight}`}
-              src={heroImageLight}
-              alt="Flet Studio editor with file browser, code area, and live preview panel"
-              loading="eager"
-              fetchpriority="high"
-            />
-            <img
-              className={`${styles.heroScreenshot} ${styles.heroScreenshotDark}`}
-              src={heroImageDark}
-              alt="Flet Studio editor with file browser, code area, and live preview panel"
-              loading="eager"
-              fetchpriority="high"
-            />
+            <HeroScreenshot />
           </div>
         </section>
 
@@ -114,13 +115,13 @@ function Studio() {
             </p>
             <div className={styles.closingCtas}>
               <a
-                className={styles.closingCtaPrimary}
+                className={styles.primaryCta}
                 href="https://flet.app"
                 target="_blank"
                 rel="noopener noreferrer">
                 Try Flet Studio
               </a>
-              <Link className={styles.closingCtaSecondary} to="/docs/studio">
+              <Link className={styles.secondaryCta} to="/docs/studio">
                 Read the docs
               </Link>
             </div>

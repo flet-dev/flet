@@ -115,18 +115,6 @@
   display: block;
 }
 
-.heroScreenshotDark {
-  display: none;
-}
-
-html[data-theme='dark'] .heroScreenshotLight {
-  display: none;
-}
-
-html[data-theme='dark'] .heroScreenshotDark {
-  display: block;
-}
-
 .featuresSection {
   padding: 5rem 1.5rem;
   width: 100%;
@@ -228,47 +216,6 @@ html[data-theme='dark'] .heroScreenshotDark {
   margin: 0 0 2rem;
 }
 
-.closingCtaPrimary {
-  background-color: #f81d5b;
-  color: #fff !important;
-  display: inline-block;
-  line-height: 1.2em;
-  text-decoration: none !important;
-  transition: background 0.2s, transform 0.2s;
-  border-radius: 8px;
-  font-size: 1.15rem;
-  font-weight: 600;
-  padding: 14px 28px;
-  border: 2px solid #f81d5b;
-}
-
-.closingCtaPrimary:hover {
-  background-color: #db0f49;
-  border-color: #db0f49;
-  color: #fff !important;
-  transform: translateY(-1px);
-}
-
-.closingCtaSecondary {
-  background-color: transparent;
-  color: #f81d5b !important;
-  display: inline-block;
-  line-height: 1.2em;
-  text-decoration: none !important;
-  transition: background 0.2s, transform 0.2s;
-  border-radius: 8px;
-  font-size: 1.15rem;
-  font-weight: 600;
-  padding: 14px 28px;
-  border: 2px solid #f81d5b;
-}
-
-.closingCtaSecondary:hover {
-  background-color: rgba(248, 29, 91, 0.08);
-  color: #f81d5b !important;
-  transform: translateY(-1px);
-}
-
 .closingCtas {
   display: flex;
   flex-wrap: wrap;
@@ -329,12 +276,6 @@ html[data-theme='dark'] .heroScreenshotDark {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .closingCtaPrimary,
-  .closingCtaSecondary {
-    width: 100%;
-    text-align: center;
   }
 }
 

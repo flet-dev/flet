@@ -10,4 +10,4 @@ reverse-chronological order. Flet Studio ships independently of the Flet SDK —
 
 ## May 26, 2026
 
-The initial public release of Flet Studio.
+* The initial public release of Flet Studio.
