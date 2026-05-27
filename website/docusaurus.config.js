@@ -72,7 +72,7 @@ module.exports = {
       items: [
         {
           to: 'docs',
-          activeBasePath: 'docs',
+          activeBaseRegex: '^/docs(?!/studio)',
           label: 'Docs',
           position: 'left',
         },
@@ -80,6 +80,12 @@ module.exports = {
           to: 'gallery',
           activeBasePath: 'gallery',
           label: 'Gallery',
+          position: 'left',
+        },
+        {
+          to: 'studio',
+          activeBaseRegex: '^/(studio|docs/studio)',
+          label: 'Studio',
           position: 'left',
         },
         {
@@ -119,7 +125,24 @@ module.exports = {
             {
               label: 'Reference',
               to: '/docs/reference',
-            }
+            },
+          ],
+        },
+        {
+          title: 'Studio',
+          items: [
+            {
+              label: 'Flet Studio app',
+              href: 'https://flet.app',
+            },
+            {
+              label: 'Docs',
+              to: '/docs/studio',
+            },
+            {
+              label: "What's new",
+              to: '/docs/studio/whats-new',
+            },
           ],
         },
         {

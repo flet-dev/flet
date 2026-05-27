@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/chip)
-
 ### Assist chips
 
 Assist chips are chips with [`leading`](chip.md#flet.Chip.leading) icon

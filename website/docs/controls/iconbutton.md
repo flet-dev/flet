@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/iconbutton)
-
 ### Handling clicks
 
 <CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />

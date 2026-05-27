@@ -1,6 +1,7 @@
 import React from "react";
 import apiData from "@site/.crocodocs/api-data.json";
 import codeExamples from "@site/.crocodocs/code-examples.json";
+import examplesMetadata from "@site/.crocodocs/examples-metadata.json";
 import Admonition from "@theme/Admonition";
 import CodeBlock from "@theme/CodeBlock";
 import {unified} from "unified";
@@ -49,6 +50,16 @@ export function getApiData() {
  */
 export function getExampleSource(path) {
   return codeExamples[path] ?? null;
+}
+
+/**
+ * Return true if the example directory has a pyproject.toml that declares web support.
+ * Examples without a pyproject.toml are absent from the metadata and return false,
+ * since Flet Studio cannot run them as standalone apps.
+ * @param {string} exampleDir - Path of the example directory relative to examples_root.
+ */
+export function getExampleWebSupported(exampleDir) {
+  return examplesMetadata[exampleDir]?.webSupported === true;
 }
 
 /**

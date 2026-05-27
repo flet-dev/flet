@@ -5,14 +5,14 @@ authors: feodor
 tags: [releases]
 ---
 
-Flet 0.7.1 enables developers [changing scroll position](#controlling-scroll-position) and [receiving scroll notifications](#receiving-scroll-notifications) from `Page`, `View`, `Column`, `Row`, `ListView` and `GridView` controls.
+Flet 0.7.1 enables developers [changing scroll position](/blog/scrolling-controls-and-theming#controlling-scroll-position) and [receiving scroll notifications](/blog/scrolling-controls-and-theming#receiving-scroll-notifications) from `Page`, `View`, `Column`, `Row`, `ListView` and `GridView` controls.
 
 The release also introduces theming improvements:
-* [Color scheme customization](#color-scheme-customization)
-* [Nested themes](#nested-themes)
-* [Text theming](#text-theming)
-* [Scrollbar theming](#scrollbar-theme)
-* [Tabs theming](#tabs-theming)
+* [Color scheme customization](/blog/scrolling-controls-and-theming#color-scheme-customization)
+* [Nested themes](/blog/scrolling-controls-and-theming#nested-themes)
+* [Text theming](/blog/scrolling-controls-and-theming#text-theming)
+* [Scrollbar theming](/blog/scrolling-controls-and-theming#scrollbar-theme)
+* [Tabs theming](/blog/scrolling-controls-and-theming#tabs-theming)
 
 {/* truncate */}
 

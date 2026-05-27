@@ -12,8 +12,6 @@ _No changes in the `flet` Dart package; version bumped for release coordination 
 
 * Add `parseControlWidget()` and `parseControlWidgets()` utilities for converting Flet controls in protocol values to Flutter widgets ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
 
-### Improvements
-
 ### Bug fixes
 
 * Preserve viewport minimum constraints for short scrollable `View`, `Column`, and `Row` content so main-axis alignment still applies ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
@@ -22,8 +20,6 @@ _No changes in the `flet` Dart package; version bumped for release coordination 
 * Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
 * Resolve absolute-path `src` (e.g. `Image(src="/images/foo.svg")`) against `assets_dir` on web so embedded apps mounted at non-root URLs load assets correctly, pass `data:`/`blob:` URIs through unchanged, preserve origin-relative semantics when `assets_dir` is unset, and add a `window.flet.assetsDir` JS-interop bridge so embedding hosts can supply `assets_dir` to the top-level `FletApp` ([#6470](https://github.com/flet-dev/flet/pull/6470)) by @FeodorFitsner.
 * Coerce `double` to `int` in `parseInt` so float values passed into `int`-typed protocol fields (e.g. `Duration(seconds: 2.0)`) decode correctly instead of falling back to the default ([#6478](https://github.com/flet-dev/flet/issues/6478), [#6480](https://github.com/flet-dev/flet/pull/6480)) by @FeodorFitsner.
-
-### Other changes
 
 ## 0.84.0
 

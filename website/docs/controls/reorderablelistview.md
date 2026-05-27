@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/autofillgroup)
-
 ### Horizontal and Vertical
 
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />

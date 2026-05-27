@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="900" viewBox="0 0 1920 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="1920" height="900" fill="#fafbfc"/>
+  <g opacity="0.7">
+    <rect x="-60" y="40" width="380" height="520" rx="48" fill="#fcd5e0" transform="rotate(-12 130 300)"/>
+    <rect x="80" y="-40" width="320" height="400" rx="40" fill="#d6e7f5" transform="rotate(8 240 160)"/>
+    <rect x="280" y="120" width="520" height="600" rx="60" fill="#cfeefb" transform="rotate(-6 540 420)"/>
+    <rect x="160" y="380" width="280" height="320" rx="36" fill="#ffe6ed" transform="rotate(-18 300 540)"/>
+    <rect x="540" y="480" width="240" height="280" rx="30" fill="#dceef7" transform="rotate(10 660 620)"/>
+    <rect x="720" y="60" width="300" height="280" rx="32" fill="#dcdfee" transform="rotate(-8 870 200)"/>
+    <rect x="900" y="320" width="180" height="200" rx="24" fill="#fcd5e0" transform="rotate(12 990 420)"/>
+    <rect x="1020" y="540" width="280" height="280" rx="32" fill="#cfeefb" transform="rotate(-10 1160 680)"/>
+    <rect x="1240" y="60" width="320" height="420" rx="40" fill="#d6e7f5" transform="rotate(6 1400 270)"/>
+    <rect x="1400" y="280" width="220" height="240" rx="28" fill="#ffe6ed" transform="rotate(-14 1510 400)"/>
+    <rect x="1480" y="500" width="280" height="280" rx="32" fill="#dceef7" transform="rotate(10 1620 640)"/>
+    <rect x="1640" y="80" width="320" height="320" rx="36" fill="#fcd5e0" transform="rotate(-6 1800 240)"/>
+    <rect x="1700" y="540" width="280" height="320" rx="32" fill="#dcdfee" transform="rotate(8 1840 700)"/>
+    <circle cx="1820" cy="820" r="60" fill="#fcd5e0"/>
+    <rect x="40" y="700" width="200" height="200" rx="24" fill="#d6e7f5" transform="rotate(-6 140 800)"/>
+  </g>
+</svg>

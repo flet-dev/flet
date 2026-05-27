@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/container)
-
 ### Clickable container
 
 <CodeExample path={frontMatter.examples + '/clickable/main.py'} language="python" />

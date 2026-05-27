@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/dropdown)
-
 ### Color selection with filtering
 
 <CodeExample path={frontMatter.examples + '/color_selection_with_filtering/main.py'} language="python" />

@@ -1,18 +1,18 @@
 ## Description
 
-<!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. -->
+<!-- Please include a summary of the change, relevant motivation, and context. -->
 
 <!-- If this PR fixes an open issue, please link to the issue here. Ex: Fixes #4562 -->
 
-## Test Code
+## Test code
 
 ```python
-# Test code for the review of this PR
+# Minimal test/reproduction code for reviewers, if applicable.
 ```
 
 ## Type of change
 
-<!-- Please delete options that are not relevant. -->
+<!-- select only options relevant to your PR -->
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
@@ -22,13 +22,14 @@
 ## Checklist
 
 - [ ] I signed the CLA.
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] If this PR targets a `release/*` branch, I added a new record to the active root `CHANGELOG.md` section
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] My changes generate no new warnings
-- [ ] New and existing tests pass locally with my changes
-- [ ] I have made corresponding changes to the [documentation](https://github.com/flet-dev/website) (if applicable)
+- [ ] I have performed a self-review of my own code.
+- [ ] My code follows the style guidelines of this project.
+- [ ] I have commented my code, particularly in hard-to-understand areas.
+- [ ] My changes generate no new warnings.
+- [ ] New and existing tests pass locally with my changes.
+- [ ] I have made corresponding documentation changes, if applicable.
+- [ ] I have added changelog entries for user-facing changes, if applicable.
+- [ ] I have updated release guide pages and `website/sidebars.yml` for breaking changes, removals, and deprecations, if applicable.
 
 ## Screenshots
 

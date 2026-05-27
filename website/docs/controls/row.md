@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/layout/row)
-
 ### Spacing children
 
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />

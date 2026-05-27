@@ -1,7 +1,7 @@
 """Modal routes — fullscreen-dialog overlays that don't unmount the
 underlying stack.
 
-A route marked ``modal=True`` is rendered on top of the previous
+A route marked `modal=True` is rendered on top of the previous
 location's view stack. Closing the modal pops it without rebuilding
 the views underneath — they stay mounted.
 
@@ -9,11 +9,11 @@ Two flavours, distinguished by placement in the route tree:
 
 * **Global modal** — declared at the top level. Reachable from
   anywhere with a single URL; the base stack comes from the last
-  non-modal location the Router saw. Demonstrated by ``/settings`` here.
+  non-modal location the Router saw. Demonstrated by `/settings` here.
 
 * **Local modal** — declared as a child of a non-modal parent. The URL
   embeds the parent's path, so deep-link works without any state.
-  Demonstrated by ``/items/<id>/edit`` here.
+  Demonstrated by `/items/<id>/edit` here.
 """
 
 import flet as ft

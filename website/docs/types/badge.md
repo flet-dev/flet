@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/badge)
-
 ### Badge decorating an icon on a NavigationBar
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />

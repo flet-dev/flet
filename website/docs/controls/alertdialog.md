@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/alertdialog)
-
 ### Modal and non-modal dialogs
 
 <CodeExample path={frontMatter.examples + '/modal_and_non_modal/main.py'} language="python" />

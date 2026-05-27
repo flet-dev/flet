@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/animations/animated_switcher)
-
 ### Animated switching between two containers with scale effect
 
 <CodeExample path={frontMatter.examples + '/scale_effect/main.py'} language="python" />

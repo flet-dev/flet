@@ -24,16 +24,16 @@ def _make_container(component_fn):
 
 
 def test_diff_replaces_incompatible_component_in_scalar_field():
-    """Changing ``Container.content`` from one Component fn to another must
+    """Changing `Container.content` from one Component fn to another must
     produce a remove + add (not an in-place migrate), so the new component
-    receives a fresh ``_i`` and ``did_mount`` is fired.
+    receives a fresh `_i` and `did_mount` is fired.
 
-    Regression: before this fix, ``_compare_values`` called
-    ``_compare_dataclasses`` on both Components because ``type(src) is
-    type(dst) == Component``.  ``_migrate_state`` then copied ``_i`` from
+    Regression: before this fix, `_compare_values` called
+    `_compare_dataclasses` on both Components because `type(src) is
+    type(dst) == Component`.  `_migrate_state` then copied `_i` from
     the old instance to the new one, so the session's add/remove dedup logic
     considered the new component already mounted and silently skipped
-    ``did_mount`` (and thus ``use_effect`` mount setup).
+    `did_mount` (and thus `use_effect` mount setup).
     """
     old_root = _make_container(_CompA)
     new_root = _make_container(_CompB)
@@ -64,8 +64,8 @@ def test_diff_replaces_incompatible_component_in_scalar_field():
 
 
 def test_diff_migrates_same_component_fn_when_args_differ():
-    """Sanity check: Components with the same ``fn`` but different args (so
-    they don't compare equal) must still migrate ``_i`` in place, so hook
+    """Sanity check: Components with the same `fn` but different args (so
+    they don't compare equal) must still migrate `_i` in place, so hook
     state survives a re-render.
     """
     from flet.components.component import Renderer

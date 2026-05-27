@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinocheckbox)
-
 ### Cupertino, Material and Adaptive Checkboxes
 
 <CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />

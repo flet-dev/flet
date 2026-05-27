@@ -14,8 +14,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/displays/canvas)
-
 ### Smiling face
 
 <CodeExample path={frontMatter.examples + '/smiling_face/main.py'} language="python" />

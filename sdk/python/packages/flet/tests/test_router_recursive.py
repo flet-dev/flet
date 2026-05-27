@@ -1,14 +1,14 @@
-"""Unit tests for ``Route(recursive=True)`` matching.
+"""Unit tests for `Route(recursive=True)` matching.
 
 A recursive route matches itself as its own descendant — one
-``_RouteMatch`` per consumed URL segment. The matcher tries
+`_RouteMatch` per consumed URL segment. The matcher tries
 non-recursive children before self-recursion at every depth so a
-specific sibling (e.g. ``example/:gp*``) wins over the recursive
-``:slug``.
+specific sibling (e.g. `example/:gp*`) wins over the recursive
+`:slug`.
 
-These tests exercise ``_match_routes`` directly. View emission with
+These tests exercise `_match_routes` directly. View emission with
 one stack entry per recursion level is exercised by the
-``recursive_routes`` integration test that drives the example app.
+`recursive_routes` integration test that drives the example app.
 """
 
 from flet.components.router import Route, _match_routes
@@ -47,8 +47,8 @@ def test_recursive_route_matches_single_segment():
 
 
 def test_recursive_route_matches_three_levels():
-    """``/folder/a/b/c`` produces three ``:name`` matches. Each level's
-    ``resolved_path`` accumulates the consumed prefix."""
+    """`/folder/a/b/c` produces three `:name` matches. Each level's
+    `resolved_path` accumulates the consumed prefix."""
     folder = Route(
         path="folder",
         component=_dummy,
@@ -97,7 +97,7 @@ def test_recursive_route_unbounded_depth():
 def test_non_recursive_sibling_wins_at_root_depth():
     """A non-recursive child declared as a sibling of the recursive
     route matches before self-recursion at every depth — here the root
-    depth. ``/folder/search`` lands on Search, not on Folder(search)."""
+    depth. `/folder/search` lands on Search, not on Folder(search)."""
     folder = Route(
         path="folder",
         component=_dummy,
@@ -114,7 +114,7 @@ def test_non_recursive_sibling_wins_at_root_depth():
 
 def test_non_recursive_sibling_wins_at_recursive_child_depth():
     """The same rule applies inside the recursive route itself — a
-    ``search`` child of the recursive ``:name`` wins over self-recursion
+    `search` child of the recursive `:name` wins over self-recursion
     at every depth."""
     search = Route(path="search", component=_dummy)
     folder = Route(
@@ -185,7 +185,7 @@ def test_recursive_route_alone_at_root_matches_each_segment():
 
 
 def test_recursive_route_trailing_slash_treated_as_terminator():
-    """Both ``/folder/a`` and ``/folder/a/`` terminate at the same
+    """Both `/folder/a` and `/folder/a/` terminate at the same
     leaf match — the trailing slash isn't consumed as another empty
     recursion."""
     folder = Route(
@@ -203,8 +203,8 @@ def test_recursive_route_trailing_slash_treated_as_terminator():
 
 
 def test_recursive_route_with_splat_child_at_every_depth():
-    """The canonical ``gallery`` pattern from the studio app: a recursive
-    ``:slug`` with an ``example/:gp*`` child. The splat child wins over
+    """The canonical `gallery` pattern from the studio app: a recursive
+    `:slug` with an `example/:gp*` child. The splat child wins over
     self-recursion at any depth."""
     example = Route(path="example/:gp*", component=_dummy)
     gallery = Route(
