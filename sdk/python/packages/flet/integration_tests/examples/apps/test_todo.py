@@ -14,7 +14,7 @@ import flet.testing as ftt
 async def test_todo_basic(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(700, 760)
+    flet_app_function.resize_page(700, 700 * 0.625)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 

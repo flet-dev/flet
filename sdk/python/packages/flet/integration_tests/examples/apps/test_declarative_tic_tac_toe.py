@@ -6,6 +6,8 @@ import flet.testing as ftt
 
 
 def tic_tac_toe_main(page: ft.Page):
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.render(tic_tac_toe.Game)
 
 
@@ -18,7 +20,7 @@ def tic_tac_toe_main(page: ft.Page):
 async def test_declarative_tic_tac_toe(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(640, 480)
+    flet_app_function.resize_page(230 * 1.5, 230)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 

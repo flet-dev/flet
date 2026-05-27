@@ -18,7 +18,7 @@ def routing_two_pages_main(page: ft.Page):
 async def test_declarative_routing_two_pages(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(500, 420)
+    flet_app_function.resize_page(500, 500 * 0.625)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 

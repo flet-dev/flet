@@ -306,7 +306,7 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
-    def resize_page(self, width: int, height: int):
+    def resize_page(self, width: float, height: float):
         """
         Resizes the page window to the specified width and height.
         """

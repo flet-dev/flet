@@ -419,7 +419,7 @@ async def test_auth_dialog(flet_app_function: ftt.FletTestApp):
 async def test_featured(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(700, 500)
+    flet_app_function.resize_page(800, 800 * 0.625)
     flet_app_function.page.update()
     await flet_app_function.tester.pump_and_settle()
 
