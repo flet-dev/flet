@@ -16,4 +16,8 @@ std::string Utf8FromUtf16(const wchar_t* utf16_string);
 // encoded in UTF-8. Returns an empty std::vector<std::string> on failure.
 std::vector<std::string> GetCommandLineArguments();
 
+// Returns true when the given environment variable exists, even if it is set
+// to an empty value.
+bool HasEnvironmentVariable(const wchar_t* name);
+
 #endif  // RUNNER_UTILS_H_
