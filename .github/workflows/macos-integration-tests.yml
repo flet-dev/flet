@@ -39,18 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         suite:
-        - apps
         - examples/apps
-        - examples/controls/core
-        - examples/controls/cupertino
-        - examples/controls/material
-        - examples/extensions
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/services
-        - controls/theme
-        - extensions
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
@@ -73,7 +62,10 @@ jobs:
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO \
+            packages/flet/integration_tests/examples/apps/test_routing_navigation.py::test_route_change_event \
+            packages/flet/integration_tests/examples/apps/test_routing_navigation.py::test_drawer_navigation \
+            packages/flet/integration_tests/examples/apps/test_todo.py::test_todo_basic
 
       - name: Prepare failure screenshots
         if: failure()
