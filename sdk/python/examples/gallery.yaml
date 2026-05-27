@@ -10,10 +10,6 @@
 # in this file will be skipped at scan time.
 
 categories:
-  Featured:
-    _icon: star
-    _description: Featured examples and demos
-    7GUIs:
 
   Getting Started:
     _icon: rocket_launch
@@ -244,6 +240,7 @@ categories:
   Cookbook:
     _icon: interests
     _description: Recipes and patterns for common app features
+    7GUIs:
 
   Community:
     _icon: people
