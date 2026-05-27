@@ -77,8 +77,7 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'gallery',
-          activeBasePath: 'gallery',
+          to: 'https://flet.app/gallery',
           label: 'Gallery',
           position: 'left',
         },

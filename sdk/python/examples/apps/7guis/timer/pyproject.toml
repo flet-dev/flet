@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs", "Cookbook"]
+categories = ["Cookbook/7GUIs", "Cookbook"]
 
 [tool.flet.metadata]
 title = "Timer"

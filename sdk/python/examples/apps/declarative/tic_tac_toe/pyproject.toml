@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Games", "Declarative", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_tic_tac_toe/declarative_tic_tac_toe.png"]
 
 [tool.flet.metadata]
 title = "Tic tac toe"

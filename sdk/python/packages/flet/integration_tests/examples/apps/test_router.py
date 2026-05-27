@@ -417,6 +417,12 @@ async def test_auth_dialog(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_featured(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(800, 800 * 0.625)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
     sign_in = await flet_app_function.tester.find_by_text("Sign In")
     assert sign_in.count == 1
 
@@ -433,6 +439,13 @@ async def test_featured(flet_app_function: ftt.FletTestApp):
         "3 featured projects available"
     )
     assert featured_count.count == 1
+
+    flet_app_function.assert_screenshot(
+        "featured_logged_in",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
 
     browse_btn = await flet_app_function.tester.find_by_text("Browse projects")
     assert browse_btn.count == 1

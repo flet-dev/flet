@@ -8,9 +8,10 @@ ft.context.disable_auto_update()
 
 
 class IconBrowser(ft.Container):
-    def __init__(self, icon_set, expand=False, height=500):
+    def __init__(self, icon_set, expand=False, height=500, key_prefix=None):
         super().__init__()
         self.icon_set = icon_set
+        self.key_prefix = key_prefix
         if expand:
             self.expand = expand
         else:
@@ -35,6 +36,7 @@ class IconBrowser(ft.Container):
             await display_icons(search_txt.value)
 
         search_txt = ft.TextField(
+            key=f"{self.key_prefix}_search_input" if self.key_prefix else None,
             expand=1,
             hint_text="Enter keyword and press search button. "
             "To view all icons enter *",
@@ -43,7 +45,14 @@ class IconBrowser(ft.Container):
         )
 
         search_query = ft.Row(
-            [search_txt, ft.IconButton(icon=search_icon, on_click=search_click)]
+            [
+                search_txt,
+                ft.IconButton(
+                    key=f"{self.key_prefix}_search_button" if self.key_prefix else None,
+                    icon=search_icon,
+                    on_click=search_click,
+                ),
+            ]
         )
 
         search_results = ft.GridView(
@@ -165,8 +174,16 @@ def main(page: ft.Page):
                         ft.TabBarView(
                             expand=True,
                             controls=[
-                                IconBrowser(ft.Icons, expand=True),
-                                IconBrowser(ft.CupertinoIcons, expand=True),
+                                IconBrowser(
+                                    ft.Icons,
+                                    expand=True,
+                                    key_prefix="material_icons",
+                                ),
+                                IconBrowser(
+                                    ft.CupertinoIcons,
+                                    expand=True,
+                                    key_prefix="cupertino_icons",
+                                ),
                             ],
                         ),
                     ],
