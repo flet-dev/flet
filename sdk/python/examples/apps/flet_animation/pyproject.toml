@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Animations/Apps", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/flet_animation/flet_animation.png"]
 
 [tool.flet.metadata]
 title = "Flet animation"

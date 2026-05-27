@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Featured", "Tools"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/icons_browser/icons_browser.png"]
 
 [tool.flet.metadata]
 title = "Icons browser"

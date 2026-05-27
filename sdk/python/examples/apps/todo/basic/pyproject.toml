@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Featured", "Getting Started"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/todo/todo_basic.png"]
 
 [tool.flet.metadata]
 title = "Classic To-Do"

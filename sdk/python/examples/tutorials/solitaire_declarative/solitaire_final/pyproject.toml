@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Featured", "Games", "Declarative"]
+screenshots = ["packages/flet/integration_tests/tutorials/golden/macos/solitaire_declarative/solitaire_declarative.png"]
 
 [tool.flet.metadata]
 title = "Solitaire"
