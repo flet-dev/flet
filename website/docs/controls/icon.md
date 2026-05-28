@@ -13,7 +13,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 ## Examples
 
 To browse and visualize all available icons,
-visit our [icons browser](https://examples.flet.dev/icons_browser/)
+visit our [icons browser](https://flet.app/gallery/run/apps/icons_browser/)
 
 ### Basic Example
 
