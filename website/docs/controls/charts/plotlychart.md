@@ -11,7 +11,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Example 1
+### Plotly line chart
 
 Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
@@ -19,7 +19,7 @@ Based on an official [Plotly example](https://plotly.com/python/line-charts).
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
 
-### Example 2
+### Plotly bar chart
 
 Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
@@ -27,7 +27,7 @@ Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 
-### Example 3
+### Plotly pie chart
 
 Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 
@@ -35,7 +35,7 @@ Based on an official [Plotly example](https://plotly.com/python/pie-charts).
 
 <Image src={frontMatter.example_images + '/example_3.png'} width="65%" />
 
-### Example 4
+### Plotly box plot
 
 Based on an official [Plotly example](https://plotly.com/python/box-plots).
 

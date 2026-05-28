@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Media/Lottie"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Lottie animations"
 controls = ["SafeArea", "Column", "Lottie", "Placeholder", "Text"]
 layout_pattern = "single-panel"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Media/Rive"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Rive animations"
 controls = ["SafeArea", "Column", "Rive", "ProgressBar"]
 layout_pattern = "media-showcase"
 complexity = "basic"

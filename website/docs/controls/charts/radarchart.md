@@ -11,7 +11,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Example 1
+### Radar chart
 
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 

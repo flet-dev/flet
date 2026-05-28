@@ -30,17 +30,17 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_media + '/handling_hovers.gif'} width="15%" />
 
-### Animate 1
+### Animate size and color
 
 <CodeExample path={frontMatter.examples + '/animate_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/animate_1.gif'} width="25%" />
 
-### Animate 2
+### Animate gradient and shape
 
 <CodeExample path={frontMatter.examples + '/animate_2/main.py'} language="python" />
 
-### Animate 3
+### Animated slide-in menu
 
 <CodeExample path={frontMatter.examples + '/animate_3/main.py'} language="python" />
 
