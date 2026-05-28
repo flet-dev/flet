@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Media/AudioRecorder"]
 
 [tool.flet.metadata]
-title = "Audio recorder basic"
+title = "Audio recorder"
 controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "Button", "AudioRecorder"]
 layout_pattern = "inline-actions"
 complexity = "basic"

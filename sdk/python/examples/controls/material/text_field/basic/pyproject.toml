@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/TextField"]
 
 [tool.flet.metadata]
-title = "TextField basic"
+title = "TextField"
 controls = ["SafeArea", "Column", "TextField", "Button", "Text"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

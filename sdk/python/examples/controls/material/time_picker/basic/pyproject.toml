@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/TimePicker"]
 
 [tool.flet.metadata]
-title = "TimePicker basic"
+title = "TimePicker"
 controls = ["SafeArea", "Column", "Button", "Text", "TimePicker", "SnackBar"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

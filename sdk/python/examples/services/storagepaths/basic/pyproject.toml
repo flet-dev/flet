@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/Storagepaths"]
 
 [tool.flet.metadata]
-title = "Basic storage paths"
+title = "Storage paths"
 controls = ["SafeArea", "Column", "Page", "Text"]
 layout_pattern = "inline-actions"
 complexity = "basic"

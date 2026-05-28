@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/Text"]
 
 [tool.flet.metadata]
-title = "Basic rich text"
+title = "Rich text"
 controls = ["SafeArea", "Column", "Text", "TextSpan"]
 layout_pattern = "stacked-content"
 complexity = "basic"

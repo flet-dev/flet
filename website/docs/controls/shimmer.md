@@ -7,7 +7,7 @@ title: "Shimmer"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.gif'} imageCaption="Basic shimmer" imageWidth="30%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.gif'} imageCaption="Shimmer" imageWidth="30%"/>
 
 ## Examples
 

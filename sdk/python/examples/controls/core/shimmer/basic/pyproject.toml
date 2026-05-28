@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Effects/Shimmer"]
 
 [tool.flet.metadata]
-title = "Shimmer basic"
+title = "Shimmer"
 controls = ["Shimmer", "Column", "Container", "SafeArea"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

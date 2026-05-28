@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/Checkbox"]
 
 [tool.flet.metadata]
-title = "Basic checkbox"
+title = "Checkbox"
 controls = ["SafeArea", "Column", "Checkbox", "Button", "Text"]
 layout_pattern = "form"
 complexity = "basic"

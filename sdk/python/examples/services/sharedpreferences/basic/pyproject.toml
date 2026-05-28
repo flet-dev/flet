@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/SharedPreferences"]
 
 [tool.flet.metadata]
-title = "Basic shared preferences"
+title = "Shared preferences"
 controls = ["SafeArea", "Column", "Page", "SharedPreferences", "Text", "Row", "TextField", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

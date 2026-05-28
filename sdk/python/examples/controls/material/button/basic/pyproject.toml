@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/Button"]
 
 [tool.flet.metadata]
-title = "Basic button"
+title = "Button"
 controls = ["SafeArea", "Column", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

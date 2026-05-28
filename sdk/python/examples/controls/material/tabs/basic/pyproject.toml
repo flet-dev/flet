@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Tabs"]
 
 [tool.flet.metadata]
-title = "Tabs basic"
+title = "Tabs"
 controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "Container", "Text", "CircleAvatar"]
 layout_pattern = "single-panel"
 complexity = "basic"

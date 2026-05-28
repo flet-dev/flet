@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/TransparentPointer"]
 
 [tool.flet.metadata]
-title = "TransparentPointer basic"
+title = "TransparentPointer"
 controls = ["SafeArea", "Stack", "GestureDetector", "TransparentPointer", "Container", "Button"]
 layout_pattern = "overlay"
 complexity = "basic"

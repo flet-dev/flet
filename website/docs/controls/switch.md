@@ -7,11 +7,11 @@ title: "Switch"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic switch and disabled switch" imageWidth="20%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Switch" imageWidth="20%"/>
 
 ## Examples
 
-### Basic Example
+### Switch
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

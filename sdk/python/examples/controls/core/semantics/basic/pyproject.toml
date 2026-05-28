@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Accessibility"]
 
 [tool.flet.metadata]
-title = "Semantics basic"
+title = "Semantics"
 controls = ["Semantics", "TextField", "Icon", "Column", "SafeArea"]
 layout_pattern = "form-field"
 complexity = "basic"

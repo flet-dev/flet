@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CodeEditor" imageWidth="60%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CodeEditor" imageWidth="60%"/>
 
 ## Usage
 
@@ -32,7 +32,7 @@ pip install flet-code-editor  # (1)!
 </Tabs>
 ## Examples
 
-### Basic example
+### CodeEditor
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} alt="code-editor-example-1" width="60%" />

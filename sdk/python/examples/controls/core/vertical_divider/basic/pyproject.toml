@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/VerticalDivider"]
 
 [tool.flet.metadata]
-title = "VerticalDivider basic"
+title = "VerticalDivider"
 controls = ["SafeArea", "Row", "VerticalDivider", "Container"]
 layout_pattern = "single-row"
 complexity = "basic"

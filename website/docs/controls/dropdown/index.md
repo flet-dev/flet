@@ -9,7 +9,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # Dropdown
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Dropdown" imageWidth="25%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Dropdown" imageWidth="25%"/>
 
 ## Examples
 

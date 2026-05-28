@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/Gyroscope"]
 
 [tool.flet.metadata]
-title = "Basic gyroscope"
+title = "Gyroscope"
 controls = ["SafeArea", "Column", "Page", "GyroscopeReadingEvent", "Text", "Gyroscope"]
 layout_pattern = "inline-actions"
 complexity = "basic"

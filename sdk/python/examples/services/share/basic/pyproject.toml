@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/Share"]
 
 [tool.flet.metadata]
-title = "Basic share"
+title = "Share"
 controls = ["SafeArea", "Column", "Page", "Share", "Text", "Row", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

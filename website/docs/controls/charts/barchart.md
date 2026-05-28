@@ -8,7 +8,7 @@ title: "BarChart"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.diagram} imageCaption="Basic bar chart" imageWidth="80%" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.diagram} imageCaption="Bar chart" imageWidth="80%" />
 
 ## Examples
 

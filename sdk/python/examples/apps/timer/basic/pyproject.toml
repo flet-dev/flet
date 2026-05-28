@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Cookbook"]
 
 [tool.flet.metadata]
-title = "Basic timer"
+title = "Timer"
 controls = ["SafeArea", "Column", "Row", "Text", "FilledButton", "TextButton"]
 layout_pattern = "center-stage"
 complexity = "basic"

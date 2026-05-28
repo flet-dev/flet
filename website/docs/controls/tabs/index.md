@@ -10,11 +10,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # Tabs
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic tabs" imageWidth="70%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Tabs" imageWidth="70%"/>
 
 ## Examples
 
-### Basic Example
+### Tabs
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
