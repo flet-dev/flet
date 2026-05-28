@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Media/Video"]
 
 [tool.flet.metadata]
-title = "Basic Video"
+title = "Video"
 controls = ["SafeArea", "Video"]
 layout_pattern = "single-panel"
 complexity = "basic"

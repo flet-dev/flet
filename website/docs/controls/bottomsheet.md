@@ -7,11 +7,11 @@ title: "BottomSheet"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic BottomSheet" imageWidth="30%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="BottomSheet" imageWidth="30%"/>
 
 ## Examples
 
-### Basic example
+### BottomSheet
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

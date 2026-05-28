@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/UrlLauncher", "Navigation/Routing"]
 
 [tool.flet.metadata]
-title = "Basic URL launcher"
+title = "URL launcher"
 controls = ["SafeArea", "Column", "Page", "UrlLauncher", "TextField", "Text", "LaunchMode", "WebViewConfiguration"]
 layout_pattern = "inline-actions"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/Banner"]
 
 [tool.flet.metadata]
-title = "Basic Banner"
+title = "Banner"
 controls = ["SafeArea", "Column", "Button", "Banner", "Icon", "Text", "TextButton"]
 layout_pattern = "dialog-flow"
 complexity = "basic"

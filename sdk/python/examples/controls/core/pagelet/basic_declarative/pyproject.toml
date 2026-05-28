@@ -21,7 +21,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Pagelet"]
 
 [tool.flet.metadata]
-title = "Basic Declarative"
+title = "Pagelet Declarative"
 controls = [
   "Pagelet",
   "SafeArea",

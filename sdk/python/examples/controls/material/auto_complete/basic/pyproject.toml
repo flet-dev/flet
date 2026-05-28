@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/AutoComplete"]
 
 [tool.flet.metadata]
-title = "Basic AutoComplete"
+title = "AutoComplete"
 controls = ["SafeArea", "Column", "AutoComplete", "AutoCompleteSuggestion", "Text"]
 layout_pattern = "form"
 complexity = "basic"
