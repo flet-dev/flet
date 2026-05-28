@@ -1,3 +1,7 @@
+## 0.85.3
+
+_No changes in the `flet` Dart package; version bumped for release coordination with a `flet.Router` view-pop fix on the Python side._
+
 ## 0.85.2
 
 _No changes in the `flet` Dart package; version bumped for release coordination with `flet.Router` enhancements on the Python side (modal/recursive route flags, chain-based default pop)._
