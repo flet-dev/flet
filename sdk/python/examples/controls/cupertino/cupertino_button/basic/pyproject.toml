@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/CupertinoButton"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoButton"
 controls = ["SafeArea", "Column", "CupertinoButton", "Button", "Text", "Row", "Icon"]
 layout_pattern = "inline-actions"
 complexity = "basic"

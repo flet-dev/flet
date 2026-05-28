@@ -8,11 +8,11 @@ title: "CupertinoSegmentedButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoSegmentedButton" imageWidth="20%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoSegmentedButton" imageWidth="20%"/>
 
 ## Examples
 
-### Basic Example
+### CupertinoSegmentedButton
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/OutlinedButton"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "OutlinedButton"
 controls = ["SafeArea", "OutlinedButton"]
 layout_pattern = "inline-actions"
 complexity = "basic"

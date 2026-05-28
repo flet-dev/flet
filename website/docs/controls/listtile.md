@@ -8,11 +8,11 @@ title: "ListTile"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ListTile" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ListTile" />
 
 ## Examples
 
-### Basic Example
+### ListTile
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

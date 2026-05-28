@@ -8,11 +8,11 @@ title: "CupertinoActivityIndicator"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoActivityIndicator" imageWidth="8%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoActivityIndicator" imageWidth="8%"/>
 
 ## Examples
 
-### Basic Example
+### CupertinoActivityIndicator
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

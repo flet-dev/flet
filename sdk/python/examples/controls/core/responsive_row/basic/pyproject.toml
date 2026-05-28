@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/ResponsiveRow"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "ResponsiveRow"
 controls = ["SafeArea", "Column", "ResponsiveRow", "Container", "TextField", "Text"]
 layout_pattern = "responsive-grid"
 complexity = "basic"

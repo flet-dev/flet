@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/Markdown"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Markdown"
 controls = ["SafeArea", "Markdown"]
 layout_pattern = "article"
 complexity = "basic"

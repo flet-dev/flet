@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/ListTile"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "ListTile"
 controls = ["SafeArea", "Card", "Container", "Column", "ListTile", "Icon", "Image", "PopupMenuButton", "PopupMenuItem", "Text"]
 layout_pattern = "list-detail"
 complexity = "basic"

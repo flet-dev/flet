@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/DropdownM2"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "DropdownM2"
 controls = ["SafeArea", "Column", "DropdownM2", "Button", "Text"]
 layout_pattern = "form"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/RotatedBox"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "RotatedBox"
 controls = [
     "SafeArea",
     "Column",

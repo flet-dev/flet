@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/DataTable"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "DataTable"
 controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell", "Text"]
 layout_pattern = "table-view"
 complexity = "basic"

@@ -10,11 +10,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # CupertinoActionSheet
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoActionSheet" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoActionSheet" />
 
 ## Examples
 
-### Basic Example
+### CupertinoActionSheet
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

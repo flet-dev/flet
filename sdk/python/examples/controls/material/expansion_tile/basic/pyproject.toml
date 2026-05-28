@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/ExpansionTile"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "ExpansionTile"
 controls = ["SafeArea", "Column", "ExpansionTile", "ListTile", "Text", "Icon", "SnackBar"]
 layout_pattern = "list-detail"
 complexity = "basic"

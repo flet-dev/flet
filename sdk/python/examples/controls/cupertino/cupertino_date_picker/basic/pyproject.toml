@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/CupertinoDatePicker"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoDatePicker"
 controls = ["SafeArea", "Column", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoDatePicker", "Text"]
 layout_pattern = "single-panel"
 complexity = "basic"

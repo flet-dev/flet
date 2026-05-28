@@ -7,11 +7,11 @@ title: "ExpansionTile"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ExpansionTile" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ExpansionTile" />
 
 ## Examples
 
-### Basic Example
+### ExpansionTile
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

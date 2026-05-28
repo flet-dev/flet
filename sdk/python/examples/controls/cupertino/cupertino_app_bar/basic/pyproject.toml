@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/CupertinoAppBar"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoAppBar"
 controls = ["CupertinoAppBar", "Icon", "Text", "SafeArea"]
 layout_pattern = "toolbar-actions"
 complexity = "basic"

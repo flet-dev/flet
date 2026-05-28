@@ -8,11 +8,11 @@ title: "ExpansionPanelList"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ExpansionPanelList" imageWidth="45%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ExpansionPanelList" imageWidth="45%"/>
 
 ## Examples
 
-### Basic Example
+### ExpansionPanelList
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

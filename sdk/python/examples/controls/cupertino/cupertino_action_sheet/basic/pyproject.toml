@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/CupertinoActionSheet"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoActionSheet"
 controls = ["SafeArea", "Column", "CupertinoFilledButton", "CupertinoBottomSheet", "CupertinoActionSheet", "CupertinoActionSheetAction", "Text", "Row", "Icon"]
 layout_pattern = "single-panel"
 complexity = "basic"
