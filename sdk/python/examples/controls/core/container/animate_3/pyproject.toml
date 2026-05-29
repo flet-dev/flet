@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Animate 3"
+title = "Animated slide-in menu"
 controls = ["SafeArea", "Button", "Container", "Column", "Row", "IconButton", "ListTile"]
 layout_pattern = "overlay"
 complexity = "basic"

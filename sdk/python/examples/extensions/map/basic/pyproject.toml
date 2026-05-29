@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/Map"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Map"
 controls = ["SafeArea", "Map", "TileLayer", "SimpleAttribution"]
 layout_pattern = "single-panel"
 complexity = "basic"

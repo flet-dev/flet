@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/LineChart"]
 
 [tool.flet.metadata]
-title = "Example 2"
+title = "Line chart with custom axes"
 controls = ["SafeArea", "LineChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

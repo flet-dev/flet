@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/BottomSheet"]
 
 [tool.flet.metadata]
-title = "Basic BottomSheet"
+title = "BottomSheet"
 controls = ["SafeArea", "Column", "Button", "BottomSheet", "Container", "Text"]
 layout_pattern = "dialog-flow"
 complexity = "basic"

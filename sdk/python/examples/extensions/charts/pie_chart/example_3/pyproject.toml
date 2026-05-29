@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/PieChart"]
 
 [tool.flet.metadata]
-title = "Example 3"
+title = "Pie chart with icon badges"
 controls = ["SafeArea", "PieChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

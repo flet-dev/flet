@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/CupertinoTimerPicker"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoTimerPicker"
 controls = ["SafeArea", "Row", "Text", "CupertinoButton", "CupertinoBottomSheet", "CupertinoTimerPicker"]
 layout_pattern = "single-panel"
 complexity = "basic"

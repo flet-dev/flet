@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/Icon"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Icon"
 controls = ["SafeArea", "Column", "Row", "Icon"]
 layout_pattern = "single-panel"
 complexity = "basic"

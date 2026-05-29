@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/PageView"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "PageView"
 controls = ["PageView", "SafeArea", "Container", "Column", "Text", "Icon"]
 layout_pattern = "pager"
 complexity = "basic"

@@ -10,7 +10,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # Canvas
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Canvas" imageWidth="25%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Canvas" imageWidth="25%"/>
 
 ## Examples
 

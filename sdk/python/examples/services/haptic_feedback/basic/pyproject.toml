@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/HapticFeedback"]
 
 [tool.flet.metadata]
-title = "Basic haptic feedback"
+title = "Haptic feedback"
 controls = ["SafeArea", "Column", "Page", "HapticFeedback", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

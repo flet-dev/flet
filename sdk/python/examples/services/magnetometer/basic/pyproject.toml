@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/Magnetometer"]
 
 [tool.flet.metadata]
-title = "Basic magnetometer"
+title = "Magnetometer"
 controls = ["SafeArea", "Column", "Page", "MagnetometerReadingEvent", "Text", "Magnetometer"]
 layout_pattern = "inline-actions"
 complexity = "basic"

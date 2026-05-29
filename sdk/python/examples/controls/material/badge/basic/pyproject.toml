@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/Badge"]
 
 [tool.flet.metadata]
-title = "Basic Badge"
+title = "Badge"
 controls = ["NavigationBar", "NavigationBarDestination", "Icon", "Badge", "SafeArea", "Column", "Text"]
 layout_pattern = "navigation"
 complexity = "basic"

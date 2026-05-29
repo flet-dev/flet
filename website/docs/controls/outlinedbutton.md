@@ -12,7 +12,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Basic example
+### OutlinedButton
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

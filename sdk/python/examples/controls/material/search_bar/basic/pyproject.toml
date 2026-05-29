@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/SearchBar"]
 
 [tool.flet.metadata]
-title = "SearchBar basic"
+title = "SearchBar"
 controls = ["SearchBar", "ListTile", "Text", "SafeArea"]
 layout_pattern = "search-overlay"
 complexity = "basic"

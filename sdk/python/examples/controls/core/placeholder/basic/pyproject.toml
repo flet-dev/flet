@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Placeholder"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Placeholder"
 controls = ["Placeholder", "SafeArea"]
 layout_pattern = "single-panel"
 complexity = "basic"

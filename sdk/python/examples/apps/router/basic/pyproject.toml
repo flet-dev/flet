@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
-title = "Basic routing"
+title = "Routing"
 controls = ["SafeArea", "Column", "Row", "Button", "Text", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "basic"

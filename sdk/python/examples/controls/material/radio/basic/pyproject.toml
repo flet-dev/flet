@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/Radio"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Radio"
 controls = ["RadioGroup", "Radio", "Button", "Text", "SafeArea"]
 layout_pattern = "form"
 complexity = "basic"

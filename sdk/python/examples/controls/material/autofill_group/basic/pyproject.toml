@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/AutofillGroup"]
 
 [tool.flet.metadata]
-title = "Basic AutofillGroup"
+title = "AutofillGroup"
 controls = ["SafeArea", "AutofillGroup", "Column", "TextField"]
 layout_pattern = "form"
 complexity = "basic"

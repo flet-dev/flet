@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/Battery"]
 
 [tool.flet.metadata]
-title = "Basic battery"
+title = "Battery"
 controls = ["SafeArea", "Column", "Page", "Button", "Battery", "Text"]
 layout_pattern = "inline-actions"
 complexity = "basic"

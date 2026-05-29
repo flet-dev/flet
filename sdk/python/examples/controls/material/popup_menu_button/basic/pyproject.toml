@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/PopupMenuButton"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "PopupMenuButton"
 controls = ["PopupMenuButton", "PopupMenuItem", "SafeArea", "Row", "Icon", "Text"]
 layout_pattern = "overlay-action"
 complexity = "basic"

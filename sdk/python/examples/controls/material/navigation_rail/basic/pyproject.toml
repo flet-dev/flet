@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/NavigationRail"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "NavigationRail"
 controls = ["NavigationRail", "NavigationRailDestination", "SafeArea", "FloatingActionButton", "SelectionArea", "Page", "VerticalDivider", "Column", "Row", "Text"]
 layout_pattern = "side-navigation"
 complexity = "basic"

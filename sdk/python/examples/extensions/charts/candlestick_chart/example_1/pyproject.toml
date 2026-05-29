@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/CandlestickChart"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Candlestick chart"
 controls = ["SafeArea", "CandlestickChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Animate 2"
+title = "Animate gradient and shape"
 controls = ["SafeArea", "Column", "Container", "Button", "Text"]
 layout_pattern = "inline-actions"
 complexity = "basic"

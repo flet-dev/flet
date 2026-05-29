@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/DateRangePicker"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "DateRangePicker"
 controls = ["SafeArea", "Column", "Button", "DateRangePicker", "Text"]
 layout_pattern = "single-panel"
 complexity = "basic"

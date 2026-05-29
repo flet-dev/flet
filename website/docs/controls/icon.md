@@ -8,14 +8,14 @@ title: "Icon"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Icon" imageWidth="5%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Icon" imageWidth="5%"/>
 
 ## Examples
 
 To browse and visualize all available icons,
 visit our [icons browser](https://flet.app/gallery/run/apps/icons_browser/)
 
-### Basic Example
+### Icon
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

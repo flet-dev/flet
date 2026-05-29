@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Dialogs/SnackBar"]
 
 [tool.flet.metadata]
-title = "SnackBar basic"
+title = "SnackBar"
 controls = ["SnackBar", "Button", "Text", "SafeArea"]
 layout_pattern = "inline-actions"
 complexity = "basic"

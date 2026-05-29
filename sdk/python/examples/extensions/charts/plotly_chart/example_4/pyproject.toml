@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/PlotlyChart"]
 
 [tool.flet.metadata]
-title = "Example 4"
+title = "Plotly box plot"
 controls = ["SafeArea", "PlotlyChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

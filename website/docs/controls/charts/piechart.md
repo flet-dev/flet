@@ -12,19 +12,19 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Example 1
+### Pie chart with hover borders
 
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
 
-### Example 2
+### Pie chart with hover sections
 
 <CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 
-### Example 3
+### Pie chart with icon badges
 
 <CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
 

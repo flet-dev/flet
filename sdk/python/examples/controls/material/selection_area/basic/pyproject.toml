@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/SelectionArea"]
 
 [tool.flet.metadata]
-title = "SelectionArea basic"
+title = "SelectionArea"
 controls = ["SelectionArea", "Column", "Text", "SafeArea"]
 layout_pattern = "comparison-stack"
 complexity = "basic"

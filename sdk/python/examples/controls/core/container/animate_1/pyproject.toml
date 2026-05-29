@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Animate 1"
+title = "Animate size and color"
 controls = ["SafeArea", "Column", "Container", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

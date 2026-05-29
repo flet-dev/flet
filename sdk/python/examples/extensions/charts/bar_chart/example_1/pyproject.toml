@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/BarChart"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Interactive bar chart"
 controls = ["SafeArea", "BarChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

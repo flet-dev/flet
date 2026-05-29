@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/PieChart"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Pie chart with hover borders"
 controls = ["SafeArea", "PieChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

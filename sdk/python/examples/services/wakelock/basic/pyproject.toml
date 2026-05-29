@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/Wakelock"]
 
 [tool.flet.metadata]
-title = "Basic wakelock"
+title = "Wakelock"
 controls = ["SafeArea", "Column", "Page", "Wakelock", "Text", "Row", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/CupertinoNavigationBar"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoNavigationBar"
 controls = ["CupertinoNavigationBar", "NavigationBarDestination", "SafeArea", "Text"]
 layout_pattern = "tabbed-navigation"
 complexity = "basic"

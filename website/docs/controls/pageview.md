@@ -10,7 +10,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Basic Example
+### PageView
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

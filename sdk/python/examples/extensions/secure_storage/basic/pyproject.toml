@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/SecureStorage"]
 
 [tool.flet.metadata]
-title = "Basic secure storage"
+title = "Secure storage"
 controls = ["SafeArea", "Column", "Page", "SecureStorage", "TextField", "Text", "Row", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

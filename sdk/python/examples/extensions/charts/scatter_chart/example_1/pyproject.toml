@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/ScatterChart"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Scatter chart"
 controls = ["SafeArea", "ScatterChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

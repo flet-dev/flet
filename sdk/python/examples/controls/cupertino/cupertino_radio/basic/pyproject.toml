@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/CupertinoRadio"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoRadio"
 controls = ["SafeArea", "Column", "RadioGroup", "CupertinoRadio", "Text", "Button"]
 layout_pattern = "form"
 complexity = "basic"

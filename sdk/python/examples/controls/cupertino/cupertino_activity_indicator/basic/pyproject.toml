@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Displays/CupertinoActivityIndicator"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoActivityIndicator"
 controls = ["SafeArea", "CupertinoActivityIndicator"]
 layout_pattern = "single-panel"
 complexity = "basic"

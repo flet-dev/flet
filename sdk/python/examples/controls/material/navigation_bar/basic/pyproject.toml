@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/NavigationBar"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "NavigationBar"
 controls = ["NavigationBar", "NavigationBarDestination", "SafeArea", "Text"]
 layout_pattern = "tabbed-navigation"
 complexity = "basic"

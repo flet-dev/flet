@@ -9,11 +9,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # DataTable
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic DataTable" imageWidth="25%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="DataTable" imageWidth="25%"/>
 
 ## Examples
 
-### Basic Example
+### DataTable
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

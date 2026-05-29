@@ -11,7 +11,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Basic Example
+### DatePicker
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

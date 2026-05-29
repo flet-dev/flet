@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/Switch"]
 
 [tool.flet.metadata]
-title = "Switch basic"
+title = "Switch"
 controls = ["SafeArea", "Column", "Switch", "Button", "Text"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

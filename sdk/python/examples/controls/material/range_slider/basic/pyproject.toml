@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/RangeSlider"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "RangeSlider"
 controls = ["RangeSlider", "SafeArea", "Text", "Column", "Container"]
 layout_pattern = "input-panel"
 complexity = "basic"

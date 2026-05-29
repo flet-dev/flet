@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Charts/RadarChart"]
 
 [tool.flet.metadata]
-title = "Example 1"
+title = "Radar chart"
 controls = ["SafeArea", "RadarChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

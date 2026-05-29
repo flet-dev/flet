@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/TextButton"]
 
 [tool.flet.metadata]
-title = "TextButton basic"
+title = "TextButton"
 controls = ["SafeArea", "Column", "TextButton"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

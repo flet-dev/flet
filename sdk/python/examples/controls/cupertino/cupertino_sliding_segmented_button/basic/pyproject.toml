@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Buttons/CupertinoSlidingSegmentedButton"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "CupertinoSlidingSegmentedButton"
 controls = ["SafeArea", "CupertinoSlidingSegmentedButton", "Text", "SnackBar"]
 layout_pattern = "single-panel"
 complexity = "basic"

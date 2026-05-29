@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/CodeEditor"]
 
 [tool.flet.metadata]
-title = "Basic example"
+title = "CodeEditor"
 controls = ["SafeArea", "CodeEditor"]
 layout_pattern = "single-panel"
 complexity = "basic"

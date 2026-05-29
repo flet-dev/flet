@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/Slider"]
 
 [tool.flet.metadata]
-title = "Slider basic"
+title = "Slider"
 controls = ["Slider", "Text", "Column", "SafeArea"]
 layout_pattern = "stacked-actions"
 complexity = "basic"

@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/Barometer"]
 
 [tool.flet.metadata]
-title = "Basic barometer"
+title = "Barometer"
 controls = ["SafeArea", "Column", "Page", "BarometerReadingEvent", "Text", "Barometer"]
 layout_pattern = "inline-actions"
 complexity = "basic"

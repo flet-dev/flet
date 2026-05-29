@@ -7,11 +7,11 @@ title: "SearchBar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic search bar" imageWidth="70%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="SearchBar" imageWidth="70%"/>
 
 ## Examples
 
-### Basic Example
+### SearchBar
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

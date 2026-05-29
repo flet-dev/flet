@@ -8,11 +8,11 @@ title: "CupertinoButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoButton" imageWidth="10%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoButton" imageWidth="10%"/>
 
 ## Examples
 
-### Basic Example
+### CupertinoButton
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

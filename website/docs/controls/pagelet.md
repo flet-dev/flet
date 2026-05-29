@@ -7,11 +7,11 @@ title: "Pagelet"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Pagelet" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Pagelet" />
 
 ## Examples
 
-### Basic example
+### Pagelet
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

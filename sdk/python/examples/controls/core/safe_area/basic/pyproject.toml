@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/SafeArea"]
 
 [tool.flet.metadata]
-title = "SafeArea basic"
+title = "SafeArea"
 controls = ["SafeArea", "Container", "Text", "FloatingActionButton"]
 layout_pattern = "centered-single-action"
 complexity = "basic"

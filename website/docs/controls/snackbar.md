@@ -12,7 +12,7 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 ## Examples
 
-### Basic Example
+### SnackBar
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 

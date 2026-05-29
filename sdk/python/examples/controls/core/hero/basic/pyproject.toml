@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/Hero"]
 
 [tool.flet.metadata]
-title = "Basic"
+title = "Hero"
 controls = ["View", "SafeArea", "Container", "Column", "GestureDetector", "Hero", "AppBar", "Button", "Text", "Icon"]
 layout_pattern = "list-detail"
 complexity = "basic"

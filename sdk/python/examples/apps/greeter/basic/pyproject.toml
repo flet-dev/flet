@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Getting Started"]
 
 [tool.flet.metadata]
-title = "Basic greeter"
+title = "Greeter"
 controls = ["SafeArea", "Column", "TextField", "Button", "Text"]
 layout_pattern = "form"
 complexity = "basic"
