@@ -156,9 +156,7 @@ class AudioService extends FletService {
         final position = parseDuration(args["position"]);
         if (player.state == PlayerState.completed) {
           // Playback finished. Under ReleaseMode.release the native source has
-          // been freed, so re-prepare it before resuming: seeking/resuming a
-          // freed source hangs forever (the player never emits onSeekComplete,
-          // surfacing on the Python side as a 30s TimeoutException). See #6536.
+          // been freed, so re-prepare it before resuming.
           if ((_releaseMode ?? ReleaseMode.release) == ReleaseMode.release) {
             await _applySource();
           }
