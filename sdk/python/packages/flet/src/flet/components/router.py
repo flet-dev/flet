@@ -686,17 +686,26 @@ def Router(
                     page.navigate(current_modal_pop_to_ref.current)
                     return
 
-                # Non-modal pop: use the matched chain's parent route
-                # (route-tree-structural) rather than
-                # `views[-2].route`. This survives shared view keys
-                # like a tab-root layout that emits `route="/"` for
+                # Non-modal pop: navigate to the previous *view entry*'s
+                # resolved URL rather than `chain[-2]` or
+                # `views[-2].route`. Classifying into view entries skips
+                # `outlet=True` layouts and componentless grouping routes
+                # — otherwise `chain[-2]` can point at a layout whose URL
+                # equals the current view's URL, making the pop navigate
+                # to where we already are (a no-op that strands the URL).
+                # Staying route-tree-structural also survives shared view
+                # keys like a tab-root layout emitting `route="/"` for
                 # multiple sibling sections.
                 chain_now = current_chain_ref.current
-                if chain_now and len(chain_now) > 1:
-                    parent_match = chain_now[-2]
-                    target = parent_match.resolved_path or parent_match.full_path or "/"
-                    page.navigate(target)
-                    return
+                if chain_now:
+                    _, view_entries = _split_chain_into_view_levels(chain_now)
+                    if len(view_entries) > 1:
+                        parent_match = view_entries[-2][0]
+                        target = (
+                            parent_match.resolved_path or parent_match.full_path or "/"
+                        )
+                        page.navigate(target)
+                        return
 
                 # Stack of length 1 — nothing to pop to. (Flutter's
                 # `Navigator.canPop` is False here anyway.)
