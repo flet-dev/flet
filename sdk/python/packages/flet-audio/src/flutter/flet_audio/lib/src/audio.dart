@@ -85,20 +85,14 @@ class AudioService extends FletService {
         _src = resolvedSrc.uri;
         _srcBytes = null;
         srcChanged = true;
-
-        var assetSrc = control.backend.getAssetSource(_src!);
-        if (assetSrc.isFile) {
-          await player.setSourceDeviceFile(assetSrc.path);
-        } else {
-          await player.setSourceUrl(assetSrc.path);
-        }
+        await _applySource();
       } else if (resolvedSrc.bytes != null &&
           (_srcBytes == null || !listEquals(_srcBytes, resolvedSrc.bytes))) {
         // bytes
         _srcBytes = resolvedSrc.bytes;
         _src = null;
         srcChanged = true;
-        await player.setSourceBytes(resolvedSrc.bytes!);
+        await _applySource();
       }
 
       if (srcChanged) {
@@ -136,12 +130,44 @@ class AudioService extends FletService {
     }();
   }
 
+  /// Pushes the currently tracked source ([_src] or [_srcBytes]) to the native
+  /// [player], preparing it for playback.
+  ///
+  /// Used both when the source changes (from [update]) and to re-prepare
+  /// playback after the player has reached [PlayerState.completed] under
+  /// [ReleaseMode.release], where the native source has already been freed.
+  Future<void> _applySource() async {
+    if (_src != null) {
+      final assetSrc = control.backend.getAssetSource(_src!);
+      if (assetSrc.isFile) {
+        await player.setSourceDeviceFile(assetSrc.path);
+      } else {
+        await player.setSourceUrl(assetSrc.path);
+      }
+    } else if (_srcBytes != null) {
+      await player.setSourceBytes(_srcBytes!);
+    }
+  }
+
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
     switch (name) {
       case "play":
         final position = parseDuration(args["position"]);
-        if (position != null) {
+        if (player.state == PlayerState.completed) {
+          // Playback finished. Under ReleaseMode.release the native source has
+          // been freed, so re-prepare it before resuming: seeking/resuming a
+          // freed source hangs forever (the player never emits onSeekComplete,
+          // surfacing on the Python side as a 30s TimeoutException). See #6536.
+          if ((_releaseMode ?? ReleaseMode.release) == ReleaseMode.release) {
+            await _applySource();
+          }
+          // Position is already reset to the start after completion, so only
+          // seek when a specific non-zero position was requested.
+          if (position != null && position > Duration.zero) {
+            await player.seek(position);
+          }
+        } else if (position != null) {
           await player.seek(position);
         }
         await player.resume();
@@ -158,6 +184,12 @@ class AudioService extends FletService {
       case "seek":
         final position = parseDuration(args["position"]);
         if (position != null) {
+          if (player.state == PlayerState.completed &&
+              (_releaseMode ?? ReleaseMode.release) == ReleaseMode.release) {
+            // Source was freed on completion (see "play"); re-prepare it,
+            // otherwise the seek would hang waiting for onSeekComplete.
+            await _applySource();
+          }
           await player.seek(position);
         }
         break;
