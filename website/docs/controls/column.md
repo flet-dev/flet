@@ -28,16 +28,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_media + '/horizontal_alignment.png'} alt="horizontal-alignment" width="40%" />
 
-### Infinite scrolling
-
-This example demonstrates adding of list items on-the-fly, as user scroll to the bottom,
-creating the illusion of infinite list:
-
 <CodeExample path={frontMatter.examples + '/infinite_scrolling/main.py'} language="python" />
-
-### Scrolling programmatically
-
-This example shows how to use [`scroll_to()`](column.md) to programmatically scroll a column:
 
 <CodeExample path={frontMatter.examples + '/programmatic_scroll/main.py'} language="python" />
 

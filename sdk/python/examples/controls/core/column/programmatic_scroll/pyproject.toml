@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Column"]
 
 [tool.flet.metadata]
-title = "Column programmatic scroll"
+title = "Scrolling programmatically"
+description = "This example shows how to use [`scroll_to()`](column.md) to programmatically scroll a column:"
 controls = ["Container", "Column", "Row", "Button", "Text"]
 layout_pattern = "control-panel"
 complexity = "basic"

@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Column"]
 
 [tool.flet.metadata]
-title = "Column infinite scrolling"
+title = "Infinite scrolling"
+description = "This example demonstrates adding of list items on-the-fly, as user scroll to the bottom, creating the illusion of infinite list:"
 controls = ["Container", "Column", "Text"]
 layout_pattern = "infinite-list"
 complexity = "basic"
