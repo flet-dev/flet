@@ -10,15 +10,9 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Text
-
 <CodeExample path={frontMatter.examples + '/text/main.py'} language="python" />
 
-### Images
-
 <CodeExample path={frontMatter.examples + '/images/main.py'} language="python" />
-
-### Files
 
 <CodeExample path={frontMatter.examples + '/files/main.py'} language="python" />
 

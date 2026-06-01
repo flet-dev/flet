@@ -8,7 +8,7 @@ plugin from examples-metadata.json (sourced from pyproject.toml titles).
 import re
 from pathlib import Path
 
-DOCS_DIR = Path(__file__).parent.parent.parent.parent / "website/docs/controls"
+DOCS_DIR = Path(__file__).parent.parent.parent.parent / "website/docs"
 
 # Matches: ### Header\n\n<CodeExample path={frontMatter.examples + '/subfolder/...
 PATTERN = re.compile(

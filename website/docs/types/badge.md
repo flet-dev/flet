@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Badge decorating an icon on a NavigationBar
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} width="40%" />
