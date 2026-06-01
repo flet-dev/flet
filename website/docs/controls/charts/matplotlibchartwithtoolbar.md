@@ -12,10 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Basic
-
-Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py).
-
 <CodeExample path={frontMatter.examples + '/toolbar/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/toolbar.png'} width="65%" />

@@ -11,6 +11,25 @@ const fs = require("fs");
 const path = require("path");
 
 const SUBFOLDER_RE = /frontMatter\.examples\s*\+\s*'\/([^/]+)\//;
+const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+function markdownToInlineAst(text) {
+  const children = [];
+  let lastIndex = 0;
+  let match;
+  LINK_RE.lastIndex = 0;
+  while ((match = LINK_RE.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      children.push({ type: "text", value: text.slice(lastIndex, match.index) });
+    }
+    children.push({ type: "link", url: match[2], children: [{ type: "text", value: match[1] }] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    children.push({ type: "text", value: text.slice(lastIndex) });
+  }
+  return children;
+}
 
 module.exports = function remarkInjectExampleHeadings() {
   const metadataPath = path.join(__dirname, "..", ".crocodocs", "examples-metadata.json");
@@ -46,17 +65,20 @@ module.exports = function remarkInjectExampleHeadings() {
       const title = metadata[`${examplesPath}/${match[1]}`]?.title;
       if (!title) continue;
 
-      insertions.push({ index: i, title });
+      const description = metadata[`${examplesPath}/${match[1]}`]?.description ?? null;
+      insertions.push({ index: i, title, description });
     }
 
     // Insert in reverse order so earlier indices stay valid
     for (let i = insertions.length - 1; i >= 0; i--) {
-      const { index, title } = insertions[i];
-      tree.children.splice(index, 0, {
-        type: "heading",
-        depth: 3,
-        children: [{ type: "text", value: title }],
-      });
+      const { index, title, description } = insertions[i];
+      const nodes = [
+        { type: "heading", depth: 3, children: [{ type: "text", value: title }] },
+      ];
+      if (description) {
+        nodes.push({ type: "paragraph", children: markdownToInlineAst(description) });
+      }
+      tree.children.splice(index, 0, ...nodes);
     }
   };
 };

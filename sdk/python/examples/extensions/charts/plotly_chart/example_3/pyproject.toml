@@ -15,6 +15,7 @@ categories = ["Charts/PlotlyChart"]
 
 [tool.flet.metadata]
 title = "Plotly pie chart"
+description = "Based on an official [Plotly example](https://plotly.com/python/pie-charts)."
 controls = ["SafeArea", "PlotlyChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

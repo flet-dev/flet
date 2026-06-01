@@ -189,9 +189,11 @@ def _generate_examples_metadata(examples_root: Path, output_path: Path) -> int:
         relative = example_dir.relative_to(examples_root).as_posix()
         data = _read_pyproject(pyproject_path)
         meta: dict[str, Any] = {"webSupported": _example_web_supported(pyproject_path)}
-        title = data.get("tool", {}).get("flet", {}).get("metadata", {}).get("title")
-        if title:
+        flet_metadata = data.get("tool", {}).get("flet", {}).get("metadata", {})
+        if title := flet_metadata.get("title"):
             meta["title"] = title
+        if description := flet_metadata.get("description"):
+            meta["description"] = description
         mapping[relative] = meta
 
     output_path.write_text(
