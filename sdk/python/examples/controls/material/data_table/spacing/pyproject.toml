@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/DataTable"]
 
 [tool.flet.metadata]
-title = "Spacing"
+title = "Horizontal margin and column spacing"
+description = "Use [`horizontal_margin`](index.md#flet.DataTable.horizontal_margin) to control the left and right edge spacing of the first and last columns. Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacing between columns."
 controls = ["SafeArea", "Column", "DataTable", "DataColumn", "DataRow", "DataCell", "Slider", "FilledButton", "OutlinedButton", "Container", "Text", "AppBar"]
 layout_pattern = "dashboard"
 complexity = "basic"

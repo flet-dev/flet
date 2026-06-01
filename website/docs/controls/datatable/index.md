@@ -17,30 +17,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/basic.png'} width="40%" />
 
-### Horizontal margin and column spacing
-
-Use [`horizontal_margin`](index.md#flet.DataTable.horizontal_margin) to control the left and right
-edge spacing of the first and last columns.
-Use [`column_spacing`](index.md#flet.DataTable.column_spacing) to control spacing between columns.
-
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/spacing_flow.gif'} width="55%" />
 
-### Adaptive row heights
-
-Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')`
-(infinity) will cause the `DataTable` to let each individual row adapt its height to its
-respective content, instead of all rows having the same height.
-
 <CodeExample path={frontMatter.examples + '/adaptive_row_heights/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/adaptive_row_heights.png'} width="55%" />
-
-### Sortable columns and selectable rows
-
-This example demonstrates row selection (including select-all),
-sortable string and numeric columns, and stable selection across sorts and refreshes.
 
 <CodeExample path={frontMatter.examples + '/sortable_and_selectable/main.py'} language="python" />
 
