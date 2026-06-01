@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Nested themes 3"
+title = "Theme mode toggle"
 controls = ["SafeArea", "Column", "Row", "Container", "Button", "Switch"]
 layout_pattern = "stacked-sections"
 complexity = "basic"

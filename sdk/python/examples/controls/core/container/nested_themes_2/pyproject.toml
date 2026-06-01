@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Nested themes 2"
+title = "Page, dark and light themes"
 controls = ["SafeArea", "Column", "Row", "Container", "Button", "TextButton", "Text"]
 layout_pattern = "stacked-sections"
 complexity = "basic"
