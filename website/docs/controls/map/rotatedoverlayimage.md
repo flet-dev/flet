@@ -9,6 +9,4 @@ import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
 ## Examples
 
-### RotatedOverlayImage
-
 <CodeExample path={frontMatter.examples + '/overlay_images/main.py'} language="python" />

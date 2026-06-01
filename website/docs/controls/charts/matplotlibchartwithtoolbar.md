@@ -20,19 +20,13 @@ Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/
 
 <Image src={frontMatter.example_images + '/toolbar.png'} width="65%" />
 
-### 3D chart
-
 <CodeExample path={frontMatter.examples + '/three_d/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/three_d.png'} width="65%" />
 
-### Handle events
-
 <CodeExample path={frontMatter.examples + '/handle_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handle_events.png'} width="65%" />
-
-### Animated chart
 
 <CodeExample path={frontMatter.examples + '/animate/main.py'} language="python" />
 

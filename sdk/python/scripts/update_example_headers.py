@@ -28,7 +28,7 @@ def process_file(md_file: Path) -> bool:
 
 def main() -> None:
     changed = 0
-    for md_file in sorted(DOCS_DIR.glob("*.md")):
+    for md_file in sorted(DOCS_DIR.rglob("*.md")):
         if process_file(md_file):
             changed += 1
     print(f"Updated {changed} files.")

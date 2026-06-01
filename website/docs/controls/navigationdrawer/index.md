@@ -13,19 +13,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Start-aligned drawer
-
 <CodeExample path={frontMatter.examples + '/position_start/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/position_start.gif'} alt="Start-aligned navigation drawer example" width="40%" />
 
-### End-aligned drawer
-
 <CodeExample path={frontMatter.examples + '/position_end/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/position_end.gif'} alt="End-aligned navigation drawer example" width="40%" />
-
-### Theming
 
 <CodeExample path={frontMatter.examples + '/theming/main.py'} language="python" />
 

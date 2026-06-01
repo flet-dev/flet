@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### DataTable
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} width="40%" />
@@ -47,8 +45,6 @@ sortable string and numeric columns, and stable selection across sorts and refre
 <CodeExample path={frontMatter.examples + '/sortable_and_selectable/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/sortable_and_selectable.png'} width="55%" />
-
-### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
