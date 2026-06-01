@@ -12,29 +12,17 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Image gallery
-
 <CodeExample path={frontMatter.examples + '/gallery/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/gallery.gif'} width="45%" />
 
-### Fade-in images with a placeholder
-
 <CodeExample path={frontMatter.examples + '/fade_in/main.py'} language="python" />
-
-### Displaying images from base64 strings and byte data
 
 <CodeExample path={frontMatter.examples + '/src_base64_and_bytes/main.py'} language="python" />
 
-### Displaying a static SVG image
-
 <CodeExample path={frontMatter.examples + '/static_svg/main.py'} language="python" />
 
-### Displaying a dynamic SVG image
-
 <CodeExample path={frontMatter.examples + '/dynamic_svg/main.py'} language="python" />
-
-### Displaying a Lucide icon
 
 <CodeExample path={frontMatter.examples + '/lucide_icons/main.py'} language="python" />
 

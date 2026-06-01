@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 [Solitaire game tutorial](https://flet.dev/docs/tutorials/python-solitaire)
 
-### Handling events
-
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 ### Draggable containers
@@ -28,11 +26,7 @@ inside another control (yellow container) giving the same results.
 
 <Image src={frontMatter.example_images + '/draggable_containers.gif'} alt="draggable-containers" width="40%" />
 
-### Window drag area
-
 <CodeExample path={frontMatter.examples + '/window_drag_area/main.py'} language="python" />
-
-### Mouse Cursors
 
 <CodeExample path={frontMatter.examples + '/mouse_cursors/main.py'} language="python" />
 

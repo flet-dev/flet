@@ -12,19 +12,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Handling clicks
-
 <CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_clicks.gif'} alt="handling-clicks" width="40%" />
 
-### Selected icon
-
 <CodeExample path={frontMatter.examples + '/selected_icon/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/selected_icon.gif'} alt="selected-icon" width="20%" />
-
-### Variants
 
 <CodeExample path={frontMatter.examples + '/variants/main.py'} language="python" />
 

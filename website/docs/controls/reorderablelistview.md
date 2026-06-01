@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Horizontal and Vertical
-
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/horizontal_and_vertical.gif'} alt="horizontal-and-vertical" width="65%" />

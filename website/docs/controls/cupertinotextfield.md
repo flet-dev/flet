@@ -12,17 +12,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### CupertinoTextField
-
 <CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/cupertino_material_and_adaptive.png'} alt="cupertino-material-and-adaptive" width="70%" />
 
-### Handling selection changes
-
 <CodeExample path={frontMatter.examples + '/selection_change/main.py'} language="python" />
-
-### Background image
 
 <CodeExample path={frontMatter.examples + '/background_image/main.py'} language="python" />
 

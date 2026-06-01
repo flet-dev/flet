@@ -15,27 +15,15 @@ Navigation is done via [page.navigate()](../controls/page.md#flet.Page.navigate)
 
 ## Examples
 
-### Basic
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
-
-### Layout with outlet
 
 <CodeExample path={frontMatter.examples + '/layout_outlet/main.py'} language="python" />
 
-### Dynamic segments
-
 <CodeExample path={frontMatter.examples + '/dynamic_segments/main.py'} language="python" />
-
-### Loaders
 
 <CodeExample path={frontMatter.examples + '/loaders/main.py'} language="python" />
 
-### Active links
-
 <CodeExample path={frontMatter.examples + '/active_links/main.py'} language="python" />
-
-### Featured
 
 <CodeExample path={frontMatter.examples + '/featured/main.py'} language="python" />
 

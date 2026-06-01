@@ -11,13 +11,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### ResponsiveRow
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="80%" />
-
-### Custom breakpoints
 
 <CodeExample path={frontMatter.examples + '/custom_breakpoint/main.py'} language="python" />
 

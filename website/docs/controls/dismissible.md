@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Dismissible `ListTile`s
-
 <CodeExample path={frontMatter.examples + '/dismissible_list_tiles/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/dismissible_list_tiles.gif'} alt="dismissible-list-tiles" width="30%" />

@@ -15,8 +15,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 To browse and visualize all available icons,
 visit our [icons browser](https://flet.app/gallery/run/apps/icons_browser/)
 
-### Icon
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="25%" />

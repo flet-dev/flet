@@ -12,13 +12,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Flip
-
 <CodeExample path={frontMatter.examples + '/flip/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/flip.png'} width="55%" />
-
-### Rotate
 
 <CodeExample path={frontMatter.examples + '/rotate/main.py'} language="python" />
 
@@ -30,19 +26,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src="test-images/controls/core/golden/macos/rotated_box/rotated_box.png" width="55%" />
 
-### Scale
-
 <CodeExample path={frontMatter.examples + '/scale/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/scale.png'} width="55%" />
 
-### Offset
-
 <CodeExample path={frontMatter.examples + '/offset/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/offset.png'} width="55%" />
-
-### Matrix4 Transform
 
 <CodeExample path={frontMatter.examples + '/matrix4_transform/main.py'} language="python" />
 

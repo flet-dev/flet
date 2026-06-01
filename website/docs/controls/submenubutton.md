@@ -12,13 +12,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### SubmenuButton
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
-
-### Standalone Example
 
 <CodeExample path={frontMatter.examples + '/standalone/main.py'} language="python" />
 

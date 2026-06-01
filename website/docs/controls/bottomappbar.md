@@ -11,13 +11,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Notched `FloatingActionButton`
-
 <CodeExample path={frontMatter.examples + '/notched_fab/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/notched_fab.png'} width="55%" />
-
-### Custom border radius
 
 <CodeExample path={frontMatter.examples + '/border_radius/main.py'} language="python" />
 

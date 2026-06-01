@@ -10,11 +10,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Handling events
-
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
-
-### Programmatic transformations
 
 <CodeExample path={frontMatter.examples + '/transformations/main.py'} language="python" />
 

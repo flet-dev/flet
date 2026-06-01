@@ -12,25 +12,17 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Column `spacing`
-
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/spacing.gif'} alt="spacing" width="55%" />
-
-### Column wrapping
 
 <CodeExample path={frontMatter.examples + '/wrap/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/wrap.gif'} alt="wrap" width="55%" />
 
-### Column vertical alignments
-
 <CodeExample path={frontMatter.examples + '/alignment/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/alignment.png'} alt="alignment" width="55%" />
-
-### Column horizontal alignments
 
 <CodeExample path={frontMatter.examples + '/horizontal_alignment/main.py'} language="python" />
 
