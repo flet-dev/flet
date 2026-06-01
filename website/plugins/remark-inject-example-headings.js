@@ -1,6 +1,7 @@
 /**
- * Remark plugin that injects a ### heading before each <CodeExample> element,
- * sourcing the title from examples-metadata.json (built from pyproject.toml files).
+ * Remark plugin that injects a ### heading (and optional description) before
+ * each <CodeExample> element, sourcing content from examples-metadata.json
+ * (built from [tool.flet.metadata] in pyproject.toml files).
  *
  * Relies on the MDX file having an `examples` frontmatter field (e.g.
  * "controls/material/app_bar") and CodeExample path expressions of the form:
@@ -11,24 +12,65 @@ const fs = require("fs");
 const path = require("path");
 
 const SUBFOLDER_RE = /frontMatter\.examples\s*\+\s*'\/([^/]+)\//;
-const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
 
-function markdownToInlineAst(text) {
-  const children = [];
+// Matches [text](url) or [`code`](url) or `code`
+const INLINE_RE = /\[(`[^`]+`|[^\]]*)\]\(([^)]+)\)|`([^`]+)`/g;
+
+// Returns true when an h3 heading already exists between the last section
+// boundary (h1/h2 or another JSX flow element) and position `index`.
+// Used as a safety net for docs that still carry a static ### header.
+function hasPrecedingH3(children, index) {
+  for (let i = index - 1; i >= 0; i--) {
+    const n = children[i];
+    if (n.type === "heading" && n.depth <= 2) return false;
+    if (n.type === "heading" && n.depth === 3) return true;
+    if (n.type === "mdxJsxFlowElement") return false;
+  }
+  return false;
+}
+
+// Parse a single line of inline markdown into AST children.
+// Handles: [text](url), [`code`](url), `code`, plain text.
+function parseInline(text) {
+  const nodes = [];
   let lastIndex = 0;
   let match;
-  LINK_RE.lastIndex = 0;
-  while ((match = LINK_RE.exec(text)) !== null) {
+  INLINE_RE.lastIndex = 0;
+  while ((match = INLINE_RE.exec(text)) !== null) {
     if (match.index > lastIndex) {
-      children.push({ type: "text", value: text.slice(lastIndex, match.index) });
+      nodes.push({ type: "text", value: text.slice(lastIndex, match.index) });
     }
-    children.push({ type: "link", url: match[2], children: [{ type: "text", value: match[1] }] });
+    if (match[1] !== undefined) {
+      // Link: [text](url) or [`code`](url)
+      const linkText = match[1];
+      const url = match[2];
+      const child =
+        linkText.startsWith("`") && linkText.endsWith("`")
+          ? { type: "inlineCode", value: linkText.slice(1, -1) }
+          : { type: "text", value: linkText };
+      nodes.push({ type: "link", url, children: [child] });
+    } else {
+      // Inline code: `code`
+      nodes.push({ type: "inlineCode", value: match[3] });
+    }
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length) {
-    children.push({ type: "text", value: text.slice(lastIndex) });
+    nodes.push({ type: "text", value: text.slice(lastIndex) });
   }
-  return children;
+  return nodes;
+}
+
+// Parse a (possibly multi-paragraph) markdown description string into an array
+// of paragraph AST nodes. Paragraphs are separated by blank lines.
+function parseDescription(text) {
+  return text
+    .trim()
+    .split(/\n\n+/)
+    .map((para) => ({
+      type: "paragraph",
+      children: parseInline(para.replace(/\n/g, " ")),
+    }));
 }
 
 module.exports = function remarkInjectExampleHeadings() {
@@ -62,22 +104,23 @@ module.exports = function remarkInjectExampleHeadings() {
       const match = SUBFOLDER_RE.exec(exprValue);
       if (!match) continue;
 
-      const title = metadata[`${examplesPath}/${match[1]}`]?.title;
+      const entry = metadata[`${examplesPath}/${match[1]}`];
+      const title = entry?.title;
       if (!title) continue;
 
-      const description = metadata[`${examplesPath}/${match[1]}`]?.description ?? null;
-      insertions.push({ index: i, title, description });
+      // Skip if a static ### heading already exists in this section.
+      if (hasPrecedingH3(tree.children, i)) continue;
+
+      insertions.push({ index: i, title, description: entry?.description ?? null });
     }
 
-    // Insert in reverse order so earlier indices stay valid
+    // Insert in reverse order so earlier indices stay valid.
     for (let i = insertions.length - 1; i >= 0; i--) {
       const { index, title, description } = insertions[i];
       const nodes = [
         { type: "heading", depth: 3, children: [{ type: "text", value: title }] },
+        ...( description ? parseDescription(description) : []),
       ];
-      if (description) {
-        nodes.push({ type: "paragraph", children: markdownToInlineAst(description) });
-      }
       tree.children.splice(index, 0, ...nodes);
     }
   };
