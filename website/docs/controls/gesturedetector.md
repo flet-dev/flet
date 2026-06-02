@@ -15,13 +15,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
-### Draggable containers
-
-The following example demonstrates how a control can be freely dragged inside a Stack.
-
-The sample also shows that GestureDetector can have a child control (blue container) as well as be nested
-inside another control (yellow container) giving the same results.
-
 <CodeExample path={frontMatter.examples + '/draggable_containers/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/draggable_containers.gif'} alt="draggable-containers" width="40%" />
