@@ -11,12 +11,10 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Drag and drop Containers
-
-#<CodeExample path={frontMatter.examples + '/drag_and_drop_containers/main.py'} language="python" />
-
-#<CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/drag_and_drop_containers.gif'} alt="drag-and-drop-containers" width="40%" />
+
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
