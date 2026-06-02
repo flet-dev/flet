@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
-title = "Nested routes"
+title = "Managed views — nested routes"
+description = "Each route component returns a [View](../controls/view.md) with its own [AppBar](../controls/appbar.md). Navigating deeper pushes views onto the stack; swipe-back and AppBar back button pop them."
 controls = ["SafeArea", "Column", "Row", "Button", "Text", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "basic"

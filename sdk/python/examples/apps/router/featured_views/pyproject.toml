@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
-title = "Featured views"
+title = "Managed views — full app with NavigationRail"
+description = "Complete app with [NavigationRail](../controls/navigationrail), stacked project views, and tabbed settings — all using `manage_views=True`."
 controls = ["View", "AppBar", "Column", "Row", "Container", "Button", "Switch", "TextField", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "intermediate"
