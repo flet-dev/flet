@@ -25,12 +25,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/theming.gif'} alt="Themed navigation drawer example" width="40%" />
 
-### Adaptive navigation
-
-This example switches between a [`NavigationBar`](../navigationbar/index.md)
-on narrow layouts and a [`NavigationRail`](../navigationrail/index.md) with an
-end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts.
-
 <CodeExample path={frontMatter.examples + '/adaptive_navigation/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/adaptive_navigation.gif'} alt="Adaptive navigation example switching between a navigation bar and a navigation rail with an end drawer" width="55%" />
