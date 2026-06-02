@@ -15,6 +15,10 @@ categories = ["Pages/Page"]
 
 [tool.flet.metadata]
 title = "Window hidden on start"
+description = """
+A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden. This lets your app perform initial setup (for example, add content, resize or position the window) before showing it to the user.
+
+In the example below, the window is resized and centered before becoming visible:"""
 controls = ["SafeArea", "Column", "Text"]
 layout_pattern = "single-panel"
 complexity = "basic"

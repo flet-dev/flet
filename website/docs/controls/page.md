@@ -17,14 +17,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 <CodeExample path={frontMatter.examples + '/app_exit_confirm_dialog/main.py'} language="python" />
 
-### Hidden app window on startup
-
-A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden.
-This lets your app perform initial setup (for example, add content, resize
-or position the window) before showing it to the user.
-
-In the example below, the window is resized and centered before becoming visible:
-
 <CodeExample path={frontMatter.examples + '/window_hidden_on_start/main.py'} language="python" />
 
 If you need this feature when packaging a desktop app using
