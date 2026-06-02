@@ -15,6 +15,7 @@ categories = ["Layout/Dismissible"]
 
 [tool.flet.metadata]
 title = "Remove `Dismissible` `on_dismiss` inside component"
+display_title = false
 controls = ["SafeArea", "ListView", "Dismissible", "ListTile"]
 layout_pattern = "list-detail"
 complexity = "basic"

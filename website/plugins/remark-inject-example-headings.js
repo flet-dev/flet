@@ -6,6 +6,9 @@
  * Relies on the MDX file having an `examples` frontmatter field (e.g.
  * "controls/material/app_bar") and CodeExample path expressions of the form:
  *   path={frontMatter.examples + '/subfolder/main.py'}
+ *
+ * Set `display_title = false` in [tool.flet.metadata] to suppress injection
+ * for a specific example (use when the doc page has a hand-written heading).
  */
 
 const fs = require("fs");
@@ -15,19 +18,6 @@ const SUBFOLDER_RE = /frontMatter\.examples\s*\+\s*'\/([^/]+)\//;
 
 // Matches [text](url) or [`code`](url) or `code`
 const INLINE_RE = /\[(`[^`]+`|[^\]]*)\]\(([^)]+)\)|`([^`]+)`/g;
-
-// Returns true when an h3 heading already exists between the last section
-// boundary (h1/h2 or another JSX flow element) and position `index`.
-// Used as a safety net for docs that still carry a static ### header.
-function hasPrecedingH3(children, index) {
-  for (let i = index - 1; i >= 0; i--) {
-    const n = children[i];
-    if (n.type === "heading" && n.depth <= 2) return false;
-    if (n.type === "heading" && n.depth === 3) return true;
-    if (n.type === "mdxJsxFlowElement") return false;
-  }
-  return false;
-}
 
 // Parse a single line of inline markdown into AST children.
 // Handles: [text](url), [`code`](url), `code`, plain text.
@@ -108,8 +98,7 @@ module.exports = function remarkInjectExampleHeadings() {
       const title = entry?.title;
       if (!title) continue;
 
-      // Skip if a static ### heading already exists in this section.
-      if (hasPrecedingH3(tree.children, i)) continue;
+      if (entry.displayTitle === false) continue;
 
       insertions.push({ index: i, title, description: entry?.description ?? null });
     }
@@ -119,7 +108,7 @@ module.exports = function remarkInjectExampleHeadings() {
       const { index, title, description } = insertions[i];
       const nodes = [
         { type: "heading", depth: 3, children: [{ type: "text", value: title }] },
-        ...( description ? parseDescription(description) : []),
+        ...(description ? parseDescription(description) : []),
       ];
       tree.children.splice(index, 0, ...nodes);
     }

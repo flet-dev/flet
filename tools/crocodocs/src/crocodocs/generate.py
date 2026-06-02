@@ -194,6 +194,8 @@ def _generate_examples_metadata(examples_root: Path, output_path: Path) -> int:
             meta["title"] = title
         if description := flet_metadata.get("description"):
             meta["description"] = description
+        if flet_metadata.get("display_title") is False:
+            meta["displayTitle"] = False
         mapping[relative] = meta
 
     output_path.write_text(
