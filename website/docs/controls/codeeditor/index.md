@@ -32,7 +32,6 @@ pip install flet-code-editor  # (1)!
 </Tabs>
 ## Examples
 
-### CodeEditor
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} alt="code-editor-example-1" width="60%" />
