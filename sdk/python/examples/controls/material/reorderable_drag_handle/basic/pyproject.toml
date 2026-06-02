@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Input/Reorderable"]
 
 [tool.flet.metadata]
-title = "ReorderableDragHandle"
+title = "Custom drag handle"
 controls = ["ReorderableListView", "ReorderableDragHandle", "ListTile", "SafeArea"]
 layout_pattern = "draggable-list"
 complexity = "basic"
