@@ -8,8 +8,8 @@
  *   path={frontMatter.examples + '/subfolder/main.py'}   ← relative to frontmatter
  *   path={'controls/material/some_group/subfolder/main.py'}  ← absolute hardcoded
  *
- * Set `display_title = false` in [tool.flet.metadata] to suppress injection
- * for a specific example (use when the doc page has a hand-written heading).
+ * Add `displayTitle={false}` to a <CodeExample> tag to suppress injection
+ * for that specific example (use when the doc page has a hand-written heading).
  */
 
 const fs = require("fs");
@@ -121,11 +121,15 @@ module.exports = function remarkInjectExampleHeadings() {
       }
       if (!metaKey) continue;
 
+      const displayTitleAttr = node.attributes?.find((a) => a.name === "displayTitle");
+      if (displayTitleAttr) {
+        const v = displayTitleAttr.value;
+        if (v?.type === "mdxJsxAttributeValueExpression" && v.value?.trim() === "false") continue;
+      }
+
       const entry = metadata[metaKey];
       const title = entry?.title;
       if (!title) continue;
-
-      if (entry.displayTitle === false) continue;
 
       insertions.push({ index: i, title, docsIntro: entry?.docs_intro ?? null });
     }

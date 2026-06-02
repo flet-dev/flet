@@ -35,6 +35,6 @@ On Flutter's side, though, the already-dismissed `Dismissible` widget in the mid
 
 **Always assign a stable, unique key to each `Dismissible`, typically based on the item's identifier or index.**
 
-<CodeExample path={frontMatter.examples + '/remove_on_dismiss_declarative/main.py'} language="python" />
+<CodeExample displayTitle={false} path={frontMatter.examples + '/remove_on_dismiss_declarative/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
