@@ -16,10 +16,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/basic_flow.gif'} width="40%" />
 
-### Scrolling
-
-`ExpansionPanelList` supports scrolling through its [`scroll`](expansionpanellist.md) property.
-
 <CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/scrollable.png'} width="40%" />
