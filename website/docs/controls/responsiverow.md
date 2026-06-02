@@ -19,8 +19,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/custom_breakpoint.gif'} width="70%" />
 
-### Scrollable content
-
-<CodeExample path="controls/core/responsive_row/scrollable/main.py" language="python" />
+<CodeExample path={'controls/core/responsive_row/scrollable/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
