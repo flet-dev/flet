@@ -15,7 +15,7 @@ categories = ["Charts/MatplotlibChart"]
 
 [tool.flet.metadata]
 title = "Toolbar"
-description = "Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py)."
+docs_intro = "Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py)."
 controls = ["SafeArea", "MatplotlibChart"]
 layout_pattern = "single-chart"
 complexity = "basic"

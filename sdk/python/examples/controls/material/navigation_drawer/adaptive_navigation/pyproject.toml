@@ -15,7 +15,7 @@ categories = ["Navigation/NavigationDrawer"]
 
 [tool.flet.metadata]
 title = "Adaptive Navigation"
-description = "This example switches between a `NavigationBar` on narrow layouts and a [`NavigationRail`](../navigationrail/index.md) with an end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts."
+docs_intro = "This example switches between a `NavigationBar` on narrow layouts and a [`NavigationRail`](../navigationrail/index.md) with an end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts."
 controls = ["NavigationDrawer", "NavigationDrawerDestination", "NavigationRail", "NavigationRailDestination", "NavigationBar", "NavigationBarDestination", "Button", "SafeArea", "Container", "Row", "Column", "VerticalDivider", "Text", "Page"]
 layout_pattern = "adaptive-navigation"
 complexity = "intermediate"

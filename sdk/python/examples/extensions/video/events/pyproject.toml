@@ -15,7 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Events"
-description = "Listen for player [events](#flet_video.Video-events) like [`on_load`][flet_video.Video.on_load], [`on_complete`][flet_video.Video.on_complete], [`on_track_change`][flet_video.Video.on_track_change], etc."
+docs_intro = "Listen for player [events](#flet_video.Video-events) like [`on_load`][flet_video.Video.on_load], [`on_complete`][flet_video.Video.on_complete], [`on_track_change`][flet_video.Video.on_track_change], etc."
 controls = ["SafeArea", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"

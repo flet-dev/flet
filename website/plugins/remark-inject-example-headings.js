@@ -127,15 +127,15 @@ module.exports = function remarkInjectExampleHeadings() {
 
       if (entry.displayTitle === false) continue;
 
-      insertions.push({ index: i, title, description: entry?.description ?? null });
+      insertions.push({ index: i, title, docsIntro: entry?.docs_intro ?? null });
     }
 
     // Insert in reverse order so earlier indices stay valid.
     for (let i = insertions.length - 1; i >= 0; i--) {
-      const { index, title, description } = insertions[i];
+      const { index, title, docsIntro } = insertions[i];
       const nodes = [
         { type: "heading", depth: 3, children: [{ type: "text", value: title }] },
-        ...(description ? parseDescription(description) : []),
+        ...(docsIntro ? parseDescription(docsIntro) : []),
       ];
       tree.children.splice(index, 0, ...nodes);
     }

@@ -15,7 +15,7 @@ categories = ["Layout/DataTable"]
 
 [tool.flet.metadata]
 title = "Sortable columns and selectable rows"
-description = "This example demonstrates row selection (including select-all), sortable string and numeric columns, and stable selection across sorts and refreshes."
+docs_intro = "This example demonstrates row selection (including select-all), sortable string and numeric columns, and stable selection across sorts and refreshes."
 controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell", "Text"]
 layout_pattern = "table-view"
 complexity = "intermediate"

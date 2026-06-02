@@ -15,7 +15,7 @@ categories = ["Layout/ExpansionPanelList"]
 
 [tool.flet.metadata]
 title = "Scrolling"
-description = "`ExpansionPanelList` supports scrolling through its [`scroll`](expansionpanellist.md) property."
+docs_intro = "`ExpansionPanelList` supports scrolling through its [`scroll`](expansionpanellist.md) property."
 controls = ["SafeArea", "ExpansionPanelList", "ExpansionPanel", "ListTile", "IconButton", "Text"]
 layout_pattern = "list-detail"
 complexity = "basic"

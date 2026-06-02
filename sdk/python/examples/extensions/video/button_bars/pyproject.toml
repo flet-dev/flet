@@ -15,7 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Button bars"
-description = "Customize the [`primary_button_bar`][flet_video.MaterialDesktopVideoControls.primary_button_bar], [`top_button_bar`][flet_video.MaterialDesktopVideoControls.top_button_bar], and [`bottom_button_bar`][flet_video.MaterialDesktopVideoControls.bottom_button_bar] of [`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls] with built-in and custom items."
+docs_intro = "Customize the [`primary_button_bar`][flet_video.MaterialDesktopVideoControls.primary_button_bar], [`top_button_bar`][flet_video.MaterialDesktopVideoControls.top_button_bar], and [`bottom_button_bar`][flet_video.MaterialDesktopVideoControls.bottom_button_bar] of [`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls] with built-in and custom items."
 controls = ["SafeArea", "Text", "Icon", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"

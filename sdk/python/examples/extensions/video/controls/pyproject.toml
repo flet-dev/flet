@@ -15,7 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Controls"
-description = "Switch between [`AdaptiveVideoControls`][flet_video.AdaptiveVideoControls], [`MaterialVideoControls`][flet_video.MaterialVideoControls], [`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls], custom, and hidden control sets at runtime."
+docs_intro = "Switch between [`AdaptiveVideoControls`][flet_video.AdaptiveVideoControls], [`MaterialVideoControls`][flet_video.MaterialVideoControls], [`MaterialDesktopVideoControls`][flet_video.MaterialDesktopVideoControls], custom, and hidden control sets at runtime."
 controls = ["SafeArea", "Column", "Row", "Button", "IconButton", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"

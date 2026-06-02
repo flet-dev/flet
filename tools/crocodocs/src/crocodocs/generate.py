@@ -192,8 +192,8 @@ def _generate_examples_metadata(examples_root: Path, output_path: Path) -> int:
         flet_metadata = data.get("tool", {}).get("flet", {}).get("metadata", {})
         if title := flet_metadata.get("title"):
             meta["title"] = title
-        if description := flet_metadata.get("description"):
-            meta["description"] = description
+        if docs_intro := flet_metadata.get("docs_intro"):
+            meta["docs_intro"] = docs_intro
         if flet_metadata.get("display_title") is False:
             meta["displayTitle"] = False
         mapping[relative] = meta

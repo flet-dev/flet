@@ -15,7 +15,7 @@ categories = ["Layout/DataTable"]
 
 [tool.flet.metadata]
 title = "Adaptive row heights"
-description = "Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')` (infinity) will cause the `DataTable` to let each individual row adapt its height to its respective content, instead of all rows having the same height."
+docs_intro = "Setting [`data_row_max_height`](index.md#flet.DataTable.data_row_max_height) to `float('inf')` (infinity) will cause the `DataTable` to let each individual row adapt its height to its respective content, instead of all rows having the same height."
 controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell"]
 layout_pattern = "table-view"
 complexity = "basic"

@@ -15,7 +15,7 @@ categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
 title = "Recursive routes"
-description = "A route marked `recursive=True` can match itself as its own descendant — one View is emitted per consumed URL segment. Use this for tree-shaped URLs with unbounded depth (e.g. a file browser at `/folder/a/b/c`)."
+docs_intro = "A route marked `recursive=True` can match itself as its own descendant — one View is emitted per consumed URL segment. Use this for tree-shaped URLs with unbounded depth (e.g. a file browser at `/folder/a/b/c`)."
 controls = ["SafeArea", "Column", "Button", "Text", "TextField", "AppBar", "View", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "intermediate"
