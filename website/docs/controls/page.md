@@ -13,11 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 <CodeExample path={frontMatter.examples + '/keyboard_events/main.py'} language="python" />
 
-### Mobile device orientation configuration
-
-Shows how to lock your app to specific device orientations
-(e.g., portrait up, landscape right) and listen for orientation changes on mobile devices.
-
 <CodeExample path={frontMatter.examples + '/device_orientation/main.py'} language="python" />
 
 <CodeExample path={frontMatter.examples + '/app_exit_confirm_dialog/main.py'} language="python" />

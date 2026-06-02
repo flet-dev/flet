@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/Page"]
 
 [tool.flet.metadata]
-title = "Device orientation"
+title = "Mobile device orientation configuration"
+description = "Shows how to lock your app to specific device orientations (e.g., portrait up, landscape right) and listen for orientation changes on mobile devices."
 controls = ["SafeArea", "AppBar", "Text", "Column", "Checkbox", "Page"]
 layout_pattern = "single-panel"
 complexity = "basic"
