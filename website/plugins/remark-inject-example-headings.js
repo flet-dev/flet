@@ -20,11 +20,17 @@ const SUBFOLDER_RE = /frontMatter\.examples\s*\+\s*'\/([^/]+)\//;
 // Matches: 'controls/.../subfolder/file.py', captures the directory path.
 const HARDCODED_PATH_RE = /^'(controls\/.+)\/[^/']+\.py'$/;
 
-// Matches [text](url) or [`code`](url) or `code`
-const INLINE_RE = /\[(`[^`]+`|[^\]]*)\]\(([^)]+)\)|`([^`]+)`/g;
+// Matches (in priority order):
+//   1. [`code`][ref_id]  — API cross-reference with code label
+//   2. [text](url) or [`code`](url) — regular link
+//   3. `code` — inline code
+const INLINE_RE = /\[(`[^`]+`)\]\[([^\]]+)\]|\[(`[^`]+`|[^\]]*)\]\(([^)]+)\)|`([^`]+)`/g;
 
 // Parse a single line of inline markdown into AST children.
-// Handles: [text](url), [`code`](url), `code`, plain text.
+// Handles: [`code`][ref_id], [text](url), [`code`](url), `code`, plain text.
+//
+// For [`code`][ref_id], emits the text+inlineCode+text triplet that
+// remark-api-links expects so it can resolve the ref to a real URL.
 function parseInline(text) {
   const nodes = [];
   let lastIndex = 0;
@@ -35,9 +41,19 @@ function parseInline(text) {
       nodes.push({ type: "text", value: text.slice(lastIndex, match.index) });
     }
     if (match[1] !== undefined) {
+      // [`code`][ref_id] — append "[" to preceding text node, then emit
+      // inlineCode + "][ref_id]" so remark-api-links can resolve the link.
+      if (nodes.length > 0 && nodes[nodes.length - 1].type === "text") {
+        nodes[nodes.length - 1].value += "[";
+      } else {
+        nodes.push({ type: "text", value: "[" });
+      }
+      nodes.push({ type: "inlineCode", value: match[1].slice(1, -1) });
+      nodes.push({ type: "text", value: `][${match[2]}]` });
+    } else if (match[3] !== undefined) {
       // Link: [text](url) or [`code`](url)
-      const linkText = match[1];
-      const url = match[2];
+      const linkText = match[3];
+      const url = match[4];
       const child =
         linkText.startsWith("`") && linkText.endsWith("`")
           ? { type: "inlineCode", value: linkText.slice(1, -1) }
@@ -45,7 +61,7 @@ function parseInline(text) {
       nodes.push({ type: "link", url, children: [child] });
     } else {
       // Inline code: `code`
-      nodes.push({ type: "inlineCode", value: match[3] });
+      nodes.push({ type: "inlineCode", value: match[5] });
     }
     lastIndex = match.index + match[0].length;
   }

@@ -15,6 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Video Screenshot"
+description = "Shows how to capture the current video frame with [`take_screenshot()`][flet_video.Video.take_screenshot] and display it as an image."
 controls = ["SafeArea", "Column", "Row", "Button", "Container", "Image", "Text", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"

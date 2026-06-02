@@ -15,6 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Subtitles"
+description = "Attach a [`VideoSubtitleTrack`][flet_video.VideoSubtitleTrack] (here, raw VTT text) and customize its appearance with [`VideoSubtitleConfiguration`][flet_video.VideoSubtitleConfiguration]."
 controls = ["SafeArea", "Column", "Switch", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"
