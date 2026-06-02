@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Display/WebView"]
 
 [tool.flet.metadata]
-title = "WebView example 1"
+title = "WebView"
 controls = ["SafeArea", "WebView"]
 layout_pattern = "single-panel"
 complexity = "basic"
