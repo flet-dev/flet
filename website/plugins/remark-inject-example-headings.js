@@ -4,8 +4,9 @@
  * (built from [tool.flet.metadata] in pyproject.toml files).
  *
  * Relies on the MDX file having an `examples` frontmatter field (e.g.
- * "controls/material/app_bar") and CodeExample path expressions of the form:
- *   path={frontMatter.examples + '/subfolder/main.py'}
+ * "controls/material/app_bar") and CodeExample path expressions of one of:
+ *   path={frontMatter.examples + '/subfolder/main.py'}   ← relative to frontmatter
+ *   path={'controls/material/some_group/subfolder/main.py'}  ← absolute hardcoded
  *
  * Set `display_title = false` in [tool.flet.metadata] to suppress injection
  * for a specific example (use when the doc page has a hand-written heading).
@@ -14,7 +15,10 @@
 const fs = require("fs");
 const path = require("path");
 
+// Matches: frontMatter.examples + '/subfolder/...', captures subfolder name.
 const SUBFOLDER_RE = /frontMatter\.examples\s*\+\s*'\/([^/]+)\//;
+// Matches: 'controls/.../subfolder/file.py', captures the directory path.
+const HARDCODED_PATH_RE = /^'(controls\/.+)\/[^/']+\.py'$/;
 
 // Matches [text](url) or [`code`](url) or `code`
 const INLINE_RE = /\[(`[^`]+`|[^\]]*)\]\(([^)]+)\)|`([^`]+)`/g;
@@ -91,10 +95,17 @@ module.exports = function remarkInjectExampleHeadings() {
           ? attrValue
           : "";
 
-      const match = SUBFOLDER_RE.exec(exprValue);
-      if (!match) continue;
+      let metaKey;
+      const subfolderMatch = SUBFOLDER_RE.exec(exprValue);
+      if (subfolderMatch) {
+        metaKey = `${examplesPath}/${subfolderMatch[1]}`;
+      } else {
+        const hardcodedMatch = HARDCODED_PATH_RE.exec(exprValue);
+        if (hardcodedMatch) metaKey = hardcodedMatch[1];
+      }
+      if (!metaKey) continue;
 
-      const entry = metadata[`${examplesPath}/${match[1]}`];
+      const entry = metadata[metaKey];
       const title = entry?.title;
       if (!title) continue;
 
