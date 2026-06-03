@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-app-bar-basic"
+name = "cupertino-app-bar"
 version = "1.0.0"
 description = "Displays a CupertinoAppBar with custom leading and trailing icons and light theme styling."
 requires-python = ">=3.10"

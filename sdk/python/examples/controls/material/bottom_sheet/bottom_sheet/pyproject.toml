@@ -1,5 +1,5 @@
 [project]
-name = "bottom-sheet-basic"
+name = "bottom-sheet"
 version = "1.0.0"
 description = "Basic BottomSheet dialog with dismiss handling."
 requires-python = ">=3.10"

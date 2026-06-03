@@ -1,5 +1,5 @@
 [project]
-name = "markdown-basic"
+name = "markdown"
 version = "1.0.0"
 description = "Renders a long Markdown document with links, images, tables, and code blocks."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-action-sheet-basic"
+name = "cupertino-action-sheet"
 version = "1.0.0"
 description = "Opens a CupertinoActionSheet in a CupertinoBottomSheet and logs the selected action."
 requires-python = ">=3.10"

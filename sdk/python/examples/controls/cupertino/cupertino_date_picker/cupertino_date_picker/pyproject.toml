@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-date-picker-basic"
+name = "cupertino-date-picker"
 version = "1.0.0"
 description = "Shows a CupertinoDatePicker in a bottom sheet and updates text when the value changes."
 requires-python = ">=3.10"

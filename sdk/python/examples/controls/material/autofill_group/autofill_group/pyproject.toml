@@ -1,5 +1,5 @@
 [project]
-name = "autofill-group-basic"
+name = "autofill-group"
 version = "1.0.0"
 description = "Basic AutofillGroup with common autofill hints."
 requires-python = ">=3.10"

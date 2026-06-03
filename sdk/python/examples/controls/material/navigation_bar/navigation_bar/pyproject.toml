@@ -1,5 +1,5 @@
 [project]
-name = "navigation-bar-basic"
+name = "navigation-bar"
 version = "1.0.0"
 description = "Demonstrates a Material NavigationBar with three destination tabs."
 requires-python = ">=3.10"

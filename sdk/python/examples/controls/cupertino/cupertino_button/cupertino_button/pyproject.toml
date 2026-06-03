@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-button-basic"
+name = "cupertino-button"
 version = "1.0.0"
 description = "Demonstrates styled, disabled, and adaptive CupertinoButton variations in one layout."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-navigation-bar-basic"
+name = "cupertino-navigation-bar"
 version = "1.0.0"
 description = "Shows a CupertinoNavigationBar with three destinations and selected tab callback logging."
 requires-python = ">=3.10"

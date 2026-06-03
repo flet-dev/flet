@@ -1,5 +1,5 @@
 [project]
-name = "icon-basic"
+name = "icon"
 version = "1.0.0"
 description = "Displays Material and Cupertino icons with different sizes and colors."
 requires-python = ">=3.10"

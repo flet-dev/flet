@@ -1,5 +1,5 @@
 [project]
-name = "data-table-basic"
+name = "data-table"
 version = "1.0.0"
 description = "Shows a basic DataTable with text columns and numeric age values."
 requires-python = ">=3.10"

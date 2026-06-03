@@ -1,5 +1,5 @@
 [project]
-name = "expansion-tile-basic"
+name = "expansion-tile"
 version = "1.0.0"
 description = "Shows ExpansionTile variants with trailing and leading arrows, snack feedback, and nested list tiles."
 requires-python = ">=3.10"

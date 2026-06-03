@@ -1,5 +1,5 @@
 [project]
-name = "badge-basic"
+name = "badge"
 version = "1.0.0"
 description = "Basic Badge usage on NavigationBar icons."
 requires-python = ">=3.10"

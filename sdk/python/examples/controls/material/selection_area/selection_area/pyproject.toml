@@ -1,5 +1,5 @@
 [project]
-name = "selection-area-basic"
+name = "selection-area"
 version = "1.0.0"
 description = "Compare selectable and non-selectable text using a SelectionArea wrapper."
 requires-python = ">=3.10"

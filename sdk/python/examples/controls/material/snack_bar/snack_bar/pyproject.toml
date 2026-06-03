@@ -1,5 +1,5 @@
 [project]
-name = "snack-bar-basic"
+name = "snack-bar"
 version = "1.0.0"
 description = "Open a basic SnackBar from a button tap."
 requires-python = ">=3.10"

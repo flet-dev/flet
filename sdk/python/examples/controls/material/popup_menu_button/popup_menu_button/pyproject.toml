@@ -1,5 +1,5 @@
 [project]
-name = "popup-menu-button-basic"
+name = "popup-menu-button"
 version = "1.0.0"
 description = "Shows a PopupMenuButton with text, icon, custom content, and checked menu items."
 requires-python = ">=3.10"

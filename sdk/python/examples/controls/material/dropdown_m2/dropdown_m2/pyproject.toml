@@ -1,5 +1,5 @@
 [project]
-name = "dropdown-m2-basic"
+name = "dropdown-m2"
 version = "1.0.0"
 description = "Submits selected DropdownM2 value and displays it in a message label."
 requires-python = ">=3.10"

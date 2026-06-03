@@ -1,5 +1,5 @@
 [project]
-name = "menu-item-button-basic"
+name = "menu-item-button"
 version = "1.0.0"
 description = "Uses MenuItemButton items to change page background color from a submenu with hover styling."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-filled-button-basic"
+name = "cupertino-filled-button"
 version = "1.0.0"
 description = "Renders a CupertinoFilledButton with click opacity and click callback behavior."
 requires-python = ">=3.10"

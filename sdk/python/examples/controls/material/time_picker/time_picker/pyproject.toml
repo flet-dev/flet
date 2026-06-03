@@ -1,5 +1,5 @@
 [project]
-name = "time-picker-basic"
+name = "time-picker"
 version = "1.0.0"
 description = "Opens a TimePicker dialog and reports selection, dismissal, and entry mode changes."
 requires-python = ">=3.10"

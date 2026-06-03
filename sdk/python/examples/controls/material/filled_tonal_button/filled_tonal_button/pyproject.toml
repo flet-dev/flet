@@ -1,5 +1,5 @@
 [project]
-name = "filled-tonal-button-basic"
+name = "filled-tonal-button"
 version = "1.0.0"
 description = "Demonstrates FilledTonalButton variants including disabled and icon button states."
 requires-python = ">=3.10"

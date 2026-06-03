@@ -1,5 +1,5 @@
 [project]
-name = "safe-area-basic"
+name = "safe-area"
 version = "1.0.0"
 description = "Keep centered content inside device safe insets while updating a counter."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "tabs-basic"
+name = "tabs"
 version = "1.0.0"
 description = "Displays a basic Tabs layout with icons, an avatar tab label, and matching tab content."
 requires-python = ">=3.10"

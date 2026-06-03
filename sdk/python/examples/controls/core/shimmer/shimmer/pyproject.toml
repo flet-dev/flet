@@ -1,5 +1,5 @@
 [project]
-name = "shimmer-basic"
+name = "shimmer"
 version = "1.0.0"
 description = "Show a basic Shimmer loading effect over stacked placeholder blocks."
 requires-python = ">=3.10"

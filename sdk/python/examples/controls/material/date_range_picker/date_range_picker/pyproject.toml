@@ -1,5 +1,5 @@
 [project]
-name = "date-range-picker-basic"
+name = "date-range-picker"
 version = "1.0.0"
 description = "Opens DateRangePicker and displays start and end date values after selection."
 requires-python = ">=3.10"

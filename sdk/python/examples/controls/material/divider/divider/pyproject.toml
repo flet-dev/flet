@@ -1,5 +1,5 @@
 [project]
-name = "divider-basic"
+name = "divider"
 version = "1.0.0"
 description = "Demonstrates Divider height, thickness, and color between vertically stacked containers."
 requires-python = ">=3.10"

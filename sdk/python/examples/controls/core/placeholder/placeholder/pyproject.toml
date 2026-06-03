@@ -1,5 +1,5 @@
 [project]
-name = "placeholder-basic"
+name = "placeholder"
 version = "1.0.0"
 description = "Shows a basic Placeholder control with fallback dimensions and custom styling."
 requires-python = ">=3.10"

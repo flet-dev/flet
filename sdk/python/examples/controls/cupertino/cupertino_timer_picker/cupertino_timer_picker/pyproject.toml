@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-timer-picker-basic"
+name = "cupertino-timer-picker"
 version = "1.0.0"
 description = "Opens CupertinoTimerPicker in a bottom sheet and updates displayed timer value on change."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "navigation-rail-basic"
+name = "navigation-rail"
 version = "1.0.0"
 description = "Demonstrates a Material NavigationRail with three destinations and custom leading FAB."
 requires-python = ">=3.10"

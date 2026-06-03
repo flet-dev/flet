@@ -1,5 +1,5 @@
 [project]
-name = "page-view-basic"
+name = "page-view"
 version = "1.0.0"
 description = "Demonstrates a swipeable PageView with page-change callback and peeked viewport pages."
 requires-python = ">=3.10"

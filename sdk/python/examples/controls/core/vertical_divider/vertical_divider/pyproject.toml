@@ -1,5 +1,5 @@
 [project]
-name = "vertical-divider-basic"
+name = "vertical-divider"
 version = "1.0.0"
 description = "Separates colored containers in a row using VerticalDivider variants."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "expansion-panel-list-basic"
+name = "expansion-panel-list"
 version = "1.0.0"
 description = "Builds an ExpansionPanelList with dynamic panel deletion and panel-change callbacks."
 requires-python = ">=3.10"

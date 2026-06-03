@@ -1,5 +1,5 @@
 [project]
-name = "pagelet-basic"
+name = "pagelet"
 version = "1.0.0"
 description = "Shows a Pagelet configured with app bars, drawers, and a floating action button."
 requires-python = ">=3.10"

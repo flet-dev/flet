@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-radio-basic"
+name = "cupertino-radio"
 version = "1.0.0"
 description = "Collects color selection with CupertinoRadio controls in a RadioGroup and submit action."
 requires-python = ">=3.10"

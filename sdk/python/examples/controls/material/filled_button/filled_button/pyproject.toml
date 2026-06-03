@@ -1,5 +1,5 @@
 [project]
-name = "filled-button-basic"
+name = "filled-button"
 version = "1.0.0"
 description = "Shows enabled, disabled, and icon variants of FilledButton in a simple vertical layout."
 requires-python = ">=3.10"

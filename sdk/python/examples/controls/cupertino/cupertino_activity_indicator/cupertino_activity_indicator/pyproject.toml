@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-activity-indicator-basic"
+name = "cupertino-activity-indicator"
 version = "1.0.0"
 description = "Shows a centered CupertinoActivityIndicator with custom color and radius."
 requires-python = ">=3.10"

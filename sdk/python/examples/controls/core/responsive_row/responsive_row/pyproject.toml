@@ -1,5 +1,5 @@
 [project]
-name = "responsive-row-basic"
+name = "responsive-row"
 version = "1.0.0"
 description = "Builds a four-column responsive layout and form row that adapt to breakpoints."
 requires-python = ">=3.10"

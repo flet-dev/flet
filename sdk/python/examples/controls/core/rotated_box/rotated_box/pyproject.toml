@@ -1,5 +1,5 @@
 [project]
-name = "rotated-box-basic"
+name = "rotated-box"
 version = "1.0.0"
 description = "Compares normal layouted controls with quarter_turns RotatedBox rendering."
 requires-python = ">=3.10"

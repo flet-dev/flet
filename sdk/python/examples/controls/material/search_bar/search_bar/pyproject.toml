@@ -1,5 +1,5 @@
 [project]
-name = "search-bar-basic"
+name = "search-bar"
 version = "1.0.0"
 description = "Search colors with async suggestions shown inside a SearchBar view."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "auto-complete-basic"
+name = "auto-complete"
 version = "1.0.0"
 description = "Basic AutoComplete with change and select event handling."
 requires-python = ">=3.10"

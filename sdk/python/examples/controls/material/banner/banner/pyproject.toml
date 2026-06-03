@@ -1,5 +1,5 @@
 [project]
-name = "banner-basic"
+name = "banner"
 version = "1.0.0"
 description = "Basic Banner dialog with action buttons."
 requires-python = ">=3.10"

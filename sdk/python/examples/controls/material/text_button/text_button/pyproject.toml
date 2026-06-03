@@ -1,5 +1,5 @@
 [project]
-name = "text-button-basic"
+name = "text-button"
 version = "1.0.0"
 description = "Shows enabled and disabled TextButton controls with the default appearance."
 requires-python = ">=3.10"

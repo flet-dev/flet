@@ -1,5 +1,5 @@
 [project]
-name = "date-picker-basic"
+name = "date-picker"
 version = "1.0.0"
 description = "Opens DatePicker dialog and logs selected date and dismiss events in the page content."
 requires-python = ">=3.10"

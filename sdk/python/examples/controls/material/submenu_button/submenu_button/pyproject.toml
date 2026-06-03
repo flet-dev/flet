@@ -1,5 +1,5 @@
 [project]
-name = "submenu-button-basic"
+name = "submenu-button"
 version = "1.0.0"
 description = "Changes background color and text alignment from nested SubmenuButton menu actions."
 requires-python = ">=3.10"

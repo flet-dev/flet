@@ -1,5 +1,5 @@
 [project]
-name = "cupertino-sliding-segmented-button-basic"
+name = "cupertino-sliding-segmented-button"
 version = "1.0.0"
 description = "Displays CupertinoSlidingSegmentedButton and shows feedback when segment selection changes."
 requires-python = ">=3.10"

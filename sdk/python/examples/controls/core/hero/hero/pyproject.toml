@@ -1,5 +1,5 @@
 [project]
-name = "hero-basic"
+name = "hero"
 version = "1.0.0"
 description = "Demonstrates Hero animation between home and details views with a shared tagged card."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "list-tile-basic"
+name = "list-tile"
 version = "1.0.0"
 description = "Showcases one-line and two-line ListTile variants with leading/trailing controls and selection state."
 requires-python = ">=3.10"

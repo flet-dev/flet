@@ -1,5 +1,5 @@
 [project]
-name = "radio-basic"
+name = "radio"
 version = "1.0.0"
 description = "Shows radio selection with a submit action and simple message display."
 requires-python = ">=3.10"

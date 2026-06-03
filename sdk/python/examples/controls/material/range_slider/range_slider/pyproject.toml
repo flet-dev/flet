@@ -1,5 +1,5 @@
 [project]
-name = "range-slider-basic"
+name = "range-slider"
 version = "1.0.0"
 description = "Shows a configured RangeSlider with labels and divisions."
 requires-python = ">=3.10"
