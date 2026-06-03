@@ -1,5 +1,5 @@
 [project]
-name = "reorderable-drag-handle-basic"
+name = "reorderable-drag-handle"
 version = "1.0.0"
 description = "Shows a ReorderableListView with custom drag handles."
 requires-python = ">=3.10"

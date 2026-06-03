@@ -1,5 +1,5 @@
 [project]
-name = "pagelet-basic-declarative"
+name = "pagelet-declarative"
 version = "1.0.0"
 description = "Demonstrates a declarative Pagelet with drawers and an app shell."
 requires-python = ">=3.10"
