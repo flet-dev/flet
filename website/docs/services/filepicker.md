@@ -86,8 +86,6 @@ ft.Image(src="/uploads/<some-uploaded-picture.png>")
 
 ## Examples
 
-### Pick, save, and get directory paths
-
 <CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pick_save_and_get_directory_path.png'} width="55%" />

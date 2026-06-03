@@ -67,8 +67,6 @@ for installing on other Linux distributions.
 
 ## Examples
 
-### Audio
-
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 ## Description

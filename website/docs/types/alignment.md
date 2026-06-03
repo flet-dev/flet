@@ -10,8 +10,6 @@ import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 ## Examples
 
-### Example 1
-
 <CodeExample path={frontMatter.examples + '/container/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/container.png'} width="55%" />

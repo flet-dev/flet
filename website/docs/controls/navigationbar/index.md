@@ -13,17 +13,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### NavigationBar
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="40%" />
-
-### Adaptive navigation
-
-This example switches between a `NavigationBar`
-on narrow layouts and a [`NavigationRail`](../navigationrail/index.md) with an
-end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts.
 
 <CodeExample path={'controls/material/navigation_drawer/adaptive_navigation/main.py'} language="python" />
 

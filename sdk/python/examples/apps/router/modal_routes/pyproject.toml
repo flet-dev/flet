@@ -15,6 +15,8 @@ categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
 title = "Modal routes"
+docs_intro = """
+Routes marked `modal=True` are rendered as a fullscreen-dialog overlay on top of the previous (non-modal) location's view stack. A *global* modal is declared at the top level (the URL works from anywhere); a *local* modal is declared as a child of a non-modal parent (the URL embeds the parent's segment, so deep-link works without any state)."""
 controls = ["SafeArea", "Column", "Button", "Text", "TextField", "AppBar", "View", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "intermediate"

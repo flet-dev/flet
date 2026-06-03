@@ -1,12 +1,20 @@
 ---
 class_name: "flet.DragTarget"
+examples: "controls/core/drag_target_and_draggable"
+example_images: "examples/controls/core/drag_target_and_draggable/media"
 title: "DragTarget"
 ---
 
-import {ClassAll} from '@site/src/components/crocodocs';
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
 
 ## Examples
 
-See [these](draggable.md#examples).
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers/main.py'} language="python" />
 
-<ClassAll name={frontMatter.class_name} />
+<Image src={frontMatter.example_images + '/drag_and_drop_containers.gif'} alt="drag-and-drop-containers" width="40%" />
+
+<CodeExample path={frontMatter.examples + '/drag_and_drop_containers_declarative/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

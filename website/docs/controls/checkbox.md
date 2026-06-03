@@ -11,19 +11,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Checkbox
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="50%" caption="After clicking Submit" />
 
-### Handling events
-
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_events.png'} alt="handling-events" width="35%" caption="After three clicks" />
-
-### Styled checkboxes
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 

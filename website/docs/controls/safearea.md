@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Example
 
-### SafeArea
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

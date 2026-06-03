@@ -13,8 +13,6 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 ## Examples
 
-### PopupMenuButton
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="35%" />

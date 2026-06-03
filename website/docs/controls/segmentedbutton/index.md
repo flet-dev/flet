@@ -13,8 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### SegmentedButton
-
 <CodeExample path={frontMatter.examples + '/single_multiple_selection/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/single_multiple_selection.png'} width="55%" />

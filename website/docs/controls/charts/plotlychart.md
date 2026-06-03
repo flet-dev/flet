@@ -11,33 +11,17 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Plotly line chart
-
-Based on an official [Plotly example](https://plotly.com/python/line-charts).
-
 <CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
-
-### Plotly bar chart
-
-Based on an official [Plotly example](https://plotly.com/python/bar-charts).
 
 <CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 
-### Plotly pie chart
-
-Based on an official [Plotly example](https://plotly.com/python/pie-charts).
-
 <CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_3.png'} width="65%" />
-
-### Plotly box plot
-
-Based on an official [Plotly example](https://plotly.com/python/box-plots).
 
 <CodeExample path={frontMatter.examples + '/example_4/main.py'} language="python" />
 

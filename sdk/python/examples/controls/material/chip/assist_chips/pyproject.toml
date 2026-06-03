@@ -15,6 +15,12 @@ categories = ["Input/Chip"]
 
 [tool.flet.metadata]
 title = "Assist chips"
+docs_intro = """
+Assist chips are chips with [`leading`](chip.md#flet.Chip.leading) icon and [`on_click`](chip.md#flet.Chip.on_click) event specified.
+
+They represent smart or automated actions that appear dynamically and contextually in a UI.
+
+An alternative to assist chips are buttons, which should appear persistently and consistently."""
 controls = ["SafeArea", "Row", "Chip", "Icon", "Text"]
 layout_pattern = "inline-actions"
 complexity = "basic"

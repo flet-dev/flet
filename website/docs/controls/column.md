@@ -12,40 +12,23 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Column `spacing`
-
 <CodeExample path={frontMatter.examples + '/spacing/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/spacing.gif'} alt="spacing" width="55%" />
-
-### Column wrapping
 
 <CodeExample path={frontMatter.examples + '/wrap/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/wrap.gif'} alt="wrap" width="55%" />
 
-### Column vertical alignments
-
 <CodeExample path={frontMatter.examples + '/alignment/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/alignment.png'} alt="alignment" width="55%" />
-
-### Column horizontal alignments
 
 <CodeExample path={frontMatter.examples + '/horizontal_alignment/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/horizontal_alignment.png'} alt="horizontal-alignment" width="40%" />
 
-### Infinite scrolling
-
-This example demonstrates adding of list items on-the-fly, as user scroll to the bottom,
-creating the illusion of infinite list:
-
 <CodeExample path={frontMatter.examples + '/infinite_scrolling/main.py'} language="python" />
-
-### Scrolling programmatically
-
-This example shows how to use [`scroll_to()`](column.md) to programmatically scroll a column:
 
 <CodeExample path={frontMatter.examples + '/programmatic_scroll/main.py'} language="python" />
 

@@ -11,13 +11,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Hero
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="40%" />
-
-### Gallery
 
 <CodeExample path={frontMatter.examples + '/gallery/main.py'} language="python" />
 

@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### User avatars
-
 <CodeExample path={frontMatter.examples + '/user_avatars/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/user_avatars.png'} alt="user-avatars" width="20%" />

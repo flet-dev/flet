@@ -12,14 +12,12 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Horizontal and Vertical
-
 <CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/horizontal_and_vertical.gif'} alt="horizontal-and-vertical" width="65%" />
 
-### Custom drag handle
+<CodeExample path={'controls/material/reorderable_drag_handle/basic/main.py'} language="python" />
 
-See [this](reorderabledraghandle.md#examples).
+<Image src={'examples/controls/material/reorderable_drag_handle/media/basic.gif'} alt="custom-drag-handle" width="55%" />
 
 <ClassMembers name={frontMatter.class_name} />

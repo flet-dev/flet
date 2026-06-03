@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Container"]
 
 [tool.flet.metadata]
-title = "Nested themes 1"
+title = "Inherited and overridden theme"
 controls = ["SafeArea", "Column", "Container", "Button"]
 layout_pattern = "single-panel"
 complexity = "basic"

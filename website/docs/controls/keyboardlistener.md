@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Press any keys
-
 <CodeExample path={frontMatter.examples + '/detect_keys/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

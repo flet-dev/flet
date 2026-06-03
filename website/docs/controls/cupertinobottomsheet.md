@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Displaying a `CupertinoActionSheet`
-
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="cupertinoactionsheet" width="55%" />
