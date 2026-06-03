@@ -1,5 +1,5 @@
 [project]
-name = "color-pickers-example-3"
+name = "color-pickers-slide-picker"
 version = "1.0.0"
 description = "SlidePicker example using RGB color model with styled indicator and color change callback."
 requires-python = ">=3.10"

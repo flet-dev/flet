@@ -1,5 +1,5 @@
 [project]
-name = "color-pickers-example-4"
+name = "color-pickers-material-picker"
 version = "1.0.0"
 description = "MaterialPicker example with callbacks for both selected color and primary swatch changes."
 requires-python = ">=3.10"

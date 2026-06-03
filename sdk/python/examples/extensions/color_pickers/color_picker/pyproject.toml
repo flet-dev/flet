@@ -1,5 +1,5 @@
 [project]
-name = "color-pickers-example-1"
+name = "color-pickers-color-picker"
 version = "1.0.0"
 description = "ColorPicker example with RGB palette mode, color history, and HSV/history change callbacks."
 requires-python = ">=3.10"

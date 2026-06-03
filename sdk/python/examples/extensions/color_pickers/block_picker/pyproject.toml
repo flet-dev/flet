@@ -1,5 +1,5 @@
 [project]
-name = "color-pickers-example-5"
+name = "color-pickers-block-picker"
 version = "1.0.0"
 description = "BlockPicker dialog example with curated color palette and icon-triggered modal launch."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "color-pickers-example-2"
+name = "color-pickers-hue-ring-picker"
 version = "1.0.0"
 description = "HueRingPicker example with custom ring stroke width and color change callback."
 requires-python = ">=3.10"
