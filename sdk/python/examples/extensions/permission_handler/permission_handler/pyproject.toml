@@ -1,5 +1,5 @@
 [project]
-name = "services-permission-handler-example-1"
+name = "permission-handler-permission-handler"
 version = "1.0.0"
 description = "Requests microphone permission, reads its status, and opens app settings."
 requires-python = ">=3.10"

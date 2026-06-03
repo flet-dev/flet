@@ -1,5 +1,5 @@
 [project]
-name = "services-audio-recorder-basic"
+name = "audio-recorder-audio-recorder"
 version = "1.0.0"
 description = "Records audio, lists input devices, and checks recorder permissions from one screen."
 requires-python = ">=3.10"

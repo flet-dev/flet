@@ -1,5 +1,5 @@
 [project]
-name = "charts-bar-chart-example-1"
+name = "charts-bar-chart-interactive-bar-chart"
 version = "1.0.0"
 description = "Interactive bar chart showing fruit supply with custom axes, tooltips, and grid lines."
 requires-python = ">=3.10"

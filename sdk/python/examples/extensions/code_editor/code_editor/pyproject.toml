@@ -1,5 +1,5 @@
 [project]
-name = "code-editor-example-1"
+name = "code-editor-code-editor"
 version = "1.0.0"
 description = "Basic CodeEditor setup with Python syntax highlighting and change callbacks."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-haptic-feedback-basic"
+name = "haptic-feedback-haptic-feedback"
 version = "1.0.0"
 description = "Triggers heavy, medium, light, and vibration haptic feedback actions."
 requires-python = ">=3.10"

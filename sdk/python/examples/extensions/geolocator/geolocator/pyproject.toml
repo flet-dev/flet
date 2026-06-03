@@ -1,5 +1,5 @@
 [project]
-name = "services-geolocator-example-1"
+name = "geolocator-geolocator"
 version = "1.0.0"
 description = "Requests location permissions and exercises geolocator actions from one dashboard."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-barometer-basic"
+name = "barometer-barometer"
 version = "1.0.0"
 description = "Streams atmospheric pressure readings and reports barometer errors from the device sensor."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "ads-example-1"
+name = "ads-banner-ad-and-interstitial-ad"
 version = "1.0.0"
 description = "Mobile ads example with BannerAd and InterstitialAd."
 requires-python = ">=3.10"

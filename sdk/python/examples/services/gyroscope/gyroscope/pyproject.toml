@@ -1,5 +1,5 @@
 [project]
-name = "services-gyroscope-basic"
+name = "gyroscope-gyroscope"
 version = "1.0.0"
 description = "Streams gyroscope rotation readings and reports sensor errors from supported devices."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-shake-detector-basic"
+name = "shake-detector-shake-detector"
 version = "1.0.0"
 description = "Detects shake gestures and appends a message each time a shake is recognized."
 requires-python = ">=3.10"

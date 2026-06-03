@@ -1,5 +1,5 @@
 [project]
-name = "services-accelerometer-basic"
+name = "accelerometer-accelerometer"
 version = "1.0.0"
 description = "Streams live accelerometer readings and displays sensor errors from the device."
 requires-python = ">=3.10"

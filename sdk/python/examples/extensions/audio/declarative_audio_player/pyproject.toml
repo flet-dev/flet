@@ -1,5 +1,5 @@
 [project]
-name = "services-audio-declarative-1"
+name = "audio-declarative-audio-player"
 version = "1.0.0"
 description = "Builds a declarative audio player with playback controls and live progress updates."
 requires-python = ">=3.10"

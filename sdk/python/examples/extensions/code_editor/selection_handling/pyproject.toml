@@ -1,5 +1,5 @@
 [project]
-name = "code-editor-example-2"
+name = "code-editor-selection-handling"
 version = "1.0.0"
 description = "CodeEditor selection demo with custom theme, gutter styling, and caret/selection controls."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "map-basic"
+name = "map-map"
 version = "1.0.0"
 description = "Shows a basic flet-map tile layer with error callback handling."
 requires-python = ">=3.10"

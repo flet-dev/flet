@@ -1,5 +1,5 @@
 [project]
-name = "code-editor-example-5"
+name = "code-editor-python-analyzer"
 version = "1.0.0"
 description = "CodeEditor with Python-side syntax analysis and gutter error markers."
 requires-python = ">=3.10"

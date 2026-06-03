@@ -1,5 +1,5 @@
 [project]
-name = "charts-pie-chart-example-1"
+name = "charts-pie-chart-pie-chart-with-hover-borders"
 version = "1.0.0"
 description = "Pie chart with hover-sensitive section borders for interactive emphasis."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-urllauncher-basic"
+name = "urllauncher-url-launcher"
 version = "1.0.0"
 description = "Launches URLs in multiple modes including web view, browser view, and popup windows."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-magnetometer-basic"
+name = "magnetometer-magnetometer"
 version = "1.0.0"
 description = "Streams ambient magnetic field readings and reports magnetometer errors."
 requires-python = ">=3.10"

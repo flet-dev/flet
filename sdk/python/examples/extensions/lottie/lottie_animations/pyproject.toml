@@ -1,5 +1,5 @@
 [project]
-name = "lottie-example-1"
+name = "lottie-lottie-animations"
 version = "1.0.0"
 description = "Plays Lottie animations from a remote URL and local JSON file with error fallback content."
 requires-python = ">=3.10"
