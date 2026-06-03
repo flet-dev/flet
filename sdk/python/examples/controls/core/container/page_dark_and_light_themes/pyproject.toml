@@ -1,5 +1,5 @@
 [project]
-name = "container-nested-themes-2"
+name = "container-page-dark-and-light-themes"
 version = "1.0.0"
 description = "Multiple nested containers comparing page, dark, and light theme behaviors."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "container-animate-1"
+name = "container-animate-size-and-color"
 version = "1.0.0"
 description = "Animated container size and color transitions triggered by button clicks."
 requires-python = ">=3.10"

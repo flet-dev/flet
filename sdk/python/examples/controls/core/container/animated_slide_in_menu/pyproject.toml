@@ -1,5 +1,5 @@
 [project]
-name = "container-animate-3"
+name = "container-animated-slide-in-menu"
 version = "1.0.0"
 description = "Slide-in side menu built with animated container offset and overlay controls."
 requires-python = ">=3.10"

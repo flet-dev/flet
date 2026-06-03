@@ -1,5 +1,5 @@
 [project]
-name = "container-nested-themes-1"
+name = "container-inherited-and-overridden-theme"
 version = "1.0.0"
 description = "Nested theme containers demonstrating inherited and overridden button color schemes."
 requires-python = ">=3.10"

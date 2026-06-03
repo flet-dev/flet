@@ -1,5 +1,5 @@
 [project]
-name = "container-animate-2"
+name = "container-animate-gradient-and-shape"
 version = "1.0.0"
 description = "Animated container with gradient, border, alignment, and shape transitions."
 requires-python = ">=3.10"
