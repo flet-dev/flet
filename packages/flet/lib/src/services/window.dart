@@ -500,9 +500,11 @@ class WindowService extends FletService with WindowListener {
       return;
     }
     if (eventName == "close") {
-      _isClosing = !(_preventClose ?? false);
+      final preventClose = _preventClose ?? false;
+      _isClosing = !preventClose;
       control.backend.onWindowEvent(
-          eventName, _snapshotWindowState(focused: false));
+          eventName,
+          _snapshotWindowState(focused: preventClose ? null : false));
       return;
     }
     if (eventName == "hide") {
