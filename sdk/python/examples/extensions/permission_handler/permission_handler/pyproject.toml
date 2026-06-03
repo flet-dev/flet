@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Utility/PermissionHandler"]
 
 [tool.flet.metadata]
-title = "Permission handler example"
+title = "Permission Handler"
 controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "OutlinedButton", "PermissionHandler"]
 layout_pattern = "inline-actions"
 complexity = "basic"

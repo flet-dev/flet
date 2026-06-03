@@ -97,7 +97,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/video/main.py'} language="python" />
 
 <CodeExample path={frontMatter.examples + '/playback/main.py'} language="python" />
 

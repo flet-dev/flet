@@ -65,7 +65,7 @@ See:
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/permission_handler/main.py'} language="python" />
 
 ## Description
 

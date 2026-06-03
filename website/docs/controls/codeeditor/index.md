@@ -32,15 +32,15 @@ pip install flet-code-editor  # (1)!
 </Tabs>
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/code_editor/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} alt="code-editor-example-1" width="60%" />
 
-<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/selection_handling/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} alt="code-editor-example-2" width="65%" />
 
-<CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/folding_and_initial_selection/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_3.png'} alt="code-editor-example-3" width="65%" />
 

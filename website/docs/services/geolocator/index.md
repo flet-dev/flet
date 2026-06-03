@@ -202,7 +202,7 @@ Geolocation API.
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/geolocator/main.py'} language="python" />
 
 ## Description
 

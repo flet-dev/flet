@@ -45,7 +45,7 @@ More details [here](tilelayer.md).
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/map/main.py'} language="python" />
 
 <CodeExample path={frontMatter.examples + '/attribution/main.py'} language="python" />
 

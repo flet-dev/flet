@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Sensors/Geolocator"]
 
 [tool.flet.metadata]
-title = "Geolocator example"
+title = "Geolocator"
 controls = ["SafeArea", "Column", "Page", "AppBar", "Text", "GeolocatorPositionChangeEvent", "TextButton", "OutlinedButton"]
 layout_pattern = "inline-actions"
 complexity = "basic"

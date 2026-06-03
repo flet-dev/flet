@@ -13,6 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_4/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/material_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
