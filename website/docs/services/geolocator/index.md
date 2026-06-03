@@ -8,8 +8,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
-# Geolocator
-
 Access device location services in your [Flet](https://flet.dev) app using the `flet-geolocator` extension.
 The control wraps Flutter's [`geolocator`](https://pub.dev/packages/geolocator) package and exposes async helpers for permission checks and position streams.
 

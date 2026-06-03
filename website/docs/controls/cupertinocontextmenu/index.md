@@ -7,8 +7,6 @@ title: "CupertinoContextMenu"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# CupertinoContextMenu
-
 <ClassSummary name={frontMatter.class_name} />
 
 ## Examples

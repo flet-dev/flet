@@ -7,8 +7,6 @@ title: "MaterialPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# MaterialPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/material_picker.png'} imageCaption="MaterialPicker" imageWidth="55%"/>
 
 ## Example

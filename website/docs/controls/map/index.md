@@ -7,8 +7,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {CodeExample} from '@site/src/components/crocodocs';
 
-# Map
-
 Display interactive maps in your [Flet](https://flet.dev) apps with markers, overlays, and rich attributions provided by the `flet-map` extension. The control is built on top of [`flutter_map`](https://pub.dev/packages/flutter_map) and supports multiple tile providers and layers.
 
 ## Platform Support

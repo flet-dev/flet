@@ -7,8 +7,6 @@ title: "NavigationBar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# NavigationBar
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Simple navigation bar" imageWidth="35%"/>
 
 ## Examples

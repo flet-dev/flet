@@ -7,8 +7,6 @@ title: "HueRingPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# HueRingPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/hue_ring_picker.png'} imageCaption="HueRingPicker" imageWidth="55%"/>
 
 ## Example

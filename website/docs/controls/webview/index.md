@@ -8,8 +8,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
-# WebView
-
 Display web content in a WebView to be shown in your [Flet](https://flet.dev) apps.
 
 It is powered by the [webview_flutter](https://pub.dev/packages/webview_flutter)

@@ -7,8 +7,6 @@ title: "DataTable"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# DataTable
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="DataTable" imageWidth="25%"/>
 
 ## Examples

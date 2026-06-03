@@ -8,8 +8,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
-# Video
-
 Embed a full-featured video player in your [Flet](https://flet.dev) app with playlist support, hardware acceleration controls, and subtitle configuration.
 
 It is powered by the [media_kit](https://pub.dev/packages/media_kit) Flutter package.

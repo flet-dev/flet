@@ -7,8 +7,6 @@ title: "SlidePicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# SlidePicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/slide_picker.png'} imageCaption="SlidePicker" imageWidth="35%"/>
 
 ## Example

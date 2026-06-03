@@ -8,8 +8,6 @@ title: "CupertinoActionSheet"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# CupertinoActionSheet
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoActionSheet" />
 
 ## Examples

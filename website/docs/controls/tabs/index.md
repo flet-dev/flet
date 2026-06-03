@@ -8,8 +8,6 @@ title: "Tabs"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# Tabs
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Tabs" imageWidth="70%"/>
 
 ## Examples
