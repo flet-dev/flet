@@ -13,15 +13,30 @@ The path to the application's console log file (`console.log`) in the temporary 
 
 Its value is set in production mode.
 
+:::info
+At runtime, the equivalent of this environment variable is
+[`StoragePaths.get_console_log_filename()`](../services/storagepaths.md#flet.StoragePaths.get_console_log_filename).
+:::
+
 ### `FLET_APP_STORAGE_DATA`
 
 A directory for the storage of persistent application data that is preserved between app updates.
 It is already pre-created and its location depends on the platform the app is running on.
 
+:::info
+At runtime, prefer the equivalent of this environment variable is
+[`StoragePaths.get_application_support_directory()`](../services/storagepaths.md#flet.StoragePaths.get_application_support_directory).
+:::
+
 ### `FLET_APP_STORAGE_TEMP`
 
 A directory for the storage of temporary application files, i.e. cache.
 It is already pre-created and its location depends on the platform the app is running on.
+
+:::info
+At runtime, prefer the equivalent of this environment variable is
+[`StoragePaths.get_application_cache_directory()`](../services/storagepaths.md#flet.StoragePaths.get_application_cache_directory).
+:::
 
 ### `FLET_APP_USER_MODEL_ID`
 
