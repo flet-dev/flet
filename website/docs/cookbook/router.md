@@ -39,7 +39,7 @@ def App():
 ft.run(lambda page: page.render(App))
 ```
 
-See [full example](../controls/router.md#basic).
+See [full example](../controls/router.md#routing).
 
 ## Defining routes
 
@@ -134,7 +134,7 @@ ft.Router([
 ```
 
 Layout routes can be nested to any depth. Each level calls `use_route_outlet()` to
-get its immediate child. See [full example](../controls/router.md#layout-with-outlet).
+get its immediate child. See [full example](../controls/router.md#layout-outlet).
 
 ## Dynamic segments, optional segments, and splats
 
@@ -221,7 +221,7 @@ def UserProfile():
     return ft.Text(f"Hello, {user.name}")
 ```
 
-See [full example](../controls/router.md#loaders).
+See [full example](../controls/router.md#route-loaders).
 
 ## Authentication
 
