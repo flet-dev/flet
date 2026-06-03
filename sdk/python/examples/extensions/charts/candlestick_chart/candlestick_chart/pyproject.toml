@@ -1,5 +1,5 @@
 [project]
-name = "charts-candlestick-chart-candlestick-chart"
+name = "charts-candlestick-chart"
 version = "1.0.0"
 description = "Candlestick chart visualizing weekly OHLC data with labeled axes and event-driven tooltips."
 requires-python = ">=3.10"

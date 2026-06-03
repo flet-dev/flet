@@ -1,5 +1,5 @@
 [project]
-name = "share-share"
+name = "share"
 version = "1.0.0"
 description = "Shares text, links, and files while showing the raw share result status."
 requires-python = ">=3.10"

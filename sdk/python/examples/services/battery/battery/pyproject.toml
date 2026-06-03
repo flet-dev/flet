@@ -1,5 +1,5 @@
 [project]
-name = "battery-battery"
+name = "battery"
 version = "1.0.0"
 description = "Shows battery level, battery state, and battery saver status with a refresh action."
 requires-python = ">=3.10"

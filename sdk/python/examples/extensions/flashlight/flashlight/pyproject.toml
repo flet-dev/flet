@@ -1,5 +1,5 @@
 [project]
-name = "flashlight-flashlight"
+name = "flashlight"
 version = "1.0.0"
 description = "Turns the device flashlight on and off with two simple actions."
 requires-python = ">=3.10"

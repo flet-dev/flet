@@ -1,5 +1,5 @@
 [project]
-name = "user-accelerometer-user-accelerometer"
+name = "user-accelerometer"
 version = "1.0.0"
 description = "Streams linear acceleration readings without gravity and reports sensor errors."
 requires-python = ">=3.10"

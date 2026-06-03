@@ -1,5 +1,5 @@
 [project]
-name = "video-video"
+name = "video"
 version = "1.0.0"
 description = "Plays a single video using the flet-video player."
 requires-python = ">=3.10"

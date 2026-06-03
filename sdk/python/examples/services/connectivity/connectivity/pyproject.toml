@@ -1,5 +1,5 @@
 [project]
-name = "connectivity-connectivity"
+name = "connectivity"
 version = "1.0.0"
 description = "Displays current connectivity state and listens for connectivity change events."
 requires-python = ">=3.10"

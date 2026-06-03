@@ -1,5 +1,5 @@
 [project]
-name = "secure-storage-secure-storage"
+name = "secure-storage"
 version = "1.0.0"
 description = "Stores, reads, removes, and clears protected key-value entries in secure storage."
 requires-python = ">=3.10"

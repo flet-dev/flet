@@ -1,5 +1,5 @@
 [project]
-name = "screen-brightness-screen-brightness"
+name = "screen-brightness"
 version = "1.0.0"
 description = "Reads and adjusts system and application brightness with live change notifications."
 requires-python = ">=3.10"
