@@ -11,11 +11,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/shimmer/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/image_for_docs.gif'} alt="custom-label" width="30%" />
 
-<CodeExample path={frontMatter.examples + '/basic_placeholder/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/shimmer_basic_placeholder/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic_placeholder.png'} alt="custom-label" width="30%" />
 

@@ -12,7 +12,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/banner/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/banner_flow.gif'} alt="basic" width="50%" />
 
