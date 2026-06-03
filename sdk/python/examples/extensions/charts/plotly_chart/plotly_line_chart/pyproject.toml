@@ -1,5 +1,5 @@
 [project]
-name = "charts-plotly-chart-plotly-line-chart"
+name = "charts-plotly-line-chart"
 version = "1.0.0"
 description = "Plotly line chart showing life expectancy trends by country in Oceania."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "audio-audio-playback-controls"
+name = "audio-playback-controls"
 version = "1.0.0"
 description = "Controls audio playback, seek position, volume, and balance for a remote track."
 requires-python = ">=3.10"

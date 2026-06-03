@@ -1,5 +1,5 @@
 [project]
-name = "charts-plotly-chart-plotly-pie-chart"
+name = "charts-plotly-pie-chart"
 version = "1.0.0"
 description = "Plotly pie chart example for categorical distribution visualization."
 requires-python = ">=3.10"

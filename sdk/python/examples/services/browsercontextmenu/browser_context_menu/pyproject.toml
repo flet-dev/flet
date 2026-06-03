@@ -1,5 +1,5 @@
 [project]
-name = "browsercontextmenu-browser-context-menu"
+name = "browser-context-menu"
 version = "1.0.0"
 description = "Enables and disables the browser context menu from a simple web control panel."
 requires-python = ">=3.10"

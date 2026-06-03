@@ -1,5 +1,5 @@
 [project]
-name = "camera-camera-playground"
+name = "camera-playground"
 version = "1.0.0"
 description = "Comprehensive camera demo with preview, photos, video recording, and streaming."
 requires-python = ">=3.10"

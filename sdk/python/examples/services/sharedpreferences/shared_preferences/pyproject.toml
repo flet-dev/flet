@@ -1,5 +1,5 @@
 [project]
-name = "sharedpreferences-shared-preferences"
+name = "shared-preferences"
 version = "1.0.0"
 description = "Writes and reads plain SharedPreferences values using keyed inputs."
 requires-python = ">=3.10"
