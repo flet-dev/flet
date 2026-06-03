@@ -1,6 +1,6 @@
 ---
 class_name: "flet.UrlLauncher"
-examples: "services/urllauncher"
+examples: "services/url_launcher"
 title: "UrlLauncher"
 ---
 

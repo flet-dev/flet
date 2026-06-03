@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SharedPreferences"
-examples: "services/sharedpreferences"
+examples: "services/shared_preferences"
 title: "SharedPreferences"
 ---
 

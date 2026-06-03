@@ -1,5 +1,5 @@
 [project]
-name = "webview"
+name = "web-view"
 version = "1.0.0"
 description = "Displays a web page in a WebView and logs page lifecycle events."
 requires-python = ">=3.10"
