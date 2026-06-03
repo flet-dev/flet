@@ -16,7 +16,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_media + '/horizontal_and_vertical.gif'} alt="horizontal-and-vertical" width="65%" />
 
-<CodeExample path={'controls/material/reorderable_drag_handle/basic/main.py'} language="python" />
+<CodeExample path={'controls/material/reorderable_drag_handle/custom_drag_handle/main.py'} language="python" />
 
 <Image src={'examples/controls/material/reorderable_drag_handle/media/basic.gif'} alt="custom-drag-handle" width="55%" />
 
