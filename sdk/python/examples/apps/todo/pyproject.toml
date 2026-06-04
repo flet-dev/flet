@@ -1,5 +1,5 @@
 [project]
-name = "todo-classic-to-do"
+name = "todo"
 version = "1.0.0"
 description = "Classic to-do app with add, edit, delete, and filter interactions inspired by TodoMVC."
 requires-python = ">=3.10"
