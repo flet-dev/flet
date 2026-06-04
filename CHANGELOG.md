@@ -9,6 +9,7 @@
 ### Bug fixes
 
 * Fix `flet.Router`'s default `on_view_pop` navigating to the wrong URL when an `outlet=True` layout sits between two views in `manage_views=True` mode. Popping such a view now targets the previous view entry's resolved URL — skipping outlet layouts and componentless grouping routes — instead of `chain[-2]`, which could equal the current view's URL and strand the page route, making the next navigation to it a no-op ([#6533](https://github.com/flet-dev/flet/pull/6533)) by @FeodorFitsner.
+* Fix `flet-audio.Audio.play()`/`seek()` timing out when replaying after playback had completed: under the default `ReleaseMode.RELEASE` the source is freed on completion and is now re-prepared on replay ([#6536](https://github.com/flet-dev/flet/issues/6536), [#6538](https://github.com/flet-dev/flet/pull/6538)) by @ndonkoHenri.
 
 ## 0.85.2
 
