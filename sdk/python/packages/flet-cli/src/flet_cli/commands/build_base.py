@@ -922,6 +922,25 @@ class BaseBuildCommand(BaseFlutterCommand):
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
+        for key, value in android_permissions.items():
+            if isinstance(value, bool):
+                continue
+            if isinstance(value, dict):
+                for ak, av in value.items():
+                    if not isinstance(av, (str, bool, int, float)):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android permission attribute value for "
+                            f"{key}.{ak}: {type(av).__name__}. "
+                            "Expected string, boolean, or number.",
+                        )
+                continue
+            self.cleanup(
+                1,
+                f"Invalid Android permission value for {key}: "
+                f"{type(value).__name__}. Expected boolean or inline table.",
+            )
+
         android_features = merge_dict(
             android_features,
             self.get_pyproject("tool.flet.android.feature") or {},

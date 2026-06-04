@@ -2,6 +2,7 @@
 
 ### Improvements
 
+* Allow `[tool.flet.android.permission]` values to be TOML inline tables in addition to booleans — each `key = "value"` entry adds an `android:<key>="<value>"` attribute to the generated `<uses-permission>` element, unlocking modifiers like `android:maxSdkVersion` and `android:usesPermissionFlags` that real-world Android permissions (e.g. Bluetooth LE) require. The boolean form and the `--android-permissions` CLI flag are unchanged; a non-empty inline table is always emitted, an empty table (`{}`) is treated as `false`, and invalid value types fail the build with a clear error ([#6550](https://github.com/flet-dev/flet/issues/6550), [#6551](https://github.com/flet-dev/flet/pull/6551)) by @FeodorFitsner.
 * Upgrade the bundled Pyodide runtime in the `flet build web` template from `0.27.5` to `0.27.7` (includes `micropip` `0.9.0`) ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
 * Drop generated `web/canvaskit/` build artifacts (`canvaskit.js`/`.wasm`/`.symbols` and the `chromium/` and `skwasm`/`skwasm_st` variants) from the `flet build web` template — these are produced by the Flutter web build and should not have been committed into the cookiecutter template ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
 

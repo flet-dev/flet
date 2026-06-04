@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- flet: permission {% for k, v in cookiecutter.options.android_permissions.items() %} {% if v == True %} -->
-    <uses-permission android:name="{{ k }}" />
+    <!-- flet: permission {% for k, v in cookiecutter.options.android_permissions.items() %} {% if v %} -->
+    <uses-permission android:name="{{ k }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av }}"{% endfor %}{% endif %} />
     <!-- flet: end of permission {% endif %} {% endfor %} -->
 
     <!-- flet: feature {% for k, v in cookiecutter.options.android_features.items() %} -->
