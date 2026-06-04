@@ -1,5 +1,5 @@
 [project]
-name = "apps-custom-controls-custom-buttons"
+name = "custom-controls"
 version = "1.0.0"
 description = "Shows three ways to define reusable custom button controls with predefined styling."
 requires-python = ">=3.10"
