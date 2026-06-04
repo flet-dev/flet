@@ -15,6 +15,10 @@ categories = ["Input/Chip"]
 
 [tool.flet.metadata]
 title = "Filter chips"
+docs_intro = """
+Filter chips are chips with [`on_select`](chip.md#flet.Chip.on_select) event specified.
+
+They use tags or descriptive words provided in the [`label`](chip.md#flet.Chip.label) to filter content. They can be a good alternative to switches or checkboxes."""
 controls = ["SafeArea", "Column", "Row", "Chip", "Icon", "Text"]
 layout_pattern = "filter-bar"
 complexity = "basic"

@@ -12,15 +12,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Multi-series line chart
-
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/multi_series_line_chart/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
 
-### Line chart with custom axes
-
-<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/line_chart_with_custom_axes/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 

@@ -12,9 +12,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### SelectionArea
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/selection_area/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="30%" />
 

@@ -11,8 +11,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Modal and non-modal dialogs
-
 <CodeExample path={frontMatter.examples + '/modal_and_non_modal/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/alert_dialog_flow.gif'} alt="Modal and non-modal dialogs" width="50%" caption="Modal and non-modal dialogs" />

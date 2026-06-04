@@ -7,23 +7,13 @@ title: "NavigationRail"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# NavigationRail
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Navigation rail extended" imageWidth="12%"/>
 
 ## Examples
 
-### NavigationRail
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/navigation_rail/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="45%" />
-
-### Adaptive navigation
-
-This example switches between a [`NavigationBar`](../navigationbar/index.md)
-on narrow layouts and a `NavigationRail` with an
-end [`NavigationDrawer`](../navigationdrawer/index.md) on wider layouts.
 
 <CodeExample path={'controls/material/navigation_drawer/adaptive_navigation/main.py'} language="python" />
 

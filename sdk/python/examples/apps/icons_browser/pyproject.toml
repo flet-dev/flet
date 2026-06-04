@@ -1,5 +1,5 @@
 [project]
-name = "apps-icons-browser"
+name = "icons-browser"
 version = "1.0.0"
 description = "Searches Material and Cupertino icon sets and copies selected icon constants to the clipboard."
 requires-python = ">=3.10"

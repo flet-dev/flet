@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-reorderable-list"
+name = "declarative-reorderable-list"
 version = "1.0.0"
 description = "Adds, removes, and reorders list items declaratively with stable item identity."
 requires-python = ">=3.10"

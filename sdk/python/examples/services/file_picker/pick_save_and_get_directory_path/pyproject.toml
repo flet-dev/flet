@@ -1,5 +1,5 @@
 [project]
-name = "services-file-picker-pick-save-and-get-directory-path"
+name = "file-picker-pick-save-and-get-directory-path"
 version = "1.0.0"
 description = "Demonstrates file picking, save dialogs, and directory selection in one example."
 requires-python = ">=3.10"

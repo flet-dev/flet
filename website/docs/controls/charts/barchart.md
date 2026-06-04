@@ -12,15 +12,11 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Interactive bar chart
-
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/interactive_bar_chart/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
 
-### Bar chart with hover
-
-<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/bar_chart_with_hover/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 

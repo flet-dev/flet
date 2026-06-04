@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-use-dialog-chained"
+name = "declarative-use-dialog-chained"
 version = "1.0.0"
 description = "Chains two declarative AlertDialogs — opens a success dialog after the confirm dialog dismisses."
 requires-python = ">=3.10"

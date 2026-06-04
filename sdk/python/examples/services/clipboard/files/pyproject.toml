@@ -1,5 +1,5 @@
 [project]
-name = "services-clipboard-files"
+name = "clipboard-files"
 version = "1.0.0"
 description = "Writes sample file references to the clipboard and reads clipboard file entries back."
 requires-python = ">=3.10"

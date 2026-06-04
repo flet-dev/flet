@@ -148,15 +148,19 @@ def _generate_code_examples(examples_root: Path, output_path: Path) -> int:
     return len(mapping)
 
 
+def _read_pyproject(pyproject_path: Path) -> dict[str, Any]:
+    try:
+        return tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
 def _example_web_supported(pyproject_path: Path) -> bool:
     """Return True when the example at pyproject_path supports the web platform.
 
     Web is supported when [tool.flet].platforms is absent, empty, or contains "web".
     """
-    try:
-        data = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return True
+    data = _read_pyproject(pyproject_path)
     platforms = data.get("tool", {}).get("flet", {}).get("platforms")
     if not platforms:
         return True
@@ -183,7 +187,14 @@ def _generate_examples_metadata(examples_root: Path, output_path: Path) -> int:
         if example_dir == examples_root:
             continue
         relative = example_dir.relative_to(examples_root).as_posix()
-        mapping[relative] = {"webSupported": _example_web_supported(pyproject_path)}
+        data = _read_pyproject(pyproject_path)
+        meta: dict[str, Any] = {"webSupported": _example_web_supported(pyproject_path)}
+        flet_metadata = data.get("tool", {}).get("flet", {}).get("metadata", {})
+        if title := flet_metadata.get("title"):
+            meta["title"] = title
+        if docs_intro := flet_metadata.get("docs_intro"):
+            meta["docs_intro"] = docs_intro
+        mapping[relative] = meta
 
     output_path.write_text(
         json.dumps(mapping, indent=2, sort_keys=True), encoding="utf-8"

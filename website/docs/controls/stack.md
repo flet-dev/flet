@@ -11,13 +11,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Avatar with online status
-
 <CodeExample path={frontMatter.examples + '/online_avatar/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/online_avatar.png'} alt="online-avatar" width="8%" />
-
-### Absolute positioning
 
 <CodeExample path={frontMatter.examples + '/absolute_positioning/main.py'} language="python" />
 

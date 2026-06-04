@@ -14,7 +14,8 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Navigation/Router"]
 
 [tool.flet.metadata]
-title = "Nested outlet views"
+title = "Managed views — shared layout with outlet"
+docs_intro = "A layout route with `outlet=True` wraps child routes in a shared [View](../controls/view.md). Leaf components return regular controls; the layout provides the View."
 controls = ["View", "AppBar", "Column", "Container", "Button", "Text", "Router", "Route"]
 layout_pattern = "page-navigation"
 complexity = "intermediate"

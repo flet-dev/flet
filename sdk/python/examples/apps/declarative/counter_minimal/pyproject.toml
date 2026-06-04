@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-counter-minimal"
+name = "declarative-counter-minimal"
 version = "1.0.0"
 description = "Small declarative counter showing the minimum state hook pattern for updating text."
 requires-python = ">=3.10"

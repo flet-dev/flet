@@ -1,6 +1,6 @@
 ---
 class_name: "flet.StoragePaths"
-examples: "services/storagepaths"
+examples: "services/storage_paths"
 title: "StoragePaths"
 ---
 
@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Storage paths
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/storage_paths/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

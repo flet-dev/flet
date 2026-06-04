@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Layout/Dismissible"]
 
 [tool.flet.metadata]
-title = "Remove on dismiss declarative"
+title = "Remove `Dismissible` `on_dismiss` inside component"
 controls = ["SafeArea", "ListView", "Dismissible", "ListTile"]
 layout_pattern = "list-detail"
 complexity = "basic"

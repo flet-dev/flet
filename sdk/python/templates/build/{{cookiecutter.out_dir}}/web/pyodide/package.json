@@ -1,6 +1,6 @@
 {
   "name": "pyodide",
-  "version": "0.27.5",
+  "version": "0.27.7",
   "description": "The Pyodide JavaScript package",
   "keywords": [
     "python",
@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/pyodide/pyodide/issues"
   },
-  "license": "Apache-2.0",
+  "license": "MPL-2.0",
   "devDependencies": {
     "@types/assert": "^1.5.6",
     "@types/expect": "^24.3.0",

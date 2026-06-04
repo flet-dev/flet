@@ -15,6 +15,10 @@ categories = ["Utility/GestureDetector"]
 
 [tool.flet.metadata]
 title = "Draggable containers"
+docs_intro = """
+The following example demonstrates how a control can be freely dragged inside a Stack.
+
+The sample also shows that GestureDetector can have a child control (blue container) as well as be nested inside another control (yellow container) giving the same results."""
 controls = ["SafeArea", "Stack", "Container", "GestureDetector"]
 layout_pattern = "canvas"
 complexity = "basic"

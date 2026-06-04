@@ -8,15 +8,11 @@ title: "CupertinoActionSheet"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# CupertinoActionSheet
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoActionSheet" />
 
 ## Examples
 
-### CupertinoActionSheet
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/cupertino_action_sheet/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="55%" />
 

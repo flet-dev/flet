@@ -7,12 +7,10 @@ title: "MaterialPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# MaterialPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/material_picker.png'} imageCaption="MaterialPicker" imageWidth="55%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_4/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/material_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -1,5 +1,5 @@
 [project]
-name = "apps-palette-editor"
+name = "palette-editor"
 version = "1.0.0"
 description = "Interactive editor for Material theme colors and role previews."
 requires-python = ">=3.10"

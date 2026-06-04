@@ -12,13 +12,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Cupertino, Material and Adaptive Checkboxes
-
 <CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/cupertino_material_and_adaptive.png'} alt="cupertino-material-and-adaptive" width="80%" />
-
-### Styled checkboxes
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 

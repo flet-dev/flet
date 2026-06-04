@@ -11,19 +11,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### TimePicker
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/time_picker/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} width="55%" />
-
-### Hour Formats
 
 <CodeExample path={frontMatter.examples + '/hour_formats/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/hour_formats.gif'} width="55%" />
-
-### Custom Locale
 
 <CodeExample path={frontMatter.examples + '/custom_locale/main.py'} language="python" />
 

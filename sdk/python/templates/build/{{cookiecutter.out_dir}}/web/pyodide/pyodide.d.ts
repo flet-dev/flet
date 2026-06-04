@@ -44,7 +44,9 @@ type FSNode = {
 	mode: number;
 };
 type FSStream = {
-	tty?: boolean;
+	tty?: {
+		ops: object;
+	};
 	seekable?: boolean;
 	stream_ops: FSStreamOps;
 	node: FSNode;
@@ -173,7 +175,7 @@ declare class PyProxy {
 	 * @param options
 	 * @return The JavaScript object resulting from the conversion.
 	 */
-	toJs({ depth, pyproxies, create_pyproxies, dict_converter, default_converter, }?: {
+	toJs({ depth, pyproxies, create_pyproxies, dict_converter, default_converter, eager_converter, }?: {
 		/** How many layers deep to perform the conversion. Defaults to infinite */
 		depth?: number;
 		/**
@@ -208,6 +210,15 @@ declare class PyProxy {
 		 * documentation of :meth:`~pyodide.ffi.to_js`.
 		 */
 		default_converter?: (obj: PyProxy, convert: (obj: PyProxy) => any, cacheConversion: (obj: PyProxy, result: any) => void) => any;
+		/**
+		 * Optional callback to convert objects which gets called after ``str``,
+		 * ``int``, ``float``, ``bool``, ``None``, and ``JsProxy`` are converted but
+		 * *before* any default conversions are applied to standard data structures.
+		 *
+		 * Its arguments are the same as `dict_converter`.
+		 * See the documentation of :meth:`~pyodide.ffi.to_js`.
+		 */
+		eager_converter?: (obj: PyProxy, convert: (obj: PyProxy) => any, cacheConversion: (obj: PyProxy, result: any) => void) => any;
 	}): any;
 }
 declare class PyProxyWithLength extends PyProxy {
@@ -1601,7 +1612,8 @@ export declare function loadPyodide(options?: {
 	 */
 	pyproxyToStringRepr?: boolean;
 	/**
-	 * Make loop.run_until_complete() function correctly using stack switching
+	 * Make loop.run_until_complete() function correctly using stack switching.
+	 * Default: ``true``.
 	 */
 	enableRunUntilComplete?: boolean;
 	/**

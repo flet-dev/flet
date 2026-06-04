@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-minimal-reactive"
+name = "declarative-minimal-reactive"
 version = "1.0.0"
 description = "Renders a minimal declarative component to show the smallest reactive app structure."
 requires-python = ">=3.10"

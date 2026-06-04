@@ -12,8 +12,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Handling events
-
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/handling_events.gif'} alt="handling-events" width="40%" />

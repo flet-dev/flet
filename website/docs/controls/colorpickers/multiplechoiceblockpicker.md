@@ -7,12 +7,10 @@ title: "MultipleChoiceBlockPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# MultipleChoiceBlockPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/multiple_choice_block_picker.png'} imageCaption="MultipleChoiceBlockPicker" imageWidth="35%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_6/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/multiple_choice_block_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

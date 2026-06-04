@@ -1,5 +1,5 @@
 [project]
-name = "tutorials-calculator"
+name = "calculator"
 version = "1.0.0"
 description = "Builds an iOS-style calculator app with custom button controls and arithmetic operations."
 requires-python = ">=3.10"

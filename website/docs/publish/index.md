@@ -835,7 +835,7 @@ A Flet desktop app (Windows, macOS, or Linux) can start with its window hidden.
 This lets your app perform initial setup (for example, add content, resize or
 position the window) before showing it to the user.
 
-See this [code example](../controls/page.md#hidden-app-window-on-startup).
+See this [code example](../controls/page.md#window-hidden-on-start).
 
 #### Resolution order
 

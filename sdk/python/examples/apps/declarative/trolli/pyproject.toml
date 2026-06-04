@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-trolli"
+name = "declarative-trolli"
 version = "1.0.0"
 description = "Declarative Trello-style board app with draggable lists, cards, dialogs, and route-based navigation."
 requires-python = ">=3.10"

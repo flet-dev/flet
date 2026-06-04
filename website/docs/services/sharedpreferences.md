@@ -1,6 +1,6 @@
 ---
 class_name: "flet.SharedPreferences"
-examples: "services/sharedpreferences"
+examples: "services/shared_preferences"
 title: "SharedPreferences"
 ---
 
@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Shared preferences
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/shared_preferences/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />
