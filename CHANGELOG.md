@@ -1,5 +1,10 @@
 ## 0.85.3
 
+### Improvements
+
+* Upgrade the bundled Pyodide runtime in the `flet build web` template from `0.27.5` to `0.27.7` (includes `micropip` `0.9.0`) ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
+* Drop generated `web/canvaskit/` build artifacts (`canvaskit.js`/`.wasm`/`.symbols` and the `chromium/` and `skwasm`/`skwasm_st` variants) from the `flet build web` template — these are produced by the Flutter web build and should not have been committed into the cookiecutter template ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
+
 ### Bug fixes
 
 * Fix `flet.Router`'s default `on_view_pop` navigating to the wrong URL when an `outlet=True` layout sits between two views in `manage_views=True` mode. Popping such a view now targets the previous view entry's resolved URL — skipping outlet layouts and componentless grouping routes — instead of `chain[-2]`, which could equal the current view's URL and strand the page route, making the next navigation to it a no-op ([#6533](https://github.com/flet-dev/flet/pull/6533)) by @FeodorFitsner.
