@@ -15,6 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Playlist"
+docs_intro = "Mutate [`playlist`][flet_video.Video.playlist] directly to add, remove, or replace items, and navigate between tracks."
 controls = ["SafeArea", "Column", "Row", "Button", "Video"]
 layout_pattern = "dashboard"
 complexity = "basic"

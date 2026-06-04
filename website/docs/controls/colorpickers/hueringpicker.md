@@ -7,12 +7,10 @@ title: "HueRingPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# HueRingPicker
-
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/hue_ring_picker.png'} imageCaption="Basic HueRingPicker" imageWidth="55%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/hue_ring_picker.png'} imageCaption="HueRingPicker" imageWidth="55%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/hue_ring_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

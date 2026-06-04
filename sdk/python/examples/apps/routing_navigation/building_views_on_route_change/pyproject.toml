@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-building-views-on-route-change"
+name = "routing-navigation-building-views-on-route-change"
 version = "1.0.0"
 description = "Builds a navigation stack from the current route and handles nested settings routes."
 requires-python = ">=3.10"

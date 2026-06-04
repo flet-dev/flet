@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-use-dialog-multiple"
+name = "declarative-use-dialog-multiple"
 version = "1.0.0"
 description = "Per-item rename and delete AlertDialogs on a file list, each driven by its own `use_dialog` hook."
 requires-python = ">=3.10"

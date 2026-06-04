@@ -1,6 +1,6 @@
 ---
 class_name: "flet.UrlLauncher"
-examples: "services/urllauncher"
+examples: "services/url_launcher"
 title: "UrlLauncher"
 ---
 
@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/url_launcher/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

@@ -7,8 +7,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {CodeExample} from '@site/src/components/crocodocs';
 
-# Map
-
 Display interactive maps in your [Flet](https://flet.dev) apps with markers, overlays, and rich attributions provided by the `flet-map` extension. The control is built on top of [`flutter_map`](https://pub.dev/packages/flutter_map) and supports multiple tile providers and layers.
 
 ## Platform Support
@@ -45,31 +43,17 @@ More details [here](tilelayer.md).
 
 ## Examples
 
-### Basic
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
-
-### Attributions
+<CodeExample path={frontMatter.examples + '/map/main.py'} language="python" />
 
 <CodeExample path={frontMatter.examples + '/attribution/main.py'} language="python" />
 
-### Camera Controls
-
 <CodeExample path={frontMatter.examples + '/camera_controls/main.py'} language="python" />
-
-### Idle Camera
 
 <CodeExample path={frontMatter.examples + '/idle_camera/main.py'} language="python" />
 
-### Interaction Flags
-
 <CodeExample path={frontMatter.examples + '/interaction_flags/main.py'} language="python" />
 
-### Multiple Layers
-
 <CodeExample path={frontMatter.examples + '/multi_layers/main.py'} language="python" />
-
-### Overlay Images
 
 <CodeExample path={frontMatter.examples + '/overlay_images/main.py'} language="python" />
 

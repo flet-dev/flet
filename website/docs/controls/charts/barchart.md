@@ -8,19 +8,15 @@ title: "BarChart"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.diagram} imageCaption="Basic bar chart" imageWidth="80%" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.diagram} imageCaption="Bar chart" imageWidth="80%" />
 
 ## Examples
 
-### Example 1
-
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/interactive_bar_chart/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
 
-### Example 2
-
-<CodeExample path={frontMatter.examples + '/example_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/bar_chart_with_hover/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
 

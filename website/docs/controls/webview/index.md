@@ -1,14 +1,12 @@
 ---
 class_name: "flet_webview.WebView"
-examples: "extensions/webview"
+examples: "extensions/web_view"
 title: "WebView"
 ---
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
-
-# WebView
 
 Display web content in a WebView to be shown in your [Flet](https://flet.dev) apps.
 
@@ -42,7 +40,7 @@ pip install flet-webview  # (1)!
 </Tabs>
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/web_view/main.py'} language="python" />
 
 ## Troubleshooting
 

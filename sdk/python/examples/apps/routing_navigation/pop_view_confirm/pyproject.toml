@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-pop-view-confirm"
+name = "routing-navigation-pop-view-confirm"
 version = "1.0.0"
 description = "Confirms whether a view is allowed to pop before returning from the store route."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-todo"
+name = "declarative-todo"
 version = "1.0.0"
 description = "Tracks, filters, edits, and clears tasks in a declarative to-do application."
 requires-python = ">=3.10"

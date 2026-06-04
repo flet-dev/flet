@@ -8,19 +8,13 @@ title: "ExpansionPanelList"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic ExpansionPanelList" imageWidth="45%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ExpansionPanelList" imageWidth="45%"/>
 
 ## Examples
 
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/expansion_panel_list/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic_flow.gif'} width="40%" />
-
-### Scrolling
-
-`ExpansionPanelList` supports scrolling through its [`scroll`](expansionpanellist.md) property.
 
 <CodeExample path={frontMatter.examples + '/scrollable/main.py'} language="python" />
 

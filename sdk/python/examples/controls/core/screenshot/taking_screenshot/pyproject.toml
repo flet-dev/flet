@@ -1,5 +1,5 @@
 [project]
-name = "screenshot-taking-screenshot"
+name = "taking-screenshot"
 version = "1.0.0"
 description = "Capture a Screenshot control asynchronously and save the image to a file."
 requires-python = ">=3.10"

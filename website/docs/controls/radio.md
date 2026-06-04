@@ -11,19 +11,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/radio/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="40%" />
-
-### Handling selection changes
 
 <CodeExample path={frontMatter.examples + '/handling_selection_changes/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/handling_selection_changes.gif'} alt="handling-selection-changes" width="40%" />
-
-### Styled radio buttons
 
 <CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
 

@@ -8,11 +8,9 @@ title: "CupertinoRadio"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoRadios" imageWidth="10%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoRadio" imageWidth="10%"/>
 
 ## Examples
-
-### Cupertino, Material and Adaptive Radios
 
 <CodeExample path={frontMatter.examples + '/cupertino_material_and_adaptive/main.py'} language="python" />
 

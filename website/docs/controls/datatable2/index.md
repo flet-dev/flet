@@ -43,19 +43,13 @@ pip install flet-datatable2  # (1)!
 
 ## Examples
 
-### Empty state
-
 <CodeExample path={frontMatter.examples + '/empty_state/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/empty_state.png'} width="55%" />
 
-### Sortable and selectable
-
 <CodeExample path={frontMatter.examples + '/sortable_and_selectable/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/sortable_and_selectable.gif'} width="65%" />
-
-### Column widths
 
 <CodeExample path={frontMatter.examples + '/column_widths/main.py'} language="python" />
 

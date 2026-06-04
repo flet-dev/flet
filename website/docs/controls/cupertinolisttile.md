@@ -8,11 +8,9 @@ title: "CupertinoListTile"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoListTile" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoListTile" />
 
 ## Examples
-
-### Notched and non-notched list tiles
 
 <CodeExample path={frontMatter.examples + '/notched/main.py'} language="python" />
 

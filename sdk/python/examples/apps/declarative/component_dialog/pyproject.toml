@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-component-dialog"
+name = "declarative-component-dialog"
 version = "1.0.0"
 description = "Opens a declarative alert dialog that loads user data asynchronously before rendering it."
 requires-python = ">=3.10"

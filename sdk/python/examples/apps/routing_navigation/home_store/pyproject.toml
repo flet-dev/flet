@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-home-store"
+name = "routing-navigation-home-store"
 version = "1.0.0"
 description = "Shows a minimal route-driven home and store flow using view stack navigation."
 requires-python = ">=3.10"

@@ -7,23 +7,17 @@ title: "Shimmer"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.gif'} imageCaption="Basic shimmer" imageWidth="30%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.gif'} imageCaption="Shimmer" imageWidth="30%"/>
 
 ## Examples
 
-### Basic
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/shimmer/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/image_for_docs.gif'} alt="custom-label" width="30%" />
 
-### Skeleton list placeholders
-
-<CodeExample path={frontMatter.examples + '/basic_placeholder/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/shimmer_basic_placeholder/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic_placeholder.png'} alt="custom-label" width="30%" />
-
-### Custom gradients and directions
 
 <CodeExample path={frontMatter.examples + '/custom_gradient/main.py'} language="python" />
 

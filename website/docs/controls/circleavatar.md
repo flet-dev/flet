@@ -8,11 +8,9 @@ title: "CircleAvatar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CircleAvatar" imageWidth="5%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CircleAvatar" imageWidth="5%"/>
 
 ## Examples
-
-### User avatars
 
 <CodeExample path={frontMatter.examples + '/user_avatars/main.py'} language="python" />
 

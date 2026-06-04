@@ -7,11 +7,9 @@ title: "AlertDialog"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic AlertDialog" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="AlertDialog" />
 
 ## Examples
-
-### Modal and non-modal dialogs
 
 <CodeExample path={frontMatter.examples + '/modal_and_non_modal/main.py'} language="python" />
 

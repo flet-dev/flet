@@ -21,8 +21,8 @@ class RadioGroup(Control):
     """
     The content of the RadioGroup.
 
-    Typically a list of `Radio` controls nested in a container control, e.g. `Column`,
-    `Row`.
+    Typically a list of :class:`~flet.Radio` controls nested in a container control,
+    e.g. `Column`, `Row`.
 
     Raises:
         ValueError: If :attr:`content` is not visible.

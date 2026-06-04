@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-flight-booker"
+name = "7guis-flight-booker"
 version = "1.0.0"
 description = "7GUIs flight booking form with trip mode selection, date picking, and booking validation."
 requires-python = ">=3.10"

@@ -521,6 +521,11 @@ Permissions with `false` are omitted from the generated manifest.
 <TabItem value="pyproject-toml" label="pyproject.toml">
 Use boolean values. TOML booleans must be lowercase: `true` or `false`.
 Permissions set to `false` are omitted from the generated manifest.
+
+A value can also be a TOML inline table whose entries become extra
+`android:<key>="<value>"` attributes on the generated `<uses-permission>`
+element — useful for attributes like `maxSdkVersion` or `usesPermissionFlags`.
+A non-empty table is always emitted; an empty table `{}` is treated as `false`.
 </TabItem>
 </Tabs>
 #### Example
@@ -538,6 +543,8 @@ flet build apk \
 [tool.flet.android.permission]
 "android.permission.READ_EXTERNAL_STORAGE" = true
 "android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
+"android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 ```
 </TabItem>
 </Tabs>
@@ -551,6 +558,8 @@ the `pyproject.toml` example above will be translated accordingly into this:
 <manifest>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
 </manifest>
 ```
 </details>
