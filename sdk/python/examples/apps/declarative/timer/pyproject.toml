@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-timer"
+name = "declarative-timer"
 version = "1.0.0"
 description = "Declarative stopwatch example driven by observable timer state and async ticking."
 requires-python = ">=3.10"

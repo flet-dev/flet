@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-shape-drawer"
+name = "declarative-shape-drawer"
 version = "1.0.0"
 description = "Draws polygons on a canvas declaratively in response to tap and hover gestures."
 requires-python = ">=3.10"

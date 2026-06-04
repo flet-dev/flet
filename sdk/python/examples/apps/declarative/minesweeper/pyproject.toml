@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-minesweeper"
+name = "declarative-minesweeper"
 version = "1.0.0"
 description = "Implements a declarative Minesweeper board with timer, flagging, and win-loss state."
 requires-python = ">=3.10"
