@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-drawer-navigation"
+name = "routing-navigation-drawer-navigation"
 version = "1.0.0"
 description = "Connects a navigation drawer to route changes across home, store, and about views."
 requires-python = ">=3.10"
