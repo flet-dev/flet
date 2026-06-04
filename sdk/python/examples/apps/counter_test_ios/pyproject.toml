@@ -1,5 +1,5 @@
 [project]
-name = "apps-counter-test-ios"
+name = "counter-test-ios"
 version = "1.0.0"
 description = "Minimal floating-action-button counter app used for testing Flet on mobile devices."
 requires-python = ">=3.10"

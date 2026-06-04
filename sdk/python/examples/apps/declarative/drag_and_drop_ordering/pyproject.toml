@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-drag-and-drop-ordering"
+name = "declarative-drag-and-drop-ordering"
 version = "1.0.0"
 description = "Reorders groups and items declaratively with nested drag-and-drop targets."
 requires-python = ">=3.10"

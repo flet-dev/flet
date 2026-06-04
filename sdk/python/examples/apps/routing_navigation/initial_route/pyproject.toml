@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-initial-route"
+name = "routing-navigation-initial-route"
 version = "1.0.0"
 description = "Displays the initial route string passed into a Flet app."
 requires-python = ">=3.10"

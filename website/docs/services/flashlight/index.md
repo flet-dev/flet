@@ -8,8 +8,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
-# Flashlight
-
 Control the device torch/flashlight in your [Flet](https://flet.dev) app via the `flet-flashlight` extension, built on top of Flutter's [`flashlight`](https://pub.dev/packages/flashlight) package.
 
 ## Platform Support
@@ -39,7 +37,7 @@ pip install flet-flashlight  # (1)!
 </Tabs>
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/flashlight/main.py'} language="python" />
 
 ## Description
 

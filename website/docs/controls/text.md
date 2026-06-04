@@ -24,7 +24,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_media + '/variable_font_weight.gif'} width="40%" />
 
-<CodeExample path={frontMatter.examples + '/rich_text_basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/rich_text/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/rich_text_basic.png'} width="55%" />
 

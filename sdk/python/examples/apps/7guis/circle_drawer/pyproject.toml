@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-circle-drawer"
+name = "7guis-circle-drawer"
 version = "1.0.0"
 description = "7GUIs circle drawer app with tap-created circles, radius editing, and undo-redo history."
 requires-python = ">=3.10"

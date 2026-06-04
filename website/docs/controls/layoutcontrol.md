@@ -20,7 +20,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/rotate.png'} width="55%" />
 
-<CodeExample path={'controls/core/rotated_box/basic/main.py'} language="python" />
+<CodeExample path={'controls/core/rotated_box/rotated_box/main.py'} language="python" />
 
 <Image src="test-images/controls/core/golden/macos/rotated_box/rotated_box.png" width="55%" />
 

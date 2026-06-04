@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-drag-and-drop-containers"
+name = "declarative-drag-and-drop-containers"
 version = "1.0.0"
 description = "Drag colored squares onto a target container to update its background color declaratively."
 requires-python = ">=3.10"

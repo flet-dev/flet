@@ -1,0 +1,28 @@
+[project]
+name = "charts-plotly-box-plot"
+version = "1.0.0"
+description = "Plotly grouped box plot comparing moisture distributions across categories."
+requires-python = ">=3.10"
+keywords = ["charts", "plotly-chart", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts", "kaleido", "numpy", "pandas", "plotly[express]"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/PlotlyChart"]
+
+[tool.flet.metadata]
+title = "Plotly box plot"
+docs_intro = "Based on an official [Plotly example](https://plotly.com/python/box-plots)."
+controls = ["SafeArea", "PlotlyChart"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization"]
+
+[tool.flet]
+platforms = ["ios", "android", "macos", "windows", "linux"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

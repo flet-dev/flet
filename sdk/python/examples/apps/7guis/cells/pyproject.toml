@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-cells"
+name = "7guis-cells"
 version = "1.0.0"
 description = "7GUIs spreadsheet app with formula editing, cell references, and live recalculation."
 requires-python = ">=3.10"

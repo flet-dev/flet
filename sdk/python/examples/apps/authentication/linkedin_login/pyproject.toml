@@ -1,5 +1,5 @@
 [project]
-name = "apps-authentication-linkedin-login"
+name = "authentication-linkedin-login"
 version = "1.0.0"
 description = "Authenticates with a custom LinkedIn OAuth provider and displays the token and user ID."
 requires-python = ">=3.10"

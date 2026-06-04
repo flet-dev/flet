@@ -7,12 +7,10 @@ title: "ColorPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# ColorPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ColorPicker" imageWidth="55%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/color_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

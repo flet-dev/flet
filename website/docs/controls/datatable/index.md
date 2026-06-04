@@ -7,13 +7,11 @@ title: "DataTable"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# DataTable
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="DataTable" imageWidth="25%"/>
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/data_table/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} width="40%" />
 

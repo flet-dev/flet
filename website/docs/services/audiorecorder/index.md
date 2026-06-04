@@ -162,7 +162,7 @@ permissions = ["microphone"]
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/audio_recorder/main.py'} language="python" />
 
 ### Stream chunks and save/download \{#stream-chunks-and-save-download}
 
