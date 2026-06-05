@@ -8,6 +8,28 @@ MCP (Model Context Protocol) server that gives LLM agents access to Flet example
 pip install flet-mcp
 ```
 
+## Building the data files
+
+The MCP server reads a Griffe-introspected `api.json` and (optionally) a
+SQLite index of examples and docs. Build them from inside the flet SDK
+workspace so every Flet extension package (`flet-audio`, `flet-map`, …) is
+importable — the workspace declares them all as members, but you need the
+`mcp-build` dependency group to pick up the build-time deps (`markdownify`,
+`griffe`):
+
+```bash
+cd sdk/python
+uv sync --group mcp-build
+uv run flet mcp build                            # api.json only
+uv run flet mcp build --examples ./examples      # add examples index
+uv run flet mcp build --docs <search_index.json> # add docs index
+```
+
+Running the build from elsewhere (a downstream project's venv that only
+installs core `flet`) works too, but the resulting `api.json` will be missing
+controls from every extension package not installed in that venv — the
+indexer logs a "Failed to load" line per missing package and skips it.
+
 ## Usage
 
 ### Start the MCP server
