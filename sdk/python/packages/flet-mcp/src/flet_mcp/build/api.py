@@ -36,7 +36,15 @@ DEFAULT_PACKAGES: list[str] = [
     "flet_webview",
 ]
 
-_CONTROL_BASE_NAMES = {"BaseControl", "LayoutControl", "AdaptiveControl", "Service"}
+_CONTROL_BASE_NAMES = {
+    "BaseControl",
+    "LayoutControl",
+    "AdaptiveControl",
+    "Service",
+    # BasePage is itself a control, so anything inheriting from it (notably
+    # `Page`, the most-used class in Flet) must also be classified as one.
+    "BasePage",
+}
 
 
 # ---------------------------------------------------------------------------
