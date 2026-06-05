@@ -95,9 +95,11 @@ def _is_event_class(cls: griffe.Class) -> bool:
 
 
 def _is_dataclass(cls: griffe.Class) -> bool:
+    # Flet wraps most styling/value classes (ButtonStyle, Padding, ...) with the
+    # @value decorator, which expands to @dataclass under the hood.
     for dec in cls.decorators:
         dec_str = str(dec.value)
-        if "dataclass" in dec_str:
+        if "dataclass" in dec_str or dec_str.rsplit(".", 1)[-1] == "value":
             return True
     return False
 
@@ -188,14 +190,15 @@ def _extract_methods(cls: griffe.Class) -> list[dict[str, Any]]:
                         "default": _default_str(param.default),
                     }
                 )
-            methods.append(
-                {
-                    "name": name,
-                    "args": args,
-                    "return_type": _annotation_str(member.annotation),
-                    "docstring": _full_docstring(member.docstring),
-                }
-            )
+            entry: dict[str, Any] = {
+                "name": name,
+                "args": args,
+                "return_type": _annotation_str(member.annotation),
+                "docstring": _full_docstring(member.docstring),
+            }
+            if "async" in member.labels:
+                entry["async"] = True
+            methods.append(entry)
     return methods
 
 
@@ -307,14 +310,15 @@ def _walk_module(
                                         "default": _default_str(param.default),
                                     }
                                 )
-                            class_methods.append(
-                                {
-                                    "name": mname,
-                                    "args": args,
-                                    "return_type": _annotation_str(member.annotation),
-                                    "docstring": _full_docstring(member.docstring),
-                                }
-                            )
+                            entry: dict[str, Any] = {
+                                "name": mname,
+                                "args": args,
+                                "return_type": _annotation_str(member.annotation),
+                                "docstring": _full_docstring(member.docstring),
+                            }
+                            if "async" in member.labels:
+                                entry["async"] = True
+                            class_methods.append(entry)
                     types.append(
                         {
                             "name": obj.name,

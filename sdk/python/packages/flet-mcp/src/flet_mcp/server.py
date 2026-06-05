@@ -41,11 +41,14 @@ mcp = FastMCP(
     instructions=(
         "Flet MCP server provides tools for building Flet applications. "
         f"Enabled tool groups in this session: {', '.join(_enabled_groups) or 'none'}. "
-        "Use API/enum tools to verify control names, properties, and enum members "
-        "before writing code. If examples or docs tools are enabled, search them "
-        "first to discover patterns, then retrieve full content with the matching "
-        "get_* tool. Other groups can be toggled via FLET_MCP_ENABLE_{API,ICONS,"
-        "EXAMPLES,DOCS,CLI}=1."
+        "When you have a class name in mind (any control, service, dataclass, "
+        "or event), call get_api(name) first — it is the cheapest verifier and "
+        "a 'not found' result is definitive. Methods marked `\"async\": true` "
+        "in the response must be awaited; the calling event handler must be "
+        "`async def`. Use list_controls only to browse, and enum tools for "
+        "enum lookups. If examples or docs tools are enabled, search first and "
+        "retrieve full content with the matching get_* tool. Other groups can "
+        "be toggled via FLET_MCP_ENABLE_{API,ICONS,EXAMPLES,DOCS,CLI}=1."
     ),
 )
 
@@ -273,37 +276,32 @@ if _API_ON:
         return store.list_controls(category=category, kind=kind, limit=limit)
 
     @mcp.tool()
-    def get_control_api(name: str) -> dict:
-        """Get detailed API reference for a specific control or service.
+    def get_api(name: str) -> dict:
+        """Get the API reference for a Flet class by name.
 
-        Returns properties (with types and docstrings), events, and methods
-        (with argument signatures). The response includes a 'kind' field
-        indicating whether it's a visual "control" or a non-visual "service".
+        Looks across visual controls, non-visual services, dataclass types
+        (ButtonStyle, Padding, TextStyle, Border, Theme, ColorScheme, ...),
+        and event classes. The `kind` field on the response tells you which
+        bucket matched (`control`, `service`, dataclass, or event).
 
-        Args:
-            name: Control or service class name (e.g. "TextField", "FilePicker",
-                "Audio").
-        """
-        store = _get_api_store()
-        result = store.get_control(name)
-        if result is None:
-            return {"error": f"Control or service '{name}' not found"}
-        return result
+        This is the primary verification tool — when you have a class name
+        in mind, call this first. A "not found" response is a definitive
+        negative: the name does not exist in this Flet version.
 
-    @mcp.tool()
-    def get_type_api(name: str) -> dict:
-        """Get API reference for a non-control type (dataclass).
+        Methods declared `async def` are marked with `"async": true` in the
+        `methods` list — the caller (and any event handler invoking them)
+        must `await` such methods.
 
-        Returns fields, class methods, and factory methods for types like
-        ButtonStyle, TextStyle, Padding, Border, Theme, ColorScheme, etc.
+        For enum lookups, use get_enum / enum_has_member instead.
 
         Args:
-            name: Type class name (e.g. "ButtonStyle", "Padding", "TextStyle").
+            name: Class name (e.g. "Button", "Window", "TextField", "Audio",
+                "ButtonStyle", "Padding", "TapEvent").
         """
         store = _get_api_store()
-        result = store.get_type(name)
+        result = store.get(name)
         if result is None:
-            return {"error": f"Type '{name}' not found"}
+            return {"error": f"'{name}' not found"}
         return result
 
     @mcp.tool()

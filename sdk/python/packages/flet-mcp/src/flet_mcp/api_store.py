@@ -64,19 +64,27 @@ class ApiStore:
                 break
         return results
 
-    def get_control(self, name: str) -> dict[str, Any] | None:
-        """Return full control dict by name, or None."""
-        self._load()
-        return self._controls.get(name)
-
     # ------------------------------------------------------------------
-    # Types & Events
+    # Unified lookup (controls/services/types/events)
     # ------------------------------------------------------------------
 
-    def get_type(self, name: str) -> dict[str, Any] | None:
-        """Return full type dict by name, or None."""
+    def get(self, name: str) -> dict[str, Any] | None:
+        """Look up `name` across controls, services, dataclass types, and events.
+
+        Every match carries a `kind` field — `"control"`, `"service"`, `"type"`,
+        or `"event"` — so the caller can distinguish them without inspecting the
+        response shape. Controls and services already carry `kind`; types and
+        events are augmented here. Returns `None` only when the name matches
+        nothing.
+        """
         self._load()
-        return self._types.get(name) or self._events.get(name)
+        if hit := self._controls.get(name):
+            return hit
+        if hit := self._types.get(name):
+            return {"kind": "type", **hit}
+        if hit := self._events.get(name):
+            return {"kind": "event", **hit}
+        return None
 
     # ------------------------------------------------------------------
     # Enums

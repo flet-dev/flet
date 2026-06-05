@@ -107,7 +107,7 @@ focus on the hallucination-reduction starter set: **API** and **icons** are on;
 
 | Group | Default | Tools |
 |---|---|---|
-| `API` | on | `list_controls`, `get_control_api`, `get_type_api`, `get_enum`, `search_enum_members`, `enum_has_member` |
+| `API` | on | `list_controls`, `get_api`, `get_enum`, `search_enum_members`, `enum_has_member` |
 | `ICONS` | on | `find_icon` |
 | `EXAMPLES` | off | `search_examples`, `get_example` |
 | `DOCS` | off | `search_docs`, `get_doc` |
@@ -115,9 +115,8 @@ focus on the hallucination-reduction starter set: **API** and **icons** are on;
 
 | Tool | Description |
 |------|-------------|
-| `list_controls` | List controls and services, with optional filtering |
-| `get_control_api` | Get properties, events, and methods for a control |
-| `get_type_api` | Get fields and methods for a type (ButtonStyle, Padding, etc.) |
+| `list_controls` | Browse controls and services, with optional filtering |
+| `get_api` | Get the API reference for a class by name — looks across controls, services, dataclass types (ButtonStyle, Padding, ...), and event classes. Async methods are marked `"async": true`. |
 | `get_enum` | Get enum members |
 | `search_enum_members` | Search large enums (Icons, CupertinoIcons) |
 | `enum_has_member` | Check if an enum value exists |
