@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
@@ -36,15 +37,7 @@ DEFAULT_PACKAGES: list[str] = [
     "flet_webview",
 ]
 
-_CONTROL_BASE_NAMES = {
-    "BaseControl",
-    "LayoutControl",
-    "AdaptiveControl",
-    "Service",
-    # BasePage is itself a control, so anything inheriting from it (notably
-    # `Page`, the most-used class in Flet) must also be classified as one.
-    "BasePage",
-}
+_CONTROL_BASE_NAMES = {"BaseControl", "LayoutControl", "AdaptiveControl", "Service"}
 
 
 # ---------------------------------------------------------------------------
@@ -89,12 +82,35 @@ def _package_from_module(module: str) -> str:
     return top.replace("_", "-")
 
 
+# Populated once per build_api() call: simple class name -> list of direct
+# base simple-names. Used by _is_control_class to walk the inheritance chain
+# through intermediate bases (DialogControl, BasePage, ...) without having
+# to enumerate every transitive base in _CONTROL_BASE_NAMES.
+_class_bases: dict[str, list[str]] = {}
+
+
+def _collect_class_bases(module: griffe.Module) -> None:
+    """Pre-pass: index every class's direct base simple-names into _class_bases."""
+    for obj in module.members.values():
+        if isinstance(obj, griffe.Module):
+            _collect_class_bases(obj)
+        elif isinstance(obj, griffe.Class):
+            _class_bases[obj.name] = [str(b).rsplit(".", 1)[-1] for b in obj.bases]
+
+
 def _is_control_class(cls: griffe.Class) -> bool:
-    """Check if any base class name matches a known control base."""
-    for base in cls.bases:
-        base_name = str(base).rsplit(".", 1)[-1]
+    """Check whether cls (transitively) inherits a known control base."""
+    visited: set[str] = set()
+    stack: list[str] = [str(b).rsplit(".", 1)[-1] for b in cls.bases]
+    while stack:
+        base_name = stack.pop()
         if base_name in _CONTROL_BASE_NAMES:
             return True
+        if base_name in visited:
+            continue
+        visited.add(base_name)
+        # Walk up: if we indexed this base earlier, queue its own bases.
+        stack.extend(_class_bases.get(base_name, ()))
     return False
 
 
@@ -112,6 +128,24 @@ def _is_enum(cls: griffe.Class) -> bool:
 
 def _is_event_class(cls: griffe.Class) -> bool:
     return any("Event" in str(base).rsplit(".", 1)[-1] for base in cls.bases)
+
+
+_DEPRECATION_KW_RE = re.compile(r"(reason|version|delete_version)=['\"]([^'\"]*)['\"]")
+
+
+def _deprecation_info(cls: griffe.Class) -> dict | None:
+    """Extract @deprecated / @deprecated_class metadata if present.
+
+    Returns a dict with whichever of `reason`/`version`/`delete_version` were
+    given as keyword args, or ``None`` if the class isn't deprecated.
+    """
+    for dec in cls.decorators:
+        s = str(dec.value)
+        if "deprecated" not in s:
+            continue
+        info = {k: v for k, v in _DEPRECATION_KW_RE.findall(s)}
+        return info or {"reason": "deprecated"}
+    return None
 
 
 def _is_dataclass(cls: griffe.Class) -> bool:
@@ -282,36 +316,38 @@ def _walk_module(
 
                     kind = "service" if _is_service(obj) else "control"
                     module_path = obj.canonical_path.rsplit(".", 1)[0]
-                    controls.append(
-                        {
-                            "name": obj.name,
-                            "module": module_path,
-                            "package": _package_from_module(module_path),
-                            "kind": kind,
-                            "summary": _first_line(obj.docstring),
-                            "bases": [str(b) for b in obj.bases],
-                            "categories": categories,
-                            "tags": tags,
-                            "properties": regular_props,
-                            "events": event_fields,
-                            "methods": _extract_methods(obj),
-                        }
-                    )
+                    entry: dict[str, Any] = {
+                        "name": obj.name,
+                        "module": module_path,
+                        "package": _package_from_module(module_path),
+                        "kind": kind,
+                        "summary": _first_line(obj.docstring),
+                        "bases": [str(b) for b in obj.bases],
+                        "categories": categories,
+                        "tags": tags,
+                        "properties": regular_props,
+                        "events": event_fields,
+                        "methods": _extract_methods(obj),
+                    }
+                    if dep := _deprecation_info(obj):
+                        entry["deprecated"] = dep
+                    controls.append(entry)
 
                 elif _is_event_class(obj):
                     fields = _extract_properties(obj)
                     for f in fields:
                         f.pop("is_event", None)
                     module_path = obj.canonical_path.rsplit(".", 1)[0]
-                    events.append(
-                        {
-                            "name": obj.name,
-                            "module": module_path,
-                            "package": _package_from_module(module_path),
-                            "docstring": _full_docstring(obj.docstring),
-                            "fields": fields,
-                        }
-                    )
+                    entry = {
+                        "name": obj.name,
+                        "module": module_path,
+                        "package": _package_from_module(module_path),
+                        "docstring": _full_docstring(obj.docstring),
+                        "fields": fields,
+                    }
+                    if dep := _deprecation_info(obj):
+                        entry["deprecated"] = dep
+                    events.append(entry)
 
                 elif _is_dataclass(obj):
                     fields = _extract_properties(obj)
@@ -346,16 +382,17 @@ def _walk_module(
                                 entry["async"] = True
                             class_methods.append(entry)
                     module_path = obj.canonical_path.rsplit(".", 1)[0]
-                    types.append(
-                        {
-                            "name": obj.name,
-                            "module": module_path,
-                            "package": _package_from_module(module_path),
-                            "docstring": _full_docstring(obj.docstring),
-                            "fields": fields,
-                            "methods": class_methods,
-                        }
-                    )
+                    entry = {
+                        "name": obj.name,
+                        "module": module_path,
+                        "package": _package_from_module(module_path),
+                        "docstring": _full_docstring(obj.docstring),
+                        "fields": fields,
+                        "methods": class_methods,
+                    }
+                    if dep := _deprecation_info(obj):
+                        entry["deprecated"] = dep
+                    types.append(entry)
             except Exception as exc:
                 logger.warning("Error processing class %s: %s", name, exc)
 
@@ -527,12 +564,21 @@ def build_api(output_path: Path, packages: list[str] | None = None) -> dict[str,
     types: list[dict] = []
     enums: list[dict] = []
 
+    loaded: list[griffe.Module] = []
     for pkg in packages:
         try:
-            module = griffe.load(pkg)
+            loaded.append(griffe.load(pkg))
         except Exception as exc:
             logger.warning("Failed to load package %s: %s", pkg, exc)
-            continue
+
+    # Pass 1: build the class-name -> bases registry so _is_control_class
+    # can walk transitive inheritance (DialogControl -> AdaptiveControl, etc.)
+    _class_bases.clear()
+    for module in loaded:
+        _collect_class_bases(module)
+
+    # Pass 2: classify + extract each class.
+    for module in loaded:
         _walk_module(module, controls, events, types, enums)
 
     # Inject Icons and CupertinoIcons from JSON files (not Python Enums)

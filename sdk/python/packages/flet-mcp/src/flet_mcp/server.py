@@ -280,16 +280,17 @@ if _API_ON:
 
     @mcp.tool()
     def get_api(name: str) -> dict:
-        """Get the API reference for a Flet class by name.
+        """Get the API reference for any Flet symbol by name.
 
         Looks across visual controls, non-visual services, dataclass types
         (ButtonStyle, Padding, TextStyle, Border, Theme, ColorScheme, ...),
-        and event classes. The `kind` field on the response tells you which
-        bucket matched (`control`, `service`, dataclass, or event).
+        event classes, and enums (MainAxisAlignment, TextAlign, Icons, ...).
+        The `kind` field on the response tells you which bucket matched
+        (`control`, `service`, `type`, `event`, `enum`, or `large_enum`).
 
-        This is the primary verification tool — when you have a class name
-        in mind, call this first. A "not found" response is a definitive
-        negative: the name does not exist in this Flet version.
+        This is the primary verification tool — when you have a name in mind,
+        call this first. A "not found" response is a definitive negative: the
+        name does not exist in this Flet version.
 
         Methods declared `async def` are marked with `"async": true` in the
         `methods` list — the caller (and any event handler invoking them)
@@ -301,11 +302,17 @@ if _API_ON:
         ...) means the consuming project needs that package added to its
         dependencies — surface this to the user before using the class.
 
-        For enum lookups, use get_enum / enum_has_member instead.
+        Deprecated classes are kept in the index (so a "not found" stays
+        meaningful) but marked with a `"deprecated"` object carrying the
+        replacement reason. If you see this field, do not use the class — pick
+        the replacement named in the reason.
+
+        For large enums (Icons, CupertinoIcons) the response is truncated; use
+        search_enum_members / enum_has_member / find_icon to drill in.
 
         Args:
-            name: Class name (e.g. "Button", "Window", "TextField", "Audio",
-                "ButtonStyle", "Padding", "TapEvent").
+            name: Symbol name (e.g. "Button", "Window", "AlertDialog", "Audio",
+                "ButtonStyle", "TapEvent", "MainAxisAlignment", "Icons").
         """
         store = _get_api_store()
         result = store.get(name)

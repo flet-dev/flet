@@ -69,13 +69,15 @@ class ApiStore:
     # ------------------------------------------------------------------
 
     def get(self, name: str) -> dict[str, Any] | None:
-        """Look up `name` across controls, services, dataclass types, and events.
+        """Look up `name` across controls, services, types, events, and enums.
 
         Every match carries a `kind` field — `"control"`, `"service"`, `"type"`,
-        or `"event"` — so the caller can distinguish them without inspecting the
-        response shape. Controls and services already carry `kind`; types and
-        events are augmented here. Returns `None` only when the name matches
-        nothing.
+        `"event"`, or `"enum"` (`"large_enum"` for Icons/CupertinoIcons) — so the
+        caller can distinguish them without inspecting the response shape.
+        Controls and services already carry `kind`; the other buckets are
+        augmented here. Returns `None` only when the name matches nothing.
+
+        Enum responses use the same truncation as `get_enum` for large enums.
         """
         self._load()
         if hit := self._controls.get(name):
@@ -84,6 +86,8 @@ class ApiStore:
             return {"kind": "type", **hit}
         if hit := self._events.get(name):
             return {"kind": "event", **hit}
+        if enum := self.get_enum(name):
+            return {"kind": enum.get("kind", "enum"), **enum}
         return None
 
     # ------------------------------------------------------------------
