@@ -116,7 +116,7 @@ focus on the hallucination-reduction starter set: **API** and **icons** are on;
 | Tool | Description |
 |------|-------------|
 | `list_controls` | Browse controls and services, with optional filtering |
-| `get_api` | Get the API reference for a class by name — looks across controls, services, dataclass types (ButtonStyle, Padding, ...), and event classes. Async methods are marked `"async": true`. |
+| `get_api` | Get the API reference for a class by name — looks across controls, services, dataclass types (ButtonStyle, Padding, ...), and event classes. Async methods are marked `"async": true`; every entry carries a `"package"` field naming the pip-installable source package (`"flet"` = core, anything else needs adding to deps). |
 | `get_enum` | Get enum members |
 | `search_enum_members` | Search large enums (Icons, CupertinoIcons) |
 | `enum_has_member` | Check if an enum value exists |

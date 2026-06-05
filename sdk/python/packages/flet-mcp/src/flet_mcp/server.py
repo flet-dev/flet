@@ -45,10 +45,13 @@ mcp = FastMCP(
         "or event), call get_api(name) first — it is the cheapest verifier and "
         "a 'not found' result is definitive. Methods marked `\"async\": true` "
         "in the response must be awaited; the calling event handler must be "
-        "`async def`. Use list_controls only to browse, and enum tools for "
-        "enum lookups. If examples or docs tools are enabled, search first and "
-        "retrieve full content with the matching get_* tool. Other groups can "
-        "be toggled via FLET_MCP_ENABLE_{API,ICONS,EXAMPLES,DOCS,CLI}=1."
+        '`async def`. The response also carries a `"package"` field — if it '
+        'is anything other than `"flet"`, that pip package must be added to '
+        "the consuming project before the import will resolve. Use "
+        "list_controls only to browse, and enum tools for enum lookups. If "
+        "examples or docs tools are enabled, search first and retrieve full "
+        "content with the matching get_* tool. Other groups can be toggled "
+        "via FLET_MCP_ENABLE_{API,ICONS,EXAMPLES,DOCS,CLI}=1."
     ),
 )
 
@@ -291,6 +294,12 @@ if _API_ON:
         Methods declared `async def` are marked with `"async": true` in the
         `methods` list — the caller (and any event handler invoking them)
         must `await` such methods.
+
+        Every match also carries a `"package"` field naming the pip-installable
+        package the class lives in. `"flet"` is the core package and is always
+        available. Anything else (`"flet-audio"`, `"flet-video"`, `"flet-map"`,
+        ...) means the consuming project needs that package added to its
+        dependencies — surface this to the user before using the class.
 
         For enum lookups, use get_enum / enum_has_member instead.
 

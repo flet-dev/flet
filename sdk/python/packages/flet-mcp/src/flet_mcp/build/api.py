@@ -77,6 +77,18 @@ def _default_str(default: Any) -> str:
     return str(default)
 
 
+def _package_from_module(module: str) -> str:
+    """Return the pip-installable package name for a module path.
+
+    The first segment of the dotted path is the import name (e.g. ``flet_video``);
+    Flet's pip distribution names just swap underscores for hyphens. Core flet
+    stays ``"flet"`` — the agent uses that as a sentinel for "no extra dep
+    needed".
+    """
+    top = module.split(".", 1)[0]
+    return top.replace("_", "-")
+
+
 def _is_control_class(cls: griffe.Class) -> bool:
     """Check if any base class name matches a known control base."""
     for base in cls.bases:
@@ -245,9 +257,11 @@ def _walk_module(
             try:
                 if _is_enum(obj):
                     members = _extract_enum_members(obj)
+                    module_path = obj.canonical_path.rsplit(".", 1)[0]
                     entry: dict[str, Any] = {
                         "name": obj.name,
-                        "module": obj.canonical_path.rsplit(".", 1)[0],
+                        "module": module_path,
+                        "package": _package_from_module(module_path),
                         "docstring": _full_docstring(obj.docstring),
                         "members": members,
                     }
@@ -267,10 +281,12 @@ def _walk_module(
                         e.pop("is_event", None)
 
                     kind = "service" if _is_service(obj) else "control"
+                    module_path = obj.canonical_path.rsplit(".", 1)[0]
                     controls.append(
                         {
                             "name": obj.name,
-                            "module": obj.canonical_path.rsplit(".", 1)[0],
+                            "module": module_path,
+                            "package": _package_from_module(module_path),
                             "kind": kind,
                             "summary": _first_line(obj.docstring),
                             "bases": [str(b) for b in obj.bases],
@@ -286,10 +302,12 @@ def _walk_module(
                     fields = _extract_properties(obj)
                     for f in fields:
                         f.pop("is_event", None)
+                    module_path = obj.canonical_path.rsplit(".", 1)[0]
                     events.append(
                         {
                             "name": obj.name,
-                            "module": obj.canonical_path.rsplit(".", 1)[0],
+                            "module": module_path,
+                            "package": _package_from_module(module_path),
                             "docstring": _full_docstring(obj.docstring),
                             "fields": fields,
                         }
@@ -327,10 +345,12 @@ def _walk_module(
                             if "async" in member.labels:
                                 entry["async"] = True
                             class_methods.append(entry)
+                    module_path = obj.canonical_path.rsplit(".", 1)[0]
                     types.append(
                         {
                             "name": obj.name,
-                            "module": obj.canonical_path.rsplit(".", 1)[0],
+                            "module": module_path,
+                            "package": _package_from_module(module_path),
                             "docstring": _full_docstring(obj.docstring),
                             "fields": fields,
                             "methods": class_methods,
@@ -453,6 +473,7 @@ def _inject_icon_enums(enums: list[dict]) -> None:
             {
                 "name": "Icons",
                 "module": "flet.controls.material.icons",
+                "package": "flet",
                 "docstring": "Material Design icon constants.",
                 "kind": "large_enum",
                 "members": [
@@ -465,6 +486,7 @@ def _inject_icon_enums(enums: list[dict]) -> None:
             {
                 "name": "CupertinoIcons",
                 "module": "flet.controls.cupertino.cupertino_icons",
+                "package": "flet",
                 "docstring": "Cupertino (iOS-style) icon constants.",
                 "kind": "large_enum",
                 "members": [
