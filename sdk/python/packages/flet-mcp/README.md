@@ -79,12 +79,20 @@ result = agent.run_sync("Create a Flet app with a login form")
 
 ## Tools
 
+Tools are organized into groups that can be toggled at server startup. Defaults
+focus on the hallucination-reduction starter set: **API** and **icons** are on;
+**examples**, **docs**, and **CLI** are off.
+
+| Group | Default | Tools |
+|---|---|---|
+| `API` | on | `list_controls`, `get_control_api`, `get_type_api`, `get_enum`, `search_enum_members`, `enum_has_member` |
+| `ICONS` | on | `find_icon` |
+| `EXAMPLES` | off | `search_examples`, `get_example` |
+| `DOCS` | off | `search_docs`, `get_doc` |
+| `CLI` | off | `get_cli_help` |
+
 | Tool | Description |
 |------|-------------|
-| `search_examples` | Search example projects by keyword |
-| `get_example` | Get full source code for an example |
-| `search_docs` | Search documentation by keyword |
-| `get_doc` | Get full content of a doc section |
 | `list_controls` | List controls and services, with optional filtering |
 | `get_control_api` | Get properties, events, and methods for a control |
 | `get_type_api` | Get fields and methods for a type (ButtonStyle, Padding, etc.) |
@@ -92,4 +100,44 @@ result = agent.run_sync("Create a Flet app with a login form")
 | `search_enum_members` | Search large enums (Icons, CupertinoIcons) |
 | `enum_has_member` | Check if an enum value exists |
 | `find_icon` | Search Material and Cupertino icons by keyword |
+| `search_examples` | Search example projects by keyword |
+| `get_example` | Get full source code for an example |
+| `search_docs` | Search documentation by keyword |
+| `get_doc` | Get full content of a doc section |
 | `get_cli_help` | Get structured CLI command options |
+
+### Toggling groups
+
+Each group is gated by an environment variable read at server startup:
+
+| Variable | Default | Effect |
+|---|---|---|
+| `FLET_MCP_ENABLE_API` | `1` | Register the API tool group |
+| `FLET_MCP_ENABLE_ICONS` | `1` | Register `find_icon` |
+| `FLET_MCP_ENABLE_EXAMPLES` | `0` | Register example search/get tools |
+| `FLET_MCP_ENABLE_DOCS` | `0` | Register docs search/get tools |
+| `FLET_MCP_ENABLE_CLI` | `0` | Register `get_cli_help` |
+
+Accepted truthy values: `1`, `true`, `yes` (case-insensitive). The active
+groups are also surfaced in the server's `initialize` instructions, so MCP
+clients that forward those instructions to the model (e.g. Pydantic AI's
+`MCPToolset(..., include_instructions=True)`) keep the model's guidance
+in sync with what's actually registered.
+
+Examples:
+
+```bash
+# Default starter surface (API + icons only)
+flet mcp
+
+# Add examples and docs once their indexes have been built
+FLET_MCP_ENABLE_EXAMPLES=1 FLET_MCP_ENABLE_DOCS=1 flet mcp
+
+# Narrow further: API tools only, drop icons
+FLET_MCP_ENABLE_ICONS=0 flet mcp
+```
+
+Note: enabling `EXAMPLES` or `DOCS` only registers the tools — you also need to
+populate the SQLite index by running `flet mcp build --examples <path>` and/or
+`--docs <search_index.json>`. Without an index the tools register cleanly but
+return empty results.
