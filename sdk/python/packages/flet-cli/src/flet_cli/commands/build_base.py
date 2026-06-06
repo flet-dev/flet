@@ -826,6 +826,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "android.hardware.touchscreen": False,
         }
         android_meta_data = {}
+        android_providers = {}
 
         # merge values from "--permissions" arg:
         for p in (
@@ -973,6 +974,88 @@ class BaseBuildCommand(BaseFlutterCommand):
                 android_meta_data[p[:i]] = p[i + 1 :]
             else:
                 self.cleanup(1, f"Invalid Android meta-data option: {p}")
+
+        android_providers = merge_dict(
+            android_providers,
+            self.get_pyproject("tool.flet.android.provider") or {},
+        )
+
+        def _xml_attr_value(v):
+            # Android XML expects lowercase booleans.
+            if isinstance(v, bool):
+                return "true" if v else "false"
+            return v
+
+        normalized_providers = {}
+        for key, value in android_providers.items():
+            if value is False or value == {}:
+                continue
+            if value is True:
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: 'true' is not "
+                    "supported. Use an inline table of attributes, or 'false' "
+                    "to skip.",
+                )
+            if not isinstance(value, dict):
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: "
+                    f"{type(value).__name__}. Expected boolean or inline table.",
+                )
+            normalized = {}
+            for ak, av in value.items():
+                if ak == "name":
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute for {key}: "
+                        "'name' is reserved and is taken from the table key.",
+                    )
+                if ak == "meta_data":
+                    if not isinstance(av, dict):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta_data for {key}: "
+                            f"{type(av).__name__}. Expected inline table.",
+                        )
+                    normalized_meta = {}
+                    for mk, mv in av.items():
+                        if isinstance(mv, (str, bool, int, float)):
+                            normalized_meta[mk] = _xml_attr_value(mv)
+                            continue
+                        if isinstance(mv, dict):
+                            normalized_attrs = {}
+                            for attr_key, attr_value in mv.items():
+                                if not isinstance(attr_value, (str, bool, int, float)):
+                                    self.cleanup(
+                                        1,
+                                        f"Invalid Android provider meta-data "
+                                        f"attribute value for "
+                                        f"{key}.meta_data.{mk}.{attr_key}: "
+                                        f"{type(attr_value).__name__}. "
+                                        "Expected string, boolean, or number.",
+                                    )
+                                normalized_attrs[attr_key] = _xml_attr_value(attr_value)
+                            normalized_meta[mk] = normalized_attrs
+                            continue
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta-data value for "
+                            f"{key}.meta_data.{mk}: {type(mv).__name__}. "
+                            "Expected string, boolean, number, or inline table.",
+                        )
+                    normalized["meta_data"] = normalized_meta
+                    continue
+                if not isinstance(av, (str, bool, int, float)):
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute value for "
+                        f"{key}.{ak}: {type(av).__name__}. "
+                        "Expected string, boolean, or number.",
+                    )
+                normalized[ak] = _xml_attr_value(av)
+            normalized_providers[key] = normalized
+        android_providers = normalized_providers
 
         deep_linking_scheme = (
             self.get_pyproject("tool.flet.ios.deep_linking.scheme")
@@ -1126,6 +1209,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
+                "android_providers": android_providers,
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
