@@ -80,7 +80,7 @@ src
     version = "0.1.0"
     description = "An Example."
     readme = "README.md"
-    requires-python = ">=3.10"
+    requires-python = ">=3.14"
     authors = [{ name = "Me", email = "me@example.com" }]
     dependencies = [
       "flet"
@@ -121,6 +121,45 @@ In this case, two things to keep in mind:
 - don't use `pip freeze > requirements.txt` to generate this file or fill it with dependencies,
   as it may include packages incompatible with the target platform. Instead, hand-pick and include
   only the direct dependencies required by your app, including `flet`.
+:::
+
+## Choosing a Python version
+
+`flet build` and `flet publish` bundle a specific Python release into your app.
+Supported versions and the matching CPython / Pyodide artifacts:
+
+| Short | CPython runtime | Pyodide (web) | Status   |
+| ----- | --------------- | ------------- | -------- |
+| 3.12  | 3.12.13         | 0.27.7        | stable   |
+| 3.13  | 3.13.13         | 0.29.4        | stable   |
+| 3.14  | 3.14.5          | 314.0.0a2     | default  |
+
+The version is resolved in this order:
+
+1. **`--python-version X.Y`** — explicit override. Must match a supported short
+   version (e.g. `flet build apk --python-version 3.13`).
+2. **`[project].requires-python`** in `pyproject.toml` — parsed as a PEP 440
+   specifier; the **highest** supported short version that satisfies it wins.
+   `requires-python = ">=3.13,<3.14"` resolves to 3.13;
+   `requires-python = ">=3.13"` resolves to 3.14.
+3. **Default** — the latest supported version (currently `3.14`).
+
+If neither the CLI flag nor `requires-python` selects a supported version
+(e.g. `requires-python = ">=3.20"`), the build fails with a clear error
+listing the versions you can choose from.
+
+For web builds (`flet build web` / `flet publish`), the matching Pyodide
+runtime is downloaded into the build output and cached under
+`~/.flet/pyodide/<version>/` on first use, so subsequent builds reuse it. The
+older `0.27.5` bundle that used to ship inside the build template has been
+removed in favour of this per-build, versioned download.
+
+:::note[Pre-release Python (3.15 etc.)]
+To bundle a pre-release Python, name it explicitly — `--python-version 3.15`
+or `requires-python = "==3.15.*"`. There is **no separate `--pre` flag** for
+this. The `--pre` flag on [`flet publish`](../cli/flet-publish.md) is a
+different, unrelated option for allowing **micropip** to install pre-release
+Python *packages* at runtime.
 :::
 
 ## How it works
