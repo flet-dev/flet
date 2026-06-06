@@ -17,7 +17,7 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  serious_python: 1.0.0
+  serious_python: 1.0.1
 
   package_info_plus: ^9.0.0
   path_provider: ^2.1.4

@@ -1258,6 +1258,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = flet.version.flet_version
 
         is_local_dev = False
+        # Identity printed in status / hashed for invalidation; may differ from
+        # the path cookiecutter actually reads when caching kicks in below.
+        template_source = template_url
         if template_url:
             # User-provided template (git repo or local path) — use checkout
             checkout = template_ref
@@ -1266,13 +1269,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
             if local_tpl.is_dir():
                 template_url = str(local_tpl)
+                template_source = template_url
                 checkout = None
                 is_local_dev = True
             else:
-                template_url = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                from flet_cli.utils.template_cache import get_cached_template_zip
+
+                template_source = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                template_url = str(
+                    get_cached_template_zip(template_source, template_ref)
+                )
                 checkout = None
 
-        hash.update(template_url)
+        hash.update(template_source)
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1298,7 +1307,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_url}"
+                status = f"[bold blue]Creating app shell from {template_source}"
                 if checkout:
                     status += f' with ref "{template_ref}"'
                 status += "..."
