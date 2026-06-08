@@ -1943,7 +1943,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
                         if dev_path.exists():
-                            toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                            # Use Path.as_uri() so Windows drive paths render as
+                            # `file:///D:/a/...` rather than `file://D:\a\...`,
+                            # which pip otherwise treats as a UNC path and fails
+                            # to resolve.
+                            toml_dependencies[i] = (
+                                f"{package_name} @ {dev_path.as_uri()}"
+                            )
                         else:
                             toml_dependencies[i] = (
                                 f"{package_name} @ {package_location}"
