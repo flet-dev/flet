@@ -1,6 +1,8 @@
 import argparse
 import sys
 
+from packaging.version import Version
+
 import flet.version
 import flet_cli.commands.build
 import flet_cli.commands.create
@@ -21,7 +23,12 @@ from flet_cli.utils.python_versions import (
 def _supported_python_versions_block() -> str:
     """Render the multi-line `flet --version` listing of supported Python releases."""
     lines = ["Supported Python versions:"]
-    for r in SUPPORTED_PYTHON_VERSIONS:
+    sorted_versions = sorted(
+        SUPPORTED_PYTHON_VERSIONS,
+        key=lambda r: Version(r.short),
+        reverse=True,
+    )
+    for r in sorted_versions:
         suffix = []
         if r.prerelease:
             suffix.append("pre-release")
