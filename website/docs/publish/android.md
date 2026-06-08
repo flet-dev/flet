@@ -424,6 +424,96 @@ the `pyproject.toml` example above will be translated accordingly into this:
 ```
 </details>
 
+### Providers
+
+A content provider component that supplies app data to other apps or components.
+More information [here](https://developer.android.com/guide/topics/manifest/provider-element).
+
+Each provider is declared as a TOML table whose key is the provider's
+`android:name` (the fully-qualified class name). The table's entries become
+extra `android:<key>="<value>"` attributes on the generated `<provider>`
+element. A reserved `meta_data` sub-table emits nested `<meta-data>` children
+inside the provider.
+
+See also:
+
+- [`<provider>` element](https://developer.android.com/guide/topics/manifest/provider-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.provider]`
+
+#### Supported value forms
+
+The value for each provider must be a TOML inline table or sub-table of
+attributes. A value of `false` skips the entry entirely; `true` is not
+accepted (a `<provider>` with no attributes is meaningless). An empty table
+`{}` is also treated as `false`.
+
+Attribute values must be strings, booleans, or numbers — they are written
+verbatim into the manifest. The `name` key is reserved (the `android:name`
+comes from the table key).
+
+The reserved `meta_data` sub-table emits `<meta-data>` children. Each
+sub-entry's key is the `android:name`; the value can be either:
+
+- a scalar (string/bool/number) — rendered as `android:value="…"`, or
+- an inline table — its entries become `android:<key>="<value>"` attributes
+  on the `<meta-data>` element (useful for `android:resource="@xml/…"`).
+
+#### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.provider]
+"rikka.shizuku.ShizukuProvider" = { authorities = "${applicationId}.shizuku", multiprocess = "false", enabled = "true", exported = "true", permission = "android.permission.INTERACT_ACROSS_USERS_FULL" }
+
+[tool.flet.android.provider."com.example.MyProvider"]
+authorities = "${applicationId}.myprovider"
+exported = false
+grantUriPermissions = true
+
+[tool.flet.android.provider."com.example.MyProvider".meta_data]
+"android.support.FILE_PROVIDER_PATHS" = { resource = "@xml/file_paths" }
+"some.other.key" = "some-value"
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<application>
+    <provider android:name="rikka.shizuku.ShizukuProvider"
+              android:authorities="${applicationId}.shizuku"
+              android:multiprocess="false"
+              android:enabled="true"
+              android:exported="true"
+              android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <provider android:name="com.example.MyProvider"
+              android:authorities="${applicationId}.myprovider"
+              android:exported="false"
+              android:grantUriPermissions="true">
+        <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        <meta-data android:name="some.other.key" android:value="some-value" />
+    </provider>
+</application>
+```
+</details>
+
+:::note
+Flet already declares a built-in `androidx.core.content.FileProvider` with
+authorities `${applicationId}.provider`. Declaring another provider that
+uses the same authorities will cause the Android manifest merger to fail —
+pick a different `android:authorities` value for your custom provider.
+:::
+
 ### Features
 
 A hardware or software feature that is used by the application.
