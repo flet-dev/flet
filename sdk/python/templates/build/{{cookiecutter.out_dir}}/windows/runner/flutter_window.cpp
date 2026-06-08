@@ -1,3 +1,5 @@
+{%- set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
+                        or get_pyproject("tool.flet.app.hide_window_on_start") -%}
 #include "flutter_window.h"
 
 #include <optional>
@@ -29,6 +31,7 @@ bool FlutterWindow::OnCreate() {
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   const bool hide_window_on_start =
+      {{ "true" if hide_window_on_start else "false" }} ||
       HasEnvironmentVariable(L"FLET_HIDE_WINDOW_ON_START");
   flutter_controller_->engine()->SetNextFrameCallback([this,
                                                        hide_window_on_start]() {
