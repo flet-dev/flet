@@ -51,11 +51,31 @@ env:
 
 jobs:
   build:
-    name: Build (${{ matrix.name }})
+    name: Build (${{ matrix.name }}, Python ${{ matrix.python_version }})
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
+        # Cartesian product of (python_version × name): each of the 14 build
+        # targets below runs against every supported bundled CPython. The
+        # `include` entries supply the per-name runner / build_cmd / etc. and
+        # are matched onto every python_version row.
+        python_version: ['3.12', '3.13', '3.14']
+        name:
+          - linux
+          - macos
+          - windows
+          - aab-ubuntu
+          - aab-macos
+          - aab-windows
+          - apk-ubuntu
+          - apk-macos
+          - apk-windows
+          - ipa
+          - ios-simulator
+          - web-ubuntu
+          - web-macos
+          - web-windows
         include:
           # -------- Desktop --------
           - name: linux
@@ -196,12 +216,12 @@ jobs:
         working-directory: sdk/python/examples/apps/flet_build_test
         run: |
           echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
-          uv run ${{ matrix.build_cmd }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
+          uv run ${{ matrix.build_cmd }} --python-version ${{ matrix.python_version }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: ${{ matrix.artifact_name }}
+          name: ${{ matrix.artifact_name }}-py${{ matrix.python_version }}
           path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
           if-no-files-found: error
           overwrite: false
