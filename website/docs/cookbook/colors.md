@@ -2,7 +2,7 @@
 title: "Working with Colors"
 ---
 
-<img src="/img/docs/colors/color_palettes.png"className="screenshot-100" />
+<img src="/img/docs/colors/color_palettes.png" className="screenshot-100" />
 
 Flet supports two primary ways of defining colors:
 
@@ -20,7 +20,7 @@ Hex color values follow either of these formats:
 >>> ft.Container(bgcolor="#ff0000")
 ```
 
-## Named Color
+## Named Colors
 
 Flet uses Material Design [theme colors](https://m3.material.io/styles/color-the-color-system/color-roles)
 and [color palettes](https://m2.material.io/design/color/the-color-system.html#color-usage-and-palettes).
@@ -30,6 +30,8 @@ You can define named colors in two ways:
 * As a **string** (e.g., `"blue"`, `"redAccent100"`)
 * Using the `Colors` or `CupertinoColors` **enums** for better type safety and autocompletion
 
+When using strings, use only Flet named color identifiers (the same set exposed by `Colors` / `CupertinoColors`), not arbitrary CSS-like color names.
+
 ```python-repl
 >>> ft.Container(bgcolor="yellow")
 >>> ft.Container(bgcolor=ft.Colors.YELLOW)
@@ -38,7 +40,7 @@ You can define named colors in two ways:
 
 ### Theme Colors
 
-<img src="/img/docs/colors/theme_colors.png"className="screenshot-100" />
+<img src="/img/docs/colors/theme_colors.png" className="screenshot-100" />
 
 There are 30 named theme colors in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme) that are generated based on
 the [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme.color_scheme_seed), which defaults to [`Colors.BLUE`](../types/colors.md#flet.Colors.BLUE).
@@ -59,13 +61,13 @@ page.theme = ft.Theme(
 )
 ```
 
-<img src="/img/docs/colors/theme_colors_green.png"className="screenshot-100" />
+<img src="/img/docs/colors/theme_colors_green.png" className="screenshot-100" />
 
 Theme colors serve as fallback values for most Flet controls.
 
 ### Color Palettes
 
-<img src="/img/docs/colors/color_palettes_2.png"className="screenshot-100" />
+<img src="/img/docs/colors/color_palettes_2.png" className="screenshot-100" />
 
 Originally introduced by Material Design in 2014, **color palettes** are collections of coordinated
 colors designed to work together harmoniously.
@@ -90,7 +92,7 @@ Flet provides multiple ways to set opacity:
 #### Using `with_opacity`
 
 This method is present in both [`Colors`](../types/colors.md) and [`CupertinoColors`](../types/cupertinocolors.md) enums.
-It takes a [color](#) and an opacity, and returns a string in the format `"color,opacity"`, understood by Flet.
+It takes an opacity and a [color](#), and returns a string in the format `"color,opacity"`, understood by Flet.
 
 ```python-repl
 >>> ft.Colors.with_opacity(0.5, ft.Colors.RED)
@@ -114,13 +116,13 @@ For colors in hex format, you can specify the `aa` channel with values between `
 Most Flet controls have default colors defined by the [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme),
 and these can be overridden at various levels.
 
-<img src="/img/docs/colors/colors_fallback.svg"className="screenshot-80" />
+<img src="/img/docs/colors/colors_fallback.svg" className="screenshot-80" />
 
 ### Control Level
 
 If a color is provided as value for a control's color-like property, it will be used directly.
 
-```python
+```python-repl
 >>> ft.Card(bgcolor=ft.Colors.GREEN_200)
 ```
 
