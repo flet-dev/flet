@@ -2,15 +2,15 @@
 
 ### Improvements
 
-* Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms by @ndonkoHenri.
+* Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms ([#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 
 ### Documentation
 
-* Improve `FilePicker.save_file()` documentation: on desktop, passing `src_bytes` writes those bytes to the selected file by @ndonkoHenri.
+* Improve `FilePicker.save_file()` documentation: on desktop, passing `src_bytes` writes those bytes to the selected file ([#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 
 ### Bug fixes
 
-* Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771)) by @ndonkoHenri.
+* Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771), [#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 
 ## 0.85.3
 
