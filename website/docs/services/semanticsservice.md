@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Retrieve accessibility features
-
 <CodeExample path={frontMatter.examples + '/accessibility_features/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

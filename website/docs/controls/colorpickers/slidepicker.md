@@ -7,12 +7,10 @@ title: "SlidePicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# SlidePicker
-
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/slide_picker.png'} imageCaption="Basic SlidePicker" imageWidth="35%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/slide_picker.png'} imageCaption="SlidePicker" imageWidth="35%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_3/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/slide_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

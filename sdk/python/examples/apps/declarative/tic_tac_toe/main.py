@@ -2,13 +2,14 @@ import flet as ft
 
 
 @ft.component
-def Square(value: str, on_click):
+def Square(value: str, on_click, control_key=None):
     return ft.Button(
         ft.Icon(ft.Icons.CIRCLE_OUTLINED)
         if value == "O"
         else ft.Icon(ft.Icons.CLOSE)
         if value == "X"
         else "",
+        key=control_key,
         width=50,
         height=50,
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=5), padding=0),
@@ -35,17 +36,32 @@ def Board(x_is_next: bool, squares: list[str], on_play):
                 else f"Next player: {'X' if x_is_next else 'O'}"
             ),
             ft.Row(
-                [Square(squares[i], lambda e, i=i: handle_click(i)) for i in range(3)]
+                [
+                    Square(
+                        squares[i],
+                        lambda e, i=i: handle_click(i),
+                        control_key=f"square_{i}",
+                    )
+                    for i in range(3)
+                ]
             ),
             ft.Row(
                 [
-                    Square(squares[i], lambda e, i=i: handle_click(i))
+                    Square(
+                        squares[i],
+                        lambda e, i=i: handle_click(i),
+                        control_key=f"square_{i}",
+                    )
                     for i in range(3, 6)
                 ]
             ),
             ft.Row(
                 [
-                    Square(squares[i], lambda e, i=i: handle_click(i))
+                    Square(
+                        squares[i],
+                        lambda e, i=i: handle_click(i),
+                        control_key=f"square_{i}",
+                    )
                     for i in range(6, 9)
                 ]
             ),

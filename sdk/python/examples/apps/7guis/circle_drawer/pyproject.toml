@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-circle-drawer"
+name = "7guis-circle-drawer"
 version = "1.0.0"
 description = "7GUIs circle drawer app with tap-created circles, radius editing, and undo-redo history."
 requires-python = ">=3.10"
@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs", "Displays/Canvas"]
+categories = ["Cookbook/7GUIs", "Displays/Canvas"]
 
 [tool.flet.metadata]
 title = "Circle drawer"

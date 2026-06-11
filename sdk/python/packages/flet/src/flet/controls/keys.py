@@ -10,7 +10,7 @@ __all__ = [
 
 
 def _lazy_value(cls=None, **kwargs):
-    """Deferred proxy for ``value`` to avoid circular import with base_control."""
+    """Deferred proxy for `value` to avoid circular import with base_control."""
     from flet.controls.base_control import value as _v
 
     if cls is not None:

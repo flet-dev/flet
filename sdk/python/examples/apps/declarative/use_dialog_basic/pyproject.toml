@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-use-dialog-basic"
+name = "declarative-use-dialog-basic"
 version = "1.0.0"
 description = "Single declarative AlertDialog driven by `use_dialog` with an async delete and loading state."
 requires-python = ">=3.10"
@@ -14,7 +14,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 categories = ["Declarative", "Getting Started/Declarative"]
 
 [tool.flet.metadata]
-title = "Use dialog basic"
+title = "Use dialog"
 controls = ["Column", "Text", "Button", "TextButton", "AlertDialog"]
 layout_pattern = "inline-actions"
 complexity = "basic"

@@ -8,15 +8,11 @@ title: "Banner"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic Banner" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Banner" />
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/banner)
-
-### Basic example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/banner/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/banner_flow.gif'} alt="basic" width="50%" />
 

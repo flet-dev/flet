@@ -417,6 +417,12 @@ async def test_auth_dialog(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_featured(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.resize_page(800, 800 * 0.625)
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+
     sign_in = await flet_app_function.tester.find_by_text("Sign In")
     assert sign_in.count == 1
 
@@ -433,6 +439,13 @@ async def test_featured(flet_app_function: ftt.FletTestApp):
         "3 featured projects available"
     )
     assert featured_count.count == 1
+
+    flet_app_function.assert_screenshot(
+        "featured_logged_in",
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
+    )
 
     browse_btn = await flet_app_function.tester.find_by_text("Browse projects")
     assert browse_btn.count == 1
@@ -521,6 +534,14 @@ async def test_nested_routes(flet_app_function: ftt.FletTestApp):
     go_products_btn = await flet_app_function.tester.find_by_text("Go to Products")
     assert go_products_btn.count == 1
 
+    # Navigation idempotency: re-tap from Home after popping all the way
+    # back must navigate again (the route must not be stranded by the pop).
+    await flet_app_function.tester.tap(go_products_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    products_title = await flet_app_function.tester.find_by_text("All Products")
+    assert products_title.count == 1
+
 
 @pytest.mark.parametrize(
     "flet_app_function",
@@ -558,6 +579,29 @@ async def test_nested_outlet_views(flet_app_function: ftt.FletTestApp):
     back_btn = await flet_app_function.tester.find_by_tooltip("Back")
     assert back_btn.count == 1
     await flet_app_function.tester.tap(back_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    products_title = await flet_app_function.tester.find_by_text("All Products")
+    assert products_title.count == 1
+
+    # AppBar back → Home. Popping the products view must navigate to "/"
+    # (the previous *view*), not to the outlet layout's own "/products"
+    # URL. If it lands on the layout URL, the page route stays at
+    # "/products" while Flutter shows Home — and the next "Browse
+    # Products" tap becomes a no-op navigation to the current URL.
+    back_btn = await flet_app_function.tester.find_by_tooltip("Back")
+    assert back_btn.count == 1
+    await flet_app_function.tester.tap(back_btn)
+    await flet_app_function.tester.pump_and_settle()
+
+    welcome = await flet_app_function.tester.find_by_text("Welcome!")
+    assert welcome.count == 1
+
+    # Re-navigate to products — proves the route wasn't stranded on the
+    # layout URL after the pop.
+    browse_btn = await flet_app_function.tester.find_by_text("Browse Products")
+    assert browse_btn.count == 1
+    await flet_app_function.tester.tap(browse_btn)
     await flet_app_function.tester.pump_and_settle()
 
     products_title = await flet_app_function.tester.find_by_text("All Products")

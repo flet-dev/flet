@@ -151,6 +151,17 @@ def _render_pypi_partial() -> str:
     """Fetch and render the PyPI package index, filtering non-flet packages and converting admonition syntax to MDX format."""
     from .pypi_index import render_pypi_index
 
+    if os.environ.get("FLET_DOCS_FAST"):
+        return "\n".join(
+            [
+                ":::warning",
+                "The PyPI package index is skipped while `FLET_DOCS_FAST` is set.",
+                "Run the full docs build to refresh this list.",
+                ":::",
+                "",
+            ]
+        )
+
     rendered = render_pypi_index(
         base_url="https://pypi.flet.dev/",
         timeout_s=20.0,

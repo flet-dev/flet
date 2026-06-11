@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-navigation-drawer"
+name = "declarative-navigation-drawer"
 version = "1.0.0"
 description = "Declarative app with a NavigationDrawer whose selected destination drives the page content."
 requires-python = ">=3.10"

@@ -1,3 +1,4 @@
+import asyncio
 from datetime import time
 
 from palette_constants import (
@@ -49,6 +50,8 @@ def main(page: ft.Page):
     preview_theme_mode = {"value": ft.ThemeMode.LIGHT}
     light_theme_color_overrides: dict[str, ft.ColorValue] = {}
     dark_theme_color_overrides: dict[str, ft.ColorValue] = {}
+    hex_color_change_task = {"future": None, "seq": 0}
+    latest_hex_color = {"value": None}
     theme_seed_colors = {
         ft.ThemeMode.LIGHT: LIGHT_SEED_COLOR,
         ft.ThemeMode.DARK: LIGHT_SEED_COLOR,
@@ -327,19 +330,35 @@ def main(page: ft.Page):
 
         return handler
 
-    def on_hex_color_change(e: ft.ControlEvent):
+    async def apply_hex_color_change_debounced(expected_seq: int):
+        await asyncio.sleep(0.05)
+        if expected_seq != hex_color_change_task["seq"]:
+            return
         if selected_role["attr"] is None or selected_role["label"] is None:
             return
-        current_theme_color_overrides()[selected_role["attr"]] = e.data
-        set_selected_material_from_value(e.data)
+        color_value = latest_hex_color["value"]
+        current_theme_color_overrides()[selected_role["attr"]] = color_value
+        set_selected_material_from_value(color_value)
         rebuild_material_color_controls()
         rebuild_shade_controls()
         rebuild_theme()
         rebuild_left_pane_controls()
         selected_color_status.value = (
-            f"{selected_role['label']} color changed to {e.data}."
+            f"{selected_role['label']} color changed to {color_value}."
         )
         page.update()
+
+    def on_hex_color_change(e: ft.ControlEvent):
+        if selected_role["attr"] is None or selected_role["label"] is None:
+            return
+        latest_hex_color["value"] = e.data
+        hex_color_change_task["seq"] += 1
+        future = hex_color_change_task["future"]
+        if future is not None and not future.done():
+            future.cancel()
+        hex_color_change_task["future"] = page.run_task(
+            apply_hex_color_change_debounced, hex_color_change_task["seq"]
+        )
 
     material_color_row = ft.Row(
         wrap=True,

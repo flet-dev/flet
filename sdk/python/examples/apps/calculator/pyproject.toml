@@ -1,5 +1,5 @@
 [project]
-name = "tutorials-calculator"
+name = "calculator"
 version = "1.0.0"
 description = "Builds an iOS-style calculator app with custom button controls and arithmetic operations."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Getting Started", "Featured", "Tools"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/calculator/calculator.png"]
 
 [tool.flet.metadata]
 title = "Calculator"

@@ -17,31 +17,56 @@ __all__ = [
 
 
 class ReleaseMode(Enum):
-    """The behavior of Audio player when an audio is finished or stopped."""
+    """
+    Determines what happens to the player's resources (the buffered audio and
+    the underlying native player) when playback finishes or is stopped, and
+    therefore how quickly, and at what cost, the same audio can be played again.
+    """
 
     RELEASE = "release"
     """
-    Releases all resources, just like calling release method.
+    Frees all resources once playback completes, as if
+    :meth:`flet_audio.Audio.release` had been called automatically.
+    This is the default mode.
 
-    Info:
-        - On Android, the media player is quite resource-intensive, and this will
-            let it go. Data will be buffered again when needed (if it's a remote file,
-            it will be downloaded again).
-        - On iOS and macOS, works just like
-            :meth:`flet_audio.Audio.release` method.
+    The buffered audio and the native player are released, so nothing is kept in
+    memory while the audio is idle. Playing again is still supported, but the
+    source is **loaded again from scratch** first (and a remote file is
+    re-downloaded), which adds a short delay before playback starts.
+
+    Best when replays are rare or may never happen and keeping memory usage to a
+    minimum matters.
+
+    Note:
+        - On Android, the native media player is resource-intensive; this mode
+            lets it go and re-buffers the data only when needed.
+        - On iOS and macOS, behaves like :meth:`flet_audio.Audio.release`.
     """
 
     LOOP = "loop"
     """
-    Keeps buffered data and plays again after completion, creating a loop.
-    Notice that calling stop method is not enough to release the resources
-    when this mode is being used.
+    Automatically restarts playback from the beginning every time it completes,
+    creating a continuous loop. All resources are kept buffered.
+
+    Best for audio that should repeat indefinitely, such as background music.
+
+    Note:
+        Resources are never released automatically in this mode. To free them,
+        change the source or call :meth:`flet_audio.Audio.release`.
     """
 
     STOP = "stop"
     """
-    Stops audio playback but keep all resources intact.
-    Use this if you intend to play again later.
+    Stops playback when the audio completes but keeps all resources (the
+    buffered audio and the native player) intact.
+
+    Because nothing is released, playing again is **immediate**: the audio
+    restarts straight from the retained buffer, with no reloading or
+    re-downloading. The trade-off is that these resources stay in memory while
+    the audio is idle.
+
+    Best when you intend to replay the same audio and want instant,
+    network-free playback (for example, short sound effects or repeated tones).
     """
 
 

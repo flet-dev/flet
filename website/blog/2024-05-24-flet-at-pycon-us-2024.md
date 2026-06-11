@@ -8,6 +8,8 @@ Last week we attended PyCon US in a beautiful city of Pittsburgh, PA!
 
 I've been on many conferences, but at PyCon I was amazed by the spacious venue, flawless event organization, high-quality content and welcoming community 😎, ...and good food 🍔!
 
+{/* truncate */}
+
 <img src="/img/blog/pycon-us-2024/pycon-us-2024-collage.jpg" className="screenshot-60 screenshot-rounded" />
 
 We met a lot of great people and, especially, wonderful people from Beeware (hello Russell, Malcolm and Russell 👋). They did a great job of popularizing Python on mobile and advocating the addition of iOS and Android to the list of supported platforms in the next release of Python 3.13 🎉!
@@ -20,5 +22,3 @@ As first time attendees we did't do talks or presentations, but watched and lear
 We plan to present next year 🤞.
 
 Next PyCon US is going to be at the same place. Will come again and hope to see more of you there!
-
-

@@ -10,6 +10,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover
+    import tomli as tomllib
+
 from .assets import bulk_copy_assets
 from .config import CrocoDocsConfig
 from .docs import (
@@ -143,6 +148,60 @@ def _generate_code_examples(examples_root: Path, output_path: Path) -> int:
     return len(mapping)
 
 
+def _read_pyproject(pyproject_path: Path) -> dict[str, Any]:
+    try:
+        return tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def _example_web_supported(pyproject_path: Path) -> bool:
+    """Return True when the example at pyproject_path supports the web platform.
+
+    Web is supported when [tool.flet].platforms is absent, empty, or contains "web".
+    """
+    data = _read_pyproject(pyproject_path)
+    platforms = data.get("tool", {}).get("flet", {}).get("platforms")
+    if not platforms:
+        return True
+    return "web" in platforms
+
+
+def _generate_examples_metadata(examples_root: Path, output_path: Path) -> int:
+    """Write a JSON file mapping example directory paths to their metadata.
+
+    Walks every directory under examples_root that contains a pyproject.toml and emits
+    a per-directory metadata entry. The directory key is its path relative to
+    examples_root (e.g. "controls/material/button/basic"), matching the parent of
+    the keys used in code-examples.json.
+    """
+    mapping: dict[str, dict[str, Any]] = {}
+    if not examples_root.exists():
+        output_path.write_text("{}", encoding="utf-8")
+        return 0
+
+    for pyproject_path in sorted(examples_root.rglob("pyproject.toml")):
+        if _should_skip_example_path(examples_root, pyproject_path):
+            continue
+        example_dir = pyproject_path.parent
+        if example_dir == examples_root:
+            continue
+        relative = example_dir.relative_to(examples_root).as_posix()
+        data = _read_pyproject(pyproject_path)
+        meta: dict[str, Any] = {"webSupported": _example_web_supported(pyproject_path)}
+        flet_metadata = data.get("tool", {}).get("flet", {}).get("metadata", {})
+        if title := flet_metadata.get("title"):
+            meta["title"] = title
+        if docs_intro := flet_metadata.get("docs_intro"):
+            meta["docs_intro"] = docs_intro
+        mapping[relative] = meta
+
+    output_path.write_text(
+        json.dumps(mapping, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    return len(mapping)
+
+
 def run_generate(
     config: CrocoDocsConfig,
     docs_path: Path,
@@ -206,6 +265,10 @@ def run_generate(
     code_examples_output = config.partials_output_dir / "code-examples.json"
     code_example_entries = _generate_code_examples(
         config.examples_root, code_examples_output
+    )
+    examples_metadata_output = config.partials_output_dir / "examples-metadata.json"
+    examples_metadata_entries = _generate_examples_metadata(
+        config.examples_root, examples_metadata_output
     )
 
     reporter.stage("Extracting API data")
@@ -323,6 +386,7 @@ def run_generate(
     summary.add("symbols serialized", len(classes) + len(functions) + len(aliases))
     summary.add("partials generated", generated_partials)
     summary.add("code example entries", code_example_entries)
+    summary.add("examples metadata entries", examples_metadata_entries)
     try:
         sidebar_source = config.sidebars_source.relative_to(
             config.project_root

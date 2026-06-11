@@ -1,5 +1,5 @@
 [project]
-name = "services-semantics-service-accessibility-features"
+name = "semantics-service-accessibility-features"
 version = "1.0.0"
 description = "Reads accessibility feature flags from SemanticsService and refreshes them on demand."
 requires-python = ">=3.10"

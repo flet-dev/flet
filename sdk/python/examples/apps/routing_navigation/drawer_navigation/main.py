@@ -128,6 +128,7 @@ def main(page: ft.Page):
                     drawer=create_drawer(selected_index=2),
                 )
             )
+        page.update()
 
     async def view_pop(view):
         page.views.pop()

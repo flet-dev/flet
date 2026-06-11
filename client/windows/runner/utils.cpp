@@ -41,6 +41,12 @@ std::vector<std::string> GetCommandLineArguments() {
   return command_line_arguments;
 }
 
+bool HasEnvironmentVariable(const wchar_t* name) {
+  ::SetLastError(ERROR_SUCCESS);
+  const DWORD value_length = ::GetEnvironmentVariableW(name, nullptr, 0);
+  return value_length > 0 || ::GetLastError() != ERROR_ENVVAR_NOT_FOUND;
+}
+
 std::string Utf8FromUtf16(const wchar_t* utf16_string) {
   if (utf16_string == nullptr) {
     return std::string();

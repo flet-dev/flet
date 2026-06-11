@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-routing-two-pages"
+name = "declarative-routing-two-pages"
 version = "1.0.0"
 description = "Demonstrates declarative view routing with theme context shared across two pages."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Declarative", "Navigation/Routing", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_routing_two_pages/declarative_routing_two_pages.png"]
 
 [tool.flet.metadata]
 title = "Routing two pages"

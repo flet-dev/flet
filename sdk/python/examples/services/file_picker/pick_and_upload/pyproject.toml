@@ -1,5 +1,5 @@
 [project]
-name = "services-file-picker-pick-and-upload"
+name = "file-picker-pick-and-upload"
 version = "1.0.0"
 description = "Picks multiple files in web mode and uploads them with live progress indicators."
 requires-python = ">=3.10"

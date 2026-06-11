@@ -7,6 +7,7 @@ def main(page: ft.Page):
 
     def route_change(e):
         route_log.controls.append(ft.Text(f"New route: {e.route}"))
+        page.update()
 
     page.on_route_change = route_change
     page.update()

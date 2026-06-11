@@ -1,3 +1,34 @@
+## 0.85.4
+
+### Improvements
+
+* Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms by @ndonkoHenri.
+
+### Documentation
+
+* Improve `FilePicker.save_file()` documentation: on desktop, passing `src_bytes` writes those bytes to the selected file by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771)) by @ndonkoHenri.
+
+## 0.85.3
+
+### Improvements
+
+* Allow `[tool.flet.android.permission]` values to be TOML inline tables in addition to booleans — each `key = "value"` entry adds an `android:<key>="<value>"` attribute to the generated `<uses-permission>` element, unlocking modifiers like `android:maxSdkVersion` and `android:usesPermissionFlags` that real-world Android permissions (e.g. Bluetooth LE) require. The boolean form and the `--android-permissions` CLI flag are unchanged; a non-empty inline table is always emitted, an empty table (`{}`) is treated as `false`, and invalid value types fail the build with a clear error ([#6550](https://github.com/flet-dev/flet/issues/6550), [#6551](https://github.com/flet-dev/flet/pull/6551)) by @FeodorFitsner.
+* Add `[tool.flet.android.provider]` for declaring custom `<provider>` entries in the generated `AndroidManifest.xml`. Each table key is the provider's `android:name`; entries become `android:<key>="<value>"` attributes on the generated element. A reserved `meta_data` sub-table emits nested `<meta-data>` children (scalar values render as `android:value="…"`; inline-table values render as `android:<k>="<v>"` so `android:resource="@xml/…"` works). `false` / `{}` skip the entry; `true` and invalid value types fail the build with a clear error. The built-in `androidx.core.content.FileProvider` block is unchanged ([#6556](https://github.com/flet-dev/flet/issues/6556), [#6559](https://github.com/flet-dev/flet/pull/6559)) by @FeodorFitsner.
+* Upgrade the bundled Pyodide runtime in the `flet build web` template from `0.27.5` to `0.27.7` (includes `micropip` `0.9.0`) ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
+* Drop generated `web/canvaskit/` build artifacts (`canvaskit.js`/`.wasm`/`.symbols` and the `chromium/` and `skwasm`/`skwasm_st` variants) from the `flet build web` template — these are produced by the Flutter web build and should not have been committed into the cookiecutter template ([#6549](https://github.com/flet-dev/flet/pull/6549)) by @FeodorFitsner.
+* Cache the downloaded `flet-build-template.zip` across builds. The build template is bound to an exact Flet version and is immutable, so on every `flet build` / `flet debug` after the first, the CLI now uses a previously-downloaded zip from `$FLET_CACHE_DIR/build-template/v<flet-version>/` (defaulting to `~/.flet/cache/build-template/v<flet-version>/`) instead of re-fetching it via cookiecutter. The CLI also exports `FLET_CACHE_DIR` into the child Gradle process, so `serious_python_android` >= 1.0.1 lands its Python dist tarballs (`python-android-dart-<py>-<abi>.tar.gz`) in the same cache root by default — fixing the multi-minute "Creating app shell" / `downloadDistArchive_*` delay on every Android debug build. Custom `--template` URLs and the local-dev template path are unchanged ([#6555](https://github.com/flet-dev/flet/discussions/6555), [#6558](https://github.com/flet-dev/flet/pull/6558)) by @FeodorFitsner.
+* Bump the bundled build template's `serious_python` dependency from `1.0.0` to `1.0.1` so Android builds pick up the new persistent Python-tarball cache + conditional-GET revalidation introduced in [`serious_python` 1.0.1](https://github.com/flet-dev/serious-python/blob/main/src/serious_python_android/CHANGELOG.md) ([#6558](https://github.com/flet-dev/flet/pull/6558)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix `flet.Router`'s default `on_view_pop` navigating to the wrong URL when an `outlet=True` layout sits between two views in `manage_views=True` mode. Popping such a view now targets the previous view entry's resolved URL — skipping outlet layouts and componentless grouping routes — instead of `chain[-2]`, which could equal the current view's URL and strand the page route, making the next navigation to it a no-op ([#6533](https://github.com/flet-dev/flet/pull/6533)) by @FeodorFitsner.
+* Fix `flet-audio.Audio.play()`/`seek()` timing out when replaying after playback had completed: under the default `ReleaseMode.RELEASE` the source is freed on completion and is now re-prepared on replay ([#6536](https://github.com/flet-dev/flet/issues/6536), [#6538](https://github.com/flet-dev/flet/pull/6538)) by @ndonkoHenri.
+* Fix `ft.run(view=ft.AppView.FLET_APP_HIDDEN)` briefly flashing the native window in the top-left corner during Windows desktop startup. The Windows runner now respects `FLET_HIDE_WINDOW_ON_START` and skips the first-frame `Show()` call so the window stays hidden until `page.window.visible = True`, matching the Linux desktop behavior; the same fix is applied to the `flet build windows` template runner so generated apps behave consistently. On Linux, pre-show window placement actions (`page.window.center()`, `page.window.alignment`) are now deferred until the window first becomes visible to avoid an analogous flash, and the window's `focused` state is preserved when a `prevent_close` handler cancels a close attempt ([#5897](https://github.com/flet-dev/flet/issues/5897), [#5914](https://github.com/flet-dev/flet/issues/5914), [#6527](https://github.com/flet-dev/flet/pull/6527)) by @ihmily.
+
 ## 0.85.2
 
 ### New features
@@ -7,16 +38,10 @@
 
 ### Improvements
 
-* Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms by @ndonkoHenri.
 * `flet.Router`'s default `on_view_pop` now navigates to the matched chain's parent (`chain[-2].resolved_path`) instead of `views[-2].route`, which is robust against apps that share a `View.route` value between sibling tab roots to suppress switch transitions. Apps that install their own `page.on_view_pop` before `page.render_views()` still take precedence. Each sub-chain (base + modal) renders with its own `LocationInfo`, so `is_route_active(...)` inside a base view sees the base URL while a global modal is open over it ([#6516](https://github.com/flet-dev/flet/pull/6516)) by @FeodorFitsner.
-
-### Documentation
-
-* Improve `FilePicker.save_file()` documentation: on desktop, passing `src_bytes` writes those bytes to the selected file by @ndonkoHenri.
 
 ### Bug fixes
 
-* Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771)) by @ndonkoHenri.
 * Fix cross-tab session contamination on Flet web: opening the same app URL in a duplicated browser tab no longer steals the original tab's output connection via `sessionStorage`-cloned `_flet_session_id`. `REGISTER_CLIENT` now rejects session reuse when the existing session still has a live `connection`, allocating a fresh session for the second tab while preserving legitimate single-tab reconnect after refresh or network blip (where `connection` is already `None`) ([#6512](https://github.com/flet-dev/flet/issues/6512), [#6513](https://github.com/flet-dev/flet/pull/6513)) by @ihmily.
 
 ## 0.85.1
@@ -39,11 +64,19 @@
 * Add `issues` property to `CodeEditor` (along with `Issue` and `IssueType` types) for displaying code analysis error markers in the gutter, with analysis performed on the Python side ([#6407](https://github.com/flet-dev/flet/pull/6407)) by @FeodorFitsner.
 * Add `Page.pop_views_until()` to pop multiple views and return a result to the destination view ([#6326](https://github.com/flet-dev/flet/issues/6326), [#6347](https://github.com/flet-dev/flet/pull/6347)) by @brunobrown.
 * Make `NavigationDrawerDestination.label` accept custom controls and add `NavigationDrawerTheme.icon_theme` ([#6379](https://github.com/flet-dev/flet/issues/6379), [#6395](https://github.com/flet-dev/flet/pull/6395)) by @ndonkoHenri.
-* Add `local_position` and `global_position` to `DragTargetEvent`, deprecating `x`, `y`, and `offset` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
+* Add `local_position` and `global_position` to `DragTargetEvent` for target-relative and global pointer coordinates ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
 * Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
 * Add `Page.theme_animation_style` for customizing the duration and curve of the theme cross-fade between `theme` and `dark_theme` (or disabling it with `AnimationStyle.no_animation()`), exposing Flutter's `MaterialApp.themeAnimationStyle` ([#6476](https://github.com/flet-dev/flet/pull/6476)) by @FeodorFitsner.
 
-### Improvements
+### Breaking changes
+
+* Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helper functions (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
+
+### Deprecations
+
+* Deprecate `DragTargetEvent.x`, `DragTargetEvent.y`, and `DragTargetEvent.offset`; use `local_position` for target-relative coordinates or `global_position` for global coordinates instead. These APIs are scheduled for removal in `0.88.0` ([#6387](https://github.com/flet-dev/flet/issues/6387), [#6401](https://github.com/flet-dev/flet/pull/6401)) by @ndonkoHenri.
+* Deprecate `Video.show_controls`; set `Video.controls` to `None` to hide controls. This API is scheduled for removal in `0.88.0` ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+* Deprecate `Video.playlist_add()` and `Video.playlist_remove()`; mutate `Video.playlist` directly with list methods such as `append()` and `pop()`. These APIs are scheduled for removal in `0.88.0` ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
 
 ### Bug fixes
 
@@ -78,7 +111,6 @@
 ### Other changes
 
 * Add a declarative `ReorderableListView` app example showing add, remove, and reorder flows with stable item identity ([#6374](https://github.com/flet-dev/flet/pull/6374)) by @FeodorFitsner.
-* Remove deprecated module-level `margin`, `padding`, `border`, and `border_radius` helpers (`all()`, `symmetric()`, `only()`, `horizontal()`, `vertical()`) in favor of the corresponding `Margin`, `Padding`, `Border`, and `BorderRadius` classmethods ([#6425](https://github.com/flet-dev/flet/pull/6425)) by @ndonkoHenri.
 * Centralize Linux apt dependencies in `flet.utils.linux_deps` and update CI workflows and publish docs to consume them dynamically ([#6357](https://github.com/flet-dev/flet/issues/6357), [#6383](https://github.com/flet-dev/flet/pull/6383)) by @ndonkoHenri.
 * Bump `serious_python` to `0.9.12` in the `flet build` template ([#6461](https://github.com/flet-dev/flet/pull/6461)) by @FeodorFitsner.
 

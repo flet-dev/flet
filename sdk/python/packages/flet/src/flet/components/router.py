@@ -47,55 +47,55 @@ class Route:
     """
     Defines a single route in the route tree.
 
-    Routes can be nested via ``children`` to create layout hierarchies.
-    A route with ``component`` and ``children`` acts as a layout route — its
+    Routes can be nested via `children` to create layout hierarchies.
+    A route with `component` and `children` acts as a layout route — its
     component should call :func:`~flet.use_route_outlet` to render the
     matched child.
 
     Args:
-        path: Relative path segment. Supports dynamic segments (``:name``),
-            optional segments (``:name?``), splats (``:name*``), and custom
-            regex constraints (``:name(\\\\d+)``). ``None`` for pathless
+        path: Relative path segment. Supports dynamic segments (`:name`),
+            optional segments (`:name?`), splats (`:name*`), and custom
+            regex constraints (`:name(\\\\d+)`). `None` for pathless
             layout routes.
-        index: When ``True``, this route matches when the parent path
+        index: When `True`, this route matches when the parent path
             matches exactly (no further segments). Index routes must not
-            have ``path`` or ``children``.
-        component: A ``@component`` function to render when this route
+            have `path` or `children`.
+        component: A `@component` function to render when this route
             matches.
         children: Nested child routes.
         loader: Optional data loader function. Called with the matched
             params dict when the route matches. Result is available via
             :func:`~flet.use_route_loader_data`.
-        outlet: When ``True`` and ``manage_views=True``, this route acts
+        outlet: When `True` and `manage_views=True`, this route acts
             as a layout that wraps its matched child via
             :func:`~flet.use_route_outlet` within a single
             :class:`~flet.View`, instead of each child becoming a separate
             :class:`~flet.View`.
-        modal: When ``True`` and ``manage_views=True``, the route's View
+        modal: When `True` and `manage_views=True`, the route's View
             is rendered as a modal overlay on top of the existing stack
             instead of replacing it. The route's component should set
-            ``fullscreen_dialog=True`` on its returned :class:`~flet.View`
+            `fullscreen_dialog=True` on its returned :class:`~flet.View`
             so Flutter renders the slide-up presentation and a close (X)
             icon. Placement controls the base stack:
 
             * Declared at the **top level**: a *global* modal. The base
               stack is rebuilt from the last non-modal location the
-              Router saw (defaults to ``"/"`` on first render).
+              Router saw (defaults to `"/"` on first render).
             * Declared as a **child** of a non-modal route: a *local*
               modal. The base stack is the chain above the modal in the
               route tree, so deep-link works from the URL alone.
 
             On pop, the Router navigates to the resolved URL of the
-            non-modal parent — never to ``views[-2].route`` — so a
+            non-modal parent — never to `views[-2].route` — so a
             modal close is always a real navigation back to the
             base location.
-        recursive: When ``True``, the route can match itself as its own
-            descendant — one matched ``_RouteMatch`` per consumed segment.
+        recursive: When `True`, the route can match itself as its own
+            descendant — one matched `_RouteMatch` per consumed segment.
             Useful for tree-shaped URLs with unbounded depth
-            (e.g. ``/folder/a/b/c``) where each segment should become its
+            (e.g. `/folder/a/b/c`) where each segment should become its
             own stack entry. Non-recursive children are tried before
             self-recursion at every depth so a more specific sibling
-            (e.g. ``example/:gp*``) wins over the recursive ``:slug``.
+            (e.g. `example/:gp*`) wins over the recursive `:slug`.
     """
 
     path: str | None = None
@@ -114,9 +114,9 @@ class LocationInfo:
     Describes the current location parsed from the page route.
 
     Args:
-        pathname: URL path portion (e.g. ``/products/42``).
-        search: Query string portion without leading ``?``.
-        hash: Fragment portion without leading ``#``.
+        pathname: URL path portion (e.g. `/products/42`).
+        search: Query string portion without leading `?`.
+        hash: Fragment portion without leading `#`.
     """
 
     pathname: str
@@ -169,7 +169,7 @@ def _match_routes(
     Match pathname against route tree.
 
     Returns a chain of matched routes from outermost to innermost,
-    or ``None`` if no route matches.
+    or `None` if no route matches.
     """
     for route in routes:
         result = _try_match(route, pathname, parent_path)
@@ -222,8 +222,8 @@ def _try_match(
     if route.recursive:
         # Recursive routes consume one matched segment per recursion and
         # try non-recursive children before self-recursing — so a more
-        # specific sibling (e.g. ``example/:gp*``) wins over the
-        # recursive ``:slug`` at every depth without duplicate
+        # specific sibling (e.g. `example/:gp*`) wins over the
+        # recursive `:slug` at every depth without duplicate
         # declarations.
         prefix_pattern = repath.pattern(full_path, end=False)
         prefix_m = re.match(prefix_pattern, pathname)
@@ -362,7 +362,7 @@ def use_route_location() -> str:
     Returns an empty string if called outside a Router tree.
 
     Returns:
-        The current URL pathname (e.g. ``"/products/42"``).
+        The current URL pathname (e.g. `"/products/42"`).
     """
     loc = use_context(_location_context)
     if not _is_inside_router(loc):
@@ -375,17 +375,17 @@ def use_view_path() -> str:
     Returns the resolved URL for the current view level.
 
     This differs from :func:`use_route_location` which returns the full
-    current URL.  ``use_view_path`` returns the URL up to the current
-    view level (the leaf route of the view in ``manage_views=True`` mode).
+    current URL.  `use_view_path` returns the URL up to the current
+    view level (the leaf route of the view in `manage_views=True` mode).
 
-    Useful as the ``route`` value for :class:`~flet.View` to produce a
+    Useful as the `route` value for :class:`~flet.View` to produce a
     unique Navigator key per view in the stack.
 
     Must be called inside a component rendered by a :class:`~flet.Router`.
     Returns an empty string if called outside a Router tree.
 
     Returns:
-        The resolved URL for this view level (e.g. ``"/products/42"``).
+        The resolved URL for this view level (e.g. `"/products/42"`).
     """
     value = use_context(_view_path_context)
     if not _is_inside_router(value):
@@ -399,10 +399,10 @@ def use_route_outlet() -> Control:
 
     Used inside layout route components to render the active child route.
     Must be called inside a component rendered by a :class:`~flet.Router`.
-    Returns ``None`` if called outside a Router tree.
+    Returns `None` if called outside a Router tree.
 
     Returns:
-        The rendered child component, or ``None`` if no child matches.
+        The rendered child component, or `None` if no child matches.
     """
     value = use_context(_outlet_context)
     if not _is_inside_router(value):
@@ -414,10 +414,10 @@ def use_route_loader_data():
     """
     Returns the data from the current route's loader function.
 
-    Must be called inside a component whose route has a ``loader`` defined.
+    Must be called inside a component whose route has a `loader` defined.
 
     Returns:
-        The return value of the route's loader function, or ``None``.
+        The return value of the route's loader function, or `None`.
     """
     value = use_context(_loader_data_context)
     if not _is_inside_router(value):
@@ -433,12 +433,12 @@ def is_route_active(path: str, exact: bool = False) -> bool:
 
     Args:
         path: Path to check against the current location.
-        exact: If ``True``, requires an exact match. If ``False`` (default),
-            a prefix match is used (e.g. ``"/products"`` matches
-            ``"/products/42"``).
+        exact: If `True`, requires an exact match. If `False` (default),
+            a prefix match is used (e.g. `"/products"` matches
+            `"/products/42"`).
 
     Returns:
-        ``True`` if the path matches the current location.
+        `True` if the path matches the current location.
     """
     loc = use_context(_location_context)
     if not _is_inside_router(loc):
@@ -507,7 +507,7 @@ def _split_chain_into_view_levels(
     """
     Split matched chain into layout wrappers and view entries.
 
-    Only **pathless** routes (no ``path``, not ``index``) with a component
+    Only **pathless** routes (no `path`, not `index`) with a component
     are treated as layouts that wrap every View.  All other routes with
     a component become their own View in the stack.
 
@@ -515,7 +515,7 @@ def _split_chain_into_view_levels(
         A tuple of (layouts, view_entries) where:
         - layouts: pathless routes with components that wrap every View
         - view_entries: path-bearing routes, each becoming its own View.
-          Each entry is ``(match, accumulated_path)``.
+          Each entry is `(match, accumulated_path)`.
     """
     layouts: list[_RouteMatch] = []
     view_entries: list[tuple[_RouteMatch, str]] = []
@@ -607,7 +607,7 @@ def Router(
     Navigation is done via :meth:`~flet.Page.push_route` or
     :meth:`~flet.Page.navigate`.
 
-    When ``manage_views`` is ``True``, the Router returns a list of
+    When `manage_views` is `True`, the Router returns a list of
     :class:`~flet.View` objects (one per path level) instead of a single
     component tree. This enables swipe-back gestures, system back button,
     and :class:`~flet.AppBar` implicit back button on mobile.
@@ -616,10 +616,10 @@ def Router(
     Args:
         routes: List of top-level :class:`~flet.Route` definitions.
         not_found: Optional component to render when no route matches (404).
-        manage_views: When ``True``, produce a list of
+        manage_views: When `True`, produce a list of
             :class:`~flet.View` objects (one per path level) instead of a
             single component tree. Route components should return
-            :class:`~flet.View` instances with ``route`` and ``appbar``
+            :class:`~flet.View` instances with `route` and `appbar`
             set. Use with :meth:`~flet.Page.render_views`.
 
     Example:
@@ -648,12 +648,12 @@ def Router(
     prev_non_modal_location_ref = use_ref(None)
     # Snapshot of the chain emitted for the current location. Used by
     # the default pop handler to compute the parent URL structurally
-    # (``chain[-2].resolved_path``), which survives shared ``view.route``
+    # (`chain[-2].resolved_path`), which survives shared `view.route`
     # keys (e.g. an app that uses the same route key for two sibling
     # tab roots to suppress switch animations).
     current_chain_ref = use_ref(None)
     # URL to navigate to when popping the topmost view, IF the current
-    # chain ends in a modal route. ``None`` otherwise. Set whenever a
+    # chain ends in a modal route. `None` otherwise. Set whenever a
     # modal route matches.
     current_modal_pop_to_ref = use_ref(None)
 
@@ -686,20 +686,29 @@ def Router(
                     page.navigate(current_modal_pop_to_ref.current)
                     return
 
-                # Non-modal pop: use the matched chain's parent route
-                # (route-tree-structural) rather than
-                # ``views[-2].route``. This survives shared view keys
-                # like a tab-root layout that emits ``route="/"`` for
+                # Non-modal pop: navigate to the previous *view entry*'s
+                # resolved URL rather than `chain[-2]` or
+                # `views[-2].route`. Classifying into view entries skips
+                # `outlet=True` layouts and componentless grouping routes
+                # — otherwise `chain[-2]` can point at a layout whose URL
+                # equals the current view's URL, making the pop navigate
+                # to where we already are (a no-op that strands the URL).
+                # Staying route-tree-structural also survives shared view
+                # keys like a tab-root layout emitting `route="/"` for
                 # multiple sibling sections.
                 chain_now = current_chain_ref.current
-                if chain_now and len(chain_now) > 1:
-                    parent_match = chain_now[-2]
-                    target = parent_match.resolved_path or parent_match.full_path or "/"
-                    page.navigate(target)
-                    return
+                if chain_now:
+                    _, view_entries = _split_chain_into_view_levels(chain_now)
+                    if len(view_entries) > 1:
+                        parent_match = view_entries[-2][0]
+                        target = (
+                            parent_match.resolved_path or parent_match.full_path or "/"
+                        )
+                        page.navigate(target)
+                        return
 
                 # Stack of length 1 — nothing to pop to. (Flutter's
-                # ``Navigator.canPop`` is False here anyway.)
+                # `Navigator.canPop` is False here anyway.)
 
             page.on_view_pop = on_view_pop
 
@@ -732,8 +741,8 @@ def Router(
             return not_found()
         return None
 
-    # Detect modal routes in the chain. ``modal_idx`` is the index of
-    # the first route in the chain with ``modal=True``; ``-1`` means
+    # Detect modal routes in the chain. `modal_idx` is the index of
+    # the first route in the chain with `modal=True`; `-1` means
     # the chain is fully non-modal.
     modal_idx = -1
     for i, m in enumerate(chain):
@@ -741,7 +750,7 @@ def Router(
             modal_idx = i
             break
 
-    # For a *global* modal (``modal_idx == 0`` — the chain starts at a
+    # For a *global* modal (`modal_idx == 0` — the chain starts at a
     # modal with no non-modal parents) we want the visible stack to be
     # the chain of the previously visited non-modal location +
     # the modal's own chain. This way the underlying stack stays mounted
@@ -762,8 +771,8 @@ def Router(
         modal_idx = len(base_chain)
 
     # Track refs that downstream consumers (default pop handler, etc.)
-    # read. ``current_chain_ref`` always reflects the chain we're
-    # actually emitting. ``current_modal_pop_to_ref`` is set only when
+    # read. `current_chain_ref` always reflects the chain we're
+    # actually emitting. `current_modal_pop_to_ref` is set only when
     # the chain ends in a modal — non-modal navigations clear it.
     current_chain_ref.current = chain
     if modal_idx == -1:
@@ -799,7 +808,7 @@ def Router(
     loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
 
     if not manage_views:
-        # Single-view mode (existing behavior). ``modal`` is ignored
+        # Single-view mode (existing behavior). `modal` is ignored
         # here — it only affects stack composition in multi-view mode.
         return _location_context(
             loc,
@@ -819,17 +828,17 @@ def Router(
     # into layouts vs. view entries SEPARATELY so that an outlet route
     # that would be a leaf view in its own sub-chain doesn't get
     # re-classified as a layout just because there's more chain after
-    # the boundary. ``modal_idx`` already points to the modal route in
+    # the boundary. `modal_idx` already points to the modal route in
     # the (possibly combined) chain.
-    # ``modal_idx <= 0`` covers both the no-modal case (``-1``) and a
-    # degenerate modal chain with no base (``0``) — neither is split.
+    # `modal_idx <= 0` covers both the no-modal case (`-1`) and a
+    # degenerate modal chain with no base (`0`) — neither is split.
     sub_chains = [chain] if modal_idx <= 0 else [chain[:modal_idx], chain[modal_idx:]]
 
     # Each sub-chain's views see their own URL via the location
     # context. The base sub-chain (when there's a modal split) sees the
     # remembered non-modal location it was matched against — so
-    # ``is_route_active("/gallery")`` inside a base view stays True
-    # while a global ``/settings`` modal is open over Gallery.
+    # `is_route_active("/gallery")` inside a base view stays True
+    # while a global `/settings` modal is open over Gallery.
     base_sub_loc = LocationInfo(pathname=pathname, search=search, hash=hash_val)
     if modal_idx > 0:
         base_loc_str = prev_non_modal_location_ref.current or "/"

@@ -10,8 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-### Taking control screenshot
-
 <CodeExample path={frontMatter.examples + '/taking_screenshot/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

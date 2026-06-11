@@ -102,7 +102,7 @@ Note:
 Setting [`Container.animate`](../controls/container.md#flet.Container.animate) to [`AnimationValue`](../types/aliases.md#flet.AnimationValue)
 enables implicit animation of container properties such as size, background color, border style, gradient.
 
-<CodeExample path="controls/core/container/animate_1/main.py" language="python" />
+<CodeExample path="controls/core/container/animate_size_and_color/main.py" language="python" />
 
 <Image src="examples/controls/core/container/media/animate_1.gif" alt="animate" width="55%" />
 

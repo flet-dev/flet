@@ -1,5 +1,5 @@
 [project]
-name = "apps-flet-animation"
+name = "flet-animation"
 version = "1.0.0"
 description = "Animates scattered blocks into the FLET logo with randomized colors, size, and rotation."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Animations/Apps", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/flet_animation/flet_animation.png"]
 
 [tool.flet.metadata]
 title = "Flet animation"

@@ -12,21 +12,13 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/snackbar)
-
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/snack_bar/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="30%" />
-
-### Counter
 
 <CodeExample path={frontMatter.examples + '/counter/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/snack_bar_flow.gif'} alt="Snack bar with counter" width="30%" caption="Snack bar with counter" />
-
-### Action
 
 <CodeExample path={frontMatter.examples + '/action/main.py'} language="python" />
 

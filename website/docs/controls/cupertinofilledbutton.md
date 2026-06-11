@@ -8,15 +8,11 @@ title: "CupertinoFilledButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoFilledButton" imageWidth="10%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoFilledButton" imageWidth="10%"/>
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/cupertinofilledbutton)
-
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/cupertino_filled_button/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="25%" />
 

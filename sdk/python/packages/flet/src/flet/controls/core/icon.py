@@ -28,7 +28,7 @@ class Icon(LayoutControl):
     The icon to display, selected from a predefined icon set.
 
     You can explore available icons using the
-    [Flet Icons Browser](https://examples.flet.dev/icons_browser/).
+    [Flet Icons Browser](https://flet.app/gallery/run/apps/icons_browser/).
     """
 
     color: Optional[ColorValue] = None

@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-crud"
+name = "7guis-crud"
 version = "1.0.0"
 description = "7GUIs CRUD app for filtering, selecting, creating, editing, and deleting records."
 requires-python = ">=3.10"
@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs"]
+categories = ["Cookbook/7GUIs"]
 
 [tool.flet.metadata]
 title = "CRUD"

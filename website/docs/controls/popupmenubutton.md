@@ -13,11 +13,7 @@ import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/sr
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/buttons/popupmenubutton)
-
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/popup_menu_button/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="35%" />
 

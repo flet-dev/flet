@@ -947,8 +947,8 @@ class Page(BasePage):
         """
         Navigate to a new route (sync convenience wrapper).
 
-        Equivalent to ``asyncio.create_task(page.push_route(route, **kwargs))``.
-        Use this in synchronous callbacks (e.g. ``on_click``) where awaiting
+        Equivalent to `asyncio.create_task(page.push_route(route, **kwargs))`.
+        Use this in synchronous callbacks (e.g. `on_click`) where awaiting
         is not possible.
 
         Args:

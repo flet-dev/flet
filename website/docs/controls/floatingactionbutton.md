@@ -8,13 +8,9 @@ title: "FloatingActionButton"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic FloatingActionButton" imageWidth="7%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="FloatingActionButton" imageWidth="7%"/>
 
 ## Examples
-
-[Live example](https://flet-controls-gallery.fly.dev/buttons/floatingactionbutton)
-
-### Handling clicks
 
 <CodeExample path={frontMatter.examples + '/handling_clicks/main.py'} language="python" />
 

@@ -1,5 +1,5 @@
 [project]
-name = "apps-authentication-github-minimal"
+name = "authentication-github-minimal"
 version = "1.0.0"
 description = "Shows a minimal GitHub OAuth login flow and prints the access token and user ID."
 requires-python = ">=3.10"

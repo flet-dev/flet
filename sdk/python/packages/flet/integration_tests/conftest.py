@@ -13,7 +13,7 @@ def create_flet_app(request):
         test_path=request.fspath,
         flet_app_main=params.get("flet_app_main"),
         skip_pump_and_settle=params.get("skip_pump_and_settle", False),
-        assets_dir=Path(__file__).resolve().parent / "assets",
+        assets_dir=params.get("assets_dir", Path(__file__).resolve().parent / "assets"),
     )
 
 

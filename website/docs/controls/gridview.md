@@ -8,13 +8,9 @@ title: "GridView"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic GridView" imageWidth="20%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="GridView" imageWidth="20%"/>
 
 ## Examples
-
-[Live example](https://flet-controls-gallery.fly.dev/layout/gridview)
-
-### Photo gallery
 
 <CodeExample path={frontMatter.examples + '/photo_gallery/main.py'} language="python" />
 

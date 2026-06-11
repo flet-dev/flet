@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-sunflower"
+name = "declarative-sunflower"
 version = "1.0.0"
 description = "Animates a sunflower seed pattern with a slider that recomputes declarative layout."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Declarative", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_sunflower/declarative_sunflower.png"]
 
 [tool.flet.metadata]
 title = "Sunflower"

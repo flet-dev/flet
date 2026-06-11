@@ -72,14 +72,19 @@ module.exports = {
       items: [
         {
           to: 'docs',
-          activeBasePath: 'docs',
+          activeBaseRegex: '^/docs(?!/studio)',
           label: 'Docs',
           position: 'left',
         },
         {
-          to: 'gallery',
-          activeBasePath: 'gallery',
+          to: 'https://flet.app/gallery',
           label: 'Gallery',
+          position: 'left',
+        },
+        {
+          to: 'studio',
+          activeBaseRegex: '^/(studio|docs/studio)',
+          label: 'Studio',
           position: 'left',
         },
         {
@@ -119,7 +124,24 @@ module.exports = {
             {
               label: 'Reference',
               to: '/docs/reference',
-            }
+            },
+          ],
+        },
+        {
+          title: 'Studio',
+          items: [
+            {
+              label: 'Flet Studio app',
+              href: 'https://flet.app',
+            },
+            {
+              label: 'Docs',
+              to: '/docs/studio',
+            },
+            {
+              label: "What's new",
+              to: '/docs/studio/whats-new',
+            },
           ],
         },
         {
@@ -180,6 +202,7 @@ module.exports = {
         docs: {
           // It is recommended to set document id as docs home page (`docs/` path).
           sidebarPath: require.resolve('./sidebars.js'),
+          beforeDefaultRemarkPlugins: [require('./plugins/remark-inject-example-headings')],
           remarkPlugins: [require('./plugins/remark-api-links'), require('./plugins/remark-code-annotations')],
           editUrl:
             'https://github.com/flet-dev/flet/website/edit/main/',

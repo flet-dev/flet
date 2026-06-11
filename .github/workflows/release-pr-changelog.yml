@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - 'release/**'
+    paths-ignore:
+      - 'website/**'
+      - 'tools/**'
     types:
       - opened
       - synchronize

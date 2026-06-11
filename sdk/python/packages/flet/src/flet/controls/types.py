@@ -1438,7 +1438,7 @@ Represents a color and can be:
 - a material color from the :class:`~flet.Colors` enum,
 - or a Cupertino color from the :class:`~flet.CupertinoColors` enum.
 
-More information [here](https://flet.dev/docs/cookbook/cookbook/cookbook/colors).
+More information [here](https://flet.dev/docs/cookbook/colors).
 """
 
 # Icons

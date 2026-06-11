@@ -11,21 +11,13 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/utility/shadermask)
-
-### Pink glow around image edges
-
 <CodeExample path={frontMatter.examples + '/pink_radial_glow/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pink_radial_glow.png'} alt="pink-radial-glow" width="55%" />
 
-### Fade out bottom edge of an image
-
 <CodeExample path={frontMatter.examples + '/fade_out_image_bottom/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/fade_out_image_bottom.png'} alt="fade-out-image-bottom" width="55%" />
-
-### Applying linear and radial gradients/shaders
 
 <CodeExample path={frontMatter.examples + '/linear_and_radial_gradients/main.py'} language="python" />
 

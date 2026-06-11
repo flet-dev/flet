@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-tic-tac-toe"
+name = "declarative-tic-tac-toe"
 version = "1.0.0"
 description = "Plays tic-tac-toe declaratively with move history and winner detection."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Games", "Declarative", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_tic_tac_toe/declarative_tic_tac_toe.png"]
 
 [tool.flet.metadata]
 title = "Tic tac toe"

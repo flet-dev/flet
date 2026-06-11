@@ -8,13 +8,9 @@ title: "CupertinoSlider"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic CupertinoSlider" imageWidth="20%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoSlider" imageWidth="20%"/>
 
 ## Examples
-
-[Live example](https://flet-controls-gallery.fly.dev/input/cupertinoslider)
-
-### Handling events
 
 <CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
 

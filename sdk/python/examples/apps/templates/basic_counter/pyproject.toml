@@ -18,7 +18,7 @@ dev = [
 ]
 
 [tool.flet.metadata]
-title = "Basic Counter"
+title = "Counter"
 
 [tool.flet.gallery]
 categories = ["Getting Started"]

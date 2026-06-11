@@ -11,15 +11,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/daterangepicker)
-
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/date_range_picker/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="55%" />
-
-### Custom locale
 
 <CodeExample path={frontMatter.examples + '/custom_locale/main.py'} language="python" />
 

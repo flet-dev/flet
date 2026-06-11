@@ -187,6 +187,11 @@ module.exports = {
           "type": "doc",
           "id": "cookbook/encrypting-sensitive-data",
           "label": "Encrypting sensitive data"
+        },
+        {
+          "type": "doc",
+          "id": "cookbook/declarative-dialogs",
+          "label": "Declarative dialogs"
         }
       ]
     },
@@ -316,6 +321,60 @@ module.exports = {
           "id": "extend/built-in-extensions"
         }
       ]
+    },
+    {
+      "type": "category",
+      "label": "Stay up to date",
+      "collapsed": true,
+      "items": [
+        {
+          "type": "doc",
+          "id": "updates/release-notes",
+          "label": "Release notes"
+        },
+        {
+          "type": "category",
+          "label": "Breaking changes and deprecations",
+          "collapsed": true,
+          "items": [
+            {
+              "type": "category",
+              "label": "v0.85.0",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/removed-spacing-border-helpers",
+                  "label": "Deprecated spacing and border helper functions removed"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/deprecated-drag-target-event-coordinates",
+                  "label": "DragTargetEvent coordinate fields deprecated"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/deprecated-video-apis",
+                  "label": "Video control APIs deprecated"
+                }
+              ]
+            }
+          ],
+          "link": {
+            "type": "doc",
+            "id": "updates/breaking-changes/index"
+          }
+        },
+        {
+          "type": "doc",
+          "id": "updates/compatibility-policy",
+          "label": "Compatibility policy"
+        }
+      ],
+      "link": {
+        "type": "doc",
+        "id": "updates/index"
+      }
     },
     {
       "type": "category",
@@ -3859,6 +3918,28 @@ module.exports = {
         "type": "doc",
         "id": "reference/index"
       }
+    }
+  ],
+  "studio": [
+    {
+      "type": "doc",
+      "id": "studio/index",
+      "label": "Introduction"
+    },
+    {
+      "type": "doc",
+      "id": "studio/whats-new",
+      "label": "What's new"
+    },
+    {
+      "type": "doc",
+      "id": "studio/terms-of-service",
+      "label": "Terms of Service"
+    },
+    {
+      "type": "doc",
+      "id": "studio/privacy-policy",
+      "label": "Privacy Policy"
     }
   ]
 };

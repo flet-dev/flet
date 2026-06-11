@@ -162,6 +162,9 @@ class CalculatorApp(ft.Container):
 
 def main(page: ft.Page):
     page.title = "Calc App"
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+
     # create application instance
     calc = CalculatorApp()
 
@@ -169,4 +172,5 @@ def main(page: ft.Page):
     page.add(calc)
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

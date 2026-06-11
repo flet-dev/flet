@@ -1,6 +1,6 @@
 ---
 class_name: "flet.BrowserContextMenu"
-examples: "services/browsercontextmenu"
+examples: "services/browser_context_menu"
 title: "BrowserContextMenu"
 ---
 
@@ -10,6 +10,6 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/browser_context_menu/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

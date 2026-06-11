@@ -34,6 +34,13 @@ That skill is the source of truth for item wording, scope selection, and what sh
   * If a related issue or PR is missing the `{version}` milestone, update the milestone on GitHub and keep the link in the changelog.
   * When selecting candidates for `packages/flet/CHANGELOG.md`, prefer items with meaningful Flutter-side impact.
   * When selecting candidates for `sdk/python/packages/*/CHANGELOG.md`, prefer published Python-facing changes; do not include extension-internal Flutter implementation work unless it materially changes user-visible Python behavior.
+* If the release includes breaking changes, API removals, or deprecations,
+  update `website/docs/release/release-notes.md` and
+  `website/docs/release/breaking-changes/index.md`.
+  * Use [`flet-deprecation`](../flet-deprecation/SKILL.md) for deprecation
+    guide requirements and sidebar placement.
+  * Group related deprecations into one migration guide page where possible,
+    and add guide pages under the release version in `website/sidebars.yml`.
 * Scan all changelogs for `Unreleased` sections, not only the root ones:
   * `/CHANGELOG.md`
   * `packages/flet/CHANGELOG.md`
@@ -42,9 +49,14 @@ That skill is the source of truth for item wording, scope selection, and what sh
   `rg -n "^##\\s*\\[?Unreleased\\]?|^##\\s*Unreleased" -S CHANGELOG.md packages/flet/CHANGELOG.md sdk/python/packages/*/CHANGELOG.md`
 * If any changelog has an `Unreleased` section, convert that section into the new release section (`## {new_version}`), preserving and re-sorting its items. Do not leave duplicate release content in both `Unreleased` and `{new_version}`.
   This conversion must be done for every matched changelog from the scan above.
-* Sort items in changelogs as following:
+* Sort items in changelogs as follows, omitting empty sections:
   * New features
   * Improvements
+  * Breaking changes
+  * Deprecations
   * Bug fixes
+  * Documentation
   * Other changes (chore, refactor, etc.)
+  Put removals of previously deprecated APIs under `Breaking changes`, and
+  keep newly deprecated-but-still-working APIs under `Deprecations`.
 * Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.

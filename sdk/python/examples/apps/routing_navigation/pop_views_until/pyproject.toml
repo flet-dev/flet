@@ -1,5 +1,5 @@
 [project]
-name = "apps-routing-navigation-pop-views-until"
+name = "routing-navigation-pop-views-until"
 version = "1.0.0"
 description = "Pops multiple views from the navigation stack and returns a result to the destination view."
 requires-python = ">=3.10"

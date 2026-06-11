@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-temperature-converter"
+name = "7guis-temperature-converter"
 version = "1.0.0"
 description = "7GUIs temperature converter with synchronized Celsius and Fahrenheit fields."
 requires-python = ">=3.10"
@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs", "Tools"]
+categories = ["Cookbook/7GUIs", "Tools"]
 
 [tool.flet.metadata]
 title = "Temperature converter"

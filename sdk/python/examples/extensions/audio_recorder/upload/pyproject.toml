@@ -1,5 +1,5 @@
 [project]
-name = "services-audio-recorder-upload"
+name = "audio-recorder-upload"
 version = "1.0.0"
 description = "Records PCM16 audio and uploads the streamed bytes to Flet upload storage."
 requires-python = ">=3.10"

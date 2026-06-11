@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-trolli"
+name = "declarative-trolli"
 version = "1.0.0"
 description = "Declarative Trello-style board app with draggable lists, cards, dialogs, and route-based navigation."
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Declarative", "Featured"]
+screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_trolli/declarative_trolli.png"]
 
 [tool.flet.metadata]
 title = "Trolli"

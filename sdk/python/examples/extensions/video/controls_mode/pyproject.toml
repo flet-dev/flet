@@ -15,6 +15,7 @@ categories = ["Media/Video"]
 
 [tool.flet.metadata]
 title = "Mode-specific controls"
+docs_intro = "Show different controls in normal vs. fullscreen mode by mapping each [`VideoControlsMode`][flet_video.VideoControlsMode] to its own [`controls`][flet_video.Video.controls] value."
 controls = ["SafeArea", "Container", "Text", "Video"]
 layout_pattern = "single-panel"
 complexity = "basic"

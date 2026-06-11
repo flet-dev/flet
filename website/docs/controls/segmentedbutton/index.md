@@ -9,13 +9,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 # SegmentedButton
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Basic segmented button" />
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="SegmentedButton" />
 
 ## Examples
-
-[Live example](https://flet-controls-gallery.fly.dev/buttons/segmentedbutton)
-
-### Basic Example
 
 <CodeExample path={frontMatter.examples + '/single_multiple_selection/main.py'} language="python" />
 

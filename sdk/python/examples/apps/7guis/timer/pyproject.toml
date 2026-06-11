@@ -1,5 +1,5 @@
 [project]
-name = "apps-7guis-timer"
+name = "7guis-timer"
 version = "1.0.0"
 description = "7GUIs timer app with automatic progress updates, duration control, and reset handling."
 requires-python = ">=3.10"
@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Featured/7GUIs", "Cookbook"]
+categories = ["Cookbook/7GUIs", "Cookbook"]
 
 [tool.flet.metadata]
 title = "Timer"

@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-edit-form"
+name = "declarative-edit-form"
 version = "1.0.0"
 description = "Edits a small form declaratively and submits or resets the fields through observable state."
 requires-python = ">=3.10"

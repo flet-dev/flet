@@ -7,17 +7,11 @@ title: "CupertinoContextMenu"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# CupertinoContextMenu
-
 <ClassSummary name={frontMatter.class_name} />
 
 ## Examples
 
-[Live example](https://flet-controls-gallery.fly.dev/dialogs/cupertinocontextmenu)
-
-### Basic Example
-
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/cupertino_context_menu/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/basic.gif'} alt="basic" width="55%" />
 
