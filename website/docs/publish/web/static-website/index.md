@@ -50,9 +50,9 @@ full matrix and resolution rules. In short:
 
 | Python | Pyodide   |
 | ------ | --------- |
-| 3.12   | 0.27.7    |
-| 3.13   | 0.29.4    |
 | 3.14   | 314.0.0a2 |
+| 3.13   | 0.29.4    |
+| 3.12   | 0.27.7    |
 
 The matching Pyodide runtime is downloaded into the build output and cached
 under `~/.flet/pyodide/<version>/` on first use. The older `0.27.5` bundle
