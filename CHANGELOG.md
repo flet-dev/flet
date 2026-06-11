@@ -13,6 +13,7 @@
 ### Breaking changes
 
 * `flet build` and `flet publish` now bundle CPython 3.14 by default (previously 3.12, implicit via the old single-version `serious_python`). Existing apps that depend on native wheels without 3.14 binaries should pin explicitly with `--python-version 3.12` (CLI), `requires-python = ">=3.12,<3.13"` (pyproject), or `SERIOUS_PYTHON_VERSION=3.12` in the build environment ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Android builds now include only the ABIs the bundled Python supports: with Python 3.13+ (3.14 is the default), `armeabi-v7a` is no longer packaged by default — previously 32-bit devices could install such an app, but it crashed at startup because python-build ships no 32-bit distribution (PEP 738). An explicit `--arch armeabi-v7a` fails with a clear error unless combined with `--python-version 3.12` ([#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
 * The `flet.version.pyodide_version` module attribute and the `PYODIDE_VERSION` constant are removed. Reach for `flet_cli.utils.python_versions.SUPPORTED_PYTHON_VERSIONS` if you need the per-version Pyodide mapping programmatically ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 
 ### Bug fixes
