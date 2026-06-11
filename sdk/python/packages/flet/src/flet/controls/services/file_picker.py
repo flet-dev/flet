@@ -334,7 +334,16 @@ class FilePicker(Service):
 
         Returns:
             A list of selected files.
+
+        Raises:
+            ValueError: If `compression_quality` is not between
+                `0` and `100` inclusive.
         """
+        if not (0 <= compression_quality <= 100):
+            raise ValueError(
+                "compression_quality must be between 0 and 100 inclusive, "
+                f"got {compression_quality}."
+            )
         files = await self._invoke_method(
             "pick_files",
             {
