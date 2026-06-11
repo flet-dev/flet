@@ -1,18 +1,18 @@
 """Helpers for Android-specific build configuration."""
 
-# Android ABIs supported by Flutter, mapped to `flutter build`
-# --target-platform values. Order is meaningful: it defines the order in which
-# generated artifacts (e.g. Gradle packaging excludes) list ABIs.
 ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM = {
     "armeabi-v7a": "android-arm",
     "arm64-v8a": "android-arm64",
     "x86_64": "android-x64",
 }
+"""Android ABIs supported by Flutter, mapped to `flutter build --target-platform`
+values. Order is meaningful: it defines the order in which
+generated artifacts (e.g. Gradle packaging excludes) list ABIs."""
 
 
 def flutter_target_platforms(archs: list[str]) -> list[str]:
     """
-    Map Android ABI names to Flutter `--target-platform` values.
+    Map Android ABI names to `flutter build --target-platform` values.
 
     Args:
         archs: Android ABI names, e.g. `["arm64-v8a"]`.
