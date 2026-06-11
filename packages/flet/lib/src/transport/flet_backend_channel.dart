@@ -10,6 +10,18 @@ import 'flet_backend_channel_web_socket.dart';
 typedef FletBackendChannelOnDisconnectCallback = void Function();
 typedef FletBackendChannelOnMessageCallback = void Function(Message message);
 
+/// Builds a custom [FletBackendChannel] supplied by the embedder.
+///
+/// When provided to [FletApp]/[FletBackend], the channel is used directly and
+/// the URL-scheme factory below is skipped — letting embedded runtimes (e.g.
+/// `serious_python`'s in-process Dart↔Python FFI bridge) plug in a transport
+/// that needs more setup than a `String address` URL can express, without
+/// forcing the `flet` package to take a Python-related dependency.
+typedef FletBackendChannelBuilder = FletBackendChannel Function({
+  required FletBackendChannelOnMessageCallback onMessage,
+  required FletBackendChannelOnDisconnectCallback onDisconnect,
+});
+
 abstract class FletBackendChannel {
   factory FletBackendChannel(
       {required String address,

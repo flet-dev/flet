@@ -62,6 +62,7 @@ class FletBackend extends ChangeNotifier {
   int _reconnectStarted = 0;
   int _reconnectDelayMs = 0;
   FletBackendChannel? _backendChannel;
+  final FletBackendChannelBuilder? _channelBuilder;
   final List<Message> _sendQueue = [];
   String route = "";
   bool isLoading = true;
@@ -104,11 +105,13 @@ class FletBackend extends ChangeNotifier {
       this.forcePyodide,
       this.tester,
       required extensions,
+      FletBackendChannelBuilder? channelBuilder,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
         _reconnectTimeoutMs = reconnectTimeoutMs,
-        _reconnectIntervalMs = reconnectIntervalMs {
+        _reconnectIntervalMs = reconnectIntervalMs,
+        _channelBuilder = channelBuilder {
     // add Flet extension with core controls and services
     this.extensions = [...extensions, FletCoreExtension()];
 
@@ -177,12 +180,21 @@ class FletBackend extends ChangeNotifier {
   Future<void> connect() async {
     debugPrint("Connecting to Flet backend $pageUri...");
     try {
-      _backendChannel = FletBackendChannel(
-          address: pageUri.toString(),
-          args: args ?? {},
-          forcePyodide: forcePyodide == true,
-          onDisconnect: _onDisconnect,
-          onMessage: _onMessage);
+      final builder = _channelBuilder;
+      if (builder != null) {
+        // Embedder-supplied transport (e.g. serious_python's in-process FFI
+        // bridge). The builder is responsible for the entire transport
+        // lifecycle; we just wire its callbacks to ours.
+        _backendChannel = builder(
+            onDisconnect: _onDisconnect, onMessage: _onMessage);
+      } else {
+        _backendChannel = FletBackendChannel(
+            address: pageUri.toString(),
+            args: args ?? {},
+            forcePyodide: forcePyodide == true,
+            onDisconnect: _onDisconnect,
+            onMessage: _onMessage);
+      }
       await _backendChannel!.connect();
       _registerClient();
     } catch (e) {

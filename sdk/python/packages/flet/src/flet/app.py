@@ -252,15 +252,26 @@ async def run_async(
         signal.signal(signal.SIGINT, exit_gracefully)
         signal.signal(signal.SIGTERM, exit_gracefully)
 
-    conn = (
-        await __run_socket_server(
+    # Embedded runtime can opt into the in-process dart_bridge transport
+    # (provided by libdart_bridge from flet-dev/serious-python) by setting
+    # FLET_DART_BRIDGE_PORT. Falls back to the existing socket / web
+    # transports when the env var is absent.
+    bridge_port_env = os.getenv("FLET_DART_BRIDGE_PORT")
+    if is_embedded() and bridge_port_env:
+        conn = await __run_dart_bridge_server(
+            port=int(bridge_port_env),
+            main=main or target,
+            before_main=before_main,
+        )
+    elif is_socket_server:
+        conn = await __run_socket_server(
             port=port,
             main=main or target,
             before_main=before_main,
             blocking=is_embedded(),
         )
-        if is_socket_server
-        else await __run_web_server(
+    else:
+        conn = await __run_web_server(
             main=main or target,
             before_main=before_main,
             host=host,
@@ -273,7 +284,6 @@ async def run_async(
             no_cdn=no_cdn,
             on_startup=on_app_startup,
         )
-    )
 
     logger.info("Flet app has started...")
 
@@ -394,6 +404,45 @@ async def __run_socket_server(
         on_session_created=__get_on_session_created(main),
         before_main=before_main,
         blocking=blocking,
+        executor=executor,
+    )
+    await conn.start()
+    return conn
+
+
+async def __run_dart_bridge_server(
+    port: int,
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+):
+    """
+    Start Flet dart_bridge transport and return active connection object.
+
+    This transport exchanges the same MsgPack-framed protocol as
+    `__run_socket_server`, but over the in-process `dart_bridge` byte channel
+    instead of a Unix socket — eliminating the socket file, kernel context
+    switches, and the connect/handshake retry loop for embedded apps.
+
+    Args:
+        port: Dart native port (passed in via env var by the embedding side;
+            doubles as the keyed channel identifier).
+        main: User app entry handler.
+        before_main: Optional hook called before `main`.
+
+    Returns:
+        Started dart_bridge-server connection instance.
+    """
+    # Imported lazily so non-embedded runs (web server, native desktop) never
+    # try to load libdart_bridge.
+    from flet.messaging.flet_dart_bridge_server import FletDartBridgeServer
+
+    executor = concurrent.futures.ThreadPoolExecutor()
+
+    conn = FletDartBridgeServer(
+        loop=asyncio.get_running_loop(),
+        port=port,
+        on_session_created=__get_on_session_created(main),
+        before_main=before_main,
         executor=executor,
     )
     await conn.start()

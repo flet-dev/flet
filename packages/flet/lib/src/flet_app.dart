@@ -7,6 +7,7 @@ import 'flet_backend.dart';
 import 'flet_extension.dart';
 import 'models/control.dart';
 import 'testing/tester.dart';
+import 'transport/flet_backend_channel.dart';
 
 /// FletApp - The top-level widget that initializes everything
 class FletApp extends StatefulWidget {
@@ -26,6 +27,12 @@ class FletApp extends StatefulWidget {
   final Tester? tester;
   final bool multiView;
 
+  /// Optional escape hatch for embedders that bring their own transport
+  /// (e.g. `serious_python`'s in-process FFI bridge). When set, this builder
+  /// is invoked from [FletBackend.connect] in place of the URL-scheme
+  /// factory; [pageUrl] is then irrelevant for transport selection.
+  final FletBackendChannelBuilder? channelBuilder;
+
   const FletApp(
       {super.key,
       required this.pageUrl,
@@ -42,7 +49,8 @@ class FletApp extends StatefulWidget {
       this.args,
       this.forcePyodide,
       this.tester,
-      this.multiView = false});
+      this.multiView = false,
+      this.channelBuilder});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -76,6 +84,7 @@ class _FletAppState extends State<FletApp> {
             forcePyodide: widget.forcePyodide,
             tester: widget.tester,
             multiView: widget.multiView,
+            channelBuilder: widget.channelBuilder,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },
