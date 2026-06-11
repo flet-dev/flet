@@ -1,3 +1,9 @@
+## 0.85.4
+
+### Bug fixes
+
+* Fix `flet build apk` failing at `mergeDebugNativeLibs` with `N files found with path 'lib/<abi>/libc++_shared.so'` when an app combines `serious_python_android` with another Flutter plugin that also bundles the NDK C++ runtime ([#6570](https://github.com/flet-dev/flet/issues/6570)) by @ndonkoHenri.
+
 ## 0.85.3
 
 ### Improvements
