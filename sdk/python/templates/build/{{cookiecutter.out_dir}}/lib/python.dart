@@ -1,7 +1,7 @@
 const errorExitCode = 100;
 
 const pythonScript = """
-import os, runpy, socket, sys, traceback
+import os, runpy, sys, traceback
 
 # fix for cryptography package
 os.environ["CRYPTOGRAPHY_OPENSSL_NO_LEGACY"] = "1"
@@ -56,29 +56,28 @@ def initialize_ctypes():
 initialize_ctypes()
 
 out_file = open("{outLogFilename}", "w+", buffering=1)
-
-callback_socket_addr = os.getenv("FLET_PYTHON_CALLBACK_SOCKET_ADDR")
-if ":" in callback_socket_addr:
-    addr, port = callback_socket_addr.split(":")
-    callback_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    callback_socket.connect((addr, int(port)))
-else:
-    callback_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    callback_socket.connect(callback_socket_addr)
-
 sys.stdout = sys.stderr = out_file
 
+# Exit-code transport. The Dart side allocated a dedicated PythonBridge port
+# (FLET_DART_BRIDGE_EXIT_PORT) and is listening on it. `flet_exit` posts the
+# exit code as raw UTF-8 bytes through that bridge — the Dart side parses,
+# then either renders the error screen (code == 100) or terminates the host
+# process (any other code) using the file we wrote to above.
+import dart_bridge  # built-in module provided by libdart_bridge
+_exit_port = int(os.environ["FLET_DART_BRIDGE_EXIT_PORT"])
+
 def flet_exit(code=0):
-    callback_socket.sendall(str(code).encode())
-    out_file.close()
-    callback_socket.close()
+    try:
+        dart_bridge.send_bytes(_exit_port, str(code).encode())
+    finally:
+        out_file.close()
 
 sys.exit = flet_exit
 
 ex = None
 try:
     import certifi
-    
+
     os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
     os.environ["SSL_CERT_FILE"] = certifi.where()
 

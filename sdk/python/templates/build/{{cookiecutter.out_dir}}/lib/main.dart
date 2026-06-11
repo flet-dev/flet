@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:serious_python/bridge.dart';
 import 'package:serious_python/serious_python.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
@@ -67,6 +70,14 @@ String assetsDir = "";
 String appDir = "";
 Map<String, String> environmentVariables = Map.from(Platform.environment);
 
+// In production (embedded) mode the Flet protocol flows over an in-process
+// PythonBridge — no socket file, no TCP. `_exitBridge` is a separate bridge
+// dedicated to Python's exit-code transmission (replaces the legacy stdout-
+// callback socket). Both are null in web + developer modes where Python is
+// either remote or in a separate process.
+PythonBridge? _bridge;
+PythonBridge? _exitBridge;
+
 void main(List<String> args) async {
 
   FletDeepLinkingBootstrap.install();
@@ -86,6 +97,19 @@ void main(List<String> args) async {
       future: prepareApp(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
+          // In production mode prepareApp() created _bridge; wire a
+          // PythonBridge-backed channel so FletApp talks to the embedded
+          // Python over the in-process FFI transport. In web + dev modes
+          // _bridge is null and FletApp falls back to its URL-scheme factory
+          // (websocket / TCP / UDS).
+          final channelBuilder = _bridge == null
+              ? null
+              : ({
+                  required FletBackendChannelOnMessageCallback onMessage,
+                  required FletBackendChannelOnDisconnectCallback onDisconnect,
+                }) =>
+                  _DartBridgeBackendChannel(_bridge!,
+                      onMessage: onMessage, onDisconnect: onDisconnect);
           // OK - start Python program
           return kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)
               ? FletApp(
@@ -112,6 +136,7 @@ void main(List<String> args) async {
                           assetsDir: assetsDir,
                           showAppStartupScreen: showAppStartupScreen,
                           appStartupScreenMessage: appStartupScreenMessage,
+                          channelBuilder: channelBuilder,
                           extensions: extensions);
                     }
                   });
@@ -197,16 +222,20 @@ Future prepareApp() async {
     environmentVariables.putIfAbsent(
         "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      // use TCP on Windows
-      var tcpPort = await getUnusedPort();
-      pageUrl = "tcp://localhost:$tcpPort";
-      environmentVariables.putIfAbsent("FLET_SERVER_PORT", () => tcpPort.toString());
-    } else {
-      // use UDS on other platforms
-      pageUrl = "flet_$pid.sock";
-      environmentVariables.putIfAbsent("FLET_SERVER_UDS_PATH", () => pageUrl);
-    }
+    // In production we use the in-process dart_bridge FFI transport (no UDS,
+    // no TCP — Python and Flutter share the process). Two bridges:
+    //   _bridge      — the Flet MsgPack protocol channel (Dart ↔ Python).
+    //   _exitBridge  — Python-only outbound channel carrying the exit code
+    //                  when `sys.exit(code)` is called inside the embedded
+    //                  interpreter. Replaces the legacy stdout-callback
+    //                  socket.
+    _bridge = PythonBridge();
+    _exitBridge = PythonBridge();
+    pageUrl = "dartbridge://${_bridge!.port}";
+    environmentVariables.putIfAbsent(
+        "FLET_DART_BRIDGE_PORT", () => _bridge!.port.toString());
+    environmentVariables.putIfAbsent(
+        "FLET_DART_BRIDGE_EXIT_PORT", () => _exitBridge!.port.toString());
   }
 
   if (!kIsWeb && assetsDir.isNotEmpty) {
@@ -226,33 +255,17 @@ Future<String?> runPythonApp(List<String> args) async {
 
   var completer = Completer<String>();
 
-  ServerSocket outSocketServer;
-  String socketAddr = "";
-  StringBuffer pythonOut = StringBuffer();
+  // Subscribe to the exit-code bridge. Python's `sys.exit(code)` is patched
+  // (in python.dart) to encode `code` as raw UTF-8 bytes and post them via
+  // `dart_bridge.send_bytes(FLET_DART_BRIDGE_EXIT_PORT, ...)`. We don't need
+  // a streaming codec here — the channel only ever carries a single short
+  // payload, then Python tears down.
+  StringBuffer pythonExitBuf = StringBuffer();
+  StreamSubscription<Uint8List>? exitSub;
 
-  if (defaultTargetPlatform == TargetPlatform.windows) {
-    var tcpAddr = "127.0.0.1";
-    outSocketServer = await ServerSocket.bind(tcpAddr, 0);
-    debugPrint(
-        'Python output TCP Server is listening on port ${outSocketServer.port}');
-    socketAddr = "$tcpAddr:${outSocketServer.port}";
-  } else {
-    socketAddr = "stdout_$pid.sock";
-    if (await File(socketAddr).exists()) {
-      await File(socketAddr).delete();
-    }
-    outSocketServer = await ServerSocket.bind(
-        InternetAddress(socketAddr, type: InternetAddressType.unix), 0);
-    debugPrint('Python output Socket Server is listening on $socketAddr');
-  }
-
-  environmentVariables.putIfAbsent("FLET_PYTHON_CALLBACK_SOCKET_ADDR", () => socketAddr);
-
-  void closeOutServer() async {
-    outSocketServer.close();
-
-    int exitCode = int.tryParse(pythonOut.toString().trim()) ?? 0;
-
+  void onExitSignal() async {
+    await exitSub?.cancel();
+    int exitCode = int.tryParse(pythonExitBuf.toString().trim()) ?? 0;
     if (exitCode == errorExitCode) {
       var out = "";
       if (await File(outLogFilename).exists()) {
@@ -264,27 +277,110 @@ Future<String?> runPythonApp(List<String> args) async {
     }
   }
 
-  outSocketServer.listen((client) {
-    debugPrint(
-        'Connection from: ${client.remoteAddress.address}:${client.remotePort}');
-    client.listen((data) {
-      var s = String.fromCharCodes(data);
-      pythonOut.write(s);
-    }, onError: (error) {
-      client.close();
-      closeOutServer();
-    }, onDone: () {
-      client.close();
-      closeOutServer();
-    });
-  });
+  exitSub = _exitBridge!.messages.listen(
+    (data) {
+      pythonExitBuf.write(String.fromCharCodes(data));
+      // One frame is always the full code on this channel — act on it.
+      onExitSignal();
+    },
+    onError: (error) {
+      debugPrint('Exit bridge error: $error');
+      onExitSignal();
+    },
+    onDone: onExitSignal,
+    cancelOnError: false,
+  );
 
   // run python async
   SeriousPython.runProgram(path.join(appDir, "$pythonModuleName.pyc"),
       script: script, environmentVariables: environmentVariables);
 
-  // wait for client connection to close
+  // wait for Python to signal exit
   return completer.future;
+}
+
+/// `FletBackendChannel` implementation backed by a [PythonBridge]. Bytes
+/// flow Dart↔Python entirely in-process; no Unix socket, no kernel context
+/// switch. The wire format is the same MsgPack-framed protocol the existing
+/// socket-based `FletSocketBackendChannel` speaks.
+class _DartBridgeBackendChannel implements FletBackendChannel {
+  _DartBridgeBackendChannel(this._bridge,
+      {required FletBackendChannelOnMessageCallback onMessage,
+      required FletBackendChannelOnDisconnectCallback onDisconnect})
+      : _onMessage = onMessage,
+        _onDisconnect = onDisconnect,
+        _deserializer =
+            StreamingMsgpackDeserializer(extDecoder: FletMsgpackDecoder());
+
+  final PythonBridge _bridge;
+  final FletBackendChannelOnMessageCallback _onMessage;
+  final FletBackendChannelOnDisconnectCallback _onDisconnect;
+  final StreamingMsgpackDeserializer _deserializer;
+  StreamSubscription<Uint8List>? _subscription;
+
+  @override
+  Future connect() async {
+    _subscription = _bridge.messages.listen(
+      _onBytes,
+      onError: (error, stack) {
+        debugPrint("PythonBridge stream error: $error");
+        _onDisconnect();
+      },
+      onDone: () {
+        debugPrint("PythonBridge stream closed.");
+        _onDisconnect();
+      },
+      cancelOnError: false,
+    );
+  }
+
+  void _onBytes(Uint8List bytes) {
+    _deserializer.addChunk(bytes);
+    final frames = _deserializer.decodeMessages();
+    for (final frame in frames) {
+      _onMessage(Message.fromList(frame));
+    }
+  }
+
+  @override
+  void send(Message message) {
+    final encoded = Uint8List.fromList(
+        msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder()));
+    // Retry loop covers the brief startup window where Python hasn't yet
+    // called `dart_bridge.set_enqueue_handler_func` — bridge.send returns
+    // false in that case. Once Flet's app.py registers the handler (which
+    // happens before `runpy.run_module` is dispatched), bridge.send returns
+    // true synchronously.
+    if (_bridge.send(encoded)) return;
+    _retrySend(encoded);
+  }
+
+  void _retrySend(Uint8List encoded) {
+    const interval = Duration(milliseconds: 50);
+    const deadline = Duration(seconds: 30);
+    final start = DateTime.now();
+    Timer.periodic(interval, (timer) {
+      if (_bridge.send(encoded)) {
+        timer.cancel();
+      } else if (DateTime.now().difference(start) > deadline) {
+        timer.cancel();
+        debugPrint(
+            "PythonBridge send timed out: Python handler never registered.");
+      }
+    });
+  }
+
+  @override
+  bool get isLocalConnection => true;
+
+  @override
+  int get defaultReconnectIntervalMs => 0;
+
+  @override
+  void disconnect() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
 }
 
 class ErrorScreen extends StatelessWidget {
@@ -377,10 +473,3 @@ class BlankScreen extends StatelessWidget {
   }
 }
 
-Future<int> getUnusedPort() {
-  return ServerSocket.bind("127.0.0.1", 0).then((socket) {
-    var port = socket.port;
-    socket.close();
-    return port;
-  });
-}

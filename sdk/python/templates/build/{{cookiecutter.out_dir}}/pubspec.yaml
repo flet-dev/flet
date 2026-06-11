@@ -17,7 +17,18 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  serious_python: 1.0.1
+  # PythonBridge (in-process dart_bridge FFI transport) ships on the
+  # serious-python `dart-bridge` branch. Swap back to a version pin
+  # (`serious_python: ^2.0.0`) once it's published to pub.dev.
+  serious_python:
+    git:
+      url: https://github.com/flet-dev/serious-python.git
+      ref: dart-bridge
+
+  # MsgPack codec used by the dart_bridge FletBackendChannel implementation
+  # in lib/main.dart — matches the wire format flet's existing socket
+  # transport already speaks.
+  msgpack_dart: ^1.0.1
 
   package_info_plus: ^9.0.0
   path_provider: ^2.1.4
