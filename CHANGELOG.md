@@ -1,3 +1,9 @@
+## 0.85.4
+
+### Bug fixes
+
+* Specify `handler` signatures in `subscribe` and `subscribe_topic` functions in `pubsub_client.py` for better type checking ([#6549](https://github.com/flet-dev/flet/pull/6564)) by @Iaw4tch
+
 ## 0.85.3
 
 ### Improvements
