@@ -248,6 +248,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--arch",
             dest="target_arch",
+            action="extend",
             nargs="+",
             default=[],
             help="Build for specific CPU architectures "
@@ -503,6 +504,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--source-packages",
             dest="source_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of Python packages to install from source distributions",
@@ -558,6 +560,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--permissions",
             dest="permissions",
             type=str.lower,
+            action="extend",
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
