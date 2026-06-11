@@ -1,7 +1,23 @@
 ## 0.86.0
 
+### New features
+
+* Multi-version bundled CPython support in `flet build` and `flet publish`. Pick the runtime your app ships with via the new `--python-version` flag (3.12 / 3.13 / 3.14), or let it be derived from `[project].requires-python` in your `pyproject.toml`; defaults to the latest supported stable (currently 3.14). The matching CPython-standalone build, Pyodide release (0.27.7 / 0.29.4 / 314.0.0a2), and Emscripten wheel platform tag are all resolved from a central registry. Adding a future pre-release CPython line (e.g. 3.15 beta) is a one-row append with `prerelease=True` — opt-in only via an explicit `--python-version 3.15` or `requires-python = "==3.15.*"`, never the auto-resolved default. Requires `serious_python` >= 2.0.0, now pinned in the `flet build` template. See the new [Choosing a Python version](https://flet.dev/docs/publish#choosing-a-python-version) docs section ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+
+### Improvements
+
+* Pyodide is no longer pre-baked into the `flet build` template. Each `flet build web` / `flet publish` run downloads the matching `pyodide-core-<version>.tar.bz2` (plus the runtime `micropip` and `packaging` wheels) into a per-version cache at `~/.flet/pyodide/<version>/` and copies the files into the build output. Subsequent builds reuse the cache; the older `0.27.5` bundle previously shipped in the cookiecutter template is gone ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* `flet --version` now lists the supported Python versions newest first, each with its matching Pyodide release and a `default` / `pre-release` annotation where applicable, instead of the single static `Pyodide: …` line. The global `flet.version.pyodide_version` export is removed (the only external consumer was the CLI version output, now updated) ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* `client/web/python.js` and the build template's `python.js` no longer hardcode `defaultPyodideUrl`. `patch_index.py` now injects `flet.pyodideUrl` per build (CDN URL by default, or the local `pyodide/pyodide.js` path under `--no-cdn`) so the runtime URL always tracks the resolved Pyodide release ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+
+### Breaking changes
+
+* `flet build` and `flet publish` now bundle CPython 3.14 by default (previously 3.12, implicit via the old single-version `serious_python`). Existing apps that depend on native wheels without 3.14 binaries should pin explicitly with `--python-version 3.12` (CLI), `requires-python = ">=3.12,<3.13"` (pyproject), or `SERIOUS_PYTHON_VERSION=3.12` in the build environment ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* The `flet.version.pyodide_version` module attribute and the `PYODIDE_VERSION` constant are removed. Reach for `flet_cli.utils.python_versions.SUPPORTED_PYTHON_VERSIONS` if you need the per-version Pyodide mapping programmatically ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+
 ### Bug fixes
 
+* Fix `flet build` failing on Windows when a dependency is pulled in via `[tool.flet.<platform>].dev_packages` (or any local-path install): the rewritten `<pkg> @ file://<path>` URL now uses `Path.as_uri()`, producing the correct `file:///D:/...` three-slash form instead of `file://D:\...`, which pip on Windows parsed as a UNC path and aborted with `OSError: [Errno 2] No such file or directory: '\\\\D:\\a\\...'` ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 * Fix `flet build apk` failing at `mergeDebugNativeLibs` with `N files found with path 'lib/<abi>/libc++_shared.so'` when an app combines `serious_python_android` with another Flutter plugin that also bundles the NDK C++ runtime ([#6570](https://github.com/flet-dev/flet/issues/6570), [#6571](https://github.com/flet-dev/flet/pull/6571)) by @ndonkoHenri.
 
 ## 0.85.3
