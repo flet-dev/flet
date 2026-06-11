@@ -1,5 +1,6 @@
-const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js";
-
+// Pyodide URL is injected per build by flet-web's patch_index.py
+// (sets flet.pyodideUrl). Falls back to the local pyodide/ directory that
+// flet build web / flet publish drop next to the page.
 let _apps = {};
 let _documentUrl = document.URL;
 
@@ -31,7 +32,7 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
 
     // initialize worker
     app.worker.postMessage({
-        pyodideUrl: flet.noCdn ? flet.pyodideUrl : defaultPyodideUrl,
+        pyodideUrl: flet.pyodideUrl || "pyodide/pyodide.js",
         args: args,
         documentUrl: _documentUrl,
         appPackageUrl: flet.appPackageUrl,

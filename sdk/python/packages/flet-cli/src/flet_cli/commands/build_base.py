@@ -36,6 +36,10 @@ from flet_cli.utils.project_dependencies import (
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+from flet_cli.utils.python_versions import (
+    UnsupportedPythonVersionError,
+    resolve_python_version,
+)
 
 DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
@@ -510,6 +514,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="The list of Python packages to install from source distributions",
         )
         parser.add_argument(
+            "--python-version",
+            dest="python_version",
+            type=str,
+            default=None,
+            help="Python version to bundle (e.g. 3.13). Defaults to the latest "
+            "supported version, or is parsed from project.requires-python.",
+        )
+        parser.add_argument(
             "--info-plist",
             dest="info_plist",
             action="extend",
@@ -701,6 +713,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
+
+        try:
+            self.python_release = resolve_python_version(
+                self.options.python_version, self.get_pyproject
+            )
+        except UnsupportedPythonVersionError as e:
+            self.cleanup(1, str(e))
 
     def validate_target_platform(self):
         """
@@ -1226,6 +1245,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
+                "python_version": self.python_release.short,
                 "target_arch": target_arch,
                 "android_excluded_abis": (
                     excluded_android_abis(target_arch)
@@ -1907,6 +1927,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             str(self.package_app_path),
             "--platform",
             self.package_platform,
+            "--python-version",
+            self.python_release.short,
         ]
 
         if self.template_data["options"]["target_arch"]:
@@ -1917,7 +1939,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ["--arch", ",".join(self.template_data["options"]["target_arch"])]
             )
 
-        package_env = {}
+        package_env = {
+            "SERIOUS_PYTHON_VERSION": self.python_release.short,
+        }
 
         # requirements
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
@@ -1950,7 +1974,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
                         if dev_path.exists():
-                            toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                            # Use Path.as_uri() so Windows drive paths render as
+                            # `file:///D:/a/...` rather than `file://D:\a\...`,
+                            # which pip otherwise treats as a UNC path and fails
+                            # to resolve.
+                            toml_dependencies[i] = (
+                                f"{package_name} @ {dev_path.as_uri()}"
+                            )
                         else:
                             toml_dependencies[i] = (
                                 f"{package_name} @ {package_location}"
@@ -2113,6 +2143,21 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
+        # Drop the matching Pyodide runtime into the Flutter project's web/
+        # directory so it ships in `flutter build web` output. Cached
+        # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
+        # are no-ops.
+        if self.package_platform == "Emscripten":
+            from flet_cli.utils.pyodide import ensure_pyodide
+
+            self.update_status("[bold blue]Preparing Pyodide runtime...")
+            pyodide_dest = self.flutter_dir / "web" / "pyodide"
+            ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+            console.log(
+                f"Pyodide {self.python_release.pyodide} ready "
+                f"{self.emojis['checkmark']}"
+            )
+
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
         Resolve a boolean setting with precedence: CLI option, pyproject, default.
@@ -2183,7 +2228,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
         )
 
-        build_env = {}
+        build_env = {
+            "SERIOUS_PYTHON_VERSION": self.python_release.short,
+        }
 
         # site-packages variable
         if self.package_platform != "Emscripten":

@@ -73,8 +73,11 @@ android {
         ndk {
             {% if cookiecutter.options.target_arch %}
             abiFilters += listOf({% for arch in cookiecutter.options.target_arch %}"{{ arch }}"{% if not loop.last %}, {% endif %}{% endfor %})
-            {% else %}
+            {% elif cookiecutter.options.python_version == "3.12" %}
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+            {% else %}
+            // python-build dropped 32-bit Android in 3.13 (PEP 738).
+            abiFilters += listOf("arm64-v8a", "x86_64")
             {% endif %}
         }
 // flet: end of split_per_abi {% endif %}
