@@ -23,6 +23,10 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.utils.android import (
+    ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    excluded_android_abis,
+)
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
@@ -247,7 +251,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="Build for specific CPU architectures "
-            "(used in macOS and Android builds only). Example: `--arch arm64 x64`",
+            "(used in macOS and Android builds only). "
+            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x64. "
+            "Example: `--arch arm64-v8a`",
         )
         parser.add_argument(
             "--exclude",
@@ -1086,6 +1092,26 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
             or self.get_pyproject("tool.flet.target_arch")
         )
+        target_arch = (
+            target_arch
+            if isinstance(target_arch, list)
+            else [target_arch]
+            if isinstance(target_arch, str)
+            else []
+        )
+        if self.package_platform == "Android":
+            invalid_archs = [
+                arch
+                for arch in target_arch
+                if arch not in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM
+            ]
+            if invalid_archs:
+                self.cleanup(
+                    1,
+                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}. "
+                    f"Supported: "
+                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.",
+                )
 
         ios_export_method = (
             self.options.ios_export_method
@@ -1197,11 +1223,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
-                "target_arch": (
-                    target_arch
-                    if isinstance(target_arch, list)
-                    else [target_arch]
-                    if isinstance(target_arch, str)
+                "target_arch": target_arch,
+                "android_excluded_abis": (
+                    excluded_android_abis(target_arch)
+                    if self.package_platform == "Android"
                     else []
                 ),
                 "info_plist": info_plist,
