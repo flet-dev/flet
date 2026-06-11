@@ -1,6 +1,8 @@
 import argparse
 import sys
 
+from packaging.version import Version
+
 import flet.version
 import flet_cli.commands.build
 import flet_cli.commands.create
@@ -12,6 +14,29 @@ import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
 import flet_cli.commands.serve
+from flet_cli.utils.python_versions import (
+    DEFAULT_PYTHON_VERSION,
+    SUPPORTED_PYTHON_VERSIONS,
+)
+
+
+def _supported_python_versions_block() -> str:
+    """Render the multi-line `flet --version` listing of supported Python releases."""
+    lines = ["Supported Python versions:"]
+    sorted_versions = sorted(
+        SUPPORTED_PYTHON_VERSIONS,
+        key=lambda r: Version(r.short),
+        reverse=True,
+    )
+    for r in sorted_versions:
+        suffix = []
+        if r.prerelease:
+            suffix.append("pre-release")
+        if r.short == DEFAULT_PYTHON_VERSION:
+            suffix.append("default")
+        tail = f", {', '.join(suffix)}" if suffix else ""
+        lines.append(f"  {r.short} (Pyodide {r.pyodide}{tail})")
+    return "\n".join(lines)
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -76,7 +101,7 @@ def get_parser() -> argparse.ArgumentParser:
         version=(
             f"Flet: {flet.version.flet_version}\n"
             f"Flutter: {flet.version.flutter_version}\n"
-            f"Pyodide: {flet.version.pyodide_version}"
+            f"{_supported_python_versions_block()}"
         ),
     )
 
