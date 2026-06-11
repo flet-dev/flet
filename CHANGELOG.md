@@ -1,6 +1,6 @@
-## 0.85.4
+## 0.86.0
 
-### Improvements
+### New features
 
 * Add `compression_quality` to `FilePicker.pick_files()` for selecting the image compression quality used by supported platforms ([#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 
