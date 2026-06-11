@@ -315,6 +315,13 @@ async def run_async(
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
+        elif is_embedded() and bridge_port_env:
+            # dart_bridge has no serve_forever (no socket accept loop) — the
+            # embedded interpreter would otherwise exit as soon as the user's
+            # main() returns. Park here until the host process tears us down.
+            with contextlib.suppress(KeyboardInterrupt):
+                await terminate.wait()
+
         elif view == AppView.WEB_BROWSER or view is None or force_web_server:
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
