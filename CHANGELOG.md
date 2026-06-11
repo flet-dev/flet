@@ -2,8 +2,8 @@
 
 ### Bug fixes
 
-* Fix `flet build apk` / `flet build aab` with `--arch` packaging native libraries for *all* Android ABIs instead of only the requested ones. The requested architectures are now forwarded to Flutter as `--target-platform` (so `--split-per-abi` builds only the requested splits), unrequested ABI directories are excluded from the artifact, Android `--arch` values are validated, multiple `--arch` values now correctly reach `serious_python`, and stale artifacts from previous builds are no longer copied into the output directory ([#6567](https://github.com/flet-dev/flet/issues/6567)) by @ndonkoHenri.
-* Fix repeated `--arch`, `--source-packages` and `--permissions` flags in `flet build` keeping only the values of the last occurrence by @ndonkoHenri.
+* Fix `flet build apk` / `flet build aab` with `--arch` packaging native libraries for *all* Android ABIs instead of only the requested ones. The requested architectures are now forwarded to Flutter as `--target-platform` (so `--split-per-abi` builds only the requested splits), unrequested ABI directories are excluded from the artifact, Android `--arch` values are validated, multiple `--arch` values now correctly reach `serious_python`, and stale artifacts from previous builds are no longer copied into the output directory ([#6567](https://github.com/flet-dev/flet/issues/6567), [#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
+* Fix repeated `--arch`, `--source-packages` and `--permissions` flags in `flet build` keeping only the values of the last occurrence ([#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
 
 ## 0.85.3
 
