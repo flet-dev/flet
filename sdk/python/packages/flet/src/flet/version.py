@@ -13,7 +13,6 @@ __all__ = [
     "flet_version",
     "flutter_version",
     "from_git",
-    "pyodide_version",
 ]
 
 # set by CI
@@ -35,12 +34,6 @@ apps with [`flet build`](https://flet.dev/docs/cli/flet-build/).
 This value is set explicitly in CI for released packages. When running from
 source and no version is provided, it is resolved from the repository's
 `.fvmrc` file when available.
-"""
-
-PYODIDE_VERSION = "0.27.7"
-"""
-The Pyodide version being used when packaging
-with [`flet build web`](https://flet.dev/docs/cli/flet-build/).
 """
 
 
@@ -141,6 +134,5 @@ def get_flutter_version() -> str:
 
 
 flutter_version = get_flutter_version()
-pyodide_version = PYODIDE_VERSION
 flet_version = get_flet_version()
 __version__ = flet_version
