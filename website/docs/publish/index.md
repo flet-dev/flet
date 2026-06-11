@@ -80,7 +80,7 @@ src
     version = "0.1.0"
     description = "An Example."
     readme = "README.md"
-    requires-python = ">=3.14"
+    requires-python = ">=3.10"
     authors = [{ name = "Me", email = "me@example.com" }]
     dependencies = [
       "flet"
@@ -1008,7 +1008,7 @@ Its value is determined in the following order of precedence:
 1. [`--arch`](../cli/flet-build.md#--arch)
 2. `[tool.flet.<PLATFORM>].target_arch`, where `<PLATFORM>` can be `android` or `macos`
 3. `[tool.flet].target_arch`
-4. Platform defaults for the `<target_platform>`
+4. Platform defaults for the `<target_platform>` — ([Android](android.md#supported-target-architectures), [macOS](macos.md#target-architecture))
 
 #### Example
 

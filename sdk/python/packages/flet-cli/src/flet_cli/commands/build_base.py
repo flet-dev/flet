@@ -1130,10 +1130,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             if invalid_archs:
                 self.cleanup(
                     1,
-                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}. "
+                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}.\n"
                     f"Supported: "
-                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.",
+                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
                 )
+            python_abis = list(self.python_release.android_abis)
+            unsupported_archs = [a for a in target_arch if a not in python_abis]
+            if unsupported_archs:
+                self.cleanup(
+                    1,
+                    f"Architecture(s) not supported by Python "
+                    f"{self.python_release.short}: {', '.join(unsupported_archs)}.\n"
+                    f"Supported: {', '.join(python_abis)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            if not target_arch:
+                # Build only for the ABIs the bundled Python supports.
+                target_arch = python_abis
 
         ios_export_method = (
             self.options.ios_export_method
@@ -2500,11 +2514,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         # incompatible formats so flutter_launcher_icons gets a decodable file.
         images = list(
             filter(
-                lambda p: not (
-                    (ext := Path(p).suffix.lower()) == ".icns"
-                    and self.target_platform != "macos"
-                    or ext == ".ico"
-                    and self.target_platform != "windows"
+                lambda p: (
+                    not (
+                        (ext := Path(p).suffix.lower()) == ".icns"
+                        and self.target_platform != "macos"
+                        or ext == ".ico"
+                        and self.target_platform != "windows"
+                    )
                 ),
                 glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
             )

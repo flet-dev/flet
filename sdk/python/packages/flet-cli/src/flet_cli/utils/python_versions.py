@@ -20,11 +20,16 @@ class PythonRelease:
     standalone_date: str
     pyodide: str
     pyodide_platform_tag: str
-    # When True, this release is supported via `--python-version` (and an
-    # explicit `requires-python = "==X.Y.*"` specifier) but is not picked
-    # automatically by the default or by open-ended `requires-python`
-    # specifiers like `>=3.14`. Use for beta CPython lines.
+
+    android_abis: tuple[str, ...]
+    """Android ABIs python-build publishes distributions for. 32-bit Android
+    was dropped in 3.13 (PEP 738), so only 3.12 carries armeabi-v7a."""
+
     prerelease: bool
+    """When True, this release is supported via `--python-version` (and an
+    explicit `requires-python = "==X.Y.*"` specifier) but is not picked
+    automatically by the default or by open-ended `requires-python`
+    specifiers like `>=3.14`. Use for beta CPython lines."""
 
 
 SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
@@ -34,6 +39,7 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
         standalone_date="20260602",
         pyodide="0.27.7",
         pyodide_platform_tag="pyodide-2024.0-wasm32",
+        android_abis=("armeabi-v7a", "arm64-v8a", "x86_64"),
         prerelease=False,
     ),
     PythonRelease(
@@ -42,6 +48,7 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
         standalone_date="20260602",
         pyodide="0.29.4",
         pyodide_platform_tag="pyodide-2025.0-wasm32",
+        android_abis=("arm64-v8a", "x86_64"),
         prerelease=False,
     ),
     PythonRelease(
@@ -50,6 +57,7 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
         standalone_date="20260602",
         pyodide="314.0.0a2",
         pyodide_platform_tag="pyemscripten-2026.0-wasm32",
+        android_abis=("arm64-v8a", "x86_64"),
         prerelease=False,
     ),
     # Add future pre-release CPython lines with `prerelease=True`. They are
@@ -62,6 +70,7 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
     #     standalone_date="...",
     #     pyodide="...",
     #     pyodide_platform_tag="...",
+    #     android_abis=("arm64-v8a", "x86_64"),
     #     prerelease=True,
     # ),
 ]
