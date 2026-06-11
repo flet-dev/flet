@@ -1,3 +1,9 @@
+## Unreleased
+
+### Bug fixes
+
+* Fix `flet build apk` / `flet build aab` with `--arch` packaging native libraries for *all* Android ABIs instead of only the requested ones. Requested architectures are now forwarded to Flutter as `--target-platform` (so `--split-per-abi` also produces only the requested splits), and the generated Gradle project excludes unrequested ABI directories from the artifact — the existing `ndk.abiFilters` could not do this alone because the Flutter Gradle plugin adds all default ABIs as buildType-level filters and AGP merges the two levels as a union. `--arch` values are now validated for Android builds (`arm64-v8a`, `armeabi-v7a`, `x86_64`), and stale APK/AAB artifacts from a previous build with different options are no longer copied into the output directory. Also fixes `--arch` with multiple values passing only the first one to `serious_python` — packaged apps were missing Python dependencies for every architecture after the first ([#6567](https://github.com/flet-dev/flet/issues/6567)) by @ndonkoHenri.
+
 ## 0.85.3
 
 ### Improvements
