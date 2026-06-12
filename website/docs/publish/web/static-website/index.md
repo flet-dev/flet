@@ -45,11 +45,11 @@ if sys.platform == "emscripten":
 :::note[Pyodide and Python version]
 The Python version you choose for `flet build web` / `flet publish` pins a
 specific Pyodide release — see
-[Choosing a Python version](../../index.md#choosing-a-python-version) for the
+[Bundled Python](../../index.md#bundled-python) for the
 full matrix and resolution rules. In short:
 
 | Python | Pyodide   |
-| ------ | --------- |
+|--------|-----------|
 | 3.14   | 314.0.0a2 |
 | 3.13   | 0.29.4    |
 | 3.12   | 0.27.7    |

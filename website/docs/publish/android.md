@@ -80,7 +80,7 @@ The following target architectures are supported:
 
 :::note
 The available architectures depend on the
-[bundled Python version](index.md#choosing-a-python-version): Python dropped
+[bundled Python version](index.md#bundled-python): Python dropped
 32-bit Android support in `3.13` ([PEP 738](https://peps.python.org/pep-0738/)),
 so targeting `armeabi-v7a` requires building with `--python-version 3.12`. By default,
 an app is built for all architectures its bundled Python version supports.
