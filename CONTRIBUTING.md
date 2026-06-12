@@ -70,13 +70,12 @@ uv sync
 Create `hello.py` file with a minimal Flet program:
 
 ```python
-import flet
-from flet import Page, Text
+import flet as ft
 
-def main(page: Page):
-    page.add(Text("Hello, world!"))
+def main(page: ft.Page):
+    page.add(ft.Text("Hello, world!"))
 
-flet.app(target=main)
+ft.run(main)
 ```
 
 and then run it:
@@ -257,84 +256,93 @@ For patches to the current stable release, branch directly from `main`, fix, ope
 
 * Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
 * Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
-* Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
-* Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
+* Open terminal in `client` directory and run `flutter clean; flutter pub get`.
+* Increment version in `packages/flet/pubspec.yaml`.
+* Review and update `CHANGELOG.md` for the release version.
+* Update version in `packages/flet/pubspec.yaml` to the release version if not already done.
+* Run `flutter build macos`, `flutter build linux`, `flutter build windows`, `flutter build web` to ensure everything compiles.
+* Run `uv run pytest` in `sdk/python` to ensure all tests pass.
+* If any test fails, fix the issue before proceeding.
+* Once all checks pass, commit the final changes (version bumps, changelog updates) to the release branch.
 
 ## New macOS environment for Flet developer
 
-* **Homebrew**: https://brew.sh/
+This section outlines how to prepare a fresh macOS environment for Flet development.
 
-After installing homebrew, install xz libraries with it:
-```
-brew install xz
-```
-
-* **Pyenv**. Install with `brew`: https://github.com/pyenv/pyenv?tab=readme-ov-file#unixmacos
-  * Install and switch to the latest Python 3.12:
-```
-pyenv install 3.12.6
-pyenv global 3.12.6
-```
-
-Setup your shell environment: https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
-
-```
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
-echo 'eval "$(pyenv init -)"' >> ~/.zprofile
-```
-
-Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
-
-```
-python --version
-which python
-```
-
-* **Rbenv**. Install with `brew`: https://github.com/rbenv/rbenv?tab=readme-ov-file#homebrew
-  * Install and switch to the latest Ruby:
-```
-rbenv install 3.3.5
-rbenv global 3.3.5
-```
-
-Ensure Ruby version is 3.3.5 and location is `/Users/{user}/.rbenv/shims/ruby`:
-
-```
-ruby --version
-which ruby
-```
-
-* **VS Code**. Install "Apple silicon" release: https://code.visualstudio.com/download
-
-* **GitHub Desktop**: https://desktop.github.com/download/
-Open GitHub Desktop app, install Rosetta.
+### Prerequisites
 
 * **uv**: https://docs.astral.sh/uv/getting-started/installation/
-
-After installing uv, set PATH:
-```
-echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
-```
-
-Check `uv` version and make sure it's in PATH:
-
-```
-uv --version
-```
-
-* **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
-* **XCode** for macOS and iOS SDKs: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
+* **git**: https://git-scm.com/downloads
+* **Flutter**: https://docs.flutter.dev/get-started/install/macos
+* **Xcode**: Install from the Mac App Store, then open it, agree to license, and install command line tools with `xcode-select --install`.
+* **Android Studio** (optional for Android development): https://developer.android.com/studio
 * **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
-Install flutter with fvm:
-```
-fvm install 3.24.3
-fvm global 3.24.3
+* **CocoaPods**: `sudo gem install cocoapods`
+* **Visual Studio Code**: https://code.visualstudio.com/
+
+### Clone the repository
+
+```bash
+git clone https://github.com/flet-dev/flet.git
+cd flet
 ```
 
-Set PATH:
-```
-echo 'export PATH=$HOME/fvm/default/bin:$PATH' >> ~/.zprofile
+### Install Flutter
+
+Follow the [official guide](https://docs.flutter.dev/get-started/install/macos) to install Flutter. Ensure Flutter is in your PATH and run `flutter doctor` to verify.
+
+### Install uv
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-* **cocoapods**: https://guides.cocoapods.org/using/getting-started.html#installation
+### Set up Python SDK
+
+```bash
+cd sdk/python
+uv sync
+```
+
+### Set up Flutter client
+
+```bash
+cd client
+flutter pub get
+```
+
+### Set environment variables
+
+Add the following to your shell profile (e.g., `~/.zshrc`):
+
+```bash
+export FLET_VIEW_PATH="$HOME/flet/client/build/macos/Build/Products/Release"
+export FLET_WEB_PATH="$HOME/flet/client/build/web"
+```
+
+Then reload: `source ~/.zshrc`
+
+### Build Flutter client
+
+```bash
+cd client
+flutter build macos
+flutter build web
+```
+
+### Verify installation
+
+Create a `hello.py` file with the updated example and run it with `uv run python hello.py`. You should see a window with "Hello, world!".
+
+### Running tests
+
+```bash
+cd sdk/python
+uv run pytest
+```
+
+### Additional notes
+
+* For Android development, set up an Android emulator or connect a physical device.
+* For iOS development, you need Xcode and a Mac with Apple Silicon or an Intel Mac.
+* Refer to the official Flutter documentation for any platform-specific setup.
