@@ -15,6 +15,7 @@ def patch_index_html(
     pyodide: bool = False,
     pyodide_pre: bool = False,
     pyodide_script_path: str = "",
+    pyodide_version: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: bool = False,
@@ -60,6 +61,18 @@ def patch_index_html(
         app_config.append("flet.pyodide = true;")
         app_config.append(f"flet.micropipIncludePre = {str(pyodide_pre).lower()};")
         app_config.append(f'flet.pythonModuleName = "{module_name}";')
+
+    # Pin the Pyodide runtime URL for this build. The web client used to fall
+    # back to a hardcoded CDN URL when not in no-cdn mode; with multi-version
+    # support that constant is gone, so we always inject the URL here.
+    if pyodide_version:
+        if no_cdn:
+            pyodide_url = "pyodide/pyodide.js"
+        else:
+            pyodide_url = (
+                f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.js"
+            )
+        app_config.append(f'flet.pyodideUrl="{pyodide_url}";')
 
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
