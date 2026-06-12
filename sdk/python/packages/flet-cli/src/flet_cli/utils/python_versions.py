@@ -18,6 +18,10 @@ class PythonRelease:
     short: str
     standalone: str
     standalone_date: str
+    # Release date tag of the matching `flet-dev/python-build` release
+    # (e.g. "20260611"). Combined with `standalone` to construct the
+    # platform-plugin download URLs.
+    python_build_date: str
     pyodide: str
     pyodide_platform_tag: str
     # When True, this release is supported via `--python-version` (and an
@@ -31,24 +35,27 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
     PythonRelease(
         short="3.12",
         standalone="3.12.13",
-        standalone_date="20260602",
+        standalone_date="20260610",
+        python_build_date="20260611",
         pyodide="0.27.7",
         pyodide_platform_tag="pyodide-2024.0-wasm32",
         prerelease=False,
     ),
     PythonRelease(
         short="3.13",
-        standalone="3.13.13",
-        standalone_date="20260602",
+        standalone="3.13.14",
+        standalone_date="20260610",
+        python_build_date="20260611",
         pyodide="0.29.4",
-        pyodide_platform_tag="pyodide-2025.0-wasm32",
+        pyodide_platform_tag="pyemscripten-2025.0-wasm32",
         prerelease=False,
     ),
     PythonRelease(
         short="3.14",
-        standalone="3.14.5",
-        standalone_date="20260602",
-        pyodide="314.0.0a2",
+        standalone="3.14.6",
+        standalone_date="20260610",
+        python_build_date="20260611",
+        pyodide="314.0.0",
         pyodide_platform_tag="pyemscripten-2026.0-wasm32",
         prerelease=False,
     ),
@@ -60,6 +67,7 @@ SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
     #     short="3.15",
     #     standalone="3.15.0",
     #     standalone_date="...",
+    #     python_build_date="...",
     #     pyodide="...",
     #     pyodide_platform_tag="...",
     #     prerelease=True,

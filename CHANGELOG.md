@@ -2,7 +2,7 @@
 
 ### New features
 
-* Multi-version bundled CPython support in `flet build` and `flet publish`. Pick the runtime your app ships with via the new `--python-version` flag (3.12 / 3.13 / 3.14), or let it be derived from `[project].requires-python` in your `pyproject.toml`; defaults to the latest supported stable (currently 3.14). The matching CPython-standalone build, Pyodide release (0.27.7 / 0.29.4 / 314.0.0a2), and Emscripten wheel platform tag are all resolved from a central registry. Adding a future pre-release CPython line (e.g. 3.15 beta) is a one-row append with `prerelease=True` — opt-in only via an explicit `--python-version 3.15` or `requires-python = "==3.15.*"`, never the auto-resolved default. Requires `serious_python` >= 2.0.0, now pinned in the `flet build` template. See the new [Choosing a Python version](https://flet.dev/docs/publish#choosing-a-python-version) docs section ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Multi-version bundled CPython support in `flet build` and `flet publish`. Pick the runtime your app ships with via the new `--python-version` flag (3.12 / 3.13 / 3.14), or let it be derived from `[project].requires-python` in your `pyproject.toml`; defaults to the latest supported stable (currently 3.14). The matching CPython-standalone build, Pyodide release (0.27.7 / 0.29.4 / 314.0.0), and Emscripten wheel platform tag are all resolved from a central registry. Adding a future pre-release CPython line (e.g. 3.15 beta) is a one-row append with `prerelease=True` — opt-in only via an explicit `--python-version 3.15` or `requires-python = "==3.15.*"`, never the auto-resolved default. Requires `serious_python` >= 2.0.0, now pinned in the `flet build` template. See the new [Choosing a Python version](https://flet.dev/docs/publish#choosing-a-python-version) docs section ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 
 ### Improvements
 
@@ -18,6 +18,7 @@
 ### Bug fixes
 
 * Fix `flet build` failing on Windows when a dependency is pulled in via `[tool.flet.<platform>].dev_packages` (or any local-path install): the rewritten `<pkg> @ file://<path>` URL now uses `Path.as_uri()`, producing the correct `file:///D:/...` three-slash form instead of `file://D:\...`, which pip on Windows parsed as a UNC path and aborted with `OSError: [Errno 2] No such file or directory: '\\\\D:\\a\\...'` ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Fix `flet build web --python-version 3.13` failing to match any Pyodide-built native wheel. The 3.13 row in the Python version registry was set to Pyodide platform tag `pyodide-2025.0-wasm32`, but Pyodide actually publishes 0.29 wheels under `pyemscripten_2025_0_wasm32` (the `pyodide_` → `pyemscripten_` prefix transition happened at 0.28/0.29, not at 314.0). Corrected to `pyemscripten-2025.0-wasm32` so pip's wheel selection picks up the correct tags by @FeodorFitsner.
 
 ## 0.85.3
 

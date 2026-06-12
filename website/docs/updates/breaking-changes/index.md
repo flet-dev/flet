@@ -22,6 +22,13 @@ This page lists the guides created for each release.
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 0.86.0
+
+#### Breaking changes
+
+- [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/default-bundled-python-3-14)
+- [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/removed-pyodide-version-export)
+
 ### Released in Flet 0.85.0
 
 #### Breaking changes

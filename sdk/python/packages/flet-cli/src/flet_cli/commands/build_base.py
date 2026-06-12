@@ -1910,6 +1910,8 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         package_env = {
             "SERIOUS_PYTHON_VERSION": self.python_release.short,
+            "SERIOUS_PYTHON_FULL_VERSION": self.python_release.standalone,
+            "SERIOUS_PYTHON_BUILD_DATE": self.python_release.python_build_date,
         }
 
         # requirements
@@ -2199,6 +2201,8 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         build_env = {
             "SERIOUS_PYTHON_VERSION": self.python_release.short,
+            "SERIOUS_PYTHON_FULL_VERSION": self.python_release.standalone,
+            "SERIOUS_PYTHON_BUILD_DATE": self.python_release.python_build_date,
         }
 
         # site-packages variable

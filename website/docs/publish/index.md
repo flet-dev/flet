@@ -130,8 +130,8 @@ Supported versions and the matching CPython / Pyodide artifacts:
 
 | Short | CPython runtime | Pyodide (web) | Status   |
 | ----- | --------------- | ------------- | -------- |
-| 3.14  | 3.14.5          | 314.0.0a2     | default  |
-| 3.13  | 3.13.13         | 0.29.4        | stable   |
+| 3.14  | 3.14.6          | 314.0.0       | default  |
+| 3.13  | 3.13.14         | 0.29.4        | stable   |
 | 3.12  | 3.12.13         | 0.27.7        | stable   |
 
 The version is resolved in this order:
