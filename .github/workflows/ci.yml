@@ -220,7 +220,7 @@ jobs:
   # =============================
   build_windows:
     name: Build Flet Client for Windows
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     needs:
       - python_tests
       - build_flet_package
