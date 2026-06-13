@@ -5,7 +5,7 @@ import flet.testing as ftt
 from examples.controls.material.data_table.adaptive_row_heights import (
     main as adaptive_row_heights,
 )
-from examples.controls.material.data_table.basic import main as basic
+from examples.controls.material.data_table.data_table import main as basic
 from examples.controls.material.data_table.handling_events import (
     main as handling_events,
 )
