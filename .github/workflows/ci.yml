@@ -53,10 +53,10 @@ jobs:
         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -86,7 +86,7 @@ jobs:
 
       - name: Upload docs-coverage logs
         if: matrix.python-version == '3.12'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docs-coverage
           path: sdk/python/docstr_coverage.log
@@ -99,10 +99,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
 
@@ -110,7 +110,7 @@ jobs:
         run: corepack enable
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Build website
         run: |
@@ -132,20 +132,20 @@ jobs:
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0   # fetch all history
           fetch-tags: true # ensure tags are available
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Compute versions
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
 
       - name: Setup Dart (OIDC for pub.dev)
-        uses: dart-lang/setup-dart@e630b99d28a3b71860378cafdc2a067c71107f94
+        uses: dart-lang/setup-dart@v1.7.2
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -180,10 +180,10 @@ jobs:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Patch build template flet version
         shell: bash
@@ -208,7 +208,7 @@ jobs:
           zip -r "$GITHUB_WORKSPACE/flet-app-templates.zip" app/
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: template-artifacts
           path: |
@@ -230,10 +230,10 @@ jobs:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -263,7 +263,7 @@ jobs:
           7z a "${ROOT}/client/flet-windows.zip" "flet"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-artifacts
           if-no-files-found: error
@@ -285,10 +285,10 @@ jobs:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -304,7 +304,7 @@ jobs:
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-artifacts
           if-no-files-found: error
@@ -443,10 +443,10 @@ jobs:
           apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Get Flutter version from ".fvmrc"
         uses: kuhnroyal/flutter-fvm-config-action/config@v3
@@ -537,7 +537,7 @@ jobs:
           build_flutter "flet-desktop"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-${{ matrix.distro_id }}-${{ matrix.arch }}-artifacts
           if-no-files-found: error
@@ -557,10 +557,10 @@ jobs:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -614,7 +614,7 @@ jobs:
           uv build --package flet-web --sdist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-artifacts
           if-no-files-found: error
@@ -637,13 +637,13 @@ jobs:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -695,7 +695,7 @@ jobs:
           done
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: flet-python-extensions
           if-no-files-found: error
@@ -716,10 +716,10 @@ jobs:
       - build_flet_package
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Build Python packages
         shell: bash
@@ -732,7 +732,7 @@ jobs:
           uv build --package flet-desktop
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: flet-cli-desktop-python-distribution
           path: |
@@ -768,7 +768,7 @@ jobs:
           fi
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
@@ -801,13 +801,13 @@ jobs:
       - release
     steps:
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
         with:
           ignore-empty-workdir: true
           cache-dependency-glob: ""
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
