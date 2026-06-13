@@ -131,6 +131,10 @@ class MatplotlibChart(ft.GestureDetector):
             on_resize=self._on_canvas_resize,
             expand=True,
         )
+        # Hook the Dart-side frame-applied ack so we only clear `_waiting`
+        # after the frame actually rendered. Without this gate, interactive
+        # drags pile up frames in Dart's queue and replay them in a burst.
+        self.mpl_canvas.set_on_frame_applied(self._on_frame_applied)
         # Rubberband (zoom selection) overlay drawn on top of the chart image.
         self._rubberband = ft.Container(
             visible=False,
@@ -419,6 +423,17 @@ class MatplotlibChart(ft.GestureDetector):
         self.figure.savefig(buff, format=format, dpi=self.figure.dpi * self.__dpr)
         return buff.getvalue()
 
+    def _on_frame_applied(self) -> None:
+        """
+        Called from the canvas when the Dart side finishes rendering a
+        frame. Clearing `_waiting` here (rather than immediately after
+        sending the frame) gates `send_message({"type": "draw"})` so
+        matplotlib doesn't generate the next frame until the previous one
+        has actually painted. Without this, interactive drags pile up
+        frames in the Dart-side queue and play back in a burst.
+        """
+        self._waiting = False
+
     async def _receive_loop(self):
         """
         Consume backend messages and apply canvas/state updates.
@@ -435,15 +450,16 @@ class MatplotlibChart(ft.GestureDetector):
                 assert isinstance(content, (bytes, bytearray))
                 logger.debug(f"receive_binary({len(content)})")
                 # Hand the frame to the client widget — full PNG replaces the
-                # backbuffer, diff PNG composites onto it. Awaiting naturally
-                # rate-limits this loop to the client's processing speed and
-                # yields the asyncio loop for incoming events.
+                # backbuffer, diff PNG composites onto it. `_waiting` is
+                # cleared in `_on_frame_applied` when the Dart side acks
+                # that it actually rendered the frame, not here — otherwise
+                # interactive drags push frames faster than the renderer
+                # can keep up and the queue grows unbounded.
                 if self.__image_mode == "full":
-                    await self.mpl_canvas.apply_full(bytes(content))
+                    self.mpl_canvas.apply_full(bytes(content))
                 else:
-                    await self.mpl_canvas.apply_diff(bytes(content))
+                    self.mpl_canvas.apply_diff(bytes(content))
                 self.img_count += 1
-                self._waiting = False
             else:
                 logger.debug(f"receive_json({content})")
                 if content["type"] == "image_mode":
