@@ -579,7 +579,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.pyodide_version)' )"
+          PYODIDE_VERSION="$( uv run python -c 'from flet_cli.utils.python_versions import DEFAULT_PYTHON_VERSION, get_release; print(get_release(DEFAULT_PYTHON_VERSION).pyodide)' )"
           echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
           echo "Pyodide version: $PYODIDE_VERSION"
 
@@ -587,10 +587,6 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          # Compute Pyodide URLs
-          PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
-          PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
-
           FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
 
           flutter build web --wasm
@@ -601,13 +597,9 @@ jobs:
           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
           cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
 
-          # Download the Pyodide tarball and extract its contents into the web build folder
-          curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
-
-          # Download the prebuilt pyodide wheels
-          for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
-            curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
-          done
+          # Download the Pyodide runtime (plus the micropip/packaging wheels
+          # resolved from pyodide-lock.json) into the web build folder
+          uv run --project "${SDK_PYTHON}" python -c "from pathlib import Path; from flet_cli.utils.pyodide import ensure_pyodide; ensure_pyodide('${PYODIDE_VERSION}', Path('${FLET_WEB}/web/pyodide'))"
 
           # Archive the web client into a gzipped tarball
           tar -czvf "flet-web.tar.gz" -C "build/web" .
