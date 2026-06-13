@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:provider/provider.dart';
 
 import 'flet_app_errors_handler.dart';
@@ -24,7 +25,11 @@ import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
 import 'protocol/update_control_body.dart';
 import 'testing/tester.dart';
+import 'transport/data_channel.dart';
 import 'transport/flet_backend_channel.dart';
+import 'transport/flet_msgpack_decoder.dart';
+import 'transport/flet_msgpack_encoder.dart';
+import 'transport/protocol_muxed_data_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
 import 'utils/numbers.dart';
@@ -63,6 +68,13 @@ class FletBackend extends ChangeNotifier {
   int _reconnectDelayMs = 0;
   FletBackendChannel? _backendChannel;
   final FletBackendChannelBuilder? _channelBuilder;
+  late final DataChannelFactory _dataChannelFactory;
+  final DataChannelFactory? _injectedDataChannelFactory;
+  // Inbound mux registry for ProtocolMuxedDataChannel — type-byte 0x01
+  // frames are routed by channel_id to the matching channel's deliver hook.
+  // PythonBridge-backed DataChannels do NOT live in this registry (their
+  // bytes arrive on their own native port, never on the Flet transport).
+  final Map<int, ProtocolMuxedDataChannel> _dataChannels = {};
   final List<Message> _sendQueue = [];
   String route = "";
   bool isLoading = true;
@@ -106,12 +118,16 @@ class FletBackend extends ChangeNotifier {
       this.tester,
       required extensions,
       FletBackendChannelBuilder? channelBuilder,
+      DataChannelFactory? dataChannelFactory,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs,
-        _channelBuilder = channelBuilder {
+        _channelBuilder = channelBuilder,
+        _injectedDataChannelFactory = dataChannelFactory {
+    _dataChannelFactory =
+        _injectedDataChannelFactory ?? ProtocolMuxedDataChannelFactory(this);
     // add Flet extension with core controls and services
     this.extensions = [...extensions, FletCoreExtension()];
 
@@ -186,14 +202,14 @@ class FletBackend extends ChangeNotifier {
         // bridge). The builder is responsible for the entire transport
         // lifecycle; we just wire its callbacks to ours.
         _backendChannel = builder(
-            onDisconnect: _onDisconnect, onMessage: _onMessage);
+            onDisconnect: _onDisconnect, onPacket: _onPacket);
       } else {
         _backendChannel = FletBackendChannel(
             address: pageUri.toString(),
             args: args ?? {},
             forcePyodide: forcePyodide == true,
             onDisconnect: _onDisconnect,
-            onMessage: _onMessage);
+            onPacket: _onPacket);
       }
       await _backendChannel!.connect();
       _registerClient();
@@ -202,6 +218,40 @@ class FletBackend extends ChangeNotifier {
       error = e.toString();
       _onDisconnect();
     }
+  }
+
+  /// Opens a dedicated [DataChannel] for high-throughput byte traffic from a
+  /// widget. In embedded mode this is backed by a fresh `PythonBridge`; in
+  /// dev / web modes it is a logical channel multiplexed over the active
+  /// [FletBackendChannel] (see [ProtocolMuxedDataChannelFactory]).
+  ///
+  /// Must be called from the main Isolate (it doesn't escape there, but
+  /// the returned channel is main-Isolate-bound either way).
+  DataChannel openDataChannel() => _dataChannelFactory.open();
+
+  // ---------------------------------------------------------------------
+  // Mux registry — used by ProtocolMuxedDataChannel only.
+  // ---------------------------------------------------------------------
+
+  /// Registers a muxed data channel so inbound 0x01 frames for [id] are
+  /// routed to it. Called from [ProtocolMuxedDataChannel.<ctor>].
+  void registerDataChannel(int id, ProtocolMuxedDataChannel channel) {
+    assert(!_dataChannels.containsKey(id), "duplicate data channel id $id");
+    _dataChannels[id] = channel;
+  }
+
+  /// Removes [id] from the routing table. Called from
+  /// [ProtocolMuxedDataChannel.close]. Idempotent — frames for an
+  /// unregistered id are silently dropped.
+  void unregisterDataChannel(int id) {
+    _dataChannels.remove(id);
+  }
+
+  /// Sends a fully-formed packet on the active transport. Used by
+  /// [ProtocolMuxedDataChannel] to ship `[0x01][channel_id:u32 LE][bytes]`
+  /// alongside regular protocol traffic.
+  void sendRawPacket(Uint8List packet) {
+    _backendChannel?.send(packet);
   }
 
   _registerClient() {
@@ -428,9 +478,42 @@ class FletBackend extends ChangeNotifier {
     return getAssetSrc(src, pageUri, assetsDir);
   }
 
-  _onMessage(Message message) {
+  /// Inbound transport dispatcher. Every packet starts with a 1-byte type
+  /// discriminator:
+  ///   0x00 → MsgPack-encoded Flet control frame (the existing protocol).
+  ///   0x01 → raw DataChannel frame `[channel_id:u32 LE][payload]`.
+  void _onPacket(Uint8List packet) {
+    if (packet.isEmpty) {
+      debugPrint("Dropping empty packet");
+      return;
+    }
+    final type = packet[0];
+    if (type == 0x00) {
+      // Decode the MsgPack body and dispatch as a Flet protocol message.
+      final body = msgpack.deserialize(
+          Uint8List.sublistView(packet, 1),
+          extDecoder: FletMsgpackDecoder());
+      _onMessage(Message.fromList(body));
+    } else if (type == 0x01) {
+      if (packet.length < 5) {
+        debugPrint("Dropping malformed data channel frame (len=${packet.length})");
+        return;
+      }
+      final channelId =
+          ByteData.sublistView(packet, 1, 5).getUint32(0, Endian.little);
+      final channel = _dataChannels[channelId];
+      if (channel == null) {
+        // Stale frame after channel.close() — silently drop.
+        return;
+      }
+      channel.deliver(Uint8List.sublistView(packet, 5));
+    } else {
+      debugPrint("Dropping packet with unknown type byte 0x${type.toRadixString(16)}");
+    }
+  }
+
+  void _onMessage(Message message) {
     debugPrint("Received message: ${message.toList()}");
-    //debugPrint("message.payload: ${message.payload}");
     switch (message.action) {
       case MessageAction.registerClient:
         _onClientRegistered(
@@ -580,7 +663,12 @@ class FletBackend extends ChangeNotifier {
   _send(Message message, {bool unbuffered = false}) {
     if (unbuffered || !isLoading) {
       debugPrint("_send: ${message.action} ${message.payload}");
-      _backendChannel?.send(message);
+      final encoded = msgpack.serialize(message.toList(),
+          extEncoder: FletMsgpackEncoder());
+      final packet = Uint8List(1 + encoded.length);
+      packet[0] = 0x00;
+      packet.setRange(1, packet.length, encoded);
+      _backendChannel?.send(packet);
     } else {
       _sendQueue.add(message);
     }

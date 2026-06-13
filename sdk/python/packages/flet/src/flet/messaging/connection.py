@@ -120,3 +120,39 @@ class Connection:
         Subclasses can override this method to clean up transport-specific state.
         """
         pass
+
+    # ------------------------------------------------------------------
+    # DataChannel transport hooks. Subclasses implement these for the
+    # transports that carry widget byte channels: dart_bridge mode (each
+    # channel = a dedicated PythonBridge port), socket / WebSocket modes
+    # (channel frames muxed over the same protocol transport).
+    # ------------------------------------------------------------------
+
+    def data_channel_for(self, channel_id: int):
+        """Return the `DataChannel` for `channel_id` allocated on the Dart
+        side. Idempotent — subsequent calls with the same id return the
+        same instance within the session.
+
+        Called by `Control.get_data_channel(id)` after a `data_channel_open`
+        event arrives.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support DataChannel "
+            "(transport-specific implementation missing)."
+        )
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame for `channel_id`. Used by the
+        protocol-muxed implementation only — dart_bridge channels go
+        through their own dedicated `dart_bridge.send_bytes(port, ...)`
+        call instead.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not implement send_data_channel_frame."
+        )
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        """Best-effort drop of `channel_id` from the mux registry. Default
+        is a no-op so subclasses that don't keep one don't need to override.
+        """
+        pass

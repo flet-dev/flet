@@ -108,21 +108,41 @@ class FletDartBridgeServer(Connection):
 
     async def __inbound_loop(self):
         """
-        Drains the inbound queue, feeds bytes into a streaming MsgPack
-        unpacker, and dispatches each complete frame.
+        Drains the inbound queue and dispatches each packet. Each dart_bridge
+        send delivers one complete packet — `[type:u8][payload]`. type=0x00
+        is a MsgPack-encoded Flet control frame, decoded and dispatched as
+        a protocol message; type=0x01 is a raw DataChannel frame, but on
+        the dart_bridge transport that *only* carries the Flet protocol —
+        DataChannels in embedded mode get their own dedicated PythonBridge,
+        so a 0x01 here would be an error and we log+drop.
         """
-        unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         try:
             while True:
-                payload = await self.__inbound_queue.get()
-                unpacker.feed(payload)
-                for msg in unpacker:
+                packet = await self.__inbound_queue.get()
+                if not packet:
+                    continue
+                ptype = packet[0]
+                if ptype == 0x00:
                     try:
+                        msg = msgpack.unpackb(
+                            packet[1:], ext_hook=decode_ext_from_msgpack
+                        )
                         await self.__on_message(msg)
                     except Exception:
                         logger.error(
                             "Error dispatching dart_bridge frame", exc_info=True
                         )
+                elif ptype == 0x01:
+                    logger.debug(
+                        "dart_bridge channel received a 0x01 data frame; "
+                        "DataChannels in embedded mode should use a dedicated "
+                        "PythonBridge, not the protocol channel."
+                    )
+                else:
+                    logger.debug(
+                        "dart_bridge channel received packet with unknown type 0x%02x",
+                        ptype,
+                    )
         except asyncio.CancelledError:
             logger.debug("dart_bridge inbound loop cancelled.")
 
@@ -200,17 +220,38 @@ class FletDartBridgeServer(Connection):
         """
         Encodes a protocol message and posts it to the Dart side via
         `dart_bridge.send_bytes`. Non-blocking; ordering is preserved by the
-        Dart VM's port queue.
+        Dart VM's port queue. Wire format: `[0x00][msgpack body]` — no
+        length prefix (the bridge preserves message boundaries).
         """
         transport_log.debug("send_message: %s", message)
-        m = msgpack.packb(
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
+        packet = b"\x00" + body
         try:
-            dart_bridge.send_bytes(self.__port, m)
+            dart_bridge.send_bytes(self.__port, packet)
         except Exception:
             logger.error("dart_bridge.send_bytes failed", exc_info=True)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve the DataChannel for `channel_id`. In embedded native mode
+        each DataChannel rides its own dedicated PythonBridge native port
+        (the `channel_id` *is* the port). Idempotent.
+        """
+        from flet.data_channel import _DartBridgeDataChannel
+
+        # No registry needed: _DartBridgeDataChannel is stateless wrt port
+        # and the dart_bridge module routes by port number internally. We
+        # still cache per port to avoid duplicate handler registrations.
+        if not hasattr(self, "_data_channels"):
+            self._data_channels: dict[int, Any] = {}
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _DartBridgeDataChannel(channel_id)
+        self._data_channels[channel_id] = channel
+        return channel
 
     async def close(self):
         """

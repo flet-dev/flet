@@ -562,6 +562,7 @@ from flet.controls.types import (
     VisualDensity,
     WebRenderer,
 )
+from flet.data_channel import DataChannel, DataChannelOpenEvent
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.version import flet_version as __version__
@@ -755,6 +756,8 @@ __all__ = [
     "CupertinoTimerPickerMode",
     "CupertinoTintedButton",
     "DataCell",
+    "DataChannel",
+    "DataChannelOpenEvent",
     "DataColumn",
     "DataColumnSortEvent",
     "DataRow",

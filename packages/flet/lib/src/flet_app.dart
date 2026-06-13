@@ -7,6 +7,7 @@ import 'flet_backend.dart';
 import 'flet_extension.dart';
 import 'models/control.dart';
 import 'testing/tester.dart';
+import 'transport/data_channel.dart';
 import 'transport/flet_backend_channel.dart';
 
 /// FletApp - The top-level widget that initializes everything
@@ -33,6 +34,13 @@ class FletApp extends StatefulWidget {
   /// factory; [pageUrl] is then irrelevant for transport selection.
   final FletBackendChannelBuilder? channelBuilder;
 
+  /// Optional factory for high-throughput byte channels (see [DataChannel]).
+  /// Embedders that ship an in-process Python runtime can inject a
+  /// `PythonBridge`-backed factory here; when `null`, `FletBackend` falls
+  /// back to a built-in factory that muxes raw bytes over the regular Flet
+  /// protocol channel.
+  final DataChannelFactory? dataChannelFactory;
+
   const FletApp(
       {super.key,
       required this.pageUrl,
@@ -50,7 +58,8 @@ class FletApp extends StatefulWidget {
       this.forcePyodide,
       this.tester,
       this.multiView = false,
-      this.channelBuilder});
+      this.channelBuilder,
+      this.dataChannelFactory});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -85,6 +94,7 @@ class _FletAppState extends State<FletApp> {
             tester: widget.tester,
             multiView: widget.multiView,
             channelBuilder: widget.channelBuilder,
+            dataChannelFactory: widget.dataChannelFactory,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },
