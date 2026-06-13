@@ -1,4 +1,6 @@
+import asyncio
 import contextlib
+from collections import deque
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
@@ -69,10 +71,16 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         # `init` is the @ft.control post-construct lifecycle hook (runs
         # before `did_mount`). Wire up the default channel-capture handler.
         self._channel: Optional[ft.DataChannel] = None
-        # Backpressure ack callback — invoked when Dart finishes applying
-        # a frame on its end. Producer-side widgets (e.g. MatplotlibChart)
-        # set this to gate the next frame so the Dart-side queue stays
-        # bounded under interactive load.
+        # FIFO of per-frame ack futures. Each `apply_*` enqueues a future
+        # and `awaits` it; `_on_dart_message` pops the head and resolves
+        # it when Dart's `[0xFF]` ack arrives. The await is what makes
+        # producer-side callers (e.g. MatplotlibChart._receive_loop)
+        # block — events queued during the wait are processed *after*
+        # the ack instead of being dropped by stale gate checks.
+        self._pending_acks: deque[asyncio.Future] = deque()
+        # Optional plain callback for observers that want to be notified
+        # on every frame ack (e.g. perf instrumentation). Fires alongside
+        # the future resolution; not load-bearing for backpressure.
         self._on_frame_applied: Optional[Callable[[], None]] = None
         if self.on_data_channel_open is None:
             self.on_data_channel_open = self._capture_channel
@@ -87,38 +95,57 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         #   [0xFF] — frame_applied ack. Sent by Dart after each apply_full /
         #            apply_diff / clear completes on its end. Restores the
         #            round-trip backpressure that `_invoke_method` used to
-        #            provide implicitly.
-        if not payload:
+        #            provide implicitly in 0.85.
+        if not payload or payload[0] != 0xFF:
             return
-        if payload[0] == 0xFF:
-            cb = self._on_frame_applied
-            if cb is not None:
-                with contextlib.suppress(Exception):
-                    cb()
+        # Resolve the head future so the matching `apply_*` await returns.
+        if self._pending_acks:
+            fut = self._pending_acks.popleft()
+            if not fut.done():
+                fut.set_result(None)
+        # Then fire the observer callback (if any).
+        cb = self._on_frame_applied
+        if cb is not None:
+            with contextlib.suppress(Exception):
+                cb()
 
     def set_on_frame_applied(self, cb: Optional[Callable[[], None]]) -> None:
-        """Register a callback invoked when Dart finishes applying a frame.
+        """Register a side-channel callback invoked on every frame ack.
 
-        Producer widgets use this to gate frame emission — e.g. matplotlib
-        clears its `_waiting` flag here so the next `draw` message from
-        the figure is honored. Without this gate, the producer would push
-        frames into the Dart-side queue faster than they're rendered,
-        causing the UI to hog and then replay buffered frames in a burst.
+        Useful for instrumentation. Backpressure is handled by awaiting
+        the result of `apply_full` / `apply_diff` / `clear` directly —
+        this callback is a fire-and-forget observer, not part of the
+        gating path.
         """
         self._on_frame_applied = cb
 
-    def apply_full(self, image_bytes: bytes) -> None:
+    async def _send_and_wait(self, packet: bytes) -> None:
+        """Send a channel packet and await Dart's ack.
+
+        Awaiting blocks the caller until `[0xFF]` arrives on the channel,
+        re-creating the 0.85 `_invoke_method` round-trip semantics:
+        events that arrive in the producer's queue during the wait stay
+        queued (instead of being processed eagerly against a stale
+        `_waiting` flag).
+        """
+        if self._channel is None:
+            return
+        loop = asyncio.get_running_loop()
+        fut: asyncio.Future = loop.create_future()
+        self._pending_acks.append(fut)
+        self._channel.send(packet)
+        await fut
+
+    async def apply_full(self, image_bytes: bytes) -> None:
         """
         Replace the current displayed image with a full PNG frame.
 
         Args:
             image_bytes: PNG bytes of the complete frame.
         """
-        if self._channel is None:
-            return
-        self._channel.send(b"\x01" + image_bytes)
+        await self._send_and_wait(b"\x01" + image_bytes)
 
-    def apply_diff(self, image_bytes: bytes) -> None:
+    async def apply_diff(self, image_bytes: bytes) -> None:
         """
         Composite an incremental "diff" PNG frame onto the current image.
 
@@ -130,14 +157,10 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         Args:
             image_bytes: PNG bytes of the diff frame.
         """
-        if self._channel is None:
-            return
-        self._channel.send(b"\x02" + image_bytes)
+        await self._send_and_wait(b"\x02" + image_bytes)
 
-    def clear(self) -> None:
+    async def clear(self) -> None:
         """
         Clear the displayed image and discard the backbuffer.
         """
-        if self._channel is None:
-            return
-        self._channel.send(b"\x03")
+        await self._send_and_wait(b"\x03")

@@ -216,29 +216,21 @@ async def main(page: ft.Page):
     orig_full = canvas.apply_full
     orig_diff = canvas.apply_diff
 
-    def apply_full(image_bytes: bytes) -> None:
+    async def apply_full(image_bytes: bytes) -> None:
         stats.record_send(len(image_bytes), is_full=True)
-        orig_full(image_bytes)
+        await orig_full(image_bytes)
 
-    def apply_diff(image_bytes: bytes) -> None:
+    async def apply_diff(image_bytes: bytes) -> None:
         stats.record_send(len(image_bytes), is_full=False)
-        orig_diff(image_bytes)
+        await orig_diff(image_bytes)
 
     canvas.apply_full = apply_full
     canvas.apply_diff = apply_diff
 
-    # Chain ourselves in front of the chart's frame-applied callback so the
-    # backpressure ack still clears `_waiting` on the chart. We record the
-    # Dart→Python ack timestamp here, which pairs with the send timestamp
-    # captured in `record_send` to give the dart-side decode + paint cost.
-    chart_ack = canvas._on_frame_applied
-
-    def on_ack() -> None:
-        stats.record_ack()
-        if chart_ack is not None:
-            chart_ack()
-
-    canvas.set_on_frame_applied(on_ack)
+    # Register an observer for frame-applied acks so we can record the
+    # Dart-side timing. Pure observation — backpressure is handled by
+    # the apply_*/await pattern in `MatplotlibChart._receive_loop`.
+    canvas.set_on_frame_applied(stats.record_ack)
 
     # Background task: refresh the labels at ~4 Hz so speed/fps decay
     # visibly when traffic stops and stay readable during fast drags

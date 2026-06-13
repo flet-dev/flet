@@ -131,10 +131,6 @@ class MatplotlibChart(ft.GestureDetector):
             on_resize=self._on_canvas_resize,
             expand=True,
         )
-        # Hook the Dart-side frame-applied ack so we only clear `_waiting`
-        # after the frame actually rendered. Without this gate, interactive
-        # drags pile up frames in Dart's queue and replay them in a burst.
-        self.mpl_canvas.set_on_frame_applied(self._on_frame_applied)
         # Rubberband (zoom selection) overlay drawn on top of the chart image.
         self._rubberband = ft.Container(
             visible=False,
@@ -423,17 +419,6 @@ class MatplotlibChart(ft.GestureDetector):
         self.figure.savefig(buff, format=format, dpi=self.figure.dpi * self.__dpr)
         return buff.getvalue()
 
-    def _on_frame_applied(self) -> None:
-        """
-        Called from the canvas when the Dart side finishes rendering a
-        frame. Clearing `_waiting` here (rather than immediately after
-        sending the frame) gates `send_message({"type": "draw"})` so
-        matplotlib doesn't generate the next frame until the previous one
-        has actually painted. Without this, interactive drags pile up
-        frames in the Dart-side queue and play back in a burst.
-        """
-        self._waiting = False
-
     async def _receive_loop(self):
         """
         Consume backend messages and apply canvas/state updates.
@@ -449,17 +434,21 @@ class MatplotlibChart(ft.GestureDetector):
             if is_binary:
                 assert isinstance(content, (bytes, bytearray))
                 logger.debug(f"receive_binary({len(content)})")
-                # Hand the frame to the client widget — full PNG replaces the
-                # backbuffer, diff PNG composites onto it. `_waiting` is
-                # cleared in `_on_frame_applied` when the Dart side acks
-                # that it actually rendered the frame, not here — otherwise
-                # interactive drags push frames faster than the renderer
-                # can keep up and the queue grows unbounded.
+                # Hand the frame to the client widget — full PNG replaces
+                # the backbuffer, diff PNG composites onto it. `await`
+                # here serialises this receive loop on the Dart-side
+                # frame-applied ack: matplotlib "draw" notifications that
+                # arrive during the round-trip stay queued in
+                # `_receive_queue` and are processed after the ack returns,
+                # instead of being eagerly dropped against a stale
+                # `_waiting=True` gate. This is the same backpressure shape
+                # the 0.85 `_invoke_method` round-trip used to provide.
                 if self.__image_mode == "full":
-                    self.mpl_canvas.apply_full(bytes(content))
+                    await self.mpl_canvas.apply_full(bytes(content))
                 else:
-                    self.mpl_canvas.apply_diff(bytes(content))
+                    await self.mpl_canvas.apply_diff(bytes(content))
                 self.img_count += 1
+                self._waiting = False
             else:
                 logger.debug(f"receive_json({content})")
                 if content["type"] == "image_mode":
