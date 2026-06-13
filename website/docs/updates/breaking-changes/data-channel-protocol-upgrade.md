@@ -107,5 +107,5 @@ the channel directly.
 
 ## References
 
-- API documentation: [DataChannel](/docs/extending-flet/data-channels)
+- API: `flet.DataChannel` (Python) and `FletBackend.openDataChannel` (Dart) — see the module docstrings in `flet/data_channel.py`; dedicated reference pages will be added in a follow-up.
 - Release notes: [Flet 0.86.0](../release-notes.md)
