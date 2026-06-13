@@ -1535,7 +1535,7 @@ jobs:
         shell: bash
         run: |
             sudo apt update --allow-releaseinfo-change
-            LINUX_DEPS="$(uv run python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+            LINUX_DEPS="$(uv run flet --version --json | jq -r '.linux_dependencies | join(" ")')"
             sudo apt-get install -y --no-install-recommends $LINUX_DEPS
             sudo apt-get clean
 
