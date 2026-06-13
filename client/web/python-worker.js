@@ -38,7 +38,14 @@ self.sendPythonOutput = function (text, isStderr) {
 
 self.initPyodide = async function () {
     try {
-        importScripts(self.pyodideUrl);
+        // Module-worker load path. `importScripts` only exists in classic
+        // workers — Pyodide >= 0.29 actively refuses to load there ("Classic
+        // web workers are not supported"). We're a module worker, so the
+        // runtime ships as `pyodide.mjs` and exposes `loadPyodide` via ESM
+        // exports. The CDN/jsdelivr fallback URL set by patch_index.py also
+        // points at the .mjs variant.
+        const pyodideModule = await import(self.pyodideUrl);
+        const loadPyodide = pyodideModule.loadPyodide || self.loadPyodide;
         self.pyodide = await loadPyodide({
             stdout: (text) => self.sendPythonOutput(text, false),
             stderr: (text) => self.sendPythonOutput(text, true),

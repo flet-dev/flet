@@ -1186,6 +1186,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "no_cdn": (
                 self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
             ),
+            # Surface the resolved Pyodide release to the cookiecutter
+            # context so the web template's index.html can wire the
+            # correct jsdelivr URL when CDN mode is on.
+            "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
             "project_name": project_name,
