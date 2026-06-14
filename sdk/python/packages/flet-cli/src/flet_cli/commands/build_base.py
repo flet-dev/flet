@@ -1912,10 +1912,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ["--arch"] + self.template_data["options"]["target_arch"]
             )
 
+        # Only the short version is passed; serious_python derives the full
+        # version, python-build date, and dart_bridge version from its own
+        # committed snapshot of the manifest.
         package_env = {
             "SERIOUS_PYTHON_VERSION": self.python_release.short,
-            "SERIOUS_PYTHON_FULL_VERSION": self.python_release.standalone,
-            "SERIOUS_PYTHON_BUILD_DATE": self.python_release.python_build_date,
         }
 
         # requirements
@@ -2203,10 +2204,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
         )
 
+        # Only the short version is passed; serious_python derives the rest
+        # from its committed manifest snapshot.
         build_env = {
             "SERIOUS_PYTHON_VERSION": self.python_release.short,
-            "SERIOUS_PYTHON_FULL_VERSION": self.python_release.standalone,
-            "SERIOUS_PYTHON_BUILD_DATE": self.python_release.python_build_date,
         }
 
         # site-packages variable

@@ -26,11 +26,11 @@ Earlier Flet releases used a single Pyodide pin in `flet.version` to drive the
 web` would bundle. With
 [multi-version Python support](/docs/publish#choosing-a-python-version) the
 mapping is now Python-version-aware (`3.12 → 0.27.7`, `3.13 → 0.29.4`,
-`3.14 → 314.0.0`) and lives in
-[`flet_cli/utils/python_versions.py`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-cli/src/flet_cli/utils/python_versions.py).
-
-`flet --version` now lists every supported Python version with its matching
-Pyodide release, newest first.
+`3.14 → 314.0.0`). It is loaded on demand from
+[python-build's date-keyed `manifest.json`](https://github.com/flet-dev/python-build)
+— the single source of truth shared with serious_python — via
+[`flet_cli/utils/python_versions.py`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-cli/src/flet_cli/utils/python_versions.py),
+so it is no longer hand-maintained.
 
 ## Migration guide
 
@@ -48,9 +48,9 @@ print(f"Bundled Pyodide: {flet.version.pyodide_version}")
 Code after migration:
 
 ```python
-from flet_cli.utils.python_versions import SUPPORTED_PYTHON_VERSIONS
+from flet_cli.utils.python_versions import get_supported_python_versions
 
-for release in SUPPORTED_PYTHON_VERSIONS:
+for release in get_supported_python_versions():
     print(f"  {release.short} → Pyodide {release.pyodide}")
 ```
 
@@ -59,11 +59,11 @@ the Python release the same way the CLI does:
 
 ```python
 from flet_cli.utils.python_versions import (
-    DEFAULT_PYTHON_VERSION,
+    get_default_python_version,
     get_release,
 )
 
-release = get_release(DEFAULT_PYTHON_VERSION)
+release = get_release(get_default_python_version())
 print(f"Default Pyodide: {release.pyodide}")
 ```
 

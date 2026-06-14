@@ -1,29 +1,48 @@
 """Supported Python versions for `flet build` / `flet publish`.
 
-This module is the single source of truth on the Python side for which
-Python releases the Flet toolchain can bundle, and the matching
-CPython-standalone + Pyodide artifacts. Mirror any change here in
-serious_python's `_pythonReleases` map (bin/package_command.dart).
+The set of bundlable Python releases — and the matching CPython-standalone +
+Pyodide artifacts — is defined by python-build's date-keyed ``manifest.json``,
+the single source of truth shared with serious_python. This module pins one
+python-build release date and fetches that release's manifest (cached under
+``~/.flet/cache``, immutable per date), so nothing here is hand-mirrored.
+
+Pin (``PYTHON_BUILD_RELEASE_DATE``) overrides, for dev/CI:
+* ``FLET_PYTHON_BUILD_RELEASE_DATE`` — use a different published release date.
+* ``FLET_PYTHON_BUILD_MANIFEST`` — read a local ``manifest.json`` instead of
+  fetching (mirrors serious_python's ``gen_version_tables --manifest``).
 """
 
+import json
+import os
+import shutil
+import urllib.request
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Callable, Optional
 
 from packaging.specifiers import SpecifierSet
 from packaging.version import Version
+
+from flet_cli.utils.template_cache import get_cache_root
+
+# python-build release this flet pins. Keep in sync with serious_python's
+# `pythonReleaseDate` (lib/src/python_versions.dart) — both should track the
+# same python-build release.
+PYTHON_BUILD_RELEASE_DATE = "20260614"
+
+RELEASE_DATE_ENV = "FLET_PYTHON_BUILD_RELEASE_DATE"
+MANIFEST_PATH_ENV = "FLET_PYTHON_BUILD_MANIFEST"
+
+_MANIFEST_URL = (
+    "https://github.com/flet-dev/python-build/releases/download/{date}/manifest.json"
+)
 
 
 @dataclass(frozen=True)
 class PythonRelease:
     short: str
     standalone: str
-    standalone_date: str
-    # Release date tag of the matching `flet-dev/python-build` release
-    # (e.g. "20260611"). Combined with `standalone` to construct the
-    # platform-plugin download URLs.
-    python_build_date: str
     pyodide: str
-    pyodide_platform_tag: str
     # When True, this release is supported via `--python-version` (and an
     # explicit `requires-python = "==X.Y.*"` specifier) but is not picked
     # automatically by the default or by open-ended `requires-python`
@@ -31,61 +50,82 @@ class PythonRelease:
     prerelease: bool
 
 
-SUPPORTED_PYTHON_VERSIONS: list[PythonRelease] = [
-    PythonRelease(
-        short="3.12",
-        standalone="3.12.13",
-        standalone_date="20260610",
-        python_build_date="20260611",
-        pyodide="0.27.7",
-        pyodide_platform_tag="pyodide-2024.0-wasm32",
-        prerelease=False,
-    ),
-    PythonRelease(
-        short="3.13",
-        standalone="3.13.14",
-        standalone_date="20260610",
-        python_build_date="20260611",
-        pyodide="0.29.4",
-        pyodide_platform_tag="pyemscripten-2025.0-wasm32",
-        prerelease=False,
-    ),
-    PythonRelease(
-        short="3.14",
-        standalone="3.14.6",
-        standalone_date="20260610",
-        python_build_date="20260611",
-        pyodide="314.0.0",
-        pyodide_platform_tag="pyemscripten-2026.0-wasm32",
-        prerelease=False,
-    ),
-    # Add future pre-release CPython lines with `prerelease=True`. They are
-    # opt-in via `--python-version 3.15` or an explicit
-    # `requires-python = "==3.15.*"`; never the auto-resolved default.
-    #
-    # PythonRelease(
-    #     short="3.15",
-    #     standalone="3.15.0",
-    #     standalone_date="...",
-    #     python_build_date="...",
-    #     pyodide="...",
-    #     pyodide_platform_tag="...",
-    #     prerelease=True,
-    # ),
-]
+def _resolve_release_date() -> str:
+    return os.environ.get(RELEASE_DATE_ENV) or PYTHON_BUILD_RELEASE_DATE
 
-DEFAULT_PYTHON_VERSION = "3.14"
+
+def _load_manifest() -> dict:
+    """Return the python-build manifest as a dict.
+
+    Reads ``$FLET_PYTHON_BUILD_MANIFEST`` if set; otherwise fetches the pinned
+    release's ``manifest.json`` (cached immutably under
+    ``~/.flet/cache/python-build``). Falls back to a present cache when the
+    network is unavailable; raises with an actionable message if neither the
+    network nor a cache can supply it.
+    """
+    local = os.environ.get(MANIFEST_PATH_ENV)
+    if local:
+        with open(local, encoding="utf-8") as f:
+            return json.load(f)
+
+    date = _resolve_release_date()
+    url = _MANIFEST_URL.format(date=date)
+    cache_path = get_cache_root() / "python-build" / f"manifest-{date}.json"
+
+    if not (cache_path.exists() and cache_path.stat().st_size > 0):
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
+        try:
+            with urllib.request.urlopen(url) as resp, open(tmp_path, "wb") as out:
+                shutil.copyfileobj(resp, out)
+                out.flush()
+                os.fsync(out.fileno())
+            os.replace(tmp_path, cache_path)
+        except BaseException as e:
+            tmp_path.unlink(missing_ok=True)
+            if not (cache_path.exists() and cache_path.stat().st_size > 0):
+                raise RuntimeError(
+                    f"Could not obtain the Python build manifest for release "
+                    f"{date} from {url}: {e}. Check your network connection, or "
+                    f"set ${MANIFEST_PATH_ENV} to a local manifest.json."
+                ) from e
+
+    with cache_path.open(encoding="utf-8") as f:
+        return json.load(f)
+
+
+@lru_cache(maxsize=1)
+def _load_data() -> tuple[tuple[PythonRelease, ...], str]:
+    manifest = _load_manifest()
+    releases = tuple(
+        PythonRelease(
+            short=short,
+            standalone=info["full_version"],
+            pyodide=info["pyodide_version"],
+            prerelease=bool(info.get("prerelease", False)),
+        )
+        for short, info in manifest["pythons"].items()
+    )
+    return releases, manifest["default_python_version"]
+
+
+def get_supported_python_versions() -> list[PythonRelease]:
+    return list(_load_data()[0])
+
+
+def get_default_python_version() -> str:
+    return _load_data()[1]
 
 
 def get_release(short: str) -> Optional[PythonRelease]:
-    for r in SUPPORTED_PYTHON_VERSIONS:
+    for r in get_supported_python_versions():
         if r.short == short:
             return r
     return None
 
 
 def supported_short_versions() -> list[str]:
-    return [r.short for r in SUPPORTED_PYTHON_VERSIONS]
+    return [r.short for r in get_supported_python_versions()]
 
 
 class UnsupportedPythonVersionError(ValueError):
@@ -100,11 +140,13 @@ def resolve_python_version(
 
     Priority: `--python-version` CLI arg → `[project].requires-python` (parsed
     as a PEP 440 SpecifierSet, highest matching supported short version wins) →
-    `DEFAULT_PYTHON_VERSION`.
+    the manifest's default.
 
     Raises `UnsupportedPythonVersionError` if the CLI arg names an unsupported
     version, or if `requires-python` excludes every supported version.
     """
+
+    supported = get_supported_python_versions()
 
     if cli_arg:
         release = get_release(cli_arg)
@@ -130,7 +172,7 @@ def resolve_python_version(
                 # `>=3.14` never silently jumps to a beta CPython line.
                 stable_matching = [
                     r
-                    for r in SUPPORTED_PYTHON_VERSIONS
+                    for r in supported
                     if not r.prerelease and Version(r.standalone) in spec
                 ]
                 if stable_matching:
@@ -147,7 +189,7 @@ def resolve_python_version(
                 spec_with_pre = SpecifierSet(requires, prereleases=True)
                 prerelease_matching = [
                     r
-                    for r in SUPPORTED_PYTHON_VERSIONS
+                    for r in supported
                     if r.prerelease and Version(r.short) in spec_with_pre
                 ]
                 if prerelease_matching:
@@ -162,6 +204,6 @@ def resolve_python_version(
                     f"({', '.join(supported_short_versions())})."
                 )
 
-    fallback = get_release(DEFAULT_PYTHON_VERSION)
+    fallback = get_release(get_default_python_version())
     assert fallback is not None
     return fallback

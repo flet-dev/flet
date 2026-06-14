@@ -579,7 +579,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          PYODIDE_VERSION="$( uv run flet --version --json | jq -r '.python_versions[] | select(.default) | .pyodide' )"
+          PYODIDE_VERSION="$( uv run python -c "from flet_cli.utils.python_versions import resolve_python_version; print(resolve_python_version(None).pyodide)" )"
           echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
           echo "Pyodide version: $PYODIDE_VERSION"
 
