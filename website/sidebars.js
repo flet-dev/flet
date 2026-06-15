@@ -339,22 +339,34 @@ module.exports = {
           "items": [
             {
               "type": "category",
+              "label": "v0.86.0",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-deprecated-clear-cache-flag",
+                  "label": "flet build --clear-cache flag deprecated"
+                }
+              ]
+            },
+            {
+              "type": "category",
               "label": "v0.85.0",
               "collapsed": true,
               "items": [
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/removed-spacing-border-helpers",
+                  "id": "updates/breaking-changes/v0-85-0-removed-spacing-border-helpers",
                   "label": "Deprecated spacing and border helper functions removed"
                 },
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/deprecated-drag-target-event-coordinates",
+                  "id": "updates/breaking-changes/v0-85-0-deprecated-drag-target-event-coordinates",
                   "label": "DragTargetEvent coordinate fields deprecated"
                 },
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/deprecated-video-apis",
+                  "id": "updates/breaking-changes/v0-85-0-deprecated-video-apis",
                   "label": "Video control APIs deprecated"
                 }
               ]

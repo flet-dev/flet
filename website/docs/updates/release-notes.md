@@ -8,8 +8,14 @@ This page links release announcements, changelogs, and migration notes for Flet 
 
 ## Stable releases
 
+### 0.86.x
+
+- 0.86.0: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0860), [Breaking changes and deprecations](breaking-changes/index.md#released-in-flet-0860)
+
 ### 0.85.x
 
+- 0.85.3: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0853)
+- 0.85.2: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0852)
 - 0.85.1: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0851)
 - 0.85.0: [Announcement](/blog/flet-v-0-85-release-announcement), [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0850), [Breaking changes and deprecations](breaking-changes/index.md#released-in-flet-0850)
 
@@ -213,12 +219,14 @@ This page links release announcements, changelogs, and migration notes for Flet 
 - 0.1.56: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0156)
 - 0.1.55: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0155)
 - 0.1.54: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0154)
+- 0.1.53: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0153)
 - 0.1.52: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0152)
 - 0.1.51: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0151)
 - 0.1.50: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0150-1)
 - 0.1.49: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0149)
 - 0.1.48: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0148)
 - 0.1.47: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0147)
+- 0.1.46: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0146)
 - 0.1.43: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0143)
 - 0.1.42: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0142)
 - 0.1.41: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#0141)
