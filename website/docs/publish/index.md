@@ -170,8 +170,7 @@ When you run `flet build <target_platform>`, the pipeline is:
    The Flutter app embeds your packaged Python app in its assets and uses `flet` and
    [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
    The project is cached and reused across builds for rapid iterations;
-   run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory and force a rebuild
-   (the [`--clear-cache`](../cli/flet-build.md#--clear-cache) flag is deprecated).
+   run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory and force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
      - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
@@ -1193,8 +1192,7 @@ is downloaded as a zip artifact from the matching Flet GitHub Release. The versi
 used is determined by the installed Flet version.
 
 The cached project is refreshed when template inputs change or after you run
-[`flet clean`](../cli/flet-clean.md) to delete the `build` directory (the
-[`--clear-cache`](../cli/flet-build.md#--clear-cache) flag is deprecated).
+[`flet clean`](../cli/flet-clean.md) to delete the `build` directory.
 
 #### Template Source
 
@@ -1616,6 +1614,6 @@ dependency is aligned with the same development version before building your app
     ```
 </TabItem>
 </Tabs>
-2. Rebuild the app with the build cache cleared (run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory; the [`--clear-cache`](../cli/flet-build.md#--clear-cache) flag is deprecated)
+2. Rebuild the app with the build cache cleared (run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory)
 
 To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.
