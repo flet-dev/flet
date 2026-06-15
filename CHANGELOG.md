@@ -23,6 +23,7 @@
 
 * Fix `flet build` failing on Windows when a dependency is pulled in via `[tool.flet.<platform>].dev_packages` (or any local-path install): the rewritten `<pkg> @ file://<path>` URL now uses `Path.as_uri()`, producing the correct `file:///D:/...` three-slash form instead of `file://D:\...`, which pip on Windows parsed as a UNC path and aborted with `OSError: [Errno 2] No such file or directory: '\\\\D:\\a\\...'` ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 * Fix `flet build web --python-version 3.13` failing to match any Pyodide-built native wheel. The 3.13 row in the Python version registry was set to Pyodide platform tag `pyodide-2025.0-wasm32`, but Pyodide actually publishes 0.29 wheels under `pyemscripten_2025_0_wasm32` (the `pyodide_` → `pyemscripten_` prefix transition happened at 0.28/0.29, not at 314.0). Corrected to `pyemscripten-2025.0-wasm32` so pip's wheel selection picks up the correct tags by @FeodorFitsner.
+* `flet build` now cleans the build directory when the bundled Python version changes between builds, preventing stale compiled bytecode from the previous version crashing the app at runtime with `ImportError: bad magic number` by @FeodorFitsner.
 
 ## 0.85.3
 

@@ -712,6 +712,22 @@ class BaseBuildCommand(BaseFlutterCommand):
         except UnsupportedPythonVersionError as e:
             self.cleanup(1, str(e))
 
+        # Changing the bundled Python version invalidates the compiled bytecode
+        # baked into the previous build's native bundles (stdlib/site-packages
+        # .pyc). Reusing the build directory would mix versions and crash at
+        # runtime with "bad magic number". Force a clean rebuild on a switch.
+        version_marker = self.build_dir / ".python-version"
+        if self.build_dir.exists() and version_marker.exists():
+            previous = version_marker.read_text(encoding="utf-8").strip()
+            if previous and previous != self.python_release.short:
+                console.log(
+                    f"Bundled Python version changed ({previous} -> "
+                    f"{self.python_release.short}); cleaning the build directory."
+                )
+                shutil.rmtree(self.build_dir, ignore_errors=True)
+        self.build_dir.mkdir(parents=True, exist_ok=True)
+        version_marker.write_text(self.python_release.short, encoding="utf-8")
+
     def validate_target_platform(self):
         """
         Validate whether current host OS can build the selected target platform.
