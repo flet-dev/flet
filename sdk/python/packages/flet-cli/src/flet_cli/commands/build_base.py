@@ -4,7 +4,6 @@ import glob
 import os
 import platform
 import shutil
-import warnings
 from pathlib import Path
 from typing import Optional, cast
 
@@ -16,6 +15,7 @@ from rich.table import Column, Table
 import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import copy_tree, slugify
+from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -663,15 +663,17 @@ class BaseBuildCommand(BaseFlutterCommand):
         super().handle(options)
 
         if getattr(self.options, "clear_cache", None):
-            warnings.warn(
-                "The `--clear-cache` flag is deprecated and will be removed in a "
-                "future release. Use the `flet clean` command instead.",
-                DeprecationWarning,
-                stacklevel=2,
+            deprecated_warning(
+                name="--clear-cache",
+                reason="Use the `flet clean` command instead.",
+                version="0.86.0",
+                delete_version="0.89.0",
+                type="flag",
             )
             console.print(
-                "Warning: `--clear-cache` is deprecated and will be removed in a "
-                "future release. Use the `flet clean` command instead.",
+                "Warning: the `--clear-cache` flag is deprecated since version "
+                "0.86.0 and will be removed in version 0.89.0. "
+                "Use the `flet clean` command instead.",
                 style=warning_style,
             )
 
