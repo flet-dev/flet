@@ -3854,6 +3854,11 @@ module.exports = {
             },
             {
               "type": "doc",
+              "id": "cli/flet-clean",
+              "label": "flet clean"
+            },
+            {
+              "type": "doc",
               "id": "cli/flet-create",
               "label": "flet create"
             },
