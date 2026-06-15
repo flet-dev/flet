@@ -907,6 +907,11 @@ module.exports = {
             },
             {
               "type": "doc",
+              "id": "controls/dropdownm2",
+              "label": "DropdownM2"
+            },
+            {
+              "type": "doc",
               "id": "controls/expansionpanel",
               "label": "ExpansionPanel"
             },
@@ -3789,6 +3794,14 @@ module.exports = {
                 {
                   "type": "doc",
                   "id": "types/onupdated"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/run"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/run_async"
                 },
                 {
                   "type": "doc",

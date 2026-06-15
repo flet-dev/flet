@@ -77,6 +77,7 @@ class Option(Control):
 
 @deprecated_class(
     reason="Use Dropdown instead.",
+    docs_reason="Use [`Dropdown`][flet.Dropdown] instead.",
     version="0.84.0",
     delete_version="1.0",
 )
