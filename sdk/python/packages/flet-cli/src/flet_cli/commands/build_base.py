@@ -1377,6 +1377,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.cleanup(1, f"{e}")
 
             # For local development, override flet dependency with path
+            repo_root = None
+            pubspec = None
             if is_local_dev:
                 repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
                 if repo_root:
@@ -1386,21 +1388,36 @@ class BaseBuildCommand(BaseFlutterCommand):
                     pubspec.setdefault("dependency_overrides", {})["flet"] = {
                         "path": flet_pkg_path
                     }
-                    # The test host (test_mode) depends on flet_integration_test,
-                    # which is publish_to:none and only resolvable from the repo.
-                    # Point it (and its own flet path dep, via override) at the
-                    # local checkout.
-                    if "flet_integration_test" in pubspec.get("dev_dependencies", {}):
-                        fit_pkg_path = str(
-                            repo_root / "packages" / "flet_integration_test"
-                        )
-                        pubspec["dev_dependencies"]["flet_integration_test"] = {
-                            "path": fit_pkg_path
+
+            # In test mode, inject the integration-test driver (and flutter_test)
+            # as dev dependencies. They are intentionally NOT in the template
+            # pubspec: that keeps it valid YAML for the release patch tooling and
+            # ensures a normal `flet build` never pulls them. flet_integration_test
+            # is publish_to:none, so for local dev it resolves to the in-repo
+            # package by path, and for an end user it is a git dependency pinned to
+            # this flet version's tag.
+            if getattr(self, "test_mode", False):
+                if pubspec is None:
+                    pubspec = self.load_yaml(self.pubspec_path)
+                dev_deps = pubspec.setdefault("dev_dependencies", {})
+                dev_deps["flutter_test"] = {"sdk": "flutter"}
+                if is_local_dev and repo_root:
+                    fit_pkg_path = str(repo_root / "packages" / "flet_integration_test")
+                    dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
+                    pubspec.setdefault("dependency_overrides", {})[
+                        "flet_integration_test"
+                    ] = {"path": fit_pkg_path}
+                else:
+                    dev_deps["flet_integration_test"] = {
+                        "git": {
+                            "url": "https://github.com/flet-dev/flet.git",
+                            "ref": f"v{flet.version.flet_version}",
+                            "path": "packages/flet_integration_test",
                         }
-                        pubspec.setdefault("dependency_overrides", {})[
-                            "flet_integration_test"
-                        ] = {"path": fit_pkg_path}
-                    self.save_yaml(self.pubspec_path, pubspec)
+                    }
+
+            if pubspec is not None:
+                self.save_yaml(self.pubspec_path, pubspec)
 
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 

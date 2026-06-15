@@ -57,15 +57,10 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   flutter_native_splash: ^2.4.1
   flutter_lints: ^2.0.0
-{% if cookiecutter.test_mode %}
-  flutter_test:
-    sdk: flutter
-  # Flet integration-test driver. Pulls in `integration_test` transitively and
-  # provides the on-device RemoteWidgetTester used by integration_test/app_test.dart.
-  # This package is publish_to:none; flet-cli rewrites the path for local dev.
-  flet_integration_test:
-    path: ../../../../../packages/flet_integration_test
-{% endif %}
+# In test_mode, flet-cli injects flutter_test + flet_integration_test into
+# dev_dependencies after rendering (see build_base.create_flutter_project). They
+# are not declared here so this pubspec stays valid YAML for the release patch
+# tooling and so a normal `flet build` never pulls the test driver.
 
 flutter:
 

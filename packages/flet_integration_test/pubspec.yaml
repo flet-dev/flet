@@ -11,17 +11,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flet:
-    path: ../flet
-  # integration_test ships the on-device test binding used by the driver, so it
-  # is a regular dependency (the test host that depends on this package needs it
-  # on-device).
+  # flet is depended on by VERSION (not path) so that when this package is
+  # consumed — as a path dep in repo dev or a git dep in an end user's test host
+  # — flet resolves to the SAME source as the app's flet (the app's
+  # dependency_overrides win for the whole graph). A path here would pin a second
+  # flet source and conflict with the app's pub.dev flet.
+  flet: ^0.86.0
+  # integration_test (on-device test binding) and flutter_test (WidgetTester) are
+  # regular dependencies, not dev: this is a test-helper package, so consumers
+  # that depend on it get both transitively for `flutter test`.
   integration_test:
+    sdk: flutter
+  flutter_test:
     sdk: flutter
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^3.0.1
+
+# Only used when this package is the root (standalone analyze / repo dev): build
+# the driver against the in-repo flet rather than a published version. Ignored
+# when this package is consumed as a dependency.
+dependency_overrides:
+  flet:
+    path: ../flet
 
 flutter:
