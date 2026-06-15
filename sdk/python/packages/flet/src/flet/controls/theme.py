@@ -523,7 +523,7 @@ class TextTheme:
 @value
 class ScrollbarTheme:
     """
-    Customizes the colors, thickness, and shape of scrollbars across the app.
+    Customizes the colors, thickness, and shape of descendant scrollbars.
     """
 
     thumb_visibility: Optional[ControlStateValue[bool]] = None
@@ -609,7 +609,7 @@ class ScrollbarTheme:
 @value
 class TabBarTheme:
     """
-    Customizes the appearance of :class:`~flet.TabBar` control across the app.
+    Customizes the appearance of descendant :class:`~flet.TabBar` controls.
     """
 
     indicator_size: Optional[TabBarIndicatorSize] = None
@@ -741,7 +741,7 @@ class SystemOverlayStyle:
 @value
 class DialogTheme:
     """
-    Customizes the appearance of :class:`~flet.AlertDialog` across the app.
+    Customizes the appearance of descendant :class:`~flet.AlertDialog` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -823,7 +823,7 @@ class DialogTheme:
 @value
 class ButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.Button` across the app.
+    Customizes the appearance of descendant :class:`~flet.Button` controls.
     """
 
     style: Optional[ButtonStyle] = None
@@ -836,7 +836,7 @@ class ButtonTheme:
 @value
 class OutlinedButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.OutlinedButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.OutlinedButton` controls.
     """
 
     style: Optional[ButtonStyle] = None
@@ -849,7 +849,7 @@ class OutlinedButtonTheme:
 @value
 class TextButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.TextButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.TextButton` controls.
     """
 
     style: Optional[ButtonStyle] = None
@@ -862,7 +862,7 @@ class TextButtonTheme:
 @value
 class FilledButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.FilledButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.FilledButton` controls.
     """
 
     style: Optional[ButtonStyle] = None
@@ -876,7 +876,7 @@ class FilledButtonTheme:
 @value
 class IconButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.IconButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.IconButton` controls.
     """
 
     style: Optional[ButtonStyle] = None
@@ -889,7 +889,7 @@ class IconButtonTheme:
 @value
 class BottomSheetTheme:
     """
-    Customizes the appearance of :class:`~flet.BottomSheet` across the app.
+    Customizes the appearance of descendant :class:`~flet.BottomSheet` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -951,7 +951,7 @@ class BottomSheetTheme:
 @value
 class CardTheme:
     """
-    Customizes the appearance of :class:`~flet.Card` across the app.
+    Customizes the appearance of descendant :class:`~flet.Card` controls.
     """
 
     color: Optional[ColorValue] = None
@@ -994,7 +994,7 @@ class CardTheme:
 @value
 class ChipTheme:
     """
-    Customizes the appearance of :class:`~flet.Chip` across the app.
+    Customizes the appearance of descendant :class:`~flet.Chip` controls.
     """
 
     color: Optional[ControlStateValue[ColorValue]] = None
@@ -1121,8 +1121,8 @@ class ChipTheme:
 @value
 class FloatingActionButtonTheme:
     """
-    Customizes the appearance of :class:`~flet.FloatingActionButton`
-    across the app.
+    Customizes the appearance of descendant :class:`~flet.FloatingActionButton`
+    controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -1234,7 +1234,7 @@ class FloatingActionButtonTheme:
 @value
 class NavigationRailTheme:
     """
-    Customizes the appearance of :class:`~flet.NavigationRail` across the app.
+    Customizes the appearance of descendant :class:`~flet.NavigationRail` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -1309,7 +1309,7 @@ class NavigationRailTheme:
 @value
 class AppBarTheme:
     """
-    Customizes the appearance of :class:`~flet.AppBar` controls across the app.
+    Customizes the appearance of descendant :class:`~flet.AppBar` controls.
     """
 
     color: Optional[ColorValue] = None
@@ -1390,7 +1390,7 @@ class AppBarTheme:
 @value
 class BottomAppBarTheme:
     """
-    Customizes the appearance of :class:`~flet.BottomAppBar` controls across the app.
+    Customizes the appearance of descendant :class:`~flet.BottomAppBar` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -1836,7 +1836,7 @@ class BannerTheme:
 @value
 class DatePickerTheme:
     """
-    Customizes the appearance of :class:`~flet.DatePicker` controls across the app.
+    Customizes the appearance of descendant :class:`~flet.DatePicker` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -1899,7 +1899,8 @@ class DatePickerTheme:
 
     range_picker_elevation: Optional[Number] = None
     """
-    Overrides the default elevation of the full screen DateRangePicker (TBD).
+    Overrides the default elevation of the full screen
+    :class:`~flet.DateRangePicker`.
     """
 
     day_text_style: Optional[TextStyle] = None
@@ -2013,7 +2014,8 @@ class DatePickerTheme:
 
     range_picker_shape: Optional[OutlinedBorder] = None
     """
-    Overrides the default overall shape of a full screen DateRangePicker (TBD).
+    Overrides the default overall shape of a full screen
+    :class:`~flet.DateRangePicker`.
 
     If elevation is greater than zero then a shadow is shown and the shadow's shape
     mirrors the shape of the dialog.
@@ -2022,7 +2024,7 @@ class DatePickerTheme:
     range_picker_header_help_text_style: Optional[TextStyle] = None
     """
     Overrides the default text style used for the help text of the header of a full \
-    screen DateRangePicker (TBD).
+    screen :class:`~flet.DateRangePicker`.
 
     The help text (also referred to as "supporting text" in the Material spec) is
     usually a prompt to the user at the top of the header (i.e. 'Select date').
@@ -2108,7 +2110,7 @@ class DatePickerTheme:
 @value
 class TimePickerTheme:
     """
-    Customizes the appearance of :class:`~flet.TimePicker` controls across the app.
+    Customizes the appearance of descendant :class:`~flet.TimePicker` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -2247,7 +2249,7 @@ class TimePickerTheme:
 @value
 class DropdownTheme:
     """
-    Customizes the appearance of :class:`~flet.Dropdown` across the app.
+    Customizes the appearance of descendant :class:`~flet.Dropdown` controls.
     """
 
     menu_style: Optional[MenuStyle] = None
@@ -2685,8 +2687,8 @@ class SliderTheme:
 @value
 class ProgressIndicatorTheme:
     """
-    Customizes the appearance of progress indicators (:class:`~flet.ProgressBar`, \
-    :class:`~flet.ProgressRing`) across the app.
+    Customizes the appearance of descendant progress indicators
+    (:class:`~flet.ProgressBar`, :class:`~flet.ProgressRing`).
     """
 
     color: Optional[ColorValue] = None
@@ -2707,7 +2709,10 @@ class ProgressIndicatorTheme:
 
     refresh_bgcolor: Optional[ColorValue] = None
     """
-    Background color of that fills the circle under the RefreshIndicator (TBD).
+    Background color that fills the circle under the refresh indicator.
+
+    If a refresh indicator does not specify its own background color, this theme
+    value is used. If this is also not set, the current theme's canvas color is used.
     """
 
     linear_min_height: Optional[Number] = None
@@ -2771,7 +2776,7 @@ class ProgressIndicatorTheme:
 @value
 class PopupMenuTheme:
     """
-    Customizes the appearance of :class:`~flet.PopupMenuButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.PopupMenuButton` controls.
     """
 
     color: Optional[ColorValue] = None
@@ -2845,7 +2850,7 @@ class PopupMenuTheme:
 @value
 class SearchBarTheme:
     """
-    Customizes the appearance of :class:`~flet.SearchBar` controls across the app.
+    Customizes the appearance of descendant :class:`~flet.SearchBar` controls.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -2920,7 +2925,8 @@ class SearchBarTheme:
 @value
 class SearchViewTheme:
     """
-    Customizes the appearance of :class:`~flet.SearchBar` controls across the app.
+    Customizes the appearance of descendant search views presented by
+    :class:`~flet.SearchBar`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -3295,15 +3301,43 @@ class Theme:
     """
 
     appbar_theme: Optional[AppBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.AppBar` controls.
+    """
+
     badge_theme: Optional[BadgeTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Badge` controls.
+    """
+
     banner_theme: Optional[BannerTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Banner` controls.
+    """
+
     bottom_appbar_theme: Optional[BottomAppBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.BottomAppBar` controls.
+    """
+
     bottom_sheet_theme: Optional[BottomSheetTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.BottomSheet` controls.
+    """
+
     card_theme: Optional[CardTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Card` controls.
+    """
+
     checkbox_theme: Optional[CheckboxTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Checkbox` controls.
+    """
+
     chip_theme: Optional[ChipTheme] = None
     """
-    Customizes the appearance of :class:`~flet.Chip` across the app.
+    Customizes the appearance of descendant :class:`~flet.Chip` controls.
     """
 
     color_scheme: Optional[ColorScheme] = None
@@ -3313,17 +3347,17 @@ class Theme:
 
     data_table_theme: Optional[DataTableTheme] = None
     """
-    Customizes the appearance of :class:`~flet.DataTable` across the app.
+    Customizes the appearance of descendant :class:`~flet.DataTable` controls.
     """
 
     date_picker_theme: Optional[DatePickerTheme] = None
     """
-    Customizes the appearance of :class:`~flet.DatePicker` across the app.
+    Customizes the appearance of descendant :class:`~flet.DatePicker` controls.
     """
 
     dialog_theme: Optional[DialogTheme] = None
     """
-    Customizes the appearance of :class:`~flet.AlertDialog` across the app.
+    Customizes the appearance of descendant :class:`~flet.AlertDialog` controls.
     """
 
     divider_theme: Optional[DividerTheme] = None
@@ -3344,87 +3378,227 @@ class Theme:
 
     dropdown_theme: Optional[DropdownTheme] = None
     """
-    Customizes the appearance of :class:`~flet.Dropdown` across the app.
+    Customizes the appearance of descendant :class:`~flet.Dropdown` controls.
     """
 
     button_theme: Optional[ButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.Button` across the app.
+    Customizes the appearance of descendant :class:`~flet.Button` controls.
     """
 
     outlined_button_theme: Optional[OutlinedButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.OutlinedButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.OutlinedButton`
+    controls.
     """
 
     text_button_theme: Optional[TextButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.TextButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.TextButton` controls.
     """
 
     filled_button_theme: Optional[FilledButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.FilledButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.FilledButton` controls.
     """
 
     icon_button_theme: Optional[IconButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.IconButton` across the app.
+    Customizes the appearance of descendant :class:`~flet.IconButton` controls.
     """
 
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
     """
-    Customizes the appearance of :class:`~flet.ExpansionTile` across the app.
+    Customizes the appearance of descendant :class:`~flet.ExpansionTile`
+    controls.
     """
 
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
     """
-    Customizes the appearance of :class:`~flet.FloatingActionButton`
-    across the app.
+    Customizes the appearance of descendant :class:`~flet.FloatingActionButton`
+    controls.
     """
 
     icon_theme: Optional[IconTheme] = None
     """
-    Customizes the appearance of :class:`~flet.Icon` across the app.
+    Customizes the appearance of descendant :class:`~flet.Icon` controls.
     """
 
     list_tile_theme: Optional[ListTileTheme] = None
     """
-    Customizes the appearance of :class:`~flet.ListTile` across the app.
+    Customizes the appearance of descendant :class:`~flet.ListTile` controls.
     """
 
     navigation_bar_theme: Optional[NavigationBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.NavigationBar` controls.
+    """
+
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.NavigationDrawer`
+    controls.
+    """
+
     navigation_rail_theme: Optional[NavigationRailTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.NavigationRail` controls.
+    """
+
     page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
+    """
+    Configures the default page transition presets used for route changes.
+    """
+
     popup_menu_theme: Optional[PopupMenuTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.PopupMenuButton`
+    controls.
+    """
+
     splash_color: Optional[ColorValue] = None
+    """
+    The color of ink splashes.
+    """
+
     highlight_color: Optional[ColorValue] = None
+    """
+    The highlight color used during ink splash animations or to indicate a selected \
+    menu item.
+    """
+
     hover_color: Optional[ColorValue] = None
+    """
+    The color used to indicate that a pointer is hovering over a control.
+    """
+
     focus_color: Optional[ColorValue] = None
+    """
+    The color used to indicate that a control has input focus.
+    """
+
     unselected_control_color: Optional[ColorValue] = None
+    """
+    The color used for controls in their inactive but enabled state, such as an \
+    unchecked :class:`~flet.Checkbox`.
+    """
+
     disabled_color: Optional[ColorValue] = None
+    """
+    The color used for disabled controls and text.
+    """
+
     canvas_color: Optional[ColorValue] = None
+    """
+    The default color for canvas surfaces behind Material controls.
+    """
+
     scaffold_bgcolor: Optional[ColorValue] = None
     """
-    Customizes the page background color.
+    The default background color for scaffold-like page surfaces.
     """
+
     card_bgcolor: Optional[ColorValue] = None
+    """
+    The default background color for :class:`~flet.Card` controls.
+    """
+
     hint_color: Optional[ColorValue] = None
+    """
+    The color used for hint or placeholder text, for example in
+    :class:`~flet.TextField` controls.
+    """
+
     secondary_header_color: Optional[ColorValue] = None
+    """
+    The color used for secondary headers, such as the header of a paginated data table
+    when rows are selected.
+    """
+
     primary_text_theme: Optional[TextTheme] = None
+    """
+    A text theme that contrasts with the theme's primary color.
+    """
+
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.ProgressBar` and
+    :class:`~flet.ProgressRing` controls.
+    """
+
     radio_theme: Optional[RadioTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Radio` controls.
+    """
+
     scrollbar_theme: Optional[ScrollbarTheme] = None
+    """
+    Customizes the appearance of descendant scrollbars.
+    """
+
     search_bar_theme: Optional[SearchBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.SearchBar` controls.
+    """
+
     search_view_theme: Optional[SearchViewTheme] = None
+    """
+    Customizes the appearance of the search view presented by
+    :class:`~flet.SearchBar`.
+    """
+
     segmented_button_theme: Optional[SegmentedButtonTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.SegmentedButton`
+    controls.
+    """
+
     slider_theme: Optional[SliderTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Slider` and
+    :class:`~flet.RangeSlider` controls.
+    """
+
     snackbar_theme: Optional[SnackBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.SnackBar` controls.
+    """
+
     switch_theme: Optional[SwitchTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.Switch` controls.
+    """
+
     system_overlay_style: Optional[SystemOverlayStyle] = None
+    """
+    Customizes the appearance of the system status bar and navigation bar on mobile \
+    platforms.
+    """
+
     tab_bar_theme: Optional[TabBarTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.TabBar` controls.
+    """
+
     text_theme: Optional[TextTheme] = None
+    """
+    The default text styles for descendant controls.
+    """
+
     time_picker_theme: Optional[TimePickerTheme] = None
+    """
+    Customizes the appearance of descendant :class:`~flet.TimePicker` controls.
+    """
+
     tooltip_theme: Optional[TooltipTheme] = None
+    """
+    Customizes the appearance of descendant tooltips.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    Specifies how compact descendant Material controls should be.
+
+    Negative density values make supported controls denser and more compact, while
+    positive values make them more spacious. See :class:`~flet.VisualDensity`.
+    """

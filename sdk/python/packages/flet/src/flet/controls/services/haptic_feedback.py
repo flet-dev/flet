@@ -37,6 +37,9 @@ class HapticFeedback(Service):
 
     async def selection_click(self):
         """
-        TBD
+        Provides haptic feedback for a selection changing through discrete values.
+
+        On supported platforms, this is typically used for controls such as pickers,
+        sliders, or other inputs where the selected value changes one step at a time.
         """
         await self._invoke_method("selection_click")

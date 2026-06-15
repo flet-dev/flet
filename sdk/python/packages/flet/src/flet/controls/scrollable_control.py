@@ -56,8 +56,8 @@ class ScrollType(Enum):
     """
     Viewport was overscrolled.
 
-    See :attr:`~flet.OnScrollEvent.overscroll` and
-    :attr:`~flet.OnScrollEvent.velocity` are available.
+    See :attr:`flet.OnScrollEvent.overscroll` and
+    :attr:`flet.OnScrollEvent.velocity` are available.
     """
 
 
@@ -330,9 +330,8 @@ class ScrollableControl(Control):
     Shared scroll behavior for controls that expose a scrollable viewport.
 
     This mixin-style control is inherited by controls such as
-    :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.ResponsiveRow`,
-    :class:`~flet.View`, :class:`~flet.ListView`, and :class:`~flet.GridView`.
-    It provides a common API for:
+    :class:`~flet.Column`, :class:`~flet.Row`, :class:`~flet.View`,
+    :class:`~flet.ListView`, and :class:`~flet.GridView`. It provides a common API for:
 
     - enabling/disabling scrolling and scrollbar visibility via :attr:`scroll`;
     - receiving throttled scroll notifications via :attr:`on_scroll` and

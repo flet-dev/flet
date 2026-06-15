@@ -23,7 +23,7 @@ __all__ = [
 @control("NavigationDrawerDestination")
 class NavigationDrawerDestination(Control):
     """
-    A :class:`~NavigationDrawer` destination.
+    Displays an icon with a label, for use in NavigationDrawer destinations.
     """
 
     label: StrOrControl
