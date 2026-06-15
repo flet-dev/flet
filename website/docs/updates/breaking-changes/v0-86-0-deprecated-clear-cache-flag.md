@@ -45,8 +45,7 @@ flet build web
 ```
 
 `flet clean` accepts an optional [path](../../cli/flet-clean.md#python_app_path) to the app directory (defaults to the
-current directory), so you can target another project with
-`flet clean path/to/app`.
+current directory), so you can target another project with `flet clean path/to/app`.
 
 ## Timeline
 
