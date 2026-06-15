@@ -83,8 +83,8 @@ class SemanticsControl extends StatelessWidget {
       onPaste: control.hasEventHandler("paste")
           ? () => control.triggerEvent("paste")
           : null,
-      onLongPress: control.hasEventHandler("dismiss")
-          ? () => control.triggerEvent("dismiss")
+      onLongPress: control.hasEventHandler("long_press")
+          ? () => control.triggerEvent("long_press")
           : null,
       onMoveCursorForwardByCharacter: control.getBool(
               "on_move_cursor_forward_by_character", false)!
