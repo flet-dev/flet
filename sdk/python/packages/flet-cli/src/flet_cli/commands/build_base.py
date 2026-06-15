@@ -4,6 +4,7 @@ import glob
 import os
 import platform
 import shutil
+import warnings
 from pathlib import Path
 from typing import Optional, cast
 
@@ -263,7 +264,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="clear_cache",
             action="store_true",
             default=None,
-            help="Remove any existing build cache before starting the build process",
+            help="Remove any existing build cache before starting the build process. "
+            "Deprecated: use the `flet clean` command instead",
         )
         parser.add_argument(
             "--project",
@@ -647,6 +649,20 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
 
         super().handle(options)
+
+        if getattr(self.options, "clear_cache", None):
+            warnings.warn(
+                "The `--clear-cache` flag is deprecated and will be removed in a "
+                "future release. Use the `flet clean` command instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            console.print(
+                "Warning: `--clear-cache` is deprecated and will be removed in a "
+                "future release. Use the `flet clean` command instead.",
+                style=warning_style,
+            )
+
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
 
