@@ -1,11 +1,15 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'dart:async';
-import 'package:flet/flet.dart';
-import 'package:flutter/gestures.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import '../../utils/lock.dart';
+import '../test_finder.dart';
+import '../tester.dart';
 import 'flutter_test_finder.dart';
 
 class FlutterWidgetTester implements Tester {
@@ -16,6 +20,11 @@ class FlutterWidgetTester implements Tester {
   TestGesture? _gesture;
 
   FlutterWidgetTester(this._tester, this._binding);
+
+  /// The integration-test binding, exposed for subclasses (e.g.
+  /// `RemoteWidgetTester`).
+  @protected
+  IntegrationTestWidgetsFlutterBinding get binding => _binding;
 
   @override
   Future<void> pumpAndSettle({Duration? duration}) async {
@@ -101,14 +110,15 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  Future<void> tapAt(Offset offset) =>
-      _tester.tapAt(offset);
+  Future<void> tapAt(Offset offset) => _tester.tapAt(offset);
 
   @override
-  Future<void> mouseClickAt(Offset offset) => _mouseClickAt(offset, kPrimaryButton);
+  Future<void> mouseClickAt(Offset offset) =>
+      _mouseClickAt(offset, kPrimaryButton);
 
   @override
-  Future<void> mouseDoubleClickAt(Offset offset) => _mouseDoubleClickAt(offset);
+  Future<void> mouseDoubleClickAt(Offset offset) =>
+      _mouseDoubleClickAt(offset);
 
   @override
   Future<void> rightMouseClickAt(Offset offset) =>
@@ -130,8 +140,7 @@ class FlutterWidgetTester implements Tester {
       _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
 
   @override
-  Future<void> enterText(
-      TestFinder finder, int finderIndex, String text) =>
+  Future<void> enterText(TestFinder finder, int finderIndex, String text) =>
       _tester.enterText(
         (finder as FlutterTestFinder).raw.at(finderIndex),
         text,
@@ -184,7 +193,11 @@ class FlutterWidgetTester implements Tester {
   }
 
   @override
-  void teardown() => _teardown.complete();
+  void teardown() {
+    if (!_teardown.isCompleted) {
+      _teardown.complete();
+    }
+  }
 
   @override
   Future waitForTeardown() => _teardown.future;

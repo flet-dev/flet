@@ -1162,6 +1162,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.target_platform in ["ipa"]
             and not ios_provisioning_profile
             and not self.debug_platform
+            and not getattr(self, "test_mode", False)
         ):
             console.print(
                 Panel(
@@ -1208,6 +1209,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
+            # Enabled by `flet test` to scaffold integration-test wiring
+            # (integration_test/ + flutter_test dev deps). Default False so
+            # normal `flet build`/`flet debug` output is unaffected.
+            "test_mode": getattr(self, "test_mode", False),
             "project_name": project_name,
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,

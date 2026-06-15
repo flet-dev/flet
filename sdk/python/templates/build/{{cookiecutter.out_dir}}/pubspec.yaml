@@ -57,6 +57,12 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   flutter_native_splash: ^2.4.1
   flutter_lints: ^2.0.0
+{% if cookiecutter.test_mode %}
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+{% endif %}
 
 flutter:
 

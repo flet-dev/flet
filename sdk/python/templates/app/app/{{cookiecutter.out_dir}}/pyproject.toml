@@ -16,7 +16,14 @@ dev = [
     "flet-cli>={{cookiecutter.flet_version}}",
     "flet-desktop>={{cookiecutter.flet_version}}",
     "flet-web>={{cookiecutter.flet_version}}",
+    # Integration testing with `flet test` / pytest. The `test` extra brings in
+    # pytest, pytest-asyncio and the screenshot-comparison dependencies.
+    "flet[test]>={{cookiecutter.flet_version}}",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
 
 [tool.flet]
 {%- if cookiecutter.platform == "linux" %}

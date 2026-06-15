@@ -139,7 +139,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
-      "test": tester != null,
+      "test": tester != null || const bool.fromEnvironment("FLET_TEST"),
       "multi_view": multiView,
       "pyodide": isPyodideMode(),
       "window": {

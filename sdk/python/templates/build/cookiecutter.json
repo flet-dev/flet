@@ -27,6 +27,7 @@
     "pwa_background_color": "#FFFFFF",
     "pwa_theme_color": "#0175C2",
     "split_per_abi": false,
+    "test_mode": false,
     "no_cdn": false,
     "no_wasm": false,
     "pyodide_version": "",

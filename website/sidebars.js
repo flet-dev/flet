@@ -27,6 +27,10 @@ module.exports = {
         },
         {
           "type": "doc",
+          "id": "getting-started/integration-testing"
+        },
+        {
+          "type": "doc",
           "id": "getting-started/testing-on-mobile"
         }
       ]
@@ -3896,6 +3900,11 @@ module.exports = {
               "type": "doc",
               "id": "cli/flet-serve",
               "label": "flet serve"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-test",
+              "label": "flet test"
             }
           ],
           "link": {

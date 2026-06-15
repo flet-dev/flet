@@ -6,6 +6,7 @@ docs:
   - getting-started/installation.md
   - getting-started/create-flet-app.md
   - getting-started/running-app.md
+  - getting-started/integration-testing.md
   - getting-started/testing-on-mobile.md
   Tutorials:
   - Calculator: tutorials/calculator.md
@@ -854,6 +855,7 @@ docs:
       flet publish: cli/flet-publish.md
       flet run: cli/flet-run.md
       flet serve: cli/flet-serve.md
+      flet test: cli/flet-test.md
     Python packages built in Flet: reference/binary-packages-android-ios.md
     Environment Variables: reference/environment-variables.md
 
