@@ -191,8 +191,8 @@ class FletTestApp:
     def tester(self) -> Union[Tester, RemoteTester]:
         """
         Returns the tester that programmatically interacts with page controls \
-        and the test environment. In device mode this is a \
-        :class:`~flet.testing.remote_tester.RemoteTester`.
+        and the test environment. In device mode this is a `RemoteTester` \
+        driving the app over a socket.
         """
         if self.__tester is None:
             raise RuntimeError("tester is not initialized")
@@ -578,7 +578,7 @@ class FletTestApp:
                 same directory as the source frames.
             frames: Iterable of PNG-encoded frame bytes to use directly, in the
                 order they should appear in the animation. Typically paired
-                with :meth:`Page.take_animation`.
+                with :meth:`~flet.BasePage.take_animation`.
             duration: Frame duration in milliseconds. Either a single `int`
                 applied to every frame, or a sequence of `int` with one
                 entry per frame. Pass the same list used for
