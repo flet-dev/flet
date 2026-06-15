@@ -1665,6 +1665,29 @@ module.exports = {
             },
             {
               "type": "category",
+              "label": "Testing",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "types/testing/flettestapp"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/testing/tester"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/testing/finder"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/testing/disposalmode"
+                }
+              ]
+            },
+            {
+              "type": "category",
               "label": "Base Controls",
               "collapsed": true,
               "items": [
@@ -2145,15 +2168,7 @@ module.exports = {
                 },
                 {
                   "type": "doc",
-                  "id": "types/finder"
-                },
-                {
-                  "type": "doc",
                   "id": "types/flip"
-                },
-                {
-                  "type": "doc",
-                  "id": "types/flettestapp"
                 },
                 {
                   "type": "category",
@@ -2600,10 +2615,6 @@ module.exports = {
                 {
                   "type": "doc",
                   "id": "types/templateroute"
-                },
-                {
-                  "type": "doc",
-                  "id": "types/tester"
                 },
                 {
                   "type": "doc",

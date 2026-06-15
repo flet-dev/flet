@@ -338,6 +338,11 @@ docs:
           GitHubOAuthProvider: types/auth/githuboauthprovider.md
           GoogleOAuthProvider: types/auth/googleoauthprovider.md
       - types/auth/user.md
+      Testing:
+      - types/testing/flettestapp.md
+      - types/testing/tester.md
+      - types/testing/finder.md
+      - types/testing/disposalmode.md
       Base Controls:
       - controls/adaptivecontrol.md
       - controls/basecontrol.md
@@ -451,9 +456,7 @@ docs:
       - types/duration.md
       - types/filepickerfile.md
       - types/filepickeruploadfile.md
-      - types/finder.md
       - types/flip.md
-      - types/flettestapp.md
       - Geolocator:
         - services/geolocator/types/foregroundnotificationconfiguration.md
         - services/geolocator/types/geolocatorandroidconfiguration.md
@@ -555,7 +558,6 @@ docs:
       - types/size.md
       - types/strutstyle.md
       - types/templateroute.md
-      - types/tester.md
       - types/textdecoration.md
       - types/textselection.md
       - types/textspan.md

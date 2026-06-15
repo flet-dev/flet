@@ -91,9 +91,10 @@ testpaths = ["tests"]
 
 ## Writing a test
 
-Test functions are `async` and receive the `flet_app` fixture, which starts your
-app and exposes a **tester** to drive it. Each test gets a **fresh app
-instance**, so tests are independent and can run in any order.
+Test functions are `async` and receive the [`flet_app`][flet.testing.FletTestApp]
+fixture, which starts your app and exposes a [tester][flet.testing.Tester] to
+drive it. Each test gets a **fresh app instance**, so tests are independent and
+can run in any order.
 
 Here is the counter sample (`tests/test_main.py`) that `flet create` generates:
 
@@ -146,27 +147,31 @@ ft.run(main)
 
 :::tip
 Give controls you want to test a stable [`key`](../cookbook/control-refs.md) and
-find them with `find_by_key()`. It's more robust than matching on text, which can
-change with localization or formatting.
+find them with [`find_by_key()`][flet.testing.Tester.find_by_key]. It's more
+robust than matching on text, which can change with localization or formatting.
 :::
 
 ## The tester API
 
-`flet_app.tester` finds controls and drives interactions. **Finder** methods
-return a `Finder`; **action** methods take a `Finder`; and **pump** methods let
-the UI advance. All methods are awaitable.
+[`flet_app.tester`][flet.testing.FletTestApp.tester] finds controls and drives
+interactions. **Finder** methods return a [`Finder`][flet.testing.Finder];
+**action** methods take a `Finder`; and **pump** methods let the UI advance. All
+methods are awaitable.
 
 ### Finding controls
 
 | Method | Finds controls by |
 | --- | --- |
-| `find_by_key(key)` | their `key` |
-| `find_by_text(text)` | exact text |
-| `find_by_text_containing(pattern)` | a regular-expression match on text |
-| `find_by_icon(icon)` | their icon (e.g. `ft.Icons.ADD`) |
-| `find_by_tooltip(value)` | tooltip text |
+| [`find_by_key(key)`][flet.testing.Tester.find_by_key] | their `key` |
+| [`find_by_text(text)`][flet.testing.Tester.find_by_text] | exact text |
+| [`find_by_text_containing(pattern)`][flet.testing.Tester.find_by_text_containing] | a regular-expression match on text |
+| [`find_by_icon(icon)`][flet.testing.Tester.find_by_icon] | their icon (e.g. `ft.Icons.ADD`) |
+| [`find_by_tooltip(value)`][flet.testing.Tester.find_by_tooltip] | tooltip text |
 
-A `Finder` reports how many controls matched and lets you pick one:
+A [`Finder`][flet.testing.Finder] reports how many controls matched (via
+[`count`][flet.testing.Finder.count]) and lets you pick one with
+[`first`][flet.testing.Finder.first], [`last`][flet.testing.Finder.last] or
+[`at()`][flet.testing.Finder.at]:
 
 ```python
 finder = await tester.find_by_text("Item")
@@ -180,15 +185,16 @@ await tester.tap(finder.at(1))    # match at index 1
 
 | Method | Action |
 | --- | --- |
-| `tap(finder)` | tap a control |
-| `long_press(finder)` | long-press a control |
-| `enter_text(finder, text)` | type text into a field |
-| `mouse_hover(finder)` | hover the mouse over a control |
+| [`tap(finder)`][flet.testing.Tester.tap] | tap a control |
+| [`long_press(finder)`][flet.testing.Tester.long_press] | long-press a control |
+| [`enter_text(finder, text)`][flet.testing.Tester.enter_text] | type text into a field |
+| [`mouse_hover(finder)`][flet.testing.Tester.mouse_hover] | hover the mouse over a control |
 
 ### Pumping
 
-The UI doesn't update instantly after an interaction. Call `pump_and_settle()`
-to let the app process events and render the result before asserting:
+The UI doesn't update instantly after an interaction. Call
+[`pump_and_settle()`][flet.testing.Tester.pump_and_settle] to let the app process
+events and render the result before asserting:
 
 ```python
 await tester.tap(await tester.find_by_key("submit"))
@@ -196,8 +202,8 @@ await tester.pump_and_settle()
 assert (await tester.find_by_text("Done")).count == 1
 ```
 
-Use `pump(duration=...)` to advance by a fixed amount when you don't want to wait
-for everything to settle.
+Use [`pump(duration=...)`][flet.testing.Tester.pump] to advance by a fixed amount
+when you don't want to wait for everything to settle.
 
 ## Screenshot testing
 
@@ -206,9 +212,11 @@ app and compare it against a committed *golden* (reference) image — useful for
 catching visual regressions. Full-screen capture is a device feature, so this is
 **not available on desktop**.
 
-`tester.take_screenshot(name)` captures the screen as PNG bytes, and
-`flet_app.assert_screenshot(name, bytes)` compares them against the golden image,
-failing the test if they differ beyond a similarity threshold (≈99% by default):
+[`tester.take_screenshot(name)`][flet.testing.Tester.take_screenshot] captures
+the screen as PNG bytes, and
+[`flet_app.assert_screenshot(name, bytes)`][flet.testing.FletTestApp.assert_screenshot]
+compares them against the golden image, failing the test if they differ beyond a
+similarity threshold (≈99% by default):
 
 ```python
 async def test_home_screen(flet_app: ftt.FletTestApp):
