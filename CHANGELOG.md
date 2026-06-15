@@ -1,5 +1,13 @@
 ## 0.85.3
 
+### New features
+
+* Add `flet clean` command that deletes the `build` directory of a Flet app — the Flutter bootstrap project, cached artifacts, and generated output — in a single step ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
+
+### Deprecations
+
+* Deprecate the `--clear-cache` flag of `flet build` and `flet debug`; run the new `flet clean` command instead. The flag remains functional but now emits a deprecation warning, and is scheduled for removal in `0.88.0` ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
+
 ### Improvements
 
 * Allow `[tool.flet.android.permission]` values to be TOML inline tables in addition to booleans — each `key = "value"` entry adds an `android:<key>="<value>"` attribute to the generated `<uses-permission>` element, unlocking modifiers like `android:maxSdkVersion` and `android:usesPermissionFlags` that real-world Android permissions (e.g. Bluetooth LE) require. The boolean form and the `--android-permissions` CLI flag are unchanged; a non-empty inline table is always emitted, an empty table (`{}`) is treated as `false`, and invalid value types fail the build with a clear error ([#6550](https://github.com/flet-dev/flet/issues/6550), [#6551](https://github.com/flet-dev/flet/pull/6551)) by @FeodorFitsner.
