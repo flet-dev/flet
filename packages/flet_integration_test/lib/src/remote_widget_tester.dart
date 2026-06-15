@@ -2,14 +2,13 @@
 // ignore_for_file: non_const_argument_for_const_parameter
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import '../test_finder.dart';
+import 'package:flet/flet.dart';
 import 'flutter_test_finder.dart';
 import 'flutter_tester.dart';
 import 'frame_decoder.dart';

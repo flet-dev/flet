@@ -1,11 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import '../tester.dart';
+import 'package:flet/flet.dart';
 import 'flutter_tester.dart';
 
 /// Runs an integration test in "host" mode: the Flet app under test runs in a

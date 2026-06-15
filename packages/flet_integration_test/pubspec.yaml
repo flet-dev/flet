@@ -1,0 +1,27 @@
+name: flet_integration_test
+description: Driver for running Flet app integration tests on-device. Internal Flet tooling, not published to pub.dev.
+homepage: https://flet.dev
+repository: https://github.com/flet-dev/flet/tree/main/packages/flet_integration_test
+version: 0.86.0
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flet:
+    path: ../flet
+  # integration_test ships the on-device test binding used by the driver, so it
+  # is a regular dependency (the test host that depends on this package needs it
+  # on-device).
+  integration_test:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:

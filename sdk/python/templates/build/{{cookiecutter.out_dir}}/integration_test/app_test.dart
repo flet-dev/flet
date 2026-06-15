@@ -1,4 +1,4 @@
-{% if cookiecutter.test_mode %}import 'package:flet/testing.dart';
+{% if cookiecutter.test_mode %}import 'package:flet_integration_test/flet_integration_test.dart';
 import 'package:{{ cookiecutter.project_name }}/main.dart' as app;
 
 // Device-mode integration test entry point. The app under test runs on-device

@@ -1386,6 +1386,20 @@ class BaseBuildCommand(BaseFlutterCommand):
                     pubspec.setdefault("dependency_overrides", {})["flet"] = {
                         "path": flet_pkg_path
                     }
+                    # The test host (test_mode) depends on flet_integration_test,
+                    # which is publish_to:none and only resolvable from the repo.
+                    # Point it (and its own flet path dep, via override) at the
+                    # local checkout.
+                    if "flet_integration_test" in pubspec.get("dev_dependencies", {}):
+                        fit_pkg_path = str(
+                            repo_root / "packages" / "flet_integration_test"
+                        )
+                        pubspec["dev_dependencies"]["flet_integration_test"] = {
+                            "path": fit_pkg_path
+                        }
+                        pubspec.setdefault("dependency_overrides", {})[
+                            "flet_integration_test"
+                        ] = {"path": fit_pkg_path}
                     self.save_yaml(self.pubspec_path, pubspec)
 
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")

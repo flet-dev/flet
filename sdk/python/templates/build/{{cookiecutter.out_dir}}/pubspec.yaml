@@ -60,8 +60,11 @@ dev_dependencies:
 {% if cookiecutter.test_mode %}
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
+  # Flet integration-test driver. Pulls in `integration_test` transitively and
+  # provides the on-device RemoteWidgetTester used by integration_test/app_test.dart.
+  # This package is publish_to:none; flet-cli rewrites the path for local dev.
+  flet_integration_test:
+    path: ../../../../../packages/flet_integration_test
 {% endif %}
 
 flutter:
