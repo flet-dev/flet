@@ -57,9 +57,9 @@ class _ChipControlState extends State<ChipControl> {
       return const ErrorControl("Chip.label must be provided and visible");
     }
 
-    var onClick = widget.control.getBool("on_click", false)!;
-    var onDelete = widget.control.getBool("on_delete", false)!;
-    var onSelect = widget.control.getBool("on_select", false)!;
+    var onClick = widget.control.hasEventHandler("click");
+    var onDelete = widget.control.hasEventHandler("delete");
+    var onSelect = widget.control.hasEventHandler("select");
     if (onSelect && onClick) {
       return const ErrorControl(
           "Chip cannot have both on_select and on_click events specified");
@@ -99,8 +99,7 @@ class _ChipControlState extends State<ChipControl> {
       color: widget.control.getWidgetStateColor("color", Theme.of(context)),
       pressElevation: widget.control.getDouble("elevation_on_click"),
       side: widget.control.getBorderSide("border_side", Theme.of(context)),
-      clipBehavior:
-          parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
+      clipBehavior: widget.control.getClipBehavior("clip_behavior", Clip.none)!,
       visualDensity: widget.control.getVisualDensity("visual_density"),
       avatarBoxConstraints:
           widget.control.getBoxConstraints("leading_size_constraints"),

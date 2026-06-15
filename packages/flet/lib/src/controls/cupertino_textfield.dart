@@ -164,7 +164,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     var readOnly = widget.control.getBool("read_only", false)!;
     var password = widget.control.getBool("password", false)!;
-    var onChange = widget.control.getBool("on_change", false)!;
+    var onChange = widget.control.hasEventHandler("change");
 
     var cursorColor = widget.control.getColor("cursor_color", context);
     var selectionColor = widget.control.getColor("selection_color", context);
@@ -357,7 +357,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         onTap: () => widget.control.triggerEvent("click"),
         controller: _controller,
         focusNode: focusNode,
-        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+        onTapOutside: widget.control.hasEventHandler("tap_outside")
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");
               }
