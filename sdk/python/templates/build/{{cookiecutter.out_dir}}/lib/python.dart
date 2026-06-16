@@ -67,17 +67,45 @@ _native_stdout = sys.stdout
 _native_stderr = sys.stderr
 
 class _TeeWriter:
+    # The file half receives writes raw — preserves byte-for-byte parity
+    # with what Python wrote, so the error-screen capture file matches a
+    # plain `python` console run.
+    #
+    # The native (logcat / os_log) half is line-buffered so Python's
+    # `print(x)` doesn't produce two log entries — CPython implements
+    # `print` as `write(text)` + `write("\\n")`, and the standalone
+    # newline write would otherwise show as a blank logcat row after
+    # every print. We accumulate until we see "\\n", emit the line
+    # without the trailing newline, and skip purely empty lines (so
+    # `print()` with no args also stays out of the log).
     def __init__(self, native, file_):
         self._native = native
         self._file = file_
+        self._native_buf = ""
     def write(self, text):
+        if not text:
+            return 0
         try:
-            self._native.write(text)
+            self._native_buf += text
+            while True:
+                nl = self._native_buf.find("\\n")
+                if nl < 0:
+                    break
+                line = self._native_buf[:nl]
+                self._native_buf = self._native_buf[nl + 1:]
+                if line:
+                    self._native.write(line)
         except Exception:
             pass
         return self._file.write(text)
     def flush(self):
         try:
+            # Drain any pending partial line (no trailing newline in the
+            # source stream — could happen if the user app calls
+            # `sys.stdout.flush()` mid-line).
+            if self._native_buf:
+                self._native.write(self._native_buf)
+                self._native_buf = ""
             self._native.flush()
         except Exception:
             pass
