@@ -236,6 +236,20 @@ Future prepareApp() async {
 }
 
 Future<String?> runPythonApp(List<String> args) async {
+  // Process-reuse path: Android may keep the OS process alive across a
+  // back-button quit and restart only the Dart VM. libdart_bridge stays
+  // loaded, Python is still up. `initBridges()` already fired
+  // `dart_bridge_signal_dart_session` with the new ports — Python's
+  // session-restart handlers have rewired by now. Don't call into
+  // `SeriousPython.runProgram` again (it would no-op-return immediately
+  // anyway, but the never-completing-future park here keeps the
+  // FletApp's existing FutureBuilder rendering until the OS tears us
+  // down for real).
+  if (nrt.pythonAlreadyRunning) {
+    debugPrint(
+        "Python already initialized (process reuse) — skipping SeriousPython.runProgram");
+    return Completer<String>().future;
+  }
   return nrt.runPython(
     moduleName: pythonModuleName,
     appDir: appDir,

@@ -31,9 +31,26 @@ PythonBridge? _exitBridge;
 
 /// Allocate the protocol + exit bridges, stamp the required env vars onto
 /// [envVars], and return the `dartbridge://<port>` page URL.
+///
+/// Also fires `dart_bridge_signal_dart_session` unconditionally. On a fresh
+/// start where libdart_bridge hasn't initialized Python yet, the call is a
+/// cheap no-op inside the C library. On Android process reuse — where the
+/// OS kept this process alive across a Dart VM restart and Python is still
+/// loaded with handlers on the previous (now-dead) ports — it dispatches
+/// the new port numbers to the running Python session-restart subscribers
+/// so they can rewire transparently. See libdart_bridge >= 1.3.0.
 String initBridges(Map<String, String> envVars) {
   _bridge = PythonBridge();
   _exitBridge = PythonBridge();
+
+  // Signal the running Python (if any) about the new Dart native ports.
+  // The labels here match what `serious_python_run` reconstructs from
+  // env vars on its own reuse path — keep in sync.
+  DartBridge.instance.signalDartSession({
+    "protocol": _bridge!.port,
+    "exit": _exitBridge!.port,
+  });
+
   envVars.putIfAbsent("FLET_DART_BRIDGE_PORT", () => _bridge!.port.toString());
   envVars.putIfAbsent(
     "FLET_DART_BRIDGE_EXIT_PORT",
@@ -43,6 +60,15 @@ String initBridges(Map<String, String> envVars) {
 }
 
 bool get bridgesActive => _bridge != null;
+
+/// True when libdart_bridge already has an embedded CPython up from a
+/// previous Dart VM in the same OS process. On Android the OS may keep
+/// the process alive across a back-button exit and restart only the Dart
+/// VM on re-launch — this flag lets `runPythonApp` skip
+/// `SeriousPython.runProgram` (which would otherwise wedge waiting on a
+/// Python interpreter that's already running). Always false on a fresh
+/// process, and false when running against pre-1.3.0 libdart_bridge.
+bool get pythonAlreadyRunning => DartBridge.instance.isPythonInitialized;
 
 /// Extract the bundled app.zip into a fresh app directory and return its
 /// path. Wraps `serious_python.extractAssetZip` so main.dart doesn't have
