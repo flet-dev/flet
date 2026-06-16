@@ -56,23 +56,73 @@ def initialize_ctypes():
 initialize_ctypes()
 
 out_file = open("{outLogFilename}", "w+", buffering=1)
-sys.stdout = sys.stderr = out_file
+
+# libdart_bridge >= 1.3.0 installs native-log file-like wrappers as
+# sys.stdout / sys.stderr right after Py_Initialize so prints land in
+# logcat (Android) / os_log (iOS) / stderr (desktop). Tee here so the
+# error-screen capture file ALSO gets the output — both paths matter.
+# On older libdart_bridge (no native install) `_native_*` will be the
+# default text streams; the tee still works as a plain duplicate write.
+_native_stdout = sys.stdout
+_native_stderr = sys.stderr
+
+class _TeeWriter:
+    def __init__(self, native, file_):
+        self._native = native
+        self._file = file_
+    def write(self, text):
+        try:
+            self._native.write(text)
+        except Exception:
+            pass
+        return self._file.write(text)
+    def flush(self):
+        try:
+            self._native.flush()
+        except Exception:
+            pass
+        self._file.flush()
+    def isatty(self):
+        return False
+    def fileno(self):
+        return self._file.fileno()
+
+sys.stdout = _TeeWriter(_native_stdout, out_file)
+sys.stderr = _TeeWriter(_native_stderr, out_file)
 
 # Exit-code transport. The Dart side allocated a dedicated PythonBridge port
 # (FLET_DART_BRIDGE_EXIT_PORT) and is listening on it. `flet_exit` posts the
 # exit code as raw UTF-8 bytes through that bridge — the Dart side parses,
 # then either renders the error screen (code == 100) or terminates the host
 # process (any other code) using the file we wrote to above.
+#
+# On Android process reuse (Dart VM restarts while libdart_bridge stays
+# loaded), the exit-bridge port number changes. We keep `_exit_port` in a
+# one-element list so the session-restart handler below can mutate it in
+# place — `flet_exit` always reads the current value.
 import dart_bridge  # built-in module provided by libdart_bridge
-_exit_port = int(os.environ["FLET_DART_BRIDGE_EXIT_PORT"])
+_exit_port = [int(os.environ["FLET_DART_BRIDGE_EXIT_PORT"])]
 
 def flet_exit(code=0):
     try:
-        dart_bridge.send_bytes(_exit_port, str(code).encode())
+        dart_bridge.send_bytes(_exit_port[0], str(code).encode())
     finally:
         out_file.close()
 
 sys.exit = flet_exit
+
+# Subscribe to new-Dart-VM signals if the running libdart_bridge supports
+# them (>= 1.3.0). On process reuse, the new VM's port-map carries the
+# fresh exit-bridge port number; rewire so flet_exit talks to the right
+# Dart side. Older libdart_bridge doesn't expose the handler — fall
+# through silently and the existing single-VM behaviour holds.
+_add_restart = getattr(dart_bridge, "add_session_restart_handler", None)
+if _add_restart is not None:
+    def _on_dart_session_restart(port_map):
+        new_exit = port_map.get("exit")
+        if new_exit is not None:
+            _exit_port[0] = int(new_exit)
+    _add_restart(_on_dart_session_restart)
 
 ex = None
 try:
