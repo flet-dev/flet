@@ -42,7 +42,7 @@ dependencies:
   pasteboard: ^0.4.0
   provider: ^6.1.2
   screenshot: ^3.0.0
-  screen_brightness: ^2.1.7
+  screen_brightness: ^2.1.11
   sensors_plus: ^7.0.0
   shared_preferences: ^2.5.3
   share_plus: ^12.0.1
