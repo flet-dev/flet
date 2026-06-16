@@ -1,6 +1,6 @@
 import pytest
 
-import examples.apps.todo.basic.main as todo_basic
+import examples.apps.todo.main as todo_basic
 import flet as ft
 import flet.testing as ftt
 

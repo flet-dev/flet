@@ -1,6 +1,6 @@
 import pytest
 
-import examples.controls.material.text_field.basic.main as basic
+import examples.controls.material.text_field.text_field.main as basic
 import flet as ft
 import flet.testing as ftt
 from examples.controls.material.text_field.handling_change_events.main import (

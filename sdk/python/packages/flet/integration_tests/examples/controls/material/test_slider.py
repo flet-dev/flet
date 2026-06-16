@@ -1,8 +1,8 @@
 import pytest
 
-import examples.controls.material.slider.basic.main as basic
 import examples.controls.material.slider.custom_label.main as custom_label
 import examples.controls.material.slider.handling_events.main as handling_events
+import examples.controls.material.slider.slider.main as basic
 import flet as ft
 import flet.testing as ftt
 

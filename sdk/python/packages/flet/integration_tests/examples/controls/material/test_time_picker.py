@@ -2,9 +2,9 @@ from datetime import time
 
 import pytest
 
-import examples.controls.material.time_picker.basic.main as basic
 import examples.controls.material.time_picker.custom_locale.main as custom_locale
 import examples.controls.material.time_picker.hour_formats.main as hour_formats
+import examples.controls.material.time_picker.time_picker.main as basic
 import flet as ft
 import flet.testing as ftt
 
