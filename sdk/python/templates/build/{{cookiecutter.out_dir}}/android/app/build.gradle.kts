@@ -23,17 +23,10 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true
-            keepDebugSymbols += listOf(
-                "*/arm64-v8a/libpython*.so",
-                "*/armeabi-v7a/libpython*.so",
-                "*/x86/libpython*.so",
-                "*/x86_64/libpython*.so",
-            )
-        }
-    }
+    // No native-library packaging config is needed: serious_python loads Python
+    // extension modules directly from the APK (memory-mapped) and ships pure
+    // Python in stored asset zips. Modern packaging (the default at minSdk 23+)
+    // is all that's required.
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

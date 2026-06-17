@@ -695,6 +695,45 @@ source_packages = ["package1", "package2"]
 </TabItem>
 </Tabs>
 
+### Android extract packages
+
+:::note
+[Android](android.md) only.
+:::
+
+On Android, pure Python ships in a stored zip read in place (`zipimport`) and native modules are
+loaded memory-mapped from the APK. Packages that read their bundled **data files** through a real
+filesystem path — `__file__` / `pkg_resources` instead of
+[`importlib.resources`](https://docs.python.org/3/library/importlib.resources.html) — don't work
+from inside the zip. List such "path-hungry" packages here to ship them **extracted to disk**
+instead.
+
+Most packages that bundle data (including `certifi`) read it through `importlib.resources`, which
+is zip-safe, so they need no entry here — only add packages that actually fail to find their data
+when imported from the zip.
+
+#### Resolution order
+
+1. [`--android-extract-packages`](../cli/flet-build.md#--android-extract-packages)
+2. `[tool.flet.android].extract_packages`
+3. `[tool.flet].extract_packages`
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --android-extract-packages package1 package2
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+extract_packages = ["package1", "package2"]
+```
+</TabItem>
+</Tabs>
+
 ### Icons
 
 :::note[Platform support]

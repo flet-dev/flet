@@ -17,13 +17,14 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  # PythonBridge (in-process dart_bridge FFI transport) ships on the
-  # serious-python `dart-bridge` branch. Swap back to a version pin
-  # (`serious_python: ^2.0.0`) once it's published to pub.dev.
+  # PythonBridge (in-process dart_bridge FFI transport) + the Android
+  # native-mmap packaging ship on the serious-python `android-native-mmap`
+  # branch. Swap back to a version pin (`serious_python: ^2.0.0`) once it's
+  # published to pub.dev.
   serious_python:
     git:
       url: https://github.com/flet-dev/serious-python.git
-      ref: dart-bridge
+      ref: android-native-mmap
       path: src/serious_python
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
