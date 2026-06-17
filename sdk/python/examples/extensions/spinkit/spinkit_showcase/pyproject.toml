@@ -1,7 +1,7 @@
 [project]
 name = "spinkit-showcase"
 version = "1.0.0"
-description = "Showcase of all SpinKit loading animation controls with color and size customization."
+description = "Displays a SpinKitRotatingCircle loading animation."
 requires-python = ">=3.10"
 keywords = ["spinkit", "loading", "spinner", "animation", "indicator"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
