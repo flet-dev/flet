@@ -1,12 +1,10 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
-from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
-from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.layout_control import LayoutControl
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
@@ -24,6 +22,14 @@ from flet.controls.types import (
     MainAxisAlignment,
     Number,
 )
+
+if TYPE_CHECKING:
+    # Annotation-only (quoted below): deferred so a View doesn't eagerly pull the
+    # Cupertino controls (cold-start import cost).
+    from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
+    from flet.controls.cupertino.cupertino_navigation_bar import (
+        CupertinoNavigationBar,
+    )
 
 __all__ = ["View"]
 
@@ -49,7 +55,7 @@ class View(ScrollableControl, LayoutControl):
     program to update :attr:`flet.Page.route` when a view popped.
     """
 
-    appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
+    appbar: "Optional[Union[AppBar, CupertinoAppBar]]" = None
     """
     An :class:`~flet.AppBar` control to display at the top of the `Page`.
     """
@@ -71,7 +77,7 @@ class View(ScrollableControl, LayoutControl):
     Describes position of :attr:`floating_action_button`
     """
 
-    navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None
+    navigation_bar: "Union[NavigationBar, CupertinoNavigationBar, None]" = None
     """
     A navigation bar (:class:`~flet.NavigationBar` or \
     :class:`~flet.CupertinoNavigationBar`) control to display at the bottom of the \

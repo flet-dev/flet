@@ -1,577 +1,626 @@
 from typing import TYPE_CHECKING
 
-from flet.app import AppCallable, app, app_async, run, run_async
-from flet.components.component import Component
-from flet.components.component_decorator import component
-from flet.components.hooks.use_callback import use_callback
-from flet.components.hooks.use_context import (
-    ContextProvider,
-    create_context,
-    use_context,
-)
-from flet.components.hooks.use_dialog import use_dialog
-from flet.components.hooks.use_effect import (
-    on_mounted,
-    on_unmounted,
-    on_updated,
-    use_effect,
-)
-from flet.components.hooks.use_memo import use_memo
-from flet.components.hooks.use_ref import use_ref
-from flet.components.hooks.use_state import use_state
-from flet.components.memo import memo
-from flet.components.observable import Observable, observable
-from flet.components.public_utils import unwrap_component
-from flet.components.router import (
-    LocationInfo,
-    Route,
-    Router,
-    is_route_active,
-    use_route_loader_data,
-    use_route_location,
-    use_route_outlet,
-    use_route_params,
-    use_view_path,
-)
-from flet.controls import alignment, border, border_radius, margin, padding
-from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.alignment import Alignment, Axis
-from flet.controls.animation import (
-    Animation,
-    AnimationCurve,
-    AnimationStyle,
-    AnimationValue,
-)
-from flet.controls.base_control import BaseControl, Value, control, value
-from flet.controls.base_page import BasePage, PageMediaData, PageResizeEvent
-from flet.controls.blur import (
-    Blur,
-    BlurTileMode,
-    BlurValue,
-)
-from flet.controls.border import (
-    Border,
-    BorderSide,
-    BorderSideStrokeAlign,
-    BorderSideStrokeAlignValue,
-    BorderStyle,
-)
-from flet.controls.border_radius import (
-    BorderRadius,
-    BorderRadiusValue,
-)
-from flet.controls.box import (
-    BlurStyle,
-    BoxConstraints,
-    BoxDecoration,
-    BoxFit,
-    BoxShadow,
-    BoxShadowValue,
-    BoxShape,
-    ColorFilter,
-    DecorationImage,
-    FilterQuality,
-)
-from flet.controls.buttons import (
-    BeveledRectangleBorder,
-    ButtonStyle,
-    CircleBorder,
-    ContinuousRectangleBorder,
-    OutlinedBorder,
-    RoundedRectangleBorder,
-    ShapeBorder,
-    StadiumBorder,
-)
-from flet.controls.colors import Colors
-from flet.controls.context import Context, context
-from flet.controls.control import Control
-from flet.controls.control_event import (
-    ControlEvent,
-    ControlEventHandler,
-    Event,
-    EventControlType,
-    EventHandler,
-)
-from flet.controls.control_state import (
-    ControlState,
-    ControlStateValue,
-)
-from flet.controls.core.animated_switcher import (
-    AnimatedSwitcher,
-    AnimatedSwitcherTransition,
-)
-from flet.controls.core.autofill_group import (
-    AutofillGroup,
-    AutofillGroupDisposeAction,
-    AutofillHint,
-)
-from flet.controls.core.column import Column
-from flet.controls.core.dismissible import (
-    Dismissible,
-    DismissibleDismissEvent,
-    DismissibleUpdateEvent,
-)
-from flet.controls.core.drag_target import (
-    DragTarget,
-    DragTargetEvent,
-    DragTargetLeaveEvent,
-    DragWillAcceptEvent,
-)
-from flet.controls.core.draggable import Draggable
-from flet.controls.core.flet_app import FletApp, FletAppOutputEvent
-from flet.controls.core.gesture_detector import GestureDetector
-from flet.controls.core.grid_view import GridView
-from flet.controls.core.hero import Hero
-from flet.controls.core.icon import Icon
-from flet.controls.core.image import Image
-from flet.controls.core.interactive_viewer import InteractiveViewer
-from flet.controls.core.keyboard_listener import (
-    KeyboardListener,
-    KeyDownEvent,
-    KeyRepeatEvent,
-    KeyUpEvent,
-)
-from flet.controls.core.list_view import ListView
-from flet.controls.core.markdown import (
-    Markdown,
-    MarkdownCodeTheme,
-    MarkdownCustomCodeTheme,
-    MarkdownExtensionSet,
-    MarkdownStyleSheet,
-)
-from flet.controls.core.merge_semantics import MergeSemantics
-from flet.controls.core.page_view import PageView
-from flet.controls.core.pagelet import Pagelet
-from flet.controls.core.placeholder import Placeholder
-from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
-from flet.controls.core.responsive_row import ResponsiveRow
-from flet.controls.core.rotated_box import RotatedBox
-from flet.controls.core.row import Row
-from flet.controls.core.safe_area import SafeArea
-from flet.controls.core.screenshot import Screenshot
-from flet.controls.core.semantics import Semantics
-from flet.controls.core.shader_mask import ShaderMask
-from flet.controls.core.shimmer import Shimmer, ShimmerDirection
-from flet.controls.core.stack import Stack, StackFit
-from flet.controls.core.text import (
-    Text,
-    TextAffinity,
-    TextSelection,
-    TextSelectionChangeCause,
-    TextSelectionChangeEvent,
-)
-from flet.controls.core.text_span import TextSpan
-from flet.controls.core.transparent_pointer import TransparentPointer
-from flet.controls.core.view import View
-from flet.controls.core.window import (
-    Window,
-    WindowEvent,
-    WindowEventType,
-    WindowResizeEdge,
-)
-from flet.controls.core.window_drag_area import WindowDragArea
-from flet.controls.cupertino import cupertino_colors
-from flet.controls.cupertino.cupertino_action_sheet import CupertinoActionSheet
-from flet.controls.cupertino.cupertino_action_sheet_action import (
-    CupertinoActionSheetAction,
-)
-from flet.controls.cupertino.cupertino_activity_indicator import (
-    CupertinoActivityIndicator,
-)
-from flet.controls.cupertino.cupertino_alert_dialog import CupertinoAlertDialog
-from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
-from flet.controls.cupertino.cupertino_bottom_sheet import CupertinoBottomSheet
-from flet.controls.cupertino.cupertino_button import (
-    CupertinoButton,
-    CupertinoButtonSize,
-)
-from flet.controls.cupertino.cupertino_checkbox import CupertinoCheckbox
-from flet.controls.cupertino.cupertino_colors import CupertinoColors
-from flet.controls.cupertino.cupertino_context_menu import CupertinoContextMenu
-from flet.controls.cupertino.cupertino_context_menu_action import (
-    CupertinoContextMenuAction,
-)
-from flet.controls.cupertino.cupertino_date_picker import (
-    CupertinoDatePicker,
-    CupertinoDatePickerDateOrder,
-    CupertinoDatePickerMode,
-)
-from flet.controls.cupertino.cupertino_dialog_action import CupertinoDialogAction
-from flet.controls.cupertino.cupertino_filled_button import CupertinoFilledButton
-from flet.controls.cupertino.cupertino_list_tile import CupertinoListTile
-from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
-from flet.controls.cupertino.cupertino_picker import CupertinoPicker
-from flet.controls.cupertino.cupertino_radio import CupertinoRadio
-from flet.controls.cupertino.cupertino_segmented_button import CupertinoSegmentedButton
-from flet.controls.cupertino.cupertino_slider import CupertinoSlider
-from flet.controls.cupertino.cupertino_sliding_segmented_button import (
-    CupertinoSlidingSegmentedButton,
-)
-from flet.controls.cupertino.cupertino_switch import CupertinoSwitch
-from flet.controls.cupertino.cupertino_textfield import (
-    CupertinoTextField,
-    OverlayVisibilityMode,
-)
-from flet.controls.cupertino.cupertino_timer_picker import (
-    CupertinoTimerPicker,
-    CupertinoTimerPickerMode,
-)
-from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
-from flet.controls.device_info import (
-    AndroidBuildVersion,
-    AndroidDeviceInfo,
-    DeviceInfo,
-    IosDeviceInfo,
-    IosUtsname,
-    LinuxDeviceInfo,
-    MacOsDeviceInfo,
-    WebBrowserName,
-    WebDeviceInfo,
-    WindowsDeviceInfo,
-)
-from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import (
-    DateTimeValue,
-    Duration,
-    DurationValue,
-)
-from flet.controls.events import (
-    DragDownEvent,
-    DragEndEvent,
-    DragStartEvent,
-    DragUpdateEvent,
-    ForcePressEvent,
-    HoverEvent,
-    LongPressDownEvent,
-    LongPressEndEvent,
-    LongPressMoveUpdateEvent,
-    LongPressStartEvent,
-    MultiTapEvent,
-    PointerEvent,
-    ScaleEndEvent,
-    ScaleStartEvent,
-    ScaleUpdateEvent,
-    ScrollEvent,
-    TapEvent,
-    TapMoveEvent,
-)
-from flet.controls.exceptions import (
-    FletException,
-    FletPageDisconnectedException,
-    FletUnimplementedPlatformException,
-    FletUnsupportedPlatformException,
-)
-from flet.controls.geometry import Rect, Size
-from flet.controls.gradients import (
-    Gradient,
-    GradientTileMode,
-    LinearGradient,
-    RadialGradient,
-    SweepGradient,
-)
-from flet.controls.icon_data import IconData
-from flet.controls.id_counter import IdCounter
-from flet.controls.keys import Key, KeyValue, ScrollKey, ValueKey
-from flet.controls.layout_control import (
-    ConstrainedControl,
-    LayoutControl,
-    LayoutSizeChangeEvent,
-)
-from flet.controls.margin import Margin, MarginValue
-from flet.controls.material import dropdown, dropdownm2
-from flet.controls.material.alert_dialog import AlertDialog
-from flet.controls.material.app_bar import AppBar
-from flet.controls.material.auto_complete import (
-    AutoComplete,
-    AutoCompleteSelectEvent,
-    AutoCompleteSuggestion,
-)
-from flet.controls.material.badge import Badge, BadgeValue
-from flet.controls.material.banner import Banner
-from flet.controls.material.bottom_app_bar import BottomAppBar
-from flet.controls.material.bottom_sheet import BottomSheet
-from flet.controls.material.button import Button
-from flet.controls.material.card import Card, CardVariant
-from flet.controls.material.checkbox import Checkbox
-from flet.controls.material.chip import Chip
-from flet.controls.material.circle_avatar import CircleAvatar
-from flet.controls.material.container import Container
-from flet.controls.material.context_menu import (
-    ContextMenu,
-    ContextMenuDismissEvent,
-    ContextMenuSelectEvent,
-    ContextMenuTrigger,
-)
-from flet.controls.material.datatable import (
-    DataCell,
-    DataColumn,
-    DataColumnSortEvent,
-    DataRow,
-    DataTable,
-)
-from flet.controls.material.date_picker import (
-    DatePicker,
-    DatePickerEntryMode,
-    DatePickerEntryModeChangeEvent,
-    DatePickerMode,
-)
-from flet.controls.material.date_range_picker import DateRangePicker
-from flet.controls.material.divider import Divider
-from flet.controls.material.dropdown import Dropdown, DropdownOption
-from flet.controls.material.dropdownm2 import DropdownM2
-from flet.controls.material.elevated_button import ElevatedButton
-from flet.controls.material.expansion_panel import (
-    ExpansionPanel,
-    ExpansionPanelList,
-    ExpansionPanelListChangeEvent,
-)
-from flet.controls.material.expansion_tile import ExpansionTile, TileAffinity
-from flet.controls.material.filled_button import FilledButton
-from flet.controls.material.filled_tonal_button import FilledTonalButton
-from flet.controls.material.floating_action_button import FloatingActionButton
-from flet.controls.material.form_field_control import FormFieldControl, InputBorder
-from flet.controls.material.icon_button import (
-    FilledIconButton,
-    FilledTonalIconButton,
-    IconButton,
-    OutlinedIconButton,
-)
-from flet.controls.material.list_tile import (
-    ListTile,
-    ListTileStyle,
-    ListTileTitleAlignment,
-)
-from flet.controls.material.menu_bar import MenuBar, MenuStyle
-from flet.controls.material.menu_item_button import MenuItemButton
-from flet.controls.material.navigation_bar import (
-    NavigationBar,
-    NavigationBarDestination,
-    NavigationBarLabelBehavior,
-)
-from flet.controls.material.navigation_drawer import (
-    NavigationDrawer,
-    NavigationDrawerDestination,
-)
-from flet.controls.material.navigation_rail import (
-    NavigationRail,
-    NavigationRailDestination,
-    NavigationRailLabelType,
-)
-from flet.controls.material.outlined_button import OutlinedButton
-from flet.controls.material.popup_menu_button import (
-    PopupMenuButton,
-    PopupMenuItem,
-    PopupMenuPosition,
-)
-from flet.controls.material.progress_bar import ProgressBar
-from flet.controls.material.progress_ring import ProgressRing
-from flet.controls.material.radio import Radio
-from flet.controls.material.radio_group import RadioGroup
-from flet.controls.material.range_slider import RangeSlider
-from flet.controls.material.reorderable_list_view import (
-    OnReorderEvent,
-    ReorderableListView,
-)
-from flet.controls.material.search_bar import SearchBar
-from flet.controls.material.segmented_button import Segment, SegmentedButton
-from flet.controls.material.selection_area import SelectionArea
-from flet.controls.material.slider import Slider, SliderInteraction
-from flet.controls.material.snack_bar import (
-    DismissDirection,
-    SnackBar,
-    SnackBarAction,
-    SnackBarBehavior,
-)
-from flet.controls.material.submenu_button import SubmenuButton
-from flet.controls.material.switch import Switch
-from flet.controls.material.tabs import (
-    Tab,
-    TabAlignment,
-    TabBar,
-    TabBarHoverEvent,
-    TabBarIndicatorSize,
-    TabBarView,
-    TabIndicatorAnimation,
-    Tabs,
-    UnderlineTabIndicator,
-)
-from flet.controls.material.text_button import TextButton
-from flet.controls.material.textfield import (
-    InputFilter,
-    KeyboardType,
-    NumbersOnlyInputFilter,
-    TextCapitalization,
-    TextField,
-    TextOnlyInputFilter,
-)
-from flet.controls.material.time_picker import (
-    TimePicker,
-    TimePickerEntryMode,
-    TimePickerEntryModeChangeEvent,
-    TimePickerHourFormat,
-)
-from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode, TooltipValue
-from flet.controls.material.vertical_divider import VerticalDivider
-from flet.controls.multi_view import MultiView
-from flet.controls.padding import Padding, PaddingValue
-from flet.controls.page import (
-    AppLifecycleStateChangeEvent,
-    KeyboardEvent,
-    LocaleChangeEvent,
-    LoginEvent,
-    MultiViewAddEvent,
-    MultiViewRemoveEvent,
-    Page,
-    PlatformBrightnessChangeEvent,
-    RouteChangeEvent,
-    ViewPopEvent,
-    ViewsPopUntilEvent,
-)
-from flet.controls.painting import (
-    Paint,
-    PaintGradient,
-    PaintingStyle,
-    PaintLinearGradient,
-    PaintRadialGradient,
-    PaintSweepGradient,
-)
-from flet.controls.query_string import QueryString
-from flet.controls.ref import Ref
-from flet.controls.scrollable_control import (
-    OnScrollEvent,
-    ScrollableControl,
-    Scrollbar,
-    ScrollbarOrientation,
-    ScrollDirection,
-    ScrollType,
-)
-from flet.controls.services.accelerometer import (
-    Accelerometer,
-    AccelerometerReadingEvent,
-)
-from flet.controls.services.barometer import Barometer, BarometerReadingEvent
-from flet.controls.services.battery import (
-    Battery,
-    BatteryState,
-    BatteryStateChangeEvent,
-)
-from flet.controls.services.browser_context_menu import BrowserContextMenu
-from flet.controls.services.clipboard import Clipboard
-from flet.controls.services.connectivity import (
-    Connectivity,
-    ConnectivityChangeEvent,
-    ConnectivityType,
-)
-from flet.controls.services.file_picker import (
-    FilePicker,
-    FilePickerFile,
-    FilePickerFileType,
-    FilePickerUploadEvent,
-    FilePickerUploadFile,
-)
-from flet.controls.services.gyroscope import Gyroscope, GyroscopeReadingEvent
-from flet.controls.services.haptic_feedback import HapticFeedback
-from flet.controls.services.magnetometer import Magnetometer, MagnetometerReadingEvent
-from flet.controls.services.screen_brightness import (
-    ScreenBrightness,
-    ScreenBrightnessChangeEvent,
-)
-from flet.controls.services.semantics_service import Assertiveness, SemanticsService
-from flet.controls.services.sensor_error_event import SensorErrorEvent
-from flet.controls.services.service import Service
-from flet.controls.services.shake_detector import ShakeDetector
-from flet.controls.services.share import (
-    Share,
-    ShareCupertinoActivityType,
-    ShareFile,
-    ShareResult,
-    ShareResultStatus,
-)
-from flet.controls.services.shared_preferences import SharedPreferences
-from flet.controls.services.storage_paths import StoragePaths
-from flet.controls.services.url_launcher import (
-    BrowserConfiguration,
-    LaunchMode,
-    UrlLauncher,
-    WebViewConfiguration,
-)
-from flet.controls.services.user_accelerometer import (
-    UserAccelerometer,
-    UserAccelerometerReadingEvent,
-)
-from flet.controls.services.wakelock import Wakelock
-from flet.controls.template_route import TemplateRoute
-from flet.controls.text_style import (
-    StrutStyle,
-    TextBaseline,
-    TextDecoration,
-    TextDecorationStyle,
-    TextOverflow,
-    TextStyle,
-    TextThemeStyle,
-)
-from flet.controls.transform import (
-    Flip,
-    Matrix4,
-    Offset,
-    OffsetValue,
-    Rotate,
-    RotateValue,
-    Scale,
-    ScaleValue,
-    Transform,
-)
-from flet.controls.types import (
-    AppLifecycleState,
-    AppView,
-    AutomaticNotchShape,
-    BlendMode,
-    Brightness,
-    CircularRectangleNotchShape,
-    ClipBehavior,
-    ColorValue,
-    CrossAxisAlignment,
-    DeviceOrientation,
-    FloatingActionButtonLocation,
-    FontWeight,
-    IconDataOrControl,
-    ImageRepeat,
-    LabelPosition,
-    Locale,
-    LocaleConfiguration,
-    MainAxisAlignment,
-    MouseCursor,
-    NotchShape,
-    Number,
-    Orientation,
-    PagePlatform,
-    PointerDeviceType,
-    ResponsiveNumber,
-    ResponsiveRowBreakpoint,
-    RouteUrlStrategy,
-    ScrollMode,
-    StrokeCap,
-    StrokeJoin,
-    StrOrControl,
-    SupportsStr,
-    TextAlign,
-    ThemeMode,
-    Url,
-    UrlTarget,
-    VerticalAlignment,
-    VisualDensity,
-    WebRenderer,
-)
-from flet.data_channel import DataChannel, DataChannelOpenEvent
-from flet.pubsub.pubsub_client import PubSubClient
-from flet.pubsub.pubsub_hub import PubSubHub
+# `__version__` is cheap and frequently accessed — keep it eager.
 from flet.version import flet_version as __version__
 
+# The public API is imported lazily (PEP 562). `import flet` no longer executes
+# the full ~270-module package; each name is imported on first access and cached
+# into module globals. The block below exists only for type checkers / IDEs.
 if TYPE_CHECKING:
-    from flet.controls.cupertino import cupertino_icons
+    from flet.app import (
+        AppCallable,
+        app,
+        app_async,
+        run,
+        run_async,
+    )
+    from flet.components.component import Component
+    from flet.components.component_decorator import component
+    from flet.components.hooks.use_callback import use_callback
+    from flet.components.hooks.use_context import (
+        ContextProvider,
+        create_context,
+        use_context,
+    )
+    from flet.components.hooks.use_dialog import use_dialog
+    from flet.components.hooks.use_effect import (
+        on_mounted,
+        on_unmounted,
+        on_updated,
+        use_effect,
+    )
+    from flet.components.hooks.use_memo import use_memo
+    from flet.components.hooks.use_ref import use_ref
+    from flet.components.hooks.use_state import use_state
+    from flet.components.memo import memo
+    from flet.components.observable import (
+        Observable,
+        observable,
+    )
+    from flet.components.public_utils import unwrap_component
+    from flet.components.router import (
+        LocationInfo,
+        Route,
+        Router,
+        is_route_active,
+        use_route_loader_data,
+        use_route_location,
+        use_route_outlet,
+        use_route_params,
+        use_view_path,
+    )
+    from flet.controls import (
+        alignment,
+        border,
+        border_radius,
+        margin,
+        padding,
+    )
+    from flet.controls.adaptive_control import AdaptiveControl
+    from flet.controls.alignment import (
+        Alignment,
+        Axis,
+    )
+    from flet.controls.animation import (
+        Animation,
+        AnimationCurve,
+        AnimationStyle,
+        AnimationValue,
+    )
+    from flet.controls.base_control import (
+        BaseControl,
+        Value,
+        control,
+        value,
+    )
+    from flet.controls.base_page import (
+        BasePage,
+        PageMediaData,
+        PageResizeEvent,
+    )
+    from flet.controls.blur import (
+        Blur,
+        BlurTileMode,
+        BlurValue,
+    )
+    from flet.controls.border import (
+        Border,
+        BorderSide,
+        BorderSideStrokeAlign,
+        BorderSideStrokeAlignValue,
+        BorderStyle,
+    )
+    from flet.controls.border_radius import (
+        BorderRadius,
+        BorderRadiusValue,
+    )
+    from flet.controls.box import (
+        BlurStyle,
+        BoxConstraints,
+        BoxDecoration,
+        BoxFit,
+        BoxShadow,
+        BoxShadowValue,
+        BoxShape,
+        ColorFilter,
+        DecorationImage,
+        FilterQuality,
+    )
+    from flet.controls.buttons import (
+        BeveledRectangleBorder,
+        ButtonStyle,
+        CircleBorder,
+        ContinuousRectangleBorder,
+        OutlinedBorder,
+        RoundedRectangleBorder,
+        ShapeBorder,
+        StadiumBorder,
+    )
+    from flet.controls.colors import Colors
+    from flet.controls.context import (
+        Context,
+        context,
+    )
+    from flet.controls.control import Control
+    from flet.controls.control_event import (
+        ControlEvent,
+        ControlEventHandler,
+        Event,
+        EventControlType,
+        EventHandler,
+    )
+    from flet.controls.control_state import (
+        ControlState,
+        ControlStateValue,
+    )
+    from flet.controls.core.animated_switcher import (
+        AnimatedSwitcher,
+        AnimatedSwitcherTransition,
+    )
+    from flet.controls.core.autofill_group import (
+        AutofillGroup,
+        AutofillGroupDisposeAction,
+        AutofillHint,
+    )
+    from flet.controls.core.column import Column
+    from flet.controls.core.dismissible import (
+        Dismissible,
+        DismissibleDismissEvent,
+        DismissibleUpdateEvent,
+    )
+    from flet.controls.core.drag_target import (
+        DragTarget,
+        DragTargetEvent,
+        DragTargetLeaveEvent,
+        DragWillAcceptEvent,
+    )
+    from flet.controls.core.draggable import Draggable
+    from flet.controls.core.flet_app import (
+        FletApp,
+        FletAppOutputEvent,
+    )
+    from flet.controls.core.gesture_detector import GestureDetector
+    from flet.controls.core.grid_view import GridView
+    from flet.controls.core.hero import Hero
+    from flet.controls.core.icon import Icon
+    from flet.controls.core.image import Image
+    from flet.controls.core.interactive_viewer import InteractiveViewer
+    from flet.controls.core.keyboard_listener import (
+        KeyboardListener,
+        KeyDownEvent,
+        KeyRepeatEvent,
+        KeyUpEvent,
+    )
+    from flet.controls.core.list_view import ListView
+    from flet.controls.core.markdown import (
+        Markdown,
+        MarkdownCodeTheme,
+        MarkdownCustomCodeTheme,
+        MarkdownExtensionSet,
+        MarkdownStyleSheet,
+    )
+    from flet.controls.core.merge_semantics import MergeSemantics
+    from flet.controls.core.page_view import PageView
+    from flet.controls.core.pagelet import Pagelet
+    from flet.controls.core.placeholder import Placeholder
+    from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
+    from flet.controls.core.responsive_row import ResponsiveRow
+    from flet.controls.core.rotated_box import RotatedBox
+    from flet.controls.core.row import Row
+    from flet.controls.core.safe_area import SafeArea
+    from flet.controls.core.screenshot import Screenshot
+    from flet.controls.core.semantics import Semantics
+    from flet.controls.core.shader_mask import ShaderMask
+    from flet.controls.core.shimmer import (
+        Shimmer,
+        ShimmerDirection,
+    )
+    from flet.controls.core.stack import (
+        Stack,
+        StackFit,
+    )
+    from flet.controls.core.text import (
+        Text,
+        TextAffinity,
+        TextSelection,
+        TextSelectionChangeCause,
+        TextSelectionChangeEvent,
+    )
+    from flet.controls.core.text_span import TextSpan
+    from flet.controls.core.transparent_pointer import TransparentPointer
+    from flet.controls.core.view import View
+    from flet.controls.core.window import (
+        Window,
+        WindowEvent,
+        WindowEventType,
+        WindowResizeEdge,
+    )
+    from flet.controls.core.window_drag_area import WindowDragArea
+    from flet.controls.cupertino import (
+        cupertino_colors,
+        cupertino_icons,
+    )
+    from flet.controls.cupertino.cupertino_action_sheet import CupertinoActionSheet
+    from flet.controls.cupertino.cupertino_action_sheet_action import (
+        CupertinoActionSheetAction,
+    )
+    from flet.controls.cupertino.cupertino_activity_indicator import (
+        CupertinoActivityIndicator,
+    )
+    from flet.controls.cupertino.cupertino_alert_dialog import CupertinoAlertDialog
+    from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
+    from flet.controls.cupertino.cupertino_bottom_sheet import CupertinoBottomSheet
+    from flet.controls.cupertino.cupertino_button import (
+        CupertinoButton,
+        CupertinoButtonSize,
+    )
+    from flet.controls.cupertino.cupertino_checkbox import CupertinoCheckbox
+    from flet.controls.cupertino.cupertino_colors import CupertinoColors
+    from flet.controls.cupertino.cupertino_context_menu import CupertinoContextMenu
+    from flet.controls.cupertino.cupertino_context_menu_action import (
+        CupertinoContextMenuAction,
+    )
+    from flet.controls.cupertino.cupertino_date_picker import (
+        CupertinoDatePicker,
+        CupertinoDatePickerDateOrder,
+        CupertinoDatePickerMode,
+    )
+    from flet.controls.cupertino.cupertino_dialog_action import CupertinoDialogAction
+    from flet.controls.cupertino.cupertino_filled_button import CupertinoFilledButton
     from flet.controls.cupertino.cupertino_icons import CupertinoIcons
-    from flet.controls.material import icons
+    from flet.controls.cupertino.cupertino_list_tile import CupertinoListTile
+    from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
+    from flet.controls.cupertino.cupertino_picker import CupertinoPicker
+    from flet.controls.cupertino.cupertino_radio import CupertinoRadio
+    from flet.controls.cupertino.cupertino_segmented_button import (
+        CupertinoSegmentedButton,
+    )
+    from flet.controls.cupertino.cupertino_slider import CupertinoSlider
+    from flet.controls.cupertino.cupertino_sliding_segmented_button import (
+        CupertinoSlidingSegmentedButton,
+    )
+    from flet.controls.cupertino.cupertino_switch import CupertinoSwitch
+    from flet.controls.cupertino.cupertino_textfield import (
+        CupertinoTextField,
+        OverlayVisibilityMode,
+    )
+    from flet.controls.cupertino.cupertino_timer_picker import (
+        CupertinoTimerPicker,
+        CupertinoTimerPickerMode,
+    )
+    from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
+    from flet.controls.device_info import (
+        AndroidBuildVersion,
+        AndroidDeviceInfo,
+        DeviceInfo,
+        IosDeviceInfo,
+        IosUtsname,
+        LinuxDeviceInfo,
+        MacOsDeviceInfo,
+        WebBrowserName,
+        WebDeviceInfo,
+        WindowsDeviceInfo,
+    )
+    from flet.controls.dialog_control import DialogControl
+    from flet.controls.duration import (
+        DateTimeValue,
+        Duration,
+        DurationValue,
+    )
+    from flet.controls.events import (
+        DragDownEvent,
+        DragEndEvent,
+        DragStartEvent,
+        DragUpdateEvent,
+        ForcePressEvent,
+        HoverEvent,
+        LongPressDownEvent,
+        LongPressEndEvent,
+        LongPressMoveUpdateEvent,
+        LongPressStartEvent,
+        MultiTapEvent,
+        PointerEvent,
+        ScaleEndEvent,
+        ScaleStartEvent,
+        ScaleUpdateEvent,
+        ScrollEvent,
+        TapEvent,
+        TapMoveEvent,
+    )
+    from flet.controls.exceptions import (
+        FletException,
+        FletPageDisconnectedException,
+        FletUnimplementedPlatformException,
+        FletUnsupportedPlatformException,
+    )
+    from flet.controls.geometry import (
+        Rect,
+        Size,
+    )
+    from flet.controls.gradients import (
+        Gradient,
+        GradientTileMode,
+        LinearGradient,
+        RadialGradient,
+        SweepGradient,
+    )
+    from flet.controls.icon_data import IconData
+    from flet.controls.id_counter import IdCounter
+    from flet.controls.keys import (
+        Key,
+        KeyValue,
+        ScrollKey,
+        ValueKey,
+    )
+    from flet.controls.layout_control import (
+        ConstrainedControl,
+        LayoutControl,
+        LayoutSizeChangeEvent,
+    )
+    from flet.controls.margin import (
+        Margin,
+        MarginValue,
+    )
+    from flet.controls.material import (
+        dropdown,
+        dropdownm2,
+        icons,
+    )
+    from flet.controls.material.alert_dialog import AlertDialog
+    from flet.controls.material.app_bar import AppBar
+    from flet.controls.material.auto_complete import (
+        AutoComplete,
+        AutoCompleteSelectEvent,
+        AutoCompleteSuggestion,
+    )
+    from flet.controls.material.badge import (
+        Badge,
+        BadgeValue,
+    )
+    from flet.controls.material.banner import Banner
+    from flet.controls.material.bottom_app_bar import BottomAppBar
+    from flet.controls.material.bottom_sheet import BottomSheet
+    from flet.controls.material.button import Button
+    from flet.controls.material.card import (
+        Card,
+        CardVariant,
+    )
+    from flet.controls.material.checkbox import Checkbox
+    from flet.controls.material.chip import Chip
+    from flet.controls.material.circle_avatar import CircleAvatar
+    from flet.controls.material.container import Container
+    from flet.controls.material.context_menu import (
+        ContextMenu,
+        ContextMenuDismissEvent,
+        ContextMenuSelectEvent,
+        ContextMenuTrigger,
+    )
+    from flet.controls.material.datatable import (
+        DataCell,
+        DataColumn,
+        DataColumnSortEvent,
+        DataRow,
+        DataTable,
+    )
+    from flet.controls.material.date_picker import (
+        DatePicker,
+        DatePickerEntryMode,
+        DatePickerEntryModeChangeEvent,
+        DatePickerMode,
+    )
+    from flet.controls.material.date_range_picker import DateRangePicker
+    from flet.controls.material.divider import Divider
+    from flet.controls.material.dropdown import (
+        Dropdown,
+        DropdownOption,
+    )
+    from flet.controls.material.dropdownm2 import DropdownM2
+    from flet.controls.material.elevated_button import ElevatedButton
+    from flet.controls.material.expansion_panel import (
+        ExpansionPanel,
+        ExpansionPanelList,
+        ExpansionPanelListChangeEvent,
+    )
+    from flet.controls.material.expansion_tile import (
+        ExpansionTile,
+        TileAffinity,
+    )
+    from flet.controls.material.filled_button import FilledButton
+    from flet.controls.material.filled_tonal_button import FilledTonalButton
+    from flet.controls.material.floating_action_button import FloatingActionButton
+    from flet.controls.material.form_field_control import (
+        FormFieldControl,
+        InputBorder,
+    )
+    from flet.controls.material.icon_button import (
+        FilledIconButton,
+        FilledTonalIconButton,
+        IconButton,
+        OutlinedIconButton,
+    )
     from flet.controls.material.icons import Icons
+    from flet.controls.material.list_tile import (
+        ListTile,
+        ListTileStyle,
+        ListTileTitleAlignment,
+    )
+    from flet.controls.material.menu_bar import (
+        MenuBar,
+        MenuStyle,
+    )
+    from flet.controls.material.menu_item_button import MenuItemButton
+    from flet.controls.material.navigation_bar import (
+        NavigationBar,
+        NavigationBarDestination,
+        NavigationBarLabelBehavior,
+    )
+    from flet.controls.material.navigation_drawer import (
+        NavigationDrawer,
+        NavigationDrawerDestination,
+    )
+    from flet.controls.material.navigation_rail import (
+        NavigationRail,
+        NavigationRailDestination,
+        NavigationRailLabelType,
+    )
+    from flet.controls.material.outlined_button import OutlinedButton
+    from flet.controls.material.popup_menu_button import (
+        PopupMenuButton,
+        PopupMenuItem,
+        PopupMenuPosition,
+    )
+    from flet.controls.material.progress_bar import ProgressBar
+    from flet.controls.material.progress_ring import ProgressRing
+    from flet.controls.material.radio import Radio
+    from flet.controls.material.radio_group import RadioGroup
+    from flet.controls.material.range_slider import RangeSlider
+    from flet.controls.material.reorderable_list_view import (
+        OnReorderEvent,
+        ReorderableListView,
+    )
+    from flet.controls.material.search_bar import SearchBar
+    from flet.controls.material.segmented_button import (
+        Segment,
+        SegmentedButton,
+    )
+    from flet.controls.material.selection_area import SelectionArea
+    from flet.controls.material.slider import (
+        Slider,
+        SliderInteraction,
+    )
+    from flet.controls.material.snack_bar import (
+        DismissDirection,
+        SnackBar,
+        SnackBarAction,
+        SnackBarBehavior,
+    )
+    from flet.controls.material.submenu_button import SubmenuButton
+    from flet.controls.material.switch import Switch
+    from flet.controls.material.tabs import (
+        Tab,
+        TabAlignment,
+        TabBar,
+        TabBarHoverEvent,
+        TabBarIndicatorSize,
+        TabBarView,
+        TabIndicatorAnimation,
+        Tabs,
+        UnderlineTabIndicator,
+    )
+    from flet.controls.material.text_button import TextButton
+    from flet.controls.material.textfield import (
+        InputFilter,
+        KeyboardType,
+        NumbersOnlyInputFilter,
+        TextCapitalization,
+        TextField,
+        TextOnlyInputFilter,
+    )
+    from flet.controls.material.time_picker import (
+        TimePicker,
+        TimePickerEntryMode,
+        TimePickerEntryModeChangeEvent,
+        TimePickerHourFormat,
+    )
+    from flet.controls.material.tooltip import (
+        Tooltip,
+        TooltipTriggerMode,
+        TooltipValue,
+    )
+    from flet.controls.material.vertical_divider import VerticalDivider
+    from flet.controls.multi_view import MultiView
+    from flet.controls.padding import (
+        Padding,
+        PaddingValue,
+    )
+    from flet.controls.page import (
+        AppLifecycleStateChangeEvent,
+        KeyboardEvent,
+        LocaleChangeEvent,
+        LoginEvent,
+        MultiViewAddEvent,
+        MultiViewRemoveEvent,
+        Page,
+        PlatformBrightnessChangeEvent,
+        RouteChangeEvent,
+        ViewPopEvent,
+        ViewsPopUntilEvent,
+    )
+    from flet.controls.painting import (
+        Paint,
+        PaintGradient,
+        PaintingStyle,
+        PaintLinearGradient,
+        PaintRadialGradient,
+        PaintSweepGradient,
+    )
+    from flet.controls.query_string import QueryString
+    from flet.controls.ref import Ref
+    from flet.controls.scrollable_control import (
+        OnScrollEvent,
+        ScrollableControl,
+        Scrollbar,
+        ScrollbarOrientation,
+        ScrollDirection,
+        ScrollType,
+    )
+    from flet.controls.services.accelerometer import (
+        Accelerometer,
+        AccelerometerReadingEvent,
+    )
+    from flet.controls.services.barometer import (
+        Barometer,
+        BarometerReadingEvent,
+    )
+    from flet.controls.services.battery import (
+        Battery,
+        BatteryState,
+        BatteryStateChangeEvent,
+    )
+    from flet.controls.services.browser_context_menu import BrowserContextMenu
+    from flet.controls.services.clipboard import Clipboard
+    from flet.controls.services.connectivity import (
+        Connectivity,
+        ConnectivityChangeEvent,
+        ConnectivityType,
+    )
+    from flet.controls.services.file_picker import (
+        FilePicker,
+        FilePickerFile,
+        FilePickerFileType,
+        FilePickerUploadEvent,
+        FilePickerUploadFile,
+    )
+    from flet.controls.services.gyroscope import (
+        Gyroscope,
+        GyroscopeReadingEvent,
+    )
+    from flet.controls.services.haptic_feedback import HapticFeedback
+    from flet.controls.services.magnetometer import (
+        Magnetometer,
+        MagnetometerReadingEvent,
+    )
+    from flet.controls.services.screen_brightness import (
+        ScreenBrightness,
+        ScreenBrightnessChangeEvent,
+    )
+    from flet.controls.services.semantics_service import (
+        Assertiveness,
+        SemanticsService,
+    )
+    from flet.controls.services.sensor_error_event import SensorErrorEvent
+    from flet.controls.services.service import Service
+    from flet.controls.services.shake_detector import ShakeDetector
+    from flet.controls.services.share import (
+        Share,
+        ShareCupertinoActivityType,
+        ShareFile,
+        ShareResult,
+        ShareResultStatus,
+    )
+    from flet.controls.services.shared_preferences import SharedPreferences
+    from flet.controls.services.storage_paths import StoragePaths
+    from flet.controls.services.url_launcher import (
+        BrowserConfiguration,
+        LaunchMode,
+        UrlLauncher,
+        WebViewConfiguration,
+    )
+    from flet.controls.services.user_accelerometer import (
+        UserAccelerometer,
+        UserAccelerometerReadingEvent,
+    )
+    from flet.controls.services.wakelock import Wakelock
+    from flet.controls.template_route import TemplateRoute
+    from flet.controls.text_style import (
+        StrutStyle,
+        TextBaseline,
+        TextDecoration,
+        TextDecorationStyle,
+        TextOverflow,
+        TextStyle,
+        TextThemeStyle,
+    )
     from flet.controls.theme import (
         AppBarTheme,
         BadgeTheme,
@@ -618,6 +667,65 @@ if TYPE_CHECKING:
         TimePickerTheme,
         TooltipTheme,
     )
+    from flet.controls.transform import (
+        Flip,
+        Matrix4,
+        Offset,
+        OffsetValue,
+        Rotate,
+        RotateValue,
+        Scale,
+        ScaleValue,
+        Transform,
+    )
+    from flet.controls.types import (
+        AppLifecycleState,
+        AppView,
+        AutomaticNotchShape,
+        BlendMode,
+        Brightness,
+        CircularRectangleNotchShape,
+        ClipBehavior,
+        ColorValue,
+        CrossAxisAlignment,
+        DeviceOrientation,
+        FloatingActionButtonLocation,
+        FontWeight,
+        IconDataOrControl,
+        ImageRepeat,
+        LabelPosition,
+        Locale,
+        LocaleConfiguration,
+        MainAxisAlignment,
+        MouseCursor,
+        NotchShape,
+        Number,
+        Orientation,
+        PagePlatform,
+        PointerDeviceType,
+        ResponsiveNumber,
+        ResponsiveRowBreakpoint,
+        RouteUrlStrategy,
+        ScrollMode,
+        StrokeCap,
+        StrokeJoin,
+        StrOrControl,
+        SupportsStr,
+        TextAlign,
+        ThemeMode,
+        Url,
+        UrlTarget,
+        VerticalAlignment,
+        VisualDensity,
+        WebRenderer,
+    )
+    from flet.data_channel import (
+        DataChannel,
+        DataChannelOpenEvent,
+    )
+    from flet.pubsub.pubsub_client import PubSubClient
+    from flet.pubsub.pubsub_hub import PubSubHub
+
 
 __all__ = [
     "Accelerometer",
@@ -1151,73 +1259,554 @@ __all__ = [
     "value",
 ]
 
-_THEME_EXPORTS = {
-    "AppBarTheme",
-    "BadgeTheme",
-    "BannerTheme",
-    "BottomAppBarTheme",
-    "BottomSheetTheme",
-    "ButtonTheme",
-    "CardTheme",
-    "CheckboxTheme",
-    "ChipTheme",
-    "ColorScheme",
-    "DataTableTheme",
-    "DatePickerTheme",
-    "DialogTheme",
-    "DividerTheme",
-    "DropdownTheme",
-    "ExpansionTileTheme",
-    "FilledButtonTheme",
-    "FloatingActionButtonTheme",
-    "IconButtonTheme",
-    "IconTheme",
-    "ListTileTheme",
-    "NavigationBarTheme",
-    "NavigationDrawerTheme",
-    "NavigationRailTheme",
-    "OutlinedButtonTheme",
-    "PageTransitionsTheme",
-    "PageTransitionTheme",
-    "PopupMenuTheme",
-    "ProgressIndicatorTheme",
-    "RadioTheme",
-    "ScrollbarTheme",
-    "SearchBarTheme",
-    "SearchViewTheme",
-    "SegmentedButtonTheme",
-    "SliderTheme",
-    "SnackBarTheme",
-    "SwitchTheme",
-    "SystemOverlayStyle",
-    "TabBarTheme",
-    "TextButtonTheme",
-    "TextTheme",
-    "Theme",
-    "TimePickerTheme",
-    "TooltipTheme",
+# Generated: exported name -> module that defines it.
+_LAZY = {
+    "Accelerometer": "flet.controls.services.accelerometer",
+    "AccelerometerReadingEvent": "flet.controls.services.accelerometer",
+    "AdaptiveControl": "flet.controls.adaptive_control",
+    "AlertDialog": "flet.controls.material.alert_dialog",
+    "Alignment": "flet.controls.alignment",
+    "AndroidBuildVersion": "flet.controls.device_info",
+    "AndroidDeviceInfo": "flet.controls.device_info",
+    "AnimatedSwitcher": "flet.controls.core.animated_switcher",
+    "AnimatedSwitcherTransition": "flet.controls.core.animated_switcher",
+    "Animation": "flet.controls.animation",
+    "AnimationCurve": "flet.controls.animation",
+    "AnimationStyle": "flet.controls.animation",
+    "AnimationValue": "flet.controls.animation",
+    "AppBar": "flet.controls.material.app_bar",
+    "AppBarTheme": "flet.controls.theme",
+    "AppCallable": "flet.app",
+    "AppLifecycleState": "flet.controls.types",
+    "AppLifecycleStateChangeEvent": "flet.controls.page",
+    "AppView": "flet.controls.types",
+    "Assertiveness": "flet.controls.services.semantics_service",
+    "AutoComplete": "flet.controls.material.auto_complete",
+    "AutoCompleteSelectEvent": "flet.controls.material.auto_complete",
+    "AutoCompleteSuggestion": "flet.controls.material.auto_complete",
+    "AutofillGroup": "flet.controls.core.autofill_group",
+    "AutofillGroupDisposeAction": "flet.controls.core.autofill_group",
+    "AutofillHint": "flet.controls.core.autofill_group",
+    "AutomaticNotchShape": "flet.controls.types",
+    "Axis": "flet.controls.alignment",
+    "Badge": "flet.controls.material.badge",
+    "BadgeTheme": "flet.controls.theme",
+    "BadgeValue": "flet.controls.material.badge",
+    "Banner": "flet.controls.material.banner",
+    "BannerTheme": "flet.controls.theme",
+    "Barometer": "flet.controls.services.barometer",
+    "BarometerReadingEvent": "flet.controls.services.barometer",
+    "BaseControl": "flet.controls.base_control",
+    "BasePage": "flet.controls.base_page",
+    "Battery": "flet.controls.services.battery",
+    "BatteryState": "flet.controls.services.battery",
+    "BatteryStateChangeEvent": "flet.controls.services.battery",
+    "BeveledRectangleBorder": "flet.controls.buttons",
+    "BlendMode": "flet.controls.types",
+    "Blur": "flet.controls.blur",
+    "BlurStyle": "flet.controls.box",
+    "BlurTileMode": "flet.controls.blur",
+    "BlurValue": "flet.controls.blur",
+    "Border": "flet.controls.border",
+    "BorderRadius": "flet.controls.border_radius",
+    "BorderRadiusValue": "flet.controls.border_radius",
+    "BorderSide": "flet.controls.border",
+    "BorderSideStrokeAlign": "flet.controls.border",
+    "BorderSideStrokeAlignValue": "flet.controls.border",
+    "BorderStyle": "flet.controls.border",
+    "BottomAppBar": "flet.controls.material.bottom_app_bar",
+    "BottomAppBarTheme": "flet.controls.theme",
+    "BottomSheet": "flet.controls.material.bottom_sheet",
+    "BottomSheetTheme": "flet.controls.theme",
+    "BoxConstraints": "flet.controls.box",
+    "BoxDecoration": "flet.controls.box",
+    "BoxFit": "flet.controls.box",
+    "BoxShadow": "flet.controls.box",
+    "BoxShadowValue": "flet.controls.box",
+    "BoxShape": "flet.controls.box",
+    "Brightness": "flet.controls.types",
+    "BrowserConfiguration": "flet.controls.services.url_launcher",
+    "BrowserContextMenu": "flet.controls.services.browser_context_menu",
+    "Button": "flet.controls.material.button",
+    "ButtonStyle": "flet.controls.buttons",
+    "ButtonTheme": "flet.controls.theme",
+    "Card": "flet.controls.material.card",
+    "CardTheme": "flet.controls.theme",
+    "CardVariant": "flet.controls.material.card",
+    "Checkbox": "flet.controls.material.checkbox",
+    "CheckboxTheme": "flet.controls.theme",
+    "Chip": "flet.controls.material.chip",
+    "ChipTheme": "flet.controls.theme",
+    "CircleAvatar": "flet.controls.material.circle_avatar",
+    "CircleBorder": "flet.controls.buttons",
+    "CircularRectangleNotchShape": "flet.controls.types",
+    "ClipBehavior": "flet.controls.types",
+    "Clipboard": "flet.controls.services.clipboard",
+    "ColorFilter": "flet.controls.box",
+    "ColorScheme": "flet.controls.theme",
+    "ColorValue": "flet.controls.types",
+    "Colors": "flet.controls.colors",
+    "Column": "flet.controls.core.column",
+    "Component": "flet.components.component",
+    "Connectivity": "flet.controls.services.connectivity",
+    "ConnectivityChangeEvent": "flet.controls.services.connectivity",
+    "ConnectivityType": "flet.controls.services.connectivity",
+    "ConstrainedControl": "flet.controls.layout_control",
+    "Container": "flet.controls.material.container",
+    "Context": "flet.controls.context",
+    "ContextMenu": "flet.controls.material.context_menu",
+    "ContextMenuDismissEvent": "flet.controls.material.context_menu",
+    "ContextMenuSelectEvent": "flet.controls.material.context_menu",
+    "ContextMenuTrigger": "flet.controls.material.context_menu",
+    "ContextProvider": "flet.components.hooks.use_context",
+    "ContinuousRectangleBorder": "flet.controls.buttons",
+    "Control": "flet.controls.control",
+    "ControlEvent": "flet.controls.control_event",
+    "ControlEventHandler": "flet.controls.control_event",
+    "ControlState": "flet.controls.control_state",
+    "ControlStateValue": "flet.controls.control_state",
+    "CrossAxisAlignment": "flet.controls.types",
+    "CupertinoActionSheet": "flet.controls.cupertino.cupertino_action_sheet",
+    "CupertinoActionSheetAction": "flet.controls.cupertino.cupertino_action_sheet_action",  # noqa: E501
+    "CupertinoActivityIndicator": "flet.controls.cupertino.cupertino_activity_indicator",  # noqa: E501
+    "CupertinoAlertDialog": "flet.controls.cupertino.cupertino_alert_dialog",
+    "CupertinoAppBar": "flet.controls.cupertino.cupertino_app_bar",
+    "CupertinoBottomSheet": "flet.controls.cupertino.cupertino_bottom_sheet",
+    "CupertinoButton": "flet.controls.cupertino.cupertino_button",
+    "CupertinoButtonSize": "flet.controls.cupertino.cupertino_button",
+    "CupertinoCheckbox": "flet.controls.cupertino.cupertino_checkbox",
+    "CupertinoColors": "flet.controls.cupertino.cupertino_colors",
+    "CupertinoContextMenu": "flet.controls.cupertino.cupertino_context_menu",
+    "CupertinoContextMenuAction": "flet.controls.cupertino.cupertino_context_menu_action",  # noqa: E501
+    "CupertinoDatePicker": "flet.controls.cupertino.cupertino_date_picker",
+    "CupertinoDatePickerDateOrder": "flet.controls.cupertino.cupertino_date_picker",
+    "CupertinoDatePickerMode": "flet.controls.cupertino.cupertino_date_picker",
+    "CupertinoDialogAction": "flet.controls.cupertino.cupertino_dialog_action",
+    "CupertinoFilledButton": "flet.controls.cupertino.cupertino_filled_button",
+    "CupertinoIcons": "flet.controls.cupertino.cupertino_icons",
+    "CupertinoListTile": "flet.controls.cupertino.cupertino_list_tile",
+    "CupertinoNavigationBar": "flet.controls.cupertino.cupertino_navigation_bar",
+    "CupertinoPicker": "flet.controls.cupertino.cupertino_picker",
+    "CupertinoRadio": "flet.controls.cupertino.cupertino_radio",
+    "CupertinoSegmentedButton": "flet.controls.cupertino.cupertino_segmented_button",
+    "CupertinoSlider": "flet.controls.cupertino.cupertino_slider",
+    "CupertinoSlidingSegmentedButton": "flet.controls.cupertino.cupertino_sliding_segmented_button",  # noqa: E501
+    "CupertinoSwitch": "flet.controls.cupertino.cupertino_switch",
+    "CupertinoTextField": "flet.controls.cupertino.cupertino_textfield",
+    "CupertinoTimerPicker": "flet.controls.cupertino.cupertino_timer_picker",
+    "CupertinoTimerPickerMode": "flet.controls.cupertino.cupertino_timer_picker",
+    "CupertinoTintedButton": "flet.controls.cupertino.cupertino_tinted_button",
+    "DataCell": "flet.controls.material.datatable",
+    "DataChannel": "flet.data_channel",
+    "DataChannelOpenEvent": "flet.data_channel",
+    "DataColumn": "flet.controls.material.datatable",
+    "DataColumnSortEvent": "flet.controls.material.datatable",
+    "DataRow": "flet.controls.material.datatable",
+    "DataTable": "flet.controls.material.datatable",
+    "DataTableTheme": "flet.controls.theme",
+    "DatePicker": "flet.controls.material.date_picker",
+    "DatePickerEntryMode": "flet.controls.material.date_picker",
+    "DatePickerEntryModeChangeEvent": "flet.controls.material.date_picker",
+    "DatePickerMode": "flet.controls.material.date_picker",
+    "DatePickerTheme": "flet.controls.theme",
+    "DateRangePicker": "flet.controls.material.date_range_picker",
+    "DateTimeValue": "flet.controls.duration",
+    "DecorationImage": "flet.controls.box",
+    "DeviceInfo": "flet.controls.device_info",
+    "DeviceOrientation": "flet.controls.types",
+    "DialogControl": "flet.controls.dialog_control",
+    "DialogTheme": "flet.controls.theme",
+    "DismissDirection": "flet.controls.material.snack_bar",
+    "Dismissible": "flet.controls.core.dismissible",
+    "DismissibleDismissEvent": "flet.controls.core.dismissible",
+    "DismissibleUpdateEvent": "flet.controls.core.dismissible",
+    "Divider": "flet.controls.material.divider",
+    "DividerTheme": "flet.controls.theme",
+    "DragDownEvent": "flet.controls.events",
+    "DragEndEvent": "flet.controls.events",
+    "DragStartEvent": "flet.controls.events",
+    "DragTarget": "flet.controls.core.drag_target",
+    "DragTargetEvent": "flet.controls.core.drag_target",
+    "DragTargetLeaveEvent": "flet.controls.core.drag_target",
+    "DragUpdateEvent": "flet.controls.events",
+    "DragWillAcceptEvent": "flet.controls.core.drag_target",
+    "Draggable": "flet.controls.core.draggable",
+    "Dropdown": "flet.controls.material.dropdown",
+    "DropdownM2": "flet.controls.material.dropdownm2",
+    "DropdownOption": "flet.controls.material.dropdown",
+    "DropdownTheme": "flet.controls.theme",
+    "Duration": "flet.controls.duration",
+    "DurationValue": "flet.controls.duration",
+    "ElevatedButton": "flet.controls.material.elevated_button",
+    "Event": "flet.controls.control_event",
+    "EventControlType": "flet.controls.control_event",
+    "EventHandler": "flet.controls.control_event",
+    "ExpansionPanel": "flet.controls.material.expansion_panel",
+    "ExpansionPanelList": "flet.controls.material.expansion_panel",
+    "ExpansionPanelListChangeEvent": "flet.controls.material.expansion_panel",
+    "ExpansionTile": "flet.controls.material.expansion_tile",
+    "ExpansionTileTheme": "flet.controls.theme",
+    "FilePicker": "flet.controls.services.file_picker",
+    "FilePickerFile": "flet.controls.services.file_picker",
+    "FilePickerFileType": "flet.controls.services.file_picker",
+    "FilePickerUploadEvent": "flet.controls.services.file_picker",
+    "FilePickerUploadFile": "flet.controls.services.file_picker",
+    "FilledButton": "flet.controls.material.filled_button",
+    "FilledButtonTheme": "flet.controls.theme",
+    "FilledIconButton": "flet.controls.material.icon_button",
+    "FilledTonalButton": "flet.controls.material.filled_tonal_button",
+    "FilledTonalIconButton": "flet.controls.material.icon_button",
+    "FilterQuality": "flet.controls.box",
+    "FletApp": "flet.controls.core.flet_app",
+    "FletAppOutputEvent": "flet.controls.core.flet_app",
+    "FletException": "flet.controls.exceptions",
+    "FletPageDisconnectedException": "flet.controls.exceptions",
+    "FletUnimplementedPlatformException": "flet.controls.exceptions",
+    "FletUnsupportedPlatformException": "flet.controls.exceptions",
+    "Flip": "flet.controls.transform",
+    "FloatingActionButton": "flet.controls.material.floating_action_button",
+    "FloatingActionButtonLocation": "flet.controls.types",
+    "FloatingActionButtonTheme": "flet.controls.theme",
+    "FontWeight": "flet.controls.types",
+    "ForcePressEvent": "flet.controls.events",
+    "FormFieldControl": "flet.controls.material.form_field_control",
+    "GestureDetector": "flet.controls.core.gesture_detector",
+    "Gradient": "flet.controls.gradients",
+    "GradientTileMode": "flet.controls.gradients",
+    "GridView": "flet.controls.core.grid_view",
+    "Gyroscope": "flet.controls.services.gyroscope",
+    "GyroscopeReadingEvent": "flet.controls.services.gyroscope",
+    "HapticFeedback": "flet.controls.services.haptic_feedback",
+    "Hero": "flet.controls.core.hero",
+    "HoverEvent": "flet.controls.events",
+    "Icon": "flet.controls.core.icon",
+    "IconButton": "flet.controls.material.icon_button",
+    "IconButtonTheme": "flet.controls.theme",
+    "IconData": "flet.controls.icon_data",
+    "IconDataOrControl": "flet.controls.types",
+    "IconTheme": "flet.controls.theme",
+    "Icons": "flet.controls.material.icons",
+    "IdCounter": "flet.controls.id_counter",
+    "Image": "flet.controls.core.image",
+    "ImageRepeat": "flet.controls.types",
+    "InputBorder": "flet.controls.material.form_field_control",
+    "InputFilter": "flet.controls.material.textfield",
+    "InteractiveViewer": "flet.controls.core.interactive_viewer",
+    "IosDeviceInfo": "flet.controls.device_info",
+    "IosUtsname": "flet.controls.device_info",
+    "Key": "flet.controls.keys",
+    "KeyDownEvent": "flet.controls.core.keyboard_listener",
+    "KeyRepeatEvent": "flet.controls.core.keyboard_listener",
+    "KeyUpEvent": "flet.controls.core.keyboard_listener",
+    "KeyValue": "flet.controls.keys",
+    "KeyboardEvent": "flet.controls.page",
+    "KeyboardListener": "flet.controls.core.keyboard_listener",
+    "KeyboardType": "flet.controls.material.textfield",
+    "LabelPosition": "flet.controls.types",
+    "LaunchMode": "flet.controls.services.url_launcher",
+    "LayoutControl": "flet.controls.layout_control",
+    "LayoutSizeChangeEvent": "flet.controls.layout_control",
+    "LinearGradient": "flet.controls.gradients",
+    "LinuxDeviceInfo": "flet.controls.device_info",
+    "ListTile": "flet.controls.material.list_tile",
+    "ListTileStyle": "flet.controls.material.list_tile",
+    "ListTileTheme": "flet.controls.theme",
+    "ListTileTitleAlignment": "flet.controls.material.list_tile",
+    "ListView": "flet.controls.core.list_view",
+    "Locale": "flet.controls.types",
+    "LocaleChangeEvent": "flet.controls.page",
+    "LocaleConfiguration": "flet.controls.types",
+    "LocationInfo": "flet.components.router",
+    "LoginEvent": "flet.controls.page",
+    "LongPressDownEvent": "flet.controls.events",
+    "LongPressEndEvent": "flet.controls.events",
+    "LongPressMoveUpdateEvent": "flet.controls.events",
+    "LongPressStartEvent": "flet.controls.events",
+    "MacOsDeviceInfo": "flet.controls.device_info",
+    "Magnetometer": "flet.controls.services.magnetometer",
+    "MagnetometerReadingEvent": "flet.controls.services.magnetometer",
+    "MainAxisAlignment": "flet.controls.types",
+    "Margin": "flet.controls.margin",
+    "MarginValue": "flet.controls.margin",
+    "Markdown": "flet.controls.core.markdown",
+    "MarkdownCodeTheme": "flet.controls.core.markdown",
+    "MarkdownCustomCodeTheme": "flet.controls.core.markdown",
+    "MarkdownExtensionSet": "flet.controls.core.markdown",
+    "MarkdownStyleSheet": "flet.controls.core.markdown",
+    "Matrix4": "flet.controls.transform",
+    "MenuBar": "flet.controls.material.menu_bar",
+    "MenuItemButton": "flet.controls.material.menu_item_button",
+    "MenuStyle": "flet.controls.material.menu_bar",
+    "MergeSemantics": "flet.controls.core.merge_semantics",
+    "MouseCursor": "flet.controls.types",
+    "MultiTapEvent": "flet.controls.events",
+    "MultiView": "flet.controls.multi_view",
+    "MultiViewAddEvent": "flet.controls.page",
+    "MultiViewRemoveEvent": "flet.controls.page",
+    "NavigationBar": "flet.controls.material.navigation_bar",
+    "NavigationBarDestination": "flet.controls.material.navigation_bar",
+    "NavigationBarLabelBehavior": "flet.controls.material.navigation_bar",
+    "NavigationBarTheme": "flet.controls.theme",
+    "NavigationDrawer": "flet.controls.material.navigation_drawer",
+    "NavigationDrawerDestination": "flet.controls.material.navigation_drawer",
+    "NavigationDrawerTheme": "flet.controls.theme",
+    "NavigationRail": "flet.controls.material.navigation_rail",
+    "NavigationRailDestination": "flet.controls.material.navigation_rail",
+    "NavigationRailLabelType": "flet.controls.material.navigation_rail",
+    "NavigationRailTheme": "flet.controls.theme",
+    "NotchShape": "flet.controls.types",
+    "Number": "flet.controls.types",
+    "NumbersOnlyInputFilter": "flet.controls.material.textfield",
+    "Observable": "flet.components.observable",
+    "Offset": "flet.controls.transform",
+    "OffsetValue": "flet.controls.transform",
+    "OnReorderEvent": "flet.controls.material.reorderable_list_view",
+    "OnScrollEvent": "flet.controls.scrollable_control",
+    "Orientation": "flet.controls.types",
+    "OutlinedBorder": "flet.controls.buttons",
+    "OutlinedButton": "flet.controls.material.outlined_button",
+    "OutlinedButtonTheme": "flet.controls.theme",
+    "OutlinedIconButton": "flet.controls.material.icon_button",
+    "OverlayVisibilityMode": "flet.controls.cupertino.cupertino_textfield",
+    "Padding": "flet.controls.padding",
+    "PaddingValue": "flet.controls.padding",
+    "Page": "flet.controls.page",
+    "PageMediaData": "flet.controls.base_page",
+    "PagePlatform": "flet.controls.types",
+    "PageResizeEvent": "flet.controls.base_page",
+    "PageTransitionTheme": "flet.controls.theme",
+    "PageTransitionsTheme": "flet.controls.theme",
+    "PageView": "flet.controls.core.page_view",
+    "Pagelet": "flet.controls.core.pagelet",
+    "Paint": "flet.controls.painting",
+    "PaintGradient": "flet.controls.painting",
+    "PaintLinearGradient": "flet.controls.painting",
+    "PaintRadialGradient": "flet.controls.painting",
+    "PaintSweepGradient": "flet.controls.painting",
+    "PaintingStyle": "flet.controls.painting",
+    "Placeholder": "flet.controls.core.placeholder",
+    "PlatformBrightnessChangeEvent": "flet.controls.page",
+    "PointerDeviceType": "flet.controls.types",
+    "PointerEvent": "flet.controls.events",
+    "PopupMenuButton": "flet.controls.material.popup_menu_button",
+    "PopupMenuItem": "flet.controls.material.popup_menu_button",
+    "PopupMenuPosition": "flet.controls.material.popup_menu_button",
+    "PopupMenuTheme": "flet.controls.theme",
+    "ProgressBar": "flet.controls.material.progress_bar",
+    "ProgressIndicatorTheme": "flet.controls.theme",
+    "ProgressRing": "flet.controls.material.progress_ring",
+    "PubSubClient": "flet.pubsub.pubsub_client",
+    "PubSubHub": "flet.pubsub.pubsub_hub",
+    "QueryString": "flet.controls.query_string",
+    "RadialGradient": "flet.controls.gradients",
+    "Radio": "flet.controls.material.radio",
+    "RadioGroup": "flet.controls.material.radio_group",
+    "RadioTheme": "flet.controls.theme",
+    "RangeSlider": "flet.controls.material.range_slider",
+    "Rect": "flet.controls.geometry",
+    "Ref": "flet.controls.ref",
+    "ReorderableDragHandle": "flet.controls.core.reorderable_drag_handle",
+    "ReorderableListView": "flet.controls.material.reorderable_list_view",
+    "ResponsiveNumber": "flet.controls.types",
+    "ResponsiveRow": "flet.controls.core.responsive_row",
+    "ResponsiveRowBreakpoint": "flet.controls.types",
+    "Rotate": "flet.controls.transform",
+    "RotateValue": "flet.controls.transform",
+    "RotatedBox": "flet.controls.core.rotated_box",
+    "RoundedRectangleBorder": "flet.controls.buttons",
+    "Route": "flet.components.router",
+    "RouteChangeEvent": "flet.controls.page",
+    "RouteUrlStrategy": "flet.controls.types",
+    "Router": "flet.components.router",
+    "Row": "flet.controls.core.row",
+    "SafeArea": "flet.controls.core.safe_area",
+    "Scale": "flet.controls.transform",
+    "ScaleEndEvent": "flet.controls.events",
+    "ScaleStartEvent": "flet.controls.events",
+    "ScaleUpdateEvent": "flet.controls.events",
+    "ScaleValue": "flet.controls.transform",
+    "ScreenBrightness": "flet.controls.services.screen_brightness",
+    "ScreenBrightnessChangeEvent": "flet.controls.services.screen_brightness",
+    "Screenshot": "flet.controls.core.screenshot",
+    "ScrollDirection": "flet.controls.scrollable_control",
+    "ScrollEvent": "flet.controls.events",
+    "ScrollKey": "flet.controls.keys",
+    "ScrollMode": "flet.controls.types",
+    "ScrollType": "flet.controls.scrollable_control",
+    "ScrollableControl": "flet.controls.scrollable_control",
+    "Scrollbar": "flet.controls.scrollable_control",
+    "ScrollbarOrientation": "flet.controls.scrollable_control",
+    "ScrollbarTheme": "flet.controls.theme",
+    "SearchBar": "flet.controls.material.search_bar",
+    "SearchBarTheme": "flet.controls.theme",
+    "SearchViewTheme": "flet.controls.theme",
+    "Segment": "flet.controls.material.segmented_button",
+    "SegmentedButton": "flet.controls.material.segmented_button",
+    "SegmentedButtonTheme": "flet.controls.theme",
+    "SelectionArea": "flet.controls.material.selection_area",
+    "Semantics": "flet.controls.core.semantics",
+    "SemanticsService": "flet.controls.services.semantics_service",
+    "SensorErrorEvent": "flet.controls.services.sensor_error_event",
+    "Service": "flet.controls.services.service",
+    "ShaderMask": "flet.controls.core.shader_mask",
+    "ShakeDetector": "flet.controls.services.shake_detector",
+    "ShapeBorder": "flet.controls.buttons",
+    "Share": "flet.controls.services.share",
+    "ShareCupertinoActivityType": "flet.controls.services.share",
+    "ShareFile": "flet.controls.services.share",
+    "ShareResult": "flet.controls.services.share",
+    "ShareResultStatus": "flet.controls.services.share",
+    "SharedPreferences": "flet.controls.services.shared_preferences",
+    "Shimmer": "flet.controls.core.shimmer",
+    "ShimmerDirection": "flet.controls.core.shimmer",
+    "Size": "flet.controls.geometry",
+    "Slider": "flet.controls.material.slider",
+    "SliderInteraction": "flet.controls.material.slider",
+    "SliderTheme": "flet.controls.theme",
+    "SnackBar": "flet.controls.material.snack_bar",
+    "SnackBarAction": "flet.controls.material.snack_bar",
+    "SnackBarBehavior": "flet.controls.material.snack_bar",
+    "SnackBarTheme": "flet.controls.theme",
+    "Stack": "flet.controls.core.stack",
+    "StackFit": "flet.controls.core.stack",
+    "StadiumBorder": "flet.controls.buttons",
+    "StoragePaths": "flet.controls.services.storage_paths",
+    "StrOrControl": "flet.controls.types",
+    "StrokeCap": "flet.controls.types",
+    "StrokeJoin": "flet.controls.types",
+    "StrutStyle": "flet.controls.text_style",
+    "SubmenuButton": "flet.controls.material.submenu_button",
+    "SupportsStr": "flet.controls.types",
+    "SweepGradient": "flet.controls.gradients",
+    "Switch": "flet.controls.material.switch",
+    "SwitchTheme": "flet.controls.theme",
+    "SystemOverlayStyle": "flet.controls.theme",
+    "Tab": "flet.controls.material.tabs",
+    "TabAlignment": "flet.controls.material.tabs",
+    "TabBar": "flet.controls.material.tabs",
+    "TabBarHoverEvent": "flet.controls.material.tabs",
+    "TabBarIndicatorSize": "flet.controls.material.tabs",
+    "TabBarTheme": "flet.controls.theme",
+    "TabBarView": "flet.controls.material.tabs",
+    "TabIndicatorAnimation": "flet.controls.material.tabs",
+    "Tabs": "flet.controls.material.tabs",
+    "TapEvent": "flet.controls.events",
+    "TapMoveEvent": "flet.controls.events",
+    "TemplateRoute": "flet.controls.template_route",
+    "Text": "flet.controls.core.text",
+    "TextAffinity": "flet.controls.core.text",
+    "TextAlign": "flet.controls.types",
+    "TextBaseline": "flet.controls.text_style",
+    "TextButton": "flet.controls.material.text_button",
+    "TextButtonTheme": "flet.controls.theme",
+    "TextCapitalization": "flet.controls.material.textfield",
+    "TextDecoration": "flet.controls.text_style",
+    "TextDecorationStyle": "flet.controls.text_style",
+    "TextField": "flet.controls.material.textfield",
+    "TextOnlyInputFilter": "flet.controls.material.textfield",
+    "TextOverflow": "flet.controls.text_style",
+    "TextSelection": "flet.controls.core.text",
+    "TextSelectionChangeCause": "flet.controls.core.text",
+    "TextSelectionChangeEvent": "flet.controls.core.text",
+    "TextSpan": "flet.controls.core.text_span",
+    "TextStyle": "flet.controls.text_style",
+    "TextTheme": "flet.controls.theme",
+    "TextThemeStyle": "flet.controls.text_style",
+    "Theme": "flet.controls.theme",
+    "ThemeMode": "flet.controls.types",
+    "TileAffinity": "flet.controls.material.expansion_tile",
+    "TimePicker": "flet.controls.material.time_picker",
+    "TimePickerEntryMode": "flet.controls.material.time_picker",
+    "TimePickerEntryModeChangeEvent": "flet.controls.material.time_picker",
+    "TimePickerHourFormat": "flet.controls.material.time_picker",
+    "TimePickerTheme": "flet.controls.theme",
+    "Tooltip": "flet.controls.material.tooltip",
+    "TooltipTheme": "flet.controls.theme",
+    "TooltipTriggerMode": "flet.controls.material.tooltip",
+    "TooltipValue": "flet.controls.material.tooltip",
+    "Transform": "flet.controls.transform",
+    "TransparentPointer": "flet.controls.core.transparent_pointer",
+    "UnderlineTabIndicator": "flet.controls.material.tabs",
+    "Url": "flet.controls.types",
+    "UrlLauncher": "flet.controls.services.url_launcher",
+    "UrlTarget": "flet.controls.types",
+    "UserAccelerometer": "flet.controls.services.user_accelerometer",
+    "UserAccelerometerReadingEvent": "flet.controls.services.user_accelerometer",
+    "Value": "flet.controls.base_control",
+    "ValueKey": "flet.controls.keys",
+    "VerticalAlignment": "flet.controls.types",
+    "VerticalDivider": "flet.controls.material.vertical_divider",
+    "View": "flet.controls.core.view",
+    "ViewPopEvent": "flet.controls.page",
+    "ViewsPopUntilEvent": "flet.controls.page",
+    "VisualDensity": "flet.controls.types",
+    "Wakelock": "flet.controls.services.wakelock",
+    "WebBrowserName": "flet.controls.device_info",
+    "WebDeviceInfo": "flet.controls.device_info",
+    "WebRenderer": "flet.controls.types",
+    "WebViewConfiguration": "flet.controls.services.url_launcher",
+    "Window": "flet.controls.core.window",
+    "WindowDragArea": "flet.controls.core.window_drag_area",
+    "WindowEvent": "flet.controls.core.window",
+    "WindowEventType": "flet.controls.core.window",
+    "WindowResizeEdge": "flet.controls.core.window",
+    "WindowsDeviceInfo": "flet.controls.device_info",
+    "alignment": "flet.controls",
+    "app": "flet.app",
+    "app_async": "flet.app",
+    "border": "flet.controls",
+    "border_radius": "flet.controls",
+    "component": "flet.components.component_decorator",
+    "context": "flet.controls.context",
+    "control": "flet.controls.base_control",
+    "create_context": "flet.components.hooks.use_context",
+    "cupertino_colors": "flet.controls.cupertino",
+    "cupertino_icons": "flet.controls.cupertino",
+    "dropdown": "flet.controls.material",
+    "dropdownm2": "flet.controls.material",
+    "icons": "flet.controls.material",
+    "is_route_active": "flet.components.router",
+    "margin": "flet.controls",
+    "memo": "flet.components.memo",
+    "observable": "flet.components.observable",
+    "on_mounted": "flet.components.hooks.use_effect",
+    "on_unmounted": "flet.components.hooks.use_effect",
+    "on_updated": "flet.components.hooks.use_effect",
+    "padding": "flet.controls",
+    "run": "flet.app",
+    "run_async": "flet.app",
+    "unwrap_component": "flet.components.public_utils",
+    "use_callback": "flet.components.hooks.use_callback",
+    "use_context": "flet.components.hooks.use_context",
+    "use_dialog": "flet.components.hooks.use_dialog",
+    "use_effect": "flet.components.hooks.use_effect",
+    "use_memo": "flet.components.hooks.use_memo",
+    "use_ref": "flet.components.hooks.use_ref",
+    "use_route_loader_data": "flet.components.router",
+    "use_route_location": "flet.components.router",
+    "use_route_outlet": "flet.components.router",
+    "use_route_params": "flet.components.router",
+    "use_state": "flet.components.hooks.use_state",
+    "use_view_path": "flet.components.router",
+    "value": "flet.controls.base_control",
 }
 
 
 def __getattr__(name: str):
-    if name in _THEME_EXPORTS:
-        from flet.controls import theme
+    module_path = _LAZY.get(name)
+    if module_path is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import importlib
 
-        return getattr(theme, name)
-    if name == "Icons":
-        from flet.controls.material.icons import Icons
+    module = importlib.import_module(module_path)
+    try:
+        value = getattr(module, name)
+    except AttributeError:
+        # `name` is itself a submodule (e.g. `flet.alignment`), not an attribute.
+        value = importlib.import_module(f"{module_path}.{name}")
+    globals()[name] = value  # cache: subsequent access skips __getattr__
+    return value
 
-        return Icons
-    if name == "CupertinoIcons":
-        from flet.controls.cupertino.cupertino_icons import CupertinoIcons
 
-        return CupertinoIcons
-    if name == "icons":
-        import importlib
-
-        return importlib.import_module("flet.controls.material.icons")
-    if name == "cupertino_icons":
-        import importlib
-
-        return importlib.import_module("flet.controls.cupertino.cupertino_icons")
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+def __dir__():
+    return list(__all__)
