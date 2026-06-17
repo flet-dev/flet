@@ -35,6 +35,9 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   ROOT: "${{ github.workspace }}"
   SDK_PYTHON: "${{ github.workspace }}/sdk/python"
@@ -53,6 +56,8 @@ jobs:
   build:
     name: Build (${{ matrix.name }})
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -161,10 +166,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
@@ -186,7 +192,7 @@ jobs:
           sudo apt-get clean
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
           cache: true
@@ -199,7 +205,7 @@ jobs:
           uv run ${{ matrix.build_cmd }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.artifact_name }}
           path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
@@ -209,6 +215,8 @@ jobs:
   pack:
     name: Pack (${{ matrix.name }})
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
     env:
       FLET_DESKTOP_FLAVOR: full
     strategy:
@@ -226,16 +234,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
           cache: true
@@ -300,7 +309,7 @@ jobs:
           uv run --with pyinstaller flet pack src/main.py --yes --name flet-pack-test --distpath dist $FLET_PACK_EXTRA_ARGS
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.name }}-pack-artifact
           path: sdk/python/examples/apps/flet_build_test/dist

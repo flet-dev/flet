@@ -3,6 +3,9 @@ name: Build docs
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build Documentation
@@ -22,8 +25,9 @@ jobs:
         run: corepack enable
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: false
 
       - name: Build website
         run: |

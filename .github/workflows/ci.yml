@@ -43,6 +43,8 @@ jobs:
   python_tests:
     name: Python ${{ matrix.python-version }} tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -346,6 +348,8 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
@@ -581,6 +585,8 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
@@ -672,6 +678,8 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
@@ -681,6 +689,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
@@ -688,7 +697,7 @@ jobs:
           enable-cache: false
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
           cache: true
@@ -801,11 +810,15 @@ jobs:
       - build_flet_extensions
       - build_flet_cli_desktop
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    permissions:
+      contents: write
     steps:
       - name: Detect pre-release
         id: prerelease
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "${{ github.ref_name }}" == *".dev"* ]]; then
+          if [[ "$REF_NAME" == *".dev"* ]]; then
             echo "is_prerelease=true" >> $GITHUB_OUTPUT
           else
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
@@ -843,15 +856,17 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     needs:
       - release
+    permissions:
+      id-token: write
     steps:
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           ignore-empty-workdir: true
           cache-dependency-glob: ""
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: dist
           merge-multiple: true
