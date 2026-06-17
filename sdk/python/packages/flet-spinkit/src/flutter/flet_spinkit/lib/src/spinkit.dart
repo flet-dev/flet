@@ -24,7 +24,8 @@ class _SpinKitControlState extends State<SpinKitControl> {
     final lineWidth = widget.control.getDouble("line_width");
     final borderWidth = widget.control.getDouble("border_width");
     final itemCount = widget.control.getInt("item_count");
-    final waveTypeStr = widget.control.getString("wave_type");
+    final waveType = parseEnum(SpinKitWaveType.values,
+        widget.control.getString("wave_type"), SpinKitWaveType.start)!;
 
     Widget spinner;
 
@@ -49,7 +50,7 @@ class _SpinKitControlState extends State<SpinKitControl> {
           size: size,
           duration: duration ?? const Duration(milliseconds: 1200),
           itemCount: itemCount ?? 5,
-          type: _parseWaveType(waveTypeStr),
+          type: waveType,
         );
         break;
       case "SpinKitWanderingCubes":
@@ -255,17 +256,5 @@ class _SpinKitControlState extends State<SpinKitControl> {
     }
 
     return LayoutControl(control: widget.control, child: spinner);
-  }
-
-  SpinKitWaveType _parseWaveType(String? value) {
-    switch (value?.toLowerCase()) {
-      case "center":
-        return SpinKitWaveType.center;
-      case "end":
-        return SpinKitWaveType.end;
-      case "start":
-      default:
-        return SpinKitWaveType.start;
-    }
   }
 }
