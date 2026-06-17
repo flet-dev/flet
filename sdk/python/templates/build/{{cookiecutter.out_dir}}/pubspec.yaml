@@ -24,7 +24,7 @@ dependencies:
   serious_python:
     git:
       url: https://github.com/flet-dev/serious-python.git
-      ref: android-native-mmap
+      ref: dart-bridge
       path: src/serious_python
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
