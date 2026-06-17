@@ -706,7 +706,11 @@ loaded memory-mapped from the APK. Packages that read their bundled **data files
 filesystem path — `__file__` / `pkg_resources` instead of
 [`importlib.resources`](https://docs.python.org/3/library/importlib.resources.html) — don't work
 from inside the zip. List such "path-hungry" packages here to ship them **extracted to disk**
-instead. A built-in default set (e.g. `certifi`) is always extracted; your list is merged on top.
+instead.
+
+Most packages that bundle data (including `certifi`) read it through `importlib.resources`, which
+is zip-safe, so they need no entry here — only add packages that actually fail to find their data
+when imported from the zip.
 
 #### Resolution order
 

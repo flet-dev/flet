@@ -44,12 +44,15 @@ DEFAULT_TEMPLATE_URL = (
 
 # Android (serious_python native-mmap packaging): pure Python ships in stored zips
 # read via zipimport, which breaks packages that read bundled data through a real
-# filesystem path (__file__ / pkg_resources) instead of importlib.resources. These
-# are shipped extracted to disk by default; users extend the list via
-# --android-extract-packages or [tool.flet.android].extract_packages.
-ANDROID_DEFAULT_EXTRACT_PACKAGES = [
-    "certifi",
-]
+# filesystem path (__file__ / pkg_resources) instead of importlib.resources. Such
+# packages are shipped extracted to disk via --android-extract-packages or
+# [tool.flet.android].extract_packages.
+#
+# The default set is empty: the common offenders read their data via
+# importlib.resources, which is zip-safe (e.g. certifi.where() works from the zip —
+# importlib.resources.as_file() extracts cacert.pem to a temp file on demand). Add
+# real offenders here as they are found.
+ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 
 
 class BaseBuildCommand(BaseFlutterCommand):
