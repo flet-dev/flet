@@ -42,6 +42,15 @@ DEFAULT_TEMPLATE_URL = (
     "v{version}/flet-build-template.zip"
 )
 
+# Android (serious_python native-mmap packaging): pure Python ships in stored zips
+# read via zipimport, which breaks packages that read bundled data through a real
+# filesystem path (__file__ / pkg_resources) instead of importlib.resources. These
+# are shipped extracted to disk by default; users extend the list via
+# --android-extract-packages or [tool.flet.android].extract_packages.
+ANDROID_DEFAULT_EXTRACT_PACKAGES = [
+    "certifi",
+]
+
 
 class BaseBuildCommand(BaseFlutterCommand):
     """
@@ -504,6 +513,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of Python packages to install from source distributions",
+        )
+        parser.add_argument(
+            "--android-extract-packages",
+            dest="android_extract_packages",
+            nargs="+",
+            default=[],
+            help="Android only: Python packages (relative paths) to ship extracted "
+            "to disk instead of inside the app zip — for packages that read bundled "
+            "data via __file__ / pkg_resources rather than importlib.resources",
         )
         parser.add_argument(
             "--python-version",
@@ -2036,6 +2054,27 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
                 source_packages
             )
+
+        # android-extract-packages: path-hungry packages shipped extracted to disk
+        # instead of inside the zip (serious_python Android native-mmap packaging).
+        # A built-in default set covers commonly-broken packages; the user list
+        # (CLI / pyproject) is merged on top.
+        if self.package_platform == "Android":
+            user_extract_packages = (
+                self.options.android_extract_packages
+                or self.get_pyproject(
+                    f"tool.flet.{self.config_platform}.extract_packages"
+                )
+                or self.get_pyproject("tool.flet.extract_packages")
+                or []
+            )
+            extract_packages = list(
+                dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
+            )
+            if extract_packages:
+                package_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
+                    extract_packages
+                )
 
         if self.get_bool_setting(self.options.compile_app, "compile.app", False):
             package_args.append("--compile-app")
