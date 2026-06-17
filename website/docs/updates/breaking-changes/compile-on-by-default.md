@@ -13,7 +13,7 @@ The [breaking changes and deprecations index](.) lists the guides created for ea
 
 ## Summary
 
-`flet build` and `flet publish` now **compile your app and the installed
+`flet build` now **compile your app and the installed
 packages to `.pyc` by default** (via `python -m compileall -b`, with the original
 `.py` files removed from the bundle). Previously compilation was off unless you
 opted in with `--compile-app` / `--compile-packages` or
