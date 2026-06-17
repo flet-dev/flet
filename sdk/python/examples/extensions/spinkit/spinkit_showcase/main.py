@@ -10,7 +10,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
-            content=fsk.SpinKitRotatingCircle(
+            content=fsk.RotatingCircle(
                 color=ft.Colors.BLUE,
                 size=50,
             )
