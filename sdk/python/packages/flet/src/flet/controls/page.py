@@ -18,7 +18,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet.components.component import Renderer
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
@@ -657,6 +656,8 @@ class Page(BasePage):
             **kwargs: Keyword arguments passed to `component`.
         """
 
+        from flet.components.component import Renderer
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -679,6 +680,8 @@ class Page(BasePage):
             *args: Positional arguments passed to `component`.
             **kwargs: Keyword arguments passed to `component`.
         """
+
+        from flet.components.component import Renderer
 
         logger.debug("Page.render_views()")
         self._notify = self.__notify
