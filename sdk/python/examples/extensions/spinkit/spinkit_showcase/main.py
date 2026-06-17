@@ -98,7 +98,7 @@ def main(page: ft.Page):
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=8,
                     ),
-                    border=ft.border.all(
+                    border=ft.Border.all(
                         1, ft.Colors.with_opacity(0.12, ft.Colors.ON_SURFACE)
                     ),
                     border_radius=12,
