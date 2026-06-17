@@ -1081,9 +1081,15 @@ removes known junk files and any additional globs you specify.
       (implies `cleanup-packages`)
     * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
 
-By default, Flet does **not** compile your app files during packaging.
-This allows the build process to complete even if there are syntax errors,
-which can be useful for debugging or rapid iteration.
+By default, Flet **compiles** both your app and the installed packages to `.pyc`
+during packaging. Shipping bytecode avoids recompiling every module on each cold
+start — a significant startup win on mobile, where pure Python is imported from a
+stored zip and cannot cache bytecode back to disk.
+
+Pass `--no-compile-app` / `--no-compile-packages` (or set `[tool.flet.compile].app`
+/ `[tool.flet.compile].packages` to `false`) to disable it — for example to speed
+up iterative builds, or to keep `.py` source in the bundle so the build still
+completes with syntax errors present and tracebacks show source lines.
 
 #### Resolution order
 
@@ -1092,14 +1098,14 @@ The values of `compile-app` and `cleanup-app` are respectively determined in the
 1. [`--compile-app`](../cli/flet-build.md#--compile-app) / [`--cleanup-app`](../cli/flet-build.md#--cleanup-app)
 2. `[tool.flet.<PLATFORM>.compile].app` / `[tool.flet.<PLATFORM>.cleanup].app`
 3. `[tool.flet.compile].app` / `[tool.flet.cleanup].app`
-4. empty list / empty list
+4. `True` / empty list
 
 The values of `compile-packages` and `cleanup-packages` are respectively determined in the following order of precedence:
 
 1. [`--compile-packages`](../cli/flet-build.md#--compile-packages) / [`--cleanup-packages`](../cli/flet-build.md#--cleanup-packages)
 2. `[tool.flet.<PLATFORM>.compile].packages` / `[tool.flet.<PLATFORM>.cleanup].packages`
 3. `[tool.flet.compile].packages` / `[tool.flet.cleanup].packages`
-4. `False` / `True`
+4. `True` / `True`
 
 The values of `cleanup-app-files` and `cleanup-package-files` are respectively determined in the following order of precedence:
 

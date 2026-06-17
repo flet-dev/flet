@@ -27,6 +27,7 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 #### Breaking changes
 
 - [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/default-bundled-python-3-14)
+- [App and packages are compiled to `.pyc` by default](/docs/updates/breaking-changes/compile-on-by-default)
 - [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/removed-pyodide-version-export)
 - [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/data-channel-protocol-upgrade)
 
