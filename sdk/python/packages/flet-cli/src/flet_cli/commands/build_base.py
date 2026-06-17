@@ -464,16 +464,18 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--compile-app",
             dest="compile_app",
-            action="store_true",
+            action=argparse.BooleanOptionalAction,
             default=None,
-            help="Pre-compile app's `.py` files to `.pyc`",
+            help="Pre-compile app's `.py` files to `.pyc` (on by default; "
+            "use --no-compile-app to disable)",
         )
         parser.add_argument(
             "--compile-packages",
             dest="compile_packages",
-            action="store_true",
+            action=argparse.BooleanOptionalAction,
             default=None,
-            help="Pre-compile site packages' `.py` files to `.pyc`",
+            help="Pre-compile site packages' `.py` files to `.pyc` (on by default; "
+            "use --no-compile-packages to disable)",
         )
         parser.add_argument(
             "--cleanup-app",
@@ -2078,11 +2080,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
             )
 
-        if self.get_bool_setting(self.options.compile_app, "compile.app", False):
+        if self.get_bool_setting(self.options.compile_app, "compile.app", True):
             package_args.append("--compile-app")
 
         if self.get_bool_setting(
-            self.options.compile_packages, "compile.packages", False
+            self.options.compile_packages, "compile.packages", True
         ):
             package_args.append("--compile-packages")
 
