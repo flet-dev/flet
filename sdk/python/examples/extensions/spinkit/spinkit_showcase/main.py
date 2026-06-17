@@ -84,7 +84,7 @@ def main(page: ft.Page):
                         [
                             ft.Container(
                                 content=make_spinner(cls),
-                                alignment=ft.alignment.center,
+                                alignment=ft.Alignment.CENTER,
                                 expand=True,
                             ),
                             ft.Text(
