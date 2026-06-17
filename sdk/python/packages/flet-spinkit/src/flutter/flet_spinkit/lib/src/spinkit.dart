@@ -239,19 +239,11 @@ class _SpinKitControlState extends State<SpinKitControl> {
           duration: duration ?? const Duration(milliseconds: 1200),
         );
         break;
-      case "SpinKitPumpCurve":
-        spinner = SpinKitPumpCurve(
+      case "SpinKitWaveSpinner":
+        spinner = SpinKitWaveSpinner(
           color: color,
           size: size,
           duration: duration ?? const Duration(milliseconds: 1200),
-        );
-        break;
-      case "SpinKitRingCurve":
-        spinner = SpinKitRingCurve(
-          color: color,
-          size: size,
-          duration: duration ?? const Duration(milliseconds: 1200),
-          lineWidth: lineWidth ?? 3.0,
         );
         break;
       default:

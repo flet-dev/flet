@@ -36,8 +36,7 @@ class Extension extends FletExtension {
       case "SpinKitDancingSquare":
       case "SpinKitPianoWave":
       case "SpinKitPulsingGrid":
-      case "SpinKitPumpCurve":
-      case "SpinKitRingCurve":
+      case "SpinKitWaveSpinner":
         return SpinKitControl(key: key, control: control);
       default:
         return null;

@@ -21,10 +21,8 @@ __all__ = [
     "SpinKitPouringHourGlassRefined",
     "SpinKitPulse",
     "SpinKitPulsingGrid",
-    "SpinKitPumpCurve",
     "SpinKitPumpingHeart",
     "SpinKitRing",
-    "SpinKitRingCurve",
     "SpinKitRipple",
     "SpinKitRotatingCircle",
     "SpinKitRotatingPlain",
@@ -35,6 +33,7 @@ __all__ = [
     "SpinKitThreeInOut",
     "SpinKitWanderingCubes",
     "SpinKitWave",
+    "SpinKitWaveSpinner",
     "SpinKitWaveType",
 ]
 
@@ -482,9 +481,9 @@ class SpinKitPulsingGrid(ft.LayoutControl):
     """The duration of one animation cycle."""
 
 
-@ft.control("SpinKitPumpCurve")
-class SpinKitPumpCurve(ft.LayoutControl):
-    """A pump-like animation along a curve."""
+@ft.control("SpinKitWaveSpinner")
+class SpinKitWaveSpinner(ft.LayoutControl):
+    """A circular wave spinner."""
 
     color: Optional[ft.ColorValue] = None
     """The color of the spinner."""
@@ -494,20 +493,3 @@ class SpinKitPumpCurve(ft.LayoutControl):
 
     duration: Optional[ft.DurationValue] = None
     """The duration of one animation cycle."""
-
-
-@ft.control("SpinKitRingCurve")
-class SpinKitRingCurve(ft.LayoutControl):
-    """A ring that animates along a curve."""
-
-    color: Optional[ft.ColorValue] = None
-    """The color of the spinner."""
-
-    size: Optional[ft.Number] = None
-    """The size of the spinner in pixels. Defaults to 50."""
-
-    duration: Optional[ft.DurationValue] = None
-    """The duration of one animation cycle."""
-
-    line_width: Optional[ft.Number] = None
-    """The stroke width of the ring. Defaults to 3."""

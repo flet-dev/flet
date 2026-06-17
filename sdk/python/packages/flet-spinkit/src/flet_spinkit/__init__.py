@@ -16,10 +16,8 @@ from flet_spinkit.spinkit import (
     SpinKitPouringHourGlassRefined,
     SpinKitPulse,
     SpinKitPulsingGrid,
-    SpinKitPumpCurve,
     SpinKitPumpingHeart,
     SpinKitRing,
-    SpinKitRingCurve,
     SpinKitRipple,
     SpinKitRotatingCircle,
     SpinKitRotatingPlain,
@@ -30,6 +28,7 @@ from flet_spinkit.spinkit import (
     SpinKitThreeInOut,
     SpinKitWanderingCubes,
     SpinKitWave,
+    SpinKitWaveSpinner,
     SpinKitWaveType,
 )
 
@@ -51,10 +50,8 @@ __all__ = [
     "SpinKitPouringHourGlassRefined",
     "SpinKitPulse",
     "SpinKitPulsingGrid",
-    "SpinKitPumpCurve",
     "SpinKitPumpingHeart",
     "SpinKitRing",
-    "SpinKitRingCurve",
     "SpinKitRipple",
     "SpinKitRotatingCircle",
     "SpinKitRotatingPlain",
@@ -65,5 +62,6 @@ __all__ = [
     "SpinKitThreeInOut",
     "SpinKitWanderingCubes",
     "SpinKitWave",
+    "SpinKitWaveSpinner",
     "SpinKitWaveType",
 ]
