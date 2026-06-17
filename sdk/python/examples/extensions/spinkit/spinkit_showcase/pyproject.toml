@@ -10,6 +10,9 @@ dependencies = ["flet", "flet-spinkit"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
+[tool.uv.sources]
+flet-spinkit = { path = "../../../../packages/flet-spinkit", editable = true }
+
 [tool.flet.gallery]
 categories = ["Animation/SpinKit"]
 
