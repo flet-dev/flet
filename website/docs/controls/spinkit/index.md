@@ -1,6 +1,5 @@
 ---
 examples: "extensions/spinkit"
-example_images: "test-images/examples/extensions/spinkit/golden/macos/spinkit_showcase"
 title: "SpinKit"
 ---
 
@@ -61,7 +60,7 @@ Some controls have additional properties listed in their section below.
 
 ### ChasingDots
 
-<ClassSummary name="flet_spinkit.ChasingDots" image={frontMatter.example_images + '/chasing_dots.png'} imageCaption="ChasingDots" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.ChasingDots" />
 
 <ClassMembers name="flet_spinkit.ChasingDots" />
 
@@ -69,7 +68,7 @@ Some controls have additional properties listed in their section below.
 
 ### Circle
 
-<ClassSummary name="flet_spinkit.Circle" image={frontMatter.example_images + '/circle.png'} imageCaption="Circle" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.Circle" />
 
 <ClassMembers name="flet_spinkit.Circle" />
 
@@ -77,7 +76,7 @@ Some controls have additional properties listed in their section below.
 
 ### CubeGrid
 
-<ClassSummary name="flet_spinkit.CubeGrid" image={frontMatter.example_images + '/cube_grid.png'} imageCaption="CubeGrid" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.CubeGrid" />
 
 <ClassMembers name="flet_spinkit.CubeGrid" />
 
@@ -85,7 +84,7 @@ Some controls have additional properties listed in their section below.
 
 ### DancingSquare
 
-<ClassSummary name="flet_spinkit.DancingSquare" image={frontMatter.example_images + '/dancing_square.png'} imageCaption="DancingSquare" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.DancingSquare" />
 
 <ClassMembers name="flet_spinkit.DancingSquare" />
 
@@ -93,7 +92,7 @@ Some controls have additional properties listed in their section below.
 
 ### DoubleBounce
 
-<ClassSummary name="flet_spinkit.DoubleBounce" image={frontMatter.example_images + '/double_bounce.png'} imageCaption="DoubleBounce" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.DoubleBounce" />
 
 <ClassMembers name="flet_spinkit.DoubleBounce" />
 
@@ -101,7 +100,7 @@ Some controls have additional properties listed in their section below.
 
 ### DualRing
 
-<ClassSummary name="flet_spinkit.DualRing" image={frontMatter.example_images + '/dual_ring.png'} imageCaption="DualRing" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.DualRing" />
 
 <ClassMembers name="flet_spinkit.DualRing" />
 
@@ -109,7 +108,7 @@ Some controls have additional properties listed in their section below.
 
 ### FadingCircle
 
-<ClassSummary name="flet_spinkit.FadingCircle" image={frontMatter.example_images + '/fading_circle.png'} imageCaption="FadingCircle" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.FadingCircle" />
 
 <ClassMembers name="flet_spinkit.FadingCircle" />
 
@@ -117,7 +116,7 @@ Some controls have additional properties listed in their section below.
 
 ### FadingCube
 
-<ClassSummary name="flet_spinkit.FadingCube" image={frontMatter.example_images + '/fading_cube.png'} imageCaption="FadingCube" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.FadingCube" />
 
 <ClassMembers name="flet_spinkit.FadingCube" />
 
@@ -125,7 +124,7 @@ Some controls have additional properties listed in their section below.
 
 ### FadingFour
 
-<ClassSummary name="flet_spinkit.FadingFour" image={frontMatter.example_images + '/fading_four.png'} imageCaption="FadingFour" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.FadingFour" />
 
 <ClassMembers name="flet_spinkit.FadingFour" />
 
@@ -133,7 +132,7 @@ Some controls have additional properties listed in their section below.
 
 ### FadingGrid
 
-<ClassSummary name="flet_spinkit.FadingGrid" image={frontMatter.example_images + '/fading_grid.png'} imageCaption="FadingGrid" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.FadingGrid" />
 
 <ClassMembers name="flet_spinkit.FadingGrid" />
 
@@ -141,7 +140,7 @@ Some controls have additional properties listed in their section below.
 
 ### FoldingCube
 
-<ClassSummary name="flet_spinkit.FoldingCube" image={frontMatter.example_images + '/folding_cube.png'} imageCaption="FoldingCube" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.FoldingCube" />
 
 <ClassMembers name="flet_spinkit.FoldingCube" />
 
@@ -149,7 +148,7 @@ Some controls have additional properties listed in their section below.
 
 ### HourGlass
 
-<ClassSummary name="flet_spinkit.HourGlass" image={frontMatter.example_images + '/hour_glass.png'} imageCaption="HourGlass" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.HourGlass" />
 
 <ClassMembers name="flet_spinkit.HourGlass" />
 
@@ -157,7 +156,7 @@ Some controls have additional properties listed in their section below.
 
 ### PianoWave
 
-<ClassSummary name="flet_spinkit.PianoWave" image={frontMatter.example_images + '/piano_wave.png'} imageCaption="PianoWave" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.PianoWave" />
 
 <ClassMembers name="flet_spinkit.PianoWave" />
 
@@ -165,7 +164,7 @@ Some controls have additional properties listed in their section below.
 
 ### PouringHourGlass
 
-<ClassSummary name="flet_spinkit.PouringHourGlass" image={frontMatter.example_images + '/pouring_hour_glass.png'} imageCaption="PouringHourGlass" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.PouringHourGlass" />
 
 <ClassMembers name="flet_spinkit.PouringHourGlass" />
 
@@ -173,7 +172,7 @@ Some controls have additional properties listed in their section below.
 
 ### PouringHourGlassRefined
 
-<ClassSummary name="flet_spinkit.PouringHourGlassRefined" image={frontMatter.example_images + '/pouring_hour_glass_refined.png'} imageCaption="PouringHourGlassRefined" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.PouringHourGlassRefined" />
 
 <ClassMembers name="flet_spinkit.PouringHourGlassRefined" />
 
@@ -181,7 +180,7 @@ Some controls have additional properties listed in their section below.
 
 ### Pulse
 
-<ClassSummary name="flet_spinkit.Pulse" image={frontMatter.example_images + '/pulse.png'} imageCaption="Pulse" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.Pulse" />
 
 <ClassMembers name="flet_spinkit.Pulse" />
 
@@ -189,7 +188,7 @@ Some controls have additional properties listed in their section below.
 
 ### PulsingGrid
 
-<ClassSummary name="flet_spinkit.PulsingGrid" image={frontMatter.example_images + '/pulsing_grid.png'} imageCaption="PulsingGrid" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.PulsingGrid" />
 
 <ClassMembers name="flet_spinkit.PulsingGrid" />
 
@@ -197,7 +196,7 @@ Some controls have additional properties listed in their section below.
 
 ### PumpingHeart
 
-<ClassSummary name="flet_spinkit.PumpingHeart" image={frontMatter.example_images + '/pumping_heart.png'} imageCaption="PumpingHeart" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.PumpingHeart" />
 
 <ClassMembers name="flet_spinkit.PumpingHeart" />
 
@@ -205,7 +204,7 @@ Some controls have additional properties listed in their section below.
 
 ### Ring
 
-<ClassSummary name="flet_spinkit.Ring" image={frontMatter.example_images + '/ring.png'} imageCaption="Ring" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.Ring" />
 
 <ClassMembers name="flet_spinkit.Ring" />
 
@@ -213,7 +212,7 @@ Some controls have additional properties listed in their section below.
 
 ### Ripple
 
-<ClassSummary name="flet_spinkit.Ripple" image={frontMatter.example_images + '/ripple.png'} imageCaption="Ripple" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.Ripple" />
 
 <ClassMembers name="flet_spinkit.Ripple" />
 
@@ -221,7 +220,7 @@ Some controls have additional properties listed in their section below.
 
 ### RotatingCircle
 
-<ClassSummary name="flet_spinkit.RotatingCircle" image={frontMatter.example_images + '/rotating_circle.png'} imageCaption="RotatingCircle" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.RotatingCircle" />
 
 <ClassMembers name="flet_spinkit.RotatingCircle" />
 
@@ -229,7 +228,7 @@ Some controls have additional properties listed in their section below.
 
 ### RotatingPlain
 
-<ClassSummary name="flet_spinkit.RotatingPlain" image={frontMatter.example_images + '/rotating_plain.png'} imageCaption="RotatingPlain" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.RotatingPlain" />
 
 <ClassMembers name="flet_spinkit.RotatingPlain" />
 
@@ -237,7 +236,7 @@ Some controls have additional properties listed in their section below.
 
 ### SpinningCircle
 
-<ClassSummary name="flet_spinkit.SpinningCircle" image={frontMatter.example_images + '/spinning_circle.png'} imageCaption="SpinningCircle" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.SpinningCircle" />
 
 <ClassMembers name="flet_spinkit.SpinningCircle" />
 
@@ -245,7 +244,7 @@ Some controls have additional properties listed in their section below.
 
 ### SpinningLines
 
-<ClassSummary name="flet_spinkit.SpinningLines" image={frontMatter.example_images + '/spinning_lines.png'} imageCaption="SpinningLines" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.SpinningLines" />
 
 <ClassMembers name="flet_spinkit.SpinningLines" />
 
@@ -253,7 +252,7 @@ Some controls have additional properties listed in their section below.
 
 ### SquareCircle
 
-<ClassSummary name="flet_spinkit.SquareCircle" image={frontMatter.example_images + '/square_circle.png'} imageCaption="SquareCircle" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.SquareCircle" />
 
 <ClassMembers name="flet_spinkit.SquareCircle" />
 
@@ -261,7 +260,7 @@ Some controls have additional properties listed in their section below.
 
 ### ThreeBounce
 
-<ClassSummary name="flet_spinkit.ThreeBounce" image={frontMatter.example_images + '/three_bounce.png'} imageCaption="ThreeBounce" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.ThreeBounce" />
 
 <ClassMembers name="flet_spinkit.ThreeBounce" />
 
@@ -269,7 +268,7 @@ Some controls have additional properties listed in their section below.
 
 ### ThreeInOut
 
-<ClassSummary name="flet_spinkit.ThreeInOut" image={frontMatter.example_images + '/three_in_out.png'} imageCaption="ThreeInOut" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.ThreeInOut" />
 
 <ClassMembers name="flet_spinkit.ThreeInOut" />
 
@@ -277,7 +276,7 @@ Some controls have additional properties listed in their section below.
 
 ### WanderingCubes
 
-<ClassSummary name="flet_spinkit.WanderingCubes" image={frontMatter.example_images + '/wandering_cubes.png'} imageCaption="WanderingCubes" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.WanderingCubes" />
 
 <ClassMembers name="flet_spinkit.WanderingCubes" />
 
@@ -285,7 +284,7 @@ Some controls have additional properties listed in their section below.
 
 ### Wave
 
-<ClassSummary name="flet_spinkit.Wave" image={frontMatter.example_images + '/wave.png'} imageCaption="Wave" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.Wave" />
 
 <ClassMembers name="flet_spinkit.Wave" />
 
@@ -293,6 +292,6 @@ Some controls have additional properties listed in their section below.
 
 ### WaveSpinner
 
-<ClassSummary name="flet_spinkit.WaveSpinner" image={frontMatter.example_images + '/wave_spinner.png'} imageCaption="WaveSpinner" imageWidth="25%" />
+<ClassSummary name="flet_spinkit.WaveSpinner" />
 
 <ClassMembers name="flet_spinkit.WaveSpinner" />
