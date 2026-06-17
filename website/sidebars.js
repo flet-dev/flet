@@ -1346,6 +1346,11 @@ module.exports = {
             },
             {
               "type": "doc",
+              "id": "controls/spinkit/index",
+              "label": "SpinKit"
+            },
+            {
+              "type": "doc",
               "id": "controls/slider",
               "label": "Slider"
             },

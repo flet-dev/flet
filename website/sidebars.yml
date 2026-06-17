@@ -272,6 +272,7 @@ docs:
       Screenshot: controls/screenshot.md
       ShaderMask: controls/shadermask.md
       Shimmer: controls/shimmer.md
+      SpinKit: controls/spinkit/index.md
       Slider: controls/slider.md
       SnackBar: controls/snackbar.md
       Stack: controls/stack.md
