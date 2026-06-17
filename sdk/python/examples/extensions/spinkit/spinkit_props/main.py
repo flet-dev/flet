@@ -1,4 +1,4 @@
-import flet_spinkit as fsk
+import flet_spinkit as spins
 
 import flet as ft
 
@@ -45,12 +45,16 @@ def main(page: ft.Page):
         section(
             "color",
             [
-                labeled(fsk.RotatingCircle(color=ft.Colors.BLUE, size=50), "BLUE"),
-                labeled(fsk.RotatingCircle(color=ft.Colors.RED, size=50), "RED"),
-                labeled(fsk.RotatingCircle(color=ft.Colors.GREEN, size=50), "GREEN"),
-                labeled(fsk.RotatingCircle(color=ft.Colors.ORANGE, size=50), "ORANGE"),
-                labeled(fsk.RotatingCircle(color=ft.Colors.PURPLE, size=50), "PURPLE"),
-                labeled(fsk.RotatingCircle(color=ft.Colors.TEAL, size=50), "TEAL"),
+                labeled(spins.RotatingCircle(color=ft.Colors.BLUE, size=50), "BLUE"),
+                labeled(spins.RotatingCircle(color=ft.Colors.RED, size=50), "RED"),
+                labeled(spins.RotatingCircle(color=ft.Colors.GREEN, size=50), "GREEN"),
+                labeled(
+                    spins.RotatingCircle(color=ft.Colors.ORANGE, size=50), "ORANGE"
+                ),
+                labeled(
+                    spins.RotatingCircle(color=ft.Colors.PURPLE, size=50), "PURPLE"
+                ),
+                labeled(spins.RotatingCircle(color=ft.Colors.TEAL, size=50), "TEAL"),
             ],
         ),
         ft.Divider(height=8),
@@ -58,11 +62,11 @@ def main(page: ft.Page):
         section(
             "size",
             [
-                labeled(fsk.ThreeBounce(color=ft.Colors.BLUE, size=20), "20"),
-                labeled(fsk.ThreeBounce(color=ft.Colors.BLUE, size=30), "30"),
-                labeled(fsk.ThreeBounce(color=ft.Colors.BLUE, size=40), "40"),
-                labeled(fsk.ThreeBounce(color=ft.Colors.BLUE, size=50), "50"),
-                labeled(fsk.ThreeBounce(color=ft.Colors.BLUE, size=70), "70"),
+                labeled(spins.ThreeBounce(color=ft.Colors.BLUE, size=20), "20"),
+                labeled(spins.ThreeBounce(color=ft.Colors.BLUE, size=30), "30"),
+                labeled(spins.ThreeBounce(color=ft.Colors.BLUE, size=40), "40"),
+                labeled(spins.ThreeBounce(color=ft.Colors.BLUE, size=50), "50"),
+                labeled(spins.ThreeBounce(color=ft.Colors.BLUE, size=70), "70"),
             ],
         ),
         ft.Divider(height=8),
@@ -71,7 +75,7 @@ def main(page: ft.Page):
             "duration",
             [
                 labeled(
-                    fsk.Pulse(
+                    spins.Pulse(
                         color=ft.Colors.BLUE,
                         size=50,
                         duration=ft.Duration(milliseconds=400),
@@ -79,7 +83,7 @@ def main(page: ft.Page):
                     "400ms",
                 ),
                 labeled(
-                    fsk.Pulse(
+                    spins.Pulse(
                         color=ft.Colors.BLUE,
                         size=50,
                         duration=ft.Duration(milliseconds=700),
@@ -87,7 +91,7 @@ def main(page: ft.Page):
                     "700ms",
                 ),
                 labeled(
-                    fsk.Pulse(
+                    spins.Pulse(
                         color=ft.Colors.BLUE,
                         size=50,
                         duration=ft.Duration(milliseconds=1000),
@@ -95,7 +99,7 @@ def main(page: ft.Page):
                     "1000ms",
                 ),
                 labeled(
-                    fsk.Pulse(
+                    spins.Pulse(
                         color=ft.Colors.BLUE,
                         size=50,
                         duration=ft.Duration(milliseconds=2000),
@@ -103,7 +107,7 @@ def main(page: ft.Page):
                     "2000ms",
                 ),
                 labeled(
-                    fsk.Pulse(
+                    spins.Pulse(
                         color=ft.Colors.BLUE,
                         size=50,
                         duration=ft.Duration(milliseconds=4000),
@@ -118,19 +122,21 @@ def main(page: ft.Page):
             "Wave · wave_type",
             [
                 labeled(
-                    fsk.Wave(
-                        color=ft.Colors.BLUE, size=50, wave_type=fsk.WaveType.START
+                    spins.Wave(
+                        color=ft.Colors.BLUE, size=50, wave_type=spins.WaveType.START
                     ),
                     "START",
                 ),
                 labeled(
-                    fsk.Wave(
-                        color=ft.Colors.BLUE, size=50, wave_type=fsk.WaveType.CENTER
+                    spins.Wave(
+                        color=ft.Colors.BLUE, size=50, wave_type=spins.WaveType.CENTER
                     ),
                     "CENTER",
                 ),
                 labeled(
-                    fsk.Wave(color=ft.Colors.BLUE, size=50, wave_type=fsk.WaveType.END),
+                    spins.Wave(
+                        color=ft.Colors.BLUE, size=50, wave_type=spins.WaveType.END
+                    ),
                     "END",
                 ),
             ],
@@ -140,10 +146,10 @@ def main(page: ft.Page):
         section(
             "Wave · item_count",
             [
-                labeled(fsk.Wave(color=ft.Colors.BLUE, size=50, item_count=3), "3"),
-                labeled(fsk.Wave(color=ft.Colors.BLUE, size=50, item_count=5), "5"),
-                labeled(fsk.Wave(color=ft.Colors.BLUE, size=50, item_count=7), "7"),
-                labeled(fsk.Wave(color=ft.Colors.BLUE, size=50, item_count=10), "10"),
+                labeled(spins.Wave(color=ft.Colors.BLUE, size=50, item_count=3), "3"),
+                labeled(spins.Wave(color=ft.Colors.BLUE, size=50, item_count=5), "5"),
+                labeled(spins.Wave(color=ft.Colors.BLUE, size=50, item_count=7), "7"),
+                labeled(spins.Wave(color=ft.Colors.BLUE, size=50, item_count=10), "10"),
             ],
         ),
         ft.Divider(height=8),
@@ -151,10 +157,10 @@ def main(page: ft.Page):
         section(
             "Ring · line_width",
             [
-                labeled(fsk.Ring(color=ft.Colors.BLUE, size=50, line_width=2), "2"),
-                labeled(fsk.Ring(color=ft.Colors.BLUE, size=50, line_width=5), "5"),
-                labeled(fsk.Ring(color=ft.Colors.BLUE, size=50, line_width=8), "8"),
-                labeled(fsk.Ring(color=ft.Colors.BLUE, size=50, line_width=12), "12"),
+                labeled(spins.Ring(color=ft.Colors.BLUE, size=50, line_width=2), "2"),
+                labeled(spins.Ring(color=ft.Colors.BLUE, size=50, line_width=5), "5"),
+                labeled(spins.Ring(color=ft.Colors.BLUE, size=50, line_width=8), "8"),
+                labeled(spins.Ring(color=ft.Colors.BLUE, size=50, line_width=12), "12"),
             ],
         ),
         ft.Divider(height=8),
@@ -162,11 +168,17 @@ def main(page: ft.Page):
         section(
             "DualRing · line_width",
             [
-                labeled(fsk.DualRing(color=ft.Colors.BLUE, size=50, line_width=2), "2"),
-                labeled(fsk.DualRing(color=ft.Colors.BLUE, size=50, line_width=5), "5"),
-                labeled(fsk.DualRing(color=ft.Colors.BLUE, size=50, line_width=8), "8"),
                 labeled(
-                    fsk.DualRing(color=ft.Colors.BLUE, size=50, line_width=12), "12"
+                    spins.DualRing(color=ft.Colors.BLUE, size=50, line_width=2), "2"
+                ),
+                labeled(
+                    spins.DualRing(color=ft.Colors.BLUE, size=50, line_width=5), "5"
+                ),
+                labeled(
+                    spins.DualRing(color=ft.Colors.BLUE, size=50, line_width=8), "8"
+                ),
+                labeled(
+                    spins.DualRing(color=ft.Colors.BLUE, size=50, line_width=12), "12"
                 ),
             ],
         ),
@@ -175,11 +187,17 @@ def main(page: ft.Page):
         section(
             "Ripple · border_width",
             [
-                labeled(fsk.Ripple(color=ft.Colors.BLUE, size=50, border_width=2), "2"),
-                labeled(fsk.Ripple(color=ft.Colors.BLUE, size=50, border_width=4), "4"),
-                labeled(fsk.Ripple(color=ft.Colors.BLUE, size=50, border_width=8), "8"),
                 labeled(
-                    fsk.Ripple(color=ft.Colors.BLUE, size=50, border_width=14), "14"
+                    spins.Ripple(color=ft.Colors.BLUE, size=50, border_width=2), "2"
+                ),
+                labeled(
+                    spins.Ripple(color=ft.Colors.BLUE, size=50, border_width=4), "4"
+                ),
+                labeled(
+                    spins.Ripple(color=ft.Colors.BLUE, size=50, border_width=8), "8"
+                ),
+                labeled(
+                    spins.Ripple(color=ft.Colors.BLUE, size=50, border_width=14), "14"
                 ),
             ],
         ),
@@ -189,16 +207,20 @@ def main(page: ft.Page):
             "SpinningLines · line_width",
             [
                 labeled(
-                    fsk.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=1), "1"
+                    spins.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=1),
+                    "1",
                 ),
                 labeled(
-                    fsk.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=2), "2"
+                    spins.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=2),
+                    "2",
                 ),
                 labeled(
-                    fsk.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=4), "4"
+                    spins.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=4),
+                    "4",
                 ),
                 labeled(
-                    fsk.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=6), "6"
+                    spins.SpinningLines(color=ft.Colors.BLUE, size=50, line_width=6),
+                    "6",
                 ),
             ],
         ),
@@ -208,16 +230,16 @@ def main(page: ft.Page):
             "PianoWave · item_count",
             [
                 labeled(
-                    fsk.PianoWave(color=ft.Colors.BLUE, size=50, item_count=3), "3"
+                    spins.PianoWave(color=ft.Colors.BLUE, size=50, item_count=3), "3"
                 ),
                 labeled(
-                    fsk.PianoWave(color=ft.Colors.BLUE, size=50, item_count=5), "5"
+                    spins.PianoWave(color=ft.Colors.BLUE, size=50, item_count=5), "5"
                 ),
                 labeled(
-                    fsk.PianoWave(color=ft.Colors.BLUE, size=50, item_count=8), "8"
+                    spins.PianoWave(color=ft.Colors.BLUE, size=50, item_count=8), "8"
                 ),
                 labeled(
-                    fsk.PianoWave(color=ft.Colors.BLUE, size=50, item_count=12), "12"
+                    spins.PianoWave(color=ft.Colors.BLUE, size=50, item_count=12), "12"
                 ),
             ],
         ),
