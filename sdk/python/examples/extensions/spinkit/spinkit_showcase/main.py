@@ -38,7 +38,6 @@ SPINNERS = [
 
 def main(page: ft.Page):
     page.title = "SpinKit Showcase"
-    page.theme_mode = ft.ThemeMode.DARK
     page.scroll = ft.ScrollMode.AUTO
     page.padding = 20
 
@@ -64,13 +63,12 @@ def main(page: ft.Page):
                                 name,
                                 size=11,
                                 text_align=ft.TextAlign.CENTER,
-                                color=ft.Colors.WHITE70,
                             ),
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=8,
                     ),
-                    bgcolor=ft.Colors.with_opacity(0.08, ft.Colors.WHITE),
+                    bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
                     border_radius=12,
                     padding=12,
                 )
