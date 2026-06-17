@@ -2058,7 +2058,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         # android-extract-packages: path-hungry packages shipped extracted to disk
         # instead of inside the zip (serious_python Android native-mmap packaging).
         # A built-in default set covers commonly-broken packages; the user list
-        # (CLI / pyproject) is merged on top.
+        # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
+        # Gradle split during `flutter build`, so the env var is set on build_env
+        # (see _run_flutter_command), not on the package step.
+        self.android_extract_packages: list[str] = []
         if self.package_platform == "Android":
             user_extract_packages = (
                 self.options.android_extract_packages
@@ -2068,13 +2071,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.get_pyproject("tool.flet.extract_packages")
                 or []
             )
-            extract_packages = list(
+            self.android_extract_packages = list(
                 dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
             )
-            if extract_packages:
-                package_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
-                    extract_packages
-                )
 
         if self.get_bool_setting(self.options.compile_app, "compile.app", False):
             package_args.append("--compile-app")
@@ -2269,6 +2268,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.package_platform != "Emscripten":
             build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
+            )
+
+        # Path-hungry packages to ship extracted to disk: consumed by the
+        # serious_python_android Gradle split during `flutter build`.
+        if self.package_platform == "Android" and self.android_extract_packages:
+            build_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
+                self.android_extract_packages
             )
 
         if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:

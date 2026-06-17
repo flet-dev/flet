@@ -4,3 +4,5 @@ AACHE = "AACHE"
 ROUTEROS = "ROUTEROS"
 # OpenType variable font axis tag for width
 wdth = "wdth"
+# Python package name (Mozilla CA bundle)
+certifi = "certifi"
