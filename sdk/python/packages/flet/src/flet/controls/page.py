@@ -47,11 +47,7 @@ from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
-from flet.controls.services.browser_context_menu import BrowserContextMenu
-from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
-from flet.controls.services.shared_preferences import SharedPreferences
-from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
@@ -1310,6 +1306,7 @@ class Page(BasePage):
         """
         The BrowserContextMenu service for the current page.
         """
+        from flet.controls.services.browser_context_menu import BrowserContextMenu
 
         return BrowserContextMenu()
 
@@ -1324,6 +1321,7 @@ class Page(BasePage):
         """
         The SharedPreferences service for the current page.
         """
+        from flet.controls.services.shared_preferences import SharedPreferences
 
         return SharedPreferences()
 
@@ -1338,6 +1336,7 @@ class Page(BasePage):
         """
         The Clipboard service for the current page.
         """
+        from flet.controls.services.clipboard import Clipboard
 
         return Clipboard()
 
@@ -1352,6 +1351,7 @@ class Page(BasePage):
         """
         The StoragePaths service for the current page.
         """
+        from flet.controls.services.storage_paths import StoragePaths
 
         return StoragePaths()
 
