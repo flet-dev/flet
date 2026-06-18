@@ -464,6 +464,161 @@ Common pitfalls:
 
 You can find source code for this example [here](https://github.com/flet-dev/flet-spinkit).
 
+## Dedicated data channels
+
+Property updates and method calls between Python and Dart go over Flet's MsgPack-framed control protocol. That works well for widget state and small events but caps at ~1 GB/s with several allocations per frame. For widgets that need to move **bulk binary data** — image frames, audio buffers, file blobs, ML inference tensors — Flet provides **dedicated `DataChannel`s** that bypass MsgPack entirely and reach memory-bandwidth-class throughput on every supported platform.
+
+Examples of widgets that benefit:
+
+- A chart receiving a stream of bitmaps from Python (1080p RGBA at 60 fps ≈ 480 MB/s — far above what the control protocol can sustain)
+- A camera widget pushing frames Dart → Python for ML inference
+- A microphone widget streaming PCM samples to a Python DSP pipeline
+
+For sub-KB widget state, you don't need this — the regular property protocol is faster end-to-end at that size. Reach for `DataChannel` when payloads start at a few KB and especially when they stream at high rates.
+
+### How it works
+
+Allocation lives on the **Dart side**: the widget calls `FletBackend.of(context).openDataChannel()` in `initState`, then **fires a control event named `data_channel_open`** carrying `{channel_name, channel_id}`. The Python side declares an `on_data_channel_open` handler, retrieves the matching channel via `Control.get_data_channel(channel_id)`, and starts sending/receiving bytes.
+
+Transport is chosen per deployment mode automatically — dedicated `PythonBridge` per channel in embedded native (`flet build` for desktop/mobile), raw-byte frames muxed over `postMessage` with Transferable ArrayBuffer in Pyodide, muxed over the protocol socket in `flet run` dev mode, muxed over WebSocket with a Python server. **Widget code is identical across all modes.**
+
+### Python-side API
+
+```python
+from typing import Callable, Optional
+
+import flet as ft
+
+
+@ft.control("MyImageChart")
+class MyImageChart(ft.LayoutControl):
+    on_data_channel_open: Optional[ft.EventHandler[ft.DataChannelOpenEvent]] = None
+
+    def init(self) -> None:
+        # `init` is the @ft.control post-construct hook (runs before `did_mount`).
+        # Wire up the channel-capture handler here.
+        self._frames: Optional[ft.DataChannel] = None
+        if self.on_data_channel_open is None:
+            self.on_data_channel_open = self._capture_channel
+
+    def _capture_channel(self, e: ft.DataChannelOpenEvent) -> None:
+        # `e.channel_name` is the label the Dart side put in the event
+        # payload — dispatch on it when a widget opens multiple channels.
+        # Single-channel widgets can ignore it.
+        self._frames = self.get_data_channel(e.channel_id)
+        # Optional: subscribe to bytes flowing Dart → Python.
+        self._frames.on_bytes(self._on_frame_from_dart)
+
+    def push_frame(self, rgba_bytes: bytes) -> None:
+        """Python → Dart — fire-and-forget byte send."""
+        if self._frames is not None:
+            self._frames.send(rgba_bytes)
+
+    def _on_frame_from_dart(self, payload: bytes) -> None:
+        # Called from the transport's delivery thread (under the GIL in
+        # embedded native mode). Push to a `queue.Queue` and let a worker
+        # drain — don't do heavy CPU work here, it'll starve the transport.
+        ...
+```
+
+`ft.DataChannel` is an abstract class — instances come back from `Control.get_data_channel(channel_id)`. Its surface:
+
+- `send(payload: bytes)` — Python → Dart, fire-and-forget
+- `on_bytes(callback: Callable[[bytes], None] | None)` — register a handler for bytes pushed from Dart; pass `None` to clear
+- `close()` — release the channel (idempotent; the framework auto-closes on control unmount, you rarely need to call it explicitly)
+
+The `ft.DataChannelOpenEvent` fields are `channel_name: str` and `channel_id: int`. The field is `channel_name`, not `name`, because `name` is reserved on the base `Event` class for the event's own name (`"data_channel_open"`).
+
+### Dart-side API
+
+```dart
+import 'package:flet/flet.dart';
+
+class MyImageChartState extends State<MyImageChartWidget> {
+  late final DataChannel _frames;
+  StreamSubscription<Uint8List>? _sub;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_sub != null) return;  // initialise lazily, once
+    _frames = FletBackend.of(context).openDataChannel();
+    _sub = _frames.messages.listen(_onFrameFromPython);
+    // Tell Python about the channel via a regular control event.
+    widget.control.triggerEvent("data_channel_open", {
+      "channel_name": "frames",
+      "channel_id": _frames.id,
+    });
+  }
+
+  void _onFrameFromPython(Uint8List bytes) {
+    // hand to a Texture, dart:ui.Image.fromPixels, etc.
+  }
+
+  void _pushFrameToPython(Uint8List bytes) {
+    _frames.send(bytes);
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    _frames.close();
+    super.dispose();
+  }
+}
+```
+
+`DataChannel` Dart-side surface:
+
+- `int get id` — the channel identifier that goes into the `data_channel_open` event payload
+- `Stream<Uint8List> get messages` — bytes pushed from Python
+- `bool send(Uint8List bytes)` — Dart → Python, fire-and-forget
+- `void close()` — release the channel (idempotent)
+
+**Allocate the channel in `didChangeDependencies`, not `initState`** — `FletBackend.of(context)` needs an active `BuildContext` and that's the first lifecycle hook where it's safely available.
+
+Neither side imports `serious_python` or `dart_bridge`. The DataChannel API surface lives entirely in `package:flet` / `flet`, so your extension's dependencies stay the same.
+
+### Multiple channels per widget
+
+A control can open as many channels as it needs — each `openDataChannel()` call mints a unique id. Disambiguate them by `channel_name` in the event:
+
+```dart
+// Dart — open two channels, label each
+_frames = FletBackend.of(context).openDataChannel();
+_audio  = FletBackend.of(context).openDataChannel();
+widget.control.triggerEvent("data_channel_open", {
+  "channel_name": "frames",
+  "channel_id": _frames.id,
+});
+widget.control.triggerEvent("data_channel_open", {
+  "channel_name": "audio",
+  "channel_id": _audio.id,
+});
+```
+
+```python
+# Python — dispatch on channel_name
+def _on_data_channel_open(self, e: ft.DataChannelOpenEvent) -> None:
+    match e.channel_name:
+        case "frames":
+            self._frames = self.get_data_channel(e.channel_id)
+        case "audio":
+            self._audio = self.get_data_channel(e.channel_id)
+```
+
+### Threading + backpressure
+
+The `on_bytes` handler runs **synchronously under the GIL** on whatever OS thread the transport delivered from. For anything CPU-heavy (PNG decode, ML inference) push the payload onto a `queue.Queue` or `asyncio.Queue` and let a worker drain — blocking the delivery thread will starve the transport.
+
+The receiving side's queue is **unbounded by default**. If a producer outpaces the consumer (camera frames into a slow decoder, matplotlib rotation into Flutter paint), memory grows. For media-streaming widgets, implement backpressure or a drop-old policy on the producer side. A reference example is [`MatplotlibChartCanvas`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flet_charts/matplotlib_chart_canvas.py) — it uses a 1-byte ack frame from Dart so the producer waits per-frame, mirroring matplotlib WebAgg's `waiting` flag pattern.
+
+### See also
+
+- **First-party reference widget**: `MatplotlibChartCanvas` — a complete migration from `_invoke_method` PNG dispatch to a 1-byte-opcode data channel, including backpressure ack and the GPU / CPU rendering strategies. [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flet_charts/matplotlib_chart_canvas.py) · [Dart](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flutter/flet_charts/lib/src/matplotlib_chart_canvas.dart)
+- **Full design / performance notes** (wire format, cross-mode operation, concurrency model, empirical numbers): [`dedicated-data-channels.md`](https://github.com/flet-dev/serious-python/blob/main/docs/dedicated-data-channels.md) in `flet-dev/serious-python`.
+- **Wire-format protocol upgrade** for anyone implementing a custom Flet backend or sidecar: [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0-data-channel-protocol-upgrade).
+
 ## Examples
 
 Flet has controls that are implemented as [built-in extensions](built-in-extensions.md) and could serve as a starting point for your own controls.
