@@ -3,6 +3,7 @@
 ### New features
 
 * Multi-version bundled CPython support in `flet build` and `flet publish`. Pick the runtime your app ships with via the new `--python-version` flag (3.12 / 3.13 / 3.14), or let it be derived from `[project].requires-python` in your `pyproject.toml`; defaults to the latest supported stable (currently 3.14). The matching CPython-standalone build, Pyodide release (0.27.7 / 0.29.4 / 314.0.0a2), and Emscripten wheel platform tag are all resolved from a central registry. Adding a future pre-release CPython line (e.g. 3.15 beta) is a one-row append with `prerelease=True` — opt-in only via an explicit `--python-version 3.15` or `requires-python = "==3.15.*"`, never the auto-resolved default. Requires `serious_python` >= 2.0.0, now pinned in the `flet build` template. See the new [Choosing a Python version](https://flet.dev/docs/publish#choosing-a-python-version) docs section ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Add `flet clean` command that deletes the `build` directory of a Flet app — the Flutter bootstrap project, cached artifacts, and generated output — in a single step ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
 
 ### Improvements
 
@@ -16,9 +17,14 @@
 * Android builds now include only the ABIs the bundled Python supports: for Python 3.13+, `armeabi-v7a` is no longer supported nor packaged by default. An explicit `--arch armeabi-v7a` fails with a clear error unless combined with `--python-version 3.12`, which is the only Python version supporting it ([#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
 * The `flet.version.pyodide_version` module attribute and the `PYODIDE_VERSION` constant are removed. Reach for `flet_cli.utils.python_versions.SUPPORTED_PYTHON_VERSIONS` if you need the per-version Pyodide mapping programmatically ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 
+### Deprecations
+
+* Deprecate the `--clear-cache` flag of `flet build` and `flet debug`; use the new `flet clean` command instead. The flag remains functional but now emits a deprecation warning, and is scheduled for removal in `0.89.0` ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
+
 ### Bug fixes
 
 * Fix `flet build` failing on Windows when a dependency is pulled in via `[tool.flet.<platform>].dev_packages` (or any local-path install): the rewritten `<pkg> @ file://<path>` URL now uses `Path.as_uri()`, producing the correct `file:///D:/...` three-slash form instead of `file://D:\...`, which pip on Windows parsed as a UNC path and aborted with `OSError: [Errno 2] No such file or directory: '\\\\D:\\a\\...'` ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Specify `handler` signatures in `subscribe` and `subscribe_topic` methods of `PubSubClient` for better type checking ([#6549](https://github.com/flet-dev/flet/pull/6564)) by @Iaw4tch
 * Fix `flet build apk` / `flet build aab` with `--arch` packaging native libraries for *all* Android ABIs instead of only the requested ones. The requested architectures are now forwarded to Flutter as `--target-platform` (so `--split-per-abi` builds only the requested splits), unrequested ABI directories are excluded from the artifact, Android `--arch` values are validated, multiple `--arch` values now correctly reach `serious_python`, and stale artifacts from previous builds are no longer copied into the output directory ([#6567](https://github.com/flet-dev/flet/issues/6567), [#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
 * Fix repeated `--arch`, `--source-packages` and `--permissions` flags in `flet build` keeping only the values of the last occurrence ([#6578](https://github.com/flet-dev/flet/pull/6578)) by @ndonkoHenri.
 
