@@ -62,7 +62,7 @@ class ExpansionPanelListControl extends StatelessWidget {
       child: panelList,
     );
 
-    if (control.getBool("on_scroll", false)!) {
+    if (control.hasEventHandler("scroll")) {
       result = ScrollNotificationControl(control: control, child: result);
     }
 

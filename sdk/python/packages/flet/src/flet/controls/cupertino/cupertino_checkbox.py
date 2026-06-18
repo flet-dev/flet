@@ -98,9 +98,9 @@ class CupertinoCheckbox(LayoutControl):
     states.
 
     :attr:`active_color` is used as fallback color when
-    the checkbox is in the :attr:`~flet.ControlState.SELECTED` state,
+    the checkbox is in the :attr:`flet.ControlState.SELECTED` state,
     :attr:`flet.CupertinoColors.WHITE` at `50%` opacity is used as fallback color
-    when this checkbox is in the :attr:`~flet.ControlState.DISABLED` state, and
+    when this checkbox is in the :attr:`flet.ControlState.DISABLED` state, and
     :attr:`flet.CupertinoColors.WHITE` otherwise.
 
     Note:

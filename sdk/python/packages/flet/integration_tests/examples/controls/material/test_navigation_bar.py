@@ -2,7 +2,7 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.navigation_bar.basic.main import main as basic
+from examples.controls.material.navigation_bar.navigation_bar.main import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

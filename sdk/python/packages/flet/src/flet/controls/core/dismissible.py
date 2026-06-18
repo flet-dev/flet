@@ -25,8 +25,8 @@ class DismissibleDismissEvent(Event["Dismissible"]):
     """
     Event payload for dismissal confirmation and completion callbacks.
 
-    Used by :attr:`~flet.Dismissible.on_confirm_dismiss` and
-    :attr:`~flet.Dismissible.on_dismiss`.
+    Used by :attr:`flet.Dismissible.on_confirm_dismiss` and
+    :attr:`flet.Dismissible.on_dismiss`.
     """
 
     direction: DismissDirection
@@ -173,7 +173,7 @@ class Dismissible(LayoutControl, AdaptiveControl):
     This dismissible cannot be dragged again until this pending dismissal is resolved.
 
     To resolve the pending dismissal, call the
-    :meth:`~flet.Dismissible.confirm_dismiss` method
+    :meth:`flet.Dismissible.confirm_dismiss` method
     passing it a boolean representing the decision. If `True`, then the control will be
     dismissed, otherwise it will be moved back to its original location.
     """

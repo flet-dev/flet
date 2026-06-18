@@ -4,10 +4,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.core.responsive_row.basic.main import main as basic
 from examples.controls.core.responsive_row.custom_breakpoint.main import (
     main as custom_breakpoint,
 )
+from examples.controls.core.responsive_row.responsive_row.main import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

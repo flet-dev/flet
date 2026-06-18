@@ -59,6 +59,9 @@ class ObservableSubscription(ComponentOwned):
     """
 
     observable: InitVar[Observable]
+    """
+    Observable object to subscribe to.
+    """
 
     def __post_init__(self, owner: Component, observable: Observable) -> None:
         super().__post_init__(owner)

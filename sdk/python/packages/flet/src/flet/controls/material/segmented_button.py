@@ -171,7 +171,7 @@ class SegmentedButton(LayoutControl):
     """
     Called when the selection changes.
 
-    The :attr:`~flet.Event.data` property of the event handler argument
+    The :attr:`flet.Event.data` property of the event handler argument
     contains a list of strings identifying the selected segments.
     """
 
