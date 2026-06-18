@@ -14,7 +14,7 @@ class Oval(Shape):
     Draws an axis-aligned oval that fills the given axis-aligned rectangle with the \
     given :attr:`paint`.
 
-    The :attr:`~flet.Paint.style` property of :attr:`paint` indicates
+    The :attr:`flet.Paint.style` property of :attr:`paint` indicates
     whether this oval is filled, stroked, or both.
     """
 

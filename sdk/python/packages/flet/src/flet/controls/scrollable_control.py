@@ -56,8 +56,8 @@ class ScrollType(Enum):
     """
     Viewport was overscrolled.
 
-    See :attr:`~flet.OnScrollEvent.overscroll` and
-    :attr:`~flet.OnScrollEvent.velocity` are available.
+    See :attr:`flet.OnScrollEvent.overscroll` and
+    :attr:`flet.OnScrollEvent.velocity` are available.
     """
 
 

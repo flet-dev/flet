@@ -68,10 +68,12 @@ docs:
     Release notes: updates/release-notes.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
+      v0.86.0:
+        flet build --clear-cache flag deprecated: updates/breaking-changes/v0-86-0-deprecated-clear-cache-flag.md
       v0.85.0:
-        Deprecated spacing and border helper functions removed: updates/breaking-changes/removed-spacing-border-helpers.md
-        DragTargetEvent coordinate fields deprecated: updates/breaking-changes/deprecated-drag-target-event-coordinates.md
-        Video control APIs deprecated: updates/breaking-changes/deprecated-video-apis.md
+        Deprecated spacing and border helper functions removed: updates/breaking-changes/v0-85-0-removed-spacing-border-helpers.md
+        DragTargetEvent coordinate fields deprecated: updates/breaking-changes/v0-85-0-deprecated-drag-target-event-coordinates.md
+        Video control APIs deprecated: updates/breaking-changes/v0-85-0-deprecated-video-apis.md
     Compatibility policy: updates/compatibility-policy.md
   Reference:
     _index: reference/index.md
@@ -182,7 +184,7 @@ docs:
       Dropdown:
         _index: controls/dropdown/index.md
         DropdownOption: controls/dropdownoption.md
-      #DropdownM2: controls/dropdownm2.md
+      DropdownM2: controls/dropdownm2.md
       ExpansionPanel: controls/expansionpanel.md
       ExpansionPanelList: controls/expansionpanellist.md
       ExpansionTile: controls/expansiontile.md
@@ -831,6 +833,8 @@ docs:
       - types/onmounted.md
       - types/onunmounted.md
       - types/onupdated.md
+      - types/run.md
+      - types/run_async.md
       - types/usecallback.md
       - types/usecontext.md
       - types/useeffect.md
@@ -845,6 +849,7 @@ docs:
     CLI:
       _index: cli/index.md
       flet build: cli/flet-build.md
+      flet clean: cli/flet-clean.md
       flet create: cli/flet-create.md
       flet debug: cli/flet-debug.md
       flet devices: cli/flet-devices.md

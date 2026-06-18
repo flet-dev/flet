@@ -28,8 +28,21 @@ class NavigationBarLabelBehavior(Enum):
     """
 
     ALWAYS_SHOW = "alwaysShow"
+    """
+    Always shows the label below every destination, selected and unselected.
+    """
     ALWAYS_HIDE = "alwaysHide"
+    """
+    Hides every destination label, regardless of which destination is selected.
+    """
     ONLY_SHOW_SELECTED = "onlyShowSelected"
+    """
+    Shows the label only for the selected destination.
+
+    Unselected destinations hide their labels and keep the icon centered. When a
+    destination becomes selected, its label fades in and the label/icon pair shifts so
+    both remain centered together.
+    """
 
 
 @control("NavigationBarDestination")
@@ -171,7 +184,10 @@ class NavigationBar(LayoutControl, AdaptiveControl):
 
     border: Optional[Border] = None
     """
-    TBD
+    The border of the adaptive navigation bar.
+
+    This is applied only when :attr:`adaptive` is `True` and the control is rendered
+    as a Cupertino tab bar.
     """
 
     animation_duration: Optional[DurationValue] = None

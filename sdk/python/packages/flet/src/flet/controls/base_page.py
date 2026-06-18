@@ -260,7 +260,7 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the :attr:`~flet.Window.width` property of :attr:`flet.Page.window` \
+            use the :attr:`flet.Window.width` property of :attr:`flet.Page.window` \
             instead.
     """
 
@@ -272,7 +272,7 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the :attr:`~flet.Window.height` property of
+            use the :attr:`flet.Window.height` property of
             :attr:`flet.Page.window` instead.
     """
 
@@ -405,7 +405,7 @@ class BasePage(AdaptiveControl):
 
         This method adds the specified `dialog` to the active dialog stack
         and renders it on the page.
-        The :attr:`~flet.DialogControl.on_dismiss` handler of the dialog
+        The :attr:`flet.DialogControl.on_dismiss` handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 

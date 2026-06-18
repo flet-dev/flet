@@ -603,12 +603,17 @@ class Page(BasePage):
 
     on_multi_view_add: Optional[EventHandler[MultiViewAddEvent]] = None
     """
-    TBD
+    Called when a new multi-view is created.
+
+    The event payload includes the new view's identifier and any initial data passed
+    when opening the view.
     """
 
     on_multi_view_remove: Optional[EventHandler[MultiViewRemoveEvent]] = None
     """
-    TBD
+    Called when a multi-view is removed.
+
+    The event payload includes the identifier of the removed view.
     """
     _services: ServiceRegistry = field(default_factory=ServiceRegistry)
 

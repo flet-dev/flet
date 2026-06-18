@@ -23,21 +23,35 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
-    // No native-library packaging config is needed: serious_python loads Python
-    // extension modules directly from the APK (memory-mapped) and ships pure
-    // Python in stored asset zips. Modern packaging (the default at minSdk 23+)
-    // is all that's required.
-
-// flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
+    // serious_python loads Python extension modules memory-mapped directly from the
+    // APK (no extraction) and ships pure Python in stored asset zips, so
+    // `useLegacyPackaging` / `keepDebugSymbols` from earlier Flet templates are no
+    // longer needed at minSdk 23+. The `pickFirsts` and `excludes` blocks below
+    // address two unrelated multi-source jniLibs issues that AGP can't resolve on
+    // its own.
     packaging {
         jniLibs {
+            // serious_python_android ships libc++_shared.so as part of the Python runtime payload
+            // (the cross-compiled wheels on pypi.flet.dev depend on it at link time). Many third-party
+            // Flutter plugins (ultralytics_yolo, sentry_flutter, several ML / CV / audio plugins) also
+            // bundle their own copy. When an app pulls in both, Gradle's mergeNativeLibs task aborts
+            // with "N files found with path 'lib/<abi>/libc++_shared.so'" because AGP refuses to silently
+            // choose between duplicate native libraries (the right default for most .so files).
+            //
+            // libc++_shared.so is a documented exception: the NDK has held strict ABI compatibility on it
+            // since r17, so whichever copy wins input ordering, every consumer that linked against libc++_shared
+            // will work against it. pickFirsts is the narrowly-scoped escape hatch for exactly this case -- it
+            // only opens a hole for the matching glob; any other future duplicate-native-lib conflict still fails loudly.
+            pickFirsts += listOf("**/libc++_shared.so")
+
+// flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
             // Strip native libs of ABIs not requested via `target_arch`.
             // `ndk.abiFilters` alone can't do this: the Flutter Gradle plugin adds all default
             // ABIs as buildType-level filters and AGP merges the two levels as a union.
             excludes += listOf({% for abi in cookiecutter.options.android_excluded_abis %}"lib/{{ abi }}/**"{% if not loop.last %}, {% endif %}{% endfor %})
+// flet: end of excluded_abis {% endif %}
         }
     }
-// flet: end of excluded_abis {% endif %}
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

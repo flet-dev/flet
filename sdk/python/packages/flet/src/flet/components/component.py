@@ -68,8 +68,20 @@ class Component(BaseControl):
     """
 
     fn: Callable[..., Any] = field(metadata={"skip": True})
+    """
+    Component function called to produce the rendered body.
+    """
+
     args: tuple[Any, ...] = field(default_factory=tuple, metadata={"skip": True})
+    """
+    Positional arguments passed to :attr:`fn`.
+    """
+
     kwargs: dict[str, Any] = field(default_factory=dict, metadata={"skip": True})
+    """
+    Keyword arguments passed to :attr:`fn`.
+    """
+
     _parent_component: weakref.ref[Component] | None = field(
         default=None, metadata={"skip": True}
     )
@@ -78,6 +90,10 @@ class Component(BaseControl):
     )
     _contexts: dict[object, Any] = field(default_factory=dict, metadata={"skip": True})
     memoized: bool = field(default=False, metadata={"skip": True})
+    """
+    Whether this component can skip rendering when arguments are unchanged.
+    """
+
     _stale: bool = field(default=False, metadata={"skip": True})
 
     visible: bool = True

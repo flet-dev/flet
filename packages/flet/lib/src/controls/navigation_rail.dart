@@ -94,7 +94,12 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           destinations:
               widget.control.children("destinations").map((destinationControl) {
             destinationControl.notifyParent = true;
-            var icon = destinationControl.buildIconOrWidget("icon")!;
+            var icon = destinationControl.buildIconOrWidget("icon",
+                required: true,
+                errorWidget: const ErrorControl(
+                    "Error displaying NavigationRailDestination.icon",
+                    description:
+                        "Must be a valid IconData or visible Control"))!;
             Widget? selectedIcon =
                 destinationControl.buildIconOrWidget("selected_icon");
             return NavigationRailDestination(
