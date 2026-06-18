@@ -23,6 +23,10 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.utils.android import (
+    ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    excluded_android_abis,
+)
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
@@ -260,10 +264,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--arch",
             dest="target_arch",
+            action="extend",
             nargs="+",
             default=[],
             help="Build for specific CPU architectures "
-            "(used in macOS and Android builds only). Example: `--arch arm64 x64`",
+            "(used in macOS and Android builds only). "
+            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x64. "
+            "Example: `--arch arm64-v8a`",
         )
         parser.add_argument(
             "--exclude",
@@ -515,6 +522,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--source-packages",
             dest="source_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of Python packages to install from source distributions",
@@ -587,6 +595,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--permissions",
             dest="permissions",
             type=str.lower,
+            action="extend",
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
@@ -1144,6 +1153,40 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
             or self.get_pyproject("tool.flet.target_arch")
         )
+        target_arch = (
+            target_arch
+            if isinstance(target_arch, list)
+            else [target_arch]
+            if isinstance(target_arch, str)
+            else []
+        )
+        if self.package_platform == "Android":
+            invalid_archs = [
+                arch
+                for arch in target_arch
+                if arch not in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM
+            ]
+            if invalid_archs:
+                self.cleanup(
+                    1,
+                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}.\n"
+                    f"Supported: "
+                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            python_abis = list(self.python_release.android_abis)
+            unsupported_archs = [a for a in target_arch if a not in python_abis]
+            if unsupported_archs:
+                self.cleanup(
+                    1,
+                    f"Architecture(s) not supported by Python "
+                    f"{self.python_release.short}: {', '.join(unsupported_archs)}.\n"
+                    f"Supported: {', '.join(python_abis)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            if not target_arch:
+                # Build only for the ABIs the bundled Python supports.
+                target_arch = python_abis
 
         ios_export_method = (
             self.options.ios_export_method
@@ -1260,11 +1303,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
                 "python_version": self.python_release.short,
-                "target_arch": (
-                    target_arch
-                    if isinstance(target_arch, list)
-                    else [target_arch]
-                    if isinstance(target_arch, str)
+                "target_arch": target_arch,
+                "android_excluded_abis": (
+                    excluded_android_abis(target_arch)
+                    if self.package_platform == "Android"
                     else []
                 ),
                 "info_plist": info_plist,
@@ -1947,8 +1989,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         ]
 
         if self.template_data["options"]["target_arch"]:
+            # serious_python's --arch is a Dart multi-option: values must be
+            # comma-separated or the flag repeated. Space-separated values
+            # after the first are silently treated as positional arguments.
             package_args.extend(
-                ["--arch"] + self.template_data["options"]["target_arch"]
+                ["--arch", ",".join(self.template_data["options"]["target_arch"])]
             )
 
         # Only the short version is passed; serious_python derives the full
@@ -2354,6 +2399,32 @@ class BaseBuildCommand(BaseFlutterCommand):
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
+    def resolve_output_path(self, build_output: str) -> str:
+        """
+        Resolve a platform `outputs` glob to an absolute path inside the
+        Flutter project, substituting the `{arch}` and name placeholders.
+
+        Args:
+            build_output: An entry of `self.platforms[...]["outputs"]`.
+        """
+
+        assert self.flutter_dir
+        assert self.template_data
+
+        arch = platform.machine().lower()
+        if arch in {"x86_64", "amd64"}:
+            arch = "x64"
+        elif arch in {"arm64", "aarch64"}:
+            arch = "arm64"
+
+        return (
+            str(self.flutter_dir.joinpath(build_output))
+            .replace("{arch}", arch)
+            .replace("{artifact_name}", self.template_data["artifact_name"])
+            .replace("{project_name}", self.template_data["project_name"])
+            .replace("{product_name}", self.template_data["product_name"])
+        )
+
     def copy_build_output(self):
         """
         Copy generated platform artifacts into the requested output directory.
@@ -2369,11 +2440,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.update_status(
             f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
         )
-        arch = platform.machine().lower()
-        if arch in {"x86_64", "amd64"}:
-            arch = "x64"
-        elif arch in {"arm64", "aarch64"}:
-            arch = "arm64"
 
         def make_ignore_fn(out_dir, out_glob):
             """
@@ -2392,13 +2458,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             return ignore
 
         for build_output in self.platforms[self.target_platform]["outputs"]:
-            build_output_dir = (
-                str(self.flutter_dir.joinpath(build_output))
-                .replace("{arch}", arch)
-                .replace("{artifact_name}", self.template_data["artifact_name"])
-                .replace("{project_name}", self.template_data["project_name"])
-                .replace("{product_name}", self.template_data["product_name"])
-            )
+            build_output_dir = self.resolve_output_path(build_output)
 
             if self.verbose > 0:
                 console.log(

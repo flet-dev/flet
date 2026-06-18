@@ -28,6 +28,17 @@ android {
     // Python in stored asset zips. Modern packaging (the default at minSdk 23+)
     // is all that's required.
 
+// flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
+    packaging {
+        jniLibs {
+            // Strip native libs of ABIs not requested via `target_arch`.
+            // `ndk.abiFilters` alone can't do this: the Flutter Gradle plugin adds all default
+            // ABIs as buildType-level filters and AGP merges the two levels as a union.
+            excludes += listOf({% for abi in cookiecutter.options.android_excluded_abis %}"lib/{{ abi }}/**"{% if not loop.last %}, {% endif %}{% endfor %})
+        }
+    }
+// flet: end of excluded_abis {% endif %}
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
