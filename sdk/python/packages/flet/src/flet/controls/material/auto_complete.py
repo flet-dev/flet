@@ -57,8 +57,8 @@ class AutoComplete(LayoutControl):
 
     Note:
         - A valid :class:`~flet.AutoCompleteSuggestion` must have at least a
-            :attr:`~flet.AutoCompleteSuggestion.key` or
-            :attr:`~flet.AutoCompleteSuggestion.value` specified, else it will be
+            :attr:`flet.AutoCompleteSuggestion.key` or
+            :attr:`flet.AutoCompleteSuggestion.value` specified, else it will be
             ignored. If only `key` is provided, `value` will be set to `key` as
             fallback and vice versa.
         - The internal filtration process of the suggestions (based on their `key`s)

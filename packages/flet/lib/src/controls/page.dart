@@ -285,8 +285,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             final pixelRatio = parseDouble(
                 args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
             final image = await boundary.toImage(pixelRatio: pixelRatio);
-            final data =
-                await image.toByteData(format: ui.ImageByteFormat.png);
+            final data = await image.toByteData(format: ui.ImageByteFormat.png);
             image.dispose();
             if (data == null) return frames;
             frames.add(data.buffer.asUint8List());
@@ -387,7 +386,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     final topView = views.last;
     final canPop = topView.getBool("can_pop", true) ?? true;
-    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    final requiresConfirm = topView.hasEventHandler("confirm_pop");
     if (!canPop || requiresConfirm) {
       return null;
     }
@@ -436,12 +435,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _attachKeyboardListenerIfNeeded() {
-    var onKeyboardEvent = widget.control.getBool("on_keyboard_event", false);
+    var onKeyboardEvent = widget.control.hasEventHandler("keyboard_event");
     if (onKeyboardEvent != _prevOnKeyboardEvent) {
-      if (onKeyboardEvent == true && !_keyboardHandlerSubscribed) {
+      if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.addHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = true;
-      } else if (onKeyboardEvent == false && _keyboardHandlerSubscribed) {
+      } else if (!onKeyboardEvent && _keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.removeHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = false;
       }

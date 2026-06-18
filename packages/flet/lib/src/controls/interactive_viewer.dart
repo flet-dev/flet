@@ -139,7 +139,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           .getDouble("interaction_end_friction_coefficient", 0.0000135)!,
       scaleFactor: widget.control.getDouble("scale_factor", 200)!,
       clipBehavior:
-          parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!,
+          widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
       alignment: widget.control.get("alignment"),
       boundaryMargin:
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,

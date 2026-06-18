@@ -122,7 +122,13 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     build_controls_on_demand: bool = True
     """
-    TBD
+    Whether grid children should be built lazily as they become visible.
+
+    When `True`, the grid uses a builder-based implementation and creates child
+    controls on demand while scrolling. This is the recommended setting for large
+    collections.
+
+    When `False`, all child controls are built eagerly when the grid is built.
     """
 
     def __contains__(self, item):

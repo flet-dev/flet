@@ -239,7 +239,7 @@ class Container(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists the container area.
 
-    The :attr:`~flet.Event.data` property of the event handler argument is a boolean:
+    The :attr:`flet.Event.data` property of the event handler argument is a boolean:
     `True` when the cursor enters and `False` when it exits this container.
     """
 

@@ -2,7 +2,6 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.outlined_button.basic.main import main as basic
 from examples.controls.material.outlined_button.custom_content.main import (
     main as custom_content,
 )
@@ -10,6 +9,9 @@ from examples.controls.material.outlined_button.handling_clicks.main import (
     main as handling_clicks,
 )
 from examples.controls.material.outlined_button.icons.main import main as icons
+from examples.controls.material.outlined_button.outlined_button.main import (
+    main as basic,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

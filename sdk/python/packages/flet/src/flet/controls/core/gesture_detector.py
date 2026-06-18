@@ -75,7 +75,11 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     exclude_from_semantics: bool = False
     """
-    TBD
+    Whether the gestures of this detector should be excluded from the semantics tree.
+
+    Set this to `True` when the wrapped content already exposes the appropriate
+    semantic actions and you do not want this detector to add duplicate accessibility
+    announcements.
     """
 
     on_force_press_start: Optional[EventHandler[ForcePressEvent["GestureDetector"]]] = (
@@ -109,12 +113,17 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     trackpad_scroll_causes_scale: bool = False
     """
-    TBD
+    Whether trackpad scroll gestures should be interpreted as scale gestures.
+
+    When enabled, compatible trackpad pinch/scroll input can trigger
+    :attr:`on_scale_start`, :attr:`on_scale_update`, and :attr:`on_scale_end`.
     """
 
     allowed_devices: Optional[list[PointerDeviceType]] = None
     """
-    TBD
+    Restricts gesture recognition to the specified pointer device types.
+
+    If `None`, gestures from any supported input device can be recognized.
     """
 
     on_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -490,12 +499,13 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_scale_update: Optional[EventHandler[ScaleUpdateEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when the focal point, scale factor, or rotation of an active scale gesture
+    changes.
     """
 
     on_scale_end: Optional[EventHandler[ScaleEndEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when an active scale gesture ends.
     """
 
     on_hover: Optional[EventHandler[HoverEvent["GestureDetector"]]] = None
@@ -515,5 +525,6 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_scroll: Optional[EventHandler[ScrollEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when a pointer scroll event is received, such as a mouse wheel or trackpad
+    scroll.
     """

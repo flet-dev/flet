@@ -1,7 +1,7 @@
 import pytest
 
 import examples.controls.material.button.animate_on_hover.main as animate_on_hover
-import examples.controls.material.button.basic.main as basic
+import examples.controls.material.button.button.main as basic
 import examples.controls.material.button.button_shapes.main as button_shapes
 import examples.controls.material.button.custom_content.main as custom_content
 import examples.controls.material.button.handling_clicks.main as handling_clicks

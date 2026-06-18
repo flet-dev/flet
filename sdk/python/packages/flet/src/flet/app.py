@@ -41,7 +41,12 @@ Used for both `main` and `before_main` handlers.
 """
 
 
-@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
+@deprecated(
+    "Use run() instead.",
+    docs_reason="Use [`run()`][flet.run] instead.",
+    version="0.80.0",
+    show_parentheses=True,
+)
 def app(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:
@@ -49,7 +54,12 @@ def app(*args, **kwargs):
     return run(*new_args, **kwargs)
 
 
-@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
+@deprecated(
+    "Use run_async() instead.",
+    docs_reason="Use [`run_async()`][flet.run_async] instead.",
+    version="0.80.0",
+    show_parentheses=True,
+)
 def app_async(*args, **kwargs):
     new_args = list(args)
     if "target" in kwargs:
@@ -94,7 +104,7 @@ def run(
         target: Deprecated alias for `main`.
 
     Returns:
-        When `export_asgi_app=True`, returns a FastAPI ASGI app.
+        A FastAPI ASGI app when `export_asgi_app=True`.
             Otherwise, runs the app and returns `None`.
     """
     if is_pyodide():

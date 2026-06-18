@@ -135,7 +135,7 @@ class FilePickerFile:
     """
     File contents.
 
-    Returned only when :meth:`~flet.FilePicker.pick_files` is called with
+    Returned only when :meth:`flet.FilePicker.pick_files` is called with
     `with_data=True`. Otherwise this value is `None`.
     """
 
@@ -185,8 +185,8 @@ class FilePicker(Service):
     Called when a file is uploaded via :meth:`upload` method.
 
     This callback is invoked at least twice for each uploaded file: once with `0.0`
-    :attr:`~flet.FilePickerUploadEvent.progress` before the upload starts, and once with
-    `1.0` :attr:`~flet.FilePickerUploadEvent.progress` when the upload completes.
+    :attr:`flet.FilePickerUploadEvent.progress` before the upload starts, and once with
+    `1.0` :attr:`flet.FilePickerUploadEvent.progress` when the upload completes.
 
     For files larger than 1 MB, additional progress events are emitted
     at every 10% increment (for example, `0.1`, `0.2`, ...).

@@ -24,6 +24,7 @@
 ### Bug fixes
 
 * Fix `flet build` failing on Windows when a dependency is pulled in via `[tool.flet.<platform>].dev_packages` (or any local-path install): the rewritten `<pkg> @ file://<path>` URL now uses `Path.as_uri()`, producing the correct `file:///D:/...` three-slash form instead of `file://D:\...`, which pip on Windows parsed as a UNC path and aborted with `OSError: [Errno 2] No such file or directory: '\\\\D:\\a\\...'` ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Fix `flet build apk` failing at `mergeDebugNativeLibs` with `N files found with path 'lib/<abi>/libc++_shared.so'` when an app combines `serious_python_android` with another Flutter plugin that also bundles the NDK C++ runtime ([#6570](https://github.com/flet-dev/flet/issues/6570), [#6571](https://github.com/flet-dev/flet/pull/6571)) by @ndonkoHenri.
 * Specify `handler` signatures in `subscribe` and `subscribe_topic` methods of `PubSubClient` for better type checking ([#6549](https://github.com/flet-dev/flet/pull/6564)) by @Iaw4tch
 * Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771), [#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 

@@ -125,7 +125,7 @@ class CircleAvatar(LayoutControl):
     Called when an error occurs while loading the :attr:`background_image_src` or \
     :attr:`foreground_image_src`.
 
-    The :attr:`~flet.Event.data` property of the event handler argument is
+    The :attr:`flet.Event.data` property of the event handler argument is
     a string whose value is either `"background"` or `"foreground"`
     indicating the error's origin.
     """

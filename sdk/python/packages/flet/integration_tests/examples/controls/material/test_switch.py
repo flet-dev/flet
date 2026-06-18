@@ -1,7 +1,7 @@
 import pytest
 
-import examples.controls.material.switch.basic.main as basic
 import examples.controls.material.switch.handling_events.main as handling_events
+import examples.controls.material.switch.switch.main as basic
 import flet as ft
 import flet.testing as ftt
 

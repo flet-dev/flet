@@ -1,6 +1,6 @@
 import pytest
 
-import examples.controls.material.tabs.basic.main as basic
+import examples.controls.material.tabs.tabs.main as basic
 import flet as ft
 import flet.testing as ftt
 

@@ -639,6 +639,9 @@ class WindowsDeviceInfo(DeviceInfo):
     """
 
     user_name: str
+    """
+    The name of the current user.
+    """
 
     major_version: int
     """The major version number of the operating system.

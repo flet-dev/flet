@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 
 import '../flet_service.dart';
-import '../utils/numbers.dart';
 
 class ConnectivityService extends FletService {
   final Connectivity _connectivity = Connectivity();
@@ -36,7 +35,7 @@ class ConnectivityService extends FletService {
   }
 
   void _updateListeners() {
-    final listenChange = control.getBool("on_change") == true;
+    final listenChange = control.hasEventHandler("change");
     if (listenChange && _subscription == null) {
       _subscription = _connectivity.onConnectivityChanged.listen(
           (List<ConnectivityResult> result) {
