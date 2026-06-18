@@ -81,7 +81,7 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 ## Docs, Examples, Tests
 
 - Add control/service docs under `website/docs/controls/<name>` for controls and `website/docs/services/<name>` for services.
-- For extensions with many similar controls (e.g., 30 spinner types), use a **single-page doc** with one `index.md` file (see `website/docs/controls/spinkit/index.md` as a model) rather than one file per control.
+- Always create one doc page per control, even for extensions with many similar controls. Use `index.md` for the overview (install instructions, examples, list of links) and individual `<controlname>.md` files for each control — consistent with `flet-color-pickers` and other extensions.
 - Use `<ClassSummary name="pkg.ClassName" />` and `<ClassMembers name="pkg.ClassName" />` JSX from `@site/src/components/crocodocs` to render API docs. Do NOT add `image=`, `imageCaption=`, or `imageWidth=` props to `<ClassSummary>` when no screenshots exist yet.
 - In the `## Examples` section, do NOT add `###` subtitles above `<CodeExample>` blocks — titles are injected automatically from the example file itself.
 - Add all custom enums/types docs and update `website/sidebars.yml` navigation.

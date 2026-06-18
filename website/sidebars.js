@@ -1345,9 +1345,170 @@ module.exports = {
               "label": "Shimmer"
             },
             {
-              "type": "doc",
-              "id": "controls/spinkit/index",
-              "label": "SpinKit"
+              "type": "category",
+              "label": "SpinKit",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/chasingdots",
+                  "label": "ChasingDots"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/circle",
+                  "label": "Circle"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/cubegrid",
+                  "label": "CubeGrid"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/dancingsquare",
+                  "label": "DancingSquare"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/doublebounce",
+                  "label": "DoubleBounce"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/dualring",
+                  "label": "DualRing"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/fadingcircle",
+                  "label": "FadingCircle"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/fadingcube",
+                  "label": "FadingCube"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/fadingfour",
+                  "label": "FadingFour"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/fadinggrid",
+                  "label": "FadingGrid"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/foldingcube",
+                  "label": "FoldingCube"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/hourglass",
+                  "label": "HourGlass"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pianowave",
+                  "label": "PianoWave"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pouringhourglass",
+                  "label": "PouringHourGlass"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pouringhourglassrefined",
+                  "label": "PouringHourGlassRefined"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pulse",
+                  "label": "Pulse"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pulsinggrid",
+                  "label": "PulsingGrid"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/pumpingheart",
+                  "label": "PumpingHeart"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/ring",
+                  "label": "Ring"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/ripple",
+                  "label": "Ripple"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/rotatingcircle",
+                  "label": "RotatingCircle"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/rotatingplain",
+                  "label": "RotatingPlain"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/spinningcircle",
+                  "label": "SpinningCircle"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/spinninglines",
+                  "label": "SpinningLines"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/squarecircle",
+                  "label": "SquareCircle"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/threebounce",
+                  "label": "ThreeBounce"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/threeinout",
+                  "label": "ThreeInOut"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/wanderingcubes",
+                  "label": "WanderingCubes"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/wave",
+                  "label": "Wave"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/wavespinner",
+                  "label": "WaveSpinner"
+                },
+                {
+                  "type": "doc",
+                  "id": "controls/spinkit/wavetype",
+                  "label": "WaveType"
+                }
+              ],
+              "link": {
+                "type": "doc",
+                "id": "controls/spinkit/index"
+              }
             },
             {
               "type": "doc",
