@@ -151,7 +151,7 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
-          enable-cache: false
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Patch versions
         shell: bash
@@ -173,7 +173,7 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build app
         shell: bash
