@@ -17,9 +17,10 @@ jobs:
           persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 20
+          package-manager-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Enable Corepack
         run: corepack enable
@@ -27,7 +28,7 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
-          enable-cache: false
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build website
         run: |
