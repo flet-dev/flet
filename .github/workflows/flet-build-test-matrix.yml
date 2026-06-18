@@ -1,0 +1,193 @@
+name: Flet Build Test (matrix)
+
+# Reusable workflow: runs the 14-target `flet build` matrix against a single
+# bundled CPython release. Invoked from `flet-build-test.yml`, which calls it
+# once per supported Python version so the UI groups jobs by version.
+
+on:
+  workflow_call:
+    inputs:
+      python_version:
+        description: "Bundled CPython short version (e.g. 3.13)."
+        type: string
+        required: true
+      extra_build_args:
+        description: "Extra CLI args appended to `flet build`."
+        type: string
+        default: ""
+
+env:
+  ROOT: "${{ github.workspace }}"
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  UV_PYTHON: 3.12
+  PYTHONUTF8: 1
+
+  # https://flet.dev/docs/reference/environment-variables
+  FLET_CLI_NO_RICH_OUTPUT: 1
+
+  FLET_BUILD_EXTRA_ARGS: ${{ inputs.extra_build_args }}
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # -------- Desktop --------
+          - name: linux
+            runner: ubuntu-latest
+            build_cmd: "flet build linux"
+            artifact_name: linux-build-artifact
+            artifact_path: build/linux
+            needs_linux_deps: true
+
+          - name: macos
+            runner: macos-26
+            build_cmd: "flet build macos"
+            artifact_name: macos-build-artifact
+            artifact_path: build/macos
+            needs_linux_deps: false
+
+          - name: windows
+            runner: windows-latest
+            build_cmd: "flet build windows"
+            artifact_name: windows-build-artifact
+            artifact_path: build/windows
+            needs_linux_deps: false
+
+          # -------- Android --------
+          - name: aab-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build aab"
+            artifact_name: aab-build-ubuntu-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: aab-macos
+            runner: macos-26
+            build_cmd: "flet build aab"
+            artifact_name: aab-build-macos-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: aab-windows
+            runner: windows-latest
+            build_cmd: "flet build aab"
+            artifact_name: aab-build-windows-artifact
+            artifact_path: build/aab
+            needs_linux_deps: false
+
+          - name: apk-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build apk"
+            artifact_name: apk-build-ubuntu-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          - name: apk-macos
+            runner: macos-26
+            build_cmd: "flet build apk"
+            artifact_name: apk-build-macos-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          - name: apk-windows
+            runner: windows-latest
+            build_cmd: "flet build apk"
+            artifact_name: apk-build-windows-artifact
+            artifact_path: build/apk
+            needs_linux_deps: false
+
+          # -------- iOS --------
+          - name: ipa
+            runner: macos-26
+            build_cmd: "flet build ipa"
+            artifact_name: ipa-build-artifact
+            artifact_path: build/ipa
+            needs_linux_deps: false
+
+          - name: ios-simulator
+            runner: macos-26
+            build_cmd: "flet build ios-simulator"
+            artifact_name: ios-simulator-build-artifact
+            artifact_path: build/ios-simulator
+            needs_linux_deps: false
+
+          # -------- Web --------
+          - name: web-ubuntu
+            runner: ubuntu-latest
+            build_cmd: "flet build web"
+            artifact_name: web-build-ubuntu-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+          - name: web-macos
+            runner: macos-26
+            build_cmd: "flet build web"
+            artifact_name: web-build-macos-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+          - name: web-windows
+            runner: windows-latest
+            build_cmd: "flet build web"
+            artifact_name: web-build-windows-artifact
+            artifact_path: build/web
+            needs_linux_deps: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: false
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Install Linux dependencies
+        if: matrix.needs_linux_deps
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          sudo apt-get install -y --no-install-recommends $LINUX_DEPS
+          sudo apt-get clean
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Build app
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        env:
+          PYTHON_VERSION: ${{ inputs.python_version }}
+        run: |
+          echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
+          uv run ${{ matrix.build_cmd }} --python-version "$PYTHON_VERSION" --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.artifact_name }}-py${{ inputs.python_version }}
+          path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}
+          if-no-files-found: error
+          overwrite: false

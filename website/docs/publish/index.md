@@ -80,7 +80,7 @@ src
     version = "0.1.0"
     description = "An Example."
     readme = "README.md"
-    requires-python = ">=3.10"
+    requires-python = ">=3.14"
     authors = [{ name = "Me", email = "me@example.com" }]
     dependencies = [
       "flet"
@@ -123,6 +123,45 @@ In this case, two things to keep in mind:
   only the direct dependencies required by your app, including `flet`.
 :::
 
+## Choosing a Python version
+
+`flet build` and `flet publish` bundle a specific Python release into your app.
+Supported versions and the matching CPython / Pyodide artifacts:
+
+| Short | CPython runtime | Pyodide (web) | Status   |
+| ----- | --------------- | ------------- | -------- |
+| 3.14  | 3.14.5          | 314.0.0a2     | default  |
+| 3.13  | 3.13.13         | 0.29.4        | stable   |
+| 3.12  | 3.12.13         | 0.27.7        | stable   |
+
+The version is resolved in this order:
+
+1. **`--python-version X.Y`** — explicit override. Must match a supported short
+   version (e.g. `flet build apk --python-version 3.13`).
+2. **`[project].requires-python`** in `pyproject.toml` — parsed as a PEP 440
+   specifier; the **highest** supported short version that satisfies it wins.
+   `requires-python = ">=3.13,<3.14"` resolves to 3.13;
+   `requires-python = ">=3.13"` resolves to 3.14.
+3. **Default** — the latest supported version (currently `3.14`).
+
+If neither the CLI flag nor `requires-python` selects a supported version
+(e.g. `requires-python = ">=3.20"`), the build fails with a clear error
+listing the versions you can choose from.
+
+For web builds (`flet build web` / `flet publish`), the matching Pyodide
+runtime is downloaded into the build output and cached under
+`~/.flet/pyodide/<version>/` on first use, so subsequent builds reuse it. The
+older `0.27.5` bundle that used to ship inside the build template has been
+removed in favour of this per-build, versioned download.
+
+:::note[Pre-release Python (3.15 etc.)]
+To bundle a pre-release Python, name it explicitly — `--python-version 3.15`
+or `requires-python = "==3.15.*"`. There is **no separate `--pre` flag** for
+this. The `--pre` flag on [`flet publish`](../cli/flet-publish.md) is a
+different, unrelated option for allowing **micropip** to install pre-release
+Python *packages* at runtime.
+:::
+
 ## How it works
 
 When you run `flet build <target_platform>`, the pipeline is:
@@ -131,7 +170,7 @@ When you run `flet build <target_platform>`, the pipeline is:
    The Flutter app embeds your packaged Python app in its assets and uses `flet` and
    [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
    The project is cached and reused across builds for rapid iterations;
-   use [`--clear-cache`](../cli/flet-build.md#--clear-cache) to force a rebuild.
+   run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory and force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
      - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
@@ -1152,8 +1191,8 @@ permissions = ["location", "microphone"]
 is downloaded as a zip artifact from the matching Flet GitHub Release. The version of the template
 used is determined by the installed Flet version.
 
-The cached project is refreshed when template inputs change or when you pass
-[`--clear-cache`](../cli/flet-build.md#--clear-cache).
+The cached project is refreshed when template inputs change or after you run
+[`flet clean`](../cli/flet-clean.md) to delete the `build` directory.
 
 #### Template Source
 
@@ -1575,6 +1614,6 @@ dependency is aligned with the same development version before building your app
     ```
 </TabItem>
 </Tabs>
-2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#--clear-cache); or manually delete `build/flutter`)
+2. Rebuild the app with the build cache cleared (run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory)
 
 To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.

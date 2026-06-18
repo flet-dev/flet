@@ -57,7 +57,7 @@ class PubSubClient:
         """
         self.__pubsub.send_others_on_topic(self.__session_id, topic, message)
 
-    def subscribe(self, handler: Callable):
+    def subscribe(self, handler: Callable[[Any], Any]):
         """
         Subscribes this session to global messages.
 
@@ -68,7 +68,7 @@ class PubSubClient:
         """
         self.__pubsub.subscribe(self.__session_id, handler)
 
-    def subscribe_topic(self, topic: str, handler: Callable):
+    def subscribe_topic(self, topic: str, handler: Callable[[str, Any], Any]):
         """
         Subscribes this session to a topic.
 
