@@ -258,9 +258,9 @@ class FilePicker(Service):
         name to save a file.
 
         Note:
-            - On desktop this method only opens a dialog for the user to select
-                a location and file name, and returns the chosen path. The file
-                itself is not created or saved.
+            - On desktop, this method opens a dialog for the user to select a
+                location and file name. If `src_bytes` is provided, those bytes
+                are written to the selected file.
 
         Args:
             dialog_title: The title of the dialog window.
@@ -270,8 +270,7 @@ class FilePicker(Service):
             src_bytes: The contents of a file. Must be provided in web,
                 iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is
-                :attr:`flet.FilePickerFileType.CUSTOM`.
+                `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Raises:
             ValueError: If `src_bytes` is not provided, when called in web mode,
@@ -308,6 +307,8 @@ class FilePicker(Service):
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
         with_data: bool = False,
+        compression_quality: int = 0,
+        cancel_upload_on_window_blur: bool = True,
     ) -> list[FilePickerFile]:
         """
         Opens a pick file dialog.
@@ -322,13 +323,27 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
-                :attr:`flet.FilePickerFile.bytes`.
+                :attr:`~flet.FilePickerFile.bytes`.
+            compression_quality: Image compression quality from `0` to `100`.
+                `0` disables compression.
+            cancel_upload_on_window_blur: Web-only. Whether to treat browser
+                window blur as a cancelled selection. Set to `False` to avoid
+                losing valid selections on slow networks or slow machines.
             allowed_extensions: The allowed file extensions. Has effect only if
                 `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Returns:
             A list of selected files.
+
+        Raises:
+            ValueError: If `compression_quality` is not between
+                `0` and `100` inclusive.
         """
+        if not (0 <= compression_quality <= 100):
+            raise ValueError(
+                "compression_quality must be between 0 and 100 inclusive, "
+                f"got {compression_quality}."
+            )
         files = await self._invoke_method(
             "pick_files",
             {
@@ -338,6 +353,8 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
                 "with_data": with_data,
+                "compression_quality": compression_quality,
+                "cancel_upload_on_window_blur": cancel_upload_on_window_blur,
             },
             timeout=3600,
         )
