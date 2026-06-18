@@ -91,7 +91,7 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - Use `ft.Colors.SURFACE_CONTAINER_HIGHEST` for card/cell backgrounds in showcase examples — it adapts to light and dark system themes automatically.
 - Do NOT set an explicit dark theme in examples; let the app use system theme (no `page.theme_mode`).
 - Add integration tests under `packages/flet/integration_tests/extensions/<name>/` — **not** inside the extension package's own directory (no `tests/` folder in the package itself, matching the pattern of `flet-code-editor`, `flet-color-pickers`, etc.).
-- For controls with continuously-running animations, screenshot tests are non-deterministic and will fail non-deterministically. Write pure Python unit tests instead (instantiate each class, verify props, verify enum values).
+- For controls with continuously-running animations, do NOT use `assert_control_screenshot` or `pump_and_settle` — they will timeout waiting for animations to settle. Instead use `await flet_app.tester.pump(duration=ft.Duration(milliseconds=500))` which advances the clock by a fixed amount. This still runs real Flutter rendering and catches crashes, without screenshot comparison.
 - Ensure generated screenshots are suitable for docs usage when visual examples are added.
 
 ## Upgrade and Compatibility Guardrails
