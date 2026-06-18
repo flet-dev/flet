@@ -3,6 +3,7 @@
 ### New features
 
 * Multi-version bundled CPython support in `flet build` and `flet publish`. Pick the runtime your app ships with via the new `--python-version` flag (3.12 / 3.13 / 3.14), or let it be derived from `[project].requires-python` in your `pyproject.toml`; defaults to the latest supported stable (currently 3.14). The matching CPython-standalone build, Pyodide release (0.27.7 / 0.29.4 / 314.0.0a2), and Emscripten wheel platform tag are all resolved from a central registry. Adding a future pre-release CPython line (e.g. 3.15 beta) is a one-row append with `prerelease=True` — opt-in only via an explicit `--python-version 3.15` or `requires-python = "==3.15.*"`, never the auto-resolved default. Requires `serious_python` >= 2.0.0, now pinned in the `flet build` template. See the new [Choosing a Python version](https://flet.dev/docs/publish#choosing-a-python-version) docs section ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+* Add `flet clean` command that deletes the `build` directory of a Flet app — the Flutter bootstrap project, cached artifacts, and generated output — in a single step ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
 
 ### Improvements
 
@@ -14,6 +15,10 @@
 
 * `flet build` and `flet publish` now bundle CPython 3.14 by default (previously 3.12, implicit via the old single-version `serious_python`). Existing apps that depend on native wheels without 3.14 binaries should pin explicitly with `--python-version 3.12` (CLI), `requires-python = ">=3.12,<3.13"` (pyproject), or `SERIOUS_PYTHON_VERSION=3.12` in the build environment ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
 * The `flet.version.pyodide_version` module attribute and the `PYODIDE_VERSION` constant are removed. Reach for `flet_cli.utils.python_versions.SUPPORTED_PYTHON_VERSIONS` if you need the per-version Pyodide mapping programmatically ([#6577](https://github.com/flet-dev/flet/pull/6577)) by @FeodorFitsner.
+
+### Deprecations
+
+* Deprecate the `--clear-cache` flag of `flet build` and `flet debug`; use the new `flet clean` command instead. The flag remains functional but now emits a deprecation warning, and is scheduled for removal in `0.89.0` ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
 
 ### Bug fixes
 
