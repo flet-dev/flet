@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_secure_storage: 10.0.0
+  flutter_secure_storage: 10.3.1
 
   flet:
     path: ../../../../../../../packages/flet
