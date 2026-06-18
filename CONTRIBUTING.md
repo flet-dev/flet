@@ -168,12 +168,12 @@ First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in 
 
 -  To build the Flutter client for MacOS, run:
     ```
-    flutter build macos
+    fvm flutter build macos
     ```
     When the build is complete, you should see the Flet bundle in the `FLET_VIEW_PATH`. (Running it will open a blank window.)
 -  To build the Flutter client for Web, run the below command:
     ```
-    flutter build web
+    fvm flutter build web --wasm
     ```
     When the build is complete, a directory `client/build/web` will be created.
 
@@ -256,11 +256,11 @@ For patches to the current stable release, branch directly from `main`, fix, ope
 
 * Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
 * Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
-* Open terminal in `client` directory and run `flutter clean; flutter pub get`.
+* Open terminal in `client` directory and run `fvm flutter clean; fvm flutter pub get`.
 * Increment version in `packages/flet/pubspec.yaml`.
 * Review and update `CHANGELOG.md` for the release version.
 * Update version in `packages/flet/pubspec.yaml` to the release version if not already done.
-* Run `flutter build macos`, `flutter build linux`, `flutter build windows`, `flutter build web` to ensure everything compiles.
+* Run `fvm flutter build macos`, `fvm flutter build linux`, `fvm flutter build windows`, `fvm flutter build web --wasm` to ensure everything compiles.
 * Run `uv run pytest` in `sdk/python` to ensure all tests pass.
 * If any test fails, fix the issue before proceeding.
 * Once all checks pass, commit the final changes (version bumps, changelog updates) to the release branch.
@@ -289,7 +289,7 @@ cd flet
 
 ### Install Flutter
 
-Follow the [official guide](https://docs.flutter.dev/get-started/install/macos) to install Flutter. Ensure Flutter is in your PATH and run `flutter doctor` to verify.
+Follow the [official guide](https://docs.flutter.dev/get-started/install/macos) to install Flutter. Ensure Flutter is in your PATH and run `fvm flutter doctor` to verify.
 
 ### Install uv
 
@@ -308,7 +308,7 @@ uv sync
 
 ```bash
 cd client
-flutter pub get
+fvm flutter pub get
 ```
 
 ### Set environment variables
@@ -326,8 +326,8 @@ Then reload: `source ~/.zshrc`
 
 ```bash
 cd client
-flutter build macos
-flutter build web
+fvm flutter build macos
+fvm flutter build web --wasm
 ```
 
 ### Verify installation
