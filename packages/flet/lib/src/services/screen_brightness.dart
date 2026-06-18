@@ -81,13 +81,13 @@ class ScreenBrightnessService extends FletService {
     }
 
     final listenSystem =
-        control.getBool("on_system_screen_brightness_change") == true;
+        control.hasEventHandler("system_screen_brightness_change");
     final listenApplication =
-        control.getBool("on_application_screen_brightness_change") == true;
+        control.hasEventHandler("application_screen_brightness_change");
 
     if (listenSystem && _systemSubscription == null) {
-      _systemSubscription = _screenBrightness.onSystemScreenBrightnessChanged
-          .listen((value) {
+      _systemSubscription =
+          _screenBrightness.onSystemScreenBrightnessChanged.listen((value) {
         control.triggerEvent(
             "system_screen_brightness_change", {"brightness": value});
       }, onError: (error) {

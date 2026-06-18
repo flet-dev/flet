@@ -21,32 +21,100 @@ if TYPE_CHECKING:
 
 class AppView(Enum):
     """
-    TBD
+    Defines how an app launched with :func:`flet.run` or :func:`flet.run_async`
+    should be displayed.
     """
 
     WEB_BROWSER = "web_browser"
+    """
+    Runs the app as a web server and opens it in the user's web browser.
+    """
+
     FLET_APP = "flet_app"
+    """
+    Runs the app in a Flet desktop window.
+    """
+
     FLET_APP_WEB = "flet_app_web"
+    """
+    Runs the app in a Flet desktop window backed by the web server mode.
+    """
+
     FLET_APP_HIDDEN = "flet_app_hidden"
+    """
+    Starts the Flet desktop window hidden.
+    """
 
 
 class WebRenderer(Enum):
     """
-    TBD
+    Selects which Flutter web renderer should be used for a web-hosted app.
+
+    Use this with the `web_renderer` argument of :func:`flet.run` or
+    :func:`flet.run_async`.
+
+    Note:
+        The available renderer choices depend on how the web frontend was built.
+        A default web build provides CanvasKit. A WebAssembly build can make both
+        CanvasKit and skwasm available.
     """
 
     AUTO = "auto"
+    """
+    Lets the runtime choose the renderer automatically.
+
+    This is the recommended default. In WebAssembly builds, the runtime can prefer
+    skwasm and fall back to CanvasKit when needed. In default web builds, CanvasKit
+    is used.
+    """
     CANVAS_KIT = "canvaskit"
+    """
+    Uses the CanvasKit renderer.
+
+    CanvasKit is broadly compatible with modern browsers and is the renderer used by
+    default in standard web builds.
+    """
     SKWASM = "skwasm"
+    """
+    Uses the skwasm renderer.
+
+    skwasm is available for WebAssembly web builds and can provide better startup
+    time and frame performance. Browsers and servers must meet the requirements for
+    WebAssembly support, and multi-threaded rendering additionally requires the
+    necessary SharedArrayBuffer security setup.
+    """
 
 
 class RouteUrlStrategy(Enum):
     """
-    TBD
+    Controls how routes are represented in the browser URL for web apps.
+
+    Use this with the `route_url_strategy` argument of :func:`flet.run` or
+    :func:`flet.run_async`.
+
+    Note:
+        This setting affects web-hosted apps only.
     """
 
     PATH = "path"
+    """
+    Stores routes in the browser pathname.
+
+    URLs look like `https://example.com/store`.
+
+    Note:
+        This strategy usually requires the web server to rewrite unmatched requests to
+        `index.html` so deep links and page reloads continue to work.
+    """
     HASH = "hash"
+    """
+    Stores routes in the URL fragment after `#`.
+
+    URLs look like `https://example.com/#/store`.
+
+    This strategy is useful when you cannot configure the hosting server for
+    pathname-based routing.
+    """
 
 
 class UrlTarget(Enum):
@@ -190,11 +258,36 @@ class CircularRectangleNotchShape(NotchShape):
 @value
 class AutomaticNotchShape(NotchShape):
     """
-    A notch sahpe created from :class:`~flet.ShapeBorder`s.
+    A notch shape created from :class:`~flet.ShapeBorder` values.
+
+    It uses one shape as the outer outline and optionally subtracts a second shape
+    to form the notch. This is commonly used for controls such as
+    :class:`~flet.BottomAppBar` that need to make room for a floating action button.
     """
 
     host: "ShapeBorder"
+    """
+    The shape of the control that uses the notch.
+
+    This is typically the outer shape of the host control, such as a
+    :class:`~flet.BottomAppBar`.
+
+    Note:
+        The shape must not depend on text direction.
+    """
     guest: Optional["ShapeBorder"] = None
+    """
+    The shape to subtract from :attr:`host` to create the notch.
+
+    This is typically the shape of the control the notch should accommodate, such as
+    a :class:`~flet.FloatingActionButton`.
+
+    If this is `None`, no notch is cut out even when space for a guest control is
+    available.
+
+    Note:
+        The shape must not depend on text direction.
+    """
 
     def __post_init__(self):
         self._type = "auto"
@@ -328,6 +421,9 @@ class VerticalAlignment(Enum):
     """
 
     NONE = None
+    """
+    Use the default vertical alignment.
+    """
 
     START = -1.0
     """
@@ -347,7 +443,7 @@ class VerticalAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a :class:`~flet.Checkbox`, :class:`~flet.Radio` or \
+    Position of label in a :class:`~flet.Checkbox`, :class:`~flet.Radio` or
     :class:`~flet.Switch`
     """
 
@@ -364,40 +460,186 @@ class LabelPosition(Enum):
 
 class BlendMode(Enum):
     """
-    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from \
-    Flutter documentation for blend mode examples.
+    Algorithms used to combine source and destination pixels during painting.
+
+    The source is the content being drawn and the destination is the content already
+    present behind it.
     """
 
     CLEAR = "clear"
+    """
+    Drops both the source and destination, leaving a fully transparent result.
+    """
+
     COLOR = "color"
+    """
+    Takes the hue and saturation from the source and the luminosity from the
+    destination.
+    """
+
     COLOR_BURN = "colorBurn"
+    """
+    Darkens the destination by dividing the inverse destination by the source and
+    then inverting the result.
+    """
+
     COLOR_DODGE = "colorDodge"
+    """
+    Brightens the destination by dividing it by the inverse of the source.
+    """
+
     DARKEN = "darken"
+    """
+    Chooses the darker value from each source and destination color channel.
+    """
+
     DIFFERENCE = "difference"
+    """
+    Subtracts the smaller channel value from the larger one.
+
+    Compositing black has no effect, while compositing white inverts the other image.
+    """
+
     DST = "dst"
+    """
+    Drops the source and keeps only the destination.
+    """
+
     DST_A_TOP = "dstATop"
+    """
+    Draws the destination over the source, but only where they overlap.
+    """
+
     DST_IN = "dstIn"
+    """
+    Keeps the destination only where the source and destination overlap.
+
+    The source acts as an opacity mask.
+    """
+
     DST_OUT = "dstOut"
+    """
+    Keeps the destination only where the source and destination do not overlap.
+
+    The source acts as an opacity mask.
+    """
+
     DST_OVER = "dstOver"
+    """
+    Draws the source underneath the destination.
+    """
+
     EXCLUSION = "exclusion"
+    """
+    Produces an effect similar to :attr:`DIFFERENCE`, but softer.
+    """
+
     HARD_LIGHT = "hardLight"
+    """
+    Combines multiply and screen-style blending while favoring the source image.
+    """
+
     HUE = "hue"
+    """
+    Takes the hue from the source and the saturation and luminosity from the
+    destination.
+    """
+
     LIGHTEN = "lighten"
+    """
+    Chooses the lighter value from each source and destination color channel.
+    """
+
     LUMINOSITY = "luminosity"
+    """
+    Takes the luminosity from the source and the hue and saturation from the
+    destination.
+    """
+
     MODULATE = "modulate"
+    """
+    Multiplies the source and destination color channels without multiplying alpha.
+    """
+
     MULTIPLY = "multiply"
+    """
+    Multiplies the source and destination color channels, including alpha.
+    """
+
     OVERLAY = "overlay"
+    """
+    Combines multiply and screen-style blending while favoring the destination image.
+    """
+
     PLUS = "plus"
+    """
+    Adds the source and destination channel values together.
+
+    This is useful for cross-fading between two images.
+    """
+
     SATURATION = "saturation"
+    """
+    Takes the saturation from the source and the hue and luminosity from the
+    destination.
+    """
+
     SCREEN = "screen"
+    """
+    Multiplies the inverted source and destination values, then inverts the result.
+
+    This can only produce the same or lighter colors.
+    """
+
     SOFT_LIGHT = "softLight"
+    """
+    Applies a softer lighting effect than :attr:`OVERLAY`.
+    """
+
     SRC = "src"
+    """
+    Drops the destination and keeps only the source.
+    """
+
     SRC_A_TOP = "srcATop"
+    """
+    Draws the source over the destination, but only where they overlap.
+    """
+
     SRC_IN = "srcIn"
+    """
+    Keeps the source only where the source and destination overlap.
+
+    The destination acts as an opacity mask.
+    """
+
     SRC_OUT = "srcOut"
+    """
+    Keeps the source only where the source and destination do not overlap.
+
+    The destination acts as an opacity mask.
+    """
+
     SRC_OVER = "srcOver"
+    """
+    Draws the source over the destination.
+
+    This is the default painting behavior.
+    """
+
     VALUES = "values"
+    """
+    Not a usable blend mode.
+
+    Warning:
+        This member exists in the Python enum surface but does not map to a runtime
+        blend mode. Do not use it for painting or image composition.
+    """
+
     XOR = "xor"
+    """
+    Uses an exclusive-or composition so overlapping areas become transparent.
+    """
 
 
 class TextAlign(Enum):
@@ -564,24 +806,51 @@ class PagePlatform(Enum):
     """
 
     IOS = "ios"
+    """
+    Apple iOS.
+    """
     ANDROID = "android"
+    """
+    Android phones and tablets.
+    """
     ANDROID_TV = "android_tv"
+    """
+    Android TV devices.
+    """
     MACOS = "macos"
+    """
+    Apple macOS.
+    """
     WINDOWS = "windows"
+    """
+    Microsoft Windows.
+    """
     LINUX = "linux"
+    """
+    Linux desktop environments.
+    """
 
     def is_apple(self) -> bool:
-        """Whether this PagePlatform instance is an Apple (iOS or macOS) platform."""
+        """
+        Whether this platform is one of Apple's platforms.
+
+        Returns `True` for :attr:`IOS` and :attr:`MACOS`.
+        """
         return self in {PagePlatform.IOS, PagePlatform.MACOS}
 
     def is_mobile(self) -> bool:
-        """Whether this PagePlatform instance is a mobile (iOS or Android) platform."""
+        """
+        Whether this platform is a mobile platform.
+
+        Returns `True` for :attr:`IOS` and :attr:`ANDROID`.
+        """
         return self in {PagePlatform.IOS, PagePlatform.ANDROID}
 
     def is_desktop(self) -> bool:
         """
-        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) \
-        platform.
+        Whether this platform is a desktop platform.
+
+        Returns `True` for :attr:`MACOS`, :attr:`WINDOWS`, and :attr:`LINUX`.
         """
         return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
 
@@ -681,24 +950,109 @@ class FloatingActionButtonLocation(Enum):
     """  # noqa: E501
 
     CENTER_DOCKED = "centerDocked"
+    """
+    Centers the floating action button over the bottom navigation bar so its center
+    aligns with the bar's top edge.
+
+    This is typically used with a bottom navigation bar or bottom app bar that can
+    visually accommodate the overlapping button.
+    """
+
     CENTER_FLOAT = "centerFloat"
+    """
+    Centers the floating action button near the bottom of the screen.
+    """
+
     CENTER_TOP = "centerTop"
+    """
+    Centers the floating action button over the boundary between the app bar and the
+    body.
+    """
+
     END_CONTAINED = "endContained"
+    """
+    Aligns the floating action button to the end side and positions it so it lines up
+    with the vertical center of the bottom navigation bar.
+    """
+
     END_DOCKED = "endDocked"
+    """
+    Aligns the floating action button to the end side and docks it over the bottom
+    navigation bar so its center aligns with the bar's top edge.
+    """
+
     END_FLOAT = "endFloat"
+    """
+    Aligns the floating action button to the end side near the bottom of the screen.
+    """
+
     END_TOP = "endTop"
+    """
+    Aligns the floating action button to the end side over the boundary between the
+    app bar and the body.
+    """
+
     MINI_CENTER_DOCKED = "miniCenterDocked"
+    """
+    Like :attr:`CENTER_DOCKED`, but intended for a mini floating action button.
+    """
+
     MINI_CENTER_FLOAT = "miniCenterFloat"
+    """
+    Like :attr:`CENTER_FLOAT`, but optimized for a mini floating action button.
+    """
+
     MINI_CENTER_TOP = "miniCenterTop"
+    """
+    Like :attr:`CENTER_TOP`, but intended for a mini floating action button.
+    """
+
     MINI_END_DOCKED = "miniEndDocked"
+    """
+    Like :attr:`END_DOCKED`, but intended for a mini floating action button.
+    """
+
     MINI_END_FLOAT = "miniEndFloat"
+    """
+    Like :attr:`END_FLOAT`, but optimized for a mini floating action button.
+    """
+
     MINI_END_TOP = "miniEndTop"
+    """
+    Like :attr:`END_TOP`, but intended for a mini floating action button.
+    """
+
     MINI_START_DOCKED = "miniStartDocked"
+    """
+    Like :attr:`START_DOCKED`, but intended for a mini floating action button.
+    """
+
     MINI_START_FLOAT = "miniStartFloat"
+    """
+    Like :attr:`START_FLOAT`, but optimized for a mini floating action button.
+    """
+
     MINI_START_TOP = "miniStartTop"
+    """
+    Like :attr:`START_TOP`, but intended for a mini floating action button.
+    """
+
     START_DOCKED = "startDocked"
+    """
+    Aligns the floating action button to the start side and docks it over the bottom
+    navigation bar so its center aligns with the bar's top edge.
+    """
+
     START_FLOAT = "startFloat"
+    """
+    Aligns the floating action button to the start side near the bottom of the screen.
+    """
+
     START_TOP = "startTop"
+    """
+    Aligns the floating action button to the start side over the boundary between the
+    app bar and the body.
+    """
 
 
 class AppLifecycleState(Enum):

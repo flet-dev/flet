@@ -129,6 +129,13 @@ class TabBarHoverEvent(Event["TabBar"]):
 
 @value
 class UnderlineTabIndicator:
+    """
+    Draws a horizontal line below the selected tab.
+
+    Use this with :attr:`flet.TabBar.indicator` to customize the indicator's line,
+    insets, and optional corner radius.
+    """
+
     border_side: BorderSide = field(
         default_factory=lambda: BorderSide(width=2.0, color=Colors.WHITE)
     )
@@ -249,7 +256,7 @@ class Tabs(LayoutControl, AdaptiveControl):
     """
     Called when :attr:`selected_index` changes.
 
-    The :attr:`~flet.Event.data` property of the event handler argument
+    The :attr:`flet.Event.data` property of the event handler argument
     contains the index of the selected tab.
     """
 
@@ -320,7 +327,7 @@ class TabBarView(LayoutControl, AdaptiveControl):
 
     Note:
         The length of :attr:`controls` must be the same as the
-        :attr:`~flet.Tabs.length` property of the ancestor :class:`~flet.Tabs`.
+        :attr:`flet.Tabs.length` property of the ancestor :class:`~flet.Tabs`.
     """
 
     controls: list[Control]
@@ -557,7 +564,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     """
     Called when a tab is clicked.
 
-    The :attr:`~flet.Event.data` property of the event handler argument
+    The :attr:`flet.Event.data` property of the event handler argument
     contains the index of the clicked tab.
     """
 

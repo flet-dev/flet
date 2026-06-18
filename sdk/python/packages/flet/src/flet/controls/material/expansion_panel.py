@@ -30,7 +30,7 @@ class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
     """
     The index of the panel in :attr:`flet.ExpansionPanelList.controls` that was toggled.
 
-    Panels with :attr:`~flet.Control.visible` set to `False` are not counted/indexed.
+    Panels with :attr:`flet.Control.visible` set to `False` are not counted/indexed.
     This means the value may differ from the panel's position in the original
     :attr:`flet.ExpansionPanelList.controls` list when some panels are invisible.
     To map it back, filter :attr:`flet.ExpansionPanelList.controls` to only visible

@@ -23,8 +23,8 @@ class OnReorderEvent(Event["ReorderableListView"]):
     The new position of the item after the reordering, if available.
 
     Will be non-`None` only for the following events:
-    :attr:`~flet.ReorderableListView.on_reorder`,
-    :attr:`~flet.ReorderableListView.on_reorder_end`.
+    :attr:`flet.ReorderableListView.on_reorder`,
+    :attr:`flet.ReorderableListView.on_reorder_end`.
     """
 
     old_index: Optional[int] = None
@@ -32,8 +32,8 @@ class OnReorderEvent(Event["ReorderableListView"]):
     The previous position of the item before the reordering, if available.
 
     Will be non-`None` only for the following events:
-    :attr:`~flet.ReorderableListView.on_reorder`,
-    :attr:`~flet.ReorderableListView.on_reorder_start`.
+    :attr:`flet.ReorderableListView.on_reorder`,
+    :attr:`flet.ReorderableListView.on_reorder_start`.
     """
 
 

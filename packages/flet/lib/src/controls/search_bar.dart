@@ -135,9 +135,9 @@ class _SearchBarControlState extends State<SearchBarControl> {
       });
     }
 
-    bool onChange = widget.control.getBool("on_change", false)!;
-    bool onTap = widget.control.getBool("on_tap", false)!;
-    bool onSubmit = widget.control.getBool("on_submit", false)!;
+    bool onChange = widget.control.hasEventHandler("change");
+    bool onTap = widget.control.hasEventHandler("tap");
+    bool onSubmit = widget.control.hasEventHandler("submit");
     TextInputType keyboardType =
         widget.control.getTextInputType("keyboard_type", TextInputType.text)!;
 
@@ -224,7 +224,7 @@ class _SearchBarControlState extends State<SearchBarControl> {
             leading: widget.control.buildWidget("bar_leading"),
             trailing: widget.control.buildWidgets("bar_trailing"),
             onTap: onTap ? () => widget.control.triggerEvent("tap") : null,
-            onTapOutside: widget.control.getBool("on_tap_outside_bar", false)!
+            onTapOutside: widget.control.hasEventHandler("tap_outside_bar")
                 ? (PointerDownEvent? event) =>
                     widget.control.triggerEvent("tap_outside_bar")
                 : null,

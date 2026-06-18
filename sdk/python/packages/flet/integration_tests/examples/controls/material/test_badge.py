@@ -1,6 +1,6 @@
 import pytest
 
-import examples.controls.material.badge.basic.main as basic
+import examples.controls.material.badge.badge.main as basic
 import flet as ft
 import flet.testing as ftt
 

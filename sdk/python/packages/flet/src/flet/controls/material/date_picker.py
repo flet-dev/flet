@@ -87,6 +87,7 @@ class DatePicker(DialogControl):
     Depending on the :attr:`entry_mode`, it will show either a Calendar
     or an Input (TextField) for picking a date.
 
+    Example:
     ```python
     picker = ft.DatePicker()
 
@@ -143,7 +144,7 @@ class DatePicker(DialogControl):
     but does not participate in page-level locale resolution.
 
     If set to `None` (the default) or an inexistent/unsupported locale,
-    the :attr:`~flet.LocaleConfiguration.current_locale` of the
+    the :attr:`flet.LocaleConfiguration.current_locale` of the
     :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
@@ -253,7 +254,7 @@ class DatePicker(DialogControl):
         default_factory=lambda: Padding.symmetric(horizontal=16.0, vertical=24.0)
     )
     """
-    The amount of padding added to :attr:`~flet.PageMediaData.view_insets` of the \
+    The amount of padding added to :attr:`flet.PageMediaData.view_insets` of the \
     :attr:`flet.Page.media` on the outside of this picker's dialog.
 
     This defines the minimum space between the screen's edges and the dialog.
@@ -264,7 +265,7 @@ class DatePicker(DialogControl):
     Called when user clicks confirm button.
     :attr:`value` is updated with selected date.
 
-    The :attr:`~flet.Event.data` property of the event handler argument
+    The :attr:`flet.Event.data` property of the event handler argument
     contains the selected date.
     """
 

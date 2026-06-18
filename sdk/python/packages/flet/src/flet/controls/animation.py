@@ -235,8 +235,8 @@ class Animation:
     Explicit animation configuration for animatable control properties.
 
     Properties that accept animation usually also support shorthand values via
-    :data:`~flet.AnimationValue`:
-    - `True`: enables a default `1000ms` :attr:`~flet.AnimationCurve.LINEAR` animation.
+    :data:`flet.AnimationValue`:
+    - `True`: enables a default `1000ms` :attr:`flet.AnimationCurve.LINEAR` animation.
     - `int`: interpreted as animation duration in milliseconds with a linear curve.
     """
 

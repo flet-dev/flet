@@ -107,8 +107,8 @@ class Stack(LayoutControl, AdaptiveControl):
     alignment: Optional[Alignment] = None
     """
     Specifies the alignment for non-positioned (those without explicit alignment \
-    properties such as :attr:`~flet.LayoutControl.top`
-    or :attr:`~flet.LayoutControl.bottom`) and
+    properties such as :attr:`flet.LayoutControl.top`
+    or :attr:`flet.LayoutControl.bottom`) and
     partially-positioned :attr:`controls`.
     """
 

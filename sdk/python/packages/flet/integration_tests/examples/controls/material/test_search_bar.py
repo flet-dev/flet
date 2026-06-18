@@ -1,6 +1,6 @@
 import pytest
 
-import examples.controls.material.search_bar.basic.main as basic
+import examples.controls.material.search_bar.search_bar.main as basic
 import flet as ft
 import flet.testing as ftt
 
