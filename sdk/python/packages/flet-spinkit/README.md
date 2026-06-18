@@ -1,70 +1,42 @@
 # flet-spinkit
 
-Loading spinner animation controls for [Flet](https://flet.dev) apps, powered by the [`flutter_spinkit`](https://pub.dev/packages/flutter_spinkit) Flutter package.
+[![pypi](https://img.shields.io/pypi/v/flet-spinkit.svg)](https://pypi.python.org/pypi/flet-spinkit)
+[![downloads](https://static.pepy.tech/badge/flet-spinkit/month)](https://pepy.tech/project/flet-spinkit)
+[![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-spinkit)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-spinkit.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-spinkit.svg)
+[![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/LICENSE)
 
-## Installation
+A [Flet](https://flet.dev) extension package with 30 animated loading spinner controls.
 
-```bash
-pip install flet-spinkit
-```
+It is based on the [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) Flutter package.
+
+## Documentation
+
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/spinkit/).
+
+## Platform Support
+
+| Platform | Windows | macOS | Linux | iOS | Android | Web |
+|----------|---------|-------|-------|-----|---------|-----|
+| Supported|    ✅    |   ✅   |   ✅   |  ✅  |    ✅    |  ✅  |
 
 ## Usage
 
-```python
-import flet as ft
-import flet_spinkit as fsk
+### Installation
 
-def main(page: ft.Page):
-    page.add(
-        fsk.SpinKitRotatingCircle(color=ft.Colors.BLUE, size=50),
-        fsk.SpinKitWave(color=ft.Colors.RED, size=50, wave_type=fsk.SpinKitWaveType.CENTER),
-        fsk.SpinKitDualRing(color=ft.Colors.GREEN, size=50, line_width=5),
-        fsk.SpinKitRipple(color=ft.Colors.PURPLE, size=100, border_width=4),
-    )
+To install the `flet-spinkit` package and add it to your project dependencies:
 
-ft.app(main)
-```
+- Using `uv`:
+    ```bash
+    uv add flet-spinkit
+    ```
 
-## Available Controls
+- Using `pip`:
+    ```bash
+    pip install flet-spinkit
+    ```
+    After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
-| Control | Extra properties |
-|---|---|
-| `SpinKitRotatingPlain` | — |
-| `SpinKitDoubleBounce` | — |
-| `SpinKitWave` | `wave_type`, `item_count` |
-| `SpinKitWanderingCubes` | — |
-| `SpinKitFadingFour` | — |
-| `SpinKitFadingCube` | — |
-| `SpinKitPulse` | — |
-| `SpinKitChasingDots` | — |
-| `SpinKitThreeBounce` | — |
-| `SpinKitCircle` | — |
-| `SpinKitCubeGrid` | — |
-| `SpinKitFadingCircle` | — |
-| `SpinKitRotatingCircle` | — |
-| `SpinKitFoldingCube` | — |
-| `SpinKitPumpingHeart` | — |
-| `SpinKitHourGlass` | — |
-| `SpinKitPouringHourGlass` | — |
-| `SpinKitPouringHourGlassRefined` | — |
-| `SpinKitFadingGrid` | — |
-| `SpinKitRing` | `line_width` |
-| `SpinKitRipple` | `border_width` |
-| `SpinKitDualRing` | `line_width` |
-| `SpinKitSpinningCircle` | — |
-| `SpinKitSpinningLines` | `line_width` |
-| `SpinKitSquareCircle` | — |
-| `SpinKitThreeInOut` | — |
-| `SpinKitDancingSquare` | — |
-| `SpinKitPianoWave` | `item_count` |
-| `SpinKitPulsingGrid` | — |
-| `SpinKitPumpCurve` | — |
-| `SpinKitRingCurve` | `line_width` |
+### Examples
 
-All controls share these common properties:
-
-| Property | Type | Description |
-|---|---|---|
-| `color` | `ColorValue` | Spinner color |
-| `size` | `Number` | Spinner size in pixels (default: 50) |
-| `duration` | `DurationValue` | Animation cycle duration |
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/spinkit).
