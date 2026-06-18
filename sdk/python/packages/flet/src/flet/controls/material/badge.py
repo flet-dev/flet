@@ -49,7 +49,7 @@ class Badge(BaseControl):
 
     alignment: Optional[Alignment] = None
     """
-    Aligns the :attr:`~flet.Badge.label` relative to the content of the badge.
+    Aligns the :attr:`flet.Badge.label` relative to the content of the badge.
 
     The alignment positions the :attr:`label` in similar way
     :attr:`flet.Container.content` is positioned using :attr:`flet.Container.alignment`,

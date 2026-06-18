@@ -47,10 +47,29 @@ _ST_REMOVE = 1
 
 
 class Operation(Enum):
+    """
+    Operation types supported by object patches.
+    """
+
     Replace = 0
+    """
+    Replace the value at a path.
+    """
+
     Add = 1
+    """
+    Add a value at a path.
+    """
+
     Remove = 2
+    """
+    Remove the value at a path.
+    """
+
     Move = 3
+    """
+    Move a value from one path to another path.
+    """
 
 
 class ObjectPatchException(Exception):

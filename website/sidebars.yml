@@ -184,7 +184,7 @@ docs:
       Dropdown:
         _index: controls/dropdown/index.md
         DropdownOption: controls/dropdownoption.md
-      #DropdownM2: controls/dropdownm2.md
+      DropdownM2: controls/dropdownm2.md
       ExpansionPanel: controls/expansionpanel.md
       ExpansionPanelList: controls/expansionpanellist.md
       ExpansionTile: controls/expansiontile.md
@@ -833,6 +833,8 @@ docs:
       - types/onmounted.md
       - types/onunmounted.md
       - types/onupdated.md
+      - types/run.md
+      - types/run_async.md
       - types/usecallback.md
       - types/usecontext.md
       - types/useeffect.md

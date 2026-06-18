@@ -1,6 +1,6 @@
 import pytest
 
-import examples.controls.core.vertical_divider.basic.main as basic
+import examples.controls.core.vertical_divider.vertical_divider.main as basic
 import flet as ft
 import flet.testing as ftt
 

@@ -26,10 +26,10 @@ class SearchBar(LayoutControl):
     Manages a "search view" route that allows the user to select one of the suggested \
     completions for a search query.
 
+    Example:
     ```python
     ft.SearchBar(bar_hint_text="Search...")
     ```
-
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -78,8 +78,8 @@ class SearchBar(LayoutControl):
     bar_overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     Defines the highlight color that's typically used to indicate that the search bar \
-    is in :attr:`~flet.ControlState.FOCUSED`, :attr:`~flet.ControlState.HOVERED`, or \
-    :attr:`~flet.ControlState.PRESSED` states.
+    is in :attr:`flet.ControlState.FOCUSED`, :attr:`flet.ControlState.HOVERED`, or \
+    :attr:`flet.ControlState.PRESSED` states.
     """
 
     bar_shadow_color: Optional[ControlStateValue[ColorValue]] = None

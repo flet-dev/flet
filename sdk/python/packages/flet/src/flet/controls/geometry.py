@@ -17,7 +17,14 @@ class Size:
     """
 
     width: Number
+    """
+    The horizontal extent of the size.
+    """
+
     height: Number
+    """
+    The vertical extent of the size.
+    """
 
     @property
     def aspect_ratio(self) -> float:

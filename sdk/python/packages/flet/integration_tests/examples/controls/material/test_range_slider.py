@@ -2,10 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.range_slider.basic.main import main as basic
 from examples.controls.material.range_slider.handling_change_events.main import (
     main as handling_change_events,
 )
+from examples.controls.material.range_slider.range_slider.main import main as basic
 
 
 @pytest.mark.asyncio(loop_scope="function")

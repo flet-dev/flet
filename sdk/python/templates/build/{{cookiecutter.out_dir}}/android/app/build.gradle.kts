@@ -31,6 +31,20 @@ android {
                 "*/x86/libpython*.so",
                 "*/x86_64/libpython*.so",
             )
+
+            // serious_python_android ships libc++_shared.so as part of the Python runtime payload
+            // (the cross-compiled wheels on pypi.flet.dev depend on it at link time). Many third-party
+            // Flutter plugins (ultralytics_yolo, sentry_flutter, several ML / CV / audio plugins) also
+            // bundle their own copy. When an app pulls in both, Gradle's mergeNativeLibs task aborts
+            // with "N files found with path 'lib/<abi>/libc++_shared.so'" because AGP refuses to silently
+            // choose between duplicate native libraries (the right default for most .so files).
+            //
+            // libc++_shared.so is a documented exception: the NDK has held strict ABI compatibility on it
+            // since r17, so whichever copy wins input ordering, every consumer that linked against libc++_shared
+            // will work against it. pickFirsts is the narrowly-scoped escape hatch for exactly this case -- it
+            // only opens a hole for the matching glob; any other future duplicate-native-lib conflict still fails loudly.
+            pickFirsts += listOf("**/libc++_shared.so")
+
 // flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
             // Strip native libs of ABIs not requested via `target_arch`.
             // `ndk.abiFilters` alone can't do this: the Flutter Gradle plugin adds all default

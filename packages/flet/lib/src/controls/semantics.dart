@@ -50,41 +50,41 @@ class SemanticsControl extends StatelessWidget {
       headingLevel: control.getInt("heading_level"),
       excludeSemantics: control.getBool("exclude_semantics", false)!,
       mixed: control.getBool("mixed"),
-      onTap: control.getBool("on_click", false)!
+      onTap: control.hasEventHandler("click")
           ? () => control.triggerEvent("click")
           : null,
-      onIncrease: control.getBool("on_increase", false)!
+      onIncrease: control.hasEventHandler("increase")
           ? () => control.triggerEvent("increase")
           : null,
-      onDecrease: control.getBool("on_decrease", false)!
+      onDecrease: control.hasEventHandler("decrease")
           ? () => control.triggerEvent("decrease")
           : null,
-      onDismiss: control.getBool("on_dismiss", false)!
+      onDismiss: control.hasEventHandler("dismiss")
           ? () => control.triggerEvent("dismiss")
           : null,
-      onScrollLeft: control.getBool("on_scroll_left", false)!
+      onScrollLeft: control.hasEventHandler("scroll_left")
           ? () => control.triggerEvent("scroll_left")
           : null,
-      onScrollRight: control.getBool("on_scroll_right", false)!
+      onScrollRight: control.hasEventHandler("scroll_right")
           ? () => control.triggerEvent("scroll_right")
           : null,
-      onScrollUp: control.getBool("on_scroll_up", false)!
+      onScrollUp: control.hasEventHandler("scroll_up")
           ? () => control.triggerEvent("scroll_up")
           : null,
-      onScrollDown: control.getBool("on_scroll_down", false)!
+      onScrollDown: control.hasEventHandler("scroll_down")
           ? () => control.triggerEvent("scroll_down")
           : null,
-      onCopy: control.getBool("on_copy", false)!
+      onCopy: control.hasEventHandler("copy")
           ? () => control.triggerEvent("copy")
           : null,
-      onCut: control.getBool("on_cut", false)!
+      onCut: control.hasEventHandler("cut")
           ? () => control.triggerEvent("cut")
           : null,
-      onPaste: control.getBool("on_paste", false)!
+      onPaste: control.hasEventHandler("paste")
           ? () => control.triggerEvent("paste")
           : null,
-      onLongPress: control.getBool("on_dismiss", false)!
-          ? () => control.triggerEvent("dismiss")
+      onLongPress: control.hasEventHandler("long_press")
+          ? () => control.triggerEvent("long_press")
           : null,
       onMoveCursorForwardByCharacter: control.getBool(
               "on_move_cursor_forward_by_character", false)!
@@ -97,14 +97,14 @@ class SemanticsControl extends StatelessWidget {
               control.triggerEvent("move_cursor_backward_by_character", value)
           : null,
       onDidGainAccessibilityFocus:
-          control.getBool("on_did_gain_accessibility_focus", false)!
+          control.hasEventHandler("did_gain_accessibility_focus")
               ? () => control.triggerEvent("did_gain_accessibility_focus")
               : null,
       onDidLoseAccessibilityFocus:
-          control.getBool("on_did_lose_accessibility_focus", false)!
+          control.hasEventHandler("did_lose_accessibility_focus")
               ? () => control.triggerEvent("did_lose_accessibility_focus")
               : null,
-      onSetText: control.getBool("on_set_text", false)!
+      onSetText: control.hasEventHandler("set_text")
           ? (String text) => control.triggerEvent("set_text", text)
           : null,
     );

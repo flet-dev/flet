@@ -343,13 +343,12 @@ class FletCustomPainter extends CustomPainter {
 
   void drawColor(Canvas canvas, Control shape) {
     var color = shape.getColor("color", context, Colors.black)!;
-    var blendMode =
-        parseBlendMode(shape.getString("blend_mode"), BlendMode.srcOver)!;
+    var blendMode = shape.getBlendMode("blend_mode", BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 
   void drawPoints(Canvas canvas, Control shape) {
-    var points = parseOffsetList(shape.get("points"))!;
+    var points = shape.getOffsetList("points")!;
     var pointMode = ui.PointMode.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
@@ -456,8 +455,7 @@ class FletCustomPainter extends CustomPainter {
     final height = shape.getDouble("height");
 
     final img = shape.get("_image") as ui.Image?;
-    final hashMatch =
-        img != null && shape.get("_hash") == getImageHash(shape);
+    final hashMatch = img != null && shape.get("_hash") == getImageHash(shape);
 
     // Gapless playback: if we have a cached image, draw it even when the hash
     // is stale. Without this, src updates leave a blank frame on screen while

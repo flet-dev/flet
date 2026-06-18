@@ -222,7 +222,7 @@ class DataRow(Control):
 
     Note:
         There must be exactly as many cells as there are visible
-        :attr:`~flet.DataTable.columns` in the table.
+        :attr:`flet.DataTable.columns` in the table.
 
     Raises:
         ValueError: If it does not contain at least one visible :class:`~flet.DataCell`.

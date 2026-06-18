@@ -2,11 +2,11 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.expansion_tile.basic import main as basic
 from examples.controls.material.expansion_tile.borders import main as borders
 from examples.controls.material.expansion_tile.custom_animations import (
     main as custom_animations,
 )
+from examples.controls.material.expansion_tile.expansion_tile import main as basic
 from examples.controls.material.expansion_tile.programmatic_expansion import (
     main as programmatic_expansion,
 )

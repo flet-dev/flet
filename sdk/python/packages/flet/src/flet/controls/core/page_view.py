@@ -39,7 +39,7 @@ class PageView(LayoutControl):
     """
     The zero-based index of the currently visible page.
 
-    Changing it later on (followed by :meth:`~flet.BaseControl.update`)
+    Changing it later on (followed by :meth:`flet.BaseControl.update`)
     jumps to the specified page without animation.
 
     Raises:
@@ -131,7 +131,7 @@ class PageView(LayoutControl):
     """
     Fired when the visible page changes.
 
-    The :attr:`~flet.Event.data` property of the event argument contains
+    The :attr:`flet.Event.data` property of the event argument contains
     the index of the new page.
     """
 
@@ -203,7 +203,7 @@ class PageView(LayoutControl):
     ):
         """
         Animates to the next page. Same as calling
-        :meth:`~flet.PageView.go_to_page` with `selected_index + 1`.
+        :meth:`flet.PageView.go_to_page` with `selected_index + 1`.
 
         Args:
             animation_duration: Length of the animation.
@@ -221,7 +221,7 @@ class PageView(LayoutControl):
     ):
         """
         Animates to the previous page. Same as calling
-        :meth:`~flet.PageView.go_to_page` with `selected_index - 1`.
+        :meth:`flet.PageView.go_to_page` with `selected_index - 1`.
 
         Args:
             animation_duration: Length of the animation.

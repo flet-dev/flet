@@ -1,8 +1,10 @@
 import pytest
 
-import examples.controls.cupertino.cupertino_timer_picker.basic.main as basic
 import flet as ft
 import flet.testing as ftt
+from examples.controls.cupertino.cupertino_timer_picker.cupertino_timer_picker import (
+    main as basic,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

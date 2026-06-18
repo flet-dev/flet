@@ -127,7 +127,7 @@ class TimePicker(DialogControl):
     but does not participate in page-level locale resolution.
 
     If set to `None` (the default) or an inexistent/unsupported locale,
-    the :attr:`~flet.LocaleConfiguration.current_locale` of the
+    the :attr:`flet.LocaleConfiguration.current_locale` of the
     :attr:`flet.Page.locale_configuration` is used as fallback.
     """
 
@@ -227,7 +227,7 @@ class TimePicker(DialogControl):
     Called when user clicks confirm button.
 
     :attr:`value` property is updated with selected time.
-    Additionally, the :attr:`~flet.Event.data` property of the event handler argument
+    Additionally, the :attr:`flet.Event.data` property of the event handler argument
     also contains the selected time.
     """
 
