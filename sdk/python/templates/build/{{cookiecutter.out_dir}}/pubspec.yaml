@@ -17,7 +17,12 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  serious_python: 2.0.0
+  serious_python: 3.0.0
+
+  # MsgPack codec used by the dart_bridge FletBackendChannel implementation
+  # in lib/main.dart — matches the wire format flet's existing socket
+  # transport already speaks.
+  msgpack_dart: ^1.0.1
 
   package_info_plus: ^9.0.0
   path_provider: ^2.1.4
@@ -32,8 +37,6 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
-  device_info_plus: 12.3.0 # remove that in May, 2026 once CI moved to macOS 26
-  connectivity_plus: 7.0.0 # remove that in May, 2026 once CI moved to macOS 26
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1

@@ -26,7 +26,7 @@ jobs:
       flutter_version: ${{ steps.v.outputs.value }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Resolve version
         id: v
@@ -55,7 +55,7 @@ jobs:
       FLUTTER_VERSION: ${{ needs.resolve_version.outputs.flutter_version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Compute platform pair
         id: pair
@@ -94,7 +94,7 @@ jobs:
           touch "/tmp/digests/${digest#sha256:}"
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: flet-build-digests-${{ steps.pair.outputs.value }}
           path: /tmp/digests/*
@@ -111,7 +111,7 @@ jobs:
       FLUTTER_VERSION: ${{ needs.resolve_version.outputs.flutter_version }}
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: /tmp/digests
           pattern: flet-build-digests-*

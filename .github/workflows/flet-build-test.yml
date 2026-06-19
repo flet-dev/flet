@@ -107,17 +107,17 @@ jobs:
             runner: macos-26
 
           - name: windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
@@ -137,7 +137,7 @@ jobs:
         shell: bash
         run: |
           sudo apt update --allow-releaseinfo-change
-          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
           sudo apt-get clean
 
@@ -185,7 +185,7 @@ jobs:
           uv run --with pyinstaller flet pack src/main.py --yes --name flet-pack-test --distpath dist $FLET_PACK_EXTRA_ARGS
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.name }}-pack-artifact
           path: sdk/python/examples/apps/flet_build_test/dist

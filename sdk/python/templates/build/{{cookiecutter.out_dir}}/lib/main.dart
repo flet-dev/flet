@@ -9,11 +9,17 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:serious_python/serious_python.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 
-import "python.dart";
+// `dart:ffi` (and therefore `package:serious_python/bridge.dart`,
+// `package:serious_python/serious_python.dart`) isn't available on web.
+// The conditional import below loads the real PythonBridge-backed runtime
+// on platforms where FFI exists; on web it resolves to a stub of the same
+// shape that just throws if invoked. `main` guards every use with
+// `kIsWeb` so the stub is never actually called.
+import 'native_runtime_stub.dart'
+    if (dart.library.ffi) 'native_runtime.dart' as nrt;
 
 {% for dep in cookiecutter.flutter.dependencies %}
 import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
@@ -86,6 +92,18 @@ void main(List<String> args) async {
       future: prepareApp(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
+          // In production mode prepareApp() created native bridges; wire a
+          // PythonBridge-backed channel so FletApp talks to the embedded
+          // Python over the in-process FFI transport. In web + dev modes
+          // the bridges are absent and FletApp falls back to its URL-scheme
+          // factory (websocket / TCP / UDS).
+          final channelBuilder = nrt.channelBuilder;
+          // Native (non-web): high-throughput byte channels for widgets get
+          // their own dedicated PythonBridge each. Web (Pyodide) leaves this
+          // null so FletBackend's built-in ProtocolMuxedDataChannelFactory
+          // muxes channel bytes over the postMessage transport with
+          // Transferable ArrayBuffer for zero-copy.
+          final dataChannelFactory = nrt.dataChannelFactory;
           // OK - start Python program
           return kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)
               ? FletApp(
@@ -112,6 +130,8 @@ void main(List<String> args) async {
                           assetsDir: assetsDir,
                           showAppStartupScreen: showAppStartupScreen,
                           appStartupScreenMessage: appStartupScreenMessage,
+                          channelBuilder: channelBuilder,
+                          dataChannelFactory: dataChannelFactory,
                           extensions: extensions);
                     }
                   });
@@ -164,7 +184,7 @@ Future prepareApp() async {
   } else {
     // production mode
     // extract app from asset
-    appDir = await extractAssetZip(assetPath, checkHash: true);
+    appDir = await nrt.extractAppAssets(assetPath, checkHash: true);
 
     // set current directory to app path
     Directory.current = appDir;
@@ -197,16 +217,15 @@ Future prepareApp() async {
     environmentVariables.putIfAbsent(
         "FLET_PLATFORM", () => defaultTargetPlatform.name.toLowerCase());
 
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      // use TCP on Windows
-      var tcpPort = await getUnusedPort();
-      pageUrl = "tcp://localhost:$tcpPort";
-      environmentVariables.putIfAbsent("FLET_SERVER_PORT", () => tcpPort.toString());
-    } else {
-      // use UDS on other platforms
-      pageUrl = "flet_$pid.sock";
-      environmentVariables.putIfAbsent("FLET_SERVER_UDS_PATH", () => pageUrl);
-    }
+    // In production we use the in-process dart_bridge FFI transport (no UDS,
+    // no TCP — Python and Flutter share the process). Two bridges, both
+    // owned by `native_runtime.dart`:
+    //   protocol bridge — the Flet MsgPack channel (Dart ↔ Python).
+    //   exit bridge     — Python-only outbound channel carrying the exit
+    //                     code when `sys.exit(code)` is called inside the
+    //                     embedded interpreter. Replaces the legacy
+    //                     stdout-callback socket.
+    pageUrl = nrt.initBridges(environmentVariables);
   }
 
   if (!kIsWeb && assetsDir.isNotEmpty) {
@@ -217,74 +236,27 @@ Future prepareApp() async {
 }
 
 Future<String?> runPythonApp(List<String> args) async {
-  var argvItems = args.map((a) => "\"${a.replaceAll('"', '\\"')}\"");
-  var argv = "[${argvItems.isNotEmpty ? argvItems.join(',') : '""'}]";
-  var script = pythonScript
-      .replaceAll("{outLogFilename}", outLogFilename.replaceAll("\\", "\\\\"))
-      .replaceAll('{module_name}', pythonModuleName)
-      .replaceAll('{argv}', argv);
-
-  var completer = Completer<String>();
-
-  ServerSocket outSocketServer;
-  String socketAddr = "";
-  StringBuffer pythonOut = StringBuffer();
-
-  if (defaultTargetPlatform == TargetPlatform.windows) {
-    var tcpAddr = "127.0.0.1";
-    outSocketServer = await ServerSocket.bind(tcpAddr, 0);
+  // Process-reuse path: Android may keep the OS process alive across a
+  // back-button quit and restart only the Dart VM. libdart_bridge stays
+  // loaded, Python is still up. `initBridges()` already fired
+  // `dart_bridge_signal_dart_session` with the new ports — Python's
+  // session-restart handlers have rewired by now. Don't call into
+  // `SeriousPython.runProgram` again (it would no-op-return immediately
+  // anyway, but the never-completing-future park here keeps the
+  // FletApp's existing FutureBuilder rendering until the OS tears us
+  // down for real).
+  if (nrt.pythonAlreadyRunning) {
     debugPrint(
-        'Python output TCP Server is listening on port ${outSocketServer.port}');
-    socketAddr = "$tcpAddr:${outSocketServer.port}";
-  } else {
-    socketAddr = "stdout_$pid.sock";
-    if (await File(socketAddr).exists()) {
-      await File(socketAddr).delete();
-    }
-    outSocketServer = await ServerSocket.bind(
-        InternetAddress(socketAddr, type: InternetAddressType.unix), 0);
-    debugPrint('Python output Socket Server is listening on $socketAddr');
+        "Python already initialized (process reuse) — skipping SeriousPython.runProgram");
+    return Completer<String>().future;
   }
-
-  environmentVariables.putIfAbsent("FLET_PYTHON_CALLBACK_SOCKET_ADDR", () => socketAddr);
-
-  void closeOutServer() async {
-    outSocketServer.close();
-
-    int exitCode = int.tryParse(pythonOut.toString().trim()) ?? 0;
-
-    if (exitCode == errorExitCode) {
-      var out = "";
-      if (await File(outLogFilename).exists()) {
-        out = await File(outLogFilename).readAsString();
-      }
-      completer.complete(out);
-    } else {
-      exit(exitCode);
-    }
-  }
-
-  outSocketServer.listen((client) {
-    debugPrint(
-        'Connection from: ${client.remoteAddress.address}:${client.remotePort}');
-    client.listen((data) {
-      var s = String.fromCharCodes(data);
-      pythonOut.write(s);
-    }, onError: (error) {
-      client.close();
-      closeOutServer();
-    }, onDone: () {
-      client.close();
-      closeOutServer();
-    });
-  });
-
-  // run python async
-  SeriousPython.runProgram(path.join(appDir, "$pythonModuleName.pyc"),
-      script: script, environmentVariables: environmentVariables);
-
-  // wait for client connection to close
-  return completer.future;
+  return nrt.runPython(
+    moduleName: pythonModuleName,
+    appDir: appDir,
+    outLogFilename: outLogFilename,
+    environmentVariables: environmentVariables,
+    args: args,
+  );
 }
 
 class ErrorScreen extends StatelessWidget {
@@ -377,10 +349,3 @@ class BlankScreen extends StatelessWidget {
   }
 }
 
-Future<int> getUnusedPort() {
-  return ServerSocket.bind("127.0.0.1", 0).then((socket) {
-    var port = socket.port;
-    socket.close();
-    return port;
-  });
-}

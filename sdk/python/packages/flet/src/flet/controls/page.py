@@ -18,9 +18,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet.auth.authorization import Authorization
-from flet.auth.oauth_provider import OAuthProvider
-from flet.components.component import Renderer
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import BasePage
@@ -47,11 +44,7 @@ from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
-from flet.controls.services.browser_context_menu import BrowserContextMenu
-from flet.controls.services.clipboard import Clipboard
 from flet.controls.services.service import Service
-from flet.controls.services.shared_preferences import SharedPreferences
-from flet.controls.services.storage_paths import StoragePaths
 from flet.controls.services.url_launcher import UrlLauncher
 from flet.controls.types import (
     AppLifecycleState,
@@ -68,16 +61,27 @@ from flet.utils.deprecated import deprecated
 from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
-if not is_pyodide():
-    from flet.auth.authorization_service import AuthorizationService
-
-    AuthorizationImpl = AuthorizationService
-else:
-    AuthorizationImpl = Authorization
-
 if TYPE_CHECKING:
+    from flet.auth.authorization import Authorization
+    from flet.auth.oauth_provider import OAuthProvider
     from flet.messaging.session import Session
     from flet.pubsub.pubsub_client import PubSubClient
+
+
+def _default_authorization_impl() -> "type[Authorization]":
+    """Resolve the default `Authorization` implementation lazily.
+
+    Deferring these imports keeps the auth subsystem out of the cold-start
+    import graph for apps that never call `Page.login`.
+    """
+    if not is_pyodide():
+        from flet.auth.authorization_service import AuthorizationService
+
+        return AuthorizationService
+    from flet.auth.authorization import Authorization
+
+    return Authorization
+
 
 try:
     from typing import ParamSpec
@@ -88,7 +92,7 @@ except ImportError:
 logger = logging.getLogger("flet")
 
 
-AT = TypeVar("AT", bound=Authorization)
+AT = TypeVar("AT", bound="Authorization")
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
 
@@ -657,6 +661,8 @@ class Page(BasePage):
             **kwargs: Keyword arguments passed to `component`.
         """
 
+        from flet.components.component import Renderer
+
         logger.debug("Page.render()")
         self._notify = self.__notify
         self.views[0].controls = Renderer().render(component, *args, **kwargs)
@@ -679,6 +685,8 @@ class Page(BasePage):
             *args: Positional arguments passed to `component`.
             **kwargs: Keyword arguments passed to `component`.
         """
+
+        from flet.components.component import Renderer
 
         logger.debug("Page.render_views()")
         self._notify = self.__notify
@@ -1050,7 +1058,7 @@ class Page(BasePage):
 
     async def login(
         self,
-        provider: OAuthProvider,
+        provider: "OAuthProvider",
         fetch_user: bool = True,
         fetch_groups: bool = False,
         scope: Optional[list[str]] = None,
@@ -1060,14 +1068,16 @@ class Page(BasePage):
         ] = None,
         complete_page_html: Optional[str] = None,
         redirect_to_page: Optional[bool] = False,
-        authorization: type[AT] = AuthorizationImpl,
-    ) -> AT:
+        authorization: "Optional[type[AT]]" = None,
+    ) -> "AT":
         """
         Starts OAuth flow.
 
         See [Authentication](https://flet.dev/docs/cookbook/authentication)
         guide for more information and examples.
         """
+        if authorization is None:
+            authorization = _default_authorization_impl()
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
@@ -1278,7 +1288,7 @@ class Page(BasePage):
         return self.session.connection.executor
 
     @property
-    def auth(self) -> Optional[Authorization]:
+    def auth(self) -> "Optional[Authorization]":
         """
         The current authorization context, or `None` if the user is not authorized.
         """
@@ -1315,6 +1325,7 @@ class Page(BasePage):
         """
         The BrowserContextMenu service for the current page.
         """
+        from flet.controls.services.browser_context_menu import BrowserContextMenu
 
         return BrowserContextMenu()
 
@@ -1329,6 +1340,7 @@ class Page(BasePage):
         """
         The SharedPreferences service for the current page.
         """
+        from flet.controls.services.shared_preferences import SharedPreferences
 
         return SharedPreferences()
 
@@ -1343,6 +1355,7 @@ class Page(BasePage):
         """
         The Clipboard service for the current page.
         """
+        from flet.controls.services.clipboard import Clipboard
 
         return Clipboard()
 
@@ -1357,6 +1370,7 @@ class Page(BasePage):
         """
         The StoragePaths service for the current page.
         """
+        from flet.controls.services.storage_paths import StoragePaths
 
         return StoragePaths()
 
