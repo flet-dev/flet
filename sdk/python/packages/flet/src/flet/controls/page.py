@@ -1386,7 +1386,7 @@ class Page(BasePage):
 
         if self.web:
             return from_dict(WebDeviceInfo, info)
-        elif self.platform == PagePlatform.ANDROID:
+        elif self.platform == PagePlatform.ANDROID or self.platform == PagePlatform.ANDROID_TV:
             return from_dict(AndroidDeviceInfo, info)
         elif self.platform == PagePlatform.IOS:
             return from_dict(IosDeviceInfo, info)
