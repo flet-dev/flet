@@ -174,6 +174,33 @@ def __get_client_storage_dir():
     )
 
 
+def reporthook(block_num, block_size, total_size):
+    """
+    Callback function to display download progress.
+    """
+    if total_size <= 0:
+        return  # Content-Length header missing
+    
+    downloaded = block_num * block_size
+    percent = min(100, int(downloaded * 100 / total_size))
+    
+    # Build a simple progress bar (20 characters wide)
+    bar_length = 20
+    filled_length = int(bar_length * downloaded // total_size)
+    bar = '█' * filled_length + '░' * (bar_length - filled_length)
+    
+    # Download speed approximation (optional)
+    # You can add MB downloaded as well
+    downloaded_mb = downloaded / (1024 * 1024)
+    total_mb = total_size / (1024 * 1024)
+    
+    # \r returns cursor to the start of the line, overwriting previous output
+    print(f"\rProgress: |{bar}| {percent}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)", end='', flush=True)
+    
+    if percent == 100:
+        print()  # Newline after completion
+
+
 def __download_flet_client(file_name):
     """
     Download a Flet client archive from GitHub Releases.
@@ -195,7 +222,7 @@ def __download_flet_client(file_name):
     logger.info(f"Downloading Flet v{ver} from {flet_url}")
     print(f"Preparing Flet v{ver} for the first use. This is a one-time operation...")
     temp_arch = Path(tempfile.gettempdir()).joinpath(f"{file_name}.{random_string(10)}")
-    urllib.request.urlretrieve(flet_url, str(temp_arch))
+    urllib.request.urlretrieve(flet_url, str(temp_arch), reporthook)
     return str(temp_arch)
 
 
