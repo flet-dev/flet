@@ -175,28 +175,30 @@ def __get_client_storage_dir():
 
 
 def reporthook(block_num, block_size, total_size):
-    """
-    Callback function to display download progress.
-    """
+    """Callback function to display download progress."""
     if total_size <= 0:
         return  # Content-Length header missing
-    
+
     downloaded = block_num * block_size
     percent = min(100, int(downloaded * 100 / total_size))
-    
+
     # Build a simple progress bar (20 characters wide)
     bar_length = 20
     filled_length = int(bar_length * downloaded // total_size)
-    bar = '█' * filled_length + '░' * (bar_length - filled_length)
-    
+    bar = "█" * filled_length + "░" * (bar_length - filled_length)
+
     # Download speed approximation (optional)
     # You can add MB downloaded as well
     downloaded_mb = downloaded / (1024 * 1024)
     total_mb = total_size / (1024 * 1024)
-    
+
     # \r returns cursor to the start of the line, overwriting previous output
-    print(f"\rProgress: |{bar}| {percent}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)", end='', flush=True)
-    
+    print(
+        f"\rProgress: |{bar}| {percent}% ({downloaded_mb:.1f}/{total_mb:.1f} MB)",
+        end="",
+        flush=True,
+    )
+
     if percent == 100:
         print()  # Newline after completion
 
