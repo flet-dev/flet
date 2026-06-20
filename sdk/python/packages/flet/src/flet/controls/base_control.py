@@ -23,7 +23,6 @@ else:
 
 
 if TYPE_CHECKING:
-    from .base_page import BasePage
     from .keys import KeyValue
     from .page import Page
 
