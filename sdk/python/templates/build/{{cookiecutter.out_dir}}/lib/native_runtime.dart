@@ -70,11 +70,11 @@ bool get bridgesActive => _bridge != null;
 /// process, and false when running against pre-1.3.0 libdart_bridge.
 bool get pythonAlreadyRunning => DartBridge.instance.isPythonInitialized;
 
-/// Extract the bundled app.zip into a fresh app directory and return its
-/// path. Wraps `serious_python.extractAssetZip` so main.dart doesn't have
-/// to import the FFI-touching package directly.
-Future<String> extractAppAssets(String assetPath, {bool checkHash = false}) =>
-    extractAssetZip(assetPath, checkHash: checkHash);
+/// Resolve the bundled app directory (Android unpacks `app.zip` on first
+/// launch; desktop/iOS read it in place from the bundle). Wraps
+/// `SeriousPython.prepareApp()` so main.dart doesn't have to import the
+/// FFI-touching package directly.
+Future<String> getAppDir() => SeriousPython.prepareApp();
 
 /// FletApp's `channelBuilder` for the embedded-Python protocol — wraps the
 /// in-process [PythonBridge] in a [FletBackendChannel]. Returns null until

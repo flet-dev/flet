@@ -17,8 +17,8 @@ bool get bridgesActive => false;
 /// process-reuse check compiles for the web target.
 bool get pythonAlreadyRunning => false;
 
-Future<String> extractAppAssets(String assetPath, {bool checkHash = false}) =>
-    throw UnsupportedError("Asset extraction not available on web");
+Future<String> getAppDir() =>
+    throw UnsupportedError("App directory not available on web");
 
 FletBackendChannelBuilder? get channelBuilder => null;
 

@@ -2088,6 +2088,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+            # app staging dir: serious_python's `package` places the processed
+            # app here (no app.zip on native); the platform native build copies
+            # it into the bundle (Android zips it as a stored asset).
+            package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -2234,10 +2238,18 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash.commit()
 
-        # make sure app/app.zip exists
-        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
-        if not os.path.exists(app_zip_path):
-            self.cleanup(1, "Flet app package app/app.zip was not created.")
+        # verify the package output: web ships app/app.zip; native platforms
+        # stage the unpacked app to build/app for the native build to bundle.
+        if self.package_platform == "Emscripten":
+            app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+            if not os.path.exists(app_zip_path):
+                self.cleanup(1, "Flet app package app/app.zip was not created.")
+        else:
+            app_staging_dir = self.build_dir / "python-app"
+            if not app_staging_dir.exists():
+                self.cleanup(
+                    1, f"Flet app package was not staged to {app_staging_dir}."
+                )
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
@@ -2337,6 +2349,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+            # app staging dir: read by the platform native build (CMake /
+            # podspec / Android Gradle) at `flutter build` time to place the
+            # unpacked app into the bundle.
+            build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
 
         # Path-hungry packages to ship extracted to disk: consumed by the
         # serious_python_android Gradle split during `flutter build`.
