@@ -265,7 +265,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> "Union[Page, BasePage]":
+    def page(self) -> Page:
         """
         The page to which this control belongs to.
         """
