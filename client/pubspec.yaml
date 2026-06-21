@@ -94,6 +94,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
+  screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
 
 dev_dependencies:
   flutter_test:

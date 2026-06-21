@@ -17,12 +17,12 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  # Track the in-development serious_python (4.0.0) from the app-package branch
+  # Track the in-development serious_python (4.0.0) from the main branch
   # until it's published to pub.dev. Pinned by the lifted app-packaging work.
   serious_python:
     git:
       url: https://github.com/flet-dev/serious-python.git
-      ref: app-package
+      ref: main
       path: src/serious_python
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
@@ -43,6 +43,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
+  screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
