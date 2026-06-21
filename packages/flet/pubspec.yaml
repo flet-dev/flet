@@ -52,7 +52,6 @@ dependencies:
   web: ^1.1.1
   web_socket_channel: ^3.0.2
   window_manager: ^0.5.1
-  window_to_front: ^0.0.3
   wakelock_plus: ^1.4.0
 
 dev_dependencies:
