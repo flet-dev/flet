@@ -1,6 +1,7 @@
 import argparse
 import copy
 import glob
+import json
 import os
 import platform
 import shutil
@@ -1972,6 +1973,42 @@ class BaseBuildCommand(BaseFlutterCommand):
                 d[pp[-1]] = f"{images_dir}/{image}"
                 return
 
+    def _darwin_spm_active(self) -> bool:
+        """Whether the iOS/macOS build uses Swift Package Manager (vs CocoaPods).
+
+        SPM is Flet's default integration for darwin. Flet auto-enables it only
+        on its own managed Flutter (see `install_flutter`); when building with a
+        Flutter from PATH, honor whatever the user configured. CocoaPods stays as
+        the fallback. The result is cached for the build.
+        """
+        if self.package_platform not in ("iOS", "Darwin"):
+            return False
+        if getattr(self, "_spm_active_cached", None) is not None:
+            return self._spm_active_cached
+        active = False
+        if self.flutter_installed_by_flet:
+            active = True
+        else:
+            try:
+                result = self.run(
+                    [
+                        self.flutter_exe,
+                        "config",
+                        "--machine",
+                        "--no-version-check",
+                        "--suppress-analytics",
+                    ],
+                    cwd=os.getcwd(),
+                    capture_output=True,
+                )
+                if result.returncode == 0 and result.stdout:
+                    cfg = json.loads(result.stdout)
+                    active = bool(cfg.get("enable-swift-package-manager", False))
+            except Exception:
+                active = False
+        self._spm_active_cached = active
+        return active
+
     def package_python_app(self):
         """
         Package Python app and dependencies into Flutter-consumable app archive.
@@ -2092,6 +2129,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             # app here (no app.zip on native); the platform native build copies
             # it into the bundle (Android zips it as a stored asset).
             package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): tell serious_python's package command to
+        # do the host-side SPM staging (the podspec prepare_command doesn't run
+        # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
+        if self._darwin_spm_active():
+            package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true"
+            package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
+                self.build_dir / ".serious_python_spm_key"
+            )
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -2353,6 +2399,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             # podspec / Android Gradle) at `flutter build` time to place the
             # unpacked app into the bundle.
             build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): export the cache-bust key the package
+        # step computed so the plugin's Package.swift re-resolves when the staged
+        # native set changes (SwiftPM caches its graph on manifest text + env).
+        if self._darwin_spm_active():
+            spm_key_file = self.build_dir / ".serious_python_spm_key"
+            if spm_key_file.exists():
+                build_env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
 
         # Path-hungry packages to ship extracted to disk: consumed by the
         # serious_python_android Gradle split during `flutter build`.

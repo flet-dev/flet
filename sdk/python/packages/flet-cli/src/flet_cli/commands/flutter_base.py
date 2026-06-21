@@ -47,6 +47,10 @@ class BaseFlutterCommand(BaseCommand):
         self.emojis = {}
         self.dart_exe = None
         self.flutter_exe = None
+        # True once install_flutter() has provisioned a Flet-managed Flutter SDK
+        # (vs. a Flutter discovered on PATH). Flet only auto-enables Swift Package
+        # Manager on its own managed installation.
+        self.flutter_installed_by_flet = False
         self.required_flutter_version: Optional[version.Version] = None
         self.verbose = False
         self.require_android_sdk = False
@@ -266,6 +270,23 @@ class BaseFlutterCommand(BaseCommand):
                 if isinstance(config_result.stderr, str):
                     console.log(config_result.stderr, style=error_style)
                 self.cleanup(config_result.returncode)
+
+        # Swift Package Manager is Flet's default integration for iOS/macOS
+        # builds. Enable it only on this Flet-managed Flutter installation — never
+        # mutate a user's own Flutter config. Builds that use a Flutter found on
+        # PATH keep whatever SPM setting the user already has.
+        self.flutter_installed_by_flet = True
+        self.run(
+            [
+                self.flutter_exe,
+                "config",
+                "--no-version-check",
+                "--suppress-analytics",
+                "--enable-swift-package-manager",
+            ],
+            cwd=os.getcwd(),
+            capture_output=self.verbose < 1,
+        )
 
         if self.verbose > 0:
             console.log(
