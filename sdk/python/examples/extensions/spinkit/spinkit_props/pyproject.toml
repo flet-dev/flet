@@ -1,0 +1,29 @@
+[project]
+name = "spinkit-props"
+version = "1.0.0"
+description = "Demonstrates SpinKit control properties: color, size, duration, line_width, border_width, wave_type, item_count."
+requires-python = ">=3.10"
+keywords = ["spinkit", "loading", "spinner", "animation", "properties"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-spinkit"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Animation/SpinKit"]
+
+[tool.flet.metadata]
+title = "SpinKit Properties"
+controls = [
+    "RotatingCircle", "ThreeBounce", "Pulse", "Wave",
+    "Ring", "DualRing", "Ripple", "SpinningLines", "PianoWave",
+]
+layout_pattern = "sections"
+complexity = "beginner"
+features = ["color", "size", "duration", "wave_type", "item_count", "line_width", "border_width"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

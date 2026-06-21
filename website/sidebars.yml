@@ -278,6 +278,39 @@ docs:
       Screenshot: controls/screenshot.md
       ShaderMask: controls/shadermask.md
       Shimmer: controls/shimmer.md
+      SpinKit:
+        _index: controls/spinkit/index.md
+        ChasingDots: controls/spinkit/chasingdots.md
+        Circle: controls/spinkit/circle.md
+        CubeGrid: controls/spinkit/cubegrid.md
+        DancingSquare: controls/spinkit/dancingsquare.md
+        DoubleBounce: controls/spinkit/doublebounce.md
+        DualRing: controls/spinkit/dualring.md
+        FadingCircle: controls/spinkit/fadingcircle.md
+        FadingCube: controls/spinkit/fadingcube.md
+        FadingFour: controls/spinkit/fadingfour.md
+        FadingGrid: controls/spinkit/fadinggrid.md
+        FoldingCube: controls/spinkit/foldingcube.md
+        HourGlass: controls/spinkit/hourglass.md
+        PianoWave: controls/spinkit/pianowave.md
+        PouringHourGlass: controls/spinkit/pouringhourglass.md
+        PouringHourGlassRefined: controls/spinkit/pouringhourglassrefined.md
+        Pulse: controls/spinkit/pulse.md
+        PulsingGrid: controls/spinkit/pulsinggrid.md
+        PumpingHeart: controls/spinkit/pumpingheart.md
+        Ring: controls/spinkit/ring.md
+        Ripple: controls/spinkit/ripple.md
+        RotatingCircle: controls/spinkit/rotatingcircle.md
+        RotatingPlain: controls/spinkit/rotatingplain.md
+        SpinningCircle: controls/spinkit/spinningcircle.md
+        SpinningLines: controls/spinkit/spinninglines.md
+        SquareCircle: controls/spinkit/squarecircle.md
+        ThreeBounce: controls/spinkit/threebounce.md
+        ThreeInOut: controls/spinkit/threeinout.md
+        WanderingCubes: controls/spinkit/wanderingcubes.md
+        Wave: controls/spinkit/wave.md
+        WaveSpinner: controls/spinkit/wavespinner.md
+        WaveType: controls/spinkit/wavetype.md
       Slider: controls/slider.md
       SnackBar: controls/snackbar.md
       Stack: controls/stack.md

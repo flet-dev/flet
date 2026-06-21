@@ -44,7 +44,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 
 ## Flutter-side Rules
 
-- Use `parseEnum()` for enums.
+- Use `parseEnum()` for enums — it's exported from `package:flet/flet.dart`. Call it as `parseEnum(MyEnum.values, widget.control.getString("attr"), MyEnum.defaultVal)!`. Do NOT write a custom `_parseXxx()` switch helper.
 - For control attributes, prefer `widget.control.getBool()/getDouble()/...` accessors.
 - For non-control parsing, use shared `parseSomething()` helpers.
 - Do not add one-off private parser utilities when standard helpers exist.
@@ -65,22 +65,33 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 
 ## Integration Checklist
 
-- Add dependency and registration to Flet client app.
-- Add extension package to `sdk/python/pyproject.toml`.
-- Add extension to `sdk/python/packages/flet/pyproject.toml`.
-- Add extension to `sdk/python/examples/apps/flet_build_test/pyproject.toml`.
+- Register in the Flet client app — two files:
+  1. `client/pubspec.yaml`: add `flet_<ext>: path: ../sdk/python/packages/flet-<ext>/src/flutter/flet_<ext>` under `dependencies`.
+  2. `client/lib/main.dart`: add `import 'package:flet_<ext>/flet_<ext>.dart' as flet_<ext>;` and `flet_<ext>.Extension()` to the `extensions` list.
+- Add extension package to `sdk/python/pyproject.toml` in **two places**: the `dependencies` list and `[tool.uv.sources]` as `{ workspace = true }`.
+- Add extension to `sdk/python/packages/flet/pyproject.toml` in the `[dependency-groups] extensions` list.
+- Add extension to `sdk/python/examples/apps/flet_build_test/pyproject.toml` in **three places**: `[project] dependencies`, `[tool.uv.sources]` as `{ path = "...", editable = true }`, and `[tool.flet.dev_packages]` as a relative path string.
+- Add extension to `tools/crocodocs/pyproject.toml` under `[tool.crocodocs.packages]` as `<pkg_name> = "../../sdk/python/packages/<pkg-dir>/src"`. This fixes "Missing API entry" errors in the docs. Note: `api-data.json` is gitignored (generated at build time); only the `pyproject.toml` change needs committing.
 - Add extension to `.github/workflows/ci.yml` in both places:
   - `build_flet_extensions` -> `PACKAGES` list.
   - `py_publish` -> `for pkg in ...` publish loop.
 - Add `.gitignore` to Flutter extension project if missing.
+- Remove `[tool.uv.sources]` local path overrides from example `pyproject.toml` files before opening a PR (they are development-only conveniences).
 
 ## Docs, Examples, Tests
 
 - Add control/service docs under `website/docs/controls/<name>` for controls and `website/docs/services/<name>` for services.
+- Always create one doc page per control, even for extensions with many similar controls. Use `index.md` for the overview (install instructions, examples, list of links) and individual `<controlname>.md` files for each control — consistent with `flet-color-pickers` and other extensions.
+- Use `<ClassSummary name="pkg.ClassName" />` and `<ClassMembers name="pkg.ClassName" />` JSX from `@site/src/components/crocodocs` to render API docs. Do NOT add `image=`, `imageCaption=`, or `imageWidth=` props to `<ClassSummary>` when no screenshots exist yet.
+- In the `## Examples` section, do NOT add `###` subtitles above `<CodeExample>` blocks — titles are injected automatically from the example file itself.
 - Add all custom enums/types docs and update `website/sidebars.yml` navigation.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
-- Add examples under `sdk/python/examples` in the appropriate category for control vs service.
-- Add integration tests under `packages/flet/integration_tests` in the appropriate category for control vs service.
+- Add examples under `sdk/python/examples/extensions/<name>/` for extension controls.
+- Use `import flet_<ext> as <short_alias>` in examples (e.g., `import flet_spinkit as spins`). Keep alias short but readable.
+- Use `ft.Colors.SURFACE_CONTAINER_HIGHEST` for card/cell backgrounds in showcase examples — it adapts to light and dark system themes automatically.
+- Do NOT set an explicit dark theme in examples; let the app use system theme (no `page.theme_mode`).
+- Add integration tests under `packages/flet/integration_tests/extensions/<name>/` — **not** inside the extension package's own directory (no `tests/` folder in the package itself, matching the pattern of `flet-code-editor`, `flet-color-pickers`, etc.).
+- For controls with continuously-running animations, do NOT use `assert_control_screenshot` or `pump_and_settle` — they will timeout waiting for animations to settle. Instead use `await flet_app.tester.pump(duration=ft.Duration(milliseconds=500))` which advances the clock by a fixed amount. This still runs real Flutter rendering and catches crashes, without screenshot comparison.
 - Ensure generated screenshots are suitable for docs usage when visual examples are added.
 
 ## Upgrade and Compatibility Guardrails
