@@ -1,5 +1,4 @@
 import argparse
-import contextlib
 import copy
 import glob
 import os
@@ -10,7 +9,6 @@ from typing import Optional, cast
 
 import yaml
 from packaging.requirements import Requirement
-from packaging.utils import canonicalize_name
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -494,11 +492,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             action=argparse.BooleanOptionalAction,
             default=None,
             help="Integrate the embedded Python runtime via Swift Package Manager "
-            "(default) or CocoaPods for iOS/macOS builds. On by default; Flet "
-            "automatically falls back to CocoaPods when the app uses `flet-video` "
-            "(media_kit, not yet SPM-compatible). Use --no-swift-package-manager "
-            "(or `swift_package_manager = false` under [tool.flet]) if your app "
-            "uses other packages that don't support SPM.",
+            "(default) or CocoaPods for iOS/macOS builds. On by default, matching "
+            "Flutter 3.44+ which uses SPM by default (other non-SPM plugins still "
+            "build with CocoaPods alongside it). Use --no-swift-package-manager (or "
+            "`swift_package_manager = false` under [tool.flet]) only if you've "
+            "disabled Swift Package Manager in Flutter.",
         )
         parser.add_argument(
             "--cleanup-app",
@@ -1991,44 +1989,24 @@ class BaseBuildCommand(BaseFlutterCommand):
                 d[pp[-1]] = f"{images_dir}/{image}"
                 return
 
-    # Flet packages that don't yet support Swift Package Manager. If an app uses
-    # one, Flutter builds the whole iOS/macOS app with CocoaPods, so serious_python
-    # must stage for CocoaPods too. Names are canonicalized for comparison.
-    _NON_SPM_PLUGINS = frozenset({canonicalize_name("flet-video")})
-
-    def _references_non_spm_plugins(self, toml_dependencies, requirements_txt):
-        """Whether the app depends on any package that forces a CocoaPods build."""
-        names = set()
-        for dep in toml_dependencies or []:
-            with contextlib.suppress(Exception):
-                names.add(canonicalize_name(Requirement(dep).name))
-        if requirements_txt.exists():
-            for line in requirements_txt.read_text(encoding="utf-8").splitlines():
-                line = line.strip()
-                if not line or line.startswith(("#", "-")):
-                    continue
-                with contextlib.suppress(Exception):
-                    names.add(canonicalize_name(Requirement(line).name))
-        return bool(names & self._NON_SPM_PLUGINS)
-
     def _darwin_spm_active(self) -> bool:
         """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
 
-        On by default. Falls back to CocoaPods when the app uses a package that
-        isn't SPM-ready (e.g. `flet-video`/media_kit) — Flutter then builds the
-        whole app with CocoaPods, so serious_python must stage to match. A user
-        can also force CocoaPods with `--no-swift-package-manager` (or
-        `swift_package_manager = false` under `[tool.flet]`) when they use other
-        non-SPM packages. Flet does not change Flutter's global SPM configuration —
-        only which way it stages the Python runtime.
+        On by default, matching Flutter 3.44+ (SPM enabled by default). Because
+        `serious_python_darwin` ships a `Package.swift`, Flutter always builds it
+        as an SPM plugin when SPM is enabled — even in a hybrid app where other,
+        non-SPM plugins (e.g. `flet-video`/media_kit) build with CocoaPods at the
+        same time. So serious_python must stage for SPM to match; it is NOT tied
+        to whether the app also pulls in non-SPM plugins. Users force CocoaPods
+        with `--no-swift-package-manager` (or `swift_package_manager = false` under
+        `[tool.flet]`) only when they've disabled SPM in Flutter itself. Flet does
+        not change Flutter's global SPM configuration.
         """
         if self.package_platform not in ("iOS", "Darwin"):
             return False
-        if not self.get_bool_setting(
+        return self.get_bool_setting(
             self.options.swift_package_manager, "swift_package_manager", True
-        ):
-            return False
-        return not getattr(self, "_app_uses_non_spm_plugin", False)
+        )
 
     def package_python_app(self):
         """
@@ -2093,14 +2071,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         if platform_dependencies:
             toml_dependencies.extend(platform_dependencies)
-
-        # Detect packages that don't support Swift Package Manager and so force
-        # Flutter to build the whole iOS/macOS app with CocoaPods (currently only
-        # `flet-video`, which bundles media_kit). serious_python then has to stage
-        # for CocoaPods to match — see `_darwin_spm_active`.
-        self._app_uses_non_spm_plugin = self._references_non_spm_plugins(
-            toml_dependencies, requirements_txt
-        )
 
         dev_packages_configured = False
         if len(toml_dependencies) > 0:
