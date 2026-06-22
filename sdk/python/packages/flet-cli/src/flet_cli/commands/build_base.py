@@ -15,6 +15,7 @@ from rich.table import Column, Table
 import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import copy_tree, slugify
+from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -22,6 +23,10 @@ from flet_cli.commands.flutter_base import (
     verbose1_style,
     verbose2_style,
     warning_style,
+)
+from flet_cli.utils.android import (
+    ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    excluded_android_abis,
 )
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
@@ -32,11 +37,27 @@ from flet_cli.utils.project_dependencies import (
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+from flet_cli.utils.python_versions import (
+    UnsupportedPythonVersionError,
+    resolve_python_version,
+)
 
 DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
     "v{version}/flet-build-template.zip"
 )
+
+# Android (serious_python native-mmap packaging): pure Python ships in stored zips
+# read via zipimport, which breaks packages that read bundled data through a real
+# filesystem path (__file__ / pkg_resources) instead of importlib.resources. Such
+# packages are shipped extracted to disk via --android-extract-packages or
+# [tool.flet.android].extract_packages.
+#
+# The default set is empty: the common offenders read their data via
+# importlib.resources, which is zip-safe (e.g. certifi.where() works from the zip —
+# importlib.resources.as_file() extracts cacert.pem to a temp file on demand). Add
+# real offenders here as they are found.
+ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 
 
 class BaseBuildCommand(BaseFlutterCommand):
@@ -244,10 +265,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--arch",
             dest="target_arch",
+            action="extend",
             nargs="+",
             default=[],
             help="Build for specific CPU architectures "
-            "(used in macOS and Android builds only). Example: `--arch arm64 x64`",
+            "(used in macOS and Android builds only). "
+            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x64. "
+            "Example: `--arch arm64-v8a`",
         )
         parser.add_argument(
             "--exclude",
@@ -263,7 +287,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="clear_cache",
             action="store_true",
             default=None,
-            help="Remove any existing build cache before starting the build process",
+            help="Remove any existing build cache before starting the build process. "
+            "Deprecated: use the `flet clean` command instead",
         )
         parser.add_argument(
             "--project",
@@ -448,16 +473,30 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--compile-app",
             dest="compile_app",
-            action="store_true",
+            action=argparse.BooleanOptionalAction,
             default=None,
-            help="Pre-compile app's `.py` files to `.pyc`",
+            help="Pre-compile app's `.py` files to `.pyc` (on by default; "
+            "use --no-compile-app to disable)",
         )
         parser.add_argument(
             "--compile-packages",
             dest="compile_packages",
-            action="store_true",
+            action=argparse.BooleanOptionalAction,
             default=None,
-            help="Pre-compile site packages' `.py` files to `.pyc`",
+            help="Pre-compile site packages' `.py` files to `.pyc` (on by default; "
+            "use --no-compile-packages to disable)",
+        )
+        parser.add_argument(
+            "--swift-package-manager",
+            dest="swift_package_manager",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Integrate the embedded Python runtime via Swift Package Manager "
+            "(default) or CocoaPods for iOS/macOS builds. On by default, matching "
+            "Flutter 3.44+ which uses SPM by default (other non-SPM plugins still "
+            "build with CocoaPods alongside it). Use --no-swift-package-manager (or "
+            "`swift_package_manager = false` under [tool.flet]) only if you've "
+            "disabled Swift Package Manager in Flutter.",
         )
         parser.add_argument(
             "--cleanup-app",
@@ -497,9 +536,27 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--source-packages",
             dest="source_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="The list of Python packages to install from source distributions",
+        )
+        parser.add_argument(
+            "--android-extract-packages",
+            dest="android_extract_packages",
+            nargs="+",
+            default=[],
+            help="Android only: Python packages (relative paths) to ship extracted "
+            "to disk instead of inside the app zip — for packages that read bundled "
+            "data via __file__ / pkg_resources rather than importlib.resources",
+        )
+        parser.add_argument(
+            "--python-version",
+            dest="python_version",
+            type=str,
+            default=None,
+            help="Python version to bundle (e.g. 3.13). Defaults to the latest "
+            "supported version, or is parsed from project.requires-python.",
         )
         parser.add_argument(
             "--info-plist",
@@ -552,6 +609,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--permissions",
             dest="permissions",
             type=str.lower,
+            action="extend",
             nargs="+",
             default=[],
             choices=["location", "camera", "microphone", "photo_library"],
@@ -647,6 +705,22 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
 
         super().handle(options)
+
+        if getattr(self.options, "clear_cache", None):
+            deprecated_warning(
+                name="--clear-cache",
+                reason="Use the `flet clean` command instead.",
+                version="0.86.0",
+                delete_version="0.89.0",
+                type="flag",
+            )
+            console.print(
+                "Warning: the `--clear-cache` flag is deprecated since version "
+                "0.86.0 and will be removed in version 0.89.0. "
+                "Use the `flet clean` command instead.",
+                style=warning_style,
+            )
+
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
 
@@ -692,6 +766,29 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
+
+        try:
+            self.python_release = resolve_python_version(
+                self.options.python_version, self.get_pyproject
+            )
+        except UnsupportedPythonVersionError as e:
+            self.cleanup(1, str(e))
+
+        # Changing the bundled Python version invalidates the compiled bytecode
+        # baked into the previous build's native bundles (stdlib/site-packages
+        # .pyc). Reusing the build directory would mix versions and crash at
+        # runtime with "bad magic number". Force a clean rebuild on a switch.
+        version_marker = self.build_dir / ".python-version"
+        if self.build_dir.exists() and version_marker.exists():
+            previous = version_marker.read_text(encoding="utf-8").strip()
+            if previous and previous != self.python_release.short:
+                console.log(
+                    f"Bundled Python version changed ({previous} -> "
+                    f"{self.python_release.short}); cleaning the build directory."
+                )
+                shutil.rmtree(self.build_dir, ignore_errors=True)
+        self.build_dir.mkdir(parents=True, exist_ok=True)
+        version_marker.write_text(self.python_release.short, encoding="utf-8")
 
     def validate_target_platform(self):
         """
@@ -826,6 +923,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "android.hardware.touchscreen": False,
         }
         android_meta_data = {}
+        android_providers = {}
 
         # merge values from "--permissions" arg:
         for p in (
@@ -922,6 +1020,25 @@ class BaseBuildCommand(BaseFlutterCommand):
             else:
                 self.cleanup(1, f"Invalid Android permission option: {p}")
 
+        for key, value in android_permissions.items():
+            if isinstance(value, bool):
+                continue
+            if isinstance(value, dict):
+                for ak, av in value.items():
+                    if not isinstance(av, (str, bool, int, float)):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android permission attribute value for "
+                            f"{key}.{ak}: {type(av).__name__}. "
+                            "Expected string, boolean, or number.",
+                        )
+                continue
+            self.cleanup(
+                1,
+                f"Invalid Android permission value for {key}: "
+                f"{type(value).__name__}. Expected boolean or inline table.",
+            )
+
         android_features = merge_dict(
             android_features,
             self.get_pyproject("tool.flet.android.feature") or {},
@@ -955,6 +1072,88 @@ class BaseBuildCommand(BaseFlutterCommand):
             else:
                 self.cleanup(1, f"Invalid Android meta-data option: {p}")
 
+        android_providers = merge_dict(
+            android_providers,
+            self.get_pyproject("tool.flet.android.provider") or {},
+        )
+
+        def _xml_attr_value(v):
+            # Android XML expects lowercase booleans.
+            if isinstance(v, bool):
+                return "true" if v else "false"
+            return v
+
+        normalized_providers = {}
+        for key, value in android_providers.items():
+            if value is False or value == {}:
+                continue
+            if value is True:
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: 'true' is not "
+                    "supported. Use an inline table of attributes, or 'false' "
+                    "to skip.",
+                )
+            if not isinstance(value, dict):
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: "
+                    f"{type(value).__name__}. Expected boolean or inline table.",
+                )
+            normalized = {}
+            for ak, av in value.items():
+                if ak == "name":
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute for {key}: "
+                        "'name' is reserved and is taken from the table key.",
+                    )
+                if ak == "meta_data":
+                    if not isinstance(av, dict):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta_data for {key}: "
+                            f"{type(av).__name__}. Expected inline table.",
+                        )
+                    normalized_meta = {}
+                    for mk, mv in av.items():
+                        if isinstance(mv, (str, bool, int, float)):
+                            normalized_meta[mk] = _xml_attr_value(mv)
+                            continue
+                        if isinstance(mv, dict):
+                            normalized_attrs = {}
+                            for attr_key, attr_value in mv.items():
+                                if not isinstance(attr_value, (str, bool, int, float)):
+                                    self.cleanup(
+                                        1,
+                                        f"Invalid Android provider meta-data "
+                                        f"attribute value for "
+                                        f"{key}.meta_data.{mk}.{attr_key}: "
+                                        f"{type(attr_value).__name__}. "
+                                        "Expected string, boolean, or number.",
+                                    )
+                                normalized_attrs[attr_key] = _xml_attr_value(attr_value)
+                            normalized_meta[mk] = normalized_attrs
+                            continue
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta-data value for "
+                            f"{key}.meta_data.{mk}: {type(mv).__name__}. "
+                            "Expected string, boolean, number, or inline table.",
+                        )
+                    normalized["meta_data"] = normalized_meta
+                    continue
+                if not isinstance(av, (str, bool, int, float)):
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute value for "
+                        f"{key}.{ak}: {type(av).__name__}. "
+                        "Expected string, boolean, or number.",
+                    )
+                normalized[ak] = _xml_attr_value(av)
+            normalized_providers[key] = normalized
+        android_providers = normalized_providers
+
         deep_linking_scheme = (
             self.get_pyproject("tool.flet.ios.deep_linking.scheme")
             if self.package_platform == "iOS"
@@ -984,6 +1183,40 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
             or self.get_pyproject("tool.flet.target_arch")
         )
+        target_arch = (
+            target_arch
+            if isinstance(target_arch, list)
+            else [target_arch]
+            if isinstance(target_arch, str)
+            else []
+        )
+        if self.package_platform == "Android":
+            invalid_archs = [
+                arch
+                for arch in target_arch
+                if arch not in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM
+            ]
+            if invalid_archs:
+                self.cleanup(
+                    1,
+                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}.\n"
+                    f"Supported: "
+                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            python_abis = list(self.python_release.android_abis)
+            unsupported_archs = [a for a in target_arch if a not in python_abis]
+            if unsupported_archs:
+                self.cleanup(
+                    1,
+                    f"Architecture(s) not supported by Python "
+                    f"{self.python_release.short}: {', '.join(unsupported_archs)}.\n"
+                    f"Supported: {', '.join(python_abis)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            if not target_arch:
+                # Build only for the ABIs the bundled Python supports.
+                target_arch = python_abis
 
         ios_export_method = (
             self.options.ios_export_method
@@ -1065,6 +1298,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "no_cdn": (
                 self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
             ),
+            # Surface the resolved Pyodide release to the cookiecutter
+            # context so the web template's index.html can wire the
+            # correct jsdelivr URL when CDN mode is on.
+            "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
             "project_name": project_name,
@@ -1095,11 +1332,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             "options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
-                "target_arch": (
-                    target_arch
-                    if isinstance(target_arch, list)
-                    else [target_arch]
-                    if isinstance(target_arch, str)
+                "python_version": self.python_release.short,
+                "target_arch": target_arch,
+                "android_excluded_abis": (
+                    excluded_android_abis(target_arch)
+                    if self.package_platform == "Android"
                     else []
                 ),
                 "info_plist": info_plist,
@@ -1107,6 +1344,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
+                "android_providers": android_providers,
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
@@ -1155,6 +1393,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = flet.version.flet_version
 
         is_local_dev = False
+        # Identity printed in status / hashed for invalidation; may differ from
+        # the path cookiecutter actually reads when caching kicks in below.
+        template_source = template_url
         if template_url:
             # User-provided template (git repo or local path) — use checkout
             checkout = template_ref
@@ -1163,13 +1404,19 @@ class BaseBuildCommand(BaseFlutterCommand):
             local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
             if local_tpl.is_dir():
                 template_url = str(local_tpl)
+                template_source = template_url
                 checkout = None
                 is_local_dev = True
             else:
-                template_url = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                from flet_cli.utils.template_cache import get_cached_template_zip
+
+                template_source = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                template_url = str(
+                    get_cached_template_zip(template_source, template_ref)
+                )
                 checkout = None
 
-        hash.update(template_url)
+        hash.update(template_source)
         hash.update(template_ref)
 
         template_dir = self.options.template_dir or self.get_pyproject(
@@ -1195,7 +1442,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_url}"
+                status = f"[bold blue]Creating app shell from {template_source}"
                 if checkout:
                     status += f' with ref "{template_ref}"'
                 status += "..."
@@ -1272,10 +1519,15 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.template_data
         assert self.build_dir
 
+        # Replace the permanent flutter-packages copy with this build's set. The
+        # temp dir is populated by serious_python's package step and is ABSENT
+        # when the app has no Flutter extensions — so always clear the old copy
+        # first, otherwise an extension removed since the previous build (e.g.
+        # dropping flet-video) would linger here and stay in the built app.
+        if self.flutter_packages_dir.exists():
+            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
         if self.flutter_packages_temp_dir.exists():
             # copy packages from temp to permanent location
-            if self.flutter_packages_dir.exists():
-                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
             shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
@@ -1737,6 +1989,25 @@ class BaseBuildCommand(BaseFlutterCommand):
                 d[pp[-1]] = f"{images_dir}/{image}"
                 return
 
+    def _darwin_spm_active(self) -> bool:
+        """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
+
+        On by default, matching Flutter 3.44+ (SPM enabled by default). Because
+        `serious_python_darwin` ships a `Package.swift`, Flutter always builds it
+        as an SPM plugin when SPM is enabled — even in a hybrid app where other,
+        non-SPM plugins (e.g. `flet-video`/media_kit) build with CocoaPods at the
+        same time. So serious_python must stage for SPM to match; it is NOT tied
+        to whether the app also pulls in non-SPM plugins. Users force CocoaPods
+        with `--no-swift-package-manager` (or `swift_package_manager = false` under
+        `[tool.flet]`) only when they've disabled SPM in Flutter itself. Flet does
+        not change Flutter's global SPM configuration.
+        """
+        if self.package_platform not in ("iOS", "Darwin"):
+            return False
+        return self.get_bool_setting(
+            self.options.swift_package_manager, "swift_package_manager", True
+        )
+
     def package_python_app(self):
         """
         Package Python app and dependencies into Flutter-consumable app archive.
@@ -1767,14 +2038,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             str(self.package_app_path),
             "--platform",
             self.package_platform,
+            "--python-version",
+            self.python_release.short,
         ]
 
         if self.template_data["options"]["target_arch"]:
+            # serious_python's --arch is a Dart multi-option: values must be
+            # comma-separated or the flag repeated. Space-separated values
+            # after the first are silently treated as positional arguments.
             package_args.extend(
-                ["--arch"] + self.template_data["options"]["target_arch"]
+                ["--arch", ",".join(self.template_data["options"]["target_arch"])]
             )
 
-        package_env = {}
+        # Only the short version is passed; serious_python derives the full
+        # version, python-build date, and dart_bridge version from its own
+        # committed snapshot of the manifest.
+        package_env = {
+            "SERIOUS_PYTHON_VERSION": self.python_release.short,
+        }
 
         # requirements
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
@@ -1807,7 +2088,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
                         if dev_path.exists():
-                            toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                            # Use Path.as_uri() so Windows drive paths render as
+                            # `file:///D:/a/...` rather than `file://D:\a\...`,
+                            # which pip otherwise treats as a UNC path and fails
+                            # to resolve.
+                            toml_dependencies[i] = (
+                                f"{package_name} @ {dev_path.as_uri()}"
+                            )
                         else:
                             toml_dependencies[i] = (
                                 f"{package_name} @ {package_location}"
@@ -1837,6 +2124,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+            # app staging dir: serious_python's `package` places the processed
+            # app here (no app.zip on native); the platform native build copies
+            # it into the bundle (Android zips it as a stored asset).
+            package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): tell serious_python's package command to
+        # do the host-side SPM staging (the podspec prepare_command doesn't run
+        # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
+        # serious_python defaults to SPM staging, so be explicit either way — set
+        # it false for the CocoaPods cases (e.g. an app using flet-video).
+        if self.package_platform in ("iOS", "Darwin"):
+            spm = self._darwin_spm_active()
+            package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
+            if spm:
+                package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
+                    self.build_dir / ".serious_python_spm_key"
+                )
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -1872,11 +2176,31 @@ class BaseBuildCommand(BaseFlutterCommand):
                 source_packages
             )
 
-        if self.get_bool_setting(self.options.compile_app, "compile.app", False):
+        # android-extract-packages: path-hungry packages shipped extracted to disk
+        # instead of inside the zip (serious_python Android native-mmap packaging).
+        # A built-in default set covers commonly-broken packages; the user list
+        # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
+        # Gradle split during `flutter build`, so the env var is set on build_env
+        # (see _run_flutter_command), not on the package step.
+        self.android_extract_packages: list[str] = []
+        if self.package_platform == "Android":
+            user_extract_packages = (
+                self.options.android_extract_packages
+                or self.get_pyproject(
+                    f"tool.flet.{self.config_platform}.extract_packages"
+                )
+                or self.get_pyproject("tool.flet.extract_packages")
+                or []
+            )
+            self.android_extract_packages = list(
+                dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
+            )
+
+        if self.get_bool_setting(self.options.compile_app, "compile.app", True):
             package_args.append("--compile-app")
 
         if self.get_bool_setting(
-            self.options.compile_packages, "compile.packages", False
+            self.options.compile_packages, "compile.packages", True
         ):
             package_args.append("--compile-packages")
 
@@ -1963,12 +2287,35 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash.commit()
 
-        # make sure app/app.zip exists
-        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
-        if not os.path.exists(app_zip_path):
-            self.cleanup(1, "Flet app package app/app.zip was not created.")
+        # verify the package output: web ships app/app.zip; native platforms
+        # stage the unpacked app to build/app for the native build to bundle.
+        if self.package_platform == "Emscripten":
+            app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+            if not os.path.exists(app_zip_path):
+                self.cleanup(1, "Flet app package app/app.zip was not created.")
+        else:
+            app_staging_dir = self.build_dir / "python-app"
+            if not app_staging_dir.exists():
+                self.cleanup(
+                    1, f"Flet app package was not staged to {app_staging_dir}."
+                )
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
+
+        # Drop the matching Pyodide runtime into the Flutter project's web/
+        # directory so it ships in `flutter build web` output. Cached
+        # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
+        # are no-ops.
+        if self.package_platform == "Emscripten":
+            from flet_cli.utils.pyodide import ensure_pyodide
+
+            self.update_status("[bold blue]Preparing Pyodide runtime...")
+            pyodide_dest = self.flutter_dir / "web" / "pyodide"
+            ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+            console.log(
+                f"Pyodide {self.python_release.pyodide} ready "
+                f"{self.emojis['checkmark']}"
+            )
 
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
@@ -2040,12 +2387,35 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
         )
 
-        build_env = {}
+        # Only the short version is passed; serious_python derives the rest
+        # from its committed manifest snapshot.
+        build_env = {
+            "SERIOUS_PYTHON_VERSION": self.python_release.short,
+        }
 
         # site-packages variable
         if self.package_platform != "Emscripten":
             build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
+            )
+            # app staging dir: read by the platform native build (CMake /
+            # podspec / Android Gradle) at `flutter build` time to place the
+            # unpacked app into the bundle.
+            build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): export the cache-bust key the package
+        # step computed so the plugin's Package.swift re-resolves when the staged
+        # native set changes (SwiftPM caches its graph on manifest text + env).
+        if self._darwin_spm_active():
+            spm_key_file = self.build_dir / ".serious_python_spm_key"
+            if spm_key_file.exists():
+                build_env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
+
+        # Path-hungry packages to ship extracted to disk: consumed by the
+        # serious_python_android Gradle split during `flutter build`.
+        if self.package_platform == "Android" and self.android_extract_packages:
+            build_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
+                self.android_extract_packages
             )
 
         if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
@@ -2120,6 +2490,32 @@ class BaseBuildCommand(BaseFlutterCommand):
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
+    def resolve_output_path(self, build_output: str) -> str:
+        """
+        Resolve a platform `outputs` glob to an absolute path inside the
+        Flutter project, substituting the `{arch}` and name placeholders.
+
+        Args:
+            build_output: An entry of `self.platforms[...]["outputs"]`.
+        """
+
+        assert self.flutter_dir
+        assert self.template_data
+
+        arch = platform.machine().lower()
+        if arch in {"x86_64", "amd64"}:
+            arch = "x64"
+        elif arch in {"arm64", "aarch64"}:
+            arch = "arm64"
+
+        return (
+            str(self.flutter_dir.joinpath(build_output))
+            .replace("{arch}", arch)
+            .replace("{artifact_name}", self.template_data["artifact_name"])
+            .replace("{project_name}", self.template_data["project_name"])
+            .replace("{product_name}", self.template_data["product_name"])
+        )
+
     def copy_build_output(self):
         """
         Copy generated platform artifacts into the requested output directory.
@@ -2135,11 +2531,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.update_status(
             f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
         )
-        arch = platform.machine().lower()
-        if arch in {"x86_64", "amd64"}:
-            arch = "x64"
-        elif arch in {"arm64", "aarch64"}:
-            arch = "arm64"
 
         def make_ignore_fn(out_dir, out_glob):
             """
@@ -2158,13 +2549,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             return ignore
 
         for build_output in self.platforms[self.target_platform]["outputs"]:
-            build_output_dir = (
-                str(self.flutter_dir.joinpath(build_output))
-                .replace("{arch}", arch)
-                .replace("{artifact_name}", self.template_data["artifact_name"])
-                .replace("{project_name}", self.template_data["project_name"])
-                .replace("{product_name}", self.template_data["product_name"])
-            )
+            build_output_dir = self.resolve_output_path(build_output)
 
             if self.verbose > 0:
                 console.log(

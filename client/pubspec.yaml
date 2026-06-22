@@ -82,6 +82,9 @@ dependencies:
   flet_secure_storage:
     path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
 
+  flet_spinkit:
+    path: ../sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit
+
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
@@ -94,6 +97,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
+  screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
 
 dev_dependencies:
   flutter_test:

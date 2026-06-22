@@ -1,11 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TypeVar, cast
-
-try:
-    from typing import Protocol
-except ImportError:
-    from typing_extensions import Protocol
+from typing import Protocol, TypeVar, cast
 
 from flet.components.hooks.hook import Hook
 from flet.components.observable import Observable

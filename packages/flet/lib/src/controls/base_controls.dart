@@ -76,7 +76,7 @@ Widget _badge(Widget widget, ThemeData theme, Control control) {
 }
 
 Widget _sizeChangeObserver(Widget widget, Control control) {
-  if (!control.getBool("on_size_change", false)!) return widget;
+  if (!control.hasEventHandler("size_change")) return widget;
 
   // Opt-in size reporting to avoid extra layout work by default.
   return SizeChangeObserver(
@@ -118,7 +118,7 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
       duration: animation.duration,
       curve: animation.curve,
       opacity: opacity ?? 1.0,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "opacity");
             }
@@ -142,7 +142,7 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<double>(end: rotationDetails?.angle ?? 0),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "rotation");
             }
@@ -178,7 +178,7 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<double>(end: scaleDetails?.scale ?? 1.0),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "scale");
             }
@@ -218,7 +218,7 @@ Widget _offsetControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<Offset>(end: Offset(offsetDetails.x, offsetDetails.y)),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "offset");
             }
@@ -296,7 +296,7 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
       alignment: alignment,
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "align");
             }
@@ -323,7 +323,7 @@ Widget _marginControl(BuildContext context, Widget widget, Control control) {
       margin: margin,
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "margin");
             }
@@ -441,7 +441,7 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
   Timer? _timer;
 
   void _onSizeChanged(Size size) {
-    if (!mounted || widget.control.getBool("on_size_change", false) != true) {
+    if (!mounted || !widget.control.hasEventHandler("size_change")) {
       return;
     }
 
@@ -477,7 +477,7 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
     final remaining = interval - (now - _lastDispatch);
     final delay = Duration(milliseconds: remaining > 0 ? remaining : 0);
     _timer = Timer(delay, () {
-      if (!mounted || !widget.control.getBool("on_size_change", false)!) {
+      if (!mounted || !widget.control.hasEventHandler("size_change")) {
         return;
       }
       final size = _pendingSize;

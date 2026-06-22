@@ -29,7 +29,16 @@
       assetBase: "{{ cookiecutter.base_url }}",
       routeUrlStrategy: "{{ cookiecutter.route_url_strategy }}",
       canvasKitBaseUrl: "/canvaskit/",
-      pyodideUrl: "/pyodide/pyodide.js",
+      // .mjs is required: python-worker.js is a module worker and loads
+      // the runtime via dynamic `import()`. Pyodide >= 0.29 also refuses
+      // to run in classic workers. Use the local copy that `flet build`
+      // drops into web/pyodide/ when --no-cdn is set; otherwise pull
+      // from jsdelivr so the build artifact can stay slim.
+      {% if cookiecutter.no_cdn == "True" %}
+      pyodideUrl: "/pyodide/pyodide.mjs",
+      {% else %}
+      pyodideUrl: "https://cdn.jsdelivr.net/pyodide/v{{ cookiecutter.pyodide_version }}/full/pyodide.mjs",
+      {% endif %}
       pythonModuleName: "{{ cookiecutter.python_module_name }}",
       webRenderer: "{{ cookiecutter.web_renderer }}",
       fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN

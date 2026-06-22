@@ -15,12 +15,12 @@ Updater = Callable[[StateT], StateT]
 @dataclass
 class StateHook(Hook):
     """
-    Hook state container backing :func:`~flet.use_state`.
+    Hook state container backing :func:`flet.use_state`.
     """
 
     value: Any
     """
-    Current state value returned by :func:`~flet.use_state`.
+    Current state value returned by :func:`flet.use_state`.
 
     Updated by the `set_state` setter. It may hold any Python value,
     including an :class:`~flet.Observable`.

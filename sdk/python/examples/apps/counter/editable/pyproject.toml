@@ -1,5 +1,5 @@
 [project]
-name = "flet-app-editable-counter"
+name = "counter-editable"
 version = "1.0.0"
 description = "Classic counter app with increment and decrement buttons around a numeric text field."
 requires-python = ">=3.10"

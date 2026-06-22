@@ -8,13 +8,11 @@ title: "Tabs"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-# Tabs
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Tabs" imageWidth="70%"/>
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/tabs/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/basic.gif'} width="55%" />
 

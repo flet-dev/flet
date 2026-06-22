@@ -7,12 +7,10 @@ title: "BlockPicker"
 
 import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-# BlockPicker
-
 <ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/block_picker.png'} imageCaption="BlockPicker" imageWidth="35%"/>
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_5/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/block_picker/main.py'} language="python" />
 
 <ClassMembers name={frontMatter.class_name} />

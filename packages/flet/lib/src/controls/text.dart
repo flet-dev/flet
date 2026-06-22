@@ -67,8 +67,7 @@ class TextControl extends StatelessWidget {
       backgroundColor: control.getColor("bgcolor", context),
     );
 
-    var textAlign =
-        parseTextAlign(control.getString("text_align"), TextAlign.start)!;
+    var textAlign = control.getTextAlign("text_align", TextAlign.start)!;
 
     onSelectionChanged(TextSelection selection, SelectionChangedCause? cause) {
       control.triggerEvent("selection_change", {

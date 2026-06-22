@@ -1,9 +1,13 @@
 import pytest
 
-import examples.controls.core.container.nested_themes_1.main as nested_themes_1
-import examples.controls.core.container.nested_themes_2.main as nested_themes_2
 import examples.controls.core.container.size_aware.main as size_aware
 import flet.testing as ftt
+from examples.controls.core.container.inherited_and_overridden_theme import (
+    main as nested_themes_1,
+)
+from examples.controls.core.container.page_dark_and_light_themes import (
+    main as nested_themes_2,
+)
 
 
 @pytest.mark.parametrize(

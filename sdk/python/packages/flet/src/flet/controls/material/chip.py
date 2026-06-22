@@ -189,7 +189,10 @@ class Chip(LayoutControl):
 
     visual_density: Optional[VisualDensity] = None
     """
-    TBD
+    Defines how compact this chip should be.
+
+    Negative density values make the chip more compact, while positive values make it
+    more spacious.
     """
 
     border_side: Optional[BorderSide] = None

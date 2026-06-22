@@ -16,6 +16,9 @@ class ComponentOwned:
     """
 
     owner: InitVar["Component"]
+    """
+    Component that owns this object.
+    """
 
     def __post_init__(self, owner: "Component") -> None:
         self._component = weakref.ref(owner)

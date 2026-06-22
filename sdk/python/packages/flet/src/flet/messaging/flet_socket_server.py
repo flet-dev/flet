@@ -71,6 +71,10 @@ class FletSocketServer(Connection):
         self.__before_main = before_main
         self.__blocking = blocking
         self.__running_tasks = set()
+        # DataChannel mux registry. Keyed by channel_id minted on the Dart
+        # side; populated lazily on the first Control.get_data_channel(id)
+        # call. Frames for unknown ids are silently dropped.
+        self._data_channels: dict[int, Any] = {}
         self.loop = loop
         self.executor = executor
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)
@@ -244,7 +248,12 @@ class FletSocketServer(Connection):
 
     async def __receive_loop(self, reader: asyncio.StreamReader, connection_token: int):
         """
-        Reads and dispatches inbound MsgPack frames from the socket.
+        Reads and dispatches inbound packets from the socket.
+
+        Wire format on the byte stream: each packet is prefixed with a 4-byte
+        little-endian length, then `[type:u8][payload]`. type=0x00 is a
+        MsgPack-encoded Flet protocol frame; type=0x01 is a raw DataChannel
+        frame (`[channel_id:u32 LE][bytes]`).
 
         The loop exits when:
         - socket EOF is reached;
@@ -255,23 +264,48 @@ class FletSocketServer(Connection):
             reader: Socket stream reader to consume bytes from.
             connection_token: Token identifying the connection generation.
         """
-        unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         try:
             while True:
-                buf = await reader.read(1024 * 1024)
-                if not buf:
+                try:
+                    header = await reader.readexactly(4)
+                except asyncio.IncompleteReadError:
+                    break  # EOF mid-stream or clean close
+                length = int.from_bytes(header, "little", signed=False)
+                if length == 0:
+                    continue
+                try:
+                    packet = await reader.readexactly(length)
+                except asyncio.IncompleteReadError:
+                    logger.debug("Truncated packet read; aborting receive loop.")
                     break
-                unpacker.feed(buf)
-                for msg in unpacker:
-                    if self.__connection_token != connection_token:
-                        return
+                if self.__connection_token != connection_token:
+                    return
+                ptype = packet[0]
+                if ptype == 0x00:
+                    msg = msgpack.unpackb(packet[1:], ext_hook=decode_ext_from_msgpack)
                     await self.__on_message(msg)
+                elif ptype == 0x01:
+                    if len(packet) < 5:
+                        logger.debug("Dropping malformed data-channel frame.")
+                        continue
+                    channel_id = int.from_bytes(packet[1:5], "little", signed=False)
+                    self.__on_data_channel_frame(channel_id, packet[5:])
+                else:
+                    logger.debug("Dropping packet with unknown type 0x%02x", ptype)
         except asyncio.CancelledError:
             logger.debug("Receive loop cancelled.")
         except Exception as e:
             logger.debug("Error receiving socket data from Flet client: %s", e)
         finally:
             logger.debug("Receive loop exiting.")
+
+    def __on_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Routes an inbound `[0x01][channel_id][payload]` frame to its
+        registered DataChannel. Silently drops frames for unknown ids
+        (handles unmount races)."""
+        channel = self._data_channels.get(channel_id)
+        if channel is not None:
+            channel._deliver(payload)
 
     async def __send_loop(
         self,
@@ -390,18 +424,49 @@ class FletSocketServer(Connection):
         """
         Encodes and queues an outbound message for the active connection.
 
+        Wire format: `[length:u32 LE][0x00][msgpack body]`. The send loop
+        writes the bytes verbatim to the socket.
+
         If no active send queue exists (no connected client), the message is dropped.
 
         Args:
             message: Protocol message to send.
         """
         transport_log.debug("send_message: %s", message)
-        m = msgpack.packb(
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
+        packet = b"\x00" + body
+        framed = len(packet).to_bytes(4, "little", signed=False) + packet
         if self.__send_queue is not None:
-            self.__send_queue.put_nowait(m)
+            self.__send_queue.put_nowait(framed)
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame `[length][0x01][channel_id:u32 LE][bytes]`.
+        Called by `_ProtocolMuxedDataChannel.send` on the Python side."""
+        header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
+        packet = header + payload
+        framed = len(packet).to_bytes(4, "little", signed=False) + packet
+        if self.__send_queue is not None:
+            self.__send_queue.put_nowait(framed)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve or construct the muxed DataChannel for `channel_id`.
+        Idempotent — returns the same instance per id within the session.
+        Called from `Control.get_data_channel(id)`.
+        """
+        from flet.data_channel import _ProtocolMuxedDataChannel
+
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _ProtocolMuxedDataChannel(channel_id, self)
+        self._data_channels[channel_id] = channel
+        return channel
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        self._data_channels.pop(channel_id, None)
 
     async def close(self):
         """

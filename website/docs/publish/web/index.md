@@ -20,6 +20,7 @@ Here is a table comparing Flet app running as a static vs dynamic website:
 | **Performance**          | ⬇️ Slower - Pyodide is currently 3x-5x slower than native Python because of WASM                                                                                           | ✅ Faster - the code is running on the server by native Python.                                                             |
 | **Code protection**      | ⬇️ Low - app's code is loaded into a web browser and can be inspected by a user.                                                                                           | ✅ High - the app is running on the server.                                                                                 |
 | **Hosting**              | ✅ Cheap/Free - no code is running on the server and thus the app can be hosted anywhere: GitHub Pages, Cloudflare Pages, Replit, Vercel, a shared hosting or your own VPS. | ⬇️ Paid - the app requires Python code to run on the server and communicate with a web browser via WebSockets.             |
+| **Python version**       | ⬇️ Tied to a specific Pyodide release — pick from the supported set (3.12 / 3.13 / 3.14). See [Choosing a Python version](../index.md#choosing-a-python-version).            | ✅ Any Python version that runs your server.                                                                                |
 
 [Static website]: static-website/index.md
 [Dynamic website]: dynamic-website/index.md

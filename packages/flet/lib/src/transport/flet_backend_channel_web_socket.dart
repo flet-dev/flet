@@ -1,27 +1,23 @@
 import 'package:flutter/foundation.dart';
-import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../protocol/message.dart';
 import '../utils/networking.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/uri.dart';
 import 'flet_backend_channel.dart';
-import 'flet_msgpack_decoder.dart';
-import 'flet_msgpack_encoder.dart';
 
 class FletWebSocketBackendChannel implements FletBackendChannel {
   late final String _wsUrl;
   late final bool _isLocalConnection;
-  FletBackendChannelOnMessageCallback onMessage;
+  FletBackendChannelOnPacketCallback onPacket;
   FletBackendChannelOnDisconnectCallback onDisconnect;
   WebSocketChannel? _channel;
 
   FletWebSocketBackendChannel(
       {required String address,
       required this.onDisconnect,
-      required this.onMessage}) {
+      required this.onPacket}) {
     _wsUrl = getWebSocketEndpoint(Uri.parse(address));
   }
 
@@ -35,7 +31,6 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
   Future connect() async {
     debugPrint("Connecting to WebSocket $_wsUrl...");
     try {
-      // todo
       var uri = Uri.parse(_wsUrl);
       if (kIsWeb) {
         _isLocalConnection = isLocalhost(uri);
@@ -56,15 +51,21 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
     });
   }
 
-  _onMessage(message) {
-    onMessage(Message.fromList(
-        msgpack.deserialize(message, extDecoder: FletMsgpackDecoder())));
+  void _onMessage(dynamic message) {
+    // Each WebSocket binary message is one complete packet — message
+    // boundaries are preserved by the transport, no framing needed here.
+    if (message is Uint8List) {
+      onPacket(message);
+    } else if (message is List<int>) {
+      onPacket(Uint8List.fromList(message));
+    } else {
+      debugPrint("Unexpected WebSocket message type: ${message.runtimeType}");
+    }
   }
 
   @override
-  void send(Message message) {
-    _channel?.sink.add(
-        msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder()));
+  void send(Uint8List packet) {
+    _channel?.sink.add(packet);
   }
 
   @override

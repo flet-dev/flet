@@ -42,6 +42,24 @@ if sys.platform == "emscripten":
 ```
 :::
 
+:::note[Pyodide and Python version]
+The Python version you choose for `flet build web` / `flet publish` pins a
+specific Pyodide release — see
+[Choosing a Python version](../../index.md#choosing-a-python-version) for the
+full matrix and resolution rules. In short:
+
+| Python | Pyodide   |
+| ------ | --------- |
+| 3.14   | 314.0.0   |
+| 3.13   | 0.29.4    |
+| 3.12   | 0.27.7    |
+
+The matching Pyodide runtime is downloaded into the build output and cached
+under `~/.flet/pyodide/<version>/` on first use. The older `0.27.5` bundle
+that used to ship inside the build template has been removed in favour of
+this versioned per-build download.
+:::
+
 ## Differences
 
 There are two ways to publish a static website: [`flet build web`](#flet-build-web) and [`flet publish`](#flet-publish).

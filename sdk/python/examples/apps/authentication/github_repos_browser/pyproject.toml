@@ -1,5 +1,5 @@
 [project]
-name = "apps-authentication-github-repos-browser"
+name = "authentication-github-repos-browser"
 version = "1.0.0"
 description = "Logs in with GitHub, restores a saved token, and lists the signed-in user's repositories."
 requires-python = ">=3.10"

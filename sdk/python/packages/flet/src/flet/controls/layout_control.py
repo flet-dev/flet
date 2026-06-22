@@ -231,56 +231,62 @@ class LayoutControl(Control):
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.Control.opacity` property.
+    Enables implicit animation of the :attr:`flet.Control.opacity` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_size: Optional[AnimationValue] = None
     """
-    TBD
+    Enables implicit animation of this control's size.
+
+    If :attr:`width` or :attr:`height` is set, changes to those dimensions are
+    animated. If neither dimension is set, changes to the control's natural size are
+    animated instead.
+
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_position: Optional[AnimationValue] = None
     """
     Enables implicit animation of the positioning properties \
-    (:attr:`~flet.LayoutControl.left`, :attr:`~flet.LayoutControl.right`, \
-    :attr:`~flet.LayoutControl.top` and :attr:`~flet.LayoutControl.bottom`).
+    (:attr:`flet.LayoutControl.left`, :attr:`flet.LayoutControl.right`, \
+    :attr:`flet.LayoutControl.top` and :attr:`flet.LayoutControl.bottom`).
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_align: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.LayoutControl.align` property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.align` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_margin: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.LayoutControl.margin` property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.margin` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_rotation: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.LayoutControl.rotate` property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.rotate` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_scale: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.LayoutControl.scale` property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.scale` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_offset: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the :attr:`~flet.LayoutControl.offset` property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.offset` property.
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """

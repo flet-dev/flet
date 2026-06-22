@@ -350,32 +350,59 @@ class Paint:
 
     stroke_cap: Optional[StrokeCap] = None
     """
-    TBD
+    The kind of finish to place on the ends of stroked lines.
+
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
+    If not set, the effective default is :attr:`flet.StrokeCap.BUTT`.
     """
 
     stroke_join: Optional[StrokeJoin] = None
     """
-    TBD
+    The kind of finish to place on joins between stroked segments.
+
+    This applies when :attr:`style` is
+    :attr:`flet.PaintingStyle.STROKE`. If not set, the effective default is
+    :attr:`flet.StrokeJoin.MITER`.
+
+    See also:
+        :attr:`stroke_miter_limit`
     """
 
     stroke_miter_limit: Optional[Number] = None
     """
-    TBD
+    The limit for drawing miter joins when :attr:`stroke_join` is
+    :attr:`flet.StrokeJoin.MITER` and :attr:`style` is
+    :attr:`flet.PaintingStyle.STROKE`.
+
+    If this limit is exceeded, a bevel join is used instead. If not set, the effective
+    default is `4.0`.
     """
 
     stroke_width: Optional[Number] = None
     """
-    TBD
+    How wide stroked edges should be, in logical pixels.
+
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`. If not set,
+    the effective default is `0.0`, which corresponds to a hairline width.
     """
 
     stroke_dash_pattern: Optional[list[Number]] = None
     """
-    TBD
+    Dash pattern used when painting stroked outlines.
+
+    Values alternate between painted dash lengths and unpainted gap lengths. For
+    example, `[5, 10]` paints a dash 5 logical pixels long, then leaves a gap 10
+    logical pixels long, repeating the pattern along the stroked path.
+
+    Note:
+        This applies only when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
     """
 
     style: Optional[PaintingStyle] = None
     """
-    TBD
+    Whether to paint filled interiors or only stroked outlines.
+
+    If not set, the effective default is :attr:`flet.PaintingStyle.FILL`.
     """
 
     def copy(

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- flet: permission {% for k, v in cookiecutter.options.android_permissions.items() %} {% if v == True %} -->
-    <uses-permission android:name="{{ k }}" />
+    <!-- flet: permission {% for k, v in cookiecutter.options.android_permissions.items() %} {% if v %} -->
+    <uses-permission android:name="{{ k }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av }}"{% endfor %}{% endif %} />
     <!-- flet: end of permission {% endif %} {% endfor %} -->
 
     <!-- flet: feature {% for k, v in cookiecutter.options.android_features.items() %} -->
@@ -61,6 +61,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <!-- flet: provider {% for k, v in cookiecutter.options.android_providers.items() %} {% if v %} -->
+        <provider android:name="{{ k }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
+            {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk }}" android:value="{{ mv }}" />{% endif %}
+            {% endfor %}</provider>{% endif %}
+        <!-- flet: end of provider {% endif %} {% endfor %} -->
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

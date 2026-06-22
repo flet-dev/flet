@@ -1,5 +1,5 @@
 [project]
-name = "apps-authentication-github-login-same-page"
+name = "authentication-github-login-same-page"
 version = "1.0.0"
 description = "Runs GitHub OAuth in the same browser tab and displays the authenticated user ID."
 requires-python = ">=3.10"

@@ -1,5 +1,5 @@
 [project]
-name = "services-clipboard-images"
+name = "clipboard-images"
 version = "1.0.0"
 description = "Copies a sample image to the clipboard and previews image data loaded from the clipboard."
 requires-python = ">=3.10"

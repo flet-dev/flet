@@ -15,7 +15,7 @@ Navigation is done via [page.navigate()](../controls/page.md#flet.Page.navigate)
 
 ## Examples
 
-<CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/routing/main.py'} language="python" />
 
 <CodeExample path={frontMatter.examples + '/layout_outlet/main.py'} language="python" />
 

@@ -1,8 +1,8 @@
 import pytest
 
 import examples.controls.material.snack_bar.action.main as action
-import examples.controls.material.snack_bar.basic.main as basic
 import examples.controls.material.snack_bar.counter.main as counter
+import examples.controls.material.snack_bar.snack_bar.main as basic
 import flet as ft
 import flet.testing as ftt
 

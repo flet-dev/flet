@@ -1,5 +1,5 @@
 [project]
-name = "apps-counter-accessible"
+name = "counter-accessible"
 version = "1.0.0"
 description = "Accessible counter app with semantics labels and a keyboard shortcut for the semantics debugger."
 requires-python = ">=3.10"

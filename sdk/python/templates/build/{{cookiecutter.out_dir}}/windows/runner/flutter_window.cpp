@@ -1,8 +1,11 @@
+{%- set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
+                        or get_pyproject("tool.flet.app.hide_window_on_start") -%}
 #include "flutter_window.h"
 
 #include <optional>
 
 #include "flutter/generated_plugin_registrant.h"
+#include "utils.h"
 
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
     : project_(project) {}
@@ -27,8 +30,14 @@ bool FlutterWindow::OnCreate() {
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
-    this->Show();
+  const bool hide_window_on_start =
+      {{ "true" if hide_window_on_start else "false" }} ||
+      HasEnvironmentVariable(L"FLET_HIDE_WINDOW_ON_START");
+  flutter_controller_->engine()->SetNextFrameCallback([this,
+                                                       hide_window_on_start]() {
+    if (!hide_window_on_start) {
+      Show();
+    }
   });
 
   // Flutter can complete the first frame before the "show window" callback is

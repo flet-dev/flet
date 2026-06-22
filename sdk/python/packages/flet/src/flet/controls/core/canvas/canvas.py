@@ -16,7 +16,7 @@ class CanvasResizeEvent(Event["Canvas"]):
     """
     Event emitted when a :class:`~flet.canvas.Canvas` reports a new rendered size.
 
-    This event is delivered through :attr:`~flet.canvas.Canvas.on_resize`
+    This event is delivered through :attr:`flet.canvas.Canvas.on_resize`
     and carries the latest measured dimensions in logical pixels.
     """
 

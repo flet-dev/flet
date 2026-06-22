@@ -1,5 +1,5 @@
 [project]
-name = "apps-declarative-sunflower"
+name = "declarative-sunflower"
 version = "1.0.0"
 description = "Animates a sunflower seed pattern with a slider that recomputes declarative layout."
 requires-python = ">=3.10"

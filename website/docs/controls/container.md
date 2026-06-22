@@ -24,23 +24,23 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_media + '/handling_hovers.gif'} width="15%" />
 
-<CodeExample path={frontMatter.examples + '/animate_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/animate_size_and_color/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/animate_1.gif'} width="25%" />
 
-<CodeExample path={frontMatter.examples + '/animate_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/animate_gradient_and_shape/main.py'} language="python" />
 
-<CodeExample path={frontMatter.examples + '/animate_3/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/animated_slide_in_menu/main.py'} language="python" />
 
-<CodeExample path={frontMatter.examples + '/nested_themes_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/inherited_and_overridden_theme/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/nested_themes_1.png'} width="40%" />
 
-<CodeExample path={frontMatter.examples + '/nested_themes_2/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/page_dark_and_light_themes/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/nested_themes_2.png'} width="60%" />
 
-<CodeExample path={frontMatter.examples + '/nested_themes_3/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
 
 <Image src={frontMatter.example_media + '/nested_themes_3.gif'} width="40%" />
 

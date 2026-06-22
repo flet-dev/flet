@@ -8,12 +8,12 @@ import {CodeExample, Image} from '@site/src/components/crocodocs';
 In this tutorial we will show you, step-by-step, how to create a To-Do app in Python
 using Flet framework and then publish it as a desktop, mobile or web app.
 The app is a single-file console program of just
-[164 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/basic/main.py),
+[164 lines (formatted!) of Python code](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/todo/main.py),
 yet it is a multi-platform application with rich, responsive UI:
 
 <Image src="examples/tutorials/todo/media/complete-demo-web.gif" width="55%" />
 
-You can see the live demo [here](https://flet.app/gallery/run/apps/todo/basic/).
+You can see the live demo [here](https://flet.app/gallery/run/apps/todo/).
 
 We chose a To-Do app for the tutorial, because it covers all of the basic concepts you
 would need to create a Flet app: building a page layout, adding controls, handling events,

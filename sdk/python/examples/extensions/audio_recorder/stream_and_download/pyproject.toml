@@ -1,5 +1,5 @@
 [project]
-name = "services-audio-recorder-stream-and-download"
+name = "audio-recorder-stream-and-download"
 version = "1.0.0"
 description = "Streams PCM16 audio chunks and saves or downloads them as a WAV file from bytes."
 requires-python = ">=3.10"

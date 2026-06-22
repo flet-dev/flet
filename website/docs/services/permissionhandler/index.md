@@ -8,8 +8,6 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
-# Permission Handler
-
 Helps manage runtime permissions in your [Flet](https://flet.dev) apps.
 
 It is powered by the Flutter [`permission_handler`](https://pub.dev/packages/permission_handler) package.
@@ -65,7 +63,7 @@ See:
 
 ## Example
 
-<CodeExample path={frontMatter.examples + '/example_1/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/permission_handler/main.py'} language="python" />
 
 ## Description
 

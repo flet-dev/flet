@@ -107,6 +107,7 @@ class Audio(ft.Service):
 
         Args:
             position: The position to start playback from.
+                Defaults to the beginning of the audio.
         """
         await self._invoke_method(
             method_name="play",

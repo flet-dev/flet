@@ -74,10 +74,17 @@ requires distributing the correct APK for each device.
 
 The following target architectures are supported:
 
-- [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a)
-- [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a)
-- [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64)
-- [`x86`](https://developer.android.com/ndk/guides/abis#x86)
+- [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) (64-bit) — Python `3.12` and above
+- [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64) (64-bit) — Python `3.12` and above
+- [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) (32-bit) — Python `3.12` **only**
+
+:::note
+The available architectures depend on the
+[bundled Python version](index.md#bundled-python): Python dropped
+32-bit Android support in `3.13` ([PEP 738](https://peps.python.org/pep-0738/)),
+so targeting `armeabi-v7a` requires building with `--python-version 3.12`. By default,
+an app is built for all architectures its bundled Python version supports.
+:::
 
 #### Resolution order
 
@@ -87,8 +94,9 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.android].split_per_abi`
 3. `false`
 
-When enabled, 3 APKs are produced by default, one for each of the following ABIs: `arm64-v8a`,
-`armeabi-v7a`, and `x86_64`. These can be customized by setting [`target architectures`](index.md#target-architecture).
+When enabled, one APK is produced per ABI — by default, one for each
+architecture the bundled Python version supports (see above). These can be
+customized by setting [`target architectures`](index.md#target-architecture).
 
 #### Example
 
@@ -424,6 +432,96 @@ the `pyproject.toml` example above will be translated accordingly into this:
 ```
 </details>
 
+### Providers
+
+A content provider component that supplies app data to other apps or components.
+More information [here](https://developer.android.com/guide/topics/manifest/provider-element).
+
+Each provider is declared as a TOML table whose key is the provider's
+`android:name` (the fully-qualified class name). The table's entries become
+extra `android:<key>="<value>"` attributes on the generated `<provider>`
+element. A reserved `meta_data` sub-table emits nested `<meta-data>` children
+inside the provider.
+
+See also:
+
+- [`<provider>` element](https://developer.android.com/guide/topics/manifest/provider-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.provider]`
+
+#### Supported value forms
+
+The value for each provider must be a TOML inline table or sub-table of
+attributes. A value of `false` skips the entry entirely; `true` is not
+accepted (a `<provider>` with no attributes is meaningless). An empty table
+`{}` is also treated as `false`.
+
+Attribute values must be strings, booleans, or numbers — they are written
+verbatim into the manifest. The `name` key is reserved (the `android:name`
+comes from the table key).
+
+The reserved `meta_data` sub-table emits `<meta-data>` children. Each
+sub-entry's key is the `android:name`; the value can be either:
+
+- a scalar (string/bool/number) — rendered as `android:value="…"`, or
+- an inline table — its entries become `android:<key>="<value>"` attributes
+  on the `<meta-data>` element (useful for `android:resource="@xml/…"`).
+
+#### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.provider]
+"rikka.shizuku.ShizukuProvider" = { authorities = "${applicationId}.shizuku", multiprocess = "false", enabled = "true", exported = "true", permission = "android.permission.INTERACT_ACROSS_USERS_FULL" }
+
+[tool.flet.android.provider."com.example.MyProvider"]
+authorities = "${applicationId}.myprovider"
+exported = false
+grantUriPermissions = true
+
+[tool.flet.android.provider."com.example.MyProvider".meta_data]
+"android.support.FILE_PROVIDER_PATHS" = { resource = "@xml/file_paths" }
+"some.other.key" = "some-value"
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<application>
+    <provider android:name="rikka.shizuku.ShizukuProvider"
+              android:authorities="${applicationId}.shizuku"
+              android:multiprocess="false"
+              android:enabled="true"
+              android:exported="true"
+              android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <provider android:name="com.example.MyProvider"
+              android:authorities="${applicationId}.myprovider"
+              android:exported="false"
+              android:grantUriPermissions="true">
+        <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        <meta-data android:name="some.other.key" android:value="some-value" />
+    </provider>
+</application>
+```
+</details>
+
+:::note
+Flet already declares a built-in `androidx.core.content.FileProvider` with
+authorities `${applicationId}.provider`. Declaring another provider that
+uses the same authorities will cause the Android manifest merger to fail —
+pick a different `android:authorities` value for your custom provider.
+:::
+
 ### Features
 
 A hardware or software feature that is used by the application.
@@ -521,6 +619,11 @@ Permissions with `false` are omitted from the generated manifest.
 <TabItem value="pyproject-toml" label="pyproject.toml">
 Use boolean values. TOML booleans must be lowercase: `true` or `false`.
 Permissions set to `false` are omitted from the generated manifest.
+
+A value can also be a TOML inline table whose entries become extra
+`android:<key>="<value>"` attributes on the generated `<uses-permission>`
+element — useful for attributes like `maxSdkVersion` or `usesPermissionFlags`.
+A non-empty table is always emitted; an empty table `{}` is treated as `false`.
 </TabItem>
 </Tabs>
 #### Example
@@ -538,6 +641,8 @@ flet build apk \
 [tool.flet.android.permission]
 "android.permission.READ_EXTERNAL_STORAGE" = true
 "android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
+"android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 ```
 </TabItem>
 </Tabs>
@@ -551,6 +656,8 @@ the `pyproject.toml` example above will be translated accordingly into this:
 <manifest>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
 </manifest>
 ```
 </details>
@@ -664,6 +771,46 @@ adaptive_icon_background = "#0B6BFF"
 ```
 </TabItem>
 </Tabs>
+
+## Android extract packages
+
+:::note
+[Android](android.md) only.
+:::
+
+On Android, pure Python ships in a stored zip read in place (`zipimport`) and native modules are
+loaded memory-mapped from the APK. Packages that read their bundled **data files** through a real
+filesystem path — `__file__` / `pkg_resources` instead of
+[`importlib.resources`](https://docs.python.org/3/library/importlib.resources.html) — don't work
+from inside the zip. List such "path-hungry" packages here to ship them **extracted to disk**
+instead.
+
+Most packages that bundle data (including `certifi`) read it through `importlib.resources`, which
+is zip-safe, so they need no entry here — only add packages that actually fail to find their data
+when imported from the zip.
+
+### Resolution order
+
+1. [`--android-extract-packages`](../cli/flet-build.md#--android-extract-packages)
+2. `[tool.flet.android].extract_packages`
+3. `[tool.flet].extract_packages`
+
+### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --android-extract-packages package1 package2
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+extract_packages = ["package1", "package2"]
+```
+</TabItem>
+</Tabs>
+
 ## ADB Tips
 
 [Android Debug Bridge (adb)](https://developer.android.com/tools/adb) is a

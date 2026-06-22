@@ -136,7 +136,7 @@ class _ViewControlState extends State<ViewControl> {
       child: column,
     );
 
-    if (control.getBool("on_scroll", false)!) {
+    if (control.hasEventHandler("scroll")) {
       child = ScrollNotificationControl(control: control, child: child);
     }
 
@@ -190,12 +190,10 @@ class _ViewControlState extends State<ViewControl> {
             ((pageData?.themeMode == null ||
                     pageData?.themeMode == ThemeMode.system) &&
                 pageData?.brightness == Brightness.light)
-        ? parseTheme(control.parent!.get("theme"), context, Brightness.light)
+        ? control.parent!.getTheme("theme", context, Brightness.light)
         : control.parent!.getString("dark_theme") != null
-            ? parseTheme(
-                control.parent!.get("dark_theme"), context, Brightness.dark)
-            : parseTheme(
-                control.parent!.get("theme"), context, Brightness.dark);
+            ? control.parent!.getTheme("dark_theme", context, Brightness.dark)
+            : control.parent!.getTheme("theme", context, Brightness.dark);
 
     Widget scaffold = Scaffold(
       key: _materialScaffoldKey,
@@ -287,7 +285,7 @@ class _ViewControlState extends State<ViewControl> {
     result = PopScope(
         canPop: _allowPop || control.getBool("can_pop", true)!,
         onPopInvokedWithResult: (didPop, result) {
-          if (didPop || !control.getBool("on_confirm_pop", false)!) {
+          if (didPop || !control.hasEventHandler("confirm_pop")) {
             return;
           }
           debugPrint("Page.onPopInvokedWithResult()");

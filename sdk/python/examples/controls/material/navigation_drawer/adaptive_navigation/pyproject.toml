@@ -1,5 +1,5 @@
 [project]
-name = "navigation-drawer-adaptive-navigation"
+name = "adaptive-navigation"
 version = "1.0.0"
 description = "Demonstrates adaptive navigation with NavigationBar on narrow layouts and NavigationRail plus NavigationDrawer on wide layouts."
 requires-python = ">=3.10"

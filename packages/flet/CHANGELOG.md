@@ -1,6 +1,12 @@
+## 0.86.0
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the multi-version bundled CPython support on the Python side ([#6577](https://github.com/flet-dev/flet/pull/6577))._
+
 ## 0.85.3
 
-_No changes in the `flet` Dart package; version bumped for release coordination with a `flet.Router` view-pop fix on the Python side._
+### Bug fixes
+
+* Defer pre-show window placement on Linux (`centerWindow()`, `setWindowAlignment()`) until the window first becomes visible, so `page.window.center()` / `page.window.alignment` set before `page.window.visible = True` no longer flash the window during startup. Also preserve the `focused` state when a `prevent_close` handler cancels a close attempt ([#5897](https://github.com/flet-dev/flet/issues/5897), [#5914](https://github.com/flet-dev/flet/issues/5914), [#6527](https://github.com/flet-dev/flet/pull/6527)) by @ihmily.
 
 ## 0.85.2
 
