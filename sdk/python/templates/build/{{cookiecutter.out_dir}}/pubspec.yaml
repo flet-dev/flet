@@ -17,13 +17,8 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  # Track the in-development serious_python (4.0.0) from the main branch
-  # until it's published to pub.dev. Pinned by the lifted app-packaging work.
-  serious_python:
-    git:
-      url: https://github.com/flet-dev/serious-python.git
-      ref: main
-      path: src/serious_python
+
+  serious_python: 4.0.0
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket
