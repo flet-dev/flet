@@ -39,7 +39,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path: ^1.9.0
   path_provider: ^2.1.5
-  pasteboard: ^0.4.0
+  pasteboard: ^0.5.0
   provider: ^6.1.2
   screenshot: ^3.0.0
   screen_brightness: ^2.1.11
@@ -52,7 +52,6 @@ dependencies:
   web: ^1.1.1
   web_socket_channel: ^3.0.2
   window_manager: ^0.5.1
-  window_to_front: ^0.0.3
   wakelock_plus: ^1.4.0
 
 dev_dependencies:

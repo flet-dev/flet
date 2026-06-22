@@ -672,6 +672,7 @@ jobs:
             flet-permission-handler
             flet-rive
             flet-secure-storage
+            flet-spinkit
             flet-video
             flet-webview
           )
@@ -836,6 +837,7 @@ jobs:
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \
+            flet_spinkit \
             flet_video \
             flet_webview; do
             uv publish dist/**/${pkg}-*

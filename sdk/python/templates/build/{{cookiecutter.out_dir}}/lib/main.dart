@@ -6,7 +6,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -50,7 +49,6 @@ hide_window_on_start: {{ hide_window_on_start }}
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const assetPath = "app/app.zip";
 const pythonModuleName = "{{ cookiecutter.python_module_name }}";
 final showAppBootScreen = bool.tryParse("{{ show_boot_screen }}".toLowerCase()) ?? false;
 const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the app for its first launch…", true) }}';
@@ -183,35 +181,35 @@ Future prepareApp() async {
     }
   } else {
     // production mode
-    // extract app from asset
-    appDir = await nrt.extractAppAssets(assetPath, checkHash: true);
-
-    // set current directory to app path
-    Directory.current = appDir;
+    // resolve the app dir from the bundle (Android unpacks app.zip on first launch)
+    appDir = await nrt.getAppDir();
 
     assetsDir = path.join(appDir, "assets");
 
-    // configure apps DATA and TEMP directories
+    // configure the app's storage directories
     WidgetsFlutterBinding.ensureInitialized();
 
-    var appTempPath = (await path_provider.getApplicationCacheDirectory()).path;
-    var appDataPath =
-        (await path_provider.getApplicationDocumentsDirectory()).path;
-
-    if (defaultTargetPlatform != TargetPlatform.iOS &&
-        defaultTargetPlatform != TargetPlatform.android) {
-      // append app name to the path and create dir
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appDataPath = path.join(appDataPath, "flet", packageInfo.packageName);
-      if (!await Directory(appDataPath).exists()) {
-        await Directory(appDataPath).create(recursive: true);
-      }
+    // FLET_APP_STORAGE_DATA — durable, app-private; also the cwd. Lives under
+    // the OS application-support dir (NOT the app bundle, which is read-only),
+    // so relative file writes / SQLite work and persist across app updates.
+    var appDataPath = path.join(
+        (await path_provider.getApplicationSupportDirectory()).path, "data");
+    if (!await Directory(appDataPath).exists()) {
+      await Directory(appDataPath).create(recursive: true);
     }
+    Directory.current = appDataPath;
+
+    // FLET_APP_STORAGE_CACHE — regenerable; the OS may purge it.
+    var appCachePath = (await path_provider.getApplicationCacheDirectory()).path;
+    // FLET_APP_STORAGE_TEMP — volatile OS temp; may vanish between launches.
+    var appTempPath = (await path_provider.getTemporaryDirectory()).path;
 
     environmentVariables.putIfAbsent("FLET_APP_STORAGE_DATA", () => appDataPath);
+    environmentVariables.putIfAbsent(
+        "FLET_APP_STORAGE_CACHE", () => appCachePath);
     environmentVariables.putIfAbsent("FLET_APP_STORAGE_TEMP", () => appTempPath);
 
-    outLogFilename = path.join(appTempPath, "console.log");
+    outLogFilename = path.join(appCachePath, "console.log");
     environmentVariables.putIfAbsent("FLET_APP_CONSOLE", () => outLogFilename);
 
     environmentVariables.putIfAbsent(

@@ -17,7 +17,8 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  serious_python: 3.0.0
+
+  serious_python: 4.0.0
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket
@@ -37,6 +38,7 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
+  screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
@@ -47,9 +49,14 @@ flutter:
 
   uses-material-design: true
 
+# On native platforms the app ships unpacked inside the bundle (placed by
+# serious_python's platform build), so there is no app.zip Flutter asset. Only
+# the web (Pyodide) build still loads app/app.zip.
+#{% if cookiecutter.options.config_platform == "web" %}
   assets:
     - app/app.zip
     - app/app.zip.hash
+#{% endif %}
 
 # dart run flutter_launcher_icons
 flutter_launcher_icons:
