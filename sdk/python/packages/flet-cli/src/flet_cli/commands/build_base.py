@@ -487,6 +487,18 @@ class BaseBuildCommand(BaseFlutterCommand):
             "use --no-compile-packages to disable)",
         )
         parser.add_argument(
+            "--swift-package-manager",
+            dest="swift_package_manager",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Integrate the embedded Python runtime via Swift Package Manager "
+            "(default) or CocoaPods for iOS/macOS builds. On by default, matching "
+            "Flutter 3.44+ which uses SPM by default (other non-SPM plugins still "
+            "build with CocoaPods alongside it). Use --no-swift-package-manager (or "
+            "`swift_package_manager = false` under [tool.flet]) only if you've "
+            "disabled Swift Package Manager in Flutter.",
+        )
+        parser.add_argument(
             "--cleanup-app",
             dest="cleanup_app",
             action="store_true",
@@ -1507,10 +1519,15 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.template_data
         assert self.build_dir
 
+        # Replace the permanent flutter-packages copy with this build's set. The
+        # temp dir is populated by serious_python's package step and is ABSENT
+        # when the app has no Flutter extensions — so always clear the old copy
+        # first, otherwise an extension removed since the previous build (e.g.
+        # dropping flet-video) would linger here and stay in the built app.
+        if self.flutter_packages_dir.exists():
+            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
         if self.flutter_packages_temp_dir.exists():
             # copy packages from temp to permanent location
-            if self.flutter_packages_dir.exists():
-                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
             shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
@@ -1972,6 +1989,25 @@ class BaseBuildCommand(BaseFlutterCommand):
                 d[pp[-1]] = f"{images_dir}/{image}"
                 return
 
+    def _darwin_spm_active(self) -> bool:
+        """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
+
+        On by default, matching Flutter 3.44+ (SPM enabled by default). Because
+        `serious_python_darwin` ships a `Package.swift`, Flutter always builds it
+        as an SPM plugin when SPM is enabled — even in a hybrid app where other,
+        non-SPM plugins (e.g. `flet-video`/media_kit) build with CocoaPods at the
+        same time. So serious_python must stage for SPM to match; it is NOT tied
+        to whether the app also pulls in non-SPM plugins. Users force CocoaPods
+        with `--no-swift-package-manager` (or `swift_package_manager = false` under
+        `[tool.flet]`) only when they've disabled SPM in Flutter itself. Flet does
+        not change Flutter's global SPM configuration.
+        """
+        if self.package_platform not in ("iOS", "Darwin"):
+            return False
+        return self.get_bool_setting(
+            self.options.swift_package_manager, "swift_package_manager", True
+        )
+
     def package_python_app(self):
         """
         Package Python app and dependencies into Flutter-consumable app archive.
@@ -2088,6 +2124,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+            # app staging dir: serious_python's `package` places the processed
+            # app here (no app.zip on native); the platform native build copies
+            # it into the bundle (Android zips it as a stored asset).
+            package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): tell serious_python's package command to
+        # do the host-side SPM staging (the podspec prepare_command doesn't run
+        # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
+        # serious_python defaults to SPM staging, so be explicit either way — set
+        # it false for the CocoaPods cases (e.g. an app using flet-video).
+        if self.package_platform in ("iOS", "Darwin"):
+            spm = self._darwin_spm_active()
+            package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
+            if spm:
+                package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
+                    self.build_dir / ".serious_python_spm_key"
+                )
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -2234,10 +2287,18 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash.commit()
 
-        # make sure app/app.zip exists
-        app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
-        if not os.path.exists(app_zip_path):
-            self.cleanup(1, "Flet app package app/app.zip was not created.")
+        # verify the package output: web ships app/app.zip; native platforms
+        # stage the unpacked app to build/app for the native build to bundle.
+        if self.package_platform == "Emscripten":
+            app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+            if not os.path.exists(app_zip_path):
+                self.cleanup(1, "Flet app package app/app.zip was not created.")
+        else:
+            app_staging_dir = self.build_dir / "python-app"
+            if not app_staging_dir.exists():
+                self.cleanup(
+                    1, f"Flet app package was not staged to {app_staging_dir}."
+                )
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
@@ -2337,6 +2398,18 @@ class BaseBuildCommand(BaseFlutterCommand):
             build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+            # app staging dir: read by the platform native build (CMake /
+            # podspec / Android Gradle) at `flutter build` time to place the
+            # unpacked app into the bundle.
+            build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+
+        # Swift Package Manager (darwin): export the cache-bust key the package
+        # step computed so the plugin's Package.swift re-resolves when the staged
+        # native set changes (SwiftPM caches its graph on manifest text + env).
+        if self._darwin_spm_active():
+            spm_key_file = self.build_dir / ".serious_python_spm_key"
+            if spm_key_file.exists():
+                build_env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
 
         # Path-hungry packages to ship extracted to disk: consumed by the
         # serious_python_android Gradle split during `flutter build`.

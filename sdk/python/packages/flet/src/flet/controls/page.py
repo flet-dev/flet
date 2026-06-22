@@ -13,6 +13,7 @@ from typing import (
     Any,
     Callable,
     Optional,
+    ParamSpec,
     TypeVar,
     Union,
 )
@@ -81,12 +82,6 @@ def _default_authorization_impl() -> "type[Authorization]":
     from flet.auth.authorization import Authorization
 
     return Authorization
-
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
 
 
 logger = logging.getLogger("flet")

@@ -14,6 +14,8 @@ dependencies = [
     "flet-audio-recorder",
     "flet-camera",
     "flet-charts",
+    "flet-code-editor",
+    "flet-color-pickers",
     "flet-datatable2",
     "flet-flashlight",
     "flet-geolocator",
@@ -44,6 +46,8 @@ flet-audio = { path = "../../../packages/flet-audio", editable = true }
 flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable = true }
 flet-camera = { path = "../../../packages/flet-camera", editable = true }
 flet-charts = { path = "../../../packages/flet-charts", editable = true }
+flet-code-editor = { path = "../../../packages/flet-code-editor", editable = true }
+flet-color-pickers = { path = "../../../packages/flet-color-pickers", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
@@ -63,6 +67,8 @@ flet-audio = "../../../packages/flet-audio"
 flet-audio-recorder = "../../../packages/flet-audio-recorder"
 flet-camera = "../../../packages/flet-camera"
 flet-charts = "../../../packages/flet-charts"
+flet-code-editor = "../../../packages/flet-code-editor"
+flet-color-pickers = "../../../packages/flet-color-pickers"
 flet-datatable2 = "../../../packages/flet-datatable2"
 flet-flashlight = "../../../packages/flet-flashlight"
 flet-geolocator = "../../../packages/flet-geolocator"
@@ -97,8 +103,8 @@ path = "src"
 [tool.flet.android.meta_data]
 "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"
 
-[tool.flet.android.provider]
-"rikka.shizuku.ShizukuProvider" = { authorities = "${applicationId}.shizuku", multiprocess = "false", enabled = "true", exported = "true", permission = "android.permission.INTERACT_ACROSS_USERS_FULL" }
+# [tool.flet.android.provider]
+# "rikka.shizuku.ShizukuProvider" = { authorities = "${applicationId}.shizuku", multiprocess = "false", enabled = "true", exported = "true", permission = "android.permission.INTERACT_ACROSS_USERS_FULL" }
 
 [tool.flet.ios.info]
 GADApplicationIdentifier = "ca-app-pub-3940256099942544~3347511713"

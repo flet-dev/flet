@@ -9,18 +9,32 @@ Flet makes it easy to work with files and directories on the mobile/desktop devi
 
 ### Storage Paths
 
-Flet provides two directory paths for data storage, available as environment variables:
-[`FLET_APP_STORAGE_DATA`](../reference/environment-variables.md#flet_app_storage_data) and
-[`FLET_APP_STORAGE_TEMP`](../reference/environment-variables.md#flet_app_storage_temp).
+Flet provides three pre-created, app-private directory paths as environment variables:
 
-Their values can be gotten as follows:
+- [`FLET_APP_STORAGE_DATA`](../reference/environment-variables.md#flet_app_storage_data) — **durable**
+  data (databases, state, config). Preserved across app updates and backed up; the OS never deletes it.
+  This is also the program's current working directory, so relative writes land here.
+- [`FLET_APP_STORAGE_CACHE`](../reference/environment-variables.md#flet_app_storage_cache) —
+  **regenerable** cache. The OS may purge it; only store things you can rebuild.
+- [`FLET_APP_STORAGE_TEMP`](../reference/environment-variables.md#flet_app_storage_temp) — **throwaway**
+  scratch (the OS temp dir). May vanish between launches.
+
+Use `FLET_APP_STORAGE_DATA` for anything you must keep — putting a database in cache or temp risks
+silent data loss.
+
+Their values can be read as follows:
 
 ```python
 import os
 
 app_data_path = os.getenv("FLET_APP_STORAGE_DATA")
+app_cache_path = os.getenv("FLET_APP_STORAGE_CACHE")
 app_temp_path = os.getenv("FLET_APP_STORAGE_TEMP")
 ```
+
+Because `FLET_APP_STORAGE_DATA` is the working directory, a relative path like `"counter.txt"` resolves
+inside it; use `os.path.join(app_data_path, ...)` if you want to be explicit. The same behavior applies
+under `flet run` (the dev working directory is `<project>/.flet/storage/data`).
 
 ### Writing to a File
 

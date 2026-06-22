@@ -28,4 +28,6 @@ repos:
     hooks:
       - id: typos
         args: [ --config, sdk/python/_typos.toml ]
-        exclude: /templates/
+        # Generated *.pbxproj files contain random hex UUIDs that typos
+        # misreads as misspelled words.
+        exclude: (/templates/|\.pbxproj$)

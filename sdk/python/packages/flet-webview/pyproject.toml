@@ -8,6 +8,7 @@ license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
+    "typing-extensions; python_version < '3.11'",
 ]
 
 [project.urls]
