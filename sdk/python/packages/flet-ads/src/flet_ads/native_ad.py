@@ -27,7 +27,7 @@ class NativeAd(BannerAd):
         ValueError: When neither :attr:`factory_id` nor `template_style` is set.
     """
 
-    def before_update(self):
-        super().before_update()
+    def init(self):
+        super().init()
         if self.factory_id is None and self.template_style is None:
             raise ValueError("factory_id or template_style must be set")

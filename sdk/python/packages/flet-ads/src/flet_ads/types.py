@@ -6,12 +6,17 @@ import flet as ft
 
 __all__ = [
     "AdRequest",
+    "ConsentDebugSettings",
+    "ConsentRequestParameters",
+    "ConsentStatus",
+    "DebugGeography",
     "NativeAdTemplateStyle",
     "NativeAdTemplateTextStyle",
     "NativeAdTemplateType",
     "NativeTemplateFontStyle",
     "PaidAdEvent",
     "PrecisionType",
+    "PrivacyOptionsRequirementStatus",
 ]
 
 
@@ -129,3 +134,99 @@ class NativeAdTemplateStyle:
     primary_text_style: Optional[NativeAdTemplateTextStyle] = None
     secondary_text_style: Optional[NativeAdTemplateTextStyle] = None
     tertiary_text_style: Optional[NativeAdTemplateTextStyle] = None
+
+
+class ConsentStatus(Enum):
+    """
+    User consent status, as reported by the User Messaging Platform (UMP).
+    """
+
+    NOT_REQUIRED = "notRequired"
+    """User consent is not required."""
+
+    OBTAINED = "obtained"
+    """User consent has been obtained."""
+
+    REQUIRED = "required"
+    """User consent is required but has not yet been obtained."""
+
+    UNKNOWN = "unknown"
+    """Consent status is unknown."""
+
+
+class PrivacyOptionsRequirementStatus(Enum):
+    """
+    Whether a privacy options entry point (e.g. a button that
+    re-opens the privacy options form) is required.
+    """
+
+    NOT_REQUIRED = "notRequired"
+    """Privacy options entry point is not required."""
+
+    REQUIRED = "required"
+    """Privacy options entry point is required."""
+
+    UNKNOWN = "unknown"
+    """Privacy options requirement status is unknown."""
+
+
+class DebugGeography(Enum):
+    """
+    Debug geography values used to test consent flows.
+
+    Note:
+        These only take effect on devices registered as test devices through
+        :attr:`flet_ads.ConsentDebugSettings.test_identifiers`.
+    """
+
+    DISABLED = "debugGeographyDisabled"
+    """Debug geography disabled."""
+
+    EEA = "debugGeographyEea"
+    """Geography appears as in the EEA (European Economic Area) for debug devices."""
+
+    REGULATED_US_STATE = "debugGeographyRegulatedUsState"
+    """Geography appears as in a regulated US State for debug devices."""
+
+    OTHER = "debugGeographyOther"
+    """Geography appears as in a region with no regulation in force."""
+
+
+@ft.value
+class ConsentDebugSettings:
+    """
+    Debug settings to hardcode in consent requests, useful for testing the
+    consent flow during development.
+    """
+
+    debug_geography: Optional[DebugGeography] = None
+    """
+    The geography to simulate when gathering consent on test devices.
+    """
+
+    test_identifiers: Optional[list[str]] = None
+    """
+    A list of device identifiers for which debug features are enabled.
+
+    A device's hashed ID is printed to the device logs the first time a
+    consent request is made from it.
+    """
+
+
+@ft.value
+class ConsentRequestParameters:
+    """
+    Parameters sent when updating the user's consent information.
+    """
+
+    tag_for_under_age_of_consent: Optional[bool] = None
+    """
+    Whether the user is tagged as being under the age of consent.
+
+    `False` means users are not under the age of consent.
+    """
+
+    consent_debug_settings: Optional[ConsentDebugSettings] = None
+    """
+    Debug settings to hardcode in test requests.
+    """

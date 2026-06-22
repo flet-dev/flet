@@ -84,6 +84,7 @@ docs:
         _index: controls/ads/index.md
         BannerAd: controls/ads/bannerad.md
         BaseAd: controls/ads/basead.md
+        ConsentManager: controls/ads/consentmanager.md
         InterstitialAd: controls/ads/interstitialad.md
       AlertDialog: controls/alertdialog.md
       AnimatedSwitcher: controls/animatedswitcher.md
@@ -351,6 +352,8 @@ docs:
       Classes:
       - Ads:
         - controls/ads/types/adrequest.md
+        - controls/ads/types/consentdebugsettings.md
+        - controls/ads/types/consentrequestparameters.md
       - types/alignment.md
       - types/androidbuildversion.md
       - types/animation.md
@@ -648,7 +651,10 @@ docs:
       - types/value.md
       Enums:
       - Ads:
+        - controls/ads/types/consentstatus.md
+        - controls/ads/types/debuggeography.md
         - controls/ads/types/precisiontype.md
+        - controls/ads/types/privacyoptionsrequirementstatus.md
       - types/animatedswitchertransition.md
       - types/animationcurve.md
       - types/applifecyclestate.md
