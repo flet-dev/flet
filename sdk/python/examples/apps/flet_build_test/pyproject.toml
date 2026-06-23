@@ -103,8 +103,8 @@ spinner = "ChasingDots"
 spinner_color_light = "#7c4dff"
 spinner_color_dark = "#b388ff"
 spinner_size = 60
-prepare_message = "Preparing your app…"
-startup_message = "Starting up…"
+prepare_message = "Preparing your app..."
+startup_message = "Starting up..."
 fade_out_duration = 200
 
 [tool.flet.android.permission]
