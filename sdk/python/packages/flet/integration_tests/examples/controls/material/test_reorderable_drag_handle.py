@@ -2,7 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.reorderable_drag_handle.basic.main import main as basic
+from examples.controls.material.reorderable_drag_handle.custom_drag_handle.main import (
+    main as basic,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

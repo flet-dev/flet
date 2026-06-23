@@ -52,6 +52,12 @@ class OutlinedButton(LayoutControl, AdaptiveControl):
 
     style: Optional[ButtonStyle] = None
     """
+    The style to apply to the button.
+
+    Use this to override visual properties such as colors, padding, shape, and
+    outline side. For outlined buttons, specifying the outline appearance usually
+    requires setting both :attr:`flet.ButtonStyle.shape` and
+    :attr:`flet.ButtonStyle.side`.
     """
 
     autofocus: bool = False

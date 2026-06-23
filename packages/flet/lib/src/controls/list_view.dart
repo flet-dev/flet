@@ -50,7 +50,7 @@ class _ListViewControlState extends State<ListViewControl> {
     var padding = widget.control.getPadding("padding");
     var reverse = widget.control.getBool("reverse", false)!;
     var clipBehavior =
-        parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!;
+        widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var buildControlsOnDemand =
         widget.control.getBool("build_controls_on_demand", true)!;
@@ -173,7 +173,7 @@ class _ListViewControlState extends State<ListViewControl> {
             scrollController: _controller,
             child: child);
 
-        if (widget.control.getBool("on_scroll", false)!) {
+        if (widget.control.hasEventHandler("scroll")) {
           child =
               ScrollNotificationControl(control: widget.control, child: child);
         }

@@ -434,10 +434,15 @@ class MatplotlibChart(ft.GestureDetector):
             if is_binary:
                 assert isinstance(content, (bytes, bytearray))
                 logger.debug(f"receive_binary({len(content)})")
-                # Hand the frame to the client widget — full PNG replaces the
-                # backbuffer, diff PNG composites onto it. Awaiting naturally
-                # rate-limits this loop to the client's processing speed and
-                # yields the asyncio loop for incoming events.
+                # Hand the frame to the client widget — full PNG replaces
+                # the backbuffer, diff PNG composites onto it. `await`
+                # here serialises this receive loop on the Dart-side
+                # frame-applied ack: matplotlib "draw" notifications that
+                # arrive during the round-trip stay queued in
+                # `_receive_queue` and are processed after the ack returns,
+                # instead of being eagerly dropped against a stale
+                # `_waiting=True` gate. This is the same backpressure shape
+                # the 0.85 `_invoke_method` round-trip used to provide.
                 if self.__image_mode == "full":
                     await self.mpl_canvas.apply_full(bytes(content))
                 else:

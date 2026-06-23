@@ -133,7 +133,10 @@ class Semantics(Control):
 
     on_tap_hint_text: Optional[str] = None
     """
-    TBD
+    A hint describing what happens when the user activates :attr:`on_tap`.
+
+    Assistive technologies can announce this together with :attr:`hint_text` to make
+    the tap action more specific.
     """
 
     current_value_length: Optional[int] = None
@@ -149,7 +152,10 @@ class Semantics(Control):
 
     exclude_semantics: bool = False
     """
-    TBD
+    Whether the semantics information from :attr:`content` should be excluded.
+
+    When `True`, only the semantics configured on this :class:`~flet.Semantics`
+    wrapper are exposed.
     """
 
     mixed: Optional[bool] = None
@@ -161,12 +167,15 @@ class Semantics(Control):
 
     on_long_press_hint_text: Optional[str] = None
     """
-    TBD
+    A hint describing what happens when the user activates :attr:`on_long_press`.
     """
 
     container: Optional[bool] = None
     """
-    TBD
+    Whether this semantics node should introduce its own semantic container.
+
+    A container groups the semantics of its subtree into a distinct node instead of
+    always merging with surrounding semantics.
     """
 
     live_region: Optional[bool] = None
@@ -201,7 +210,11 @@ class Semantics(Control):
 
     on_double_tap: Optional[ControlEventHandler["Semantics"]] = None
     """
-    TBD
+    Reserved for a semantic double-tap action.
+
+    Warning:
+        This event is not wired by the current runtime implementation and will not
+        fire until the control implementation adds support for it.
     """
 
     on_increase: Optional[ControlEventHandler["Semantics"]] = None

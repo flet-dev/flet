@@ -26,7 +26,7 @@ class CupertinoDatePickerMode(Enum):
     """
     Mode that shows the date in hour, minute, and (optional) an AM/PM designation.
     The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
-    format, i.e. if :attr:`~flet.CupertinoDatePicker.use_24h_format` is `False`.
+    format, i.e. if :attr:`flet.CupertinoDatePicker.use_24h_format` is `False`.
     Column order is subject to internationalization.
 
     Example: `4 | 14 | PM`
@@ -46,7 +46,7 @@ class CupertinoDatePickerMode(Enum):
     Mode that shows the date as day of the week, month, day of month and
     the time in hour, minute, and (optional) an AM/PM designation.
     The AM/PM designation is shown only if `CupertinoDatePicker` does not use 24h
-    format, i.e. if :attr:`~flet.CupertinoDatePicker.use_24h_format` is `False`.
+    format, i.e. if :attr:`flet.CupertinoDatePicker.use_24h_format` is `False`.
     Column order is subject to internationalization.
 
     Example: `Fri Jul 13 | 4 | 14 | PM`

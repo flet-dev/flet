@@ -50,9 +50,20 @@ class TesterService extends FletService {
 
       case "find_by_key":
         var controlKey = parseKey(args["key"])!;
-        var key = controlKey is ControlScrollKey
+        // Preserve the concrete value type so the constructed ValueKey<T>
+        // matches the one ControlWidget assigned to the rendered widget.
+        // ValueKey's `==` is runtimeType-strict — `ValueKey<Object>('foo')`
+        // never equals `ValueKey<String>('foo')`, which would make
+        // `find.byKey(...)` miss every Flet control.
+        Key? key = controlKey is ControlScrollKey
             ? control.backend.globalKeys[controlKey.toString()]
-            : ValueKey(controlKey.value);
+            : switch (controlKey.value) {
+                String v => ValueKey<String>(v),
+                int v => ValueKey<int>(v),
+                double v => ValueKey<double>(v),
+                bool v => ValueKey<bool>(v),
+                _ => ValueKey(controlKey.value),
+              };
         if (key == null) {
           throw Exception("Key not found: $key");
         }

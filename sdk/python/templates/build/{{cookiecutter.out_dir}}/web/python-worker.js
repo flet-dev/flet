@@ -38,7 +38,14 @@ self.sendPythonOutput = function (text, isStderr) {
 
 self.initPyodide = async function () {
     try {
-        importScripts(self.pyodideUrl);
+        // Module-worker load path. `importScripts` only exists in classic
+        // workers — Pyodide >= 0.29 actively refuses to load there ("Classic
+        // web workers are not supported"). We're a module worker, so the
+        // runtime ships as `pyodide.mjs` and exposes `loadPyodide` via ESM
+        // exports. The CDN/jsdelivr fallback URL set by patch_index.py also
+        // points at the .mjs variant.
+        const pyodideModule = await import(self.pyodideUrl);
+        const loadPyodide = pyodideModule.loadPyodide || self.loadPyodide;
         self.pyodide = await loadPyodide({
             stdout: (text) => self.sendPythonOutput(text, false),
             stderr: (text) => self.sendPythonOutput(text, true),
@@ -206,7 +213,14 @@ self.initPyodide = async function () {
 };
 
 self.receiveCallback = (message) => {
-    self.postMessage(message.toJs());
+    // `message` is a Pyodide JsProxy wrapping a Python `bytes`. `toJs()`
+    // gives us a fresh Uint8Array; transferring its underlying ArrayBuffer
+    // to the main thread skips the structured-clone copy (~hundreds of KB
+    // per matplotlib frame). Safe because the Uint8Array is freshly
+    // materialized here, and the original Python `bytes` is untouched
+    // (Pyodide keeps its own reference).
+    const bytes = message.toJs();
+    self.postMessage(bytes, [bytes.buffer]);
 }
 // Same channel as `receiveCallback`, exposed under `flet_js` so the
 // Python python_output shim can post pre-encoded msgpack frames.

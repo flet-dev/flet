@@ -75,7 +75,7 @@ class CupertinoTextField(TextField):
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the :attr:`~flet.FormFieldControl.bgcolor`
+    The blend mode applied to the :attr:`flet.FormFieldControl.bgcolor`
     or :attr:`gradient` background.
     """
 
@@ -86,23 +86,23 @@ class CupertinoTextField(TextField):
 
     prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the :attr:`~flet.FormFieldControl.prefix`
+    Defines the visibility of the :attr:`flet.FormFieldControl.prefix`
     control based on the state of text entry.
 
     Note:
         Has no effect if
-        :attr:`~flet.FormFieldControl.prefix`
+        :attr:`flet.FormFieldControl.prefix`
         is not specified.
     """
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the :attr:`~flet.FormFieldControl.suffix`
+    Defines the visibility of the :attr:`flet.FormFieldControl.suffix`
     control based on the state of text entry.
 
     Note:
         Has no effect if
-        :attr:`~flet.FormFieldControl.suffix`
+        :attr:`flet.FormFieldControl.suffix`
         is not specified.
     """
 
@@ -110,9 +110,7 @@ class CupertinoTextField(TextField):
     """
     Defines the visibility of the clear button based on the state of text entry.
 
-    Will appear only if no
-    :attr:`~flet.FormFieldControl.suffix`
-    is provided.
+    Will appear only if no :attr:`flet.FormFieldControl.suffix` is provided.
     """
 
     clear_button_semantics_label: Optional[str] = "Clear"
@@ -124,15 +122,15 @@ class CupertinoTextField(TextField):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the :attr:`~flet.FormFieldControl.bgcolor`
+    An image to paint above the :attr:`flet.FormFieldControl.bgcolor`
     or :attr:`gradient` background.
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
     The padding around the text entry area between the \
-    :attr:`~flet.FormFieldControl.prefix`
-    and :attr:`~flet.FormFieldControl.suffix`
+    :attr:`flet.FormFieldControl.prefix`
+    and :attr:`flet.FormFieldControl.suffix`
     or the clear button when :attr:`clear_button_visibility_mode`
     is not :attr:`flet.OverlayVisibilityMode.NEVER`.
     """

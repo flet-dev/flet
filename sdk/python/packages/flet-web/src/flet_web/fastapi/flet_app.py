@@ -96,6 +96,11 @@ class FletApp(Connection):
         self.__upload_endpoint_path = upload_endpoint_path
         self.__secret_key = secret_key
 
+        # DataChannel mux registry keyed by channel_id minted on the Dart
+        # side. Populated lazily on the first Control.get_data_channel(id)
+        # call. Frames for unknown ids are silently dropped.
+        self._data_channels: dict[int, Any] = {}
+
         app_id = self.__id
         weakref.finalize(
             self, lambda: logger.info(f"FletApp was garbage collected: {app_id}")
@@ -214,6 +219,11 @@ class FletApp(Connection):
         """
         Receive binary frames from WebSocket and dispatch decoded client messages.
 
+        Wire format: each WebSocket binary frame is one packet —
+        `[type:u8][payload]`. type=0x00 is a MsgPack-encoded Flet protocol
+        frame; type=0x01 is a raw DataChannel frame
+        (`[channel_id:u32 LE][bytes]`).
+
         On disconnect/error, terminates send loop via queue sentinel when a
         session is active.
         """
@@ -222,9 +232,23 @@ class FletApp(Connection):
         try:
             while True:
                 data = await self.__websocket.receive_bytes()
-                await self.__on_message(
-                    msgpack.unpackb(data, ext_hook=decode_ext_from_msgpack)
-                )
+                if not data:
+                    continue
+                ptype = data[0]
+                if ptype == 0x00:
+                    await self.__on_message(
+                        msgpack.unpackb(data[1:], ext_hook=decode_ext_from_msgpack)
+                    )
+                elif ptype == 0x01:
+                    if len(data) < 5:
+                        logger.debug("Dropping malformed data-channel frame.")
+                        continue
+                    channel_id = int.from_bytes(data[1:5], "little", signed=False)
+                    channel = self._data_channels.get(channel_id)
+                    if channel is not None:
+                        channel._deliver(data[5:])
+                else:
+                    logger.debug("Dropping packet with unknown type 0x%02x", ptype)
         except Exception as e:
             if not isinstance(e, WebSocketDisconnect):
                 logger.warning(f"Receive loop error: {e}", exc_info=True)
@@ -383,16 +407,40 @@ class FletApp(Connection):
         """
         Serialize and enqueue a server message for transport to the client.
 
+        Wire format: one packet per `send_bytes` call —
+        `[0x00][msgpack body]`. WebSocket preserves message boundaries so
+        no length prefix is needed.
+
         Args:
             message: Outbound protocol message.
         """
 
         transport_log.debug(f"send_message: {message}")
-        m = msgpack.packb(
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
-        self.__send_queue.put_nowait(m)
+        self.__send_queue.put_nowait(b"\x00" + body)
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame `[0x01][channel_id:u32 LE][bytes]`
+        over the WebSocket. Called by `_ProtocolMuxedDataChannel.send`."""
+        header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
+        self.__send_queue.put_nowait(header + payload)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve or construct the muxed DataChannel for `channel_id`."""
+        from flet.data_channel import _ProtocolMuxedDataChannel
+
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _ProtocolMuxedDataChannel(channel_id, self)
+        self._data_channels[channel_id] = channel
+        return channel
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        self._data_channels.pop(channel_id, None)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """

@@ -52,7 +52,7 @@ class DataTableControl extends StatelessWidget {
               horizontalInside: horizontalLines ?? BorderSide.none,
               verticalInside: verticalLines ?? BorderSide.none)
           : null,
-      clipBehavior: parseClip(control.getString("clip_behavior"), Clip.none)!,
+      clipBehavior: control.getClipBehavior("clip_behavior", Clip.none)!,
       checkboxHorizontalMargin: control.getDouble("checkbox_horizontal_margin"),
       columnSpacing: control.getDouble("column_spacing"),
       dataRowColor: control.getWidgetStateColor("data_row_color", theme),
@@ -68,7 +68,7 @@ class DataTableControl extends StatelessWidget {
       showCheckboxColumn: control.getBool("show_checkbox_column", false)!,
       sortAscending: control.getBool("sort_ascending", false)!,
       sortColumnIndex: control.getInt("sort_column_index"),
-      onSelectAll: control.getBool("on_select_all", false)!
+      onSelectAll: control.hasEventHandler("select_all")
           ? (bool? selected) => control.triggerEvent("select_all", selected)
           : null,
       columns: control.children("columns").map((column) {
@@ -81,7 +81,7 @@ class DataTableControl extends StatelessWidget {
           headingRowAlignment:
               column.getMainAxisAlignment("heading_row_alignment"),
           mouseCursor: WidgetStateMouseCursor.clickable,
-          onSort: column.getBool("on_sort", false)!
+          onSort: column.hasEventHandler("sort")
               ? (columnIndex, ascending) => column
                   .triggerEvent("sort", {"ci": columnIndex, "asc": ascending})
               : null,
@@ -94,10 +94,10 @@ class DataTableControl extends StatelessWidget {
           key: ValueKey(row.id),
           selected: row.getBool("selected", false)!,
           color: row.getWidgetStateColor("color", theme),
-          onSelectChanged: row.getBool("on_select_change", false)!
+          onSelectChanged: row.hasEventHandler("select_change")
               ? (selected) => row.triggerEvent("select_change", selected)
               : null,
-          onLongPress: row.getBool("on_long_press", false)!
+          onLongPress: row.hasEventHandler("long_press")
               ? () => row.triggerEvent("long_press")
               : null,
           cells: row.children("cells").map((cell) {
@@ -106,19 +106,19 @@ class DataTableControl extends StatelessWidget {
               cell.buildTextOrWidget("content")!,
               placeholder: cell.getBool("placeholder", false)!,
               showEditIcon: cell.getBool("show_edit_icon", false)!,
-              onDoubleTap: cell.getBool("on_double_tap", false)!
+              onDoubleTap: cell.hasEventHandler("double_tap")
                   ? () => cell.triggerEvent("double_tap")
                   : null,
-              onLongPress: cell.getBool("on_long_press", false)!
+              onLongPress: cell.hasEventHandler("long_press")
                   ? () => cell.triggerEvent("long_press")
                   : null,
-              onTap: cell.getBool("on_tap", false)!
+              onTap: cell.hasEventHandler("tap")
                   ? () => cell.triggerEvent("tap")
                   : null,
-              onTapCancel: cell.getBool("on_tap_cancel", false)!
+              onTapCancel: cell.hasEventHandler("tap_cancel")
                   ? () => cell.triggerEvent("tap_cancel")
                   : null,
-              onTapDown: cell.getBool("on_tap_down", false)!
+              onTapDown: cell.hasEventHandler("tap_down")
                   ? (TapDownDetails details) =>
                       cell.triggerEvent("tap_down", details.toMap())
                   : null,

@@ -45,7 +45,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
     var title = control.buildTextOrWidget("title");
     var subtitle = control.buildTextOrWidget("subtitle");
     var trailing = control.buildIconOrWidget("trailing");
-    var onClick = control.getBool("on_click", false)!;
+    var onClick = control.hasEventHandler("click");
     var toggleInputs = control.getBool("toggle_inputs", false)!;
     var url = control.getUrl("url");
 
@@ -65,7 +65,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
             : null;
 
     Function()? onLongPress =
-        control.getBool("on_long_press", false)! && !control.disabled
+        control.hasEventHandler("long_press") && !control.disabled
             ? () {
                 control.triggerEvent("long_press");
               }

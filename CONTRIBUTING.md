@@ -256,14 +256,9 @@ For patches to the current stable release, branch directly from `main`, fix, ope
 
 * Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
 * Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
-* Open terminal in `client` directory and run `fvm flutter clean; fvm flutter pub get`.
-* Increment version in `packages/flet/pubspec.yaml`.
-* Review and update `CHANGELOG.md` for the release version.
-* Update version in `packages/flet/pubspec.yaml` to the release version if not already done.
-* Run `fvm flutter build macos`, `fvm flutter build linux`, `fvm flutter build windows`, `fvm flutter build web --wasm` to ensure everything compiles.
-* Run `uv run pytest` in `sdk/python` to ensure all tests pass.
-* If any test fails, fix the issue before proceeding.
-* Once all checks pass, commit the final changes (version bumps, changelog updates) to the release branch.
+* Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
+* Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
+* The supported Python / Pyodide versions are loaded on demand from [python-build's](https://github.com/flet-dev/python-build) date-keyed `manifest.json`; flet pins one release via `PYTHON_BUILD_RELEASE_DATE` in `sdk/python/packages/flet-cli/src/flet_cli/utils/python_versions.py`. When bumping it, keep it aligned with serious_python's `pythonReleaseDate` (both should track the same python-build release).
 
 ## New macOS environment for Flet developer
 

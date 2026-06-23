@@ -2,7 +2,9 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.expansion_panel_list.basic import main as basic
+from examples.controls.material.expansion_panel_list.expansion_panel_list import (
+    main as basic,
+)
 from examples.controls.material.expansion_panel_list.scrollable import (
     main as scrollable,
 )

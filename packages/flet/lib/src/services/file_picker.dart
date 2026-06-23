@@ -36,6 +36,9 @@ class FilePickerService extends FletService {
         ?.map((e) => e.toString())
         .toList();
     var withData = parseBool(args["with_data"], false)!;
+    var cancelUploadOnWindowBlur =
+        parseBool(args["cancel_upload_on_window_blur"], true)!;
+    var compressionQuality = parseInt(args["compression_quality"], 0)!;
     var srcBytes = args["src_bytes"];
 
     if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
@@ -48,15 +51,17 @@ class FilePickerService extends FletService {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
-        _files = (await FilePicker.platform.pickFiles(
+        _files = (await FilePicker.pickFiles(
                 dialogTitle: dialogTitle,
                 initialDirectory: initialDirectory,
                 lockParentWindow: true,
                 type: fileType,
                 allowedExtensions: allowedExtensions,
+                compressionQuality: compressionQuality,
                 allowMultiple: args["allow_multiple"],
                 withData: withData,
-                withReadStream: !withData))
+                withReadStream: !withData,
+                cancelUploadOnWindowBlur: cancelUploadOnWindowBlur))
             ?.files;
         return _files != null
             ? _files!.asMap().entries.map((file) {
@@ -79,7 +84,7 @@ class FilePickerService extends FletService {
           throw Exception(
               "\"file_name\" is required when saving a file on Web.");
         }
-        return await FilePicker.platform.saveFile(
+        return await FilePicker.saveFile(
             dialogTitle: dialogTitle,
             fileName: args["file_name"] != null || !isIOSMobile()
                 ? args["file_name"]
@@ -93,7 +98,7 @@ class FilePickerService extends FletService {
         if (kIsWeb) {
           throw Exception("Get Directory Path dialog is not supported on web.");
         }
-        return await FilePicker.platform.getDirectoryPath(
+        return await FilePicker.getDirectoryPath(
           dialogTitle: dialogTitle,
           initialDirectory: initialDirectory,
           lockParentWindow: true,
