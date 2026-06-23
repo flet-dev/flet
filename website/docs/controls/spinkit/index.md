@@ -71,6 +71,7 @@ All options are optional:
 | `text_color_light` / `text_color_dark` | white (dark) / black (light) | Message text color. |
 | `prepare_message` | none | Text shown while unpacking the app (Android only). |
 | `startup_message` | none | Text shown while the Python runtime and app start. |
+| `fade_out_duration` | `300` | Fade-out duration in milliseconds when the app becomes ready; `0` removes it instantly. |
 
 :::tip
 This boot screen is a complete, real-world example of the

@@ -42,7 +42,6 @@ String appDir = "";
 Map<String, String> environmentVariables = Map.from(Platform.environment);
 
 void main(List<String> args) async {
-
   FletDeepLinkingBootstrap.install();
 
   _args = List<String>.from(args);
@@ -56,74 +55,186 @@ void main(List<String> args) async {
     ext.ensureInitialized();
   }
 
-  runApp(FutureBuilder(
-      future: prepareApp(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          // In production mode prepareApp() created native bridges; wire a
-          // PythonBridge-backed channel so FletApp talks to the embedded
-          // Python over the in-process FFI transport. In web + dev modes
-          // the bridges are absent and FletApp falls back to its URL-scheme
-          // factory (websocket / TCP / UDS).
-          final channelBuilder = nrt.channelBuilder;
-          // Native (non-web): high-throughput byte channels for widgets get
-          // their own dedicated PythonBridge each. Web (Pyodide) leaves this
-          // null so FletBackend's built-in ProtocolMuxedDataChannelFactory
-          // muxes channel bytes over the postMessage transport with
-          // Transferable ArrayBuffer for zero-copy.
-          final dataChannelFactory = nrt.dataChannelFactory;
-          // OK - start Python program
-          return kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)
-              ? FletApp(
-                  pageUrl: pageUrl,
-                  assetsDir: assetsDir,
-                  bootScreenName: bootScreenName,
-                  bootScreenOptions: bootScreenOptions,
-                  extensions: extensions)
-              : FutureBuilder(
-                  future: runPythonApp(args),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                    if (snapshot.hasData || snapshot.hasError) {
-                      // error or premature finish
-                      return _bootScreenApp(BootStatus(BootStage.startingUp,
-                          error: snapshot.data ?? snapshot.error.toString()));
-                    } else {
-                      // no result of error
-                      return FletApp(
-                          pageUrl: pageUrl,
-                          assetsDir: assetsDir,
-                          bootScreenName: bootScreenName,
-                          bootScreenOptions: bootScreenOptions,
-                          channelBuilder: channelBuilder,
-                          dataChannelFactory: dataChannelFactory,
-                          extensions: extensions);
-                    }
-                  });
-        } else if (snapshot.hasError) {
-          // error
-          return _bootScreenApp(BootStatus(BootStage.preparing,
-              error: snapshot.error.toString()));
-        } else {
-          // loading (prepare phase)
-          return _bootScreenApp(null);
-        }
-      }));
+  runApp(BootHost(args: args));
 }
 
-/// Wraps the resolved boot screen in a [MaterialApp]. When [status] is null the
-/// live [_bootStatus] notifier is used (prepare phase); otherwise a fixed
-/// terminal [status] is shown (e.g. a fatal prepare/run error).
-Widget _bootScreenApp(BootStatus? status) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: resolveBootScreen(
-      name: bootScreenName,
-      options: bootScreenOptions,
+/// Hosts the app together with a persistent boot screen overlay.
+///
+/// The boot screen is rendered once, at a fixed position above the app tree, so
+/// its animation runs continuously across both boot phases (preparing → starting
+/// up) instead of restarting when `prepareApp()` completes and the app tree is
+/// built underneath. The overlay fades out once the app reports it is ready.
+class BootHost extends StatefulWidget {
+  final List<String> args;
+
+  const BootHost({super.key, required this.args});
+
+  @override
+  State<BootHost> createState() => _BootHostState();
+}
+
+class _BootHostState extends State<BootHost> {
+  bool _prepared = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _boot();
+  }
+
+  Future<void> _boot() async {
+    try {
+      await prepareApp();
+    } catch (e) {
+      _bootStatus.value = BootStatus(BootStage.preparing, error: e.toString());
+      return;
+    }
+    if (!mounted) return;
+    setState(() => _prepared = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          // The app builds underneath the overlay; while preparing it is just
+          // an empty placeholder (the opaque overlay covers it anyway).
+          _prepared ? _buildApp() : const SizedBox.shrink(),
+          _BootOverlay(status: _bootStatus),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApp() {
+    // In web + dev modes FletApp connects over its URL-scheme transport
+    // (websocket / TCP / UDS). In production prepareApp() created the native
+    // FFI bridges and we additionally run the embedded Python program.
+    if (kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)) {
+      return FletApp(
+        pageUrl: pageUrl,
+        assetsDir: assetsDir,
+        bootScreenName: bootScreenName,
+        bootScreenOptions: bootScreenOptions,
+        bootStatus: _bootStatus,
+        extensions: extensions,
+      );
+    }
+    return _ProdApp(args: widget.args);
+  }
+}
+
+/// Production host: runs the embedded Python program alongside [FletApp] over
+/// the in-process PythonBridge FFI transport. If the program exits or errors,
+/// the failure is surfaced on the boot screen via [_bootStatus].
+class _ProdApp extends StatefulWidget {
+  final List<String> args;
+
+  const _ProdApp({required this.args});
+
+  @override
+  State<_ProdApp> createState() => _ProdAppState();
+}
+
+class _ProdAppState extends State<_ProdApp> {
+  @override
+  void initState() {
+    super.initState();
+    // A completed future means the Python program returned/exited prematurely
+    // (it normally runs the event loop until the app quits). On process reuse
+    // runPythonApp() returns a never-completing future, so this never fires.
+    runPythonApp(widget.args).then((result) {
+      if (!mounted) return;
+      _bootStatus.value = BootStatus(BootStage.startingUp,
+          error: result ?? "The app exited unexpectedly.");
+    }).catchError((Object e) {
+      if (!mounted) return;
+      _bootStatus.value = BootStatus(BootStage.startingUp, error: e.toString());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FletApp(
+      pageUrl: pageUrl,
+      assetsDir: assetsDir,
+      bootScreenName: bootScreenName,
+      bootScreenOptions: bootScreenOptions,
+      bootStatus: _bootStatus,
+      // PythonBridge-backed protocol channel + dedicated byte channels.
+      channelBuilder: nrt.channelBuilder,
+      dataChannelFactory: nrt.dataChannelFactory,
       extensions: extensions,
-      status: status != null ? ValueNotifier<BootStatus>(status) : _bootStatus,
-    ),
-  );
+    );
+  }
+}
+
+/// Persistent boot screen overlay. Renders the boot screen once (so its
+/// animation never remounts across boot phases), then fades out when [status]
+/// reports `done`. Once dismissed it stays gone — later reconnects are handled
+/// by the app's own loading UI.
+class _BootOverlay extends StatefulWidget {
+  final ValueNotifier<BootStatus> status;
+
+  const _BootOverlay({required this.status});
+
+  @override
+  State<_BootOverlay> createState() => _BootOverlayState();
+}
+
+class _BootOverlayState extends State<_BootOverlay> {
+  bool _fadingOut = false;
+  bool _removed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.status.addListener(_onStatus);
+    _onStatus();
+  }
+
+  void _onStatus() {
+    if (!_fadingOut && widget.status.value.done) {
+      setState(() => _fadingOut = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.status.removeListener(_onStatus);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_removed) return const SizedBox.shrink();
+    // Fade-out duration (ms) when the app becomes ready; 0 = instant.
+    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 300)!;
+    return IgnorePointer(
+      ignoring: _fadingOut,
+      child: AnimatedOpacity(
+        opacity: _fadingOut ? 0.0 : 1.0,
+        duration: Duration(milliseconds: fadeMs),
+        onEnd: () {
+          if (_fadingOut && !_removed) setState(() => _removed = true);
+        },
+        // resolveBootScreen is built once here (status changes update the
+        // message via the screen's own ValueListenableBuilder), so the spinner
+        // keeps animating across preparing → starting up.
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: resolveBootScreen(
+            name: bootScreenName,
+            options: bootScreenOptions,
+            extensions: extensions,
+            status: widget.status,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 Future prepareApp() async {
@@ -135,10 +246,6 @@ Future prepareApp() async {
   }
 
   await setupDesktop(hideWindowOnStart: hideWindowOnStart);
-
-  // TEMP: artificial delay to visually test the boot screen "preparing" stage.
-  // REMOVE before release.
-  await Future.delayed(const Duration(seconds: 4));
 
   if (kIsWeb) {
     // web mode - connect via HTTP

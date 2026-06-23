@@ -733,12 +733,13 @@ bgcolor = "#101020"
 ```
 
 :::note
-The boot screen is rendered in two separate phases that **remount** at the
-boundary (the prepare phase runs before the Flet backend exists; the startup
-phase runs inside it). Drive your UI from `status` rather than from mount-time
-animation state, and don't rely on the app's `Theme` for colors during the
-prepare phase — read them from `options` (as above) so both phases look
-identical.
+In a packaged app, the boot screen is rendered by a persistent host overlay so
+your widget is **not** remounted between the prepare and startup phases — the
+same instance (and its animations) is reused, and the host fades it out when the
+app is ready. Drive your UI from `status`, and don't rely on the app's `Theme`
+for colors during the prepare phase — read them from `options` so the screen
+looks consistent throughout. The host also reads `fade_out_duration` (ms) from
+your `options` to control that fade-out.
 :::
 
 :::tip[Real-world example]

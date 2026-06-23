@@ -21,12 +21,19 @@ class BootStatus {
   /// formatted for display. A heading can be derived from [stage].
   final String? error;
 
-  const BootStatus(this.stage, {this.error});
+  /// True once the app is ready and the boot screen should be dismissed.
+  /// Used by a persistent boot overlay to know when to fade out.
+  final bool done;
+
+  const BootStatus(this.stage, {this.error, this.done = false});
 
   @override
   bool operator ==(Object other) =>
-      other is BootStatus && other.stage == stage && other.error == error;
+      other is BootStatus &&
+      other.stage == stage &&
+      other.error == error &&
+      other.done == done;
 
   @override
-  int get hashCode => Object.hash(stage, error);
+  int get hashCode => Object.hash(stage, error, done);
 }

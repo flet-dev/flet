@@ -55,10 +55,14 @@ class FletBackend extends ChangeNotifier {
   final Map<String, dynamic> bootScreenOptions;
   final String? appErrorMessage;
   final int? controlId;
-  /// Notifies the boot screen of the current [BootStatus] (stage + any startup
-  /// error). Kept in sync with [isLoading]/[error].
-  final ValueNotifier<BootStatus> bootStatus =
-      ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
+  /// Notifies the boot screen of the current [BootStatus] (stage, any startup
+  /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
+  ///
+  /// May be injected by the embedder (e.g. a persistent boot overlay in the
+  /// app bootstrap that needs the same notifier across both boot phases). When
+  /// injected, this backend updates but does not own/dispose it.
+  late final ValueNotifier<BootStatus> bootStatus;
+  final bool _ownsBootStatus;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
@@ -122,6 +126,7 @@ class FletBackend extends ChangeNotifier {
       this.forcePyodide,
       this.tester,
       required extensions,
+      ValueNotifier<BootStatus>? bootStatus,
       FletBackendChannelBuilder? channelBuilder,
       DataChannelFactory? dataChannelFactory,
       FletBackend? parentFletBackend})
@@ -130,7 +135,10 @@ class FletBackend extends ChangeNotifier {
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs,
         _channelBuilder = channelBuilder,
+        _ownsBootStatus = bootStatus == null,
         _injectedDataChannelFactory = dataChannelFactory {
+    this.bootStatus = bootStatus ??
+        ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
     _dataChannelFactory =
         _injectedDataChannelFactory ?? ProtocolMuxedDataChannelFactory(this);
     // add Flet extension with core controls and services
@@ -195,7 +203,9 @@ class FletBackend extends ChangeNotifier {
     _page.removeListener(_onPageUpdated);
     _page.dispose();
     _backendChannel?.disconnect();
-    bootStatus.dispose();
+    if (_ownsBootStatus) {
+      bootStatus.dispose();
+    }
     super.dispose();
   }
 
@@ -218,9 +228,6 @@ class FletBackend extends ChangeNotifier {
             onPacket: _onPacket);
       }
       await _backendChannel!.connect();
-      // TEMP: artificial delay to visually test the boot screen "startingUp"
-      // stage. REMOVE before release.
-      await Future.delayed(const Duration(seconds: 4));
       _registerClient();
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
@@ -618,7 +625,8 @@ class FletBackend extends ChangeNotifier {
     // error only once loading has settled with an error present.
     final err =
         (!isLoading && error.isNotEmpty) ? formatAppErrorMessage(error) : null;
-    final newStatus = BootStatus(BootStage.startingUp, error: err);
+    final newStatus = BootStatus(BootStage.startingUp,
+        error: err, done: !isLoading && error.isEmpty);
     if (bootStatus.value != newStatus) {
       bootStatus.value = newStatus;
     }

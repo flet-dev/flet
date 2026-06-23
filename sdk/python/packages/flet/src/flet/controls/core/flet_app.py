@@ -59,14 +59,38 @@ class FletApp(LayoutControl):
     Total time to try reconnecting.
     """
 
+    boot_screen_name: Optional[str] = None
+    """
+    Name of the boot screen to show while the embedded app starts up.
+
+    When `None`, the built-in `"flet"` boot screen is used. Custom boot screens
+    are provided by extensions; see the
+    [boot screen docs](https://flet.dev/docs/publish/#boot-screen).
+    """
+
+    boot_screen_options: Optional[dict[str, Any]] = None
+    """
+    Options for the boot screen, passed through to the boot screen widget.
+
+    For the built-in `"flet"` screen these include `spinner_size`,
+    `startup_message`, `bgcolor_light`/`bgcolor_dark`, etc. See the
+    [boot screen docs](https://flet.dev/docs/publish/#boot-screen).
+    """
+
     show_app_startup_screen: bool = False
     """
     Whether to show the app startup screen.
+
+    Deprecated: use :attr:`boot_screen_options` instead, e.g.
+    `boot_screen_options={"spinner_size": 30}`.
     """
 
     app_startup_screen_message: Optional[str] = None
     """
     Message to display on the app startup screen.
+
+    Deprecated: use :attr:`boot_screen_options` instead, e.g.
+    `boot_screen_options={"startup_message": "Loading…"}`.
     """
 
     app_error_message: Optional[str] = None

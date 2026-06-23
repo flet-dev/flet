@@ -881,6 +881,7 @@ startup_message = "Starting up…"          # empty/absent → no message
 | `text_color_light` / `text_color_dark` | Message text color. When omitted, defaults to white in dark mode and black in light mode. |
 | `prepare_message` | Text shown during the **preparing** stage (Android only). Empty or absent shows no message. |
 | `startup_message` | Text shown during the **starting up** stage. Empty or absent shows no message. |
+| `fade_out_duration` | Fade-out duration in milliseconds when the app becomes ready. Defaults to `300`; `0` removes it instantly. |
 
 Colors accept the same formats as elsewhere in Flet (hex like `#ffffff` or named
 colors like `blue`).
