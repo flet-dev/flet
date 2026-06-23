@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -20,47 +19,18 @@ import 'package:window_manager/window_manager.dart';
 import 'native_runtime_stub.dart'
     if (dart.library.ffi) 'native_runtime.dart' as nrt;
 
-{% for dep in cookiecutter.flutter.dependencies %}
-import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
-{% endfor %}
-
-/*
-{% set show_boot_screen = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.show")
-                        or get_pyproject("tool.flet.app.boot_screen.show")
-                        or False %}
-{% set boot_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.boot_screen.message")
-                        or get_pyproject("tool.flet.app.boot_screen.message") %}
-
-{% set show_startup_screen = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.startup_screen.show")
-                        or get_pyproject("tool.flet.app.startup_screen.show")
-                        or False %}
-{% set startup_screen_message = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.startup_screen.message")
-                        or get_pyproject("tool.flet.app.startup_screen.message") %}
-
-{% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start")
-                        or get_pyproject("tool.flet.app.hide_window_on_start") %}
-
-show_boot_screen: {{ show_boot_screen }}
-boot_screen_message: {{ boot_screen_message }}
-show_startup_screen: {{ show_startup_screen }}
-startup_screen_message: {{ startup_screen_message }}
-hide_window_on_start: {{ hide_window_on_start }}
-*/
+// All build-time (cookiecutter / jinja) declarations — extension imports and
+// list, python module name, boot screen config — live in this generated file
+// so that main.dart stays plain, editable Dart.
+import 'flet_generated.dart';
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-const pythonModuleName = "{{ cookiecutter.python_module_name }}";
-final showAppBootScreen = bool.tryParse("{{ show_boot_screen }}".toLowerCase()) ?? false;
-const appBootScreenMessage = '{{ boot_screen_message | default("Preparing the app for its first launch…", true) }}';
-final showAppStartupScreen = bool.tryParse("{{ show_startup_screen }}".toLowerCase()) ?? false;
-const appStartupScreenMessage = '{{ startup_screen_message | default("Getting things ready…", true) }}';
-final hideWindowOnStart = bool.tryParse("{{ hide_window_on_start }}".toLowerCase()) ?? false;
-
-List<FletExtension> extensions = [
-{% for dep in cookiecutter.flutter.dependencies %}
-{{ dep }}.Extension(),
-{% endfor %}
-];
+// Drives the boot screen during the prepare phase (bundle unpacking, storage
+// setup, bridge init), before any FletBackend exists. Seeded to `preparing`;
+// switched to an error status if prepare/run fails fatally.
+final ValueNotifier<BootStatus> _bootStatus =
+    ValueNotifier<BootStatus>(const BootStatus(BootStage.preparing));
 
 String outLogFilename = "";
 
@@ -107,8 +77,8 @@ void main(List<String> args) async {
               ? FletApp(
                   pageUrl: pageUrl,
                   assetsDir: assetsDir,
-                  showAppStartupScreen: showAppStartupScreen,
-                  appStartupScreenMessage: appStartupScreenMessage,
+                  bootScreenName: bootScreenName,
+                  bootScreenOptions: bootScreenOptions,
                   extensions: extensions)
               : FutureBuilder(
                   future: runPythonApp(args),
@@ -116,18 +86,15 @@ void main(List<String> args) async {
                       (BuildContext context, AsyncSnapshot<String?> snapshot) {
                     if (snapshot.hasData || snapshot.hasError) {
                       // error or premature finish
-                      return MaterialApp(
-                        builder: (context, _) => ErrorScreen(
-                            title: "Error running app",
-                            text: snapshot.data ?? snapshot.error.toString()),
-                      );
+                      return _bootScreenApp(BootStatus(BootStage.startingUp,
+                          error: snapshot.data ?? snapshot.error.toString()));
                     } else {
                       // no result of error
                       return FletApp(
                           pageUrl: pageUrl,
                           assetsDir: assetsDir,
-                          showAppStartupScreen: showAppStartupScreen,
-                          appStartupScreenMessage: appStartupScreenMessage,
+                          bootScreenName: bootScreenName,
+                          bootScreenOptions: bootScreenOptions,
                           channelBuilder: channelBuilder,
                           dataChannelFactory: dataChannelFactory,
                           extensions: extensions);
@@ -135,16 +102,28 @@ void main(List<String> args) async {
                   });
         } else if (snapshot.hasError) {
           // error
-          return MaterialApp(
-              builder: (context, _) => ErrorScreen(
-                  title: "Error starting app",
-                  text: snapshot.error.toString()));
+          return _bootScreenApp(BootStatus(BootStage.preparing,
+              error: snapshot.error.toString()));
         } else {
-          // loading
-          return MaterialApp(
-              builder: (context, _) => showAppBootScreen ? const BootScreen() : const BlankScreen());
+          // loading (prepare phase)
+          return _bootScreenApp(null);
         }
       }));
+}
+
+/// Wraps the resolved boot screen in a [MaterialApp]. When [status] is null the
+/// live [_bootStatus] notifier is used (prepare phase); otherwise a fixed
+/// terminal [status] is shown (e.g. a fatal prepare/run error).
+Widget _bootScreenApp(BootStatus? status) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: resolveBootScreen(
+      name: bootScreenName,
+      options: bootScreenOptions,
+      extensions: extensions,
+      status: status != null ? ValueNotifier<BootStatus>(status) : _bootStatus,
+    ),
+  );
 }
 
 Future prepareApp() async {
@@ -156,6 +135,10 @@ Future prepareApp() async {
   }
 
   await setupDesktop(hideWindowOnStart: hideWindowOnStart);
+
+  // TEMP: artificial delay to visually test the boot screen "preparing" stage.
+  // REMOVE before release.
+  await Future.delayed(const Duration(seconds: 4));
 
   if (kIsWeb) {
     // web mode - connect via HTTP
@@ -255,95 +238,5 @@ Future<String?> runPythonApp(List<String> args) async {
     environmentVariables: environmentVariables,
     args: args,
   );
-}
-
-class ErrorScreen extends StatelessWidget {
-  final String title;
-  final String text;
-
-  const ErrorScreen({super.key, required this.title, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Container(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: text));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 16,
-                  ),
-                  label: const Text("Copy"),
-                )
-              ],
-            ),
-            Expanded(
-                child: SingleChildScrollView(
-              child: SelectableText(text,
-                  style: Theme.of(context).textTheme.bodySmall),
-            ))
-          ],
-        ),
-      )),
-    );
-  }
-}
-
-class BootScreen extends StatelessWidget {
-  const BootScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              width: 30,
-              height: 30,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(appBootScreenMessage, style: Theme.of(context).textTheme.bodySmall,)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BlankScreen extends StatelessWidget {
-  const BlankScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SizedBox.shrink(),
-    );
-  }
 }
 

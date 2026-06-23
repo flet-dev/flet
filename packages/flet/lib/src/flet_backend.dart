@@ -11,6 +11,7 @@ import 'flet_app_errors_handler.dart';
 import 'flet_core_extension.dart';
 import 'flet_extension.dart';
 import 'models/asset_source.dart';
+import 'models/boot_status.dart';
 import 'models/control.dart';
 import 'models/window_state.dart';
 import 'protocol/control_event_body.dart';
@@ -50,10 +51,14 @@ class FletBackend extends ChangeNotifier {
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
+  final String bootScreenName;
+  final Map<String, dynamic> bootScreenOptions;
   final String? appErrorMessage;
   final int? controlId;
+  /// Notifies the boot screen of the current [BootStatus] (stage + any startup
+  /// error). Kept in sync with [isLoading]/[error].
+  final ValueNotifier<BootStatus> bootStatus =
+      ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
@@ -109,8 +114,8 @@ class FletBackend extends ChangeNotifier {
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
+      this.bootScreenName = "flet",
+      this.bootScreenOptions = const {},
       this.appErrorMessage,
       this.controlId,
       this.args,
@@ -190,6 +195,7 @@ class FletBackend extends ChangeNotifier {
     _page.removeListener(_onPageUpdated);
     _page.dispose();
     _backendChannel?.disconnect();
+    bootStatus.dispose();
     super.dispose();
   }
 
@@ -212,6 +218,9 @@ class FletBackend extends ChangeNotifier {
             onPacket: _onPacket);
       }
       await _backendChannel!.connect();
+      // TEMP: artificial delay to visually test the boot screen "startingUp"
+      // stage. REMOVE before release.
+      await Future.delayed(const Duration(seconds: 4));
       _registerClient();
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
@@ -600,6 +609,20 @@ class FletBackend extends ChangeNotifier {
   _onSessionCrashed(SessionCrashedBody body) {
     error = body.message;
     notifyListeners();
+  }
+
+  @override
+  void notifyListeners() {
+    // Keep the boot screen status in sync with the loading/error state.
+    // While loading (incl. reconnecting) show the loading state; show the
+    // error only once loading has settled with an error present.
+    final err =
+        (!isLoading && error.isNotEmpty) ? formatAppErrorMessage(error) : null;
+    final newStatus = BootStatus(BootStage.startingUp, error: err);
+    if (bootStatus.value != newStatus) {
+      bootStatus.value = newStatus;
+    }
+    super.notifyListeners();
   }
 
   String formatAppErrorMessage(String rawError) {

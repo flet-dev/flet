@@ -133,8 +133,11 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
-    showAppStartupScreen: true,
-    appStartupScreenMessage: "Working...",
+    bootScreenName: "flet",
+    bootScreenOptions: const {
+      "spinner_size": 30,
+      "startup_message": "Working..."
+    },
     appErrorMessage: "The application encountered an error: {message}",
     extensions: extensions,
     multiView: isMultiView(),

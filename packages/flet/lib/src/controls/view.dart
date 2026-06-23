@@ -17,7 +17,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
-import '../widgets/loading_page.dart';
+import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'app_bar.dart';
@@ -244,22 +244,18 @@ class _ViewControlState extends State<ViewControl> {
     }
 
     var backend = FletBackend.of(context);
-    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
 
     var appStatus =
         context.select<FletBackend, ({bool isLoading, String error})>(
             (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     Widget? loadingPage;
-    if ((appStatus.isLoading || appStatus.error != "") &&
-        showAppStartupScreen) {
-      loadingPage = LoadingPage(
-        isLoading: appStatus.isLoading,
-        message: appStatus.isLoading
-            ? appStartupScreenMessage
-            : formattedErrorMessage,
+    if (appStatus.isLoading || appStatus.error != "") {
+      loadingPage = resolveBootScreen(
+        name: backend.bootScreenName,
+        options: backend.bootScreenOptions,
+        extensions: backend.extensions,
+        status: backend.bootStatus,
       );
     }
 

@@ -14,8 +14,8 @@ import 'transport/flet_backend_channel.dart';
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
+  final String? bootScreenName;
+  final Map<String, dynamic>? bootScreenOptions;
   final String? appErrorMessage;
   final int? controlId;
   final String? title;
@@ -45,8 +45,8 @@ class FletApp extends StatefulWidget {
       {super.key,
       required this.pageUrl,
       required this.assetsDir,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
+      this.bootScreenName,
+      this.bootScreenOptions,
       this.appErrorMessage,
       this.controlId,
       this.title,
@@ -79,8 +79,8 @@ class _FletAppState extends State<FletApp> {
     return ChangeNotifierProvider<FletBackend>(
       create: (context) {
         return FletBackend(
-            showAppStartupScreen: widget.showAppStartupScreen,
-            appStartupScreenMessage: widget.appStartupScreenMessage,
+            bootScreenName: widget.bootScreenName ?? "flet",
+            bootScreenOptions: widget.bootScreenOptions ?? const {},
             appErrorMessage: widget.appErrorMessage,
             controlId: widget.controlId,
             reconnectIntervalMs: widget.reconnectIntervalMs,

@@ -5,6 +5,7 @@ import '../flet_app_errors_handler.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
+import '../widgets/boot_screen.dart';
 import 'base_controls.dart';
 
 class FletAppControl extends StatefulWidget {
@@ -35,7 +36,7 @@ class _FletAppControlState extends State<FletAppControl> {
     var reconnectIntervalMs = widget.control.getInt("reconnect_interval_ms");
     var reconnectTimeoutMs = widget.control.getInt("reconnect_timeout_ms");
     var showAppStartupScreen =
-        widget.control.getBool("show_app_startup_screen");
+        widget.control.getBool("show_app_startup_screen", false)!;
     var appStartupScreenMessage =
         widget.control.getString("app_startup_screen_message");
     var appErrorMessage = widget.control.getString("app_error_message");
@@ -46,8 +47,9 @@ class _FletAppControlState extends State<FletAppControl> {
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
-        showAppStartupScreen: showAppStartupScreen,
-        appStartupScreenMessage: appStartupScreenMessage,
+        bootScreenName: "flet",
+        bootScreenOptions: legacyBootScreenOptions(
+            showAppStartupScreen, appStartupScreenMessage),
         appErrorMessage: appErrorMessage,
         pageUrl: url,
         assetsDir: widget.control.getString("assets_dir", "")!,
