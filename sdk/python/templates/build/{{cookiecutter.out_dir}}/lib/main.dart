@@ -210,8 +210,8 @@ class _BootOverlayState extends State<_BootOverlay> {
   @override
   Widget build(BuildContext context) {
     if (_removed) return const SizedBox.shrink();
-    // Fade-out duration (ms) when the app becomes ready; 0 = instant.
-    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 300)!;
+    // Fade-out duration (ms) when the app becomes ready; 0 (default) = instant.
+    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 0)!;
     return IgnorePointer(
       ignoring: _fadingOut,
       child: AnimatedOpacity(

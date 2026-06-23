@@ -65,13 +65,13 @@ All options are optional:
 |--------|---------|-------------|
 | `spinner` | `WanderingCubes` | Any SpinKit animation, named without the `SpinKit` prefix (e.g. `Wave`, `FadingCube`, `PouringHourGlass`). Case-insensitive. |
 | `theme_mode` | `auto` | `auto` (follow device), `light`, or `dark`. |
-| `bgcolor_light` / `bgcolor_dark` | theme background | Background color. |
-| `spinner_color_light` / `spinner_color_dark` | white (dark) / black (light) | Spinner color. |
+| `bgcolor_light` / `bgcolor_dark` | Flet theme background | Background color. |
+| `spinner_color_light` / `spinner_color_dark` | Flet theme primary | Spinner color. |
 | `spinner_size` | `60` | Spinner size in logical pixels. |
-| `text_color_light` / `text_color_dark` | white (dark) / black (light) | Message text color. |
+| `text_color_light` / `text_color_dark` | Flet theme on-surface | Message text color. |
 | `prepare_message` | none | Text shown while unpacking the app (Android only). |
 | `startup_message` | none | Text shown while the Python runtime and app start. |
-| `fade_out_duration` | `300` | Fade-out duration in milliseconds when the app becomes ready; `0` removes it instantly. |
+| `fade_out_duration` | `0` | Fade-out duration in milliseconds when the app becomes ready; `0` removes it instantly. |
 
 :::tip
 This boot screen is a complete, real-world example of the

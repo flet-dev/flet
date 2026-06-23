@@ -875,13 +875,13 @@ startup_message = "Starting up…"          # empty/absent → no message
 | Option | Description |
 |--------|-------------|
 | `theme_mode` | Which color set to use: `auto` (follow the device), `light`, or `dark`. Defaults to `auto`. |
-| `bgcolor_light` / `bgcolor_dark` | Background color. When omitted, the default theme background is used. |
-| `spinner_color_light` / `spinner_color_dark` | Spinner color. When omitted, the theme's primary color is used. |
+| `bgcolor_light` / `bgcolor_dark` | Background color. When omitted, follows Flet's default theme background. |
+| `spinner_color_light` / `spinner_color_dark` | Spinner color. When omitted, follows Flet's default theme primary color. |
 | `spinner_size` | Spinner diameter in logical pixels. `0` or absent hides the spinner. |
-| `text_color_light` / `text_color_dark` | Message text color. When omitted, defaults to white in dark mode and black in light mode. |
+| `text_color_light` / `text_color_dark` | Message text color. When omitted, follows Flet's default theme on-surface color. |
 | `prepare_message` | Text shown during the **preparing** stage (Android only). Empty or absent shows no message. |
 | `startup_message` | Text shown during the **starting up** stage. Empty or absent shows no message. |
-| `fade_out_duration` | Fade-out duration in milliseconds when the app becomes ready. Defaults to `300`; `0` removes it instantly. |
+| `fade_out_duration` | Fade-out duration in milliseconds when the app becomes ready. Defaults to `0` (removed instantly); set a value like `300` to fade out. |
 
 Colors accept the same formats as elsewhere in Flet (hex like `#ffffff` or named
 colors like `blue`).

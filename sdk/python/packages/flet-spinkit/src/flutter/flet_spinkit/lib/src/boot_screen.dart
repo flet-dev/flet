@@ -96,48 +96,56 @@ class SpinKitBootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = _isDark(context);
-    final contrast = dark ? Colors.white : Colors.black;
+    // Follow Flet's default theme (not the bare bootstrap MaterialApp theme) so
+    // unset colors match what the app itself will use.
+    final theme =
+        parseTheme(null, context, dark ? Brightness.dark : Brightness.light);
     final bgcolor = _color("bgcolor", dark);
-    final spinnerColor = _color("spinner_color", dark) ?? contrast;
-    final textColor = _color("text_color", dark) ?? contrast;
+    final spinnerColor =
+        _color("spinner_color", dark) ?? theme.colorScheme.primary;
+    final textColor = _color("text_color", dark) ?? theme.colorScheme.onSurface;
     final size = parseDouble(options["spinner_size"], 60)!;
     final type = _resolveSpinnerType(options["spinner"] as String?);
 
-    return ValueListenableBuilder<BootStatus>(
-      valueListenable: status,
-      builder: (context, boot, _) {
-        final Widget child;
-        if (boot.error != null) {
-          child = Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              boot.error!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.redAccent),
-            ),
-          );
-        } else {
-          final message = boot.stage == BootStage.preparing
-              ? options["prepare_message"] as String?
-              : options["startup_message"] as String?;
-          final children = <Widget>[
-            createSpinKit(type, color: spinnerColor, size: size),
-          ];
-          if (message != null && message.isNotEmpty) {
-            children.add(const SizedBox(height: 16));
-            children.add(Text(message, style: TextStyle(color: textColor)));
+    return Theme(
+      data: theme,
+      child: ValueListenableBuilder<BootStatus>(
+        valueListenable: status,
+        builder: (context, boot, _) {
+          final Widget child;
+          if (boot.error != null) {
+            child = Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                boot.error!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: theme.colorScheme.error),
+              ),
+            );
+          } else {
+            final message = boot.stage == BootStage.preparing
+                ? options["prepare_message"] as String?
+                : options["startup_message"] as String?;
+            final children = <Widget>[
+              createSpinKit(type, color: spinnerColor, size: size),
+            ];
+            if (message != null && message.isNotEmpty) {
+              children.add(const SizedBox(height: 16));
+              children.add(Text(message, style: TextStyle(color: textColor)));
+            }
+            child = Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            );
           }
-          child = Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: children,
+          return Scaffold(
+            // null → Flet theme's scaffold background.
+            backgroundColor: bgcolor,
+            body: Center(child: child),
           );
-        }
-        return Scaffold(
-          backgroundColor: bgcolor,
-          body: Center(child: child),
-        );
-      },
+        },
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../models/boot_status.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
+import '../utils/theme.dart';
 
 /// The built-in "flet" boot screen, used as the ultimate fallback whenever no
 /// custom boot screen is configured or matched.
@@ -46,26 +47,31 @@ class FletBootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = _isDark(context);
+    // Follow Flet's default theme (not the bare bootstrap MaterialApp theme) so
+    // unset colors match what the app itself will use.
+    final theme =
+        parseTheme(null, context, dark ? Brightness.dark : Brightness.light);
     final bgcolor = _color("bgcolor", dark);
     final spinnerColor = _color("spinner_color", dark);
-    // Default the text color to match the resolved brightness, not the ambient
-    // MaterialApp theme (which may be the default light theme over a dark bg).
-    final textColor =
-        _color("text_color", dark) ?? (dark ? Colors.white : Colors.black);
+    final textColor = _color("text_color", dark);
     final spinnerSize = parseInt(options["spinner_size"], 0)!;
 
-    return ValueListenableBuilder<BootStatus>(
-      valueListenable: status,
-      builder: (context, bootStatus, _) {
-        final child = bootStatus.error != null
-            ? _buildError(context, bootStatus)
-            : _buildLoading(context, bootStatus, spinnerSize, spinnerColor,
-                textColor);
-        return Scaffold(
-          backgroundColor: bgcolor,
-          body: Center(child: child),
-        );
-      },
+    return Theme(
+      data: theme,
+      child: ValueListenableBuilder<BootStatus>(
+        valueListenable: status,
+        builder: (context, bootStatus, _) {
+          final child = bootStatus.error != null
+              ? _buildError(context, bootStatus)
+              : _buildLoading(context, bootStatus, spinnerSize, spinnerColor,
+                  textColor);
+          return Scaffold(
+            // null → Flet theme's scaffold background.
+            backgroundColor: bgcolor,
+            body: Center(child: child),
+          );
+        },
+      ),
     );
   }
 
