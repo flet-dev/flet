@@ -38,6 +38,46 @@ Then import the package in your Flet app:
 import flet_spinkit as spins
 ```
 
+### Boot screen
+
+`flet-spinkit` also provides a [boot screen](../../publish/index.md#boot-screen) named
+`spinkit` — an animated loader shown while your packaged app is starting up. Once
+`flet-spinkit` is a dependency, select it in `pyproject.toml`:
+
+```toml
+[tool.flet.boot_screen]
+name = "spinkit"
+
+[tool.flet.boot_screen.spinkit]
+spinner = "WanderingCubes"          # any SpinKit animation (without the "SpinKit" prefix)
+spinner_color_light = "#7c4dff"
+spinner_color_dark = "#b388ff"
+spinner_size = 60
+bgcolor_light = "#ffffff"
+bgcolor_dark = "#0d0d12"
+prepare_message = "Preparing your app…"
+startup_message = "Starting up…"
+```
+
+All options are optional:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `spinner` | `WanderingCubes` | Any SpinKit animation, named without the `SpinKit` prefix (e.g. `Wave`, `FadingCube`, `PouringHourGlass`). Case-insensitive. |
+| `theme_mode` | `auto` | `auto` (follow device), `light`, or `dark`. |
+| `bgcolor_light` / `bgcolor_dark` | theme background | Background color. |
+| `spinner_color_light` / `spinner_color_dark` | white (dark) / black (light) | Spinner color. |
+| `spinner_size` | `60` | Spinner size in logical pixels. |
+| `text_color_light` / `text_color_dark` | white (dark) / black (light) | Message text color. |
+| `prepare_message` | none | Text shown while unpacking the app (Android only). |
+| `startup_message` | none | Text shown while the Python runtime and app start. |
+
+:::tip
+This boot screen is a complete, real-world example of the
+[`createBootScreen`](../../extend/user-extensions.md#boot-screen) extension hook —
+see its source under `flet-spinkit`'s `src/flutter/flet_spinkit/lib/src/boot_screen.dart`.
+:::
+
 ## Examples
 
 <CodeExample path={frontMatter.examples + '/spinkit_showcase/main.py'} language="python" />

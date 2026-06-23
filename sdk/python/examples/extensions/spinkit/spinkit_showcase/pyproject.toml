@@ -31,3 +31,18 @@ features = ["spinner grid", "color selection", "size slider", "all 31 spinner ty
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
+
+# Animated SpinKit boot screen, shown while the packaged app starts up.
+# Provided by the flet-spinkit extension (see its src/flutter/.../boot_screen.dart).
+[tool.flet.boot_screen]
+name = "spinkit"
+
+[tool.flet.boot_screen.spinkit]
+spinner = "WanderingCubes"
+spinner_color_light = "#7c4dff"
+spinner_color_dark = "#b388ff"
+spinner_size = 60
+bgcolor_light = "#ffffff"
+bgcolor_dark = "#0d0d12"
+prepare_message = "Preparing your app…"
+startup_message = "Starting up…"

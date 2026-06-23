@@ -741,6 +741,13 @@ prepare phase — read them from `options` (as above) so both phases look
 identical.
 :::
 
+:::tip[Real-world example]
+The [`flet-spinkit`](../controls/spinkit/index.md#boot-screen) extension ships a
+complete `spinkit` boot screen built exactly this way — see
+[`boot_screen.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit/lib/src/boot_screen.dart)
+and its [`extension.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit/lib/src/extension.dart).
+:::
+
 ## Examples
 
 Flet has controls that are implemented as [built-in extensions](built-in-extensions.md) and could serve as a starting point for your own controls.
