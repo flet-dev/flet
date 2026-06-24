@@ -26,11 +26,12 @@ import 'flet_generated.dart';
 
 const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
-// Drives the boot screen during the prepare phase (bundle unpacking, storage
-// setup, bridge init), before any FletBackend exists. Seeded to `preparing`;
-// switched to an error status if prepare/run fails fatally.
+// Drives the boot screen before any FletBackend exists. Seeded to `startingUp`
+// so the "preparing" stage never flashes on platforms/launches that don't
+// unpack the app bundle. Only Android's first launch after install/update
+// actually unpacks (see `_boot`), and only then is it switched to `preparing`.
 final ValueNotifier<BootStatus> _bootStatus =
-    ValueNotifier<BootStatus>(const BootStatus(BootStage.preparing));
+    ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
 
 String outLogFilename = "";
 
@@ -83,12 +84,27 @@ class _BootHostState extends State<BootHost> {
   }
 
   Future<void> _boot() async {
+    // The "preparing" stage is only meaningful while the app bundle is being
+    // unpacked, which happens on Android's first launch after install/update.
+    // Everywhere else prepareApp() is fast, so staying in `startingUp` avoids
+    // flashing "Preparing…" every launch. Only switch to `preparing` if
+    // prepareApp is actually slow on Android (i.e. it's unpacking).
+    Timer? preparingTimer;
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      preparingTimer = Timer(const Duration(milliseconds: 400), () {
+        _bootStatus.value = const BootStatus(BootStage.preparing);
+      });
+    }
     try {
       await prepareApp();
     } catch (e) {
+      preparingTimer?.cancel();
       _bootStatus.value = BootStatus(BootStage.preparing, error: e.toString());
       return;
     }
+    preparingTimer?.cancel();
+    // Unpacking (if any) is done — hand off to the starting-up stage.
+    _bootStatus.value = const BootStatus(BootStage.startingUp);
     if (!mounted) return;
     setState(() => _prepared = true);
   }
