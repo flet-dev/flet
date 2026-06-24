@@ -3,7 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 DebugGeography? parseDebugGeography(String? value,
         [DebugGeography? defaultValue]) =>
-    parseEnum(DebugGeography.values, value, defaultValue);
+    parseEnum(DebugGeography.values, "debugGeography$value", defaultValue);
 
 ConsentDebugSettings? parseConsentDebugSettings(dynamic value,
     [ConsentDebugSettings? defaultValue]) {

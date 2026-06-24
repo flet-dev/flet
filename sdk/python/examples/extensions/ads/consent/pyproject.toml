@@ -1,0 +1,27 @@
+[project]
+name = "consent"
+version = "1.0.0"
+description = "Gather user consent for ads with Google's User Messaging Platform (UMP)."
+requires-python = ">=3.10"
+keywords = ["ads", "consent", "ump", "gdpr", "admob", "mobile", "privacy"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-ads"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Marketing/Ads"]
+
+[tool.flet.metadata]
+title = "AdMob Consent (UMP)"
+controls = ["SafeArea", "Column", "OutlinedButton", "AppBar", "Text", "Divider", "ConsentManager"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["consent gathering", "consent form", "privacy options form", "consent status"]
+
+[tool.flet]
+platforms = ["ios", "android"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

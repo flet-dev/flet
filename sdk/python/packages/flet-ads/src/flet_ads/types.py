@@ -179,16 +179,16 @@ class DebugGeography(Enum):
         :attr:`flet_ads.ConsentDebugSettings.test_identifiers`.
     """
 
-    DISABLED = "debugGeographyDisabled"
+    DISABLED = "disabled"
     """Debug geography disabled."""
 
-    EEA = "debugGeographyEea"
+    EEA = "eea"
     """Geography appears as in the EEA (European Economic Area) for debug devices."""
 
-    REGULATED_US_STATE = "debugGeographyRegulatedUsState"
+    REGULATED_US_STATE = "regulatedUsState"
     """Geography appears as in a regulated US State for debug devices."""
 
-    OTHER = "debugGeographyOther"
+    OTHER = "other"
     """Geography appears as in a region with no regulation in force."""
 
 
