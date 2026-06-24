@@ -170,34 +170,6 @@ jobs:
           path: '.fvmrc'
           cache: true
 
-      # TEMP: use libdart_bridge.so built by a specific dart-bridge CI run
-      # instead of the released binary, so Android builds pick up unreleased
-      # dart-bridge changes (e.g. the worker-thread priority fix). REMOVE once
-      # the change is released and dart_bridge_version is bumped.
-      # Cross-repo artifact download needs a token with actions:read on
-      # flet-dev/dart-bridge — set the DART_BRIDGE_TOKEN secret (a PAT); the
-      # default GITHUB_TOKEN cannot read another repo's run artifacts.
-      - name: Use dart-bridge Android binaries from a specific CI run
-        if: startsWith(matrix.name, 'apk') || startsWith(matrix.name, 'aab')
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.DART_BRIDGE_TOKEN || secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          VER="${{ inputs.python_version }}"
-          RUN_ID=28121718882
-          DEST="${ROOT}/dart_bridge_dist"
-          TMP="${ROOT}/dart_bridge_tmp"
-          mkdir -p "$DEST"
-          # Pull only this Python version's .so artifacts (all ABIs).
-          gh run download "$RUN_ID" --repo flet-dev/dart-bridge \
-            --pattern "libdart_bridge-android-*-py${VER}" --dir "$TMP"
-          # serious_python_android expects a flat dir of
-          # libdart_bridge-android-<abi>-py<ver>.so files.
-          find "$TMP" -name '*.so' -exec mv {} "$DEST/" \;
-          ls -l "$DEST"
-          echo "SERIOUS_PYTHON_DART_BRIDGE_DIST=$DEST" >> "$GITHUB_ENV"
-
       - name: Build app
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
