@@ -33,7 +33,7 @@ class ProgressRingControl extends StatelessWidget {
       padding: control.getPadding("padding"),
       // ignore: deprecated_member_use
       year2023: control.getBool(
-          "year2023"), // todo: deprecated and to be removed in future versions
+          "year_2023"), // todo: deprecated and to be removed in future versions
     );
     return LayoutControl(control: control, child: indicator);
   }
