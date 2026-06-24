@@ -16,7 +16,7 @@ Its value is set in production mode.
 
 :::info
 At runtime, the equivalent of this environment variable is
-[`StoragePaths.get_console_log_filename()`](../services/storagepaths.md#flet.StoragePaths.get_console_log_filename).
+[`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
 :::
 
 ### `FLET_APP_STORAGE_DATA`
@@ -31,6 +31,11 @@ In production this directory is also the Python program's **current working dire
 file writes (e.g. `open("app.db", "w")`, `sqlite3.connect("app.db")`) land here. In `flet run` (dev
 mode) it is `<project>/.flet/storage/data`.
 
+:::info
+At runtime, the equivalent of this environment variable is
+[`StoragePaths.get_application_support_directory()`][flet.StoragePaths.get_application_support_directory].
+:::
+
 ### `FLET_APP_STORAGE_CACHE`
 
 A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
@@ -40,8 +45,8 @@ Windows, `~/Library/Caches/<bundle-id>` on macOS, `~/.cache/<app-id>` on Linux, 
 iOS/Android). In `flet run` it is `<project>/.flet/storage/cache`.
 
 :::info
-At runtime, prefer the equivalent of this environment variable is
-[`StoragePaths.get_application_support_directory()`](../services/storagepaths.md#flet.StoragePaths.get_application_support_directory).
+At runtime, the equivalent of this environment variable is
+[`StoragePaths.get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory].
 :::
 
 ### `FLET_APP_STORAGE_TEMP`
@@ -54,8 +59,8 @@ and Python's `tempfile` is pointed here too (via `TMPDIR`). Equivalent to Python
 `tempfile.gettempdir()`.
 
 :::info
-At runtime, prefer the equivalent of this environment variable is
-[`StoragePaths.get_application_cache_directory()`](../services/storagepaths.md#flet.StoragePaths.get_application_cache_directory).
+At runtime, the equivalent of this environment variable is
+[`StoragePaths.get_temporary_directory()`][flet.StoragePaths.get_temporary_directory].
 :::
 
 ### `FLET_APP_USER_MODEL_ID`
