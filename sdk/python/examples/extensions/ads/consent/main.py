@@ -4,12 +4,11 @@ import flet_ads as fta
 
 def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.scroll = ft.ScrollMode.AUTO
 
-    # UMP/consent is only available on mobile platforms (Android and iOS).
+    # mobile-only
     supported = not page.web and page.platform.is_mobile()
-
-    page.services.append(consent_manager := fta.ConsentManager())
+    if supported:
+        page.services.append(consent_manager := fta.ConsentManager())
 
     async def refresh_status():
         consent_status = await consent_manager.get_consent_status()
@@ -20,7 +19,7 @@ def main(page: ft.Page):
             f"Privacy options required: {privacy_status.name}\n"
             f"Can request ads: {can_request}"
         )
-        # Only surface the privacy options entry point when it is required.
+        # Only surface the privacy options entry point when we are required to.
         privacy_button.visible = (
             privacy_status == fta.PrivacyOptionsRequirementStatus.REQUIRED
         )
@@ -46,7 +45,7 @@ def main(page: ft.Page):
             # loading ads (e.g. fta.BannerAd / fta.InterstitialAd).
         except Exception as ex:
             status.value = f"Error: {ex}"
-        page.update()
+            status.update()
 
     async def show_privacy_options(e: ft.Event[ft.OutlinedButton]):
         try:
@@ -92,9 +91,7 @@ def main(page: ft.Page):
                         disabled=not supported,
                     ),
                     ft.Divider(),
-                    status := ft.Text(
-                        'Tap "Gather consent" to begin.', selectable=True
-                    ),
+                    status := ft.Text('Tap "Gather consent" to begin.'),
                 ],
             )
         ),

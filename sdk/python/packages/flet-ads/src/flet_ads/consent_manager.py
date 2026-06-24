@@ -42,9 +42,7 @@ class ConsentManager(ft.Service):
             )
 
     async def request_consent_info_update(
-        self,
-        params: Optional[ConsentRequestParameters] = None,
-        timeout: Optional[float] = None,
+        self, params: Optional[ConsentRequestParameters] = None
     ):
         """
         Requests an update of the user's consent information.
@@ -56,14 +54,8 @@ class ConsentManager(ft.Service):
             params: Parameters such as debug settings (useful for
                 testing the form during development) or the under-age tag.
                 If `None`, default parameters are used.
-            timeout: The maximum amount of time (in seconds) to wait for a
-                response. If `None`, waits indefinitely.
         """
-        await self._invoke_method(
-            "request_consent_info_update",
-            {"params": params},
-            timeout=timeout,
-        )
+        await self._invoke_method("request_consent_info_update", {"params": params})
 
     async def is_consent_form_available(self) -> bool:
         """
@@ -113,39 +105,25 @@ class ConsentManager(ft.Service):
             await self._invoke_method("get_privacy_options_requirement_status")
         )
 
-    async def load_and_show_consent_form_if_required(
-        self, timeout: Optional[float] = None
-    ):
+    async def load_and_show_consent_form_if_required(self):
         """
         Loads a consent form and immediately shows it if consent is required.
 
         If consent is not required, this method completes without showing
         anything. This is the simplest way to gather consent: call
         :meth:`request_consent_info_update` first, then this method.
-
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a
-                response. If `None`, waits indefinitely (the user may take a
-                while to interact with the form).
         """
-        await self._invoke_method(
-            "load_and_show_consent_form_if_required",
-            timeout=timeout,
-        )
+        await self._invoke_method("load_and_show_consent_form_if_required")
 
-    async def show_privacy_options_form(self, timeout: Optional[float] = None):
+    async def show_privacy_options_form(self):
         """
         Presents the privacy options form to the user.
 
         This lets users change or withdraw their consent after the initial
         choice. Only present it when :meth:`get_privacy_options_requirement_status`
         returns :attr:`flet_ads.PrivacyOptionsRequirementStatus.REQUIRED`.
-
-        Args:
-            timeout: The maximum amount of time (in seconds) to wait for a
-                response. If `None`, waits indefinitely.
         """
-        await self._invoke_method("show_privacy_options_form", timeout=timeout)
+        await self._invoke_method("show_privacy_options_form")
 
     async def reset(self):
         """
