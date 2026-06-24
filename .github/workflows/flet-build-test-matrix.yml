@@ -54,7 +54,7 @@ jobs:
             needs_linux_deps: false
 
           - name: windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
             build_cmd: "flet build windows"
             artifact_name: windows-build-artifact
             artifact_path: build/windows
@@ -76,7 +76,7 @@ jobs:
             needs_linux_deps: false
 
           - name: aab-windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
             build_cmd: "flet build aab"
             artifact_name: aab-build-windows-artifact
             artifact_path: build/aab
@@ -97,7 +97,7 @@ jobs:
             needs_linux_deps: false
 
           - name: apk-windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
             build_cmd: "flet build apk"
             artifact_name: apk-build-windows-artifact
             artifact_path: build/apk
@@ -134,7 +134,7 @@ jobs:
             needs_linux_deps: false
 
           - name: web-windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
             build_cmd: "flet build web"
             artifact_name: web-build-windows-artifact
             artifact_path: build/web
@@ -165,7 +165,7 @@ jobs:
         shell: bash
         run: |
           sudo apt update --allow-releaseinfo-change
-          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
           sudo apt-get clean
 

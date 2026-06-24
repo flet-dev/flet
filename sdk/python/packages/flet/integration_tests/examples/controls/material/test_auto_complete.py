@@ -1,7 +1,7 @@
 import pytest
 
 import flet.testing as ftt
-from examples.controls.material.auto_complete.basic import main as basic
+from examples.controls.material.auto_complete.auto_complete import main as basic
 
 
 @pytest.mark.parametrize(

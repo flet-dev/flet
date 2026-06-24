@@ -113,8 +113,19 @@ class Event(Generic[EventControlType]):
     """
 
     name: str
+    """
+    The event name.
+    """
+
     data: Optional[Any] = field(default=None, kw_only=True)
+    """
+    Optional event payload data.
+    """
+
     control: EventControlType = field(repr=False)
+    """
+    The control that emitted the event.
+    """
 
     @property
     def page(self) -> Union["Page", "BasePage"]:

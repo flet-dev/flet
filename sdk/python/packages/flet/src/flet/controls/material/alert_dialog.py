@@ -29,6 +29,7 @@ class AlertDialog(DialogControl):
     `title` is displayed above the :attr:`content` and the `actions` are displayed
     below the `content`.
 
+    Example:
     ```python
     ft.AlertDialog(
         title=ft.Text("Session expired"),
@@ -211,7 +212,10 @@ class AlertDialog(DialogControl):
 
     title_text_style: Optional[TextStyle] = None
     """
-    TBD
+    The text style for the :attr:`title` of this dialog.
+
+    If `None`, :attr:`flet.DialogTheme.title_text_style` is used.
+    If that is also `None`, the default comes from the active dialog theme.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.NONE

@@ -1,7 +1,6 @@
 import argparse
+import json
 import sys
-
-from packaging.version import Version
 
 import flet.version
 import flet_cli.commands.build
@@ -15,29 +14,28 @@ import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
 import flet_cli.commands.serve
-from flet_cli.utils.python_versions import (
-    DEFAULT_PYTHON_VERSION,
-    SUPPORTED_PYTHON_VERSIONS,
-)
+from flet_cli.utils.linux_deps import linux_dependencies
 
 
-def _supported_python_versions_block() -> str:
-    """Render the multi-line `flet --version` listing of supported Python releases."""
-    lines = ["Supported Python versions:"]
-    sorted_versions = sorted(
-        SUPPORTED_PYTHON_VERSIONS,
-        key=lambda r: Version(r.short),
-        reverse=True,
-    )
-    for r in sorted_versions:
-        suffix = []
-        if r.prerelease:
-            suffix.append("pre-release")
-        if r.short == DEFAULT_PYTHON_VERSION:
-            suffix.append("default")
-        tail = f", {', '.join(suffix)}" if suffix else ""
-        lines.append(f"  {r.short} (Pyodide {r.pyodide}{tail})")
-    return "\n".join(lines)
+def _version_info() -> dict:
+    """Build the machine-readable `flet --version --json` document.
+
+    Exposes Flet/Flutter versions and the Linux build dependencies. The
+    supported Python/Pyodide set is no longer surfaced here — it now comes from
+    python-build's manifest (see `flet_cli.utils.python_versions`).
+    """
+    return {
+        "flet": flet.version.flet_version,
+        "flutter": flet.version.flutter_version,
+        "linux_dependencies": list(linux_dependencies),
+    }
+
+
+def _render_version(as_json: bool) -> str:
+    """Render `flet --version` output as JSON or the human-readable text block."""
+    if as_json:
+        return json.dumps(_version_info(), indent=2)
+    return f"Flet: {flet.version.flet_version}\nFlutter: {flet.version.flutter_version}"
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -94,16 +92,17 @@ def get_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    # add version flag
+    # add version flags
     parser.add_argument(
         "--version",
         "-V",
-        action="version",
-        version=(
-            f"Flet: {flet.version.flet_version}\n"
-            f"Flutter: {flet.version.flutter_version}\n"
-            f"{_supported_python_versions_block()}"
-        ),
+        action="store_true",
+        help="show version information and exit",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="with --version, output version information as JSON",
     )
 
     sp = parser.add_subparsers(dest="command")
@@ -137,6 +136,11 @@ def main():
 
     # parse arguments
     args = parser.parse_args()
+
+    # handle `flet --version [--json]` (no subcommand/handler is set)
+    if getattr(args, "version", False):
+        print(_render_version(args.json))
+        sys.exit(0)
 
     # execute command
     args.handler(args)

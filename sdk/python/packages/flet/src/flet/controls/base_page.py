@@ -18,8 +18,6 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.core.view import View
-from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
-from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DurationValue
 from flet.controls.keys import ScrollKey
@@ -50,6 +48,12 @@ _MANAGED_DIALOG_DISMISS_ORIGINAL = "_managed_dialog_dismiss_original"
 _MANAGED_DIALOG_DISMISS_WRAPPER = "_managed_dialog_dismiss_wrapper"
 
 if TYPE_CHECKING:
+    # Annotation-only (quoted at use sites): deferred so a Page doesn't eagerly
+    # pull the Cupertino controls (cold-start import cost).
+    from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
+    from flet.controls.cupertino.cupertino_navigation_bar import (
+        CupertinoNavigationBar,
+    )
     from flet.controls.theme import Theme
 
 
@@ -256,7 +260,7 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the :attr:`~flet.Window.width` property of :attr:`flet.Page.window` \
+            use the :attr:`flet.Window.width` property of :attr:`flet.Page.window` \
             instead.
     """
 
@@ -268,7 +272,7 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the :attr:`~flet.Window.height` property of
+            use the :attr:`flet.Window.height` property of
             :attr:`flet.Page.window` instead.
     """
 
@@ -401,7 +405,7 @@ class BasePage(AdaptiveControl):
 
         This method adds the specified `dialog` to the active dialog stack
         and renders it on the page.
-        The :attr:`~flet.DialogControl.on_dismiss` handler of the dialog
+        The :attr:`flet.DialogControl.on_dismiss` handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
@@ -596,7 +600,7 @@ class BasePage(AdaptiveControl):
 
     # appbar
     @property
-    def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
+    def appbar(self) -> "Union[AppBar, CupertinoAppBar, None]":
         """
         Gets or sets the top application bar (:class:`~flet.AppBar` or \
         :class:`~flet.CupertinoAppBar`) for the view.
@@ -607,7 +611,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().appbar
 
     @appbar.setter
-    def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
+    def appbar(self, value: "Union[AppBar, CupertinoAppBar, None]"):
         self.__root_view().appbar = value
 
     # bottom_appbar
@@ -625,7 +629,9 @@ class BasePage(AdaptiveControl):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Optional[Union[NavigationBar, CupertinoNavigationBar]]:
+    def navigation_bar(
+        self,
+    ) -> "Optional[Union[NavigationBar, CupertinoNavigationBar]]":
         """
         Bottom navigation bar for the root view.
         """
@@ -635,7 +641,7 @@ class BasePage(AdaptiveControl):
     @navigation_bar.setter
     def navigation_bar(
         self,
-        value: Optional[Union[NavigationBar, CupertinoNavigationBar]],
+        value: "Optional[Union[NavigationBar, CupertinoNavigationBar]]",
     ):
         self.__root_view().navigation_bar = value
 

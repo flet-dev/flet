@@ -1,37 +1,35 @@
 import 'dart:js_interop';
 
 import 'package:flutter/foundation.dart';
-import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 
-import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
-import 'flet_msgpack_decoder.dart';
-import 'flet_msgpack_encoder.dart';
 
 @JS()
 external JSPromise jsConnect(
     String appId, JSAny args, JSExportedDartFunction onMessage);
 
+/// The optional `transferList` argument names ArrayBuffers (in `data`'s
+/// underlying buffer) whose ownership should transfer to the receiver —
+/// `postMessage` then avoids the structured-clone copy. We pass the
+/// packet's `.buffer` here so bulk DataChannel frames are zero-copy across
+/// the Worker boundary.
 @JS()
-external void jsSend(String appId, JSUint8Array data);
+external void jsSend(String appId, JSUint8Array data, JSArray<JSObject>? transferList);
 
 @JS()
 external void jsDisconnect(String appId);
 
-typedef FletBackendJavascriptChannelOnMessageCallback = void Function(
-    List<int> message);
-
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
   final Map<String, dynamic> args;
-  final FletBackendChannelOnMessageCallback onMessage;
+  final FletBackendChannelOnPacketCallback onPacket;
   final FletBackendChannelOnDisconnectCallback onDisconnect;
 
   FletJavaScriptBackendChannel(
       {required this.address,
       required this.args,
       required this.onDisconnect,
-      required this.onMessage});
+      required this.onPacket});
 
   @override
   connect() async {
@@ -40,8 +38,9 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   }
 
   void _onMessage(JSUint8Array data) {
-    onMessage(Message.fromList(
-        msgpack.deserialize(data.toDart, extDecoder: FletMsgpackDecoder())));
+    // Each postMessage event is one packet — message boundaries are
+    // preserved by the underlying MessageChannel.
+    onPacket(data.toDart);
   }
 
   @override
@@ -51,12 +50,15 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   int get defaultReconnectIntervalMs => 10000;
 
   @override
-  void send(Message message) {
-    jsSend(
-        address,
-        msgpack
-            .serialize(message.toList(), extEncoder: FletMsgpackEncoder())
-            .toJS);
+  void send(Uint8List packet) {
+    final jsBytes = packet.toJS;
+    // Transfer the underlying ArrayBuffer to the receiver — zero copy
+    // across the Worker boundary. Safe because the sender does not access
+    // `packet` after this call (FletBackend always builds a fresh buffer
+    // per send).
+    final jsBuffer = packet.buffer.toJS;
+    final transferList = <JSObject>[jsBuffer as JSObject].toJS;
+    jsSend(address, jsBytes, transferList);
   }
 
   @override

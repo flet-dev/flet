@@ -35,21 +35,8 @@ class MatplotlibChartCanvasControl extends StatefulWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Shared helpers
+// Shared base
 // ---------------------------------------------------------------------------
-
-Uint8List _extractBytes(dynamic args) {
-  final v = args is Map ? args["bytes"] : args;
-  if (v is Uint8List) return v;
-  if (v is ByteData) {
-    return v.buffer.asUint8List(v.offsetInBytes, v.lengthInBytes);
-  }
-  if (v is List<int>) return Uint8List.fromList(v);
-  if (v is List && v.every((e) => e is int)) {
-    return Uint8List.fromList(v.cast<int>());
-  }
-  throw ArgumentError("Expected bytes for image data, got ${v.runtimeType}");
-}
 
 abstract class _MatplotlibChartCanvasStateBase
     extends State<MatplotlibChartCanvasControl> {
@@ -60,15 +47,30 @@ abstract class _MatplotlibChartCanvasStateBase
   Size _lastSize = Size.zero;
   int _lastResize = DateTime.now().millisecondsSinceEpoch;
 
+  DataChannel? _channel;
+  StreamSubscription<Uint8List>? _channelSub;
+
   @override
-  void initState() {
-    super.initState();
-    widget.control.addInvokeMethodListener(_invokeMethod);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Open the data channel lazily on first dependency lookup — we need
+    // BuildContext to reach FletBackend, which isn't available in initState.
+    if (_channel != null) return;
+    _channel = FletBackend.of(context).openDataChannel();
+    _channelSub = _channel!.messages.listen(_onChannelFrame);
+    // Announce the channel to Python via the standard convention event.
+    widget.control.triggerEvent("data_channel_open", {
+      "channel_name": "frames",
+      "channel_id": _channel!.id,
+    });
   }
 
   @override
   void dispose() {
-    widget.control.removeInvokeMethodListener(_invokeMethod);
+    _channelSub?.cancel();
+    _channelSub = null;
+    _channel?.close();
+    _channel = null;
     disposeResources();
     super.dispose();
   }
@@ -81,20 +83,40 @@ abstract class _MatplotlibChartCanvasStateBase
   Future<void> clearAll();
   CustomPainter buildPainter();
 
-  Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    switch (name) {
-      case "apply_full":
-        await _enqueue(() => applyFull(_extractBytes(args)));
-        return;
-      case "apply_diff":
-        await _enqueue(() => applyDiff(_extractBytes(args)));
-        return;
-      case "clear":
-        await _enqueue(clearAll);
-        return;
+  // 1-byte ack sent back to Python after each apply completes. Restores
+  // round-trip backpressure: matplotlib's producer side keeps `_waiting`
+  // set until this ack arrives, so frames don't pile up in the Dart-side
+  // queue during interactive drags.
+  static final Uint8List _frameAppliedAck = Uint8List.fromList([0xFF]);
+
+  /// Inbound DataChannel frame. Wire format:
+  ///   [0x01][PNG bytes] → apply_full
+  ///   [0x02][PNG bytes] → apply_diff
+  ///   [0x03]            → clear
+  void _onChannelFrame(Uint8List bytes) {
+    if (bytes.isEmpty) return;
+    // Zero-copy slice of the same underlying buffer.
+    final payload = Uint8List.sublistView(bytes, 1);
+    switch (bytes[0]) {
+      case 0x01:
+        _enqueueAndAck(() => applyFull(payload));
+        break;
+      case 0x02:
+        _enqueueAndAck(() => applyDiff(payload));
+        break;
+      case 0x03:
+        _enqueueAndAck(clearAll);
+        break;
       default:
-        throw Exception("Unknown MatplotlibChartCanvas method: $name");
+        debugPrint(
+            "MatplotlibChartCanvas: unknown data-channel opcode 0x${bytes[0].toRadixString(16)}");
     }
+  }
+
+  void _enqueueAndAck(Future<void> Function() task) {
+    _enqueue(task).whenComplete(() {
+      _channel?.send(_frameAppliedAck);
+    });
   }
 
   Future<void> _enqueue(Future<void> Function() task) {

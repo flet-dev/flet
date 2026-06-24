@@ -2,10 +2,10 @@ import pytest
 
 import flet as ft
 import flet.testing as ftt
-from examples.controls.material.radio.basic.main import main as basic
 from examples.controls.material.radio.handling_selection_changes.main import (
     main as handling_selection_changes,
 )
+from examples.controls.material.radio.radio.main import main as basic
 from examples.controls.material.radio.styled.main import main as styled
 
 

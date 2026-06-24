@@ -108,7 +108,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 20
+          node-version: 24
           package-manager-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Enable Corepack
@@ -237,7 +237,7 @@ jobs:
   # =============================
   build_windows:
     name: Build Flet Client for Windows
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     needs:
       - python_tests
       - build_flet_package
@@ -511,7 +511,7 @@ jobs:
             sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
           apt-get update --allow-releaseinfo-change
-          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           apt-get install -y $LINUX_DEPS
 
       - name: Build Flutter Linux clients
@@ -620,7 +620,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          PYODIDE_VERSION="$( uv run python -c 'import flet.version; print(flet.version.pyodide_version)' )"
+          PYODIDE_VERSION="$( uv run python -c "from flet_cli.utils.python_versions import resolve_python_version; print(resolve_python_version(None).pyodide)" )"
           echo "PYODIDE_VERSION=$PYODIDE_VERSION" >> "$GITHUB_ENV"
           echo "Pyodide version: $PYODIDE_VERSION"
 
@@ -628,10 +628,6 @@ jobs:
         shell: bash
         working-directory: client
         run: |
-          # Compute Pyodide URLs
-          PYODIDE_URL="https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-core-${PYODIDE_VERSION}.tar.bz2"
-          PYODIDE_CDN_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
-
           FLET_WEB="${SDK_PYTHON}/packages/flet-web/src/flet_web"
 
           flutter build web --wasm
@@ -642,13 +638,9 @@ jobs:
           FLUTTER_JS_DIR="$(dirname "$(command -v flutter)")/cache/flutter_web_sdk/flutter_js"
           cp "$FLUTTER_JS_DIR/flutter.js.map" "${FLET_WEB}/web"
 
-          # Download the Pyodide tarball and extract its contents into the web build folder
-          curl -L "$PYODIDE_URL" | tar -xj -C "${FLET_WEB}/web"
-
-          # Download the prebuilt pyodide wheels
-          for wheel in "packaging-24.2-py3-none-any.whl" "micropip-0.8.0-py3-none-any.whl"; do
-            curl -L "${PYODIDE_CDN_URL}/${wheel}" -o "${FLET_WEB}/web/pyodide/${wheel}"
-          done
+          # Download the Pyodide runtime (plus the micropip/packaging wheels
+          # resolved from pyodide-lock.json) into the web build folder
+          uv run --project "${SDK_PYTHON}" python -c "from pathlib import Path; from flet_cli.utils.pyodide import ensure_pyodide; ensure_pyodide('${PYODIDE_VERSION}', Path('${FLET_WEB}/web/pyodide'))"
 
           # Archive the web client into a gzipped tarball
           tar -czvf "flet-web.tar.gz" -C "build/web" .
@@ -727,6 +719,7 @@ jobs:
             flet-permission-handler
             flet-rive
             flet-secure-storage
+            flet-spinkit
             flet-video
             flet-webview
           )
@@ -904,6 +897,7 @@ jobs:
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \
+            flet_spinkit \
             flet_video \
             flet_webview; do
             uv publish dist/**/${pkg}-*

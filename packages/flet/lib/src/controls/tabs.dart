@@ -287,8 +287,7 @@ class _TabBarControlState extends State<TabBarControl> {
           widget.control.getDouble("indicator_thickness", 2.0)!;
       var tabAlignment = widget.control.getTabAlignment("tab_alignment",
           scrollable ? TabAlignment.start : TabAlignment.fill)!;
-      var mouseCursor =
-          parseMouseCursor(widget.control.getString("mouse_cursor"));
+      var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
       var padding = parseEdgeInsets(widget.control.getPadding("padding"));
       var labelPadding = widget.control.getPadding("label_padding");
       var labelStyle =

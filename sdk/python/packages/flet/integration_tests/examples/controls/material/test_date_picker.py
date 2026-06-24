@@ -2,8 +2,8 @@ import datetime
 
 import pytest
 
-import examples.controls.material.date_picker.basic.main as basic
 import examples.controls.material.date_picker.custom_locale.main as custom_locale
+import examples.controls.material.date_picker.date_picker.main as basic
 import flet as ft
 import flet.testing as ftt
 

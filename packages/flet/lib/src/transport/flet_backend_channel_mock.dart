@@ -1,18 +1,32 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 
 import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_encoder.dart';
 
 class FletMockBackendChannel implements FletBackendChannel {
-  FletBackendChannelOnMessageCallback onMessage;
+  FletBackendChannelOnPacketCallback onPacket;
   FletBackendChannelOnDisconnectCallback onDisconnect;
 
   FletMockBackendChannel(
       {required String address,
       required this.onDisconnect,
-      required this.onMessage});
+      required this.onPacket});
+
+  /// Wrap test-scenario `Message` payloads in the on-wire packet shape
+  /// `[0x00][msgpack(message.toList())]` so the inbound dispatcher sees
+  /// them through the same code path as real transports.
+  void onMessage(Message message) {
+    final encoded = msgpack.serialize(message.toList(),
+        extEncoder: FletMsgpackEncoder());
+    final packet = Uint8List(1 + encoded.length);
+    packet[0] = 0x00;
+    packet.setRange(1, packet.length, encoded);
+    onPacket(packet);
+  }
   @override
   bool get isLocalConnection => true;
 
@@ -296,8 +310,9 @@ class FletMockBackendChannel implements FletBackendChannel {
   }
 
   @override
-  void send(Message message) {
-    debugPrint("Send message: ${message.toList()}");
+  void send(Uint8List packet) {
+    debugPrint("Send packet: type=${packet.isNotEmpty ? packet[0] : -1} "
+        "len=${packet.length}");
   }
 
   @override

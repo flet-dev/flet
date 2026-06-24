@@ -104,7 +104,7 @@ class Dropdown(LayoutControl):
 
     value: Optional[str] = None
     """
-    The :attr:`~flet.DropdownOption.key` of the dropdown :attr:`options`
+    The :attr:`flet.DropdownOption.key` of the dropdown :attr:`options`
     corresponding to the selected option.
     """
 

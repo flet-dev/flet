@@ -1,5 +1,8 @@
+import asyncio
+import contextlib
+from collections import deque
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Callable, Optional
 
 import flet as ft
 
@@ -26,10 +29,24 @@ class MatplotlibChartCanvas(ft.LayoutControl):
 
     Receives full and incremental "diff" PNG frames and composites them in
     CPU memory, holding at most one decoded image for display at a time.
-    Avoids the per-frame `Picture.toImage` allocations that the generic
-    `flet.canvas.Canvas` capture path uses, which on Flutter web
-    (CanvasKit/WASM) accumulate and aren't promptly reclaimed by the JS GC
-    during animation, causing browser memory growth.
+    Frames flow over a dedicated [ft.DataChannel] rather than the regular
+    Flet protocol, so the PNG bytes skip MsgPack encode/decode and travel
+    at memory-bandwidth-class speed in embedded native mode (per-channel
+    PythonBridge) and at near-bandwidth speed in web/dev modes (raw-byte
+    frames muxed over the protocol transport).
+
+    Wire format on the data channel (one byte of opcode followed by the
+    PNG payload):
+
+    | opcode | payload    | meaning                                    |
+    |--------|------------|--------------------------------------------|
+    | 0x01   | PNG bytes  | apply_full — replace backdrop              |
+    | 0x02   | PNG bytes  | apply_diff — composite onto backbuffer     |
+    | 0x03   | (empty)    | clear — drop backdrop + backbuffer         |
+
+    The reverse-direction `resize` event (Dart → Python, small JSON-shaped
+    payload) stays on the existing Flet protocol channel — no reason to
+    move tiny control events off it.
     """
 
     resize_interval: ft.Number = 10
@@ -42,6 +59,83 @@ class MatplotlibChartCanvas(ft.LayoutControl):
     Called when the size of this canvas has changed.
     """
 
+    on_data_channel_open: Optional[ft.EventHandler[ft.DataChannelOpenEvent]] = None
+    """
+    Framework hook — Dart fires this when it opens the data channel during
+    `initState`. The default handler captures the channel for use by
+    apply_full / apply_diff / clear. Override only if you need to do
+    something extra at attach-time.
+    """
+
+    def init(self) -> None:
+        # `init` is the @ft.control post-construct lifecycle hook (runs
+        # before `did_mount`). Wire up the default channel-capture handler.
+        self._channel: Optional[ft.DataChannel] = None
+        # FIFO of per-frame ack futures. Each `apply_*` enqueues a future
+        # and `awaits` it; `_on_dart_message` pops the head and resolves
+        # it when Dart's `[0xFF]` ack arrives. The await is what makes
+        # producer-side callers (e.g. MatplotlibChart._receive_loop)
+        # block — events queued during the wait are processed *after*
+        # the ack instead of being dropped by stale gate checks.
+        self._pending_acks: deque[asyncio.Future] = deque()
+        # Optional plain callback for observers that want to be notified
+        # on every frame ack (e.g. perf instrumentation). Fires alongside
+        # the future resolution; not load-bearing for backpressure.
+        self._on_frame_applied: Optional[Callable[[], None]] = None
+        if self.on_data_channel_open is None:
+            self.on_data_channel_open = self._capture_channel
+
+    def _capture_channel(self, e: ft.DataChannelOpenEvent) -> None:
+        # Single-channel widget; no need to dispatch on e.channel_name.
+        self._channel = self.get_data_channel(e.channel_id)
+        self._channel.on_bytes(self._on_dart_message)
+
+    def _on_dart_message(self, payload: bytes) -> None:
+        # Wire format on the reverse direction (Dart → Python):
+        #   [0xFF] — frame_applied ack. Sent by Dart after each apply_full /
+        #            apply_diff / clear completes on its end. Restores the
+        #            round-trip backpressure that `_invoke_method` used to
+        #            provide implicitly in 0.85.
+        if not payload or payload[0] != 0xFF:
+            return
+        # Resolve the head future so the matching `apply_*` await returns.
+        if self._pending_acks:
+            fut = self._pending_acks.popleft()
+            if not fut.done():
+                fut.set_result(None)
+        # Then fire the observer callback (if any).
+        cb = self._on_frame_applied
+        if cb is not None:
+            with contextlib.suppress(Exception):
+                cb()
+
+    def set_on_frame_applied(self, cb: Optional[Callable[[], None]]) -> None:
+        """Register a side-channel callback invoked on every frame ack.
+
+        Useful for instrumentation. Backpressure is handled by awaiting
+        the result of `apply_full` / `apply_diff` / `clear` directly —
+        this callback is a fire-and-forget observer, not part of the
+        gating path.
+        """
+        self._on_frame_applied = cb
+
+    async def _send_and_wait(self, packet: bytes) -> None:
+        """Send a channel packet and await Dart's ack.
+
+        Awaiting blocks the caller until `[0xFF]` arrives on the channel,
+        re-creating the 0.85 `_invoke_method` round-trip semantics:
+        events that arrive in the producer's queue during the wait stay
+        queued (instead of being processed eagerly against a stale
+        `_waiting` flag).
+        """
+        if self._channel is None:
+            return
+        loop = asyncio.get_running_loop()
+        fut: asyncio.Future = loop.create_future()
+        self._pending_acks.append(fut)
+        self._channel.send(packet)
+        await fut
+
     async def apply_full(self, image_bytes: bytes) -> None:
         """
         Replace the current displayed image with a full PNG frame.
@@ -49,7 +143,7 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         Args:
             image_bytes: PNG bytes of the complete frame.
         """
-        await self._invoke_method("apply_full", arguments={"bytes": image_bytes})
+        await self._send_and_wait(b"\x01" + image_bytes)
 
     async def apply_diff(self, image_bytes: bytes) -> None:
         """
@@ -63,10 +157,10 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         Args:
             image_bytes: PNG bytes of the diff frame.
         """
-        await self._invoke_method("apply_diff", arguments={"bytes": image_bytes})
+        await self._send_and_wait(b"\x02" + image_bytes)
 
     async def clear(self) -> None:
         """
         Clear the displayed image and discard the backbuffer.
         """
-        await self._invoke_method("clear")
+        await self._send_and_wait(b"\x03")

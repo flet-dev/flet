@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:window_to_front/window_to_front.dart';
 
 import '../models/window_state.dart';
 import 'platform.dart';
@@ -243,7 +242,9 @@ Future focusWindow() async {
 
 Future windowToFront() async {
   if (isDesktopPlatform()) {
-    await WindowToFront.activate();
+    // Bring the window to the front, activating the app over other apps
+    // (window_manager.show() calls NSApp.activate(ignoringOtherApps: true)).
+    await windowManager.show();
   }
 }
 

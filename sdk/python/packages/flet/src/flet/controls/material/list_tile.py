@@ -23,18 +23,18 @@ __all__ = ["ListTile", "ListTileStyle", "ListTileTitleAlignment"]
 
 class ListTileTitleAlignment(Enum):
     """
-    Defines how :class:`~flet.ListTile` aligns :attr:`~flet.ListTile.leading`
-    and :attr:`~flet.ListTile.trailing` relative to the tile's title area.
+    Defines how :class:`~flet.ListTile` aligns :attr:`flet.ListTile.leading`
+    and :attr:`flet.ListTile.trailing` relative to the tile's title area.
 
     The alignment is computed against the text block formed by
-    :attr:`~flet.ListTile.title` and :attr:`~flet.ListTile.subtitle`.
+    :attr:`flet.ListTile.title` and :attr:`flet.ListTile.subtitle`.
     Use this to tune the visual balance between icon/avatar controls and text,
     especially when tiles switch between one-line, two-line, and three-line layouts.
     """
 
     TOP = "top"
     """
-    Aligns :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
+    Aligns :attr:`flet.ListTile.leading` and :attr:`flet.ListTile.trailing`
     toward the top of the title area.
 
     Top placement respects :attr:`flet.ListTile.min_vertical_padding`.
@@ -42,13 +42,13 @@ class ListTileTitleAlignment(Enum):
 
     CENTER = "center"
     """
-    Centers :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
+    Centers :attr:`flet.ListTile.leading` and :attr:`flet.ListTile.trailing`
     relative to the title/subtitle block.
     """
 
     BOTTOM = "bottom"
     """
-    Aligns :attr:`~flet.ListTile.leading` and :attr:`~flet.ListTile.trailing`
+    Aligns :attr:`flet.ListTile.leading` and :attr:`flet.ListTile.trailing`
     toward the bottom of the title area.
 
     Bottom placement respects :attr:`flet.ListTile.min_vertical_padding`.
@@ -80,7 +80,13 @@ class ListTileStyle(Enum):
     """
 
     LIST = "list"
+    """
+    Uses the title style intended for list tiles shown in a regular list.
+    """
     DRAWER = "drawer"
+    """
+    Uses the title style intended for list tiles shown in a drawer.
+    """
 
 
 @control("ListTile")

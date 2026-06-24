@@ -53,6 +53,7 @@ extensions = [
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-spinkit",
     "flet-video",
     "flet-webview",
 ]

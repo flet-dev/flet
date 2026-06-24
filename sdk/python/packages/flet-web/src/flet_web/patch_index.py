@@ -65,12 +65,19 @@ def patch_index_html(
     # Pin the Pyodide runtime URL for this build. The web client used to fall
     # back to a hardcoded CDN URL when not in no-cdn mode; with multi-version
     # support that constant is gone, so we always inject the URL here.
+    #
+    # `.mjs` is the ES-module variant; python-worker.js (a module worker)
+    # loads it via dynamic `import()`. We can no longer use `.js` because
+    # Pyodide >= 0.29 throws "Classic web workers are not supported" inside
+    # any worker that has `importScripts` available — only classic workers
+    # have it. All supported Pyodide versions (0.27.7 / 0.29.4 / 314.0.0)
+    # ship `pyodide.mjs`.
     if pyodide_version:
         if no_cdn:
-            pyodide_url = "pyodide/pyodide.js"
+            pyodide_url = "pyodide/pyodide.mjs"
         else:
             pyodide_url = (
-                f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.js"
+                f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.mjs"
             )
         app_config.append(f'flet.pyodideUrl="{pyodide_url}";')
 

@@ -6,7 +6,6 @@ from examples.apps.router.active_links import main as active_links
 from examples.apps.router.app_drawer import main as app_drawer
 from examples.apps.router.auth_dialog import main as auth_dialog
 from examples.apps.router.auth_page import main as auth_page
-from examples.apps.router.basic import main as basic
 from examples.apps.router.dynamic_segments import main as dynamic_segments
 from examples.apps.router.featured import main as featured
 from examples.apps.router.featured_views import main as featured_views
@@ -18,6 +17,7 @@ from examples.apps.router.nested_outlet_views import main as nested_outlet_views
 from examples.apps.router.nested_routes import main as nested_routes
 from examples.apps.router.prefix_routes import main as prefix_routes
 from examples.apps.router.recursive_routes import main as recursive_routes
+from examples.apps.router.routing import main as basic
 from examples.apps.router.runtime_routes import main as runtime_routes
 from examples.apps.router.splats import main as splats
 

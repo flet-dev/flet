@@ -29,6 +29,7 @@
     "split_per_abi": false,
     "no_cdn": false,
     "no_wasm": false,
+    "pyodide_version": "",
     "options": null,
     "pyproject": null,
     "_extensions": ["cookiecutter_extensions.FletExtension"]

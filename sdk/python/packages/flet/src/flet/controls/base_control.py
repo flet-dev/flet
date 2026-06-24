@@ -197,6 +197,9 @@ class BaseControl:
     """
 
     key: Optional["KeyValue"] = None
+    """
+    A stable key used to preserve control identity across updates.
+    """
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -361,6 +364,26 @@ class BaseControl:
         """
         controls_log.debug("%s.will_unmount()", self)
         pass
+
+    def get_data_channel(self, channel_id: int):
+        """
+        Resolve the [DataChannel] allocated on the Dart side for this
+        widget. Pattern:
+
+            on_data_channel_open: Optional[ft.EventHandler[DataChannelOpenEvent]] = None
+
+            def init(self):
+                self.on_data_channel_open = self._on_open
+
+            def _on_open(self, e):
+                self._channel = self.get_data_channel(e.channel_id)
+
+        Idempotent — the underlying Connection caches DataChannels by id,
+        so repeated calls return the same instance. No error path: the id
+        always comes from a framework-fired event, so by the time this
+        runs the channel exists on both sides.
+        """
+        return self.page.session.connection.data_channel_for(channel_id)
 
     # public methods
     def update(self) -> None:

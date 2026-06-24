@@ -112,7 +112,7 @@ jobs:
             runner: macos-26
 
           - name: windows
-            runner: windows-latest
+            runner: windows-2025-vs2026
 
     steps:
       - name: Checkout repository
@@ -145,7 +145,7 @@ jobs:
         shell: bash
         run: |
           sudo apt update --allow-releaseinfo-change
-          LINUX_DEPS="$(uv run --project sdk/python/packages/flet python -c 'from flet.utils.linux_deps import linux_dependencies; print(" ".join(linux_dependencies))')"
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
           sudo apt-get clean
 
