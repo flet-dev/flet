@@ -151,7 +151,7 @@ class ConsentManager(ft.Service):
         """
         Resets the consent state.
 
-        Tip:
+        Warning:
             This is intended only for testing, allowing you to simulate a first-time
             user. It should not be used in production.
         """

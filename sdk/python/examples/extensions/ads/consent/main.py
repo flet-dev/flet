@@ -24,21 +24,18 @@ def main(page: ft.Page):
         privacy_button.visible = (
             privacy_status == fta.PrivacyOptionsRequirementStatus.REQUIRED
         )
+        page.update()
 
     async def gather_consent(e: ft.Event[ft.OutlinedButton]):
         status.value = "Gathering consent…"
         status.update()
         try:
-            # The debug settings below force the EEA geography so that the
-            # consent form is shown while testing. Find your device's hashed id
-            # in the device logs after a first run, and put it in `test_identifiers`.
             # Remember to remove the debug settings in production.
             await consent_manager.request_consent_info_update(
                 fta.ConsentRequestParameters(
-                    tag_for_under_age_of_consent=True,
                     consent_debug_settings=fta.ConsentDebugSettings(
                         debug_geography=fta.DebugGeography.EEA,
-                        test_identifiers=["TEST-DEVICE-HASHED-ID"],
+                        # test_identifiers=["<HASHED_ID>"], # for physical devices only
                     ),
                 )
             )
@@ -61,9 +58,12 @@ def main(page: ft.Page):
 
     async def reset_consent(e: ft.Event[ft.OutlinedButton]):
         # For testing only: resets consent so you can replay the flow.
-        await consent_manager.reset()
-        status.value = 'Consent reset. Tap "Gather consent" to begin again.'
-        privacy_button.visible = False
+        try:
+            await consent_manager.reset()
+            status.value = 'Consent reset. Tap "Gather consent" to begin again.'
+            privacy_button.visible = False
+        except Exception as ex:
+            status.value = f"Error: {ex}"
         page.update()
 
     page.add(
@@ -79,7 +79,7 @@ def main(page: ft.Page):
                     ft.OutlinedButton(
                         content="Gather consent",
                         on_click=gather_consent,
-                        disabled=not supported,  # mobile only
+                        disabled=not supported,
                     ),
                     privacy_button := ft.OutlinedButton(
                         content="Show privacy options form",
@@ -89,7 +89,7 @@ def main(page: ft.Page):
                     ft.OutlinedButton(
                         content="Reset consent (testing)",
                         on_click=reset_consent,
-                        disabled=not supported,  # mobile only
+                        disabled=not supported,
                     ),
                     ft.Divider(),
                     status := ft.Text(
