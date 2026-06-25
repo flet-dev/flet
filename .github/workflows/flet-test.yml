@@ -1,0 +1,176 @@
+name: Flet Test (on-device)
+
+# Runs `flet test` end-to-end on every target: provisions a per-platform test
+# host (build pipeline in test_mode), launches the built Counter app with embedded
+# Python, and drives it over the socket tester channel. Unlike
+# macos-integration-tests.yml (host-mode screenshots) and flet-build-test.yml
+# (compile only), this actually runs the app on the device/emulator/simulator.
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - '.github/workflows/flet-test.yml'
+      - '.fvmrc'
+      - 'packages/flet/**'
+      - 'packages/flet_integration_test/**'
+      - 'sdk/python/packages/flet/**'
+      - 'sdk/python/packages/flet-cli/**'
+      - 'sdk/python/examples/apps/flet_test_counter/**'
+  pull_request:
+    paths:
+      - '.github/workflows/flet-test.yml'
+      - '.fvmrc'
+      - 'packages/flet/**'
+      - 'packages/flet_integration_test/**'
+      - 'sdk/python/packages/flet/**'
+      - 'sdk/python/packages/flet-cli/**'
+      - 'sdk/python/examples/apps/flet_test_counter/**'
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: "Python version to bundle into the test app."
+        type: string
+        default: "3.14"
+
+# Ensure only one run per branch (PR or push), cancel older ones
+concurrency:
+  group: flet-test-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  ROOT: "${{ github.workspace }}"
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  APP_DIR: "sdk/python/examples/apps/flet_test_counter"
+
+  # Host venv (runs flet-cli + pytest). The *embedded* app runtime is built
+  # against PYTHON_VERSION (3.14) via `--python-version`; the host stays on 3.13
+  # for stable test-dependency wheels (numpy/pillow/scikit-image).
+  UV_PYTHON: "3.13"
+  PYTHONUTF8: 1
+
+  # https://flet.dev/docs/reference/environment-variables
+  FLET_CLI_NO_RICH_OUTPUT: 1
+  # Use the Flutter the setup action puts on PATH, not fvm.
+  FLET_TEST_DISABLE_FVM: 1
+
+  PYTHON_VERSION: ${{ github.event.inputs.python_version || '3.14' }}
+
+jobs:
+  flet-test:
+    name: ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos
+            runner: macos-26
+            test_cmd: uv run flet test macos --python-version ${PYTHON_VERSION} --yes -v
+
+          - platform: ios
+            runner: macos-26
+            test_cmd: uv run flet test ios -d "$IOS_UDID" --python-version ${PYTHON_VERSION} --yes -v
+
+          - platform: windows
+            runner: windows-2025-vs2026
+            test_cmd: uv run flet test windows --python-version ${PYTHON_VERSION} --yes -v
+
+          - platform: linux
+            runner: ubuntu-latest
+            test_cmd: xvfb-run -a uv run flet test linux --python-version ${PYTHON_VERSION} --yes -v
+
+          - platform: android
+            runner: ubuntu-latest
+            # Run command lives in the emulator-runner step below.
+            test_cmd: ""
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v8.2.0
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Show tool versions
+        shell: bash
+        run: |
+          uv --version
+          uv run --project sdk/python/packages/flet-cli python --version
+          flutter --version
+
+      # -------- Linux: build deps + virtual display --------
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          sudo apt-get update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          sudo apt-get install -y --no-install-recommends $LINUX_DEPS xvfb
+          sudo apt-get clean
+
+      # -------- iOS: boot a simulator, capture its UDID --------
+      - name: Boot iOS simulator
+        if: matrix.platform == 'ios'
+        shell: bash
+        run: |
+          UDID=$(xcrun simctl list devices available -j \
+            | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')
+          if [ -z "$UDID" ] || [ "$UDID" = "null" ]; then
+            echo "No available iPhone simulator found" >&2
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using iOS simulator $UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          echo "IOS_UDID=$UDID" >> "$GITHUB_ENV"
+
+      # -------- Android: enable KVM for a fast emulator --------
+      - name: Enable KVM
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      # -------- Run: desktop + iOS (non-Android) --------
+      - name: Run flet test (${{ matrix.platform }})
+        if: matrix.platform != 'android'
+        shell: bash
+        working-directory: ${{ env.APP_DIR }}
+        run: ${{ matrix.test_cmd }}
+
+      # -------- Run: Android (inside the emulator) --------
+      - name: Run flet test (android)
+        if: matrix.platform == 'android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: true
+          disable-animations: true
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          working-directory: ${{ env.APP_DIR }}
+          script: uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v

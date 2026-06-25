@@ -4,3 +4,6 @@ AACHE = "AACHE"
 ROUTEROS = "ROUTEROS"
 # OpenType variable font axis tag for width
 wdth = "wdth"
+# iOS Unique Device IDentifier (simctl `.udid` JSON field / shell var names)
+UDID = "UDID"
+udid = "udid"
