@@ -619,6 +619,136 @@ The receiving side's queue is **unbounded by default**. If a producer outpaces t
 - **Full design / performance notes** (wire format, cross-mode operation, concurrency model, empirical numbers): [`dedicated-data-channels.md`](https://github.com/flet-dev/serious-python/blob/main/docs/dedicated-data-channels.md) in `flet-dev/serious-python`.
 - **Wire-format protocol upgrade** for anyone implementing a custom Flet backend or sidecar: [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0-data-channel-protocol-upgrade).
 
+## Boot screen
+
+An extension can provide a custom **boot screen** — the screen shown while your
+packaged app is starting, before the first page appears (see
+[Boot screen](../publish/index.md#boot-screen) in the publishing guide for the
+end-user/configuration side). This lets you fully brand the launch experience,
+including custom layouts and animations, instead of using the built-in `flet`
+screen.
+
+### The `createBootScreen` hook
+
+Override `createBootScreen` on your `FletExtension` (in `src/extension.dart`). A
+single extension can serve multiple named screens:
+
+```dart
+import 'package:flet/flet.dart';
+import 'package:flutter/material.dart';
+
+import 'my_boot_screen.dart';
+
+class Extension extends FletExtension {
+  @override
+  Widget? createBootScreen(String name, Map<String, dynamic> options,
+      ValueListenable<BootStatus> status) {
+    switch (name) {
+      case "my_screen":
+        return MyBootScreen(options: options, status: status);
+      default:
+        return null; // not handled — Flet tries the next extension, then the built-in "flet" screen
+    }
+  }
+}
+```
+
+The hook receives:
+
+- **`name`** — the configured screen name (from `[tool.flet.boot_screen].name`).
+  Return `null` for names you don't handle.
+- **`options`** — the `[tool.flet.boot_screen.<name>]` table from `pyproject.toml`
+  as a `Map<String, dynamic>`. Put whatever options your screen needs there.
+- **`status`** — a `ValueListenable<BootStatus>` that reports the current boot
+  state. Watch it with a `ValueListenableBuilder` to update the UI live.
+
+`BootStatus` carries:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `stage` | `BootStage` | `BootStage.preparing` (unpacking the app bundle — Android only) or `BootStage.startingUp` (Python runtime + app starting). |
+| `error` | `String?` | Non-null when startup failed; the message is ready for display. |
+
+### Example widget
+
+```dart
+import 'package:flet/flet.dart';
+import 'package:flutter/material.dart';
+
+class MyBootScreen extends StatelessWidget {
+  final Map<String, dynamic> options;
+  final ValueListenable<BootStatus> status;
+
+  const MyBootScreen({super.key, required this.options, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    // Read options from pyproject.toml. Colors accept hex (#rrggbb) or named
+    // colors via Flet's HexColor helper.
+    final bgcolor =
+        HexColor.fromString(null, options["bgcolor"] as String?) ?? Colors.black;
+
+    return ValueListenableBuilder<BootStatus>(
+      valueListenable: status,
+      builder: (context, boot, _) {
+        if (boot.error != null) {
+          return Scaffold(
+            backgroundColor: bgcolor,
+            body: Center(
+              child: Text(boot.error!,
+                  style: const TextStyle(color: Colors.redAccent)),
+            ),
+          );
+        }
+        final message = boot.stage == BootStage.preparing
+            ? "Preparing…"
+            : "Starting up…";
+        return Scaffold(
+          backgroundColor: bgcolor,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(message, style: const TextStyle(color: Colors.white)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+Then select your screen by name in the app's `pyproject.toml`:
+
+```toml
+[tool.flet.boot_screen]
+name = "my_screen"
+
+[tool.flet.boot_screen.my_screen]
+bgcolor = "#101020"
+```
+
+:::note
+In a packaged app, the boot screen is rendered by a persistent host overlay so
+your widget is **not** remounted between the prepare and startup phases — the
+same instance (and its animations) is reused, and the host fades it out when the
+app is ready. Drive your UI from `status`, and don't rely on the app's `Theme`
+for colors during the prepare phase — read them from `options` so the screen
+looks consistent throughout. The host also reads `fade_out_duration` (ms) from
+your `options` to control that fade-out.
+:::
+
+:::tip[Real-world example]
+The [`flet-spinkit`](../controls/spinkit/index.md#boot-screen) extension ships a
+complete `spinkit` boot screen built exactly this way — see
+[`boot_screen.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit/lib/src/boot_screen.dart)
+and its [`extension.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit/lib/src/extension.dart).
+:::
+
 ## Examples
 
 Flet has controls that are implemented as [built-in extensions](built-in-extensions.md) and could serve as a starting point for your own controls.

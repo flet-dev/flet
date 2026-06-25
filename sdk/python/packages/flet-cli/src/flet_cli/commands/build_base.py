@@ -1,6 +1,8 @@
 import argparse
+import base64
 import copy
 import glob
+import json
 import os
 import platform
 import shutil
@@ -1356,7 +1358,75 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
+            "boot_screen": self._resolve_boot_screen(),
             "pyproject": self.get_pyproject(),
+        }
+
+    def _resolve_boot_screen(self):
+        """
+        Resolve the boot screen configuration from pyproject.toml.
+
+        Merges the global `[tool.flet.boot_screen]` with the platform-specific
+        `[tool.flet.<platform>.boot_screen]` (platform wins per key), resolves
+        the selected screen `name` (default "flet") and its options table.
+
+        Falls back to the legacy `[tool.flet[.<platform>].app.boot_screen]` /
+        `app.startup_screen` (`show`/`message`) settings, mapping them onto the
+        built-in "flet" screen with a deprecation warning.
+
+        Returns a dict with `name` and `options_b64` (base64-encoded JSON of the
+        options table) for the cookiecutter template.
+        """
+        config_platform = self.config_platform
+
+        def merged(key):
+            result = {}
+            merge_dict(
+                result, copy.deepcopy(self.get_pyproject(f"tool.flet.{key}") or {})
+            )
+            merge_dict(
+                result,
+                copy.deepcopy(
+                    self.get_pyproject(f"tool.flet.{config_platform}.{key}") or {}
+                ),
+            )
+            return result
+
+        boot_screen = merged("boot_screen")
+
+        if boot_screen:
+            name = boot_screen.get("name", "flet")
+            options = boot_screen.get(name) or {}
+        else:
+            # backward compatibility with the legacy app.boot_screen /
+            # app.startup_screen settings
+            name = "flet"
+            options = {}
+            legacy_boot = merged("app.boot_screen")
+            legacy_startup = merged("app.startup_screen")
+            if legacy_boot or legacy_startup:
+                console.log(
+                    "[tool.flet.app.boot_screen] and "
+                    "[tool.flet.app.startup_screen] are deprecated; use "
+                    "[tool.flet.boot_screen] with a named screen instead.",
+                    style=warning_style,
+                )
+                if legacy_boot.get("show"):
+                    options["spinner_size"] = 30
+                    message = legacy_boot.get("message")
+                    if message:
+                        options["prepare_message"] = message
+                if legacy_startup.get("show"):
+                    options["spinner_size"] = 30
+                    message = legacy_startup.get("message")
+                    if message:
+                        options["startup_message"] = message
+
+        return {
+            "name": name,
+            "options_b64": base64.b64encode(json.dumps(options).encode("utf-8")).decode(
+                "ascii"
+            ),
         }
 
     def create_flutter_project(self, second_pass=False):

@@ -82,7 +82,14 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    // The Android emulator reaches the host machine via 10.0.2.2, not
+    // localhost (which points at the emulator itself). Everywhere else
+    // (desktop, iOS simulator, web) localhost is correct.
+    var debugHost =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+            ? "10.0.2.2"
+            : "localhost";
+    pageUrl = "http://$debugHost:8550";
   }
 
   if (kIsWeb) {
@@ -133,8 +140,11 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
-    showAppStartupScreen: true,
-    appStartupScreenMessage: "Working...",
+    bootScreenName: "flet",
+    bootScreenOptions: const {
+      "spinner_size": 30,
+      "startup_message": "Working..."
+    },
     appErrorMessage: "The application encountered an error: {message}",
     extensions: extensions,
     multiView: isMultiView(),

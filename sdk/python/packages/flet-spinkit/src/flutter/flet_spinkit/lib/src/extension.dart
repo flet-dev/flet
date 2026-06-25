@@ -1,9 +1,19 @@
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import 'boot_screen.dart';
 import 'spinkit.dart';
 
 class Extension extends FletExtension {
+  @override
+  Widget? createBootScreen(String name, Map<String, dynamic> options,
+      ValueListenable<BootStatus> status) {
+    return name == "spinkit"
+        ? SpinKitBootScreen(options: options, status: status)
+        : null;
+  }
+
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {

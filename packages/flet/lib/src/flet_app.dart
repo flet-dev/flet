@@ -5,6 +5,7 @@ import 'controls/control_widget.dart';
 import 'flet_app_errors_handler.dart';
 import 'flet_backend.dart';
 import 'flet_extension.dart';
+import 'models/boot_status.dart';
 import 'models/control.dart';
 import 'testing/tester.dart';
 import 'transport/data_channel.dart';
@@ -14,8 +15,12 @@ import 'transport/flet_backend_channel.dart';
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
+  final String? bootScreenName;
+  final Map<String, dynamic>? bootScreenOptions;
+  /// Optional shared boot status notifier. When provided (e.g. by a persistent
+  /// boot overlay in the app bootstrap), the backend updates it instead of
+  /// owning its own, so the same notifier spans both boot phases.
+  final ValueNotifier<BootStatus>? bootStatus;
   final String? appErrorMessage;
   final int? controlId;
   final String? title;
@@ -45,8 +50,9 @@ class FletApp extends StatefulWidget {
       {super.key,
       required this.pageUrl,
       required this.assetsDir,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
+      this.bootScreenName,
+      this.bootScreenOptions,
+      this.bootStatus,
       this.appErrorMessage,
       this.controlId,
       this.title,
@@ -79,8 +85,9 @@ class _FletAppState extends State<FletApp> {
     return ChangeNotifierProvider<FletBackend>(
       create: (context) {
         return FletBackend(
-            showAppStartupScreen: widget.showAppStartupScreen,
-            appStartupScreenMessage: widget.appStartupScreenMessage,
+            bootScreenName: widget.bootScreenName ?? "flet",
+            bootScreenOptions: widget.bootScreenOptions ?? const {},
+            bootStatus: widget.bootStatus,
             appErrorMessage: widget.appErrorMessage,
             controlId: widget.controlId,
             reconnectIntervalMs: widget.reconnectIntervalMs,

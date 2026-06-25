@@ -815,54 +815,103 @@ web = false
 
 ### Boot screen
 
-:::note[Platform support]
-[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
-[Android](android.md), and [iOS](ios.md) only.
-:::
+The boot screen fills the gap between the native [splash screen](#splash-screen)
+and your app's first frame — that is, while the Flutter app is up but your
+Flet/Python app is not ready yet. It is told which of two stages it is in:
 
-The boot screen is shown while the packaged app archive (`app.zip`) is extracted
-to the app data directory (typically on first launch or after the app bundle changes).
-It appears after the [splash screen](#splash-screen) and before the
-[startup screen](#startup-screen).
+1. **Preparing** — the packaged app archive (`app.zip`) is being extracted to the
+   app data directory (on first launch or after the app bundle changes). This
+   stage occurs on **Android only**.
+2. **Starting up** — the Python runtime and your app are starting, until the
+   first page is shown (all platforms). If startup fails, the error is shown on
+   the boot screen.
 
-It is not shown by default. Enable it, for example, when then extraction time is noticeable.
+A boot screen is **always rendered**, so this gap is a controlled background
+instead of a bare scaffold. By default the built-in `flet` boot screen shows
+nothing but a background color — no spinner and no message — until you configure
+it. You can also replace it entirely with your own widget
+(see [Custom boot screen](#custom-boot-screen)).
 
-#### Example
+#### Selecting a boot screen
 
-<Tabs groupId="pyproject-toml">
-<TabItem value="pyproject-toml" label="pyproject.toml">
-```toml
-[tool.flet.app.boot_screen]     # or [tool.flet.<PLATFORM>.app.boot_screen]
-show = true
-message = "Preparing the app for its first launch…"
-```
-</TabItem>
-</Tabs>
-
-### Startup screen
-
-:::note[Platform support]
-[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
-[Android](android.md), and [iOS](ios.md) only.
-:::
-
-The startup screen is shown while the Python runtime and your app are starting.
-On mobile targets this can include preparing packaged dependencies. It appears
-after the [boot screen](#boot-screen).
-
-It is not shown by default.
-
-#### Example
+A boot screen is addressed by `name`. The default is `flet` (the built-in
+screen); custom names are provided by [extensions](#custom-boot-screen).
 
 <Tabs groupId="pyproject-toml">
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
-[tool.flet.app.startup_screen]      # or [tool.flet.<PLATFORM>.app.startup_screen]
-show = true
-message = "Starting up the app…"
+[tool.flet.boot_screen]    # or [tool.flet.<PLATFORM>.boot_screen]
+name = "flet"
 ```
 </TabItem>
 </Tabs>
+
+Settings under `[tool.flet.<PLATFORM>.boot_screen]` override the global
+`[tool.flet.boot_screen]` per key.
+
+#### Built-in `flet` boot screen
+
+The built-in screen is configured under a table named after it. All options are
+optional:
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.boot_screen.flet]
+theme_mode = "auto"                       # auto (default), light, or dark
+bgcolor_light = "#ffffff"
+bgcolor_dark = "#000000"
+spinner_color_light = "blue"
+spinner_color_dark = "yellow"
+spinner_size = 30                         # 0 or absent → no spinner
+text_color_light = "#000000"
+text_color_dark = "#ffffff"
+prepare_message = "Preparing your app…"   # Android only; empty/absent → no message
+startup_message = "Starting up…"          # empty/absent → no message
+```
+</TabItem>
+</Tabs>
+
+| Option | Description |
+|--------|-------------|
+| `theme_mode` | Which color set to use: `auto` (follow the device), `light`, or `dark`. Defaults to `auto`. |
+| `bgcolor_light` / `bgcolor_dark` | Background color. When omitted, follows Flet's default theme background. |
+| `spinner_color_light` / `spinner_color_dark` | Spinner color. When omitted, follows Flet's default theme primary color. |
+| `spinner_size` | Spinner diameter in logical pixels. `0` or absent hides the spinner. |
+| `text_color_light` / `text_color_dark` | Message text color. When omitted, follows Flet's default theme on-surface color. |
+| `prepare_message` | Text shown during the **preparing** stage (Android only). Empty or absent shows no message. |
+| `startup_message` | Text shown during the **starting up** stage. Empty or absent shows no message. |
+| `fade_out_duration` | Fade-out duration in milliseconds when the app becomes ready. Defaults to `0` (removed instantly); set a value like `300` to fade out. |
+
+Colors accept the same formats as elsewhere in Flet (hex like `#ffffff` or named
+colors like `blue`).
+
+#### Custom boot screen
+
+To take full control of the boot screen — including custom layouts and
+animations — provide your own Flutter widget from a Flet extension and reference
+it by `name`. See
+[Boot screen](../extend/user-extensions.md#boot-screen) in the extension authoring
+guide for how to implement one.
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.boot_screen]
+name = "my_screen"
+
+[tool.flet.boot_screen.my_screen]
+# arbitrary options passed to your widget
+```
+</TabItem>
+</Tabs>
+
+:::note[Deprecated]
+The older `[tool.flet.app.boot_screen]` and `[tool.flet.app.startup_screen]`
+settings (with `show` / `message`) are deprecated. They are still honored — and
+mapped onto the built-in `flet` boot screen — but you should migrate to
+`[tool.flet.boot_screen]`.
+:::
 
 ### Hidden app window on startup
 
