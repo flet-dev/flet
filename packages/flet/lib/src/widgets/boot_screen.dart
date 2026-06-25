@@ -23,13 +23,3 @@ Widget resolveBootScreen({
   }
   return FletBootScreen(options: options, status: status);
 }
-
-/// Builds built-in "flet" boot screen [options] from the legacy
-/// show/message startup-screen settings, for backward compatibility.
-Map<String, dynamic> legacyBootScreenOptions(bool show, String? message) {
-  if (!show) return const {};
-  return {
-    "spinner_size": 30,
-    if (message != null && message.isNotEmpty) "startup_message": message,
-  };
-}
