@@ -14,6 +14,11 @@ The path to the application's console log file (`console.log`) in the cache stor
 
 Its value is set in production mode.
 
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
+:::
+
 ### `FLET_APP_STORAGE_DATA`
 
 A directory for **durable** application data — databases, state, config — that is preserved between
@@ -26,6 +31,11 @@ In production this directory is also the Python program's **current working dire
 file writes (e.g. `open("app.db", "w")`, `sqlite3.connect("app.db")`) land here. In `flet run` (dev
 mode) it is `<project>/.flet/storage/data`.
 
+:::info
+In a running Flet app, this maps to a `data` subdirectory of
+[`StoragePaths.get_application_support_directory()`][flet.StoragePaths.get_application_support_directory].
+:::
+
 ### `FLET_APP_STORAGE_CACHE`
 
 A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
@@ -33,6 +43,11 @@ platform "clear cache" action wipes it), so only store things you can rebuild. P
 app-private; it maps to the platform's *caches* directory (`%LOCALAPPDATA%\<company>\<product>` on
 Windows, `~/Library/Caches/<bundle-id>` on macOS, `~/.cache/<app-id>` on Linux, the app cache dir on
 iOS/Android). In `flet run` it is `<project>/.flet/storage/cache`.
+
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory].
+:::
 
 ### `FLET_APP_STORAGE_TEMP`
 
@@ -42,6 +57,11 @@ persisting. (On Android it resolves to the same directory as
 [`FLET_APP_STORAGE_CACHE`](#flet_app_storage_cache).) In `flet run` it is `<project>/.flet/storage/temp`,
 and Python's `tempfile` is pointed here too (via `TMPDIR`). Equivalent to Python's
 `tempfile.gettempdir()`.
+
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_temporary_directory()`][flet.StoragePaths.get_temporary_directory].
+:::
 
 ### `FLET_APP_USER_MODEL_ID`
 

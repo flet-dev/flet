@@ -22,6 +22,10 @@ class StoragePaths(Service):
 
         If this directory does not exist, it is created automatically.
 
+        Tip:
+            In a running Flet app, this path is also exposed synchronously via
+            the `FLET_APP_STORAGE_CACHE` environment variable.
+
         Returns:
             The path to a directory where the application may place cache files.
 
@@ -63,6 +67,10 @@ class StoragePaths(Service):
 
         This directory is created automatically if it does not exist.
         Use this for files not exposed to the user. Do not use for user data files.
+
+        Tip:
+            In a running Flet app, the `FLET_APP_STORAGE_DATA` environment
+            variable points to a `data` subdirectory of this path.
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
@@ -175,6 +183,10 @@ class StoragePaths(Service):
         Files may be cleared at any time.
         The caller is responsible for managing files within this directory.
 
+        Tip:
+            In a running Flet app, this path is also exposed synchronously via
+            the `FLET_APP_STORAGE_TEMP` environment variable.
+
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.
 
@@ -192,6 +204,10 @@ class StoragePaths(Service):
 
         This file is located in the
         :meth:`flet.StoragePaths.get_application_cache_directory`.
+
+        Tip:
+            In a running Flet app, this path is also exposed synchronously via
+            the `FLET_APP_CONSOLE` environment variable.
 
         Raises:
             FletUnsupportedPlatformException: If called on the web platform.

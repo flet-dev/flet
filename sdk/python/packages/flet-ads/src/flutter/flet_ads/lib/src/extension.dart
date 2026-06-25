@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'banner.dart';
+import 'consent_manager.dart';
 import 'interstitial.dart';
 
 class Extension extends FletExtension {
@@ -18,6 +19,8 @@ class Extension extends FletExtension {
     switch (control.type) {
       case "InterstitialAd":
         return InterstitialAdService(control: control);
+      case "ConsentManager":
+        return ConsentManagerService(control: control);
       default:
         return null;
     }
