@@ -229,6 +229,7 @@ class AndroidSDK:
                 },
                 "Windows": {
                     "AMD64": "win",
+                    "ARM64": "win"
                 },
             }[platform.system()][platform.machine()]
         except KeyError:
