@@ -652,11 +652,17 @@ function preprocessRestCrossReferenceMarkdown(text, context) {
 }
 
 /**
- * Escape bare '<' characters (not followed by tag-start or '!') to '&lt;' in non-code text.
- * Prevents MDX from treating angle brackets in docstrings as JSX elements.
- * Skips fenced code blocks and inline backtick spans.
+ * Escape MDX-unsafe characters in non-code text so docstring prose can't be
+ * misparsed as MDX syntax:
+ *  - bare '<' (not followed by tag-start or '!') becomes '&lt;', so it isn't
+ *    treated as the start of a JSX element;
+ *  - '{' and '}' become '&#123;'/'&#125;', so content like
+ *    `boot_screen_options={'spinner_size': 30}` isn't parsed as a (broken)
+ *    JSX expression.
+ * Skips fenced code blocks and inline backtick spans, where these characters
+ * are already safe and should be preserved verbatim.
  */
-function escapeMdxUnsafeAngles(text) {
+function escapeMdxUnsafe(text) {
   if (!text) {
     return text;
   }
@@ -673,7 +679,10 @@ function escapeMdxUnsafeAngles(text) {
           if (inlineSegment.startsWith("`") && inlineSegment.endsWith("`")) {
             return inlineSegment;
           }
-          return inlineSegment.replace(/<(?![A-Za-z!/])/g, "&lt;");
+          return inlineSegment
+            .replace(/<(?![A-Za-z!/])/g, "&lt;")
+            .replace(/\{/g, "&#123;")
+            .replace(/\}/g, "&#125;");
         })
         .join("");
     })
@@ -1138,7 +1147,7 @@ export function renderInlineMarkdown(text, context) {
     return null;
   }
   const tree = MARKDOWN_PARSER.parse(
-    escapeMdxUnsafeAngles(
+    escapeMdxUnsafe(
       preprocessRestCrossReferenceMarkdown(
         preprocessCrossReferenceMarkdown(text, context),
         context
@@ -1164,7 +1173,7 @@ export function renderDocstring(docstring, context = {}, keyPrefix = "doc") {
     return null;
   }
   const tree = MARKDOWN_PARSER.parse(
-    escapeMdxUnsafeAngles(
+    escapeMdxUnsafe(
       preprocessRestCrossReferenceMarkdown(
         preprocessCrossReferenceMarkdown(
           normalizeDocstringMarkdown(docstring),
