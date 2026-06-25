@@ -229,7 +229,7 @@ class AndroidSDK:
                 },
                 "Windows": {
                     "AMD64": "win",
-                    "ARM64": "win"
+                    "ARM64": "win"            # If it is an ARM-based Windows device, return the download link for x64 devices.
                 },
             }[platform.system()][platform.machine()]
         except KeyError:
