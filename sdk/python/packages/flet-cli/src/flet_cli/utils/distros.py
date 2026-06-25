@@ -7,14 +7,17 @@ from typing import Optional
 from rich.progress import Progress
 
 
-def download_with_progress(url, dest_path, progress: Optional[Progress] = None):
+def download_with_progress(
+    url, dest_path, progress: Optional[Progress] = None, description="Downloading..."
+):
     """Downloads a file with a progress bar."""
     with urllib.request.urlopen(url) as response:
-        total_size = int(response.info().get("Content-Length").strip())
+        content_length = response.headers.get("Content-Length")
+        total_size = int(content_length) if content_length else None
         block_size = 8192  # 8 KB chunks
 
         if progress:
-            task = progress.add_task("Downloading...", total=total_size)
+            task = progress.add_task(description, total=total_size)
         with open(dest_path, "wb") as out_file:
             while chunk := response.read(block_size):
                 out_file.write(chunk)
