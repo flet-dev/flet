@@ -64,8 +64,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.SDK_PYTHON }}
         run: |
-          uv run --no-dev --group test pytest packages/flet/tests
-          uv run --no-dev --group test pytest packages/flet-cli/tests
+          uv run --no-dev --group test pytest packages/*/tests
 
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'
@@ -673,6 +672,7 @@ jobs:
             flet-permission-handler
             flet-rive
             flet-secure-storage
+            flet-spinkit
             flet-video
             flet-webview
           )
@@ -837,6 +837,7 @@ jobs:
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \
+            flet_spinkit \
             flet_video \
             flet_webview; do
             uv publish dist/**/${pkg}-*

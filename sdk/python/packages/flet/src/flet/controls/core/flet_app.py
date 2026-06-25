@@ -4,6 +4,7 @@ from typing import Any, Optional
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.layout_control import LayoutControl
+from flet.utils.deprecated import deprecated
 
 __all__ = ["FletApp", "FletAppOutputEvent"]
 
@@ -59,14 +60,22 @@ class FletApp(LayoutControl):
     Total time to try reconnecting.
     """
 
-    show_app_startup_screen: bool = False
+    boot_screen_name: Optional[str] = None
     """
-    Whether to show the app startup screen.
+    Name of the boot screen to show while the embedded app starts up.
+
+    When `None`, the built-in `"flet"` boot screen is used. Custom boot screens
+    are provided by extensions; see the
+    [boot screen docs](https://flet.dev/docs/publish/#boot-screen).
     """
 
-    app_startup_screen_message: Optional[str] = None
+    boot_screen_options: Optional[dict[str, Any]] = None
     """
-    Message to display on the app startup screen.
+    Options for the boot screen, passed through to the boot screen widget.
+
+    For the built-in `"flet"` screen these include `spinner_size`,
+    `startup_message`, `bgcolor_light`/`bgcolor_dark`, etc. See the
+    [boot screen docs](https://flet.dev/docs/publish/#boot-screen).
     """
 
     app_error_message: Optional[str] = None
@@ -89,3 +98,59 @@ class FletApp(LayoutControl):
     `force_pyodide=True`; root-level Pyodide pages have nowhere to
     bubble the event.
     """
+
+    @property
+    @deprecated(
+        reason="Use `boot_screen_options` instead, e.g. "
+        "boot_screen_options={'spinner_size': 30}.",
+        version="0.86.0",
+        delete_version="0.89.0",
+    )
+    def show_app_startup_screen(self) -> bool:
+        """
+        Whether to show the app startup screen.
+        """
+        return bool((self.boot_screen_options or {}).get("spinner_size", 0))
+
+    @show_app_startup_screen.setter
+    @deprecated(
+        reason="Use `boot_screen_options` instead, e.g. "
+        "boot_screen_options={'spinner_size': 30}.",
+        version="0.86.0",
+        delete_version="0.89.0",
+    )
+    def show_app_startup_screen(self, value: bool) -> None:
+        options = dict(self.boot_screen_options or {})
+        if value:
+            options.setdefault("spinner_size", 30)
+        else:
+            options.pop("spinner_size", None)
+        self.boot_screen_options = options
+
+    @property
+    @deprecated(
+        reason="Use `boot_screen_options` instead, e.g. "
+        "boot_screen_options={'startup_message': '...'}.",
+        version="0.86.0",
+        delete_version="0.89.0",
+    )
+    def app_startup_screen_message(self) -> Optional[str]:
+        """
+        Message to display on the app startup screen.
+        """
+        return (self.boot_screen_options or {}).get("startup_message")
+
+    @app_startup_screen_message.setter
+    @deprecated(
+        reason="Use `boot_screen_options` instead, e.g. "
+        "boot_screen_options={'startup_message': '...'}.",
+        version="0.86.0",
+        delete_version="0.89.0",
+    )
+    def app_startup_screen_message(self, value: Optional[str]) -> None:
+        options = dict(self.boot_screen_options or {})
+        if value is not None:
+            options["startup_message"] = value
+        else:
+            options.pop("startup_message", None)
+        self.boot_screen_options = options

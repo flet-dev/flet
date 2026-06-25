@@ -197,6 +197,9 @@ class BaseControl:
     """
 
     key: Optional["KeyValue"] = None
+    """
+    A stable key used to preserve control identity across updates.
+    """
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""

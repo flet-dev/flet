@@ -12,8 +12,13 @@ String initBridges(Map<String, String> envVars) =>
 
 bool get bridgesActive => false;
 
-Future<String> extractAppAssets(String assetPath, {bool checkHash = false}) =>
-    throw UnsupportedError("Asset extraction not available on web");
+/// Always false on web — there's no embedded CPython to be "already
+/// running". Mirrors `native_runtime.dart`'s getter so `main.dart`'s
+/// process-reuse check compiles for the web target.
+bool get pythonAlreadyRunning => false;
+
+Future<String> getAppDir() =>
+    throw UnsupportedError("App directory not available on web");
 
 FletBackendChannelBuilder? get channelBuilder => null;
 

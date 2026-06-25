@@ -34,10 +34,11 @@ class _FletAppControlState extends State<FletAppControl> {
     }
     var reconnectIntervalMs = widget.control.getInt("reconnect_interval_ms");
     var reconnectTimeoutMs = widget.control.getInt("reconnect_timeout_ms");
-    var showAppStartupScreen =
-        widget.control.getBool("show_app_startup_screen");
-    var appStartupScreenMessage =
-        widget.control.getString("app_startup_screen_message");
+    var bootScreenName = widget.control.getString("boot_screen_name", "flet")!;
+    var rawBootScreenOptions = widget.control.get("boot_screen_options");
+    var bootScreenOptions = rawBootScreenOptions is Map
+        ? Map<String, dynamic>.from(rawBootScreenOptions)
+        : <String, dynamic>{};
     var appErrorMessage = widget.control.getString("app_error_message");
 
     return LayoutControl(
@@ -46,11 +47,11 @@ class _FletAppControlState extends State<FletAppControl> {
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
-        showAppStartupScreen: showAppStartupScreen,
-        appStartupScreenMessage: appStartupScreenMessage,
+        bootScreenName: bootScreenName,
+        bootScreenOptions: bootScreenOptions,
         appErrorMessage: appErrorMessage,
         pageUrl: url,
-        assetsDir: widget.control.getString("assets_dir") ?? "",
+        assetsDir: widget.control.getString("assets_dir", "")!,
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         args: widget.control.get("args") != null

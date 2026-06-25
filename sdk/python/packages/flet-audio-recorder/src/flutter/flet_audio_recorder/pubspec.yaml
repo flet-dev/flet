@@ -13,7 +13,7 @@ dependencies:
 
   collection: ^1.16.0
   http: ^1.2.2
-  record: ^6.2.0
+  record: ^7.1.0
 
   flet:
     path: ../../../../../../../packages/flet

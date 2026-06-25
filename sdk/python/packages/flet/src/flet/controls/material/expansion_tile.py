@@ -192,7 +192,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     The color of this tile's titles when the sublist is :attr:`expanded`.
 
     If `None`, :attr:`flet.ExpansionTileTheme.text_color` is used;
-    if that is also `None`, then defaults to :attr:`~flet.TextTheme.body_large`
+    if that is also `None`, then defaults to :attr:`flet.TextTheme.body_large`
     of the :attr:`flet.Theme.text_theme`.
     """
 
@@ -248,7 +248,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     False).
 
     If `None`, :attr:`flet.ExpansionTileTheme.collapsed_text_color` is used;
-    if that is also `None`, then defaults to :attr:`~flet.TextTheme.body_large`
+    if that is also `None`, then defaults to :attr:`flet.TextTheme.body_large`
     of the :attr:`flet.Theme.text_theme`.
     """
 
@@ -340,7 +340,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     Called when a user clicks or taps the list tile.
 
-    The :attr:`~flet.Event.data` property of the event handler argument is a boolean
+    The :attr:`flet.Event.data` property of the event handler argument is a boolean
     representing the :attr:`expanded` state of the tile after the change.
     """
 

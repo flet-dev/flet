@@ -58,108 +58,99 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
 
     var content = widget.control.buildWidget("content");
 
-    var onHover = widget.control.getBool("on_hover", false)!;
-    var onEnter = widget.control.getBool("on_enter", false)!;
-    var onExit = widget.control.getBool("on_exit", false)!;
-    var onTap = widget.control.getBool("on_tap", false)!;
-    var onTapDown = widget.control.getBool("on_tap_down", false)!;
-    var onTapUp = widget.control.getBool("on_tap_up", false)!;
-    var onTapMove = widget.control.getBool("on_tap_move", false)!;
-    var onTapCancel = widget.control.getBool("on_tap_cancel", false)!;
-    var onSecondaryTap = widget.control.getBool("on_secondary_tap", false)!;
+    var onHover = widget.control.hasEventHandler("hover");
+    var onEnter = widget.control.hasEventHandler("enter");
+    var onExit = widget.control.hasEventHandler("exit");
+    var onTap = widget.control.hasEventHandler("tap");
+    var onTapDown = widget.control.hasEventHandler("tap_down");
+    var onTapUp = widget.control.hasEventHandler("tap_up");
+    var onTapMove = widget.control.hasEventHandler("tap_move");
+    var onTapCancel = widget.control.hasEventHandler("tap_cancel");
+    var onSecondaryTap = widget.control.hasEventHandler("secondary_tap");
     var onSecondaryTapDown =
-        widget.control.getBool("on_secondary_tap_down", false)!;
-    var onSecondaryTapUp =
-        widget.control.getBool("on_secondary_tap_up", false)!;
+        widget.control.hasEventHandler("secondary_tap_down");
+    var onSecondaryTapUp = widget.control.hasEventHandler("secondary_tap_up");
     var onSecondaryTapCancel =
-        widget.control.getBool("on_secondary_tap_cancel", false)!;
-    var onTertiaryTapDown =
-        widget.control.getBool("on_tertiary_tap_down", false)!;
-    var onTertiaryTapUp = widget.control.getBool("on_tertiary_tap_up", false)!;
+        widget.control.hasEventHandler("secondary_tap_cancel");
+    var onTertiaryTapDown = widget.control.hasEventHandler("tertiary_tap_down");
+    var onTertiaryTapUp = widget.control.hasEventHandler("tertiary_tap_up");
     var onTertiaryTapCancel =
-        widget.control.getBool("on_tertiary_tap_cancel", false)!;
-    var onDoubleTap = widget.control.getBool("on_double_tap", false)!;
-    var onDoubleTapDown = widget.control.getBool("on_double_tap_down", false)!;
-    var onDoubleTapCancel =
-        widget.control.getBool("on_double_tap_cancel", false)!;
-    var onLongPressDown = widget.control.getBool("on_long_press_down", false)!;
-    var onLongPressCancel =
-        widget.control.getBool("on_long_press_cancel", false)!;
-    var onLongPress = widget.control.getBool("on_long_press", false)!;
-    var onLongPressStart =
-        widget.control.getBool("on_long_press_start", false)!;
+        widget.control.hasEventHandler("tertiary_tap_cancel");
+    var onDoubleTap = widget.control.hasEventHandler("double_tap");
+    var onDoubleTapDown = widget.control.hasEventHandler("double_tap_down");
+    var onDoubleTapCancel = widget.control.hasEventHandler("double_tap_cancel");
+    var onLongPressDown = widget.control.hasEventHandler("long_press_down");
+    var onLongPressCancel = widget.control.hasEventHandler("long_press_cancel");
+    var onLongPress = widget.control.hasEventHandler("long_press");
+    var onLongPressStart = widget.control.hasEventHandler("long_press_start");
     var onLongPressMoveUpdate =
-        widget.control.getBool("on_long_press_move_update", false)!;
-    var onLongPressUp = widget.control.getBool("on_long_press_up", false)!;
-    var onLongPressEnd = widget.control.getBool("on_long_press_end", false)!;
+        widget.control.hasEventHandler("long_press_move_update");
+    var onLongPressUp = widget.control.hasEventHandler("long_press_up");
+    var onLongPressEnd = widget.control.hasEventHandler("long_press_end");
     var onSecondaryLongPressDown =
-        widget.control.getBool("on_secondary_long_press_down", false)!;
+        widget.control.hasEventHandler("secondary_long_press_down");
     var onSecondaryLongPressCancel =
-        widget.control.getBool("on_secondary_long_press_cancel", false)!;
+        widget.control.hasEventHandler("secondary_long_press_cancel");
     var onSecondaryLongPress =
-        widget.control.getBool("on_secondary_long_press", false)!;
+        widget.control.hasEventHandler("secondary_long_press");
     var onSecondaryLongPressStart =
-        widget.control.getBool("on_secondary_long_press_start", false)!;
+        widget.control.hasEventHandler("secondary_long_press_start");
     var onSecondaryLongPressMoveUpdate =
-        widget.control.getBool("on_secondary_long_press_move_update", false)!;
+        widget.control.hasEventHandler("secondary_long_press_move_update");
     var onSecondaryLongPressUp =
-        widget.control.getBool("on_secondary_long_press_up", false)!;
+        widget.control.hasEventHandler("secondary_long_press_up");
     var onSecondaryLongPressEnd =
-        widget.control.getBool("on_secondary_long_press_end", false)!;
+        widget.control.hasEventHandler("secondary_long_press_end");
     var onTertiaryLongPressDown =
-        widget.control.getBool("on_tertiary_long_press_down", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_down");
     var onTertiaryLongPressCancel =
-        widget.control.getBool("on_tertiary_long_press_cancel", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_cancel");
     var onTertiaryLongPress =
-        widget.control.getBool("on_tertiary_long_press", false)!;
+        widget.control.hasEventHandler("tertiary_long_press");
     var onTertiaryLongPressStart =
-        widget.control.getBool("on_tertiary_long_press_start", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_start");
     var onTertiaryLongPressMoveUpdate =
-        widget.control.getBool("on_tertiary_long_press_move_update", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_move_update");
     var onTertiaryLongPressUp =
-        widget.control.getBool("on_tertiary_long_press_up", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_up");
     var onTertiaryLongPressEnd =
-        widget.control.getBool("on_tertiary_long_press_end", false)!;
+        widget.control.hasEventHandler("tertiary_long_press_end");
     var onHorizontalDragDown =
-        widget.control.getBool("on_horizontal_drag_down", false)!;
+        widget.control.hasEventHandler("horizontal_drag_down");
     var onHorizontalDragStart =
-        widget.control.getBool("on_horizontal_drag_start", false)!;
+        widget.control.hasEventHandler("horizontal_drag_start");
     var onHorizontalDragUpdate =
-        widget.control.getBool("on_horizontal_drag_update", false)!;
+        widget.control.hasEventHandler("horizontal_drag_update");
     var onHorizontalDragEnd =
-        widget.control.getBool("on_horizontal_drag_end", false)!;
+        widget.control.hasEventHandler("horizontal_drag_end");
     var onHorizontalDragCancel =
-        widget.control.getBool("on_horizontal_drag_cancel", false)!;
+        widget.control.hasEventHandler("horizontal_drag_cancel");
     var onVerticalDragDown =
-        widget.control.getBool("on_vertical_drag_down", false)!;
+        widget.control.hasEventHandler("vertical_drag_down");
     var onVerticalDragStart =
-        widget.control.getBool("on_vertical_drag_start", false)!;
+        widget.control.hasEventHandler("vertical_drag_start");
     var onVerticalDragUpdate =
-        widget.control.getBool("on_vertical_drag_update", false)!;
-    var onVerticalDragEnd =
-        widget.control.getBool("on_vertical_drag_end", false)!;
+        widget.control.hasEventHandler("vertical_drag_update");
+    var onVerticalDragEnd = widget.control.hasEventHandler("vertical_drag_end");
     var onVerticalDragCancel =
-        widget.control.getBool("on_vertical_drag_cancel", false)!;
-    var onPanDown = widget.control.getBool("on_pan_down", false)!;
-    var onPanStart = widget.control.getBool("on_pan_start", false)!;
-    var onPanUpdate = widget.control.getBool("on_pan_update", false)!;
-    var onPanEnd = widget.control.getBool("on_pan_end", false)!;
-    var onPanCancel = widget.control.getBool("on_pan_cancel", false)!;
-    var onScaleStart = widget.control.getBool("on_scale_start", false)!;
-    var onScaleUpdate = widget.control.getBool("on_scale_update", false)!;
-    var onScaleEnd = widget.control.getBool("on_scale_end", false)!;
-    var onForcePressStart =
-        widget.control.getBool("on_force_press_start", false)!;
-    var onForcePressPeak =
-        widget.control.getBool("on_force_press_peak", false)!;
+        widget.control.hasEventHandler("vertical_drag_cancel");
+    var onPanDown = widget.control.hasEventHandler("pan_down");
+    var onPanStart = widget.control.hasEventHandler("pan_start");
+    var onPanUpdate = widget.control.hasEventHandler("pan_update");
+    var onPanEnd = widget.control.hasEventHandler("pan_end");
+    var onPanCancel = widget.control.hasEventHandler("pan_cancel");
+    var onScaleStart = widget.control.hasEventHandler("scale_start");
+    var onScaleUpdate = widget.control.hasEventHandler("scale_update");
+    var onScaleEnd = widget.control.hasEventHandler("scale_end");
+    var onForcePressStart = widget.control.hasEventHandler("force_press_start");
+    var onForcePressPeak = widget.control.hasEventHandler("force_press_peak");
     var onForcePressUpdate =
-        widget.control.getBool("on_force_press_update", false)!;
-    var onForcePressEnd = widget.control.getBool("on_force_press_end", false)!;
-    var onMultiTap = widget.control.getBool("on_multi_tap", false)!;
-    var onMultiLongPress =
-        widget.control.getBool("on_multi_long_press", false)!;
+        widget.control.hasEventHandler("force_press_update");
+    var onForcePressEnd = widget.control.hasEventHandler("force_press_end");
+    var onMultiTap = widget.control.hasEventHandler("multi_tap");
+    var onMultiLongPress = widget.control.hasEventHandler("multi_long_press");
     var multiTapTouches = widget.control.getInt("multi_tap_touches", 0)!;
-    var onScroll = widget.control.getBool("on_scroll", false)!;
+    var onScroll = widget.control.hasEventHandler("scroll");
 
     Widget? result = content;
 
@@ -651,10 +642,9 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
           )
         : result;
 
-    var onRightPanStart = widget.control.getBool("on_right_pan_start", false)!;
-    var onRightPanUpdate =
-        widget.control.getBool("on_right_pan_update", false)!;
-    var onRightPanEnd = widget.control.getBool("on_right_pan_end", false)!;
+    var onRightPanStart = widget.control.hasEventHandler("right_pan_start");
+    var onRightPanUpdate = widget.control.hasEventHandler("right_pan_update");
+    var onRightPanEnd = widget.control.hasEventHandler("right_pan_end");
 
     if (onScroll || onRightPanStart || onRightPanUpdate || onRightPanEnd) {
       result = Listener(
@@ -701,8 +691,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       );
     }
 
-    var mouseCursor =
-        parseMouseCursor(widget.control.getString("mouse_cursor"));
+    var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(
             cursor: mouseCursor ?? MouseCursor.defer,

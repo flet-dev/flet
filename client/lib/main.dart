@@ -24,6 +24,7 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --FAT_CLIENT_END--
 import 'package:flet_secure_storage/flet_secure_storage.dart'
     as flet_secure_storage;
+import 'package:flet_spinkit/flet_spinkit.dart' as flet_spinkit;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
@@ -59,6 +60,7 @@ void main([List<String>? args]) async {
     flet_map.Extension(),
     flet_permission_handler.Extension(),
     flet_secure_storage.Extension(),
+    flet_spinkit.Extension(),
     flet_webview.Extension(),
 
     // --FAT_CLIENT_START--
@@ -80,7 +82,14 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    // The Android emulator reaches the host machine via 10.0.2.2, not
+    // localhost (which points at the emulator itself). Everywhere else
+    // (desktop, iOS simulator, web) localhost is correct.
+    var debugHost =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+            ? "10.0.2.2"
+            : "localhost";
+    pageUrl = "http://$debugHost:8550";
   }
 
   if (kIsWeb) {
@@ -131,8 +140,11 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
-    showAppStartupScreen: true,
-    appStartupScreenMessage: "Working...",
+    bootScreenName: "flet",
+    bootScreenOptions: const {
+      "spinner_size": 30,
+      "startup_message": "Working..."
+    },
     appErrorMessage: "The application encountered an error: {message}",
     extensions: extensions,
     multiView: isMultiView(),

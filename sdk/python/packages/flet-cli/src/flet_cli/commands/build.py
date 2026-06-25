@@ -1,9 +1,13 @@
 import argparse
+import os
+import shutil
+from pathlib import Path
 
 from rich.console import Group
 from rich.live import Live
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
+from flet_cli.utils.android import flutter_target_platforms
 
 
 class Command(BaseBuildCommand):
@@ -116,8 +120,23 @@ class Command(BaseBuildCommand):
             ["build", self.platforms[self.target_platform]["flutter_build_command"]]
         )
 
-        if self.target_platform in "apk" and self.template_data["split_per_abi"]:
+        if self.target_platform == "apk" and self.template_data["split_per_abi"]:
             args.append("--split-per-abi")
+
+        if (
+            self.target_platform in ("apk", "aab")
+            and self.template_data["options"]["target_arch"]
+        ):
+            args.extend(
+                [
+                    "--target-platform",
+                    ",".join(
+                        flutter_target_platforms(
+                            self.template_data["options"]["target_arch"]
+                        )
+                    ),
+                ]
+            )
 
         if self.target_platform in ["ipa"]:
             if self.template_data["ios_provisioning_profile"]:
@@ -165,6 +184,22 @@ class Command(BaseBuildCommand):
             f"[bold blue]Building [cyan]"
             f"{self.platforms[self.target_platform]['status_text']}[/cyan]..."
         )
+
+        # Clear the build output directories of artifacts from previous runs. Flutter
+        # only ever adds files to them, and copy_build_output harvests them wholesale —
+        # so without this, a previous build with different options (e.g. --arch,
+        # --split-per-abi, or a renamed product) would leak its artifacts into the
+        # user's output directory.
+        assert self.flutter_dir
+        flutter_dir = self.flutter_dir.resolve()
+        for output in self.platforms[self.target_platform]["outputs"]:
+            output_dir = Path(
+                os.path.dirname(self.resolve_output_path(output))
+            ).resolve()
+            # only delete directories that are strictly inside the generated Flutter
+            # project (and never the project directory itself).
+            if output_dir != flutter_dir and output_dir.is_relative_to(flutter_dir):
+                shutil.rmtree(output_dir, ignore_errors=True)
 
         self._run_flutter_command()
 

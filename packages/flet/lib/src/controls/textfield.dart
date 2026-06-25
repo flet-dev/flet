@@ -120,7 +120,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     _selection = selection;
 
     if (!selection.isValid ||
-        !widget.control.getBool("on_selection_change", false)!) {
+        !widget.control.hasEventHandler("selection_change")) {
       return;
     }
 
@@ -180,7 +180,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         .getTextCapitalization("capitalization", TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control.get("input_filter"));
+        widget.control.getTextInputFormatter("input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
     // add non-null input formatters
@@ -294,7 +294,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         onTap: () {
           widget.control.triggerEvent("click");
         },
-        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+        onTapOutside: widget.control.hasEventHandler("tap_outside")
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");
               }
@@ -302,7 +302,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         onChanged: (String value) {
           _value = value;
           widget.control.updateProperties({"value": value});
-          if (widget.control.getBool("on_change", false)!) {
+          if (widget.control.hasEventHandler("change")) {
             widget.control.triggerEvent("change", value);
           }
         });

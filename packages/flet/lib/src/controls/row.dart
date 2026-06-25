@@ -56,7 +56,7 @@ class RowControl extends StatelessWidget {
         wrapIntoScrollableView: true,
         child: child);
 
-    if (control.getBool("on_scroll", false)!) {
+    if (control.hasEventHandler("scroll")) {
       child = ScrollNotificationControl(control: control, child: child);
     }
 

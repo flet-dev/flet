@@ -106,6 +106,66 @@ testing purposes.
 
 **They are not meant to be used in production.**
 
+## Consent (UMP)
+
+[`ConsentManager`][flet_ads.ConsentManager] wraps Google's
+[User Messaging Platform (UMP)](https://developers.google.com/admob/flutter/privacy) to
+gather user consent (for example, the GDPR/EEA consent form) before requesting ads.
+
+The consent message itself is created and published in the
+[AdMob console](https://apps.admob.com), not in code: Google serves the
+region-appropriate message (EEA/GDPR, a regulated US state, and so on) based on the user's
+location. Your app only requests an update and shows the form when required.
+
+### Testing the consent form
+
+Force a geography during development with
+[`DebugGeography`][flet_ads.DebugGeography] on
+[`ConsentDebugSettings`][flet_ads.ConsentDebugSettings]:
+
+- **Simulators and emulators are automatically registered as test devices**, so the debug
+  geography applies on them **without** any
+  [`test_identifiers`][flet_ads.ConsentDebugSettings.test_identifiers].
+- On a **physical device**, register it first: call
+  [`request_consent_info_update()`][flet_ads.ConsentManager.request_consent_info_update]
+  once, then read the device's hashed ID from the **native** device log. Add that ID to
+  `test_identifiers` and re-run.
+
+The message carrying the hashed ID differs per platform:
+
+**Android** (`adb logcat`):
+
+```text
+Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("33BE2250B43518CCDA7DE426D04EE231")
+to set this as a debug device.
+```
+
+**iOS** (Xcode console / Console.app):
+
+```text
+<UMP SDK>To enable debug mode for this device,
+set: UMPDebugSettings.testDeviceIdentifiers = @[2077ef9a63d2b398840261c8221a0c9b]
+```
+
+### Interpreting consent status
+
+[`ConsentStatus`][flet_ads.ConsentStatus] reflects whether a decision was
+*collected*, not what the user chose — it becomes `OBTAINED` whether they consent
+**or** decline. To gate ad loading, use [`can_request_ads()`][flet_ads.ConsentManager.can_request_ads];
+when consent is declined the SDK simply serves non-personalized ads.
+
+Furthermore, the consent status is cached across sessions, so the form is shown only once. When in testing/debug mode,
+you can call [`ConsentManager.reset()`][flet_ads.ConsentManager.reset] to replay the flow as a
+first-time user. The [test AdMob app ID](#test-values) provided above already has a sample consent message, so it
+shows the form during testing; in production your own app ID needs a message **published** in the
+AdMob console.
+
+### Under age of consent
+
+Setting [`tag_for_under_age_of_consent`][flet_ads.ConsentRequestParameters.tag_for_under_age_of_consent]
+to `True` suppresses the consent form — users under the age of consent cannot be asked to
+consent. Leave it unset (or `False`) while testing the form.
+
 ## Example
 
 <CodeExample path={frontMatter.examples + '/banner_ad_and_interstitial_ad/main.py'} language="python" />

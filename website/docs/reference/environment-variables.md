@@ -9,19 +9,59 @@ Any other value will be interpreted as `False`.
 
 ### `FLET_APP_CONSOLE`
 
-The path to the application's console log file (`console.log`) in the temporary storage directory.
+The path to the application's console log file (`console.log`) in the cache storage directory
+([`FLET_APP_STORAGE_CACHE`](#flet_app_storage_cache)).
 
 Its value is set in production mode.
 
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
+:::
+
 ### `FLET_APP_STORAGE_DATA`
 
-A directory for the storage of persistent application data that is preserved between app updates.
-It is already pre-created and its location depends on the platform the app is running on.
+A directory for **durable** application data — databases, state, config — that is preserved between
+app updates, backed up by the OS, and never auto-deleted. It is pre-created, app-private, and its
+location depends on the platform (it maps to the platform's *application support* directory:
+`%APPDATA%\<company>\<product>\data` on Windows, `~/Library/Application Support/<bundle-id>/data` on
+macOS, `~/.local/share/<app-id>/data` on Linux, the app-sandboxed support dir on iOS/Android).
+
+In production this directory is also the Python program's **current working directory**, so relative
+file writes (e.g. `open("app.db", "w")`, `sqlite3.connect("app.db")`) land here. In `flet run` (dev
+mode) it is `<project>/.flet/storage/data`.
+
+:::info
+In a running Flet app, this maps to a `data` subdirectory of
+[`StoragePaths.get_application_support_directory()`][flet.StoragePaths.get_application_support_directory].
+:::
+
+### `FLET_APP_STORAGE_CACHE`
+
+A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
+platform "clear cache" action wipes it), so only store things you can rebuild. Pre-created and
+app-private; it maps to the platform's *caches* directory (`%LOCALAPPDATA%\<company>\<product>` on
+Windows, `~/Library/Caches/<bundle-id>` on macOS, `~/.cache/<app-id>` on Linux, the app cache dir on
+iOS/Android). In `flet run` it is `<project>/.flet/storage/cache`.
+
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory].
+:::
 
 ### `FLET_APP_STORAGE_TEMP`
 
-A directory for the storage of temporary application files, i.e. cache.
-It is already pre-created and its location depends on the platform the app is running on.
+A directory for **throwaway** temporary files — the OS temporary directory (`getTemporaryDirectory()`).
+It is the most volatile of the three and may be cleared between launches, so don't rely on its contents
+persisting. (On Android it resolves to the same directory as
+[`FLET_APP_STORAGE_CACHE`](#flet_app_storage_cache).) In `flet run` it is `<project>/.flet/storage/temp`,
+and Python's `tempfile` is pointed here too (via `TMPDIR`). Equivalent to Python's
+`tempfile.gettempdir()`.
+
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_temporary_directory()`][flet.StoragePaths.get_temporary_directory].
+:::
 
 ### `FLET_APP_USER_MODEL_ID`
 

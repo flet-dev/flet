@@ -318,7 +318,10 @@ class TextStyle:
 
     shadow: Optional[BoxShadowValue] = None
     """
-    TBD
+    A list of shadows painted underneath the text.
+
+    Multiple shadows can be used to simulate lighting from multiple sources. Shadow
+    order matters because different orders can produce different transparency results.
     """
 
     foreground: Optional[Paint] = None
@@ -411,7 +414,11 @@ class TextStyle:
 @value
 class StrutStyle:
     """
-    TBD
+    Defines the strut used for vertical text layout.
+
+    A strut sets the minimum line height relative to the baseline and applies to every
+    line in the paragraph. It is useful when text may vary in script or font metrics
+    but should still keep a predictable vertical rhythm.
     """
 
     size: Optional[Number] = None

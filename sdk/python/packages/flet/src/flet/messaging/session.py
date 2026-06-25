@@ -5,9 +5,8 @@ import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
-from flet.components.hooks.use_effect import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
@@ -24,6 +23,11 @@ from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils.object_model import patch_dataclass
 from flet.utils.strings import random_string
+
+if TYPE_CHECKING:
+    # Annotation-only (quoted at use site): deferred so a Session doesn't eagerly
+    # pull the components/hooks subsystem (cold-start import cost).
+    from flet.components.hooks.use_effect import EffectHook
 
 logger = logging.getLogger("flet")
 patch_logger = logging.getLogger("flet_object_patch")
@@ -631,7 +635,7 @@ class Session:
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
-    def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
+    def schedule_effect(self, hook: "EffectHook", is_cleanup: bool):
         """
         Queues an effect hook setup/cleanup operation for scheduler execution.
 

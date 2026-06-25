@@ -59,9 +59,9 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onOpen = widget.control.getBool("on_open", false)!;
-    bool onClose = widget.control.getBool("on_close", false)!;
-    bool onHover = widget.control.getBool("on_hover", false)!;
+    bool onOpen = widget.control.hasEventHandler("open");
+    bool onClose = widget.control.hasEventHandler("close");
+    bool onHover = widget.control.hasEventHandler("hover");
 
     var subMenuButton = SubmenuButton(
       focusNode: _focusNode,

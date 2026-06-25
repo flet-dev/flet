@@ -119,6 +119,12 @@ class CircleBorder(OutlinedBorder):
     """
 
     eccentricity: Number = 0.0
+    """
+    Defines how much the circle deforms to fit a rectangle.
+
+    `0.0` keeps the shape circular, touching at least two sides of the rectangle.
+    `1.0` fully deforms it into an oval touching all sides.
+    """
 
     def __post_init__(self):
         self._type = "circle"

@@ -170,7 +170,7 @@ When you run `flet build <target_platform>`, the pipeline is:
    The Flutter app embeds your packaged Python app in its assets and uses `flet` and
    [`serious_python`](https://pub.dev/packages/serious_python) to run the app and render the UI.
    The project is cached and reused across builds for rapid iterations;
-   use [`--clear-cache`](../cli/flet-build.md#--clear-cache) to force a rebuild.
+   run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory and force a rebuild.
 2. Copy custom [icons](#icons) and [splash images](#splash-screen) from `assets` into the
    Flutter project, then generate:
      - Icons for all platforms via [`flutter_launcher_icons`](https://pub.dev/packages/flutter_launcher_icons).
@@ -815,54 +815,103 @@ web = false
 
 ### Boot screen
 
-:::note[Platform support]
-[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
-[Android](android.md), and [iOS](ios.md) only.
-:::
+The boot screen fills the gap between the native [splash screen](#splash-screen)
+and your app's first frame — that is, while the Flutter app is up but your
+Flet/Python app is not ready yet. It is told which of two stages it is in:
 
-The boot screen is shown while the packaged app archive (`app.zip`) is extracted
-to the app data directory (typically on first launch or after the app bundle changes).
-It appears after the [splash screen](#splash-screen) and before the
-[startup screen](#startup-screen).
+1. **Preparing** — the packaged app archive (`app.zip`) is being extracted to the
+   app data directory (on first launch or after the app bundle changes). This
+   stage occurs on **Android only**.
+2. **Starting up** — the Python runtime and your app are starting, until the
+   first page is shown (all platforms). If startup fails, the error is shown on
+   the boot screen.
 
-It is not shown by default. Enable it, for example, when then extraction time is noticeable.
+A boot screen is **always rendered**, so this gap is a controlled background
+instead of a bare scaffold. By default the built-in `flet` boot screen shows
+nothing but a background color — no spinner and no message — until you configure
+it. You can also replace it entirely with your own widget
+(see [Custom boot screen](#custom-boot-screen)).
 
-#### Example
+#### Selecting a boot screen
 
-<Tabs groupId="pyproject-toml">
-<TabItem value="pyproject-toml" label="pyproject.toml">
-```toml
-[tool.flet.app.boot_screen]     # or [tool.flet.<PLATFORM>.app.boot_screen]
-show = true
-message = "Preparing the app for its first launch…"
-```
-</TabItem>
-</Tabs>
-
-### Startup screen
-
-:::note[Platform support]
-[Windows](windows.md), [macOS](macos.md), [Linux](linux.md),
-[Android](android.md), and [iOS](ios.md) only.
-:::
-
-The startup screen is shown while the Python runtime and your app are starting.
-On mobile targets this can include preparing packaged dependencies. It appears
-after the [boot screen](#boot-screen).
-
-It is not shown by default.
-
-#### Example
+A boot screen is addressed by `name`. The default is `flet` (the built-in
+screen); custom names are provided by [extensions](#custom-boot-screen).
 
 <Tabs groupId="pyproject-toml">
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
-[tool.flet.app.startup_screen]      # or [tool.flet.<PLATFORM>.app.startup_screen]
-show = true
-message = "Starting up the app…"
+[tool.flet.boot_screen]    # or [tool.flet.<PLATFORM>.boot_screen]
+name = "flet"
 ```
 </TabItem>
 </Tabs>
+
+Settings under `[tool.flet.<PLATFORM>.boot_screen]` override the global
+`[tool.flet.boot_screen]` per key.
+
+#### Built-in `flet` boot screen
+
+The built-in screen is configured under a table named after it. All options are
+optional:
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.boot_screen.flet]
+theme_mode = "auto"                       # auto (default), light, or dark
+bgcolor_light = "#ffffff"
+bgcolor_dark = "#000000"
+spinner_color_light = "blue"
+spinner_color_dark = "yellow"
+spinner_size = 30                         # 0 or absent → no spinner
+text_color_light = "#000000"
+text_color_dark = "#ffffff"
+prepare_message = "Preparing your app…"   # Android only; empty/absent → no message
+startup_message = "Starting up…"          # empty/absent → no message
+```
+</TabItem>
+</Tabs>
+
+| Option | Description |
+|--------|-------------|
+| `theme_mode` | Which color set to use: `auto` (follow the device), `light`, or `dark`. Defaults to `auto`. |
+| `bgcolor_light` / `bgcolor_dark` | Background color. When omitted, follows Flet's default theme background. |
+| `spinner_color_light` / `spinner_color_dark` | Spinner color. When omitted, follows Flet's default theme primary color. |
+| `spinner_size` | Spinner diameter in logical pixels. `0` or absent hides the spinner. |
+| `text_color_light` / `text_color_dark` | Message text color. When omitted, follows Flet's default theme on-surface color. |
+| `prepare_message` | Text shown during the **preparing** stage (Android only). Empty or absent shows no message. |
+| `startup_message` | Text shown during the **starting up** stage. Empty or absent shows no message. |
+| `fade_out_duration` | Fade-out duration in milliseconds when the app becomes ready. Defaults to `0` (removed instantly); set a value like `300` to fade out. |
+
+Colors accept the same formats as elsewhere in Flet (hex like `#ffffff` or named
+colors like `blue`).
+
+#### Custom boot screen
+
+To take full control of the boot screen — including custom layouts and
+animations — provide your own Flutter widget from a Flet extension and reference
+it by `name`. See
+[Boot screen](../extend/user-extensions.md#boot-screen) in the extension authoring
+guide for how to implement one.
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.boot_screen]
+name = "my_screen"
+
+[tool.flet.boot_screen.my_screen]
+# arbitrary options passed to your widget
+```
+</TabItem>
+</Tabs>
+
+:::note[Deprecated]
+The older `[tool.flet.app.boot_screen]` and `[tool.flet.app.startup_screen]`
+settings (with `show` / `message`) are deprecated. They are still honored — and
+mapped onto the built-in `flet` boot screen — but you should migrate to
+`[tool.flet.boot_screen]`.
+:::
 
 ### Hidden app window on startup
 
@@ -1081,9 +1130,15 @@ removes known junk files and any additional globs you specify.
       (implies `cleanup-packages`)
     * `cleanup-packages`: remove junk files from site-packages (defaults to `true`)
 
-By default, Flet does **not** compile your app files during packaging.
-This allows the build process to complete even if there are syntax errors,
-which can be useful for debugging or rapid iteration.
+By default, Flet **compiles** both your app and the installed packages to `.pyc`
+during packaging. Shipping bytecode avoids recompiling every module on each cold
+start — a significant startup win on mobile, where pure Python is imported from a
+stored zip and cannot cache bytecode back to disk.
+
+Pass `--no-compile-app` / `--no-compile-packages` (or set `[tool.flet.compile].app`
+/ `[tool.flet.compile].packages` to `false`) to disable it — for example to speed
+up iterative builds, or to keep `.py` source in the bundle so the build still
+completes with syntax errors present and tracebacks show source lines.
 
 #### Resolution order
 
@@ -1092,14 +1147,14 @@ The values of `compile-app` and `cleanup-app` are respectively determined in the
 1. [`--compile-app`](../cli/flet-build.md#--compile-app) / [`--cleanup-app`](../cli/flet-build.md#--cleanup-app)
 2. `[tool.flet.<PLATFORM>.compile].app` / `[tool.flet.<PLATFORM>.cleanup].app`
 3. `[tool.flet.compile].app` / `[tool.flet.cleanup].app`
-4. empty list / empty list
+4. `True` / empty list
 
 The values of `compile-packages` and `cleanup-packages` are respectively determined in the following order of precedence:
 
 1. [`--compile-packages`](../cli/flet-build.md#--compile-packages) / [`--cleanup-packages`](../cli/flet-build.md#--cleanup-packages)
 2. `[tool.flet.<PLATFORM>.compile].packages` / `[tool.flet.<PLATFORM>.cleanup].packages`
 3. `[tool.flet.compile].packages` / `[tool.flet.cleanup].packages`
-4. `False` / `True`
+4. `True` / `True`
 
 The values of `cleanup-app-files` and `cleanup-package-files` are respectively determined in the following order of precedence:
 
@@ -1191,8 +1246,8 @@ permissions = ["location", "microphone"]
 is downloaded as a zip artifact from the matching Flet GitHub Release. The version of the template
 used is determined by the installed Flet version.
 
-The cached project is refreshed when template inputs change or when you pass
-[`--clear-cache`](../cli/flet-build.md#--clear-cache).
+The cached project is refreshed when template inputs change or after you run
+[`flet clean`](../cli/flet-clean.md) to delete the `build` directory.
 
 #### Template Source
 
@@ -1614,6 +1669,6 @@ dependency is aligned with the same development version before building your app
     ```
 </TabItem>
 </Tabs>
-2. Rebuild the app with the build cache cleared (use [`--clear-cache`](../cli/flet-build.md#--clear-cache); or manually delete `build/flutter`)
+2. Rebuild the app with the build cache cleared (run [`flet clean`](../cli/flet-clean.md) to delete the `build` directory)
 
 To ensure reproducible builds (ex: in production or CI), prefer using a specific commit SHA, instead of a branch or tag ref.

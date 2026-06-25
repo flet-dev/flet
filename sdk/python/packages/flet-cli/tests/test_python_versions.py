@@ -18,22 +18,26 @@ _FIXTURE_MANIFEST = {
         "3.12": {
             "full_version": "3.12.13",
             "pyodide_version": "0.27.7",
+            "android_abis": ["arm64-v8a", "x86_64", "armeabi-v7a"],
             "prerelease": False,
         },
         "3.13": {
             "full_version": "3.13.14",
             "pyodide_version": "0.29.4",
+            "android_abis": ["arm64-v8a", "x86_64"],
             "prerelease": False,
         },
         "3.14": {
             "full_version": "3.14.6",
             "pyodide_version": "314.0.0",
+            "android_abis": ["arm64-v8a", "x86_64"],
             "prerelease": False,
         },
         # A pre-release line: opt-in only, never auto-resolved.
         "3.15": {
             "full_version": "3.15.0a1",
             "pyodide_version": "315.0.0",
+            "android_abis": ["arm64-v8a", "x86_64"],
             "prerelease": True,
         },
     },

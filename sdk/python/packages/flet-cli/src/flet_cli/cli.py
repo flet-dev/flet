@@ -4,6 +4,7 @@ import sys
 
 import flet.version
 import flet_cli.commands.build
+import flet_cli.commands.clean
 import flet_cli.commands.create
 import flet_cli.commands.debug
 import flet_cli.commands.devices
@@ -111,6 +112,7 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.create.Command.register_to(sp, "create")
     flet_cli.commands.run.Command.register_to(sp, "run")
     flet_cli.commands.build.Command.register_to(sp, "build")
+    flet_cli.commands.clean.Command.register_to(sp, "clean")
     flet_cli.commands.debug.Command.register_to(sp, "debug")
     flet_cli.commands.test.Command.register_to(sp, "test")
     flet_cli.commands.pack.Command.register_to(sp, "pack")

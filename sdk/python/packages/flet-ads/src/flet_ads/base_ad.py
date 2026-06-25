@@ -66,7 +66,8 @@ class BaseAd(ft.BaseControl):
     Called when this ad is clicked.
     """
 
-    def before_update(self):
+    def init(self):
+        super().init()
         if self.page.web or not self.page.platform.is_mobile():
             raise ft.FletUnsupportedPlatformException(
                 f"{self.__class__.__name__} is only supported on "

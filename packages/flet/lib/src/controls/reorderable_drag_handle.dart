@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
-import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import '../widgets/reorderable_item_scope.dart';
 
@@ -28,7 +27,7 @@ class ReorderableDragHandleControl extends StatelessWidget {
           "ReorderableDragHandle.content must be set and visible");
     }
 
-    var mouseCursor = parseMouseCursor(control.getString("mouse_cursor"));
+    var mouseCursor = control.getMouseCursor("mouse_cursor");
 
     if (mouseCursor != null) {
       content = MouseRegion(

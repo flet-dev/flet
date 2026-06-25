@@ -17,14 +17,8 @@ dependencies:
 
   flet:
     path: ../../../../../packages/flet
-  # PythonBridge (in-process dart_bridge FFI transport) ships on the
-  # serious-python `dart-bridge` branch. Swap back to a version pin
-  # (`serious_python: ^2.0.0`) once it's published to pub.dev.
-  serious_python:
-    git:
-      url: https://github.com/flet-dev/serious-python.git
-      ref: dart-bridge
-      path: src/serious_python
+
+  serious_python: 4.1.0
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket
@@ -44,31 +38,25 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
-  device_info_plus: 12.3.0 # remove that in May, 2026 once CI moved to macOS 26
-  connectivity_plus: 7.0.0 # remove that in May, 2026 once CI moved to macOS 26
-  screen_brightness: 2.1.7
-  # screen_brightness_macos 2.1.3 ("Fix: swift package manager warning") ships a
-  # Package.swift declaring macOS 10.11, below FlutterFramework's 10.15 floor,
-  # which breaks Swift Package Manager resolution. Pin the last good impl until
-  # upstream fixes it: https://github.com/aaassseee/screen_brightness/issues/99
-  screen_brightness_macos: 2.1.2
+  screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   flutter_native_splash: ^2.4.1
   flutter_lints: ^2.0.0
-# In test_mode, flet-cli injects flutter_test + flet_integration_test into
-# dev_dependencies after rendering (see build_base.create_flutter_project). They
-# are not declared here so this pubspec stays valid YAML for the release patch
-# tooling and so a normal `flet build` never pulls the test driver.
 
 flutter:
 
   uses-material-design: true
 
+# On native platforms the app ships unpacked inside the bundle (placed by
+# serious_python's platform build), so there is no app.zip Flutter asset. Only
+# the web (Pyodide) build still loads app/app.zip.
+#{% if cookiecutter.options.config_platform == "web" %}
   assets:
     - app/app.zip
     - app/app.zip.hash
+#{% endif %}
 
 # dart run flutter_launcher_icons
 flutter_launcher_icons:

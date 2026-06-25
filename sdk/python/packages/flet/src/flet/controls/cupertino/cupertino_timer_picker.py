@@ -121,7 +121,7 @@ class CupertinoTimerPicker(LayoutControl):
     """
     Called when the timer's duration changes.
 
-    The :attr:`~flet.Event.data` property of the event
+    The :attr:`flet.Event.data` property of the event
     handler contains the new duration value.
     Its type matches :attr:`value`: if `value` is a `Duration`,
     then `data` is also a `Duration`; otherwise, it is an `int` (seconds).

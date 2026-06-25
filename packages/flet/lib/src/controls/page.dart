@@ -37,7 +37,7 @@ import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/loading_page.dart';
+import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
@@ -285,8 +285,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             final pixelRatio = parseDouble(
                 args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
             final image = await boundary.toImage(pixelRatio: pixelRatio);
-            final data =
-                await image.toByteData(format: ui.ImageByteFormat.png);
+            final data = await image.toByteData(format: ui.ImageByteFormat.png);
             image.dispose();
             if (data == null) return frames;
             frames.add(data.buffer.asUint8List());
@@ -387,7 +386,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     final topView = views.last;
     final canPop = topView.getBool("can_pop", true) ?? true;
-    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    final requiresConfirm = topView.hasEventHandler("confirm_pop");
     if (!canPop || requiresConfirm) {
       return null;
     }
@@ -436,12 +435,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _attachKeyboardListenerIfNeeded() {
-    var onKeyboardEvent = widget.control.getBool("on_keyboard_event", false);
+    var onKeyboardEvent = widget.control.hasEventHandler("keyboard_event");
     if (onKeyboardEvent != _prevOnKeyboardEvent) {
-      if (onKeyboardEvent == true && !_keyboardHandlerSubscribed) {
+      if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.addHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = true;
-      } else if (onKeyboardEvent == false && _keyboardHandlerSubscribed) {
+      } else if (!onKeyboardEvent && _keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.removeHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = false;
       }
@@ -480,13 +479,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       return _buildApp(widget.control, null);
     } else {
       // multi-view mode
-      var appStatus = context
-          .select<FletBackend, ({bool isLoading, String error})>((backend) =>
-              (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-      var formattedErrorMessage =
-          backend.formatAppErrorMessage(appStatus.error);
-
       List<Widget> views = [];
       for (var view in _multiViews.entries) {
         var multiViewControl = widget.control
@@ -502,12 +494,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               ? ControlWidget(control: viewControl)
               : Stack(children: [
                   PageMedia(view: multiViewControl),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
+                  resolveBootScreen(
+                    name: backend.bootScreenName,
+                    options: backend.bootScreenOptions,
+                    extensions: backend.extensions,
+                    status: backend.bootStatus,
+                  ),
                 ]),
         );
 
@@ -664,13 +656,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     debugPrint("Page navigator build: ${widget.control.id}");
 
     var backend = FletBackend.of(context);
-    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-
-    var appStatus =
-        context.select<FletBackend, ({bool isLoading, String error})>(
-            (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
     final viewRouteValues = views
@@ -694,19 +679,15 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       pages.add(AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
-          child: showAppStartupScreen
-              ? Stack(children: [
-                  const PageMedia(),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
-                ])
-              : const Scaffold(
-                  body: PageMedia(),
-                )));
+          child: Stack(children: [
+            const PageMedia(),
+            resolveBootScreen(
+              name: backend.bootScreenName,
+              options: backend.bootScreenOptions,
+              extensions: backend.extensions,
+              status: backend.bootStatus,
+            ),
+          ])));
     } else {
       String viewRoutes = effectiveViews
           .map((v) => v.getString("route", v.id.toString()))

@@ -28,7 +28,7 @@ from flet_cli.utils.template_cache import get_cache_root
 # python-build release this flet pins. Keep in sync with serious_python's
 # `pythonReleaseDate` (lib/src/python_versions.dart) — both should track the
 # same python-build release.
-PYTHON_BUILD_RELEASE_DATE = "20260614"
+PYTHON_BUILD_RELEASE_DATE = "20260618"
 
 RELEASE_DATE_ENV = "FLET_PYTHON_BUILD_RELEASE_DATE"
 MANIFEST_PATH_ENV = "FLET_PYTHON_BUILD_MANIFEST"
@@ -43,6 +43,9 @@ class PythonRelease:
     short: str
     standalone: str
     pyodide: str
+    # Android ABIs python-build publishes distributions for this minor. 32-bit
+    # Android was dropped in 3.13 (PEP 738), so only 3.12 carries armeabi-v7a.
+    android_abis: tuple[str, ...]
     # When True, this release is supported via `--python-version` (and an
     # explicit `requires-python = "==X.Y.*"` specifier) but is not picked
     # automatically by the default or by open-ended `requires-python`
@@ -102,6 +105,7 @@ def _load_data() -> tuple[tuple[PythonRelease, ...], str]:
             short=short,
             standalone=info["full_version"],
             pyodide=info["pyodide_version"],
+            android_abis=tuple(info["android_abis"]),
             prerelease=bool(info.get("prerelease", False)),
         )
         for short, info in manifest["pythons"].items()

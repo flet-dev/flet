@@ -14,6 +14,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+from rich.progress import Progress
+
 import flet_desktop
 import flet_desktop.version
 from flet.utils import (
@@ -174,6 +176,19 @@ def __get_client_storage_dir():
     )
 
 
+def __download_with_progress(url, dest_path, description):
+    """Download a file to dest_path, showing a rich progress bar."""
+    with urllib.request.urlopen(url) as response, Progress(transient=True) as progress:
+        content_length = response.headers.get("Content-Length")
+        task = progress.add_task(
+            description, total=int(content_length) if content_length else None
+        )
+        with open(dest_path, "wb") as f:
+            while chunk := response.read(8192):
+                f.write(chunk)
+                progress.update(task, advance=len(chunk))
+
+
 def __download_flet_client(file_name):
     """
     Download a Flet client archive from GitHub Releases.
@@ -195,7 +210,7 @@ def __download_flet_client(file_name):
     logger.info(f"Downloading Flet v{ver} from {flet_url}")
     print(f"Preparing Flet v{ver} for the first use. This is a one-time operation...")
     temp_arch = Path(tempfile.gettempdir()).joinpath(f"{file_name}.{random_string(10)}")
-    urllib.request.urlretrieve(flet_url, str(temp_arch))
+    __download_with_progress(flet_url, str(temp_arch), f"Downloading Flet v{ver}...")
     return str(temp_arch)
 
 

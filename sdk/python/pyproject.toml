@@ -25,6 +25,7 @@ dependencies = [
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-spinkit",
     "flet-video",
     "flet-webview",
 ]
@@ -47,6 +48,7 @@ flet-map = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
+flet-spinkit = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
 flet-code-editor = { workspace = true }
