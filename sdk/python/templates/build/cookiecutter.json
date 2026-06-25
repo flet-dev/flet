@@ -32,5 +32,6 @@
     "pyodide_version": "",
     "options": null,
     "pyproject": null,
+    "boot_screen": null,
     "_extensions": ["cookiecutter_extensions.FletExtension"]
 }

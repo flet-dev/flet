@@ -339,22 +339,59 @@ module.exports = {
           "items": [
             {
               "type": "category",
+              "label": "v0.86.0",
+              "collapsed": true,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-app-files-unpacked-read-only-bundle",
+                  "label": "App files ship unpacked in a read-only bundle; storage dirs reworked"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-default-bundled-python-3-14",
+                  "label": "Default bundled Python version is now 3.14"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-compile-on-by-default",
+                  "label": "App and packages are compiled to .pyc by default"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-removed-pyodide-version-export",
+                  "label": "flet.version.pyodide_version and PYODIDE_VERSION removed"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-data-channel-protocol-upgrade",
+                  "label": "Flet protocol framing upgraded for DataChannel support"
+                },
+                {
+                  "type": "doc",
+                  "id": "updates/breaking-changes/v0-86-0-deprecated-clear-cache-flag",
+                  "label": "flet build --clear-cache flag deprecated"
+                }
+              ]
+            },
+            {
+              "type": "category",
               "label": "v0.85.0",
               "collapsed": true,
               "items": [
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/removed-spacing-border-helpers",
+                  "id": "updates/breaking-changes/v0-85-0-removed-spacing-border-helpers",
                   "label": "Deprecated spacing and border helper functions removed"
                 },
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/deprecated-drag-target-event-coordinates",
+                  "id": "updates/breaking-changes/v0-85-0-deprecated-drag-target-event-coordinates",
                   "label": "DragTargetEvent coordinate fields deprecated"
                 },
                 {
                   "type": "doc",
-                  "id": "updates/breaking-changes/deprecated-video-apis",
+                  "id": "updates/breaking-changes/v0-85-0-deprecated-video-apis",
                   "label": "Video control APIs deprecated"
                 }
               ]
@@ -904,6 +941,11 @@ module.exports = {
                 "type": "doc",
                 "id": "controls/dropdown/index"
               }
+            },
+            {
+              "type": "doc",
+              "id": "controls/dropdownm2",
+              "label": "DropdownM2"
             },
             {
               "type": "doc",
@@ -3958,6 +4000,14 @@ module.exports = {
                 },
                 {
                   "type": "doc",
+                  "id": "types/run"
+                },
+                {
+                  "type": "doc",
+                  "id": "types/run_async"
+                },
+                {
+                  "type": "doc",
                   "id": "types/usecallback"
                 },
                 {
@@ -4017,6 +4067,11 @@ module.exports = {
               "type": "doc",
               "id": "cli/flet-build",
               "label": "flet build"
+            },
+            {
+              "type": "doc",
+              "id": "cli/flet-clean",
+              "label": "flet clean"
             },
             {
               "type": "doc",

@@ -317,14 +317,6 @@ class IosRecorderConfiguration:
     Optional audio behaviors.
     """
 
-    manage_audio_session: bool = True
-    """
-    Whether to manage the shared AVAudioSession.
-
-    Set this to `False` if another plugin is
-    already managing the AVAudioSession.
-    """
-
 
 @ft.value
 class InputDevice:
