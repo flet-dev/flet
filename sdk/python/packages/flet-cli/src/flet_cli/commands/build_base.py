@@ -893,6 +893,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("project.name")
             or self.python_app_path.name
         )
+        # Under integration test, `flutter test -d <desktop>` launches the built
+        # binary by the project name (the Flutter pubspec `name`), but the
+        # Windows/Linux runner sets the executable's OUTPUT_NAME to artifact_name.
+        # When they differ (e.g. `artifact = "my-app"` vs project `my_app`) the
+        # test host can't find the binary. Pin them equal in test mode.
+        if getattr(self, "test_mode", False):
+            artifact_name = project_name
         product_name = (
             self.options.product_name
             or self.get_pyproject("tool.flet.product")
