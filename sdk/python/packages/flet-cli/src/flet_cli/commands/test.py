@@ -50,17 +50,23 @@ def _provision_steps(cmd: "BaseBuildCommand") -> Path:
 
 # Env vars set by `flet test` (and `provision_test_host`) for the pytest
 # subprocess. `flutter test integration_test` (spawned by FletTestApp) runs the
-# platform's native build, whose serious_python build phase bundles
-# site-packages into the app from SERIOUS_PYTHON_SITE_PACKAGES — without it the
-# embedded Python can't import its dependencies (e.g. ModuleNotFoundError:
-# certifi). `flet build`/`flet debug` set the same vars for their flutter build
-# (see build_base.py `_run_flutter_command`).
+# platform's native build, whose serious_python build phase bundles the staged
+# app + site-packages — without these vars the embedded Python can't import its
+# dependencies (e.g. ModuleNotFoundError: certifi) and, on Android, the
+# `packageApp` Gradle task no-ops so a stale `app.zip` (old-Python `main.pyc`)
+# survives in the APK (ImportError: bad magic number). `flet build`/`flet debug`
+# set the SAME serious_python vars for their flutter build via
+# `_serious_python_build_env` (build_base.py `_run_flutter_command`); we reuse it
+# here so the two paths can't drift.
 _TEST_ENV_KEYS = (
     "PATH",
     "FLET_TEST_DISABLE_FVM",
     "FLET_TEST_FLUTTER_EXE",
     "SERIOUS_PYTHON_VERSION",
     "SERIOUS_PYTHON_SITE_PACKAGES",
+    "SERIOUS_PYTHON_APP",
+    "SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES",
+    "SP_NATIVE_SET",
     "SERIOUS_PYTHON_FLUTTER_PACKAGES",
 )
 
@@ -81,13 +87,10 @@ def _flutter_path_env(cmd: "BaseBuildCommand") -> dict:
         # on Windows can't resolve a bare "flutter" (no PATHEXT lookup).
         env["FLET_TEST_FLUTTER_EXE"] = str(cmd.flutter_exe)
     env["FLET_TEST_DISABLE_FVM"] = "1"
-    if getattr(cmd, "python_release", None) is not None:
-        env["SERIOUS_PYTHON_VERSION"] = cmd.python_release.short
-    if (
-        getattr(cmd, "build_dir", None) is not None
-        and getattr(cmd, "package_platform", None) != "Emscripten"
-    ):
-        env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(cmd.build_dir / "site-packages")
+    # Same serious_python env `flet build` hands its native build, so the app
+    # `flutter test` builds is bundled identically (incl. SERIOUS_PYTHON_APP →
+    # a fresh app.zip with a matching-Python main.pyc).
+    env.update(cmd._serious_python_build_env())
     if getattr(cmd, "flutter_packages_temp_dir", None) is not None:
         env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(cmd.flutter_packages_temp_dir)
     return env

@@ -2479,6 +2479,60 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self._run_flutter_command()
 
+    def _serious_python_build_env(self) -> dict:
+        """
+        serious_python environment for the platform NATIVE build (the Gradle /
+        CMake / podspec steps run by `flutter build`).
+
+        These tell the native build where the `package` step staged the app and
+        site-packages and which embedded Python runtime to bundle. `flet build`
+        applies them via `_run_flutter_command`; `flet test` applies the SAME set
+        to the `flutter test` it spawns (see test.py `_flutter_path_env`) so both
+        bundle an identical app. In particular, without `SERIOUS_PYTHON_APP` the
+        Android `packageApp` Gradle task early-returns and a stale `app.zip` (e.g.
+        an old-Python `main.pyc`) survives in the APK — `ImportError: bad magic
+        number`. Built defensively so it is safe to call before the full build
+        pipeline has populated every attribute.
+        """
+
+        env: dict = {}
+        python_release = getattr(self, "python_release", None)
+        if python_release is not None:
+            # Only the short version is passed; serious_python derives the rest
+            # from its committed manifest snapshot.
+            env["SERIOUS_PYTHON_VERSION"] = python_release.short
+
+        build_dir = getattr(self, "build_dir", None)
+        package_platform = getattr(self, "package_platform", None)
+        if build_dir is not None and package_platform != "Emscripten":
+            env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(build_dir / "site-packages")
+            # app staging dir: read by the platform native build (CMake / podspec
+            # / Android Gradle) at `flutter build` time to place the unpacked app
+            # into the bundle.
+            env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
+
+        # Swift Package Manager (darwin): export the cache-bust key the package
+        # step computed so the plugin's Package.swift re-resolves when the staged
+        # native set changes (SwiftPM caches its graph on manifest text + env).
+        if (
+            build_dir is not None
+            and package_platform in ("iOS", "Darwin")
+            and self._darwin_spm_active()
+        ):
+            spm_key_file = build_dir / ".serious_python_spm_key"
+            if spm_key_file.exists():
+                env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
+
+        # Path-hungry packages to ship extracted to disk: consumed by the
+        # serious_python_android Gradle split during `flutter build`.
+        if package_platform == "Android" and getattr(
+            self, "android_extract_packages", None
+        ):
+            env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
+                self.android_extract_packages
+            )
+        return env
+
     def _run_flutter_command(self):
         """
         Build final Flutter CLI command, configure environment, and run it.
@@ -2500,36 +2554,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
         )
 
-        # Only the short version is passed; serious_python derives the rest
-        # from its committed manifest snapshot.
-        build_env = {
-            "SERIOUS_PYTHON_VERSION": self.python_release.short,
-        }
-
-        # site-packages variable
-        if self.package_platform != "Emscripten":
-            build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
-            # app staging dir: read by the platform native build (CMake /
-            # podspec / Android Gradle) at `flutter build` time to place the
-            # unpacked app into the bundle.
-            build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
-
-        # Swift Package Manager (darwin): export the cache-bust key the package
-        # step computed so the plugin's Package.swift re-resolves when the staged
-        # native set changes (SwiftPM caches its graph on manifest text + env).
-        if self._darwin_spm_active():
-            spm_key_file = self.build_dir / ".serious_python_spm_key"
-            if spm_key_file.exists():
-                build_env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
-
-        # Path-hungry packages to ship extracted to disk: consumed by the
-        # serious_python_android Gradle split during `flutter build`.
-        if self.package_platform == "Android" and self.android_extract_packages:
-            build_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
-                self.android_extract_packages
-            )
+        # serious_python env for the native build, shared verbatim with `flet
+        # test` (which spawns its own `flutter test`) so both bundle an identical
+        # app — see `_serious_python_build_env`.
+        build_env = self._serious_python_build_env()
 
         if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
             build_args.append("--wasm")
