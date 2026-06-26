@@ -186,7 +186,9 @@ jobs:
           echo "bundle: ${BUNDLE:-<not found>}"
           if [ -n "$BUNDLE" ]; then
             set +e
-            xvfb-run -a "$BUNDLE" 2>&1 | head -80
+            # The bundle is a GUI event-loop app that never exits on its own;
+            # cap it so this diagnostic can't hang the job.
+            timeout 25 xvfb-run -a "$BUNDLE" 2>&1 | head -80
             echo "bundle exit: ${PIPESTATUS[0]}"
             set -e
           fi
@@ -204,19 +206,21 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           working-directory: ${{ env.APP_DIR }}
-          # Don't stream logcat live (verbose device logs bog down the software
-          # emulator). Run the test, then dump the relevant slice of the logcat
-          # ring buffer afterwards (non-blocking `-d`) so on-device failures
-          # (embedded Python stdout/stderr, native crashes) are diagnosable.
+          # Capture only the embedded-Python + crash tags to a file (a tight
+          # filter that won't bog down the software emulator the way a verbose
+          # firehose does), then dump it after the run. `|| CODE=$?` guarantees
+          # the dump runs even when the test fails (the runner's script aborts
+          # on the first non-zero exit otherwise).
           script: |
             adb logcat -c || true
-            set +e
-            uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v
-            CODE=$?
-            set -e
-            echo "::group::adb logcat (device-side, post-run dump)"
-            adb logcat -d -v time \
-              flet.python:V python:V stdout:V stderr:V \
-              AndroidRuntime:E DEBUG:E libc:E '*:S' | tail -n 400 || true
+            adb logcat -v time \
+              flet.python:V python:V AndroidRuntime:E DEBUG:F libc:F '*:S' \
+              > /tmp/logcat.txt 2>&1 &
+            LCPID=$!
+            CODE=0
+            uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v || CODE=$?
+            kill "$LCPID" 2>/dev/null || true
+            echo "::group::device logcat (python + crashes)"
+            tail -n 300 /tmp/logcat.txt || true
             echo "::endgroup::"
             exit $CODE
