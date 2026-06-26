@@ -163,9 +163,15 @@ jobs:
         shell: bash
         working-directory: ${{ env.APP_DIR }}
         # Force Mesa software GL on Linux (xvfb has no GPU); harmless elsewhere.
+        # NO_AT_BRIDGE/GTK_A11Y disable the AT-SPI accessibility bridge: the
+        # integration_test binding turns on the semantics tree, which makes GTK
+        # try to embed an ATK socket onto an a11y bus that doesn't exist under
+        # xvfb (Atk-CRITICAL) — the app then aborts before Flet/Python start.
         env:
           LIBGL_ALWAYS_SOFTWARE: "true"
           GALLIUM_DRIVER: llvmpipe
+          NO_AT_BRIDGE: "1"
+          GTK_A11Y: none
         run: ${{ matrix.test_cmd }}
 
       # -------- Linux: on failure, surface the GL renderer + the bundle's own
@@ -206,21 +212,18 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           working-directory: ${{ env.APP_DIR }}
-          # Capture only the embedded-Python + crash tags to a file (a tight
-          # filter that won't bog down the software emulator the way a verbose
-          # firehose does), then dump it after the run. `|| CODE=$?` guarantees
-          # the dump runs even when the test fails (the runner's script aborts
-          # on the first non-zero exit otherwise).
+          # No background logcat (a streaming `adb logcat &` can keep the
+          # runner's script from finishing). Enlarge the ring buffer, run the
+          # test, then dump the relevant slice with non-blocking `adb logcat -d`
+          # (dumps + exits). `|| CODE=$?` guarantees the dump runs on failure
+          # (the runner aborts the script on the first non-zero exit otherwise).
           script: |
+            adb logcat -G 4M || true
             adb logcat -c || true
-            adb logcat -v time \
-              flet.python:V python:V AndroidRuntime:E DEBUG:F libc:F '*:S' \
-              > /tmp/logcat.txt 2>&1 &
-            LCPID=$!
             CODE=0
             uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v || CODE=$?
-            kill "$LCPID" 2>/dev/null || true
             echo "::group::device logcat (python + crashes)"
-            tail -n 300 /tmp/logcat.txt || true
+            adb logcat -d -v time \
+              flet.python:V python:V AndroidRuntime:E DEBUG:F libc:F '*:S' | tail -n 300 || true
             echo "::endgroup::"
             exit $CODE
