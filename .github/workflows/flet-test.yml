@@ -168,6 +168,30 @@ jobs:
           GALLIUM_DRIVER: llvmpipe
         run: ${{ matrix.test_cmd }}
 
+      # -------- Linux: on failure, surface the GL renderer + the bundle's own
+      # crash output (the test harness swallows the app's early exit-79). --------
+      - name: Diagnose Linux failure
+        if: failure() && matrix.platform == 'linux'
+        shell: bash
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "true"
+          GALLIUM_DRIVER: llvmpipe
+        run: |
+          echo "::group::glxinfo (is llvmpipe active?)"
+          xvfb-run -a glxinfo -B 2>&1 | head -30 || echo "glxinfo unavailable"
+          echo "::endgroup::"
+          echo "::group::Run built Linux bundle directly"
+          BUNDLE="$(find build/flutter/build/linux -type f -name flet_test_counter | head -1)"
+          echo "bundle: ${BUNDLE:-<not found>}"
+          if [ -n "$BUNDLE" ]; then
+            set +e
+            xvfb-run -a "$BUNDLE" 2>&1 | head -80
+            echo "bundle exit: ${PIPESTATUS[0]}"
+            set -e
+          fi
+          echo "::endgroup::"
+
       # -------- Run: Android (inside the emulator) --------
       - name: Run flet test (android)
         if: matrix.platform == 'android'
@@ -180,20 +204,19 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           working-directory: ${{ env.APP_DIR }}
-          # Capture device-side logs (embedded Python stdout/stderr, Flet, Flutter,
-          # crashes) so on-device failures are diagnosable from the CI log, then
-          # dump them after the run regardless of outcome.
+          # Don't stream logcat live (verbose device logs bog down the software
+          # emulator). Run the test, then dump the relevant slice of the logcat
+          # ring buffer afterwards (non-blocking `-d`) so on-device failures
+          # (embedded Python stdout/stderr, native crashes) are diagnosable.
           script: |
             adb logcat -c || true
-            adb logcat -v time flet.python:V flutter:V python:V DartVM:V \
-              ActivityManager:I AndroidRuntime:E libc:E DEBUG:E '*:S' > /tmp/logcat.txt 2>&1 &
-            LOGCAT_PID=$!
             set +e
             uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v
             CODE=$?
             set -e
-            kill "$LOGCAT_PID" 2>/dev/null || true
-            echo "::group::adb logcat (device-side)"
-            cat /tmp/logcat.txt || true
+            echo "::group::adb logcat (device-side, post-run dump)"
+            adb logcat -d -v time \
+              flet.python:V python:V stdout:V stderr:V \
+              AndroidRuntime:E DEBUG:E libc:E '*:S' | tail -n 400 || true
             echo "::endgroup::"
             exit $CODE
