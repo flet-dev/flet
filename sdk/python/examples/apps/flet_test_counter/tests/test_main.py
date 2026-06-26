@@ -1,27 +1,29 @@
 import asyncio
+import contextlib
+import time
 
 import flet.testing as ftt
 
 
-async def _find_text_when_ready(tester, text: str, attempts: int = 40):
+async def _find_text_when_ready(tester, text: str, timeout: float = 60.0):
     """
-    Pump-and-retry until a control with `text` appears.
+    Pump-and-retry (up to `timeout` seconds) until a control with `text` appears.
 
     On a device the app runs embedded Python over dart_bridge; its cold start
-    (interpreter init + `import flet` + running `main()`) can take several
-    seconds on a slow emulator, so the first python-driven frame may land after
-    the device driver's fixed warmup. `pump_and_settle` only settles Flutter
-    frames — it can't know a python -> dart round-trip is still in flight — so
-    poll rather than assert on the first frame.
+    (interpreter init + `import flet` + running `main()`) can take tens of
+    seconds on a slow CI emulator, so the first python-driven frame may land
+    well after the device driver's fixed warmup. `pump_and_settle` only settles
+    Flutter frames — it can't know a python -> dart round-trip is still in
+    flight — so poll rather than assert on the first frame.
     """
-    finder = await tester.find_by_text(text)
-    for _ in range(attempts):
-        if finder.count >= 1:
-            break
-        await asyncio.sleep(0.25)
-        await tester.pump_and_settle()
+    deadline = time.monotonic() + timeout
+    while True:
         finder = await tester.find_by_text(text)
-    return finder
+        if finder.count >= 1 or time.monotonic() >= deadline:
+            return finder
+        await asyncio.sleep(0.25)
+        with contextlib.suppress(TimeoutError):
+            await tester.pump_and_settle()
 
 
 async def test_counter(flet_app: ftt.FletTestApp):

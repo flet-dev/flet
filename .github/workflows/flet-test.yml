@@ -212,18 +212,22 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           working-directory: ${{ env.APP_DIR }}
-          # No background logcat (a streaming `adb logcat &` can keep the
-          # runner's script from finishing). Enlarge the ring buffer, run the
-          # test, then dump the relevant slice with non-blocking `adb logcat -d`
-          # (dumps + exits). `|| CODE=$?` guarantees the dump runs on failure
-          # (the runner aborts the script on the first non-zero exit otherwise).
-          script: |
-            adb logcat -G 4M || true
-            adb logcat -c || true
-            CODE=0
-            uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v || CODE=$?
-            echo "::group::device logcat (python + crashes)"
-            adb logcat -d -v time \
-              flet.python:V python:V AndroidRuntime:E DEBUG:F libc:F '*:S' | tail -n 300 || true
-            echo "::endgroup::"
-            exit $CODE
+          # Single folded line => one shell, so the test command is the last
+          # statement and ITS exit code is the job's (no false green). A trap
+          # writes a filtered device log (embedded Python + native crashes only,
+          # everything else silenced) to a file on exit — uploaded as an
+          # artifact below instead of flooding the console.
+          script: >-
+            adb logcat -G 16M || true ;
+            adb logcat -c || true ;
+            trap 'adb logcat -d -v time flet.python:V python:V AndroidRuntime:E DEBUG:F libc:F "*:S" > "$RUNNER_TEMP/android-logcat.txt" 2>&1 || true' EXIT ;
+            uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v
+
+      # Upload the device log as an artifact (don't stream it to the console).
+      - name: Upload android logcat
+        if: always() && matrix.platform == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-logcat
+          path: ${{ runner.temp }}/android-logcat.txt
+          if-no-files-found: ignore
