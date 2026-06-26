@@ -342,11 +342,13 @@ class FletTestApp:
         except (RuntimeError, TimeoutError) as e:
             print(f"Tester teardown failed: {e}")
 
+        flutter_returncode: Optional[int] = None
         if self.__flutter_process:
             print("\nWaiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
-                print("Flutter test process has exited.")
+                flutter_returncode = self.__flutter_process.returncode
+                print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
                 print("Flutter test process did not exit in time, terminating it...")
                 self.__flutter_process.terminate()
@@ -360,6 +362,16 @@ class FletTestApp:
         # Stop the RemoteTester socket server (device mode).
         if isinstance(self.__tester, RemoteTester):
             await self.__tester.stop()
+
+        # The host-side commands can all succeed while the on-device Flutter
+        # integration test itself fails (e.g. a widget exception fails the
+        # `testWidgets` body even though our find/tap assertions passed). Surface
+        # that as a test failure — otherwise the run is falsely green.
+        if flutter_returncode is not None and flutter_returncode != 0:
+            raise RuntimeError(
+                f"Flutter integration test process failed with exit code "
+                f"{flutter_returncode}. See the Flutter test output above."
+            )
 
     def resize_page(self, width: float, height: float):
         """

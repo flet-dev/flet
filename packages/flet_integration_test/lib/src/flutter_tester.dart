@@ -28,31 +28,9 @@ class FlutterWidgetTester implements Tester {
   Future<void> pumpAndSettle({Duration? duration}) async {
     await lock.acquire();
     try {
-      final step = duration ?? const Duration(milliseconds: 100);
-      if (_binding.framePolicy ==
-          LiveTestWidgetsFlutterBindingFramePolicy.benchmarkLive) {
-        // Device mode (see runFletDeviceTest). Under benchmarkLive `pump()` only
-        // delays — it does not force a frame — and an async Python round-trip
-        // (tap -> on_click -> control update over dart_bridge) lands a few frames
-        // later. The framework's pumpAndSettle would return as soon as nothing is
-        // scheduled, i.e. before the update arrives. Instead, pump with real
-        // wall-clock delays and require the tree to stay idle for several
-        // consecutive checks (so a just-arrived update is observed), capped by a
-        // timeout.
-        final deadline = DateTime.now().add(const Duration(seconds: 15));
-        var idle = 0;
-        while (DateTime.now().isBefore(deadline)) {
-          await _tester.runAsync(() => Future.delayed(step));
-          await _tester.pump();
-          if (_binding.hasScheduledFrame) {
-            idle = 0;
-          } else if (++idle >= 5) {
-            break;
-          }
-        }
-      } else {
-        await _tester.pumpAndSettle(step);
-      }
+      await _tester.pumpAndSettle(
+        duration ?? const Duration(milliseconds: 100),
+      );
     } finally {
       lock.release();
     }
