@@ -58,6 +58,7 @@ def _provision_steps(cmd: "BaseBuildCommand") -> Path:
 _TEST_ENV_KEYS = (
     "PATH",
     "FLET_TEST_DISABLE_FVM",
+    "FLET_TEST_FLUTTER_EXE",
     "SERIOUS_PYTHON_VERSION",
     "SERIOUS_PYTHON_SITE_PACKAGES",
     "SERIOUS_PYTHON_FLUTTER_PACKAGES",
@@ -75,6 +76,10 @@ def _flutter_path_env(cmd: "BaseBuildCommand") -> dict:
     if cmd.flutter_exe:
         flutter_bin = str(Path(cmd.flutter_exe).parent)
         env["PATH"] = os.pathsep.join([flutter_bin, env.get("PATH", "")])
+        # Hand the resolved Flutter executable (e.g. `flutter.bat` on Windows) to
+        # FletTestApp: it spawns `flutter test` with create_subprocess_exec, which
+        # on Windows can't resolve a bare "flutter" (no PATHEXT lookup).
+        env["FLET_TEST_FLUTTER_EXE"] = str(cmd.flutter_exe)
     env["FLET_TEST_DISABLE_FVM"] = "1"
     if getattr(cmd, "python_release", None) is not None:
         env["SERIOUS_PYTHON_VERSION"] = cmd.python_release.short

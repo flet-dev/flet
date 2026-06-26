@@ -266,7 +266,10 @@ class FletTestApp:
             stdout = None
             stderr = None
 
-        flutter_args = ["fvm", "flutter", "test", "integration_test"]
+        # The resolved Flutter executable (full path, `flutter.bat` on Windows)
+        # is passed by `flet test`; fall back to a bare "flutter" on PATH.
+        flutter_exe = os.getenv("FLET_TEST_FLUTTER_EXE", "flutter")
+        flutter_args = ["fvm", flutter_exe, "test", "integration_test"]
 
         if self.__disable_fvm:
             flutter_args.pop(0)
