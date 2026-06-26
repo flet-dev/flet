@@ -124,7 +124,10 @@ jobs:
         run: |
           sudo apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
-          sudo apt-get install -y --no-install-recommends $LINUX_DEPS xvfb
+          # xvfb has no GPU; the Flutter GTK app needs Mesa's software GL
+          # (llvmpipe) or it crashes on GL context creation (exit 79).
+          sudo apt-get install -y --no-install-recommends \
+            $LINUX_DEPS xvfb libgl1-mesa-dri mesa-utils
           sudo apt-get clean
 
       # -------- iOS: boot a simulator, capture its UDID --------
@@ -159,6 +162,10 @@ jobs:
         if: matrix.platform != 'android'
         shell: bash
         working-directory: ${{ env.APP_DIR }}
+        # Force Mesa software GL on Linux (xvfb has no GPU); harmless elsewhere.
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "true"
+          GALLIUM_DRIVER: llvmpipe
         run: ${{ matrix.test_cmd }}
 
       # -------- Run: Android (inside the emulator) --------
@@ -173,4 +180,20 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           working-directory: ${{ env.APP_DIR }}
-          script: uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v
+          # Capture device-side logs (embedded Python stdout/stderr, Flet, Flutter,
+          # crashes) so on-device failures are diagnosable from the CI log, then
+          # dump them after the run regardless of outcome.
+          script: |
+            adb logcat -c || true
+            adb logcat -v time flet.python:V flutter:V python:V DartVM:V \
+              ActivityManager:I AndroidRuntime:E libc:E DEBUG:E '*:S' > /tmp/logcat.txt 2>&1 &
+            LOGCAT_PID=$!
+            set +e
+            uv run flet test android -d emulator-5554 --python-version ${PYTHON_VERSION} --yes -v
+            CODE=$?
+            set -e
+            kill "$LOGCAT_PID" 2>/dev/null || true
+            echo "::group::adb logcat (device-side)"
+            cat /tmp/logcat.txt || true
+            echo "::endgroup::"
+            exit $CODE
