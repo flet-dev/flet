@@ -85,6 +85,13 @@ jobs:
             runner: ubuntu-latest
             test_cmd: xvfb-run -a uv run flet test linux --python-version ${PYTHON_VERSION} --yes -v
 
+          # arm64 Linux: no kuhnroyal/Flutter action (Flutter ships no prebuilt
+          # arm64 Linux SDK) — `flet test` installs Flutter itself via a git
+          # clone of the SDK, exercising flet-cli's arm64 Linux install path.
+          - platform: linux-arm64
+            runner: ubuntu-24.04-arm
+            test_cmd: xvfb-run -a uv run flet test linux --python-version ${PYTHON_VERSION} --yes -v
+
           - platform: android
             runner: ubuntu-latest
             # Run command lives in the emulator-runner step below.
@@ -107,7 +114,9 @@ jobs:
           source "${SCRIPTS}/common.sh"
           patch_python_package_versions
 
+      # arm64 Linux gets no prebuilt Flutter SDK — `flet test` installs it.
       - name: Setup Flutter
+        if: matrix.platform != 'linux-arm64'
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           path: '.fvmrc'
@@ -118,11 +127,11 @@ jobs:
         run: |
           uv --version
           uv run --project sdk/python/packages/flet-cli python --version
-          flutter --version
+          flutter --version || echo "Flutter not on PATH yet (flet test will install it)."
 
-      # -------- Linux: build deps + virtual display --------
+      # -------- Linux: build deps + virtual display (x64 and arm64) --------
       - name: Install Linux dependencies
-        if: matrix.platform == 'linux'
+        if: startsWith(matrix.platform, 'linux')
         shell: bash
         run: |
           sudo apt-get update --allow-releaseinfo-change
