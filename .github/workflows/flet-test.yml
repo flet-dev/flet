@@ -62,6 +62,9 @@ jobs:
   flet-test:
     name: ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
+    # Cap the job so a wedged emulator/simulator (which can hang the on-device
+    # test indefinitely) auto-cancels instead of burning a full runner slot.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
