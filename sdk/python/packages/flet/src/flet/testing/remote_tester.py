@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import contextlib
 import json
 from dataclasses import asdict, is_dataclass
 from typing import Any, Optional
@@ -123,9 +124,21 @@ class RemoteTester:
 
     async def stop(self):
         """Stops the TCP server and releases any bound resources."""
+        # Tear down the active client connection first. `_read_loop` blocks on
+        # `readexactly` until it sees EOF, and the on-device app's socket close
+        # does not always deliver that to us (observed on Linux), so without this
+        # `Server.wait_closed()` below would hang forever waiting for the still
+        # running `_handle_client`. Cancelling the read task lets `_handle_client`
+        # finish; the timeout is a final safety net.
+        if self._reader_task is not None and not self._reader_task.done():
+            self._reader_task.cancel()
+        if self._writer is not None:
+            with contextlib.suppress(Exception):
+                self._writer.close()
         if self._server is not None:
             self._server.close()
-            await self._server.wait_closed()
+            with contextlib.suppress(asyncio.TimeoutError):
+                await asyncio.wait_for(self._server.wait_closed(), timeout=5)
             self._server = None
 
     async def _ensure_connected(self):
