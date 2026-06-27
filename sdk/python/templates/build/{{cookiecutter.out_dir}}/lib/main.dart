@@ -290,7 +290,15 @@ Future prepareApp() async {
     _args.remove("--debug");
   }
 
-  await setupDesktop(hideWindowOnStart: hideWindowOnStart);
+  // Linux desktop integration tests run under xvfb; waiting for the native
+  // ready-to-show callback can keep WidgetTester from reaching the remote
+  // tester connection.
+  await setupDesktop(
+    hideWindowOnStart: hideWindowOnStart,
+    waitUntilReadyToShow:
+        !(const bool.fromEnvironment("FLET_TEST") &&
+            defaultTargetPlatform == TargetPlatform.linux),
+  );
 
   if (kIsWeb) {
     // web mode - connect via HTTP
@@ -391,4 +399,3 @@ Future<String?> runPythonApp(List<String> args) async {
     args: args,
   );
 }
-
