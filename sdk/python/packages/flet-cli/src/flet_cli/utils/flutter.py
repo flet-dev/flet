@@ -78,9 +78,12 @@ def install_flutter(version, log, progress: Optional[Progress] = None):
     if not os.path.exists(install_dir):
         if is_arm64_linux():
             # Flutter publishes no prebuilt arm64 Linux SDK (its releases are
-            # x64-only), so clone the SDK at the version tag; the first `flutter`
-            # invocation then downloads the arch-appropriate engine/Dart SDK into
-            # its own cache. This mirrors how `fvm`/git-based installs work.
+            # x64-only), so clone the SDK at the version tag, then precache its
+            # engine artifacts. The prebuilt archives ship these under
+            # `bin/cache` (incl. the `sky_engine` package that `dart run` /
+            # `flutter build` resolve); a bare clone does not, so without the
+            # precache pub solving fails with "could not find package sky_engine".
+            # The downloaded artifacts are arch-appropriate (mirrors fvm/git).
             os.makedirs(os.path.dirname(install_dir), exist_ok=True)
             log(f"Cloning Flutter {version} for arm64 Linux from {FLUTTER_GIT_URL}...")
             subprocess.run(
@@ -88,6 +91,9 @@ def install_flutter(version, log, progress: Optional[Progress] = None):
                 + [FLUTTER_GIT_URL, install_dir],
                 check=True,
             )
+            log(f"Precaching Flutter {version} engine artifacts...")
+            flutter_exe = os.path.join(install_dir, "bin", "flutter")
+            subprocess.run([flutter_exe, "precache", "--linux"], check=True)
         else:
             url = get_flutter_url(version)
             archive_name = os.path.basename(url)
