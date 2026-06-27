@@ -202,6 +202,31 @@ jobs:
             set -e
           fi
           echo "::endgroup::"
+          # Re-run the integration test directly with --verbose to see why the
+          # x86_64 runner reports "No tests were found" (which build target /
+          # entrypoint it uses, whether the testWidgets body actually runs, and
+          # the exit reason). Use an unreachable server so the test body starts
+          # but doesn't block; full log is uploaded as an artifact.
+          echo "::group::flutter test integration_test/app_test.dart --verbose"
+          set +e
+          ( cd build/flutter && timeout 180 xvfb-run -a flutter test integration_test/app_test.dart \
+              -d linux --verbose \
+              --dart-define=FLET_TEST=true \
+              --dart-define=FLET_TEST_SERVER_URL=tcp://127.0.0.1:59999 \
+              > "$RUNNER_TEMP/linux-flutter-verbose.txt" 2>&1 )
+          echo "verbose run exit: $?"
+          grep -inE "Building|target=|\.dart_tool|main\.dart|app_test|FLUTTER_TARGET|dart_entrypoint|No tests were found|tests? passed|end-to-end|Connecting to remote tester|BEFORE|isolate|exited|No devices|loadDuration|^Skip|Compiling|frontend" \
+            "$RUNNER_TEMP/linux-flutter-verbose.txt" | head -70
+          set -e
+          echo "::endgroup::"
+
+      - name: Upload Linux verbose log
+        if: failure() && matrix.platform == 'linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-flutter-verbose
+          path: ${{ runner.temp }}/linux-flutter-verbose.txt
+          if-no-files-found: ignore
 
       # -------- Run: Android (inside the emulator) --------
       - name: Run flet test (android)
