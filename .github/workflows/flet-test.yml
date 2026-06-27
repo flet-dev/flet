@@ -130,7 +130,7 @@ jobs:
           # xvfb has no GPU; the Flutter GTK app needs Mesa's software GL
           # (llvmpipe) or it crashes on GL context creation (exit 79).
           sudo apt-get install -y --no-install-recommends \
-            $LINUX_DEPS xvfb libgl1-mesa-dri mesa-utils
+            $LINUX_DEPS xvfb libgl1-mesa-dri
           sudo apt-get clean
 
       # -------- iOS: boot a simulator, capture its UDID --------
@@ -166,15 +166,9 @@ jobs:
         shell: bash
         working-directory: ${{ env.APP_DIR }}
         # Force Mesa software GL on Linux (xvfb has no GPU); harmless elsewhere.
-        # NO_AT_BRIDGE/GTK_A11Y disable the AT-SPI accessibility bridge: the
-        # integration_test binding turns on the semantics tree, which makes GTK
-        # try to embed an ATK socket onto an a11y bus that doesn't exist under
-        # xvfb (Atk-CRITICAL) — the app then aborts before Flet/Python start.
         env:
           LIBGL_ALWAYS_SOFTWARE: "true"
           GALLIUM_DRIVER: llvmpipe
-          NO_AT_BRIDGE: "1"
-          GTK_A11Y: none
         run: ${{ matrix.test_cmd }}
 
       # -------- Run: Android (inside the emulator) --------
