@@ -19,18 +19,15 @@ Future setupDesktop({
     debugPrint("hideWindowOnStart: $hideWindowOnStart");
     debugPrint("hideWindowOnStartEnv: $hideWindowOnStartEnv");
 
-    Future<void> showWindow() async {
+    if (!waitUntilReadyToShow) {
+      return;
+    }
+
+    await windowManager.waitUntilReadyToShow(null, () async {
       if (hideWindowOnStartEnv == null && !hideWindowOnStart) {
         await windowManager.show();
         await windowManager.focus();
       }
-    }
-
-    if (!waitUntilReadyToShow) {
-      await showWindow();
-      return;
-    }
-
-    await windowManager.waitUntilReadyToShow(null, showWindow);
+    });
   }
 }

@@ -1,4 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -20,6 +22,11 @@ void runFletDeviceTest({required void Function(List<String>) appMain}) {
       const serverUrl = String.fromEnvironment("FLET_TEST_SERVER_URL");
       if (serverUrl.isEmpty) {
         throw Exception("FLET_TEST_SERVER_URL dart-define is required.");
+      }
+
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux) {
+        await binding.setSurfaceSize(const Size(1280, 720));
+        addTearDown(() => binding.setSurfaceSize(null));
       }
 
       // Launch the on-device app (no args => production/dart_bridge mode) and
