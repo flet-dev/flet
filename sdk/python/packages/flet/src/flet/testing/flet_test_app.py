@@ -269,7 +269,7 @@ class FletTestApp:
         # The resolved Flutter executable (full path, `flutter.bat` on Windows)
         # is passed by `flet test`; fall back to a bare "flutter" on PATH.
         flutter_exe = os.getenv("FLET_TEST_FLUTTER_EXE", "flutter")
-        flutter_args = ["fvm", flutter_exe, "test", "integration_test"]
+        flutter_args = ["fvm", flutter_exe, "test", self.__flutter_test_target()]
 
         if self.__disable_fvm:
             flutter_args.pop(0)
@@ -335,6 +335,24 @@ class FletTestApp:
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+
+    def __flutter_test_target(self) -> str:
+        if not self.__device_mode:
+            return "integration_test"
+
+        app_test_path = (
+            Path(self.__flutter_app_dir) / "integration_test" / "app_test.dart"
+        )
+        if app_test_path.is_file():
+            if not app_test_path.read_text(encoding="utf-8").strip():
+                raise RuntimeError(
+                    f"Flutter integration test driver is empty: {app_test_path}"
+                )
+            return str(Path("integration_test") / "app_test.dart")
+
+        raise RuntimeError(
+            f"Flutter integration test driver was not generated: {app_test_path}"
+        )
 
     async def teardown(self):
         """
