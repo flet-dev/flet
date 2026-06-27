@@ -1,20 +1,17 @@
-from pathlib import Path
-
 import pytest
 
 from flet.testing.flet_test_app import FletTestApp
 
 
-def test_flutter_test_target_uses_generated_app_test(tmp_path):
+def test_flutter_test_target_validates_generated_app_test_in_device_mode(tmp_path):
     app_test = tmp_path / "integration_test" / "app_test.dart"
     app_test.parent.mkdir()
     app_test.write_text("void main() {}\n", encoding="utf-8")
 
     flet_app = FletTestApp(flutter_app_dir=tmp_path, device_mode=True)
 
-    assert flet_app._FletTestApp__flutter_test_target() == str(
-        Path("integration_test") / "app_test.dart"
-    )
+    # The directory target is used; the generated driver is only validated.
+    assert flet_app._FletTestApp__flutter_test_target() == "integration_test"
 
 
 def test_flutter_test_target_requires_generated_app_test_in_device_mode(tmp_path):

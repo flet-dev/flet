@@ -337,22 +337,25 @@ class FletTestApp:
                 )
 
     def __flutter_test_target(self) -> str:
-        if not self.__device_mode:
-            return "integration_test"
-
-        app_test_path = (
-            Path(self.__flutter_app_dir) / "integration_test" / "app_test.dart"
-        )
-        if app_test_path.is_file():
+        # In device mode the driver (`integration_test/app_test.dart`) is
+        # generated from the template; validate it exists and is non-empty so a
+        # missing/empty driver surfaces as a clear error instead of a confusing
+        # "No tests were found" from `flutter test`. The directory target is
+        # used either way.
+        if self.__device_mode:
+            app_test_path = (
+                Path(self.__flutter_app_dir) / "integration_test" / "app_test.dart"
+            )
+            if not app_test_path.is_file():
+                raise RuntimeError(
+                    f"Flutter integration test driver was not generated: "
+                    f"{app_test_path}"
+                )
             if not app_test_path.read_text(encoding="utf-8").strip():
                 raise RuntimeError(
                     f"Flutter integration test driver is empty: {app_test_path}"
                 )
-            return str(Path("integration_test") / "app_test.dart")
-
-        raise RuntimeError(
-            f"Flutter integration test driver was not generated: {app_test_path}"
-        )
+        return "integration_test"
 
     async def teardown(self):
         """
