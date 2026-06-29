@@ -28,11 +28,6 @@ on:
       - 'sdk/python/packages/flet-cli/**'
       - 'sdk/python/examples/apps/flet_test_counter/**'
   workflow_dispatch:
-    inputs:
-      python_version:
-        description: "Python version to bundle into the test app."
-        type: string
-        default: "3.14"
 
 # Ensure only one run per branch (PR or push), cancel older ones
 concurrency:
@@ -46,8 +41,8 @@ env:
   APP_DIR: "sdk/python/examples/apps/flet_test_counter"
 
   # Host venv (runs flet-cli + pytest). The *embedded* app runtime is built
-  # against PYTHON_VERSION (3.14) via `--python-version`; the host stays on 3.13
-  # for stable test-dependency wheels (numpy/pillow/scikit-image).
+  # against the matrix python version via `--python-version`; the host stays on
+  # 3.13 for stable test-dependency wheels (numpy/pillow/scikit-image).
   UV_PYTHON: "3.13"
   PYTHONUTF8: 1
 
@@ -56,18 +51,23 @@ env:
   # Use the Flutter the setup action puts on PATH, not fvm.
   FLET_TEST_DISABLE_FVM: 1
 
-  PYTHON_VERSION: ${{ github.event.inputs.python_version || '3.14' }}
-
 jobs:
   flet-test:
-    name: ${{ matrix.platform }}
+    name: ${{ matrix.platform }} (py${{ matrix.python_version }})
     runs-on: ${{ matrix.runner }}
+    # The embedded runtime is built against the matrix python version; the test
+    # also asserts the running app reports it (EXPECTED_PYTHON_VERSION).
+    env:
+      PYTHON_VERSION: ${{ matrix.python_version }}
+      EXPECTED_PYTHON_VERSION: ${{ matrix.python_version }}
     # Cap the job so a wedged emulator/simulator (which can hang the on-device
     # test indefinitely) auto-cancels instead of burning a full runner slot.
     timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
+        python_version: ["3.12", "3.13", "3.14"]
+        platform: [macos, ios, windows, linux, linux-arm64, android]
         include:
           - platform: macos
             runner: macos-26
