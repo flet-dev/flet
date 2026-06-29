@@ -44,8 +44,3 @@ flet = "../../../packages/flet"
 # Dart flet = in-repo source (relative to the provisioned build/flutter dir).
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { path = "../../../../../../../packages/flet" }
-# TEMPORARY: pull serious_python from the x86_64 _sysconfigdata fix branch
-# (flet-dev/serious-python#218) so the android x86_64 CI leg validates it.
-# Revert to the pub.dev release once that PR ships.
-serious_python_android = { git = { url = "https://github.com/flet-dev/serious-python.git", ref = "fix/android-x86_64-sysconfigdata", path = "src/serious_python_android" } }
-serious_python_platform_interface = { git = { url = "https://github.com/flet-dev/serious-python.git", ref = "fix/android-x86_64-sysconfigdata", path = "src/serious_python_platform_interface" } }
