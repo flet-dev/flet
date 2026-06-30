@@ -14,6 +14,7 @@ import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
 import flet_cli.commands.serve
+import flet_cli.commands.test
 from flet_cli.utils.linux_deps import linux_dependencies
 
 
@@ -113,6 +114,7 @@ def get_parser() -> argparse.ArgumentParser:
     flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.clean.Command.register_to(sp, "clean")
     flet_cli.commands.debug.Command.register_to(sp, "debug")
+    flet_cli.commands.test.Command.register_to(sp, "test")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
     flet_cli.commands.serve.Command.register_to(sp, "serve")

@@ -56,6 +56,35 @@ void main(List<String> args) async {
     ext.ensureInitialized();
   }
 
+  if (const bool.fromEnvironment("FLET_TEST")) {
+    // Under integration test (`flet test`), `BootHost` (a StatefulWidget whose
+    // initState awaits prepareApp() then setState()s) deadlocks the
+    // WidgetTester: `tester.pump()` blocks waiting for a frame that never
+    // arrives during this boot. Use the simpler FutureBuilder boot path (no
+    // animated boot-screen overlay), which the tester drives cleanly. The app
+    // itself — embedded Python over dart_bridge, FletApp — is identical.
+    runApp(FutureBuilder(
+      future: prepareApp(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
+        }
+        if (kIsWeb || (isDesktopPlatform() && _args.isNotEmpty)) {
+          return FletApp(
+            pageUrl: pageUrl,
+            assetsDir: assetsDir,
+            bootScreenName: bootScreenName,
+            bootScreenOptions: bootScreenOptions,
+            bootStatus: _bootStatus,
+            extensions: extensions,
+          );
+        }
+        return _ProdApp(args: args);
+      },
+    ));
+    return;
+  }
+
   runApp(BootHost(args: args));
 }
 
@@ -261,7 +290,15 @@ Future prepareApp() async {
     _args.remove("--debug");
   }
 
-  await setupDesktop(hideWindowOnStart: hideWindowOnStart);
+  // Linux desktop integration tests run under xvfb; waiting for the native
+  // ready-to-show callback can keep WidgetTester from reaching the remote
+  // tester connection.
+  await setupDesktop(
+    hideWindowOnStart: hideWindowOnStart,
+    waitUntilReadyToShow:
+        !(const bool.fromEnvironment("FLET_TEST") &&
+            defaultTargetPlatform == TargetPlatform.linux),
+  );
 
   if (kIsWeb) {
     // web mode - connect via HTTP
@@ -362,4 +399,3 @@ Future<String?> runPythonApp(List<String> args) async {
     args: args,
   );
 }
-

@@ -32,9 +32,22 @@ desktop = [
     "flet-desktop",
 ]
 web = ["flet-web"]
+# Dependencies needed to run integration tests written with `flet.testing`
+# (the `flet test` command / the pytest plugin). Pillow/numpy/scikit-image
+# back screenshot and GIF comparison.
+test = [
+    "pytest >=7.2.0",
+    "pytest-asyncio >=1.1.0",
+    "numpy >=2.2.0",
+    "pillow >=10.3.0",
+    "scikit-image >=0.25.2",
+]
 
 [project.scripts]
 flet = "flet.cli:main"
+
+[project.entry-points.pytest11]
+flet = "flet.pytest_plugin"
 
 [dependency-groups]
 extensions = [

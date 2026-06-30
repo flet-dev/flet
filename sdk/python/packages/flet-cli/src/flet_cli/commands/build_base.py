@@ -893,6 +893,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("project.name")
             or self.python_app_path.name
         )
+        # Under integration test, `flutter test -d <desktop>` launches the built
+        # binary by the project name (the Flutter pubspec `name`), but the
+        # Windows/Linux runner sets the executable's OUTPUT_NAME to artifact_name.
+        # When they differ (e.g. `artifact = "my-app"` vs project `my_app`) the
+        # test host can't find the binary. Pin them equal in test mode.
+        if getattr(self, "test_mode", False):
+            artifact_name = project_name
         product_name = (
             self.options.product_name
             or self.get_pyproject("tool.flet.product")
@@ -1260,6 +1267,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.target_platform in ["ipa"]
             and not ios_provisioning_profile
             and not self.debug_platform
+            and not getattr(self, "test_mode", False)
         ):
             console.print(
                 Panel(
@@ -1306,6 +1314,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
             "split_per_abi": split_per_abi,
+            # Enabled by `flet test` to scaffold integration-test wiring
+            # (integration_test/ + flutter_test dev deps). Default False so
+            # normal `flet build`/`flet debug` output is unaffected.
+            "test_mode": getattr(self, "test_mode", False),
             "project_name": project_name,
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
@@ -1537,6 +1549,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.cleanup(1, f"{e}")
 
             # For local development, override flet dependency with path
+            repo_root = None
+            pubspec = None
             if is_local_dev:
                 repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
                 if repo_root:
@@ -1546,7 +1560,36 @@ class BaseBuildCommand(BaseFlutterCommand):
                     pubspec.setdefault("dependency_overrides", {})["flet"] = {
                         "path": flet_pkg_path
                     }
-                    self.save_yaml(self.pubspec_path, pubspec)
+
+            # In test mode, inject the integration-test driver (and flutter_test)
+            # as dev dependencies. They are intentionally NOT in the template
+            # pubspec: that keeps it valid YAML for the release patch tooling and
+            # ensures a normal `flet build` never pulls them. flet_integration_test
+            # is publish_to:none, so for local dev it resolves to the in-repo
+            # package by path, and for an end user it is a git dependency pinned to
+            # this flet version's tag.
+            if getattr(self, "test_mode", False):
+                if pubspec is None:
+                    pubspec = self.load_yaml(self.pubspec_path)
+                dev_deps = pubspec.setdefault("dev_dependencies", {})
+                dev_deps["flutter_test"] = {"sdk": "flutter"}
+                if is_local_dev and repo_root:
+                    fit_pkg_path = str(repo_root / "packages" / "flet_integration_test")
+                    dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
+                    pubspec.setdefault("dependency_overrides", {})[
+                        "flet_integration_test"
+                    ] = {"path": fit_pkg_path}
+                else:
+                    dev_deps["flet_integration_test"] = {
+                        "git": {
+                            "url": "https://github.com/flet-dev/flet.git",
+                            "ref": f"v{flet.version.flet_version}",
+                            "path": "packages/flet_integration_test",
+                        }
+                    }
+
+            if pubspec is not None:
+                self.save_yaml(self.pubspec_path, pubspec)
 
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 
@@ -2436,6 +2479,60 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self._run_flutter_command()
 
+    def _serious_python_build_env(self) -> dict:
+        """
+        serious_python environment for the platform NATIVE build (the Gradle /
+        CMake / podspec steps run by `flutter build`).
+
+        These tell the native build where the `package` step staged the app and
+        site-packages and which embedded Python runtime to bundle. `flet build`
+        applies them via `_run_flutter_command`; `flet test` applies the SAME set
+        to the `flutter test` it spawns (see test.py `_flutter_path_env`) so both
+        bundle an identical app. In particular, without `SERIOUS_PYTHON_APP` the
+        Android `packageApp` Gradle task early-returns and a stale `app.zip` (e.g.
+        an old-Python `main.pyc`) survives in the APK — `ImportError: bad magic
+        number`. Built defensively so it is safe to call before the full build
+        pipeline has populated every attribute.
+        """
+
+        env: dict = {}
+        python_release = getattr(self, "python_release", None)
+        if python_release is not None:
+            # Only the short version is passed; serious_python derives the rest
+            # from its committed manifest snapshot.
+            env["SERIOUS_PYTHON_VERSION"] = python_release.short
+
+        build_dir = getattr(self, "build_dir", None)
+        package_platform = getattr(self, "package_platform", None)
+        if build_dir is not None and package_platform != "Emscripten":
+            env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(build_dir / "site-packages")
+            # app staging dir: read by the platform native build (CMake / podspec
+            # / Android Gradle) at `flutter build` time to place the unpacked app
+            # into the bundle.
+            env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
+
+        # Swift Package Manager (darwin): export the cache-bust key the package
+        # step computed so the plugin's Package.swift re-resolves when the staged
+        # native set changes (SwiftPM caches its graph on manifest text + env).
+        if (
+            build_dir is not None
+            and package_platform in ("iOS", "Darwin")
+            and self._darwin_spm_active()
+        ):
+            spm_key_file = build_dir / ".serious_python_spm_key"
+            if spm_key_file.exists():
+                env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
+
+        # Path-hungry packages to ship extracted to disk: consumed by the
+        # serious_python_android Gradle split during `flutter build`.
+        if package_platform == "Android" and getattr(
+            self, "android_extract_packages", None
+        ):
+            env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
+                self.android_extract_packages
+            )
+        return env
+
     def _run_flutter_command(self):
         """
         Build final Flutter CLI command, configure environment, and run it.
@@ -2457,36 +2554,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
         )
 
-        # Only the short version is passed; serious_python derives the rest
-        # from its committed manifest snapshot.
-        build_env = {
-            "SERIOUS_PYTHON_VERSION": self.python_release.short,
-        }
-
-        # site-packages variable
-        if self.package_platform != "Emscripten":
-            build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
-            # app staging dir: read by the platform native build (CMake /
-            # podspec / Android Gradle) at `flutter build` time to place the
-            # unpacked app into the bundle.
-            build_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
-
-        # Swift Package Manager (darwin): export the cache-bust key the package
-        # step computed so the plugin's Package.swift re-resolves when the staged
-        # native set changes (SwiftPM caches its graph on manifest text + env).
-        if self._darwin_spm_active():
-            spm_key_file = self.build_dir / ".serious_python_spm_key"
-            if spm_key_file.exists():
-                build_env["SP_NATIVE_SET"] = spm_key_file.read_text().strip()
-
-        # Path-hungry packages to ship extracted to disk: consumed by the
-        # serious_python_android Gradle split during `flutter build`.
-        if self.package_platform == "Android" and self.android_extract_packages:
-            build_env["SERIOUS_PYTHON_ANDROID_EXTRACT_PACKAGES"] = ",".join(
-                self.android_extract_packages
-            )
+        # serious_python env for the native build, shared verbatim with `flet
+        # test` (which spawns its own `flutter test`) so both bundle an identical
+        # app — see `_serious_python_build_env`.
+        build_env = self._serious_python_build_env()
 
         if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
             build_args.append("--wasm")

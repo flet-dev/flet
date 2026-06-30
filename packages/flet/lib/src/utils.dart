@@ -6,7 +6,10 @@ import 'package:window_manager/window_manager.dart';
 
 import 'utils/platform.dart';
 
-Future setupDesktop({bool hideWindowOnStart = false}) async {
+Future setupDesktop({
+  bool hideWindowOnStart = false,
+  bool waitUntilReadyToShow = true,
+}) async {
   if (isDesktopPlatform()) {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
@@ -15,6 +18,10 @@ Future setupDesktop({bool hideWindowOnStart = false}) async {
     var hideWindowOnStartEnv = env["FLET_HIDE_WINDOW_ON_START"];
     debugPrint("hideWindowOnStart: $hideWindowOnStart");
     debugPrint("hideWindowOnStartEnv: $hideWindowOnStartEnv");
+
+    if (!waitUntilReadyToShow) {
+      return;
+    }
 
     await windowManager.waitUntilReadyToShow(null, () async {
       if (hideWindowOnStartEnv == null && !hideWindowOnStart) {

@@ -6,6 +6,7 @@ docs:
   - getting-started/installation.md
   - getting-started/create-flet-app.md
   - getting-started/running-app.md
+  - getting-started/integration-testing.md
   - getting-started/testing-on-mobile.md
   Tutorials:
   - Calculator: tutorials/calculator.md
@@ -379,6 +380,11 @@ docs:
           GitHubOAuthProvider: types/auth/githuboauthprovider.md
           GoogleOAuthProvider: types/auth/googleoauthprovider.md
       - types/auth/user.md
+      Testing:
+      - types/testing/flettestapp.md
+      - types/testing/tester.md
+      - types/testing/finder.md
+      - types/testing/disposalmode.md
       Base Controls:
       - controls/adaptivecontrol.md
       - controls/basecontrol.md
@@ -494,9 +500,7 @@ docs:
       - types/duration.md
       - types/filepickerfile.md
       - types/filepickeruploadfile.md
-      - types/finder.md
       - types/flip.md
-      - types/flettestapp.md
       - Geolocator:
         - services/geolocator/types/foregroundnotificationconfiguration.md
         - services/geolocator/types/geolocatorandroidconfiguration.md
@@ -598,7 +602,6 @@ docs:
       - types/size.md
       - types/strutstyle.md
       - types/templateroute.md
-      - types/tester.md
       - types/textdecoration.md
       - types/textselection.md
       - types/textspan.md
@@ -905,6 +908,7 @@ docs:
       flet publish: cli/flet-publish.md
       flet run: cli/flet-run.md
       flet serve: cli/flet-serve.md
+      flet test: cli/flet-test.md
     Python packages built in Flet: reference/binary-packages-android-ios.md
     Environment Variables: reference/environment-variables.md
 
