@@ -107,8 +107,8 @@ def control(
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
-        categories: MCP metadata — control categories (e.g. ``("input", "form")``).
-        tags: MCP metadata — descriptive tags (e.g. ``("text", "editable")``).
+        categories: MCP metadata — control categories (e.g. `("input", "form")`).
+        tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:

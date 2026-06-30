@@ -73,9 +73,9 @@ def _default_str(default: Any) -> str:
 def _package_from_module(module: str) -> str:
     """Return the pip-installable package name for a module path.
 
-    The first segment of the dotted path is the import name (e.g. ``flet_video``);
+    The first segment of the dotted path is the import name (e.g. `flet_video`);
     Flet's pip distribution names just swap underscores for hyphens. Core flet
-    stays ``"flet"`` — the agent uses that as a sentinel for "no extra dep
+    stays `"flet"` — the agent uses that as a sentinel for "no extra dep
     needed".
     """
     top = module.split(".", 1)[0]
@@ -137,7 +137,7 @@ def _deprecation_info(cls: griffe.Class) -> dict | None:
     """Extract @deprecated / @deprecated_class metadata if present.
 
     Returns a dict with whichever of `reason`/`version`/`delete_version` were
-    given as keyword args, or ``None`` if the class isn't deprecated.
+    given as keyword args, or `None` if the class isn't deprecated.
     """
     for dec in cls.decorators:
         s = str(dec.value)

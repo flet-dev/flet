@@ -58,7 +58,7 @@ def build_all(
         examples_dir: Root directory containing Flet example projects.
         docs_index:   Path to the mkdocs search_index.json file.
         output_dir:   Where to write mcp.db and api.json.
-                      Defaults to the ``flet_mcp/data/`` package directory.
+                      Defaults to the `flet_mcp/data/` package directory.
     """
     if output_dir is None:
         output_dir = _DATA_DIR
