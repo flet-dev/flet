@@ -205,6 +205,12 @@ if _DOCS_ON:
         """
         conn = _get_db()
         try:
+            table_check = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='docs_fts'"
+            ).fetchone()
+            if not table_check:
+                return []
+
             # BM25 weights: title=6, location_text=4, content=1
             rows = conn.execute(
                 """
@@ -241,6 +247,12 @@ if _DOCS_ON:
         """
         conn = _get_db()
         try:
+            table_check = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='docs'"
+            ).fetchone()
+            if not table_check:
+                return {"error": "No docs indexed"}
+
             row = conn.execute(
                 "SELECT location, title, content FROM docs WHERE location = ?",
                 (location,),

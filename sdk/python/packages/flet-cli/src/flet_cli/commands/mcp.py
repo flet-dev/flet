@@ -20,7 +20,8 @@ class Command(BaseCommand):
         build_parser.add_argument(
             "--docs",
             type=Path,
-            help="Path to search_index.json",
+            help="Path to mkdocs search_index.json "
+            "(deferred — pending Docusaurus rework)",
         )
         build_parser.add_argument(
             "--output",

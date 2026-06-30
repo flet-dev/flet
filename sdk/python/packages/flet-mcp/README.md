@@ -22,8 +22,12 @@ cd sdk/python
 uv sync --group mcp-build
 uv run flet mcp build                            # api.json only
 uv run flet mcp build --examples ./examples      # add examples index
-uv run flet mcp build --docs <search_index.json> # add docs index
 ```
+
+> **Docs index is currently deferred.** The `--docs` flag still expects a mkdocs
+> `search_index.json`, which the site no longer produces after the migration to
+> Docusaurus + Algolia. The `DOCS` tool group stays off by default; rebuilding
+> docs search against Docusaurus is tracked as follow-up work.
 
 Running the build from elsewhere (a downstream project's venv that only
 installs core `flet`) works too, but the resulting `api.json` will be missing
@@ -72,11 +76,8 @@ fastmcp call packages/flet-mcp/src/flet_mcp/server.py search_examples '{"query":
 # Get full example code
 fastmcp call packages/flet-mcp/src/flet_mcp/server.py get_example '{"example_id": "controls_dropdown_styled"}'
 
-# Search documentation
-fastmcp call packages/flet-mcp/src/flet_mcp/server.py search_docs '{"query": "TextField validation"}'
-
-# Get control API reference
-fastmcp call packages/flet-mcp/src/flet_mcp/server.py get_control_api '{"name": "TextField"}'
+# Get API reference for any symbol (control, service, type, event, enum)
+fastmcp call packages/flet-mcp/src/flet_mcp/server.py get_api '{"name": "TextField"}'
 
 # Find an icon
 fastmcp call packages/flet-mcp/src/flet_mcp/server.py find_icon '{"query": "settings"}'
@@ -95,8 +96,28 @@ from pydantic_ai import Agent
 from pydantic_ai.toolsets import MCPToolset
 from flet_mcp import mcp
 
-agent = Agent("claude-sonnet-4-20250514", toolsets=[MCPToolset(mcp)])
+agent = Agent("anthropic:claude-sonnet-4-6", toolsets=[MCPToolset(mcp)])
 result = agent.run_sync("Create a Flet app with a login form")
+```
+
+### Use in-process via a FastMCP client
+
+The exported `mcp` is a `FastMCP` instance, so a custom agent can talk to it
+in-process (no subprocess, no transport) by handing it to a `fastmcp.Client`.
+Set the `FLET_MCP_ENABLE_*` env vars before importing `flet_mcp` so the desired
+tool groups register. The client deserializes structured results onto `.data`:
+
+```python
+import asyncio
+from fastmcp import Client
+from flet_mcp import mcp
+
+async def main():
+    async with Client(mcp) as client:
+        api = (await client.call_tool("get_api", {"name": "TextField"})).data
+        print(api["kind"], api["package"], len(api["properties"]))
+
+asyncio.run(main())
 ```
 
 ## Tools
@@ -158,7 +179,8 @@ FLET_MCP_ENABLE_EXAMPLES=1 FLET_MCP_ENABLE_DOCS=1 flet mcp
 FLET_MCP_ENABLE_ICONS=0 flet mcp
 ```
 
-Note: enabling `EXAMPLES` or `DOCS` only registers the tools — you also need to
-populate the SQLite index by running `flet mcp build --examples <path>` and/or
-`--docs <search_index.json>`. Without an index the tools register cleanly but
-return empty results.
+Note: enabling `EXAMPLES` only registers the tools — you also need to populate
+the SQLite index by running `flet mcp build --examples <path>`. Without an index
+the tools register cleanly but return empty results. `DOCS` is deferred (see
+"Building the data files" above): the tools register and degrade gracefully to
+empty results, but no docs index is built yet.
