@@ -39,6 +39,7 @@ docs:
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
     Declarative dialogs: cookbook/declarative-dialogs.md
+    Flet MCP server: cookbook/flet-mcp.md
   Publishing Flet app:
     _index: publish/index.md
     Android: publish/android.md
