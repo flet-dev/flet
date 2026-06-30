@@ -162,3 +162,7 @@ class Command(BaseCommand):
             else ""
         )
         console.print(f"flet run {app_dir}\n")
+
+        # print testing step
+        console.print("[cyan]Run the integration tests:[/cyan]\n")
+        console.print(f"flet test {app_dir}\n")

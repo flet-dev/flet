@@ -9,7 +9,7 @@ def main(page: ft.Page):
         counter.value = str(counter.data)
 
     page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, on_click=increment_click
+        icon=ft.Icons.ADD, key="increment", on_click=increment_click
     )
     page.add(
         ft.SafeArea(

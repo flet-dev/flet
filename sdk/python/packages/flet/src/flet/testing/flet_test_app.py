@@ -16,6 +16,7 @@ from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
 from flet.controls.control import Control
+from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
@@ -114,6 +115,14 @@ class FletTestApp:
         skip_pump_and_settle:
             If `True`, the initial `pump_and_settle` after app start is skipped.
 
+        device_mode:
+            If `True`, the app under test runs on-device with embedded Python
+            (over dart_bridge), as produced by `flet build`. This session then
+            hosts only the `Tester` over a dedicated channel and does not run
+            `flet_app_main`. If `False` (default), the app runs here in-process
+            (host mode) against the dev `client` shell.
+            Env override: `FLET_TEST_DEVICE_MODE=1`.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -140,6 +149,7 @@ class FletTestApp:
         use_http: bool = False,
         disable_fvm: bool = False,
         skip_pump_and_settle: bool = False,
+        device_mode: bool = False,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -157,6 +167,7 @@ class FletTestApp:
         )
         self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
+        self.__device_mode = get_bool_env_var("FLET_TEST_DEVICE_MODE") or device_mode
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__skip_pump_and_settle = skip_pump_and_settle
@@ -165,7 +176,7 @@ class FletTestApp:
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__page = None
-        self.__tester: Tester | None = None
+        self.__tester: Union[Tester, RemoteTester, None] = None
 
     @property
     def page(self) -> ft.Page:
@@ -177,10 +188,11 @@ class FletTestApp:
         return self.__page
 
     @property
-    def tester(self) -> Tester:
+    def tester(self) -> Union[Tester, RemoteTester]:
         """
-        Returns an instance of `Tester` class that programmatically \
-        interacts with page controls and the test environment.
+        Returns the tester that programmatically interacts with page controls \
+        and the test environment. In device mode this is a `RemoteTester` \
+        driving the app over a socket.
         """
         if self.__tester is None:
             raise RuntimeError("tester is not initialized")
@@ -205,10 +217,14 @@ class FletTestApp:
             page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
 
-            if inspect.iscoroutinefunction(self.__flet_app_main):
-                await self.__flet_app_main(page)
-            elif callable(self.__flet_app_main):
-                self.__flet_app_main(page)
+            # In device mode the app under test runs on-device (embedded Python
+            # over dart_bridge); this session is tester-only and must NOT run
+            # the user's app. In host mode the app runs here in-process.
+            if not self.__device_mode:
+                if inspect.iscoroutinefunction(self.__flet_app_main):
+                    await self.__flet_app_main(page)
+                elif callable(self.__flet_app_main):
+                    self.__flet_app_main(page)
             if not self.__skip_pump_and_settle:
                 await self.__pump_and_settle_with_timeout("start")
             ready.set()
@@ -216,23 +232,44 @@ class FletTestApp:
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
-        if self.__use_http:
-            os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+        if self.__device_mode:
+            # Device mode: the app runs on-device (embedded Python over
+            # dart_bridge). This process only hosts the independent RemoteTester
+            # socket that drives the on-device WidgetTester — no Flet server,
+            # no app run here.
+            remote = RemoteTester()
+            self.__tcp_port = await remote.start(host="127.0.0.1", port=self.__tcp_port)
+            self.__tester = remote
+            print(f"Started remote tester on 127.0.0.1:{self.__tcp_port}")
+        else:
+            if self.__use_http:
+                os.environ["FLET_FORCE_WEB_SERVER"] = "true"
 
-        asyncio.create_task(
-            ft.run_async(
-                main, port=self.__tcp_port, assets_dir=str(self.__assets_dir), view=None
+            asyncio.create_task(
+                ft.run_async(
+                    main,
+                    port=self.__tcp_port,
+                    assets_dir=str(self.__assets_dir),
+                    view=None,
+                )
             )
-        )
-        print("Started Flet app")
+            print("Started Flet app")
 
+        # Stream the Flutter test process output to the console when verbose
+        # (set by `flet test -v`) or when debug logging is on; otherwise hide it.
         stdout = asyncio.subprocess.DEVNULL
         stderr = asyncio.subprocess.DEVNULL
-        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+        if (
+            get_bool_env_var("FLET_TEST_VERBOSE")
+            or logging.getLogger().getEffectiveLevel() == logging.DEBUG
+        ):
             stdout = None
             stderr = None
 
-        flutter_args = ["fvm", "flutter", "test", "integration_test"]
+        # The resolved Flutter executable (full path, `flutter.bat` on Windows)
+        # is passed by `flet test`; fall back to a bare "flutter" on PATH.
+        flutter_exe = os.getenv("FLET_TEST_FLUTTER_EXE", "flutter")
+        flutter_args = ["fvm", flutter_exe, "test", self.__flutter_test_target()]
 
         if self.__disable_fvm:
             flutter_args.pop(0)
@@ -254,15 +291,27 @@ class FletTestApp:
             flutter_args += ["-d", self.test_device]
 
         app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
-        flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
 
-        if not self.__use_http:
-            temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
-            flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
-            if self.__assets_dir:
-                flutter_args += [
-                    f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
-                ]
+        if self.__device_mode:
+            # The app under test runs on-device over dart_bridge and ships its
+            # own assets in app.zip. The RemoteWidgetTester connects to our
+            # RemoteTester server over an independent socket. FLET_TEST=true lets
+            # the embedded app know it is running under test (page.test == True).
+            server_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
+            flutter_args += [
+                f"--dart-define=FLET_TEST_SERVER_URL={server_url}",
+                "--dart-define=FLET_TEST=true",
+            ]
+        else:
+            flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
+
+            if not self.__use_http:
+                temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
+                if self.__assets_dir:
+                    flutter_args += [
+                        f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
+                    ]
 
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
@@ -272,15 +321,41 @@ class FletTestApp:
         )
 
         print("Started Flutter test process.")
-        print("Waiting for a Flet client to connect...")
+        print("Waiting for the Flutter app to connect...")
 
-        while not ready.is_set():
+        def connected() -> bool:
+            if self.__device_mode:
+                return self.__tester is not None and self.__tester.is_connected()
+            return ready.is_set()
+
+        while not connected():
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 raise RuntimeError(
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+
+    def __flutter_test_target(self) -> str:
+        # In device mode the driver (`integration_test/app_test.dart`) is
+        # generated from the template; validate it exists and is non-empty so a
+        # missing/empty driver surfaces as a clear error instead of a confusing
+        # "No tests were found" from `flutter test`. The directory target is
+        # used either way.
+        if self.__device_mode:
+            app_test_path = (
+                Path(self.__flutter_app_dir) / "integration_test" / "app_test.dart"
+            )
+            if not app_test_path.is_file():
+                raise RuntimeError(
+                    f"Flutter integration test driver was not generated: "
+                    f"{app_test_path}"
+                )
+            if not app_test_path.read_text(encoding="utf-8").strip():
+                raise RuntimeError(
+                    f"Flutter integration test driver is empty: {app_test_path}"
+                )
+        return "integration_test"
 
     async def teardown(self):
         """
@@ -291,11 +366,13 @@ class FletTestApp:
         except (RuntimeError, TimeoutError) as e:
             print(f"Tester teardown failed: {e}")
 
+        flutter_returncode: Optional[int] = None
         if self.__flutter_process:
             print("\nWaiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
-                print("Flutter test process has exited.")
+                flutter_returncode = self.__flutter_process.returncode
+                print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
                 print("Flutter test process did not exit in time, terminating it...")
                 self.__flutter_process.terminate()
@@ -305,6 +382,20 @@ class FletTestApp:
                 except asyncio.TimeoutError:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
+
+        # Stop the RemoteTester socket server (device mode).
+        if isinstance(self.__tester, RemoteTester):
+            await self.__tester.stop()
+
+        # The host-side commands can all succeed while the on-device Flutter
+        # integration test itself fails (e.g. a widget exception fails the
+        # `testWidgets` body even though our find/tap assertions passed). Surface
+        # that as a test failure — otherwise the run is falsely green.
+        if flutter_returncode is not None and flutter_returncode != 0:
+            raise RuntimeError(
+                f"Flutter integration test process failed with exit code "
+                f"{flutter_returncode}. See the Flutter test output above."
+            )
 
     def resize_page(self, width: float, height: float):
         """
@@ -523,7 +614,7 @@ class FletTestApp:
                 same directory as the source frames.
             frames: Iterable of PNG-encoded frame bytes to use directly, in the
                 order they should appear in the animation. Typically paired
-                with :meth:`Page.take_animation`.
+                with :meth:`~flet.BasePage.take_animation`.
             duration: Frame duration in milliseconds. Either a single `int`
                 applied to every frame, or a sequence of `int` with one
                 entry per frame. Pass the same list used for
