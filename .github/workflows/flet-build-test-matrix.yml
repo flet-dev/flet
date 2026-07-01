@@ -32,6 +32,8 @@ jobs:
   build:
     name: Build (${{ matrix.name }})
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -140,13 +142,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Patch versions
         shell: bash
@@ -165,20 +170,22 @@ jobs:
           sudo apt-get clean
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build app
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
+        env:
+          PYTHON_VERSION: ${{ inputs.python_version }}
         run: |
           echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
-          uv run ${{ matrix.build_cmd }} --python-version ${{ inputs.python_version }} --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
+          uv run ${{ matrix.build_cmd }} --python-version "$PYTHON_VERSION" --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.artifact_name }}-py${{ inputs.python_version }}
           path: sdk/python/examples/apps/flet_build_test/${{ matrix.artifact_path }}

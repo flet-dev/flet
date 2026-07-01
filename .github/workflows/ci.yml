@@ -26,10 +26,6 @@ on:
       - '.fvmrc'
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: write
-
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -47,18 +43,23 @@ jobs:
   python_tests:
     name: Python ${{ matrix.python-version }} tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           python-version: ${{ matrix.python-version }}
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Run tests
         shell: bash
@@ -85,7 +86,7 @@ jobs:
 
       - name: Upload docs-coverage logs
         if: matrix.python-version == '3.12'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: docs-coverage
           path: sdk/python/docstr_coverage.log
@@ -96,20 +97,27 @@ jobs:
   docs_build:
     name: Build Documentation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
+          package-manager-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build website
         run: |
@@ -124,6 +132,7 @@ jobs:
     name: Build Flet Flutter package
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write # Required for authentication using OIDC
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
@@ -131,26 +140,29 @@ jobs:
       PYPI_VER: ${{ steps.versions.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0   # fetch all history
           fetch-tags: true # ensure tags are available
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Compute versions
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
 
       - name: Setup Dart (OIDC for pub.dev)
-        uses: dart-lang/setup-dart@v1.7.2
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Run tests
         shell: bash
@@ -175,14 +187,20 @@ jobs:
     name: Package templates
     runs-on: ubuntu-latest
     needs: build_flet_package
+    permissions:
+      contents: read
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Patch build template flet version
         shell: bash
@@ -207,7 +225,7 @@ jobs:
           zip -r "$GITHUB_WORKSPACE/flet-app-templates.zip" app/
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: template-artifacts
           path: |
@@ -223,22 +241,28 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
       BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build Flutter Windows client
         env:
@@ -262,7 +286,7 @@ jobs:
           7z a "${ROOT}/client/flet-windows.zip" "flet"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: windows-artifacts
           if-no-files-found: error
@@ -278,22 +302,28 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
       BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build Flutter macOS client
         shell: bash
@@ -303,7 +333,7 @@ jobs:
           tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: macos-artifacts
           if-no-files-found: error
@@ -321,6 +351,8 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
@@ -442,23 +474,27 @@ jobs:
           apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Get Flutter version from ".fvmrc"
-        uses: kuhnroyal/flutter-fvm-config-action/config@v3
+        uses: kuhnroyal/flutter-fvm-config-action/config@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         id: fvm-config-action
         with:
           path: '.fvmrc'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
           channel: ${{ matrix.arch == 'arm64' && 'master' || 'stable' }}  # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Mark git safe directories
         shell: bash
@@ -536,7 +572,7 @@ jobs:
           build_flutter "flet-desktop"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: linux-${{ matrix.distro_id }}-${{ matrix.arch }}-artifacts
           if-no-files-found: error
@@ -552,20 +588,26 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Patch Python and Flutter versions
         shell: bash
@@ -613,7 +655,7 @@ jobs:
           uv build --package flet-web --sdist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-artifacts
           if-no-files-found: error
@@ -631,24 +673,29 @@ jobs:
     needs:
       - python_tests
       - build_flet_package
+    permissions:
+      contents: read
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Analyze and Build Flutter & Python packages
         shell: bash
@@ -695,7 +742,7 @@ jobs:
           done
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: flet-python-extensions
           if-no-files-found: error
@@ -709,6 +756,8 @@ jobs:
   build_flet_cli_desktop:
     name: Build flet, flet-cli and flet-desktop Python packages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
     needs:
@@ -716,10 +765,14 @@ jobs:
       - build_flet_package
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build Python packages
         shell: bash
@@ -732,7 +785,7 @@ jobs:
           uv build --package flet-desktop
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: flet-cli-desktop-python-distribution
           path: |
@@ -800,24 +853,28 @@ jobs:
       - build_flet_cli_desktop
       - build_flet_mcp
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    permissions:
+      contents: write
     steps:
       - name: Detect pre-release
         id: prerelease
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "${{ github.ref_name }}" == *".dev"* ]]; then
+          if [[ "$REF_NAME" == *".dev"* ]]; then
             echo "is_prerelease=true" >> $GITHUB_OUTPUT
           else
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Download artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: dist
           merge-multiple: true
 
       - name: Create/Update GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -842,15 +899,18 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     needs:
       - release
+    permissions:
+      id-token: write
     steps:
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           ignore-empty-workdir: true
           cache-dependency-glob: ""
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Download artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: dist
           merge-multiple: true
