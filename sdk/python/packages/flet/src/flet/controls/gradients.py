@@ -14,7 +14,7 @@ __all__ = [
     "SweepGradient",
 ]
 
-from flet.controls.types import Number
+from flet.controls.types import ColorValue, Number
 
 
 class GradientTileMode(Enum):
@@ -66,7 +66,7 @@ class Gradient:
     - `SweepGradient`
     """
 
-    colors: list[str]
+    colors: list[ColorValue]
     """
     The colors the gradient should obtain at each of the stops. This list must contain \
     at least two colors.

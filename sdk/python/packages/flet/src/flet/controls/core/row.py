@@ -10,7 +10,7 @@ from flet.controls.types import CrossAxisAlignment, MainAxisAlignment, Number
 __all__ = ["Row"]
 
 
-@control("Row")
+@control("Row", categories=("layout",), tags=("horizontal", "flex", "scrollable"))
 class Row(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Displays its children in a horizontal array.
