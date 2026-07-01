@@ -46,6 +46,7 @@
 * Specify `handler` signatures in `subscribe` and `subscribe_topic` methods of `PubSubClient` for better type checking ([#6549](https://github.com/flet-dev/flet/pull/6564)) by @Iaw4tch
 * Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771), [#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 * Support `PagePlatform.ANDROID_TV` in `Page.get_device_info()` retrieval ([#6604](https://github.com/flet-dev/flet/pull/6604)) by @bl1nch.
+* Remove unused `BasePage` return type and import from `BaseControl` and `ControlEvent` ([#6606](https://github.com/flet-dev/flet/pull/6606)) by @Iaw4tch.
 
 ### Documentation
 

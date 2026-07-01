@@ -19,7 +19,6 @@ from flet.utils.typing_utils import eval_type
 if TYPE_CHECKING:
     from .base_control import BaseControl  # noqa
     from .page import Page
-    from .base_page import BasePage
 
     _BaseControlType = BaseControl
 else:
@@ -128,7 +127,7 @@ class Event(Generic[EventControlType]):
     """
 
     @property
-    def page(self) -> Union["Page", "BasePage"]:
+    def page(self) -> "Page":
         """
         Page that owns the event source control.
         """

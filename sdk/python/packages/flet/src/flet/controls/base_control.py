@@ -23,7 +23,6 @@ else:
 
 
 if TYPE_CHECKING:
-    from .base_page import BasePage
     from .keys import KeyValue
     from .page import Page
 
@@ -296,7 +295,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> "Union[Page, BasePage]":
+    def page(self) -> "Page":
         """
         The page to which this control belongs to.
         """
