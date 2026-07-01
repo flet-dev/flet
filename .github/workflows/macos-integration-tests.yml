@@ -2,6 +2,8 @@ name: macOS Integration Tests
 
 on:
   push:
+    tags-ignore:
+      - '**'
     branches-ignore:
       - main
     paths:

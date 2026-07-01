@@ -8,6 +8,8 @@ name: Flet Test (on-device)
 
 on:
   push:
+    tags-ignore:
+      - '**'
     branches-ignore:
       - main
     paths:

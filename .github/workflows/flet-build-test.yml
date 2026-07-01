@@ -2,6 +2,8 @@ name: Flet Build Test
 
 on:
   push:
+    tags-ignore:
+      - '**'
     branches-ignore:
       - main
     paths:
