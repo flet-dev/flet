@@ -89,6 +89,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
         self.flutter_packages_temp_dir = None
+        self.site_packages_skipped = False
         self.platforms = {
             "windows": {
                 "package_platform": "Windows",
@@ -1637,11 +1638,20 @@ class BaseBuildCommand(BaseFlutterCommand):
         # when the app has no Flutter extensions — so always clear the old copy
         # first, otherwise an extension removed since the previous build (e.g.
         # dropping flet-video) would linger here and stay in the built app.
-        if self.flutter_packages_dir.exists():
-            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
-        if self.flutter_packages_temp_dir.exists():
-            # copy packages from temp to permanent location
-            shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
+        #
+        # Skip this when the package step ran with --skip-site-packages: in that
+        # mode serious_python does not repopulate the temp dir, so an absent temp
+        # dir means "unchanged" rather than "no extensions". Wiping here would
+        # delete the previous build's extensions and never restore them, breaking
+        # the Flutter build (unresolved web plugins). A removed extension changes
+        # the package requirements, flips the package hash, and takes the full
+        # (non-skip) path above instead.
+        if not self.site_packages_skipped:
+            if self.flutter_packages_dir.exists():
+                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+            if self.flutter_packages_temp_dir.exists():
+                # copy packages from temp to permanent location
+                shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
             self.update_status("[bold blue]Registering Flutter user extensions...")
@@ -2380,6 +2390,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not dev_packages_configured:
             if not hash.has_changed():
                 package_args.append("--skip-site-packages")
+                # serious_python skips copying Flutter packages to the temp dir
+                # under --skip-site-packages, so register_flutter_extensions must
+                # keep (not wipe) the permanent flutter-packages copy from the
+                # previous build.
+                self.site_packages_skipped = True
             else:
                 if self.flutter_packages_dir.exists():
                     shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
