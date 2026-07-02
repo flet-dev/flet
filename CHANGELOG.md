@@ -47,6 +47,7 @@
 * Fix `FilePicker.pick_files()` on web for slow network shares or slow machines: pass `cancel_upload_on_window_blur=False` to prevent valid file selections from being reported as cancelled when the browser window loses focus during file picking ([#771](https://github.com/flet-dev/flet/issues/771), [#6573](https://github.com/flet-dev/flet/pull/6573)) by @ndonkoHenri.
 * Support `PagePlatform.ANDROID_TV` in `Page.get_device_info()` retrieval ([#6604](https://github.com/flet-dev/flet/pull/6604)) by @bl1nch.
 * Fix `ProgressRing.year_2023` being ignored, so the control correctly switches between the latest and 2023 Material Design appearances ([#6614](https://github.com/flet-dev/flet/issues/6614)) by @ndonkoHenri.
+* `flet build ipa` / `ios` apps that ship ctypes packages with plain `.dylib` shared libraries (e.g. `llama-cpp-python`) now load them on the **iOS simulator** instead of failing at launch with a `dlopen` platform mismatch (`have 'iOS', need 'iOS-simulator'`); the iOS runtime also now bundles the `_multiprocessing` extension (importable, not spawnable). Bumps the pinned bundle to `serious_python` 4.2.1 / python-build `20260701` ([serious_python#223](https://github.com/flet-dev/serious-python/pull/223)) by @ndonkoHenri, @FeodorFitsner.
 
 ### Documentation
 
