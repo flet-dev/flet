@@ -823,6 +823,7 @@ jobs:
         run: |
           source "$SCRIPTS/common.sh"
           patch_python_package_versions
+          patch_toml_versions "packages/flet-mcp/pyproject.toml" "$PYPI_VER"
           uv build --package flet-mcp
 
       - name: Upload artifacts
