@@ -35,6 +35,19 @@ class _ScrollableControlState extends State<ScrollableControl>
   late bool _ownController = false;
   final _ConstraintsHolder _outerConstraints = _ConstraintsHolder();
 
+  // Auto-scroll: keep the view pinned to the bottom (end) while the user
+  // hasn't scrolled away from it. Unlike a one-shot scroll on build, this
+  // follows content that grows *in place* — e.g. streamed text appended to an
+  // existing child — which does not rebuild this widget and so is otherwise
+  // missed.
+  static const double _autoScrollThreshold = 40.0;
+  bool _pinnedToEnd = true;
+  double _lastMaxScrollExtent = 0;
+  bool _autoScrollScheduled = false;
+  // When set (via the `auto_scroll_animation` property) auto-scroll animates
+  // to the end with this duration/curve; otherwise it jumps instantly.
+  ImplicitAnimationDetails? _autoScrollAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +58,52 @@ class _ScrollableControlState extends State<ScrollableControl>
       _controller = ScrollController();
       _ownController = true;
     }
+    _controller.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_controller.hasClients) return;
+    final pos = _controller.position;
+    // "At the end" if within a small threshold of the max extent — so a
+    // partially-visible last line still counts as pinned.
+    _pinnedToEnd = pos.pixels >= pos.maxScrollExtent - _autoScrollThreshold;
+  }
+
+  void _scheduleScrollToEnd({bool force = false}) {
+    if (_autoScrollScheduled) return;
+    _autoScrollScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _autoScrollScheduled = false;
+      if (!mounted || !_controller.hasClients) return;
+      final max = _controller.position.maxScrollExtent;
+      _lastMaxScrollExtent = max;
+      if (force || _pinnedToEnd) {
+        final anim = _autoScrollAnimation;
+        if (anim != null && anim.duration > Duration.zero) {
+          _controller.animateTo(max,
+              duration: anim.duration, curve: anim.curve);
+        } else {
+          _controller.jumpTo(max);
+        }
+        _pinnedToEnd = true;
+      }
+    });
+  }
+
+  // Wraps the scrollable so auto_scroll follows extent growth (streamed text,
+  // inserted items) even when this widget itself does not rebuild.
+  Widget _wrapAutoScroll(Widget child) {
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) {
+        final max = notification.metrics.maxScrollExtent;
+        if (max > _lastMaxScrollExtent + 0.5 && _pinnedToEnd) {
+          _scheduleScrollToEnd();
+        }
+        _lastMaxScrollExtent = max;
+        return false;
+      },
+      child: child,
+    );
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -86,6 +145,7 @@ class _ScrollableControlState extends State<ScrollableControl>
 
   @override
   void dispose() {
+    _controller.removeListener(_onScroll);
     if (_ownController) {
       _controller.dispose();
     }
@@ -99,17 +159,25 @@ class _ScrollableControlState extends State<ScrollableControl>
     final scrollConfiguration =
         widget.control.getScrollbarConfiguration("scroll");
 
-    if (widget.control.getBool("auto_scroll", false)!) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.animateTo(
-          _controller.position.maxScrollExtent,
-          duration: const Duration(seconds: 1),
-          curve: Curves.ease,
-        );
-      });
+    final autoScroll = widget.control.getBool("auto_scroll", false)!;
+    if (autoScroll) {
+      // Default to a 1s ease animation (the historical auto_scroll behavior);
+      // set `auto_scroll_animation` to override, or to duration 0 for an
+      // instant jump.
+      _autoScrollAnimation = widget.control.getAnimation(
+        "auto_scroll_animation",
+        ImplicitAnimationDetails(
+            duration: const Duration(seconds: 1), curve: Curves.ease),
+      );
+      // Re-pin on rebuild (e.g. an item added). Extent growth without a
+      // rebuild is handled by the ScrollMetricsNotification listener in
+      // _wrapAutoScroll.
+      _scheduleScrollToEnd();
     }
 
-    if (scrollConfiguration == null) return widget.child;
+    if (scrollConfiguration == null) {
+      return autoScroll ? _wrapAutoScroll(widget.child) : widget.child;
+    }
 
     Widget child = widget.child;
     if (widget.wrapIntoScrollableView) {
@@ -155,7 +223,7 @@ class _ScrollableControlState extends State<ScrollableControl>
       );
     }
 
-    return result;
+    return autoScroll ? _wrapAutoScroll(result) : result;
   }
 }
 
