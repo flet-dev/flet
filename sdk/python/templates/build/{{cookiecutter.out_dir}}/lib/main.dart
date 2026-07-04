@@ -282,9 +282,16 @@ class _BootOverlayState extends State<_BootOverlay> {
         // resolveBootScreen is built once here (status changes update the
         // message via the screen's own ValueListenableBuilder), so the spinner
         // keeps animating across preparing → starting up.
+        // Use `builder:` rather than `home:` so this MaterialApp creates NO
+        // Navigator. A MaterialApp with `home` builds a Navigator with
+        // `reportsRouteUpdateToEngine: true`, which pushes the home route "/"
+        // to the browser URL on mount — clobbering a cold-start deep link
+        // (e.g. `/gallery`) before FletApp's real router reads it. The boot
+        // overlay never navigates, so it doesn't need a Navigator; this keeps
+        // theme/Directionality while leaving the URL untouched.
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: resolveBootScreen(
+          builder: (context, _) => resolveBootScreen(
             name: bootScreenName,
             options: bootScreenOptions,
             extensions: extensions,
