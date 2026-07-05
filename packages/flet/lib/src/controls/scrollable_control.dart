@@ -43,6 +43,7 @@ class _ScrollableControlState extends State<ScrollableControl>
   static const double _autoScrollThreshold = 40.0;
   bool _pinnedToEnd = true;
   double _lastMaxScrollExtent = 0;
+  double _lastPixels = 0;
   bool _autoScrollScheduled = false;
   // When set (via the `auto_scroll_animation` property) auto-scroll animates
   // to the end with this duration/curve; otherwise it jumps instantly.
@@ -64,9 +65,17 @@ class _ScrollableControlState extends State<ScrollableControl>
   void _onScroll() {
     if (!_controller.hasClients) return;
     final pos = _controller.position;
-    // "At the end" if within a small threshold of the max extent — so a
-    // partially-visible last line still counts as pinned.
-    _pinnedToEnd = pos.pixels >= pos.maxScrollExtent - _autoScrollThreshold;
+    // Unpin only when the user scrolls *up* (pixels decrease). Content growing
+    // beneath a stationary position (e.g. a tall Markdown code block inserted
+    // at the end) leaves pixels unchanged, so it must NOT unpin — otherwise a
+    // big extent jump would strand the view above the new content. Re-pin once
+    // the position returns to within a small threshold of the end.
+    if (pos.pixels < _lastPixels - 0.5) {
+      _pinnedToEnd = false;
+    } else if (pos.pixels >= pos.maxScrollExtent - _autoScrollThreshold) {
+      _pinnedToEnd = true;
+    }
+    _lastPixels = pos.pixels;
   }
 
   void _scheduleScrollToEnd({bool force = false}) {
@@ -95,6 +104,11 @@ class _ScrollableControlState extends State<ScrollableControl>
   Widget _wrapAutoScroll(Widget child) {
     return NotificationListener<ScrollMetricsNotification>(
       onNotification: (notification) {
+        // Only react to this scrollable's own metrics. Nested scrollables
+        // (e.g. a Markdown code block's horizontal scroller) bubble their
+        // notifications through with depth > 0; responding to those would
+        // track the wrong extent and break end-following.
+        if (notification.depth != 0) return false;
         final max = notification.metrics.maxScrollExtent;
         if (max > _lastMaxScrollExtent + 0.5 && _pinnedToEnd) {
           _scheduleScrollToEnd();
