@@ -170,8 +170,15 @@ self.initPyodide = async function () {
             import msgpack as _msgpack
 
         def _send_python_output(text, is_stderr):
+            # Frame exactly like PyodideConnection.send_message: a 0x00 type
+            # byte (0x00 = MsgPack Flet protocol frame, 0x01 = raw DataChannel
+            # frame) in front of the packed [action, body]. Without the prefix
+            # the Dart side reads msgpack's leading 0x92 as an unknown packet
+            # type and silently drops the line. bytes([0]) avoids a literal
+            # NUL escape inside this JS template string.
             flet_js.receive_callback(
-                _msgpack.packb(
+                bytes([0])
+                + _msgpack.packb(
                     [7, {"text": text, "is_stderr": bool(is_stderr)}]
                 )
             )
