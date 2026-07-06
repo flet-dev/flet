@@ -11,6 +11,7 @@
 // of `kIsWeb` runtime gates.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -109,7 +110,8 @@ Future<String?> runPython({
   var script = pythonScript
       .replaceAll("{outLogFilename}", outLogFilename.replaceAll("\\", "\\\\"))
       .replaceAll('{module_name}', moduleName)
-      .replaceAll('{argv}', argv);
+      .replaceAll('{argv}', argv)
+      .replaceAll('{host_executable}', jsonEncode(Platform.resolvedExecutable));
 
   var completer = Completer<String>();
 
