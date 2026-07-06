@@ -57,7 +57,7 @@ def initialize_ctypes():
 
 initialize_ctypes()
 
-out_file = open("{outLogFilename}", "w+", buffering=1)
+out_file = open({outLogFilename}, "w+", buffering=1)
 
 # libdart_bridge >= 1.3.0 installs native-log file-like wrappers as
 # sys.stdout / sys.stderr right after Py_Initialize so prints land in
@@ -199,7 +199,7 @@ def _sp_run_module_as_main(module_name):
     sys.modules["__main__"] = main
     sys.modules["__mp_main__"] = main  # Match multiprocessing's spawn alias for the main module.
 
-    # Do not let re-exec'd multiprocessing children inherit PYTHONINSPECT, or
+    # Prevent re-exec'd multiprocessing children from inheriting PYTHONINSPECT, or
     # they may stay open in interactive mode after their command finishes.
     os.environ.pop("PYTHONINSPECT", None)
 

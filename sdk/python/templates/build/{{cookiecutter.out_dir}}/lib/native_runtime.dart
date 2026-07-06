@@ -105,12 +105,13 @@ Future<String?> runPython({
   required Map<String, String> environmentVariables,
   required List<String> args,
 }) async {
-  var argvItems = args.map((a) => "\"${a.replaceAll('"', '\\"')}\"");
-  var argv = "[${argvItems.isNotEmpty ? argvItems.join(',') : '""'}]";
+  // JSON literals are valid Python literals, so every dynamic value is
+  // spliced into the boot script through jsonEncode: it correctly escapes
+  // backslashes (Windows paths), quotes, and non-ASCII.
   var script = pythonScript
-      .replaceAll("{outLogFilename}", outLogFilename.replaceAll("\\", "\\\\"))
+      .replaceAll('{outLogFilename}', jsonEncode(outLogFilename))
       .replaceAll('{module_name}', moduleName)
-      .replaceAll('{argv}', argv)
+      .replaceAll('{argv}', jsonEncode(args.isNotEmpty ? args : [""]))
       .replaceAll('{host_executable}', jsonEncode(Platform.resolvedExecutable));
 
   var completer = Completer<String>();
