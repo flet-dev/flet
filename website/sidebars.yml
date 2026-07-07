@@ -36,6 +36,7 @@ docs:
     Session Storage: cookbook/session-storage.md
     PubSub: cookbook/pub-sub.md
     Subprocess: cookbook/subprocess.md
+    Multiprocessing: cookbook/multiprocessing.md
     Logging: cookbook/logging.md
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
