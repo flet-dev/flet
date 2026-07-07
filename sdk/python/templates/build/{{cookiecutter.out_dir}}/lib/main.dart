@@ -43,6 +43,20 @@ String appDir = "";
 Map<String, String> environmentVariables = Map.from(Platform.environment);
 
 void main(List<String> args) async {
+  // On web the URL strategy must be selected before ANYTHING reads the initial
+  // location: FletDeepLinkingBootstrap.install() (below) calls
+  // WidgetsFlutterBinding.ensureInitialized() and starts observing route pushes,
+  // and the first runApp() wires up the router. Whatever strategy is active at
+  // that point latches how the cold-start URL maps to a route — under Flutter's
+  // default hash strategy a hard refresh of `/apps/x` reads an empty fragment
+  // (route "/"), so the deep link is lost and the app rewrites the URL to "/".
+  // Applying the strategy that `flet build` baked into window.flet here, as the
+  // very first statement, keeps both the running URLs (no `/#/`) and cold-start
+  // deep links on the path strategy.
+  if (kIsWeb && getFletRouteUrlStrategy() == "path") {
+    usePathUrlStrategy();
+  }
+
   FletDeepLinkingBootstrap.install();
 
   _args = List<String>.from(args);
@@ -268,9 +282,16 @@ class _BootOverlayState extends State<_BootOverlay> {
         // resolveBootScreen is built once here (status changes update the
         // message via the screen's own ValueListenableBuilder), so the spinner
         // keeps animating across preparing → starting up.
+        // Use `builder:` rather than `home:` so this MaterialApp creates NO
+        // Navigator. A MaterialApp with `home` builds a Navigator with
+        // `reportsRouteUpdateToEngine: true`, which pushes the home route "/"
+        // to the browser URL on mount — clobbering a cold-start deep link
+        // (e.g. `/gallery`) before FletApp's real router reads it. The boot
+        // overlay never navigates, so it doesn't need a Navigator; this keeps
+        // theme/Directionality while leaving the URL untouched.
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: resolveBootScreen(
+          builder: (context, _) => resolveBootScreen(
             name: bootScreenName,
             options: bootScreenOptions,
             extensions: extensions,
@@ -301,12 +322,9 @@ Future prepareApp() async {
   );
 
   if (kIsWeb) {
-    // web mode - connect via HTTP
+    // web mode - connect via HTTP. The URL strategy is applied in main() before
+    // runApp(); doing it here would be too late (see the note there).
     pageUrl = Uri.base.toString();
-    var routeUrlStrategy = getFletRouteUrlStrategy();
-    if (routeUrlStrategy == "path") {
-      usePathUrlStrategy();
-    }
     assetsDir = getAssetsDir();
   } else if (_args.isNotEmpty && isDesktopPlatform()) {
     // developer mode

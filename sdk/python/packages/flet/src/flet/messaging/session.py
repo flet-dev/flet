@@ -247,8 +247,9 @@ class Session:
         for c in removed_controls:
             patch_logger.debug("   %s", c)
 
+        added_ids = {added_control._i for added_control in added_controls}
         for removed_control in removed_controls:
-            if not any(added._i == removed_control._i for added in added_controls):
+            if removed_control._i not in added_ids:
                 removed_control.will_unmount()
             self.__index.pop(removed_control._i, None)
 
@@ -264,9 +265,10 @@ class Session:
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
+        removed_ids = {removed_control._i for removed_control in removed_controls}
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
-            if not any(removed._i == added_control._i for removed in removed_controls):
+            if added_control._i not in removed_ids:
                 added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
