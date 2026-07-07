@@ -54,6 +54,8 @@ def from_git() -> Optional[str]:
             capture_output=True,
             text=True,
             check=True,
+            # Prevent console-window-flashes per git invocation on Windows.
+            creationflags=sp.CREATE_NO_WINDOW if is_windows() else 0,
         )
         tag = result.stdout.strip()
         return tag[1:] if tag.startswith("v") else tag
