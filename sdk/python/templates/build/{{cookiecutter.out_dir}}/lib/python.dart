@@ -57,7 +57,13 @@ def initialize_ctypes():
 
 initialize_ctypes()
 
-out_file = open({outLogFilename}, "w+", buffering=1)
+out_file = open(
+    {outLogFilename},
+    "w+", 
+    buffering=1, 
+    encoding="utf-8",
+    errors="backslashreplace",  # prevents encoding failures
+)
 
 # libdart_bridge >= 1.3.0 installs native-log file-like wrappers as
 # sys.stdout / sys.stderr right after Py_Initialize so prints land in
