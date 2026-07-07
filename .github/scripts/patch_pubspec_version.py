@@ -1,5 +1,5 @@
 # /// script
-# dependencies = ["pyyaml"]
+# dependencies = ["ruamel.yaml"]
 # ///
 
 """
@@ -32,7 +32,14 @@ import argparse
 import sys
 from pathlib import Path
 
-import yaml
+from ruamel.yaml import YAML
+
+# Round-trip mode: build templates carry cookiecutter/jinja directives inside
+# YAML comments (e.g. `#{% if ... %}` gating the web-only app.zip assets), so
+# patching must preserve comments or the rendered template breaks.
+yaml = YAML()
+yaml.preserve_quotes = True
+yaml.width = 4096
 
 
 def main() -> None:
@@ -75,7 +82,7 @@ def main() -> None:
         sys.exit(1)
 
     with pubspec_path.open(encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+        data = yaml.load(f)
 
     if args.git_ref:
         # Pin flet to a git commit
@@ -109,7 +116,7 @@ def main() -> None:
                 data["dependency_overrides"][dep] = pin
 
     with pubspec_path.open("w", encoding="utf-8") as f:
-        yaml.dump(data, f, sort_keys=False)
+        yaml.dump(data, f)
 
     print(f"Successfully patched {pubspec_path}")
 
