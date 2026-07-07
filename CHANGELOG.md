@@ -48,6 +48,7 @@
 * Support `PagePlatform.ANDROID_TV` in `Page.get_device_info()` retrieval ([#6604](https://github.com/flet-dev/flet/pull/6604)) by @bl1nch.
 * Fix `ProgressRing.year_2023` being ignored, so the control correctly switches between the latest and 2023 Material Design appearances ([#6614](https://github.com/flet-dev/flet/issues/6614)) by @ndonkoHenri.
 * `flet build ipa` / `ios` apps that ship ctypes packages with plain `.dylib` shared libraries (e.g. `llama-cpp-python`) now load them on the **iOS simulator** instead of failing at launch with a `dlopen` platform mismatch (`have 'iOS', need 'iOS-simulator'`); the iOS runtime also now bundles the `_multiprocessing` extension (importable, not spawnable). Bumps the pinned bundle to `serious_python` 4.2.1 / python-build `20260701` ([serious_python#223](https://github.com/flet-dev/serious-python/pull/223)) by @ndonkoHenri, @FeodorFitsner.
+* Improve performance of checking added/removed controls in Session.patch_control from O(N²) to O(N) ([#6651](https://github.com/flet-dev/flet/pull/6651)) by @davidlawson.
 
 ### Documentation
 
@@ -69,7 +70,6 @@
 * Fix `flet.Router`'s default `on_view_pop` navigating to the wrong URL when an `outlet=True` layout sits between two views in `manage_views=True` mode. Popping such a view now targets the previous view entry's resolved URL — skipping outlet layouts and componentless grouping routes — instead of `chain[-2]`, which could equal the current view's URL and strand the page route, making the next navigation to it a no-op ([#6533](https://github.com/flet-dev/flet/pull/6533)) by @FeodorFitsner.
 * Fix `flet-audio.Audio.play()`/`seek()` timing out when replaying after playback had completed: under the default `ReleaseMode.RELEASE` the source is freed on completion and is now re-prepared on replay ([#6536](https://github.com/flet-dev/flet/issues/6536), [#6538](https://github.com/flet-dev/flet/pull/6538)) by @ndonkoHenri.
 * Fix `ft.run(view=ft.AppView.FLET_APP_HIDDEN)` briefly flashing the native window in the top-left corner during Windows desktop startup. The Windows runner now respects `FLET_HIDE_WINDOW_ON_START` and skips the first-frame `Show()` call so the window stays hidden until `page.window.visible = True`, matching the Linux desktop behavior; the same fix is applied to the `flet build windows` template runner so generated apps behave consistently. On Linux, pre-show window placement actions (`page.window.center()`, `page.window.alignment`) are now deferred until the window first becomes visible to avoid an analogous flash, and the window's `focused` state is preserved when a `prevent_close` handler cancels a close attempt ([#5897](https://github.com/flet-dev/flet/issues/5897), [#5914](https://github.com/flet-dev/flet/issues/5914), [#6527](https://github.com/flet-dev/flet/pull/6527)) by @ihmily.
-* Improve performance of checking added/removed controls in Session.patch_control from O(N²) to O(N) ([#6651](https://github.com/flet-dev/flet/pull/6651)) by @davidlawson.
 
 ## 0.85.2
 
