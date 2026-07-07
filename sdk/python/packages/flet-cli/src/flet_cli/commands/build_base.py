@@ -1589,6 +1589,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                         }
                     }
 
+            # Only the web (Pyodide) build loads the packaged app as a Flutter
+            # asset; on native platforms serious_python places it inside the
+            # bundle, and a missing app/app.zip asset would fail the build.
+            if self.config_platform == "web":
+                if pubspec is None:
+                    pubspec = self.load_yaml(self.pubspec_path)
+                assets = pubspec.setdefault("flutter", {}).setdefault("assets", [])
+                for asset in ["app/app.zip", "app/app.zip.hash"]:
+                    if asset not in assets:
+                        assets.append(asset)
+
             if pubspec is not None:
                 self.save_yaml(self.pubspec_path, pubspec)
 
