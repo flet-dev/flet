@@ -1,11 +1,11 @@
 import json
 import os
 import sqlite3
-from typing import Optional
+from typing import Optional, Union
 
 from fastmcp import FastMCP
 
-from flet_mcp.api_store import ApiStore
+from flet_mcp.api_store import ApiStore, render_text
 from flet_mcp.db import get_db_path
 from flet_mcp.icons_store import IconStore
 
@@ -21,6 +21,14 @@ _ICONS_ON = _enabled("ICONS", default="1")
 _EXAMPLES_ON = _enabled("EXAMPLES", default="0")
 _DOCS_ON = _enabled("DOCS", default="0")
 _CLI_ON = _enabled("CLI", default="0")
+
+# Single-response size budgets (chars). Tool output lands in the calling
+# agent's conversation history where it is re-sent (and re-billed) on every
+# subsequent LLM call, so oversized payloads are paged/truncated with a
+# drill-down hint instead of returned whole. The largest bundled example is
+# ~111k chars; doc sections are unbounded.
+_EXAMPLE_CHARS_BUDGET = 24_000
+_DOC_CHARS_BUDGET = 12_000
 
 
 _enabled_groups = [
@@ -69,7 +77,25 @@ def _get_api_store() -> ApiStore:
 def _get_icon_store() -> IconStore:
     global _icon_store
     if _icon_store is None:
-        _icon_store = IconStore()
+        # Icon names come from the bundled api.json enums, not the flet
+        # package — flet is not installed on runtime-only consumers.
+        # Synonym tags/popularity come from the committed data/icons.json
+        # (Google's icon search metadata); absent, search degrades to
+        # name tokens only.
+        import importlib.resources
+
+        api = _get_api_store()
+        meta: dict = {}
+        try:
+            ref = importlib.resources.files("flet_mcp").joinpath("data/icons.json")
+            meta = json.loads(ref.read_text(encoding="utf-8")).get("material", {})
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        _icon_store = IconStore(
+            material=api.enum_member_names("Icons"),
+            cupertino=api.enum_member_names("CupertinoIcons"),
+            material_meta=meta,
+        )
     return _icon_store
 
 
@@ -150,11 +176,16 @@ if _EXAMPLES_ON:
             conn.close()
 
     @mcp.tool()
-    def get_example(example_id: str) -> dict:
+    def get_example(example_id: str, filename: Optional[str] = None) -> dict:
         """Get full source code and metadata for a specific example.
+
+        Small examples are returned whole. For large multi-file examples the
+        response lists every file with its size but inlines contents only up
+        to a budget — fetch the remaining files one at a time via `filename`.
 
         Args:
             example_id: The example ID returned by search_examples().
+            filename: Optional single file to fetch in full.
         """
         conn = _get_db()
         try:
@@ -176,13 +207,44 @@ if _EXAMPLES_ON:
                 (example_id,),
             ).fetchall()
 
+            if filename is not None:
+                for f in files:
+                    if f["filename"] == filename:
+                        return {
+                            "id": row["id"],
+                            "filename": filename,
+                            "content": f["content"],
+                        }
+                return {
+                    "error": f"Example '{example_id}' has no file '{filename}'",
+                    "available_files": [f["filename"] for f in files],
+                }
+
             meta = json.loads(row["metadata"])
-            return {
+            contents: dict[str, str] = {}
+            omitted: list[str] = []
+            budget = _EXAMPLE_CHARS_BUDGET
+            for f in files:
+                content = f["content"]
+                if len(content) <= budget:
+                    contents[f["filename"]] = content
+                    budget -= len(content)
+                else:
+                    omitted.append(f["filename"])
+            result = {
                 "id": row["id"],
                 "location": row["location"],
                 **meta,
-                "files": {f["filename"]: f["content"] for f in files},
+                "file_sizes": {f["filename"]: len(f["content"]) for f in files},
+                "files": contents,
             }
+            if omitted:
+                result["note"] = (
+                    "Large example — contents omitted for "
+                    f"{omitted}; call get_example({example_id!r}, "
+                    "filename=<name>) to fetch each in full."
+                )
+            return result
         finally:
             conn.close()
 
@@ -259,11 +321,19 @@ if _DOCS_ON:
             ).fetchone()
             if not row:
                 return {"error": f"Document '{location}' not found"}
-            return {
+            content = row["content"]
+            result = {
                 "location": row["location"],
                 "title": row["title"],
-                "content": row["content"],
+                "content": content[:_DOC_CHARS_BUDGET],
             }
+            if len(content) > _DOC_CHARS_BUDGET:
+                result["note"] = (
+                    f"Truncated at {_DOC_CHARS_BUDGET:,} of {len(content):,} "
+                    "chars — search_docs() with a narrower query to land on a "
+                    "more specific section (e.g. a '#fragment' location)."
+                )
+            return result
         finally:
             conn.close()
 
@@ -291,46 +361,82 @@ if _API_ON:
         return store.list_controls(category=category, kind=kind, limit=limit)
 
     @mcp.tool()
-    def get_api(name: str) -> dict:
+    def get_api(
+        name: str,
+        member: Optional[str] = None,
+        query: Optional[str] = None,
+        format: str = "text",
+    ) -> Union[str, dict]:
         """Get the API reference for any Flet symbol by name.
 
         Looks across visual controls, non-visual services, dataclass types
         (ButtonStyle, Padding, TextStyle, Border, Theme, ColorScheme, ...),
         event classes, and enums (MainAxisAlignment, TextAlign, Icons, ...).
-        The `kind` field on the response tells you which bucket matched
-        (`control`, `service`, `type`, `event`, `enum`, or `large_enum`).
 
         This is the primary verification tool — when you have a name in mind,
         call this first. A "not found" response is a definitive negative: the
         name does not exist in this Flet version.
 
-        Methods declared `async def` are marked with `"async": true` in the
-        `methods` list — the caller (and any event handler invoking them)
-        must `await` such methods.
+        The default response is compact text, one line per member:
 
-        Every match also carries a `"package"` field naming the pip-installable
-        package the class lives in. `"flet"` is the core package and is always
-        available. Anything else (`"flet-audio"`, `"flet-video"`, `"flet-map"`,
-        ...) means the consuming project needs that package added to its
-        dependencies — surface this to the user before using the class.
+            Page (control) — High-level root control for an app view.
+            bases: AdaptiveControl
+            properties:
+              bgcolor: ColorValue? — Background color of the page.
+              multi_views: list[MultiView] = [] — The list of multi-views...
+            events:
+              on_route_change(RouteChangeEvent) — Called when route changes.
+            methods:
+              async push_route(route, kwargs) -> None — Pushes a new route...
 
-        Deprecated classes are kept in the index (so a "not found" stays
-        meaningful) but marked with a `"deprecated"` object carrying the
-        replacement reason. If you see this field, do not use the class — pick
-        the replacement named in the reason.
+        Layout conventions:
+        * `(control)` / `(service)` / `(type)` / `(event)` / `(enum)` after
+          the symbol name says which bucket matched.
+        * `?` suffix on a property type = optional (may be None).
+        * `on_x(SomeEvent)` — the handler receives a `SomeEvent` argument.
+        * `async ` prefix — the method must be awaited (so the event handler
+          calling it must be `async def`).
+        * A `package: <name>` line means the class lives in that pip package,
+          which must be added to the project's dependencies before importing
+          it — surface this to the user. No line = core `flet`, always
+          available.
+        * `DEPRECATED: <reason>` — do not use; pick the replacement named in
+          the reason.
+        * Member docstrings are trimmed to their first sentence; the `note:`
+          line reminds you how to drill down.
 
-        For large enums (Icons, CupertinoIcons) the response is truncated; use
-        search_enum_members / enum_has_member / find_icon to drill in.
+        Drill-down / filtering:
+        * `member="push_route"` — one member's full, untrimmed docstring and
+          exact type.
+        * `query="border"` — only members whose name contains the substring
+          (case-insensitive). `member` wins if both are passed.
+        * A few names are shared by multiple classes (e.g. the Text control
+          vs the canvas Text shape) — the primary one is returned and the
+          `note:` line lists the others with a dotted name that selects
+          them, e.g. `get_api("canvas.Text")`.
+        * Neither applies to enums — use search_enum_members /
+          enum_has_member / find_icon there. Large enums (Icons,
+          CupertinoIcons) are always truncated to a sample.
+
+        Errors are returned as JSON objects (`{"error": ...}`), sometimes
+        with `available_members`/`available_files` hints.
 
         Args:
             name: Symbol name (e.g. "Button", "Window", "AlertDialog", "Audio",
                 "ButtonStyle", "TapEvent", "MainAxisAlignment", "Icons").
+            member: Optional property/event/method name (e.g. "on_scroll",
+                "push_route") to fetch with its full, untrimmed docstring.
+            query: Optional case-insensitive substring to filter member names.
+            format: "text" (default, compact) or "json" (structured dicts,
+                full raw type strings; for programmatic consumers).
         """
         store = _get_api_store()
-        result = store.get(name)
+        result = store.get(name, member=member, query=query)
         if result is None:
             return {"error": f"'{name}' not found"}
-        return result
+        if "error" in result or format == "json":
+            return result
+        return render_text(result)
 
     @mcp.tool()
     def get_enum(name: str) -> dict:
@@ -351,9 +457,15 @@ if _API_ON:
 
     @mcp.tool()
     def search_enum_members(name: str, query: str, limit: int = 10) -> dict:
-        """Search enum members by name pattern.
+        """Search enum members by name substring (ranked: exact, prefix,
+        then substring matches).
 
-        Useful for large enums like Icons and CupertinoIcons.
+        For finding an *icon by concept* ("delete", "user", "back")
+        prefer find_icon — it is synonym-aware. This tool matches member
+        names literally, which suits other large enums and verifying
+        specific icon names. Material style variants
+        (_OUTLINED/_ROUNDED/_SHARP) are collapsed into their base icon;
+        append a suffix to any base name to use a variant.
 
         Args:
             name: Enum class name (e.g. "Icons", "CupertinoIcons").

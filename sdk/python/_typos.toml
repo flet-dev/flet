@@ -1,7 +1,12 @@
 [files]
 # Generated Xcode project files contain random hex UUIDs that typos
-# misreads as misspelled words.
-extend-exclude = ["*.pbxproj"]
+# misreads as misspelled words. flet-mcp's icons.json vendors Google's
+# icon search metadata, whose tags deliberately include common
+# misspellings for typo-tolerant search.
+extend-exclude = [
+    "*.pbxproj",
+    "sdk/python/packages/flet-mcp/src/flet_mcp/data/icons.json",
+]
 
 [default.extend-words]
 # AAC High Efficiency audio codec enum member name
