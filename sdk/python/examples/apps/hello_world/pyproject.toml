@@ -1,7 +1,7 @@
 [project]
 name = "hello-world"
 version = "1.0.0"
-description = "Minimal app that renders a single hello-world text message."
+description = "Say hello to Flet! The tiniest possible app — a single friendly text message."
 requires-python = ">=3.10"
 keywords = ["apps", "hello world", "minimal", "text"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]

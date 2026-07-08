@@ -1,7 +1,7 @@
 [project]
 name = "todo"
 version = "1.0.0"
-description = "Classic to-do app with add, edit, delete, and filter interactions inspired by TodoMVC."
+description = "Conquer your day! Add, edit, check off, and filter tasks, TodoMVC-style."
 requires-python = ">=3.10"
 keywords = ["apps", "todo", "tasks", "tabs", "forms"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
@@ -15,7 +15,7 @@ categories = ["Featured", "Getting Started"]
 screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/todo/todo_basic.png"]
 
 [tool.flet.metadata]
-title = "Classic To-Do"
+title = "To-Do"
 controls = ["SafeArea", "Column", "Row", "TextField", "Tabs", "TabBar", "Checkbox", "IconButton", "FloatingActionButton", "OutlinedButton", "Text"]
 layout_pattern = "form"
 complexity = "intermediate"
