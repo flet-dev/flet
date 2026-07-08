@@ -617,7 +617,7 @@ The receiving side's queue is **unbounded by default**. If a producer outpaces t
 
 - **First-party reference widget**: `MatplotlibChartCanvas` — a complete migration from `_invoke_method` PNG dispatch to a 1-byte-opcode data channel, including backpressure ack and the GPU / CPU rendering strategies. [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flet_charts/matplotlib_chart_canvas.py) · [Dart](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flutter/flet_charts/lib/src/matplotlib_chart_canvas.dart)
 - **Full design / performance notes** (wire format, cross-mode operation, concurrency model, empirical numbers): [`dedicated-data-channels.md`](https://github.com/flet-dev/serious-python/blob/main/docs/dedicated-data-channels.md) in `flet-dev/serious-python`.
-- **Wire-format protocol upgrade** for anyone implementing a custom Flet backend or sidecar: [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0-data-channel-protocol-upgrade).
+- **Wire-format protocol upgrade** for anyone implementing a custom Flet backend or sidecar: [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0/data-channel-protocol-upgrade).
 
 ## Boot screen
 

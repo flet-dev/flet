@@ -26,22 +26,22 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 #### Breaking changes
 
-- [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/v0-86-0-default-bundled-python-3-14)
-- [App and packages are compiled to `.pyc` by default](/docs/updates/breaking-changes/v0-86-0-compile-on-by-default)
-- [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/v0-86-0-removed-pyodide-version-export)
-- [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0-data-channel-protocol-upgrade)
+- [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/v0-86-0/default-bundled-python-3-14)
+- [App and packages are compiled to `.pyc` by default](/docs/updates/breaking-changes/v0-86-0/compile-on-by-default)
+- [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/v0-86-0/removed-pyodide-version-export)
+- [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0/data-channel-protocol-upgrade)
 
 #### Deprecations
 
-- [`flet build --clear-cache` flag deprecated](/docs/updates/breaking-changes/v0-86-0-deprecated-clear-cache-flag)
+- [`flet build --clear-cache` flag deprecated](/docs/updates/breaking-changes/v0-86-0/deprecated-clear-cache-flag)
 
 ### Released in Flet 0.85.0
 
 #### Breaking changes
 
-- [Deprecated spacing and border helper functions removed](/docs/updates/breaking-changes/v0-85-0-removed-spacing-border-helpers)
+- [Deprecated spacing and border helper functions removed](/docs/updates/breaking-changes/v0-85-0/removed-spacing-border-helpers)
 
 #### Deprecations
 
-- [`DragTargetEvent` coordinate fields deprecated](/docs/updates/breaking-changes/v0-85-0-deprecated-drag-target-event-coordinates)
-- [`Video` control APIs deprecated](/docs/updates/breaking-changes/v0-85-0-deprecated-video-apis)
+- [`DragTargetEvent` coordinate fields deprecated](/docs/updates/breaking-changes/v0-85-0/deprecated-drag-target-event-coordinates)
+- [`Video` control APIs deprecated](/docs/updates/breaking-changes/v0-85-0/deprecated-video-apis)
