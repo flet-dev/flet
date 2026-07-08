@@ -8,7 +8,7 @@ title: "Default bundled Python version is now 3.14"
 This guide is accurate as of Flet 0.86.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -86,4 +86,4 @@ job.
 
 - API documentation: [Choosing a Python version](/docs/publish#choosing-a-python-version)
 - Issues and PRs: [#6577](https://github.com/flet-dev/flet/pull/6577)
-- Release notes: [Flet 0.86.0](../release-notes.md)
+- Release notes: [Flet 0.86.0](../../release-notes.md)

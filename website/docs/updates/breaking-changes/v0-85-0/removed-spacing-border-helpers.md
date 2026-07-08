@@ -8,7 +8,7 @@ title: "Deprecated spacing and border helper functions removed"
 This guide is accurate as of Flet 0.85.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -74,4 +74,4 @@ card = ft.Container(
 
 - API documentation: [`Border`][flet.Border], [`BorderRadius`][flet.BorderRadius], [`Padding`][flet.Padding]
 - Issues and PRs: [#6425](https://github.com/flet-dev/flet/pull/6425)
-- Release notes: [Flet 0.85.0](../release-notes.md#085x)
+- Release notes: [Flet 0.85.0](../../release-notes.md#085x)

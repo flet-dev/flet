@@ -8,7 +8,7 @@ title: "App files ship unpacked in a read-only bundle; storage dirs reworked"
 This guide is accurate as of Flet 0.86.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -114,8 +114,8 @@ ignored by Git automatically; the old visible `storage/` directory is no longer 
 
 ## References
 
-- Environment variables: [`FLET_APP_STORAGE_DATA`](../../reference/environment-variables.md#flet_app_storage_data),
-  [`FLET_APP_STORAGE_CACHE`](../../reference/environment-variables.md#flet_app_storage_cache),
-  [`FLET_APP_STORAGE_TEMP`](../../reference/environment-variables.md#flet_app_storage_temp)
-- Cookbook: [Read and write files](../../cookbook/read-and-write-files.md)
-- Release notes: [Flet 0.86.0](../release-notes.md)
+- Environment variables: [`FLET_APP_STORAGE_DATA`](../../../reference/environment-variables.md#flet_app_storage_data),
+  [`FLET_APP_STORAGE_CACHE`](../../../reference/environment-variables.md#flet_app_storage_cache),
+  [`FLET_APP_STORAGE_TEMP`](../../../reference/environment-variables.md#flet_app_storage_temp)
+- Cookbook: [Read and write files](../../../cookbook/read-and-write-files.md)
+- Release notes: [Flet 0.86.0](../../release-notes.md)

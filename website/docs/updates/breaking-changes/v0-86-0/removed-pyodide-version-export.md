@@ -8,7 +8,7 @@ title: "flet.version.pyodide_version and PYODIDE_VERSION removed"
 This guide is accurate as of Flet 0.86.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -75,4 +75,4 @@ print(f"Default Pyodide: {release.pyodide}")
 
 - API documentation: [Choosing a Python version](/docs/publish#choosing-a-python-version)
 - Issues and PRs: [#6577](https://github.com/flet-dev/flet/pull/6577)
-- Release notes: [Flet 0.86.0](../release-notes.md)
+- Release notes: [Flet 0.86.0](../../release-notes.md)

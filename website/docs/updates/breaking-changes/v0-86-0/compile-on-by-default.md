@@ -8,7 +8,7 @@ title: "App and packages are compiled to .pyc by default"
 This guide is accurate as of Flet 0.86.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -75,4 +75,4 @@ resolution order is CLI flag → `[tool.flet.<platform>.compile]` →
 
 - API documentation: [Compilation and cleanup](/docs/publish#compilation-and-cleanup)
 - Issues and PRs: [#6598](https://github.com/flet-dev/flet/pull/6598)
-- Release notes: [Flet 0.86.0](../release-notes.md)
+- Release notes: [Flet 0.86.0](../../release-notes.md)

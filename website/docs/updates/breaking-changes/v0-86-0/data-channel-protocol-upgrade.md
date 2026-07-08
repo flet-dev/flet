@@ -8,7 +8,7 @@ title: "Flet protocol framing upgraded for DataChannel support"
 This guide is accurate as of Flet 0.86.0. Later releases might add new APIs or
 additional migration paths.
 
-The [breaking changes and deprecations index](.) lists the guides created for each release.
+The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
 :::
 
 ## Summary
@@ -108,4 +108,4 @@ the channel directly.
 ## References
 
 - API: `flet.DataChannel` (Python) and `FletBackend.openDataChannel` (Dart) — see the module docstrings in `flet/data_channel.py`; dedicated reference pages will be added in a follow-up.
-- Release notes: [Flet 0.86.0](../release-notes.md)
+- Release notes: [Flet 0.86.0](../../release-notes.md)
