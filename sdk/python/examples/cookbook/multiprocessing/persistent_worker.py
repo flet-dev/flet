@@ -13,11 +13,9 @@ def calc_worker(conn) -> None:
     and reused by every job. Receiving `None` is the shutdown signal.
     """
     while (job := conn.recv()) is not None:
-        print("entering while loop", job)
         started = time.perf_counter()
         result = sum(i * i for i in range(job))
         conn.send((result, time.perf_counter() - started))
-    print("closing connection")
     conn.close()
 
 
