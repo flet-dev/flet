@@ -59,6 +59,10 @@ def build_all(
         docs_index:   Path to the mkdocs search_index.json file.
         output_dir:   Where to write mcp.db and api.json.
                       Defaults to the `flet_mcp/data/` package directory.
+
+    Note: the icon search metadata (`data/icons.json`) is a committed
+    package file, not a build product — refresh it explicitly with
+    `python -m flet_mcp.build.icons`.
     """
     if output_dir is None:
         output_dir = _DATA_DIR

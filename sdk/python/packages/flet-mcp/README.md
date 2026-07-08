@@ -24,6 +24,16 @@ uv run flet mcp build                            # api.json only
 uv run flet mcp build --examples ./examples      # add examples index
 ```
 
+The icon search metadata (`data/icons.json`) is a *committed* file, not a
+build product — it is generated from Google's fonts.google.com icon
+metadata (names, synonym tags, popularity; Apache-2.0, the same data that
+powers the fonts.google.com icon search) and only changes when Google
+ships new icons. Refresh it with:
+
+```bash
+uv run python -m flet_mcp.build.icons
+```
+
 > **Docs index is currently deferred.** The `--docs` flag still expects a mkdocs
 > `search_index.json`, which the site no longer produces after the migration to
 > Docusaurus + Algolia. The `DOCS` tool group stays off by default; rebuilding

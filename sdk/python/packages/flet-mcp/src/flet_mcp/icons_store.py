@@ -1,48 +1,39 @@
-"""In-memory icon search across Material and Cupertino icon sets."""
+"""In-memory icon search across Material and Cupertino icon sets.
+
+Icon names come from the bundled api.json enums; Material synonym tags
+and popularity come from the committed `data/icons.json` (Google's own
+fonts.google.com search metadata, refreshed via
+`python -m flet_mcp.build.icons`). No runtime dependency on the flet
+package — flet-mcp consumers install only the MCP runtime.
+"""
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
-from importlib import resources
-
-import yaml
+from collections.abc import Iterable
 
 
 class IconStore:
-    def __init__(self):
-        # Load icon JSON files from the flet package
-        material_path = resources.files("flet") / "controls" / "material" / "icons.json"
-        cupertino_path = (
-            resources.files("flet") / "controls" / "cupertino" / "cupertino_icons.json"
-        )
+    def __init__(
+        self,
+        material: Iterable[str],
+        cupertino: Iterable[str],
+        material_meta: dict[str, dict] | None = None,
+    ):
+        """`material` / `cupertino` are icon member names (ADD, TRASH, …).
+        `material_meta` maps NAME -> {"tags": [...], "popularity": int}
+        (the icons.json payload); missing/empty degrades gracefully to
+        name-token search."""
+        self._material: list[str] = list(material)
+        self._cupertino: list[str] = list(cupertino)
+        self._meta: dict[str, dict] = material_meta or {}
 
-        with resources.as_file(material_path) as p:
-            self._material: dict[str, int] = json.loads(p.read_text("utf-8"))
-
-        with resources.as_file(cupertino_path) as p:
-            self._cupertino: dict[str, int] = json.loads(p.read_text("utf-8"))
-
-        # Load synonym data from flet_mcp/data/icons.yml
-        synonyms_path = resources.files("flet_mcp") / "data" / "icons.yml"
-        with resources.as_file(synonyms_path) as p:
-            self._synonyms_yaml: dict = yaml.safe_load(p.read_text("utf-8")) or {}
-
-        # Build a flat lookup: lowercase base name -> list of synonym keywords
-        self._synonym_map: dict[str, list[str]] = {}
-        for _category, icons in self._synonyms_yaml.items():
-            if not isinstance(icons, dict):
-                continue
-            for base_name, keywords in icons.items():
-                key = str(base_name).lower().replace(" ", "_")
-                if isinstance(keywords, list):
-                    self._synonym_map[key] = [str(k).lower() for k in keywords]
-
-        # Inverted index: keyword -> set of (family, icon_name)
+        # Inverted index: keyword -> set of (family, icon_name). Name
+        # tokens and synonym tags land in the same index and score the
+        # same — popularity does the ranking (Google's tags are their
+        # search index; a tag hit on ADD must beat a name hit on the
+        # obscure ONE_K_PLUS).
         self._index: dict[str, set[tuple[str, str]]] = defaultdict(set)
-
-        # Track which (family, icon_name) pairs have synonym-contributed keywords
-        self._synonym_entries: set[tuple[str, str, str]] = set()
 
         self._build_index()
 
@@ -52,19 +43,27 @@ class IconStore:
         for icon_name in self._cupertino:
             self._index_icon("cupertino", icon_name)
 
+    def _popularity(self, family: str, icon_name: str) -> int:
+        if family != "material":
+            return 0
+        meta = self._meta.get(icon_name) or self._meta.get(_base_name(icon_name))
+        return int(meta.get("popularity", 0)) if meta else 0
+
     def _index_icon(self, family: str, icon_name: str):
         entry = (family, icon_name)
-        tokens = icon_name.lower().split("_")
-        for token in tokens:
+        for token in icon_name.lower().split("_"):
             if token:
                 self._index[token].add(entry)
 
-        # Look up synonyms by the lowercase underscored name
-        lookup_key = icon_name.lower()
-        synonyms = self._synonym_map.get(lookup_key, [])
-        for keyword in synonyms:
-            self._index[keyword].add(entry)
-            self._synonym_entries.add((family, icon_name, keyword))
+        if family != "material":
+            return
+        # Tags are recorded for base names; style variants
+        # (_OUTLINED/_ROUNDED/_SHARP) inherit their base icon's tags.
+        meta = self._meta.get(icon_name) or self._meta.get(_base_name(icon_name))
+        for tag in (meta or {}).get("tags", []):
+            for word in str(tag).lower().split():
+                if word:
+                    self._index[word].add(entry)
 
     def find(
         self,
@@ -95,15 +94,7 @@ class IconStore:
                 fam, icon_name = entry
                 if family and fam != family:
                     continue
-
-                icon_tokens = set(icon_name.lower().split("_"))
-
-                # Check if this token matched via synonym
-                is_synonym = (fam, icon_name, token) in self._synonym_entries
-                if is_synonym:
-                    candidates[entry] += 5
-                else:
-                    candidates[entry] += 10
+                candidates[entry] += 10
 
         # Bonus for exact full-name match
         query_as_name = "_".join(query_tokens).upper()
@@ -111,28 +102,40 @@ class IconStore:
             if entry[1] == query_as_name:
                 candidates[entry] += 100
 
-        # Bonus: all query tokens present in icon name tokens
-        for entry in list(candidates):
-            icon_tokens = set(entry[1].lower().split("_"))
-            synonym_keywords = {
-                kw
-                for f, n, kw in self._synonym_entries
-                if f == entry[0] and n == entry[1]
-            }
-            all_tokens = icon_tokens | synonym_keywords
-            if all(qt in all_tokens for qt in query_tokens):
-                # Already scored per-token above; the per-token +10/+5 covers this
-                pass
-
-        sorted_results = sorted(candidates.items(), key=lambda x: -x[1])
+        # Deterministic order: score, then Google's popularity (common
+        # icons like ADD outrank obscure ones), then shorter names, then
+        # alphabetical — set iteration order must not decide what the
+        # model sees.
+        sorted_results = sorted(
+            candidates.items(),
+            key=lambda x: (
+                -x[1],
+                -self._popularity(*x[0]),
+                len(x[0][1]),
+                x[0][1],
+            ),
+        )
 
         results: list[str] = []
         for (fam, icon_name), _score in sorted_results:
             if len(results) >= limit:
                 break
+            # Collapse Material style variants (_OUTLINED/_ROUNDED/_SHARP)
+            # when their base icon is also a candidate — one icon should
+            # not spend several result slots.
+            base = _base_name(icon_name)
+            if base != icon_name and (fam, base) in candidates:
+                continue
             if fam == "material":
                 results.append(f"Icons.{icon_name}")
             else:
                 results.append(f"CupertinoIcons.{icon_name}")
 
         return results
+
+
+def _base_name(icon_name: str) -> str:
+    for suffix in ("_OUTLINED", "_ROUNDED", "_SHARP"):
+        if icon_name.endswith(suffix):
+            return icon_name[: -len(suffix)]
+    return icon_name

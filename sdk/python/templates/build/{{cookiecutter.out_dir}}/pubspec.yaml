@@ -30,11 +30,6 @@ dependencies:
   path: ^1.9.0
   window_manager: ^0.5.1
 
-# {% if 'flet_geolocator' in cookiecutter.flutter.dependencies %}
-#  geolocator: ^12.0.0
-#  geolocator_android: ^4.6.0
-# {% endif %}
-
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
@@ -49,14 +44,9 @@ flutter:
 
   uses-material-design: true
 
-# On native platforms the app ships unpacked inside the bundle (placed by
-# serious_python's platform build), so there is no app.zip Flutter asset. Only
-# the web (Pyodide) build still loads app/app.zip.
-#{% if cookiecutter.options.config_platform == "web" %}
-  assets:
-    - app/app.zip
-    - app/app.zip.hash
-#{% endif %}
+  # The web (Pyodide) build gets `assets:` with app/app.zip injected here by
+  # `flet build`; on native platforms the app ships unpacked inside the bundle
+  # (placed by serious_python's platform build), so there is no app.zip asset.
 
 # dart run flutter_launcher_icons
 flutter_launcher_icons:
