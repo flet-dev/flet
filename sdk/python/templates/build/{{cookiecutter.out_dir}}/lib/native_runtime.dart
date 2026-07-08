@@ -110,7 +110,7 @@ Future<String?> runPython({
   // backslashes (Windows paths), quotes, and non-ASCII.
   var script = pythonScript
       .replaceAll('{outLogFilename}', jsonEncode(outLogFilename))
-      .replaceAll('{module_name}', moduleName)
+      .replaceAll('{module_name}', jsonEncode(moduleName))
       .replaceAll('{argv}', jsonEncode(args.isNotEmpty ? args : [""]))
       .replaceAll('{host_executable}', jsonEncode(Platform.resolvedExecutable));
 

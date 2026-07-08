@@ -243,7 +243,8 @@ try:
         sys._base_executable = _sp_host_exe
 
     # Execute the configured app module as the real __main__ module.
-    _sp_run_module_as_main("{module_name}")
+    # {module_name} is spliced in as a JSON string literal (quotes included).
+    _sp_run_module_as_main({module_name})
 except Exception as e:
     ex = e
     traceback.print_exception(e)
