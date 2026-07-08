@@ -1,10 +1,10 @@
 [project]
 name = "flet-app"
 version = "1.0.0"
-description = "Tap the button, watch the number grow — the classic counter everyone starts with."
-requires-python = ">=3.10"
+description = "A simple Flet app."
+requires-python = ">=3.12"
 authors = [
-    { name = "Flet developer", email = "you@example.com" }
+    { name = "Your name", email = "you@example.com" }
 ]
 dependencies = [
     "flet"
@@ -18,10 +18,7 @@ dev = [
 ]
 
 [tool.flet.metadata]
-title = "Counter"
-
-[tool.flet.gallery]
-categories = ["Getting Started"]
+title = "AI Template"
 
 [tool.flet]
 org = "dev.flet"
