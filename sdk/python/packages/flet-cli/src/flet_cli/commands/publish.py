@@ -24,6 +24,8 @@ from flet_cli.utils.python_versions import (
 class Command(BaseCommand):
     """
     Compile and package a Flet app as a standalone static web application.
+
+    Detailed usage guide: https://flet.dev/docs/publish/web/static-website
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

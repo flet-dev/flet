@@ -24,6 +24,8 @@ class Command(BaseCommand):
     Create a new Flet project using a predefined template.
     It sets up the initial directory structure, metadata,
     and required files to help you get started quickly.
+
+    Detailed guide with usage examples: https://flet.dev/docs/getting-started/create-flet-app
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

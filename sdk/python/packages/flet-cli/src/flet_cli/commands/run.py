@@ -28,6 +28,8 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 class Command(BaseCommand):
     """
     Run a Flet application in hot reload mode.
+
+    Detailed usage guide: https://flet.dev/docs/getting-started/running-app
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

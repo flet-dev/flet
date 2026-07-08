@@ -12,6 +12,8 @@ from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_sty
 class Command(BaseBuildCommand):
     """
     Run a Flet Python app in debug mode on a specified platform (desktop, web, mobile).
+
+    Detailed usage guide: https://flet.dev/blog/flet-debug-the-new-cli-for-testing-flet-apps-on-mobile-devices
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:

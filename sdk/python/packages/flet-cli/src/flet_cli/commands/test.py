@@ -104,6 +104,8 @@ class Command(BaseBuildCommand):
     `flet build`, in test mode) so the app runs on-device with embedded Python,
     then runs pytest. Tests in the `tests/` directory drive the app through the
     `flet_app` fixture (find controls by key, tap, take/assert screenshots).
+
+    Detailed usage guide: https://flet.dev/docs/getting-started/integration-testing
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
