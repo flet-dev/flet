@@ -79,10 +79,16 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
             childWidth = 0;
           }
 
+          // Key the child with a GlobalKey tied to its Control identity so
+          // that when this build switches between Row and Wrap (a different
+          // widget type at the same slot), Flutter re-parents the existing
+          // Element instead of re-inflating the subtree — otherwise stateful
+          // descendants (video players, WebViews, scroll positions) would
+          // lose their State on every breakpoint change.
           controls.add(ConstrainedBox(
             constraints:
                 BoxConstraints(minWidth: childWidth, maxWidth: childWidth),
-            child: ControlWidget(key: key, control: ctrl),
+            child: ControlWidget(key: GlobalObjectKey(ctrl), control: ctrl),
           ));
         }
 
