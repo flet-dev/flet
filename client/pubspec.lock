@@ -430,6 +430,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  flet_integration_test:
+    dependency: "direct dev"
+    description:
+      path: "../packages/flet_integration_test"
+      relative: true
+    source: path
+    version: "0.86.0"
   flet_lottie:
     dependency: "direct main"
     description:
@@ -1363,13 +1370,13 @@ packages:
     source: hosted
     version: "2.0.4"
   screen_brightness:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: screen_brightness
-      sha256: e0edf92c08889e8f493cde291e7c687db2b4a1471f2371c074070b75d7c7d79b
+      sha256: "5f70754028f169f059fdc61112a19dcbee152f8b293c42c848317854d650cba3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.11"
+    version: "2.1.7"
   screen_brightness_android:
     dependency: transitive
     description:
@@ -1387,13 +1394,13 @@ packages:
     source: hosted
     version: "2.1.4"
   screen_brightness_macos:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: screen_brightness_macos
-      sha256: b0957237b842d846a84363b69f229b339a8f91faced55041e245b2ebff7b0142
+      sha256: "278712cf5288db57bd335968cbfb2ec5441028f1ee2fcbdc8d1582d8210a3442"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.2"
   screen_brightness_ohos:
     dependency: transitive
     description:

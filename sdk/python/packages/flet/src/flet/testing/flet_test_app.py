@@ -175,6 +175,8 @@ class FletTestApp:
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
+        self.__flutter_output = bytearray()
+        self.__flutter_output_task: Optional[asyncio.Task] = None
         self.__page = None
         self.__tester: Union[Tester, RemoteTester, None] = None
 
@@ -256,15 +258,14 @@ class FletTestApp:
             print("Started Flet app")
 
         # Stream the Flutter test process output to the console when verbose
-        # (set by `flet test -v`) or when debug logging is on; otherwise hide it.
-        stdout = asyncio.subprocess.DEVNULL
-        stderr = asyncio.subprocess.DEVNULL
-        if (
+        # (set by `flet test -v`) or when debug logging is on; otherwise
+        # capture it into a buffer so it can be dumped if the process fails.
+        verbose = (
             get_bool_env_var("FLET_TEST_VERBOSE")
             or logging.getLogger().getEffectiveLevel() == logging.DEBUG
-        ):
-            stdout = None
-            stderr = None
+        )
+        stdout = None if verbose else asyncio.subprocess.PIPE
+        stderr = None if verbose else asyncio.subprocess.STDOUT
 
         # The resolved Flutter executable (full path, `flutter.bat` on Windows)
         # is passed by `flet test`; fall back to a bare "flutter" on PATH.
@@ -320,6 +321,11 @@ class FletTestApp:
             stderr=stderr,
         )
 
+        if self.__flutter_process.stdout is not None:
+            self.__flutter_output_task = asyncio.create_task(
+                self.__read_flutter_output(self.__flutter_process.stdout)
+            )
+
         print("Started Flutter test process.")
         print("Waiting for the Flutter app to connect...")
 
@@ -331,10 +337,53 @@ class FletTestApp:
         while not connected():
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
+                self.__dump_flutter_output()
                 raise RuntimeError(
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+
+    async def __read_flutter_output(self, stream: asyncio.StreamReader):
+        # Read in chunks, not lines: the Flet client's debug output includes
+        # very long lines (e.g. screenshot bytes) that overflow StreamReader's
+        # per-line limit. Overlong lines are cut and only the output tail is
+        # kept to bound memory.
+        line = bytearray()
+        truncated = False
+        while True:
+            chunk = await stream.read(65536)
+            if not chunk:
+                break
+            for part in chunk.splitlines(keepends=True):
+                line.extend(part)
+                if line.endswith((b"\n", b"\r")):
+                    self.__append_flutter_output_line(line, truncated)
+                    line.clear()
+                    truncated = False
+                elif len(line) > self.__flutter_output_line_limit:
+                    del line[self.__flutter_output_line_limit :]
+                    truncated = True
+        if line:
+            self.__append_flutter_output_line(line, truncated)
+
+    def __append_flutter_output_line(self, line: bytearray, truncated: bool):
+        if len(line) > self.__flutter_output_line_limit:
+            line = line[: self.__flutter_output_line_limit]
+            truncated = True
+        self.__flutter_output.extend(line.rstrip(b"\r\n"))
+        if truncated:
+            self.__flutter_output.extend(b" ...<truncated>")
+        self.__flutter_output.extend(b"\n")
+        if len(self.__flutter_output) > self.__flutter_output_limit:
+            del self.__flutter_output[: -self.__flutter_output_limit]
+
+    def __dump_flutter_output(self):
+        if not self.__flutter_output:
+            return
+        output = self.__flutter_output.decode(errors="replace")
+        print("---------- Flutter test process output (tail) ----------")
+        print(output)
+        print("---------- End of Flutter test process output ----------")
 
     def __flutter_test_target(self) -> str:
         # In device mode the driver (`integration_test/app_test.dart`) is
@@ -383,6 +432,12 @@ class FletTestApp:
                     print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
+        if self.__flutter_output_task:
+            try:
+                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
+            except asyncio.TimeoutError:
+                self.__flutter_output_task.cancel()
+
         # Stop the RemoteTester socket server (device mode).
         if isinstance(self.__tester, RemoteTester):
             await self.__tester.stop()
@@ -392,6 +447,7 @@ class FletTestApp:
         # `testWidgets` body even though our find/tap assertions passed). Surface
         # that as a test failure — otherwise the run is falsely green.
         if flutter_returncode is not None and flutter_returncode != 0:
+            self.__dump_flutter_output()
             raise RuntimeError(
                 f"Flutter integration test process failed with exit code "
                 f"{flutter_returncode}. See the Flutter test output above."
@@ -420,8 +476,10 @@ class FletTestApp:
         """
         controls = list(self.page.controls)
         self.page.controls = [
-            scr := ft.Screenshot(
-                ft.Column(controls, margin=margin, intrinsic_width=True)
+            self.__scrollable_screenshot_host(
+                scr := ft.Screenshot(
+                    ft.Column(controls, margin=margin, intrinsic_width=True)
+                )
             )
         ]  # type: ignore
         self.page.update()
@@ -470,7 +528,11 @@ class FletTestApp:
 
         # add control and take screenshot
         screenshot = ft.Screenshot(control, expand=expand_screenshot)
-        self.page.add(screenshot)
+        self.page.add(
+            screenshot
+            if expand_screenshot
+            else self.__scrollable_screenshot_host(screenshot)
+        )
         await self.__pump_and_settle_with_timeout("assert_control_screenshot-add")
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
@@ -478,6 +540,24 @@ class FletTestApp:
             name,
             await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
             similarity_threshold=similarity_threshold,
+        )
+
+    def __scrollable_screenshot_host(
+        self, screenshot: ft.Screenshot
+    ) -> Union[ft.Screenshot, ft.Column]:
+        # A scrollable page cannot overflow; an expanded host inside it would
+        # be flex-in-unbounded-height and fail layout instead.
+        if self.page.scroll is not None:
+            return screenshot
+        # Host the screenshot in a scrollable column: content taller than the
+        # window then scrolls instead of overflowing the page (an overflow
+        # error fails the Flutter test process). The child sees the same
+        # unbounded-height constraints as in the page column, so captures are
+        # unaffected.
+        return ft.Column(
+            expand=True,
+            scroll=ft.ScrollMode.HIDDEN,
+            controls=[screenshot],
         )
 
     async def __pump_and_settle_with_timeout(self, stage: str):
@@ -849,3 +929,5 @@ class FletTestApp:
             return min(similarities), None
 
     __pump_and_settle_timeout = 10.0
+    __flutter_output_limit = 262144
+    __flutter_output_line_limit = 2048

@@ -138,10 +138,19 @@ async def test_all_controls_render(flet_app: ftt.FletTestApp):
     ]
     flet_app.page.clean()
     flet_app.page.add(
-        ft.Row(
-            wrap=True,
-            key="row",
-            controls=[cls(color=ft.Colors.BLUE, size=40) for cls in controls],
+        # The wrapped row of all spinners is much taller than the test window;
+        # host it in a scrollable column so the page doesn't overflow (an
+        # overflow error fails the Flutter test process).
+        ft.Column(
+            scroll=ft.ScrollMode.AUTO,
+            expand=True,
+            controls=[
+                ft.Row(
+                    wrap=True,
+                    key="row",
+                    controls=[cls(color=ft.Colors.BLUE, size=40) for cls in controls],
+                )
+            ],
         )
     )
     await flet_app.tester.pump(duration=ft.Duration(milliseconds=500))

@@ -25,6 +25,26 @@ void runFletHostTest({
 }) {
   var binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  // With the integration_test binding `flutter test` prints only
+  // "Test failed. See exception logs above." without ever printing the
+  // exception that failed the test (e.g. a render overflow reported during a
+  // frame). Log it here so the failure reason is visible in the test process
+  // output.
+  final prevReportTestException = reportTestException;
+  reportTestException = (details, testDescription) {
+    debugPrint("Test exception ($testDescription): "
+        "${details.exceptionAsString()}\n${details.stack ?? ''}");
+    prevReportTestException(details, testDescription);
+  };
+  debugPrint("Flet host test: exception reporter installed");
+
+  tearDownAll(() async {
+    // Exceptions are reported when the test body completes, moments before
+    // the app process exits; give the device-log relay time to flush them so
+    // they are not lost from the `flutter test` output.
+    await Future.delayed(const Duration(seconds: 2));
+  });
+
   group('end-to-end test', () {
     testWidgets('test app', (tester) async {
       var dir = Directory.current.path;

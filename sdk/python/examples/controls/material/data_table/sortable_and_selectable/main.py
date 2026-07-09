@@ -2,6 +2,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    page.scroll = ft.ScrollMode.AUTO
     inventory_items = [
         {"id": 1, "name": "Alpha", "qty": 4},
         {"id": 2, "name": "Bravo", "qty": 9},

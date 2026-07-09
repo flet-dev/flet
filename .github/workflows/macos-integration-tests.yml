@@ -42,19 +42,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TEMPORARY: only the tests affected by the overflow fixes; restore
+        # the full suite list below before merging.
+        # - apps
+        # - examples/apps
+        # - examples/controls/core
+        # - examples/controls/cupertino
+        # - examples/controls/material
+        # - examples/extensions
+        # - controls/core
+        # - controls/cupertino
+        # - controls/material
+        # - controls/services
+        # - controls/theme
+        # - extensions
         suite:
-        - apps
-        - examples/apps
-        - examples/controls/core
-        - examples/controls/cupertino
-        - examples/controls/material
-        - examples/extensions
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/services
-        - controls/theme
-        - extensions
+        - controls/material/test_grid_view.py
+        - controls/material/test_markdown.py
+        - extensions/spinkit
+        - examples/controls/material/test_datatable.py
+        - examples/controls/core/test_row.py
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
