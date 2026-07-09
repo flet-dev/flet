@@ -49,6 +49,7 @@
 * Fix `ProgressRing.year_2023` being ignored, so the control correctly switches between the latest and 2023 Material Design appearances ([#6614](https://github.com/flet-dev/flet/issues/6614)) by @ndonkoHenri.
 * `flet build ipa` / `ios` apps that ship ctypes packages with plain `.dylib` shared libraries (e.g. `llama-cpp-python`) now load them on the **iOS simulator** instead of failing at launch with a `dlopen` platform mismatch (`have 'iOS', need 'iOS-simulator'`); the iOS runtime also now bundles the `_multiprocessing` extension (importable, not spawnable). Bumps the pinned bundle to `serious_python` 4.2.1 / python-build `20260701` ([serious_python#223](https://github.com/flet-dev/serious-python/pull/223)) by @ndonkoHenri, @FeodorFitsner.
 * Improve performance of checking added/removed controls in Session.patch_control from O(N²) to O(N) ([#6651](https://github.com/flet-dev/flet/pull/6651)) by @davidlawson.
+* Fix stateful controls inside `ResponsiveRow` (video players, WebViews, scroll positions) losing their state whenever a window resize crossed a breakpoint and the layout switched between a single row and wrapping ([#6661](https://github.com/flet-dev/flet/issues/6661), [#6663](https://github.com/flet-dev/flet/pull/6663)) by @FeodorFitsner.
 
 ### Documentation
 
