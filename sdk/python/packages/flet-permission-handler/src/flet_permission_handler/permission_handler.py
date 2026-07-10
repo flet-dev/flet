@@ -27,6 +27,7 @@ class PermissionHandler(ft.Service):
             or self.page.platform
             in [
                 ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
                 ft.PagePlatform.IOS,
                 ft.PagePlatform.WINDOWS,
             ]
