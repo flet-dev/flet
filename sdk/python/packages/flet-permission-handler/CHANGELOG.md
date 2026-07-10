@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.86.0
+
+### Bug fixes
+
+* Removed platform restriction - `PermissionHandler` can now be used on `PagePlatform.ANDROID_TV`. Not officially supported by the underlying flutter `permission_handler` package, but most functionality works reliably across a wide range of Android TV builds. ([#6667](https://github.com/flet-dev/flet/pull/6667)) by @bl1nch.
+
 ## 0.80.0
 
 ## Added
