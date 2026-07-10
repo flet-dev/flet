@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Bug fixes
 
-* Removed platform restriction - `PermissionHandler` can now be used on `PagePlatform.ANDROID_TV`. Not officially supported by the underlying flutter `permission_handler` package, but most functionality works reliably across a wide range of Android TV builds. ([#6667](https://github.com/flet-dev/flet/pull/6667)) by @bl1nch.
+* Removed platform restriction - `PermissionHandler` can now be used on `PagePlatform.ANDROID_TV`. Not officially supported by the underlying flutter `permission_handler` package, but most functionality works reliably across a wide range of Android TV builds. ([#6667](https://github.com/flet-dev/flet/pull/6667)).
 
 ## 0.80.0
 
