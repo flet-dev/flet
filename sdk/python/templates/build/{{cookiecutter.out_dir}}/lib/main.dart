@@ -255,9 +255,16 @@ class _BootOverlayState extends State<_BootOverlay> {
   }
 
   void _onStatus() {
-    if (!_fadingOut && widget.status.value.done) {
-      setState(() => _fadingOut = true);
-    }
+    if (_fadingOut || !widget.status.value.done) return;
+    // With a zero fade duration the AnimatedOpacity below completes
+    // synchronously, firing onEnd (and its setState) in the middle of this
+    // widget's own rebuild, which trips the framework's `!_dirty` assert in
+    // debug mode. Skip the animation and remove the overlay in one step.
+    final fadeMs = parseInt(bootScreenOptions["fade_out_duration"], 0)!;
+    setState(() {
+      _fadingOut = true;
+      if (fadeMs == 0) _removed = true;
+    });
   }
 
   @override
