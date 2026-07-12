@@ -24,7 +24,12 @@ class FletSocketBackendChannel implements FletBackendChannel {
   late final int _defaultReconnectIntervalMs;
 
   // Inbound framing state: accumulate bytes, parse length-prefixed packets.
+  // The builder is only flattened when a complete packet (or the 4-byte
+  // length header) is available — never per incoming chunk, which would be
+  // quadratic in packet size (multi-MB raw image frames arrive in dozens
+  // of socket chunks).
   final BytesBuilder _inboundBuffer = BytesBuilder(copy: false);
+  int? _pendingLen;
 
   FletSocketBackendChannel({
     required this.address,
@@ -72,22 +77,26 @@ class FletSocketBackendChannel implements FletBackendChannel {
     _inboundBuffer.add(chunk);
     // Parse as many complete packets as the buffer currently holds.
     while (true) {
-      final buffered = _inboundBuffer.length;
-      if (buffered < 4) return;
-      final bytes = _inboundBuffer.toBytes();
-      final len = ByteData.sublistView(bytes, 0, 4).getUint32(0, Endian.little);
-      if (bytes.length < 4 + len) {
-        // Reset builder to the partial-packet remainder so we accumulate
-        // the rest on the next read.
-        _inboundBuffer.clear();
-        _inboundBuffer.add(bytes);
-        return;
+      if (_pendingLen == null) {
+        if (_inboundBuffer.length < 4) return;
+        // Flatten to read the header. Cheap: at this point the buffer
+        // holds at most one packet's worth of unconsumed leading bytes,
+        // and with a single stored chunk takeBytes returns it as-is.
+        final bytes = _inboundBuffer.takeBytes();
+        _pendingLen =
+            ByteData.sublistView(bytes, 0, 4).getUint32(0, Endian.little);
+        if (bytes.length > 4) {
+          _inboundBuffer.add(Uint8List.sublistView(bytes, 4));
+        }
       }
-      final packet = Uint8List.sublistView(bytes, 4, 4 + len);
-      onPacket(packet);
-      _inboundBuffer.clear();
-      if (bytes.length > 4 + len) {
-        _inboundBuffer.add(Uint8List.sublistView(bytes, 4 + len));
+      final len = _pendingLen!;
+      if (_inboundBuffer.length < len) return;
+      // Single flatten once the whole packet has arrived.
+      final bytes = _inboundBuffer.takeBytes();
+      _pendingLen = null;
+      onPacket(Uint8List.sublistView(bytes, 0, len));
+      if (bytes.length > len) {
+        _inboundBuffer.add(Uint8List.sublistView(bytes, len));
       }
     }
   }

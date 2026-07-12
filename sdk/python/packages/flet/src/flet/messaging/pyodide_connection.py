@@ -54,6 +54,8 @@ class PyodideConnection(Connection):
         # DataChannels ride the same postMessage transport as the Flet
         # protocol — disambiguated by the wire-format type byte.
         self._data_channels: dict[int, Any] = {}
+        # postMessage inside the browser — same-machine, memcpy-class.
+        self.local_data_transport = True
         self.pubsubhub = PubSubHub()
         self.loop = asyncio.get_running_loop()
 

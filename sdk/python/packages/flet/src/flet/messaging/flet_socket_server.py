@@ -75,6 +75,8 @@ class FletSocketServer(Connection):
         # side; populated lazily on the first Control.get_data_channel(id)
         # call. Frames for unknown ids are silently dropped.
         self._data_channels: dict[int, Any] = {}
+        # UDS or localhost TCP only — always same-machine.
+        self.local_data_transport = True
         self.loop = loop
         self.executor = executor
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)
@@ -445,9 +447,16 @@ class FletSocketServer(Connection):
     def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
         """Send a raw DataChannel frame `[length][0x01][channel_id:u32 LE][bytes]`.
         Called by `_ProtocolMuxedDataChannel.send` on the Python side."""
-        header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
-        packet = header + payload
-        framed = len(packet).to_bytes(4, "little", signed=False) + packet
+        # Single-copy assembly — sequential concats would copy the
+        # (potentially multi-MB) payload twice.
+        framed = b"".join(
+            [
+                (5 + len(payload)).to_bytes(4, "little", signed=False),
+                b"\x01",
+                channel_id.to_bytes(4, "little", signed=False),
+                payload,
+            ]
+        )
         if self.__send_queue is not None:
             self.__send_queue.put_nowait(framed)
 

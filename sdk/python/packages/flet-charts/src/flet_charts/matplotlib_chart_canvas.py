@@ -27,22 +27,24 @@ class MatplotlibChartCanvas(ft.LayoutControl):
     """
     Display widget for matplotlib WebAgg-style image streams.
 
-    Receives full and incremental "diff" PNG frames and composites them in
-    CPU memory, holding at most one decoded image for display at a time.
-    Frames flow over a dedicated [ft.DataChannel] rather than the regular
-    Flet protocol, so the PNG bytes skip MsgPack encode/decode and travel
-    at memory-bandwidth-class speed in embedded native mode (per-channel
+    Receives either raw RGBA full frames (local transports) or full and
+    incremental "diff" PNG frames (remote WebSocket) and displays them,
+    holding at most one decoded image at a time. Frames flow over a
+    dedicated [ft.DataChannel] rather than the regular Flet protocol, so
+    the frame bytes skip MsgPack encode/decode and travel at
+    memory-bandwidth-class speed in embedded native mode (per-channel
     PythonBridge) and at near-bandwidth speed in web/dev modes (raw-byte
     frames muxed over the protocol transport).
 
     Wire format on the data channel (one byte of opcode followed by the
-    PNG payload):
+    payload):
 
-    | opcode | payload    | meaning                                    |
-    |--------|------------|--------------------------------------------|
-    | 0x01   | PNG bytes  | apply_full — replace backdrop              |
-    | 0x02   | PNG bytes  | apply_diff — composite onto backbuffer     |
-    | 0x03   | (empty)    | clear — drop backdrop + backbuffer         |
+    | opcode | payload                       | meaning                                 |
+    |--------|-------------------------------|-----------------------------------------|
+    | 0x01   | PNG bytes                     | apply_full — replace backdrop           |
+    | 0x02   | PNG bytes                     | apply_diff — composite onto backbuffer  |
+    | 0x03   | (empty)                       | clear — drop backdrop + backbuffer      |
+    | 0x04   | [w u32 LE][h u32 LE][RGBA]    | raw full frame, premultiplied RGBA8888  |
 
     The reverse-direction `resize` event (Dart → Python, small JSON-shaped
     payload) stays on the existing Flet protocol channel — no reason to
@@ -164,3 +166,42 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         Clear the displayed image and discard the backbuffer.
         """
         await self._send_and_wait(b"\x03")
+
+    @staticmethod
+    def encode_raw_frame(width: int, height: int, rgba) -> bytes:
+        """
+        Encode a raw full frame into a 0x04 wire packet.
+
+        Args:
+            width: Frame width in physical pixels.
+            height: Frame height in physical pixels.
+            rgba: Premultiplied RGBA8888 pixels, `width * height * 4` bytes
+                (bytes-like; a memoryview aliasing a live buffer is copied
+                here exactly once).
+        """
+        pkt = bytearray(9 + len(rgba))
+        pkt[0] = 0x04
+        pkt[1:5] = width.to_bytes(4, "little")
+        pkt[5:9] = height.to_bytes(4, "little")
+        pkt[9:] = rgba
+        return bytes(pkt)
+
+    async def apply_raw(self, width: int, height: int, rgba: bytes) -> None:
+        """
+        Replace the displayed image with a raw premultiplied-RGBA full frame.
+
+        Args:
+            width: Frame width in physical pixels.
+            height: Frame height in physical pixels.
+            rgba: Premultiplied RGBA8888 pixels, `width * height * 4` bytes.
+        """
+        await self._send_and_wait(self.encode_raw_frame(width, height, rgba))
+
+    async def apply_raw_packet(self, packet: bytes) -> None:
+        """
+        Send a pre-encoded 0x04 raw-frame packet (avoids a second copy).
+
+        Args:
+            packet: Complete wire packet produced by `encode_raw_frame`.
+        """
+        await self._send_and_wait(packet)

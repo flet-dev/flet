@@ -113,7 +113,7 @@ class Command(BaseCommand):
             dest="web_renderer",
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
-            default="auto",
+            default=None,
             help="Flutter web renderer to use [env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
@@ -354,10 +354,14 @@ class Command(BaseCommand):
             pyodide_pre=options.pre,
             pyodide_script_path=str(script_path),
             pyodide_version=python_release.pyodide,
+            # "canvaskit" default for the same reason as `flet build web`:
+            # "auto" puts Chromium on dart2wasm/skwasm, whose JS <-> Dart
+            # typed-data boundary costs are a large per-frame tax for
+            # byte-streaming Pyodide apps.
             web_renderer=WebRenderer(
                 options.web_renderer
                 or get_pyproject("tool.flet.web.renderer")
-                or "auto"
+                or "canvaskit"
             ),
             route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy

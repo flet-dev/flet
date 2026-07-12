@@ -21,6 +21,11 @@ class Connection:
     def __init__(self):
         self.page_name: str = ""
         self.page_url: Optional[str] = None
+        # True when the connected client runs on the same machine (or in the
+        # same process), so DataChannel bytes move at local-IPC / memcpy
+        # speed. Widgets may use this to prefer uncompressed payloads over
+        # encoded ones.
+        self.local_data_transport: bool = False
         self.__pubsubhub = None
         self.__loop: Optional[AbstractEventLoop] = None
         self.__executor: Optional[ThreadPoolExecutor] = None

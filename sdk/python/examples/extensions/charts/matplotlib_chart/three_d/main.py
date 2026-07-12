@@ -44,6 +44,8 @@ class FrameStats:
         self.full_total = 0
         self.diff_count = 0
         self.diff_total = 0
+        self.raw_count = 0
+        self.raw_total = 0
         self.bytes_total = 0
         self._recent: deque[_Frame] = deque()
         # Latency tracking: each entry is (timestamp_when_observed, latency_seconds).
@@ -53,10 +55,17 @@ class FrameStats:
         self._inflight_send_ts: float | None = None
         self._last_ack_ts: float | None = None
 
-    def record_send(self, size: int, is_full: bool) -> None:
-        """Frame about to leave Python — record size and mark in-flight."""
+    def record_send(self, size: int, kind: str) -> None:
+        """Frame about to leave Python — record size and mark in-flight.
+
+        `kind` is "raw" (uncompressed RGBA full frame, local transports),
+        "full" or "diff" (PNG frames, remote transports).
+        """
         now = time.monotonic()
-        if is_full:
+        if kind == "raw":
+            self.raw_count += 1
+            self.raw_total += size
+        elif kind == "full":
             self.full_count += 1
             self.full_total += size
         else:
@@ -99,6 +108,10 @@ class FrameStats:
     @property
     def avg_diff(self) -> float:
         return self.diff_total / self.diff_count if self.diff_count else 0.0
+
+    @property
+    def avg_raw(self) -> float:
+        return self.raw_total / self.raw_count if self.raw_count else 0.0
 
     def speed_and_fps(self) -> tuple[float, float]:
         now = time.monotonic()
@@ -170,6 +183,7 @@ async def main(page: ft.Page):
     chart = flet_charts.MatplotlibChartWithToolbar(figure=fig, expand=True)
 
     # Status bar: regular Flet Text controls in a Row at the bottom.
+    avg_raw_text = ft.Text("avg raw: —", size=12)
     avg_full_text = ft.Text("avg full: —", size=12)
     avg_diff_text = ft.Text("avg diff: —", size=12)
     total_text = ft.Text("total: —", size=12)
@@ -181,6 +195,7 @@ async def main(page: ft.Page):
     status_bar = ft.Container(
         content=ft.Row(
             [
+                avg_raw_text,
                 avg_full_text,
                 avg_diff_text,
                 total_text,
@@ -215,17 +230,23 @@ async def main(page: ft.Page):
     canvas = chart.mpl.mpl_canvas
     orig_full = canvas.apply_full
     orig_diff = canvas.apply_diff
+    orig_raw = canvas.apply_raw_packet
 
     async def apply_full(image_bytes: bytes) -> None:
-        stats.record_send(len(image_bytes), is_full=True)
+        stats.record_send(len(image_bytes), kind="full")
         await orig_full(image_bytes)
 
     async def apply_diff(image_bytes: bytes) -> None:
-        stats.record_send(len(image_bytes), is_full=False)
+        stats.record_send(len(image_bytes), kind="diff")
         await orig_diff(image_bytes)
+
+    async def apply_raw_packet(packet: bytes) -> None:
+        stats.record_send(len(packet), kind="raw")
+        await orig_raw(packet)
 
     canvas.apply_full = apply_full
     canvas.apply_diff = apply_diff
+    canvas.apply_raw_packet = apply_raw_packet
 
     # Register an observer for frame-applied acks so we can record the
     # Dart-side timing. Pure observation — backpressure is handled by
@@ -238,6 +259,9 @@ async def main(page: ft.Page):
     async def refresh_loop() -> None:
         while True:
             speed, fps = stats.speed_and_fps()
+            avg_raw_text.value = (
+                f"avg raw: {_human_bytes(stats.avg_raw)} (n={stats.raw_count})"
+            )
             avg_full_text.value = (
                 f"avg full: {_human_bytes(stats.avg_full)} (n={stats.full_count})"
             )
@@ -249,7 +273,11 @@ async def main(page: ft.Page):
             fps_text.value = f"fps: {fps:.1f}"
             dart_text.value = f"dart: {stats.dart_avg_ms():.1f} ms"
             mpl_text.value = f"mpl: {stats.mpl_avg_ms():.1f} ms"
-            page.update()
+            try:
+                page.update()
+            except RuntimeError:
+                # Window closed — session destroyed; stop refreshing.
+                return
             await asyncio.sleep(0.25)
 
     asyncio.create_task(refresh_loop())

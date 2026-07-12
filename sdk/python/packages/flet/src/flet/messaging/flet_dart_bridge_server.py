@@ -82,6 +82,8 @@ class FletDartBridgeServer(Connection):
         self.__inbound_queue: asyncio.Queue[bytes] = asyncio.Queue()
         self.__inbound_task: Optional[asyncio.Task] = None
         self.__running_tasks: set[asyncio.Task] = set()
+        # In-process transport — DataChannel bytes move at memcpy speed.
+        self.local_data_transport = True
         self.loop = loop
         self.executor = executor
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)

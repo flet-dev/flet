@@ -126,6 +126,14 @@ class MatplotlibChart(ft.GestureDetector):
         self.__dpr = self.page.media.device_pixel_ratio
         logger.debug(f"DPR: {self.__dpr}")
         self.__image_mode = "full"
+        # Local transports (embedded native, Pyodide, dev socket) move
+        # DataChannel bytes at memcpy speed, so skip diffing + PNG encoding
+        # and stream raw RGBA full frames instead. Remote WebSocket clients
+        # keep the compact PNG full/diff pipeline.
+        self.wants_raw_frames = getattr(
+            self.page.session.connection, "local_data_transport", False
+        )
+        logger.debug(f"wants_raw_frames: {self.wants_raw_frames}")
 
         self.mpl_canvas = MatplotlibChartCanvas(
             on_resize=self._on_canvas_resize,
@@ -432,10 +440,9 @@ class MatplotlibChart(ft.GestureDetector):
             is_binary, content = await self._receive_queue.get()
 
             if is_binary:
-                assert isinstance(content, (bytes, bytearray))
-                logger.debug(f"receive_binary({len(content)})")
-                # Hand the frame to the client widget — full PNG replaces
-                # the backbuffer, diff PNG composites onto it. `await`
+                # Hand the frame to the client widget — a raw RGBA frame
+                # (pre-encoded 0x04 packet) or full PNG replaces the
+                # backbuffer, diff PNG composites onto it. `await`
                 # here serialises this receive loop on the Dart-side
                 # frame-applied ack: matplotlib "draw" notifications that
                 # arrive during the round-trip stay queued in
@@ -443,9 +450,14 @@ class MatplotlibChart(ft.GestureDetector):
                 # instead of being eagerly dropped against a stale
                 # `_waiting=True` gate. This is the same backpressure shape
                 # the 0.85 `_invoke_method` round-trip used to provide.
-                if self.__image_mode == "full":
+                if isinstance(content, tuple) and content[0] == "raw":
+                    logger.debug(f"receive_binary(raw, {len(content[1])})")
+                    await self.mpl_canvas.apply_raw_packet(content[1])
+                elif self.__image_mode == "full":
+                    logger.debug(f"receive_binary(full, {len(content)})")
                     await self.mpl_canvas.apply_full(bytes(content))
                 else:
+                    logger.debug(f"receive_binary(diff, {len(content)})")
                     await self.mpl_canvas.apply_diff(bytes(content))
                 self.img_count += 1
                 self._waiting = False
@@ -508,7 +520,18 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def send_binary(self, blob):
-        """Sends a binary message to the front end."""
+        """Sends a binary message to the front end.
+
+        Receives PNG `bytes` from matplotlib's stock full/diff path, or a
+        `(width, height, rgba)` tuple from `FigureManagerFletAgg.refresh_all`
+        in raw mode. This method runs synchronously inside `refresh_all()`
+        (same stack as `draw()`), which is the last safe moment to copy the
+        raw buffer — it aliases the live Agg buffer that the next draw
+        mutates in place. `encode_raw_frame` performs that one copy while
+        assembling the wire packet.
+        """
+        if isinstance(blob, tuple):
+            blob = ("raw", MatplotlibChartCanvas.encode_raw_frame(*blob))
         self._main_loop.call_soon_threadsafe(
             lambda: self._receive_queue.put_nowait((True, blob))
         )
