@@ -26,6 +26,9 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 #### Breaking changes
 
+- [App files ship unpacked in a read-only bundle; storage dirs reworked](/docs/updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle)
+- [Android: site-packages ship zipped; some packages need `extract_packages`](/docs/updates/breaking-changes/v0-86-0/android-extract-packages)
+- [Android: `x86` removed from target architectures](/docs/updates/breaking-changes/v0-86-0/android-x86-arch-removed)
 - [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/v0-86-0/default-bundled-python-3-14)
 - [App and packages are compiled to `.pyc` by default](/docs/updates/breaking-changes/v0-86-0/compile-on-by-default)
 - [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/v0-86-0/removed-pyodide-version-export)

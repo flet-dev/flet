@@ -73,6 +73,8 @@ docs:
       _index: updates/breaking-changes/index.md
       v0.86.0:
         App files ship unpacked in a read-only bundle; storage dirs reworked: updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle.md
+        "Android: site-packages ship zipped; some packages need extract_packages": updates/breaking-changes/v0-86-0/android-extract-packages.md
+        "Android: x86 removed from target architectures": updates/breaking-changes/v0-86-0/android-x86-arch-removed.md
         Default bundled Python version is now 3.14: updates/breaking-changes/v0-86-0/default-bundled-python-3-14.md
         App and packages are compiled to .pyc by default: updates/breaking-changes/v0-86-0/compile-on-by-default.md
         flet.version.pyodide_version and PYODIDE_VERSION removed: updates/breaking-changes/v0-86-0/removed-pyodide-version-export.md

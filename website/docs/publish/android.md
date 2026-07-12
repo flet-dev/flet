@@ -78,6 +78,9 @@ The following target architectures are supported:
 - [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64) (64-bit) — Python `3.12` and above
 - [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) (32-bit) — Python `3.12` **only**
 
+The 32-bit `x86` ABI is not supported — specifying it fails the build since Flet 0.86.0
+(see the [migration guide](../updates/breaking-changes/v0-86-0/android-x86-arch-removed.md)).
+
 :::note
 The available architectures depend on the
 [bundled Python version](index.md#bundled-python): Python dropped
@@ -788,6 +791,9 @@ instead.
 Most packages that bundle data (including `certifi`) read it through `importlib.resources`, which
 is zip-safe, so they need no entry here — only add packages that actually fail to find their data
 when imported from the zip.
+
+See the [migration guide](../updates/breaking-changes/v0-86-0/android-extract-packages.md) for how
+to recognize affected packages and a list of known ones.
 
 ### Resolution order
 
