@@ -8,7 +8,7 @@ def main(page: ft.Page):
     df = px.data.gapminder().query("continent=='Oceania'")
     fig = px.line(df, x="year", y="lifeExp", color="country")
 
-    page.add(ft.SafeArea(content=fch.PlotlyChart(figure=fig, expand=True)))
+    page.add(ft.SafeArea(expand=True, content=fch.PlotlyChart(figure=fig, expand=True)))
 
 
 if __name__ == "__main__":

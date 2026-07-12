@@ -205,6 +205,9 @@ async def main(page: ft.Page):
                 mpl_text,
             ],
             spacing=20,
+            # Scroll instead of overflowing when the window is narrower
+            # than the full set of counters.
+            scroll=ft.ScrollMode.HIDDEN,
         ),
         padding=ft.Padding.symmetric(horizontal=12, vertical=6),
         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,

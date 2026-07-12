@@ -1,9 +1,11 @@
 import pytest
+from example_apps import load_example
 
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-from examples.controls.charts.candlestick_chart import example_1
+
+example_1 = load_example("candlestick_chart/candlestick_chart")
 
 
 @pytest.mark.asyncio(loop_scope="function")

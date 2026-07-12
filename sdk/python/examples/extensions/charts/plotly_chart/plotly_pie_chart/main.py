@@ -10,7 +10,7 @@ def main(page: ft.Page):
 
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
 
-    page.add(ft.SafeArea(content=fch.PlotlyChart(figure=fig, expand=True)))
+    page.add(ft.SafeArea(expand=True, content=fch.PlotlyChart(figure=fig, expand=True)))
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 import pytest
+from example_apps import load_example
 
 import flet.testing as ftt
-from examples.controls.charts.matplotlib_chart import (
-    bar_chart,
-    handle_events,
-    three_d,
-    toolbar,
-)
+
+bar_chart = load_example("matplotlib_chart/bar_chart")
+handle_events = load_example("matplotlib_chart/handle_events")
+three_d = load_example("matplotlib_chart/three_d")
+toolbar = load_example("matplotlib_chart/toolbar")
 
 
 @pytest.mark.parametrize(
@@ -64,7 +64,13 @@ async def test_toolbar(flet_app_function: ftt.FletTestApp):
 )
 @pytest.mark.asyncio(loop_scope="function")
 async def test_three_d(flet_app_function: ftt.FletTestApp):
+    # Full-page screenshot, like the sibling tests: the controls-capture
+    # path measures intrinsic dimensions, which the LayoutBuilder-based
+    # matplotlib canvas cannot provide.
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "three_d",
-        await flet_app_function.take_page_controls_screenshot(),
+        await flet_app_function.page.take_screenshot(),
     )

@@ -1,15 +1,15 @@
 import plotly.express as px
 import pytest
+from example_apps import load_example
 
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-from examples.controls.charts.plotly_chart import (
-    example_1,
-    example_2,
-    example_3,
-    example_4,
-)
+
+example_1 = load_example("plotly_chart/plotly_line_chart")
+example_2 = load_example("plotly_chart/plotly_bar_chart")
+example_3 = load_example("plotly_chart/plotly_pie_chart")
+example_4 = load_example("plotly_chart/plotly_box_plot")
 
 
 @pytest.mark.asyncio(loop_scope="function")

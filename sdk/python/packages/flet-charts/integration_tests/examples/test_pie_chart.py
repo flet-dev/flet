@@ -1,7 +1,11 @@
 import pytest
+from example_apps import load_example
 
 import flet.testing as ftt
-from examples.controls.charts.pie_chart import example_1, example_2, example_3
+
+example_1 = load_example("pie_chart/pie_chart_with_hover_borders")
+example_2 = load_example("pie_chart/pie_chart_with_hover_sections")
+example_3 = load_example("pie_chart/pie_chart_with_icon_badges")
 
 
 @pytest.mark.parametrize(

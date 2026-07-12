@@ -201,11 +201,13 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                expand=True,
                 controls=[
                     ft.IconButton(ft.Icons.REFRESH, on_click=toggle_data),
                     chart,
-                ]
+                ],
             ),
         )
     )

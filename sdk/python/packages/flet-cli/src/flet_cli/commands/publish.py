@@ -114,7 +114,8 @@ class Command(BaseCommand):
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
             default=None,
-            help="Flutter web renderer to use [env: FLET_WEB_RENDERER=]",
+            help="Flutter web renderer to use, default: canvaskit "
+            "[env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",

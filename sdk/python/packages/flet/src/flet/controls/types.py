@@ -63,25 +63,27 @@ class WebRenderer(Enum):
     """
     Lets the runtime choose the renderer automatically.
 
-    This is the recommended default. In WebAssembly builds, the runtime can prefer
-    skwasm and fall back to CanvasKit when needed. In default web builds, CanvasKit
-    is used.
+    In WebAssembly builds, Chromium-based browsers prefer skwasm and other
+    browsers fall back to CanvasKit; in default web builds, CanvasKit is used.
     """
     CANVAS_KIT = "canvaskit"
     """
     Uses the CanvasKit renderer.
 
-    CanvasKit is broadly compatible with modern browsers and is the renderer used by
-    default in standard web builds.
+    CanvasKit is broadly compatible with modern browsers and is the default
+    renderer for web builds. Compared to skwasm, it is significantly faster
+    at exchanging byte buffers between JavaScript and Dart, which Flet apps
+    do on every UI update.
     """
     SKWASM = "skwasm"
     """
     Uses the skwasm renderer.
 
-    skwasm is available for WebAssembly web builds and can provide better startup
-    time and frame performance. Browsers and servers must meet the requirements for
-    WebAssembly support, and multi-threaded rendering additionally requires the
-    necessary SharedArrayBuffer security setup.
+    skwasm is available for WebAssembly web builds and can provide better
+    rendering performance, at the cost of slower byte-buffer exchange across
+    the JavaScript/Dart boundary. Browsers and servers must meet the
+    requirements for WebAssembly support, and multi-threaded rendering
+    additionally requires the necessary SharedArrayBuffer security setup.
     """
 
 

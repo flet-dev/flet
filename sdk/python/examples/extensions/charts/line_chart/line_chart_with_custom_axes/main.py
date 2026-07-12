@@ -135,11 +135,13 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                expand=True,
                 controls=[
                     ft.Button("avg", on_click=toggle_data),
                     chart,
-                ]
+                ],
             ),
         )
     )

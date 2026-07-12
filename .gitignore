@@ -32,3 +32,6 @@ vendor/
 /client/android/app/.cxx
 client/devtools_options.yaml
 /.claude/worktrees
+
+# Actual screenshots written by failed golden comparisons in integration tests
+*_actual.png

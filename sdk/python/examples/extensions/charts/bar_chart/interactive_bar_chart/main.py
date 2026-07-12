@@ -5,6 +5,7 @@ import flet_charts as fch
 def main(page: ft.Page):
     page.add(
         ft.SafeArea(
+            expand=True,
             content=fch.BarChart(
                 expand=True,
                 interactive=True,

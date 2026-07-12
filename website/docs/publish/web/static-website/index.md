@@ -206,9 +206,17 @@ route_url_strategy = "hash"
 
 Selects the Flutter web renderer:
 
-- `auto` (default) - let Flutter choose the best renderer
-- `canvaskit`
-- `skwasm`
+- `canvaskit` (default) - CanvasKit renderer, with the app compiled to JavaScript
+- `skwasm` - Skia WebAssembly renderer, with the app compiled to WebAssembly
+- `auto` - let Flutter pick the renderer based on the browser
+
+:::note
+The default is `canvaskit`, not `auto`. With `auto`, Chromium-based browsers
+pick `skwasm`, where every byte buffer passed between JavaScript and Dart pays
+a costly WebAssembly boundary conversion. Flet web apps exchange bytes with
+the Python runtime on every UI update, so `canvaskit` is significantly faster
+for them.
+:::
 
 #### Resolution order
 
@@ -216,20 +224,20 @@ Its value is determined in the following order of precedence:
 
 1. [`--web-renderer`](../../../cli/flet-build.md#--web-renderer)
 2. `[tool.flet.web].renderer`
-3. `"auto"`
+3. `"canvaskit"`
 
 #### Example
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build web --web-renderer canvaskit
+flet build web --web-renderer skwasm
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.web]
-renderer = "canvaskit"
+renderer = "skwasm"
 ```
 </TabItem>
 </Tabs>

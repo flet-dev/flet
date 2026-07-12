@@ -52,7 +52,7 @@ def main(page: ft.Page):
         boxmode="group",  # group together boxes of the different traces
     )
 
-    page.add(ft.SafeArea(content=fch.PlotlyChart(figure=fig, expand=True)))
+    page.add(ft.SafeArea(expand=True, content=fch.PlotlyChart(figure=fig, expand=True)))
 
 
 if __name__ == "__main__":

@@ -428,7 +428,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="web_renderer",
             type=str.lower,
             choices=["auto", "canvaskit", "skwasm"],
-            help="Flutter web renderer to use (web only) [env: FLET_WEB_RENDERER=]",
+            help="Flutter web renderer to use (web only), default: canvaskit "
+            "[env: FLET_WEB_RENDERER=]",
         )
         parser.add_argument(
             "--route-url-strategy",

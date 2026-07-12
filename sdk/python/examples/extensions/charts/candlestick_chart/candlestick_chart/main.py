@@ -104,6 +104,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Container(
                 expand=True,
                 border_radius=16,

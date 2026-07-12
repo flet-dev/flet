@@ -46,7 +46,7 @@ def main(page: ft.Page):
         ],
     )
 
-    page.add(ft.SafeArea(content=chart))
+    page.add(ft.SafeArea(expand=True, content=chart))
 
 
 if __name__ == "__main__":

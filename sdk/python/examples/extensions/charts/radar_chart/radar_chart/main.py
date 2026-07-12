@@ -12,6 +12,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=fch.RadarChart(
                 expand=True,
                 titles=[fch.RadarChartTitle(text=label) for label in categories],

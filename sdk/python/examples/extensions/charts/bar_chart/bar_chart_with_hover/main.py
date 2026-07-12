@@ -60,6 +60,7 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Container(
                 bgcolor=ft.Colors.GREEN_200,
                 padding=10,

@@ -133,7 +133,9 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                expand=True,
                 controls=[
                     ft.Text(
                         "Tap on the chart to toggle between random spots and Flutter "
