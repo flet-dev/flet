@@ -56,8 +56,18 @@ targeting x86 for Android *emulators*, use an `x86_64` (or `arm64-v8a`) emulator
 instead; x86 images are only published for long-obsolete API levels.
 
 Note that the architectures available for a build also depend on the
-[bundled Python version](../../../publish/index.md#bundled-python) — see
-[supported target architectures](../../../publish/android.md#supported-target-architectures).
+[bundled Python version](../../../publish/index.md#choosing-a-python-version) —
+CPython dropped 32-bit Android support in 3.13
+([PEP 738](https://peps.python.org/pep-0738/)):
+
+| ABI | Python 3.12 | Python 3.13+ |
+|---|---|---|
+| `arm64-v8a` | ✅ | ✅ |
+| `x86_64` | ✅ | ✅ |
+| `armeabi-v7a` | ✅ | ❌ |
+| `x86` | ❌ | ❌ |
+
+See [supported target architectures](../../../publish/android.md#supported-target-architectures).
 
 ## Timeline
 

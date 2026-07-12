@@ -75,7 +75,7 @@ requires distributing the correct APK for each device.
 The following target architectures are supported:
 
 - [`arm64-v8a`](https://developer.android.com/ndk/guides/abis#arm64-v8a) (64-bit) — Python `3.12` and above
-- [`x86_64`](https://developer.android.com/ndk/guides/abis#86-64) (64-bit) — Python `3.12` and above
+- [`x86_64`](https://developer.android.com/ndk/guides/abis#x86-64) (64-bit) — Python `3.12` and above
 - [`armeabi-v7a`](https://developer.android.com/ndk/guides/abis#v7a) (32-bit) — Python `3.12` **only**
 
 The 32-bit `x86` ABI is not supported — specifying it fails the build since Flet 0.86.0
@@ -83,7 +83,7 @@ The 32-bit `x86` ABI is not supported — specifying it fails the build since Fl
 
 :::note
 The available architectures depend on the
-[bundled Python version](index.md#bundled-python): Python dropped
+[bundled Python version](index.md#choosing-a-python-version): Python dropped
 32-bit Android support in `3.13` ([PEP 738](https://peps.python.org/pep-0738/)),
 so targeting `armeabi-v7a` requires building with `--python-version 3.12`. By default,
 an app is built for all architectures its bundled Python version supports.

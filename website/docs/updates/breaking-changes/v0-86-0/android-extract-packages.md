@@ -58,14 +58,18 @@ Add the failing packages to your `pyproject.toml`:
 
 ```toml
 [tool.flet.android]
-extract_packages = ["matplotlib", "scikit-learn"]
+extract_packages = ["matplotlib", "sklearn"]
 ```
 
 or pass them on the command line:
 
 ```bash
-flet build apk --android-extract-packages matplotlib scikit-learn
+flet build apk --android-extract-packages matplotlib sklearn
 ```
+
+An entry is the package's **import name** — its top-level directory under site-packages — not
+the PyPI distribution name: `sklearn`, not `scikit-learn`; `cv2`, not `opencv-python`.
+(`matplotlib` matches only because its import name happens to equal its PyPI name.)
 
 Listed packages (and everything under their directory) are moved out of `sitepackages.zip` and
 shipped extracted to the app's files directory, so `__file__`-relative reads work again.
@@ -97,8 +101,14 @@ for example `certifi.where()` works as is.
 
 Known packages that need an entry (community-reported; the list will grow as more are found):
 
-- `matplotlib` — reads `mpl-data` (fonts, `matplotlibrc`) relative to `__file__`
-- `scikit-learn`
+| package (PyPI) | entry | why |
+|---|---|---|
+| `matplotlib` | `"matplotlib"` | reads `mpl-data` (fonts, `matplotlibrc`) relative to `__file__` |
+| `scikit-learn` | `"sklearn"` | loads bundled data files through `__file__`-relative paths |
+| `opencv-python` | `"cv2"` | cv2's bootstrap resolves its config files and loads its native extension through `__file__`-relative paths, so it must ship as a real directory |
+| `astropy` | `"astropy"` | reads `astropy/CITATION` via `__file__` at import |
+| `thinc` | `"thinc"` | reads `thinc/backends/_custom_kernels.cu` via `__file__` at import |
+| `spacy` | `"spacy", "thinc"` | imports thinc at load (so it hits thinc's `_custom_kernels.cu`) and reads its own language data via `__file__` — list both |
 
 If a package of yours fails with a `sitepackages.zip/...` path in the traceback, add it to
 `extract_packages` — and consider reporting it in
