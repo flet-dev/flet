@@ -37,6 +37,14 @@ while True:
 
 ## Examples
 
+### Photo viewer
+
+Regular PNG/JPEG/WebP bytes — downloaded, read from a file or pulled from a
+database — are displayed with `render_encoded`; the client decodes them with
+its image codecs.
+
+<CodeExample path={frontMatter.examples + '/photo_viewer/main.py'} language="python" />
+
 ### Plasma animation
 
 Streams a procedurally generated plasma effect with a live FPS counter and a

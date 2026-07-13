@@ -1,0 +1,26 @@
+[project]
+name = "raw-image-photo-viewer"
+version = "1.0.0"
+description = "Browses network JPEG photos by pushing the downloaded bytes through RawImage.render_encoded."
+requires-python = ">=3.10"
+keywords = ["raw image", "photo viewer", "jpeg", "png", "encoded images", "network"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/RawImage"]
+
+[tool.flet.metadata]
+title = "Photo viewer"
+controls = ["RawImage", "Row", "IconButton"]
+layout_pattern = "toolbar above canvas"
+complexity = "basic"
+features = ["encoded JPEG rendering", "network image download", "prev/next navigation", "byte cache"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

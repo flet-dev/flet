@@ -1,10 +1,13 @@
 import io
+from pathlib import Path
 from typing import Optional
 
 import pytest
 
 import flet as ft
 import flet.testing as ftt
+
+assets_dir = Path(__file__).resolve().parent / "../../assets"
 
 
 def gradient_rgba(width: int, height: int) -> bytes:
@@ -95,6 +98,24 @@ async def test_render_encoded(flet_app: ftt.FletTestApp, request):
     ri = ft.RawImage(width=100, height=80)
     screenshot = await show_raw_image(flet_app, ri)
     await ri.render_encoded(buf.getvalue())
+    await assert_raw_image_screenshot(flet_app, request.node.name, screenshot)
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_render_encoded_png_file(flet_app: ftt.FletTestApp, request):
+    # A regular PNG file straight from disk — no Pillow involved.
+    ri = ft.RawImage(width=100, height=100, fit=ft.BoxFit.CONTAIN)
+    screenshot = await show_raw_image(flet_app, ri)
+    await ri.render_encoded((assets_dir / "minion.png").read_bytes())
+    await assert_raw_image_screenshot(flet_app, request.node.name, screenshot)
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_render_encoded_jpg_file(flet_app: ftt.FletTestApp, request):
+    # A regular JPEG file straight from disk — no Pillow involved.
+    ri = ft.RawImage(width=100, height=100, fit=ft.BoxFit.CONTAIN)
+    screenshot = await show_raw_image(flet_app, ri)
+    await ri.render_encoded((assets_dir / "141-50x50.jpg").read_bytes())
     await assert_raw_image_screenshot(flet_app, request.node.name, screenshot)
 
 
