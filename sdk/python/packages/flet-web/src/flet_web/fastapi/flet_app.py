@@ -425,6 +425,8 @@ class FletApp(Connection):
     def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
         """Send a raw DataChannel frame `[0x01][channel_id:u32 LE][bytes]`
         over the WebSocket. Called by `_ProtocolMuxedDataChannel.send`."""
+        if self.__send_queue is None:
+            return  # client disconnected — the frame is moot
         header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
         self.__send_queue.put_nowait(header + payload)
 

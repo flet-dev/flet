@@ -105,3 +105,29 @@ def test_render_rgba_rejects_wrong_length():
             await ri.render_rgba(2, 2, b"\x00" * 15)
 
     asyncio.run(run())
+
+
+class _SilentChannel:
+    """A channel that accepts frames but never acks — a dead client."""
+
+    def __init__(self):
+        self.sent = []
+
+    def send(self, payload: bytes) -> None:
+        self.sent.append(payload)
+
+
+def test_render_times_out_without_ack():
+    ri = ft.RawImage(ack_timeout=0.05)
+
+    async def run():
+        ri._channel = _SilentChannel()
+        ri._ready.set()
+        with pytest.raises(TimeoutError, match="not acknowledged"):
+            await ri.render_rgba(1, 1, b"\x00\x00\x00\xff")
+        # The abandoned future is withdrawn so a late ack can't resolve
+        # the wrong frame's wait.
+        assert not ri._pending_acks
+        assert len(ri._channel.sent) == 1
+
+    asyncio.run(run())

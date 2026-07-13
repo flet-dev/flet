@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import io
 from collections import deque
 from typing import Any, Optional
@@ -109,6 +110,20 @@ class RawImage(LayoutControl):
     Set to `None` to wait indefinitely.
     """
 
+    ack_timeout: Optional[Number] = 10.0
+    """
+    Seconds a `render` call waits for the client's frame-applied
+    acknowledgment before raising `TimeoutError`.
+
+    The ack normally arrives within milliseconds of the frame being
+    displayed. The timeout is a liveness guard: transports drop frames
+    sent while the client is disconnected (closed browser tab, network
+    loss), and without it a `while True: await raw_image.render(...)`
+    loop would wait for the lost ack forever. Raise it when streaming
+    very large frames to slow remote clients, or set to `None` to wait
+    indefinitely.
+    """
+
     on_data_channel_open: Optional[EventHandler[DataChannelOpenEvent]] = None
     """
     Framework hook — Dart fires this when it opens the data channel on
@@ -173,16 +188,31 @@ class RawImage(LayoutControl):
         fut: asyncio.Future = loop.create_future()
         self._pending_acks.append(fut)
         self._channel.send(packet)
-        await fut
+        if self.ack_timeout is None:
+            await fut
+            return
+        try:
+            await asyncio.wait_for(fut, float(self.ack_timeout))
+        except (TimeoutError, asyncio.TimeoutError):
+            # Withdraw the abandoned future so a future ack doesn't
+            # resolve it instead of the frame it belongs to.
+            with contextlib.suppress(ValueError):
+                self._pending_acks.remove(fut)
+            raise TimeoutError(
+                f"frame was not acknowledged within {self.ack_timeout}s — "
+                "the client may have disconnected"
+            ) from None
 
     async def _send_frame(self, packet: bytes) -> None:
         self._last_packet = packet
         await self._send_and_wait(packet)
 
     def _local_data_transport(self) -> bool:
-        return bool(
-            getattr(self.page.session.connection, "local_data_transport", False)
-        )
+        try:
+            page = self.page
+        except RuntimeError:  # not added to a page yet
+            return False
+        return bool(getattr(page.session.connection, "local_data_transport", False))
 
     # -- public API ---------------------------------------------------------
 
