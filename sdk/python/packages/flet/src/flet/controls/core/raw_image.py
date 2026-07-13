@@ -49,6 +49,28 @@ class RawImage(LayoutControl):
       pixel frames for which no straight-alpha source is available are sent
       uncompressed.
 
+    **Premultiplied alpha.** The raw-pixel path uploads frames directly as
+    GPU textures in Flutter's `rgba8888` format, which expects RGB values
+    already multiplied by alpha ("premultiplied"). Pillow, numpy code and
+    image files normally produce *straight* alpha instead, where color and
+    opacity are independent: a half-transparent white pixel is
+    `(255, 255, 255, 128)` straight but `(128, 128, 128, 128)`
+    premultiplied (each color channel becomes `value * alpha // 255`).
+    The `premultiplied` argument of the render methods says whether that
+    conversion is already done:
+
+    - `premultiplied=False` — pixels carry straight alpha; RGB is
+      multiplied by alpha before sending. The conversion runs in fast C
+      loops and is skipped when the frame turns out to be fully opaque.
+    - `premultiplied=True` — skip the conversion. Use it when pixels are
+      genuinely premultiplied or, the common case, when the frame is
+      **fully opaque**: with every alpha at 255 both forms are identical,
+      and declaring it saves an alpha scan per frame in streaming loops.
+
+    Passing straight-alpha pixels with `premultiplied=True` makes
+    semi-transparent areas render too bright; for fully opaque frames the
+    flag cannot be wrong either way.
+
     The last frame is retained and replayed automatically when the client
     widget remounts (page rebuild, route navigation), mirroring how
     `Image.src` persists.
