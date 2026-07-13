@@ -20,7 +20,7 @@ class RawImage(LayoutControl):
 
     Unlike :class:`~flet.Image`, whose `src` travels through the regular
     Flet protocol on every update, `RawImage` streams frames over a
-    dedicated :class:`~flet.DataChannel`: bytes skip MsgPack
+    dedicated `DataChannel`: bytes skip MsgPack
     encode/decode entirely and, on local transports (desktop app, `flet run`,
     Pyodide), are displayed from raw RGBA pixels without any image
     encoding or decoding. This makes it suitable for animations, generated
