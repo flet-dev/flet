@@ -492,6 +492,7 @@ docs:
       - types/colorfilter.md
       - types/context.md
       - types/controlstate.md
+      - types/datachannel.md
       - types/decorationimage.md
       - DeviceInfo:
           _index: types/deviceinfo/index.md
@@ -813,6 +814,7 @@ docs:
       - types/canvasresizeevent.md
       - types/contextmenudismissevent.md
       - types/contextmenuselectevent.md
+      - types/datachannelopenevent.md
       - types/datacolumnsortevent.md
       - types/datepickerentrymodechangeevent.md
       - types/dismissibledismissevent.md
