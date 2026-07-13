@@ -106,6 +106,7 @@ categories:
     Markdown:
     ProgressBar:
     ProgressRing:
+    RawImage:
     Text:
     Tooltip:
     WebView:

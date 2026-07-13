@@ -183,6 +183,7 @@ if TYPE_CHECKING:
     from flet.controls.core.page_view import PageView
     from flet.controls.core.pagelet import Pagelet
     from flet.controls.core.placeholder import Placeholder
+    from flet.controls.core.raw_image import RawImage
     from flet.controls.core.reorderable_drag_handle import ReorderableDragHandle
     from flet.controls.core.responsive_row import ResponsiveRow
     from flet.controls.core.rotated_box import RotatedBox
@@ -1070,6 +1071,7 @@ __all__ = [
     "RadioGroup",
     "RadioTheme",
     "RangeSlider",
+    "RawImage",
     "Rect",
     "Ref",
     "ReorderableDragHandle",
@@ -1603,6 +1605,7 @@ _LAZY = {
     "RadioGroup": "flet.controls.material.radio_group",
     "RadioTheme": "flet.controls.theme",
     "RangeSlider": "flet.controls.material.range_slider",
+    "RawImage": "flet.controls.core.raw_image",
     "Rect": "flet.controls.geometry",
     "Ref": "flet.controls.ref",
     "ReorderableDragHandle": "flet.controls.core.reorderable_drag_handle",
