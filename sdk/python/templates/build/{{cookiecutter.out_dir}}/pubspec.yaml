@@ -18,7 +18,7 @@ dependencies:
   flet:
     path: ../../../../../packages/flet
 
-  serious_python: 4.3.1
+  serious_python: 4.3.2
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket
