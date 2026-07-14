@@ -4,7 +4,7 @@ title: "Privacy Policy"
 
 # Flet Studio Privacy Policy
 
-**Effective date:** May 26, 2026
+**Effective date:** July 14, 2026
 
 This Privacy Policy explains how **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") collects, uses, shares, and protects personal information in connection with the Flet Studio service ("Flet Studio", "the Service"). Flet Studio is a hosted browser-based development environment for building Python applications with the Flet framework.
 
@@ -26,7 +26,7 @@ Separately, when you build a Flet application using Flet Studio and that applica
 
 ### 1.3 Scope
 
-This policy covers personal information processed by Flet Studio as currently implemented. Some features described in our marketing materials or roadmap (for example, paid subscriptions, email notifications, and AI assistance) are not yet integrated. If we add features that materially change how personal information is processed, we will update this policy as described in Section 12.
+This policy covers personal information processed by Flet Studio as currently implemented, including paid plans, AI credit purchases, AI-assisted development, and email communications. If we add features that materially change how personal information is processed, we will update this policy as described in Section 12.
 
 ---
 
@@ -34,17 +34,23 @@ This policy covers personal information processed by Flet Studio as currently im
 
 ### 2.1 Information you provide
 
-**Account profile.** When you create an account, we store the information needed to identify you and authenticate your sessions. Today, this is primarily provided through GitHub OAuth and includes:
+**Account profile.** When you create an account, we store the information needed to identify you and authenticate your sessions. This is provided through the identity provider you sign in with (GitHub, Google, or Microsoft) and includes:
 
 - Your email address
-- Your full name (if available from GitHub)
-- A unique GitHub user identifier
-- Your GitHub username
+- Your full name (if available from the provider)
+- A unique user identifier issued by the provider
+- Your username or handle (where the provider exposes one)
 - Your profile avatar URL
 
 **Account and team information.** For each account, we store the account name, a URL-safe slug, the account type (personal or team), the plan tier, and — for team accounts — the membership and role of each member.
 
 **Content you create or upload.** When you use Flet Studio, we store the app source code, files, and versions that you create, edit, or upload to the Service, along with their metadata (file path, size, timestamps, app name, description, dependencies, tags). This content is stored in object storage hosted by our infrastructure provider, Railway.
+
+**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, or until your account is deleted.
+
+**Billing information.** When you purchase a paid plan or AI credits, Stripe collects your payment card details and billing address directly — we never receive full card numbers. We store your Stripe customer and subscription identifiers, your plan status, and records of your purchases and credit grants.
+
+**Newsletter subscription.** When you create an account, your email address and name are added to the Flet Studio newsletter mailing list, operated by Mailgun. Your subscription and unsubscribe status is maintained by Mailgun, not in our database. You can unsubscribe at any time using the toggle in account settings, the unsubscribe link in every newsletter email, or your mail client's unsubscribe function.
 
 ### 2.2 Information collected automatically
 
@@ -52,13 +58,17 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Usage data.** To enforce per-account quotas and prevent abuse, we maintain daily counters of certain actions (for example, how many gallery clones or archive uploads you have performed in the last 24 hours) and a running total of the storage your account is consuming. These counters are tied to your account, not to individual sign-in sessions.
 
+**AI usage metering.** For each AI agent run, we record the model used, its token counts, and the resulting credit cost in a usage ledger tied to your account. We use these records to bill AI usage against your credits and to enforce quotas.
+
 **Server-side telemetry.** When telemetry is enabled, our server software emits operational traces and logs to a server-side observability tool (Pydantic Logfire) to help us diagnose errors, investigate incidents, and monitor performance. These traces may incidentally include account or request identifiers; we apply a PII-scrubbing rule to redact sensitive fields. Telemetry is configurable and is not enabled in all environments.
 
 We do **not** use client-side analytics services. We do not load Google Analytics, Mixpanel, Segment, advertising pixels, or any similar product into the Flet Studio web application.
 
 ### 2.3 Information from third parties
 
-When you authenticate via GitHub OAuth, we receive the profile fields listed in Section 2.1 from GitHub. We do not receive your GitHub password and we do not request access to your private repositories unless you explicitly grant a scope that permits it.
+When you authenticate via GitHub, Google, or Microsoft, we receive the profile fields listed in Section 2.1 from the provider you choose. We do not receive your password for that provider, and we do not request access to your private repositories or files unless you explicitly grant a scope that permits it.
+
+When you make a purchase, we receive payment and subscription status events from Stripe (for example, that a payment succeeded, a subscription renewed, or a subscription was cancelled). These events reference Stripe identifiers, not your card details.
 
 ---
 
@@ -67,13 +77,17 @@ When you authenticate via GitHub OAuth, we receive the profile fields listed in 
 We use personal information to:
 
 - Provide the Service: authenticate you, render your accounts and projects, store and serve your content
+- Operate AI-assisted development features: your prompts, conversation history, and the project context needed to generate a response are sent to our AI model providers (see Section 5.1)
+- Improve the Service: we may review AI conversations to diagnose problems with the AI features and improve their quality (for example, refining prompts, tooling, and agent behavior)
+- Process payments, maintain billing and credit-usage records, and calculate applicable taxes
+- Send the Flet Studio newsletter with product news and updates — you can opt out at any time (see Section 2.1)
 - Enforce per-account limits and prevent abuse of the Service
 - Maintain the security and integrity of the Service, including investigating fraud, abuse, or unauthorized access
 - Diagnose, debug, and improve the Service through server-side telemetry
 - Communicate with you about your account or service-related matters when you contact us
 - Comply with legal obligations
 
-We do **not** use your personal information for advertising, profiling, automated decision-making with legal effects, or training machine-learning models.
+We do **not** use your personal information or User Content for advertising, profiling, or automated decision-making with legal effects, and we do **not** use them to train machine-learning models — nor do we permit our AI model providers to do so (see Section 5.1).
 
 ---
 
@@ -81,10 +95,10 @@ We do **not** use your personal information for advertising, profiling, automate
 
 If you are located in the European Economic Area, the United Kingdom, or Switzerland, we rely on the following legal bases under the GDPR (or its UK equivalent) when we process your personal information:
 
-- **Performance of a contract** — to provide the Service you have signed up for. This covers account creation, authentication, storage of your content, and quota enforcement.
-- **Legitimate interests** — to keep the Service secure, prevent abuse, debug and improve the Service, and maintain operational telemetry. We balance these interests against your rights and interests, and we apply data-minimization measures (such as PII scrubbing in telemetry) accordingly.
-- **Compliance with a legal obligation** — when we are required to retain, disclose, or process personal information to comply with applicable law.
-- **Consent** — where we ask for it explicitly. Today, our processing is not consent-based; if we introduce features that require consent (for example, optional marketing communications), we will request it separately and you will be able to withdraw it at any time.
+- **Performance of a contract** — to provide the Service you have signed up for. This covers account creation, authentication, storage of your content, quota enforcement, paid subscriptions and credit purchases, and providing the AI features you invoke.
+- **Legitimate interests** — to keep the Service secure, prevent abuse, debug and improve the Service, maintain operational telemetry, and send the Flet Studio newsletter to existing account holders with product news and updates (with an easy opt-out at any time and the right to object described in Section 10). We balance these interests against your rights and interests, and we apply data-minimization measures (such as PII scrubbing in telemetry) accordingly.
+- **Compliance with a legal obligation** — when we are required to retain, disclose, or process personal information to comply with applicable law (for example, retaining billing records for tax purposes).
+- **Consent** — where we ask for it explicitly. If we introduce features that require consent, we will request it separately and you will be able to withdraw it at any time.
 
 ---
 
@@ -100,9 +114,15 @@ We rely on a small number of third-party service providers to operate Flet Studi
 
 | Service provider | Purpose | Data shared |
 |---|---|---|
-| **GitHub** | OAuth identity provider used to authenticate accounts | Authentication exchange; we receive profile fields listed in Section 2.1 |
+| **GitHub, Google, Microsoft** | OAuth identity providers used to authenticate accounts | Authentication exchange; we receive the profile fields listed in Section 2.1 from the provider you choose |
 | **Railway** | Hosting for our application servers, our managed PostgreSQL database, and the object storage that holds user-uploaded content | All personal information stored by the Service is hosted on Railway infrastructure |
+| **xAI** | AI model provider for the AI agent | Your prompts, conversation history, app source code and files (including images), and your name, email address, and username. Sent only when you use AI features; **not used to train models** |
+| **OpenAI** | AI model provider for the AI agent | Same as xAI; **not used to train models** |
+| **Stripe** | Payment processing, subscription management, and tax calculation | Email address, account identifier, plan, and — collected by Stripe directly at checkout — your billing address and payment card details; your purchase history |
+| **Mailgun** | Newsletter and email delivery | Email address, full name, and newsletter subscription/suppression status |
 | **Pydantic Logfire** | Server-side observability and tracing | Request traces, query traces, and error spans; PII-scrubbed before transmission |
+
+Our agreements with our AI model providers do not permit them to use your data to train their models.
 
 ### 5.2 Legal and safety disclosures
 
@@ -131,6 +151,9 @@ We do **not** set any advertising cookies, analytics cookies, social-media cooki
 - **User content** (apps, files, versions) is retained for as long as your account is active or until you delete it.
 - **Sign-in metadata** (last sign-in timestamp, last sign-in IP) is overwritten on each new sign-in; older values are not kept.
 - **Usage counters** are kept per day and are not retained beyond what is needed for quota enforcement and operational analysis.
+- **AI conversations** are retained until you delete the conversation or the associated app, or until your account is deleted.
+- **Billing records** (purchase and credit-usage ledgers, invoices) are retained for as long as required by applicable tax and accounting law, generally seven years in Canada, even after account deletion.
+- **Newsletter list membership** is maintained by Mailgun until you unsubscribe; when we process an account-deletion request, we also remove your address from the mailing list.
 - **Server-side telemetry** (Logfire traces and logs) is retained for the period configured with our observability provider, which is short by default.
 - **Account deletion**: when you request deletion of your account, we delete or anonymize your account profile, content, and associated records within 30 days, except where we are required to retain certain information to comply with legal obligations or to resolve disputes.
 
