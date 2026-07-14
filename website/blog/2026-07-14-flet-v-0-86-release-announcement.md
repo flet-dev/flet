@@ -71,7 +71,7 @@ More info:
 
 Since its first release, a packaged Flet app has been two programs talking over a localhost socket: the Flutter client on one side, your Python app on the other. It worked, but it meant socket setup, message copies through the OS, and awkward lifecycle corners on mobile.
 
-0.86 replaces that with **dart-bridge**: the Python interpreter is embedded **in the same process** as the Flutter app, and the two sides exchange messages over an FFI byte channel — no sockets, no network stack, no serialization detours. This is now how every app built with `flet build` runs on desktop and mobile.
+0.86 replaces that with [**dart-bridge**](https://github.com/flet-dev/dart-bridge): the Python interpreter is embedded **in the same process** as the Flutter app, and the two sides exchange messages over an FFI byte channel — no sockets, no network stack, no serialization detours. This is now how every app built with `flet build` runs on desktop and mobile.
 
 Beyond raw speed, in-process embedding fixes real behaviors: on Android, when the OS keeps the process alive after a back-button quit and restarts only the Dart VM, the transport rebinds to the new VM — your Python process and its in-memory state survive, and the session is rebuilt seamlessly. It's also the foundation that made [multiprocessing support](#multiprocessing-in-desktop-apps) possible.
 
