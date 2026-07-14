@@ -6,7 +6,7 @@ title: "Privacy Policy"
 
 **Effective date:** July 14, 2026
 
-This Privacy Policy explains how **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") collects, uses, shares, and protects personal information in connection with the Flet Studio service ("Flet Studio", "the Service"). Flet Studio is a hosted browser-based development environment for building Python applications with the Flet framework.
+This Privacy Policy explains how **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") collects, uses, shares, and protects personal information in connection with the Flet Studio service ("Flet Studio", "the Service"). Flet Studio is a hosted development environment and runtime for building applications with the Flet framework.
 
 This policy applies to information we collect from users of Flet Studio at https://flet.app (and any related domains we operate for the Service) and through the Flet Studio web application.
 
@@ -46,9 +46,9 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Content you create or upload.** When you use Flet Studio, we store the app source code, files, and versions that you create, edit, or upload to the Service, along with their metadata (file path, size, timestamps, app name, description, dependencies, tags). This content is stored in object storage hosted by our infrastructure provider, Railway.
 
-**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, or until your account is deleted.
+**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, until your account is deleted, or until we remove them under a data-retention policy we may adopt.
 
-**Billing information.** When you purchase a paid plan or AI credits, Stripe collects your payment card details and billing address directly — we never receive full card numbers. We store your Stripe customer and subscription identifiers, your plan status, and records of your purchases and credit grants.
+**Billing information.** When you purchase a paid plan or AI credits, Stripe collects your payment card details and billing address at checkout. We store your Stripe customer and subscription identifiers, your plan status, and records of your purchases and credit grants, and we retain billing addresses and purchase records for bookkeeping in QuickBooks Online.
 
 **Newsletter subscription.** When you create an account, your email address and name are added to the Flet Studio newsletter mailing list, operated by Mailgun. Your subscription and unsubscribe status is maintained by Mailgun, not in our database. You can unsubscribe at any time using the toggle in account settings, the unsubscribe link in every newsletter email, or your mail client's unsubscribe function.
 
@@ -68,7 +68,7 @@ We do **not** use client-side analytics services. We do not load Google Analytic
 
 When you authenticate via GitHub, Google, or Microsoft, we receive the profile fields listed in Section 2.1 from the provider you choose. We do not receive your password for that provider, and we do not request access to your private repositories or files unless you explicitly grant a scope that permits it.
 
-When you make a purchase, we receive payment and subscription status events from Stripe (for example, that a payment succeeded, a subscription renewed, or a subscription was cancelled). These events reference Stripe identifiers, not your card details.
+When you make a purchase, we receive payment and subscription status events from Stripe (for example, that a payment succeeded, a subscription renewed, or a subscription was cancelled). These events reference Stripe identifiers.
 
 ---
 
@@ -87,7 +87,7 @@ We use personal information to:
 - Communicate with you about your account or service-related matters when you contact us
 - Comply with legal obligations
 
-We do **not** use your personal information or User Content for advertising, profiling, or automated decision-making with legal effects, and we do **not** use them to train machine-learning models — nor do we permit our AI model providers to do so (see Section 5.1).
+We do **not** use your personal information or User Content for advertising, for profiling, or for automated decision-making that produces legal or similarly significant effects (for example, suspending an account by algorithm with no human review), and we do **not** use them to train machine-learning models — nor do we permit our AI model providers to do so (see Section 5.1).
 
 ---
 
@@ -96,7 +96,7 @@ We do **not** use your personal information or User Content for advertising, pro
 If you are located in the European Economic Area, the United Kingdom, or Switzerland, we rely on the following legal bases under the GDPR (or its UK equivalent) when we process your personal information:
 
 - **Performance of a contract** — to provide the Service you have signed up for. This covers account creation, authentication, storage of your content, quota enforcement, paid subscriptions and credit purchases, and providing the AI features you invoke.
-- **Legitimate interests** — to keep the Service secure, prevent abuse, debug and improve the Service, maintain operational telemetry, and send the Flet Studio newsletter to existing account holders with product news and updates (with an easy opt-out at any time and the right to object described in Section 10). We balance these interests against your rights and interests, and we apply data-minimization measures (such as PII scrubbing in telemetry) accordingly.
+- **Legitimate interests** — to keep the Service secure, prevent abuse, debug and improve the Service, maintain operational telemetry, and send the Flet Studio newsletter to existing account holders with product news and updates (with an easy opt-out at any time and the right to object described in Section 10).
 - **Compliance with a legal obligation** — when we are required to retain, disclose, or process personal information to comply with applicable law (for example, retaining billing records for tax purposes).
 - **Consent** — where we ask for it explicitly. If we introduce features that require consent, we will request it separately and you will be able to withdraw it at any time.
 
@@ -121,12 +121,13 @@ We rely on a small number of third-party service providers to operate Flet Studi
 | **Stripe** | Payment processing, subscription management, and tax calculation | Email address, account identifier, plan, and — collected by Stripe directly at checkout — your billing address and payment card details; your purchase history |
 | **Mailgun** | Newsletter and email delivery | Email address, full name, and newsletter subscription/suppression status |
 | **Pydantic Logfire** | Server-side observability and tracing | Request traces, query traces, and error spans; PII-scrubbed before transmission |
+| **Intuit QuickBooks Online** | Accounting and bookkeeping | Billing address, purchase and invoice records |
 
 Our agreements with our AI model providers do not permit them to use your data to train their models.
 
 ### 5.2 Legal and safety disclosures
 
-We may disclose personal information when we believe in good faith that disclosure is required by law, by a valid legal process (such as a subpoena or court order), or is necessary to protect the rights, property, or safety of Appveyor Systems Inc., our users, or the public.
+We may disclose personal information when we believe in good faith that disclosure is required by law or by a valid legal process (such as a subpoena or court order).
 
 ### 5.3 Business transfers
 
@@ -154,7 +155,8 @@ We do **not** set any advertising cookies, analytics cookies, social-media cooki
 - **AI conversations** are retained until you delete the conversation or the associated app, or until your account is deleted.
 - **Billing records** (purchase and credit-usage ledgers, invoices) are retained for as long as required by applicable tax and accounting law, generally seven years in Canada, even after account deletion.
 - **Newsletter list membership** is maintained by Mailgun until you unsubscribe; when we process an account-deletion request, we also remove your address from the mailing list.
-- **Server-side telemetry** (Logfire traces and logs) is retained for the period configured with our observability provider, which is short by default.
+- **Server-side telemetry** (Logfire traces and logs) is retained for a limited period configured with our observability provider.
+- We may adopt shorter retention periods for specific data categories in the future; if we do, we will update this policy.
 - **Account deletion**: when you request deletion of your account, we delete or anonymize your account profile, content, and associated records within 30 days, except where we are required to retain certain information to comply with legal obligations or to resolve disputes.
 
 To request deletion, email privacy@flet.dev from the email address associated with your account.

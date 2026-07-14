@@ -6,7 +6,7 @@ title: "Terms of Service"
 
 **Effective date:** July 14, 2026
 
-These Terms of Service ("Terms") form a binding agreement between you and **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") and govern your access to and use of the Flet Studio service ("Flet Studio" or the "Service"). Flet Studio is a hosted browser-based development environment and runtime for building applications with the Flet framework.
+These Terms of Service ("Terms") form a binding agreement between you and **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") and govern your access to and use of the Flet Studio service ("Flet Studio" or the "Service"). Flet Studio is a hosted development environment and runtime for building applications with the Flet framework.
 
 Please read these Terms carefully. By accessing or using Flet Studio, you agree to be bound by these Terms and by our [Privacy Policy](privacy-policy.md). If you do not agree, you must not use the Service.
 
@@ -22,7 +22,7 @@ We may update these Terms from time to time as described in Section 14.4. Your c
 
 ## 2. The Service
 
-Flet Studio provides a hosted environment that allows you to create, edit, store, run, and share applications written in Python using the Flet framework. The Service includes account management, project storage, code editing, AI-assisted development, application execution, and related features.
+Flet Studio provides a hosted environment that allows you to create, edit, store, run, and share applications written in Python using the Flet framework. The Service includes account management, project storage, code editing, AI-assisted development, application execution, sharing and publishing, and related features. Flet Studio is currently delivered through the browser; we may also offer desktop or mobile applications in the future.
 
 We may add, modify, or discontinue features at any time. Where a change materially and adversely affects the way you use the Service, we will use commercially reasonable efforts to provide advance notice through the Service or by email.
 
@@ -140,7 +140,7 @@ Payments are processed by our third-party payment processor, **Stripe**. By maki
 
 ### 7.4 Taxes
 
-Prices shown do not include taxes. Where we are required to collect them, applicable **Canadian GST/HST, provincial sales taxes (PST/QST), or other applicable sales taxes** will be calculated based on your billing address and itemized at checkout. You are responsible for all taxes associated with your purchases, other than taxes on our net income.
+Prices shown do not include taxes. Applicable sales tax will be calculated based on your billing address and itemized at checkout.
 
 ### 7.5 Refunds
 
@@ -154,7 +154,7 @@ If a payment for your subscription fails and cannot be collected after our payme
 
 ## 8. Service Availability and Modifications
 
-We strive to keep Flet Studio available and performant, but the Service is provided **without any uptime or availability guarantee**, particularly for users on the Free plan. We may perform scheduled or emergency maintenance, suspend access to all or part of the Service, or modify, deprecate, or discontinue features at any time.
+We strive to keep Flet Studio available and performant, but the Service is provided **without any uptime or availability guarantee**. We may perform scheduled or emergency maintenance, suspend access to all or part of the Service, or modify, deprecate, or discontinue features at any time.
 
 Where a change materially and adversely affects how you use the Service, we will use commercially reasonable efforts to provide advance notice through the Service or by email.
 
