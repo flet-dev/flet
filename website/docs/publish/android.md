@@ -776,25 +776,43 @@ adaptive_icon_background = "#0B6BFF"
 </TabItem>
 </Tabs>
 
-## Android extract packages
+## Extract packages
 
-:::note
-[Android](android.md) only.
-:::
+On Android, pure Python code is packaged into stored zip assets and imported in place with
+[`zipimport`](https://docs.python.org/3/library/zipimport.html). Native extension modules are
+loaded memory-mapped directly from the APK. This keeps APKs smaller and avoids unpacking all
+site-packages on first launch.
 
-On Android, pure Python ships in a stored zip read in place (`zipimport`) and native modules are
-loaded memory-mapped from the APK. Packages that read their bundled **data files** through a real
-filesystem path — `__file__` / `pkg_resources` instead of
-[`importlib.resources`](https://docs.python.org/3/library/importlib.resources.html) — don't work
-from inside the zip. List such "path-hungry" packages here to ship them **extracted to disk**
-instead.
+Most packages work from inside the zip. But packages that read bundled **data files** through a real
+filesystem path — for example with `__file__` or `pkg_resources`, instead of the zip-safe
+[`importlib.resources`](https://docs.python.org/3/library/importlib.resources.html) — may fail at
+runtime because their data lives inside `sitepackages.zip`, where plain `open()` cannot read it.
 
-Most packages that bundle data (including `certifi`) read it through `importlib.resources`, which
-is zip-safe, so they need no entry here — only add packages that actually fail to find their data
+List such packages in `extract_packages` to ship them extracted to the app's files directory
+instead of inside `sitepackages.zip`. Flet extracts the listed package directories and everything
+under them, so `__file__`-relative reads work again.
+
+Most packages that bundle data (such as `flet` or `certifi`) read it through `importlib.resources`, which
+is zip-safe, so they need no entry here. Only add packages that actually fail to find their data
 when imported from the zip.
 
-See the [migration guide](../updates/breaking-changes/v0-86-0/android-extract-packages.md) for how
-to recognize affected packages and a list of known ones.
+### Symptoms
+
+The build succeeds, but the app crashes or errors on the device when the package is imported or
+first used. The traceback usually contains a path where `sitepackages.zip` or `stdlib.zip` appears
+as a directory component, for example (`matplotlib`):
+
+```bash
+FileNotFoundError: [Errno 2] No such file or directory:
+  '/data/user/0/<applicationId>/files/.../sitepackages.zip/matplotlib/mpl-data/matplotlibrc'
+```
+
+`NotADirectoryError` or `OSError` with a similar `sitepackages.zip/...` path is also a common sign
+that the package computed a data path from `__file__` and tried to read it as a regular file.
+
+If this happens with one of your dependencies, add that package to `extract_packages` and consider
+reporting it in [Flet discussions](https://github.com/flet-dev/flet/discussions) or opening a PR so
+it can be added to the known packages list.
 
 ### Resolution order
 
@@ -803,6 +821,10 @@ to recognize affected packages and a list of known ones.
 3. `[tool.flet].extract_packages`
 
 ### Example
+
+Each entry is the package's **import name** — its top-level directory under site-packages — not
+necessarily its PyPI distribution name. For example, use `sklearn`, not `scikit-learn`; use `cv2`,
+not `opencv-python`.
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
@@ -817,6 +839,32 @@ extract_packages = ["package1", "package2"]
 ```
 </TabItem>
 </Tabs>
+
+### Wildcards
+
+An entry is a path relative to site-packages and matches that path and everything under it.
+Entries may also contain `*` and `?` wildcards, matched against the top-level directory name:
+
+```toml
+[tool.flet.android]
+extract_packages = ["somepackage*"]
+```
+
+The wildcard form can also extract a sibling `somepackage-<version>.dist-info/` directory.
+Use it for packages that read their metadata or data files through `pkg_resources`.
+
+### Affected packages
+
+Below are known packages that need to be extracted to work on Android:
+
+| Package (PyPI)  | Entry              | Reason                                                                                 |
+|-----------------|--------------------|----------------------------------------------------------------------------------------|
+| `matplotlib`    | `"matplotlib"`     | reads `mpl-data` (fonts, `matplotlibrc`) relative to `__file__`                        |
+| `scikit-learn`  | `"sklearn"`        | loads bundled data files through `__file__`-relative paths                             |
+| `opencv-python` | `"cv2"`            | resolves config files and loads its native extension through `__file__`-relative paths |
+| `astropy`       | `"astropy"`        | reads `astropy/CITATION` via `__file__` at import                                      |
+| `thinc`         | `"thinc"`          | reads `thinc/backends/_custom_kernels.cu` via `__file__` at import                     |
+| `spacy`         | `"spacy", "thinc"` | imports `thinc` at load and reads its own language data via `__file__`; list both      |
 
 ## ADB Tips
 
