@@ -9,6 +9,10 @@
 * Remove the `--clear-cache` flag of `flet build` and `flet debug` (deprecated in `0.86.0`). Use the `flet clean` command instead ([#6233](https://github.com/flet-dev/flet/issues/6233)) by @ndonkoHenri.
 * Remove `Page.go()` (deprecated in `0.80.0`). Use `Page.push_route()` instead by @ndonkoHenri.
 * Remove the `Page.url_launcher`, `Page.browser_context_menu`, `Page.shared_preferences`, `Page.clipboard`, and `Page.storage_paths` service accessors (deprecated in `0.80.0`). Instantiate the corresponding service classes directly: `UrlLauncher()`, `BrowserContextMenu()`, `SharedPreferences()`, `Clipboard()`, `StoragePaths()` by @ndonkoHenri.
+* Remove the `ConstrainedControl` base class (deprecated in `0.80.0`). Inherit from `LayoutControl` instead by @ndonkoHenri.
+* Remove `ElevatedButton` (deprecated in `0.80.0`). Use `Button` instead by @ndonkoHenri.
+* Remove `DropdownM2` and its `dropdownm2` module (deprecated in `0.84.0`). Use `Dropdown` instead by @ndonkoHenri.
+* Remove the deprecated non-underscored `Colors` aliases (`BLACK12`, `BLACK26`, `BLACK38`, `BLACK45`, `BLACK54`, `BLACK87`, `WHITE10`, `WHITE12`, `WHITE24`, `WHITE30`, `WHITE38`, `WHITE54`, `WHITE60`, `WHITE70`). Use the underscored names instead (e.g. `Colors.BLACK_12`) by @ndonkoHenri.
 
 ## 0.86.1
 

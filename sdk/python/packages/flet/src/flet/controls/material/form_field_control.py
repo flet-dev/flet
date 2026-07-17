@@ -46,8 +46,7 @@ class FormFieldControl(LayoutControl):
     Base class for Material form-field controls with a decorated input area.
 
     It provides the shared label, hint, helper, error, prefix, suffix, fill, and
-    border properties used by controls such as :class:`~flet.TextField` and
-    :class:`~flet.DropdownM2`.
+    border properties used by controls such as :class:`~flet.TextField`.
     """
 
     text_size: Optional[Number] = None

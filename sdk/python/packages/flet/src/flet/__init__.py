@@ -334,7 +334,6 @@ if TYPE_CHECKING:
         ValueKey,
     )
     from flet.controls.layout_control import (
-        ConstrainedControl,
         LayoutControl,
         LayoutSizeChangeEvent,
     )
@@ -344,7 +343,6 @@ if TYPE_CHECKING:
     )
     from flet.controls.material import (
         dropdown,
-        dropdownm2,
         icons,
     )
     from flet.controls.material.alert_dialog import AlertDialog
@@ -395,8 +393,6 @@ if TYPE_CHECKING:
         Dropdown,
         DropdownOption,
     )
-    from flet.controls.material.dropdownm2 import DropdownM2
-    from flet.controls.material.elevated_button import ElevatedButton
     from flet.controls.material.expansion_panel import (
         ExpansionPanel,
         ExpansionPanelList,
@@ -819,7 +815,6 @@ __all__ = [
     "Connectivity",
     "ConnectivityChangeEvent",
     "ConnectivityType",
-    "ConstrainedControl",
     "Container",
     "Context",
     "ContextMenu",
@@ -900,12 +895,10 @@ __all__ = [
     "DragWillAcceptEvent",
     "Draggable",
     "Dropdown",
-    "DropdownM2",
     "DropdownOption",
     "DropdownTheme",
     "Duration",
     "DurationValue",
-    "ElevatedButton",
     "Event",
     "EventControlType",
     "EventHandler",
@@ -1233,7 +1226,6 @@ __all__ = [
     "cupertino_colors",
     "cupertino_icons",
     "dropdown",
-    "dropdownm2",
     "icons",
     "is_route_active",
     "margin",
@@ -1353,7 +1345,6 @@ _LAZY = {
     "Connectivity": "flet.controls.services.connectivity",
     "ConnectivityChangeEvent": "flet.controls.services.connectivity",
     "ConnectivityType": "flet.controls.services.connectivity",
-    "ConstrainedControl": "flet.controls.layout_control",
     "Container": "flet.controls.material.container",
     "Context": "flet.controls.context",
     "ContextMenu": "flet.controls.material.context_menu",
@@ -1434,12 +1425,10 @@ _LAZY = {
     "DragWillAcceptEvent": "flet.controls.core.drag_target",
     "Draggable": "flet.controls.core.draggable",
     "Dropdown": "flet.controls.material.dropdown",
-    "DropdownM2": "flet.controls.material.dropdownm2",
     "DropdownOption": "flet.controls.material.dropdown",
     "DropdownTheme": "flet.controls.theme",
     "Duration": "flet.controls.duration",
     "DurationValue": "flet.controls.duration",
-    "ElevatedButton": "flet.controls.material.elevated_button",
     "Event": "flet.controls.control_event",
     "EventControlType": "flet.controls.control_event",
     "EventHandler": "flet.controls.control_event",
@@ -1766,7 +1755,6 @@ _LAZY = {
     "cupertino_colors": "flet.controls.cupertino",
     "cupertino_icons": "flet.controls.cupertino",
     "dropdown": "flet.controls.material",
-    "dropdownm2": "flet.controls.material",
     "icons": "flet.controls.material",
     "is_route_active": "flet.components.router",
     "margin": "flet.controls",

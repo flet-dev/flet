@@ -123,7 +123,7 @@ def main(page: ft.Page):
         ),
     )
 
-    def toggle_data(e: ft.Event[ft.ElevatedButton]):
+    def toggle_data(e: ft.Event[ft.Button]):
         if state.toggled:
             chart.data_series = data_2
             chart.interactive = False

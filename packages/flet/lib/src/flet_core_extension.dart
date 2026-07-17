@@ -51,7 +51,6 @@ import 'controls/divider.dart';
 import 'controls/drag_target.dart';
 import 'controls/draggable.dart';
 import 'controls/dropdown.dart';
-import 'controls/dropdownm2.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
@@ -253,8 +252,6 @@ class FletCoreExtension extends FletExtension {
         return DraggableControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
-      case "DropdownM2":
-        return DropdownM2Control(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
