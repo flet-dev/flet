@@ -5,15 +5,19 @@ authors: feodor
 tags: ["releases", "flet studio"]
 ---
 
-For those who didn't know we have [Flet Studio](https://flet.app) - an online tool for building Flet apps and sharing them with other users.
-Started as a quick "FletPad" experiment it grown already into a solid app, online Flet IDE if you will, with user registrations, forkable gallery of examples,
-multiple apps per account and versions history. You can play with Flet before `pip install flet` on your machine and spend time learning the framework.
-Flet Studio itself is written in Flet with a custom FastAPI backend and it's a fantastic opportunity for us to "dog food" Flet to ourselves.
+In case you missed it, we have [Flet Studio](https://flet.app) - an online tool for
+building Flet apps and sharing them with other users. What started as a quick "FletPad"
+experiment has already grown into a solid app - an online Flet IDE, if you will - with
+user accounts, a forkable gallery of examples, multiple apps per account, and version
+history. You can play with Flet and learn the framework before ever running
+`pip install flet` on your machine. Flet Studio itself is written in Flet, with a custom
+FastAPI backend, and it's a fantastic opportunity for us to dogfood Flet ourselves.
 
-We have an vision to shape Flet Studio to a hub of online services that help you build better Flet apps.
-The first service was an online editor for your apps with an ability to share them with other users.
+Our vision is to shape Flet Studio into a hub of online services that help you build
+better Flet apps. The first such service was an online editor with the ability to share
+your apps with other users.
 
-Today, we are introducing the new member of service family - AI agent!
+Today we are introducing a new member of the family - the AI agent!
 
 Go to https://flet.app and ask something like:
 
@@ -21,57 +25,88 @@ Go to https://flet.app and ask something like:
   <img src="/img/blog/flet-studio-ai/flet-studio-ai-prompt.png" className="screenshot-100" />
 </a>
 
-...and in a few moments you get the code you can start working with:
+...and in a few moments you get code you can start working with:
 
 <a href="https://flet.app" target="_blank" rel="noopener noreferrer">
   <img src="/img/blog/flet-studio-ai/flet-studio-ai-results.png" className="screenshot-100" />
 </a>
 
-## Why?
+{/* truncate */}
 
-* Because it's fun! Every program today has an Agent, right? :)
-* It can help you to start a new project. Then you can download it and continue developing on your computer.
-* You can use it to explore and learn Flet framework. How do I do this? How do I do that?
-* You can ask Flet agent to fix your own app.
+## Why an AI agent?
 
-We don't see built-in AI agent as just a coding agent for your Flet apps - Claude or Codex will probably do a better job - but we see it more as
-a central "brain" of Flet Studio IDE, coordinating a bunch tools and data sources. It will be helping you with app deployments, configuring app backends, troubleshooting errors.
+* Because it's fun! Every program today has an agent, right? :)
+* It helps you start a new project - and once it's off the ground, you can download it
+  and continue developing on your computer.
+* It's a great way to explore and learn the Flet framework: "How do I do this? How do I
+  do that?"
+* You can ask it to fix your own app.
 
-Today's agent is just a beginning of our long AI journey and, bear with us, it can be dumb sometimes :)
-Let us know if you see the way to improve its behavior or teach it something!
+We don't see the built-in agent as just a coding agent for your Flet apps - Claude or
+Codex would probably do a better job there - but rather as the central "brain" of Flet
+Studio, coordinating a bunch of tools and data sources. Over time it will help you with
+app deployments, configuring app backends, and troubleshooting errors.
+
+Today's agent is just the beginning of our long AI journey and, bear with us, it can be
+dumb sometimes :) Let us know if you see a way to improve its behavior or teach it
+something!
 
 ## Is it free?
 
-We give **1,000 "credits" per month for free** to all accounts on a new free "Explorer" plan.
+Every account on the new free "Explorer" plan gets **1,000 credits per month for free**.
 
-Frankly, 1,000 credits is not a lot to use Flet agent as your day-long tool, but quite enough to build 3-4 simple apps, to have a taste of Flet framework.
-We are not going to make our profits on selling you AI tokens - we are preparing more interesting value-added services,
-but if you need to "play" with AI longer or need more fuel to finish your app you are not blocked and have the ability to **buy more credits** or **subscribe to a plan**.
+Frankly, 1,000 credits is not enough to use the agent as your all-day tool, but it's
+quite enough to build 3-4 simple apps and get a taste of the framework. We are not
+planning to make our profit reselling AI tokens - more interesting value-added services
+are in the works - but if you want to play with AI longer, or need more fuel to finish
+your app, you are not blocked: you can **buy more credits** or **subscribe to a plan**.
 
-There is "Creator" plan which includes **10,000 AI credits per month** with "unlimited" app quotas and **Flet support**!
-We are still fleshing out the definition of "Flet support", but in essence it's your way to get closer to Flet team and move ahead of the line with your feature requests or issues.
+There is also a "Creator" plan which includes **10,000 AI credits per month**,
+"unlimited" app quotas, and **Flet support**! We are still fleshing out what exactly
+"Flet support" means, but in essence it's your way to get closer to the Flet team and
+move ahead of the line with your feature requests and issues.
 
 ## Flet MCP server
 
-We are not going to pretend Flet agent could compete with your favorite local agent. Claude, Codex and others are way more powerful, including developing apps in Flet.
-Flet is a fast growing framework with evolving API and most LLMs sit behind with their training set.
-Flet 0.86 introduces "official" [Flet MCP server](/docs/cookbook/flet-mcp/) with up-to-date dataset which helps your agent making smarter decisions when tasked to build a Flet app.
-Based on our experiments adding Flet MCP server to your agent along reduces Flet API hallucinations to zero.
+We are not going to pretend the Flet agent competes with your favorite local agent -
+Claude, Codex, and others are way more powerful, including at developing Flet apps. But
+Flet is a fast-growing framework with an evolving API, and most LLMs lag behind with
+their training data. Flet 0.86 introduces the "official"
+[Flet MCP server](/docs/cookbook/flet-mcp/) with an up-to-date dataset that helps your
+agent make smarter decisions when tasked with building a Flet app. In our experiments,
+adding the Flet MCP server alone reduces Flet API hallucinations to zero.
 
-Flet MCP supports stdio and HTTP transports and provides the following tools:
-- API
-- Examples
-- CLI
+Flet MCP supports stdio and HTTP transports and provides tools organized into groups:
 
-Check [Flet MCP server cookbook](/docs/cookbook/flet-mcp/) for more details and examples.
+- **API** - look up any Flet control, property, event, or enum as it exists in the
+  installed Flet version.
+- **Icons** - find the right icon by keyword.
+- **Examples** - search and fetch working code examples.
+- **CLI** - get help for `flet` CLI commands.
+
+Check the [Flet MCP server cookbook](/docs/cookbook/flet-mcp/) for more details and
+examples.
 
 ## Flet Skills
 
-Agent Skills is another layer of Flet AI "wisdom". We are going to work on AI skills in the coming weeks, so expect Flet Agent become smarter - it's still struggling in some
-areas like routing/navigation or declarative apps.
+Agent Skills are another layer of Flet AI "wisdom". We are going to work on skills in
+the coming weeks, so expect the Flet agent to become smarter - today it still struggles
+in some areas like routing/navigation or declarative apps.
 
-Once ready we are going to share Flet skills as installable bundle for your favorite agent.
+Once ready, we'll also share Flet skills as an installable bundle for your favorite
+local agent.
 
-## Conclusion
+## Try it
 
-...
+Open [flet.app](https://flet.app), sign in, and ask the agent to build something - your
+free monthly credits are already waiting. If you'd rather stay with your local agent,
+plug in the [Flet MCP server](/docs/cookbook/flet-mcp/) and enjoy hallucination-free
+Flet coding right away.
+
+And tell us how it went: what the agent nailed, where it stumbled, and what you'd like
+it to learn next. Drop your feedback in
+[GitHub Discussions](https://github.com/flet-dev/flet/discussions) or on
+[Discord](https://discord.gg/dzWXP8SHG8) - this is the very beginning of the journey,
+and your reports are exactly what will make the agent smarter.
+
+Happy Flet-ing!
