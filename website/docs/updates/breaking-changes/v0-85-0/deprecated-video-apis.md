@@ -74,7 +74,7 @@ been added to the page.
 ## Timeline
 
 - Deprecated in: `0.85.0`
-- Removed in: Unreleased
+- Removed in: `1.0.0`
 
 ## References
 

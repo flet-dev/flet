@@ -50,7 +50,7 @@ current directory), so you can target another project with `flet clean path/to/a
 ## Timeline
 
 - Deprecated in: `0.86.0`
-- Removal in: `0.89.0`
+- Removed in: `1.0.0`
 
 ## References
 

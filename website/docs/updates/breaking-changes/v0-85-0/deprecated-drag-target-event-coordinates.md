@@ -55,7 +55,7 @@ If your code needs page-level coordinates instead, use
 ## Timeline
 
 - Deprecated in: `0.85.0`
-- Removed in: Unreleased
+- Removed in: `1.0.0`
 
 ## References
 
