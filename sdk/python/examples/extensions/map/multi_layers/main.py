@@ -56,7 +56,7 @@ def main(page: ft.Page):
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
-                                on_click=lambda e: e.page.launch_url(
+                                on_click=lambda e: ft.UrlLauncher().launch_url(
                                     "https://www.openstreetmap.org/copyright"
                                 ),
                             ),

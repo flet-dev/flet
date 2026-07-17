@@ -15,7 +15,6 @@ from typing import (
     Optional,
     ParamSpec,
     TypeVar,
-    Union,
 )
 from urllib.parse import urlparse
 
@@ -53,12 +52,9 @@ from flet.controls.types import (
     DeviceOrientation,
     Locale,
     PagePlatform,
-    Url,
-    UrlTarget,
     Wrapper,
 )
 from flet.utils import is_pyodide
-from flet.utils.deprecated import deprecated
 from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
@@ -1143,83 +1139,6 @@ class Page(BasePage):
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
             asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))
-
-    @deprecated(
-        "Use UrlLauncher().launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def launch_url(
-        self,
-        url: Union[str, Url],
-        *,
-        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
-        web_popup_window: bool = False,
-        web_popup_window_width: Optional[int] = None,
-        web_popup_window_height: Optional[int] = None,
-    ) -> None:
-        """
-        Opens a web browser or popup window to a given `url`.
-
-        Args:
-            url: The URL to open.
-            web_popup_window_name: Window tab/name to open URL in. Use
-                :attr:`flet.UrlTarget.SELF` for the same browser tab,
-                :attr:`flet.UrlTarget.BLANK` for a new browser tab (or in external
-                application on a mobile device), or a custom name for a named tab.
-            web_popup_window: Display the URL in a browser popup window.
-            web_popup_window_width: Popup window width.
-            web_popup_window_height: Popup window height.
-        """
-        if web_popup_window:
-            await UrlLauncher().open_window(
-                url,
-                title=web_popup_window_name,
-                width=web_popup_window_width,
-                height=web_popup_window_height,
-            )
-        else:
-            await UrlLauncher().launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().can_launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def can_launch_url(self, url: str) -> bool:
-        """
-        Checks whether the specified URL can be handled by some app installed on the \
-        device.
-
-        Args:
-            url: The URL to check.
-
-        Returns:
-            `True` if it is possible to verify that there is a handler available.
-                `False` if there is no handler available, or the application does not
-                have permission to check. For example:
-
-                - On recent versions of Android and iOS, this will always return `False`
-                    unless the application has been configuration to allow querying the
-                    system for launch support.
-                - In web mode, this will always return `False` except for a few specific
-                    schemes that are always assumed to be supported (such as http(s)),
-                    as web pages are never allowed to query installed applications.
-        """
-        return await UrlLauncher().can_launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().close_in_app_web_view() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def close_in_app_web_view(self) -> None:
-        """
-        Closes in-app web view opened with `launch_url()`.
-
-        📱 Mobile only.
-        """
-        await UrlLauncher().close_in_app_web_view()
 
     @property
     def session(self) -> "Session":

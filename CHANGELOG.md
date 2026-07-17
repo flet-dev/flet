@@ -13,6 +13,11 @@
 * Remove `ElevatedButton` (deprecated in `0.80.0`). Use `Button` instead by @ndonkoHenri.
 * Remove `DropdownM2` and its `dropdownm2` module (deprecated in `0.84.0`). Use `Dropdown` instead by @ndonkoHenri.
 * Remove the deprecated non-underscored `Colors` aliases (`BLACK12`, `BLACK26`, `BLACK38`, `BLACK45`, `BLACK54`, `BLACK87`, `WHITE10`, `WHITE12`, `WHITE24`, `WHITE30`, `WHITE38`, `WHITE54`, `WHITE60`, `WHITE70`). Use the underscored names instead (e.g. `Colors.BLACK_12`) by @ndonkoHenri.
+* Remove `app()` and `app_async()` (deprecated in `0.80.0`). Use `run()` and `run_async()` instead by @ndonkoHenri.
+* Remove the `target` parameter of `run()` and `run_async()` (deprecated alias for `main`). Pass `main` instead by @ndonkoHenri.
+* Remove `Page.launch_url()`, `Page.can_launch_url()`, and `Page.close_in_app_web_view()` (deprecated in `0.90.0`). Use `UrlLauncher().launch_url()` / `.can_launch_url()` / `.close_in_app_web_view()` instead by @ndonkoHenri.
+* Remove the legacy `[tool.flet.app.boot_screen]` / `[tool.flet.app.startup_screen]` build-config fallback. Use `[tool.flet.boot_screen]` with a named screen instead by @ndonkoHenri.
+* Remove the Dart empty-string (`""`) widget-state key back-compat mapping. Use `"default"` (or `ControlState.DEFAULT`) instead by @ndonkoHenri.
 
 ## 0.86.1
 

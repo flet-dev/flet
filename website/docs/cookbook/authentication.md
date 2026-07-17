@@ -392,7 +392,7 @@ You can also change web app to open provider's authorization page in the same ta
 ```python
 page.login(
     provider,
-    on_open_authorization_url=lambda url: asyncio.create_task(page.launch_url(url, web_window_name="_self")),
+    on_open_authorization_url=lambda url: asyncio.create_task(ft.UrlLauncher().launch_url(url, web_only_window_name="_self")),
     redirect_to_page=True
 )
 ```
@@ -402,7 +402,7 @@ To open flow in a new tab (notice `_self` replaced with `_blank`):
 ```python
 page.login(
     provider,
-    on_open_authorization_url=lambda url: asyncio.create_task(page.launch_url(url, web_window_name="_blank"))
+    on_open_authorization_url=lambda url: asyncio.create_task(ft.UrlLauncher().launch_url(url, web_only_window_name="_blank"))
 )
 ```
 

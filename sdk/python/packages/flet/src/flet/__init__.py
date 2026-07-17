@@ -9,8 +9,6 @@ from flet.version import flet_version as __version__
 if TYPE_CHECKING:
     from flet.app import (
         AppCallable,
-        app,
-        app_async,
         run,
         run_async,
     )
@@ -1215,8 +1213,6 @@ __all__ = [
     "WindowsDeviceInfo",
     "__version__",
     "alignment",
-    "app",
-    "app_async",
     "border",
     "border_radius",
     "component",
@@ -1744,8 +1740,6 @@ _LAZY = {
     "WindowResizeEdge": "flet.controls.core.window",
     "WindowsDeviceInfo": "flet.controls.device_info",
     "alignment": "flet.controls",
-    "app": "flet.app",
-    "app_async": "flet.app",
     "border": "flet.controls",
     "border_radius": "flet.controls",
     "component": "flet.components.component_decorator",
