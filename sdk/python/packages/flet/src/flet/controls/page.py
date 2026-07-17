@@ -853,23 +853,6 @@ class Page(BasePage):
                 partial(handler_with_context, *args, **kwargs),
             )
 
-    @deprecated(
-        "Use push_route() instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-        show_parentheses=True,
-    )
-    def go(
-        self, route: str, skip_route_change_event: bool = False, **kwargs: Any
-    ) -> None:
-        """
-        A helper method that updates [`page.route`](#route), calls \
-        [`page.on_route_change`](#on_route_change) event handler to update views and \
-        finally calls `page.update()`.
-        """
-
-        asyncio.create_task(self.push_route(route, **kwargs))
-
     async def push_route(self, route: str, **kwargs: Any) -> None:
         """
         Pushes a new navigation route to the browser history stack.
@@ -1295,79 +1278,6 @@ class Page(BasePage):
         The PubSub client for the current page.
         """
         return self.session.pubsub_client
-
-    @property
-    @deprecated(
-        reason="Use UrlLauncher() instead.",
-        docs_reason="Use :class:`~flet.UrlLauncher` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def url_launcher(self) -> UrlLauncher:
-        """
-        The UrlLauncher service for the current page.
-        """
-        return UrlLauncher()
-
-    @property
-    @deprecated(
-        reason="Use BrowserContextMenu() instead.",
-        docs_reason="Use :class:`~flet.BrowserContextMenu` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def browser_context_menu(self):
-        """
-        The BrowserContextMenu service for the current page.
-        """
-        from flet.controls.services.browser_context_menu import BrowserContextMenu
-
-        return BrowserContextMenu()
-
-    @property
-    @deprecated(
-        reason="Use SharedPreferences() instead.",
-        docs_reason="Use :class:`~flet.SharedPreferences` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def shared_preferences(self):
-        """
-        The SharedPreferences service for the current page.
-        """
-        from flet.controls.services.shared_preferences import SharedPreferences
-
-        return SharedPreferences()
-
-    @property
-    @deprecated(
-        reason="Use Clipboard() instead.",
-        docs_reason="Use :class:`~flet.Clipboard` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def clipboard(self):
-        """
-        The Clipboard service for the current page.
-        """
-        from flet.controls.services.clipboard import Clipboard
-
-        return Clipboard()
-
-    @property
-    @deprecated(
-        reason="Use StoragePaths() instead.",
-        docs_reason="Use :class:`~flet.StoragePaths` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def storage_paths(self):
-        """
-        The StoragePaths service for the current page.
-        """
-        from flet.controls.services.storage_paths import StoragePaths
-
-        return StoragePaths()
 
     async def get_device_info(self) -> Optional[DeviceInfo]:
         """
