@@ -1,3 +1,9 @@
+## 0.86.2
+
+### Bug fixes
+
+* Fix code edits not taking effect under `flet debug android`: after re-running the command, the app kept executing the previously-unpacked, stale code instead of your changes. `flet debug` rebuilds and reinstalls the same-version APK on each iteration (`flutter run` does an update install that preserves app data), and `serious_python`'s on-device extraction cache — keyed only on `versionName+versionCode` — never saw the version change, so it skipped re-unpacking the new `app.zip`. Bumps `serious_python` to 4.3.4, which folds the APK's `lastUpdateTime` into that cache key so every (re)install re-extracts the current code while ordinary relaunches still hit the cache. `flet build apk` was never affected ([#6682](https://github.com/flet-dev/flet/issues/6682)) by @FeodorFitsner.
+
 ## 0.86.1
 
 ### Improvements
