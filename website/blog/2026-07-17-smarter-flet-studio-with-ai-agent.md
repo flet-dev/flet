@@ -28,10 +28,19 @@ Go to https://flet.app and ask something like:
 ...and in a few moments you get code you can start working with:
 
 <a href="https://flet.app" target="_blank" rel="noopener noreferrer">
-  <img src="/img/blog/flet-studio-ai/flet-studio-ai-results.png" className="screenshot-100" />
+  <img src="/img/blog/flet-studio-ai/flet-studio-ai-result-preview.png" className="screenshot-100" />
 </a>
 
 {/* truncate */}
+
+The generated code is not your typical AI slop - it's compact and readable to any
+Python developer. Maintainable code is an explicit goal for us, and we are building
+tools for the agent to achieve exactly that. It helps that Flet itself, with its minimal
+boilerplate, is a framework equally friendly to humans and AI.
+
+<a href="https://flet.app" target="_blank" rel="noopener noreferrer">
+  <img src="/img/blog/flet-studio-ai/flet-studio-ai-result-code.png" className="screenshot-100" />
+</a>
 
 ## Why an AI agent?
 
@@ -55,13 +64,13 @@ something!
 
 Every account on the new free "Explorer" plan gets **1,000 credits per month for free**.
 
-Frankly, 1,000 credits is not enough to use the agent as your all-day tool, but it's
+Frankly, 1,000 credits is not enough to use the agent as your everyday tool, but it's
 quite enough to build 3-4 simple apps and get a taste of the framework. We are not
 planning to make our profit reselling AI tokens - more interesting value-added services
 are in the works - but if you want to play with AI longer, or need more fuel to finish
-your app, you are not blocked: you can **buy more credits** or **subscribe to a plan**.
+your app, you are not blocked: you can buy more credits or subscribe to a plan.
 
-There is also a "Creator" plan which includes **10,000 AI credits per month**,
+There is a "Creator" plan which includes **10,000 AI credits per month**,
 "unlimited" app quotas, and **Flet support**! We are still fleshing out what exactly
 "Flet support" means, but in essence it's your way to get closer to the Flet team and
 move ahead of the line with your feature requests and issues.
@@ -74,7 +83,7 @@ Flet is a fast-growing framework with an evolving API, and most LLMs lag behind 
 their training data. Flet 0.86 introduces the "official"
 [Flet MCP server](/docs/cookbook/flet-mcp/) with an up-to-date dataset that helps your
 agent make smarter decisions when tasked with building a Flet app. In our experiments,
-adding the Flet MCP server alone reduces Flet API hallucinations to zero.
+adding the Flet MCP server alone reduces Flet API hallucinations next to zero.
 
 Flet MCP supports stdio and HTTP transports and provides tools organized into groups:
 
@@ -92,9 +101,6 @@ examples.
 Agent Skills are another layer of Flet AI "wisdom". We are going to work on skills in
 the coming weeks, so expect the Flet agent to become smarter - today it still struggles
 in some areas like routing/navigation or declarative apps.
-
-Once ready, we'll also share Flet skills as an installable bundle for your favorite
-local agent.
 
 ## Try it
 
