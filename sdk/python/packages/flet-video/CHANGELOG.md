@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Removed
+
+- `Video.show_controls` (deprecated in 0.85.0); set `Video.controls` to `None` to hide controls ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+- `Video.playlist_add()` and `Video.playlist_remove()` (deprecated in 0.85.0); mutate `Video.playlist` directly with list methods such as `append()` and `pop()` ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+
 ## 0.85.0
 
 ### Added

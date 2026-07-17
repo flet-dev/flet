@@ -13,9 +13,8 @@ The [breaking changes and deprecations index](../index.md) lists the guides crea
 
 ## Summary
 
-Flet 0.85.0 deprecated [`DragTargetEvent.x`][flet.DragTargetEvent.x],
-[`DragTargetEvent.y`][flet.DragTargetEvent.y], and
-[`DragTargetEvent.offset`][flet.DragTargetEvent.offset].
+Flet 0.85.0 deprecated `DragTargetEvent.x`, `DragTargetEvent.y`, and
+`DragTargetEvent.offset`.
 
 Use [`DragTargetEvent.local_position`][flet.DragTargetEvent.local_position] for
 target-relative coordinates, or
@@ -56,7 +55,7 @@ If your code needs page-level coordinates instead, use
 ## Timeline
 
 - Deprecated in: `0.85.0`
-- Removal in: `0.88.0`
+- Removed in: Unreleased
 
 ## References
 
