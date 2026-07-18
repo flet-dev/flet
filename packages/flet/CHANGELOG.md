@@ -1,3 +1,7 @@
+## 0.86.2
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the `serious_python` 4.3.4 bump that fixes stale code under `flet debug android` ([#6682](https://github.com/flet-dev/flet/issues/6682))._
+
 ## 0.86.1
 
 _No changes in the `flet` Dart package; version bumped for release coordination with the web client's readable app-package download errors ([#6680](https://github.com/flet-dev/flet/pull/6680))._
