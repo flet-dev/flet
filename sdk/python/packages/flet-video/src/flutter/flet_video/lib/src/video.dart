@@ -29,12 +29,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   bool _initialized = false;
   Future<void>? _openFuture;
 
-  /// Last values applied to the current [_player]. These share the player's
+  /// Last values applied to the current [_player]. They share the player's
   /// lifetime (both are (re)created in [_setup]), so [build] diffs against them
-  /// to avoid re-applying unchanged properties. They are reset to `null` in
-  /// [_setup] so a freshly created player is always re-initialised by [build] —
-  /// without this, toggling `visible` off/on (which disposes and recreates this
-  /// State and its player) would leave these at the player's defaults.
+  /// to avoid re-applying unchanged properties.
+  ///
+  /// [_setup] resets them to `null` whenever it creates a new player so [build]
+  /// re-applies every property to it. This is required on the `didUpdateWidget`
+  /// control-swap path, where the same State instance is reused with a fresh
+  /// player; on the `visible` off/on path the whole State (and these fields) is
+  /// recreated anyway, so they already start as `null`.
   ///
   /// Keep this list in lockstep with the property diffs in [build].
   double? _volume;
