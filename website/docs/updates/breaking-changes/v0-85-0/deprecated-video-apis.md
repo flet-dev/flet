@@ -79,5 +79,5 @@ been added to the page.
 ## References
 
 - API documentation: [`Video`][flet_video.Video]
-- Issues and PRs: [PR #6463](https://github.com/flet-dev/flet/pull/6463)
+- Issues and PRs: [PR #6463](https://github.com/flet-dev/flet/pull/6463), [PR #6693](https://github.com/flet-dev/flet/pull/6693) (removal)
 - Release notes: [Flet 0.85.0](../../release-notes.md#085x)
