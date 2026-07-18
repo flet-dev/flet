@@ -50,10 +50,10 @@ current directory), so you can target another project with `flet clean path/to/a
 ## Timeline
 
 - Deprecated in: `0.86.0`
-- Removal in: `0.89.0`
+- Removed in: `1.0.0`
 
 ## References
 
 - CLI documentation: [`flet clean`](../../../cli/flet-clean.md), [`flet build`](../../../cli/flet-build.md)
-- Issues and PRs: [#6233](https://github.com/flet-dev/flet/issues/6233)
+- Issues and PRs: [#6233](https://github.com/flet-dev/flet/issues/6233), [#6693](https://github.com/flet-dev/flet/pull/6693) (removal)
 - Release notes: [Flet 0.86.0](../../release-notes.md)

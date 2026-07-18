@@ -1,3 +1,27 @@
+## 1.0.0
+
+### Breaking changes
+
+* Remove `DragTargetEvent.x`, `DragTargetEvent.y`, and `DragTargetEvent.offset` (deprecated in `0.85.0`). Use `DragTargetEvent.local_position` for target-relative coordinates or `DragTargetEvent.global_position` for global coordinates ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `Video.show_controls` (deprecated in `0.85.0`). Set `Video.controls` to `None` to hide controls ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `Video.playlist_add()` and `Video.playlist_remove()` (deprecated in `0.85.0`). Mutate `Video.playlist` directly with list methods such as `append()` and `pop()` ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `FletApp.show_app_startup_screen` and `FletApp.app_startup_screen_message` (deprecated in `0.86.0`). Use `FletApp.boot_screen_options` instead, e.g. `boot_screen_options={'spinner_size': 30}` or `boot_screen_options={'startup_message': '...'}` ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the `--clear-cache` flag of `flet build` and `flet debug` (deprecated in `0.86.0`). Use the `flet clean` command instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `Page.go()` (deprecated in `0.80.0`). Use `Page.push_route()` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the `Page.url_launcher`, `Page.browser_context_menu`, `Page.shared_preferences`, `Page.clipboard`, and `Page.storage_paths` service accessors (deprecated in `0.80.0`). Instantiate the corresponding service classes directly: `UrlLauncher()`, `BrowserContextMenu()`, `SharedPreferences()`, `Clipboard()`, `StoragePaths()` ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the `ConstrainedControl` base class (deprecated in `0.80.0`). Inherit from `LayoutControl` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `ElevatedButton` (deprecated in `0.80.0`). Use `Button` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the deprecated non-underscored `Colors` aliases (`BLACK12`, `BLACK26`, `BLACK38`, `BLACK45`, `BLACK54`, `BLACK87`, `WHITE10`, `WHITE12`, `WHITE24`, `WHITE30`, `WHITE38`, `WHITE54`, `WHITE60`, `WHITE70`). Use the underscored names instead (e.g. `Colors.BLACK_12`) ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `app()` and `app_async()` (deprecated in `0.80.0`). Use `run()` and `run_async()` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the `target` parameter of `run()` and `run_async()` (deprecated alias for `main`). Pass `main` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `Page.launch_url()`, `Page.can_launch_url()`, and `Page.close_in_app_web_view()` (deprecated in `0.90.0`). Use `UrlLauncher().launch_url()` / `.can_launch_url()` / `.close_in_app_web_view()` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the legacy `[tool.flet.app.boot_screen]` / `[tool.flet.app.startup_screen]` build-config fallback. Use `[tool.flet.boot_screen]` with a named screen instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove the Dart empty-string (`""`) widget-state key back-compat mapping. Use `"default"` (or `ControlState.DEFAULT`) instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+
+### Changed
+
+* `DropdownM2` is no longer deprecated and remains a supported control; its `0.84.0` deprecation in favor of `Dropdown` has been reverted ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+
 ## 0.86.1
 
 ### Improvements

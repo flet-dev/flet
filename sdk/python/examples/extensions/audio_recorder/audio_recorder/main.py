@@ -19,7 +19,7 @@ def main(page: ft.Page):
         output_path = await recorder.stop_recording()
         show_snackbar(f"Stopped recording. Output Path: {output_path}")
         if page.web and output_path is not None:
-            await page.launch_url(output_path)
+            await ft.UrlLauncher().launch_url(output_path)
 
     async def handle_list_devices(e: ft.Event[ft.Button]):
         o = await recorder.get_input_devices()
