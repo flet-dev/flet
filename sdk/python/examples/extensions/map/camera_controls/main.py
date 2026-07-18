@@ -5,6 +5,9 @@ import flet_map as ftm
 def main(page: ft.Page):
     page.padding = 16
 
+    async def open_attribution(e: ft.Event[ftm.SimpleAttribution]):
+        await ft.UrlLauncher().launch_url("https://www.openstreetmap.org/copyright")
+
     async def update_camera_status(trigger: str):
         camera = await my_map.get_camera()
         camera_status.value = (
@@ -81,9 +84,7 @@ def main(page: ft.Page):
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
-                                on_click=lambda e: ft.UrlLauncher().launch_url(
-                                    "https://www.openstreetmap.org/copyright"
-                                ),
+                                on_click=open_attribution,
                             ),
                             ftm.MarkerLayer(
                                 markers=[

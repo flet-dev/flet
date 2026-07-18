@@ -13,6 +13,9 @@ IDLE_EVENT_TYPES = {
 def main(page: ft.Page):
     page.padding = 16
 
+    async def open_attribution(e: ft.Event[ftm.SimpleAttribution]):
+        await ft.UrlLauncher().launch_url("https://www.openstreetmap.org/copyright")
+
     async def handle_map_event(e: ftm.MapEvent):
         last_event.value = (
             "Last event: "
@@ -68,9 +71,7 @@ def main(page: ft.Page):
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
-                                on_click=lambda e: ft.UrlLauncher().launch_url(
-                                    "https://www.openstreetmap.org/copyright"
-                                ),
+                                on_click=open_attribution,
                             ),
                         ],
                     ),

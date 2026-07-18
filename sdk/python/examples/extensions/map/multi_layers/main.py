@@ -5,6 +5,9 @@ import flet_map as ftm
 
 
 def main(page: ft.Page):
+    async def open_attribution(e: ft.Event[ftm.SimpleAttribution]):
+        await ft.UrlLauncher().launch_url("https://www.openstreetmap.org/copyright")
+
     def handle_tap(e: ftm.MapTapEvent):
         if e.name == "tap":
             marker_layer.markers.append(
@@ -56,9 +59,7 @@ def main(page: ft.Page):
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
-                                on_click=lambda e: ft.UrlLauncher().launch_url(
-                                    "https://www.openstreetmap.org/copyright"
-                                ),
+                                on_click=open_attribution,
                             ),
                             marker_layer := ftm.MarkerLayer(
                                 markers=[
