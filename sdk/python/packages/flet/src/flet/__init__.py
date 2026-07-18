@@ -341,6 +341,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.material import (
         dropdown,
+        dropdownm2,
         icons,
     )
     from flet.controls.material.alert_dialog import AlertDialog
@@ -391,6 +392,7 @@ if TYPE_CHECKING:
         Dropdown,
         DropdownOption,
     )
+    from flet.controls.material.dropdownm2 import DropdownM2
     from flet.controls.material.expansion_panel import (
         ExpansionPanel,
         ExpansionPanelList,
@@ -893,6 +895,7 @@ __all__ = [
     "DragWillAcceptEvent",
     "Draggable",
     "Dropdown",
+    "DropdownM2",
     "DropdownOption",
     "DropdownTheme",
     "Duration",
@@ -1222,6 +1225,7 @@ __all__ = [
     "cupertino_colors",
     "cupertino_icons",
     "dropdown",
+    "dropdownm2",
     "icons",
     "is_route_active",
     "margin",
@@ -1421,6 +1425,7 @@ _LAZY = {
     "DragWillAcceptEvent": "flet.controls.core.drag_target",
     "Draggable": "flet.controls.core.draggable",
     "Dropdown": "flet.controls.material.dropdown",
+    "DropdownM2": "flet.controls.material.dropdownm2",
     "DropdownOption": "flet.controls.material.dropdown",
     "DropdownTheme": "flet.controls.theme",
     "Duration": "flet.controls.duration",
@@ -1749,6 +1754,7 @@ _LAZY = {
     "cupertino_colors": "flet.controls.cupertino",
     "cupertino_icons": "flet.controls.cupertino",
     "dropdown": "flet.controls.material",
+    "dropdownm2": "flet.controls.material",
     "icons": "flet.controls.material",
     "is_route_active": "flet.components.router",
     "margin": "flet.controls",
