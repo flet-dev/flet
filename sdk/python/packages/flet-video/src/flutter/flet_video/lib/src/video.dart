@@ -34,7 +34,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   /// to avoid re-applying unchanged properties. They are reset to `null` in
   /// [_setup] so a freshly created player is always re-initialised by [build] —
   /// without this, toggling `visible` off/on (which disposes and recreates this
-  /// State and its player) would leave these at the player's defaults. (#6683)
+  /// State and its player) would leave these at the player's defaults.
   ///
   /// Keep this list in lockstep with the property diffs in [build].
   double? _volume;
@@ -168,7 +168,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     _player = Player(configuration: playerConfig);
 
     // The new player starts with default settings, so forget what was applied
-    // to the previous one and let build() re-apply everything. (#6683)
+    // to the previous one and let build() re-apply everything.
     _volume = null;
     _pitch = null;
     _playbackRate = null;
