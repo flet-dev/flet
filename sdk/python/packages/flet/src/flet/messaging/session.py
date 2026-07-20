@@ -63,12 +63,32 @@ class Session:
         self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
         self.__updates_task: Optional[asyncio.Task] = None
         self.__closed = False
+        # Whether this session's app renders via the declarative components
+        # API (page.render/render_views). Tracked per-session — not on the
+        # global `context` singleton — so concurrent apps in one process
+        # (e.g. an embedded FletApp) keep independent update behavior.
+        self.__components_mode = False
 
         session_id = self.__id
         weakref.finalize(
             self,
             lambda: logger.info("Session was garbage collected: %s", session_id),
         )
+
+    @property
+    def components_mode(self) -> bool:
+        """
+        Whether this session's app uses the declarative components API.
+
+        Set by `Page.render`/`render_views` and read by
+        :meth:`flet.context.auto_update_enabled`. Kept on the session so that
+        multiple apps sharing one process do not interfere.
+        """
+        return self.__components_mode
+
+    @components_mode.setter
+    def components_mode(self, value: bool) -> None:
+        self.__components_mode = value
 
     @property
     def connection(self) -> Connection:
