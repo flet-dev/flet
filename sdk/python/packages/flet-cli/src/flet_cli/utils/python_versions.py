@@ -28,7 +28,7 @@ from flet_cli.utils.template_cache import get_cache_root
 # python-build release this flet pins. Keep in sync with serious_python's
 # `pythonReleaseDate` (lib/src/python_versions.dart) — both should track the
 # same python-build release.
-PYTHON_BUILD_RELEASE_DATE = "20260719"
+PYTHON_BUILD_RELEASE_DATE = "20260720"
 
 RELEASE_DATE_ENV = "FLET_PYTHON_BUILD_RELEASE_DATE"
 MANIFEST_PATH_ENV = "FLET_PYTHON_BUILD_MANIFEST"
