@@ -173,6 +173,12 @@ async def test_on_tap_outside_view(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
     assert events == []
 
+    # Tapping the view's own search field (its header, near the top of the
+    # open view) must NOT fire the event either.
+    await flet_app.tester.tap_at(ft.Offset(175, 28))
+    await flet_app.tester.pump_and_settle()
+    assert events == []
+
     # Tapping the barrier (outside the open view, well below the 250px-tall
     # view) fires the event and dismisses the view.
     await flet_app.tester.tap_at(ft.Offset(200, 660))
