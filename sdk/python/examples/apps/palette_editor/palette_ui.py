@@ -463,7 +463,7 @@ def build_error_examples() -> list[ft.Control]:
         can_reveal_password=True,
         value="hunter2",
     )
-    password_field.error_text = "Incorrect password"
+    password_field.error = "Incorrect password"
     return [
         password_field,
         ft.Text("Please correct the highlighted fields.", color=ft.Colors.ERROR),
