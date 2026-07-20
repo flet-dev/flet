@@ -1,6 +1,6 @@
 ## 0.86.2
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the `serious_python` 4.3.4 bump that fixes stale code under `flet debug android` ([#6682](https://github.com/flet-dev/flet/issues/6682))._
+* Flutter updated to [3.44.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3447).
 
 ## 0.86.1
 
