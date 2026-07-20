@@ -246,15 +246,6 @@ class _SearchBarControlState extends State<SearchBarControl> {
             (BuildContext context, SearchController controller) {
           Widget suggestions =
               _SearchBarSuggestionsHost(control: widget.control);
-          // The open search view lives in a separate route that becomes the
-          // current route, so the `SearchBar`'s own `onTapOutside` (registered
-          // in the now non-current anchor route, and gated on the bar having
-          // focus) can't detect taps outside the open view. Register a tap
-          // region *inside* the open view instead. `TextFieldTapRegion` groups
-          // this region with the view's header text field, so tapping that
-          // field (or the suggestions themselves) counts as "inside" and does
-          // not trigger the event — only taps on the surrounding barrier do.
-          // See issue #6593.
           if (widget.control.hasEventHandler("tap_outside_view")) {
             suggestions = TextFieldTapRegion(
               onTapOutside: (PointerDownEvent event) =>
