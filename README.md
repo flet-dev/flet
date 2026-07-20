@@ -140,4 +140,4 @@ flet run --web counter.py
 
 ## Contributing
 
-Want to help improve Flet? Check out the [contribution guide](https://flet.dev/docs/contributing).
+Want to help improve Flet? Check out the [contribution guide](CONTRIBUTING.md).
