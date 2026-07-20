@@ -512,7 +512,8 @@ jobs:
           fi
           apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
-          apt-get install -y $LINUX_DEPS
+          read -r -a linux_deps <<< "$LINUX_DEPS"
+          apt-get install -y "${linux_deps[@]}"
 
       - name: Build Flutter Linux clients
         shell: bash
@@ -863,9 +864,47 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           if [[ "$REF_NAME" == *".dev"* ]]; then
-            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
           else
-            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout repository
+        if: ${{ steps.prerelease.outputs.is_prerelease != 'true' }}
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Extract release notes from changelog
+        if: ${{ steps.prerelease.outputs.is_prerelease != 'true' }}
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          version="${REF_NAME#v}"
+
+          awk -v version="$version" '
+            $0 == "## " version { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+
+          if [[ ! -s release-notes.md ]]; then
+            echo "No CHANGELOG.md section found for $version."
+            exit 1
+          fi
+
+          previous_tag="$(git tag --list 'v*' --sort=-version:refname | awk -v current="$REF_NAME" '
+            /\.dev/ { next }
+            $0 == current { found = 1; next }
+            found { print; exit }
+          ')"
+
+          if [[ -n "$previous_tag" ]]; then
+            {
+              echo
+              echo "**Full Changelog**: [${previous_tag}...${REF_NAME}](https://github.com/${GITHUB_REPOSITORY}/compare/${previous_tag}...${REF_NAME})"
+            } >> release-notes.md
           fi
 
       - name: Download artifacts
@@ -874,14 +913,33 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Create/Update GitHub Release
+      - name: Create/Update stable GitHub Release
+        if: ${{ steps.prerelease.outputs.is_prerelease != 'true' }}
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
-          prerelease: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
+          prerelease: false
+          body_path: release-notes.md
+          preserve_order: true
+          overwrite_files: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/**/*.whl
+            dist/**/*.tar.gz
+            dist/**/*.zip
+
+      - name: Create/Update dev GitHub Release
+        if: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          prerelease: true
           generate_release_notes: true
           preserve_order: true
           overwrite_files: true
