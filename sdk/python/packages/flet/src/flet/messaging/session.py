@@ -434,6 +434,13 @@ class Session:
             event_name: Event name without the `on_` prefix.
             event_data: Raw event payload.
         """
+        # Bind the page context to THIS session for the duration of the event.
+        # Event dispatch runs in a fresh task whose context var may otherwise
+        # carry another session's page (e.g. when a host app embeds a FletApp),
+        # which would make context-derived state such as auto-update mode
+        # resolve against the wrong session.
+        _context_page.set(self.__page)
+
         control = self.__resolve_event_control(control_id)
         if not control:
             logger.debug("Control with ID %s not found.", control_id)
