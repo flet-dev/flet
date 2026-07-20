@@ -29,6 +29,24 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   bool _initialized = false;
   Future<void>? _openFuture;
 
+  /// Last values applied to the current [_player]. They share the player's
+  /// lifetime (both are (re)created in [_setup]), so [build] diffs against them
+  /// to avoid re-applying unchanged properties.
+  ///
+  /// [_setup] resets them to `null` whenever it creates a new player so [build]
+  /// re-applies every property to it. This is required on the `didUpdateWidget`
+  /// control-swap path, where the same State instance is reused with a fresh
+  /// player; on the `visible` off/on path the whole State (and these fields) is
+  /// recreated anyway, so they already start as `null`.
+  ///
+  /// Keep this list in lockstep with the property diffs in [build].
+  double? _volume;
+  double? _pitch;
+  double? _playbackRate;
+  bool? _shufflePlaylist;
+  PlaylistMode? _playlistMode;
+  SubtitleTrack? _subtitleTrack;
+
   /// Snapshot of the last-known playlist, used to diff against incoming
   /// updates so single add/remove changes can be applied without a full reload.
   dynamic _playlist;
@@ -151,6 +169,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     );
 
     _player = Player(configuration: playerConfig);
+
+    // The new player starts with default settings, so forget what was applied
+    // to the previous one and let build() re-apply everything.
+    _volume = null;
+    _pitch = null;
+    _playbackRate = null;
+    _shufflePlaylist = null;
+    _playlistMode = null;
+    _subtitleTrack = null;
 
     final videoControllerConfiguration = parseControllerConfiguration(
         control.get("configuration"), const VideoControllerConfiguration())!;
@@ -344,14 +371,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         parsePlaylistMode(widget.control.getString("playlist_mode"));
     var fullscreen = widget.control.getBool("fullscreen", false)!;
 
-    // previous values
-    final prevVolume = widget.control.getDouble("_volume");
-    final prevPitch = widget.control.getDouble("_pitch");
-    final prevPlaybackRate = widget.control.getDouble("_playback_rate");
-    final prevShufflePlaylist = widget.control.getBool("_shuffle_playlist");
-    final PlaylistMode? prevPlaylistMode = widget.control.get("_playlist_mode");
-    final SubtitleTrack? prevSubtitleTrack =
-        widget.control.get("_subtitle_track");
+    // previous values (tracked per-player; see field docs)
+    final prevVolume = _volume;
+    final prevPitch = _pitch;
+    final prevPlaybackRate = _playbackRate;
+    final prevShufflePlaylist = _shufflePlaylist;
+    final PlaylistMode? prevPlaylistMode = _playlistMode;
+    final SubtitleTrack? prevSubtitleTrack = _subtitleTrack;
+    // Fullscreen is Video-widget UI state (not a player property), so it stays
+    // on the control model and is intentionally not reset with the player.
     final prevFullscreen = widget.control.getBool("_fullscreen", false)!;
 
     Video video = Video(
@@ -382,20 +410,19 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           volume != prevVolume &&
           volume >= 0 &&
           volume <= 100) {
-        widget.control.updateProperties({"_volume": volume}, python: false);
+        _volume = volume;
         await _player.setVolume(volume);
       }
 
       // pitch
       if (pitch != null && pitch != prevPitch) {
-        widget.control.updateProperties({"_pitch": pitch}, python: false);
+        _pitch = pitch;
         await _player.setPitch(pitch);
       }
 
       // playbackRate
       if (playbackRate != null && playbackRate != prevPlaybackRate) {
-        widget.control
-            .updateProperties({"_playback_rate": playbackRate}, python: false);
+        _playbackRate = playbackRate;
         await _player.setRate(playbackRate);
       }
 
@@ -406,15 +433,13 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
       // shufflePlaylist
       if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
-        widget.control.updateProperties({"_shuffle_playlist": shufflePlaylist},
-            python: false);
+        _shufflePlaylist = shufflePlaylist;
         await _player.setShuffle(shufflePlaylist);
       }
 
       // playlistMode
       if (playlistMode != null && playlistMode != prevPlaylistMode) {
-        widget.control
-            .updateProperties({"_playlist_mode": playlistMode}, python: false);
+        _playlistMode = playlistMode;
         await _player.setPlaylistMode(playlistMode);
       }
 
@@ -422,8 +447,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       if (subtitleTrack != null && subtitleTrack != prevSubtitleTrack) {
         await _openFuture;
         if (!_initialized) return;
-        widget.control.updateProperties({"_subtitle_track": subtitleTrack},
-            python: false);
+        _subtitleTrack = subtitleTrack;
         await _player.setSubtitleTrack(subtitleTrack);
       }
 
