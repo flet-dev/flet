@@ -256,7 +256,20 @@ class SearchBar(LayoutControl):
 
     on_tap_outside_bar: Optional[ControlEventHandler["SearchBar"]] = None
     """
-    Fired when the user taps outside the search bar while the search view is open.
+    Fired when a pointer-down event occurs outside the search bar while the bar is
+    focused and the search view is closed.
+
+    This mirrors :attr:`flet.TextField.on_tap_outside`. To react to taps outside
+    the search view while it is open, use :attr:`on_tap_outside_view` instead.
+    """
+
+    on_tap_outside_view: Optional[ControlEventHandler["SearchBar"]] = None
+    """
+    Fired when the user taps outside the search view while it is open (for example,
+    on the surrounding barrier that dismisses it).
+
+    Tapping the view's own search field or one of the suggestions does not fire this
+    event.
     """
 
     on_submit: Optional[ControlEventHandler["SearchBar"]] = None
