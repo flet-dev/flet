@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.86.2
+
+### Fixed
+
+- `Video.volume` (and `pitch`, `playback_rate`, `shuffle_playlist`, `playlist_mode`, `subtitle_track`) resetting to the player's defaults after toggling `visible` off then on. Showing a hidden `Video` recreates its native player at default settings; the "last-applied" tracking now lives with the player and resets on recreation, so these settings are re-applied ([#6683](https://github.com/flet-dev/flet/issues/6683), [#6694](https://github.com/flet-dev/flet/pull/6694)) by @ndonkoHenri.
+
 ## 0.85.0
 
 ### Added

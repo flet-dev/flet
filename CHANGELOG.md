@@ -7,6 +7,7 @@
 ### Improvements
 
 * Flutter updated to [3.44.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3447).
+* Fix `flet_video.Video` resetting its `volume` (and `pitch`, `playback_rate`, `shuffle_playlist`, `playlist_mode`, `subtitle_track`) to the player's defaults after toggling `visible` off then on — e.g. `volume` jumped back to `100`. Hiding a `Video` disposes its native `media_kit` player and showing it recreates a fresh one at default settings; the "last-applied" tracking now lives with the player (not the persistent control model) and is reset on recreation, so `build()` re-applies every setting to the new player ([#6683](https://github.com/flet-dev/flet/issues/6683), [#6694](https://github.com/flet-dev/flet/pull/6694)) by @ndonkoHenri.
 
 ## 0.86.1
 
