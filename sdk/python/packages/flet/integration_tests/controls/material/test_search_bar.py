@@ -129,3 +129,87 @@ async def test_theme(flet_app: ftt.FletTestApp, request):
             pixel_ratio=flet_app.screenshots_pixel_ratio
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_on_tap_outside_view(flet_app: ftt.FletTestApp):
+    """
+    `on_tap_outside_view` fires when the user taps outside the *open* search
+    view (e.g. the dismiss barrier), but not when tapping the view's own field
+    or a suggestion.
+    Regression test for https://github.com/flet-dev/flet/issues/6593.
+    """
+    events = []
+
+    async def handle_tap(e: ft.Event[ft.SearchBar]):
+        await sb.open_view()
+
+    flet_app.page.padding = 0
+    flet_app.resize_page(400, 700)
+    flet_app.page.add(
+        sb := ft.SearchBar(
+            key="sb",
+            bar_hint_text="Search...",
+            on_tap=handle_tap,
+            on_tap_outside_view=lambda e: events.append("outside_view"),
+            # Keep the open view small so the surrounding barrier is easy to hit.
+            view_size_constraints=ft.BoxConstraints(
+                min_width=350, max_width=350, min_height=250, max_height=250
+            ),
+            controls=[ft.ListTile(title=ft.Text(f"Suggestion {i}")) for i in range(3)],
+        )
+    )
+    await flet_app.tester.pump_and_settle()
+
+    # Open the search view.
+    await flet_app.tester.tap(await flet_app.tester.find_by_key("sb"))
+    await flet_app.tester.pump_and_settle()
+    assert events == []
+
+    # Tapping a suggestion (inside the open view) must NOT fire the event.
+    await flet_app.tester.tap(
+        (await flet_app.tester.find_by_text("Suggestion 0")).first
+    )
+    await flet_app.tester.pump_and_settle()
+    assert events == []
+
+    # Tapping the barrier (outside the open view, well below the 250px-tall
+    # view) fires the event and dismisses the view.
+    await flet_app.tester.tap_at(ft.Offset(200, 660))
+    await flet_app.tester.pump_and_settle()
+    assert events == ["outside_view"]
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_on_tap_outside_bar(flet_app: ftt.FletTestApp):
+    """
+    `on_tap_outside_bar` fires when the bar is focused and the search view is
+    closed, and the user taps away from the bar.
+    """
+    outside_bar_events = []
+    focus_events = []
+
+    # Note: no `on_tap` opening the view -> tapping the bar just focuses it.
+    flet_app.page.padding = 0
+    flet_app.resize_page(400, 600)
+    flet_app.page.add(
+        ft.SearchBar(
+            key="sb",
+            bar_hint_text="Search...",
+            on_focus=lambda e: focus_events.append("focus"),
+            on_tap_outside_bar=lambda e: outside_bar_events.append("outside_bar"),
+        ),
+        ft.Container(key="outside", width=200, height=200),
+    )
+    await flet_app.tester.pump_and_settle()
+
+    # Tap the bar: it gains focus, the view stays closed.
+    await flet_app.tester.tap(await flet_app.tester.find_by_key("sb"))
+    await flet_app.tester.pump_and_settle()
+    assert focus_events == ["focus"]
+    assert outside_bar_events == []
+
+    # Tap away from the focused, closed bar -> the event fires.
+    await flet_app.tester.tap(await flet_app.tester.find_by_key("outside"))
+    await flet_app.tester.pump_and_settle()
+    assert outside_bar_events == ["outside_bar"]
