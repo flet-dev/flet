@@ -25,3 +25,6 @@ org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
 platforms = ["android", "ios"]
+
+[tool.flet.ios.info]
+NSMotionUsageDescription = "This app uses device motion sensors (accelerometer, gyroscope, magnetometer) to demonstrate the Magnetometer control."
