@@ -7,6 +7,34 @@ To set a boolean `True`, use one of the following string values: `"true"`, `"1"`
 Any other value will be interpreted as `False`.
 :::
 
+### `FLET_ANDROID_SIGNING_KEY_ALIAS`
+
+Android signing key alias used by
+[`flet build`](../publish/android.md#key-alias) for Android app signing.
+
+It is used only when a [keystore](../publish/android.md#key-store) is configured.
+
+### `FLET_ANDROID_SIGNING_KEY_PASSWORD`
+
+Android signing key password used by
+[`flet build`](../publish/android.md#key-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`](#flet_android_signing_key_store_password) is set
+but this variable is not, the keystore password is reused as the key password.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE`
+
+Path to the Android upload keystore (`.jks`) used by [`flet build`](../publish/android.md#key-store)
+for Android app signing.
+
+### `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
+
+Android signing keystore password used by
+[`flet build`](../publish/android.md#key-store-password) for Android app signing.
+
+If [`FLET_ANDROID_SIGNING_KEY_PASSWORD`](#flet_android_signing_key_password) is set
+but this variable is not, the key password is reused as the keystore password.
+
 ### `FLET_APP_CONSOLE`
 
 The path to the application's console log file (`console.log`) in the cache storage directory
@@ -17,6 +45,19 @@ Its value is set in production mode.
 :::info
 In a running Flet app, the equivalent of this environment variable is
 [`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
+:::
+
+### `FLET_APP_STORAGE_CACHE`
+
+A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
+platform "clear cache" action wipes it), so only store things you can rebuild. Pre-created and
+app-private; it maps to the platform's *caches* directory (`%LOCALAPPDATA%\<company>\<product>` on
+Windows, `~/Library/Caches/<bundle-id>` on macOS, `~/.cache/<app-id>` on Linux, the app cache dir on
+iOS/Android). In `flet run` it is `<project>/.flet/storage/cache`.
+
+:::info
+In a running Flet app, the equivalent of this environment variable is
+[`StoragePaths.get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory].
 :::
 
 ### `FLET_APP_STORAGE_DATA`
@@ -34,19 +75,6 @@ mode) it is `<project>/.flet/storage/data`.
 :::info
 In a running Flet app, this maps to a `data` subdirectory of
 [`StoragePaths.get_application_support_directory()`][flet.StoragePaths.get_application_support_directory].
-:::
-
-### `FLET_APP_STORAGE_CACHE`
-
-A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
-platform "clear cache" action wipes it), so only store things you can rebuild. Pre-created and
-app-private; it maps to the platform's *caches* directory (`%LOCALAPPDATA%\<company>\<product>` on
-Windows, `~/Library/Caches/<bundle-id>` on macOS, `~/.cache/<app-id>` on Linux, the app cache dir on
-iOS/Android). In `flet run` it is `<project>/.flet/storage/cache`.
-
-:::info
-In a running Flet app, the equivalent of this environment variable is
-[`StoragePaths.get_application_cache_directory()`][flet.StoragePaths.get_application_cache_directory].
 :::
 
 ### `FLET_APP_STORAGE_TEMP`
@@ -97,44 +125,11 @@ ft.run(main, assets_dir="assets")
 For control properties like [`Image.src`](../controls/image.md#flet.Image.src), continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
-### `FLET_ANDROID_SIGNING_KEY_ALIAS`
-
-Android signing key alias used by
-[`flet build`](../publish/android.md#key-alias) for Android app signing.
-
-It is used only when a [keystore](../publish/android.md#key-store) is configured.
-
-### `FLET_ANDROID_SIGNING_KEY_PASSWORD`
-
-Android signing key password used by
-[`flet build`](../publish/android.md#key-password) for Android app signing.
-
-If [`FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`](#flet_android_signing_key_store_password) is set
-but this variable is not, the keystore password is reused as the key password.
-
-### `FLET_ANDROID_SIGNING_KEY_STORE`
-
-Path to the Android upload keystore (`.jks`) used by [`flet build`](../publish/android.md#key-store)
-for Android app signing.
-
-### `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
-
-Android signing keystore password used by
-[`flet build`](../publish/android.md#key-store-password) for Android app signing.
-
-If [`FLET_ANDROID_SIGNING_KEY_PASSWORD`](#flet_android_signing_key_password) is set
-but this variable is not, the key password is reused as the keystore password.
-
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
 Whether to disable rich output in the console.
 
 Defaults to `"false"`.
-
-### `FLET_PLATFORM`
-
-The platform on which the application is running.
-Its value is one of the following: `"android"`, `"ios"`, `"linux"`, `"macos"`, `"windows"` or `"fuchsia"`.
 
 ### `FLET_CLI_SKIP_FLUTTER_DOCTOR`
 
@@ -142,15 +137,43 @@ Whether to skip running `flutter doctor` when a build fails.
 
 Defaults to `False`.
 
+### `FLET_FORCE_WEB_SERVER`
+
+Set to `true` to force running app as a web app. Automatically set on headless Linux hosts.
+
 ### `FLET_HIDE_WINDOW_ON_START`
 
 Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 
-### `FLET_FORCE_WEB_SERVER`
+### `FLET_MACOS_NOTARY_PROFILE`
 
-Set to `true` to force running app as a web app. Automatically set on headless Linux hosts.
+Name of the `notarytool` keychain profile (created with
+`xcrun notarytool store-credentials`) [used](../publish/macos.md#notarization) by
+`flet build` to authenticate with the Apple notary service when notarizing a macOS app.
+
+A profile is not a separate kind of credential — it is the same Apple ID or
+App Store Connect API key credentials, stored once in the macOS keychain
+under a name. Alternatively, set the `APPLE_API_KEY` (path to the `.p8`
+file), `APPLE_API_KEY_ID`, and `APPLE_API_ISSUER` environment variables to
+pass an App Store Connect API key inline; a configured profile takes
+[precedence](../publish/macos.md#credentials) over them.
+
+### `FLET_MACOS_SIGNING_IDENTITY`
+
+Code-signing identity [used](../publish/macos.md#code-signing) by `flet build`
+to sign the macOS app bundle: a "Developer ID Application" certificate name,
+its SHA-1 fingerprint, or `-` for ad-hoc signing.
+
+When not configured (here, via the CLI, or in `pyproject.toml`),
+the built app keeps its default ad-hoc signature.
+
+### `FLET_MAX_UPLOAD_SIZE`
+
+Maximum allowed size (in bytes) of uploaded files.
+
+Default is unlimited.
 
 ### `FLET_OAUTH_CALLBACK_HANDLER_ENDPOINT`
 
@@ -164,11 +187,10 @@ Maximum allowed time (in seconds) to complete OAuth web flow.
 
 Defaults to `600`.
 
-### `FLET_MAX_UPLOAD_SIZE`
+### `FLET_PLATFORM`
 
-Maximum allowed size (in bytes) of uploaded files.
-
-Default is unlimited.
+The platform on which the application is running.
+Its value is one of the following: `"android"`, `"ios"`, `"linux"`, `"macos"`, `"windows"` or `"fuchsia"`.
 
 ### `FLET_SECRET_KEY`
 
@@ -217,20 +239,20 @@ Defaults to `"/"` - host app in the root.
 
 Set to `true` to avoid loading CanvasKit, Pyodide, and fonts from CDNs.
 
-### `FLET_WEBSOCKET_HANDLER_ENDPOINT`
-
-Custom path for WebSocket handler.
-
-Defaults to `"/ws"`.
-
 ### `FLET_WEB_RENDERER`
 
 Web rendering mode: `"canvaskit"` (default), `"skwasm"` or `"auto"`.
+
+### `FLET_WEB_ROUTE_URL_STRATEGY`
+
+The URL strategy of the web application. Its value can be either `"path"` (default) or `"hash"`.
 
 ### `FLET_WEB_USE_COLOR_EMOJI`
 
 Set to `True`, `true` or `1` to load web font with colorful emojis.
 
-### `FLET_WEB_ROUTE_URL_STRATEGY`
+### `FLET_WEBSOCKET_HANDLER_ENDPOINT`
 
-The URL strategy of the web application. Its value can be either `"path"` (default) or `"hash"`.
+Custom path for WebSocket handler.
+
+Defaults to `"/ws"`.

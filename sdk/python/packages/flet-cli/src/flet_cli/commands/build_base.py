@@ -656,6 +656,31 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
+            "--macos-signing-identity",
+            dest="macos_signing_identity",
+            help='"Developer ID Application" certificate name, its SHA-1 '
+            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle '
+            "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
+        )
+        parser.add_argument(
+            "--macos-notarize",
+            dest="macos_notarize",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Submit the signed app to the Apple notary service and staple "
+            "the ticket; requires --macos-signing-identity and notary "
+            "credentials (macos only)",
+        )
+        parser.add_argument(
+            "--macos-notary-profile",
+            dest="macos_notary_profile",
+            help="Keychain profile name created with `xcrun notarytool "
+            "store-credentials` to authenticate with the Apple notary service; "
+            "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
+            "APPLE_API_ISSUER environment variables (macos only) "
+            "[env: FLET_MACOS_NOTARY_PROFILE=]",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -924,6 +949,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
             "com.apple.security.network.client": True,
             "com.apple.security.network.server": True,
             "com.apple.security.files.user-selected.read-write": True,
@@ -2853,11 +2879,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         # incompatible formats so flutter_launcher_icons gets a decodable file.
         images = list(
             filter(
-                lambda p: not (
-                    (ext := Path(p).suffix.lower()) == ".icns"
-                    and self.target_platform != "macos"
-                    or ext == ".ico"
-                    and self.target_platform != "windows"
+                lambda p: (
+                    not (
+                        (ext := Path(p).suffix.lower()) == ".icns"
+                        and self.target_platform != "macos"
+                        or ext == ".ico"
+                        and self.target_platform != "windows"
+                    )
                 ),
                 glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
             )

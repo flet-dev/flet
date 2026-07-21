@@ -7,7 +7,15 @@ from rich.console import Group
 from rich.live import Live
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
+from flet_cli.commands.flutter_base import verbose1_style
 from flet_cli.utils.android import flutter_target_platforms
+from flet_cli.utils.macos_sign import (
+    MacOSSigningError,
+    NotaryCredentials,
+    notarize_and_staple,
+    resolve_identity,
+    sign_app,
+)
 
 
 class Command(BaseBuildCommand):
@@ -84,6 +92,8 @@ class Command(BaseBuildCommand):
             self.customize_splash_images()
             self.run_flutter()
             self.copy_build_output()
+            if self.target_platform == "macos":
+                self.sign_macos_app()
 
             self.cleanup(
                 0,
@@ -206,4 +216,130 @@ class Command(BaseBuildCommand):
         console.log(
             f"Built [cyan]{self.platforms[self.target_platform]['status_text']}"
             f"[/cyan] {self.emojis['checkmark']}",
+        )
+
+    def sign_macos_app(self):
+        """
+        Code-sign — and optionally notarize — the built macOS app bundle.
+
+        No-op unless a signing identity is configured via
+        `--macos-signing-identity`, `[tool.flet.macos.signing]` in
+        pyproject.toml, or the `FLET_MACOS_SIGNING_IDENTITY` environment
+        variable; the app then keeps the default ad-hoc signature produced
+        by the Flutter build.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.out_dir
+        assert self.flutter_dir
+
+        identity = (
+            self.options.macos_signing_identity
+            or self.get_pyproject("tool.flet.macos.signing.identity")
+            or os.getenv("FLET_MACOS_SIGNING_IDENTITY")
+        )
+        notarize = (
+            self.options.macos_notarize
+            if self.options.macos_notarize is not None
+            else bool(self.get_pyproject("tool.flet.macos.signing.notarize"))
+        )
+
+        if not identity:
+            if notarize:
+                self.cleanup(
+                    1,
+                    "Notarization requires a code-signing identity. Pass "
+                    "--macos-signing-identity or set "
+                    "`[tool.flet.macos.signing].identity` in pyproject.toml.",
+                )
+            return
+
+        apps = sorted(self.out_dir.glob("*.app"))
+        if len(apps) != 1:
+            self.cleanup(
+                1,
+                f"Expected exactly one .app bundle in {self.rel_out_dir}, "
+                f"found {len(apps)}.",
+            )
+        app_path = apps[0]
+
+        # The Xcode-generated entitlements file already contains the merged
+        # defaults + [tool.flet.macos.entitlement] + --macos-entitlements
+        # values; re-signing replaces the signature, so they must be
+        # re-applied to the app bundle here.
+        entitlements = self.flutter_dir / "macos" / "Runner" / "Release.entitlements"
+
+        def log(message: str):
+            if self.verbose > 0:
+                console.log(message, style=verbose1_style)
+
+        self.update_status(f"[bold blue]Signing [cyan]{app_path.name}[/cyan]...")
+        try:
+            resolved = resolve_identity(identity)
+            if notarize and resolved.is_adhoc:
+                self.cleanup(
+                    1,
+                    "Notarization requires a Developer ID identity; "
+                    'ad-hoc ("-") signed apps cannot be notarized.',
+                )
+            signed_count = sign_app(
+                app_path,
+                resolved,
+                entitlements=entitlements if entitlements.is_file() else None,
+                log=log,
+            )
+            console.log(
+                f"Signed [cyan]{app_path.name}[/cyan] ({signed_count} binaries, "
+                f"identity: {resolved.description}) {self.emojis['checkmark']}"
+            )
+
+            if notarize:
+                credentials = self._macos_notary_credentials()
+                self.update_status(
+                    f"[bold blue]Notarizing [cyan]{app_path.name}[/cyan] "
+                    "(this can take a few minutes)...",
+                )
+                notarize_and_staple(app_path, credentials, log=log)
+                console.log(
+                    f"Notarized and stapled [cyan]{app_path.name}[/cyan] "
+                    f"{self.emojis['checkmark']}"
+                )
+        except MacOSSigningError as e:
+            self.cleanup(1, str(e))
+
+    def _macos_notary_credentials(self) -> NotaryCredentials:
+        """
+        Resolve Apple notary service credentials: CLI over pyproject.toml over
+        environment, with the flet-specific profile variable ranking above
+        ambient App Store Connect API key variables that other tooling may
+        have exported.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+
+        profile = (
+            self.options.macos_notary_profile
+            or self.get_pyproject("tool.flet.macos.signing.notary_profile")
+            or os.getenv("FLET_MACOS_NOTARY_PROFILE")
+        )
+        if profile:
+            return NotaryCredentials(keychain_profile=profile)
+
+        api_key = os.getenv("APPLE_API_KEY")
+        api_key_id = os.getenv("APPLE_API_KEY_ID")
+        api_issuer = os.getenv("APPLE_API_ISSUER")
+        if api_key and api_key_id and api_issuer:
+            return NotaryCredentials(
+                api_key=api_key, api_key_id=api_key_id, api_issuer=api_issuer
+            )
+
+        self.cleanup(
+            1,
+            "Notary service credentials are missing. Either store an "
+            "App Store Connect API key or Apple ID app-specific password "
+            "with `xcrun notarytool store-credentials <profile>` and pass "
+            "--macos-notary-profile <profile>, or set the APPLE_API_KEY, "
+            "APPLE_API_KEY_ID and APPLE_API_ISSUER environment variables.",
         )
