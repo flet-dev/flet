@@ -798,9 +798,9 @@ class Page(BasePage):
         """
         Whether the app window (or browser tab) is currently visible.
 
-        Driven by :attr:`on_app_lifecycle_state_change`: `False` while the
+        Driven by `on_app_lifecycle_state_change`: `False` while the
         state is `HIDE` or `PAUSE`, `True` otherwise. Distinct from the
-        control-level :attr:`visible` property, which hides the page itself.
+        control-level `visible` property, which hides the page itself.
         """
         return self.__app_visible
 
