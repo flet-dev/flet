@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../transport/data_channel.dart';
+import '../utils/frame_stream.dart';
 import '../utils/images.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -49,7 +50,8 @@ class RawImageControl extends StatefulWidget {
   State<RawImageControl> createState() => _RawImageControlState();
 }
 
-class _RawImageControlState extends State<RawImageControl> {
+class _RawImageControlState extends State<RawImageControl>
+    with FrameStreamVisibility<RawImageControl> {
   // Serialize concurrent frame applies so swaps happen in arrival order.
   Future<void>? _applyChain;
 
@@ -57,11 +59,6 @@ class _RawImageControlState extends State<RawImageControl> {
   StreamSubscription<Uint8List>? _channelSub;
 
   ui.Image? _image;
-
-  // Tracks browser tab / app visibility. While not visible we skip
-  // decoding and only remember the latest frame — see `_deferredFrame`.
-  AppLifecycleListener? _lifecycleListener;
-  bool _visible = true;
 
   // The most recent frame received while hidden (raw opcode + payload,
   // owned copy). Applied once when the tab becomes visible again; older
@@ -74,27 +71,7 @@ class _RawImageControlState extends State<RawImageControl> {
   static final Uint8List _frameAppliedAck = Uint8List.fromList([0xFF]);
 
   @override
-  void initState() {
-    super.initState();
-    final state = WidgetsBinding.instance.lifecycleState;
-    _visible = state == null ||
-        state == AppLifecycleState.resumed ||
-        state == AppLifecycleState.inactive;
-    _lifecycleListener = AppLifecycleListener(
-      onShow: _onBecameVisible,
-      onResume: _onBecameVisible,
-      onHide: _onBecameHidden,
-      onPause: _onBecameHidden,
-    );
-  }
-
-  void _onBecameHidden() {
-    _visible = false;
-  }
-
-  void _onBecameVisible() {
-    if (_visible) return;
-    _visible = true;
+  void onVisibilityRestored() {
     // Paint the latest frame that arrived while hidden (if any). It was
     // already acked on arrival, so apply it without acking again.
     final deferred = _deferredFrame;
@@ -121,8 +98,6 @@ class _RawImageControlState extends State<RawImageControl> {
 
   @override
   void dispose() {
-    _lifecycleListener?.dispose();
-    _lifecycleListener = null;
     _channelSub?.cancel();
     _channelSub = null;
     _channel?.close();
@@ -137,7 +112,7 @@ class _RawImageControlState extends State<RawImageControl> {
   /// the wire format).
   void _onChannelFrame(Uint8List bytes) {
     if (bytes.isEmpty) return;
-    if (!_visible) {
+    if (!visible) {
       // Tab hidden: the compositor is suspended, so decoding and applying
       // would build a backlog that floods the engine on resume. Drop any
       // earlier hidden frame, keep only this latest one to paint on

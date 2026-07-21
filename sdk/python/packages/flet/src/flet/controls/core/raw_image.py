@@ -177,7 +177,20 @@ class RawImage(LayoutControl):
             if not fut.done():
                 fut.set_result(None)
 
+    async def _wait_until_visible(self) -> None:
+        # Park while the tab/window is hidden: the client can't paint, so
+        # streaming frames would only build a backlog that floods it on
+        # resume. The Dart side also defends against this, but parking the
+        # producer saves the wasted CPU/bandwidth of rendering to a hidden
+        # client. No-op when the control isn't attached to a page yet.
+        try:
+            page = self.page
+        except RuntimeError:
+            return
+        await page.wait_until_visible()
+
     async def _send_and_wait(self, packet: bytes) -> None:
+        await self._wait_until_visible()
         if not self._ready.is_set():
             await asyncio.wait_for(
                 self._ready.wait(),

@@ -121,6 +121,18 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         """
         self._on_frame_applied = cb
 
+    async def _wait_until_visible(self) -> None:
+        # Park while the tab/window is hidden: the client can't paint, so
+        # streaming frames would only build a backlog that floods it on
+        # resume. The Dart side also defends against this, but parking the
+        # producer saves the wasted CPU/bandwidth of rendering to a hidden
+        # client. No-op when the control isn't attached to a page yet.
+        try:
+            page = self.page
+        except RuntimeError:
+            return
+        await page.wait_until_visible()
+
     async def _send_and_wait(self, packet: bytes) -> None:
         """Send a channel packet and await Dart's ack.
 
@@ -130,6 +142,7 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         queued (instead of being processed eagerly against a stale
         `_waiting` flag).
         """
+        await self._wait_until_visible()
         if self._channel is None:
             return
         loop = asyncio.get_running_loop()
