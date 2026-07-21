@@ -127,9 +127,9 @@ class Command(BaseCommand):
             dest="route_url_strategy",
             type=str.lower,
             choices=["path", "hash"],
-            default="path",
+            default=None,
             help="Controls how routes are handled in the browser "
-            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
+            "(default: path) [env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
