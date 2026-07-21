@@ -1,3 +1,13 @@
+## 1.0.0
+
+### New features
+
+* **macOS code signing and notarization in `flet build macos`.** Configure a signing identity — `--macos-signing-identity`, `[tool.flet.macos.signing].identity`, or `FLET_MACOS_SIGNING_IDENTITY` — and the built app is Developer ID-signed for distribution: every bundled Mach-O (the embedded Python runtime, all native modules from your dependencies, helper executables) is discovered by content and signed "inside out" with the hardened runtime and a secure timestamp, entitlements are applied to the app bundle and standalone helper executables, and the result is verified with `codesign --verify --deep --strict` plus a per-binary coverage check. Add `--macos-notarize` (or `[tool.flet.macos.signing].notarize`) to submit the app to the Apple notary service — authenticating via a `notarytool` keychain profile or `APPLE_API_KEY`/`APPLE_API_KEY_ID`/`APPLE_API_ISSUER` App Store Connect API key environment variables — and staple the ticket, producing an app that opens cleanly on macOS 15+ where downloaded unsigned apps are effectively blocked. Apple's per-file notarization log is printed on rejection, a typo'd identity fails fast with the list of valid keychain identities, and without a configured identity nothing changes (the app keeps its ad-hoc signature). The default macOS entitlements now include `com.apple.security.cs.allow-unsigned-executable-memory`, required for `ctypes`/`cffi` callbacks on Intel Macs under the hardened runtime. See the new [Code signing](https://flet.dev/docs/publish/macos#code-signing) and [Notarization](https://flet.dev/docs/publish/macos#notarization) docs ([#2347](https://github.com/flet-dev/flet/issues/2347), [#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix the generated `macos/Runner/*.entitlements` files being rejected by `codesign` with `AMFIUnserializeXML: syntax error` when used directly for re-signing: the template emitted boolean values as self-closing tags with a space (`<true />`), which Xcode and `plutil` accept but codesign's stricter AMFI plist parser does not. The templates now emit `<true/>`, and `flet build`'s own signing step additionally normalizes any entitlements file through `plistlib` before use, so plist formatting can never break signing by ([#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+
 ## 0.86.1
 
 ### Improvements
