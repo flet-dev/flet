@@ -1,3 +1,13 @@
+"""Tests for `flet_cli.utils.macos_sign`.
+
+Most tests are platform-independent: Mach-O discovery and classification are
+exercised against hand-crafted header bytes, and keychain identity
+resolution against canned `security find-identity` output (no real
+certificates or keychains are touched). Only the two tests marked
+`skipif(sys.platform != "darwin")` invoke the real `codesign` — ad-hoc
+signing needs no certificate, so they run on any Mac, including CI runners.
+"""
+
 import os
 import plistlib
 import shutil
@@ -23,16 +33,31 @@ from flet_cli.utils.macos_sign import (
     sign_app,
 )
 
+# Minimal file contents that `is_mach_o()` must classify correctly: thin
+# 64-bit (little-endian file) and 32-bit (big-endian file) Mach-O headers, a
+# fat header with a plausible architecture count, and a Java class file —
+# which shares the fat magic `0xcafebabe` but carries its format version
+# (>= 45) where a fat header carries `nfat_arch`.
 MACH_O_64 = b"\xcf\xfa\xed\xfe" + b"\x00" * 12
 MACH_O_32 = b"\xfe\xed\xfa\xce" + b"\x00" * 12
 FAT_TWO_ARCHS = b"\xca\xfe\xba\xbe" + (2).to_bytes(4, "big") + b"\x00" * 8
 JAVA_CLASS = b"\xca\xfe\xba\xbe" + (52).to_bytes(4, "big") + b"\x00" * 8
 
+# Mach-O filetype for a dynamic library — the "not an executable" case for
+# `mach_o_filetype()`; only MH_EXECUTE is exported by the module under test.
 MH_DYLIB = 0x6
 
 
 def thin_mach_o(filetype: int) -> bytes:
-    """A minimal little-endian 64-bit Mach-O header with the given filetype."""
+    """Build a minimal little-endian 64-bit Mach-O header.
+
+    Args:
+        filetype: Value for the header's `filetype` field, e.g.
+            `MH_EXECUTE` or `MH_DYLIB`.
+
+    Returns:
+        Header bytes just long enough for `mach_o_filetype()` to parse.
+    """
     return (
         b"\xcf\xfa\xed\xfe"  # MH_MAGIC_64, little-endian file
         + (0x0100000C).to_bytes(4, "little")  # cputype arm64
@@ -43,6 +68,16 @@ def thin_mach_o(filetype: int) -> bytes:
 
 
 def write(path: Path, content: bytes, executable: bool = False) -> Path:
+    """Write a file, creating parent directories as needed.
+
+    Args:
+        path: Destination file path.
+        content: Bytes to write.
+        executable: Whether to also set the executable bits.
+
+    Returns:
+        The written path, for inline use in assertions.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
     if executable:
@@ -141,6 +176,9 @@ def test_is_bundle_main_binary(tmp_path):
     )
 
 
+# Canned `security find-identity -v -p codesigning` output: two distinct
+# certificates that share the owner name "Jane Doe", so substring matching
+# on the name alone is ambiguous while each full name stays unique.
 SECURITY_LISTING = (
     "Policy: Code Signing\n"
     "  Matching identities\n"
@@ -151,6 +189,18 @@ SECURITY_LISTING = (
 
 
 def fake_security(monkeypatch, stdout=SECURITY_LISTING, returncode=0):
+    """Replace the module's subprocess runner with a canned `security` result.
+
+    `resolve_identity()` is the only code path exercised through this fake,
+    and it must not invoke anything but `security` — the inner assert
+    guards against that.
+
+    Args:
+        monkeypatch: pytest's monkeypatch fixture.
+        stdout: Fake `security find-identity` output to return.
+        returncode: Fake exit code.
+    """
+
     def fake_run(args, timeout=None):
         assert args[0] == "security"
         return subprocess.CompletedProcess(args, returncode, stdout, "")
@@ -191,7 +241,13 @@ def test_resolve_identity_empty_keychain(monkeypatch):
 
 
 def test_resolve_identity_deduplicates_multi_keychain_listings(monkeypatch):
-    """The same certificate listed from several keychains is not ambiguous."""
+    """The same certificate listed from several keychains is not ambiguous.
+
+    `security find-identity` prints one line per keychain occurrence, so a
+    certificate installed in both the login and System keychains (a common
+    state on CI runners) appears twice with an identical fingerprint. Both
+    the exact-name and the SHA-1 lookup must still resolve.
+    """
     full = "Developer ID Application: Jane Doe (TEAM123456)"
     listing = (
         f'  1) {"a" * 40} "{full}"\n'
@@ -215,7 +271,13 @@ def test_notary_credentials_args():
 
 
 def find_real_shared_object() -> Path:
-    """Locate a real Mach-O .so from the running interpreter's stdlib."""
+    """Locate a real Mach-O .so from the running interpreter's stdlib.
+
+    The end-to-end signing test needs a genuine Mach-O library — codesign
+    rejects the fake-header fixtures used elsewhere in this suite — and any
+    C extension from the interpreter's `lib-dynload` directory fits. Skips
+    the calling test on interpreters that ship without one.
+    """
     dynload = Path(sysconfig.get_path("stdlib")) / "lib-dynload"
     for so in sorted(dynload.glob("*.so")):
         return so
@@ -238,7 +300,15 @@ AMFI_HOSTILE_ENTITLEMENTS = """<?xml version="1.0" encoding="UTF-8"?>
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="requires macOS codesign")
 def test_sign_app_adhoc_end_to_end(tmp_path):
-    """Ad-hoc signing a minimal real bundle should produce a verifiable app."""
+    """Ad-hoc signing a minimal real bundle should produce a verifiable app.
+
+    Builds the smallest bundle real `codesign` accepts — an Info.plist, a
+    genuine main executable (the running Python), and a genuine .so in a
+    resource bundle, mirroring where flet apps keep site-packages — signs
+    it with entitlements written in the AMFI-hostile `<true />` formatting
+    (must be normalized, not passed through), and independently re-verifies
+    the result with `codesign --verify --deep --strict`.
+    """
     app = tmp_path / "Test.app"
     macos_dir = app / "Contents" / "MacOS"
     macos_dir.mkdir(parents=True)

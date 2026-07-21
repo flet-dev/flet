@@ -528,7 +528,9 @@ xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
 xcrun stapler staple MyApp.dmg
 ```
 
-### Signing in CI (GitHub Actions)
+### Signing and notarizing in CI
+
+#### GitHub Actions
 
 Export your certificate and private key as a `.p12` file, then store it
 (base64-encoded) and its password as repository secrets:
@@ -555,7 +557,7 @@ Export your certificate and private key as a `.p12` file, then store it
 | Symptom                                                 | Cause and fix                                                                                                                                                                                                                                                                                                                                                              |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `"MyApp" is damaged and can't be opened` on users' Macs | The bundle was modified after signing — most commonly the app writes next to its own files at runtime. Write user data to `os.getcwd()` (Flet points it at a writable location) instead of paths derived from `__file__`. Also triggered by building with `--no-compile-app`/`--no-compile-packages`, which lets Python create `__pycache__` inside the bundle at runtime. |
-| `errSecInternalComponent` when signing in CI            | The keychain is locked — unlock it in the job, or use `apple-actions/import-codesign-certs`, which handles it.                                                                                                                                                                                                                                                             |
+| `errSecInternalComponent` when signing in CI            | The keychain is locked — unlock it in the job, or use [`apple-actions/import-codesign-certs`](https://github.com/apple-actions/import-codesign-certs), which handles it.                                                                                                                                                                                                   |
 | Notarization status `Invalid`                           | Read the printed notary log: typical causes are an unsigned binary that was added to the bundle after signing, or a certificate that is not a Developer ID Application certificate.                                                                                                                                                                                        |
 | `library load disallowed by system policy`              | A native library is signed with a different Team ID than the app (or not at all). Rebuild so all binaries are re-signed together, or — if your app must load externally acquired native code at runtime — add the `com.apple.security.cs.disable-library-validation` [entitlement](#entitlements).                                                                         |
 | Notarization takes very long                            | The first-ever submission for a new account can take up to an hour or more; subsequent submissions typically finish within minutes.                                                                                                                                                                                                                                        |

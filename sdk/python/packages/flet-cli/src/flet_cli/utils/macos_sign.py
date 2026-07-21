@@ -6,6 +6,17 @@ optionally submits the result to the Apple notary service and staples the
 ticket. `codesign --deep` is deprecated for signing and misses Mach-O files
 in resource bundles (where the embedded Python stdlib and site-packages
 live), which is why binaries are discovered and signed individually.
+
+Typical flow, as driven by `flet build macos`:
+
+1. `resolve_identity()` — validate the requested identity against the
+   keychain before spending time on anything else.
+2. `sign_app()` — discover, sign, and verify the bundle.
+3. `notarize_and_staple()` — optional, requires a real (non-ad-hoc)
+   identity and `NotaryCredentials`.
+
+All failures raise `MacOSSigningError` with a user-actionable message; no
+other exception type is intentionally propagated.
 """
 
 import contextlib
@@ -44,17 +55,36 @@ class MacOSSigningError(Exception):
 
 @dataclass
 class SigningIdentity:
-    """A codesigning identity resolved from the keychain."""
+    """A codesigning identity resolved from the keychain.
+
+    Obtain instances via `resolve_identity()` (or use the `ADHOC` constant)
+    rather than constructing them directly, so that only identities that
+    actually exist in the keychain are ever passed to `codesign`.
+    """
 
     sha1: str
+    """
+    The certificate's SHA-1 fingerprint (40 hex characters), or `-` for the
+    ad-hoc pseudo-identity. Passed to `codesign --sign`; the fingerprint is
+    preferred over the name because it stays unambiguous when several
+    certificates share a name (e.g. a renewed certificate alongside an
+    expired one).
+    """
+
     name: str
+    """
+    The certificate's common name, e.g.
+    `Developer ID Application: Jane Doe (TEAM123456)`.
+    """
 
     @property
     def is_adhoc(self) -> bool:
+        """Whether this is the ad-hoc pseudo-identity (`-`)."""
         return self.sha1 == ADHOC_IDENTITY
 
     @property
     def description(self) -> str:
+        """Human-readable identity name for status and log messages."""
         return self.name if not self.is_adhoc else "ad-hoc"
 
 
@@ -65,17 +95,37 @@ ADHOC = SigningIdentity(sha1=ADHOC_IDENTITY, name=ADHOC_IDENTITY)
 class NotaryCredentials:
     """Credentials for the Apple notary service.
 
-    Either a notarytool keychain profile name (created with
-    `xcrun notarytool store-credentials`) or an App Store Connect API key
-    triple (key file path, key ID, issuer ID).
+    Populate either `keychain_profile` alone, or the complete API key
+    triple (`api_key`, `api_key_id`, `api_issuer`). A profile is not a
+    different kind of credential — it is the same secrets stored once in
+    the macOS keychain under a name, so `notarytool` can look them up
+    instead of receiving them inline.
     """
 
     keychain_profile: Optional[str] = None
+    """Name of a notarytool keychain profile previously
+    created with `xcrun notarytool store-credentials`.
+    """
+
     api_key: Optional[str] = None
+    """Path to an App Store Connect API private key (`.p8` file)."""
+
     api_key_id: Optional[str] = None
+    """The App Store Connect API key ID."""
+
     api_issuer: Optional[str] = None
+    """The App Store Connect API key issuer ID."""
 
     def as_args(self) -> list[str]:
+        """Return these credentials as `notarytool` command-line arguments.
+
+        Used for both `notarytool submit` and `notarytool log`, which must
+        authenticate with the same credentials.
+
+        Returns:
+            `["--keychain-profile", ...]` when a profile is set, otherwise
+                `["--key", ..., "--key-id", ..., "--issuer", ...]`.
+        """
         if self.keychain_profile:
             return ["--keychain-profile", self.keychain_profile]
         assert self.api_key and self.api_key_id and self.api_issuer
@@ -90,6 +140,17 @@ class NotaryCredentials:
 
 
 def _run(args: list[str], timeout: Optional[int] = None) -> subprocess.CompletedProcess:
+    """Run a command, capturing text output and never raising on exit code.
+
+    Args:
+        args: Full command line, executable first.
+        timeout: Seconds to wait before `subprocess.TimeoutExpired` is
+            raised; `None` waits indefinitely. Only the notarization
+            submit uses a timeout — everything else is local and fast.
+
+    Returns:
+        The completed process; callers decide how to treat `returncode`.
+    """
     return subprocess.run(
         args,
         capture_output=True,
@@ -101,9 +162,23 @@ def _run(args: list[str], timeout: Optional[int] = None) -> subprocess.Completed
 def resolve_identity(identity: str) -> SigningIdentity:
     """Resolve a user-provided identity against the keychain.
 
-    Accepts `-` (ad-hoc), a 40-hex SHA-1 fingerprint, the full certificate
-    name, or a unique substring of it. Fails fast — with the list of
-    available identities — instead of letting codesign silently no-op later.
+    Fails fast — with the list of available identities — instead of letting
+    a typo'd identity surface later as an opaque `codesign` error for every
+    file in the bundle.
+
+    Args:
+        identity: `-` for ad-hoc signing, a 40-hex SHA-1 fingerprint, the
+            full certificate name (e.g. `Developer ID Application: Jane Doe
+            (TEAM123456)`), or any substring of the name that matches
+            exactly one certificate (e.g. just the team ID).
+
+    Returns:
+        The matched identity; its SHA-1 fingerprint is what is ultimately
+            passed to `codesign`.
+
+    Raises:
+        MacOSSigningError: If `security find-identity` fails, no identity
+            matches, or the value matches more than one certificate.
     """
 
     identity = identity.strip()
@@ -154,7 +229,19 @@ def resolve_identity(identity: str) -> SigningIdentity:
 
 
 def is_mach_o(path: Path) -> bool:
-    """Check whether a file is a Mach-O binary by its magic number."""
+    """Check whether a file is a Mach-O binary by its magic number.
+
+    Recognizes thin 32/64-bit images in both byte orders as well as fat
+    (universal) binaries. Java `.class` files, which share the fat magic
+    `0xcafebabe`, are explicitly excluded (see inline comment).
+
+    Args:
+        path: File to inspect; only its first 8 bytes are read.
+
+    Returns:
+        True if the file starts with a Mach-O or fat header; False for
+            anything else, including unreadable or too-short files.
+    """
 
     try:
         with open(path, "rb") as f:
@@ -179,9 +266,19 @@ def is_mach_o(path: Path) -> bool:
 def find_mach_o_files(app_path: Path) -> list[Path]:
     """Find all Mach-O files in a bundle, real files only (symlinks skipped).
 
-    Every file is checked by content — extension or executable-bit filters
-    would miss binaries like versioned libraries (`libfoo.so.3`) that Python
-    wheels ship, and one unsigned Mach-O fails notarization.
+    Every file is checked by content — extension or executable-bit filters would miss
+    binaries like versioned libraries (`libfoo.so.3`) or extensionless helper tools
+    that Python wheels ship, and a single unsigned Mach-O fails notarization.
+    Symlinks are skipped because signatures live in the real file; frameworks contain
+    symlinked duplicates (`Foo.framework/Foo` → `Versions/A/Foo`) that must not be
+    signed twice.
+
+    Args:
+        app_path: Bundle directory to walk recursively.
+
+    Returns:
+        Paths of all Mach-O files found, in filesystem walk order
+            (callers sort as needed).
     """
 
     mach_o_files = []
@@ -195,13 +292,24 @@ def find_mach_o_files(app_path: Path) -> list[Path]:
 
 
 def mach_o_filetype(path: Path) -> Optional[int]:
-    """Return the Mach-O header filetype (e.g. MH_EXECUTE), if readable.
+    """Return the Mach-O header filetype value of a binary, if readable.
 
-    For fat binaries, the first architecture slice is inspected (all slices
-    of a real universal binary share one filetype).
+    Used to tell standalone executables (`MH_EXECUTE`) apart from libraries
+    and bundles (`MH_DYLIB`, `MH_BUNDLE`, ...), which determines whether a
+    binary receives entitlements when signed. For fat binaries, the first
+    architecture slice is inspected (all slices of a real universal binary
+    share one filetype).
+
+    Args:
+        path: A Mach-O file, as identified by `is_mach_o()`.
+
+    Returns:
+        The `filetype` field of the Mach-O header (e.g. `MH_EXECUTE`), or
+            None if the file is unreadable or not a recognizable Mach-O image.
     """
 
     def thin_filetype(header: bytes) -> Optional[int]:
+        """Read the filetype field from a thin Mach-O header, if valid."""
         if len(header) < 16:
             return None
         magic = header[:4]
@@ -229,7 +337,22 @@ def mach_o_filetype(path: Path) -> Optional[int]:
 
 
 def find_nested_bundles(app_path: Path) -> list[Path]:
-    """Find nested code bundles (frameworks, helper apps) inside a bundle."""
+    """Find nested code bundles inside an app bundle.
+
+    Matches frameworks, helper apps, app extensions, and XPC services (see
+    `NESTED_BUNDLE_SUFFIXES`). Each of these must receive its own signature
+    — signing the framework/bundle root signs its main binary and seals its
+    resources — after its inner binaries were signed, and before the
+    enclosing app is sealed.
+
+    Args:
+        app_path: Bundle directory to walk recursively; the root itself is
+            never included.
+
+    Returns:
+        Paths of nested bundle directories, in filesystem walk order
+            (callers sort deepest-first before signing).
+    """
 
     bundles = []
     for root, dirs, _files in os.walk(app_path):
@@ -242,7 +365,17 @@ def find_nested_bundles(app_path: Path) -> list[Path]:
 
 
 def _main_executable(app_path: Path) -> Optional[Path]:
-    """Return the app's main executable per CFBundleExecutable."""
+    """Return the app's main executable, as named by CFBundleExecutable.
+
+    Args:
+        app_path: The `.app` bundle directory.
+
+    Returns:
+        `Contents/MacOS/<CFBundleExecutable>`, or None when `Info.plist`
+            is missing, unreadable, or has no `CFBundleExecutable` key — in
+            which case no file is treated as the main executable and everything
+            gets signed individually, which is safe (merely redundant).
+    """
 
     try:
         with open(app_path / "Contents" / "Info.plist", "rb") as f:
@@ -261,6 +394,21 @@ def _is_bundle_main_binary(
     them individually first would be redundant. Any other executable — helper
     tools included — must be signed individually, because sealing a bundle
     does not sign extra Mach-O files inside it.
+
+    A false positive here (excluding a file that is not actually a bundle
+    main binary) would leave that file unsigned — `verify_app()`'s coverage
+    check is the safety net for that case.
+
+    Args:
+        path: The Mach-O file to classify.
+        app_path: The enclosing `.app` bundle root.
+        main_executable: The app's `CFBundleExecutable` path, from
+            `_main_executable()`, or None if it could not be determined.
+
+    Returns:
+        True for the app's main executable and for framework main binaries
+            (`<Name>.framework/Versions/<V>/<Name>` or flat
+            `<Name>.framework/<Name>`); False for everything else.
     """
 
     # <App>.app/Contents/MacOS/<CFBundleExecutable>
@@ -285,7 +433,20 @@ def _normalized_entitlements(entitlements: Path, tmp_dir: str) -> Path:
     codesign embeds the file verbatim and the kernel's AMFI parser is far
     stricter than CoreFoundation — e.g. it rejects self-closing tags written
     with a space (`<true />`), which plutil and Xcode accept. Round-tripping
-    through plistlib guarantees a canonical file and validates it early.
+    through plistlib guarantees a canonical file and validates it early,
+    with a clear error instead of `AMFIUnserializeXML` noise at sign time.
+
+    Args:
+        entitlements: The entitlements plist to normalize (any plistlib-
+            readable format).
+        tmp_dir: Existing directory to write the canonical copy into; the
+            caller owns its lifetime (typically a `TemporaryDirectory`).
+
+    Returns:
+        Path of the canonical copy, valid as long as `tmp_dir` exists.
+
+    Raises:
+        MacOSSigningError: If the file cannot be read or parsed as a plist.
     """
 
     try:
@@ -305,6 +466,26 @@ def _codesign(
     identity: SigningIdentity,
     entitlements: Optional[Path] = None,
 ) -> None:
+    """Run one `codesign` invocation on a file or bundle.
+
+    Always uses `--force` to replace the ad-hoc signature that Xcode/the
+    linker already put on the build output. For real identities the
+    hardened runtime (`--options runtime`) and a secure timestamp are
+    added — both notarization requirements; ad-hoc signatures get neither
+    (a timestamp cannot be issued for them, and the hardened runtime would
+    only hinder local development).
+
+    Args:
+        target: Mach-O file or bundle directory to sign. For a bundle,
+            codesign signs its main binary and seals everything else as
+            resources.
+        identity: Identity to sign with, from `resolve_identity()`.
+        entitlements: Canonical entitlements plist to embed, or None to
+            sign without entitlements (correct for libraries).
+
+    Raises:
+        MacOSSigningError: If codesign exits non-zero, with its stderr.
+    """
     args = ["codesign", "--force", "--sign", identity.sha1]
     if not identity.is_adhoc:
         args += ["--timestamp", "--options", "runtime"]
@@ -327,12 +508,42 @@ def sign_app(
 ) -> int:
     """Sign a .app bundle inside out and verify the result.
 
-    Every nested Mach-O is signed individually (deepest first), then nested
-    bundles, then the app itself. Entitlements go on the app bundle and on
-    standalone helper executables (MH_EXECUTE — e.g. a JIT-using helper like
-    Playwright's bundled node would be killed under the hardened runtime
-    without them); libraries are signed without entitlements, per Apple
-    guidance. Returns the number of individually signed binaries.
+    The order guarantees no file is ever modified after its enclosing
+    bundle's resource seal was created (which would invalidate the seal and
+    make Gatekeeper report the app as "damaged"):
+
+    1. Every nested Mach-O, deepest paths first — except bundle main
+       binaries, which are covered by step 2.
+    2. Nested bundles (frameworks etc.), deepest first.
+    3. The app bundle itself.
+
+    Entitlements go on the app bundle and on standalone helper executables
+    (`MH_EXECUTE` — e.g. a JIT-using helper like Playwright's bundled node
+    would be killed under the hardened runtime without them); libraries are
+    signed without entitlements, per Apple guidance. Quarantine/Finder
+    extended attributes are cleared first, since codesign refuses to sign
+    over them.
+
+    Args:
+        app_path: The `.app` bundle to sign, e.g. `build/macos/MyApp.app`.
+        identity: Identity to sign with, from `resolve_identity()` or the
+            `ADHOC` constant.
+        entitlements: Entitlements plist for the app and helper
+            executables; normalized via `_normalized_entitlements()` before
+            use, so any plistlib-readable formatting is accepted. None
+            signs without entitlements.
+        log: Per-file progress callback (used for `-v` output); defaults
+            to a no-op.
+
+    Returns:
+        The total number of Mach-O binaries discovered in the bundle — all
+            of them signed (individually, or via their enclosing bundle) and
+            verified.
+
+    Raises:
+        MacOSSigningError: If `app_path` is not an app bundle, the
+            entitlements file is missing or invalid, any codesign
+            invocation fails, or the final verification fails.
     """
 
     app_path = Path(app_path).resolve()
@@ -384,6 +595,19 @@ def verify_app(app_path: Path, mach_o_files: list[Path]) -> None:
     A shallow `codesign -v` passes even when a nested seal is broken — the
     exact failure mode that produces "app is damaged" for end users — so
     strict deep verification plus per-file coverage is the acceptance bar.
+    (`--deep` is deprecated for *signing* only; it remains Apple's
+    documented flag for verification.)
+
+    Args:
+        app_path: The signed `.app` bundle.
+        mach_o_files: Every Mach-O in the bundle (from
+            `find_mach_o_files()`); each one's signature is verified
+            individually so that a file missed by the signing passes cannot
+            slip through to notarization.
+
+    Raises:
+        MacOSSigningError: If deep verification fails or any binary is
+            unsigned/invalid, listing the offending files.
     """
 
     result = _run(
@@ -413,11 +637,29 @@ def notarize_and_staple(
 ) -> None:
     """Submit a signed app to the Apple notary service and staple the ticket.
 
-    Waits for the verdict; on rejection fetches and surfaces Apple's
-    per-file notarization log, which is the only place the actual errors
-    (e.g. an unsigned binary) are reported. The timeout is generous —
-    submissions normally finish within minutes, but the service is known to
-    back up for hours around events like WWDC.
+    Steps: zip the app with `ditto` (preserving bundle metadata), submit
+    with `notarytool submit --wait`, and on acceptance staple the ticket to
+    the `.app` itself — so however the user distributes it afterwards (DMG,
+    zip), Gatekeeper can validate it even offline. On rejection, Apple's
+    per-file notarization log is fetched and included in the error, as it
+    is the only place the actual problems (e.g. an unsigned binary) are
+    reported.
+
+    Args:
+        app_path: A `.app` bundle already signed with a Developer ID
+            identity, hardened runtime, and secure timestamps (ad-hoc
+            signed apps are rejected by the notary service).
+        credentials: Notary service authentication.
+        log: Progress callback for the coarse steps; defaults to a no-op.
+        timeout: Seconds to wait for the notary verdict. Generous by
+            default — submissions normally finish within minutes, but the
+            service is known to back up for hours around events like WWDC.
+
+    Raises:
+        MacOSSigningError: If archiving, submission, stapling, or staple
+            validation fails; on rejection the message includes Apple's
+            notarization log, on timeout it includes recovery instructions
+            (`notarytool history` + manual stapling).
     """
 
     app_path = Path(app_path).resolve()

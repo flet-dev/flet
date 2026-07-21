@@ -222,11 +222,20 @@ class Command(BaseBuildCommand):
         """
         Code-sign — and optionally notarize — the built macOS app bundle.
 
-        No-op unless a signing identity is configured via
-        `--macos-signing-identity`, `[tool.flet.macos.signing]` in
-        pyproject.toml, or the `FLET_MACOS_SIGNING_IDENTITY` environment
-        variable; the app then keeps the default ad-hoc signature produced
-        by the Flutter build.
+        Runs after `copy_build_output()` and operates on the final `.app`
+        in the output directory, i.e. the artifact users distribute.
+
+        No-op unless a signing identity is configured; without one, the app keeps the
+        default ad-hoc signature produced by the Flutter build. Notarization is
+        additionally gated and requires a real (non-ad-hoc) identity plus notary
+        credentials.
+
+        The app-bundle signature re-applies the entitlements from the
+        template-generated `Release.entitlements` — re-signing replaces the
+        signature Xcode embedded them in, so they must be supplied again.
+
+        Exits via `cleanup(1, ...)` with an actionable message on any
+        configuration or signing failure.
         """
 
         assert self.options
@@ -264,10 +273,7 @@ class Command(BaseBuildCommand):
             )
         app_path = apps[0]
 
-        # The Xcode-generated entitlements file already contains the merged
-        # defaults + [tool.flet.macos.entitlement] + --macos-entitlements
-        # values; re-signing replaces the signature, so they must be
-        # re-applied to the app bundle here.
+        # Release.entitlements is the single merged source of entitlements.
         entitlements = self.flutter_dir / "macos" / "Runner" / "Release.entitlements"
 
         def log(message: str):
@@ -310,10 +316,20 @@ class Command(BaseBuildCommand):
 
     def _macos_notary_credentials(self) -> NotaryCredentials:
         """
-        Resolve Apple notary service credentials: CLI over pyproject.toml over
-        environment, with the flet-specific profile variable ranking above
-        ambient App Store Connect API key variables that other tooling may
-        have exported.
+        Resolve Apple notary service credentials.
+
+        A keychain profile is looked up first — `--macos-notary-profile`,
+        then `[tool.flet.macos.signing].notary_profile`, then the
+        `FLET_MACOS_NOTARY_PROFILE` environment variable — and only then
+        the `APPLE_API_KEY`/`APPLE_API_KEY_ID`/`APPLE_API_ISSUER` App Store
+        Connect API key variables (all three required). A configured
+        profile deliberately outranks the `APPLE_API_*` variables, which
+        other tooling (Fastlane, CI images) may have exported ambiently,
+        possibly for a different Apple team.
+
+        Returns:
+            Credentials for `notarytool`; exits via `cleanup(1, ...)` with
+                    setup instructions when nothing is configured.
         """
 
         assert self.options
