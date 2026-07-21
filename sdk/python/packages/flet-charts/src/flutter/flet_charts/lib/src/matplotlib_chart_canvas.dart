@@ -56,6 +56,84 @@ abstract class _MatplotlibChartCanvasStateBase
   DataChannel? _channel;
   StreamSubscription<Uint8List>? _channelSub;
 
+  // Tab / window visibility. While the browser tab is backgrounded (or a
+  // desktop window minimized) the compositor is suspended, but the Python
+  // producer keeps streaming frames over the data channel — it is throttled
+  // by nothing but the `[0xFF]` ack, which still flows. If frames kept being
+  // uploaded and old images disposed via post-frame callbacks (which never
+  // run while hidden), decoded images and callbacks would pile up unbounded
+  // and flush into the engine on resume, flooding it with exceptions. So
+  // while hidden we keep updating offscreen state (the backbuffer / backdrop,
+  // so incremental diffs stay correct) but skip display uploads and
+  // `setState`, and dispose replaced images immediately. The latest frame is
+  // presented once when visibility returns.
+  AppLifecycleListener? _lifecycleListener;
+  bool _visible = true;
+  bool get visible => _visible;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = WidgetsBinding.instance.lifecycleState;
+    _visible = state == null ||
+        state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.inactive;
+    _lifecycleListener = AppLifecycleListener(
+      onShow: _onBecameVisible,
+      onResume: _onBecameVisible,
+      onHide: _onBecameHidden,
+      onPause: _onBecameHidden,
+    );
+  }
+
+  void _onBecameHidden() {
+    _visible = false;
+  }
+
+  void _onBecameVisible() {
+    if (_visible) return;
+    _visible = true;
+    // Present the frame accumulated while hidden. Runs on the apply chain so
+    // it can't race a frame that is still being applied. No ack: the frames
+    // it displays were already acked as they arrived.
+    _enqueue(refreshOnResume);
+  }
+
+  /// Present the latest offscreen state after the tab/window becomes visible
+  /// again. The default just repaints; the CPU strategy overrides this to
+  /// also upload the display image whose GPU upload it skipped while hidden.
+  Future<void> refreshOnResume() async {
+    if (mounted) setState(() {});
+  }
+
+  /// Dispose an image that has just been replaced. When visible, disposal is
+  /// deferred to a post-frame callback so the frame still painting it can
+  /// finish; when hidden, nothing is painting it and post-frame callbacks
+  /// won't fire until resume, so it is freed immediately to keep replaced
+  /// images from piling up.
+  void disposeReplaced(ui.Image image) {
+    if (_visible) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => image.dispose());
+    } else {
+      image.dispose();
+    }
+  }
+
+  void disposeReplacedAll(List<ui.Image> images) {
+    if (images.isEmpty) return;
+    if (_visible) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        for (final img in images) {
+          img.dispose();
+        }
+      });
+    } else {
+      for (final img in images) {
+        img.dispose();
+      }
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -73,6 +151,8 @@ abstract class _MatplotlibChartCanvasStateBase
 
   @override
   void dispose() {
+    _lifecycleListener?.dispose();
+    _lifecycleListener = null;
     _channelSub?.cancel();
     _channelSub = null;
     _channel?.close();
