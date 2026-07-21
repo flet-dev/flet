@@ -482,8 +482,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Use legacy Android native-library packaging: extract `.so` to disk "
             "at install time instead of memory-mapping them directly from the APK. Off "
             "by default (modern packaging). Enabling it makes the raw `.apk` file "
-            "smaller for side-loading, and can be more robust on older / 16 KB-page "
-            "devices, at the cost of a larger on-device install size (Android only)",
+            "smaller for side-loading, at the cost of a larger on-device install size "
+            "and slower native-library loading (Android only)",
         )
         parser.add_argument(
             "--compile-app",

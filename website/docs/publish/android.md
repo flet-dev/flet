@@ -153,9 +153,11 @@ setting (the `android:extractNativeLibs` manifest attribute).
 
 - **Modern packaging (default, `useLegacyPackaging = false`).** Native `.so` files are stored
   **uncompressed and page-aligned** inside the APK, and the OS maps them **directly from the
-  installed APK** at runtime — no second copy on disk. Pure Python code ships in stored
-  (uncompressed) zip assets and is imported in place. This is the default since Flet re-designed
-  Android packaging in v0.86.
+  installed APK** at runtime — no second copy of the native libraries on disk. Pure Python code
+  ships in stored (uncompressed) zip assets; on first launch, the runtime copies the standard
+  library and site-packages zips to app-private storage and imports from those copied zips. The
+  application payload and explicitly extracted packages are unpacked there. Modern native-library
+  packaging is the default since Flet re-designed Android packaging in v0.86.
 - **Legacy packaging (opt-in, `useLegacyPackaging = true`).** Native `.so` files are stored
   **compressed** inside the APK, and the installer **extracts a second copy** to the app's
   `nativeLibraryDir` on install. The linker then loads the libraries from that extracted
@@ -179,29 +181,58 @@ release notes:
 >
 > — [AGP 3.6.0 release notes](https://developer.android.com/build/releases/agp-3-6-0-release-notes#extractNativeLibs)
 
-In other words: when you publish to Google Play, the store re-compresses the download (often with
-Brotli), so your users get a **smaller** download and a **smaller** install than they would with
-legacy packaging — even though the uncompressed `.apk` you upload is larger. The uncompressed
-file size only matters when you hand the raw `.apk` to users directly (side-loading).
+In other words: when you publish to Google Play, the store applies additional download
+compression, which is typically more effective when native libraries are stored uncompressed.
+Users therefore typically get a **smaller** download and a **smaller** install than they would
+with legacy packaging — even though the uncompressed `.apk` you upload is larger. The raw file
+size primarily matters when you hand the `.apk` to users directly (side-loading).
 
 ### Trade-offs
 
 | Aspect | Modern (default) | Legacy (`--android-legacy-packaging`) |
 |---|---|---|
 | Raw `.apk` file size | Larger (uncompressed `.so`) | Smaller (compressed `.so`) |
-| Play Store download size | **Smaller** (re-compressed) | Larger |
+| Play Store download size | **Typically smaller** | Typically larger |
 | On-device install size | **Smaller** (no extra copy) | Larger (extracted 2nd copy) |
 | App load / startup | Faster (mmap) | Slightly slower |
-| Old / 16 KB-page devices | Occasionally fragile | **More robust** |
 
 ### When to use which
 
 - **Publishing to Google Play** (recommended via [AAB](#flet-build-aab)): **keep the default
   (modern)**. Play serves an optimized, compressed download regardless of the upload size.
 - **Distributing a raw `.apk` for side-loading** and you want the smallest file: use **legacy**
-  packaging (or simply zip/compress the modern `.apk` before sharing it).
-- **Native-load failures on old or 16 KB-page devices**: try **legacy** packaging as a
-  robustness fallback.
+  packaging. Alternatively, compress the modern `.apk` before sharing it; recipients must unpack
+  it before installation.
+
+Legacy packaging can also be useful as a diagnostic fallback for packaging-related native-library
+loading or installation failures. It is not a substitute for using
+[16 KB-compatible native libraries](https://developer.android.com/guide/practices/page-sizes).
+
+### Accessing a custom native library by file path
+
+Serious Python exposes `ANDROID_NATIVE_LIBRARY_DIR` to the embedded Python process. Its value is
+Android's app-specific native-library directory.
+
+With modern packaging, the variable is still available, but the `.so` files are not extracted
+into that directory; they remain inside the installed APK. Code that can load a packaged library
+through Android's linker should use its name, for example `ctypes.CDLL("libxxx.so")`.
+
+With legacy packaging, Android extracts every packaged `.so` for the device's ABI into
+`ANDROID_NATIVE_LIBRARY_DIR`. This makes the option useful for code that requires a real
+filesystem path to a library, including custom `ctypes` loaders or `ctypes.util.find_library`
+patches:
+
+```python
+import ctypes
+import os
+
+native_library_dir = os.environ["ANDROID_NATIVE_LIBRARY_DIR"]
+ctypes.CDLL(os.path.join(native_library_dir, "libxxx.so"))
+```
+
+The library must already be packaged under `lib/<abi>/` for the device's ABI, and all of its
+native dependencies must also be available. Legacy packaging changes only how those libraries are
+stored and loaded; it does not make an incompatible library usable.
 
 ### Resolution order
 
@@ -890,10 +921,11 @@ adaptive_icon_background = "#0B6BFF"
 
 ## Extract packages
 
-On Android, pure Python code is packaged into stored zip assets and imported in place with
-[`zipimport`](https://docs.python.org/3/library/zipimport.html). Native extension modules are
-loaded memory-mapped directly from the APK. This keeps APKs smaller and avoids unpacking all
-site-packages on first launch.
+On Android, pure Python code is packaged into stored zip assets. On first launch, Flet copies the
+standard-library and site-packages zips to app-private storage and imports from those copied zips
+with [`zipimport`](https://docs.python.org/3/library/zipimport.html). Native extension modules are
+loaded memory-mapped directly from the APK. This avoids unpacking all site-packages on first
+launch.
 
 Most packages work from inside the zip. But packages that read bundled **data files** through a real
 filesystem path — for example with `__file__` or `pkg_resources`, instead of the zip-safe

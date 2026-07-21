@@ -49,8 +49,7 @@ android {
             // `[tool.flet.android].legacy_packaging`). The installer extracts every `.so`
             // to nativeLibraryDir on install instead of the app memory-mapping them
             // straight from the APK. Produces a smaller raw `.apk` for side-loading and
-            // can be more robust on older / 16 KB-page devices, at the cost of a larger
-            // on-device install (a second, extracted copy of the libs).
+            // a larger on-device install (a second, extracted copy of the libs).
             useLegacyPackaging = true
 // flet: end of legacy_packaging {% endif %}
 
