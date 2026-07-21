@@ -274,7 +274,17 @@ class Command(BaseBuildCommand):
         app_path = apps[0]
 
         # Release.entitlements is the single merged source of entitlements.
+        # Signing without it would produce a hardened-runtime app missing the
+        # allow-jit/allow-unsigned-executable-memory exceptions Python needs —
+        # an app that signs fine and crashes at launch — so its absence is an
+        # error, not a fallback.
         entitlements = self.flutter_dir / "macos" / "Runner" / "Release.entitlements"
+        if not entitlements.is_file():
+            self.cleanup(
+                1,
+                f"Entitlements file not found: {entitlements}. The Flutter "
+                "build directory is incomplete; re-run the build.",
+            )
 
         def log(message: str):
             if self.verbose > 0:
@@ -292,7 +302,7 @@ class Command(BaseBuildCommand):
             signed_count = sign_app(
                 app_path,
                 resolved,
-                entitlements=entitlements if entitlements.is_file() else None,
+                entitlements=entitlements,
                 log=log,
             )
             console.log(

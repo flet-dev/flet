@@ -24,13 +24,16 @@ from flet_cli.utils.macos_sign import (
     MH_EXECUTE,
     MacOSSigningError,
     NotaryCredentials,
+    SigningIdentity,
     _is_bundle_main_binary,
     find_mach_o_files,
     find_nested_bundles,
     is_mach_o,
     mach_o_filetype,
+    notarize_and_staple,
     resolve_identity,
     sign_app,
+    verify_app,
 )
 
 # Minimal file contents that `is_mach_o()` must classify correctly: thin
@@ -41,6 +44,7 @@ from flet_cli.utils.macos_sign import (
 MACH_O_64 = b"\xcf\xfa\xed\xfe" + b"\x00" * 12
 MACH_O_32 = b"\xfe\xed\xfa\xce" + b"\x00" * 12
 FAT_TWO_ARCHS = b"\xca\xfe\xba\xbe" + (2).to_bytes(4, "big") + b"\x00" * 8
+FAT_64 = b"\xca\xfe\xba\xbf" + (2).to_bytes(4, "big") + b"\x00" * 8
 JAVA_CLASS = b"\xca\xfe\xba\xbe" + (52).to_bytes(4, "big") + b"\x00" * 8
 
 # Mach-O filetype for a dynamic library — the "not an executable" case for
@@ -90,6 +94,7 @@ def test_is_mach_o_detects_magic_numbers(tmp_path):
     assert is_mach_o(write(tmp_path / "thin64.so", MACH_O_64))
     assert is_mach_o(write(tmp_path / "thin32.so", MACH_O_32))
     assert is_mach_o(write(tmp_path / "fat.dylib", FAT_TWO_ARCHS))
+    assert is_mach_o(write(tmp_path / "fat64.dylib", FAT_64))
     assert not is_mach_o(write(tmp_path / "script.so", b"#!/bin/sh\necho hi\n"))
     assert not is_mach_o(write(tmp_path / "short.so", b"\xcf"))
     assert not is_mach_o(tmp_path / "missing.so")
@@ -146,22 +151,104 @@ def test_mach_o_filetype_detection(tmp_path):
     assert mach_o_filetype(write(tmp_path / "x.txt", b"hello")) is None
 
 
+def test_mach_o_filetype_fat64_and_swapped(tmp_path):
+    """fat64 and byte-swapped fat headers should be parsed to the right slice."""
+    slice_offset = 4096
+    # fat_arch_64: cputype(4) cpusubtype(4) offset(8) size(8) align(4) reserved(4)
+    fat64 = (
+        b"\xca\xfe\xba\xbf"
+        + (1).to_bytes(4, "big")  # nfat_arch
+        + (0x0100000C).to_bytes(4, "big")  # cputype
+        + (0).to_bytes(4, "big")  # cpusubtype
+        + slice_offset.to_bytes(8, "big")
+        + (32).to_bytes(8, "big")  # size
+        + (12).to_bytes(4, "big")  # align
+        + (0).to_bytes(4, "big")  # reserved
+    )
+    fat64_exe = write(
+        tmp_path / "fat64",
+        fat64 + b"\x00" * (slice_offset - len(fat64)) + thin_mach_o(MH_EXECUTE),
+    )
+    # byte-swapped 32-bit fat header (FAT_CIGAM): all fields little-endian
+    cigam = (
+        b"\xbe\xba\xfe\xca"
+        + (1).to_bytes(4, "little")
+        + (0x0100000C).to_bytes(4, "little")
+        + (0).to_bytes(4, "little")
+        + slice_offset.to_bytes(4, "little")
+        + (32).to_bytes(4, "little")
+        + (12).to_bytes(4, "little")
+    )
+    cigam_lib = write(
+        tmp_path / "cigam",
+        cigam + b"\x00" * (slice_offset - len(cigam)) + thin_mach_o(MH_DYLIB),
+    )
+
+    assert mach_o_filetype(fat64_exe) == MH_EXECUTE
+    assert mach_o_filetype(cigam_lib) == MH_DYLIB
+
+
+def canonical_framework(path: Path, binary: bytes = MACH_O_64) -> Path:
+    """Create a versioned framework layout codesign would accept.
+
+    `<path>/Versions/A/<name>` plus the `Versions/Current -> A` symlink that
+    marks the layout as canonical — the shape Flutter and CocoaPods produce
+    and `_is_signable_framework()` requires.
+
+    Args:
+        path: The `.framework` directory to create.
+        binary: Content for the framework's main binary.
+
+    Returns:
+        The framework directory, for inline use in assertions.
+    """
+    write(path / "Versions" / "A" / path.stem, binary)
+    (path / "Versions" / "Current").symlink_to("A")
+    return path
+
+
 def test_find_nested_bundles(tmp_path):
     """Frameworks and helper bundles should be discovered, the app root not."""
     app = tmp_path / "Test.app"
-    fw = app / "Contents" / "Frameworks" / "Foo.framework"
-    write(fw / "Versions" / "A" / "Foo", MACH_O_64)
+    fw = canonical_framework(app / "Contents" / "Frameworks" / "Foo.framework")
     helper = app / "Contents" / "Frameworks" / "Helper.app"
     write(helper / "Contents" / "MacOS" / "Helper", MACH_O_64, executable=True)
 
     assert sorted(find_nested_bundles(app)) == sorted([fw, helper])
 
 
+def test_find_nested_bundles_skips_non_canonical_frameworks(tmp_path):
+    """Wheel-shipped framework layouts codesign cannot seal must be excluded.
+
+    Wheels cannot contain symlinks, so frameworks installed from pip arrive
+    either without `Versions/Current` (codesign: "bundle format
+    unrecognized") or with `Current` de-symlinked into a real directory
+    (codesign: "bundle format is ambiguous"). Either would abort the whole
+    signing run if treated as a bundle; their binaries are signed
+    individually instead.
+    """
+    app = tmp_path / "Test.app"
+    site = app / "Contents" / "Resources" / "py.bundle" / "site-packages"
+    # no Versions/Current at all
+    write(site / "NoCurrent.framework" / "Versions" / "A" / "NoCurrent", MACH_O_64)
+    # Current de-symlinked into a real directory
+    desym = site / "DeSym.framework"
+    write(desym / "Versions" / "A" / "DeSym", MACH_O_64)
+    write(desym / "Versions" / "Current" / "DeSym", MACH_O_64)
+    # flat framework with an Info.plist is canonical (iOS-style) — kept
+    flat = site / "Flat.framework"
+    write(flat / "Flat", MACH_O_64)
+    write(flat / "Info.plist", b"<plist/>")
+    canonical = canonical_framework(site / "Good.framework")
+
+    assert sorted(find_nested_bundles(app)) == sorted([flat, canonical])
+
+
 def test_is_bundle_main_binary(tmp_path):
     """Bundle main binaries are signed with their bundle, everything else not."""
     app = tmp_path / "Test.app"
     main = app / "Contents" / "MacOS" / "test"
-    fw = app / "Contents" / "Frameworks" / "Foo.framework"
+    fw = canonical_framework(app / "Contents" / "Frameworks" / "Foo.framework")
 
     assert _is_bundle_main_binary(main, app, main)
     # a helper tool next to the main executable is NOT covered by the app seal
@@ -174,6 +261,24 @@ def test_is_bundle_main_binary(tmp_path):
     assert not _is_bundle_main_binary(
         app / "Contents" / "Resources" / "py.bundle" / "x.so", app, main
     )
+    # a "Versions" directory elsewhere in the framework must not match
+    assert not _is_bundle_main_binary(
+        fw / "Resources" / "Versions" / "A" / "Foo", app, main
+    )
+
+
+def test_is_bundle_main_binary_ignores_non_canonical_frameworks(tmp_path):
+    """Binaries of unsealable frameworks must be signed individually.
+
+    If the framework will not be signed as a bundle, excluding its main
+    binary from the individual pass would leave it entirely unsigned.
+    """
+    app = tmp_path / "Test.app"
+    main = app / "Contents" / "MacOS" / "test"
+    fw = app / "Contents" / "Resources" / "Bad.framework"
+    binary = write(fw / "Versions" / "A" / "Bad", MACH_O_64)
+
+    assert not _is_bundle_main_binary(binary, app, main)
 
 
 # Canned `security find-identity -v -p codesigning` output: two distinct
@@ -259,6 +364,13 @@ def test_resolve_identity_deduplicates_multi_keychain_listings(monkeypatch):
     assert resolve_identity("a" * 40).name == full
 
 
+def test_resolve_identity_security_failure(monkeypatch):
+    """A failing `security` invocation should produce an actionable error."""
+    fake_security(monkeypatch, stdout="", returncode=1)
+    with pytest.raises(MacOSSigningError, match="Unable to list"):
+        resolve_identity("Developer ID Application: Jane Doe (TEAM123456)")
+
+
 def test_notary_credentials_args():
     """Credential argument generation for both authentication mechanisms."""
     assert NotaryCredentials(keychain_profile="flet").as_args() == [
@@ -268,6 +380,363 @@ def test_notary_credentials_args():
     assert NotaryCredentials(
         api_key="key.p8", api_key_id="KID", api_issuer="ISS"
     ).as_args() == ["--key", "key.p8", "--key-id", "KID", "--issuer", "ISS"]
+
+
+# A real (non-ad-hoc) identity for tests that never touch the keychain.
+DEV_ID = SigningIdentity(
+    sha1="a" * 40, name="Developer ID Application: Jane Doe (TEAM123456)"
+)
+
+
+def build_signable_app(tmp_path: Path) -> Path:
+    """Create the richest bundle layout the signing order must handle.
+
+    Contains a main executable, a standalone helper tool, a canonical
+    framework with an extra library inside, a nested helper `.app`, a
+    resource-tree `.so`, and a non-canonical (wheel-style) framework —
+    every classification `sign_app()` distinguishes.
+
+    Args:
+        tmp_path: Test-scoped temporary directory.
+
+    Returns:
+        The `.app` bundle directory.
+    """
+    app = tmp_path / "Test.app"
+    with_plist = {
+        "CFBundleExecutable": "test",
+        "CFBundleIdentifier": "dev.flet.signtest",
+    }
+    write(app / "Contents" / "MacOS" / "test", thin_mach_o(MH_EXECUTE), True)
+    (app / "Contents" / "Info.plist").write_bytes(plistlib.dumps(with_plist))
+    write(app / "Contents" / "MacOS" / "helper", thin_mach_o(MH_EXECUTE), True)
+    fw = canonical_framework(
+        app / "Contents" / "Frameworks" / "Foo.framework",
+        binary=thin_mach_o(MH_DYLIB),
+    )
+    write(fw / "Versions" / "A" / "Libraries" / "bar.dylib", thin_mach_o(MH_DYLIB))
+    write(
+        app
+        / "Contents"
+        / "Frameworks"
+        / "Helper.app"
+        / "Contents"
+        / "MacOS"
+        / "Helper",
+        thin_mach_o(MH_EXECUTE),
+        True,
+    )
+    write(
+        app / "Contents" / "Resources" / "py.bundle" / "site-packages" / "x.so",
+        thin_mach_o(MH_DYLIB),
+    )
+    write(
+        app
+        / "Contents"
+        / "Resources"
+        / "py.bundle"
+        / "site-packages"
+        / "Bad.framework"
+        / "Versions"
+        / "A"
+        / "Bad",
+        thin_mach_o(MH_DYLIB),
+    )
+    return app
+
+
+def test_sign_app_order_and_entitlements_routing(tmp_path, monkeypatch):
+    """Inside-out order and the entitlements-per-target rules.
+
+    Asserts the three signing passes (inner binaries, nested bundles, the
+    app last), that every binary is signed before its enclosing bundle,
+    and the entitlements routing: executables and helper bundles get them,
+    frameworks and libraries do not — including that the nested helper
+    `.app`'s bundle signature carries entitlements (a plain bundle re-sign
+    would strip the ones its main executable received in pass 1).
+    """
+    app = build_signable_app(tmp_path)
+    entitlements = tmp_path / "Release.entitlements"
+    entitlements.write_bytes(plistlib.dumps({"com.apple.security.cs.allow-jit": True}))
+
+    calls: list[tuple[Path, bool]] = []
+    # the only remaining _run call is `xattr -cr`, which does not exist on
+    # non-mac platforms — stub it so this test runs everywhere
+    monkeypatch.setattr(
+        macos_sign,
+        "_run",
+        lambda args, timeout=None: subprocess.CompletedProcess(args, 0, "", ""),
+    )
+    monkeypatch.setattr(
+        macos_sign,
+        "_codesign",
+        lambda target, identity, entitlements=None: calls.append(
+            (target, entitlements is not None)
+        ),
+    )
+    verified: dict = {}
+    monkeypatch.setattr(
+        macos_sign,
+        "verify_app",
+        lambda app_path, mach_o_files, identity: verified.update(
+            app=app_path, files=mach_o_files, identity=identity
+        ),
+    )
+
+    count = sign_app(app, DEV_ID, entitlements=entitlements)
+
+    targets = [t.relative_to(app) if t != app else Path(".") for t, _ in calls]
+    entitled = {(t.relative_to(app) if t != app else Path(".")): e for t, e in calls}
+    order = {t: i for i, t in enumerate(targets)}
+
+    contents = Path("Contents")
+    fw = contents / "Frameworks" / "Foo.framework"
+    helper_app = contents / "Frameworks" / "Helper.app"
+    bad = (
+        contents
+        / "Resources"
+        / "py.bundle"
+        / "site-packages"
+        / "Bad.framework"
+        / "Versions"
+        / "A"
+        / "Bad"
+    )
+
+    # every Mach-O accounted for: 7 discovered, 5 signed individually (the
+    # app's and the canonical framework's main binaries ride on bundle
+    # signatures), plus 2 bundle signatures and the app itself
+    assert count == 7
+    assert len(verified["files"]) == 7
+    assert verified["identity"] is DEV_ID
+    assert set(targets) == {
+        contents / "MacOS" / "helper",
+        helper_app / "Contents" / "MacOS" / "Helper",
+        fw / "Versions" / "A" / "Libraries" / "bar.dylib",
+        contents / "Resources" / "py.bundle" / "site-packages" / "x.so",
+        bad,
+        fw,
+        helper_app,
+        Path("."),
+    }
+
+    # inside-out: binaries before their enclosing bundles, bundles before
+    # the app, the app strictly last
+    assert order[fw / "Versions" / "A" / "Libraries" / "bar.dylib"] < order[fw]
+    assert order[helper_app / "Contents" / "MacOS" / "Helper"] < order[helper_app]
+    assert order[fw] < order[Path(".")]
+    assert order[helper_app] < order[Path(".")]
+    assert order[Path(".")] == len(targets) - 1
+
+    # entitlements: executables, helper bundles, and the app get them;
+    # frameworks and libraries do not
+    assert entitled[contents / "MacOS" / "helper"]
+    assert entitled[helper_app / "Contents" / "MacOS" / "Helper"]
+    assert entitled[helper_app]
+    assert entitled[Path(".")]
+    assert not entitled[fw]
+    assert not entitled[fw / "Versions" / "A" / "Libraries" / "bar.dylib"]
+    assert not entitled[contents / "Resources" / "py.bundle" / "site-packages" / "x.so"]
+    # the wheel-style framework is not bundle-signed; its binary is signed
+    # individually, without entitlements
+    assert not entitled[bad]
+
+
+# Signature detail blocks as `codesign --display --verbose=2` reports them
+# (on stderr): the linker's stub signature every pip wheel ships with, a
+# regular ad-hoc signature as produced by this module, and a Developer ID
+# signature with its certificate chain.
+DISPLAY_LINKER_SIGNED = (
+    "Identifier=lib_pydantic_core.dylib\n"
+    "CodeDirectory v=20400 flags=0x20002(adhoc,linker-signed) hashes=1011+0\n"
+    "Signature=adhoc\n"
+    "TeamIdentifier=not set\n"
+)
+DISPLAY_ADHOC = (
+    "Identifier=x\n"
+    "CodeDirectory v=20400 flags=0x2(adhoc) hashes=9+2\n"
+    "Signature=adhoc\n"
+    "TeamIdentifier=not set\n"
+)
+DISPLAY_DEV_ID = (
+    "Identifier=x\n"
+    "CodeDirectory v=20500 flags=0x10000(runtime) hashes=9+2\n"
+    f"Authority={DEV_ID.name}\n"
+    "Authority=Developer ID Certification Authority\n"
+    "Authority=Apple Root CA\n"
+    "TeamIdentifier=TEAM123456\n"
+)
+
+
+def fake_verify_runner(monkeypatch, display_by_name: dict):
+    """Fake the codesign invocations `verify_app()` makes.
+
+    Deep verification and per-file `--verify` always succeed, so the
+    per-file provenance check is isolated as the deciding factor.
+
+    Args:
+        monkeypatch: pytest's monkeypatch fixture.
+        display_by_name: Maps file basename to the `--display` detail block
+            to report for it.
+    """
+
+    def fake_run(args, timeout=None):
+        assert args[0] == "codesign"
+        if "--display" in args:
+            return subprocess.CompletedProcess(
+                args, 0, "", display_by_name[Path(args[-1]).name]
+            )
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+
+
+def test_verify_app_rejects_files_not_signed_by_identity(tmp_path, monkeypatch):
+    """The coverage check must catch files that kept a foreign signature.
+
+    A skipped file still carries the wheel's `linker-signed` stub — which
+    plain `codesign --verify` accepts — so provenance, not integrity, is
+    what the safety net has to assert.
+    """
+    app = tmp_path / "Test.app"
+    good = write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+    skipped = write(app / "Contents" / "Resources" / "skipped.so", MACH_O_64)
+    fake_verify_runner(
+        monkeypatch,
+        {"test": DISPLAY_DEV_ID, "skipped.so": DISPLAY_LINKER_SIGNED},
+    )
+
+    with pytest.raises(MacOSSigningError, match=r"skipped\.so"):
+        verify_app(app, [good, skipped], DEV_ID)
+
+
+def test_verify_app_rejects_wrong_authority(tmp_path, monkeypatch):
+    """A valid signature from a different identity is still a failure."""
+    app = tmp_path / "Test.app"
+    binary = write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+    fake_verify_runner(monkeypatch, {"test": DISPLAY_ADHOC})
+
+    with pytest.raises(MacOSSigningError, match="not signed with"):
+        verify_app(app, [binary], DEV_ID)
+
+
+def test_verify_app_accepts_matching_signatures(tmp_path, monkeypatch):
+    """Both identity flavors pass when every file matches."""
+    app = tmp_path / "Test.app"
+    binary = write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+
+    fake_verify_runner(monkeypatch, {"test": DISPLAY_DEV_ID})
+    verify_app(app, [binary], DEV_ID)
+
+    fake_verify_runner(monkeypatch, {"test": DISPLAY_ADHOC})
+    verify_app(app, [binary], ADHOC)
+
+
+def test_verify_app_rejects_linker_signed_for_adhoc(tmp_path, monkeypatch):
+    """Ad-hoc mode must still reject untouched linker-signed wheel stubs."""
+    app = tmp_path / "Test.app"
+    binary = write(app / "Contents" / "Resources" / "x.so", MACH_O_64)
+    fake_verify_runner(monkeypatch, {"x.so": DISPLAY_LINKER_SIGNED})
+
+    with pytest.raises(MacOSSigningError, match=r"x\.so"):
+        verify_app(app, [binary], ADHOC)
+
+
+def fake_notary_runner(
+    monkeypatch,
+    submit_stdout='{"status": "Accepted", "id": "sub-1"}',
+    submit_returncode=0,
+    submit_timeout=False,
+    ditto_returncode=0,
+    staple_returncode=0,
+):
+    """Fake every external command `notarize_and_staple()` runs.
+
+    Args:
+        monkeypatch: pytest's monkeypatch fixture.
+        submit_stdout: Fake `notarytool submit` JSON output.
+        submit_returncode: Fake `notarytool submit` exit code.
+        submit_timeout: Whether submit should raise `TimeoutExpired`.
+        ditto_returncode: Fake `ditto` exit code.
+        staple_returncode: Fake `stapler staple` exit code.
+
+    Returns:
+        The list of invoked command lines, appended to as they happen.
+    """
+    invocations: list[list[str]] = []
+
+    def fake_run(args, timeout=None):
+        invocations.append(args)
+        if args[0] == "ditto":
+            return subprocess.CompletedProcess(args, ditto_returncode, "", "ditto err")
+        if args[:3] == ["xcrun", "notarytool", "submit"]:
+            if submit_timeout:
+                raise subprocess.TimeoutExpired(args, timeout or 0)
+            return subprocess.CompletedProcess(
+                args, submit_returncode, submit_stdout, ""
+            )
+        if args[:3] == ["xcrun", "notarytool", "log"]:
+            return subprocess.CompletedProcess(args, 0, "problems: 1 unsigned", "")
+        if args[:3] == ["xcrun", "stapler", "staple"]:
+            return subprocess.CompletedProcess(args, staple_returncode, "", "")
+        if args[:3] == ["xcrun", "stapler", "validate"]:
+            return subprocess.CompletedProcess(args, 0, "", "")
+        raise AssertionError(f"unexpected command: {args}")
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+    return invocations
+
+
+CREDENTIALS = NotaryCredentials(keychain_profile="flet")
+
+
+def test_notarize_and_staple_happy_path(tmp_path, monkeypatch):
+    """Archive, submit, staple, validate — in that order."""
+    invocations = fake_notary_runner(monkeypatch)
+
+    notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
+
+    assert [i[0] if i[0] != "xcrun" else " ".join(i[1:3]) for i in invocations] == [
+        "ditto",
+        "notarytool submit",
+        "stapler staple",
+        "stapler validate",
+    ]
+
+
+def test_notarize_and_staple_archive_failure(tmp_path, monkeypatch):
+    """A ditto failure should fail before anything is submitted."""
+    invocations = fake_notary_runner(monkeypatch, ditto_returncode=1)
+
+    with pytest.raises(MacOSSigningError, match="Failed to archive"):
+        notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
+    assert len(invocations) == 1
+
+
+def test_notarize_and_staple_rejection_fetches_log(tmp_path, monkeypatch):
+    """On rejection, Apple's notarization log must surface in the error."""
+    fake_notary_runner(
+        monkeypatch, submit_stdout='{"status": "Invalid", "id": "sub-1"}'
+    )
+
+    with pytest.raises(MacOSSigningError, match="problems: 1 unsigned"):
+        notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
+
+
+def test_notarize_and_staple_timeout_gives_recovery_steps(tmp_path, monkeypatch):
+    """A submit timeout should explain how to recover, not just fail."""
+    fake_notary_runner(monkeypatch, submit_timeout=True)
+
+    with pytest.raises(MacOSSigningError, match="notarytool history"):
+        notarize_and_staple(tmp_path / "Test.app", CREDENTIALS, timeout=60)
+
+
+def test_notarize_and_staple_staple_failure(tmp_path, monkeypatch):
+    """An accepted submission with a failing staple is still an error."""
+    fake_notary_runner(monkeypatch, staple_returncode=1)
+
+    with pytest.raises(MacOSSigningError, match="Stapling failed"):
+        notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
 
 
 def find_real_shared_object() -> Path:

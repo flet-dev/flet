@@ -6,7 +6,7 @@
 
 ### Bug fixes
 
-* Fix the generated `macos/Runner/*.entitlements` files being rejected by `codesign` with `AMFIUnserializeXML: syntax error` when used directly for re-signing: the template emitted boolean values as self-closing tags with a space (`<true />`), which Xcode and `plutil` accept but codesign's stricter AMFI plist parser does not. The templates now emit `<true/>`, and `flet build`'s own signing step additionally normalizes any entitlements file through `plistlib` before use, so plist formatting can never break signing by ([#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+* Fix the generated `macos/Runner/*.entitlements` files being rejected by `codesign` with `AMFIUnserializeXML: syntax error` when used directly for re-signing: the template emitted boolean values as self-closing tags with a space (`<true />`), which Xcode and `plutil` accept but codesign's stricter AMFI plist parser does not. The templates now emit `<true/>`, and `flet build`'s own signing step additionally normalizes any entitlements file through `plistlib` before use, so plist formatting can never break signing ([#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
 
 ## 0.86.1
 

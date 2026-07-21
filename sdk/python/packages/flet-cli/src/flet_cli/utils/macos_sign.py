@@ -40,6 +40,8 @@ MACH_O_MAGICS_LE = {b"\xce\xfa\xed\xfe", b"\xcf\xfa\xed\xfe"}  # MH_CIGAM(_64)
 MACH_O_MAGICS = MACH_O_MAGICS_BE | MACH_O_MAGICS_LE
 FAT_MAGIC = b"\xca\xfe\xba\xbe"  # FAT_MAGIC (also the Java class file magic)
 FAT_CIGAM = b"\xbe\xba\xfe\xca"
+FAT_MAGIC_64 = b"\xca\xfe\xba\xbf"  # FAT_MAGIC_64 (fat_arch_64 entries)
+FAT_CIGAM_64 = b"\xbf\xba\xfe\xca"
 
 # Mach-O header filetype value for standalone executables.
 MH_EXECUTE = 0x2
@@ -253,6 +255,8 @@ def is_mach_o(path: Path) -> bool:
     magic = header[:4]
     if magic in MACH_O_MAGICS:
         return True
+    if magic in {FAT_MAGIC_64, FAT_CIGAM_64}:
+        return True
     # The fat magic is shared with Java class files; a fat header follows
     # with nfat_arch (a small integer), a class file with its format version
     # (minimum 45, far above any real architecture count).
@@ -321,7 +325,7 @@ def mach_o_filetype(path: Path) -> Optional[int]:
 
     try:
         with open(path, "rb") as f:
-            header = f.read(20)
+            header = f.read(24)
             magic = header[:4]
             if magic in {FAT_MAGIC, FAT_CIGAM} and len(header) >= 20:
                 # fat_header (magic, nfat_arch) is followed by fat_arch
@@ -331,9 +335,47 @@ def mach_o_filetype(path: Path) -> Optional[int]:
                 slice_offset = int.from_bytes(header[16:20], endianness)
                 f.seek(slice_offset)
                 return thin_filetype(f.read(16))
+            if magic in {FAT_MAGIC_64, FAT_CIGAM_64} and len(header) >= 24:
+                # fat_arch_64 widens offset and size to 64 bits: cputype(4),
+                # cpusubtype(4), offset(8), size(8), align(4), reserved(4).
+                endianness = "big" if magic == FAT_MAGIC_64 else "little"
+                slice_offset = int.from_bytes(header[16:24], endianness)
+                f.seek(slice_offset)
+                return thin_filetype(f.read(16))
             return thin_filetype(header)
     except OSError:
         return None
+
+
+def _is_signable_framework(path: Path) -> bool:
+    """Check whether a `.framework` directory can be signed as a bundle.
+
+    codesign only accepts canonical framework layouts: versioned with a
+    `Versions/Current` symlink, or flat (iOS-style) with an `Info.plist`.
+    Frameworks that arrive through pip wheels are never canonical — the zip
+    wheel format cannot represent symlinks, so `Versions/Current` is either
+    missing (codesign: "bundle format unrecognized") or a de-symlinked real
+    directory (codesign: "bundle format is ambiguous"), and hybrid layouts
+    like PyQt6's produce a junk "generic bundle" signature that leaves the
+    framework binary untouched. Non-canonical frameworks are therefore not
+    signed as bundles at all — their Mach-O files are signed individually
+    like any other library, which library validation and notarization
+    accept just as well.
+
+    Args:
+        path: A directory whose name ends in `.framework`.
+
+    Returns:
+        True if the framework has a canonical layout codesign can seal.
+    """
+
+    versions = path / "Versions"
+    if versions.is_dir():
+        current = versions / "Current"
+        return current.is_symlink() and current.exists()
+    return (path / "Info.plist").is_file() or (
+        path / "Resources" / "Info.plist"
+    ).is_file()
 
 
 def find_nested_bundles(app_path: Path) -> list[Path]:
@@ -343,7 +385,10 @@ def find_nested_bundles(app_path: Path) -> list[Path]:
     `NESTED_BUNDLE_SUFFIXES`). Each of these must receive its own signature
     — signing the framework/bundle root signs its main binary and seals its
     resources — after its inner binaries were signed, and before the
-    enclosing app is sealed.
+    enclosing app is sealed. Frameworks with non-canonical layouts (typical
+    for frameworks shipped inside pip wheels) are excluded — codesign
+    cannot seal them, so their binaries are signed individually instead
+    (see `_is_signable_framework()`).
 
     Args:
         app_path: Bundle directory to walk recursively; the root itself is
@@ -359,8 +404,11 @@ def find_nested_bundles(app_path: Path) -> list[Path]:
         root_path = Path(root)
         for name in dirs:
             path = root_path / name
-            if path.suffix.lower() in NESTED_BUNDLE_SUFFIXES and not path.is_symlink():
-                bundles.append(path)
+            if path.suffix.lower() not in NESTED_BUNDLE_SUFFIXES or path.is_symlink():
+                continue
+            if path.suffix.lower() == ".framework" and not _is_signable_framework(path):
+                continue
+            bundles.append(path)
     return bundles
 
 
@@ -414,14 +462,22 @@ def _is_bundle_main_binary(
     # <App>.app/Contents/MacOS/<CFBundleExecutable>
     if main_executable is not None and path == main_executable:
         return True
-    # <Name>.framework/Versions/<V>/<Name> or <Name>.framework/<Name>
+    # <Name>.framework/Versions/<V>/<Name> or <Name>.framework/<Name> — but
+    # only for frameworks that will actually be signed as bundles; binaries
+    # of non-canonical (e.g. wheel-shipped) frameworks are signed
+    # individually and must not be excluded here.
     for ancestor in path.parents:
         if ancestor == app_path:
             break
         if ancestor.suffix.lower() == ".framework":
             framework_name = ancestor.stem
-            if path.name == framework_name and (
-                path.parent == ancestor or path.parent.parent.name == "Versions"
+            if (
+                path.name == framework_name
+                and (
+                    path.parent == ancestor
+                    or path.parent.parent == ancestor / "Versions"
+                )
+                and _is_signable_framework(ancestor)
             ):
                 return True
     return False
@@ -517,12 +573,15 @@ def sign_app(
     2. Nested bundles (frameworks etc.), deepest first.
     3. The app bundle itself.
 
-    Entitlements go on the app bundle and on standalone helper executables
+    Entitlements go on the app bundle, on standalone helper executables
     (`MH_EXECUTE` — e.g. a JIT-using helper like Playwright's bundled node
-    would be killed under the hardened runtime without them); libraries are
-    signed without entitlements, per Apple guidance. Quarantine/Finder
-    extended attributes are cleared first, since codesign refuses to sign
-    over them.
+    would be killed under the hardened runtime without them), and on nested
+    helper bundles (`.app`/`.appex`/`.xpc`, whose main executables face the
+    same hardened-runtime restrictions — and whose bundle signature would
+    otherwise strip the entitlements applied in step 1); frameworks and
+    libraries are signed without entitlements, per Apple guidance.
+    Quarantine/Finder extended attributes are cleared first, since codesign
+    refuses to sign over them.
 
     Args:
         app_path: The `.app` bundle to sign, e.g. `build/macos/MyApp.app`.
@@ -580,34 +639,78 @@ def sign_app(
 
         for bundle in sorted(find_nested_bundles(app_path), key=depth, reverse=True):
             log(f"Signing {bundle.relative_to(app_path)}")
-            _codesign(bundle, identity)
+            is_framework = bundle.suffix.lower() == ".framework"
+            _codesign(
+                bundle, identity, entitlements=None if is_framework else normalized
+            )
 
         log(f"Signing {app_path.name}")
         _codesign(app_path, identity, entitlements=normalized)
 
-    verify_app(app_path, mach_o_files)
+    verify_app(app_path, mach_o_files, identity)
     return len(mach_o_files)
 
 
-def verify_app(app_path: Path, mach_o_files: list[Path]) -> None:
-    """Deep-verify the bundle signature and assert every Mach-O is signed.
+def _signature_matches(path: Path, identity: SigningIdentity) -> bool:
+    """Check that a binary's signature was produced by the given identity.
+
+    A plain `codesign --verify` passes for signatures this tool never made
+    — the linker's `adhoc,linker-signed` stub every pip wheel ships with,
+    or a third party's ad-hoc signature — so integrity alone cannot prove a
+    file was actually (re-)signed. Provenance is read from
+    `codesign --display` instead: linker-signed stubs are rejected always,
+    real identities must appear in the certificate `Authority=` chain, and
+    the ad-hoc identity requires a plain `Signature=adhoc` (which is the
+    best available discriminator — a pre-existing non-linker ad-hoc
+    signature is indistinguishable from one made here).
+
+    Args:
+        path: A Mach-O file inside the signed bundle.
+        identity: The identity the file should have been signed with.
+
+    Returns:
+        True if the signature's provenance matches the identity.
+    """
+
+    # codesign --display prints signature details on stderr.
+    result = _run(["codesign", "--display", "--verbose=2", str(path)])
+    if result.returncode != 0:
+        return False
+    info = result.stderr
+    if "linker-signed" in info:
+        return False
+    if identity.is_adhoc:
+        return "Signature=adhoc" in info
+    return f"Authority={identity.name}" in info
+
+
+def verify_app(
+    app_path: Path, mach_o_files: list[Path], identity: SigningIdentity
+) -> None:
+    """Deep-verify the bundle signature and assert every Mach-O was signed.
 
     A shallow `codesign -v` passes even when a nested seal is broken — the
     exact failure mode that produces "app is damaged" for end users — so
     strict deep verification plus per-file coverage is the acceptance bar.
     (`--deep` is deprecated for *signing* only; it remains Apple's
-    documented flag for verification.)
+    documented flag for verification.) Per-file coverage checks both
+    integrity (`codesign --verify`) and provenance
+    (`_signature_matches()`), because a file skipped by the signing passes
+    would still verify fine under its original wheel/linker signature —
+    and then be rejected by notarization or library validation.
 
     Args:
         app_path: The signed `.app` bundle.
         mach_o_files: Every Mach-O in the bundle (from
-            `find_mach_o_files()`); each one's signature is verified
-            individually so that a file missed by the signing passes cannot
-            slip through to notarization.
+            `find_mach_o_files()`); each one is verified individually so
+            that a file missed by the signing passes cannot slip through
+            to notarization.
+        identity: The identity the bundle was signed with.
 
     Raises:
         MacOSSigningError: If deep verification fails or any binary is
-            unsigned/invalid, listing the offending files.
+            unsigned, invalid, or not signed by `identity`, listing the
+            offending files.
     """
 
     result = _run(
@@ -620,12 +723,15 @@ def verify_app(app_path: Path, mach_o_files: list[Path]) -> None:
 
     unsigned = []
     for f in mach_o_files:
-        if _run(["codesign", "--verify", str(f)]).returncode != 0:
+        if _run(
+            ["codesign", "--verify", str(f)]
+        ).returncode != 0 or not _signature_matches(f, identity):
             unsigned.append(f)
     if unsigned:
         listing = "\n".join(f"  {f.relative_to(app_path)}" for f in unsigned)
         raise MacOSSigningError(
-            f"Mach-O binaries left unsigned or invalid in {app_path.name}:\n{listing}"
+            f"Mach-O binaries left unsigned, invalid, or not signed with "
+            f'"{identity.description}" in {app_path.name}:\n{listing}'
         )
 
 

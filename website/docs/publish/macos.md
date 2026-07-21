@@ -577,7 +577,29 @@ Export your certificate and private key as a `.p12` file, then store it
 
 ## Mac App Store
 
-Publishing to the Mac App Store requires the **App Sandbox** entitlement, an
-*Apple Distribution* certificate, and `.pkg` packaging — a different pipeline
-that `flet build` does not automate yet. The signing support above targets
-**direct distribution** (your website, GitHub releases, etc.).
+The signing support above targets **direct distribution** (your website,
+GitHub releases, etc.). Publishing to the Mac App Store — including TestFlight
+— is a different pipeline that `flet build` does not automate yet. It requires:
+
+- an *Apple Distribution* (not *Developer ID Application*) certificate, and a
+  *Mac Installer Distribution* certificate for the `.pkg`;
+- a provisioning profile embedded at `Contents/embedded.provisionprofile`;
+- the **App Sandbox** [entitlement](#entitlements) enabled:
+
+  ```toml
+  [tool.flet.macos.entitlement]
+  "com.apple.security.app-sandbox" = true
+  ```
+
+- `com.apple.application-identifier` and `com.apple.developer.team-identifier`
+  entitlements on the main executable, and `app-sandbox` + `inherit`
+  entitlements on helper executables;
+- packaging with `productbuild` and uploading via Transporter or
+  `xcrun altool` — notarization does **not** apply to store submissions.
+
+When preparing a store build, also drop hardened-runtime exception
+entitlements you don't strictly need — including the default
+`com.apple.security.cs.allow-unsigned-executable-memory` (needed for
+ctypes/cffi callbacks on Intel Macs; set it to `false` in
+`[tool.flet.macos.entitlement]` if your app doesn't use them) — as App Review
+scrutinizes each of them.
