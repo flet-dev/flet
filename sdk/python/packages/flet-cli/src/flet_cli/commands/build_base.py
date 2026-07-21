@@ -475,6 +475,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Split the APKs per ABIs (Android only)",
         )
         parser.add_argument(
+            "--android-legacy-packaging",
+            dest="android_legacy_packaging",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Use legacy Android native-library packaging: extract `.so` to disk "
+            "at install time instead of memory-mapping them directly from the APK. Off "
+            "by default (modern packaging). Enabling it makes the raw `.apk` file "
+            "smaller for side-loading, and can be more robust on older / 16 KB-page "
+            "devices, at the cost of a larger on-device install size (Android only)",
+        )
+        parser.add_argument(
             "--compile-app",
             dest="compile_app",
             action=argparse.BooleanOptionalAction,
@@ -916,6 +927,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             else (
                 self.get_pyproject("tool.flet.android.split_per_abi")
                 if self.get_pyproject("tool.flet.android.split_per_abi") is not None
+                else False
+            )
+        )
+
+        android_legacy_packaging = (
+            self.options.android_legacy_packaging
+            if self.options.android_legacy_packaging is not None
+            else (
+                self.get_pyproject("tool.flet.android.legacy_packaging")
+                if self.get_pyproject("tool.flet.android.legacy_packaging") is not None
                 else False
             )
         )
@@ -1375,6 +1396,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     or self.get_pyproject("tool.flet.android.signing.key_store")
                     or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
                 ),
+                "android_legacy_packaging": bool(android_legacy_packaging),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),

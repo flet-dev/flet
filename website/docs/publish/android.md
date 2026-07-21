@@ -58,6 +58,12 @@ For Play Store deployment, it’s recommended to:
 - Use an [**Android App Bundle (AAB)**](#flet-build-aab) for more efficient delivery and smaller install size
 - Or [**split the APK by ABI**](#split-apk-per-abi) to reduce the APK size
 
+:::tip[APK looks large?]
+If the generated `.apk` file seems surprisingly big, that's expected — see
+[Native library packaging](#native-library-packaging-modern-vs-legacy) for why, and when
+legacy packaging produces a smaller file for side-loading.
+:::
+
 ### Split APK per ABI
 
 Android devices use different CPUs, so APKs can target different
@@ -134,6 +140,112 @@ Google Play Store due to its optimized app size.
 If you need to limit the ABIs included in the bundle, use
 [`--arch`](index.md#target-architecture) / `[tool.flet.android].target_arch`
 while `split_per_abi` is `false`.
+
+## Native library packaging (modern vs legacy)
+
+Flet apps bundle a native Python runtime and native extension modules (`.so` files) for each
+[ABI](#split-apk-per-abi). How those `.so` files are stored in the APK — and whether they are
+copied to disk when the app is installed — is controlled by Android's
+[`useLegacyPackaging`](https://developer.android.com/build/releases/agp-4-2-0-release-notes#compress-native-libs-dsl)
+setting (the `android:extractNativeLibs` manifest attribute).
+
+### How each mode works
+
+- **Modern packaging (default, `useLegacyPackaging = false`).** Native `.so` files are stored
+  **uncompressed and page-aligned** inside the APK, and the OS maps them **directly from the
+  installed APK** at runtime — no second copy on disk. Pure Python code ships in stored
+  (uncompressed) zip assets and is imported in place. This is the default since Flet re-designed
+  Android packaging in v0.86.
+- **Legacy packaging (opt-in, `useLegacyPackaging = true`).** Native `.so` files are stored
+  **compressed** inside the APK, and the installer **extracts a second copy** to the app's
+  `nativeLibraryDir` on install. The linker then loads the libraries from that extracted
+  directory.
+
+### "Why did my APK get bigger?"
+
+A common surprise is that the raw `.apk` **file** looks larger with modern packaging — sometimes
+roughly double. The contents are almost identical; the file is only bigger because the native
+libraries are stored **uncompressed** (so they can be memory-mapped). Uncompressed libraries are
+actually the recommended, more efficient choice for your users. From the Android Gradle Plugin
+release notes:
+
+> When you build your app, the plugin now sets `extractNativeLibs` to `"false"` by default. That
+> is, your native libraries are page aligned and packaged uncompressed. While this results in a
+> larger upload size, your users benefit from the following:
+> - **Smaller app install size** because the platform can access the native libraries directly
+>   from the installed APK, without creating a copy of the libraries.
+> - **Smaller download size** because Play Store compression is typically better when you include
+>   uncompressed native libraries in your APK or Android App Bundle.
+>
+> — [AGP 3.6.0 release notes](https://developer.android.com/build/releases/agp-3-6-0-release-notes#extractNativeLibs)
+
+In other words: when you publish to Google Play, the store re-compresses the download (often with
+Brotli), so your users get a **smaller** download and a **smaller** install than they would with
+legacy packaging — even though the uncompressed `.apk` you upload is larger. The uncompressed
+file size only matters when you hand the raw `.apk` to users directly (side-loading).
+
+### Trade-offs
+
+| Aspect | Modern (default) | Legacy (`--android-legacy-packaging`) |
+|---|---|---|
+| Raw `.apk` file size | Larger (uncompressed `.so`) | Smaller (compressed `.so`) |
+| Play Store download size | **Smaller** (re-compressed) | Larger |
+| On-device install size | **Smaller** (no extra copy) | Larger (extracted 2nd copy) |
+| App load / startup | Faster (mmap) | Slightly slower |
+| Old / 16 KB-page devices | Occasionally fragile | **More robust** |
+
+### When to use which
+
+- **Publishing to Google Play** (recommended via [AAB](#flet-build-aab)): **keep the default
+  (modern)**. Play serves an optimized, compressed download regardless of the upload size.
+- **Distributing a raw `.apk` for side-loading** and you want the smallest file: use **legacy**
+  packaging (or simply zip/compress the modern `.apk` before sharing it).
+- **Native-load failures on old or 16 KB-page devices**: try **legacy** packaging as a
+  robustness fallback.
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-legacy-packaging`](../cli/flet-build.md#--android-legacy-packaging) /
+   `--no-android-legacy-packaging`
+2. `[tool.flet.android].legacy_packaging`
+3. `false` (modern packaging)
+
+### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --android-legacy-packaging
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+legacy_packaging = true
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`android/app/build.gradle.kts`](index.md#build-template), enabling the option adds
+`useLegacyPackaging = true` to the native-library packaging block:
+
+```kotlin
+android {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+```
+
+The Android Gradle Plugin translates this into `android:extractNativeLibs="true"` on the
+`<application>` element of the merged `AndroidManifest.xml`.
+</details>
 
 ## Signing an Android bundle
 
