@@ -7,7 +7,12 @@ import tempfile
 from pathlib import Path
 
 from flet.controls.types import RouteUrlStrategy, WebRenderer
-from flet.utils import copy_tree, is_within_directory, random_string
+from flet.utils import (
+    copy_tree,
+    get_bool_env_var,
+    is_within_directory,
+    random_string,
+)
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
@@ -146,7 +151,8 @@ class Command(BaseCommand):
             action="store_true",
             default=False,
             help="Disable loading of CanvasKit, Pyodide, and fonts from CDNs. "
-            "Use this for full offline deployments or air-gapped environments",
+            "Use this for full offline deployments or air-gapped environments "
+            "[env: FLET_WEB_NO_CDN=]",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -343,7 +349,11 @@ class Command(BaseCommand):
             "tool.flet.web.pwa_theme_color"
         )
 
-        no_cdn = options.no_cdn or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+        no_cdn = (
+            options.no_cdn
+            or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+            or bool(get_bool_env_var("FLET_WEB_NO_CDN"))
+        )
 
         print("Patching index.html")
         patch_index_html(
@@ -362,11 +372,13 @@ class Command(BaseCommand):
             web_renderer=WebRenderer(
                 options.web_renderer
                 or get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
             ),
             route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
             ),
             no_cdn=no_cdn,

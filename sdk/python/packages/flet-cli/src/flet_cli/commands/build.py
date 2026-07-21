@@ -329,7 +329,7 @@ class Command(BaseBuildCommand):
 
         Returns:
             Credentials for `notarytool`; exits via `cleanup(1, ...)` with
-                    setup instructions when nothing is configured.
+                setup instructions when nothing is configured.
         """
 
         assert self.options

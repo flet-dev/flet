@@ -16,7 +16,7 @@ from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, slugify
+from flet.utils import copy_tree, get_bool_env_var, slugify
 from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
@@ -1314,6 +1314,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
             ),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
@@ -1324,6 +1325,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
             ),
             "pwa_background_color": (
@@ -1339,7 +1341,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
             "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+                self.options.no_cdn
+                or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+                or bool(get_bool_env_var("FLET_WEB_NO_CDN"))
             ),
             # Surface the resolved Pyodide release to the cookiecutter
             # context so the web template's index.html can wire the

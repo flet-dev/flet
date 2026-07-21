@@ -392,7 +392,7 @@ per bundled library. For public distribution, sign your app with a
 
 ### Signing the app
 
-<Tabs groupId="flet-build--pyproject-toml">
+<Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build macos --macos-signing-identity "Developer ID Application: Jane Doe (TEAM123456)"
@@ -402,6 +402,11 @@ flet build macos --macos-signing-identity "Developer ID Application: Jane Doe (T
 ```toml
 [tool.flet.macos.signing]
 identity = "Developer ID Application: Jane Doe (TEAM123456)"
+```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_MACOS_SIGNING_IDENTITY="Developer ID Application: Jane Doe (TEAM123456)"
 ```
 </TabItem>
 </Tabs>
@@ -485,7 +490,7 @@ other tooling (Fastlane, CI images) may have exported for a different team.
 
 ### Notarizing the app
 
-<Tabs groupId="flet-build--pyproject-toml">
+<Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build macos \
@@ -500,6 +505,14 @@ identity = "Developer ID Application: Jane Doe (TEAM123456)"
 notarize = true
 notary_profile = "flet-notary"
 ```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_MACOS_SIGNING_IDENTITY="Developer ID Application: Jane Doe (TEAM123456)"
+FLET_MACOS_NOTARY_PROFILE="flet-notary"
+```
+Notarization must still be turned on with `--macos-notarize` (or
+`[tool.flet.macos.signing].notarize = true`); this toggle has no environment-variable equivalent.
 </TabItem>
 </Tabs>
 
