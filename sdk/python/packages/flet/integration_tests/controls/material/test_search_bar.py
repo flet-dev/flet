@@ -145,7 +145,7 @@ async def test_on_tap_outside_view(flet_app: ftt.FletTestApp):
         await sb.open_view()
 
     flet_app.page.padding = 0
-    flet_app.resize_page(400, 700)
+    flet_app.resize_page(400, 600)
     flet_app.page.add(
         sb := ft.SearchBar(
             key="sb",
@@ -180,8 +180,8 @@ async def test_on_tap_outside_view(flet_app: ftt.FletTestApp):
     assert events == []
 
     # Tapping the barrier (outside the open view, well below the 250px-tall
-    # view) fires the event and dismisses the view.
-    await flet_app.tester.tap_at(ft.Offset(200, 660))
+    # view but comfortably on-screen) fires the event and dismisses the view.
+    await flet_app.tester.tap_at(ft.Offset(200, 450))
     await flet_app.tester.pump_and_settle()
     assert events == ["outside_view"]
 
