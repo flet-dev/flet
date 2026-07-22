@@ -578,28 +578,66 @@ Export your certificate and private key as a `.p12` file, then store it
 ## Mac App Store
 
 The signing support above targets **direct distribution** (your website,
-GitHub releases, etc.). Publishing to the Mac App Store — including TestFlight
-— is a different pipeline that `flet build` does not automate yet. It requires:
+GitHub releases, etc.). For the Mac App Store — including TestFlight —
+`flet build macos` has a dedicated mode that signs with your *Apple
+Distribution* certificate (sandboxed, without the hardened runtime), embeds
+your provisioning profile, applies the store-mandated
+`application-identifier`/`team-identifier` entitlements (helper executables
+get the sandbox `inherit` pair), and produces a signed installer `.pkg`
+ready for upload:
 
-- an *Apple Distribution* (not *Developer ID Application*) certificate, and a
-  *Mac Installer Distribution* certificate for the `.pkg`;
-- a provisioning profile embedded at `Contents/embedded.provisionprofile`;
-- the **App Sandbox** [entitlement](#entitlements) enabled:
+```toml
+[tool.flet.macos.info]
+# required by App Store validation
+LSApplicationCategoryType = "public.app-category.productivity"
+# answers the export-compliance question per build (standard encryption only)
+ITSAppUsesNonExemptEncryption = false
 
-  ```toml
-  [tool.flet.macos.entitlement]
-  "com.apple.security.app-sandbox" = true
-  ```
+[tool.flet.macos.signing]
+identity = "Apple Distribution"
+app_store = true
+provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
+installer_identity = "3rd Party Mac Developer Installer"
+```
 
-- `com.apple.application-identifier` and `com.apple.developer.team-identifier`
-  entitlements on the main executable, and `app-sandbox` + `inherit`
-  entitlements on helper executables;
-- packaging with `productbuild` and uploading via Transporter or
-  `xcrun altool` — notarization does **not** apply to store submissions.
+or on the command line: `--macos-app-store`, `--macos-provisioning-profile`
+and `--macos-installer-identity`
+(`[env: FLET_MACOS_PROVISIONING_PROFILE=]`, `[env:
+FLET_MACOS_INSTALLER_IDENTITY=]`). Notarization does **not** apply to store
+submissions and is rejected in combination with `app_store`.
 
-When preparing a store build, also drop hardened-runtime exception
-entitlements you don't strictly need — including the default
-`com.apple.security.cs.allow-unsigned-executable-memory` (needed for
-ctypes/cffi callbacks on Intel Macs; set it to `false` in
-`[tool.flet.macos.entitlement]` if your app doesn't use them) — as App Review
-scrutinizes each of them.
+One-time setup in the [developer portal](https://developer.apple.com/account)
+and [App Store Connect](https://appstoreconnect.apple.com):
+
+1. Certificates: *Apple Distribution* plus *Mac Installer Distribution*
+   (the latter appears in the keychain as `3rd Party Mac Developer
+   Installer` — it signs packages, not code, so `security find-identity -v
+   -p codesigning` does not list it; use `-p basic`).
+2. An explicit App ID matching your app's bundle id, and a **Mac App
+   Store** provisioning profile for it (referencing the Apple Distribution
+   certificate) — the file you point `provisioning_profile` at.
+3. An App Store Connect app record for the bundle id; note its numeric
+   Apple ID for the upload.
+
+The App Sandbox is enabled automatically for store builds, and every
+hardened-runtime exception entitlement (`com.apple.security.cs.*`,
+including the defaults) is stripped — they are meaningless without the
+hardened runtime and scrutinized by App Review.
+
+Upload the `.pkg` with [Transporter](https://apps.apple.com/app/transporter/id1450874784)
+or from the command line (the App Store Connect API key `.p8` goes in
+`~/.appstoreconnect/private_keys/`):
+
+```
+xcrun altool --validate-app -f build/macos/MyApp.pkg -t macos \
+    --apiKey <KEY_ID> --apiIssuer <ISSUER_ID>
+xcrun altool --upload-package build/macos/MyApp.pkg -t macos \
+    --apiKey <KEY_ID> --apiIssuer <ISSUER_ID> \
+    --apple-id <NUMERIC_APP_ID> --bundle-id <BUNDLE_ID> \
+    --bundle-version <BUILD_NUMBER> --bundle-short-version-string <VERSION>
+```
+
+Every upload needs a unique build number (`flet build macos
+--build-number N`). After processing (minutes; failures arrive by email as
+`ITMS-xxxx` codes), the build appears in the TestFlight tab of your app
+record — internal testers can install it without beta review.

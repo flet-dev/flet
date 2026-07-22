@@ -658,7 +658,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--macos-signing-identity",
             dest="macos_signing_identity",
-            help='"Developer ID Application" certificate name, its SHA-1 '
+            help='"Developer ID Application" (direct distribution) or '
+            '"Apple Distribution" (App Store) certificate name, its SHA-1 '
             'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle '
             "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
         )
@@ -679,6 +680,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
             "APPLE_API_ISSUER environment variables (macos only) "
             "[env: FLET_MACOS_NOTARY_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-app-store",
+            dest="macos_app_store",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Sign and package for Mac App Store / TestFlight distribution: "
+            "sandboxed signing without the hardened runtime, an embedded "
+            "provisioning profile, and a signed installer .pkg; mutually "
+            "exclusive with --macos-notarize (macos only)",
+        )
+        parser.add_argument(
+            "--macos-provisioning-profile",
+            dest="macos_provisioning_profile",
+            help="Path to a Mac App Store provisioning profile "
+            "(.provisionprofile) to embed at Contents/embedded.provisionprofile; "
+            "required for App Store builds (macos only) "
+            "[env: FLET_MACOS_PROVISIONING_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-installer-identity",
+            dest="macos_installer_identity",
+            help='"3rd Party Mac Developer Installer" / "Mac Installer '
+            'Distribution" certificate name or SHA-1 fingerprint used to sign '
+            "the App Store installer package; required for App Store builds "
+            "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
         )
         parser.add_argument(
             "--build-number",

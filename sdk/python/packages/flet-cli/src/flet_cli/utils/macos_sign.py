@@ -24,6 +24,7 @@ import json
 import os
 import plistlib
 import re
+import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -161,7 +162,7 @@ def _run(args: list[str], timeout: Optional[int] = None) -> subprocess.Completed
     )
 
 
-def resolve_identity(identity: str) -> SigningIdentity:
+def resolve_identity(identity: str, policy: str = "codesigning") -> SigningIdentity:
     """Resolve a user-provided identity against the keychain.
 
     Fails fast — with the list of available identities — instead of letting
@@ -173,10 +174,15 @@ def resolve_identity(identity: str) -> SigningIdentity:
             full certificate name (e.g. `Developer ID Application: Jane Doe
             (TEAM123456)`), or any substring of the name that matches
             exactly one certificate (e.g. just the team ID).
+        policy: `security find-identity` policy to match against.
+            `codesigning` for certificates that sign code; `basic` for
+            installer certificates (`3rd Party Mac Developer Installer` /
+            `Mac Installer Distribution`), which sign packages, not code,
+            and are invisible under the codesigning policy.
 
     Returns:
         The matched identity; its SHA-1 fingerprint is what is ultimately
-            passed to `codesign`.
+            passed to `codesign` / `productbuild`.
 
     Raises:
         MacOSSigningError: If `security find-identity` fails, no identity
@@ -187,10 +193,10 @@ def resolve_identity(identity: str) -> SigningIdentity:
     if identity == ADHOC_IDENTITY:
         return ADHOC
 
-    result = _run(["security", "find-identity", "-v", "-p", "codesigning"])
+    result = _run(["security", "find-identity", "-v", "-p", policy])
     if result.returncode != 0:
         raise MacOSSigningError(
-            f"Unable to list codesigning identities in the keychain:\n{result.stderr}"
+            f"Unable to list signing identities in the keychain:\n{result.stderr}"
         )
 
     # Lines look like: `  1) <40-hex SHA-1> "Developer ID Application: ... (TEAMID)"`
@@ -217,17 +223,37 @@ def resolve_identity(identity: str) -> SigningIdentity:
     listing = (
         "\n".join(f'  {i.sha1} "{i.name}"' for i in available)
         if available
-        else "  (no valid codesigning identities found)"
+        else "  (no valid identities found)"
     )
     problem = (
         "matches multiple identities" if matches else "does not match any identity"
     )
     raise MacOSSigningError(
         f'Signing identity "{identity}" {problem} in the keychain. '
-        f"Valid codesigning identities:\n{listing}\n"
+        f'Valid identities for the "{policy}" policy:\n{listing}\n'
         "Pass the exact certificate name, its SHA-1 fingerprint, "
         'or "-" for ad-hoc signing.'
     )
+
+
+def identity_team_id(identity: SigningIdentity) -> Optional[str]:
+    """Extract the Team ID from a certificate's common name.
+
+    Apple-issued certificate names end in the team identifier, e.g.
+    `Apple Distribution: Jane Doe (TEAM123456)` — the value App Store
+    signing needs for the `com.apple.application-identifier` and
+    `com.apple.developer.team-identifier` entitlements.
+
+    Args:
+        identity: A resolved signing identity.
+
+    Returns:
+        The 10-character Team ID, or None for ad-hoc or non-Apple
+            certificates without one.
+    """
+
+    m = re.search(r"\(([A-Z0-9]{10})\)$", identity.name)
+    return m.group(1) if m else None
 
 
 def is_mach_o(path: Path) -> bool:
@@ -511,7 +537,9 @@ def _normalized_entitlements(entitlements: Path, tmp_dir: str) -> Path:
     except (OSError, plistlib.InvalidFileException, ValueError) as e:
         raise MacOSSigningError(f"Invalid entitlements file {entitlements}: {e}") from e
 
-    normalized = Path(tmp_dir) / "entitlements.plist"
+    # Keep the original stem: several entitlements files (app + helper) may
+    # be normalized into the same directory and must not overwrite each other.
+    normalized = Path(tmp_dir) / f"{Path(entitlements).stem}-normalized.plist"
     with open(normalized, "wb") as f:
         plistlib.dump(values, f)
     return normalized
@@ -521,15 +549,17 @@ def _codesign(
     target: Path,
     identity: SigningIdentity,
     entitlements: Optional[Path] = None,
+    hardened_runtime: bool = True,
 ) -> None:
     """Run one `codesign` invocation on a file or bundle.
 
     Always uses `--force` to replace the ad-hoc signature that Xcode/the
-    linker already put on the build output. For real identities the
-    hardened runtime (`--options runtime`) and a secure timestamp are
-    added — both notarization requirements; ad-hoc signatures get neither
-    (a timestamp cannot be issued for them, and the hardened runtime would
-    only hinder local development).
+    linker already put on the build output. For real identities a secure
+    timestamp is added, plus the hardened runtime (`--options runtime`)
+    unless disabled — notarization requires it, App Store distribution
+    forbids relying on it (sandbox is the store's containment model).
+    Ad-hoc signatures get neither (a timestamp cannot be issued for them,
+    and the hardened runtime would only hinder local development).
 
     Args:
         target: Mach-O file or bundle directory to sign. For a bundle,
@@ -538,13 +568,18 @@ def _codesign(
         identity: Identity to sign with, from `resolve_identity()`.
         entitlements: Canonical entitlements plist to embed, or None to
             sign without entitlements (correct for libraries).
+        hardened_runtime: Whether real-identity signatures opt into the
+            hardened runtime. True for Developer ID / notarization;
+            False for App Store distribution.
 
     Raises:
         MacOSSigningError: If codesign exits non-zero, with its stderr.
     """
     args = ["codesign", "--force", "--sign", identity.sha1]
     if not identity.is_adhoc:
-        args += ["--timestamp", "--options", "runtime"]
+        args.append("--timestamp")
+        if hardened_runtime:
+            args += ["--options", "runtime"]
     if entitlements is not None:
         args += ["--entitlements", str(entitlements)]
     args.append(str(target))
@@ -561,6 +596,10 @@ def sign_app(
     identity: SigningIdentity,
     entitlements: Optional[Union[str, Path]] = None,
     log: Callable[[str], None] = lambda message: None,
+    *,
+    helper_entitlements: Optional[Union[str, Path]] = None,
+    provisioning_profile: Optional[Union[str, Path]] = None,
+    hardened_runtime: bool = True,
 ) -> int:
     """Sign a .app bundle inside out and verify the result.
 
@@ -593,6 +632,18 @@ def sign_app(
             signs without entitlements.
         log: Per-file progress callback (used for `-v` output); defaults
             to a no-op.
+        helper_entitlements: Separate entitlements plist for helper
+            executables and nested helper bundles instead of the app's.
+            App Store builds need this: helpers must carry exactly the
+            sandbox `inherit` pair, not the app's entitlement set. None
+            keeps the default (helpers share `entitlements`).
+        provisioning_profile: Provisioning profile copied to
+            `Contents/embedded.provisionprofile` before signing so the app
+            seal covers it — required for App Store distribution.
+        hardened_runtime: Whether to sign with the hardened runtime
+            (Developer ID / notarization). App Store builds pass False —
+            the store's containment model is the App Sandbox, and Apple
+            re-signs store binaries on delivery.
 
     Returns:
         The total number of Mach-O binaries discovered in the bundle — all
@@ -600,9 +651,9 @@ def sign_app(
             verified.
 
     Raises:
-        MacOSSigningError: If `app_path` is not an app bundle, the
-            entitlements file is missing or invalid, any codesign
-            invocation fails, or the final verification fails.
+        MacOSSigningError: If `app_path` is not an app bundle, an
+            entitlements or profile file is missing or invalid, any
+            codesign invocation fails, or the final verification fails.
     """
 
     app_path = Path(app_path).resolve()
@@ -611,9 +662,33 @@ def sign_app(
     entitlements = Path(entitlements) if entitlements else None
     if entitlements and not entitlements.is_file():
         raise MacOSSigningError(f"Entitlements file not found: {entitlements}")
+    helper_entitlements = Path(helper_entitlements) if helper_entitlements else None
+    if helper_entitlements and not helper_entitlements.is_file():
+        raise MacOSSigningError(
+            f"Helper entitlements file not found: {helper_entitlements}"
+        )
+
+    # Embed the provisioning profile before anything is signed so the app
+    # bundle's resource seal (created last) covers it — and before the
+    # xattr sweep below, which must also scrub the embedded copy: profiles
+    # are downloaded from the developer portal, so the source file carries
+    # com.apple.quarantine, macOS propagates it onto the copy, and App
+    # Store Connect processing rejects any quarantined file in the package
+    # (error 91109) — a check `altool --validate-app` does NOT perform.
+    if provisioning_profile is not None:
+        provisioning_profile = Path(provisioning_profile)
+        if not provisioning_profile.is_file():
+            raise MacOSSigningError(
+                f"Provisioning profile not found: {provisioning_profile}"
+            )
+        shutil.copy(
+            provisioning_profile, app_path / "Contents" / "embedded.provisionprofile"
+        )
+        log("Embedded provisioning profile")
 
     # Quarantine and Finder-info extended attributes make codesign fail with
-    # "resource fork, Finder information, or similar detritus not allowed".
+    # "resource fork, Finder information, or similar detritus not allowed",
+    # and App Store Connect rejects quarantined files outright.
     _run(["xattr", "-cr", str(app_path)])
 
     mach_o_files = find_mach_o_files(app_path)
@@ -631,21 +706,41 @@ def sign_app(
         normalized = (
             _normalized_entitlements(entitlements, tmp_dir) if entitlements else None
         )
+        # Helpers default to the app's entitlements; App Store builds pass a
+        # dedicated sandbox-inherit plist instead.
+        normalized_helper = (
+            _normalized_entitlements(helper_entitlements, tmp_dir)
+            if helper_entitlements
+            else normalized
+        )
 
         for f in sorted(inner_binaries, key=depth, reverse=True):
             log(f"Signing {f.relative_to(app_path)}")
             is_executable = mach_o_filetype(f) == MH_EXECUTE
-            _codesign(f, identity, entitlements=normalized if is_executable else None)
+            _codesign(
+                f,
+                identity,
+                entitlements=normalized_helper if is_executable else None,
+                hardened_runtime=hardened_runtime,
+            )
 
         for bundle in sorted(find_nested_bundles(app_path), key=depth, reverse=True):
             log(f"Signing {bundle.relative_to(app_path)}")
             is_framework = bundle.suffix.lower() == ".framework"
             _codesign(
-                bundle, identity, entitlements=None if is_framework else normalized
+                bundle,
+                identity,
+                entitlements=None if is_framework else normalized_helper,
+                hardened_runtime=hardened_runtime,
             )
 
         log(f"Signing {app_path.name}")
-        _codesign(app_path, identity, entitlements=normalized)
+        _codesign(
+            app_path,
+            identity,
+            entitlements=normalized,
+            hardened_runtime=hardened_runtime,
+        )
 
     verify_app(app_path, mach_o_files, identity)
     return len(mach_o_files)
@@ -844,3 +939,142 @@ def notarize_and_staple(
             f"Staple validation failed for {app_path}:\n"
             f"{result.stdout.strip()}\n{result.stderr.strip()}"
         )
+
+
+def verify_app_store_app(app_path: Path, application_identifier: str) -> None:
+    """Assert the App Store-specific invariants of a signed bundle.
+
+    Complements `verify_app()` (which checks seals and signing identity)
+    with the two things App Store Connect ingestion additionally requires
+    and TestFlight enforces (ITMS-90889): an embedded provisioning profile,
+    and the `com.apple.application-identifier` entitlement on the main
+    executable matching the profile's App ID.
+
+    Args:
+        app_path: The signed `.app` bundle.
+        application_identifier: Expected value, `<TEAMID>.<bundle id>`.
+
+    Raises:
+        MacOSSigningError: If the profile is missing or the sealed
+            entitlements do not carry the expected identifier.
+    """
+
+    profile = app_path / "Contents" / "embedded.provisionprofile"
+    if not profile.is_file():
+        raise MacOSSigningError(
+            f"App Store build is missing {profile} — the provisioning "
+            "profile was not embedded."
+        )
+
+    main_executable = _main_executable(app_path)
+    if main_executable is None:
+        raise MacOSSigningError(
+            f"Cannot determine the main executable of {app_path} from its Info.plist."
+        )
+    # codesign prints the entitlements XML on stdout, diagnostics on stderr.
+    result = _run(
+        [
+            "codesign",
+            "--display",
+            "--entitlements",
+            "-",
+            "--xml",
+            str(main_executable),
+        ]
+    )
+    entitlements: dict = {}
+    with contextlib.suppress(plistlib.InvalidFileException, ValueError):
+        entitlements = plistlib.loads(result.stdout.encode())
+    found = entitlements.get("com.apple.application-identifier")
+    if found != application_identifier:
+        raise MacOSSigningError(
+            "The main executable's sealed entitlements carry "
+            f"com.apple.application-identifier={found!r}, expected "
+            f"{application_identifier!r}. TestFlight rejects such builds "
+            "(ITMS-90889)."
+        )
+
+
+def build_pkg(
+    app_path: Union[str, Path],
+    installer_identity: SigningIdentity,
+    output: Union[str, Path],
+    log: Callable[[str], None] = lambda message: None,
+) -> Path:
+    """Build the signed installer package App Store Connect ingests.
+
+    Store submissions are uploaded as a `.pkg` produced by `productbuild`
+    and signed with an installer certificate (`3rd Party Mac Developer
+    Installer` / `Mac Installer Distribution`) — a different certificate
+    type from the one that signed the app; resolve it with
+    `resolve_identity(..., policy="basic")`. The result is verified with
+    `pkgutil --check-signature`.
+
+    Args:
+        app_path: The signed (App Store-style) `.app` bundle.
+        installer_identity: Installer certificate identity.
+        output: Path of the `.pkg` to write; replaced if it exists.
+        log: Progress callback; defaults to a no-op.
+
+    Returns:
+        The path of the signed package.
+
+    Raises:
+        MacOSSigningError: If `productbuild` fails or the package's
+            signature does not verify.
+    """
+
+    app_path = Path(app_path).resolve()
+    output = Path(output).resolve()
+    output.unlink(missing_ok=True)
+
+    log(f"Building installer package {output.name}")
+    result = _run(
+        [
+            "productbuild",
+            "--component",
+            str(app_path),
+            "/Applications",
+            "--sign",
+            installer_identity.sha1,
+            str(output),
+        ]
+    )
+    if result.returncode != 0:
+        raise MacOSSigningError(
+            f"productbuild failed for {app_path}:\n{result.stderr.strip()}"
+        )
+
+    result = _run(["pkgutil", "--check-signature", str(output)])
+    if result.returncode != 0:
+        raise MacOSSigningError(
+            f"Installer package signature verification failed for {output}:\n"
+            f"{result.stdout.strip()}\n{result.stderr.strip()}"
+        )
+    return output
+
+
+def profile_application_identifier(profile: Union[str, Path]) -> Optional[str]:
+    """Read the App ID a provisioning profile authorizes.
+
+    Used to catch a profile/bundle-id mismatch before uploading — App Store
+    Connect rejects mismatches only after processing (ITMS-90889), which is
+    a slow way to find a wrong file path.
+
+    Args:
+        profile: A `.provisionprofile` file (CMS-wrapped plist).
+
+    Returns:
+        The profile's `com.apple.application-identifier` entitlement (e.g.
+            `TEAM123456.com.example.app`), or None if the profile cannot be
+            read or parsed.
+    """
+
+    result = _run(["security", "cms", "-D", "-i", str(profile)])
+    if result.returncode != 0:
+        return None
+    try:
+        values = plistlib.loads(result.stdout.encode())
+        return values["Entitlements"]["com.apple.application-identifier"]
+    except (plistlib.InvalidFileException, ValueError, KeyError, TypeError):
+        return None
