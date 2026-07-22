@@ -1,3 +1,9 @@
+## 0.86.3
+
+### Bug fixes
+
+* Fix `flet build` picking a non-decodable icon/splash image when several files share a base name, producing a machine-dependent `NoDecoderForImageFormatException` from `flutter_launcher_icons`. When an app's `assets` held, say, both `icon.png` and `icon.svg`, `find_platform_image` selected the first match from `glob.glob(...)` — whose order is filesystem-dependent — so the same app could pick `icon.png` on one machine and `icon.svg` on another (SVG is vector and can't be decoded by the raster icon/splash generators), turning a working build into a crash purely based on directory listing order. Candidates are now filtered to formats the generators can actually decode (`.svg` is dropped everywhere; `.icns` stays macOS-only and `.ico` Windows-only) and ranked so a raster image (`.png` first) always wins, making the choice deterministic across machines. When the only supplied image is an SVG (no raster sibling), it's skipped with a build-log warning and the default Flet icon is used instead of crashing by @FeodorFitsner.
+
 ## 0.86.2
 
 ### Bug fixes
