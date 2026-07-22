@@ -28,7 +28,12 @@ warning_style = Style(color="yellow", bold=True)
 console = Console(
     log_path=False,
     theme=Theme({"log.message": "green bold"}),
-    force_terminal=not no_rich_output,
+    # Auto-detect the terminal (force_terminal=None): a real TTY gets the
+    # animated Live spinner, but piped output (CI, cloud build) must NOT be
+    # fed one line per animation frame. Forcing the terminal on floods
+    # non-TTY logs with thousands of spinner redraws. no_rich_output still
+    # forces plain output regardless.
+    force_terminal=False if no_rich_output else None,
 )
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
