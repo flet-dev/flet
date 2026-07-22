@@ -1341,7 +1341,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
-                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+                # lowered for parity with the CLI option's type=str.lower
+                or (os.getenv("FLET_WEB_ROUTE_URL_STRATEGY") or "").lower()
                 or "path"
             ),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
@@ -1352,7 +1353,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
-                or os.getenv("FLET_WEB_RENDERER")
+                or (os.getenv("FLET_WEB_RENDERER") or "").lower()
                 or "canvaskit"
             ),
             "pwa_background_color": (

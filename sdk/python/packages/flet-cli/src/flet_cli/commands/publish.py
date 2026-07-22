@@ -372,13 +372,14 @@ class Command(BaseCommand):
             web_renderer=WebRenderer(
                 options.web_renderer
                 or get_pyproject("tool.flet.web.renderer")
-                or os.getenv("FLET_WEB_RENDERER")
+                # lowered for parity with the CLI option's type=str.lower
+                or (os.getenv("FLET_WEB_RENDERER") or "").lower()
                 or "canvaskit"
             ),
             route_url_strategy=RouteUrlStrategy(
                 options.route_url_strategy
                 or get_pyproject("tool.flet.web.route_url_strategy")
-                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+                or (os.getenv("FLET_WEB_ROUTE_URL_STRATEGY") or "").lower()
                 or "path"
             ),
             no_cdn=no_cdn,

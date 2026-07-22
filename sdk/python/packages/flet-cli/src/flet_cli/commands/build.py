@@ -4,6 +4,7 @@ import plistlib
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Callable
 
 from rich.console import Group
 from rich.live import Live
@@ -12,13 +13,16 @@ from flet_cli.commands.build_base import BaseBuildCommand, console
 from flet_cli.commands.flutter_base import verbose1_style
 from flet_cli.utils.android import flutter_target_platforms
 from flet_cli.utils.macos_sign import (
+    APP_STORE_HELPER_ENTITLEMENTS,
     MacOSSigningError,
     NotaryCredentials,
     SigningIdentity,
+    app_store_entitlements,
     build_pkg,
     identity_team_id,
     notarize_and_staple,
     profile_application_identifier,
+    profile_covers_application,
     resolve_identity,
     sign_app,
     verify_app_store_app,
@@ -225,7 +229,7 @@ class Command(BaseBuildCommand):
             f"[/cyan] {self.emojis['checkmark']}",
         )
 
-    def sign_macos_app(self):
+    def sign_macos_app(self) -> None:
         """
         Code-sign — and optionally notarize — the built macOS app bundle.
 
@@ -275,18 +279,12 @@ class Command(BaseBuildCommand):
             )
 
         if not identity:
-            if notarize:
+            if notarize or app_store:
+                what = "Notarization" if notarize else "App Store signing"
                 self.cleanup(
                     1,
-                    "Notarization requires a code-signing identity. Pass "
+                    f"{what} requires a code-signing identity. Pass "
                     "--macos-signing-identity or set "
-                    "`[tool.flet.macos.signing].identity` in pyproject.toml.",
-                )
-            if app_store:
-                self.cleanup(
-                    1,
-                    "App Store signing requires an Apple Distribution "
-                    "identity. Pass --macos-signing-identity or set "
                     "`[tool.flet.macos.signing].identity` in pyproject.toml.",
                 )
             return
@@ -360,25 +358,25 @@ class Command(BaseBuildCommand):
         app_path: Path,
         identity: SigningIdentity,
         entitlements: Path,
-        log,
-    ):
+        log: Callable[[str], None],
+    ) -> None:
         """
         Sign for Mac App Store / TestFlight and build the installer package.
 
         The store lane differs from Developer ID signing in every dimension
         that matters: the app is signed with an Apple Distribution identity
-        *without* the hardened runtime; entitlements are the template's with
-        all `com.apple.security.cs.*` hardened-runtime exceptions stripped,
-        App Sandbox forced on, and the `application-identifier` /
-        `team-identifier` pair injected; helper executables carry exactly
-        the sandbox-inherit pair; a provisioning profile is embedded; and
-        the deliverable is a `.pkg` signed with an installer certificate,
-        not a notarized `.app`.
+        *without* the hardened runtime; entitlements come from
+        `app_store_entitlements()` (sandbox on, identifiers in, `cs.*`
+        exceptions stripped); helper executables and nested helper bundles
+        carry the sandbox-inherit pair; a provisioning profile is embedded;
+        and the deliverable is a `.pkg` signed with an installer
+        certificate, not a notarized `.app`.
 
         All prerequisites — installer identity, Team ID, provisioning
         profile, and the `LSApplicationCategoryType` Info.plist key App
         Store validation demands — are checked before any signing work, so
-        misconfiguration fails asap.
+        misconfiguration fails in seconds rather than after the
+        multi-minute signing pass.
 
         Exits via `cleanup(1, ...)` on any failure.
         """
@@ -425,7 +423,17 @@ class Command(BaseBuildCommand):
             )
         # Installer certs sign packages, not code — resolved under the
         # `basic` policy, and before the signing pass so a typo fails fast.
+        # That policy also lists application certs, so a wrong-but-unique
+        # match is possible; catching it here avoids a cryptic productbuild
+        # failure after the multi-minute signing pass.
         installer = resolve_identity(installer_identity, policy="basic")
+        if not installer.is_adhoc and "Installer" not in installer.name:
+            self.cleanup(
+                1,
+                f'"{installer.name}" is not an installer certificate. Store '
+                'packages must be signed with a "3rd Party Mac Developer '
+                'Installer" / "Mac Installer Distribution" certificate.',
+            )
 
         profile = (
             self.options.macos_provisioning_profile
@@ -448,8 +456,15 @@ class Command(BaseBuildCommand):
         # Read the *built* app's bundle id — the authoritative value after
         # all project/org/bundle-id resolution and templating.
         info_path = app_path / "Contents" / "Info.plist"
-        info = plistlib.loads(info_path.read_bytes())
-        bundle_id = info["CFBundleIdentifier"]
+        try:
+            info = plistlib.loads(info_path.read_bytes())
+            bundle_id = info["CFBundleIdentifier"]
+        except (OSError, plistlib.InvalidFileException, ValueError, KeyError) as e:
+            self.cleanup(
+                1,
+                f"Cannot read CFBundleIdentifier from {info_path}: {e}. "
+                "The built app bundle is malformed; re-run the build.",
+            )
         application_identifier = f"{team_id}.{bundle_id}"
 
         # App Store validation hard-requires a category (empirically: 409
@@ -472,9 +487,8 @@ class Command(BaseBuildCommand):
             )
 
         profile_app_id = profile_application_identifier(profile_path)
-        if profile_app_id is not None and profile_app_id not in (
-            application_identifier,
-            f"{team_id}.*",
+        if profile_app_id is not None and not profile_covers_application(
+            profile_app_id, application_identifier
         ):
             self.cleanup(
                 1,
@@ -484,28 +498,17 @@ class Command(BaseBuildCommand):
                 "profile for this bundle id.",
             )
 
-        # Store entitlements: the template's, minus every hardened-runtime
-        # exception (meaningless without the hardened runtime, and scrutinized
-        # by App Review), with the sandbox and identifiers forced in.
-        with open(entitlements, "rb") as f:
-            app_entitlements = {
-                k: v
-                for k, v in plistlib.load(f).items()
-                if not k.startswith("com.apple.security.cs.")
-            }
-        app_entitlements["com.apple.security.app-sandbox"] = True
-        app_entitlements["com.apple.application-identifier"] = application_identifier
-        app_entitlements["com.apple.developer.team-identifier"] = team_id
-        helper_entitlements = {
-            "com.apple.security.app-sandbox": True,
-            "com.apple.security.inherit": True,
-        }
+        # MacOSSigningError from here on is handled by sign_macos_app's
+        # enclosing try block.
+        app_entitlements = app_store_entitlements(
+            entitlements, application_identifier, team_id
+        )
 
         with tempfile.TemporaryDirectory() as tmp:
             app_ents_path = Path(tmp) / "app.entitlements"
             app_ents_path.write_bytes(plistlib.dumps(app_entitlements))
             helper_ents_path = Path(tmp) / "helper.entitlements"
-            helper_ents_path.write_bytes(plistlib.dumps(helper_entitlements))
+            helper_ents_path.write_bytes(plistlib.dumps(APP_STORE_HELPER_ENTITLEMENTS))
 
             signed_count = sign_app(
                 app_path,

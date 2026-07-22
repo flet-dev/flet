@@ -432,8 +432,9 @@ When a real identity is configured, `flet build macos` will, after the build:
    [Apple requires](https://developer.apple.com/documentation/xcode/creating-distribution-signed-code-for-macos),
    with the **hardened runtime** enabled and a secure timestamp (both required
    for notarization). [Entitlements](#entitlements) are applied to the app
-   bundle and to standalone helper executables shipped by your dependencies;
-   libraries are signed without entitlements, per Apple guidance.
+   bundle and to helper executables and helper bundles shipped by your
+   dependencies; frameworks and libraries are signed without entitlements,
+   per Apple guidance.
 2. Verify the result with `codesign --verify --deep --strict` and check that
    no binary was left unsigned.
 
@@ -452,10 +453,7 @@ service (a malware scan, typically a few minutes), after which the resulting
 Apple's notary service accepts two kinds of credentials: your **Apple ID**
 with an [app-specific password](https://support.apple.com/102654), or an
 **App Store Connect API key** (a `.p8` key file with its key ID and issuer
-ID). Flet can receive them through either of two channels — a keychain
-profile is not a different kind of credential, just the same secrets stored
-once in the macOS keychain under a name instead of being passed on every
-invocation:
+ID). Flet can receive either kind through two channels:
 
 - **Keychain profile** (best for local development) — a one-time interactive
   setup that saves either credential kind into the keychain:
@@ -600,11 +598,14 @@ provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
 installer_identity = "3rd Party Mac Developer Installer"
 ```
 
-or on the command line: `--macos-app-store`, `--macos-provisioning-profile`
-and `--macos-installer-identity`
-(`[env: FLET_MACOS_PROVISIONING_PROFILE=]`, `[env:
-FLET_MACOS_INSTALLER_IDENTITY=]`). Notarization does **not** apply to store
-submissions and is rejected in combination with `app_store`.
+The same settings are available as the `--macos-app-store`,
+`--macos-provisioning-profile` and `--macos-installer-identity` command-line
+options and the
+[`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
+and
+[`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
+environment variables. Notarization does **not** apply to store submissions
+and is rejected in combination with `app_store`.
 
 One-time setup in the [developer portal](https://developer.apple.com/account)
 and [App Store Connect](https://appstoreconnect.apple.com):
@@ -628,7 +629,7 @@ Upload the `.pkg` with [Transporter](https://apps.apple.com/app/transporter/id14
 or from the command line (the App Store Connect API key `.p8` goes in
 `~/.appstoreconnect/private_keys/`):
 
-```
+```bash
 xcrun altool --validate-app -f build/macos/MyApp.pkg -t macos \
     --apiKey <KEY_ID> --apiIssuer <ISSUER_ID>
 xcrun altool --upload-package build/macos/MyApp.pkg -t macos \

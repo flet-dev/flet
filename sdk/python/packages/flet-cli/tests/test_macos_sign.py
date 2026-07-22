@@ -3,7 +3,7 @@
 Most tests are platform-independent: Mach-O discovery and classification are
 exercised against hand-crafted header bytes, and keychain identity
 resolution against canned `security find-identity` output (no real
-certificates or keychains are touched). Only the two tests marked
+certificates or keychains are touched). Only the tests marked
 `skipif(sys.platform != "darwin")` invoke the real `codesign` — ad-hoc
 signing needs no certificate, so they run on any Mac, including CI runners.
 """
@@ -26,21 +26,26 @@ from flet_cli.utils.macos_sign import (
     NotaryCredentials,
     SigningIdentity,
     _is_bundle_main_binary,
+    app_store_entitlements,
+    build_pkg,
     find_mach_o_files,
     find_nested_bundles,
+    identity_team_id,
     is_mach_o,
     mach_o_filetype,
     notarize_and_staple,
+    profile_application_identifier,
+    profile_covers_application,
     resolve_identity,
     sign_app,
     verify_app,
+    verify_app_store_app,
 )
 
 # Minimal file contents that `is_mach_o()` must classify correctly: thin
-# 64-bit (little-endian file) and 32-bit (big-endian file) Mach-O headers, a
-# fat header with a plausible architecture count, and a Java class file —
-# which shares the fat magic `0xcafebabe` but carries its format version
-# (>= 45) where a fat header carries `nfat_arch`.
+# 64-bit (little-endian file) and 32-bit (big-endian file) Mach-O headers,
+# fat headers with plausible architecture counts, and a Java class file
+# (shares the fat magic — see `is_mach_o()`).
 MACH_O_64 = b"\xcf\xfa\xed\xfe" + b"\x00" * 12
 MACH_O_32 = b"\xfe\xed\xfa\xce" + b"\x00" * 12
 FAT_TWO_ARCHS = b"\xca\xfe\xba\xbe" + (2).to_bytes(4, "big") + b"\x00" * 8
@@ -308,6 +313,8 @@ def fake_security(monkeypatch, stdout=SECURITY_LISTING, returncode=0):
 
     def fake_run(args, timeout=None):
         assert args[0] == "security"
+        # pins resolve_identity's default policy for its pre-existing callers
+        assert args[args.index("-p") + 1] == "codesigning"
         return subprocess.CompletedProcess(args, returncode, stdout, "")
 
     monkeypatch.setattr(macos_sign, "_run", fake_run)
@@ -382,9 +389,15 @@ def test_notary_credentials_args():
     ).as_args() == ["--key", "key.p8", "--key-id", "KID", "--issuer", "ISS"]
 
 
-# A real (non-ad-hoc) identity for tests that never touch the keychain.
+# Real (non-ad-hoc) identities for tests that never touch the keychain.
 DEV_ID = SigningIdentity(
     sha1="a" * 40, name="Developer ID Application: Jane Doe (TEAM123456)"
+)
+APPLE_DIST = SigningIdentity(
+    sha1="c" * 40, name="Apple Distribution: Jane Doe (TEAM123456)"
+)
+INSTALLER = SigningIdentity(
+    sha1="d" * 40, name="3rd Party Mac Developer Installer: Jane Doe (TEAM123456)"
 )
 
 
@@ -691,7 +704,7 @@ CREDENTIALS = NotaryCredentials(keychain_profile="flet")
 
 
 def test_notarize_and_staple_happy_path(tmp_path, monkeypatch):
-    """Archive, submit, staple, validate — in that order."""
+    """Archive, submit, staple, validate — in that order, with credentials."""
     invocations = fake_notary_runner(monkeypatch)
 
     notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
@@ -702,6 +715,9 @@ def test_notarize_and_staple_happy_path(tmp_path, monkeypatch):
         "stapler staple",
         "stapler validate",
     ]
+    submit = invocations[1]
+    assert submit[-2:] == ["--keychain-profile", "flet"]
+    assert "--wait" in submit
 
 
 def test_notarize_and_staple_archive_failure(tmp_path, monkeypatch):
@@ -809,30 +825,46 @@ def test_sign_app_adhoc_end_to_end(tmp_path):
     assert result.returncode == 0, result.stderr
 
 
-@pytest.mark.skipif(sys.platform != "darwin", reason="requires macOS codesign")
 def test_sign_app_rejects_non_bundle(tmp_path):
-    """Signing should refuse paths that are not .app bundles."""
+    """Signing should refuse paths that are not .app bundles.
+
+    Not darwin-gated: the check fires before any subprocess runs.
+    """
     with pytest.raises(MacOSSigningError, match="Not an app bundle"):
         sign_app(tmp_path, ADHOC)
 
 
-# ---------------------------------------------------------------------------
-# App Store (MAS) mode
-# ---------------------------------------------------------------------------
+def test_sign_app_rejects_missing_inputs(tmp_path):
+    """Missing entitlements/helper-entitlements/profile files fail fast."""
+    app = tmp_path / "Test.app"
+    write(app / "Contents" / "MacOS" / "test", MACH_O_64)
 
-from flet_cli.utils.macos_sign import (  # noqa: E402
-    build_pkg,
-    identity_team_id,
-    profile_application_identifier,
-    verify_app_store_app,
-)
+    with pytest.raises(MacOSSigningError, match="Entitlements file not found"):
+        sign_app(app, ADHOC, entitlements=tmp_path / "missing.plist")
+    with pytest.raises(MacOSSigningError, match="Helper entitlements file not found"):
+        sign_app(app, ADHOC, helper_entitlements=tmp_path / "missing.plist")
+    with pytest.raises(MacOSSigningError, match="Provisioning profile not found"):
+        sign_app(app, ADHOC, provisioning_profile=tmp_path / "missing.provisionprofile")
 
-APPLE_DIST = SigningIdentity(
-    sha1="c" * 40, name="Apple Distribution: Jane Doe (TEAM123456)"
-)
-INSTALLER = SigningIdentity(
-    sha1="d" * 40, name="3rd Party Mac Developer Installer: Jane Doe (TEAM123456)"
-)
+
+def test_sign_app_rejects_invalid_entitlements(tmp_path, monkeypatch):
+    """A non-plist entitlements file fails with a clean error, not a traceback."""
+    app = tmp_path / "Test.app"
+    write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+    bad = write(tmp_path / "bad.plist", b"not a plist at all")
+    monkeypatch.setattr(
+        macos_sign,
+        "_run",
+        lambda args, timeout=None: subprocess.CompletedProcess(args, 0, "", ""),
+    )
+
+    with pytest.raises(MacOSSigningError, match="Invalid entitlements file"):
+        sign_app(app, ADHOC, entitlements=bad)
+
+
+# ---------------------------------------------------------------------------
+# App Store mode
+# ---------------------------------------------------------------------------
 
 
 def test_identity_team_id():
@@ -861,7 +893,7 @@ def test_resolve_identity_uses_policy(monkeypatch):
     assert resolved.sha1 == "d" * 40
 
 
-def test_sign_app_mas_mode(tmp_path, monkeypatch):
+def test_sign_app_app_store_mode(tmp_path, monkeypatch):
     """App Store signing: no hardened runtime, helper entitlements routing,
     and the provisioning profile embedded before the first signature."""
     app = build_signable_app(tmp_path)
@@ -881,14 +913,16 @@ def test_sign_app_mas_mode(tmp_path, monkeypatch):
 
     embedded = app / "Contents" / "embedded.provisionprofile"
     codesign_calls = []
+    xattr_sweeps = []
 
     def fake_run(args, timeout=None):
         if args[0] == "xattr":
             # the xattr sweep must scrub the *embedded* profile copy too —
-            # profiles are browser downloads, and a quarantined file inside
-            # the package is rejected by App Store Connect processing
-            # (error 91109, empirically build 2 of the playground app)
+            # profiles are browser downloads carrying com.apple.quarantine,
+            # and App Store Connect processing rejects any quarantined file
+            # in the package (error 91109, observed empirically)
             assert embedded.is_file(), "profile embedded after the xattr sweep"
+            xattr_sweeps.append(args)
         if args[0] == "codesign":
             # the profile must already be in place when signing starts
             assert embedded.is_file(), "profile embedded after signing began"
@@ -909,6 +943,9 @@ def test_sign_app_mas_mode(tmp_path, monkeypatch):
         hardened_runtime=False,
     )
 
+    # the sweep itself must happen — deleting it would resurrect the 91109
+    # App Store rejection
+    assert ["xattr", "-cr", str(app)] in xattr_sweeps
     assert embedded.read_bytes() == b"fake profile bytes"
     assert codesign_calls, "nothing was signed"
     for args in codesign_calls:
@@ -979,7 +1016,9 @@ def test_build_pkg(tmp_path, monkeypatch):
 
     monkeypatch.setattr(macos_sign, "_run", fake_run_rc())
     assert build_pkg(app, INSTALLER, out) == out.resolve()
-    assert invocations[0][0] == "productbuild"
+    assert invocations[0][:2] == ["productbuild", "--component"]
+    assert str(app.resolve()) in invocations[0]
+    assert "/Applications" in invocations[0]  # the store-mandated install root
     assert "--sign" in invocations[0] and "d" * 40 in invocations[0]
     assert invocations[1][:2] == ["pkgutil", "--check-signature"]
 
@@ -1019,3 +1058,232 @@ def test_profile_application_identifier(tmp_path, monkeypatch):
         lambda args, timeout=None: subprocess.CompletedProcess(args, 1, "", "err"),
     )
     assert profile_application_identifier(tmp_path / "p.provisionprofile") is None
+
+
+def test_sign_app_hardened_runtime_default(tmp_path, monkeypatch):
+    """Developer ID signing must carry --options runtime and --timestamp.
+
+    The one property production notarization depends on and no other test
+    asserts: without the hardened runtime flag every notarization fails.
+    """
+    app = tmp_path / "Test.app"
+    write(app / "Contents" / "MacOS" / "test", thin_mach_o(MH_EXECUTE), True)
+    (app / "Contents" / "Info.plist").write_bytes(
+        plistlib.dumps({"CFBundleExecutable": "test"})
+    )
+    write(app / "Contents" / "Resources" / "x.so", thin_mach_o(MH_DYLIB))
+    codesign_calls = []
+
+    def fake_run(args, timeout=None):
+        if args[0] == "codesign":
+            codesign_calls.append(args)
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+    monkeypatch.setattr(
+        macos_sign, "verify_app", lambda app_path, files, identity: None
+    )
+
+    sign_app(app, DEV_ID)
+
+    assert codesign_calls
+    for args in codesign_calls:
+        assert "--timestamp" in args
+        assert args[args.index("--options") + 1] == "runtime"
+
+
+def test_profile_covers_application():
+    """Explicit and wildcard App IDs; wildcards cover matching prefixes."""
+    assert profile_covers_application("T.dev.example.app", "T.dev.example.app")
+    assert profile_covers_application("T.*", "T.dev.example.app")
+    assert profile_covers_application("T.dev.example.*", "T.dev.example.app")
+    assert not profile_covers_application("T.dev.other.*", "T.dev.example.app")
+    assert not profile_covers_application("T.dev.example.app", "T.dev.example.two")
+
+
+def test_app_store_entitlements(tmp_path):
+    """cs.* exceptions stripped; sandbox and identifiers forced in."""
+    source = tmp_path / "Release.entitlements"
+    source.write_bytes(
+        plistlib.dumps(
+            {
+                "com.apple.security.cs.allow-jit": True,
+                "com.apple.security.cs.allow-unsigned-executable-memory": True,
+                "com.apple.security.network.client": True,
+                "com.apple.security.app-sandbox": False,
+            }
+        )
+    )
+
+    values = app_store_entitlements(source, "T.dev.example.app", "T")
+
+    assert values == {
+        "com.apple.security.network.client": True,
+        "com.apple.security.app-sandbox": True,
+        "com.apple.application-identifier": "T.dev.example.app",
+        "com.apple.developer.team-identifier": "T",
+    }
+
+    bad = write(tmp_path / "bad.entitlements", b"not a plist")
+    with pytest.raises(MacOSSigningError, match="Invalid entitlements file"):
+        app_store_entitlements(bad, "T.dev.example.app", "T")
+
+
+def test_verify_app_deep_verification_failure(tmp_path, monkeypatch):
+    """A broken bundle seal fails before any per-file check runs."""
+    app = tmp_path / "Test.app"
+    binary = write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+
+    def fake_run(args, timeout=None):
+        rc = 1 if "--deep" in args else 0
+        return subprocess.CompletedProcess(args, rc, "", "seal broken")
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+    with pytest.raises(MacOSSigningError, match="Signature verification failed"):
+        verify_app(app, [binary], ADHOC)
+
+
+def test_verify_app_store_app_unreadable_entitlements(tmp_path, monkeypatch):
+    """A codesign --display failure is reported as such, not as a mismatch."""
+    app = tmp_path / "Test.app"
+    write(app / "Contents" / "MacOS" / "test", MACH_O_64)
+    (app / "Contents" / "Info.plist").write_bytes(
+        plistlib.dumps({"CFBundleExecutable": "test"})
+    )
+    write(app / "Contents" / "embedded.provisionprofile", b"profile")
+    monkeypatch.setattr(
+        macos_sign,
+        "_run",
+        lambda args, timeout=None: subprocess.CompletedProcess(args, 1, "", "no sig"),
+    )
+
+    with pytest.raises(MacOSSigningError, match="Cannot read the sealed entitlements"):
+        verify_app_store_app(app, "T.dev.example.app")
+
+
+def test_verify_app_store_app_missing_main_executable(tmp_path):
+    """An unreadable Info.plist is a clean error, not a KeyError."""
+    app = tmp_path / "Test.app"
+    write(app / "Contents" / "embedded.provisionprofile", b"profile")
+
+    with pytest.raises(MacOSSigningError, match="Cannot determine the main executable"):
+        verify_app_store_app(app, "T.dev.example.app")
+
+
+def test_profile_application_identifier_malformed(tmp_path, monkeypatch):
+    """Unparsable CMS output degrades to None, never an exception."""
+    monkeypatch.setattr(
+        macos_sign,
+        "_run",
+        lambda args, timeout=None: subprocess.CompletedProcess(
+            args, 0, "not a plist", ""
+        ),
+    )
+    assert profile_application_identifier(tmp_path / "p.provisionprofile") is None
+
+
+def test_notarize_and_staple_validate_failure(tmp_path, monkeypatch):
+    """A stapled-but-unvalidatable ticket is still an error."""
+    fake_notary_runner(monkeypatch)
+    happy_run = macos_sign._run
+
+    def fake_run(args, timeout=None):
+        if args[:3] == ["xcrun", "stapler", "validate"]:
+            return subprocess.CompletedProcess(args, 1, "", "bad ticket")
+        return happy_run(args, timeout)
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+
+    with pytest.raises(MacOSSigningError, match="Staple validation failed"):
+        notarize_and_staple(tmp_path / "Test.app", CREDENTIALS)
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="requires macOS codesign")
+def test_sign_app_app_store_end_to_end(tmp_path):
+    """App Store-shaped signing against real codesign, ad-hoc.
+
+    Verifies the two effects unit mocks cannot: the xattr sweep strips a
+    real quarantine attribute from the embedded profile copy (App Store
+    Connect rejects quarantined package contents, error 91109 — observed),
+    and strict deep verification proves the bundle seal covers the profile.
+    """
+    app = tmp_path / "Test.app"
+    macos_dir = app / "Contents" / "MacOS"
+    macos_dir.mkdir(parents=True)
+    shutil.copy(os.path.realpath(sys.executable), macos_dir / "test")
+    with open(app / "Contents" / "Info.plist", "wb") as f:
+        plistlib.dump(
+            {
+                "CFBundleExecutable": "test",
+                "CFBundleIdentifier": "dev.flet.signtest.mas",
+                "CFBundleName": "Test",
+                "CFBundlePackageType": "APPL",
+            },
+            f,
+        )
+    entitlements = tmp_path / "app.entitlements"
+    entitlements.write_bytes(plistlib.dumps({"com.apple.security.app-sandbox": True}))
+    profile = tmp_path / "test.provisionprofile"
+    profile.write_bytes(b"fake profile bytes")
+    subprocess.run(
+        ["xattr", "-w", "com.apple.quarantine", "0083;0;test;", str(profile)],
+        check=True,
+    )
+
+    sign_app(
+        app,
+        ADHOC,
+        entitlements=entitlements,
+        provisioning_profile=profile,
+        hardened_runtime=False,
+    )
+
+    embedded = app / "Contents" / "embedded.provisionprofile"
+    listed = subprocess.run(
+        ["xattr", str(embedded)], capture_output=True, text=True
+    ).stdout
+    assert "com.apple.quarantine" not in listed
+    result = subprocess.run(
+        ["codesign", "--verify", "--deep", "--strict", str(app)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    # modifying the profile now must break the seal it is covered by
+    embedded.write_bytes(b"tampered")
+    result = subprocess.run(
+        ["codesign", "--verify", "--deep", "--strict", str(app)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+
+
+def test_resolve_identity_explains_expired_certificate(monkeypatch):
+    """An existing-but-invalid certificate must be named, not read as absent.
+
+    `security find-identity -v` hides expired/revoked certificates, so
+    without the second (unfiltered) query the error would claim no such
+    identity exists while the user sees it in Keychain Access.
+    """
+    full = "Developer ID Application: Jane Doe (TEAM123456)"
+
+    def fake_run(args, timeout=None):
+        assert args[0] == "security"
+        if "-v" in args:
+            return subprocess.CompletedProcess(
+                args, 0, "     0 valid identities found\n", ""
+            )
+        return subprocess.CompletedProcess(
+            args,
+            0,
+            f'  1) {"a" * 40} "{full}" (CSSMERR_TP_CERT_EXPIRED)\n',
+            "",
+        )
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+    with pytest.raises(
+        MacOSSigningError,
+        match=r"not valid for signing \(CSSMERR_TP_CERT_EXPIRED\)",
+    ):
+        resolve_identity(full)

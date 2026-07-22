@@ -147,24 +147,36 @@ Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 
+### `FLET_MACOS_INSTALLER_IDENTITY`
+
+Installer certificate ("3rd Party Mac Developer Installer" /
+"Mac Installer Distribution" name or SHA-1 fingerprint)
+[used](../publish/macos.md#mac-app-store) by `flet build` to sign the
+installer `.pkg` of a Mac App Store build.
+
 ### `FLET_MACOS_NOTARY_PROFILE`
 
 Name of the `notarytool` keychain profile (created with
 `xcrun notarytool store-credentials`) [used](../publish/macos.md#notarization) by
 `flet build` to authenticate with the Apple notary service when notarizing a macOS app.
 
-A profile is not a separate kind of credential — it is the same Apple ID or
-App Store Connect API key credentials, stored once in the macOS keychain
-under a name. Alternatively, set the `APPLE_API_KEY` (path to the `.p8`
-file), `APPLE_API_KEY_ID`, and `APPLE_API_ISSUER` environment variables to
-pass an App Store Connect API key inline; a configured profile takes
+Alternatively, set the `APPLE_API_KEY` (path to the `.p8` file),
+`APPLE_API_KEY_ID`, and `APPLE_API_ISSUER` environment variables to pass an
+App Store Connect API key inline; a configured profile takes
 [precedence](../publish/macos.md#credentials) over them.
+
+### `FLET_MACOS_PROVISIONING_PROFILE`
+
+Path to the Mac App Store provisioning profile (`.provisionprofile`)
+[embedded](../publish/macos.md#mac-app-store) by `flet build` into App Store
+builds at `Contents/embedded.provisionprofile`.
 
 ### `FLET_MACOS_SIGNING_IDENTITY`
 
 Code-signing identity [used](../publish/macos.md#code-signing) by `flet build`
-to sign the macOS app bundle: a "Developer ID Application" certificate name,
-its SHA-1 fingerprint, or `-` for ad-hoc signing.
+to sign the macOS app bundle: a "Developer ID Application" (direct
+distribution) or "Apple Distribution" (App Store) certificate name, its
+SHA-1 fingerprint, or `-` for ad-hoc signing.
 
 When not configured (here, via the CLI, or in `pyproject.toml`),
 the built app keeps its default ad-hoc signature.
