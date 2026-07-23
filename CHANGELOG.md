@@ -1,3 +1,9 @@
+## 0.86.3
+
+### Bug fixes
+
+* Fix a system/edge-swipe back gesture exiting the whole host app instead of navigating back when it lands on an embedded `FletApp` (an app rendered inside another Flet app — e.g. a gallery host running example apps in-process). The embedded app's `WidgetsApp` (`MaterialApp`/`CupertinoApp`) ran the default `NavigationNotification` handler, which reported `SystemNavigator.setFrameworkHandlesBack(false)` for a nested app that couldn't pop (typically a single-view example) and swallowed the notification, so the OS finished the whole activity on back and the host never got to report that it could pop. An embedded page now lets that notification bubble to the host (which re-reports `canHandlePop`) and chains a `ChildBackButtonDispatcher` to the host Router, so a system back propagates to the host and pops the view that embeds it by @FeodorFitsner.
+
 ## 0.86.2
 
 ### Bug fixes
