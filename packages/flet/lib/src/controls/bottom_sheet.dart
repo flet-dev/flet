@@ -10,14 +10,24 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 
-class BottomSheetControl extends StatelessWidget {
+class BottomSheetControl extends StatefulWidget {
   final Control control;
 
   BottomSheetControl({Key? key, required this.control})
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
+  State<BottomSheetControl> createState() => _BottomSheetControlState();
+}
+
+class _BottomSheetControlState extends State<BottomSheetControl> {
+  // The modal route this control pushed, tracked so the close path can pop
+  // exactly this route (never whatever happens to be topmost) after the frame.
+  ModalRoute? _sheetRoute;
+
+  @override
   Widget build(BuildContext context) {
+    final control = widget.control;
     debugPrint("BottomSheet build: ${control.id}");
 
     bool lastOpen = control.getBool("_open", false)!;
@@ -33,11 +43,11 @@ class BottomSheetControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ModalRoute? sheetRoute;
+        if (!context.mounted) return;
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
-                  sheetRoute ??= ModalRoute.of(context);
+                  _sheetRoute = ModalRoute.of(context);
                   var content = control.buildWidget("content");
 
                   if (content == null) {
@@ -75,7 +85,8 @@ class BottomSheetControl extends StatelessWidget {
                 shape: control.getOutlinedBorder("shape", Theme.of(context)),
                 useSafeArea: control.getBool("use_safe_area", true)!)
             .then((value) {
-          (sheetRoute?.completed ?? Future.value()).then((_) {
+          (_sheetRoute?.completed ?? Future.value()).then((_) {
+            _sheetRoute = null;
             control.updateProperties({"_open": false}, python: false);
             control.updateProperties({"open": false});
             control.triggerEvent("dismiss");
@@ -83,7 +94,18 @@ class BottomSheetControl extends StatelessWidget {
         });
       });
     } else if (open != lastOpen && lastOpen) {
-      Navigator.of(context).pop();
+      // Mark closed now so this branch doesn't re-fire, then close after the
+      // frame. Popping during build throws "setState()/markNeedsBuild() called
+      // during build" when the same frame also opens another route/overlay
+      // (e.g. a SnackBar shown right after dismissing this sheet).
+      control.updateProperties({"_open": open}, python: false);
+      final route = _sheetRoute;
+      _sheetRoute = null;
+      if (route != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          closeModalRoute(route);
+        });
+      }
     }
 
     return const SizedBox.shrink();

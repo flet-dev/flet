@@ -1,3 +1,9 @@
+## 0.86.3
+
+### Bug fixes
+
+* Fix modal controls (`AlertDialog`, `CupertinoAlertDialog`, `BottomSheet`, `CupertinoBottomSheet`) crashing to a black screen with "setState()/markNeedsBuild() called during build" when they close in the same frame that another route or overlay opens — e.g. dismissing a bottom sheet and showing a `SnackBar` from one handler. The close path popped the route synchronously during `build`, so the exit animation notified a listener that was mid-build. Each modal now tracks its own `ModalRoute` and closes it in a post-frame callback, popping *that* route (never the topmost one); `View`'s confirm-pop pops its own route too, so a modal dismissed in the same tick as a view pop can no longer dismiss the wrong one by @FeodorFitsner.
+
 ## 0.86.2
 
 ### Bug fixes
