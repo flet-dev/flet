@@ -152,7 +152,8 @@ Defaults to `False`.
 Installer certificate ("3rd Party Mac Developer Installer" /
 "Mac Installer Distribution" name or SHA-1 fingerprint)
 [used](../publish/macos.md#mac-app-store) by `flet build` to sign the
-installer `.pkg` of a Mac App Store build.
+installer `.pkg` of a Mac App Store build. When not configured, the only
+installer certificate in the keychain is auto-discovered.
 
 ### `FLET_MACOS_NOTARY_PROFILE`
 

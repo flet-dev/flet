@@ -660,7 +660,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="macos_signing_identity",
             help='"Developer ID Application" (direct distribution) or '
             '"Apple Distribution" (App Store) certificate name, its SHA-1 '
-            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle '
+            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
+            "when unset, --macos-notarize and --macos-app-store builds "
+            "auto-discover the only certificate of the required type "
             "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
         )
         parser.add_argument(
@@ -704,7 +706,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="macos_installer_identity",
             help='"3rd Party Mac Developer Installer" / "Mac Installer '
             'Distribution" certificate name or SHA-1 fingerprint used to sign '
-            "the App Store installer package; required for App Store builds "
+            "the App Store installer package; when unset, the only installer "
+            "certificate in the keychain is auto-discovered "
             "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
         )
         parser.add_argument(
