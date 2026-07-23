@@ -180,6 +180,39 @@ def resolve_identity(
     Fails fast — with the list of available identities — to avoid a typo'd identity
     surface later as an opaque `codesign` error for every file in the bundle.
 
+    The algorithm:
+
+    1. `-` returns the ad-hoc pseudo-identity without touching the
+       keychain (and without a type check — ad-hoc has no certificate).
+    2. List **valid** identities: `security find-identity -v -p <policy>`.
+       The `-v` filter is load-bearing — expired, revoked, and untrusted
+       certificates, and certificates whose private key is missing, never
+       enter the candidate pool, so validity needs no handling later. The
+       common renewal case (valid + expired certificate sharing one name)
+       therefore resolves to the valid one automatically.
+    3. Deduplicate candidates by fingerprint — a certificate installed in
+       several keychains (e.g. login and System, typical on CI) is listed
+       once per keychain and must not read as ambiguous.
+    4. Scope candidates to the `types` prefixes, when given.
+    5. Select, first rule that applies:
+       a. empty `identity` — every scoped candidate (auto-discovery);
+       b. 40 hex chars — case-insensitive fingerprint equality;
+       c. otherwise — exact name equality, falling back to
+          substring-of-name only when the exact pass found nothing.
+    6. Exactly one candidate wins and is returned. Anything else fails
+       with the most specific diagnosis available: an explicit identity
+       that matches only outside the `types` scope → wrong-certificate-type
+       error naming the match; zero matches → the unfiltered listing is
+       consulted (`_invalid_identity_reason()`) so an expired certificate
+       is called out instead of appearing missing; and every failure
+       carries the valid-candidate listing plus how to disambiguate.
+
+    Two valid same-name certificates are deliberately never auto-picked
+    (step 6 refuses): the "right" one depends on state this function
+    cannot see, e.g. which certificate the provisioning profile
+    references — a silent pick would fail much later, at notarization or
+    store-upload time.
+
     Args:
         identity: `-` for ad-hoc signing, a 40-hex SHA-1 fingerprint, the
             full certificate name (e.g. `Developer ID Application: Jane Doe
@@ -199,8 +232,9 @@ def resolve_identity(
             Apple Development or corporate certificates are legitimate).
 
     Returns:
-        The matched identity; its SHA-1 fingerprint is what is ultimately
-            passed to `codesign` / `productbuild`.
+        The matched identity. Callers sign with its SHA-1 fingerprint, not
+            its name, so a resolution can never re-ambiguate inside
+            `codesign` / `productbuild`.
 
     Raises:
         MacOSSigningError: If `security find-identity` fails, nothing
@@ -214,6 +248,8 @@ def resolve_identity(
     assert identity or types, "auto-discovery requires certificate types"
     types_desc = " / ".join(f'"{t}"' for t in types) if types else ""
 
+    # -v restricts the listing to valid identities (not expired/revoked/
+    # untrusted, private key present) — validity is handled entirely here.
     result = _run(["security", "find-identity", "-v", "-p", policy])
     if result.returncode != 0:
         raise MacOSSigningError(
@@ -234,6 +270,9 @@ def resolve_identity(
         [i for i in unscoped if i.name.startswith(tuple(types))] if types else unscoped
     )
 
+    # Selection precedence: discovery / fingerprint / exact name / substring.
+    # Exact-name runs before substring so a full CN can never be hijacked by
+    # being a substring of another certificate's name.
     if not identity:
         matches = available
     elif re.fullmatch(r"[0-9A-Fa-f]{40}", identity):
