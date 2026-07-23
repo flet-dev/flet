@@ -661,19 +661,22 @@ class BaseBuildCommand(BaseFlutterCommand):
             help='"Developer ID Application" (direct distribution) or '
             '"Apple Distribution" (App Store) certificate name, its SHA-1 '
             'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
-            "when not configured (CLI, pyproject.toml, or env), notarizing and "
-            "App Store builds auto-discover the only certificate of the "
-            "required type "
+            "when not configured (CLI, pyproject.toml, or env), developer-id "
+            "and app-store distribution builds auto-discover the only "
+            "certificate of the required type "
             "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
         )
         parser.add_argument(
-            "--macos-notarize",
-            dest="macos_notarize",
-            action=argparse.BooleanOptionalAction,
-            default=None,
-            help="Submit the signed app to the Apple notary service and staple "
-            "the ticket; requires notary credentials, while the signing "
-            "identity is auto-discovered when not configured (macos only)",
+            "--macos-distribution",
+            dest="macos_distribution",
+            type=str.lower,
+            choices=["none", "developer-id", "app-store"],
+            help="Distribution channel to sign and package for: 'developer-id' "
+            "signs with the hardened runtime, notarizes and staples for direct "
+            "distribution; 'app-store' produces a sandboxed build with an "
+            "embedded provisioning profile and a signed installer .pkg for "
+            "App Store Connect / TestFlight; 'none' (default) signs only when "
+            "a signing identity is configured (macos only)",
         )
         parser.add_argument(
             "--macos-notary-profile",
@@ -683,16 +686,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
             "APPLE_API_ISSUER environment variables (macos only) "
             "[env: FLET_MACOS_NOTARY_PROFILE=]",
-        )
-        parser.add_argument(
-            "--macos-app-store",
-            dest="macos_app_store",
-            action=argparse.BooleanOptionalAction,
-            default=None,
-            help="Sign and package for Mac App Store / TestFlight distribution: "
-            "sandboxed signing without the hardened runtime, an embedded "
-            "provisioning profile, and a signed installer .pkg; mutually "
-            "exclusive with --macos-notarize (macos only)",
         )
         parser.add_argument(
             "--macos-provisioning-profile",

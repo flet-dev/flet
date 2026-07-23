@@ -97,6 +97,8 @@ class Command(BaseBuildCommand):
             self.validate_target_platform()
             self.validate_entry_point()
             self.setup_template_data()
+            if self.target_platform == "macos":
+                self.preflight_macos_signing()
             self.create_flutter_project()
             self.package_python_app()
             self.register_flutter_extensions()
@@ -232,17 +234,154 @@ class Command(BaseBuildCommand):
             f"[/cyan] {self.emojis['checkmark']}",
         )
 
+    # Valid values of the macOS distribution lane selector. A single enum —
+    # instead of per-lane booleans — makes conflicting lanes inexpressible
+    # and lets one pyproject hold both lanes' settings, with the CLI
+    # flipping between them per build.
+    MACOS_DISTRIBUTIONS = ("none", "developer-id", "app-store")
+
+    def resolve_macos_distribution(self) -> str:
+        """
+        Resolve and validate the macOS distribution lane.
+
+        `choices=` only validates the CLI layer, so the resolved value is
+        checked again here — a typo in `pyproject.toml` (e.g. `app_store`)
+        must fail loudly, not fall through to a silently ad-hoc build.
+
+        Returns:
+            One of `MACOS_DISTRIBUTIONS`; exits via `cleanup(1, ...)` on an
+                invalid configured value.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+
+        distribution = (
+            self.options.macos_distribution
+            or self.get_pyproject("tool.flet.macos.signing.distribution")
+            or "none"
+        )
+        if distribution not in self.MACOS_DISTRIBUTIONS:
+            self.cleanup(
+                1,
+                f"Invalid macOS distribution {distribution!r}. Valid values "
+                f"for --macos-distribution / "
+                f"`[tool.flet.macos.signing].distribution`: "
+                f"{', '.join(self.MACOS_DISTRIBUTIONS)}.",
+            )
+        return distribution
+
+    def _macos_store_profile_path(self) -> Path:
+        """
+        Resolve the configured Mac App Store provisioning profile to a path.
+
+        Relative paths resolve against the project directory. Exits via
+        `cleanup(1, ...)` when no profile is configured or the file does
+        not exist.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.python_app_path
+
+        profile = (
+            self.options.macos_provisioning_profile
+            or self.get_pyproject("tool.flet.macos.signing.provisioning_profile")
+            or os.getenv("FLET_MACOS_PROVISIONING_PROFILE")
+        )
+        if not profile:
+            self.cleanup(
+                1,
+                "App Store builds need a Mac App Store provisioning profile. "
+                "Pass --macos-provisioning-profile or set "
+                "`[tool.flet.macos.signing].provisioning_profile`.",
+            )
+        profile_path = Path(profile)
+        if not profile_path.is_absolute():
+            profile_path = (self.python_app_path / profile_path).resolve()
+        if not profile_path.is_file():
+            self.cleanup(1, f"Provisioning profile not found: {profile_path}")
+        return profile_path
+
+    def preflight_macos_signing(self) -> None:
+        """
+        Validate the signing configuration before any build work.
+
+        Signing runs after the multi-minute Flutter build, so configuration
+        mistakes — a typo'd, ambiguous, or expired identity, missing notary
+        credentials, a missing provisioning profile or store category —
+        would otherwise surface only at the very end. This resolves the
+        same settings the signing step will use and fails in seconds
+        instead. The signing step re-checks everything (the keychain is
+        the authority and can change); this is purely an early exit, and a
+        no-op for builds with no signing configured.
+
+        Exits via `cleanup(1, ...)` on any configuration error.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.template_data
+
+        distribution = self.resolve_macos_distribution()
+        identity = (
+            self.options.macos_signing_identity
+            or self.get_pyproject("tool.flet.macos.signing.identity")
+            or os.getenv("FLET_MACOS_SIGNING_IDENTITY")
+        )
+        if not identity and distribution == "none":
+            return
+
+        try:
+            if distribution == "app-store":
+                resolve_identity(identity, types=APP_STORE_CERTIFICATE_TYPES)
+                resolve_identity(
+                    self.options.macos_installer_identity
+                    or self.get_pyproject("tool.flet.macos.signing.installer_identity")
+                    or os.getenv("FLET_MACOS_INSTALLER_IDENTITY"),
+                    policy="basic",
+                    types=INSTALLER_CERTIFICATE_TYPES,
+                )
+            elif distribution == "developer-id":
+                resolve_identity(identity, types=DEVELOPER_ID_CERTIFICATE_TYPES)
+                self._macos_notary_credentials()
+            else:
+                resolve_identity(identity)
+        except MacOSSigningError as e:
+            self.cleanup(1, str(e))
+
+        if distribution == "app-store":
+            self._macos_store_profile_path()
+            # The authoritative check reads the built app's Info.plist; this
+            # one catches the common case — the key not configured at all —
+            # before the build.
+            if not self.template_data["options"]["info_plist"].get(
+                "LSApplicationCategoryType"
+            ):
+                self.cleanup(
+                    1,
+                    "App Store submissions require the LSApplicationCategoryType "
+                    "Info.plist key. Add it with --info-plist "
+                    'LSApplicationCategoryType="public.app-category.<category>" '
+                    "or `[tool.flet.macos.info]` in pyproject.toml.",
+                )
+
     def sign_macos_app(self) -> None:
         """
-        Code-sign — and optionally notarize — the built macOS app bundle.
+        Code-sign and package the built macOS app bundle for its
+        distribution lane.
 
         Runs after `copy_build_output()` and operates on the final `.app`
-        in the output directory, i.e. the artifact users distribute.
+        in the output directory, i.e. the artifact users distribute. The
+        lane comes from `resolve_macos_distribution()`:
 
-        No-op unless a signing identity is configured; without one, the app keeps the
-        default ad-hoc signature produced by the Flutter build. Notarization is
-        additionally gated and requires a real (non-ad-hoc) identity plus notary
-        credentials.
+        - `none` (default) — sign only when a signing identity is
+          configured; without one, the app keeps the ad-hoc signature
+          produced by the Flutter build.
+        - `developer-id` — sign with the hardened runtime, notarize, and
+          staple for direct distribution.
+        - `app-store` — sandboxed store signing plus a signed installer
+          `.pkg` (see `_sign_macos_app_store()`).
 
         The app-bundle signature re-applies the entitlements from the
         template-generated `Release.entitlements` — re-signing replaces the
@@ -257,34 +396,17 @@ class Command(BaseBuildCommand):
         assert self.out_dir
         assert self.flutter_dir
 
+        distribution = self.resolve_macos_distribution()
         identity = (
             self.options.macos_signing_identity
             or self.get_pyproject("tool.flet.macos.signing.identity")
             or os.getenv("FLET_MACOS_SIGNING_IDENTITY")
         )
-        notarize = (
-            self.options.macos_notarize
-            if self.options.macos_notarize is not None
-            else bool(self.get_pyproject("tool.flet.macos.signing.notarize"))
-        )
-        app_store = (
-            self.options.macos_app_store
-            if self.options.macos_app_store is not None
-            else bool(self.get_pyproject("tool.flet.macos.signing.app_store"))
-        )
 
-        if app_store and notarize:
-            self.cleanup(
-                1,
-                "App Store builds are not notarized — Apple reviews and "
-                "re-signs store builds itself. Remove --macos-notarize / "
-                "`[tool.flet.macos.signing].notarize`.",
-            )
-
-        # Notarize and App Store builds require an identity anyway, so an
-        # unset one auto-discovers (resolve_identity with types, below).
-        # A plain build without an identity keeps its ad-hoc signature.
-        if not identity and not (notarize or app_store):
+        # Distribution lanes require an identity anyway, so an unset one
+        # auto-discovers (resolve_identity with types, below). A plain
+        # build without an identity keeps its ad-hoc signature.
+        if not identity and distribution == "none":
             return
 
         apps = sorted(self.out_dir.glob("*.app"))
@@ -319,9 +441,9 @@ class Command(BaseBuildCommand):
             # auto-discover the only candidate. The plain lane stays
             # unscoped: Apple Development or corporate certificates are
             # legitimate there.
-            if app_store:
+            if distribution == "app-store":
                 resolved = resolve_identity(identity, types=APP_STORE_CERTIFICATE_TYPES)
-            elif notarize:
+            elif distribution == "developer-id":
                 resolved = resolve_identity(
                     identity, types=DEVELOPER_ID_CERTIFICATE_TYPES
                 )
@@ -329,14 +451,14 @@ class Command(BaseBuildCommand):
                 resolved = resolve_identity(identity)
             if not identity:
                 console.log(f"Signing identity: {resolved.name}")
-            if notarize and resolved.is_adhoc:
+            if distribution == "developer-id" and resolved.is_adhoc:
                 self.cleanup(
                     1,
-                    "Notarization requires a Developer ID identity; "
-                    'ad-hoc ("-") signed apps cannot be notarized.',
+                    "Developer ID distribution requires a Developer ID "
+                    'identity; ad-hoc ("-") signed apps cannot be notarized.',
                 )
 
-            if app_store:
+            if distribution == "app-store":
                 self._sign_macos_app_store(app_path, resolved, entitlements, log)
                 return
 
@@ -351,7 +473,7 @@ class Command(BaseBuildCommand):
                 f"identity: {resolved.description}) {self.emojis['checkmark']}"
             )
 
-            if notarize:
+            if distribution == "developer-id":
                 credentials = self._macos_notary_credentials()
                 self.update_status(
                     f"[bold blue]Notarizing [cyan]{app_path.name}[/cyan] "
@@ -435,23 +557,7 @@ class Command(BaseBuildCommand):
         if not installer_identity:
             console.log(f"Installer identity: {installer.name}")
 
-        profile = (
-            self.options.macos_provisioning_profile
-            or self.get_pyproject("tool.flet.macos.signing.provisioning_profile")
-            or os.getenv("FLET_MACOS_PROVISIONING_PROFILE")
-        )
-        if not profile:
-            self.cleanup(
-                1,
-                "App Store builds need a Mac App Store provisioning profile. "
-                "Pass --macos-provisioning-profile or set "
-                "`[tool.flet.macos.signing].provisioning_profile`.",
-            )
-        profile_path = Path(profile)
-        if not profile_path.is_absolute():
-            profile_path = (self.python_app_path / profile_path).resolve()
-        if not profile_path.is_file():
-            self.cleanup(1, f"Provisioning profile not found: {profile_path}")
+        profile_path = self._macos_store_profile_path()
 
         # Read the *built* app's bundle id — the authoritative value after
         # all project/org/bundle-id resolution and templating.

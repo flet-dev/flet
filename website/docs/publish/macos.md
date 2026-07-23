@@ -474,6 +474,43 @@ Certificate types also scope *explicit* identities in these modes: a
 partial identity such as your team ID only has to be unique among
 certificates of the required type, not among all your certificates.
 
+### Distribution lanes
+
+`flet build macos` signs and packages for one of three lanes, selected by a
+single setting:
+
+- `none` (default) — sign only when a [signing identity](#signing-the-app)
+  is configured; without one, the app keeps its ad-hoc signature.
+- `developer-id` — sign with the hardened runtime, [notarize](#notarization)
+  and staple for direct distribution.
+- `app-store` — sandboxed store signing plus a signed installer `.pkg` for
+  the [Mac App Store](#mac-app-store).
+
+#### Resolution order
+
+The distribution lane is determined in the following order of precedence:
+
+1. [`--macos-distribution`](../cli/flet-build.md#--macos-distribution)
+2. `[tool.flet.macos.signing].distribution`
+3. Default: `none`
+
+#### Shipping on both channels
+
+One `pyproject.toml` can hold both lanes' settings — the notary profile,
+provisioning profile, and installer identity are each read only by their
+own lane, and store [Info.plist](#infoplist) keys are harmless in
+Developer ID builds. Leave the identities to
+[auto-discovery](#identity-auto-discovery) (a pinned identity fits only one
+lane), set your default lane in `pyproject.toml`, and flip it per build:
+
+```bash
+flet build macos --macos-distribution app-store
+```
+
+Both lanes write to the same output directory by default and each build
+replaces it — pass `--output` per lane to keep a notarized `.app` and a
+store `.pkg` side by side.
+
 ## Notarization
 
 A Developer-ID-signed app must also be **notarized** by Apple for Gatekeeper to
@@ -556,26 +593,25 @@ other tooling (Fastlane, CI images) may have exported for a different team.
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build macos \
-  --macos-signing-identity "Developer ID Application: Jane Doe (TEAM123456)" \
-  --macos-notarize --macos-notary-profile flet-notary
+  --macos-distribution developer-id --macos-notary-profile flet-notary
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.macos.signing]
-identity = "Developer ID Application: Jane Doe (TEAM123456)"
-notarize = true
+distribution = "developer-id"
 notary_profile = "flet-notary"
 ```
 </TabItem>
 <TabItem value="env" label="env var">
 ```dotenv
-FLET_MACOS_SIGNING_IDENTITY="Developer ID Application: Jane Doe (TEAM123456)"
 FLET_MACOS_NOTARY_PROFILE="flet-notary"
 ```
-Notarization must still be turned on with
-[`--macos-notarize`](../cli/flet-build.md#--macos-notarize) (or
-`[tool.flet.macos.signing].notarize = true`); this toggle has no environment-variable equivalent.
+The lane must still be selected with
+[`--macos-distribution`](../cli/flet-build.md#--macos-distribution)
+`developer-id` (or `[tool.flet.macos.signing].distribution`); the
+[distribution lane](#distribution-lanes) has no environment-variable
+equivalent.
 </TabItem>
 </Tabs>
 
@@ -584,15 +620,6 @@ see [Identity auto-discovery](#identity-auto-discovery).
 
 If notarization is rejected, the build fails and prints Apple's notarization
 log, which lists the exact offending files.
-
-#### Resolution order
-
-Whether to notarize is determined in the following order of precedence:
-
-1. [`--macos-notarize`](../cli/flet-build.md#--macos-notarize) /
-   `--no-macos-notarize`
-2. `[tool.flet.macos.signing].notarize`
-3. Default: `false`
 
 ### Distributing
 
@@ -628,7 +655,7 @@ Export your certificate and private key as a `.p12` file, then store it
     APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
   run: |
     echo "${{ secrets.APPLE_API_KEY_P8 }}" > AuthKey.p8
-    flet build macos --macos-notarize
+    flet build macos --macos-distribution developer-id
 ```
 
 ### Troubleshooting
@@ -655,7 +682,7 @@ hardened-runtime
 exception entitlement (`com.apple.security.cs.*`, including the defaults)
 is stripped: they are meaningless without the hardened runtime and
 scrutinized by App Review. Notarization does **not** apply to store
-submissions and is rejected in combination with `app_store`.
+submissions — the `app-store` [lane](#distribution-lanes) never notarizes.
 
 ### Store prerequisites
 
@@ -750,7 +777,7 @@ The installer identity is determined in the following order of precedence:
 <Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build macos --macos-app-store \
+flet build macos --macos-distribution app-store \
   --macos-provisioning-profile certs/MyApp_MacAppStore.provisionprofile \
   --info-plist LSApplicationCategoryType="public.app-category.productivity" \
     ITSAppUsesNonExemptEncryption=False
@@ -765,7 +792,7 @@ LSApplicationCategoryType = "public.app-category.productivity"
 ITSAppUsesNonExemptEncryption = false
 
 [tool.flet.macos.signing]
-app_store = true
+distribution = "app-store"
 provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
 ```
 </TabItem>
@@ -773,19 +800,24 @@ provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
 ```dotenv
 FLET_MACOS_PROVISIONING_PROFILE="certs/MyApp_MacAppStore.provisionprofile"
 ```
-App Store mode must still be turned on with
-[`--macos-app-store`](../cli/flet-build.md#--macos-app-store) (or
-`[tool.flet.macos.signing].app_store = true`); this toggle has no
-environment-variable equivalent.
+The lane must still be selected with
+[`--macos-distribution`](../cli/flet-build.md#--macos-distribution)
+`app-store` (or `[tool.flet.macos.signing].distribution`); the
+[distribution lane](#distribution-lanes) has no environment-variable
+equivalent.
 </TabItem>
 </Tabs>
 
-[`LSApplicationCategoryType`](https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype)
-is required — App Store validation rejects the package without it.
-`ITSAppUsesNonExemptEncryption = false` is optional but answers the
-export-compliance question once and for all; without it, App Store Connect
-asks manually for every uploaded build. Both are ordinary
-[Info.plist](#infoplist) keys.
+- Setting [`LSApplicationCategoryType`](https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype)
+  is required — App Store validation rejects the package without it.
+- Setting [`ITSAppUsesNonExemptEncryption`](https://developer.apple.com/documentation/bundleresources/information-property-list/itsappusesnonexemptencryption)
+  is optional but answers the export-compliance question once and for all.
+  If it's not set, App Store Connect walks you through an export compliance
+  questionnaire every time you upload a new version of your app.
+  If set to `false` indicates that your app does not use encryption, which can help
+  streamline the submission process.
+
+Both are ordinary [Info Property List](#infoplist) keys.
 
 Neither signing identity appears in the examples above: both are
 [auto-discovered](#identity-auto-discovery) when not configured. To pin
@@ -793,15 +825,8 @@ them explicitly, configure the [signing identity](#signing-the-app) for
 the app certificate and the [installer identity](#installer-identity) for
 the `.pkg` certificate.
 
-#### Resolution order
-
-Whether to build for the App Store is determined in the following order of
-precedence:
-
-1. [`--macos-app-store`](../cli/flet-build.md#--macos-app-store) /
-   `--no-macos-app-store`
-2. `[tool.flet.macos.signing].app_store`
-3. Default: `false`
+The lane's [resolution order](#distribution-lanes) is shared by all
+distribution channels.
 
 ### Uploading
 
