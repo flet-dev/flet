@@ -661,8 +661,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             help='"Developer ID Application" (direct distribution) or '
             '"Apple Distribution" (App Store) certificate name, its SHA-1 '
             'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
-            "when unset, --macos-notarize and --macos-app-store builds "
-            "auto-discover the only certificate of the required type "
+            "when not configured (CLI, pyproject.toml, or env), --macos-notarize "
+            "and --macos-app-store builds auto-discover the only certificate "
+            "of the required type "
             "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
         )
         parser.add_argument(
@@ -671,8 +672,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             action=argparse.BooleanOptionalAction,
             default=None,
             help="Submit the signed app to the Apple notary service and staple "
-            "the ticket; requires --macos-signing-identity and notary "
-            "credentials (macos only)",
+            "the ticket; requires notary credentials, while the signing "
+            "identity is auto-discovered when not configured (macos only)",
         )
         parser.add_argument(
             "--macos-notary-profile",
@@ -706,8 +707,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             dest="macos_installer_identity",
             help='"3rd Party Mac Developer Installer" / "Mac Installer '
             'Distribution" certificate name or SHA-1 fingerprint used to sign '
-            "the App Store installer package; when unset, the only installer "
-            "certificate in the keychain is auto-discovered "
+            "the App Store installer package; when not configured, the only "
+            "installer certificate in the keychain is auto-discovered "
             "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
         )
         parser.add_argument(

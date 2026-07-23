@@ -423,7 +423,10 @@ The signing identity is determined in the following order of precedence:
 2. `[tool.flet.macos.signing].identity`
 3. [`FLET_MACOS_SIGNING_IDENTITY`](../reference/environment-variables.md#flet_macos_signing_identity)
    environment variable
-4. Default: none — the app keeps its ad-hoc signature and no signing step runs.
+4. Default: none — a plain build keeps its ad-hoc signature and no signing
+   step runs, while [notarize](#notarization) and
+   [App Store](#mac-app-store) builds
+   [auto-discover](#identity-auto-discovery) the certificate.
 
 When a real identity is configured, `flet build macos` will, after the build:
 
@@ -439,7 +442,37 @@ When a real identity is configured, `flet build macos` will, after the build:
    no binary was left unsigned.
 
 The build fails with an actionable error if the identity is not found in the
-keychain, if any file fails to sign, or if verification fails.
+keychain, if any file fails to sign, or if verification fails. An expired or
+revoked certificate is called out by name and status instead of appearing
+missing.
+
+### Identity auto-discovery
+
+An identity counts as *not configured* only when the CLI option, the
+`pyproject.toml` key, **and** the environment variable are all unset — the
+[resolution order](#resolution-order-2) above runs first, and any configured
+value is matched as given, never silently replaced.
+
+With no identity configured anywhere, build modes that cannot proceed
+without one discover it from the keychain:
+
+- [`--macos-notarize`](#notarization) uses your **Developer ID Application**
+  certificate;
+- [`--macos-app-store`](#mac-app-store) uses your **Apple Distribution**
+  certificate (or its legacy equivalent, `3rd Party Mac Developer
+  Application`) for the app and your **installer certificate** for the
+  `.pkg`.
+
+Discovery succeeds when the keychain holds exactly one valid certificate of
+the required type — the chosen identity is printed in the build output.
+With several candidates (for example, certificates from two teams), the
+build fails with the candidate list; configure the certificate name or
+SHA-1 fingerprint explicitly. Plain builds (neither notarize nor App Store
+mode) never auto-discover.
+
+Certificate types also scope *explicit* identities in these modes: a
+partial identity such as your team ID only has to be unique among
+certificates of the required type, not among all your certificates.
 
 ## Notarization
 
@@ -450,13 +483,35 @@ service (a malware scan, typically a few minutes), after which the resulting
 
 ### Credentials
 
-Apple's notary service accepts two kinds of credentials: your **Apple ID**
-with an [app-specific password](https://support.apple.com/102654), or an
-**App Store Connect API key** (a `.p8` key file with its key ID and issuer
-ID). Flet can receive either kind through two channels:
+Apple's notary service accepts two kinds of credentials — get whichever
+suits you:
 
-- **Keychain profile** (best for local development) — a one-time interactive
-  setup that saves either credential kind into the keychain:
+- **App Store Connect API key** (recommended; also reusable for
+  [store uploads](#uploading)) — in App Store Connect, open
+  [Users and Access → Integrations](https://appstoreconnect.apple.com/access/integrations/api)
+  → **App Store Connect API** → **Team Keys** → **+**. Name the key, give it
+  the **Developer** role, then download the `AuthKey_<KEY_ID>.p8` file —
+  possible **only once** — and note the key's **Key ID** and the **Issuer
+  ID** shown at the top of the page.
+- **Apple ID + app-specific password** — at
+  [account.apple.com](https://account.apple.com) → **Sign-In and Security** →
+  **App-Specific Passwords** → **+**, generate a
+  [password](https://support.apple.com/102654) dedicated to notarization
+  (your regular Apple ID password won't work with `notarytool`).
+
+Flet can receive either kind through two channels:
+
+- **Keychain profile** (best for local development) — a one-time setup that
+  saves the credential into the macOS keychain under a name of your choice.
+  With an API key:
+
+  ```bash
+  xcrun notarytool store-credentials flet-notary \
+    --key ~/keys/AuthKey_ABC123DEFG.p8 --key-id ABC123DEFG \
+    --issuer 12345678-90ab-cdef-1234-567890abcdef
+  ```
+
+  or with an Apple ID (prompts for the app-specific password):
 
   ```bash
   xcrun notarytool store-credentials flet-notary \
@@ -482,6 +537,7 @@ Credentials are determined in the following order of precedence:
    environment variable
 4. The `APPLE_API_KEY`, `APPLE_API_KEY_ID` and `APPLE_API_ISSUER` environment
    variables (all three must be set)
+5. Default: none — notarizing builds fail without credentials.
 
 A configured profile deliberately outranks the `APPLE_API_*` variables, which
 other tooling (Fastlane, CI images) may have exported for a different team.
@@ -514,12 +570,8 @@ Notarization must still be turned on with `--macos-notarize` (or
 </TabItem>
 </Tabs>
 
-With `--macos-notarize`, the signing identity may be omitted entirely: the
-build requires a "Developer ID Application" certificate anyway, so it
-auto-discovers yours when the keychain holds exactly one (and errors with
-the candidate list when it holds several). For the same reason, a partial
-identity such as your team ID only has to be unique *among Developer ID
-Application certificates*, not among all your certificates.
+With `--macos-notarize`, the signing identity may be omitted entirely —
+see [Identity auto-discovery](#identity-auto-discovery).
 
 If notarization is rejected, the build fails and prints Apple's notarization
 log, which lists the exact offending files.
@@ -584,13 +636,82 @@ Export your certificate and private key as a `.p12` file, then store it
 
 The signing support above targets **direct distribution** (your website,
 GitHub releases, etc.). For the Mac App Store — including TestFlight —
-`flet build macos` has a dedicated mode that signs with your *Apple
-Distribution* certificate (sandboxed, without the hardened runtime), embeds
-your provisioning profile, applies the store-mandated
-`application-identifier`/`team-identifier` entitlements (helper executables
-get the sandbox `inherit` pair), and produces a signed installer `.pkg`
-ready for upload:
+`flet build macos` has a dedicated mode that produces a signed installer
+`.pkg` ready for App Store Connect. In this mode the app is signed with
+your *Apple Distribution* certificate — sandboxed, without the hardened
+runtime — your provisioning profile is embedded, the store-mandated
+`application-identifier`/`team-identifier` entitlements are applied (helper
+executables and helper bundles get the sandbox `inherit` pair), and every
+hardened-runtime
+exception entitlement (`com.apple.security.cs.*`, including the defaults)
+is stripped: they are meaningless without the hardened runtime and
+scrutinized by App Review. Notarization does **not** apply to store
+submissions and is rejected in combination with `app_store`.
 
+### Store prerequisites
+
+One-time setup, requiring an
+[Apple Developer Program](https://developer.apple.com/programs/) membership.
+
+#### Creating the distribution certificates
+
+Store builds need two certificates. Create both under
+[Certificates](https://developer.apple.com/account/resources/certificates/list)
+→ **+** (if you don't have a certificate request file yet, see
+[Generating a CSR](ios.md#generating-a-certificate-signing-request-csr) —
+the process is identical for macOS):
+
+1. **Apple Distribution** — signs the app bundle.
+2. **Mac Installer Distribution** — signs the installer `.pkg`. It appears
+   in your keychain as `3rd Party Mac Developer Installer`, and because it
+   signs packages rather than code, `security find-identity -v -p
+   codesigning` does not list it. Verify it with:
+
+   ```bash
+   security find-identity -v -p basic
+   ```
+
+Download each certificate and double-click it to install it — with its
+private key — into your login keychain.
+
+#### Registering an App ID
+
+Under [Identifiers](https://developer.apple.com/account/resources/identifiers/list)
+→ **+** → **App IDs** → type **App**, register an **explicit** App ID whose
+bundle ID exactly matches your app's (by default `<org>.<project name>`
+from `pyproject.toml`). No extra capabilities are needed.
+
+#### Creating the provisioning profile
+
+Under [Profiles](https://developer.apple.com/account/resources/profiles/list)
+→ **+**, select **Mac App Store Connect** (under *Distribution*), then:
+
+1. Select the App ID registered above.
+2. Select your **Apple Distribution** certificate.
+3. Name the profile and click **Generate**.
+4. Download the `.provisionprofile` file and keep it with your project —
+   it contains no secrets (it is a document signed *by Apple* authorizing
+   your App ID and team), so it is safe to commit.
+
+#### Creating the App Store Connect app record
+
+In [App Store Connect](https://appstoreconnect.apple.com) → **My Apps** →
+**+** → **New App**: platform **macOS**, the bundle ID from above, any name
+and SKU. Then note the app's numeric **Apple ID** under **App Information →
+General Information** — command-line uploads are keyed to it.
+
+### Building for the App Store
+
+<Tabs groupId="flet-build--pyproject-toml--env">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build macos --macos-app-store \
+  --macos-provisioning-profile certs/MyApp_MacAppStore.provisionprofile \
+  --info-plist LSApplicationCategoryType="public.app-category.productivity" \
+    ITSAppUsesNonExemptEncryption=False
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.macos.info]
 # required by App Store validation
@@ -599,46 +720,86 @@ LSApplicationCategoryType = "public.app-category.productivity"
 ITSAppUsesNonExemptEncryption = false
 
 [tool.flet.macos.signing]
-identity = "Apple Distribution"
 app_store = true
 provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
-installer_identity = "3rd Party Mac Developer Installer"
 ```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_MACOS_PROVISIONING_PROFILE="certs/MyApp_MacAppStore.provisionprofile"
+```
+App Store mode must still be turned on with `--macos-app-store` (or
+`[tool.flet.macos.signing].app_store = true`); this toggle has no
+environment-variable equivalent.
+</TabItem>
+</Tabs>
 
-The same settings are available as the `--macos-app-store`,
-`--macos-provisioning-profile` and `--macos-installer-identity` command-line
-options and the
-[`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
-and
-[`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
-environment variables. Both identities may be omitted: store builds only
-accept one certificate type each ("Apple Distribution" for the app, an
-installer certificate for the `.pkg`), so the build auto-discovers yours
-when the keychain holds exactly one of the required type. Notarization does
-**not** apply to store submissions and is rejected in combination with
-`app_store`.
+[`LSApplicationCategoryType`](https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype)
+is required — App Store validation rejects the package without it.
+`ITSAppUsesNonExemptEncryption = false` is optional but answers the
+export-compliance question once and for all; without it, App Store Connect
+asks manually for every uploaded build. Both are ordinary
+[Info.plist](#infoplist) keys.
 
-One-time setup in the [developer portal](https://developer.apple.com/account)
-and [App Store Connect](https://appstoreconnect.apple.com):
+Neither signing identity appears in the examples above: both are
+[auto-discovered](#identity-auto-discovery) when not configured. To pin
+them explicitly, use `[tool.flet.macos.signing].identity` /
+[`--macos-signing-identity`](#signing-the-app) for the app certificate and
+`installer_identity` / `--macos-installer-identity` for the `.pkg`
+certificate.
 
-1. Certificates: *Apple Distribution* plus *Mac Installer Distribution*
-   (the latter appears in the keychain as `3rd Party Mac Developer
-   Installer` — it signs packages, not code, so `security find-identity -v
-   -p codesigning` does not list it; use `-p basic`).
-2. An explicit App ID matching your app's bundle id, and a **Mac App
-   Store** provisioning profile for it (referencing the Apple Distribution
-   certificate) — the file you point `provisioning_profile` at.
-3. An App Store Connect app record for the bundle id; note its numeric
-   Apple ID for the upload.
+#### Resolution order
 
-The App Sandbox is enabled automatically for store builds, and every
-hardened-runtime exception entitlement (`com.apple.security.cs.*`,
-including the defaults) is stripped — they are meaningless without the
-hardened runtime and scrutinized by App Review.
+Whether to build for the App Store is determined in the following order of
+precedence:
+
+1. [`--macos-app-store`](../cli/flet-build.md#--macos-app-store) /
+   `--no-macos-app-store`
+2. `[tool.flet.macos.signing].app_store`
+3. Default: `false`
+
+### Provisioning profile
+
+The profile created [above](#creating-the-provisioning-profile). A relative
+path resolves against the project directory (where `pyproject.toml` lives).
+The build embeds it at `Contents/embedded.provisionprofile` — sealed by the
+app's signature — and fails fast when the profile's App ID does not cover
+the app's bundle ID, a mismatch that would otherwise surface only after
+upload as `ITMS-90889`.
+
+#### Resolution order
+
+The provisioning profile is determined in the following order of precedence:
+
+1. [`--macos-provisioning-profile`](../cli/flet-build.md#--macos-provisioning-profile)
+2. `[tool.flet.macos.signing].provisioning_profile`
+3. [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
+   environment variable
+4. Default: none — App Store builds fail without one.
+
+### Installer identity
+
+The certificate that signs the `.pkg` — the exact certificate name (as
+listed by `security find-identity -v -p basic`), its SHA-1 fingerprint, or
+a unique substring, matched only among installer certificates.
+
+#### Resolution order
+
+The installer identity is determined in the following order of precedence:
+
+1. [`--macos-installer-identity`](../cli/flet-build.md#--macos-installer-identity)
+2. `[tool.flet.macos.signing].installer_identity`
+3. [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
+   environment variable
+4. Default: none — the certificate is
+   [auto-discovered](#identity-auto-discovery).
+
+### Uploading
 
 Upload the `.pkg` with [Transporter](https://apps.apple.com/app/transporter/id1450874784)
-or from the command line (the App Store Connect API key `.p8` goes in
-`~/.appstoreconnect/private_keys/`):
+or from the command line, authenticating with the same
+[App Store Connect API key](#credentials) used for notarization — `altool`
+reads the `.p8` file from `~/.appstoreconnect/private_keys/`:
 
 ```bash
 xcrun altool --validate-app -f build/macos/MyApp.pkg -t macos \
@@ -649,7 +810,11 @@ xcrun altool --upload-package build/macos/MyApp.pkg -t macos \
     --bundle-version <BUILD_NUMBER> --bundle-short-version-string <VERSION>
 ```
 
-Every upload needs a unique build number (`flet build macos
---build-number N`). After processing (minutes; failures arrive by email as
-`ITMS-xxxx` codes), the build appears in the TestFlight tab of your app
-record — internal testers can install it without beta review.
+`<NUMERIC_APP_ID>` is the app record's Apple ID
+[noted earlier](#creating-the-app-store-connect-app-record), and every
+upload needs a unique build number (`flet build macos --build-number N`).
+After processing (minutes; failures arrive by email as `ITMS-xxxx` codes),
+the build appears in the **TestFlight** tab of your app record — internal
+testers can install it without beta review. Note that `--validate-app`
+does not catch everything processing checks, so a clean upload is only
+confirmed once processing completes.
