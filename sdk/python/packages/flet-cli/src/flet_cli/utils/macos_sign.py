@@ -155,7 +155,26 @@ def _run(args: list[str], timeout: Optional[int] = None) -> subprocess.Completed
     )
 
 
-def resolve_identity(identity: str, policy: str = "codesigning") -> SigningIdentity:
+# Certificate-type prefixes per distribution lane. The build mode fully
+# determines the acceptable type (Apple's services reject everything else),
+# so lanes scope resolution to these and can auto-discover when exactly one
+# candidate exists. Aliases reflect Apple's renames over the years.
+DEVELOPER_ID_CERTIFICATE_TYPES = ["Developer ID Application"]
+APP_STORE_CERTIFICATE_TYPES = [
+    "Apple Distribution",
+    "3rd Party Mac Developer Application",
+]
+INSTALLER_CERTIFICATE_TYPES = [
+    "3rd Party Mac Developer Installer",
+    "Mac Installer Distribution",
+]
+
+
+def resolve_identity(
+    identity: Optional[str],
+    policy: str = "codesigning",
+    types: Optional[list[str]] = None,
+) -> SigningIdentity:
     """Resolve a user-provided identity against the keychain.
 
     Fails fast — with the list of available identities — to avoid a typo'd identity
@@ -165,25 +184,35 @@ def resolve_identity(identity: str, policy: str = "codesigning") -> SigningIdent
         identity: `-` for ad-hoc signing, a 40-hex SHA-1 fingerprint, the
             full certificate name (e.g. `Developer ID Application: Jane Doe
             (TEAM123456)`), or any substring of the name that matches
-            exactly one certificate (e.g. just the team ID).
+            exactly one certificate (e.g. just the team ID). None or empty
+            **auto-discovers**: allowed only with `types`, and succeeds when
+            exactly one certificate of an acceptable type exists.
         policy: `security find-identity` policy to match against.
             `codesigning` for certificates that sign code; `basic` for
-            installer certificates (`3rd Party Mac Developer Installer` /
-            `Mac Installer Distribution`), which sign packages, not code,
-            and are invisible under the codesigning policy.
+            installer certificates, which sign packages, not code, and are
+            invisible under the codesigning policy.
+        types: Acceptable certificate-name prefixes (one of the
+            `*_CERTIFICATE_TYPES` constants). Scopes matching to the types
+            the distribution lane can actually use, so e.g. a bare team ID
+            resolves even when the keychain holds certificates of several
+            types. None matches any type (the plain signing lane, where
+            Apple Development or corporate certificates are legitimate).
 
     Returns:
         The matched identity; its SHA-1 fingerprint is what is ultimately
             passed to `codesign` / `productbuild`.
 
     Raises:
-        MacOSSigningError: If `security find-identity` fails, no identity
-            matches, or the value matches more than one certificate.
+        MacOSSigningError: If `security find-identity` fails, nothing
+            matches, the match is ambiguous, or an explicit identity is of
+            the wrong certificate type for the lane.
     """
 
-    identity = identity.strip()
+    identity = (identity or "").strip()
     if identity == ADHOC_IDENTITY:
         return ADHOC
+    assert identity or types, "auto-discovery requires certificate types"
+    types_desc = " / ".join(f'"{t}"' for t in types) if types else ""
 
     result = _run(["security", "find-identity", "-v", "-p", policy])
     if result.returncode != 0:
@@ -200,9 +229,14 @@ def resolve_identity(identity: str, policy: str = "codesigning") -> SigningIdent
         seen.setdefault(
             m.group(1).lower(), SigningIdentity(sha1=m.group(1), name=m.group(2))
         )
-    available = list(seen.values())
+    unscoped = list(seen.values())
+    available = (
+        [i for i in unscoped if i.name.startswith(tuple(types))] if types else unscoped
+    )
 
-    if re.fullmatch(r"[0-9A-Fa-f]{40}", identity):
+    if not identity:
+        matches = available
+    elif re.fullmatch(r"[0-9A-Fa-f]{40}", identity):
         matches = [i for i in available if i.sha1.lower() == identity.lower()]
     else:
         matches = [i for i in available if i.name == identity]
@@ -212,40 +246,80 @@ def resolve_identity(identity: str, policy: str = "codesigning") -> SigningIdent
     if len(matches) == 1:
         return matches[0]
 
+    # An explicit identity that exists but is of the wrong type deserves a
+    # precise error, not "no such identity".
+    if identity and types and not matches:
+        wrong_type = next(
+            (
+                i
+                for i in unscoped
+                if identity.lower() == i.sha1.lower() or identity in i.name
+            ),
+            None,
+        )
+        if wrong_type is not None:
+            raise MacOSSigningError(
+                f'"{identity}" matches "{wrong_type.name}", which is not a '
+                f"{types_desc} certificate — this operation requires one."
+            )
+
     listing = (
         "\n".join(f'  {i.sha1} "{i.name}"' for i in available)
         if available
         else "  (no valid identities found)"
     )
-    problem = (
-        "matches multiple identities" if matches else "does not match any identity"
-    )
+    if types:
+        one, many = f"{types_desc} certificate", f"{types_desc} certificates"
+    else:
+        one, many = "identity", "identities"
+    if not identity:
+        problem = (
+            f"Found several {many} in the keychain"
+            if matches
+            else f"No {one} found in the keychain"
+        )
+        subject = ""
+    else:
+        problem = (
+            f'Signing identity "{identity}" matches multiple {many}'
+            if matches
+            else f'Signing identity "{identity}" does not match any {one}'
+        )
+        subject = " in the keychain"
     # The ad-hoc hint only makes sense for code-signing lookups — installer
     # certificates have no ad-hoc equivalent.
     hint = "Pass the exact certificate name or its SHA-1 fingerprint" + (
-        ', or "-" for ad-hoc signing.' if policy == "codesigning" else "."
+        ', or "-" for ad-hoc signing.' if policy == "codesigning" and not types else "."
     )
-    # On a miss, check whether the identity exists but is invalid — without
-    # this, an expired certificate (invisible to `-v` but plainly visible in
-    # Keychain Access) reads as "no such identity", which is baffling.
-    invalid = "" if matches else _invalid_identity_reason(identity, policy)
+    # On a miss, check whether a matching-but-invalid certificate exists —
+    # without this, an expired certificate (invisible to `-v` but plainly
+    # visible in Keychain Access) reads as "no such identity".
+    invalid = "" if matches else _invalid_identity_reason(identity, policy, types)
     raise MacOSSigningError(
-        f'Signing identity "{identity}" {problem} in the keychain. '
+        f"{problem}{subject}. "
         + invalid
         + f'Valid identities for the "{policy}" policy:\n{listing}\n{hint}'
     )
 
 
-def _invalid_identity_reason(identity: str, policy: str) -> str:
+def _invalid_identity_reason(
+    identity: str, policy: str, types: Optional[list[str]] = None
+) -> str:
     """Explain a resolution miss caused by an existing-but-invalid identity.
 
     Re-queries the keychain without `-v` (which hides expired, revoked, and
     untrusted certificates) and reports the status code `security` prints,
     e.g. `CSSMERR_TP_CERT_EXPIRED`.
 
+    Args:
+        identity: The identity input to match, or "" (auto-discovery) to
+            match any certificate of an acceptable type.
+        policy: `security find-identity` policy.
+        types: Acceptable certificate-name prefixes, or None for any.
+
     Returns:
-        A sentence for the resolution error, or "" if the identity does not
-            exist at all (or the re-query fails).
+        A sentence for the resolution error, or "" if no matching
+            certificate exists at all (or the re-query fails).
     """
 
     result = _run(["security", "find-identity", "-p", policy])
@@ -255,7 +329,9 @@ def _invalid_identity_reason(identity: str, policy: str) -> str:
         r"([0-9A-Fa-f]{40})\s+\"([^\"]+)\"(?:\s+\((\w+)\))?", result.stdout
     ):
         sha1, name, status = m.group(1), m.group(2), m.group(3)
-        if identity.lower() == sha1.lower() or identity in name:
+        if types and not name.startswith(tuple(types)):
+            continue
+        if not identity or identity.lower() == sha1.lower() or identity in name:
             reason = f" ({status})" if status else ""
             return (
                 f'A matching certificate "{name}" exists but is not valid '

@@ -514,6 +514,13 @@ Notarization must still be turned on with `--macos-notarize` (or
 </TabItem>
 </Tabs>
 
+With `--macos-notarize`, the signing identity may be omitted entirely: the
+build requires a "Developer ID Application" certificate anyway, so it
+auto-discovers yours when the keychain holds exactly one (and errors with
+the candidate list when it holds several). For the same reason, a partial
+identity such as your team ID only has to be unique *among Developer ID
+Application certificates*, not among all your certificates.
+
 If notarization is rejected, the build fails and prints Apple's notarization
 log, which lists the exact offending files.
 
@@ -604,8 +611,12 @@ options and the
 [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
 and
 [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
-environment variables. Notarization does **not** apply to store submissions
-and is rejected in combination with `app_store`.
+environment variables. Both identities may be omitted: store builds only
+accept one certificate type each ("Apple Distribution" for the app, an
+installer certificate for the `.pkg`), so the build auto-discovers yours
+when the keychain holds exactly one of the required type. Notarization does
+**not** apply to store submissions and is rejected in combination with
+`app_store`.
 
 One-time setup in the [developer portal](https://developer.apple.com/account)
 and [App Store Connect](https://appstoreconnect.apple.com):

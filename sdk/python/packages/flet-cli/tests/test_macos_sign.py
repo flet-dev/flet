@@ -21,6 +21,9 @@ import pytest
 from flet_cli.utils import macos_sign
 from flet_cli.utils.macos_sign import (
     ADHOC,
+    APP_STORE_CERTIFICATE_TYPES,
+    DEVELOPER_ID_CERTIFICATE_TYPES,
+    INSTALLER_CERTIFICATE_TYPES,
     MH_EXECUTE,
     MacOSSigningError,
     NotaryCredentials,
@@ -1287,3 +1290,98 @@ def test_resolve_identity_explains_expired_certificate(monkeypatch):
         match=r"not valid for signing \(CSSMERR_TP_CERT_EXPIRED\)",
     ):
         resolve_identity(full)
+
+
+# Both certificate types under one team — the state every keychain reaches
+# after enrolling for both distribution lanes.
+TWO_LANE_LISTING = (
+    f'  1) {"a" * 40} "Developer ID Application: Jane Doe (TEAM123456)"\n'
+    f'  2) {"c" * 40} "Apple Distribution: Jane Doe (TEAM123456)"\n'
+    "     2 valid identities found\n"
+)
+
+
+def test_resolve_identity_type_scoping_disambiguates(monkeypatch):
+    """A team ID resolves once matching is scoped to the lane's cert type.
+
+    Unscoped, it matches every certificate the team owns and errors; each
+    lane's type filter makes it unique again.
+    """
+    fake_security(monkeypatch, stdout=TWO_LANE_LISTING)
+
+    with pytest.raises(MacOSSigningError, match="matches multiple identities"):
+        resolve_identity("TEAM123456")
+    dev = resolve_identity("TEAM123456", types=DEVELOPER_ID_CERTIFICATE_TYPES)
+    assert dev.name.startswith("Developer ID Application")
+    store = resolve_identity("TEAM123456", types=APP_STORE_CERTIFICATE_TYPES)
+    assert store.name.startswith("Apple Distribution")
+
+
+def test_resolve_identity_rejects_wrong_type(monkeypatch):
+    """An explicit identity of the wrong type gets a precise error."""
+    fake_security(monkeypatch, stdout=TWO_LANE_LISTING)
+
+    with pytest.raises(MacOSSigningError, match="which is not a .* certificate"):
+        resolve_identity(
+            "Developer ID Application: Jane Doe (TEAM123456)",
+            types=APP_STORE_CERTIFICATE_TYPES,
+        )
+
+
+def test_resolve_identity_auto_discovery(monkeypatch):
+    """No identity + exactly one certificate of the required type: use it."""
+    fake_security(monkeypatch, stdout=TWO_LANE_LISTING)
+
+    assert resolve_identity(None, types=DEVELOPER_ID_CERTIFICATE_TYPES).sha1 == "a" * 40
+    assert resolve_identity("", types=APP_STORE_CERTIFICATE_TYPES).sha1 == "c" * 40
+
+
+def test_resolve_identity_auto_discovery_none_found(monkeypatch):
+    """Discovery with no certificate of the type: actionable error."""
+    fake_security(monkeypatch, stdout=TWO_LANE_LISTING)
+
+    with pytest.raises(MacOSSigningError, match=r"No .*Installer.* certificate found"):
+        resolve_identity(None, types=INSTALLER_CERTIFICATE_TYPES)
+
+
+def test_resolve_identity_auto_discovery_ambiguous(monkeypatch):
+    """Discovery with several certs of the type: refuse to guess."""
+    listing = (
+        f'  1) {"a" * 40} "Developer ID Application: Jane Doe (TEAM123456)"\n'
+        f'  2) {"b" * 40} "Developer ID Application: Jane Doe (OTHERTEAM1)"\n'
+        "     2 valid identities found\n"
+    )
+    fake_security(monkeypatch, stdout=listing)
+
+    with pytest.raises(MacOSSigningError, match="Found several"):
+        resolve_identity(None, types=DEVELOPER_ID_CERTIFICATE_TYPES)
+
+
+def test_resolve_identity_adhoc_bypasses_types():
+    """Explicit "-" never touches the keychain, types or not."""
+    assert resolve_identity("-", types=APP_STORE_CERTIFICATE_TYPES).is_adhoc
+
+
+def test_resolve_identity_auto_discovery_expired(monkeypatch):
+    """Discovery finding only an expired cert of the type says so."""
+
+    def fake_run(args, timeout=None):
+        assert args[0] == "security"
+        if "-v" in args:
+            return subprocess.CompletedProcess(
+                args, 0, "     0 valid identities found\n", ""
+            )
+        return subprocess.CompletedProcess(
+            args,
+            0,
+            f'  1) {"a" * 40} "Developer ID Application: Jane Doe (TEAM123456)" '
+            "(CSSMERR_TP_CERT_EXPIRED)\n",
+            "",
+        )
+
+    monkeypatch.setattr(macos_sign, "_run", fake_run)
+    with pytest.raises(
+        MacOSSigningError,
+        match=r"not valid for signing \(CSSMERR_TP_CERT_EXPIRED\)",
+    ):
+        resolve_identity(None, types=DEVELOPER_ID_CERTIFICATE_TYPES)

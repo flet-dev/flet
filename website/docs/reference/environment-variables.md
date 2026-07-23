@@ -178,8 +178,10 @@ to sign the macOS app bundle: a "Developer ID Application" (direct
 distribution) or "Apple Distribution" (App Store) certificate name, its
 SHA-1 fingerprint, or `-` for ad-hoc signing.
 
-When not configured (here, via the CLI, or in `pyproject.toml`),
-the built app keeps its default ad-hoc signature.
+When not configured (here, via the CLI, or in `pyproject.toml`), a plain
+build keeps its default ad-hoc signature, while `--macos-notarize` and
+`--macos-app-store` builds auto-discover the certificate of the type they
+require when the keychain holds exactly one.
 
 ### `FLET_MAX_UPLOAD_SIZE`
 

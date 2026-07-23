@@ -13,7 +13,10 @@ from flet_cli.commands.build_base import BaseBuildCommand, console
 from flet_cli.commands.flutter_base import verbose1_style
 from flet_cli.utils.android import flutter_target_platforms
 from flet_cli.utils.macos_sign import (
+    APP_STORE_CERTIFICATE_TYPES,
     APP_STORE_HELPER_ENTITLEMENTS,
+    DEVELOPER_ID_CERTIFICATE_TYPES,
+    INSTALLER_CERTIFICATE_TYPES,
     MacOSSigningError,
     NotaryCredentials,
     SigningIdentity,
@@ -278,15 +281,10 @@ class Command(BaseBuildCommand):
                 "`[tool.flet.macos.signing].notarize`.",
             )
 
-        if not identity:
-            if notarize or app_store:
-                what = "Notarization" if notarize else "App Store signing"
-                self.cleanup(
-                    1,
-                    f"{what} requires a code-signing identity. Pass "
-                    "--macos-signing-identity or set "
-                    "`[tool.flet.macos.signing].identity` in pyproject.toml.",
-                )
+        # Notarize and App Store builds require an identity anyway, so an
+        # unset one auto-discovers (resolve_identity with types, below).
+        # A plain build without an identity keeps its ad-hoc signature.
+        if not identity and not (notarize or app_store):
             return
 
         apps = sorted(self.out_dir.glob("*.app"))
@@ -316,7 +314,21 @@ class Command(BaseBuildCommand):
 
         self.update_status(f"[bold blue]Signing [cyan]{app_path.name}[/cyan]...")
         try:
-            resolved = resolve_identity(identity)
+            # Each lane scopes resolution to the certificate type Apple's
+            # services accept for it — which also lets an unset identity
+            # auto-discover the only candidate. The plain lane stays
+            # unscoped: Apple Development or corporate certificates are
+            # legitimate there.
+            if app_store:
+                resolved = resolve_identity(identity, types=APP_STORE_CERTIFICATE_TYPES)
+            elif notarize:
+                resolved = resolve_identity(
+                    identity, types=DEVELOPER_ID_CERTIFICATE_TYPES
+                )
+            else:
+                resolved = resolve_identity(identity)
+            if not identity:
+                console.log(f"Signing identity: {resolved.name}")
             if notarize and resolved.is_adhoc:
                 self.cleanup(
                     1,
@@ -393,13 +405,6 @@ class Command(BaseBuildCommand):
                 'App Store builds cannot be signed ad-hoc ("-"); use your '
                 "Apple Distribution certificate.",
             )
-        if "Developer ID" in identity.name:
-            console.log(
-                f"[yellow]Warning: signing an App Store build with "
-                f'"{identity.name}" — App Store Connect only accepts Apple '
-                "Distribution (or 3rd Party Mac Developer Application) "
-                "certificates.[/yellow]"
-            )
         team_id = identity_team_id(identity)
         if not team_id:
             self.cleanup(
@@ -413,27 +418,22 @@ class Command(BaseBuildCommand):
             or self.get_pyproject("tool.flet.macos.signing.installer_identity")
             or os.getenv("FLET_MACOS_INSTALLER_IDENTITY")
         )
-        if not installer_identity:
-            self.cleanup(
-                1,
-                "App Store builds need an installer certificate to sign the "
-                ".pkg. Pass --macos-installer-identity or set "
-                "`[tool.flet.macos.signing].installer_identity` "
-                '(e.g. "3rd Party Mac Developer Installer: ... (TEAMID)").',
-            )
         # Installer certs sign packages, not code — resolved under the
-        # `basic` policy, and before the signing pass so a typo fails fast.
-        # That policy also lists application certs, so a wrong-but-unique
-        # match is possible; catching it here avoids a cryptic productbuild
-        # failure after the multi-minute signing pass.
-        installer = resolve_identity(installer_identity, policy="basic")
-        if not installer.is_adhoc and "Installer" not in installer.name:
+        # `basic` policy, scoped to installer types (the policy also lists
+        # application certs), before the signing pass so a typo fails fast.
+        # An unset identity auto-discovers the only installer certificate.
+        installer = resolve_identity(
+            installer_identity, policy="basic", types=INSTALLER_CERTIFICATE_TYPES
+        )
+        if installer.is_adhoc:
             self.cleanup(
                 1,
-                f'"{installer.name}" is not an installer certificate. Store '
-                'packages must be signed with a "3rd Party Mac Developer '
-                'Installer" / "Mac Installer Distribution" certificate.',
+                "Store packages cannot be signed ad-hoc; use your "
+                '"3rd Party Mac Developer Installer" / "Mac Installer '
+                'Distribution" certificate.',
             )
+        if not installer_identity:
+            console.log(f"Installer identity: {installer.name}")
 
         profile = (
             self.options.macos_provisioning_profile
