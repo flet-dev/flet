@@ -17,6 +17,7 @@ import '../utils/window.dart';
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
   Future<void> _pendingWindowUpdate = Future.value();
+  bool _updateScheduled = false;
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -111,7 +112,25 @@ class WindowService extends FletService with WindowListener {
   }
 
   void _scheduleWindowUpdate() {
+    // Coalesce calls that land before the previously-scheduled run has
+    // actually started: both `update()` (the Window control's own patch)
+    // and `_onPageChanged()` (a title change on the *page*, a different
+    // control) call this method, and a single patch that changes both the
+    // window and the title fires both — `_updateWindow` re-reads every
+    // property live from `control`/`parent` when it runs, so a second run
+    // queued back-to-back before the first even starts would just re-apply
+    // the same already-current values. Without this, two runs execute in
+    // sequence for one patch, and if the first starts an animated native
+    // operation (e.g. macOS NSWindow.zoom for maximize/unmaximize), the
+    // second can reissue that same call while it's still animating —
+    // zoom: toggles, so a single `maximized = true` can silently animate
+    // back to unmaximized right after being applied.
+    if (_updateScheduled) {
+      return;
+    }
+    _updateScheduled = true;
     _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
+      _updateScheduled = false;
       if (_initWindowStateCompleter.isCompleted) {
         return _updateWindow(control.backend);
       }

@@ -1,3 +1,9 @@
+## Unreleased
+
+### Bug fixes
+
+* Fix `page.window.maximized = True` intermittently reverting to unmaximized right after startup on macOS, when set in the same patch as `page.title` (e.g. `page.title = "My App"; page.window.maximized = True` in `main()`) by @davidlawson.
+
 ## 0.86.2
 
 ### Bug fixes
