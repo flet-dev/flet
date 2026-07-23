@@ -1,3 +1,9 @@
+## Unreleased
+
+### Bug fixes
+
+* Fix `MatplotlibChart` freezing permanently when its platform view is disposed with a frame in flight — the common trigger is switching to another tab inside the app, which races the frame stream: `DataChannel.send` on a disposed channel silently drops, so the frame's `[0xFF]` frame-applied ack never arrives and `_send_and_wait`'s unbounded await parks `MatplotlibChart._receive_loop` — the sole consumer of the frame queue — for the rest of the session, with no exception raised; remounting opens a fresh channel but the stale ack futures were never resolved, so the chart stayed frozen. `_capture_channel` now resolves all pending ack futures when a new channel is captured (a fresh channel means every pending ack belongs to the disposed one), unparking the producer instantly on remount, and the ack await is bounded by `FRAME_ACK_TIMEOUT` (5s; a healthy ack lands in milliseconds) — on expiry the frame is dropped and its future removed from the ack FIFO so subsequent acks keep resolving the right entries ([#6709](https://github.com/flet-dev/flet/issues/6709), [#6710](https://github.com/flet-dev/flet/pull/6710)) by @ForsakenDurian.
+
 ## 0.86.2
 
 ### Bug fixes
