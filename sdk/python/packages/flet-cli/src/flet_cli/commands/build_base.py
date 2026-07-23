@@ -661,9 +661,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             help='"Developer ID Application" (direct distribution) or '
             '"Apple Distribution" (App Store) certificate name, its SHA-1 '
             'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
-            "when not configured (CLI, pyproject.toml, or env), --macos-notarize "
-            "and --macos-app-store builds auto-discover the only certificate "
-            "of the required type "
+            "when not configured (CLI, pyproject.toml, or env), notarizing and "
+            "App Store builds auto-discover the only certificate of the "
+            "required type "
             "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
         )
         parser.add_argument(

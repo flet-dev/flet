@@ -456,9 +456,9 @@ value is matched as given, never silently replaced.
 With no identity configured anywhere, build modes that cannot proceed
 without one discover it from the keychain:
 
-- [`--macos-notarize`](#notarization) uses your **Developer ID Application**
+- [notarizing builds](#notarization) use your **Developer ID Application**
   certificate;
-- [`--macos-app-store`](#mac-app-store) uses your **Apple Distribution**
+- [App Store builds](#mac-app-store) use your **Apple Distribution**
   certificate (or its legacy equivalent, `3rd Party Mac Developer
   Application`) for the app and your **installer certificate** for the
   `.pkg`.
@@ -570,7 +570,7 @@ Notarization must still be turned on with `--macos-notarize` (or
 </TabItem>
 </Tabs>
 
-With `--macos-notarize`, the signing identity may be omitted entirely —
+When notarizing, the signing identity may be omitted entirely —
 see [Identity auto-discovery](#identity-auto-discovery).
 
 If notarization is rejected, the build fails and prints Apple's notarization

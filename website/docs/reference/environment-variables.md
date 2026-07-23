@@ -180,9 +180,9 @@ distribution) or "Apple Distribution" (App Store) certificate name, its
 SHA-1 fingerprint, or `-` for ad-hoc signing.
 
 When not configured (here, via the CLI, or in `pyproject.toml`), a plain
-build keeps its default ad-hoc signature, while `--macos-notarize` and
-`--macos-app-store` builds auto-discover the certificate of the type they
-require when the keychain holds exactly one.
+build keeps its default ad-hoc signature, while notarizing and App Store
+builds auto-discover the certificate of the type they require when the
+keychain holds exactly one.
 
 ### `FLET_MAX_UPLOAD_SIZE`
 
