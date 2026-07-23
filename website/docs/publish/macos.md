@@ -700,6 +700,42 @@ In [App Store Connect](https://appstoreconnect.apple.com) → **My Apps** →
 and SKU. Then note the app's numeric **Apple ID** under **App Information →
 General Information** — command-line uploads are keyed to it.
 
+### Provisioning profile
+
+The profile created [above](#creating-the-provisioning-profile). A relative
+path resolves against the project directory (where `pyproject.toml` lives).
+The build embeds it at `Contents/embedded.provisionprofile` — sealed by the
+app's signature — and fails fast when the profile's App ID does not cover
+the app's bundle ID, a mismatch that would otherwise surface only after
+upload as `ITMS-90889`.
+
+#### Resolution order
+
+The provisioning profile is determined in the following order of precedence:
+
+1. [`--macos-provisioning-profile`](../cli/flet-build.md#--macos-provisioning-profile)
+2. `[tool.flet.macos.signing].provisioning_profile`
+3. [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
+   environment variable
+4. Default: none — App Store builds fail without one.
+
+### Installer identity
+
+The certificate that signs the `.pkg` — the exact certificate name (as
+listed by `security find-identity -v -p basic`), its SHA-1 fingerprint, or
+a unique substring, matched only among installer certificates.
+
+#### Resolution order
+
+The installer identity is determined in the following order of precedence:
+
+1. [`--macos-installer-identity`](../cli/flet-build.md#--macos-installer-identity)
+2. `[tool.flet.macos.signing].installer_identity`
+3. [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
+   environment variable
+4. Default: none — the certificate is
+   [auto-discovered](#identity-auto-discovery).
+
 ### Building for the App Store
 
 <Tabs groupId="flet-build--pyproject-toml--env">
@@ -739,8 +775,7 @@ is required — App Store validation rejects the package without it.
 `ITSAppUsesNonExemptEncryption = false` is optional but answers the
 export-compliance question once and for all; without it, App Store Connect
 asks manually for every uploaded build. Both are ordinary
-[Info.plist](#infoplist) keys. The
-[provisioning profile](#provisioning-profile) setting is detailed below.
+[Info.plist](#infoplist) keys.
 
 Neither signing identity appears in the examples above: both are
 [auto-discovered](#identity-auto-discovery) when not configured. To pin
@@ -757,42 +792,6 @@ precedence:
    `--no-macos-app-store`
 2. `[tool.flet.macos.signing].app_store`
 3. Default: `false`
-
-### Provisioning profile
-
-The profile created [above](#creating-the-provisioning-profile). A relative
-path resolves against the project directory (where `pyproject.toml` lives).
-The build embeds it at `Contents/embedded.provisionprofile` — sealed by the
-app's signature — and fails fast when the profile's App ID does not cover
-the app's bundle ID, a mismatch that would otherwise surface only after
-upload as `ITMS-90889`.
-
-#### Resolution order
-
-The provisioning profile is determined in the following order of precedence:
-
-1. [`--macos-provisioning-profile`](../cli/flet-build.md#--macos-provisioning-profile)
-2. `[tool.flet.macos.signing].provisioning_profile`
-3. [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
-   environment variable
-4. Default: none — App Store builds fail without one.
-
-### Installer identity
-
-The certificate that signs the `.pkg` — the exact certificate name (as
-listed by `security find-identity -v -p basic`), its SHA-1 fingerprint, or
-a unique substring, matched only among installer certificates.
-
-#### Resolution order
-
-The installer identity is determined in the following order of precedence:
-
-1. [`--macos-installer-identity`](../cli/flet-build.md#--macos-installer-identity)
-2. `[tool.flet.macos.signing].installer_identity`
-3. [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
-   environment variable
-4. Default: none — the certificate is
-   [auto-discovered](#identity-auto-discovery).
 
 ### Uploading
 
