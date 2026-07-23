@@ -739,14 +739,14 @@ is required — App Store validation rejects the package without it.
 `ITSAppUsesNonExemptEncryption = false` is optional but answers the
 export-compliance question once and for all; without it, App Store Connect
 asks manually for every uploaded build. Both are ordinary
-[Info.plist](#infoplist) keys.
+[Info.plist](#infoplist) keys. The
+[provisioning profile](#provisioning-profile) setting is detailed below.
 
 Neither signing identity appears in the examples above: both are
 [auto-discovered](#identity-auto-discovery) when not configured. To pin
-them explicitly, use `[tool.flet.macos.signing].identity` /
-[`--macos-signing-identity`](#signing-the-app) for the app certificate and
-`installer_identity` / `--macos-installer-identity` for the `.pkg`
-certificate.
+them explicitly, configure the [signing identity](#signing-the-app) for
+the app certificate and the [installer identity](#installer-identity) for
+the `.pkg` certificate.
 
 #### Resolution order
 
