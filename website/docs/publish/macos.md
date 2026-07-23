@@ -522,10 +522,15 @@ Flet can receive either kind through two channels:
   secrets never appear in your shell history, environment, or `pyproject.toml`.
 
 - **Environment variables** (best for CI) — pass an App Store Connect API key
-  inline on each run by setting `APPLE_API_KEY` (path to the `.p8` file),
-  `APPLE_API_KEY_ID`, and `APPLE_API_ISSUER`. Nothing is stored on the
-  machine, which suits ephemeral CI runners where no keychain profile exists —
-  inject the values from your repository secrets.
+  inline on each run by setting
+  [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key)
+  (path to the `.p8` file),
+  [`APPLE_API_KEY_ID`](../reference/environment-variables.md#apple_api_key_id),
+  and
+  [`APPLE_API_ISSUER`](../reference/environment-variables.md#apple_api_issuer).
+  Nothing is stored on the machine, which suits ephemeral CI runners where
+  no keychain profile exists — inject the values from your repository
+  secrets.
 
 #### Resolution order
 
@@ -535,8 +540,11 @@ Credentials are determined in the following order of precedence:
 2. `[tool.flet.macos.signing].notary_profile`
 3. [`FLET_MACOS_NOTARY_PROFILE`](../reference/environment-variables.md#flet_macos_notary_profile)
    environment variable
-4. The `APPLE_API_KEY`, `APPLE_API_KEY_ID` and `APPLE_API_ISSUER` environment
-   variables (all three must be set)
+4. The [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key),
+   [`APPLE_API_KEY_ID`](../reference/environment-variables.md#apple_api_key_id)
+   and
+   [`APPLE_API_ISSUER`](../reference/environment-variables.md#apple_api_issuer)
+   environment variables (all three must be set)
 5. Default: none — notarizing builds fail without credentials.
 
 A configured profile deliberately outranks the `APPLE_API_*` variables, which
@@ -565,7 +573,8 @@ notary_profile = "flet-notary"
 FLET_MACOS_SIGNING_IDENTITY="Developer ID Application: Jane Doe (TEAM123456)"
 FLET_MACOS_NOTARY_PROFILE="flet-notary"
 ```
-Notarization must still be turned on with `--macos-notarize` (or
+Notarization must still be turned on with
+[`--macos-notarize`](../cli/flet-build.md#--macos-notarize) (or
 `[tool.flet.macos.signing].notarize = true`); this toggle has no environment-variable equivalent.
 </TabItem>
 </Tabs>
@@ -626,7 +635,7 @@ Export your certificate and private key as a `.p12` file, then store it
 
 | Symptom                                                 | Cause and fix                                                                                                                                                                                                                                                                                                                                                              |
 |---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `"MyApp" is damaged and can't be opened` on users' Macs | The bundle was modified after signing — most commonly the app writes next to its own files at runtime. Write user data to `os.getcwd()` (Flet points it at a writable location) instead of paths derived from `__file__`. Also triggered by building with `--no-compile-app`/`--no-compile-packages`, which lets Python create `__pycache__` inside the bundle at runtime. |
+| `"MyApp" is damaged and can't be opened` on users' Macs | The bundle was modified after signing — most commonly the app writes next to its own files at runtime. Write user data to `os.getcwd()` (Flet points it at a writable location) instead of paths derived from `__file__`. Also triggered by building with [`--no-compile-app`](../cli/flet-build.md#--compile-app)/[`--no-compile-packages`](../cli/flet-build.md#--compile-packages), which lets Python create `__pycache__` inside the bundle at runtime. |
 | `errSecInternalComponent` when signing in CI            | The keychain is locked — unlock it in the job, or use [`apple-actions/import-codesign-certs`](https://github.com/apple-actions/import-codesign-certs), which handles it.                                                                                                                                                                                                   |
 | Notarization status `Invalid`                           | Read the printed notary log: typical causes are an unsigned binary that was added to the bundle after signing, or a certificate that is not a Developer ID Application certificate.                                                                                                                                                                                        |
 | `library load disallowed by system policy`              | A native library is signed with a different Team ID than the app (or not at all). Rebuild so all binaries are re-signed together, or — if your app must load externally acquired native code at runtime — add the `com.apple.security.cs.disable-library-validation` [entitlement](#entitlements).                                                                         |
@@ -764,7 +773,8 @@ provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
 ```dotenv
 FLET_MACOS_PROVISIONING_PROFILE="certs/MyApp_MacAppStore.provisionprofile"
 ```
-App Store mode must still be turned on with `--macos-app-store` (or
+App Store mode must still be turned on with
+[`--macos-app-store`](../cli/flet-build.md#--macos-app-store) (or
 `[tool.flet.macos.signing].app_store = true`); this toggle has no
 environment-variable equivalent.
 </TabItem>
@@ -811,7 +821,7 @@ xcrun altool --upload-package build/macos/MyApp.pkg -t macos \
 
 `<NUMERIC_APP_ID>` is the app record's Apple ID
 [noted earlier](#creating-the-app-store-connect-app-record), and every
-upload needs a unique build number (`flet build macos --build-number N`).
+upload needs a unique [build number](index.md#build-number).
 After processing (minutes; failures arrive by email as `ITMS-xxxx` codes),
 the build appears in the **TestFlight** tab of your app record — internal
 testers can install it without beta review. Note that `--validate-app`

@@ -7,6 +7,23 @@ To set a boolean `True`, use one of the following string values: `"true"`, `"1"`
 Any other value will be interpreted as `False`.
 :::
 
+### `APPLE_API_ISSUER`
+
+Issuer ID of an App Store Connect API key. Together with `APPLE_API_KEY`
+and `APPLE_API_KEY_ID`, passes Apple notary-service
+[credentials](../publish/macos.md#credentials) inline to `flet build` —
+best for CI; a configured notary profile takes precedence.
+
+### `APPLE_API_KEY`
+
+Path to an App Store Connect API private key (`.p8`) file. See
+[`APPLE_API_ISSUER`](#apple_api_issuer).
+
+### `APPLE_API_KEY_ID`
+
+Key ID of an App Store Connect API key. See
+[`APPLE_API_ISSUER`](#apple_api_issuer).
+
 ### `FLET_ANDROID_SIGNING_KEY_ALIAS`
 
 Android signing key alias used by
