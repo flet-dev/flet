@@ -400,7 +400,7 @@ flet build macos --macos-signing-identity "Developer ID Application: Jane Doe (T
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
-[tool.flet.macos.signing]
+[tool.flet.macos.signing]  # or [tool.flet.macos.signing.<lane>]
 identity = "Developer ID Application: Jane Doe (TEAM123456)"
 ```
 </TabItem>
@@ -488,6 +488,12 @@ single setting:
 - `app-store` — sandboxed store signing plus a signed installer `.pkg` for
   the [Mac App Store](#mac-app-store).
 
+:::tip
+By default, all lanes write to the same output directory, so each build
+overwrites the existing files. To keep separate output for each lane,
+pass a custom [output directory](index.md#output-directory) for each build.
+:::
+
 #### Resolution order
 
 The distribution lane is determined in the following order of precedence:
@@ -495,6 +501,7 @@ The distribution lane is determined in the following order of precedence:
 1. [`--macos-distribution`](../cli/flet-build.md#--macos-distribution)
 2. `[tool.flet.macos.signing].distribution`
 3. Default: `none`
+
 #### Per-lane settings
 
 Every `[tool.flet.macos.signing]` key except `distribution` may be set
@@ -517,14 +524,16 @@ flet build macos --macos-distribution developer-id \
 flet build macos --macos-distribution app-store \
   --macos-signing-identity "Apple Distribution: Jane Doe (TEAM123456)" \
   --macos-installer-identity "3rd Party Mac Developer Installer: Jane Doe (TEAM123456)" \
-  --macos-provisioning-profile certs/MyApp_MacAppStore.provisionprofile \
-  --output build/macos-store
+  --macos-provisioning-profile path/to/File.provisionprofile \
+  # --output build/macos-store
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.macos.signing]
-distribution = "developer-id"   # decides which lane subtable below gets chosen
+# Decides which distribution lane subtable below gets chosen for the current build.
+# To change lane without editing pyproject.toml, consider using the `--macos-distribution` CLI option instead.
+distribution = "developer-id"
 
 [tool.flet.macos.signing.developer-id]
 identity = "Developer ID Application: Jane Doe (TEAM123456)"
@@ -533,16 +542,16 @@ notary_profile = "flet-notary"
 [tool.flet.macos.signing.app-store]
 identity = "Apple Distribution: Jane Doe (TEAM123456)"
 installer_identity = "3rd Party Mac Developer Installer: Jane Doe (TEAM123456)"
-provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
+provisioning_profile = "path/to/File.provisionprofile"
 ```
 </TabItem>
 </Tabs>
 
 Settings resolve as: CLI option → lane subtable → flat key → environment
-variable. For a key only one lane reads (like [`notary_profile`](#notarization) or
-[`provisioning_profile`](#provisioning-profile)), the subtable and the flat form are equivalent —
-group by lane for readability, or keep them flat for less nesting. A
-misnamed/inexisting subtable (e.g. `[tool.flet.macos.signing.app-wrong-store]`) fails the build.
+variable. For a key only one lane reads (like [`notary_profile`](#notarization)
+on `developer-id` lane or [`provisioning_profile`](#provisioning-profile) on `app-store` lane),
+the subtable and the flat form are equivalent — group by lane for readability,
+or keep them flat for less nesting. A misnamed/inexisting subtable fails the build.
 
 #### Switching lanes
 
@@ -557,10 +566,6 @@ lane), set your default lane in `pyproject.toml`, and flip it per build:
 flet build macos --macos-distribution app-store
 ```
 
-Both lanes write to the same output directory by default and each build
-replaces it — pass an [output directory](index.md#output-directory) per lane to keep a
-notarized `.app` and a store `.pkg` side by side.
-
 ## Notarization
 
 A **Developer-ID**-signed app must also be **notarized** by Apple for Gatekeeper to
@@ -570,8 +575,12 @@ service (a malware scan, typically a few minutes), after which the resulting
 
 ### Credentials
 
-Apple's notary service accepts two kinds of credentials — get whichever
-suits you:
+Setting up credentials takes two steps: create one with Apple, then make
+it available to Flet.
+
+#### Creating a credential
+
+Apple's notary service accepts two kinds — get whichever suits you:
 
 - **App Store Connect API key** (recommended; also reusable for
   [store uploads](#uploading)) — in App Store Connect, open
@@ -586,15 +595,15 @@ suits you:
   [password](https://support.apple.com/102654) dedicated to notarization
   (your regular Apple ID password is not meant here and won't work with `notarytool`).
 
-Flet can receive either kind through two channels:
+#### Providing it to Flet
 
 - **Keychain profile** (best for local development) — a one-time setup that
-  saves the credential into the macOS keychain under a name of your choice.
-  With an API key:
+  saves either kind of credential into the macOS keychain under a name of
+  your choice. With an API key:
 
   ```bash
   xcrun notarytool store-credentials flet-notary \
-    --key ~/keys/AuthKey_ABC123DEFG.p8 --key-id ABC123DEFG \
+    --key /path/to/AuthKey_ABC123DEFG.p8 --key-id ABC123DEFG \
     --issuer 12345678-90ab-cdef-1234-567890abcdef
   ```
 
@@ -636,7 +645,7 @@ Credentials are determined in the following order of precedence:
    environment variables (all three must be set)
 6. Default: none — notarizing builds fail without credentials.
 
-A configured profile deliberately outranks the `APPLE_API_*` variables, which
+A configured profile intentionally has precedence over the `APPLE_API_*` variables, which
 other tooling (Fastlane, CI images) may have exported for a different team.
 
 ### Notarizing the app
@@ -675,10 +684,12 @@ log, which lists the exact offending files.
 
 ### Distributing
 
-Ship the signed, notarized, and stapled `.app` in a **DMG** (recommended) or a
-zip archive created with `ditto -c -k --keepParent` (preserves the bundle
-structure and staple). A simple DMG that also gets its own staple:
+`flet build` leaves you with a signed, notarized, and stapled `.app` —
+ship it as a single downloadable file, either a **DMG** (recommended) or a
+zip archive.
 
+<Tabs>
+<TabItem value="dmg" label="DMG (recommended)">
 ```bash
 hdiutil create -volname "MyApp" -srcfolder build/macos/MyApp.app -ov -format UDZO MyApp.dmg
 codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg
@@ -686,12 +697,112 @@ xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
 xcrun stapler staple MyApp.dmg
 ```
 
+- `hdiutil create` packs the app into a compressed read-only image (`UDZO`).
+- `codesign` signs the image itself, with the same **Developer ID
+  Application** identity the app was signed with.
+- `notarytool submit` notarizes the image — same
+  [credentials](#credentials) as the build; with an API key instead of a
+  keychain profile, pass `--key`/`--key-id`/`--issuer`.
+- `stapler staple` attaches the ticket to the DMG, so the whole download —
+  not just the app inside — validates offline.
+
+The result is the conventional macOS download: users open the image and
+drag the app into **Applications**.
+</TabItem>
+<TabItem value="dmg-custom" label="Custom DMG (dmgbuild)">
+For the polished look — background image, app on the left, **Applications**
+on the right — use [`dmgbuild`](https://dmgbuild.readthedocs.io/), a small
+pip-installable tool that writes the Finder layout directly (no Finder or
+GUI session involved, so it works the same in CI):
+
+```bash
+pip install "dmgbuild>=1.6.7"
+```
+
+:::caution
+Keep dmgbuild at **1.6.7 or later**: images built with older versions
+[show a blank background](https://github.com/dmgbuild/dmgbuild/issues/273)
+on macOS 26.2+.
+:::
+
+Create `dmg_settings.py` next to your project:
+
+```python
+files = ["build/macos/MyApp.app"]
+symlinks = {"Applications": "/Applications"}
+
+# 600x400 image; place an optional dmg/background@2x.png sibling
+# next to it for Retina — both are combined automatically.
+background = "dmg/background.png"
+
+window_rect = ((200, 200), (600, 400))
+icon_size = 110
+icon_locations = {
+    "MyApp.app": (150, 210),
+    "Applications": (450, 210),
+}
+format = "UDZO"
+```
+
+The window is sized in points equal to the 1x image's pixel size, so draw
+any "drag the app to Applications" guidance directly into the background
+image. Then build, and sign/notarize/staple the image exactly as in the
+**DMG** tab:
+
+```bash
+dmgbuild -s dmg_settings.py "MyApp" MyApp.dmg
+codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg
+xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
+xcrun stapler staple MyApp.dmg
+```
+</TabItem>
+<TabItem value="zip" label="zip archive">
+```bash
+ditto -c -k --keepParent build/macos/MyApp.app MyApp.zip
+```
+
+Use `ditto` (or Finder's **Compress**) rather than plain `zip`, which can
+mangle the symlinks inside the bundled frameworks and break the app's
+signature. A zip involves no extra signing — it can't be signed or
+stapled — so after extraction Gatekeeper relies on the staple already on
+the `.app` inside.
+</TabItem>
+</Tabs>
+
 ### Signing and notarizing in CI
 
 #### GitHub Actions
 
-Export your certificate and private key as a `.p12` file, then store it
-(base64-encoded) and its password as repository secrets:
+A CI runner starts with an empty keychain, so the one-time setup is about
+getting your certificate and notary credentials into
+[repository secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets):
+
+1. Export the **Developer ID Application** certificate together with its
+   private key: in **Keychain Access**, under **login → My Certificates**,
+   right-click the certificate → **Export…** and save it in the `.p12`
+   format, protected by an export password
+   ([Apple's guide](https://support.apple.com/guide/keychain-access/import-and-export-keychain-items-kyca35961/mac)).
+2. Store the secrets — in the repository's **Settings → Secrets and
+   variables → Actions**, or with the
+   [`gh` CLI](https://cli.github.com/manual/gh_secret_set). Secrets hold
+   text, so the binary `.p12` is stored base64-encoded
+   (`base64 -i path/to/certificate.p12 | pbcopy` fills the clipboard),
+   while the `.p8` key is already text (PEM) and goes in as-is:
+
+   ```bash
+   gh secret set MACOS_CERTIFICATE_P12 --body "$(base64 -i path/to/certificate.p12)"
+   gh secret set MACOS_CERTIFICATE_PASSWORD    # prompts; the export password from step 1 above
+   gh secret set MACOS_SIGNING_IDENTITY --body "Developer ID Application: Jane Doe (TEAM123456)"
+   gh secret set APPLE_API_KEY_P8 < path/to/AuthKey_ABC123DEFG.p8
+   gh secret set APPLE_API_KEY_ID --body "ABC123DEFG"
+   gh secret set APPLE_API_ISSUER --body "12345678-90ab-cdef-1234-567890abcdef"
+   ```
+
+   The last three values come with the
+   [App Store Connect API key](#creating-a-credential).
+
+The workflow then imports the certificate into the runner's keychain and
+exposes the credentials to `flet build`:
 
 ```yaml
 - uses: apple-actions/import-codesign-certs@v3
@@ -701,14 +812,26 @@ Export your certificate and private key as a `.p12` file, then store it
 
 - name: Build, sign and notarize
   env:
-    FLET_MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
-    APPLE_API_KEY: ${{ github.workspace }}/AuthKey.p8
+    APPLE_API_KEY: ${{ runner.temp }}/AuthKey.p8
     APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
     APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+    FLET_MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
   run: |
-    echo "${{ secrets.APPLE_API_KEY_P8 }}" > AuthKey.p8
+    printf '%s' "${{ secrets.APPLE_API_KEY_P8 }}" > "$APPLE_API_KEY"
     flet build macos --macos-distribution developer-id
 ```
+
+The API key is materialized to a file because
+[`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key) is a
+*path* — `notarytool` reads the key from disk and cannot take its content
+inline. Writing it under `runner.temp` (instead of the workspace) keeps the
+private key out of any artifact upload of the checkout.
+
+:::tip
+Since the imported certificate is the only identity in the runner's
+keychain, the `MACOS_SIGNING_IDENTITY` secret and env line can also be
+dropped in favor of [auto-discovery](#identity-auto-discovery).
+:::
 
 ### Troubleshooting
 
@@ -843,8 +966,8 @@ flet build macos --macos-distribution app-store \
 ```toml
 [tool.flet.macos.info]
 # required by App Store validation
-LSApplicationCategoryType = "public.app-category.productivity"
-# answers the export-compliance question per build (standard encryption only)
+LSApplicationCategoryType = "public.app-category.xxx-yyy-zzz"
+# optional
 ITSAppUsesNonExemptEncryption = false
 
 [tool.flet.macos.signing]
@@ -866,6 +989,7 @@ equivalent.
 
 - Setting [`LSApplicationCategoryType`](https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype)
   is required — App Store validation rejects the package without it.
+  See supported/possible values [here](https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype#possibleValues).
 - Setting [`ITSAppUsesNonExemptEncryption`](https://developer.apple.com/documentation/bundleresources/information-property-list/itsappusesnonexemptencryption)
   is optional but answers the export-compliance question once and for all.
   If it's not set, App Store Connect walks you through an export compliance
