@@ -689,27 +689,20 @@ ship it as a single downloadable file, either a **DMG** (recommended) or a
 zip archive.
 
 <Tabs>
-<TabItem value="dmg" label="DMG (recommended)">
+<TabItem value="dmg" label="DMG">
+First, create the image — plain, or with a custom Finder look:
+
+<Tabs>
+<TabItem value="dmg-plain" label="Plain">
 ```bash
 hdiutil create -volname "MyApp" -srcfolder build/macos/MyApp.app -ov -format UDZO MyApp.dmg
-codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg
-xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
-xcrun stapler staple MyApp.dmg
 ```
 
-- `hdiutil create` packs the app into a compressed read-only image (`UDZO`).
-- `codesign` signs the image itself, with the same **Developer ID
-  Application** identity the app was signed with.
-- `notarytool submit` notarizes the image — same
-  [credentials](#credentials) as the build; with an API key instead of a
-  keychain profile, pass `--key`/`--key-id`/`--issuer`.
-- `stapler staple` attaches the ticket to the DMG, so the whole download —
-  not just the app inside — validates offline.
-
-The result is the conventional macOS download: users open the image and
-drag the app into **Applications**.
+`hdiutil create` packs the app into a compressed read-only image (`UDZO`)
+containing just the app. For an **Applications** drop-shortcut, a
+background image, and icon placement, see the **Custom look** tab.
 </TabItem>
-<TabItem value="dmg-custom" label="Custom DMG (dmgbuild)">
+<TabItem value="dmg-custom" label="Custom look (dmgbuild)">
 For the polished look — background image, app on the left, **Applications**
 on the right — use [`dmgbuild`](https://dmgbuild.readthedocs.io/), a small
 pip-installable tool that writes the Finder layout directly (no Finder or
@@ -725,7 +718,7 @@ Keep dmgbuild at **1.6.7 or later**: images built with older versions
 on macOS 26.2+.
 :::
 
-Create `dmg_settings.py` next to your project:
+Create [`dmg_settings.py`](https://dmgbuild.readthedocs.io/en/latest/settings.html) next to your project, and customize accordingly:
 
 ```python
 files = ["build/macos/MyApp.app"]
@@ -746,15 +739,45 @@ format = "UDZO"
 
 The window is sized in points equal to the 1x image's pixel size, so draw
 any "drag the app to Applications" guidance directly into the background
-image. Then build, and sign/notarize/staple the image exactly as in the
-**DMG** tab:
+image.
+
+:::info
+The example above is just the classic subset — the
+[settings reference](https://dmgbuild.readthedocs.io/en/latest/settings.html)
+covers much more: solid-color backgrounds, a custom volume icon (or a badge
+composited onto the standard disk icon), extra files with hidden-file and
+hidden-extension control, icon/text sizes and list-view layouts, a
+multi-language license agreement shown before mounting (attach it before
+signing the image), alternative image formats (`UDBZ`, `ULFO`) and the
+APFS filesystem, and more.
+:::
+
+Then build the image:
 
 ```bash
 dmgbuild -s dmg_settings.py "MyApp" MyApp.dmg
+```
+</TabItem>
+</Tabs>
+
+Then sign, notarize, and staple the image:
+
+```bash
 codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg
 xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
 xcrun stapler staple MyApp.dmg
 ```
+
+- `codesign` signs the image itself, with the same **Developer ID
+  Application** identity the app was signed with.
+- `notarytool submit` notarizes the image — same
+  [credentials](#credentials) as the build; with an API key instead of a
+  keychain profile, pass `--key`/`--key-id`/`--issuer`.
+- `stapler staple` attaches the ticket to the DMG, so the whole download —
+  not just the app inside — validates offline.
+
+The result is the conventional macOS download: users open the image and
+drag the app into **Applications**.
 </TabItem>
 <TabItem value="zip" label="zip archive">
 ```bash
@@ -824,8 +847,8 @@ exposes the credentials to `flet build`:
 The API key is materialized to a file because
 [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key) is a
 *path* — `notarytool` reads the key from disk and cannot take its content
-inline. Writing it under `runner.temp` (instead of the workspace) keeps the
-private key out of any artifact upload of the checkout.
+inline. Writing it under [`runner.temp`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#runner-context)
+(instead of the workspace) keeps the private key out of any artifact upload of the checkout.
 
 :::tip
 Since the imported certificate is the only identity in the runner's
@@ -842,6 +865,8 @@ dropped in favor of [auto-discovery](#identity-auto-discovery).
 | Notarization status `Invalid`                           | Read the printed notary log: typical causes are an unsigned binary that was added to the bundle after signing, or a certificate that is not a Developer ID Application certificate.                                                                                                                                                                                                                                                                         |
 | `library load disallowed by system policy`              | A native library is signed with a different Team ID than the app (or not at all). Rebuild so all binaries are re-signed together, or — if your app must load externally acquired native code at runtime — add the `com.apple.security.cs.disable-library-validation` [entitlement](#entitlements).                                                                                                                                                          |
 | Notarization takes very long                            | The first-ever submission for a new account can take up to an hour or more; subsequent submissions typically finish within minutes.                                                                                                                                                                                                                                                                                                                         |
+| Build hangs at the signing step (`codesign` at 0% CPU)  | macOS is waiting on a keychain prompt — possibly hidden behind other windows — for permission to use the private key, common after importing a key from the terminal. Click **Always Allow** on the prompt, or pre-authorize `codesign` with `security set-key-partition-list -S apple-tool:,apple: -s -k <login-password> login.keychain-db`.                                                                                                              |
+| `Warning: unable to build chain to self-signed root`    | Apple's intermediate certificate authorities are missing from the keychain, so the signature can't chain up to Apple's root. Sign in to Xcode (**Settings → Accounts**), which installs them, or download them from [Apple PKI](https://www.apple.com/certificateauthority/).                                                                                                                                                                               |
 
 ## Mac App Store
 
@@ -1032,3 +1057,12 @@ the build appears in the **TestFlight** tab of your app record — internal
 testers can install it without beta review. Note that `--validate-app`
 does not catch everything processing checks, so a clean upload is only
 confirmed once processing completes.
+
+### Troubleshooting
+
+| Symptom                                                                                      | Cause and fix                                                                                                                                                                                                                                                                                                                           |
+|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ITMS-90889: Invalid Provisioning Profile` after upload                                      | The embedded profile doesn't match the upload. `flet build` pre-checks that the profile covers the app's bundle ID, so this usually means the profile doesn't include the **Apple Distribution** certificate that signed the app — [regenerate the profile](#creating-the-provisioning-profile) selecting that certificate and rebuild. |
+| `91109: Invalid package contents` … `com.apple.quarantine`                                   | A file in the package carries the quarantine attribute macOS puts on downloads. `flet build` strips it from everything it packages, so this points to files added after the build — rebuild, or clean with `xattr -cr` before re-packaging.                                                                                             |
+| The store build can't read or write files the direct build could                             | The `app-store` lane enables the mandatory **App Sandbox**: file access is confined to the app's container (`~/Library/Containers/<bundle-id>`). Relative paths and `os.getcwd()` already land there; for anything outside, let the user pick the path with `FilePicker` — user-selected locations are granted to a sandboxed app.      |
+| After a TestFlight install, `flet build macos` fails with `Permission denied` under `build/` | macOS *app relocation*: the installer updates an existing copy with the same bundle ID wherever it finds one — including your local build products — leaving root-owned files (`_MASReceipt`) behind. `sudo rm -rf` the affected `build/macos` directory, and delete dev copies of the app before installing the store build.           |
