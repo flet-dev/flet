@@ -763,18 +763,18 @@ dmgbuild -s dmg_settings.py "MyApp" MyApp.dmg
 Then sign, notarize, and staple the image:
 
 ```bash
-codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg
-xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait
-xcrun stapler staple MyApp.dmg
+codesign -f --timestamp -s "Developer ID Application: Jane Doe (TEAM123456)" MyApp.dmg # (1)!
+xcrun notarytool submit MyApp.dmg --keychain-profile flet-notary --wait # (2)!
+xcrun stapler staple MyApp.dmg # (3)!
 ```
 
-- `codesign` signs the image itself, with the same **Developer ID
-  Application** identity the app was signed with.
-- `notarytool submit` notarizes the image — same
-  [credentials](#credentials) as the build; with an API key instead of a
-  keychain profile, pass `--key`/`--key-id`/`--issuer`.
-- `stapler staple` attaches the ticket to the DMG, so the whole download —
-  not just the app inside — validates offline.
+1. Signs the image itself, with the same **Developer ID Application**
+   identity the app was signed with.
+2. Notarizes the image — same [credentials](#credentials) as the build;
+   with an API key instead of a keychain profile, pass
+   `--key`/`--key-id`/`--issuer`.
+3. Attaches the ticket to the DMG, so the whole download — not just the
+   app inside — validates offline.
 
 The result is the conventional macOS download: users open the image and
 drag the app into **Applications**.
@@ -819,48 +819,55 @@ getting your certificate and notary credentials into
    while the `.p8` key is already text (PEM) and goes in as-is:
 
    ```bash
-   gh secret set MACOS_CERTIFICATE_P12 --body "$(base64 -i path/to/certificate.p12)"
-   gh secret set MACOS_CERTIFICATE_PASSWORD    # prompts; the export password from step 1 above
+   gh secret set MACOS_CERTIFICATE_P12 --body "$(base64 -i path/to/certificate.p12)" # (1)!
+   gh secret set MACOS_CERTIFICATE_PASSWORD # (2)!
    gh secret set MACOS_SIGNING_IDENTITY --body "Developer ID Application: Jane Doe (TEAM123456)"
-   gh secret set APPLE_API_KEY_P8 < path/to/AuthKey_ABC123DEFG.p8
-   gh secret set APPLE_API_KEY_ID --body "ABC123DEFG"
+   gh secret set APPLE_API_KEY_P8 < path/to/AuthKey_ABC123DEFG.p8 # (3)!
+   gh secret set APPLE_API_KEY_ID --body "ABC123DEFG" # (4)!
    gh secret set APPLE_API_ISSUER --body "12345678-90ab-cdef-1234-567890abcdef"
    ```
 
-   The last three values come with the
-   [App Store Connect API key](#creating-a-credential).
+   1. Secrets hold text, so the binary `.p12` is stored base64-encoded.
+      For the web UI, `base64 -i path/to/certificate.p12 | pbcopy` fills
+      the clipboard.
+   2. Prompts for the value — the export password from step 1 above.
+   3. Already text (PEM) — goes in as-is, no base64 needed.
+   4. This and the next value come with the
+      [App Store Connect API key](#creating-a-credential).
 
 The workflow then imports the certificate into the runner's keychain and
 exposes the credentials to `flet build`:
 
 ```yaml
-- uses: apple-actions/import-codesign-certs@v3
+- uses: apple-actions/import-codesign-certs@v3 # (1)!
   with:
     p12-file-base64: ${{ secrets.MACOS_CERTIFICATE_P12 }}
     p12-password: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
 
 - name: Build, sign and notarize
   env:
-    APPLE_API_KEY: ${{ runner.temp }}/AuthKey.p8
+    APPLE_API_KEY: ${{ runner.temp }}/AuthKey.p8 # (2)!
     APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
     APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-    FLET_MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+    FLET_MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }} # (3)!
   run: |
-    printf '%s' "${{ secrets.APPLE_API_KEY_P8 }}" > "$APPLE_API_KEY"
+    printf '%s' "${{ secrets.APPLE_API_KEY_P8 }}" > "$APPLE_API_KEY" # (4)!
     flet build macos --macos-distribution developer-id
 ```
 
-The API key is materialized to a file because
-[`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key) is a
-*path* — `notarytool` reads the key from disk and cannot take its content
-inline. Writing it under [`runner.temp`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#runner-context)
-(instead of the workspace) keeps the private key out of any artifact upload of the checkout.
-
-:::tip
-Since the imported certificate is the only identity in the runner's
-keychain, the `MACOS_SIGNING_IDENTITY` secret and env line can also be
-dropped in favor of [auto-discovery](#identity-auto-discovery).
-:::
+1. Imports the certificate and its private key into a fresh, unlocked
+   keychain on the runner. View its docs
+   [here](https://github.com/apple-actions/import-codesign-certs).
+2. [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key)
+   is a *path*, not content — `notarytool` reads the key from disk.
+   [`runner.temp`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#runner-context)
+   (instead of the workspace) keeps the private key out of any artifact
+   upload of the checkout.
+3. Optional: since the imported certificate is the only identity in the
+   runner's keychain, this secret and env line can also be dropped in
+   favor of [auto-discovery](#identity-auto-discovery).
+4. Materializes the PEM key from the secret to the path `notarytool`
+   will read.
 
 ### Troubleshooting
 
