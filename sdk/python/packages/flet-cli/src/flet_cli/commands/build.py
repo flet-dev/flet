@@ -4,7 +4,7 @@ import plistlib
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 
 from rich.console import Group
 from rich.live import Live
@@ -246,11 +246,14 @@ class Command(BaseBuildCommand):
 
         `choices=` only validates the CLI layer, so the resolved value is
         checked again here — a typo in `pyproject.toml` (e.g. `app_store`)
-        must fail loudly, not fall through to a silently ad-hoc build.
+        must fail loudly, not fall through to a silently ad-hoc build. For
+        the same reason, per-lane subtable names under
+        `[tool.flet.macos.signing]` are validated: a misnamed subtable
+        would otherwise be silently ignored.
 
         Returns:
             One of `MACOS_DISTRIBUTIONS`; exits via `cleanup(1, ...)` on an
-                invalid configured value.
+                invalid configured value or a misnamed lane subtable.
         """
 
         assert self.options
@@ -269,7 +272,54 @@ class Command(BaseBuildCommand):
                 f"`[tool.flet.macos.signing].distribution`: "
                 f"{', '.join(self.MACOS_DISTRIBUTIONS)}.",
             )
+        for key, value in (self.get_pyproject("tool.flet.macos.signing") or {}).items():
+            if isinstance(value, dict) and key not in self.MACOS_DISTRIBUTIONS:
+                self.cleanup(
+                    1,
+                    f"Unknown lane subtable `[tool.flet.macos.signing.{key}]` "
+                    f"— it would be silently ignored. Valid lane names: "
+                    f"{', '.join(d for d in self.MACOS_DISTRIBUTIONS if d != 'none')}.",
+                )
         return distribution
+
+    def macos_signing_setting(
+        self,
+        cli_value: Optional[str],
+        distribution: str,
+        key: str,
+        env_var: Optional[str] = None,
+    ) -> Optional[str]:
+        """
+        Resolve a signing setting with per-lane awareness.
+
+        Precedence: CLI option > `[tool.flet.macos.signing.<lane>]`
+        subtable > flat `[tool.flet.macos.signing]` key > environment
+        variable. The lane subtable deliberately beats the flat key — a
+        per-lane value that lost to a generic one would be pointless
+        (iOS's `export_methods` gets this backwards).
+
+        Args:
+            cli_value: The already-parsed CLI option value, or None.
+            distribution: The resolved lane; `none` has no subtable.
+            key: Key name under `[tool.flet.macos.signing]`.
+            env_var: Environment variable fallback, if the setting has one.
+
+        Returns:
+            The resolved value, or None when the setting is not configured.
+        """
+
+        assert self.get_pyproject
+
+        return (
+            cli_value
+            or (
+                self.get_pyproject(f"tool.flet.macos.signing.{distribution}.{key}")
+                if distribution != "none"
+                else None
+            )
+            or self.get_pyproject(f"tool.flet.macos.signing.{key}")
+            or (os.getenv(env_var) if env_var else None)
+        )
 
     def _macos_store_profile_path(self) -> Path:
         """
@@ -284,10 +334,11 @@ class Command(BaseBuildCommand):
         assert self.get_pyproject
         assert self.python_app_path
 
-        profile = (
-            self.options.macos_provisioning_profile
-            or self.get_pyproject("tool.flet.macos.signing.provisioning_profile")
-            or os.getenv("FLET_MACOS_PROVISIONING_PROFILE")
+        profile = self.macos_signing_setting(
+            cli_value=self.options.macos_provisioning_profile,
+            distribution="app-store",
+            key="provisioning_profile",
+            env_var="FLET_MACOS_PROVISIONING_PROFILE",
         )
         if not profile:
             self.cleanup(
@@ -324,10 +375,11 @@ class Command(BaseBuildCommand):
         assert self.template_data
 
         distribution = self.resolve_macos_distribution()
-        identity = (
-            self.options.macos_signing_identity
-            or self.get_pyproject("tool.flet.macos.signing.identity")
-            or os.getenv("FLET_MACOS_SIGNING_IDENTITY")
+        identity = self.macos_signing_setting(
+            cli_value=self.options.macos_signing_identity,
+            distribution=distribution,
+            key="identity",
+            env_var="FLET_MACOS_SIGNING_IDENTITY",
         )
         if not identity and distribution == "none":
             return
@@ -336,9 +388,12 @@ class Command(BaseBuildCommand):
             if distribution == "app-store":
                 resolve_identity(identity, types=APP_STORE_CERTIFICATE_TYPES)
                 resolve_identity(
-                    self.options.macos_installer_identity
-                    or self.get_pyproject("tool.flet.macos.signing.installer_identity")
-                    or os.getenv("FLET_MACOS_INSTALLER_IDENTITY"),
+                    self.macos_signing_setting(
+                        cli_value=self.options.macos_installer_identity,
+                        distribution=distribution,
+                        key="installer_identity",
+                        env_var="FLET_MACOS_INSTALLER_IDENTITY",
+                    ),
                     policy="basic",
                     types=INSTALLER_CERTIFICATE_TYPES,
                 )
@@ -397,10 +452,11 @@ class Command(BaseBuildCommand):
         assert self.flutter_dir
 
         distribution = self.resolve_macos_distribution()
-        identity = (
-            self.options.macos_signing_identity
-            or self.get_pyproject("tool.flet.macos.signing.identity")
-            or os.getenv("FLET_MACOS_SIGNING_IDENTITY")
+        identity = self.macos_signing_setting(
+            cli_value=self.options.macos_signing_identity,
+            distribution=distribution,
+            key="identity",
+            env_var="FLET_MACOS_SIGNING_IDENTITY",
         )
 
         # Distribution lanes require an identity anyway, so an unset one
@@ -535,10 +591,11 @@ class Command(BaseBuildCommand):
                 "App Store entitlements require it.",
             )
 
-        installer_identity = (
-            self.options.macos_installer_identity
-            or self.get_pyproject("tool.flet.macos.signing.installer_identity")
-            or os.getenv("FLET_MACOS_INSTALLER_IDENTITY")
+        installer_identity = self.macos_signing_setting(
+            cli_value=self.options.macos_installer_identity,
+            distribution="app-store",
+            key="installer_identity",
+            env_var="FLET_MACOS_INSTALLER_IDENTITY",
         )
         # Installer certs sign packages, not code — resolved under the
         # `basic` policy, scoped to installer types (the policy also lists
@@ -663,10 +720,11 @@ class Command(BaseBuildCommand):
         assert self.options
         assert self.get_pyproject
 
-        profile = (
-            self.options.macos_notary_profile
-            or self.get_pyproject("tool.flet.macos.signing.notary_profile")
-            or os.getenv("FLET_MACOS_NOTARY_PROFILE")
+        profile = self.macos_signing_setting(
+            cli_value=self.options.macos_notary_profile,
+            distribution="developer-id",
+            key="notary_profile",
+            env_var="FLET_MACOS_NOTARY_PROFILE",
         )
         if profile:
             return NotaryCredentials(keychain_profile=profile)

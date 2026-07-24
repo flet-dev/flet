@@ -294,3 +294,133 @@ def test_dispatch_cli_flips_lane_over_pyproject(tmp_path, monkeypatch):
     ran = stub_lanes(monkeypatch, cmd)
     cmd.sign_macos_app()
     assert ran.store and not ran.notarized
+
+
+# ---------------------------------------------------------------------------
+# Per-lane subtables: [tool.flet.macos.signing.<lane>]
+# ---------------------------------------------------------------------------
+# The fake get_pyproject is an exact-key dict, so lane subtables appear both
+# as their dotted leaf paths (what macos_signing_setting queries) and, for
+# the subtable-name validation, as the parent "tool.flet.macos.signing"
+# dict.
+
+
+def test_signing_setting_precedence(tmp_path, monkeypatch):
+    """CLI > lane subtable > flat key > env var — lane beats flat."""
+    monkeypatch.setenv("FLET_MACOS_SIGNING_IDENTITY", "from-env")
+    cmd = make_command(
+        tmp_path,
+        pyproject={
+            "tool.flet.macos.signing.developer-id.identity": "from-lane",
+            "tool.flet.macos.signing.identity": "from-flat",
+        },
+    )
+
+    setting = lambda cli, lane: cmd.macos_signing_setting(  # noqa: E731
+        cli, lane, "identity", "FLET_MACOS_SIGNING_IDENTITY"
+    )
+    assert setting("from-cli", "developer-id") == "from-cli"
+    assert setting(None, "developer-id") == "from-lane"
+    assert setting(None, "app-store") == "from-flat"  # no app-store subtable
+
+    cmd_flatless = make_command(
+        tmp_path,
+        pyproject={"tool.flet.macos.signing.developer-id.identity": "from-lane"},
+    )
+    assert (
+        cmd_flatless.macos_signing_setting(
+            None, "app-store", "identity", "FLET_MACOS_SIGNING_IDENTITY"
+        )
+        == "from-env"
+    )
+    # the plain lane never consults a subtable
+    assert (
+        cmd_flatless.macos_signing_setting(
+            None, "none", "identity", "FLET_MACOS_SIGNING_IDENTITY"
+        )
+        == "from-env"
+    )
+
+
+def test_lane_subtables_pin_identities_per_lane(tmp_path, monkeypatch):
+    """One pyproject can pin a different certificate per lane."""
+    pyproject = {
+        "tool.flet.macos.signing.distribution": "developer-id",
+        "tool.flet.macos.signing.developer-id.identity": "Developer ID pinned",
+        "tool.flet.macos.signing.app-store.identity": "Apple Distribution pinned",
+    }
+    seen = []
+
+    def record_identity(monkeypatch):
+        # applied after stub_lanes, which installs its own resolve_identity
+        monkeypatch.setattr(
+            build_module,
+            "resolve_identity",
+            lambda identity, policy="codesigning", types=None: (
+                seen.append(identity),
+                DEV_ID,
+            )[1],
+        )
+
+    cmd = make_command(tmp_path, pyproject=pyproject)
+    (cmd.out_dir / "Test.app").mkdir()
+    stub_lanes(monkeypatch, cmd)
+    record_identity(monkeypatch)
+    cmd.sign_macos_app()
+    assert seen[-1] == "Developer ID pinned"
+
+    cmd = make_command(
+        tmp_path, options={"macos_distribution": "app-store"}, pyproject=pyproject
+    )
+    (cmd.out_dir / "Test.app").mkdir(exist_ok=True)
+    stub_lanes(monkeypatch, cmd)
+    record_identity(monkeypatch)
+    cmd.sign_macos_app()
+    assert seen[-1] == "Apple Distribution pinned"
+
+
+def test_unknown_lane_subtable_rejected(tmp_path):
+    """A misnamed subtable fails loudly instead of being silently ignored."""
+    cmd = make_command(
+        tmp_path,
+        pyproject={
+            "tool.flet.macos.signing": {
+                "distribution": "developer-id",
+                "app_store": {"identity": "never read"},
+            },
+            "tool.flet.macos.signing.distribution": "developer-id",
+        },
+    )
+    with pytest.raises(Exit, match=r"Unknown lane subtable .*signing\.app_store"):
+        cmd.resolve_macos_distribution()
+
+
+def test_fully_lane_organized_pyproject(tmp_path, monkeypatch):
+    """Lane-only keys may live in their lane's subtable instead of flat.
+
+    notary_profile is only read by the developer-id lane and
+    provisioning_profile only by the app-store lane, so a config with no
+    flat keys at all must resolve identically.
+    """
+    monkeypatch.setattr(
+        build_module,
+        "resolve_identity",
+        lambda identity, policy="codesigning", types=None: APPLE_DIST,
+    )
+    profile = tmp_path / "test.provisionprofile"
+    profile.write_bytes(b"profile")
+    pyproject = {
+        "tool.flet.macos.signing.distribution": "developer-id",
+        "tool.flet.macos.signing.developer-id.notary_profile": "flet-notary",
+        "tool.flet.macos.signing.app-store.provisioning_profile": str(profile),
+    }
+
+    # developer-id lane finds its notary profile in the subtable
+    cmd = make_command(tmp_path, pyproject=pyproject)
+    assert cmd._macos_notary_credentials().keychain_profile == "flet-notary"
+
+    # app-store lane finds its provisioning profile in the subtable
+    cmd = make_command(
+        tmp_path, options={"macos_distribution": "app-store"}, pyproject=pyproject
+    )
+    assert cmd._macos_store_profile_path() == profile.resolve()

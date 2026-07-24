@@ -244,8 +244,8 @@ Its value is determined in the following order of precedence:
     ```
 
     :::note
-    `com.apple.security.cs.allow-unsigned-executable-memory` is required for
-    `ctypes`/`cffi` callbacks to work on Intel Macs when the app is signed with
+    [`com.apple.security.cs.allow-unsigned-executable-memory`](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.security.cs.allow-unsigned-executable-memory)
+    is required for `ctypes`/`cffi` callbacks to work on Intel Macs when the app is signed with
     the [hardened runtime](#code-signing) (Apple's `libffi` allocates
     writable-and-executable closure memory on `x86_64`). Apple Silicon is
     unaffected. Set it to `false` if your app targets only `arm64` and you
@@ -375,8 +375,8 @@ that built it, but when other users *download* it, macOS Gatekeeper steps in.
 Since macOS 15 (Sequoia), there is no Control-click bypass anymore — users must
 approve every blocked item in **System Settings → Privacy & Security → Open
 Anyway** with an administrator password, and a Python app can trigger this
-per bundled library. For public distribution, sign your app with a
-**Developer ID Application** certificate and [notarize](#notarization) it.
+per bundled library. For public distribution (excluding the Mac App Store),
+sign your app with a **Developer ID Application** certificate and [notarize](#notarization) it.
 
 ### Prerequisites
 
@@ -420,10 +420,12 @@ explicit ad-hoc signature.
 The signing identity is determined in the following order of precedence:
 
 1. [`--macos-signing-identity`](../cli/flet-build.md#--macos-signing-identity)
-2. `[tool.flet.macos.signing].identity`
-3. [`FLET_MACOS_SIGNING_IDENTITY`](../reference/environment-variables.md#flet_macos_signing_identity)
+2. `[tool.flet.macos.signing.<lane>].identity`
+   ([per-lane](#per-lane-settings))
+3. `[tool.flet.macos.signing].identity`
+4. [`FLET_MACOS_SIGNING_IDENTITY`](../reference/environment-variables.md#flet_macos_signing_identity)
    environment variable
-4. Default: none — a plain build keeps its ad-hoc signature and no signing
+5. Default: none — a plain build keeps its ad-hoc signature and no signing
    step runs, while [notarize](#notarization) and
    [App Store](#mac-app-store) builds
    [auto-discover](#identity-auto-discovery) the certificate.
@@ -493,12 +495,60 @@ The distribution lane is determined in the following order of precedence:
 1. [`--macos-distribution`](../cli/flet-build.md#--macos-distribution)
 2. `[tool.flet.macos.signing].distribution`
 3. Default: `none`
+#### Per-lane settings
 
-#### Shipping on both channels
+Every `[tool.flet.macos.signing]` key except `distribution` may be set
+in a per-lane subtable, which overrides the flat key when that lane builds.
+This matters for the one setting whose value genuinely differs per lane —
+the identity, whenever [auto-discovery](#identity-auto-discovery) cannot
+pick for you (say, certificates from several teams in one keychain):
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+The command line has no per-lane syntax: an invocation selects exactly
+one lane, so its options are inherently scoped to it — per-lane values
+are simply per-run values:
+
+```bash
+flet build macos --macos-distribution developer-id \
+  --macos-signing-identity "Developer ID Application: Jane Doe (TEAM123456)" \
+  --macos-notary-profile flet-notary
+
+flet build macos --macos-distribution app-store \
+  --macos-signing-identity "Apple Distribution: Jane Doe (TEAM123456)" \
+  --macos-installer-identity "3rd Party Mac Developer Installer: Jane Doe (TEAM123456)" \
+  --macos-provisioning-profile certs/MyApp_MacAppStore.provisionprofile \
+  --output build/macos-store
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.macos.signing]
+distribution = "developer-id"   # decides which lane subtable below gets chosen
+
+[tool.flet.macos.signing.developer-id]
+identity = "Developer ID Application: Jane Doe (TEAM123456)"
+notary_profile = "flet-notary"
+
+[tool.flet.macos.signing.app-store]
+identity = "Apple Distribution: Jane Doe (TEAM123456)"
+installer_identity = "3rd Party Mac Developer Installer: Jane Doe (TEAM123456)"
+provisioning_profile = "certs/MyApp_MacAppStore.provisionprofile"
+```
+</TabItem>
+</Tabs>
+
+Settings resolve as: CLI option → lane subtable → flat key → environment
+variable. For a key only one lane reads (like [`notary_profile`](#notarization) or
+[`provisioning_profile`](#provisioning-profile)), the subtable and the flat form are equivalent —
+group by lane for readability, or keep them flat for less nesting. A
+misnamed/inexisting subtable (e.g. `[tool.flet.macos.signing.app-wrong-store]`) fails the build.
+
+#### Switching lanes
 
 One `pyproject.toml` can hold both lanes' settings — the notary profile,
 provisioning profile, and installer identity are each read only by their
-own lane, and store [Info.plist](#infoplist) keys are harmless in
+own lane, and App Store [Info.plist](#infoplist) keys are harmless in
 Developer ID builds. Leave the identities to
 [auto-discovery](#identity-auto-discovery) (a pinned identity fits only one
 lane), set your default lane in `pyproject.toml`, and flip it per build:
@@ -508,12 +558,12 @@ flet build macos --macos-distribution app-store
 ```
 
 Both lanes write to the same output directory by default and each build
-replaces it — pass `--output` per lane to keep a notarized `.app` and a
-store `.pkg` side by side.
+replaces it — pass an [output directory](index.md#output-directory) per lane to keep a
+notarized `.app` and a store `.pkg` side by side.
 
 ## Notarization
 
-A Developer-ID-signed app must also be **notarized** by Apple for Gatekeeper to
+A **Developer-ID**-signed app must also be **notarized** by Apple for Gatekeeper to
 open it without warnings. Notarization uploads the app to Apple's notary
 service (a malware scan, typically a few minutes), after which the resulting
 "ticket" is **stapled** to the app so it validates even offline.
@@ -534,7 +584,7 @@ suits you:
   [account.apple.com](https://account.apple.com) → **Sign-In and Security** →
   **App-Specific Passwords** → **+**, generate a
   [password](https://support.apple.com/102654) dedicated to notarization
-  (your regular Apple ID password won't work with `notarytool`).
+  (your regular Apple ID password is not meant here and won't work with `notarytool`).
 
 Flet can receive either kind through two channels:
 
@@ -574,15 +624,17 @@ Flet can receive either kind through two channels:
 Credentials are determined in the following order of precedence:
 
 1. [`--macos-notary-profile`](../cli/flet-build.md#--macos-notary-profile)
-2. `[tool.flet.macos.signing].notary_profile`
-3. [`FLET_MACOS_NOTARY_PROFILE`](../reference/environment-variables.md#flet_macos_notary_profile)
+2. `[tool.flet.macos.signing.developer-id].notary_profile`
+   ([per-lane](#per-lane-settings))
+3. `[tool.flet.macos.signing].notary_profile`
+4. [`FLET_MACOS_NOTARY_PROFILE`](../reference/environment-variables.md#flet_macos_notary_profile)
    environment variable
-4. The [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key),
+5. The [`APPLE_API_KEY`](../reference/environment-variables.md#apple_api_key),
    [`APPLE_API_KEY_ID`](../reference/environment-variables.md#apple_api_key_id)
    and
    [`APPLE_API_ISSUER`](../reference/environment-variables.md#apple_api_issuer)
    environment variables (all three must be set)
-5. Default: none — notarizing builds fail without credentials.
+6. Default: none — notarizing builds fail without credentials.
 
 A configured profile deliberately outranks the `APPLE_API_*` variables, which
 other tooling (Fastlane, CI images) may have exported for a different team.
@@ -660,13 +712,13 @@ Export your certificate and private key as a `.p12` file, then store it
 
 ### Troubleshooting
 
-| Symptom                                                 | Cause and fix                                                                                                                                                                                                                                                                                                                                                              |
-|---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Symptom                                                 | Cause and fix                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `"MyApp" is damaged and can't be opened` on users' Macs | The bundle was modified after signing — most commonly the app writes next to its own files at runtime. Write user data to `os.getcwd()` (Flet points it at a writable location) instead of paths derived from `__file__`. Also triggered by building with [`--no-compile-app`](../cli/flet-build.md#--compile-app)/[`--no-compile-packages`](../cli/flet-build.md#--compile-packages), which lets Python create `__pycache__` inside the bundle at runtime. |
-| `errSecInternalComponent` when signing in CI            | The keychain is locked — unlock it in the job, or use [`apple-actions/import-codesign-certs`](https://github.com/apple-actions/import-codesign-certs), which handles it.                                                                                                                                                                                                   |
-| Notarization status `Invalid`                           | Read the printed notary log: typical causes are an unsigned binary that was added to the bundle after signing, or a certificate that is not a Developer ID Application certificate.                                                                                                                                                                                        |
-| `library load disallowed by system policy`              | A native library is signed with a different Team ID than the app (or not at all). Rebuild so all binaries are re-signed together, or — if your app must load externally acquired native code at runtime — add the `com.apple.security.cs.disable-library-validation` [entitlement](#entitlements).                                                                         |
-| Notarization takes very long                            | The first-ever submission for a new account can take up to an hour or more; subsequent submissions typically finish within minutes.                                                                                                                                                                                                                                        |
+| `errSecInternalComponent` when signing in CI            | The keychain is locked — unlock it in the job, or use [`apple-actions/import-codesign-certs`](https://github.com/apple-actions/import-codesign-certs), which handles it.                                                                                                                                                                                                                                                                                    |
+| Notarization status `Invalid`                           | Read the printed notary log: typical causes are an unsigned binary that was added to the bundle after signing, or a certificate that is not a Developer ID Application certificate.                                                                                                                                                                                                                                                                         |
+| `library load disallowed by system policy`              | A native library is signed with a different Team ID than the app (or not at all). Rebuild so all binaries are re-signed together, or — if your app must load externally acquired native code at runtime — add the `com.apple.security.cs.disable-library-validation` [entitlement](#entitlements).                                                                                                                                                          |
+| Notarization takes very long                            | The first-ever submission for a new account can take up to an hour or more; subsequent submissions typically finish within minutes.                                                                                                                                                                                                                                                                                                                         |
 
 ## Mac App Store
 
@@ -750,10 +802,12 @@ upload as `ITMS-90889`.
 The provisioning profile is determined in the following order of precedence:
 
 1. [`--macos-provisioning-profile`](../cli/flet-build.md#--macos-provisioning-profile)
-2. `[tool.flet.macos.signing].provisioning_profile`
-3. [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
+2. `[tool.flet.macos.signing.app-store].provisioning_profile`
+   ([per-lane](#per-lane-settings))
+3. `[tool.flet.macos.signing].provisioning_profile`
+4. [`FLET_MACOS_PROVISIONING_PROFILE`](../reference/environment-variables.md#flet_macos_provisioning_profile)
    environment variable
-4. Default: none — App Store builds fail without one.
+5. Default: none — App Store builds fail without one.
 
 ### Installer identity
 
@@ -766,10 +820,12 @@ a unique substring, matched only among installer certificates.
 The installer identity is determined in the following order of precedence:
 
 1. [`--macos-installer-identity`](../cli/flet-build.md#--macos-installer-identity)
-2. `[tool.flet.macos.signing].installer_identity`
-3. [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
+2. `[tool.flet.macos.signing.app-store].installer_identity`
+   ([per-lane](#per-lane-settings))
+3. `[tool.flet.macos.signing].installer_identity`
+4. [`FLET_MACOS_INSTALLER_IDENTITY`](../reference/environment-variables.md#flet_macos_installer_identity)
    environment variable
-4. Default: none — the certificate is
+5. Default: none — the certificate is
    [auto-discovered](#identity-auto-discovery).
 
 ### Building for the App Store
