@@ -907,3 +907,11 @@ help installing and using adb on different platforms.
     ```bash
     adb devices
     ```
+
+## Troubleshooting
+
+| Symptom                                                                                                                         | Cause and fix                                                                                                                                                             |
+|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build succeeds but the app crashes on launch; `adb logcat` shows `FileNotFoundError`/`OSError` with a `sitepackages.zip/…` path | The package reads bundled data through `__file__`-relative paths — add it to [Extract packages](#extract-packages). Capture the traceback with the [ADB tips](#adb-tips). |
+| `keytool: command not found` when creating the upload keystore                                                                  | `keytool` ships with the Java JDK (installed with the [Android SDK](#android-sdk) prerequisite) — call it by its full path or add the JDK's `bin` directory to `PATH`.    |
+| Android manifest merger fails after adding a provider                                                                           | The `authorities` value clashes with the built-in `${applicationId}.provider` — pick a different one (see [Providers](#providers)).                                       |

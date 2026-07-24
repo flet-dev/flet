@@ -796,6 +796,12 @@ the `.app` inside.
 
 #### GitHub Actions
 
+:::note
+The steps below cover only signing and notarization — graft them onto a
+complete build workflow such as the one in the
+[CI/CD guide](index.md#github-actions).
+:::
+
 A CI runner starts with an empty keychain, so the one-time setup is about
 getting your certificate and notary credentials into
 [repository secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets):
