@@ -816,6 +816,11 @@ getting your certificate and notary credentials into
    right-click the certificate → **Export…** and save it in the `.p12`
    format, protected by an export password
    ([Apple's guide](https://support.apple.com/guide/keychain-access/import-and-export-keychain-items-kyca35961/mac)).
+   The `.cer` file downloadable from the
+   [developer portal](https://developer.apple.com/account/resources/certificates/list)
+   is not a substitute: it holds only the public certificate, while the private
+   key exists solely in the keychain of the Mac that created the
+   certificate request — hence the export from Keychain Access there.
 2. Store the secrets — in the repository's **Settings → Secrets and
    variables → Actions**, or with the
    [`gh` CLI](https://cli.github.com/manual/gh_secret_set). Secrets hold

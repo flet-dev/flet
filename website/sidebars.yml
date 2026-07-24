@@ -72,6 +72,8 @@ docs:
     Release notes: updates/release-notes.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
+      v1.0.0:
+        "iOS: per-method signing settings now override top-level ones": updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence.md
       v0.86.0:
         App files ship unpacked in a read-only bundle; storage dirs reworked: updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle.md
         "Android: site-packages ship zipped; some packages need extract_packages": updates/breaking-changes/v0-86-0/android-extract-packages.md

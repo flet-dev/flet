@@ -294,9 +294,7 @@ class Command(BaseBuildCommand):
 
         Precedence: CLI option > `[tool.flet.macos.signing.<lane>]`
         subtable > flat `[tool.flet.macos.signing]` key > environment
-        variable. The lane subtable deliberately beats the flat key — a
-        per-lane value that lost to a generic one would be pointless
-        (iOS's `export_methods` gets this backwards).
+        variable.
 
         Args:
             cli_value: The already-parsed CLI option value, or None.

@@ -1293,26 +1293,26 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         ios_provisioning_profile = (
             self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
             or ios_export_method_opts.get("provisioning_profile")
+            or self.get_pyproject("tool.flet.ios.provisioning_profile")
         )
 
         ios_signing_certificate = (
             self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
             or ios_export_method_opts.get("signing_certificate")
+            or self.get_pyproject("tool.flet.ios.signing_certificate")
         )
 
         ios_export_options = (
-            self.get_pyproject("tool.flet.ios.export_options")
-            or ios_export_method_opts.get("export_options")
+            ios_export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
             or {}
         )
 
         ios_team_id = (
             self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team_id")
             or ios_export_method_opts.get("team_id")
+            or self.get_pyproject("tool.flet.ios.team_id")
         )
 
         if (
