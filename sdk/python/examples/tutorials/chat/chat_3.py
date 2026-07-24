@@ -39,7 +39,7 @@ def main(page: ft.Page):
 
     def join_click(e):
         if not user_name.value:
-            user_name.error_text = "Name cannot be blank!"
+            user_name.error = "Name cannot be blank!"
         else:
             page.session.store.set("user_name", user_name.value)
             # page.dialog.open = False

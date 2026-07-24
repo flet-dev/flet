@@ -7,10 +7,10 @@ def main(page: ft.Page):
 
     def btn_click(e):
         if not txt_name.value:
-            txt_name.error_text = "Please enter your name"
+            txt_name.error = "Please enter your name"
             greeting.value = ""
         else:
-            txt_name.error_text = None
+            txt_name.error = None
             greeting.value = f"Hello, {txt_name.value}!"
 
     page.add(

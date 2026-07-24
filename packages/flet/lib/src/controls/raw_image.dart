@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../transport/data_channel.dart';
+import '../utils/frame_stream.dart';
 import '../utils/images.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -29,6 +30,16 @@ import 'base_controls.dart';
 /// After every applied frame the widget sends a 1-byte `[0xFF]` ack back
 /// to Python — the producer awaits it, which is the backpressure that
 /// paces `render()` loops to display speed.
+///
+/// While the browser tab is hidden the main-thread compositor is
+/// suspended, but a Pyodide `render()` loop runs in a Web Worker that the
+/// browser does *not* throttle. If frames kept being decoded and applied
+/// they would pile up as undisposed [ui.Image]s and post-frame callbacks
+/// that never run, and the whole backlog would flush into the engine on
+/// resume — flooding it with per-frame exceptions. So while hidden the
+/// widget stops decoding entirely: it coalesces to the most recent frame,
+/// acks each one immediately (keeping the producer loop alive without a
+/// backlog), and applies only that latest frame when the tab returns.
 class RawImageControl extends StatefulWidget {
   final Control control;
 
@@ -39,7 +50,8 @@ class RawImageControl extends StatefulWidget {
   State<RawImageControl> createState() => _RawImageControlState();
 }
 
-class _RawImageControlState extends State<RawImageControl> {
+class _RawImageControlState extends State<RawImageControl>
+    with FrameStreamVisibility<RawImageControl> {
   // Serialize concurrent frame applies so swaps happen in arrival order.
   Future<void>? _applyChain;
 
@@ -48,9 +60,26 @@ class _RawImageControlState extends State<RawImageControl> {
 
   ui.Image? _image;
 
+  // The most recent frame received while hidden (raw opcode + payload,
+  // owned copy). Applied once when the tab becomes visible again; older
+  // frames received while hidden are dropped. Null when nothing is
+  // pending or the tab is visible.
+  Uint8List? _deferredFrame;
+
   // 1-byte ack sent back to Python after each apply completes; the Python
   // side awaits it, giving `render()` its round-trip backpressure.
   static final Uint8List _frameAppliedAck = Uint8List.fromList([0xFF]);
+
+  @override
+  void onVisibilityRestored() {
+    // Paint the latest frame that arrived while hidden (if any). It was
+    // already acked on arrival, so apply it without acking again.
+    final deferred = _deferredFrame;
+    _deferredFrame = null;
+    if (deferred != null) {
+      _applyFrame(deferred, ack: false);
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -78,40 +107,65 @@ class _RawImageControlState extends State<RawImageControl> {
     super.dispose();
   }
 
-  /// Inbound DataChannel frame. Wire format:
+  /// Inbound DataChannel frame. Applies it immediately when visible;
+  /// while hidden, coalesces to the latest frame (see [_applyFrame] for
+  /// the wire format).
+  void _onChannelFrame(Uint8List bytes) {
+    if (bytes.isEmpty) return;
+    if (!visible) {
+      // Tab hidden: the compositor is suspended, so decoding and applying
+      // would build a backlog that floods the engine on resume. Drop any
+      // earlier hidden frame, keep only this latest one to paint on
+      // resume, and ack immediately so the producer loop stays alive.
+      // Owned copy: the transport may reuse the inbound buffer before the
+      // tab returns.
+      _deferredFrame = Uint8List.fromList(bytes);
+      _channel?.send(_frameAppliedAck);
+      return;
+    }
+    _applyFrame(bytes, ack: true);
+  }
+
+  /// Decode and apply a frame. Wire format:
   ///   [0x01][encoded bytes]                → apply encoded (PNG/JPEG/WebP)
   ///   [0x03]                               → clear
   ///   [0x04][w u32 LE][h u32 LE][RGBA8888] → apply raw (premultiplied)
-  void _onChannelFrame(Uint8List bytes) {
+  ///
+  /// When [ack] is true a `[0xFF]` frame-applied ack is sent once the apply
+  /// completes. Frames deferred while hidden pass [ack] `false` because they
+  /// were already acked on arrival.
+  void _applyFrame(Uint8List bytes, {required bool ack}) {
     if (bytes.isEmpty) return;
     // Zero-copy slice of the same underlying buffer.
     final payload = Uint8List.sublistView(bytes, 1);
     switch (bytes[0]) {
       case 0x01:
-        _enqueueAndAck(() => _applyEncoded(payload));
+        _enqueue(() => _applyEncoded(payload), ack: ack);
         break;
       case 0x03:
-        _enqueueAndAck(_clear);
+        _enqueue(_clear, ack: ack);
         break;
       case 0x04:
-        _enqueueAndAck(() => _applyRaw(payload));
+        _enqueue(() => _applyRaw(payload), ack: ack);
         break;
       default:
         debugPrint(
             "RawImage: unknown data-channel opcode 0x${bytes[0].toRadixString(16)}");
         // Ack anyway so a newer Python side never hangs its render loop
         // waiting on a frame this (older) client can't apply.
-        _channel?.send(_frameAppliedAck);
+        if (ack) _channel?.send(_frameAppliedAck);
     }
   }
 
-  void _enqueueAndAck(Future<void> Function() task) {
+  void _enqueue(Future<void> Function() task, {required bool ack}) {
     final prev = _applyChain ?? Future.value();
     final next = prev.then((_) => task());
     _applyChain = next.catchError((_) {});
-    next.whenComplete(() {
-      _channel?.send(_frameAppliedAck);
-    });
+    if (ack) {
+      next.whenComplete(() {
+        _channel?.send(_frameAppliedAck);
+      });
+    }
   }
 
   Future<void> _applyEncoded(Uint8List bytes) async {

@@ -623,6 +623,14 @@ class Page(BasePage):
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None
+        # App/window visibility, driven by `on_app_lifecycle_state_change`.
+        # Producer loops (e.g. `RawImage.render`) await `wait_until_visible`
+        # to park while the tab is backgrounded instead of streaming frames a
+        # suspended client can only pile up. Starts visible; the event is set
+        # while visible and cleared while hidden.
+        self.__app_visible = True
+        self.__app_visible_event = asyncio.Event()
+        self.__app_visible_event.set()
 
     def get_control(self, id: int) -> Optional[BaseControl]:
         """
@@ -768,7 +776,54 @@ class Page(BasePage):
                     e.view = v
                     break
 
+        elif isinstance(e, AppLifecycleStateChangeEvent):
+            # `HIDE`/`PAUSE` are the only states where the client cannot
+            # display frames (backgrounded tab, minimized/paused window).
+            # `DETACH` unparks so loops don't hang on teardown.
+            self.__set_app_visible(
+                e.state not in (AppLifecycleState.HIDE, AppLifecycleState.PAUSE)
+            )
+
         return super().before_event(e)
+
+    def __set_app_visible(self, visible: bool) -> None:
+        self.__app_visible = visible
+        if visible:
+            self.__app_visible_event.set()
+        else:
+            self.__app_visible_event.clear()
+
+    @property
+    def app_visible(self) -> bool:
+        """
+        Whether the app window (or browser tab) is currently visible.
+
+        Driven by `on_app_lifecycle_state_change`: `False` while the
+        state is `HIDE` or `PAUSE`, `True` otherwise. Distinct from the
+        control-level `visible` property, which hides the page itself.
+        """
+        return self.__app_visible
+
+    async def wait_until_visible(self) -> None:
+        """
+        Suspend until the app window (or browser tab) is visible.
+
+        Returns immediately when already visible. While hidden, the client's
+        render pipeline is suspended, so a producer loop that keeps pushing
+        frames only builds a backlog that floods the client on resume.
+        Awaiting this at the top of such a loop parks the producer until the
+        tab returns:
+
+        ```python
+        while True:
+            await page.wait_until_visible()
+            await raw_image.render(produce_frame())
+        ```
+
+        The streaming controls (`RawImage`, `MatplotlibChart`) already gate
+        their sends on this internally.
+        """
+        await self.__app_visible_event.wait()
 
     def run_task(
         self,

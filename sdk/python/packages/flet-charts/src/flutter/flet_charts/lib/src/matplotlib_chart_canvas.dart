@@ -45,7 +45,8 @@ class MatplotlibChartCanvasControl extends StatefulWidget {
 // ---------------------------------------------------------------------------
 
 abstract class _MatplotlibChartCanvasStateBase
-    extends State<MatplotlibChartCanvasControl> {
+    extends State<MatplotlibChartCanvasControl>
+    with FrameStreamVisibility<MatplotlibChartCanvasControl> {
   // Serialize concurrent apply_full / apply_diff calls so backdrop mutations
   // happen in arrival order.
   Future<void>? _applyChain;
@@ -55,6 +56,26 @@ abstract class _MatplotlibChartCanvasStateBase
 
   DataChannel? _channel;
   StreamSubscription<Uint8List>? _channelSub;
+
+  // See [FrameStreamVisibility]: while hidden the compositor is suspended but
+  // the Python producer keeps streaming, so we keep updating offscreen state
+  // (the backbuffer / backdrop, so incremental diffs stay correct) but skip
+  // display uploads and `setState`, and dispose replaced images immediately.
+  // The latest frame is presented once when visibility returns.
+  @override
+  void onVisibilityRestored() {
+    // Present the frame accumulated while hidden. Runs on the apply chain so
+    // it can't race a frame that is still being applied. No ack: the frames
+    // it displays were already acked as they arrived.
+    _enqueue(refreshOnResume);
+  }
+
+  /// Present the latest offscreen state after the tab/window becomes visible
+  /// again. The default just repaints; the CPU strategy overrides this to
+  /// also upload the display image whose GPU upload it skipped while hidden.
+  Future<void> refreshOnResume() async {
+    if (mounted) setState(() {});
+  }
 
   @override
   void didChangeDependencies() {
@@ -332,22 +353,14 @@ class _GpuMatplotlibChartCanvasState
   void _replaceBackdrop(ui.Image? image) {
     final old = _backdrop;
     _backdrop = image;
-    if (old != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        old.dispose();
-      });
-    }
+    if (old != null) disposeReplaced(old);
   }
 
   void _disposeDiffs() {
     if (_diffs.isEmpty) return;
     final old = List<ui.Image>.of(_diffs);
     _diffs.clear();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      for (final img in old) {
-        img.dispose();
-      }
-    });
+    disposeReplacedAll(old);
   }
 
   @override
@@ -398,6 +411,9 @@ class _CpuMatplotlibChartCanvasState
   Uint8List? _backbuffer;
   int _bbWidth = 0;
   int _bbHeight = 0;
+  // Set when the backbuffer changed while hidden without a display upload;
+  // `refreshOnResume` uploads the latest backbuffer once when visible again.
+  bool _displayStale = false;
 
   @override
   void disposeResources() {
@@ -414,10 +430,7 @@ class _CpuMatplotlibChartCanvasState
     _backbuffer = decoded.bytes;
     _bbWidth = decoded.width;
     _bbHeight = decoded.height;
-
-    final image =
-        await _imageFromRgba(decoded.bytes, decoded.width, decoded.height);
-    _swapDisplay(image);
+    await _present();
   }
 
   @override
@@ -430,8 +443,7 @@ class _CpuMatplotlibChartCanvasState
     _backbuffer = f.pixels;
     _bbWidth = f.width;
     _bbHeight = f.height;
-    final image = await _imageFromRgba(f.pixels, f.width, f.height);
-    _swapDisplay(image);
+    await _present();
   }
 
   @override
@@ -452,14 +464,14 @@ class _CpuMatplotlibChartCanvasState
       _backbuffer = decoded.bytes;
       _bbWidth = decoded.width;
       _bbHeight = decoded.height;
-      final image =
-          await _imageFromRgba(decoded.bytes, decoded.width, decoded.height);
-      _swapDisplay(image);
+      await _present();
       return;
     }
 
     // Composite: matplotlib's diff PNG has alpha=0 for unchanged pixels.
-    // Where alpha != 0, copy the new pixel into the backbuffer.
+    // Where alpha != 0, copy the new pixel into the backbuffer. This runs
+    // even while hidden so the backbuffer stays correct across the diffs
+    // that arrive in the background; only the GPU upload is deferred.
     final bb = _backbuffer!.buffer.asUint32List();
     final df = decoded.bytes.buffer.asUint32List();
     for (int i = 0; i < df.length; i++) {
@@ -469,8 +481,32 @@ class _CpuMatplotlibChartCanvasState
       }
     }
 
+    await _present();
+  }
+
+  /// Upload the current backbuffer as the display image — but only when
+  /// visible. While hidden, skip the GPU upload (it would just pile up work
+  /// to flush into the engine on resume) and mark the display stale so
+  /// [refreshOnResume] uploads the latest backbuffer once.
+  Future<void> _present() async {
+    if (!visible) {
+      _displayStale = true;
+      return;
+    }
+    if (_backbuffer == null) return;
     final image = await _imageFromRgba(_backbuffer!, _bbWidth, _bbHeight);
     _swapDisplay(image);
+  }
+
+  @override
+  Future<void> refreshOnResume() async {
+    if (_displayStale && _backbuffer != null) {
+      _displayStale = false;
+      final image = await _imageFromRgba(_backbuffer!, _bbWidth, _bbHeight);
+      _swapDisplay(image);
+    } else if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -480,12 +516,9 @@ class _CpuMatplotlibChartCanvasState
     _backbuffer = null;
     _bbWidth = 0;
     _bbHeight = 0;
-    if (old != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        old.dispose();
-      });
-    }
-    if (mounted) setState(() {});
+    _displayStale = false;
+    if (old != null) disposeReplaced(old);
+    if (visible && mounted) setState(() {});
   }
 
   Future<_DecodedRgba?> _decodeRgba(Uint8List bytes) async {
@@ -509,11 +542,7 @@ class _CpuMatplotlibChartCanvasState
     final old = _displayImage;
     _displayImage = newImage;
     if (mounted) setState(() {});
-    if (old != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        old.dispose();
-      });
-    }
+    if (old != null) disposeReplaced(old);
   }
 
   @override

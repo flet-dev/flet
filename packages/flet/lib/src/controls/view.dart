@@ -15,6 +15,7 @@ import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/boot_screen.dart';
@@ -285,6 +286,11 @@ class _ViewControlState extends State<ViewControl> {
             return;
           }
           debugPrint("Page.onPopInvokedWithResult()");
+          // Capture THIS view's route now, so the deferred pop below targets
+          // exactly this view — not whatever is topmost when it runs. Without
+          // this, a modal (dialog/bottom sheet) dismissed in the same tick
+          // could be popped instead of the view.
+          final viewRoute = ModalRoute.of(context);
           if (_popCompleter != null && !_popCompleter!.isCompleted) {
             _popCompleter!.completeError("Aborted");
           }
@@ -308,7 +314,9 @@ class _ViewControlState extends State<ViewControl> {
                     if (!mounted) {
                       return;
                     }
-                    Navigator.pop(context, true);
+                    if (viewRoute != null) {
+                      closeModalRoute(viewRoute, true);
+                    }
                     if (mounted) {
                       setState(() {
                         _allowPop = false;

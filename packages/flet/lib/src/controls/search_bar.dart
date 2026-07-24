@@ -244,9 +244,16 @@ class _SearchBarControlState extends State<SearchBarControl> {
         },
         suggestionsBuilder:
             (BuildContext context, SearchController controller) {
-          return [
-            _SearchBarSuggestionsHost(control: widget.control),
-          ];
+          Widget suggestions =
+              _SearchBarSuggestionsHost(control: widget.control);
+          if (widget.control.hasEventHandler("tap_outside_view")) {
+            suggestions = TextFieldTapRegion(
+              onTapOutside: (PointerDownEvent event) =>
+                  widget.control.triggerEvent("tap_outside_view"),
+              child: suggestions,
+            );
+          }
+          return [suggestions];
         });
 
     return LayoutControl(control: widget.control, child: anchor);

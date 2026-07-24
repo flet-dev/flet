@@ -44,6 +44,15 @@ android {
             // only opens a hole for the matching glob; any other future duplicate-native-lib conflict still fails loudly.
             pickFirsts += listOf("**/libc++_shared.so")
 
+// flet: legacy_packaging {% if cookiecutter.options.android_legacy_packaging %}
+            // Legacy native-library packaging (opt-in via `--android-legacy-packaging` /
+            // `[tool.flet.android].legacy_packaging`). The installer extracts every `.so`
+            // to nativeLibraryDir on install instead of the app memory-mapping them
+            // straight from the APK. Produces a smaller raw `.apk` for side-loading and
+            // a larger on-device install (a second, extracted copy of the libs).
+            useLegacyPackaging = true
+// flet: end of legacy_packaging {% endif %}
+
 // flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
             // Strip native libs of ABIs not requested via `target_arch`.
             // `ndk.abiFilters` alone can't do this: the Flutter Gradle plugin adds all default

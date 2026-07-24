@@ -184,12 +184,12 @@ def main(page: ft.Page):
 
                     # simple validation instead of silently doing nothing
                     if not name:
-                        name_field.error_text = "Name is required"
+                        name_field.error = "Name is required"
                         page.update()
                         return
 
                     if name in data:
-                        name_field.error_text = "System already exists"
+                        name_field.error = "System already exists"
                         page.update()
                         return
 

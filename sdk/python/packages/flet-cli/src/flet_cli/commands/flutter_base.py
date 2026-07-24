@@ -21,14 +21,26 @@ from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 
-no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+# Detect the plain-output request BEFORE building the shared console: the
+# `--no-rich-output` argparse flag is parsed per-command, too late to
+# affect this module-level console, so check sys.argv for it here too
+# (alongside the env var). Without this, the flag only suppressed emojis
+# while the color + Live spinner kept going.
+no_rich_output = (
+    get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT") or "--no-rich-output" in sys.argv
+)
 
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
 console = Console(
     log_path=False,
     theme=Theme({"log.message": "green bold"}),
-    force_terminal=not no_rich_output,
+    # no_rich_output forces fully plain output (no color, no animation).
+    # Otherwise auto-detect the terminal (force_terminal=None): a real TTY
+    # gets the animated Live spinner, but piped output (CI, cloud build)
+    # must NOT be fed one line per animation frame — forcing the terminal
+    # on there floods non-TTY logs with thousands of spinner redraws.
+    force_terminal=False if no_rich_output else None,
 )
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
