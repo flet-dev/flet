@@ -1338,10 +1338,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
-                # lowered for parity with the CLI option's type=str.lower
-                or (os.getenv("FLET_WEB_ROUTE_URL_STRATEGY") or "").lower()
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
-            ),
+            ).lower(),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
             # select the dart2wasm/skwasm build, where every JS <-> Dart byte
             # buffer crossing pays a WasmGC boundary conversion instead of a
@@ -1350,9 +1349,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
-                or (os.getenv("FLET_WEB_RENDERER") or "").lower()
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
-            ),
+            ).lower(),
             "pwa_background_color": (
                 self.options.pwa_background_color
                 or self.get_pyproject("tool.flet.web.pwa_background_color")
