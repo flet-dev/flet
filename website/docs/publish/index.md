@@ -11,6 +11,11 @@ import Tabs from '@theme/Tabs';
 Flet CLI provides the [`flet build`](../cli/flet-build.md) command to package a
 Flet app into a standalone executable or installable package for distribution.
 
+:::info[Alternative: flet pack]
+For desktop targets, a PyInstaller-based route is also supported —
+see [`flet pack`](using-pyinstaller.md).
+:::
+
 ## Prerequisites
 
 ### Platform matrix

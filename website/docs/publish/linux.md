@@ -9,6 +9,11 @@ This guide provides detailed Linux-specific information.
 Complementary and more general information is available [here](index.md).
 :::
 
+:::info[Alternative: flet pack]
+For a quicker, PyInstaller-based way to package desktop apps — without the
+build-toolchain prerequisites below — see [`flet pack`](using-pyinstaller.md).
+:::
+
 ## Prerequisites
 
 Flet uses [Flutter](https://flutter.dev) to build Linux apps. Compiling the app

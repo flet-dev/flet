@@ -63,6 +63,7 @@ docs:
         Hosting:
         - Cloudflare: publish/web/static-website/hosting/cloudflare.md
         - GitHub Pages: publish/web/static-website/hosting/github-pages.md
+    Using PyInstaller: publish/using-pyinstaller.md
   Extending Flet:
   - extend/user-extensions.md
   - extend/built-in-extensions.md
