@@ -10,7 +10,7 @@ Complementary and more general information is available [here](index.md).
 :::
 
 :::info[Alternative: flet pack]
-For a quicker, PyInstaller-based way to package desktop apps — without the
+For a PyInstaller-based way to package desktop apps — without the
 build-toolchain prerequisites below — see [`flet pack`](using-pyinstaller.md).
 :::
 

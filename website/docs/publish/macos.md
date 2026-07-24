@@ -13,7 +13,7 @@ Complementary and more general information is available [here](index.md).
 :::
 
 :::info[Alternative: flet pack]
-For a quicker, PyInstaller-based way to package desktop apps — no Flutter
+For a PyInstaller-based way to package desktop apps — no Flutter
 toolchain required — see [`flet pack`](using-pyinstaller.md).
 :::
 
