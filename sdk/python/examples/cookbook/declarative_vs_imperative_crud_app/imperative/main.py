@@ -32,7 +32,6 @@ class Item(ft.Row):
 
     def delete_item(self, e):
         self.page.controls.remove(self)
-        self.page.update()
 
     def edit_item(self, e):
         self.text.visible = False
@@ -41,7 +40,6 @@ class Item(ft.Row):
         self.save_button.visible = True
         self.cancel_button.visible = True
         self.edit_text.visible = True
-        self.page.update()
 
     def save_item(self, e):
         self.text.value = f"{self.first_name_field.value} {self.last_name_field.value}"
@@ -51,7 +49,6 @@ class Item(ft.Row):
         self.save_button.visible = False
         self.cancel_button.visible = False
         self.edit_text.visible = False
-        self.page.update()
 
     def cancel_item(self, e):
         self.text.visible = True
@@ -60,7 +57,6 @@ class Item(ft.Row):
         self.save_button.visible = False
         self.cancel_button.visible = False
         self.edit_text.visible = False
-        self.page.update()
 
 
 def main(page: ft.Page):
@@ -71,7 +67,6 @@ def main(page: ft.Page):
         page.add(item)
         first_name.value = ""
         last_name.value = ""
-        page.update()
 
     first_name = ft.TextField(label="First Name", width=200)
     last_name = ft.TextField(label="Last Name", width=200)
