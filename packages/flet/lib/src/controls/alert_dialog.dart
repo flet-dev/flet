@@ -134,23 +134,20 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         });
       });
     } else if (!open && lastOpen) {
-      // Synchronous pop during build — Flutter schedules it for the end of
-      // the frame internally. Using `removeRoute` in a postFrame callback
-      // (the earlier sibling-host fix) raced with `View`'s on_confirm_pop
-      // path, which ALSO schedules a post-frame `Navigator.pop(context,
-      // true)`. Both callbacks fired in the same tick, and the view-pop
-      // callback ended up popping our just-finished-dismissing dialog
-      // instead of the target view — breaking the
-      // `test_pop_view_confirm` integration test.
+      // Mark closed now so this branch doesn't re-fire, then close this
+      // dialog's own route after the frame. Popping during build throws
+      // "setState() called during build" when the same frame opens another
+      // route/overlay (e.g. a SnackBar). Targeting `_dialogRoute` (not the
+      // topmost route) keeps this from racing `View`'s confirm-pop, which now
+      // also pops its own route — see `test_pop_view_confirm`. `_dialogRoute`
+      // is left set so the open path's `.then` still fires `dismiss` after the
+      // close animation completes.
       control.updateProperties({"_open": false}, python: false);
       final route = _dialogRoute;
-      if (route != null && route.isActive) {
-        debugPrint(
-            "AlertDialog(${control.id}): Closing dialog managed by this widget.");
-        Navigator.of(context).pop();
-      } else {
-        debugPrint(
-            "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
+      if (route != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          closeModalRoute(route);
+        });
       }
     }
     return const SizedBox.shrink();

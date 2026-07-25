@@ -1,3 +1,7 @@
+## 0.86.3
+
+* Fix modal controls (`AlertDialog`, `CupertinoAlertDialog`, `BottomSheet`, `CupertinoBottomSheet`) throwing "setState()/markNeedsBuild() called during build" and blanking the screen when closed in the same frame another route/overlay opens (e.g. a `SnackBar`). Each modal now tracks its own `ModalRoute` and closes it via a post-frame `closeModalRoute()` that pops that specific route; `View`'s confirm-pop pops its own route too, removing the wrong-route race between a dismissing modal and a view pop.
+
 ## 0.86.2
 
 * Flutter updated to [3.44.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3447).
