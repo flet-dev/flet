@@ -1,8 +1,10 @@
-## Unreleased
+## 0.86.3
 
 ### Bug fixes
 
 * Fix `page.window.maximized = True` intermittently reverting to unmaximized right after startup on macOS, when set in the same patch as `page.title` (e.g. `page.title = "My App"; page.window.maximized = True` in `main()`) by @davidlawson.
+* Fix `flet build` picking a non-decodable icon/splash image when several files share a base name, producing a machine-dependent `NoDecoderForImageFormatException` from `flutter_launcher_icons`. When an app's `assets` held, say, both `icon.png` and `icon.svg`, `find_platform_image` selected the first match from `glob.glob(...)` — whose order is filesystem-dependent — so the same app could pick `icon.png` on one machine and `icon.svg` on another (SVG is vector and can't be decoded by the raster icon/splash generators), turning a working build into a crash purely based on directory listing order. Candidates are now filtered to formats the generators can actually decode (`.svg` is dropped everywhere; `.icns` stays macOS-only and `.ico` Windows-only) and ranked so a raster image (`.png` first) always wins, making the choice deterministic across machines. When the only supplied image is an SVG (no raster sibling), it's skipped with a build-log warning and the default Flet icon is used instead of crashing by @FeodorFitsner.
+* Fix modal controls (`AlertDialog`, `CupertinoAlertDialog`, `BottomSheet`, `CupertinoBottomSheet`) crashing to a black screen with "setState()/markNeedsBuild() called during build" when they close in the same frame that another route or overlay opens — e.g. dismissing a bottom sheet and showing a `SnackBar` from one handler. The close path popped the route synchronously during `build`, so the exit animation notified a listener that was mid-build. Each modal now tracks its own `ModalRoute` and closes it in a post-frame callback, popping *that* route (never the topmost one); `View`'s confirm-pop pops its own route too, so a modal dismissed in the same tick as a view pop can no longer dismiss the wrong one by @FeodorFitsner.
 
 ## 0.86.2
 

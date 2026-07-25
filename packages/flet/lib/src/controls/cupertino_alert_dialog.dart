@@ -5,17 +5,30 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/colors.dart';
+import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
-class CupertinoAlertDialogControl extends StatelessWidget {
+class CupertinoAlertDialogControl extends StatefulWidget {
   final Control control;
 
   const CupertinoAlertDialogControl({super.key, required this.control});
 
+  @override
+  State<CupertinoAlertDialogControl> createState() =>
+      _CupertinoAlertDialogControlState();
+}
+
+class _CupertinoAlertDialogControlState
+    extends State<CupertinoAlertDialogControl> {
+  // The dialog's own route, tracked so the close path can pop exactly this
+  // route (never whatever is topmost) after the frame.
+  ModalRoute? _dialogRoute;
+
   Widget _createCupertinoAlertDialog() {
+    final control = widget.control;
     return ControlInheritedNotifier(
       notifier: control,
       child: Builder(builder: (context) {
@@ -58,6 +71,7 @@ class CupertinoAlertDialogControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final control = widget.control;
     debugPrint("CupertinoAlertDialog build: ${control.id}");
 
     final lastOpen = control.getBool("_open", false)!;
@@ -75,7 +89,7 @@ class CupertinoAlertDialogControl extends StatelessWidget {
       control.updateProperties({"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ModalRoute? dialogRoute;
+        if (!context.mounted) return;
         showDialog(
             barrierDismissible: !modal,
             // Render the barrier in the dialog widget so it updates live.
@@ -84,11 +98,12 @@ class CupertinoAlertDialogControl extends StatelessWidget {
             useRootNavigator: false,
             context: context,
             builder: (context) {
-              dialogRoute ??= ModalRoute.of(context);
+              _dialogRoute = ModalRoute.of(context);
               return _createCupertinoAlertDialog();
             }).then((value) {
-          (dialogRoute?.completed ?? Future.value()).then((_) {
+          (_dialogRoute?.completed ?? Future.value()).then((_) {
             debugPrint("Dismissing CupertinoAlertDialog(${control.id})");
+            _dialogRoute = null;
             control.updateProperties({"_open": false}, python: false);
             control.updateProperties({"open": false});
             control.triggerEvent("dismiss");
@@ -96,14 +111,17 @@ class CupertinoAlertDialogControl extends StatelessWidget {
         });
       });
     } else if (!open && lastOpen) {
-      if (Navigator.of(context).canPop() == true) {
-        debugPrint(
-            "CupertinoAlertDialog(${control.id}): Closing dialog managed by this widget.");
-        Navigator.of(context).pop();
-        control.updateProperties({"_open": false}, python: false);
-      } else {
-        debugPrint(
-            "CupertinoAlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
+      // Mark closed now so this branch doesn't re-fire, then close this
+      // dialog's own route after the frame — popping during build throws
+      // "setState() called during build" when the same frame opens another
+      // route/overlay. Targeting `_dialogRoute` avoids racing `View`'s
+      // confirm-pop, which also pops its own route.
+      control.updateProperties({"_open": false}, python: false);
+      final route = _dialogRoute;
+      if (route != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          closeModalRoute(route);
+        });
       }
     }
     return const SizedBox.shrink();
