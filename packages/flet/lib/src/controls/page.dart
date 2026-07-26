@@ -62,6 +62,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final AppLifecycleListener _appLifecycleListener;
   ServiceRegistry? _services;
   String? _servicesUid;
+  Control? _servicesControl;
   ServiceBinding? _windowService;
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
@@ -227,18 +228,31 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var servicesControl = widget.control.child("_services");
     if (servicesControl != null) {
       var uid = servicesControl.internals?["uid"];
-      if (_services == null || _servicesUid != uid) {
+      // Rebuild the registry when the uid changes OR when the Control instance
+      // itself is replaced. The uid identifies the Python-side ServiceRegistry,
+      // which outlives individual patches, so it stays the same when a REPLACE
+      // swaps in a fresh Control object — and ServiceRegistry listens to the
+      // object it was handed. Keying on uid alone left the registry subscribed
+      // to a detached Control: services registered afterwards were never built,
+      // and invoking one timed out with "Timeout waiting for invoke method
+      // listener for <Service>(id).<method>". Matches how `window` below tracks
+      // its control by identity.
+      if (_services == null ||
+          _servicesUid != uid ||
+          !identical(servicesControl, _servicesControl)) {
         _services?.dispose();
         _services = ServiceRegistry(
             control: servicesControl,
             propertyName: "_services",
             backend: backend);
         _servicesUid = uid;
+        _servicesControl = servicesControl;
       }
     } else if (_services != null) {
       _services?.dispose();
       _services = null;
       _servicesUid = null;
+      _servicesControl = null;
     }
 
     var windowControl = widget.control.child("window", visibleOnly: false);

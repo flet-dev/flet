@@ -1,3 +1,9 @@
+## 0.86.4
+
+### Bug fixes
+
+* Fix services registered after an embedded `FletApp` is opened never becoming usable on the host page — calling one failed with `Timeout waiting for invoke method listener for <Service>(id).<method>`. `ServiceRegistry` subclasses `Service`, so it registered *itself* on construction; when an embedded app's page built its own registry while the host page was still the current context, the embedded registry was registered as a service **inside the host's registry**. The client has no binding for a control of type `ServiceRegistry`, so building it threw `Unknown service` inside the host's service loop and aborted it, leaving every service positioned after that entry unbound — permanently, since the entry stays in the list. A registry is the container for services, not a service, so it no longer self-registers; the client-side loop also isolates per-service failures now, so a single unbuildable entry can't stop the rest from binding. Reproduced with a host app embedding a `FletApp` and registering a `Clipboard` afterwards by @FeodorFitsner.
+
 ## 0.86.3
 
 ### Improvements

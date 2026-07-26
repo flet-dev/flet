@@ -1,3 +1,7 @@
+## 0.86.4
+
+* Isolate per-service failures when building the page's service registry. `ServiceBinding` throws `Unknown service` for a control type no extension can build, and that exception escaping `ServiceRegistry._onServicesUpdated()` aborted the whole loop, so every service after the offending entry was silently never bound and later `invokeMethod` calls on them hung until they timed out. Each binding is now built independently and a failure is logged and skipped. Also rebuilds the registry when the `_services` control instance is replaced (not just when its uid changes), matching how the `window` service tracks its control by identity.
+
 ## 0.86.3
 
 * Fix a system/edge-swipe back gesture exiting the whole host app instead of navigating back when it lands on an embedded `FletApp` (an app rendered inside another Flet app — e.g. a gallery host running example apps in-process). The embedded app's `WidgetsApp` (`MaterialApp`/`CupertinoApp`) ran the default `NavigationNotification` handler, which reported `SystemNavigator.setFrameworkHandlesBack(false)` for a nested app that couldn't pop (typically a single-view example) and swallowed the notification, so the OS finished the whole activity on back and the host never got to report that it could pop. An embedded page now lets that notification bubble to the host (which re-reports `canHandlePop`) and chains a `ChildBackButtonDispatcher` to the host Router, so a system back propagates to the host and pops the view that embeds it.
