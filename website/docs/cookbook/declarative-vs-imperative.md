@@ -68,26 +68,30 @@ A component renders once when it's first created, and again whenever an observab
 
 ### Hooks
 
-Hooks (`ft.use_state`) hold local state scoped to one component instance — like a row's "editing" flag. A plain local variable won't do the job: it resets on every render, and changing it doesn't trigger one. Calling a hook's setter re-renders that component through the same mechanism observables use — hooks aren't a separate system, just private, component-scoped state.
+Hooks (`ft.use_state`) hold local state scoped to one component instance — like a row's "editing" flag. A plain local variable won't do the job: it resets on every render, and changing it doesn't trigger one. Calling a hook's setter re-renders that component, using the same mechanism as observables — just scoped to one component.
 
 ```python
 # Broken: a plain local resets on every render, and changing it doesn't trigger one
 @ft.component
-def CounterBroken():
-    count = 0
-    return ft.Row([
-        ft.Text(str(count)),
-        ft.Button("+", on_click=lambda _: (count := count + 1)),
-    ])
+def UserView(user: User, delete_user) -> ft.Control:
+    is_editing = False
+    if not is_editing:
+        return ft.Row([
+            ft.Text(f"{user.first_name} {user.last_name}"),
+            ft.Button("Edit", on_click=lambda: (is_editing := True)),  # no re-render
+        ])
+    ...
 
 # Correct: hook state survives across renders and triggers one when set
 @ft.component
-def Counter():
-    count, set_count = ft.use_state(0)
-    return ft.Row([
-        ft.Text(str(count)),
-        ft.Button("+", on_click=lambda _: set_count(count + 1)),
-    ])
+def UserView(user: User, delete_user) -> ft.Control:
+    is_editing, set_is_editing = ft.use_state(False)
+    if not is_editing:
+        return ft.Row([
+            ft.Text(f"{user.first_name} {user.last_name}"),
+            ft.Button("Edit", on_click=lambda: set_is_editing(True)),
+        ])
+    ...
 ```
 
 The state lives in two `@ft.observable` classes, `User` (`first_name`, `last_name`) and `App` (`users: list[User]`, with `add_user`/`delete_user`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
