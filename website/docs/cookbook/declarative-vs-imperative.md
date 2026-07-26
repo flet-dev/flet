@@ -35,11 +35,34 @@ To understand how Flet stores state and detects when it changes, you need to und
 
 ### Observables
 
-Observables (`@ft.observable`) are classes whose instances hold your application's state. In this "User Manager" app, each `User` instance holds one person's name, and a single `App` instance holds the list of users. The `@ft.observable` decorator makes their attribute and collection changes trackable: assigning to a field like `user.first_name`, or mutating a list field like `app.users.append(...)`, notifies the components subscribed to it, triggering them to re-render.
+Observables (`@ft.observable`) are classes whose instances hold your application's state. In this "User Manager" app, each `User` instance holds one person's name, and a single `App` instance holds the list of users. The `@ft.observable` decorator makes their attribute and collection changes trackable: assigning to a field like `user.first_name`, or changing a list field like `app.users.append(...)`, notifies the components subscribed to it, triggering them to re-render.
+
+```python
+@ft.observable
+@dataclass
+class User:
+    first_name: str
+    last_name: str
+
+    def update(self, first_name: str, last_name: str):
+        self.first_name = first_name  # notifies subscribed components
+        self.last_name = last_name
+```
 
 ### Components
 
-Components (`@ft.component`) are functions that take arguments, like `user` and `delete_user` in `UserView(user, delete_user)`, and return the controls describing the UI right now. They never change the control tree directly: unlike the imperative example, a component doesn't mutate an existing control's properties or modify `page.controls`. It just returns a new set of controls each render, and Flet reconciles that against what's already on screen, patching only what changed.
+Components (`@ft.component`) are functions that take arguments — like `user` and `delete_user` in `UserView(user, delete_user)` — and return the controls describing the UI for its current state. Only the arguments that are themselves `@ft.observable` instances, like `user`, get subscribed to; a plain callback like `delete_user` is just passed through.
+
+```python
+@ft.component
+def UserView(user: User, delete_user) -> ft.Control:
+    return ft.Row([
+        ft.Text(f"{user.first_name} {user.last_name}"),
+        ft.Button("Delete", on_click=lambda: delete_user(user)),
+    ])
+```
+
+Unlike the imperative example, a component doesn't change an existing control's properties or modify `page.controls`. It just returns a new set of controls each render, and Flet reconciles that against what's already on screen, patching only what changed.
 
 A component renders once when it's first created, and again whenever an observable it's subscribed to — received as an argument, or held via a hook — is changed, or a hook's setter replaces its value; only that component re-renders, not the whole app. On each render, it subscribes again to every such observable. The subscription is to the whole object, not individual fields — which is why, in the example below, editing one user only re-renders its `UserView` (it is subscribed to that one `user`), while adding or deleting re-renders all of `AppView` (it is subscribed to `app`, and a user list change is a change to `app`).
 
