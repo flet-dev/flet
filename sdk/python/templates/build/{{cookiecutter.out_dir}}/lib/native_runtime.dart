@@ -57,6 +57,27 @@ String initBridges(Map<String, String> envVars) {
     "FLET_DART_BRIDGE_EXIT_PORT",
     () => _exitBridge!.port.toString(),
   );
+
+  // Let embedded FletApps (a Flet program run in-process by this app — e.g. a
+  // gallery/preview) use a dedicated in-process dart_bridge channel instead of a
+  // socket. Each embedded app mints its own PythonBridge here (Dart owns the
+  // native port); the flet package hands that port to the host's Python, which
+  // serves it with a FletDartBridgeServer. See EmbeddedDartBridge / FletApp.
+  embeddedDartBridgeConnector = () {
+    final bridge = PythonBridge();
+    return EmbeddedDartBridge(
+      port: bridge.port,
+      channelBuilder: ({
+        required FletBackendChannelOnPacketCallback onPacket,
+        required FletBackendChannelOnDisconnectCallback onDisconnect,
+      }) =>
+          _DartBridgeBackendChannel(bridge,
+              onPacket: onPacket, onDisconnect: onDisconnect),
+      dataChannelFactory: _PythonBridgeDataChannelFactory(),
+      dispose: () => bridge.close(),
+    );
+  };
+
   return "dartbridge://${_bridge!.port}";
 }
 
