@@ -1,5 +1,5 @@
 ---
-title: "Declarative vs Imperative CRUD App"
+title: "Declarative vs Imperative"
 examples: "cookbook/declarative_vs_imperative_crud_app"
 ---
 
@@ -7,7 +7,7 @@ import {CodeExample} from '@site/src/components/crocodocs';
 
 By default, a Flet app is **imperative**: you directly change control properties like `visible` and `value`, add or remove controls, and Flet pushes the change to the page for you. That's fine for small apps, but it doesn't scale well — as a screen grows, the logic for keeping related controls in sync gets duplicated across event handlers, and it's easy to miss one and end up with an inconsistent UI.
 
-Flet also supports a **declarative** style: your data is the single source of truth, and the UI is a function of it (`UI = f(state)`). Handlers only change state; Flet detects the change and re-renders whatever depends on it. No `page.update()`, no manual show/hide.
+Flet also supports a **declarative** approach: the state of your app is the single source of truth, and the UI is derived from it. You don't change controls or their properties directly; instead, only change application state, by assigning to an observable field or calling a hook's setter (which will be discussed later in the article). Flet detects the change and re-renders UI that depends on it.
 
 This page builds the same small CRUD "User Manager" both ways — list users, add one, edit inline with save/cancel, delete — so you can compare them directly:
 
@@ -19,7 +19,7 @@ This page builds the same small CRUD "User Manager" both ways — list users, ad
 
 Handlers toggle `visible` on the read-only label and the edit fields; Flet pushes the change to the page automatically. **Edit** swaps the row into edit mode; **Save** copies the field values back and swaps it back; **Cancel** swaps back without saving; **Delete** removes the row from the page.
 
-<CodeExample path={frontMatter.examples + '/imperative/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/imperative/main.py'} language="python" displayTitle={false} />
 
 ## Declarative
 
@@ -29,7 +29,7 @@ Handlers only touch state — `set_is_editing(True)`, `user.update(...)`, `app.u
 
 <figure className="doc-screenshot-figure"><img alt="declarative data flow diagram" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud-declarative.drawio.png" style={{width: "55%"}} /></figure>
 
-<CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" displayTitle={false} />
 
 ## Observables, components, and hooks
 
