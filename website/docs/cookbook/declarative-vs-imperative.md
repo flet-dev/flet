@@ -20,8 +20,8 @@ This article shows the same simple "User Manager" app built both ways — impera
 In this example, clicking a button changes control properties directly (`visible`, `value`) and adds or removes controls from the page's control list — that's what makes it imperative. Flet pushes each change to the page automatically.
 
 * **Add** creates a new `Item` row from the `first_name`/`last_name` `TextField` values, appends it to `page.controls`, and clears both fields.
-* **Edit** sets `visible=False` on `text`, `edit_button`, and `delete_button`, and `visible=True` on `edit_text`, `save_button`, and `cancel_button` — switching the row into edit mode.
-* **Save** sets `text.value` to the two `TextField` values, then sets `visible=True` on `text`, `edit_button`, and `delete_button`, and `visible=False` on `edit_text`, `save_button`, and `cancel_button` — returning to read-only mode with the new values.
+* **Edit** resets the `TextField`s to the row's `first_name`/`last_name`, sets `visible=False` on `text`, `edit_button`, and `delete_button`, and `visible=True` on `edit_text`, `save_button`, and `cancel_button` — switching the row into edit mode.
+* **Save** copies the two `TextField` values into `first_name`/`last_name` and `text.value`, then sets `visible=True` on `text`, `edit_button`, and `delete_button`, and `visible=False` on `edit_text`, `save_button`, and `cancel_button` — returning to read-only mode with the new values.
 * **Cancel** sets `visible=True` on `text`, `edit_button`, and `delete_button`, and `visible=False` on `edit_text`, `save_button`, and `cancel_button` — returning to read-only mode without saving.
 * **Delete** removes the row's `Item` instance from `page.controls`.
 
