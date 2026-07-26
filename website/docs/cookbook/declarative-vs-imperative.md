@@ -9,7 +9,7 @@ By default, a Flet app is **imperative**: you directly change control properties
 
 Flet also supports a **declarative** approach: the state of your app is the single source of truth, and the UI is derived from it. You don't change controls or their properties directly; instead, only change application state, by assigning to an observable field or calling a hook's setter (which will be discussed later in the article). Flet detects the change and re-renders UI that depends on it.
 
-This page builds the same small CRUD "User Manager" both ways — list users, add one, edit inline with save/cancel, delete — so you can compare them directly:
+This article shows the same simple "User Manager" app built both ways — imperative and declarative — so you can compare the two approaches directly. It's a classic CRUD app: list users, add a new one, edit inline, and delete:
 
 <figure className="doc-screenshot-figure"><img alt="view" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud1.png" style={{width: "45%"}} /></figure>
 
@@ -17,7 +17,7 @@ This page builds the same small CRUD "User Manager" both ways — list users, ad
 
 ## Imperative
 
-Handlers toggle `visible` on the read-only label and the edit fields; Flet pushes the change to the page automatically. **Edit** swaps the row into edit mode; **Save** copies the field values back and swaps it back; **Cancel** swaps back without saving; **Delete** removes the row from the page.
+Each row's `on_click` handlers — `edit_item`, `save_item`, `cancel_item` — toggle `visible` on that row's `Text`, `TextField`s, and buttons to switch between read-only and edit mode; Flet pushes the change to the page automatically. **Edit** swaps the row into edit mode; **Save** copies the field values back and swaps it back; **Cancel** swaps back without saving; **Delete** removes the row from the page.
 
 <CodeExample path={frontMatter.examples + '/imperative/main.py'} language="python" displayTitle={false} />
 
