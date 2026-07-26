@@ -5,11 +5,11 @@ examples: "cookbook/declarative_vs_imperative_crud_app"
 
 import {CodeExample} from '@site/src/components/crocodocs';
 
-By default, a Flet app is **imperative**: you directly change control properties like `visible` and `value`, add or remove controls, and Flet pushes the change to the page for you. That's fine for small apps, but it doesn't scale well — as a screen grows, the logic for keeping related controls in sync gets duplicated across event handlers, and it's easy to miss one and end up with an inconsistent UI.
+By default, a Flet app follows an **imperative** approach: you directly change control properties like `visible` and `value`, add or remove controls, and Flet pushes the change to the page for you. That's fine for small apps, but it doesn't scale well — as a screen grows, the logic for keeping related controls in sync gets duplicated across event handlers, and it's easy to miss one and end up with an inconsistent UI.
 
-Flet also supports a **declarative** approach: the state of your app is the single source of truth, and the UI is derived from it. You don't change controls or their properties directly; instead, only change application state, by assigning to an observable field or calling a hook's setter (which will be discussed later in the article). Flet detects the change and re-renders UI that depends on it.
+Flet also supports a **declarative** approach: the state of your app is the single source of truth, and the UI is derived from it. You don't change controls or their properties directly; instead, only change application state, by assigning to [an observable field](#observables) or calling [a hook's setter](#hooks). Flet [components](#components) detect the change and re-render UI that depends on it.
 
-This article shows the same simple "User Manager" app built both ways — imperative and declarative — so you can compare the two approaches directly. It's a classic CRUD app: list users, add a new one, edit inline, and delete:
+This article shows the same simple "User Manager" app built both ways — imperative and declarative — so you can compare the two approaches directly. It's a classic CRUD app: list users, add a new user, edit inline, and delete:
 
 <figure className="doc-screenshot-figure"><img alt="view" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud1.png" style={{width: "45%"}} /></figure>
 
@@ -29,9 +29,9 @@ In this example, clicking a button changes control properties directly (`visible
 
 ## Declarative
 
-In this example, clicking a button doesn't change controls directly. Instead, it changes application state that exists separately from UI. As soon as the state changes, Flet detects it and re-renders UI.
+In [this example](#example), clicking a button doesn't change controls directly. Instead, it changes application state that exists separately from UI. As soon as the state changes, Flet detects it and re-renders UI.
 
-To understand how Flet stores state and detects when it changes, you need to understand the concepts that lay in the declarative approach: Observables, Components, and Hooks.
+To understand how Flet stores state and detects when it changes, you need to understand the concepts that lay in the declarative approach: [Observables](#observables), [Components](#components), and [Hooks](#hooks).
 
 ### Observables
 
@@ -93,6 +93,8 @@ def UserView(user: User, delete_user) -> ft.Control:
         ])
     ...
 ```
+
+### Example
 
 The state lives in two `@ft.observable` classes, `User` (`first_name`, `last_name`) and `App` (`users: list[User]`, with `add_user`/`delete_user`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
 
