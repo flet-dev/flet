@@ -96,11 +96,11 @@ def UserView(user: User, delete_user) -> ft.Control:
 
 ### Example
 
-The state lives in two `@ft.observable` classes, `User` (`first_name`, `last_name`) and `App` (`users: list[User]`, with `add_user`/`delete_user`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
+The state lives in instances of two `@ft.observable` classes: `User` (`first_name`, `last_name`) and `App` (`users: list[User]`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
 
 * **Add** (in `AddUserForm`) calls `add_user_and_clear()`, which calls `app.add_user(...)` — appending a `User` to `app.users` — then clears its own local `use_state` buffers. `AppView` holds `app` via `use_state`, so this re-renders `AppView`, regenerating the whole user list.
 * **Edit** calls `start_edit()`, which resets the local buffer hooks to the user's current values and calls `set_is_editing(True)` — re-rendering just that row's `UserView` into its editing form.
-* **Save** calls `save()`, which calls `user.update(...)` and `set_is_editing(False)`. `user` was passed directly into this `UserView`, so only this one row re-renders with the new values.
+* **Save** calls `save()`, which calls `user.update(...)` and `set_is_editing(False)` — `user` was passed directly into this `UserView`, so only this one row re-renders with the new values.
 * **Cancel** calls `cancel()`, which calls `set_is_editing(False)` — re-rendering that row back to read-only without touching `user`.
 * **Delete** calls `app.delete_user(user)`, removing it from `app.users` — like Add, this re-renders all of `AppView`, not just the one row.
 
