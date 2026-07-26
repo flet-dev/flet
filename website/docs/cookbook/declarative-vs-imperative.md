@@ -29,19 +29,23 @@ In this example, clicking a button changes control properties directly (`visible
 
 ## Declarative
 
-State lives in two `@ft.observable` classes: `User` (`first_name`, `last_name`) and `App` (`users: list[User]`, with `add_user`/`delete_user`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
+In this example, clicking a button doesn't change controls directly. Instead, it changes application state that exists separately from UI. As soon as the state changes, Flet detects it and re-renders UI.
 
-Handlers only touch state — `set_is_editing(True)`, `user.update(...)`, `app.users.remove(user)` — and Flet re-renders whatever reads it.
+To understand how Flet stores state and detects when it changes, you need to understand the concepts that lay in the declarative approach: Observables, Components, and Hooks.
 
-<figure className="doc-screenshot-figure"><img alt="declarative data flow diagram" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud-declarative.drawio.png" style={{width: "55%"}} /></figure>
+### Observables
 
-<CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" displayTitle={false} />
+Observables (`@ft.observable`) are classes whose instances hold your application's state. In this "User Manager" app, each `User` instance holds one person's name, and a single `App` instance holds the list of users. The `@ft.observable` decorator makes their attribute and collection changes trackable: assigning to a field like `user.first_name`, or mutating a list field like `app.users.append(...)`, notifies the components subscribed to it, triggering them to re-render.
 
-## Observables, components, and hooks
+### Components
 
-* **Observables** (`@ft.observable`) hold durable, worth-saving data — like `User` and `App` above. Assigning to a field, or changing a list/dict field (`app.users.append(...)`), triggers a re-render.
-* **Components** (`@ft.component`) are functions that take props, optionally call hooks, and return controls describing the UI right now. They never change the control tree directly.
-* **Hooks** (`ft.use_state`) hold local state scoped to one component instance — like the "editing" flag above. A plain local variable won't do the job: it resets on every render, and changing it doesn't trigger one.
+Components (`@ft.component`) are functions that take arguments, like `user` and `delete_user` in `UserView(user, delete_user)`, and return the controls describing the UI right now. They never change the control tree directly: unlike the imperative example, a component doesn't mutate an existing control's properties or modify `page.controls`. It just returns a new set of controls each render, and Flet reconciles that against what's already on screen, patching only what changed.
+
+A component renders once when it's first created, and again whenever an observable it's subscribed to — received as an argument, or held via a hook — is changed, or a hook's setter replaces its value; only that component re-renders, not the whole app. On each render, it subscribes again to every such observable. The subscription is to the whole object, not individual fields — which is why, in the example below, editing one user only re-renders its `UserView` (it is subscribed to that one `user`), while adding or deleting re-renders all of `AppView` (it is subscribed to `app`, and a user list change is a change to `app`).
+
+### Hooks
+
+Hooks (`ft.use_state`) hold local state scoped to one component instance — like a row's "editing" flag. A plain local variable won't do the job: it resets on every render, and changing it doesn't trigger one. Calling a hook's setter re-renders that component through the same mechanism observables use — hooks aren't a separate system, just private, component-scoped state.
 
 ```python
 # Broken: a plain local resets on every render, and changing it doesn't trigger one
@@ -62,6 +66,18 @@ def Counter():
         ft.Button("+", on_click=lambda _: set_count(count + 1)),
     ])
 ```
+
+The state lives in two `@ft.observable` classes, `User` (`first_name`, `last_name`) and `App` (`users: list[User]`, with `add_user`/`delete_user`). `@ft.component` functions read that state and return controls — `UserView` renders one row, read-only or editing; `AddUserForm` renders the add form. Each row's "editing" flag and input buffers are local `ft.use_state` hooks: they're view-only and don't belong on `User`.
+
+* **Add** (in `AddUserForm`) calls `add_user_and_clear()`, which calls `app.add_user(...)` — appending a `User` to `app.users` — then clears its own local `use_state` buffers. `AppView` holds `app` via `use_state`, so this re-renders `AppView`, regenerating the whole user list.
+* **Edit** calls `start_edit()`, which resets the local buffer hooks to the user's current values and calls `set_is_editing(True)` — re-rendering just that row's `UserView` into its editing form.
+* **Save** calls `save()`, which calls `user.update(...)` and `set_is_editing(False)`. `user` was passed directly into this `UserView`, so only this one row re-renders with the new values.
+* **Cancel** calls `cancel()`, which calls `set_is_editing(False)` — re-rendering that row back to read-only without touching `user`.
+* **Delete** calls `app.delete_user(user)`, removing it from `app.users` — like Add, this re-renders all of `AppView`, not just the one row.
+
+<figure className="doc-screenshot-figure"><img alt="declarative data flow diagram" className="doc-screenshot" src="/docs/assets/cookbook/declarative-vs-imperative-crud-app/crud-declarative.drawio.png" style={{width: "55%"}} /></figure>
+
+<CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" displayTitle={false} />
 
 ## Imperative → declarative cheat sheet
 
