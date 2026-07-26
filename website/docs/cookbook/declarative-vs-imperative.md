@@ -108,11 +108,15 @@ The state lives in instances of two `@ft.observable` classes: `User` (`first_nam
 
 <CodeExample path={frontMatter.examples + '/declarative/main.py'} language="python" displayTitle={false} />
 
-## Imperative → declarative cheat sheet
+## Conclusion
 
-| Imperative | Declarative |
-| --- | --- |
-| `control.visible = False` | Return a different control tree based on state |
-| `control.value = new_value` | Change the model: `user.update(first, last)` |
-| `page.update()` — automatic in handlers, explicit outside them | Not needed anywhere — setting state re-renders automatically |
-| One handler changing several controls at once | Small, focused components — one per piece of UI |
+Imperative and declarative aren't just two ways to write the same code — they're two different ways to think about UI. Imperative asks "what should change on screen right now?" — you list, step by step, exactly what to change for each interaction. Declarative asks "what does my data look like right now?" — you describe the UI as a function of that data, and let Flet figure out what changed on screen.
+
+That shift pays off most as an app gets more interactive:
+
+* **Debugging** — since the UI is derived from state, a bug is either "the state is wrong" or "the render is wrong," not "some event handler forgot to update a flag." You can inspect the state directly instead of tracing through a chain of mutations.
+* **Testing** — `app.add_user(...)` and `user.update(...)` are just regular Python methods with no Flet controls involved. You can call them directly in a test and check the result, with no page or rendering required.
+* **Multiple views of the same data** — if two parts of the UI need to reflect the same state (a badge count, a list, a chart), each just reads from that state instead of being kept in sync by hand.
+* **Complex, multi-step UIs** — wizards, filters, undo/redo — where many pieces of UI depend on overlapping state, declarative code scales by adding more state and components, not more handler-to-handler coordination.
+
+For more declarative examples, see the [declarative examples collection](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/declarative) — including a [Counter](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/counter/main.py), a [To-Do app](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/todo/main.py), and games like [Tic-Tac-Toe](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/tic_tac_toe/main.py) and [Minesweeper](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/declarative/minesweeper/main.py).
