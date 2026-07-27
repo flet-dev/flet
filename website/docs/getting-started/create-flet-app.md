@@ -4,6 +4,7 @@ title: "Creating a new Flet app"
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
+import {CodeExample} from '@site/src/components/crocodocs';
 
 A Flet app's UI is made up of [controls](/docs/controls), arranged on the page. Controls can be styled, nested
 inside each other to build layouts, and respond to events like clicks and taps.
@@ -57,32 +58,11 @@ You can find more information about `flet create` command [here](../cli/flet-cre
 
 `src/main.py` already contains a small working app — a counter with a button that increments it:
 
-```python title="src/main.py"
-import flet as ft
+<CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
 
-def main(page: ft.Page):
-    counter = ft.Text("0", size=50, data=0)
-
-    def increment_click(e: ft.Event[ft.FloatingActionButton]):
-        counter.data += 1
-        counter.value = str(counter.data)
-
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, key="increment", on_click=increment_click
-    )
-    page.add(
-        ft.SafeArea(
-            expand=True,
-            content=ft.Container(
-                content=counter,
-                alignment=ft.Alignment.CENTER,
-            ),
-        )
-    )
-
-if __name__ == "__main__":
-    ft.run(main)
-```
+<p align="center">
+    <img src="/docs/assets/getting-started/counter-app/macos.png" width="60%" />
+</p>
 
 * [`page`](../controls/page.md) is the top-level container for everything in the app window (or browser tab).
 * [`page.add()`](/docs/controls/basepage#flet.BasePage.add) appends controls to the page.
