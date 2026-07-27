@@ -5,6 +5,14 @@ title: "Creating a new Flet app"
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
+A Flet app's UI is made up of [controls](/docs/controls), arranged on the page. Controls can be styled, nested
+inside each other to build layouts, and respond to events like clicks and taps.
+
+This page walks through creating your first app, then the controls and events you'll use to build almost any UI,
+tying them together into a small example app.
+
+## Your first app
+
 Create a new directory (or directory with `pyproject.toml` already exists if initialized with a project manager) and switch into it.
 
 To create a new "minimal" Flet app run the following command:
@@ -34,78 +42,250 @@ pyproject.toml
 src
     assets
         icon.png
+        splash_android.png
     main.py # (1)!
-storage
-    data
-    temp
+tests
+    test_main.py # (2)!
 ```
 
 1. Contains a simple Flet program.
     It has `main()` function where you would add UI elements (controls) to a page or a window.
     The application ends with a `ft.run()` function which initializes the Flet app and [runs](running-app.md) `main()`.
+2. A sample [integration test](integration-testing.md) for the app, ready to run with `flet test`.
 
 You can find more information about `flet create` command [here](../cli/flet-create.md).
 
-## Auto-update
+`src/main.py` already contains a small working app — a counter with a button that increments it:
 
-Flet automatically calls `page.update()` (or `.update()` on the nearest isolated ancestor) at the end of every event handler and `main()` function. This means you don't need to call `.update()` yourself in most cases:
-
-```python
+```python title="src/main.py"
 import flet as ft
 
 def main(page: ft.Page):
-    def button_click(e):
-        page.controls.append(ft.Text("Clicked!"))
-        # no need to call page.update() — it happens automatically
+    counter = ft.Text("0", size=50, data=0)
 
-    page.controls.append(ft.Button("Click me", on_click=button_click))
-    # no need to call page.update() here either
+    def increment_click(e: ft.Event[ft.FloatingActionButton]):
+        counter.data += 1
+        counter.value = str(counter.data)
+
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.Icons.ADD, key="increment", on_click=increment_click
+    )
+    page.add(
+        ft.SafeArea(
+            expand=True,
+            content=ft.Container(
+                content=counter,
+                alignment=ft.Alignment.CENTER,
+            ),
+        )
+    )
+
+if __name__ == "__main__":
+    ft.run(main)
+```
+
+* [`page`](../controls/page.md) is the top-level container for everything in the app window (or browser tab).
+* [`page.add()`](/docs/controls/basepage#flet.BasePage.add) appends controls to the page.
+* [`page.floating_action_button`](../controls/floatingactionbutton.md) sets the round action button in the
+  bottom-right corner.
+* `increment_click` is an event handler — see [Handling events](#handling-events) below. Flet renders the changes
+  `increment_click` makes as soon as the handler returns.
+
+See [Running a Flet app](running-app.md) to launch it as a desktop window or in a browser.
+
+## Basic controls
+
+Most UIs are built from a handful of building blocks: something to show text, something to lay other controls out,
+and something to give them a background, border, or padding.
+
+### Text
+
+[`Text`](../controls/text.md) displays a string, with optional styling:
+
+```python
+ft.Text("Flet is fun to build with!", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE)
+```
+
+### Row and Column
+
+[`Row`](../controls/row.md) and [`Column`](../controls/column.md) lay out their `controls` horizontally and
+vertically, respectively. Both accept `alignment` (main axis) and `vertical_alignment`/`horizontal_alignment`
+(cross axis) to control spacing and positioning:
+
+```python
+ft.Row(
+    alignment=ft.MainAxisAlignment.CENTER,
+    controls=[
+        ft.Icon(ft.Icons.STAR),
+        ft.Text("Featured"),
+    ],
+)
+```
+
+Nest a `Column` inside a `Row` (or vice versa) to build more complex layouts — this is the same idea as flexbox in
+CSS.
+
+### Stack
+
+[`Stack`](../controls/stack.md) overlaps its children instead of laying them out in a line. Children are
+positioned with `top`, `bottom`, `left`, and `right`, which makes `Stack` useful for badges, overlays, and anything
+else that needs to sit on top of another control:
+
+```python
+ft.Stack(
+    controls=[
+        ft.CircleAvatar(foreground_image_src="https://picsum.photos/100"),
+        ft.Container(
+            width=14,
+            height=14,
+            bgcolor=ft.Colors.GREEN,
+            border_radius=7,
+            right=0,
+            bottom=0,
+        ),
+    ],
+)
+```
+
+### Container
+
+[`Container`](../controls/container.md) wraps a single control and adds visual styling around it: background color,
+border, border radius, padding, margin, and fixed width/height:
+
+```python
+ft.Container(
+    content=ft.Text("Styled box"),
+    bgcolor=ft.Colors.AMBER_100,
+    padding=12,
+    border_radius=8,
+)
+```
+
+`Container` is also how you make a piece of UI clickable — see [Handling events](#handling-events) below.
+
+## Structuring the page
+
+Beyond individual controls, `page` itself has properties that shape the whole app: `page.title` sets the window/tab
+title, and `page.appbar` puts a [Material `AppBar`](../controls/appbar.md) — the header row with a title and
+actions — at the top of the page:
+
+```python
+def main(page: ft.Page):
+    page.title = "My App"
+    page.appbar = ft.AppBar(
+        title=ft.Text("My App"),
+        bgcolor=ft.Colors.SURFACE_TINT,
+        actions=[ft.IconButton(ft.Icons.SETTINGS)],
+    )
+    page.add(ft.Text("Body content goes here"))
 
 ft.run(main)
 ```
 
-:::note[Note]
-If your event handler already calls `.update()` explicitly (e.g. code written for Flet 0.x), the automatic update is skipped to avoid a redundant double update.
-:::
+`page.theme` and `page.theme_mode` control the color scheme (light/dark and a seed color) applied across all
+Material controls on the page — see [Theming](../cookbook/theming.md) for more.
 
-### Disabling auto-update
+## Handling events
 
-You can disable auto-update for fine-grained control over when updates are sent to the client. Use `ft.context.disable_auto_update()` and `ft.context.enable_auto_update()` to toggle the behavior.
-
-When called inside a handler, the setting applies to the current handler context only:
+Interactive controls like [`Button`](../controls/button.md), [`IconButton`](../controls/iconbutton.md), and
+`Container` (when given `on_click`) accept event handlers — plain functions that run when the user interacts with
+the control:
 
 ```python
-import flet as ft
-
 def main(page: ft.Page):
-    def add_many_items(e):
-        ft.context.disable_auto_update()
-        for i in range(100):
-            page.controls.append(ft.Text(f"Item {i}"))
-        page.update()  # single update for all 100 items
+    def handle_click(e: ft.Event[ft.Button]):
+        page.show_dialog(ft.SnackBar(ft.Text("Button clicked!")))
 
-    page.controls.append(ft.Button("Add items", on_click=add_many_items))
+    page.add(ft.Button("Click me", on_click=handle_click))
 
 ft.run(main)
 ```
 
-When called outside of event handlers (e.g. at the module level), it controls the global default for the entire app:
+The handler receives an `Event`, whose `.control` attribute is the control that triggered it. Any control property
+you change inside a handler is picked up automatically — see [Auto-update](../cookbook/auto-update.md) — so
+most handlers only need to update the relevant control's attributes, without wiring up any state management by
+hand.
 
-```python
+For lower-level pointer interactions — taps, drags, hover, scroll — wrap a control in
+[`GestureDetector`](../controls/gesturedetector.md).
+
+## Bringing it all together
+
+Here's a small product catalog that uses everything above: an `AppBar` for the page header, `Container` and
+`Column`/`Row` for layout and styling, a `Stack` to draw a "Sale" badge on one item, and `on_click` handlers to
+react to taps:
+
+```python title="catalog.py"
 import flet as ft
 
-# disable auto-update globally
-ft.context.disable_auto_update()
+PRODUCTS = [
+    {"name": "Desk Lamp", "price": "$24", "on_sale": False},
+    {"name": "Wireless Mouse", "price": "$18", "on_sale": True},
+    {"name": "Notebook", "price": "$6", "on_sale": False},
+]
 
 def main(page: ft.Page):
-    def button_click(e):
-        page.controls.append(ft.Text("Clicked!"))
-        page.update()  # must call explicitly since auto-update is off
+    page.title = "Catalog"
+    page.appbar = ft.AppBar(title=ft.Text("Catalog"), center_title=True)
 
-    page.controls.append(ft.Button("Click me", on_click=button_click))
-    page.update()
+    def add_to_cart(product_name: str):
+        def handle_click(e: ft.Event[ft.Button]):
+            page.show_dialog(ft.SnackBar(ft.Text(f"Added {product_name} to cart")))
+        return handle_click
+
+    def product_card(product: dict) -> ft.Control:
+        card = ft.Container(
+            padding=12,
+            border_radius=8,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.Column(
+                        spacing=2,
+                        controls=[
+                            ft.Text(product["name"], weight=ft.FontWeight.BOLD),
+                            ft.Text(product["price"], color=ft.Colors.OUTLINE),
+                        ],
+                    ),
+                    ft.Button("Buy", on_click=add_to_cart(product["name"])),
+                ],
+            ),
+        )
+        if not product["on_sale"]:
+            return card
+        return ft.Stack(
+            controls=[
+                card,
+                ft.Container(
+                    content=ft.Text("SALE", size=10, color=ft.Colors.WHITE),
+                    bgcolor=ft.Colors.RED,
+                    padding=ft.Padding.symmetric(horizontal=6, vertical=2),
+                    border_radius=4,
+                    top=-6,
+                    right=-6,
+                ),
+            ],
+        )
+
+    page.add(
+        ft.Column(
+            spacing=10,
+            controls=[product_card(product) for product in PRODUCTS],
+        ),
+    )
 
 ft.run(main)
 ```
 
-**Now let's see Flet in action by [running the app](running-app.md)!**
+Run it with [`flet run`](running-app.md) and you'll get a scrollable list of product cards, each with a "Buy"
+button that pops up a confirmation.
+
+## What's next
+
+* [Running a Flet app](running-app.md) — see the apps above running as a desktop window or in a browser.
+* [Controls reference](/docs/controls) — the full list of controls available in Flet.
+* [Auto-update](../cookbook/auto-update.md) — how and when Flet sends control changes to the client.
+* [Declarative vs. imperative](../cookbook/declarative-vs-imperative.md) — once your UI needs to manage evolving
+  state (like a shopping cart or a to-do list), this is the next thing to read.
+* [Theming](../cookbook/theming.md) — customize colors, fonts, and light/dark mode across the app.

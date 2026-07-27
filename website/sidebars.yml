@@ -29,6 +29,7 @@ docs:
     Router: cookbook/router.md
     Control Refs: cookbook/control-refs.md
     Custom Controls: cookbook/custom-controls.md
+    Auto-update: cookbook/auto-update.md
     Declarative vs Imperative: cookbook/declarative-vs-imperative.md
     Async apps: cookbook/async-apps.md
     Read and Write Files: cookbook/read-and-write-files.md
