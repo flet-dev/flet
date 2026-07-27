@@ -956,6 +956,19 @@ class BaseBuildCommand(BaseFlutterCommand):
         }
         android_meta_data = {}
         android_providers = {}
+        # Gradle properties for the generated Android project. These were
+        # hardcoded in the template; the defaults below reproduce them exactly,
+        # and `[tool.flet.android.gradle_properties]` can override any entry or
+        # add new ones. The memory settings in particular are too large for some
+        # CI runners (a standard GitHub-hosted runner has ~7 GB of RAM, less
+        # than -Xmx8G alone), which previously could not be changed at all.
+        android_gradle_properties = {
+            "org.gradle.jvmargs": (
+                "-Xmx8G -XX:MaxMetaspaceSize=4G "
+                "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+            ),
+            "android.useAndroidX": "true",
+        }
 
         # merge values from "--permissions" arg:
         for p in (
@@ -1035,6 +1048,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         android_permissions = merge_dict(
             android_permissions,
             self.get_pyproject("tool.flet.android.permission") or {},
+        )
+
+        android_gradle_properties = merge_dict(
+            android_gradle_properties,
+            self.get_pyproject("tool.flet.android.gradle_properties") or {},
         )
 
         # parse --android-permissions
@@ -1386,6 +1404,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
+                "android_gradle_properties": android_gradle_properties,
                 "android_providers": android_providers,
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
