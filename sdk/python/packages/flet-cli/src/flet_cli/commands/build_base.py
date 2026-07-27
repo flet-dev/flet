@@ -2290,6 +2290,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # app here (no app.zip on native); the platform native build copies
             # it into the bundle (Android zips it as a stored asset).
             package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+            # app bundle id: serious_python (>= 4.4.2) namespaces the generated
+            # iOS framework bundle identifiers under it. Without it they keep a
+            # shared `org.python.*` default that is byte-identical in every Flet
+            # app — see flet-dev/flet#6724.
+            bundle_id = (self.template_data or {}).get("bundle_id")
+            if bundle_id:
+                package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): tell serious_python's package command to
         # do the host-side SPM staging (the podspec prepare_command doesn't run
@@ -2564,6 +2571,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             # / Android Gradle) at `flutter build` time to place the unpacked app
             # into the bundle.
             env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
+
+        # app bundle id: the CocoaPods `prepare_command` re-runs the darwin sync
+        # at `flutter build` time, so it needs the same value the package step
+        # got or the framework identifiers fall back to `org.python.*`. Read
+        # defensively — this method is documented as safe to call before the
+        # pipeline has populated every attribute.
+        bundle_id = (getattr(self, "template_data", None) or {}).get("bundle_id")
+        if bundle_id:
+            env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): export the cache-bust key the package
         # step computed so the plugin's Package.swift re-resolves when the staged
