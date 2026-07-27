@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from typing import Optional
 
 import flet.version
 import flet_cli.commands.build
@@ -41,23 +42,25 @@ def _render_version(as_json: bool) -> str:
 
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(
-    parser: argparse.ArgumentParser, name: str, args: list = None, index: int = 0
-):
+    parser: argparse.ArgumentParser, name: str, args: list
+) -> list:
     """
-    Set a default subparser when no subparser is provided.
+    Prepend a default subparser name when the command line doesn't name one.
     This should be called after setting up the argument parser but before
     `parse_args()`.
 
     Args:
+        parser: The root argument parser.
         name: The name of the default subparser to use.
-        args: A list of arguments passed to `parse_args()`.
-        index: Position in `sys.argv` where the default subparser should be
-            inserted.
+        args: The command-line arguments, without the program name.
+
+    Returns:
+        `args`, with the default subparser name prepended when applicable.
     """
 
-    # exit if help or version flags are present
-    if any(flag in sys.argv[1:] for flag in {"-h", "--help", "-V", "--version"}):
-        return
+    # exit if no arguments, or help or version flags are present
+    if not args or any(flag in args for flag in {"-h", "--help", "-V", "--version"}):
+        return args
 
     # all subparser actions
     subparser_actions = [
@@ -72,19 +75,14 @@ def set_default_subparser(
     ]
 
     # if an existing subparser is provided, skip setting a default
-    if any(arg in subparser_names for arg in sys.argv[1:]):
-        return
+    if any(arg in subparser_names for arg in args):
+        return args
 
     # if the default subparser doesn't exist, register it in the first subparser action
     if (name not in subparser_names) and subparser_actions:
         subparser_actions[0].add_parser(name)
 
-    # insert the default subparser into the appropriate argument list
-    if args is None:
-        if len(sys.argv) > 1:
-            sys.argv.insert(index, name)
-    else:
-        args.insert(index, name)
+    return [name, *args]
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -132,22 +130,86 @@ def get_parser() -> argparse.ArgumentParser:
     except ImportError:
         pass
 
-    # set "run" as the default subparser
-    set_default_subparser(parser, name="run", index=1)
-
     return parser
 
 
-def main():
+def split_script_args(argv: list) -> tuple[list, Optional[list]]:
+    """
+    Split a command line at the first bare `--` separator.
+
+    Everything after the separator is meant for the app script, not for Flet
+    itself, so it must be removed before the parser (and `set_default_subparser`)
+    sees it - otherwise `flet run app.py -- --web` would be read as Flet's own
+    `--web` option, and `flet app.py -- build` would suppress the default `run`
+    subcommand.
+
+    Args:
+        argv: Command-line arguments, without the program name.
+
+    Returns:
+        A `(argv, script_args)` tuple, where `script_args` is `None` when no
+        `--` separator is present.
+    """
+    try:
+        index = argv.index("--")
+    except ValueError:
+        return argv, None
+    return argv[:index], argv[index + 1 :]
+
+
+def parse_command_line(argv: list) -> argparse.Namespace:
+    """
+    Parse a Flet command line into the namespace passed to a command handler.
+
+    Exits the process with a usage message when the command line is invalid.
+
+    Args:
+        argv: Command-line arguments, without the program name.
+
+    Returns:
+        The parsed arguments. For `flet run`, `script_args` holds the arguments
+        to forward to the app script.
+    """
+
+    # pull off the arguments meant for the app script before the parser sees them
+    argv, script_args = split_script_args(argv)
+
     parser = get_parser()
 
+    # "run" is the default subcommand
+    argv = set_default_subparser(parser, name="run", args=argv)
+
+    args, unrecognized = parser.parse_known_args(argv)
+
+    if unrecognized:
+        message = f"unrecognized arguments: {' '.join(unrecognized)}"
+        if getattr(args, "command", None) == "run":
+            message += (
+                "\nIf these are arguments for your app script, put them after "
+                "a `--` separator, e.g. "
+                f"`flet run {args.script} -- {' '.join(unrecognized)}`"
+            )
+        parser.error(message)
+
+    # forward the arguments that followed `--` to the app script
+    if script_args is not None:
+        if getattr(args, "command", None) != "run":
+            parser.error(
+                "the `--` separator is only supported by `flet run`, to pass "
+                "the arguments that follow it to your app script"
+            )
+        args.script_args = list(args.script_args) + script_args
+
+    return args
+
+
+def main():
     # print usage/help if called without arguments
     if len(sys.argv) == 1:
-        parser.print_help(sys.stdout)
+        get_parser().print_help(sys.stdout)
         sys.exit(1)
 
-    # parse arguments
-    args = parser.parse_args()
+    args = parse_command_line(sys.argv[1:])
 
     # handle `flet --version [--json]` (no subcommand/handler is set)
     if getattr(args, "version", False):
