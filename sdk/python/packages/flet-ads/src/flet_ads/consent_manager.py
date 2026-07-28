@@ -33,8 +33,8 @@ class ConsentManager(ft.Service):
             a web and/or non-mobile platform.
     """  # noqa: E501
 
-    def init(self):
-        super().init()
+    def before_update(self):
+        super().before_update()
         if self.page.web or not self.page.platform.is_mobile():
             raise ft.FletUnsupportedPlatformException(
                 f"{self.__class__.__name__} is only supported on "
