@@ -1,3 +1,9 @@
+## 0.86.4
+
+### Bug fixes
+
+* Fix every `flet_ads` control (`BannerAd`, `InterstitialAd`, `NativeAd`, `ConsentManager`) crashing on construction with `RuntimeError: <Ad>(N) Control must be added to the page first`, which made the package unusable since 0.85. The mobile-only platform guard read `self.page` from `init()`, which runs at construction — before the control is attached to the page — so the parent-chain lookup raised. The guard is back in `before_update()`, a post-mount hook where `self.page` resolves, so ads construct freely and only reject web/desktop at mount time ([#6726](https://github.com/flet-dev/flet/issues/6726)) by @ndonkoHenri.
+
 ## 0.86.3
 
 ### Bug fixes
