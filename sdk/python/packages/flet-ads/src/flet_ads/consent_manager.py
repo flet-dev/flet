@@ -29,8 +29,8 @@ class ConsentManager(ft.Service):
     More info in the [AdMob documentation](https://developers.google.com/admob/flutter/privacy).
 
     Raises:
-        FletUnsupportedPlatformException: When any of its methods are called on
-            a web and/or non-mobile platform.
+        FletUnsupportedPlatformException: When used on a web and/or non-mobile
+            platform.
     """  # noqa: E501
 
     def before_update(self):
