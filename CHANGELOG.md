@@ -1,3 +1,22 @@
+## 1.0.0
+
+### New features
+
+* **macOS code signing, notarization, and Mac App Store builds in `flet build macos`.** Select a distribution lane with `--macos-distribution` (or `[tool.flet.macos.signing].distribution`): `developer-id` signs every bundled binary with your Developer ID certificate — hardened runtime, entitlements, secure timestamp — then notarizes and staples the app for direct distribution, while `app-store` produces a sandboxed app with your provisioning profile embedded, packaged into an installer-signed `.pkg` ready for App Store Connect and TestFlight. Signing identities are auto-discovered from the keychain when not explicitly configured (via CLI options, `pyproject.toml` — including per-lane `[tool.flet.macos.signing.<lane>]` subtables — or environment variables), and the whole configuration is validated before the build starts, so a typo'd identity, expired certificate, or missing store prerequisite fails in seconds instead of after the full build. See the new [Code signing](https://flet.dev/docs/publish/macos#code-signing), [Notarization](https://flet.dev/docs/publish/macos#notarization), and [Mac App Store](https://flet.dev/docs/publish/macos#mac-app-store) docs ([#2347](https://github.com/flet-dev/flet/issues/2347), [#4543](https://github.com/flet-dev/flet/issues/4543), [#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+
+### Improvements
+
+* Web builds and `flet publish` now read the `FLET_WEB_RENDERER`, `FLET_WEB_ROUTE_URL_STRATEGY`, and `FLET_WEB_NO_CDN` environment variables as fallbacks behind the CLI options and `[tool.flet.web]` pyproject keys, matching the `[env: ...]` notation the options already advertised, by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `flet publish`'s documented `[tool.flet.web].route_url_strategy` and `FLET_WEB_ROUTE_URL_STRATEGY` fallbacks being unreachable: the `--route-url-strategy` option's argparse default of `"path"` made the CLI value always win. The default now applies at the end of the resolution chain, as in `flet build`, by @ndonkoHenri.
+* Fix the generated `macos/Runner/*.entitlements` files being rejected by `codesign` with `AMFIUnserializeXML: syntax error` when used directly for re-signing: the template emitted boolean values as self-closing tags with a space (`<true />`), which Xcode and `plutil` accept but codesign's stricter AMFI plist parser does not. The templates now emit `<true/>`, and `flet build`'s own signing step additionally normalizes any entitlements file through `plistlib` before use, so plist formatting can never break signing ([#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+
+### Breaking changes
+
+* iOS per-method signing settings in `[tool.flet.ios.export_methods.<method>]` (`provisioning_profile`, `signing_certificate`, `export_options`, `team_id`) now override the flat `[tool.flet.ios]` keys instead of being overridden by them. Previously a per-method value silently lost to the generic one, making the subtables useless whenever a flat key was also set; the flat key is now the shared fallback across methods — the same rule as the macOS `[tool.flet.macos.signing.<lane>]` subtables. See the [iOS per-method signing precedence](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence) guide ([#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
+
 ## 0.86.3
 
 ### Bug fixes

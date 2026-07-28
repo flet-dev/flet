@@ -9,6 +9,11 @@ This guide provides detailed Linux-specific information.
 Complementary and more general information is available [here](index.md).
 :::
 
+:::info[Alternative: flet pack]
+For a PyInstaller-based way to package desktop apps — without the
+build-toolchain prerequisites below — see [`flet pack`](using-pyinstaller.md).
+:::
+
 ## Prerequisites
 
 Flet uses [Flutter](https://flutter.dev) to build Linux apps. Compiling the app
@@ -95,3 +100,12 @@ You can check the current session type with:
 ```bash
 echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 ```
+
+## Troubleshooting
+
+| Symptom                                                                                                             | Cause and fix                                                                                                                                                                                                                                                     |
+|---------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build fails with a linker error                                                                                     | The `lld` linker is missing — it is part of the [prerequisites](#prerequisites): `sudo apt install lld` (or your distribution's equivalent) and rebuild.                                                                                                          |
+| CMake can't find `gtk+-3.0` or other packages                                                                       | One or more `-dev` [prerequisites](#prerequisites) are missing — install the full list (package names differ on non-Debian distributions).                                                                                                                        |
+| The built app won't start on users' machines: `error while loading shared libraries: libmpv…` (or GStreamer errors) | The [`Audio`](../services/audio/index.md#usage) service and [`Video`](../controls/video/index.md#linux) control link against system libraries — `mpv`/`libmpv` and GStreamer must also be installed on the machine *running* the app, not only the build machine. |
+| Window positioning or centering has no effect                                                                       | The app is running in a Wayland session — see [Window positioning on Wayland](#window-positioning-on-wayland).                                                                                                                                                    |

@@ -120,8 +120,8 @@ The developer team ID to include in export options.
 Its value is determined in the following order of precedence:
 
 1. [`--ios-team-id`](../cli/flet-build.md#--ios-team-id)
-2. `[tool.flet.ios].team_id`
-3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].team_id`
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].team_id`
+3. `[tool.flet.ios].team_id`
 
 ##### Example
 
@@ -184,8 +184,8 @@ Before creating a development or distribution certificate, you need a **CSR (Cer
 Its value is determined in the following order of precedence:
 
 1. [`--ios-signing-certificate`](../cli/flet-build.md#--ios-signing-certificate)
-2. `[tool.flet.ios].signing_certificate`
-3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].signing_certificate`
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].signing_certificate`
+3. `[tool.flet.ios].signing_certificate`
 
 #### Example
 
@@ -293,8 +293,8 @@ for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; 
 Its value is determined in the following order of precedence:
 
 1. [`--ios-provisioning-profile`](../cli/flet-build.md#--ios-provisioning-profile)
-2. `[tool.flet.ios].provisioning_profile`
-3. `[tool.flet.ios.export_methods."EXPORT_METHOD"].provisioning_profile`
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].provisioning_profile`
+3. `[tool.flet.ios].provisioning_profile`
 
 The profile must match your [Bundle ID](index.md#bundle-id).
 
@@ -332,8 +332,8 @@ and find the section titled **"Available keys for -exportOptionsPlist"**.
 
 Its value is determined in the following order of precedence:
 
-1. `[tool.flet.ios].export_options` (if set, per-method export options are ignored)
-2. `[tool.flet.ios.export_methods."EXPORT_METHOD"].export_options` (see [export methods](#export-methods))
+1. `[tool.flet.ios.export_methods.EXPORT_METHOD].export_options` (see [export methods](#export-methods))
+2. `[tool.flet.ios].export_options`
 3. `{}` (no extra keys)
 
 ##### Supported value forms
@@ -434,8 +434,9 @@ export_method = "debugging"
 
 Signing settings can be configured individually per [export method](#export-method).
 
-Per-method values are used only when the corresponding top-level
-`[tool.flet.ios]` setting is not set. The method key must match the `export_method` value exactly.
+A per-method value overrides the corresponding top-level `[tool.flet.ios]`
+setting when its method is built — the top-level key is the shared
+fallback. The method key must match the `export_method` value exactly.
 
 Supported keys (same as the top-level settings):
 
@@ -449,17 +450,17 @@ Supported keys (same as the top-level settings):
 <Tabs groupId="pyproject-toml">
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
-[tool.flet.ios.export_methods."debugging"]
+[tool.flet.ios.export_methods.debugging]
 provisioning_profile = "debugging com.mycompany.example-app"
 signing_certificate = "Apple Development"
 
-[tool.flet.ios.export_methods."release-testing"]
+[tool.flet.ios.export_methods.release-testing]
 provisioning_profile = "release-testing com.mycompany.example-app"
 team_id = "ABCDEFE234"
 signing_certificate = "Apple Distribution"
 export_options = { uploadSymbols = false }
 
-[tool.flet.ios.export_methods."app-store-connect"]
+[tool.flet.ios.export_methods.app-store-connect]
 provisioning_profile = "app-store-connect com.mycompany.example-app"
 team_id = "ABCDEFE234"
 signing_certificate = "Apple Distribution"
@@ -701,3 +702,11 @@ you'll need to manually trust the developer:
 - Navigate to **Apps → Your App → TestFlight or App Store Version**.
 - Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
 - Once processing completes, your build will become available for submission. You can now **submit the app for review**.
+
+## Troubleshooting
+
+| Symptom                                                        | Cause and fix                                                                                                                                                                                                                                                                                                                                  |
+|----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build hangs at `Running Xcode build...` (`codesign` at 0% CPU) | macOS is waiting on a keychain prompt — possibly hidden behind other windows — for permission to use the signing key, common after importing a key from the terminal. Click **Always Allow** on the prompt, or pre-authorize `codesign` with `security set-key-partition-list -S apple-tool:,apple: -s -k <login-password> login.keychain-db`. |
+| `No valid code signing certificates were found`                | No signing certificate and matching profile are installed for the selected team — walk through [Signing Certificate](#signing-certificate) and [Provisioning Profile](#provisioning-profile).                                                                                                                                                  |
+| A manually copied provisioning profile keeps disappearing      | A running Xcode process removes profiles copied into `~/Library/MobileDevice/Provisioning Profiles` — quit Xcode before [installing the profile](#provisioning-profile).                                                                                                                                                                       |

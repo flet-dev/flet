@@ -16,7 +16,7 @@ from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, slugify
+from flet.utils import copy_tree, get_bool_env_var, slugify
 from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
@@ -667,6 +667,55 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
+            "--macos-signing-identity",
+            dest="macos_signing_identity",
+            help='"Developer ID Application" (direct distribution) or '
+            '"Apple Distribution" (App Store) certificate name, its SHA-1 '
+            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
+            "when not configured (CLI, pyproject.toml, or env), developer-id "
+            "and app-store distribution builds auto-discover the only "
+            "certificate of the required type "
+            "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
+        )
+        parser.add_argument(
+            "--macos-distribution",
+            dest="macos_distribution",
+            type=str.lower,
+            choices=["none", "developer-id", "app-store"],
+            help="Distribution channel to sign and package for: 'developer-id' "
+            "signs with the hardened runtime, notarizes and staples for direct "
+            "distribution; 'app-store' produces a sandboxed build with an "
+            "embedded provisioning profile and a signed installer .pkg for "
+            "App Store Connect / TestFlight; 'none' (default) signs only when "
+            "a signing identity is configured (macos only)",
+        )
+        parser.add_argument(
+            "--macos-notary-profile",
+            dest="macos_notary_profile",
+            help="Keychain profile name created with `xcrun notarytool "
+            "store-credentials` to authenticate with the Apple notary service; "
+            "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
+            "APPLE_API_ISSUER environment variables (macos only) "
+            "[env: FLET_MACOS_NOTARY_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-provisioning-profile",
+            dest="macos_provisioning_profile",
+            help="Path to a Mac App Store provisioning profile "
+            "(.provisionprofile) to embed at Contents/embedded.provisionprofile; "
+            "required for App Store builds (macos only) "
+            "[env: FLET_MACOS_PROVISIONING_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-installer-identity",
+            dest="macos_installer_identity",
+            help='"3rd Party Mac Developer Installer" / "Mac Installer '
+            'Distribution" certificate name or SHA-1 fingerprint used to sign '
+            "the App Store installer package; when not configured, the only "
+            "installer certificate in the keychain is auto-discovered "
+            "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -945,6 +994,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
             "com.apple.security.network.client": True,
             "com.apple.security.network.server": True,
             "com.apple.security.files.user-selected.read-write": True,
@@ -1264,26 +1314,26 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         ios_provisioning_profile = (
             self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
             or ios_export_method_opts.get("provisioning_profile")
+            or self.get_pyproject("tool.flet.ios.provisioning_profile")
         )
 
         ios_signing_certificate = (
             self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
             or ios_export_method_opts.get("signing_certificate")
+            or self.get_pyproject("tool.flet.ios.signing_certificate")
         )
 
         ios_export_options = (
-            self.get_pyproject("tool.flet.ios.export_options")
-            or ios_export_method_opts.get("export_options")
+            ios_export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
             or {}
         )
 
         ios_team_id = (
             self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team_id")
             or ios_export_method_opts.get("team_id")
+            or self.get_pyproject("tool.flet.ios.team_id")
         )
 
         if (
@@ -1309,8 +1359,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
-            ),
+            ).lower(),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
             # select the dart2wasm/skwasm build, where every JS <-> Dart byte
             # buffer crossing pays a WasmGC boundary conversion instead of a
@@ -1319,8 +1370,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
-            ),
+            ).lower(),
             "pwa_background_color": (
                 self.options.pwa_background_color
                 or self.get_pyproject("tool.flet.web.pwa_background_color")
@@ -1334,7 +1386,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
             "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+                self.options.no_cdn
+                or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+                or bool(get_bool_env_var("FLET_WEB_NO_CDN"))
             ),
             # Surface the resolved Pyodide release to the cookiecutter
             # context so the web template's index.html can wire the
@@ -2875,11 +2929,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         # incompatible formats so flutter_launcher_icons gets a decodable file.
         images = list(
             filter(
-                lambda p: not (
-                    (ext := Path(p).suffix.lower()) == ".icns"
-                    and self.target_platform != "macos"
-                    or ext == ".ico"
-                    and self.target_platform != "windows"
+                lambda p: (
+                    not (
+                        (ext := Path(p).suffix.lower()) == ".icns"
+                        and self.target_platform != "macos"
+                        or ext == ".ico"
+                        and self.target_platform != "windows"
+                    )
                 ),
                 glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
             )
