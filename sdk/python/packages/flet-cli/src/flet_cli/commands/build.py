@@ -272,13 +272,24 @@ class Command(BaseBuildCommand):
                 f"`[tool.flet.macos.signing].distribution`: "
                 f"{', '.join(self.MACOS_DISTRIBUTIONS)}.",
             )
+        lane_names = [d for d in self.MACOS_DISTRIBUTIONS if d != "none"]
         for key, value in (self.get_pyproject("tool.flet.macos.signing") or {}).items():
-            if isinstance(value, dict) and key not in self.MACOS_DISTRIBUTIONS:
+            if not isinstance(value, dict):
+                continue
+            if key == "none":
+                self.cleanup(
+                    1,
+                    "`[tool.flet.macos.signing.none]` is not a lane subtable "
+                    "— the `none` lane reads no signing settings, so it "
+                    "would be silently ignored. Put shared values directly "
+                    "on `[tool.flet.macos.signing]`.",
+                )
+            elif key not in lane_names:
                 self.cleanup(
                     1,
                     f"Unknown lane subtable `[tool.flet.macos.signing.{key}]` "
                     f"— it would be silently ignored. Valid lane names: "
-                    f"{', '.join(d for d in self.MACOS_DISTRIBUTIONS if d != 'none')}.",
+                    f"{', '.join(lane_names)}.",
                 )
         return distribution
 
@@ -381,6 +392,15 @@ class Command(BaseBuildCommand):
         )
         if not identity and distribution == "none":
             return
+
+        if distribution != "none" and (identity or "").strip() == "-":
+            self.cleanup(
+                1,
+                f"The ad-hoc identity ('-') cannot be used with the "
+                f"'{distribution}' distribution — ad-hoc signatures cannot "
+                f"be notarized or uploaded. Configure a real signing "
+                f"identity, or build with --macos-distribution none.",
+            )
 
         try:
             if distribution == "app-store":

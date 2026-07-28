@@ -130,7 +130,14 @@ class NotaryCredentials:
         """
         if self.keychain_profile:
             return ["--keychain-profile", self.keychain_profile]
-        assert self.api_key and self.api_key_id and self.api_issuer
+        if not (self.api_key and self.api_key_id and self.api_issuer):
+            # Not an assert: `python -O` would strip it and produce a
+            # notarytool call with silently missing arguments.
+            raise MacOSSigningError(
+                "Incomplete App Store Connect API key credentials: "
+                "APPLE_API_KEY, APPLE_API_KEY_ID and APPLE_API_ISSUER "
+                "must all be set."
+            )
         return [
             "--key",
             self.api_key,
@@ -836,7 +843,12 @@ def sign_app(
     # Quarantine and Finder-info extended attributes make codesign fail with
     # "resource fork, Finder information, or similar detritus not allowed",
     # and App Store Connect rejects quarantined files outright.
-    _run(["xattr", "-cr", str(app_path)])
+    result = _run(["xattr", "-cr", str(app_path)])
+    if result.returncode != 0:
+        raise MacOSSigningError(
+            f"Failed to clear extended attributes from {app_path}: "
+            f"{result.stderr.strip() or result.stdout.strip()}"
+        )
 
     mach_o_files = find_mach_o_files(app_path)
     main_executable = _main_executable(app_path)

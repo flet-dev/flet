@@ -370,17 +370,20 @@ class Command(BaseCommand):
             # typed-data boundary costs are a large per-frame tax for
             # byte-streaming Pyodide apps.
             web_renderer=WebRenderer(
-                options.web_renderer
-                or get_pyproject("tool.flet.web.renderer")
-                # lowered for parity with the CLI option's type=str.lower
-                or (os.getenv("FLET_WEB_RENDERER") or "").lower()
-                or "canvaskit"
+                (
+                    options.web_renderer
+                    or get_pyproject("tool.flet.web.renderer")
+                    or os.getenv("FLET_WEB_RENDERER")
+                    or "canvaskit"
+                ).lower()
             ),
             route_url_strategy=RouteUrlStrategy(
-                options.route_url_strategy
-                or get_pyproject("tool.flet.web.route_url_strategy")
-                or (os.getenv("FLET_WEB_ROUTE_URL_STRATEGY") or "").lower()
-                or "path"
+                (
+                    options.route_url_strategy
+                    or get_pyproject("tool.flet.web.route_url_strategy")
+                    or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+                    or "path"
+                ).lower()
             ),
             no_cdn=no_cdn,
         )

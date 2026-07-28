@@ -395,6 +395,30 @@ def test_unknown_lane_subtable_rejected(tmp_path):
         cmd.resolve_macos_distribution()
 
 
+def test_none_subtable_rejected(tmp_path):
+    """`[tool.flet.macos.signing.none]` is never read — fail instead of ignore."""
+    cmd = make_command(
+        tmp_path,
+        pyproject={
+            "tool.flet.macos.signing": {"none": {"identity": "never read"}},
+        },
+    )
+    with pytest.raises(Exit, match=r"signing\.none.* is not a lane subtable"):
+        cmd.resolve_macos_distribution()
+
+
+def test_preflight_rejects_adhoc_identity_for_lanes(tmp_path, monkeypatch):
+    """An explicit '-' identity fails preflight — it can't be notarized/uploaded."""
+    forbid_keychain(monkeypatch)
+    cmd = make_command(
+        tmp_path,
+        options={"macos_signing_identity": "-", "macos_notary_profile": "flet"},
+        pyproject={"tool.flet.macos.signing.distribution": "developer-id"},
+    )
+    with pytest.raises(Exit, match="ad-hoc"):
+        cmd.preflight_macos_signing()
+
+
 def test_fully_lane_organized_pyproject(tmp_path, monkeypatch):
     """Lane-only keys may live in their lane's subtable instead of flat.
 

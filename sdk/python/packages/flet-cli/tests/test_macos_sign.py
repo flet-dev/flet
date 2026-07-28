@@ -391,6 +391,11 @@ def test_notary_credentials_args():
         api_key="key.p8", api_key_id="KID", api_issuer="ISS"
     ).as_args() == ["--key", "key.p8", "--key-id", "KID", "--issuer", "ISS"]
 
+    # An incomplete API-key triple must raise, not assert — `python -O`
+    # strips asserts and would emit a notarytool call with missing args.
+    with pytest.raises(MacOSSigningError, match="APPLE_API_KEY_ID"):
+        NotaryCredentials(api_key="key.p8").as_args()
+
 
 # Real (non-ad-hoc) identities for tests that never touch the keychain.
 DEV_ID = SigningIdentity(
