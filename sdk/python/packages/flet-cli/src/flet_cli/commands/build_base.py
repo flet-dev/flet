@@ -2290,6 +2290,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # app here (no app.zip on native); the platform native build copies
             # it into the bundle (Android zips it as a stored asset).
             package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+            # app bundle id: serious_python (>= 4.4.2) namespaces the generated
+            # iOS framework bundle identifiers under it. Without it they keep a
+            # shared `org.python.*` default that is byte-identical in every Flet
+            # app — see flet-dev/flet#6724.
+            bundle_id = (self.template_data or {}).get("bundle_id")
+            if bundle_id:
+                package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): tell serious_python's package command to
         # do the host-side SPM staging (the podspec prepare_command doesn't run
@@ -2564,6 +2571,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             # / Android Gradle) at `flutter build` time to place the unpacked app
             # into the bundle.
             env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
+
+        # app bundle id: the CocoaPods `prepare_command` re-runs the darwin sync
+        # at `flutter build` time, so it needs the same value the package step
+        # got or the framework identifiers fall back to `org.python.*`. Read
+        # defensively — this method is documented as safe to call before the
+        # pipeline has populated every attribute.
+        bundle_id = (getattr(self, "template_data", None) or {}).get("bundle_id")
+        if bundle_id:
+            env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): export the cache-bust key the package
         # step computed so the plugin's Package.swift re-resolves when the staged
@@ -2854,11 +2870,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         Find the best matching image file for the current target platform.
 
-        When multiple files share the same base name (e.g. `icon.icns`,
-        `icon.ico`, `icon.png`), the method filters out formats that are
-        incompatible with the build target before selecting the first match.
-        For example, `.icns` is skipped on Windows builds because
-        `flutter_launcher_icons` cannot decode it.
+        When multiple files share the same base name (e.g. `icon.png` and
+        `icon.svg`), incompatible formats are filtered out and the rest are
+        ranked so a raster image (`.png` first) always wins, making the
+        choice deterministic regardless of filesystem ordering. Formats the
+        icon/splash generators cannot decode are dropped: `.svg` (vector,
+        never supported), `.icns` (macOS-only) and `.ico` (Windows-only). If
+        the only candidate is a vector image, a warning is logged and `None`
+        is returned so the default icon is used.
 
         Args:
             src_path: Source assets directory.
@@ -2871,21 +2890,54 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        # .icns is macOS-only and .ico is Windows-only; filter out
-        # incompatible formats so flutter_launcher_icons gets a decodable file.
-        images = list(
-            filter(
-                lambda p: not (
-                    (ext := Path(p).suffix.lower()) == ".icns"
-                    and self.target_platform != "macos"
-                    or ext == ".ico"
-                    and self.target_platform != "windows"
-                ),
-                glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
+        # flutter_launcher_icons / flutter_native_splash decode raster images
+        # only, so drop any candidate they can't read: .svg is vector (never
+        # supported), .icns is macOS-only and .ico is Windows-only.
+        def _incompatible(p: str) -> bool:
+            ext = Path(p).suffix.lower()
+            return (
+                ext == ".svg"
+                or (ext == ".icns" and self.target_platform != "macos")
+                or (ext == ".ico" and self.target_platform != "windows")
             )
+
+        # glob order is filesystem-dependent — sort so the choice is
+        # deterministic across machines, then rank by format so a raster
+        # icon (.png first) always wins when several candidates share a base
+        # name (e.g. both icon.png and icon.svg present).
+        ext_priority = {
+            ".png": 0,
+            ".webp": 1,
+            ".jpg": 2,
+            ".jpeg": 2,
+            ".gif": 3,
+            ".bmp": 4,
+            ".tif": 5,
+            ".tiff": 5,
+            ".ico": 6,
+            ".icns": 6,
+        }
+        candidates = sorted(glob.glob(str(src_path.joinpath(f"{image_name}.*"))))
+        images = sorted(
+            (p for p in candidates if not _incompatible(p)),
+            key=lambda p: (ext_priority.get(Path(p).suffix.lower(), 99), p),
         )
 
         if not images:
+            # Nothing usable. If the only candidate was a vector image (e.g.
+            # an icon.svg with no raster sibling), say why it's ignored
+            # instead of silently falling back to the default icon.
+            svg = next(
+                (p for p in candidates if Path(p).suffix.lower() == ".svg"), None
+            )
+            if svg:
+                console.log(
+                    f'Warning: "{Path(svg).name}" is a vector (SVG) image and '
+                    f'cannot be used for "{image_name}". Provide a raster '
+                    f'"{image_name}.png" to customize it — using the default '
+                    f"for now.",
+                    style=warning_style,
+                )
             return None
 
         best = images[0]

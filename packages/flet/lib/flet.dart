@@ -8,6 +8,7 @@ export 'package:flutter/material.dart' show Icons;
 export 'src/controls/base_controls.dart';
 export 'src/controls/control_widget.dart';
 export 'src/extensions/control.dart';
+export 'src/embedded_dart_bridge.dart';
 export 'src/flet_app.dart';
 export 'src/flet_app_errors_handler.dart';
 export 'src/flet_backend.dart';

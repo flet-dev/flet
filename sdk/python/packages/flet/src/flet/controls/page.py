@@ -112,6 +112,19 @@ class ServiceRegistry(Service):
         self._internals["uid"] = random_string(10)
         self._lock: threading.Lock = threading.Lock()
 
+    def init(self):
+        # Deliberately skips Service.init(), which registers the instance into
+        # `context.page._services`. A registry is the *container* for services,
+        # not a service itself, and self-registering leaks across pages: when a
+        # second Page is constructed while another page is still the current
+        # context — an embedded `FletApp` inside a host app — the new page's
+        # registry is registered inside the HOST's registry. The client has no
+        # service binding for type "ServiceRegistry", so building it throws
+        # "Unknown service" inside the host's service loop, and every service
+        # registered after it is never built: invoking one then fails with
+        # "Timeout waiting for invoke method listener".
+        BaseControl.init(self)
+
     def register_service(self, service: Service):
         """
         Registers a service in this registry and pushes an update.
