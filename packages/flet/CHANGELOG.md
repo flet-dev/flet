@@ -1,3 +1,7 @@
+## 0.86.5
+
+_No changes in the `flet` Dart package; version bumped for release coordination with configurable Android `gradle.properties` on the Python side ([#6733](https://github.com/flet-dev/flet/pull/6733))._
+
 ## 0.86.4
 
 * Isolate per-service failures when building the page's service registry. `ServiceBinding` throws `Unknown service` for a control type no extension can build, and that exception escaping `ServiceRegistry._onServicesUpdated()` aborted the whole loop, so every service after the offending entry was silently never bound and later `invokeMethod` calls on them hung until they timed out. Each binding is now built independently and a failure is logged and skipped. Also rebuilds the registry when the `_services` control instance is replaced (not just when its uid changes), matching how the `window` service tracks its control by identity.
