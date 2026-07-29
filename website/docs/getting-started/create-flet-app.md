@@ -75,8 +75,8 @@ See [Running a Flet app](running-app.md) to launch it as a desktop window or in 
 
 ## Basic controls
 
-Most UIs are built from a handful of building blocks: something to show text, something to lay other controls out,
-and something to give them a background, border, or padding.
+These are the controls you'll most likely need — for showing text, laying out other controls, and adding a
+background, border, or padding.
 
 ### Text
 
@@ -102,8 +102,7 @@ ft.Row(
 )
 ```
 
-Nest a `Column` inside a `Row` (or vice versa) to build more complex layouts — this is the same idea as flexbox in
-CSS.
+You can nest a `Column` inside a `Row` (or vice versa) to build more complex layouts.
 
 ### Stack
 
@@ -168,8 +167,8 @@ Material controls on the page — see [Theming](../cookbook/theming.md) for more
 ## Handling events
 
 Interactive controls like [`Button`](../controls/button.md), [`IconButton`](../controls/iconbutton.md), and
-`Container` (when given `on_click`) accept event handlers — plain functions that run when the user interacts with
-the control:
+[`Container`](../controls/container.md) accept event handlers — plain functions that run when the user interacts
+with the control:
 
 ```python
 def main(page: ft.Page):
@@ -181,10 +180,14 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-The handler receives an `Event`, whose `.control` attribute is the control that triggered it. Any control property
-you change inside a handler is picked up automatically — see [Auto-update](../cookbook/auto-update.md) — so
-most handlers only need to update the relevant control's attributes, without wiring up any state management by
-hand.
+Every event handler takes one argument — conventionally named `e` — an [`Event`](/docs/types/event) object.
+`e.control` is the control that triggered the event, so you can read its current state from there (a `TextField`'s
+`on_change` handler, for example, reads the new value via `e.control.value`). Typing the handler as
+`ft.Event[ft.Button]`, as above, tells your editor that `e.control` is specifically a `Button`.
+
+Anything you change inside a handler — a control property, or, as above, calling a page method like
+`show_dialog()` — is picked up [automatically](../cookbook/auto-update.md), so most handlers don't need to manage
+updates by hand.
 
 For lower-level pointer interactions — taps, drags, hover, scroll — wrap a control in
 [`GestureDetector`](../controls/gesturedetector.md).
