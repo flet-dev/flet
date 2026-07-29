@@ -1,5 +1,9 @@
 ## 0.86.5
 
+### Bug fixes
+
+* Fix every `flet_ads` control (`BannerAd`, `InterstitialAd`, `NativeAd`, `ConsentManager`) crashing on construction with `RuntimeError: <Ad>(N) Control must be added to the page first`, which made the package unusable since 0.85. The mobile-only platform guard read `self.page` from `init()`, which runs at construction — before the control is attached to the page — so the parent-chain lookup raised. The guard is back in `before_update()`, a post-mount hook where `self.page` resolves, so ads construct freely and only reject web/desktop at mount time ([#6726](https://github.com/flet-dev/flet/issues/6726), [#6735](https://github.com/flet-dev/flet/pull/6735)) by @ndonkoHenri.
+
 ### Improvements
 
 * Android Gradle properties can now be configured from `pyproject.toml` via `[tool.flet.android.gradle_properties]`. The generated project's `android/gradle.properties` was previously fixed, so its memory settings — `org.gradle.jvmargs=-Xmx8G` plus a 4 GB metaspace — could not be changed. That is larger than the total RAM of a standard GitHub-hosted runner (measured: 7.8 GB with 3 GB of swap), so release builds, which additionally run Dart AOT once per ABI and R8, could exhaust memory and stall with no error; the only workaround was to download the published build template, patch the file and pass `--template`. Entries in the table override the defaults or add new properties, e.g. `"org.gradle.jvmargs" = "-Xmx3G -XX:MaxMetaspaceSize=1G"` and `"org.gradle.workers.max" = 2`. Defaults are unchanged, so existing builds render exactly the same file by @FeodorFitsner.
