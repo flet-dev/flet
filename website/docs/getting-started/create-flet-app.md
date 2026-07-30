@@ -56,7 +56,7 @@ tests
 
 You can find more information about `flet create` command [here](../cli/flet-create.md).
 
-`src/main.py` already contains a small working app — a counter with a button that increments it:
+`src/main.py` already contains a small working counter app with a button that increments it:
 
 <CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
 
@@ -68,15 +68,15 @@ You can find more information about `flet create` command [here](../cli/flet-cre
 * [`page.add()`](/docs/controls/basepage#flet.BasePage.add) appends controls to the page.
 * [`page.floating_action_button`](../controls/floatingactionbutton.md) sets the round action button in the
   bottom-right corner.
-* `increment_click` is an event handler — see [Handling events](#handling-events) below. Flet renders the changes
-  `increment_click` makes as soon as the handler returns.
+* `increment_click` is an event handler (see [Handling events](#handling-events) below); Flet renders the changes
+  it makes as soon as the handler returns.
 
 See [Running a Flet app](running-app.md) to launch it as a desktop window or in a browser.
 
 ## Basic controls
 
-These are the controls you'll most likely need — for showing text, laying out other controls, and adding a
-background, border, or padding.
+You'll most likely need controls for showing text, laying out other controls, and adding a background, border, or
+padding.
 
 ### Text
 
@@ -140,13 +140,15 @@ ft.Container(
 )
 ```
 
-`Container` is also how you make a piece of UI clickable — see [Handling events](#handling-events) below.
+`Container` also accepts `on_click`, which makes it a handy way to make a control clickable when that control
+doesn't have an `on_click` of its own: just wrap it in a `Container`. See [Handling events](#handling-events)
+below.
 
 ## Structuring the page
 
 Beyond individual controls, `page` itself has properties that shape the whole app: `page.title` sets the window/tab
-title, and `page.appbar` puts a [Material `AppBar`](../controls/appbar.md) — the header row with a title and
-actions — at the top of the page:
+title, and `page.appbar` puts an [`AppBar`](../controls/appbar.md) (the header row with a title and actions) at
+the top of the page:
 
 ```python
 def main(page: ft.Page):
@@ -162,12 +164,18 @@ ft.run(main)
 ```
 
 `page.theme` and `page.theme_mode` control the color scheme (light/dark and a seed color) applied across all
-Material controls on the page — see [Theming](../cookbook/theming.md) for more.
+Material controls on the page (see [Theming](../cookbook/theming.md) for more).
+
+:::note[Note]
+`AppBar`, `Button`, and most other controls follow Material Design. For an iOS-style look, Flet also ships a
+parallel set of Cupertino controls (`ft.Cupertino*`). See [Adaptive apps](../cookbook/adaptive-apps.md) for
+building a single app that looks native on both platforms.
+:::
 
 ## Handling events
 
 Interactive controls like [`Button`](../controls/button.md), [`IconButton`](../controls/iconbutton.md), and
-[`Container`](../controls/container.md) accept event handlers — plain functions that run when the user interacts
+[`Container`](../controls/container.md) accept event handlers, plain functions that run when the user interacts
 with the control:
 
 ```python
@@ -180,16 +188,16 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-Every event handler takes one argument — conventionally named `e` — an [`Event`](/docs/types/event) object.
+Every event handler takes a single argument, conventionally named `e`, of type [`Event`](/docs/types/event).
 `e.control` is the control that triggered the event, so you can read its current state from there (a `TextField`'s
 `on_change` handler, for example, reads the new value via `e.control.value`). Typing the handler as
 `ft.Event[ft.Button]`, as above, tells your editor that `e.control` is specifically a `Button`.
 
-Anything you change inside a handler — a control property, or, as above, calling a page method like
-`show_dialog()` — is picked up [automatically](../cookbook/auto-update.md), so most handlers don't need to manage
+Anything you change inside a handler (a control property, or, as above, calling a page method like
+`show_dialog()`) is picked up [automatically](../cookbook/auto-update.md), so most handlers don't need to manage
 updates by hand.
 
-For lower-level pointer interactions — taps, drags, hover, scroll — wrap a control in
+For lower-level pointer interactions (taps, drags, hover, scroll), wrap a control in
 [`GestureDetector`](../controls/gesturedetector.md).
 
 ## Bringing it all together
@@ -266,9 +274,9 @@ button that pops up a confirmation.
 
 ## What's next
 
-* [Running a Flet app](running-app.md) — see the apps above running as a desktop window or in a browser.
-* [Controls reference](/docs/controls) — the full list of controls available in Flet.
-* [Auto-update](../cookbook/auto-update.md) — how and when Flet sends control changes to the client.
-* [Declarative vs. imperative](../cookbook/declarative-vs-imperative.md) — once your UI needs to manage evolving
+* [Running a Flet app](running-app.md): see the apps above running as a desktop window or in a browser.
+* [Controls reference](/docs/controls): the full list of controls available in Flet.
+* [Auto-update](../cookbook/auto-update.md): how and when Flet sends control changes to the client.
+* [Declarative vs. imperative](../cookbook/declarative-vs-imperative.md): once your UI needs to manage evolving
   state (like a shopping cart or a to-do list), this is the next thing to read.
-* [Theming](../cookbook/theming.md) — customize colors, fonts, and light/dark mode across the app.
+* [Theming](../cookbook/theming.md): customize colors, fonts, and light/dark mode across the app.
