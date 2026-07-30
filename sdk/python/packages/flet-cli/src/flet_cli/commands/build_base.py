@@ -212,11 +212,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                "android_permissions": {
-                    "android.permission.RECORD_AUDIO": True,
-                    "android.permission.WRITE_EXTERNAL_STORAGE": True,
-                    "android.permission.READ_EXTERNAL_STORAGE": True,
-                },
+                # Recording itself only needs RECORD_AUDIO: recordings are written
+                # to app-scoped storage, which requires no permission. Do not add
+                # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
+                # Permissions policy rejects apps that request broad media/storage
+                # access without a qualifying use case, and this group is opt-in
+                # for the microphone, not for the user's media library.
+                "android_permissions": {"android.permission.RECORD_AUDIO": True},
                 "android_features": {},
             },
             "photo_library": {
