@@ -971,6 +971,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
             "android.useAndroidX": "true",
         }
+        # ProGuard/R8 rules for the generated Android project. Like
+        # gradle_properties above, these were a fixed template file and the
+        # defaults reproduce it exactly. R8 renames classes in release builds
+        # while pyjnius resolves them by name, so an app that reaches into a
+        # bundled AAR needs a keep rule and had no way to add one.
+        #
+        # `proguard_rules` appends, since R8 has no directive that undoes a
+        # keep. Removing a default therefore needs its own switch:
+        # `proguard_default_rules = false` drops them, which is the only way to
+        # shed `-keepnames class * { *; }`. Keeping the two separate stops
+        # users pasting today's defaults into pyproject.toml and silently
+        # holding them after the defaults change.
+        keep_defaults = (
+            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
+        )
+        android_proguard_rules = (
+            [
+                "-keep class com.flet.serious_python_android.** { *; }",
+                "-keepnames class * { *; }",
+            ]
+            if keep_defaults
+            else []
+        )
 
         # merge values from "--permissions" arg:
         for p in (
@@ -1056,6 +1079,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             android_gradle_properties,
             self.get_pyproject("tool.flet.android.gradle_properties") or {},
         )
+
+        android_proguard_rules = android_proguard_rules + [
+            str(rule)
+            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
+        ]
 
         # parse --android-permissions
         for p in self.options.android_permissions:
@@ -1407,6 +1435,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
                 "android_gradle_properties": android_gradle_properties,
+                "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
