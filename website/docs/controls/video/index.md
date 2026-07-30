@@ -43,21 +43,35 @@ The below sections show the required configurations for each platform.
 
 ### Android
 
-You may need to declare and request file-system/storage permissions, depending on your use case:
+**No permissions are required** to play media from a URL, from a bundled asset, or
+from a file the user picked with [`FilePicker`](../../services/filepicker.md) — the
+system picker grants access to the picked file.
 
-- [`android.permission.READ_MEDIA_AUDIO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_AUDIO) (optional): Allows to read audio files from external storage. Android 13 or higher.
-- [`android.permission.READ_MEDIA_VIDEO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_VIDEO) (optional): Allows to read video files from external storage. Android 13 or higher.
-- [`android.permission.READ_EXTERNAL_STORAGE`](https://developer.android.com/reference/android/Manifest.permission#READ_EXTERNAL_STORAGE) (optional): Allows reading from external storage. Android 12 or lower.
-- [`android.permission.WRITE_EXTERNAL_STORAGE`](https://developer.android.com/reference/android/Manifest.permission#WRITE_EXTERNAL_STORAGE) (optional): Allows writing to external storage. Android 12 or lower.
+You only need media permissions if your app reads media **directly from the device's
+shared media library**, without the user picking each file:
+
+- [`android.permission.READ_MEDIA_AUDIO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_AUDIO): Allows to read audio files from external storage. Android 13 or higher.
+- [`android.permission.READ_MEDIA_VIDEO`](https://developer.android.com/reference/android/Manifest.permission#READ_MEDIA_VIDEO): Allows to read video files from external storage. Android 13 or higher.
+- [`android.permission.READ_EXTERNAL_STORAGE`](https://developer.android.com/reference/android/Manifest.permission#READ_EXTERNAL_STORAGE): Allows reading from external storage. Android 12 or lower — bound with `maxSdkVersion` so that it is not requested on Android 13 or higher.
+
+:::danger[Google Play policy]
+Google Play's [Photo and Video Permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180)
+**rejects** apps targeting Android 13 (API 33) or higher that declare
+`READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO` when the system pickers are sufficient.
+Declaring them in *any* active version code — including internal and closed testing
+tracks — is enough to block a release.
+
+Use [`FilePicker`](../../services/filepicker.md) unless you genuinely need
+library-wide access; in that case you must also submit the photo picker declaration
+form in the Play Console.
+:::
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build apk \
   --android-permissions android.permission.READ_MEDIA_AUDIO=true \
-  --android-permissions android.permission.READ_MEDIA_VIDEO=true \
-  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
-  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
+  --android-permissions android.permission.READ_MEDIA_VIDEO=true
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
@@ -65,8 +79,7 @@ flet build apk \
 [tool.flet.android.permission]
 "android.permission.READ_MEDIA_AUDIO" = true
 "android.permission.READ_MEDIA_VIDEO" = true
-"android.permission.READ_EXTERNAL_STORAGE" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.READ_EXTERNAL_STORAGE" = { maxSdkVersion = "32" }
 ```
 </TabItem>
 </Tabs>

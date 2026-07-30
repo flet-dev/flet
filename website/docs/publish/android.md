@@ -741,6 +741,22 @@ the example above will be translated accordingly into this:
 Use cross-platform permissions from [Permissions](index.md#permissions) when possible,
 and add Android-specific permissions or features here.
 
+:::danger[Declare only what you use]
+Google Play rejects apps that request broad media or storage access they do not need.
+In particular, its [Photo and Video Permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180)
+rejects apps targeting Android 13 (API 33) or higher that declare
+`READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO` when the system pickers are sufficient —
+and a single active version code carrying them, including on internal and closed
+testing tracks, is enough to block a release.
+
+[`FilePicker`](../services/filepicker.md) uses the storage access framework and needs
+no permission at all, and the app's own directories
+(see [`StoragePaths`](../services/storagepaths.md)) are always writable. Reach for
+`READ_MEDIA_*` or the legacy `*_EXTERNAL_STORAGE` permissions only when your app truly
+needs library-wide access, and bound the legacy ones with
+`{ maxSdkVersion = "32" }` so they are not requested on Android 13 or higher.
+:::
+
 See also:
 
 - [`Manifest.permission` constants](https://developer.android.com/reference/android/Manifest.permission)
@@ -779,15 +795,15 @@ A non-empty table is always emitted; an empty table `{}` is treated as `false`.
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build apk \
-  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
-  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
+  --android-permissions android.permission.CAMERA=true \
+  --android-permissions android.permission.RECORD_AUDIO=true
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.android.permission]
-"android.permission.READ_EXTERNAL_STORAGE" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
 "android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
 "android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 ```
@@ -801,8 +817,8 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
 </manifest>
