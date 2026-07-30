@@ -4,7 +4,7 @@ title: "Creating a new Flet app"
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
-import {CodeExample} from '@site/src/components/crocodocs';
+import {CodeExample, Image} from '@site/src/components/crocodocs';
 
 A Flet app's UI is made up of [controls](/docs/controls), arranged on the page. Controls can be styled, nested
 inside each other to build layouts, and respond to events like clicks and taps.
@@ -60,9 +60,7 @@ You can find more information about `flet create` command [here](../cli/flet-cre
 
 <CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
 
-<p align="center">
-    <img src="/docs/assets/getting-started/counter-app/macos.png" width="60%" />
-</p>
+<Image src="assets/getting-started/counter-app/macos.png" alt="Counter app running on macOS" width="60%" />
 
 * [`page`](../controls/page.md) is the top-level container for everything in the app window (or browser tab).
 * [`page.add()`](/docs/controls/basepage#flet.BasePage.add) appends controls to the page.
@@ -207,6 +205,9 @@ Here's a small product catalog that uses everything above: an `AppBar` for the p
 react to taps:
 
 <CodeExample path="cookbook/create_flet_app/product_catalog/main.py" language="python" title="catalog.py" />
+
+<Image src="test-images/examples/cookbook/golden/macos/product_catalog/product_catalog.png"
+       alt="Product catalog app running on macOS" width="60%" />
 
 Run it with [`flet run`](running-app.md) and you'll get a scrollable list of product cards, each with a "Buy"
 button that pops up a confirmation.
