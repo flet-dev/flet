@@ -200,74 +200,13 @@ updates by hand.
 For lower-level pointer interactions (taps, drags, hover, scroll), wrap a control in
 [`GestureDetector`](../controls/gesturedetector.md).
 
-## Bringing it all together
+## Example: Product catalog
 
 Here's a small product catalog that uses everything above: an `AppBar` for the page header, `Container` and
 `Column`/`Row` for layout and styling, a `Stack` to draw a "Sale" badge on one item, and `on_click` handlers to
 react to taps:
 
-```python title="catalog.py"
-import flet as ft
-
-PRODUCTS = [
-    {"name": "Desk Lamp", "price": "$24", "on_sale": False},
-    {"name": "Wireless Mouse", "price": "$18", "on_sale": True},
-    {"name": "Notebook", "price": "$6", "on_sale": False},
-]
-
-def main(page: ft.Page):
-    page.title = "Catalog"
-    page.appbar = ft.AppBar(title=ft.Text("Catalog"), center_title=True)
-
-    def add_to_cart(product_name: str):
-        def handle_click(e: ft.Event[ft.Button]):
-            page.show_dialog(ft.SnackBar(ft.Text(f"Added {product_name} to cart")))
-        return handle_click
-
-    def product_card(product: dict) -> ft.Control:
-        card = ft.Container(
-            padding=12,
-            border_radius=8,
-            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
-            content=ft.Row(
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                controls=[
-                    ft.Column(
-                        spacing=2,
-                        controls=[
-                            ft.Text(product["name"], weight=ft.FontWeight.BOLD),
-                            ft.Text(product["price"], color=ft.Colors.OUTLINE),
-                        ],
-                    ),
-                    ft.Button("Buy", on_click=add_to_cart(product["name"])),
-                ],
-            ),
-        )
-        if not product["on_sale"]:
-            return card
-        return ft.Stack(
-            controls=[
-                card,
-                ft.Container(
-                    content=ft.Text("SALE", size=10, color=ft.Colors.WHITE),
-                    bgcolor=ft.Colors.RED,
-                    padding=ft.Padding.symmetric(horizontal=6, vertical=2),
-                    border_radius=4,
-                    top=-6,
-                    right=-6,
-                ),
-            ],
-        )
-
-    page.add(
-        ft.Column(
-            spacing=10,
-            controls=[product_card(product) for product in PRODUCTS],
-        ),
-    )
-
-ft.run(main)
-```
+<CodeExample path="cookbook/create_flet_app/product_catalog/main.py" language="python" title="catalog.py" />
 
 Run it with [`flet run`](running-app.md) and you'll get a scrollable list of product cards, each with a "Buy"
 button that pops up a confirmation.
