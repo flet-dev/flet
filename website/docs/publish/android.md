@@ -777,11 +777,13 @@ Its value is determined in the following order of precedence:
 <TabItem value="flet-build" label="flet build">
 Accepts repeated `<name>=<enabled>` entries.
 The `<enabled>` value can be `true` or `false` (case-insensitive).
-Permissions with `false` are omitted from the generated manifest.
+Permissions with `false` are actively removed from the merged manifest.
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 Use boolean values. TOML booleans must be lowercase: `true` or `false`.
-Permissions set to `false` are omitted from the generated manifest.
+Permissions set to `false` are emitted with `tools:node="remove"`, which strips
+them from the merged manifest even when a Flutter plugin declares them — see
+[Removing a permission a plugin adds](#removing-a-permission-a-plugin-adds).
 
 A value can also be a TOML inline table whose entries become extra
 `android:<key>="<value>"` attributes on the generated `<uses-permission>`
@@ -824,6 +826,57 @@ the `pyproject.toml` example above will be translated accordingly into this:
 </manifest>
 ```
 </details>
+
+#### Removing a permission a plugin adds
+
+Not every permission in your app comes from your own configuration. Gradle's manifest
+merger folds in the manifest of every Flutter plugin you depend on, and it can also
+*synthesize* permissions you never asked for.
+
+A real example: `flet-camera` pulls in `camera_android_camerax`, whose manifest declares
+`WRITE_EXTERNAL_STORAGE` bounded to `maxSdkVersion="28"`. The merger then implies an
+**unbounded** `READ_EXTERNAL_STORAGE` from it, because on very old Android versions write
+access implied read access:
+
+```
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from .../AndroidManifest.xml reason: io.flutter.plugins.camerax requested WRITE_EXTERNAL_STORAGE
+```
+
+Neither permission appears anywhere in your `pyproject.toml`, and both show up in the
+Play Console. Setting them to `false` removes them:
+
+```toml
+[tool.flet.android.permission]
+"android.permission.READ_EXTERNAL_STORAGE" = false
+"android.permission.WRITE_EXTERNAL_STORAGE" = false
+```
+
+which generates:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+```
+
+Removing a permission that nothing declares is harmless — `tools:node="remove"` on an
+absent element is a no-op.
+
+:::tip[Finding where a permission came from]
+Gradle writes a report naming the source of every merged manifest element:
+
+```
+build/flutter/build/app/outputs/logs/manifest-merger-release-report.txt
+```
+
+Search it for the permission name. Each entry is marked `ADDED from [:some_plugin]`,
+`MERGED from [some.aar]`, or `IMPLIED from ... reason: ...`, which tells you whether to
+remove it, drop the dependency, or bound it with `maxSdkVersion`.
+:::
+
+Only remove a permission the app genuinely does not need. If a plugin declares one because
+a code path it owns requires it, removing the permission makes that path fail at runtime
+rather than at build time.
 
 ### Minimum SDK version
 
