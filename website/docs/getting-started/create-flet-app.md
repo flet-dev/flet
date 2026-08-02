@@ -84,6 +84,8 @@ padding.
 ft.Text("Flet is fun to build with!", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE)
 ```
 
+<Image src="assets/getting-started/create-flet-app/text.png" alt="Bold blue Text control" width="50%" />
+
 ### Row and Column
 
 [`Row`](../controls/row.md) and [`Column`](../controls/column.md) lay out their `controls` horizontally and
@@ -99,6 +101,8 @@ ft.Row(
     ],
 )
 ```
+
+<Image src="assets/getting-started/create-flet-app/row.png" alt="Row with a star icon and Featured text" width="50%" />
 
 You can nest a `Column` inside a `Row` (or vice versa) to build more complex layouts.
 
@@ -124,6 +128,8 @@ ft.Stack(
 )
 ```
 
+<Image src="assets/getting-started/create-flet-app/stack.png" alt="Avatar with a green status badge" width="10%" />
+
 ### Container
 
 [`Container`](../controls/container.md) wraps a single control and adds visual styling around it: background color,
@@ -137,6 +143,8 @@ ft.Container(
     border_radius=8,
 )
 ```
+
+<Image src="assets/getting-started/create-flet-app/container.png" alt="Styled box in a Container" width="20%" />
 
 `Container` also accepts `on_click`, which makes it a handy way to make a control clickable when that control
 doesn't have an `on_click` of its own: just wrap it in a `Container`. See [Handling events](#handling-events)
